@@ -10,12 +10,14 @@ var ProjectConfig = (function () {
     }
     ProjectConfig.prototype.init = function () {
         var projectRoot = params.getProjectRoot();
-        this.properties = JSON.parse(file.read(file.join(projectRoot, "egretProperties.json")));
-        for (var key in this.properties["modules"]) {
-            this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
+        if (file.exists(file.join(projectRoot, "egretProperties.json"))) {
+            this.properties = JSON.parse(file.read(file.join(projectRoot, "egretProperties.json")));
+            for (var key in this.properties["modules"]) {
+                this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
+            }
+            this.modulesConfig["html5"] = { "name": "html5" };
+            this.modulesConfig["native"] = { "name": "native" };
         }
-        this.modulesConfig["html5"] = { "name": "html5" };
-        this.modulesConfig["native"] = { "name": "native" };
     };
     /**
      * 获取项目的根路径
@@ -90,7 +92,10 @@ var ProjectConfig = (function () {
         return null;
     };
     ProjectConfig.prototype.getModulePath = function (moduleName) {
-        return this.modulesConfig[moduleName]["path"] || null;
+        if (this.modulesConfig[moduleName]) {
+            return this.modulesConfig[moduleName]["path"] || null;
+        }
+        return null;
     };
     ProjectConfig.prototype.getModuleConfig = function (moduleName) {
         var moduleJsonPath;
@@ -114,6 +119,14 @@ var ProjectConfig = (function () {
     };
     ProjectConfig.prototype.getModuleFileList = function (moduleName) {
         return this.getModuleConfig(moduleName)["file_list"].concat();
+    };
+    ProjectConfig.prototype.getModuleFileListWithAbsolutePath = function (moduleName) {
+        var list = this.getModuleConfig(moduleName)["file_list"].concat();
+        var prefix = this.getModulePrefixPath(moduleName);
+        var source = this.getModuleSourcePath(moduleName);
+        return list.map(function (item) {
+            return file.join(prefix, source, item);
+        });
     };
     ProjectConfig.prototype.getModulePrefixPath = function (moduleName) {
         var modulePath = this.getModulePath(moduleName);

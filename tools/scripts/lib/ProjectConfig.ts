@@ -11,14 +11,14 @@ class ProjectConfig {
 
     init() {
         var projectRoot = params.getProjectRoot();
-        this.properties = JSON.parse(file.read(file.join(projectRoot, "egretProperties.json")));
-
-        for (var key in this.properties["modules"]) {
-            this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
+        if (file.exists(file.join(projectRoot, "egretProperties.json"))) {
+            this.properties = JSON.parse(file.read(file.join(projectRoot, "egretProperties.json")));
+            for (var key in this.properties["modules"]) {
+                this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
+            }
+            this.modulesConfig["html5"] = {"name": "html5"};
+            this.modulesConfig["native"] = {"name": "native"};
         }
-
-        this.modulesConfig["html5"] = {"name": "html5"};
-        this.modulesConfig["native"] = {"name": "native"};
     }
 
     /**
@@ -106,7 +106,10 @@ class ProjectConfig {
     }
 
     getModulePath(moduleName) {
-        return this.modulesConfig[moduleName]["path"] || null;
+        if (this.modulesConfig[moduleName]) {
+            return this.modulesConfig[moduleName]["path"] || null;
+        }
+        return null;
     }
 
     getModuleConfig(moduleName) {
@@ -134,6 +137,16 @@ class ProjectConfig {
 
     getModuleFileList(moduleName) {
         return this.getModuleConfig(moduleName)["file_list"].concat();
+    }
+
+    getModuleFileListWithAbsolutePath(moduleName) {
+        var list = this.getModuleConfig(moduleName)["file_list"].concat();
+        var prefix = this.getModulePrefixPath(moduleName);
+        var source = this.getModuleSourcePath(moduleName);
+
+        return list.map(function (item) {
+            return file.join(prefix, source, item);
+        })
     }
 
     getModulePrefixPath(moduleName) {
@@ -181,7 +194,7 @@ class ProjectConfig {
     getModuleReferenceInfo() {
         var fileList = [];
         var moduleNames = this.getAllModuleNames();
-        moduleNames.map( (moduleName)=> {
+        moduleNames.map((moduleName)=> {
             var file_list = this.getModuleFileList(moduleName);
             var prefix = this.getModulePrefixPath(moduleName);
             var source = this.getModuleSourcePath(moduleName);

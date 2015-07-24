@@ -10,13 +10,12 @@ import config = require("../lib/ProjectConfig");
 class CreateCommand implements egret.Command {
 
     execute():number {
-        var projectPath = params.getProjectRoot();
-        if (!projectPath) {
+        var projectName = params.getCommandArgs()[0];
+        if (!projectName) {
             globals.exit(1001);
         }
-        if (file.exists(projectPath)) {
-            globals.exit(1002);
-        }
+        var projectPath = file.resolve(projectName);
+
         var type = params.getOption("--type", ["core", "gui", "empty"]);
         var async = globals.getAsync();
         async.series([

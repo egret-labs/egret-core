@@ -124,10 +124,12 @@ class Main extends egret.DisplayObjectContainer {
 
         var icon:egret.Bitmap = this.createBitmapByName("egretIcon");
         this.addChild(icon);
+        icon.anchorOffsetX = icon.width / 2;
+        icon.anchorOffsetY = icon.height / 2;
+        icon.x = stageW / 2;
+        icon.y = stageH / 2 - 60;
         icon.scaleX = 0.55;
         icon.scaleY = 0.55;
-        icon.x = stageW - icon.width >> 1;
-        icon.y = (stageH -icon.height >> 1) - 60;
 
         var colorLabel:egret.TextField = new egret.TextField();
         colorLabel.textColor = 0xffffff;
@@ -141,7 +143,11 @@ class Main extends egret.DisplayObjectContainer {
         var textfield:egret.TextField = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
-
+        textfield.width = stageW;
+        textfield.height = stageH;
+        textfield.textAlign = egret.HorizontalAlign.CENTER;
+        textfield.x = 0;
+        textfield.y = stageH / 2 + 100;
         this.textfield = textfield;
 
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
@@ -200,11 +206,6 @@ class Main extends egret.DisplayObjectContainer {
      */
     private changeDescription(textfield:egret.TextField, textFlow:Array<egret.ITextElement>):void {
         textfield.textFlow = textFlow;
-
-        var stageW:number = this.stage.stageWidth;
-        var stageH:number = this.stage.stageHeight;
-        textfield.x = stageW - textfield.width >> 1;
-        textfield.y = (stageH - textfield.height >> 1) + 100;
     }
 }
 

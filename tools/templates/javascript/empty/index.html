@@ -1,0 +1,60 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HelloWorld</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+    <meta name="full-screen" content="true"/>
+    <meta name="screen-orientation" content="portrait"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta name="360-fullscreen" content="true"/>
+
+    <style>
+        html, body {
+            -ms-touch-action: none;
+            background: #888888;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="egret-sample" style="margin: auto;width: 100%;height: 100%;" class="egret-player"
+     data-entry-class="Main"
+     data-scale-mode="showAll"
+     data-content-width="480"
+     data-content-height="800"
+     data-show-paint-rect="false"
+     data-show-fps="false"
+     data-show-fps-style="x:0,y:600,size:50,textColor:0xff0000"
+     data-show-log="false" data-log-filter="">
+</div>
+
+<!--egret_files_start-->
+<script src="egret.js"></script>
+<script src="src/Main.js"></script>
+<!--egret_files_end-->
+
+<script>
+    egret.runEgret();
+
+    //处理屏幕大小改变
+    //implement for screen size change
+    var resizeTimer = null;
+    var doResize = function () {
+        egret.updateAllScreens();
+        resizeTimer = null;
+    };
+    window.onresize = function () {
+        if (resizeTimer == null) {
+            resizeTimer = setTimeout(doResize, 300);
+        }
+    };
+</script>
+</body>
+</html>

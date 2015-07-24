@@ -30,6 +30,7 @@
 require('./locales/zh_CN');
 var Create = require("./commands/CreateCommand");
 var CreateAppCommand = require("./commands/CreateAppCommand");
+var CreateJSCommand = require("./commands/CreateJSCommand");
 var PublishCommand = require("./commands/PublishCommand");
 var HelpCommand = require("./commands/HelpCommand");
 var InfoCommand = require("./commands/InfoCommand");
@@ -84,6 +85,10 @@ var Entry = (function () {
             case "create_app":
                 var createapp = new CreateAppCommand();
                 exitCode = createapp.execute();
+                break;
+            case "create_js":
+                var createjs = new CreateJSCommand();
+                exitCode = createjs.execute();
                 break;
             case "help":
                 var help = new HelpCommand();
