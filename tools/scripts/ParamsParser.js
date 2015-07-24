@@ -29,12 +29,7 @@ function init() {
             if (!name)
                 name = itemi;
             else {
-                if (multies.indexOf(name) >= 0) {
-                    opts[name] = values4Opt;
-                }
-                else {
-                    opts[name] = values4Opt[0] || true;
-                }
+                opts[name] = values4Opt;
                 name = itemi;
                 values4Opt = [];
             }
@@ -45,6 +40,11 @@ function init() {
     }
     if (name)
         opts[name] = values4Opt;
+    for (var key in opts) {
+        if (multies.indexOf(name) < 0) {
+            opts[key] = opts[key][0] || true;
+        }
+    }
     setArgv({
         name: arr[0],
         currDir: process.cwd(),
@@ -71,7 +71,7 @@ function getCommandName() {
 }
 exports.getCommandName = getCommandName;
 function getNotNeedProjectCmds() {
-    return ["create", "create_app", "zip", "compile", "compress", "help"];
+    return ["create", "create_app", "zip", "compile", "compress", "help", "showip"];
 }
 exports.getNotNeedProjectCmds = getNotNeedProjectCmds;
 function getCommandArgs() {

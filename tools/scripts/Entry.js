@@ -34,7 +34,9 @@ var HelpCommand = require("./commands/HelpCommand");
 var InfoCommand = require("./commands/InfoCommand");
 var CheckCMD = require('./commands/CheckCommand');
 var BuildCommand = require('./commands/BuildCommand');
+var StartServerCommand = require('./commands/StartServerCommand');
 var ZipCommand = require('./commands/ZipCommand');
+var ShowIPCommand = require('./commands/ShowIPCommand');
 var CompileFilesCommand = require('./commands/CompileFilesCommand');
 var CompressJsonCommand = require('./commands/CompressJsonCommand');
 var config = require("./lib/ProjectConfig");
@@ -44,7 +46,7 @@ exports.DontExitCode = -0xF000;
 function executeCommandLine() {
     parser.init();
     var cmdName = parser.getCommandName();
-    if (["build", "publish"].indexOf(cmdName) >= 0) {
+    if (["build", "publish", "startserver"].indexOf(cmdName) >= 0) {
         config.init();
         //检测版本
         var exitCode = new CheckCMD().execute();
@@ -79,7 +81,9 @@ var Entry = (function () {
                 var help = new HelpCommand();
                 help.execute();
                 break;
-            case "run":
+            case "startserver":
+                var startserver = new StartServerCommand();
+                startserver.execute();
                 break;
             case "make":
                 break;
@@ -105,6 +109,10 @@ var Entry = (function () {
                 var compress = new CompressJsonCommand();
                 compress.initOptions(parser.getOptions());
                 compress.execute();
+                break;
+            case "showip":
+                var showip = new ShowIPCommand();
+                showip.execute();
                 break;
             case "designservice":
                 break;

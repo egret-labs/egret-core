@@ -44,10 +44,10 @@ class HelpCommand implements egret.Command {
             if (item.indexOf(".js") == -1) {
                 return;
             }
-            var tool = require("./" + item);
             var tool_name = item.split(".")[0];
-            var locale = require( "../../lib/core/locale/local.js" );
-            var title = locale.help_dict["title_" + tool_name];
+
+            var locale = global["$helpDict"];
+            var title = locale["title_" + tool_name];
             if (title) {
                 console.log(this.getSpace(4) + tool_name + this.getSpace(30 - tool_name.length) + title + "\n");
             }

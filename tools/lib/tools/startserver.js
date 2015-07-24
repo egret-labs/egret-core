@@ -102,7 +102,8 @@ function findIP(opts) {
 function onGet(request, response) {
     var projectName = exports.projectName;
     var pathname = url.parse(request.url).pathname;
-
+    console.log(pathname)
+    console.log(request.url)
 
     if (pathname.indexOf(startCompileFlag) != -1 && pathname.indexOf(startCompileFlag) == pathname.length - startCompileFlag.length) {
 
