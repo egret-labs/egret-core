@@ -218,7 +218,7 @@ module egret {
             this.$TextField = {
                 0: 30,             //fontSize
                 1: 0,              //lineSpacing
-                2: 0x000000,       //textColor
+                2: 0xffffff,       //textColor
                 3: NaN,           //textFieldWidth
                 4: NaN,           //textFieldHeight
                 5: 0,              //textWidth
