@@ -529,6 +529,7 @@ module egret {
             this._maxY = 0;
             this._firstCheck = true;
             this._dirty = true;
+            this.$renderContext.clear();
         }
 
         /**
