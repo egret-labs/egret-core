@@ -192,6 +192,11 @@ module egret {
          * @platform Web,Native
          */
         public drawRect(x:number, y:number, width:number, height:number):void {
+            if (DEBUG) {
+                if (isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)) {
+                    egret.$error(1013);
+                }
+            }
             this.$renderContext.beginPath();
             this.$renderContext.rect(x, y, width, height);
             this.$renderContext.closePath();
@@ -216,6 +221,11 @@ module egret {
          * @platform Web,Native
          */
         public drawCircle(x:number, y:number, r:number):void {
+            if (DEBUG) {
+                if (isNaN(x) || isNaN(y) || isNaN(r)) {
+                    egret.$error(1013);
+                }
+            }
             this.$renderContext.beginPath();
             this.$renderContext.arc(x, y, r, 0, Math.PI * 2);
             this.$renderContext.closePath();
@@ -246,6 +256,11 @@ module egret {
          * @platform Web,Native
          */
         public drawRoundRect(x:number, y:number, width:number, height:number, ellipseWidth:number, ellipseHeight?:number):void {
+            if (DEBUG) {
+                if (isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)) {
+                    egret.$error(1013);
+                }
+            }
             var _x:number = x;//控制X偏移
             var _y:number = y;//控制Y偏移
             var _w:number = width;
@@ -291,6 +306,11 @@ module egret {
          * @platform Web,Native
          */
         public drawEllipse(x:number, y:number, width:number, height:number):void {
+            if (DEBUG) {
+                if (isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)) {
+                    egret.$error(1013);
+                }
+            }
             var _x:number = x + width / 2;//控制X偏移
             var _y:number = y + height / 2;//控制Y偏移
             var r:number = (width > height) ? width : height;//选宽高较大者做为arc半径参数
