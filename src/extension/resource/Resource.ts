@@ -199,7 +199,7 @@ module RES {
 
 
     /**
-     * @includeExample egret/extension/resource/Resource.ts
+     * @includeExample extension/resource/Resource.ts
      */
     class Resource extends egret.EventDispatcher{
         /**
