@@ -239,6 +239,8 @@ module egret {
                 return;
             }
             values[Keys.explicitBitmapHeight] = value;
+
+            this.$invalidateContentBounds();
         }
 
         /**
