@@ -47,7 +47,6 @@ module egret {
     }
 
     export var ExternalInterface: {
-
         /**
          * @language en_US
          * Call functionName, and the value passed to the native.

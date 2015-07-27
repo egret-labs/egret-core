@@ -10,6 +10,7 @@
         "egret/text/web/InputController.ts",
 
         "egret/localStorage/web/WebLocalStorage.ts",
+        "egret/external/web/WebExternalInterface.ts",
 
         "egret/web/CanvasFactory.ts",
         "egret/web/EgretWeb.ts",

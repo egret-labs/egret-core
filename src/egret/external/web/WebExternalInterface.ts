@@ -28,22 +28,22 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.web {
-    /**
-     * @private
-     * @param functionName
-     * @param value
-     */
-    function call(functionName:string, value:string):void {
-    }
+    export class WebExternalInterface implements ExternalInterface {
+        /**
+         * @private
+         * @param functionName
+         * @param value
+         */
+        static call(functionName:string, value:string):void {
+        }
 
-    /**
-     * @private
-     * @param functionName
-     * @param listener
-     */
-    function addCallback(functionName:string, listener:(value)=>void):void {
+        /**
+         * @private
+         * @param functionName
+         * @param listener
+         */
+        static addCallback(functionName:string, listener:(value)=>void):void {
+        }
     }
-
-    ExternalInterface.call = call;
-    ExternalInterface.addCallback = addCallback;
+    ExternalInterface = WebExternalInterface;
 }
