@@ -68,7 +68,7 @@ module egret.gui {
 
         $hitTest(stageX:number, stageY:number):DisplayObject {
             var target = super.$hitTest(stageX, stageY);
-            if (target) {
+            if (target == this) {
                 target = this.$graphics.$hitTest(stageX, stageY);
             }
             return target;
