@@ -499,7 +499,7 @@ function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError,ch
  */
 function readReferenceFromExml(path){
     var text = file.read(path);
-    var exml = xml.parse(text);
+    var exml = xml.parse(text, path);
     if(!exml){
         return;
     }
@@ -640,7 +640,7 @@ function checkAllClassName(classNameToPath,path,list,moduleList,orgText){
  */
 function readClassNamesFromExml(path,srcPath){
     var text = file.read(path);
-    var exml = xml.parse(text);
+    var exml = xml.parse(text, path);
     if(!exml){
         return;
     }
@@ -658,7 +658,7 @@ function readClassNamesFromExml(path,srcPath){
  */
 function readRelyOnFromExml(path,srcPath){
     var text = file.read(path);
-    var exml = xml.parse(text);
+    var exml = xml.parse(text, path);
     if(!exml){
         return;
     }
