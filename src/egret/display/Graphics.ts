@@ -74,6 +74,13 @@ module egret {
         private lineY:number = 0;
 
         /**
+         * @private
+         */
+        public get graphicsRenderContext():GraphicsRenderContext {
+            return this.$renderContext;
+        }
+
+        /**
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -392,6 +399,38 @@ module egret {
             this.lineY = anchorY;
 
             this.$renderContext.quadraticCurveTo(controlX, controlY, anchorX, anchorY);
+        }
+
+        /**
+         * @language en_US
+         * adds an arc to the path which is centered at (x, y) position with radius r starting at startAngle and ending
+         * at endAngle going in the given direction by anticlockwise (defaulting to clockwise).
+         * @param x The x coordinate of the arc's center.
+         * @param y The y coordinate of the arc's center.
+         * @param radius The arc's radius.
+         * @param startAngle The angle at which the arc starts, measured clockwise from the positive x axis and expressed in radians.
+         * @param endAngle The angle at which the arc ends, measured clockwise from the positive x axis and expressed in radians.
+         * @param anticlockwise if true, causes the arc to be drawn counter-clockwise between the two angles. By default it is drawn clockwise.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
+         * @param x 圆弧中心（圆心）的 x 轴坐标。
+         * @param y 圆弧中心（圆心）的 y 轴坐标。
+         * @param radius 圆弧的半径。
+         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
+         * @param endAngle 圆弧的重点， 单位以弧度表示。
+         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public drawArc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
+            this.lineX = Math.cos(endAngle) + x;
+            this.lineY = Math.sin(endAngle) + y;
+
+            this.$renderContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         }
 
         /**
