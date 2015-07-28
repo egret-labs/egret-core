@@ -61,6 +61,9 @@ module egret.web {
                     var xhr = new XMLHttpRequest();
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";
+                    xhr.onerror = function () {
+                        callback(1, null);
+                    };
                     xhr.onload = function () {
                         if (this.status == 200) {
                             var blob = this.response;
