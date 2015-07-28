@@ -132,7 +132,7 @@ module RES {
      * @param compFunc {Function} 回调函数。示例：compFunc(data,url):void。
      * @param thisObject {any} 回调函数的this引用
      * @param type {string} 文件类型(可选)。请使用ResourceItem类中定义的静态常量。若不设置将根据文件扩展名生成。
-     * @see RES.Resource#example
+     * @includeExample extension/resource/GetResByUrl.ts
      */
     export function getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
         instance.getResByUrl(url,compFunc,thisObject,type);
@@ -199,7 +199,7 @@ module RES {
 
 
     /**
-     * @includeExample egret/extension/resource/Resource.ts
+     * @includeExample extension/resource/Resource.ts
      */
     class Resource extends egret.EventDispatcher{
         /**
