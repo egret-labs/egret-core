@@ -50,16 +50,16 @@ module egret {
         /**
          * @language en_US
          * Create an egret.BitmapFont object
-         * @param texture {egret.Texture} Texture set
-         * @param config {any} Configure data
+         * @param texture {egret.Texture} Texture set that use TextureMerger create
+         * @param config {any} Configure data that use TextureMerger create
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.BitmapFont 对象
-         * @param texture {egret.Texture} 纹理集
-         * @param config {any} 配置数据
+         * @param texture {egret.Texture} 使用TextureMerger生成的纹理集
+         * @param config {any} 使用TextureMerger生成的配置数据
          * @version Egret 2.0
          * @platform Web,Native
          */
