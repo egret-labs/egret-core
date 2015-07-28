@@ -202,7 +202,14 @@ module egret.web {
          */
         private loadTexture(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-
+            if(Html5Capatibility._WebPSupport) {
+                if(virtualUrl.indexOf(".png") != -1) {
+                    virtualUrl = virtualUrl.replace(".png",".webp");
+                }
+                else if(virtualUrl.indexOf(".jpg") != -1) {
+                    virtualUrl = virtualUrl.replace(".jpg",".webp");
+                }
+            }
             this._imageLoader.load(virtualUrl, function (code:number, bitmapData:HTMLImageElement) {
                 if (code != 0) {
                     IOErrorEvent.dispatchIOErrorEvent(loader);

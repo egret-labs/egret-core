@@ -95,6 +95,11 @@ module egret.web {
         /**
          * @private
          */
+        public static _WebPSupport:boolean = false;
+
+        /**
+         * @private
+         */
         constructor() {
             super();
         }

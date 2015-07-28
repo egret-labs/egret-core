@@ -57,7 +57,7 @@ module egret.web {
             var winURL = window["URL"] || window["webkitURL"];
             if (BaseImageLoader._bitmapCallbackMap[url] == null) {//非正在加载中
                 this._addToCallbackList(url, callback);
-                if (false) {
+                if (Html5Capatibility._canUseBlob) {
                     var xhr = new XMLHttpRequest();
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";
