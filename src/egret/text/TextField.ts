@@ -684,18 +684,6 @@ module egret {
         }
 
         public _draw(renderContext:RendererContext):void {
-            var self = this;
-            var properties:egret.TextFieldProperties = self._TF_Props_;
-
-            if (properties._type == egret.TextFieldType.INPUT) {
-                if (self._isTyping) {
-                    return;
-                }
-            }
-            else if (properties._textMaxWidth == 0) {
-                return;
-            }
-
             super._draw(renderContext);
         }
 
@@ -704,8 +692,20 @@ module egret {
          * @param renderContext
          */
         public _render(renderContext:RendererContext):void {
-            if(this._bgGraphics)
-                this._bgGraphics._draw(renderContext);
+            var self = this;
+
+            if(self._bgGraphics)
+                self._bgGraphics._draw(renderContext);
+
+            var properties:egret.TextFieldProperties = self._TF_Props_;
+            if (properties._type == egret.TextFieldType.INPUT) {
+                if (self._isTyping) {
+                    return;
+                }
+            }
+            else if (properties._textMaxWidth == 0) {
+                return;
+            }
 
             this.drawText(renderContext);
 
