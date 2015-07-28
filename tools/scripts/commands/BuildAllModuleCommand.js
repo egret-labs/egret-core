@@ -26,6 +26,7 @@ var BuildAllModuleCommand = (function () {
     };
     //[["core,res"], ["third"]]//
     BuildAllModuleCommand.prototype.getFirstList = function () {
+        var _this = this;
         var moduleList;
         var exModules = params.getOption("--module");
         if (exModules && exModules.length > 0) {
@@ -56,7 +57,7 @@ var BuildAllModuleCommand = (function () {
                 thirdArr.push([item]);
             }
             else {
-                this.otherArr.push({ "name": item, "dependence": dependence });
+                _this.otherArr.push({ "name": item, "dependence": dependence });
             }
         });
         return [coreArr].concat(thirdArr);
@@ -72,7 +73,7 @@ var BuildAllModuleCommand = (function () {
                 }
             }
             if (dep.length == 0) {
-                tempArr.push([info[i]]);
+                tempArr.push([info["name"]]);
                 this.otherArr.splice(i, 1);
             }
         }
@@ -93,6 +94,7 @@ var BuildAllModuleCommand = (function () {
         else {
             modules = this.getNextModules();
         }
+        console.log(modules);
         for (var i = 0; i < modules.length; i++) {
             var buildCmd = new BuildModuleCMD();
             buildCmd.moduleNames = modules[i];

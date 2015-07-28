@@ -11,6 +11,7 @@ import BuildModuleCMD = require("./BuildModuleCommand");
  */
 class BuildAllModuleCommand implements egret.Command {
     private callback:(exitCode:number)=>void;
+
     execute(callback?:(exitCode:number)=>void):number {
         this.callback = callback;
 
@@ -20,7 +21,7 @@ class BuildAllModuleCommand implements egret.Command {
     }
 
     private endBuild() {
-        if(this.callback) {
+        if (this.callback) {
             this.callback(0);
         }
         else {
@@ -54,7 +55,7 @@ class BuildAllModuleCommand implements egret.Command {
         var coreArr = [];
         var thirdArr = [];
         //取出 引擎库
-        moduleList.forEach(function (item) {
+        moduleList.forEach((item) => {
             if (config.getModulePath(item) == null) {
                 coreArr.push(item);
                 return;
@@ -73,6 +74,7 @@ class BuildAllModuleCommand implements egret.Command {
 
     private totalCount = 0;
     private otherArr = [];
+
     private getNextModules() {
         var tempArr = [];
         for (var i = this.otherArr.length - 1; i >= 0; i--) {
@@ -85,7 +87,7 @@ class BuildAllModuleCommand implements egret.Command {
             }
 
             if (dep.length == 0) {
-                tempArr.push([info[i]]);
+                tempArr.push([info["name"]]);
                 this.otherArr.splice(i, 1);
             }
         }
@@ -109,6 +111,7 @@ class BuildAllModuleCommand implements egret.Command {
         else {
             modules = this.getNextModules();
         }
+        console.log(modules);
 
         for (var i = 0; i < modules.length; i++) {
             var buildCmd = new BuildModuleCMD();

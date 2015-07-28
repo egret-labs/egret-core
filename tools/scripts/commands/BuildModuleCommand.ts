@@ -136,7 +136,6 @@ class BuildModuleCommand implements egret.Command {
     }
 
     private getDependencyList(moduleName, excludeArr) {
-        var libsPath = file.join(config.getProjectRoot(), "libs");
         var tsList = [];
         //如果有依赖，则需要将依赖的库.d.ts（已生成在项目中）文件也放入到list中
         var dependencyList = config.getModuleDependenceList(moduleName);
@@ -145,7 +144,7 @@ class BuildModuleCommand implements egret.Command {
                 var depModuleName = dependencyList[i];
                 if (excludeArr.indexOf(depModuleName) < 0) {//未在排除列表内
                     var dependencyModuleOutput = config.getModuleOutput(depModuleName);
-                    var dtsFile = file.join(libsPath, dependencyModuleOutput, depModuleName + ".d.ts");
+                    var dtsFile = file.join(dependencyModuleOutput, depModuleName + ".d.ts");
                     tsList.push(dtsFile);
                 }
             }
