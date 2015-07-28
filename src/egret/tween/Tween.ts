@@ -82,7 +82,7 @@ module egret {
 		/**
          * 激活一个对象，对其添加 Tween 动画
          * @param target {any} 要激活 Tween 的对象
-         * @param props {any} 参数
+         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
          * @param pluginData {any} 暂未实现
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false
 		 */

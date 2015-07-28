@@ -42,8 +42,8 @@ module egret {
 
         /**
          * 创建一个 egret.BitmapFont 对象
-         * @param texture {egret.Texture} 纹理集
-         * @param config {any} 配置数据
+         * @param texture {egret.Texture} 使用TextureMerger生成的纹理集
+         * @param config {any} 使用TextureMerger生成的配置数据
          */
         public constructor(texture:Texture, config:any) {
             super(texture);
