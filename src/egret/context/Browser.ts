@@ -46,6 +46,8 @@ module egret {
             return Browser.instance;
         }
 
+        public webPSupport:boolean = false;
+
         /**
          * @deprecated
          * @returns {boolean}
