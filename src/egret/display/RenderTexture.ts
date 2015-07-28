@@ -37,6 +37,10 @@ module egret {
             super();
         }
 
+        toDataURL(type:string) {
+            return (<egret.sys.Surface>this._bitmapData).toDataURL(type);
+        }
+
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
             var originParent = displayObject.$parent;
             var c1 = new egret.DisplayObjectContainer();

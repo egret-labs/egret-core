@@ -245,6 +245,25 @@ module egret {
             return result.data;
         }
 
+        private convertImageToCanvas() {
+            var surface = sys.surfaceFactory.create(true);
+            if (!surface) {
+                return null;
+            }
+
+            Bitmap.$drawImage(surface.renderContext, this, this.$getTextureWidth(), this.$getTextureHeight(), null, egret.BitmapFillMode.SCALE, false);
+
+            return surface;
+        }
+
+        toDataURL(type:string) {
+            return (<egret.sys.Surface>this.convertImageToCanvas()).toDataURL(type);
+        }
+
+        download(base64:string) {
+            document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
+        }
+
         /**
          * @language en_US
          * dispose texture

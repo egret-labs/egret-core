@@ -38,5 +38,7 @@ module egret.sys {
          * 绘图上下文
          */
         renderContext:RenderContext;
+
+        toDataURL(type?: string, ...args: any[]): string;
     }
 }
