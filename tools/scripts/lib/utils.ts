@@ -55,6 +55,8 @@ export function format(text: string, ...args): string {
     for (var i = 0; i < length; i++) {
         text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]);
     }
+
+    text = formatStdoutString(text);
     return text;
 }
 
@@ -63,6 +65,34 @@ export function exit(code: number, ...args) {
     console.error(message);
     process.exit(code);
 }
+
+
+
+//第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
+var ColorOutputReplacements = {
+    "{color_green}": "\033[1;32;1m",
+    "{color_red}": "\033[0;31m",
+    "{color_normal}": "\033[0m",
+    "{color_gray}": "\033[0;37m",
+    "{color_underline}": "\033[4;36;1m"
+};
+var NoColorOutputReplacements = {
+    "{color_green}": "",
+    "{color_red}": "",
+    "{color_normal}": "",
+    "{color_gray}": "",
+    "{color_underline}": "",
+    "\n": "\\n",
+    "\r": ""
+};
+function formatStdoutString(message) {
+    var replacements = ColorOutputReplacements;
+    for (var raw in replacements) {
+        message = message.split(raw).join(replacements[raw]);
+    }
+    return message;
+}
+
 
 /**
  * 获取到Egret的根路径
