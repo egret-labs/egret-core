@@ -246,29 +246,6 @@ module egret {
         }
 
         /**
-         * @private
-         * 转换成canvas
-         * @returns {any}
-         */
-        private convertImageToCanvas() {
-            var surface = sys.surfaceFactory.create(true);
-            if (!surface) {
-                return null;
-            }
-
-            var iWidth = this.$getTextureWidth();
-            var iHeight = this.$getTextureHeight();
-            surface.width = iWidth;
-            surface.height = iHeight;
-            surface.style.width = iWidth + "px";
-            surface.style.height = iHeight + "px";
-
-            Bitmap.$drawImage(surface.renderContext, this, iWidth, iHeight, null, egret.BitmapFillMode.SCALE, false);
-
-            return surface;
-        }
-
-        /**
          * @language en_US
          * Convert base64 string, if the picture across domains, or null
          * @param type Type conversions, such as "image / png"
@@ -281,13 +258,7 @@ module egret {
          * @returns {any} base64字符串
          */
         public toDataURL(type:string):string {
-            try {
-                return (<egret.sys.Surface>this.convertImageToCanvas()).toDataURL(type);
-            }
-            catch(e) {
-                egret.$error(1033);
-            }
-            return null;
+            throw new Error();
         }
 
         /**
@@ -303,7 +274,7 @@ module egret {
          * @param base64 base64字符串
          */
         download(base64:string) {
-            document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
+            throw new Error();
         }
 
         /**

@@ -50,13 +50,7 @@ module egret {
          * @returns {any} base64字符串
          */
         toDataURL(type:string) {
-            try {
-                return (<egret.sys.Surface>this._bitmapData).toDataURL(type);
-            }
-            catch(e) {
-                egret.$error(1033);
-            }
-            return null;
+            throw new Error();
         }
 
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
