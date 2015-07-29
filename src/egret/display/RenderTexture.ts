@@ -37,8 +37,26 @@ module egret {
             super();
         }
 
+        /**
+         * @language en_US
+         * Convert base64 string, if there is cross-domain containing pictures, or null
+         * @param type Type conversions, such as "image / png"
+         * @returns {any} base64 string
+         */
+        /**
+         * @language zh_CN
+         * 转换成base64字符串，如果有包含的图片跨域，则返回null
+         * @param type 转换的类型，如  "image/png"
+         * @returns {any} base64字符串
+         */
         toDataURL(type:string) {
-            return (<egret.sys.Surface>this._bitmapData).toDataURL(type);
+            try {
+                return (<egret.sys.Surface>this._bitmapData).toDataURL(type);
+            }
+            catch(e) {
+                egret.$error(1033);
+            }
+            return null;
         }
 
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {

@@ -245,21 +245,63 @@ module egret {
             return result.data;
         }
 
+        /**
+         * @private
+         * 转换成canvas
+         * @returns {any}
+         */
         private convertImageToCanvas() {
             var surface = sys.surfaceFactory.create(true);
             if (!surface) {
                 return null;
             }
 
-            Bitmap.$drawImage(surface.renderContext, this, this.$getTextureWidth(), this.$getTextureHeight(), null, egret.BitmapFillMode.SCALE, false);
+            var iWidth = this.$getTextureWidth();
+            var iHeight = this.$getTextureHeight();
+            surface.width = iWidth;
+            surface.height = iHeight;
+            surface.style.width = iWidth + "px";
+            surface.style.height = iHeight + "px";
+
+            Bitmap.$drawImage(surface.renderContext, this, iWidth, iHeight, null, egret.BitmapFillMode.SCALE, false);
 
             return surface;
         }
 
-        toDataURL(type:string) {
-            return (<egret.sys.Surface>this.convertImageToCanvas()).toDataURL(type);
+        /**
+         * @language en_US
+         * Convert base64 string, if the picture across domains, or null
+         * @param type Type conversions, such as "image / png"
+         * @returns {any} base64 string
+         */
+        /**
+         * @language zh_CN
+         * 转换成base64字符串，如果图片跨域，则返回null
+         * @param type 转换的类型，如  "image/png"
+         * @returns {any} base64字符串
+         */
+        public toDataURL(type:string):string {
+            try {
+                return (<egret.sys.Surface>this.convertImageToCanvas()).toDataURL(type);
+            }
+            catch(e) {
+                egret.$error(1033);
+            }
+            return null;
         }
 
+        /**
+         * @private
+         * @language en_US
+         * Download base64 string
+         * @param base64 base64 string
+         */
+        /**
+         * @private
+         * @language zh_CN
+         * 下载base64字符串
+         * @param base64 base64字符串
+         */
         download(base64:string) {
             document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
         }

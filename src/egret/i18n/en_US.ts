@@ -27,6 +27,7 @@ module egret {
     locale_strings[1027] = "DecodingError";
     locale_strings[1028] = ". called injection is not configured rule: {0}, please specify configuration during its initial years of injection rule, and then call the corresponding single case.";
     locale_strings[1029] = "Function.prototype.bind - what is trying to be bound is not callable";
+    locale_strings[1033] = "Photos can not be used across domains toDataURL to convert base64";
 
     //RES
     locale_strings[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
