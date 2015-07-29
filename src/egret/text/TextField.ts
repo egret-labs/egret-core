@@ -409,7 +409,7 @@ module egret {
          */
         private invalidateFontString():void {
             this.$TextField[sys.TextKeys.fontStringChanged] = true;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -449,7 +449,7 @@ module egret {
                 return;
             }
             values[sys.TextKeys.textAlign] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -476,7 +476,7 @@ module egret {
                 return;
             }
             values[sys.TextKeys.verticalAlign] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -504,7 +504,7 @@ module egret {
             if (values[sys.TextKeys.lineSpacing] == value)
                 return;
             values[sys.TextKeys.lineSpacing] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -566,7 +566,7 @@ module egret {
                 return;
             }
             values[sys.TextKeys.wordWrap] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -614,7 +614,7 @@ module egret {
                     }
 
                     this._inputUtils.init(this);
-                    this.$invalidateContentBounds();
+                    this.$invalidateTextField();
 
                     if (this.$stage) {
                         this._inputUtils._addStageText();
@@ -683,7 +683,7 @@ module egret {
 
             this._isFlow = false;
             if (this.$TextField[sys.TextKeys.text] != value) {
-                this.$invalidateContentBounds();
+                this.$invalidateTextField();
                 this.$TextField[sys.TextKeys.text] = value;
                 var text:string = "";
                 if (this.$TextField[sys.TextKeys.displayAsPassword]) {
@@ -745,7 +745,7 @@ module egret {
             var self = this;
             if (this.$TextField[sys.TextKeys.displayAsPassword] != value) {
                 this.$TextField[sys.TextKeys.displayAsPassword] = value;
-                this.$invalidateContentBounds();
+                this.$invalidateTextField();
 
                 var text:string = "";
                 if (value) {
@@ -790,7 +790,7 @@ module egret {
          */
         public _setStrokeColor(value:number):void {
             if (this.$TextField[sys.TextKeys.strokeColor] != value) {
-                this.$invalidateContentBounds();
+                this.$invalidateTextField();
                 this.$TextField[sys.TextKeys.strokeColor] = value;
                 this.$TextField[sys.TextKeys.strokeColorString] = toColorString(value);
             }
@@ -828,7 +828,7 @@ module egret {
          */
         public _setStroke(value:number):void {
             if (this.$TextField[sys.TextKeys.stroke] != value) {
-                this.$invalidateContentBounds();
+                this.$invalidateTextField();
                 this.$TextField[sys.TextKeys.stroke] = value;
             }
         }
@@ -883,7 +883,7 @@ module egret {
         public set scrollV(value:number) {
             this.$TextField[sys.TextKeys.scrollV] = Math.max(value, 1);
 
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -993,7 +993,7 @@ module egret {
          */
         public _setMultiline(value:boolean):void {
             this.$TextField[sys.TextKeys.multiline] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -1016,7 +1016,7 @@ module egret {
                 return;
             }
             values[sys.TextKeys.textFieldWidth] = value;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
 
         /**
@@ -1227,13 +1227,13 @@ module egret {
         }
 
         /**
-         * @private
+         * 不能重写$invalidateContentBounds，因为内部graphics调用clear时会触发$invalidateContentBounds这狗方法，从而导致死循环。
          */
-        $invalidateContentBounds():void {
+        $invalidateTextField():void {
             super.$invalidateContentBounds();
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
         }
-
+        
         /**
          * @private
          */
@@ -1350,7 +1350,7 @@ module egret {
         private setMiddleStyle(textArr:Array<egret.ITextElement>):void {
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
             this._textArr = textArr;
-            this.$invalidateContentBounds();
+            this.$invalidateTextField();
         }
         /**
          * @language en_US
