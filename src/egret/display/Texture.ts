@@ -247,7 +247,7 @@ module egret {
 
         /**
          * @language en_US
-         * Convert base64 string, if the picture across domains, or null
+         * Convert base64 string, if the picture (or pictures included) cross-border or null
          * @param type Type conversions, such as "image / png"
          * @returns {any} base64 string
          * @platform Web
@@ -255,13 +255,13 @@ module egret {
          */
         /**
          * @language zh_CN
-         * 转换成base64字符串，如果图片跨域，则返回null
+         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如  "image/png"
          * @returns {any} base64字符串
          * @platform Web
          * @version Egret 2.0.3
          */
-        public toDataURL(type:string):string {
+        public toDataURL(type:string, rect?:egret.Rectangle, smoothing?:boolean):string {
             throw new Error();
         }
 

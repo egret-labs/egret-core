@@ -33,20 +33,42 @@ module egret.web {
     /**
      * @private
      */
-    function convertImageToCanvas(texture:egret.Texture):HTMLCanvasElement {
+    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle, smoothing?:boolean):HTMLCanvasElement {
         var surface = sys.surfaceFactory.create(true);
         if (!surface) {
             return null;
         }
 
-        var iWidth = texture.$getTextureWidth();
-        var iHeight = texture.$getTextureHeight();
+        var w = texture.$getTextureWidth();
+        var h = texture.$getTextureHeight();
+        if (rect == null) {
+            rect =  egret.$TempRectangle;
+            rect.x = 0;
+            rect.y = 0;
+            rect.width = w;
+            rect.height = h;
+        }
+
+        rect.x = Math.min(rect.x, w - 1);
+        rect.y = Math.min(rect.y, h - 1);
+        rect.width = Math.min(rect.width, w - rect.x);
+        rect.height = Math.min(rect.height, h - rect.y);
+
+        var iWidth = rect.width;
+        var iHeight = rect.height;
         surface.width = iWidth;
         surface.height = iHeight;
         surface.style.width = iWidth + "px";
         surface.style.height = iHeight + "px";
 
-        Bitmap.$drawImage(surface.renderContext, texture, iWidth, iHeight, null, egret.BitmapFillMode.SCALE, false);
+        var bitmapData = texture;
+        surface.renderContext.imageSmoothingEnabled = smoothing;
+        var offsetX:number = Math.round(bitmapData._offsetX);
+        var offsetY:number = Math.round(bitmapData._offsetY);
+        var bitmapWidth:number = bitmapData._bitmapWidth;
+        var bitmapHeight:number = bitmapData._bitmapHeight;
+        surface.renderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x, bitmapData._bitmapY + rect.y,
+            bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
         return surface;
     }
@@ -54,9 +76,9 @@ module egret.web {
     /**
      * @private
      */
-    function toDataURL(type:string):string {
+    function toDataURL(type:string, rect?:egret.Rectangle, smoothing?:boolean):string {
         try {
-            return (<egret.sys.Surface>convertImageToCanvas(this)).toDataURL(type);
+            return (<egret.sys.Surface>convertImageToCanvas(this, rect, smoothing)).toDataURL(type);
         }
         catch(e) {
             egret.$error(1033);
@@ -74,21 +96,6 @@ module egret.web {
         document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
     }
 
-    /**
-     * @private
-     */
-    function renderTextureToDataURL(type:string) {
-        try {
-            return (<egret.sys.Surface>this._bitmapData).toDataURL(type);
-        }
-        catch(e) {
-            egret.$error(1033);
-        }
-        return null;
-    }
-
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.download = download;
-
-    RenderTexture.prototype.toDataURL = renderTextureToDataURL;
 }
