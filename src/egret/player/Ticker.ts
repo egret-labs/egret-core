@@ -126,7 +126,8 @@ module egret.sys {
             if (DEBUG && $ticker) {
                 $error(1008, "egret.sys.SystemTicker");
             }
-            egret.$START_TIME = this.lastTime = Date.now();
+            egret.$START_TIME = Date.now();
+            this.lastTime = 0;
         }
 
         /**
