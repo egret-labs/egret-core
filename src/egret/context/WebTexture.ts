@@ -89,5 +89,5 @@ module egret.web {
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.download = download;
 
-    RenderTexture.prototype.toDataURL = toDataURL;
+    RenderTexture.prototype.toDataURL = renderTextureToDataURL;
 }
