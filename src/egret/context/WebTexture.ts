@@ -72,7 +72,7 @@ module egret.web {
 
         offsetX = Math.round(offsetX * scale);
         offsetY = Math.round(offsetY * scale);
-        RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX + rect.x * scale , texture._bitmapY + rect.y * scale,
+        RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX + rect.x / scale , texture._bitmapY + rect.y / scale,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
         egret.RendererContext.imageSmoothingEnabled = imageSmoothingEnabled;
