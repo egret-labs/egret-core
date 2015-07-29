@@ -3,6 +3,7 @@ var params = require("../ParamsParser");
 var config = require("../lib/ProjectConfig");
 var globals = require("../Globals");
 var file = require("../lib/FileUtil");
+var ModifyHtmlsCommand = require("./ModifyHtmlsCommand");
 var CompressJsonCMD = require("./CompressJsonCommand");
 var CompileFilesCMD = require("./CompileFilesCommand");
 var PublishWebCommand = (function () {
@@ -63,6 +64,16 @@ var PublishWebCommand = (function () {
             });
         }
         if (true) {
+            task.push(function (tempCallback) {
+                file.copy(file.join(projectPath, "index.html"), file.join(releaseOutputPath, "index.html"));
+                var modify = new ModifyHtmlsCommand();
+                modify.isCompiler = true;
+                modify.htmlPath = releaseOutputPath;
+                modify.execute();
+                tempCallback();
+            });
+        }
+        if (false) {
             task.push(function (tempCallback) {
                 //拷贝
                 //拷贝release.html到外面，并且改名为index.html

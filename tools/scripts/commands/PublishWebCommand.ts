@@ -4,7 +4,8 @@ import params = require("../ParamsParser");
 import config = require("../lib/ProjectConfig");
 import globals = require("../Globals");
 import file = require("../lib/FileUtil");
-import GenerateVersionCommand = require("../commands/GenerateVersionCommand");
+import GenerateVersionCommand = require("./GenerateVersionCommand");
+import ModifyHtmlsCommand = require("./ModifyHtmlsCommand");
 
 import ZipCMD = require("./ZipCommand");
 
@@ -76,7 +77,20 @@ class PublishWebCommand implements egret.Command {
             });
         }
 
-        if (true) {//拷贝其他文件
+        if (true) {//修改html文件
+            task.push((tempCallback)=> {//修改egret_file_list.js文件
+                file.copy(file.join(projectPath, "index.html"), file.join(releaseOutputPath, "index.html"));
+
+                var modify = new ModifyHtmlsCommand();
+                modify.isCompiler = true;
+                modify.htmlPath = releaseOutputPath;
+                modify.execute();
+
+                tempCallback();
+            });
+        }
+
+        if (false) {//拷贝其他文件
             task.push((tempCallback)=> {
                 //拷贝
 
@@ -97,7 +111,7 @@ class PublishWebCommand implements egret.Command {
 
                 var compressJson = new CompressJsonCMD();
                 compressJson.initOptions({
-                    "--source" : releaseOutputPath
+                    "--source": releaseOutputPath
                 });
                 compressJson.execute();
                 tempCallback();

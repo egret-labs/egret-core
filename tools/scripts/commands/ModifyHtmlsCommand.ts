@@ -7,21 +7,22 @@ import config = require('../lib/ProjectConfig');
 
 class ModifyHtmlsCommand implements egret.Command {
 
+    htmlPath:string;
     isCompiler;
     execute():number {
-        var projectPath = config.getProjectRoot();
         var isCompiler = this.isCompiler;
-        if (!isCompiler) {
-            var egretProperties = JSON.parse(file.read(file.join(projectPath, "egretProperties.json")));
+        if (!isCompiler) {//获取非压缩后的所有js文件
+            this.htmlPath = config.getProjectRoot();
+            var egretProperties = JSON.parse(file.read(file.join(this.htmlPath, "egretProperties.json")));
             var document_class = egretProperties["document_class"];
 
-            var egretListcontent = file.read(file.join(projectPath, "bin-debug", "lib", "egret_file_list.js"));
+            var egretListcontent = file.read(file.join(this.htmlPath, "bin-debug", "lib", "egret_file_list.js"));
             var egretList = JSON.parse(egretListcontent.substring(egretListcontent.indexOf("["), egretListcontent.indexOf("]") + 1));
             egretList = egretList.map(function(item) {
                 return "libs/" + item;
             });
 
-            var gameListcontent = file.read(file.join(projectPath, "bin-debug", "src", "game_file_list.js"));
+            var gameListcontent = file.read(file.join(this.htmlPath, "bin-debug", "src", "game_file_list.js"));
             var gameList = JSON.parse(gameListcontent.substring(gameListcontent.indexOf("["), gameListcontent.indexOf("]") + 1));
             gameList = gameList.map(function(item) {
                 return "bin-debug/src/" + item;
@@ -37,7 +38,7 @@ class ModifyHtmlsCommand implements egret.Command {
             str += "<script src=\"" + list[i] + "\"></script>\n";
         }
 
-        var htmlList = file.getDirectoryListing(file.join(projectPath));
+        var htmlList = file.getDirectoryListing(file.join(this.htmlPath));
         htmlList.map(function(htmlpath) {
             if (file.getExtension(htmlpath) == "html") {
                 var htmlContent = file.read(htmlpath);
