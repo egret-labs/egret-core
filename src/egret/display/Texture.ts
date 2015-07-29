@@ -167,7 +167,7 @@ module egret {
          * @param rect 需要转换的区域
          * @returns {any} base64字符串
          * @platform Web
-         * @version Egret 2.0.3
+         * @version Egret 2.4
          */
         public toDataURL(type:string, rect?:egret.Rectangle):string {
             throw new Error();
@@ -178,7 +178,7 @@ module egret {
          * 下载base64字符串
          * @param base64 base64字符串
          * @platform Web
-         * @version Egret 2.0.3
+         * @version Egret 2.4
          */
         download(base64:string) {
             throw new Error();

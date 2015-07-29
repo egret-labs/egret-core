@@ -57,7 +57,8 @@ module egret {
         
         /**
          * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
-         * 默认值是 true
+         * @default true
+         * @version Egret 2.4
          */
         public get bounces(): boolean {
             return this._ScrV_Props_._bounces;
