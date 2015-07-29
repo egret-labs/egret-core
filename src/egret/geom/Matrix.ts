@@ -34,7 +34,7 @@ module egret {
     var HalfPI = PI / 2;
     var PacPI = PI + HalfPI;
     var TwoPI = PI * 2;
-
+    var DEG_TO_RAD:number = Math.PI / 180;
     /**
      * @private
      */
@@ -587,6 +587,202 @@ module egret {
             return this.a == other.a && this.b == other.b &&
                 this.c == other.c && this.d == other.d &&
                 this.tx == other.tx && this.ty == other.ty;
+        }
+
+        /**
+         * @language en_US
+         * prepend matrix
+         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
+         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
+         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
+         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
+         * @param tx The distance by which to translate each point along the x axis.
+         * @param ty The distance by which to translate each point along the y axis.
+         * @returns matrix
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 前置矩阵
+         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param b 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param c 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param tx 沿 x 轴平移每个点的距离
+         * @param ty 沿 y 轴平移每个点的距离
+         * @returns 矩阵自身
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public prepend(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
+            var tx1 = this.tx;
+            if (a != 1 || b != 0 || c != 0 || d != 1) {
+                var a1 = this.a;
+                var c1 = this.c;
+                this.a = a1 * a + this.b * c;
+                this.b = a1 * b + this.b * d;
+                this.c = c1 * a + this.d * c;
+                this.d = c1 * b + this.d * d;
+            }
+            this.tx = tx1 * a + this.ty * c + tx;
+            this.ty = tx1 * b + this.ty * d + ty;
+            return this;
+        }
+
+        /**
+         * @language en_US
+         * append matrix
+         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
+         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
+         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
+         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
+         * @param tx The distance by which to translate each point along the x axis.
+         * @param ty The distance by which to translate each point along the y axis.
+         * @returns matrix
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 后置矩阵
+         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param b 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param c 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param tx 沿 x 轴平移每个点的距离
+         * @param ty 沿 y 轴平移每个点的距离
+         * @returns 矩阵自身
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public append(a:number, b:number, c:number, d:number, tx:number, ty:number):Matrix {
+            var a1 = this.a;
+            var b1 = this.b;
+            var c1 = this.c;
+            var d1 = this.d;
+            if (a != 1 || b != 0 || c != 0 || d != 1) {
+                this.a = a * a1 + b * c1;
+                this.b = a * b1 + b * d1;
+                this.c = c * a1 + d * c1;
+                this.d = c * b1 + d * d1;
+            }
+            this.tx = tx * a1 + ty * c1 + this.tx;
+            this.ty = tx * b1 + ty * d1 + this.ty;
+            return this;
+        }
+
+        /**
+         * @language en_US
+         * Given a point in the pretransform coordinate space, returns the coordinates of that point after the transformation occurs.
+         * Unlike the standard transformation applied using the transformPoint() method, the deltaTransformPoint() method's transformation does not consider the translation parameters tx and ty.
+         * @param point The point for which you want to get the result of the matrix transformation.
+         * @returns The point resulting from applying the matrix transformation.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果给定预转换坐标空间中的点，则此方法返回发生转换后该点的坐标。
+         * 与使用 transformPoint() 方法应用的标准转换不同，deltaTransformPoint() 方法的转换不考虑转换参数 tx 和 ty。
+         * @param point 想要获得其矩阵转换结果的点
+         * @returns 由应用矩阵转换所产生的点
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public deltaTransformPoint(point:Point):Point {
+            var self = this;
+            var x = self.a * point.x + self.c * point.y;
+            var y = self.b * point.x + self.d * point.y;
+            return new egret.Point(x, y);
+        }
+
+        /**
+         * @language en_US
+         * Returns a text value listing the properties of the Matrix object.
+         * @returns A string containing the values of the properties of the Matrix object: a, b, c, d, tx, and ty.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回将 Matrix 对象表示的几何转换应用于指定点所产生的结果。
+         * @returns 一个字符串，它包含 Matrix 对象的属性值：a、b、c、d、tx 和 ty。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public toString():string {
+            return "(a=" + this.a + ", b=" + this.b + ", c=" + this.c + ", d=" + this.d + ", tx=" + this.tx + ", ty=" + this.ty + ")";
+        }
+
+        /**
+         * @language en_US
+         * Includes parameters for scaling, rotation, and translation. When applied to a matrix it sets the matrix's values based on those parameters.
+         * @param scaleX The factor by which to scale horizontally.
+         * @param scaleY The factor by which scale vertically.
+         * @param rotation The amount to rotate, in radians.
+         * @param tx The number of pixels to translate (move) to the right along the x axis.
+         * @param ty The number of pixels to translate (move) down along the y axis.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 包括用于缩放、旋转和转换的参数。当应用于矩阵时，该方法会基于这些参数设置矩阵的值。
+         * @param scaleX 水平缩放所用的系数
+         * @param scaleY 垂直缩放所用的系数
+         * @param rotation 旋转量（以弧度为单位）
+         * @param tx 沿 x 轴向右平移（移动）的像素数
+         * @param ty 沿 y 轴向下平移（移动）的像素数
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public createBox(scaleX:number, scaleY:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+            var self = this;
+            if (rotation !== 0) {
+                rotation = rotation / DEG_TO_RAD;
+                var u = egret.NumberUtils.cos(rotation);
+                var v = egret.NumberUtils.sin(rotation);
+                self.a = u * scaleX;
+                self.b = v * scaleY;
+                self.c = -v * scaleX;
+                self.d = u * scaleY;
+            } else {
+                self.a = scaleX;
+                self.b = 0;
+                self.c = 0;
+                self.d = scaleY;
+            }
+            self.tx = tx;
+            self.ty = ty;
+        }
+
+        /**
+         * @language en_US
+         * Creates the specific style of matrix expected by the beginGradientFill() and lineGradientStyle() methods of the Graphics class.
+         * Width and height are scaled to a scaleX/scaleY pair and the tx/ty values are offset by half the width and height.
+         * @param width The width of the gradient box.
+         * @param height The height of the gradient box.
+         * @param rotation The amount to rotate, in radians.
+         * @param tx The distance, in pixels, to translate to the right along the x axis. This value is offset by half of the width parameter.
+         * @param ty The distance, in pixels, to translate down along the y axis. This value is offset by half of the height parameter.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建 Graphics 类的 beginGradientFill() 和 lineGradientStyle() 方法所需的矩阵的特定样式。
+         * 宽度和高度被缩放为 scaleX/scaleY 对，而 tx/ty 值偏移了宽度和高度的一半。
+         * @param width 渐变框的宽度
+         * @param height 渐变框的高度
+         * @param rotation 旋转量（以弧度为单位）
+         * @param tx 沿 x 轴向右平移的距离（以像素为单位）。此值将偏移 width 参数的一半
+         * @param ty 沿 y 轴向下平移的距离（以像素为单位）。此值将偏移 height 参数的一半
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public createGradientBox(width:number, height:number, rotation:number = 0, tx:number = 0, ty:number = 0):void {
+            this.createBox(width / 1638.4, height / 1638.4, rotation, tx + width / 2, ty + height / 2);
         }
 
         /**
