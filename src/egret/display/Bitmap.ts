@@ -297,7 +297,7 @@ module egret {
          * Note:If the image is loaded from cross origin,that we can't access to the pixel data,so it might cause
          * the pixelHitTest property invalid.
          * @default false
-         * @version Lark 1.0
+         * @version Egret 2.0
          * @platform Web,Native
          */
         /**
@@ -305,7 +305,7 @@ module egret {
          * 是否开启精确像素碰撞。设置为true显示对象本身的透明区域将能够被穿透。<br/>
          * 注意：若图片资源是以跨域方式从外部服务器加载的，将无法访问图片的像素数据，而导致此属性失效。
          * @default false
-         * @version Lark 1.0
+         * @version Egret 2.0
          * @platform Web,Native
          */
         public get pixelHitTest():boolean {
