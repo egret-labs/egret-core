@@ -33,7 +33,7 @@ module egret.web {
     /**
      * @private
      */
-    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle, smoothing?:boolean):egret.sys.Surface {
+    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle):egret.sys.Surface {
         var surface = sys.surfaceFactory.create(true);
         if (!surface) {
             return null;
@@ -62,7 +62,7 @@ module egret.web {
         surface["style"]["height"] = iHeight + "px";
 
         var bitmapData = texture;
-        surface.renderContext.imageSmoothingEnabled = smoothing;
+        surface.renderContext.imageSmoothingEnabled = false;
         var offsetX:number = Math.round(bitmapData._offsetX);
         var offsetY:number = Math.round(bitmapData._offsetY);
         var bitmapWidth:number = bitmapData._bitmapWidth;
@@ -76,9 +76,9 @@ module egret.web {
     /**
      * @private
      */
-    function toDataURL(type:string, rect?:egret.Rectangle, smoothing?:boolean):string {
+    function toDataURL(type:string, rect?:egret.Rectangle):string {
         try {
-            var surface = convertImageToCanvas(this, rect, smoothing);
+            var surface = convertImageToCanvas(this, rect);
             var result = surface.toDataURL(type);
 
             sys.surfaceFactory.release(surface);
