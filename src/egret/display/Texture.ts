@@ -165,12 +165,11 @@ module egret {
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如  "image/png"
          * @param rect 需要转换的区域
-         * @param smoothing 转换数据是否需要平滑处理
          * @returns {any} base64字符串
          * @platform Web
          * @version Egret 2.0.3
          */
-        public toDataURL(type:string, rect?:egret.Rectangle, smoothing?:boolean):string {
+        public toDataURL(type:string, rect?:egret.Rectangle):string {
             throw new Error();
         }
 

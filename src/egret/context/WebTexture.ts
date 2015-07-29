@@ -33,10 +33,7 @@ module egret.web {
     /**
      * @private
      */
-    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle, smoothing?:boolean):HTMLCanvasElement {
-        var imageSmoothingEnabled = egret.RendererContext.imageSmoothingEnabled;
-        egret.RendererContext.imageSmoothingEnabled = smoothing;
-
+    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle):HTMLCanvasElement {
         var surface = document.createElement("canvas");
         var renderContext = egret.RendererContext.createRendererContext(surface);
 
@@ -75,16 +72,15 @@ module egret.web {
         RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX + rect.x / scale , texture._bitmapY + rect.y / scale,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
-        egret.RendererContext.imageSmoothingEnabled = imageSmoothingEnabled;
         return surface;
     }
 
     /**
      * @private
      */
-    function toDataURL(type:string, rect?:egret.Rectangle, smoothing?:boolean):string {
+    function toDataURL(type:string, rect?:egret.Rectangle):string {
         try {
-            return convertImageToCanvas(this, rect, smoothing).toDataURL(type);
+            return convertImageToCanvas(this, rect).toDataURL(type);
         }
         catch (e) {
             egret.$error(1033);
