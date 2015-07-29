@@ -250,12 +250,16 @@ module egret {
          * Convert base64 string, if the picture across domains, or null
          * @param type Type conversions, such as "image / png"
          * @returns {any} base64 string
+         * @platform Web
+         * @version Egret 2.0.3
          */
         /**
          * @language zh_CN
          * 转换成base64字符串，如果图片跨域，则返回null
          * @param type 转换的类型，如  "image/png"
          * @returns {any} base64字符串
+         * @platform Web
+         * @version Egret 2.0.3
          */
         public toDataURL(type:string):string {
             throw new Error();
@@ -272,6 +276,8 @@ module egret {
          * @language zh_CN
          * 下载base64字符串
          * @param base64 base64字符串
+         * @platform Web
+         * @version Egret 2.0.3
          */
         download(base64:string) {
             throw new Error();
