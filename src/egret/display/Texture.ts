@@ -161,6 +161,28 @@ module egret {
 
         }
 
+        /**
+         * 转换成base64字符串，如果图片跨域，则返回null
+         * @param type 转换的类型，如  "image/png"
+         * @returns {any} base64字符串
+         * @platform Web
+         * @version Egret 2.0.3
+         */
+        public toDataURL(type:string):string {
+            throw new Error();
+        }
+
+        /**
+         * @private
+         * 下载base64字符串
+         * @param base64 base64字符串
+         * @platform Web
+         * @version Egret 2.0.3
+         */
+        download(base64:string) {
+            throw new Error();
+        }
+
         public _drawForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
             var bitmapData = this._bitmapData;

@@ -50,6 +50,17 @@ module egret {
         }
 
         /**
+         * 转换成base64字符串，如果有包含的图片跨域，则返回null
+         * @param type 转换的类型，如  "image/png"
+         * @returns {any} base64字符串
+         * @platform Web
+         * @version Egret 2.0.3
+         */
+        toDataURL(type:string):string {
+            throw new Error();
+        }
+
+        /**
          * @private
          */
         public init():void {
