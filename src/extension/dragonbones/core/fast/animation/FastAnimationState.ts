@@ -29,48 +29,14 @@
 
 module dragonBones {
 
-	export class FastAnimationState{
-//		private static var _pool:Vector.<FastAnimationState> = new Vector.<FastAnimationState>;
-//		
-//		/** @private */
-//		dragonBones_internal static function borrowObject():FastAnimationState
-//		{
-//			if(_pool.length == 0)
-//			{
-//				return new FastAnimationState();
-//			}
-//			return _pool.pop();
-//		}
-//		
-//		/** @private */
-//		dragonBones_internal static function returnObject(animationState:FastAnimationState):void
-//		{
-//			animationState.dispose();
-//			
-//			if(_pool.indexOf(animationState) < 0)
-//			{
-//				_pool[_pool.length] = animationState;
-//			}
-//		}
-//		
-//		/** @private */
-//		dragonBones_internal static function clear():void
-//		{
-//			var i:int = _pool.length;
-//			while(i --)
-//			{
-//				_pool[i].clear();
-//			}
-//			_pool.length = 0;
-//		}
-		
+	export class FastAnimationState implements IAnimationState{
 		
 		public animationCache:AnimationCache;
 		/**
 		 * If auto genterate tween between keyframes.
 		 */
 		public autoTween:boolean;
-		public progress:number;
+		private _progress:number;
 		public _armature:FastArmature;
 		
 		private _boneTimelineStateList:Array<FastBoneTimelineState> = [];
@@ -104,11 +70,40 @@ module dragonBones {
 		}
 		
 		public dispose():void{
-			this.resetTimelineStateList();
+			this._resetTimelineStateList();
 			this._armature = null;
 		}
 		
-		public resetTimelineStateList():void{
+		/**
+		 * Play the current animation. 如果动画已经播放完毕, 将不会继续播放.
+		 */
+		public play():FastAnimationState
+		{
+			this._isPlaying = true;
+			return this;
+		}
+		
+		/**
+		 * Stop playing current animation.
+		 */
+		public stop():FastAnimationState
+		{
+			this._isPlaying = false;
+			return this;
+		}
+		
+		public setCurrentTime(value:number):FastAnimationState
+		{
+			if(value < 0 || isNaN(value))
+			{
+				value = 0;
+			}
+			this._time = value;
+			this._currentTime = this._time * 1000;
+			return this;
+		}
+
+		public _resetTimelineStateList():void{
 			var i:number = this._boneTimelineStateList.length;
 			while(i --){
 				FastBoneTimelineState.returnObject(this._boneTimelineStateList[i]);
@@ -120,10 +115,11 @@ module dragonBones {
 				FastSlotTimelineState.returnObject(this._slotTimelineStateList[i]);
 			}
 			this._slotTimelineStateList.length = 0;
+			this.name = null;
 		}
 		
 		/** @private */
-		public fadeIn(aniData:AnimationData, playTimes:number, timeScale:number, fadeTotalTime:number):void{
+		public _fadeIn(aniData:AnimationData, playTimes:number, timeScale:number, fadeTotalTime:number):void{
 			this.animationData = aniData;
 			
 			this.name = this.animationData.name;
@@ -151,13 +147,13 @@ module dragonBones {
 			this._listenCompleteEvent = this._armature.hasEventListener(AnimationEvent.COMPLETE);
 			
 			if(this._armature.enableCache && this.animationCache && this._fading && this._boneTimelineStateList){
-				this.updateTransformTimeline(this.progress, false);
+				this.updateTransformTimeline(this.progress);
 			}
 			
 			this._time = 0;
-			this.progress = 0;
+			this._progress = 0;
 			
-			this.updateTimelineStateList();
+			this._updateTimelineStateList();
 			this.hideBones();
 			return;
 		}
@@ -166,8 +162,8 @@ module dragonBones {
 		 * @private
 		 * Update timeline state based on mixing transforms and clip.
 		 */
-		public updateTimelineStateList():void{	
-			this.resetTimelineStateList();
+		public _updateTimelineStateList():void{	
+			this._resetTimelineStateList();
 			var timelineName:string;
 			var length:number = this.animationData.timelineList.length;
 			for(var i:number = 0;i < length;i++){
@@ -195,14 +191,14 @@ module dragonBones {
 		}
 		
 		/** @private */
-		public advanceTime(passedTime:number, loop:boolean):void{
+		public _advanceTime(passedTime:number):void{
 			passedTime *= this._timeScale;
 			if(this._fading){
 				//计算progress
 				this._time += passedTime;
-				this.progress = this._time / this._fadeTotalTime;
-				if(this.progress >= 1){
-					this.progress = 0;
+				this._progress = this._time / this._fadeTotalTime;
+				if(this._progress >= 1){
+					this._progress = 0;
 					this._time = 0;
 					this._fading = false;
 				}
@@ -223,16 +219,17 @@ module dragonBones {
 				}
 			}
 			else{
-				this.advanceTimelinesTime(passedTime, loop);
+				this.advanceTimelinesTime(passedTime);
 			}
 		}
 		
-		private advanceTimelinesTime(passedTime:number, loop:boolean):void{
+		private advanceTimelinesTime(passedTime:number):void{
 			this._time += passedTime;
 			
 			//计算是否已经播放完成isThisComplete
 
 			var loopCompleteFlg:boolean = false;
+			var completeFlg:boolean = false;
 			var isThisComplete:boolean = false;
 			var currentPlayTimes:number = 0;
 			var currentTime:number = this._time * 1000;
@@ -241,16 +238,16 @@ module dragonBones {
 			{
 				isThisComplete = false;
 				
-				this.progress = currentTime / this._totalTime;
+				this._progress = currentTime / this._totalTime;
 				currentPlayTimes = Math.ceil(this.progress) || 1;
-				this.progress -= Math.floor(this.progress);
+				this._progress -= Math.floor(this.progress);
 				currentTime %= this._totalTime;
 			}
 			else{
 				currentPlayTimes = this._playTimes;
 				currentTime = this._totalTime;
 				isThisComplete = true;
-				this.progress = 1;
+				this._progress = 1;
 			}
 			
 			this._isComplete = isThisComplete;
@@ -259,7 +256,7 @@ module dragonBones {
 				this.animationCache.update(this.progress);
 			}
 			else{
-				this.updateTransformTimeline(this.progress, loop);
+				this.updateTransformTimeline(this.progress);
 			}
 			
 			//update main timeline
@@ -271,7 +268,10 @@ module dragonBones {
 					}
 					this._currentPlayTimes = currentPlayTimes;
 				}
-				
+				if(this._isComplete)
+				{
+					completeFlg = true;
+				}
 				this._lastTime = this._currentTime;
 				this._currentTime = currentTime;
 				this.updateMainTimeline(isThisComplete);
@@ -279,19 +279,19 @@ module dragonBones {
 			
 			//抛事件
 			var event:AnimationEvent;
-			if(this._listenCompleteEvent && this._isComplete){
+			if(this._listenCompleteEvent && completeFlg){
 				event = new AnimationEvent(AnimationEvent.COMPLETE);
 				event.animationState = this;
-				this._armature._eventList.push(event);
+				this._armature._addEvent(event);
 			}
 			else if(this._listenLoopCompleteEvent && loopCompleteFlg){
 				event = new AnimationEvent(AnimationEvent.LOOP_COMPLETE);
 				event.animationState = this;
-				this._armature._eventList.push(event);
+				this._armature._addEvent(event);
 			}
 		}
 		
-		private updateTransformTimeline(progress:number, loop:boolean):void{
+		private updateTransformTimeline(progress:number):void{
 			var i:number = this._boneTimelineStateList.length;
 			var boneTimeline:FastBoneTimelineState;
 			var slotTimeline:FastSlotTimelineState;
@@ -301,7 +301,7 @@ module dragonBones {
 				//update boneTimelie
 				while(i--){
 					boneTimeline = this._boneTimelineStateList[i];
-					boneTimeline.update(progress, loop);
+					boneTimeline.update(progress);
 					this._isComplete = boneTimeline._isComplete && this._isComplete;
 					
 				}
@@ -311,7 +311,7 @@ module dragonBones {
 				//update slotTimelie
 				while(i--){
 					slotTimeline = this._slotTimelineStateList[i];
-					slotTimeline.update(progress, loop);
+					slotTimeline.update(progress);
 					this._isComplete = slotTimeline._isComplete && this._isComplete;
 
 				}
@@ -320,7 +320,7 @@ module dragonBones {
 				//update boneTimelie
 				while(i--){
 					boneTimeline = this._boneTimelineStateList[i];
-					boneTimeline.update(progress, loop);
+					boneTimeline.update(progress);
 				}
 				
 				i = this._slotTimelineStateList.length;
@@ -328,7 +328,7 @@ module dragonBones {
 				//update slotTimelie
 				while(i--){
 					slotTimeline = this._slotTimelineStateList[i];
-					slotTimeline.update(progress, loop);
+					slotTimeline.update(progress);
 				}
 			}
 		}
@@ -375,23 +375,23 @@ module dragonBones {
 			}
 		}
 		
-		private setTimeScale(value:number):void{
+		private setTimeScale(value:number):FastAnimationState{
 			if(isNaN(value) || value == Infinity){
 				value = 1;
 			}
 			this._timeScale = value;
-			return;
+			return this;
 		}
 		
-		private setPlayTimes(value:number = 0):void{
+		private setPlayTimes(value:number = 0):FastAnimationState{
 			//如果动画只有一帧  播放一次就可以
 			if(Math.round(this._totalTime * 0.001 * this.animationData.frameRate) < 2){
-				this._playTimes = value < 0?-1:1;
+				this._playTimes = 1;
 			}
 			else{
-				this._playTimes = value < 0?-value:value;
+				this._playTimes = value;
 			}
-			return;
+			return this;
 		}
 		
 		/**
@@ -451,6 +451,11 @@ module dragonBones {
 					slot.hideSlots();
 				}
 			}
+		}
+
+		public get progress():number
+		{
+			return this._progress;
 		}
 	}
 }

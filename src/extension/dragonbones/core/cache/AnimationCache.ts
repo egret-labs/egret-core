@@ -123,7 +123,7 @@ module dragonBones {
 			
 		
 		public update(progress:number):void{
-			var frameIndex:number = Math.floor(progress * this.frameNum);
+			var frameIndex:number = Math.floor(progress * (this.frameNum - 1));
 			
 //			var boneTimelineCache:BoneTimelineCache;
 //			for(var i:int = 0, length:int = boneTimelineCacheList.length; i < length; i++)

@@ -96,7 +96,7 @@ module dragonBones {
         }
 
         /**
-         * 根据子纹理的名字获取子纹理所在的矩形区域
+         * 根据子纹理的名字获取子纹理所在的实际矩形区域
          * @param subTextureName 子纹理的名字
          * @returns {*} 子纹理所在的矩形区域
          */
@@ -105,6 +105,20 @@ module dragonBones {
             if(textureData && textureData instanceof TextureData)
             {
                 return textureData.region;
+            }
+            return null;
+        }
+
+        /**
+         * 根据子纹理的名字获取子纹理所在的真实矩形区域
+         * @param subTextureName 子纹理的名字
+         * @returns {*} 子纹理所在的矩形区域
+         */
+        public getFrame(subTextureName:string):Rectangle {
+            var textureData:TextureData = this._textureDatas[subTextureName];
+            if(textureData && textureData instanceof TextureData)
+            {
+                return textureData.frame;
             }
             return null;
         }

@@ -161,6 +161,17 @@ module dragonBones {
 		}
 		
 		private clear():void{
+			
+			this._resetTimelineStateList();
+			
+			this._boneMasks.length = 0;
+			
+			this._armature = null;
+			this._clip = null;
+		}
+
+		public _resetTimelineStateList():void
+		{
 			var i:number = this._timelineStateList.length;
 			while(i --){
 				TimelineState._returnObject(this._timelineStateList[i]);
@@ -172,11 +183,6 @@ module dragonBones {
 				SlotTimelineState._returnObject(this._slotTimelineStateList[i])
 			}
 			this._slotTimelineStateList.length = 0;
-
-			this._boneMasks.length = 0;
-			
-			this._armature = null;
-			this._clip = null;
 		}
 		
 //骨架装配

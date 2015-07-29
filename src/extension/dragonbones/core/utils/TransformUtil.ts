@@ -151,5 +151,14 @@ module dragonBones {
 			}
 			return radian;
 		}
+        /**
+         *  确保角度在-180到180之间
+         */
+        public static normalizeRotation(rotation:number):number
+        {
+            rotation = (rotation + Math.PI)%(2*Math.PI);
+            rotation = rotation > 0 ? rotation : 2*Math.PI + rotation;
+            return rotation - Math.PI;
+        }
 	}
 }

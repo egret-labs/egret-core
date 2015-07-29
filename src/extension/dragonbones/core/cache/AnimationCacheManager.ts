@@ -30,7 +30,7 @@
 module dragonBones {
 
 	export class AnimationCacheManager{
-		public cacheGeneratorArmature:FastArmature
+		public cacheGeneratorArmature:ICacheableArmature
 		public armatureData:ArmatureData;
 		public frameRate:number;
 		public animationCacheDic:any = {};
@@ -156,18 +156,29 @@ module dragonBones {
 			if(!animationCache){
 				return;
 			}
-			this.cacheGeneratorArmature.animation.gotoAndPlay(animationName,0,-1,1);
-			var animationState:FastAnimationState = this.cacheGeneratorArmature.animation.animationState;
+
+			var animationState:IAnimationState = this.cacheGeneratorArmature.getAnimation().animationState;
 			var passTime:number = 1 / this.frameRate;
-			this.cacheGeneratorArmature._disableEventDispatch = true;
-			this.cacheGeneratorArmature._cacheLoop = loop;
+
+			if(loop)
+			{
+				this.cacheGeneratorArmature.getAnimation().gotoAndPlay(animationName,0,-1,0);
+			}
+			else
+			{
+				this.cacheGeneratorArmature.getAnimation().gotoAndPlay(animationName,0,-1,1);
+			}
+			var tempEnableEventDispatch:boolean = this.cacheGeneratorArmature.enableEventDispatch;
+			this.cacheGeneratorArmature.enableEventDispatch = false;
+
+			var lastProgress:number;
 			do{
+				lastProgress = animationState.progress;
 				this.cacheGeneratorArmature.advanceTime(passTime);
 				animationCache.addFrame();
-			}while (!animationState.isComplete);
-			this.cacheGeneratorArmature._cacheLoop = false;
-			this.cacheGeneratorArmature._disableEventDispatch = false;
-			this.cacheGeneratorArmature._eventList.length = 0;
+			}while (animationState.progress >= lastProgress && animationState.progress < 1);
+
+			this.cacheGeneratorArmature.enableEventDispatch = tempEnableEventDispatch;
 			this.resetCacheGeneratorArmature();
 			this.cacheGeneratorArmature.enableCache = temp;
 		}

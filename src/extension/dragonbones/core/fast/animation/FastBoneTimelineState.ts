@@ -162,14 +162,14 @@ module dragonBones {
 		}
 		
 		/** @private */
-		public update(progress:number, loop:boolean):void{
+		public update(progress:number):void{
 			if(this._updateMode == 1){
 				this._updateMode = 0;
 				this.updateSingleFrame();
 				
 			}
 			else if(this._updateMode == -1){
-				this.updateMultipleFrame(progress, loop);
+				this.updateMultipleFrame(progress);
 			}
 		}
 		
@@ -185,7 +185,7 @@ module dragonBones {
 			this._bone.invalidUpdate();
 		}
 		
-		private updateMultipleFrame(progress:number, loop:boolean):void{
+		private updateMultipleFrame(progress:number):void{
 			var currentPlayTimes:number = 0;
 			progress /= this._timelineData.scale;
 			progress += this._timelineData.offset;
@@ -269,7 +269,7 @@ module dragonBones {
 				
 				if(currentFrame){
 					this._bone.arriveAtFrame(currentFrame, this._animationState);
-					this.updateToNextFrame(currentPlayTimes, loop);
+					this.updateToNextFrame(currentPlayTimes);
 				}
 				
 				if(this._tweenTransform){
@@ -280,7 +280,7 @@ module dragonBones {
 
 		}
 		
-		private updateToNextFrame(currentPlayTimes:number = 0, loop:boolean = false):void{
+		private updateToNextFrame(currentPlayTimes:number = 0):void{
 			var nextFrameIndex:number = this._currentFrameIndex + 1;
 			if(nextFrameIndex >= this._timelineData.frameList.length){
 				nextFrameIndex = 0;
@@ -288,7 +288,7 @@ module dragonBones {
 			var currentFrame:TransformFrame = <TransformFrame><any> (this._timelineData.frameList[this._currentFrameIndex]);
 			var nextFrame:TransformFrame = <TransformFrame><any> (this._timelineData.frameList[nextFrameIndex]);
 			var tweenEnabled:boolean = false;
-			if(!loop && nextFrameIndex == 0 &&( this._animationState.playTimes &&
+			if( nextFrameIndex == 0 &&( this._animationState.playTimes &&
 										this._animationState.currentPlayTimes >= this._animationState.playTimes && 
 										((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset)* this._timelineData.scale > 0.999999
 				)){
@@ -300,7 +300,7 @@ module dragonBones {
 				if(isNaN(this._tweenEasing)){
 					this._tweenEasing = currentFrame.tweenEasing;
 					this._tweenCurve = currentFrame.curve;
-					if(isNaN(this._tweenEasing))    //frame no tween
+					if(isNaN(this._tweenEasing) && this._tweenCurve == null)    //frame no tween
 					{
 						tweenEnabled = false;
 					}
@@ -321,7 +321,7 @@ module dragonBones {
 			else{
 				this._tweenEasing = currentFrame.tweenEasing;
 				this._tweenCurve = currentFrame.curve;
-				if(isNaN(this._tweenEasing) || this._tweenEasing == 10)    //frame no tween
+				if((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null)   //frame no tween
 				{
 					this._tweenEasing = NaN;
 					tweenEnabled = false;
@@ -342,6 +342,7 @@ module dragonBones {
 				this._durationTransform.scaleX = nextFrame.transform.scaleX - currentFrame.transform.scaleX + nextFrame.scaleOffset.x;
 				this._durationTransform.scaleY = nextFrame.transform.scaleY - currentFrame.transform.scaleY + nextFrame.scaleOffset.y;
 				
+				this._durationTransform.normalizeRotation();
 				if(nextFrameIndex == 0){
 					this._durationTransform.skewX = TransformUtil.formatRadian(this._durationTransform.skewX);
 					this._durationTransform.skewY = TransformUtil.formatRadian(this._durationTransform.skewY);
@@ -378,7 +379,7 @@ module dragonBones {
 			if (this._tweenCurve){
 				progress = this._tweenCurve.getValueByProgress(progress);
 			}
-			if(this._tweenEasing){
+			else if(this._tweenEasing){
 				progress = MathUtil.getEaseValue(progress, this._tweenEasing);
 			}
 			

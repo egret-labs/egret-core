@@ -91,7 +91,7 @@ module dragonBones {
 		public _origin:DBTransform;
 		
 		/** @private */
-//		protected var _visible:Boolean;
+		public _visible:boolean;
 		
 		/** @private */
 		public _parent:FastBone;
@@ -107,7 +107,7 @@ module dragonBones {
 			this._global = new DBTransform();
 			this._origin = new DBTransform();
 			
-//			_visible = true;
+			this._visible = true;
 			
 			this.armature = null;
 			this._parent = null;
@@ -234,14 +234,14 @@ module dragonBones {
 			return this._parent;
 		}
 		
-//		public function get visible():Boolean
-//		{
-//			return _visible;
-//		}
-//		public function set visible(value:Boolean):void
-//		{
-//			_visible = value;
-//		}
+		public get visible():boolean
+		{
+			return this._visible;
+		}
+		public set visible(value:boolean)
+		{
+			this._visible = value;
+		}
 		
 		public set frameCache(cache:FrameCache){
 			this._frameCache = cache;

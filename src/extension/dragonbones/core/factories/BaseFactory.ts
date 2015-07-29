@@ -537,7 +537,7 @@ module dragonBones {
 				slotData = slotDataList[i];
 				slot = this._generateFastSlot();
 				slot.initWithSlotData(slotData);
-				armature.addSlot(slot, slotData.parent);
+				
 				
 				var l:number = slotData.displayDataList.length;
 				while(l--){
@@ -547,6 +547,7 @@ module dragonBones {
 						case DisplayData.ARMATURE:
 							var childArmature:FastArmature = this.buildFastArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlas, skinName);
 							displayList[l] = childArmature;
+							slot.hasChildArmature = true;
 							break;
 						
 						case DisplayData.IMAGE:
@@ -561,8 +562,8 @@ module dragonBones {
 				var length1:number = displayList.length;
 				for(var i1:number = 0;i1 < length1;i1++){
 					var displayObject:any = displayList[i1];
-					if(displayObject instanceof Armature){
-						displayObject = (<Armature><any> displayObject).display;
+					if(displayObject instanceof FastArmature){
+						displayObject = (<FastArmature><any> displayObject).display;
 					}
 					
 					if(displayObject.hasOwnProperty("name")){
@@ -575,6 +576,7 @@ module dragonBones {
 				}
 				//==================================================
 				slot.initDisplayList(displayList.concat());
+				armature.addSlot(slot, slotData.parent);
 				slot._changeDisplayIndex(slotData.displayIndex);
 			}
 		}

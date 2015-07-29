@@ -45,7 +45,7 @@ module dragonBones {
 		/**
 		 * The instance dispatch sound event.
 		 */
-		//private static const _soundManager:SoundEventManager = SoundEventManager.getInstance();
+		private static _soundManager:SoundEventManager = SoundEventManager.getInstance();
 
         /**
          * 骨架名。
@@ -237,6 +237,17 @@ module dragonBones {
 			this._lockDispose = false;
 			if(this._delayDispose){
 				this.dispose();
+			}
+		}
+
+		public resetAnimation():void
+		{
+			this.animation.stop();
+			this.animation._resetAnimationStateList();
+			
+			for(var i:number = 0,len:number = this._boneList.length; i < len; i++)
+			{
+				this._boneList[i]._removeAllStates();
 			}
 		}
 
@@ -516,16 +527,16 @@ module dragonBones {
 				frameEvent.frameLabel = frame.event;
 				this._eventList.push(frameEvent);
 			}
-			/*
-			if(frame.sound && _soundManager.hasEventListener(SoundEvent.SOUND))
+			
+			if(frame.sound && Armature._soundManager.hasEventListener(SoundEvent.SOUND))
 			{
 				var soundEvent:SoundEvent = new SoundEvent(SoundEvent.SOUND);
 				soundEvent.armature = this;
 				soundEvent.animationState = animationState;
 				soundEvent.sound = frame.sound;
-				_soundManager.dispatchEvent(soundEvent);
+				Armature._soundManager.dispatchEvent(soundEvent);
 			}
-			*/
+			
 			//[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
 			//后续会扩展更多的action，目前只有gotoAndPlay的含义
 			if(frame.action){
@@ -537,6 +548,11 @@ module dragonBones {
 
 		private sortSlot(slot1:Slot, slot2:Slot):number{
 			return slot1.zOrder < slot2.zOrder?1: -1;
+		}
+
+		public getAnimation():any
+		{
+			return this._animation;
 		}
 
 	}

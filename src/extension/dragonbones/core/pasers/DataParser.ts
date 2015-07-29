@@ -419,6 +419,15 @@ module dragonBones {
 			outputFrame.action = frameObject[ConstValues.A_ACTION];
 			outputFrame.event = frameObject[ConstValues.A_EVENT];
 			outputFrame.sound = frameObject[ConstValues.A_SOUND];
+			var curve:any = frameObject[ConstValues.A_CURVE];
+			if(curve != null && curve.length == 4)
+			{
+				outputFrame.curve = new CurveData();
+				outputFrame.curve.pointList = [new Point(curve[0],
+														 curve[1]),
+											   new Point(curve[2],
+														 curve[3])];
+			}
 		}
 		
 		private static parseTransform(transformObject:any, transform:DBTransform, pivot:Point = null):void{

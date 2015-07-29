@@ -47,9 +47,6 @@ module dragonBones {
 		
 		public _blendMode:string;
 		
-		/** @private */
-		public _timelineState:FastSlotTimelineState;
-		
 		public hasChildArmature:boolean;
 		public constructor(self:FastSlot){
 			super();
@@ -218,8 +215,8 @@ module dragonBones {
 				}
 				this._updateTransform();
 				
-				if(this._currentDisplay instanceof FastArmature){
-					var targetArmature:FastArmature = <FastArmature><any> (this._currentDisplay);
+				if(display instanceof FastArmature){
+					var targetArmature:FastArmature = <FastArmature><any> (display);
 					
 					if(	this.armature &&
 						this.armature.animation.animationState &&
@@ -233,6 +230,17 @@ module dragonBones {
 			}
 		}
 		
+
+		/** @private */
+		public set visible(value:boolean)
+		{
+			if(this._visible != value)
+			{
+				this._visible = value;
+				this._updateDisplayVisible(this._visible);
+			}
+		}
+
 		/**
 		 * The DisplayObject list belonging to this Slot instance (display or armature). Replace it to implement switch texture.
 		 */
@@ -280,6 +288,10 @@ module dragonBones {
 			return this._displayList[this._currentDisplayIndex] instanceof FastArmature ? this._displayList[this._currentDisplayIndex] : null;
 		}
 		
+		public set childArmature(value:FastArmature)
+		{
+			this.display = value;
+		}
 		/**
 		 * zOrder. Support decimal for ensure dynamically added slot work toghther with animation controled slot.  
 		 * @return zOrder.
@@ -318,7 +330,7 @@ module dragonBones {
 		}
 		
 		public get dispalyIndex():number{
-			return this._currentDisplayIndex
+			return this._currentDisplayIndex;
 		}
 		
 		public get colorChanged():boolean{
@@ -437,7 +449,7 @@ module dragonBones {
 			if(frame.action) {
 				var targetArmature:FastArmature = this.childArmature;
 				if (targetArmature){
-					targetArmature.animation.gotoAndPlay(frame.action);
+					targetArmature.getAnimation().gotoAndPlay(frame.action);
 				}
 			}
 		}

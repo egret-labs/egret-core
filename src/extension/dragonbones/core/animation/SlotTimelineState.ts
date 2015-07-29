@@ -93,6 +93,7 @@ module dragonBones {
 		private _currentFrameDuration:number = 0;
 		
 		private _tweenEasing:number;
+		private _tweenCurve:CurveData;
 		private _tweenColor:boolean;
 		
 		private _rawAnimationScale:number;
@@ -323,7 +324,8 @@ module dragonBones {
 				this._tweenEasing = this._animationState.clip.tweenEasing;
 				if(isNaN(this._tweenEasing)){
 					this._tweenEasing = currentFrame.tweenEasing;
-					if(isNaN(this._tweenEasing))    //frame no tween
+					this._tweenCurve = currentFrame.curve;
+					if(isNaN(this._tweenEasing) && this._tweenCurve == null)    //frame no tween
 					{
 						tweenEnabled = false;
 					}
@@ -343,7 +345,8 @@ module dragonBones {
 			}
 			else{
 				this._tweenEasing = currentFrame.tweenEasing;
-				if(isNaN(this._tweenEasing) || this._tweenEasing == 10)    //frame no tween
+				this._tweenCurve = currentFrame.curve;
+				if((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null)  //frame no tween
 				{
 					this._tweenEasing = NaN;
 					tweenEnabled = false;
@@ -438,14 +441,19 @@ module dragonBones {
 		}
 		
 		private updateTween():void{
-			var progress:number = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
-			if(this._tweenEasing){
-				progress = MathUtil.getEaseValue(progress, this._tweenEasing);
-			}
-			
+						
 			var currentFrame:SlotFrame = <SlotFrame><any> (this._timelineData.frameList[this._currentFrameIndex]);
 			
 			if(this._tweenColor && this._animationState.displayControl){
+
+				var progress:number = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
+				if(this._tweenCurve != null)
+				{
+					progress = this._tweenCurve.getValueByProgress(progress);
+				}
+				else if(this._tweenEasing){
+					progress = MathUtil.getEaseValue(progress, this._tweenEasing);
+				}
 				if(currentFrame.color){
 					this._slot._updateDisplayColor(
 						currentFrame.color.alphaOffset + this._durationColor.alphaOffset * progress,

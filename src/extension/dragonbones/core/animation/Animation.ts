@@ -90,12 +90,10 @@ module dragonBones {
 			if(!this._armature){
 				return;
 			}
-			var i:number = this._animationStateList.length;
-			while(i --){
-				AnimationState._returnObject(this._animationStateList[i]);
-			}
+			
+			this._resetAnimationStateList();
+			
 			this._animationList.length = 0;
-			this._animationStateList.length = 0;
 			
 			this._armature = null;
 			this._animationDataList = null;
@@ -103,6 +101,18 @@ module dragonBones {
 			this._animationStateList = null;
 		}
 		
+		public _resetAnimationStateList():void
+		{
+			var i:number = this._animationStateList.length;
+			var animationState:AnimationState;
+			while(i --)
+			{
+				animationState = this._animationStateList[i];
+				animationState._resetTimelineStateList();
+				AnimationState._returnObject(animationState);
+			}
+			this._animationStateList.length = 0;
+		}
 		
 		/**
 		 * 开始播放指定名称的动画。

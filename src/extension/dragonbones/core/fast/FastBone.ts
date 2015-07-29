@@ -29,6 +29,10 @@
 
 module dragonBones {
 
+	/**
+	 * 不保存子骨骼列表和子插槽列表
+	 * 不能动态添加子骨骼和子插槽
+	 */
 	export class FastBone extends FastDBObject{
 		public static initWithBoneData(boneData:BoneData):FastBone{
 			var outputBone:FastBone = new FastBone();
@@ -41,6 +45,8 @@ module dragonBones {
 			return outputBone;
 		}
 		
+		public slotList:Array<FastSlot> = [];
+		public boneList:Array<FastBone> = [];
 		/** @private */
 		public _timelineState:FastBoneTimelineState;
 		
@@ -52,6 +58,26 @@ module dragonBones {
 			this._needUpdate = 2;
 		}
 		
+		/**
+		 * Get all Bone instance associated with this bone.
+		 * @return A Vector.&lt;Slot&gt; instance.
+		 * @see dragonBones.Slot
+		 */
+		public getBones(returnCopy:boolean = true):Array<FastBone>
+		{
+			return returnCopy ? this.boneList.concat() : this.boneList;
+		}
+		
+		/**
+		 * Get all Slot instance associated with this bone.
+		 * @return A Vector.&lt;Slot&gt; instance.
+		 * @see dragonBones.Slot
+		 */
+		public getSlots(returnCopy:boolean = true):Array<FastSlot>
+		{
+			return returnCopy ? this.slotList.concat() : this.slotList;
+		}
+
 		/**
 		 * @inheritDoc
 		 */
@@ -104,8 +130,63 @@ module dragonBones {
 				frameEvent.bone = this;
 				frameEvent.animationState = animationState;
 				frameEvent.frameLabel = frame.event;
-				this.armature._eventList.push(frameEvent);
+				this.armature._addEvent(frameEvent);
 			}
+		}
+
+		/**
+		 * Unrecommended API. Recommend use slot.childArmature.
+		 */
+		public get childArmature():any
+		{
+			var s:FastSlot = this.slot;
+			if(s)
+			{
+				return s.childArmature;
+			}
+			return null;
+		}
+		
+		/**
+		 * Unrecommended API. Recommend use slot.display.
+		 */
+		public get display():any
+		{
+			var s:FastSlot = this.slot;
+			if(s)
+			{
+				return s.display;
+			}
+			return null;
+		}
+		public set display(value:any)
+		{
+			var s:FastSlot = this.slot;
+			if(s)
+			{
+				s.display = value;
+			}
+		}
+		
+		/** @private */
+		public set visible(value:boolean)
+		{
+			if(this._visible != value)
+			{
+				this._visible = value;
+				for(var i:number = 0, len:number = this.armature.slotList.length; i < len; i++)
+				{
+					if(this.armature.slotList[i].parent == this)
+					{
+						this.armature.slotList[i]._updateDisplayVisible(this._visible);
+					}
+				}
+			}
+		}
+		
+		public get slot():FastSlot
+		{
+			return this.slotList.length > 0 ? this.slotList[0] : null;
 		}
 	}
 }

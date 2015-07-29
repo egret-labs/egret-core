@@ -40,6 +40,12 @@ module dragonBones {
      * @see dragonBones.BoneData
      */
 	export class Bone extends DBObject{
+
+		/**
+		 * The instance dispatch sound event.
+		 */
+		private static _soundManager:SoundEventManager = SoundEventManager.getInstance();
+
 		public static initWithBoneData(boneData:BoneData):Bone{
 			var outputBone:Bone = new Bone();
 			
@@ -454,16 +460,16 @@ module dragonBones {
 					frameEvent.frameLabel = frame.event;
 					this._armature._eventList.push(frameEvent);
 				}
-				/*
-				if(frame.sound && _soundManager.hasEventListener(SoundEvent.SOUND))
+				
+				if(frame.sound && Bone._soundManager.hasEventListener(SoundEvent.SOUND))
 				{
 					var soundEvent:SoundEvent = new SoundEvent(SoundEvent.SOUND);
 					soundEvent.armature = this._armature;
 					soundEvent.animationState = animationState;
 					soundEvent.sound = frame.sound;
-					_soundManager.dispatchEvent(soundEvent);
+					Bone._soundManager.dispatchEvent(soundEvent);
 				}
-				*/
+				
 				//[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
 				//后续会扩展更多的action，目前只有gotoAndPlay的含义
 				if(frame.action) {
@@ -495,6 +501,12 @@ module dragonBones {
 			}
 		}
 		
+		/** @private */
+		public _removeAllStates():void
+		{
+			this._timelineStateList.length = 0;
+		}
+
 		private blendingTimeline():void{
 			var timelineState:TimelineState;
 			var transform:DBTransform;

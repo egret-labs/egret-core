@@ -29,6 +29,9 @@
 
 module dragonBones {
 
+	/**
+	 * 不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
+	 */
 	export class FastAnimation{
 		public animationList:Array<string>;
 		public animationState:FastAnimationState = new FastAnimationState();
@@ -38,6 +41,7 @@ module dragonBones {
 		private _animationDataList:Array<AnimationData>;
 		private _animationDataObj:any;
 		private _isPlaying:boolean;
+		private _timeScale:number;
 		
 		public constructor(armature:FastArmature){
 			this._armature = armature;
@@ -46,6 +50,7 @@ module dragonBones {
 			this._animationDataObj = {};
 
 			this._isPlaying = false;
+			this._timeScale = 1;
 		}
 		
 		/**
@@ -62,13 +67,13 @@ module dragonBones {
 			this.animationState = null;
 		}
 		
-		public gotoAndPlay( animationName:string, fadeInTime:number = -1, duration:number = -1, playTimes:number = NaN):void{
+		public gotoAndPlay( animationName:string, fadeInTime:number = -1, duration:number = -1, playTimes:number = NaN):FastAnimationState{
 			if (!this._animationDataList){
-				return;
+				return null;
 			}
 			var animationData:AnimationData = this._animationDataObj[animationName];
 			if (!animationData){
-				return;
+				return null;
 			}
 			this._isPlaying = true;
 			fadeInTime = fadeInTime < 0?(animationData.fadeTime < 0?0.3:animationData.fadeTime):fadeInTime;
@@ -83,7 +88,7 @@ module dragonBones {
 			
 			//播放新动画
 			
-			this.animationState.fadeIn(animationData, playTimes, 1 / durationScale, fadeInTime);
+			this.animationState._fadeIn(animationData, playTimes, 1 / durationScale, fadeInTime);
 			
 			if(this._armature.enableCache && this.animationCacheManager){
 				this.animationState.animationCache = this.animationCacheManager.getAnimationCache(animationName);
@@ -94,11 +99,34 @@ module dragonBones {
 				var slot:FastSlot = this._armature.slotHasChildArmatureList[i];
 				var childArmature:FastArmature = slot.childArmature;
 				if(childArmature){
-					childArmature.animation.gotoAndPlay(animationName);
+					childArmature.getAnimation().gotoAndPlay(animationName);
 				}
 			}
+			return this.animationState;
 		}
 		
+		public gotoAndStop(animationName:string,
+						   time:number,
+						   normalizedTime:number = -1,
+						   fadeInTime:number = 0,
+						   duration:number = -1
+						   ):FastAnimationState
+		{
+			if(this.animationState.name != animationName)
+			{
+				this.gotoAndPlay(animationName,fadeInTime,duration);
+			}
+			if(normalizedTime >=0)
+			{
+				this.animationState.setCurrentTime(this.animationState.totalTime * normalizedTime);
+			}
+			else
+			{
+				this.animationState.setCurrentTime(time);
+			}
+			this.animationState.stop();
+			return this.animationState;
+		}
 		/**
 		 * Play the animation from the current position.
 		 */
@@ -106,7 +134,7 @@ module dragonBones {
 			if(!this._animationDataList){
 				return;
 			}
-			if(!this.animationState){
+			if(!this.animationState.name){
 				this.gotoAndPlay(this._animationDataList[0].name);
 			}
 			else if (!this._isPlaying){
@@ -122,12 +150,12 @@ module dragonBones {
 		}
 		
 		/** @private */
-		public advanceTime(passedTime:number, loop:boolean = false):void{
+		public advanceTime(passedTime:number):void{
 			if(!this._isPlaying){
 				return;
 			}
 			
-			this.animationState.advanceTime(passedTime, loop);
+			this.animationState._advanceTime(passedTime * this._timeScale);
 		}
 		
 		/**
@@ -139,6 +167,19 @@ module dragonBones {
 			return this._animationDataObj[animationName] != null;
 		}
 		
+		public get timeScale():number
+		{
+			return this._timeScale;
+		}
+
+		public set timeScale(value:number)
+		{
+			if(isNaN(value) || value < 0)
+			{
+				value = 1;
+			}
+			this._timeScale = value;
+		}
 		/**
 		 * The AnimationData list associated with this Animation instance.
 		 * @see dragonBones.objects.AnimationData.
@@ -156,6 +197,41 @@ module dragonBones {
 				this._animationDataObj[animationData.name] = animationData;
 			}
 		}
+
+		/**
+		 * Unrecommended API. Recommend use animationList.
+		 */
+		public get movementList():Array<string>
+		{
+			return this.animationList;
+		}
 		
+		/**
+		 * Unrecommended API. Recommend use lastAnimationName.
+		 */
+		public get movementID():string
+		{
+			return this.lastAnimationName;
+		}
+
+		public isPlaying():boolean
+		{
+			return this._isPlaying && !this.isComplete;
+		}
+
+		public get isComplete():boolean
+		{
+			return this.animationState.isComplete;
+		}
+		
+		public get lastAnimationState():FastAnimationState
+		{
+			return this.animationState;
+		}
+
+		public get lastAnimationName():string
+		{
+			return this.animationState ? this.animationState.name : null;
+		}
 	}
 }

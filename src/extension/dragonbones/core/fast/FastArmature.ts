@@ -29,7 +29,11 @@
 
 module dragonBones {
 
-	export class FastArmature extends EventDispatcher implements IAnimatable{
+	/**
+	 * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
+	 */
+
+	export class FastArmature extends EventDispatcher implements ICacheableArmature{
 		/**
 		 * The name should be same with ArmatureData's name
 		 */
@@ -40,7 +44,7 @@ module dragonBones {
 		public userData:any;
 		
 		
-		public enableCache:boolean;
+		private _enableCache:boolean;
 		
 		/**
 		 * 保证CacheManager是独占的前提下可以开启，开启后有助于性能提高
@@ -63,12 +67,12 @@ module dragonBones {
 		
 		public slotHasChildArmatureList:Array<FastSlot>;
 		
+		public _enableEventDispatch:boolean = true;
+
 		public __dragonBonesData:DragonBonesData;
 		public _armatureData:ArmatureData;
 		public _slotsZOrderChanged:boolean;
 		public _eventList:Array<any>;
-		public _disableEventDispatch:boolean;
-		public _cacheLoop:boolean;
 		
 		private _delayDispose:boolean;
 		private _lockDispose:boolean;
@@ -132,7 +136,7 @@ module dragonBones {
 		
 		public advanceTime(passedTime:number):void{
 			this._lockDispose = true;
-			this._animation.advanceTime(passedTime, this._cacheLoop);
+			this._animation.advanceTime(passedTime);
 			
 			var bone:FastBone;
 			var slot:FastSlot;
@@ -172,7 +176,7 @@ module dragonBones {
 			
 			i = this.slotHasChildArmatureList.length;
 			while(i--){
-				slot = this.slotList[i];
+				slot = this.slotHasChildArmatureList[i];
 				var childArmature:FastArmature = slot.childArmature;
 				if(childArmature){
 					childArmature.advanceTime(passedTime);
@@ -183,7 +187,7 @@ module dragonBones {
 				this.updateSlotsZOrder();
 			}
 			
-			while(this._eventList.length > 0 && !this._disableEventDispatch){
+			while(this._eventList.length > 0){
 				this.dispatchEvent(this._eventList.shift());
 			}
 			
@@ -213,6 +217,59 @@ module dragonBones {
 			return animationCacheManager;
 		}
 		
+		public getBone(boneName:string):FastBone
+		{
+			return this._boneDic[boneName];
+		}
+		public getSlot(slotName:string):FastSlot
+		{
+			return this._slotDic[slotName];
+		}
+		
+		/**
+		 * Gets the Bone associated with this DisplayObject.
+		 * @param Instance type of this object varies from flash.display.DisplayObject to startling.display.DisplayObject and subclasses.
+		 * @return A Bone instance or null if no Bone with that DisplayObject exist..
+		 * @see dragonBones.Bone
+		 */
+		public getBoneByDisplay(display:any):FastBone
+		{
+			var slot:FastSlot = this.getSlotByDisplay(display);
+			return slot?slot.parent:null;
+		}
+		
+		/**
+		 * Gets the Slot associated with this DisplayObject.
+		 * @param Instance type of this object varies from flash.display.DisplayObject to startling.display.DisplayObject and subclasses.
+		 * @return A Slot instance or null if no Slot with that DisplayObject exist.
+		 * @see dragonBones.Slot
+		 */
+		public getSlotByDisplay(displayObj:any):FastSlot
+		{
+			if(displayObj)
+			{
+				for(var i:number = 0,len:number = this.slotList.length; i < len; i++)
+				{
+					if(this.slotList[i].display == displayObj)
+					{
+						return this.slotList[i];
+					}
+				}
+			}
+			return null;
+		}
+		
+		/**
+		 * Get all Slot instance associated with this armature.
+		 * @param if return Vector copy
+		 * @return A Vector.&lt;Slot&gt; instance.
+		 * @see dragonBones.Slot
+		 */
+		public getSlots(returnCopy:boolean = true):Array<FastSlot>
+		{
+			return returnCopy?this.slotList.concat():this.slotList;
+		}
+
 		public _updateBonesByCache():void{
 			var i:number = this.boneList.length;
 			var bone:FastBone;
@@ -233,6 +290,7 @@ module dragonBones {
 			var parentBone:FastBone;
 			if(parentName){
 				parentBone = this.getBone(parentName);
+				parentBone.boneList.push(bone);
 			}
 			bone.armature = this;
 			bone.setParent(parentBone);
@@ -251,6 +309,7 @@ module dragonBones {
 			if(bone){
 				slot.armature = this;
 				slot.setParent(bone);
+				bone.slotList.push(slot);
 				slot._addDisplayToContainer(this.display);
 				this.slotList.push(slot);
 				this._slotDic[slot.name] = slot;
@@ -314,7 +373,7 @@ module dragonBones {
 				var frameEvent:FrameEvent = new FrameEvent(FrameEvent.ANIMATION_FRAME_EVENT);
 				frameEvent.animationState = animationState;
 				frameEvent.frameLabel = frame.event;
-				this._eventList.push(frameEvent);
+				this._addEvent(frameEvent);
 			}
 
 			if(frame.action){
@@ -322,8 +381,28 @@ module dragonBones {
 			}
 		}
 		
+		public invalidUpdate(boneName:string = null):void
+		{
+			if(boneName)
+			{
+				var bone:FastBone = this.getBone(boneName);
+				if(bone)
+				{
+					bone.invalidUpdate();
+				}
+			}
+			else
+			{
+				var i:number = this.boneList.length;
+				while(i --)
+				{
+					this.boneList[i].invalidUpdate();
+				}
+			}
+		}
+
 		public resetAnimation():void{
-			this.animation.animationState.resetTimelineStateList();
+			this.animation.animationState._resetTimelineStateList();
 			var length:number = this.boneList.length;
 			for(var i:number = 0;i < length;i++){
 				var boneItem:FastBone = this.boneList[i];
@@ -336,6 +415,11 @@ module dragonBones {
 			return slot1.zOrder < slot2.zOrder?1: -1;
 		}
 		
+		public getAnimation():any
+		{
+			return this._animation;
+		}
+
 		/**
 		 * ArmatureData.
 		 * @see dragonBones.objects.ArmatureData.
@@ -358,13 +442,31 @@ module dragonBones {
 		public get display():any{
 			return this._display;
 		}
-		
-		
-		public getBone(boneName:string):FastBone{
-			return this._boneDic[boneName];
+
+		public get enableCache():boolean
+		{
+			return this._enableCache;
 		}
-		public getSlot(slotName:string):FastSlot{
-			return this._slotDic[slotName];
+		public set enableCache(value:boolean)
+		{
+			this._enableCache = value;
+		}
+		
+		public get enableEventDispatch():boolean
+		{
+			return this._enableEventDispatch;
+		}
+		public set enableEventDispatch(value:boolean)
+		{
+			this._enableEventDispatch = value;
+		}
+		
+		public _addEvent(event:Event):void
+		{
+			if (this._enableEventDispatch)
+			{
+				this._eventList.push(event);
+			}			
 		}
 	}
 }
