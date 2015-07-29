@@ -163,6 +163,7 @@ module egret {
          * @param width {number} 矩形的宽度
          * @param height {number} 矩形的高度
          * @returns {egret.Rectangle}
+         * @deprecated
          */
         public initialize(x:number, y:number, width:number, height:number):Rectangle {
             this.x = x;

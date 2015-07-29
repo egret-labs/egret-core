@@ -297,6 +297,7 @@ module egret {
          * 表示从对象相对锚点X。
          * @member {number} egret.DisplayObject#anchorX
          * @default 0
+         * @deprecated
          */
         public get anchorX():number {
             return this._DO_Props_._anchorX;
@@ -320,6 +321,7 @@ module egret {
          * 表示从对象相对锚点Y。
          * @member {number} egret.DisplayObject#anchorY
          * @default 0
+         * @deprecated
          */
         public get anchorY():number {
             return this._DO_Props_._anchorY;

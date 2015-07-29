@@ -328,6 +328,7 @@ module egret {
          * @method egret.Matrix#identityMatrix
          * @param matrix {egret.Matrix} 重置的目标矩阵
          * @returns {egret.Matrix}
+         * @deprecated
          */
         public identityMatrix(matrix:Matrix):Matrix {
             this.a = matrix.a;
@@ -371,6 +372,7 @@ module egret {
          * @param y {number}
          * @returns {numberPoint}
          * @stable C 该方法以后可能删除
+         * @deprecated
          */
         public static transformCoords(matrix:Matrix, x:number, y:number):Point {
             var resultPoint:Point = Point.identity;
