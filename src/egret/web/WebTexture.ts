@@ -33,7 +33,7 @@ module egret.web {
     /**
      * @private
      */
-    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle, smoothing?:boolean):HTMLCanvasElement {
+    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle, smoothing?:boolean):egret.sys.Surface {
         var surface = sys.surfaceFactory.create(true);
         if (!surface) {
             return null;
@@ -58,8 +58,8 @@ module egret.web {
         var iHeight = rect.height;
         surface.width = iWidth;
         surface.height = iHeight;
-        surface.style.width = iWidth + "px";
-        surface.style.height = iHeight + "px";
+        surface["style"]["width"]= iWidth + "px";
+        surface["style"]["height"] = iHeight + "px";
 
         var bitmapData = texture;
         surface.renderContext.imageSmoothingEnabled = smoothing;
@@ -67,7 +67,7 @@ module egret.web {
         var offsetY:number = Math.round(bitmapData._offsetY);
         var bitmapWidth:number = bitmapData._bitmapWidth;
         var bitmapHeight:number = bitmapData._bitmapHeight;
-        surface.renderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x, bitmapData._bitmapY + rect.y,
+        surface.renderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
         return surface;
@@ -78,7 +78,12 @@ module egret.web {
      */
     function toDataURL(type:string, rect?:egret.Rectangle, smoothing?:boolean):string {
         try {
-            return (<egret.sys.Surface>convertImageToCanvas(this, rect, smoothing)).toDataURL(type);
+            var surface = convertImageToCanvas(this, rect, smoothing);
+            var result = surface.toDataURL(type);
+
+            sys.surfaceFactory.release(surface);
+
+            return result;
         }
         catch(e) {
             egret.$error(1033);

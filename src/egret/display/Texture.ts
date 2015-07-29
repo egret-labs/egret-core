@@ -249,6 +249,8 @@ module egret {
          * @language en_US
          * Convert base64 string, if the picture (or pictures included) cross-border or null
          * @param type Type conversions, such as "image / png"
+         * @param rect The need to convert the area
+         * @param smoothing Whether to convert data to the smoothing process
          * @returns {any} base64 string
          * @platform Web
          * @version Egret 2.0.3
@@ -257,6 +259,8 @@ module egret {
          * @language zh_CN
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如  "image/png"
+         * @param rect 需要转换的区域
+         * @param smoothing 转换数据是否需要平滑处理
          * @returns {any} base64字符串
          * @platform Web
          * @version Egret 2.0.3
