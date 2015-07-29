@@ -33,29 +33,58 @@ module egret.web {
     /**
      * @private
      */
-    function convertImageToCanvas(texture:egret.Texture):HTMLCanvasElement {
+    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle, smoothing?:boolean):HTMLCanvasElement {
+        var imageSmoothingEnabled = egret.RendererContext.imageSmoothingEnabled;
+        egret.RendererContext.imageSmoothingEnabled = smoothing;
+
         var surface = document.createElement("canvas");
         var renderContext = egret.RendererContext.createRendererContext(surface);
 
-        var iWidth = texture._textureWidth;
-        var iHeight = texture._textureHeight;
+        var w = texture._textureWidth;
+        var h = texture._textureHeight;
+        if (rect == null) {
+            rect = new egret.Rectangle();
+            rect.x = 0;
+            rect.y = 0;
+            rect.width = w;
+            rect.height = h;
+        }
+
+        rect.x = Math.min(rect.x, w - 1);
+        rect.y = Math.min(rect.y, h - 1);
+        rect.width = Math.min(rect.width, w - rect.x);
+        rect.height = Math.min(rect.height, h - rect.y);
+
+        var iWidth = rect.width;
+        var iHeight = rect.height;
         surface.width = iWidth;
         surface.height = iHeight;
         surface.style.width = iWidth + "px";
         surface.style.height = iHeight + "px";
 
-        var thisObject = {_texture_to_render: texture};
-        Bitmap._drawBitmap(renderContext, iWidth, iHeight, thisObject);
+        var thisObject:any = {_texture_to_render: texture};
 
+        var scale = egret.MainContext.instance.rendererContext._texture_scale_factor;
+        var offsetX:number = texture._offsetX;
+        var offsetY:number = texture._offsetY;
+        var bitmapWidth:number = texture._bitmapWidth || w;
+        var bitmapHeight:number = texture._bitmapHeight || h;
+
+        offsetX = Math.round(offsetX * scale);
+        offsetY = Math.round(offsetY * scale);
+        RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX + rect.x * scale , texture._bitmapY + rect.y * scale,
+            bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+
+        egret.RendererContext.imageSmoothingEnabled = imageSmoothingEnabled;
         return surface;
     }
 
     /**
      * @private
      */
-    function toDataURL(type:string):string {
+    function toDataURL(type:string, rect?:egret.Rectangle, smoothing?:boolean):string {
         try {
-            return convertImageToCanvas(this).toDataURL(type);
+            return convertImageToCanvas(this, rect, smoothing).toDataURL(type);
         }
         catch (e) {
             egret.$error(1033);
@@ -73,21 +102,6 @@ module egret.web {
         document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
     }
 
-    /**
-     * @private
-     */
-    function renderTextureToDataURL(type:string) {
-        try {
-            return this._bitmapData.toDataURL(type);
-        }
-        catch (e) {
-            egret.$error(1033);
-            return null;
-        }
-    }
-
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.download = download;
-
-    RenderTexture.prototype.toDataURL = renderTextureToDataURL;
 }

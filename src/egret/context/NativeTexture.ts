@@ -44,15 +44,6 @@ module egret.web {
 
     }
 
-    /**
-     * @private
-     */
-    function renderTextureToDataURL(type:string) {
-        return "";
-    }
-
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.download = download;
-
-    RenderTexture.prototype.toDataURL = toDataURL;
 }
