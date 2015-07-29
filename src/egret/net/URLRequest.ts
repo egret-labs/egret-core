@@ -137,6 +137,6 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public requestHeaders:Array<URLRequestHeader>;
+        public requestHeaders:Array<URLRequestHeader> = [];
     }
 }
