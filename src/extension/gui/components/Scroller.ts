@@ -51,6 +51,12 @@ module egret.gui {
             this._Scr_Props_ = new egret.gui.ScrollerProperties();
         }
 
+        /**
+         * 是否启用回弹，当启用回弹后，Scroller中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+         * 默认值是 true
+         */
+        public bounces: boolean;
+
         public setContent(content: IViewport) {
             (<egret.ScrollView><any>this)._content = <egret.DisplayObject><any>content;
             (<egret.ScrollView><any>this)._removeEvents();

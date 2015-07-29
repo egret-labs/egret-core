@@ -62,7 +62,7 @@ module egret.web {
         /**
          * @private
          */
-        private bufferSource:AudioBufferSourceNode = null;
+        private bufferSource:AudioBufferSourceNodeEgret = null;
         /**
          * @private
          */
@@ -397,7 +397,7 @@ interface AudioBuffer {
 /**
  * @private
  */
-interface AudioBufferSourceNode {
+interface AudioBufferSourceNodeEgret {
     buffer:any;
     context:any;
     onended:Function;

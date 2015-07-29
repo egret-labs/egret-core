@@ -102,5 +102,9 @@ module egret {
          */
         public _vScrollTween:Tween = null;
 
+        /**
+         * @private
+         */
+        public _bounces: boolean = true;
     }
 }
