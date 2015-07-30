@@ -29,6 +29,16 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.AnimationCacheManager
+	 * @classdesc
+	 * AnimationCacheManager 实例是动画缓存管理器，他可以为一个或多个同类型的Armature生成动画缓存数据，从而提高动画运行效率。
+	 * 目前AnimationCacheManager只支持对FastArmatrue生成缓存，以后会扩展为对任何实现ICacheableArmature接口的Armature生成缓存。
+	 * @see dragonBones.ICacheableArmature
+	 * @see dragonBones.FastArmature
+	 * @see dragonBones.AnimationCache
+	 * @see dragonBones.FrameCache
+	 */
 	export class AnimationCacheManager{
 		public cacheGeneratorArmature:ICacheableArmature
 		public armatureData:ArmatureData;
@@ -38,7 +48,14 @@ module dragonBones {
 		public slotFrameCacheDic:any = {};
 		public constructor(){
 		}
-		
+
+		/**
+		 * 通过ArmatrueData创建并初始化AnimationCacheManager。
+		 * AnimationCacheManager的创建需要依赖ArmatrueData。
+		 * @param armatureData {ArmatureData} 骨架数据实例。
+		 * @param frameRate {number} 帧频。帧频决定生成数据缓存的采样率。
+		 * @see dragonBones.ArmatureData.
+		 */
 		public static initWithArmatureData(armatureData:ArmatureData, frameRate:number = 0):AnimationCacheManager{
 			var output:AnimationCacheManager = new AnimationCacheManager();
 			output.armatureData = armatureData;

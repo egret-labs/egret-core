@@ -30,10 +30,10 @@
 
 module dragonBones {
 	/**
-	 * @class dragonBones.FrameEvent
+	 * @class dragonBones.SoundEvent
 	 * @extends dragonBones.Event
 	 * @classdesc
-	 * 帧事件
+	 * 声音事件
 	 */
 	export class SoundEvent extends Event{
 

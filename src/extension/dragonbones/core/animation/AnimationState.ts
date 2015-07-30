@@ -33,7 +33,7 @@ module dragonBones {
     /**
      * @class dragonBones.AnimationState
      * @classdesc
-     * AnimationState 实例由 Animation 实例播放动画时产生， 用于控制单个动画的播放。
+     * AnimationState 实例由 Animation 实例播放动画时产生， 可以对单个动画的播放进行最细致的调节。
      * @see dragonBones.Animation
      * @see dragonBones.AnimationData
      */
