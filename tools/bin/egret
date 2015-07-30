@@ -7,7 +7,7 @@ if(!fs.existsSync(EGRET_PATH)){
 }
 var analysis = require(path.join(EGRET_PATH,"tools/lib/core/params_analyze.js"));
 
-if (!analysis.getArgv().opts["-old"]) {
+if (analysis.getArgv().opts["-dirty"]) {
     require('../scripts/Entry').executeCommandLine();
 
 }

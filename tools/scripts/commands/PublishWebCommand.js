@@ -94,7 +94,7 @@ var PublishWebCommand = (function () {
                 });
                 compressJson.execute();
                 var formatWebP = new FormatWebPCMD();
-                formatWebP.initOptions({ path: releaseOutputPath });
+                formatWebP.initOptions({ path: releaseOutputPath, copyTestWebP: true });
                 formatWebP.execute(tempCallback);
             });
         }

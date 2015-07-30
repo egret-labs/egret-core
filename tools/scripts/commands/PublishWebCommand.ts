@@ -117,7 +117,7 @@ class PublishWebCommand implements egret.Command {
                 compressJson.execute();
 
                 var formatWebP = new FormatWebPCMD();
-                formatWebP.initOptions({path:releaseOutputPath});
+                formatWebP.initOptions({path:releaseOutputPath, copyTestWebP:true});
                 formatWebP.execute(tempCallback);
             });
         }
