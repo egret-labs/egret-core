@@ -133,7 +133,7 @@ module egret.sys {
             matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
             if(root!==target.$stage){
-                root.$getInvertedConcatenatedMatrix().$preMultiplyInto(matrix, matrix);
+                target.$getConcatenatedMatrixAt(root,matrix);
             }
             region.updateRegion(bounds, matrix);
             return true;
