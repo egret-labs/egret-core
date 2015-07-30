@@ -30,7 +30,11 @@
 module dragonBones {
 
 	/**
-	 *
+	 * @class dragonBones.SlotFrameCache
+	 * @classdesc
+	 * SlotFrameCache 存储了Slot的帧缓存数据。
+	 * @see dragonBones.FastSlot
+	 * @see dragonBones.ICacheUser
 	 * @example
      * <pre>
 	 * //获取动画数据

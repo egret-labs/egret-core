@@ -29,6 +29,14 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.ISlotCacheGenerator
+	 * @classdesc
+	 * ICacheUser 接口定义了可以生成Slot帧缓存的接口。
+	 * 目前只有FastSlot实现了该接口。
+	 * @see dragonBones.FastSlot
+	 * @see dragonBones.ICacheUser
+	 */
 	export interface ISlotCacheGenerator extends ICacheUser{
 		global:DBTransform;
 		globalTransformMatrix:Matrix;

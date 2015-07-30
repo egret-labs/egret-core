@@ -137,7 +137,7 @@ module dragonBones {
 
         /**
 		 * 创建一个新的Animation实例并赋给传入的Armature实例
-		 * @param armature {Armature} 纹理
+		 * @param armature {Armature} 骨架实例
 		 */
 		public constructor(armature:Armature){
 			this._armature = armature;
@@ -314,7 +314,7 @@ module dragonBones {
 		 * @param group {string} 动画所处的组
 		 * @param fadeOutMode {string} 动画淡出模式 (none, sameLayer, sameGroup, sameLayerAndGroup, all).默认值：sameLayerAndGroup
 		 * @returns {AnimationState} 动画播放状态实例
-		 * @see dragonBones..AnimationState.
+		 * @see dragonBones.AnimationState.
 		 */
 		public gotoAndStop(
 			animationName:string, 
@@ -342,9 +342,9 @@ module dragonBones {
 			
 			return animationState;
 		}
-		
+
 		/**
-		 * Play the animation from the current position.
+		 * 从当前位置继续播放动画
 		 */
 		public play():void{
 			if (!this._animationDataList || this._animationDataList.length == 0){
@@ -360,7 +360,10 @@ module dragonBones {
 				this.gotoAndPlay(this._lastAnimationState.name);
 			}
 		}
-		
+
+		/**
+		 * 暂停动画播放
+		 */
 		public stop():void{
 			this._isPlaying = false;
 		}

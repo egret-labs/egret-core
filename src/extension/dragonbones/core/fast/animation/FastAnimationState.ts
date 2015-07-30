@@ -29,11 +29,19 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.FastAnimationState
+	 * @classdesc
+	 * FastAnimationState 实例代表播放的动画， 可以对单个动画的播放进行最细致的调节。
+	 * @see dragonBones.Animation
+	 * @see dragonBones.AnimationData
+	 */
 	export class FastAnimationState implements IAnimationState{
 		
 		public animationCache:AnimationCache;
 		/**
-		 * If auto genterate tween between keyframes.
+		 * 是否自动补间。
+		 * @member {boolean} dragonBones.AnimationState#autoTween
 		 */
 		public autoTween:boolean;
 		private _progress:number;
@@ -73,18 +81,20 @@ module dragonBones {
 			this._resetTimelineStateList();
 			this._armature = null;
 		}
-		
+
 		/**
-		 * Play the current animation. 如果动画已经播放完毕, 将不会继续播放.
+		 * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
+		 * @returns {FastAnimationState} 动画播放状态实例
 		 */
 		public play():FastAnimationState
 		{
 			this._isPlaying = true;
 			return this;
 		}
-		
+
 		/**
-		 * Stop playing current animation.
+		 * 暂停当前动画的播放。
+		 * @returns {AnimationState} 动画播放状态实例
 		 */
 		public stop():FastAnimationState
 		{
@@ -393,44 +403,50 @@ module dragonBones {
 			}
 			return this;
 		}
-		
+
 		/**
-		 * playTimes Play times(0:loop forever, 1~+∞:play times, -1~-∞:will fade animation after play complete).
+		 * 播放次数 (0:循环播放， >0:播放次数)
+		 * @member {number} dragonBones.FastAnimationState#playTimes
 		 */
 		public get playTimes():number{
 			return this._playTimes;
 		}
-		
+
 		/**
-		 * Current animation played times
+		 * 当前播放次数
+		 * @member {number} dragonBones.FastAnimationState#currentPlayTimes
 		 */
 		public get currentPlayTimes():number{
 			return this._currentPlayTimes < 0 ? 0 : this._currentPlayTimes;
 		}
-		
+
 		/**
-		 * Is animation complete.
+		 * 是否播放完成
+		 * @member {boolean} dragonBones.FastAnimationState#isComplete
 		 */
 		public get isComplete():boolean{
 			return this._isComplete; 
 		}
-		
+
 		/**
-		 * Is animation playing.
+		 * 是否正在播放
+		 * @member {boolean} dragonBones.FastAnimationState#isPlaying
 		 */
 		public get isPlaying():boolean{
 			return (this._isPlaying && !this._isComplete);
 		}
-		
+
 		/**
-		 * The length of the animation clip in seconds.
+		 * 动画总时长（单位：秒）
+		 * @member {number} dragonBones.FastAnimationState#totalTime
 		 */
 		public get totalTime():number{
 			return this._totalTime * 0.001;
 		}
-		
+
 		/**
-		 * The current time of the animation.
+		 * 动画当前播放时间（单位：秒）
+		 * @member {number} dragonBones.FastAnimationState#currentTime
 		 */
 		public get currentTime():number{
 			return this._currentTime < 0 ? 0 : this._currentTime * 0.001;

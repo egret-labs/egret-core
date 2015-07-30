@@ -30,7 +30,14 @@
 module dragonBones {
 
 	/**
-	 * 不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
+	 * @class dragonBones.FastAnimation
+	 * @classdesc
+	 * FastAnimation实例隶属于FastArmature,用于控制FastArmature的动画播放。
+	 * 和Animation相比，FastAnimation为了优化性能，不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
+	 * @see dragonBones.FastBone
+	 * @see dragonBones.FastArmature
+	 * @see dragonBones.FastAnimationState
+	 * @see dragonBones.AnimationData.
 	 *
 	 * @example
      * <pre>
@@ -78,8 +85,20 @@ module dragonBones {
      *  </pre>
 	 */
 	export class FastAnimation{
+		/**
+		 * 所有动画名称列表.
+		 * @member {string[]} dragonBones.FastAnimation#animationList
+		 */
 		public animationList:Array<string>;
+		/**
+		 * 当前正在运行的动画实例.
+		 * @member {FastAnimationState} dragonBones.FastAnimation#animationState
+		 */
 		public animationState:FastAnimationState = new FastAnimationState();
+		/**
+		 * 动画缓存管理器.
+		 * @member {AnimationCacheManager} dragonBones.FastAnimation#animationCacheManager
+		 */
 		public animationCacheManager:AnimationCacheManager;
 		
 		private _armature:FastArmature;
@@ -87,7 +106,11 @@ module dragonBones {
 		private _animationDataObj:any;
 		private _isPlaying:boolean;
 		private _timeScale:number;
-		
+
+		/**
+		 * 创建一个新的FastAnimation实例并赋给传入的FastArmature实例
+		 * @param armature {FastArmature} 骨架实例
+		 */
 		public constructor(armature:FastArmature){
 			this._armature = armature;
 			this.animationState._armature = armature;
@@ -111,7 +134,16 @@ module dragonBones {
 			this.animationList = null;
 			this.animationState = null;
 		}
-		
+
+		/**
+		 * 开始播放指定名称的动画。
+		 * 要播放的动画将经过指定时间的淡入过程，然后开始播放，同时之前播放的动画会经过相同时间的淡出过程。
+		 * @param animationName {string} 指定播放动画的名称.
+		 * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+		 * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+		 * @param playTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+		 * @see dragonBones.FastAnimationState.
+		 */
 		public gotoAndPlay( animationName:string, fadeInTime:number = -1, duration:number = -1, playTimes:number = NaN):FastAnimationState{
 			if (!this._animationDataList){
 				return null;
@@ -149,7 +181,16 @@ module dragonBones {
 			}
 			return this.animationState;
 		}
-		
+
+		/**
+		 * 播放指定名称的动画并停止于某个时间点
+		 * @param animationName {string} 指定播放的动画名称.
+		 * @param time {number} 动画停止的绝对时间
+		 * @param normalizedTime {number} 动画停止的相对动画总时间的系数，这个参数和time参数是互斥的（例如 0.2：动画停止总时间的20%位置） 默认值：-1 意味着使用绝对时间。
+		 * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：0
+		 * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+		 * @see dragonBones.FastAnimationState.
+		 */
 		public gotoAndStop(animationName:string,
 						   time:number,
 						   normalizedTime:number = -1,
@@ -172,8 +213,9 @@ module dragonBones {
 			this.animationState.stop();
 			return this.animationState;
 		}
+
 		/**
-		 * Play the animation from the current position.
+		 * 从当前位置继续播放动画
 		 */
 		public play():void{
 			if(!this._animationDataList){
@@ -189,7 +231,10 @@ module dragonBones {
 				this.gotoAndPlay(this.animationState.name);
 			}
 		}
-		
+
+		/**
+		 * 暂停动画播放
+		 */
 		public stop():void{
 			this._isPlaying = false;
 		}
@@ -211,12 +256,15 @@ module dragonBones {
 		public hasAnimation(animationName:string):boolean{
 			return this._animationDataObj[animationName] != null;
 		}
-		
+
+		/**
+		 * 时间缩放倍数
+		 * @member {number} dragonBones.FastAnimation#timeScale
+		 */
 		public get timeScale():number
 		{
 			return this._timeScale;
 		}
-
 		public set timeScale(value:number)
 		{
 			if(isNaN(value) || value < 0)
@@ -226,8 +274,9 @@ module dragonBones {
 			this._timeScale = value;
 		}
 		/**
-		 * The AnimationData list associated with this Animation instance.
-		 * @see dragonBones.objects.AnimationData.
+		 * 包含的所有动画数据列表
+		 * @member {AnimationData[]} dragonBones.FastAnimation#animationDataList
+		 * @see dragonBones.AnimationData.
 		 */
 		public get animationDataList():Array<AnimationData>{
 			return this._animationDataList;
@@ -259,21 +308,37 @@ module dragonBones {
 			return this.lastAnimationName;
 		}
 
+		/**
+		 * 是否正在播放
+		 * @member {boolean} dragonBones.FastAnimation#isPlaying
+		 */
 		public isPlaying():boolean
 		{
 			return this._isPlaying && !this.isComplete;
 		}
 
+		/**
+		 * 是否播放完成.
+		 * @member {boolean} dragonBones.FastAnimation#isComplete
+		 */
 		public get isComplete():boolean
 		{
 			return this.animationState.isComplete;
 		}
-		
+
+		/**
+		 * 当前播放动画的实例.
+		 * @member {FastAnimationState} dragonBones.FastAnimation#lastAnimationState
+		 */
 		public get lastAnimationState():FastAnimationState
 		{
 			return this.animationState;
 		}
 
+		/**
+		 * 当前播放动画的名字.
+		 * @member {string} dragonBones.FastAnimation#lastAnimationName
+		 */
 		public get lastAnimationName():string
 		{
 			return this.animationState ? this.animationState.name : null;

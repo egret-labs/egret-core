@@ -30,7 +30,11 @@
 module dragonBones {
 
 	/**
-	 *
+	 * @class dragonBones.SlotTimelineCache
+	 * @classdesc
+	 * SlotTimelineCache 存储了Slot的时间轴缓存数据。
+	 * @see dragonBones.TimelineCache
+	 * @see dragonBones.SlotFrameCache
 	 * @example
      * <pre>
 	 * //获取动画数据

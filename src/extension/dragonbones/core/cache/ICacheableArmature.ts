@@ -29,6 +29,14 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.ICacheableArmature
+	 * @classdesc
+	 * ICacheableArmature 接口定义了可以使用缓存的Armature的接口。
+	 * 目前只有FastArmature实现了该接口。
+	 * @see dragonBones.FastArmature
+	 * @see dragonBones.IArmature
+	 */
 	export interface ICacheableArmature extends IArmature{
 		enableCache:boolean;
 		enableEventDispatch:boolean;
