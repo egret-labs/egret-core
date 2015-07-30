@@ -1,6 +1,6 @@
 {
     "name": "egret",
-    "version": "1.7.3",
+    "version": "2.4.0",
     "private": true,
     "author":"egret-labs",
     "scripts": {
