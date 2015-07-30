@@ -30,9 +30,59 @@
 module dragonBones {
 
 	/**
-	 * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
+	 * @class dragonBones.FastArmature
+     * @classdesc
+     * FastArmature 是 DragonBones 高效率的骨骼动画系统。他能缓存动画数据，大大减少动画播放的计算
+     * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
+     * @extends dragonBones.EventDispatcher
+     * @see dragonBones.ArmatureData
 	 */
+	 /**
+	  * @example
+      * <pre>
+	  * //获取动画数据
+      *  var skeletonData = RES.getRes("skeleton");
+      *  //获取纹理集数据
+      *  var textureData = RES.getRes("textureConfig");
+      *  //获取纹理集图片
+      *  var texture = RES.getRes("texture");
+	  *
+      *  //创建一个工厂，用来创建Armature
+      *  var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+      *  //把动画数据添加到工厂里
+      *  factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+      *  //把纹理集数据和图片添加到工厂里
+      *  factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
 
+      *  //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+      *  var armatureName:string = skeletonData.armature[0].name;
+      *  //从工厂里创建出Armature
+      *  var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
+      *  //获取装载Armature的容器
+      *  var armatureDisplay = armature.display;
+      *  //把它添加到舞台上
+      *  this.addChild(armatureDisplay);
+      *  
+      *  //以60fps的帧率开启动画缓存，缓存所有的动画数据
+      *  var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
+	  *
+      * //取得这个Armature动画列表中的第一个动画的名字
+      *  var curAnimationName = armature.animation.animationList[0];
+      *  //播放这个动画，gotoAndPlay各个参数说明
+      *  //第一个参数 animationName {string} 指定播放动画的名称.
+      *  //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+      *  //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+      *  armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+
+      *  //把Armature添加到心跳时钟里
+      *  dragonBones.WorldClock.clock.add(armature);
+      *  //心跳时钟开启
+      *  egret.Ticker.getInstance().register(function (advancedTime) {
+      *      dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+      *  }, this);
+      *  </pre>
+	  */
 	export class FastArmature extends EventDispatcher implements ICacheableArmature{
 		/**
 		 * The name should be same with ArmatureData's name
@@ -197,6 +247,13 @@ module dragonBones {
 			}
 		}
 
+		/**
+		 * 开启动画缓存
+		 * @param  {number} 帧速率，每秒缓存多少次数据，越大越流畅,若值小于零会被设置为动画数据中的默认帧率
+		 * @param  {Array<any>} 需要缓存的动画列表，如果为null，则全部动画都缓存
+		 * @param  {boolean} 动画是否是循环动画，仅在3.0以下的数据格式使用，如果动画不是循环动画请设置为false，默认为true。
+		 * @return {AnimationCacheManager}  返回缓存管理器，可以绑定到其他armature以减少内存
+		 */
 		public enableAnimationCache(frameRate:number, animationList:Array<any> = null, loop:boolean = true):AnimationCacheManager{
 			var animationCacheManager:AnimationCacheManager = AnimationCacheManager.initWithArmatureData(this.armatureData,frameRate);
 			if(animationList){
