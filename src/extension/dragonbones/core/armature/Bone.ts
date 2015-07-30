@@ -38,6 +38,66 @@ module dragonBones {
      * @see dragonBones.Armature
      * @see dragonBones.Slot
      * @see dragonBones.BoneData
+     *
+     * @example
+     * <pre>
+     * //获取动画数据 本例使用Knight例子.
+        //资源下载地址http://dragonbones.github.io/download_forwarding.html?download_url=downloads/dragonbonesdemos_v2.4.zip
+        var skeletonData = RES.getRes("skeleton");
+        //获取纹理集数据
+        var textureData = RES.getRes("textureConfig");
+        //获取纹理集图片
+        var texture = RES.getRes("texture");
+        //这个资源需要自己准备
+        var horseHat = RES.getRes("horseHat");
+        //创建一个工厂，用来创建Armature
+        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        //把动画数据添加到工厂里
+        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+        //把纹理集数据和图片添加到工厂里
+        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+
+        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+        var armatureName:string = skeletonData.armature[1].name;
+        //从工厂里创建出Armature
+        var armature:dragonBones.Armature = factory.buildArmature(armatureName);
+        //获取装载Armature的容器
+        var armatureDisplay = armature.display;
+        //把它添加到舞台上
+        armatureDisplay.x = 200;
+        armatureDisplay.y = 300;
+        this.addChild(armatureDisplay);
+
+        //以下四句代码，实现给骨骼添加slot的功能
+        //1.获取马头的骨骼
+        var horseHead:dragonBones.Bone = armature.getBone("horseHead");
+        //2.创建一个slot
+        var horseHatSlot:dragonBones.EgretSlot = new dragonBones.EgretSlot();
+        //3.给这个slot赋一个图片
+        horseHatSlot.display = new egret.Bitmap(horseHat);
+        //4.把这个slot添加到骨骼上
+        horseHead.addSlot(horseHatSlot);
+
+        //以下3句代码，实现了子骨骼的获取和播放子骨架的动画
+        //1.获取包含子骨架的骨骼
+        var weaponBone:dragonBones.Bone = armature.getBone("armOutside");
+        //2.获取骨骼上的子骨架
+        var childArmature:dragonBones.Armature = weaponBone.childArmature;
+        //3.播放子骨架的动画
+        childArmature.animation.gotoAndPlay("attack_sword_1",0,-1,0);
+
+
+        //取得这个Armature动画列表中的第一个动画的名字
+        var curAnimationName = armature.animation.animationList[0];
+        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+
+        //把Armature添加到心跳时钟里
+        dragonBones.WorldClock.clock.add(armature);
+        //心跳时钟开启
+        egret.Ticker.getInstance().register(function (advancedTime) {
+            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+        }, this);
+     *   </pre>
      */
 	export class Bone extends DBObject{
 
@@ -460,7 +520,6 @@ module dragonBones {
 					frameEvent.frameLabel = frame.event;
 					this._armature._eventList.push(frameEvent);
 				}
-				
 				if(frame.sound && Bone._soundManager.hasEventListener(SoundEvent.SOUND))
 				{
 					var soundEvent:SoundEvent = new SoundEvent(SoundEvent.SOUND);

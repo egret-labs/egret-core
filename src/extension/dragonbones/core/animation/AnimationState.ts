@@ -36,6 +36,57 @@ module dragonBones {
      * AnimationState 实例由 Animation 实例播放动画时产生， 用于控制单个动画的播放。
      * @see dragonBones.Animation
      * @see dragonBones.AnimationData
+     *
+     * @example
+     * <pre>
+     *   //获取动画数据
+     *   var skeletonData = RES.getRes("skeleton");
+     *   //获取纹理集数据
+     *   var textureData = RES.getRes("textureConfig");
+     *   //获取纹理集图片
+     *   var texture = RES.getRes("texture");
+	 *
+     *   //创建一个工厂，用来创建Armature
+     *   var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+     *   //把动画数据添加到工厂里
+     *   factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+     *   //把纹理集数据和图片添加到工厂里
+     *   factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+	 *
+     *   //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+     *   var armatureName:string = skeletonData.armature[0].name;
+     *   //从工厂里创建出Armature
+     *   var armature:dragonBones.Armature = factory.buildArmature(armatureName);
+     *   //获取装载Armature的容器
+     *   var armatureDisplay = armature.display;
+     *   armatureDisplay.x = 200;
+     *   armatureDisplay.y = 500;
+     *   //把它添加到舞台上
+     *   this.addChild(armatureDisplay);
+	 *
+     *   //取得这个Armature动画列表中的第一个动画的名字
+     *   var curAnimationName:string = armature.animation.animationList[0];
+     *   //播放这个动画
+     *   armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+	 *
+     *   //获取animationState可以对动画进行更多控制；
+     *   var animationState:dragonBones.AnimationState = armature.animation.getState(curAnimationName);
+	 *
+     *   //下面的代码实现人物的脖子和头动，但是其他部位不动
+     *   animationState.addBoneMask("neck",true);
+     *   //下面的代码实现人物的身体动，但是脖子和头不动
+     *   //animationState.addBoneMask("hip",true);//“hip”是骨架的根骨骼的名字
+     *   //animationState.removeBoneMask("neck",true);
+     *   //下面的代码实现动画幅度减小的效果
+     *   //animationState.weight = 0.5;
+     *
+     *   //把Armature添加到心跳时钟里 
+     *   dragonBones.WorldClock.clock.add(armature);
+     *   //心跳时钟开启
+     *   egret.Ticker.getInstance().register(function (advancedTime) {
+     *      dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+     *   }, this);
+     * </pre>
      */
 	export class AnimationState{
 		private static _pool:Array<AnimationState> =[];
@@ -485,13 +536,11 @@ module dragonBones {
 		/** @private */
 		public _advanceTime(passedTime:number):boolean{
 			passedTime *= this._timeScale;
-			
 			this.advanceFadeTime(passedTime);
 			
 			if(this._fadeWeight){
 				this.advanceTimelinesTime(passedTime);
 			}
-			
 			return this._isFadeOut && this._fadeState == 1;
 		}
 		
@@ -698,6 +747,7 @@ module dragonBones {
 			
 			var event:AnimationEvent;
 			if(startFlg){
+
 				if(this._armature.hasEventListener(AnimationEvent.START)){
 					event = new AnimationEvent(AnimationEvent.START);
 					event.animationState = this;
