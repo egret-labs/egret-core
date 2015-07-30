@@ -74,7 +74,7 @@ export function getCommandName() {
 }
 
 export function getNotNeedProjectCmds() {
-    return ["create", "create_app", "create_js", "zip", "compile", "compress", "help", "showip", "export_stu_db", "ccs2db"];
+    return ["create", "create_app", "create_js", "zip", "compile", "compress", "help", "showip", "export_stu_db", "ccs2db", "info"];
 }
 
 export function getCommandArgs() {

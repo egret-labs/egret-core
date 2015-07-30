@@ -84,7 +84,7 @@ module egret {
          * @private
          * 
          */
-        public _checkFrame():void{
+        public $checkFrame():void{
             this.frameCount--;
             if(this.frameCount<=0){
                 this.dispose();

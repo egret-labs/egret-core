@@ -317,7 +317,7 @@ module egret.sys {
          * 广播EnterFrame事件。
          */
         private broadcastEnterFrame():void {
-            var list = DisplayObject.$enterFrameCallBackList;
+            var list:Array<any> = DisplayObject.$enterFrameCallBackList;
             var length = list.length;
             if (length == 0) {
                 return;
@@ -325,6 +325,11 @@ module egret.sys {
             list = list.concat();
             for (var i = 0; i < length; i++) {
                 list[i].dispatchEventWith(Event.ENTER_FRAME);
+            }
+
+            list = Recycler._callBackList;
+            for (i = list.length - 1; i >= 0; i--) {
+                list[i].$checkFrame();
             }
         }
 
