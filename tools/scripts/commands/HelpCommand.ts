@@ -27,7 +27,6 @@ class HelpCommand implements egret.Command {
 
             }
             catch (e) {
-                console.log (e)
                 globals.log2(1901, args[0]);
             }
 

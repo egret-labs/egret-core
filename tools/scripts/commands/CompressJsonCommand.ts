@@ -7,7 +7,6 @@ import file = require('../lib/FileUtil');
 class CompressJsonCommand implements egret.Command {
     private sourcePath:string;
     initOptions(options:Object):void {
-        console.log(options);
         this.sourcePath = file.join((params.getObjectOption(options, '--source')) || "");
     }
 

@@ -111,7 +111,6 @@ class BuildAllModuleCommand implements egret.Command {
         else {
             modules = this.getNextModules();
         }
-        console.log(modules);
 
         for (var i = 0; i < modules.length; i++) {
             var buildCmd = new BuildModuleCMD();

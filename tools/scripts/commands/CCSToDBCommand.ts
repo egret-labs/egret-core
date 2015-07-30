@@ -70,9 +70,6 @@ class CCSToDBCommand implements egret.Command {
         var parentFile = file.getDirectory(outputFile);
         file.createDirectory(parentFile);
 
-        console.log(parentFile)
-        console.log(outputFile)
-        console.log(dbName)
         file.save(outputFile, JSON.stringify(dbData, null, "\t"));
 
         console.log(fileUrl + "生成完毕");

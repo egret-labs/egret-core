@@ -5,7 +5,6 @@ var CompressJsonCommand = (function () {
     function CompressJsonCommand() {
     }
     CompressJsonCommand.prototype.initOptions = function (options) {
-        console.log(options);
         this.sourcePath = file.join((params.getObjectOption(options, '--source')) || "");
     };
     CompressJsonCommand.prototype.execute = function () {

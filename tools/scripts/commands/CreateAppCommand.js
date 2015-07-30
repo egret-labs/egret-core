@@ -110,7 +110,6 @@ var CreateAppCommand = (function () {
     CreateAppCommand.prototype.run_unzip = function (app_path, template_path, app_data) {
         var template_zip_path = file.join(template_path, app_data["template"]["zip"]);
         var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
-        console.log(cmd);
         var build = cp_exec(cmd);
         build.stderr.on("data", function (data) {
             globals.log(data);

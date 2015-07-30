@@ -51,7 +51,6 @@ var BuildCommand = (function () {
                 var moduleNames = config.getAllModuleNames();
                 var html5List = [];
                 var nativeList = [];
-                console.log(moduleNames);
                 var libRoot = file.join(config.getProjectRoot(), "libs");
                 moduleNames.forEach(function (moduleName) {
                     var outputPath = config.getModuleOutput(moduleName);
@@ -73,7 +72,6 @@ var BuildCommand = (function () {
                 });
                 file.save(file.join(config.getProjectRoot(), "bin-debug", "lib", "egret_file_list.js"), "var egret_file_list = " + JSON.stringify(html5List, null, "\t") + ";");
                 file.save(file.join(config.getProjectRoot(), "bin-debug", "lib", "egret_file_list_native.js"), "var egret_file_list = " + JSON.stringify(nativeList, null, "\t") + ";");
-                console.log(111111);
                 tempCallback();
             });
         }

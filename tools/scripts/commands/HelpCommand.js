@@ -21,7 +21,6 @@ var HelpCommand = (function () {
                 return;
             }
             catch (e) {
-                console.log(e);
                 globals.log2(1901, args[0]);
             }
             return;
