@@ -33,6 +33,7 @@ module egret {
      * @classdesc
      * 提供混合模式可视效果的常量值的类。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=48 BlendMode实例代码
+     * @includeExample egret/display/BlendMode.ts
      */
     export class BlendMode {
 

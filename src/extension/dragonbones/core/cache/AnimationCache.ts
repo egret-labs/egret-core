@@ -30,7 +30,15 @@
 module dragonBones {
 
 	/**
-	 *
+	 * @class dragonBones.AnimationCache
+	 * @classdesc
+	 * Slot 实例是骨头上的一个插槽，是显示图片的容器。
+	 * 一个 Bone 上可以有多个Slot，每个Slot中同一时间都会有一张图片用于显示，不同的Slot中的图片可以同时显示。
+	 * 每个 Slot 中可以包含多张图片，同一个 Slot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
+	 * @extends dragonBones.DBObject
+	 * @see dragonBones.Armature
+	 * @see dragonBones.Bone
+	 * @see dragonBones.SlotData
 	 * @example
      * <pre>
 	 * //获取动画数据

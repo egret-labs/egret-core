@@ -105,7 +105,10 @@ function compileModule(callback,moduleName){
 
 
     moduleFileList = moduleFileList.concat(dependencyList);
-
+    //解决引擎路径有空格问题
+    moduleFileList = moduleFileList.map(function (item) {
+        return globals.addQuotes(item);
+    });
     var compiler = require("./egret_compiler.js");
     var cmd = moduleFileList.join(" ") + " --out " + path.join(projectPath,moduleConfig.name + ".js") + " -t ES5"
     compiler.compile( function(){

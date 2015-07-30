@@ -23,6 +23,9 @@ function run(dir, args, opts) {
     var needCompileEngine = opts["-e"] || opts["--module"];
     var keepGeneratedTypescript = opts["-k"];
 
+    var typeScriptCompiler = require("../tools/egret_compiler.js");
+    typeScriptCompiler.defaultTscLib = projectProperties.getTscLibUrl();
+
     buildPlatform(needCompileEngine, keepGeneratedTypescript);
 }
 

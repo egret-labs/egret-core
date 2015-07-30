@@ -43,7 +43,7 @@ module egret {
         private _arrayBuffer:ArrayBuffer;
         private context = WebAudio.ctx;
         private gain;
-        private bufferSource:AudioBufferSourceNode = null;
+        private bufferSource: AudioBufferSourceNodeEgret = null;
         private paused = true;
 
         private static decodeArr:Array<any> = [];
@@ -269,7 +269,7 @@ interface AudioBuffer {
 /**
  * @private
  */
-interface AudioBufferSourceNode {
+interface AudioBufferSourceNodeEgret {
     buffer:any;
     context:any;
     onended:Function;

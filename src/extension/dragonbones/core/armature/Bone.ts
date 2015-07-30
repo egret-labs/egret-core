@@ -34,6 +34,7 @@ module dragonBones {
      * @class dragonBones.Bone
      * @classdesc
      * Bone 实例代表 Armature 中的一个骨头。一个Armature实例可以由很多 Bone组成。
+	 * Bone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
      * @extends dragonBones.DBObject
      * @see dragonBones.Armature
      * @see dragonBones.Slot

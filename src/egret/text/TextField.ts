@@ -36,8 +36,8 @@ module egret {
      * 如果开发者希望所有平台完全无差异，请使用BitmapText
      * @extends egret.DisplayObject
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=141&terms1_id=25&terms2_id=33 创建文本
-     *
      * @event egret.TextEvent.LINK 点击链接后调度。
+     * @includeExample egret/text/TextField.ts
      */
     export class TextField extends DisplayObject {
 
@@ -258,6 +258,7 @@ module egret {
          * 如果值为 true，则文本为斜体；false，则为不使用斜体。
          * 默认值为 false。
          * @member {boolean} egret.TextField#italic
+         * @platform Web
          */
         public set italic(value:boolean) {
             this._setItalic(value);
@@ -280,6 +281,7 @@ module egret {
          * 如果值为 true，则文本为粗体字；false，则为非粗体字。
          * 默认值为 false。
          * @member {boolean} egret.TextField#bold
+         * @platform Web
          */
         public set bold(value:boolean) {
             this._setBold(value);
@@ -528,14 +530,10 @@ module egret {
 
         public _setWidth(value:number):void {
             super._setWidth(value);
-
-            this.fillBackground();
         }
 
         public _setHeight(value:number):void {
             super._setHeight(value);
-
-            this.fillBackground();
         }
 
         private _bgGraphics:Graphics = null;
@@ -686,18 +684,6 @@ module egret {
         }
 
         public _draw(renderContext:RendererContext):void {
-            var self = this;
-            var properties:egret.TextFieldProperties = self._TF_Props_;
-
-            if (properties._type == egret.TextFieldType.INPUT) {
-                if (self._isTyping) {
-                    return;
-                }
-            }
-            else if (properties._textMaxWidth == 0) {
-                return;
-            }
-
             super._draw(renderContext);
         }
 
@@ -706,8 +692,20 @@ module egret {
          * @param renderContext
          */
         public _render(renderContext:RendererContext):void {
-            if(this._bgGraphics)
-                this._bgGraphics._draw(renderContext);
+            var self = this;
+
+            if(self._bgGraphics)
+                self._bgGraphics._draw(renderContext);
+
+            var properties:egret.TextFieldProperties = self._TF_Props_;
+            if (properties._type == egret.TextFieldType.INPUT) {
+                if (self._isTyping) {
+                    return;
+                }
+            }
+            else if (properties._textMaxWidth == 0) {
+                return;
+            }
 
             this.drawText(renderContext);
 
@@ -999,6 +997,7 @@ module egret {
             }
 
             properties._numLines = linesArr.length;
+            this.fillBackground();
             return linesArr;
         }
 
