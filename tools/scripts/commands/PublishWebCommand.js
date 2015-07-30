@@ -6,6 +6,7 @@ var file = require("../lib/FileUtil");
 var ModifyHtmlsCommand = require("./ModifyHtmlsCommand");
 var CompressJsonCMD = require("./CompressJsonCommand");
 var CompileFilesCMD = require("./CompileFilesCommand");
+var FormatWebPCMD = require("./FormatWebPCommand");
 var PublishWebCommand = (function () {
     function PublishWebCommand() {
     }
@@ -92,7 +93,9 @@ var PublishWebCommand = (function () {
                     "--source": releaseOutputPath
                 });
                 compressJson.execute();
-                tempCallback();
+                var formatWebP = new FormatWebPCMD();
+                formatWebP.initOptions({ path: releaseOutputPath });
+                formatWebP.execute(tempCallback);
             });
         }
         var async = require('../../lib/core/async');

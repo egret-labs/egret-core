@@ -12,6 +12,7 @@ import ZipCMD = require("./ZipCommand");
 import CompressJsonCMD = require("./CompressJsonCommand");
 import ChangeEntranceCMD = require("./ChangeEntranceCommand");
 import CompileFilesCMD = require("./CompileFilesCommand");
+import FormatWebPCMD = require("./FormatWebPCommand");
 
 class PublishWebCommand implements egret.Command {
     execute():number {
@@ -114,7 +115,10 @@ class PublishWebCommand implements egret.Command {
                     "--source": releaseOutputPath
                 });
                 compressJson.execute();
-                tempCallback();
+
+                var formatWebP = new FormatWebPCMD();
+                formatWebP.initOptions({path:releaseOutputPath});
+                formatWebP.execute(tempCallback);
             });
         }
 
