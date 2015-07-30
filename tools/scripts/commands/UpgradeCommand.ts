@@ -12,15 +12,14 @@ class UpgradeCommand implements egret.Command {
     }
 
     private run() {
-        var currDir = params.getProjectRoot();
+        //var currDir = params.getProjectRoot();
 
-        var config = require("../core/projectConfig.js");
-        config.init(currDir);
-        var version = config.data.egret_version;
+        //var config = require("../core/projectConfig.js");
+        //config.init(currDir);
+        var version = config.getVersion();
         if (!version) {
             version = "1.0.0";
         }
-
         var modify = require("./upgrade/ModifyProperties");
         for (var i = 0; i < this.upgradeConfigArr.length; i++) {
             var info = this.upgradeConfigArr[i];

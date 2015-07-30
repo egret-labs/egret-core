@@ -14,11 +14,7 @@ var FormatWebPCommand = (function () {
         var needWebP = params.getOption("-webp");
         if (needWebP) {
             //替换发布文件中对webp格式判断
-            var str = 'var img = new Image();\n' +
-                '    img.onload = function (){\n' +
-                '        egret.web.Html5Capatibility._WebPSupport = true;\n' +
-                '    };\n' +
-                '    img.src = "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAACyAgCdASoBAAEALy2Wy2WlpaWlpYEsSygABc6zbAAA/upgAAA=";';
+            var str = 'var img = new Image();\n' + '    img.onload = function (){\n' + '        egret.web.Html5Capatibility._WebPSupport = true;\n' + '    };\n' + '    img.src = "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAACyAgCdASoBAAEALy2Wy2WlpaWlpYEsSygABc6zbAAA/upgAAA=";';
             var txt = file.read(file.join(this.path, "index.html"));
             txt = txt.replace("//WebP_replace", str);
             file.save(file.join(this.path, "index.html"), txt);

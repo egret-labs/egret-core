@@ -1,5 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
-var params = require("../ParamsParser");
+var config = require('../lib/ProjectConfig');
 var globals = require("../Globals");
 var UpgradeCommand = (function () {
     function UpgradeCommand() {
@@ -22,10 +22,10 @@ var UpgradeCommand = (function () {
         return 0;
     };
     UpgradeCommand.prototype.run = function () {
-        var currDir = params.getProjectRoot();
-        var config = require("../core/projectConfig.js");
-        config.init(currDir);
-        var version = config.data.egret_version;
+        //var currDir = params.getProjectRoot();
+        //var config = require("../core/projectConfig.js");
+        //config.init(currDir);
+        var version = config.getVersion();
         if (!version) {
             version = "1.0.0";
         }

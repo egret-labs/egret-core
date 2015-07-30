@@ -54,10 +54,12 @@ function executeCommandLine() {
     if (parser.getNotNeedProjectCmds().indexOf(cmdName) < 0) {
         config.init();
         //检测版本
-        var exitCode = new CheckCMD().execute();
-        if ((exitCode) > 0) {
-            process.exit(exitCode);
-            return;
+        if (parser.getCommandName() != "upgrade") {
+            var exitCode = new CheckCMD().execute();
+            if ((exitCode) > 0) {
+                process.exit(exitCode);
+                return;
+            }
         }
     }
     entry.executeOption();
