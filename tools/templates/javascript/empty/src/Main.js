@@ -132,19 +132,17 @@ function Main() {
         this.addChild(topMask);
 
         var icon = this.createBitmapByName("egretIcon");
-        icon.anchorX = icon.anchorY = 0.5;
         this.addChild(icon);
-        icon.x = stageW / 2;
-        icon.y = stageH / 2 - 60;
         icon.scaleX = 0.55;
         icon.scaleY = 0.55;
+        icon.x = (stageW - icon.width * icon.scaleX) / 2;
+        icon.y = (stageH - icon.height * icon.scaleY) / 2 - 60;
 
         var colorLabel = new egret.TextField();
-        colorLabel.x = stageW / 2;
+        colorLabel.width = stageW;
         colorLabel.y = stageH / 2 + 50;
-        colorLabel.anchorX = colorLabel.anchorY = 0.5;
         colorLabel.textColor = 0xffffff;
-        colorLabel.textAlign = "center";
+        colorLabel.textAlign = egret.HorizontalAlign.CENTER;
         colorLabel.text = "Hello Egret";
         colorLabel.size = 20;
         this.addChild(colorLabel);

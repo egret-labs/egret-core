@@ -37,6 +37,7 @@ module egret {
      */
     export interface IHashObject {
         /**
+         * @readOnly
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
 		 * @member {number} egret.IHashObject#hashCode
          */

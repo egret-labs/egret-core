@@ -57,6 +57,7 @@ module egret {
      * @classdesc
      * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
      * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
+     * @includeExample egret/utils/ByteArray.ts
      */
     export class ByteArray {
         private static SIZE_OF_BOOLEAN:number = 1;
@@ -634,6 +635,9 @@ module egret {
             }
         }
 
+        /**
+         * @private
+         */
         public validate(len:number):boolean {
             //len += this.data.byteOffset;
             if (this.data.byteLength > 0 && this._position + len <= this.data.byteLength) {

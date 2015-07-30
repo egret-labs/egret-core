@@ -33,6 +33,7 @@ module egret {
      * @classdesc
      * StageScaleMode 类为 Stage.scaleMode 属性提供值。
      * @class egret.StageScaleMode
+     * @includeExample egret/display/StageScaleMode.ts
      */
     export class StageScaleMode {
 

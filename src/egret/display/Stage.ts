@@ -37,6 +37,7 @@ module egret {
      * 可以以全局方式访问 Stage 对象(egret.MainContext.instance.stage)。也可以利用 DisplayObject 实例的 stage 属性进行访问。
      * Stage 类具有多个祖代类 -- DisplayObjectContainer、DisplayObject 和 EventDispatcher，属性和方法便是从这些类继承而来的。从这些继承的许多属性和方法不适用于 Stage 对象。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=202&terms1_id=59&terms2_id=69 深入了解屏幕适配
+     * @includeExample egret/display/Stage.ts
      */
     export class Stage extends DisplayObjectContainer {
 
@@ -162,6 +163,7 @@ module egret {
          * @param x
          * @param y
          * @returns {egret.DisplayObject}
+         * @private
          */
         public hitTest(x, y, ignoreTouchEnabled:boolean = false):DisplayObject {
             if (!this._DO_Props_._touchEnabled) {

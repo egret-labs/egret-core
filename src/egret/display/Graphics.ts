@@ -36,6 +36,7 @@ module egret {
      * Graphics 类包含一组可用来创建矢量形状的方法。支持绘制的显示对象包括 Sprite 和 Shape 对象。这些类中的每一个类都包括 graphics 属性，该属性是一个 Graphics 对象。
      * 以下是为便于使用而提供的一些辅助函数：drawRect()、drawRoundRect()、drawCircle() 和 drawEllipse()。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=136&terms1_id=25&terms2_id=32&t3_id=136  绘制矩形
+     * @includeExample egret/display/Graphics.ts
      */
     export class Graphics {
 
@@ -98,6 +99,7 @@ module egret {
          * @param alphas {Array} colors 数组中对应颜色的 alpha 值数组。
          * @param ratios {Array} 颜色分布比率的数组。
          * @param matrix {egret.Matrix} 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         * @platform Web
          */
         public beginGradientFill(type:string, colors:Array<number>, alphas:Array<number>, ratios:Array<number>, matrix:egret.Matrix = null):void {
             var gradient = this.getGradient(type, colors, alphas, ratios, matrix);

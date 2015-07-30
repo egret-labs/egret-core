@@ -34,8 +34,9 @@ module egret {
 	 * @classdesc
      * EventPhase 类可为 Event 类的 eventPhase 属性提供值。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=113&terms1_id=25&terms2_id=29 事件的执行流程
+     * @includeExample egret/events/EventPhase.ts
      */
-    export class EventPhase{
+    export class EventPhase {
 
         /**
          * 捕获阶段，是事件流的第一个阶段。

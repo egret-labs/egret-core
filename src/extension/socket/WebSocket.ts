@@ -34,6 +34,7 @@ module egret {
      * 要使用 egret.WebSocket 类的方法，请先使用构造函数 new egret.WebSocket 创建一个 egret.WebSocket 对象。
      * 套接字以异步方式传输和接收数据。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=164&terms1_id=25&terms2_id=37 WebSocket
+     * @includeExample extension/socket/WebSocket.ts
      */
     export class WebSocket extends egret.EventDispatcher {
         /**
@@ -55,8 +56,8 @@ module egret {
         private _connected:boolean = false;
 
         /**
-         * 创建一个 egret.WebSocket 对象
-         * 参数为预留参数，现版本暂不处理，连接地址和端口号在 connect 函数中传入
+         * 创建一个 egret.WebSocket 对象。
+         * 参数为预留参数，现版本暂不处理，连接地址和端口号在 connect 函数中传入。
          * @param host 要连接到的主机的名称或 IP 地址
          * @param port 要连接到的端口号
          */

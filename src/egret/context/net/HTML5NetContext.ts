@@ -38,6 +38,7 @@ module egret {
     export class HTML5NetContext extends NetContext {
 
         public _versionCtr:egret.IVersionController;
+
         public constructor() {
             super();
             Texture.createBitmapData = Texture._createBitmapDataForCanvasAndWebGl;
@@ -159,7 +160,7 @@ module egret {
             console.log("loadQQAudio");
 
             QZAppExternal.preloadSound(
-                function(data){
+                function (data) {
                     if (data.code == 0) {
                         var audio = new QQAudio();
                         audio._setPath(virtualUrl);
@@ -173,10 +174,10 @@ module egret {
                     else {
                         IOErrorEvent.dispatchIOErrorEvent(loader);
                     }
-                },{
-                    bid : -1,
-                    url : virtualUrl,
-                    refresh : 1
+                }, {
+                    bid: -1,
+                    url: virtualUrl,
+                    refresh: 1
                 });
         }
 
@@ -230,6 +231,14 @@ module egret {
 
         private loadTexture(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
+            if (Browser.getInstance().webPSupport) {
+                if (virtualUrl.indexOf(".png") != -1) {
+                    virtualUrl = virtualUrl.replace(".png", ".webp");
+                }
+                else if (virtualUrl.indexOf(".jpg") != -1) {
+                    virtualUrl = virtualUrl.replace(".jpg", ".webp");
+                }
+            }
             Texture.createBitmapData(virtualUrl, function (code:number, bitmapData:HTMLImageElement) {
                 if (code != 0) {
                     IOErrorEvent.dispatchIOErrorEvent(loader);

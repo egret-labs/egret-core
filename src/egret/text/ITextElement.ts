@@ -57,7 +57,13 @@ module egret {
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=146&terms1_id=25&terms2_id=33&t3_id=146 多种样式文本混合
      */
     export interface ITextElement {
+        /**
+         * 文本内容
+         */
         text:string;
+        /**
+         * 文本样式
+         */
         style?:ITextStyle;
     }
 

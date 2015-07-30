@@ -38,6 +38,7 @@ module egret {
      * 同时，SpriteSheet可以很方便的进行素材整合，降低HTTP请求数量
      * SpriteSheet 格式的具体规范可以参见此文档  https://github.com/egret-labs/egret-core/wiki/Egret-SpriteSheet-Specification
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=135&terms1_id=25&terms2_id=31 纹理集的使用
+     * @includeExample egret/display/SpriteSheet.ts
      */
     export class SpriteSheet extends HashObject {
 

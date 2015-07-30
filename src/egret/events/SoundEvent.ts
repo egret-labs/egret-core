@@ -32,6 +32,7 @@ module egret {
      * @classdesc
      * 声音相关事件。
      * 有事件：SoundEvent.SOUND_COMPLETE
+     * @includeExample egret/events/SoundEvent.ts
      */
     export class SoundEvent extends egret.Event {
 

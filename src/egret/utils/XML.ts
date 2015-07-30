@@ -34,11 +34,14 @@ module egret {
      * XML文件解析工具，它将XML文件解析为标准的JSON对象返回。
      * 用法类似JSON.parse(),传入一个XML字符串给XML.parse()，将能得到一个标准JSON对象。
      * 示例：
+     * <pre>
      *      <root value="abc">
      *          <item value="item0"/>
      *          <item value="item1"/>
      *      </root>
+     * </pre>         
      * 将解析为:
+     * <pre>
      *      {
      *          "name": "root",
      *          "$value": "abc",
@@ -47,7 +50,9 @@ module egret {
      *              {"name": "item", "$value": "item1"}
      *          ]
      *      }
+     * </pre>   
      * 其中XML上的属性节点都使用$+"属性名"的方式表示,子节点都存放在children属性的列表里，name表示节点名称。
+     * @includeExample egret/utils/XML.ts
      */
     export class XML {
 
@@ -56,6 +61,7 @@ module egret {
 		 * @method egret.XML.parse
          * @param value {string} 要解析的XML字符串。
 		 * @returns {any} 解析完后的JSON对象
+         * @platform Web
          */
         public static parse(value:string):any{
             var xmlDoc = SAXParser.getInstance().parserXML(value);
@@ -128,6 +134,7 @@ module egret {
          * @param path {string} 子节点路径，例如"item.node"
          * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
 		 * @returns {any} 节点路径的所有子节点
+         * @platform Web
          */
         public static findChildren(xml:any,path:string,result?:Array<any>):Array<any>{
             if(!result){
@@ -145,7 +152,8 @@ module egret {
 		 * @method egret.XML.findByPath
 		 * @param xml {any} 
 		 * @param path {string} 
-		 * @param result {egret.Array<any>} 
+		 * @param result {egret.Array<any>}
+         * @platform Web
 		 */
          private static findByPath(xml:any,path:string,result:Array<any>):void{
             var index:number = path.indexOf(".");
@@ -183,6 +191,7 @@ module egret {
          * @param xml {any} 要查找的XML节点。
          * @param result {egret.Array<any>} 可选参数，传入一个数组用于存储查找的结果。这样做能避免重复创建对象。
 		 * @returns {string} 节点上的所有属性名列表
+         * @platform Web
          */
         public static getAttributes(xml:any,result?:Array<any>):Array<string>{
             if(!result){
