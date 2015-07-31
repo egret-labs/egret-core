@@ -338,7 +338,7 @@ module egret {
                 var values = this.$Bitmap;
                 destW *= values[Keys.explicitScaleX];
                 destH *= values[Keys.explicitScaleY];
-                Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
+                Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing, bitmapData._offsetX * values[Keys.explicitScaleX], bitmapData._offsetY * values[Keys.explicitScaleY]);
             }
         }
 
@@ -415,12 +415,12 @@ module egret {
          * @param fillMode
          * @param smoothing
          */
-        static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean):void {
+        static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean, offsetX?:number, offsetY?:number):void {
             var bitmapData = texture;
             context.imageSmoothingEnabled = smoothing;
 
-            var offsetX:number = Math.round(bitmapData._offsetX);
-            var offsetY:number = Math.round(bitmapData._offsetY);
+            offsetX = offsetX || Math.round(bitmapData._offsetX);
+            offsetY = offsetY || Math.round(bitmapData._offsetY);
             var bitmapWidth:number = bitmapData._bitmapWidth;
             var bitmapHeight:number = bitmapData._bitmapHeight;
 
