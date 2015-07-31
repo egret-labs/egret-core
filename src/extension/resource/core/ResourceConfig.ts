@@ -33,6 +33,7 @@ module RES {
 	/**
 	 * @class RES.ResourceConfig
 	 * @classdesc
+     * @private
 	 */
     export class ResourceConfig {
 

@@ -34,6 +34,7 @@ module RES {
 	 * @class RES.ResourceEvent
 	 * @classdesc
 	 * @extends egret.Event
+	 * @private
 	 */
 	export class ResourceEvent extends egret.Event{
 		/**

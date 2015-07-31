@@ -29,7 +29,9 @@
 
 
 module RES {
-
+    /**
+     * @private
+     */
     export class TextAnalyzer extends BinAnalyzer{
 
         public constructor(){
