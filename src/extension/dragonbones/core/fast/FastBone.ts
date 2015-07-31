@@ -30,10 +30,6 @@
 module dragonBones {
 
 	/**
-	 * 不保存子骨骼列表和子插槽列表
-	 * 不能动态添加子骨骼和子插槽
-	 */
-	/**
 	 * @class dragonBones.FastBone
 	 * @classdesc
 	 * FastBone 实例代表 FastArmature 中的一个骨头。一个FastArmature实例可以由很多 FastBone组成。
