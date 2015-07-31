@@ -73,14 +73,6 @@ module egret {
             this._texture = value;
         }
 
-        public set smoothing(value) {
-
-        }
-
-        public get smoothing():boolean {
-            return false;
-        }
-
         /**
          * 矩形区域，它定义位图对象的九个缩放区域。此属性仅当fillMode为BitmapFillMode.SCALE时有效。
          * scale9Grid的x、y、width、height分别代表九宫图中中间那块的左上点的x、y以及中间方块的宽高。
