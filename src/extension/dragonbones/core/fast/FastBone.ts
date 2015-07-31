@@ -33,6 +33,17 @@ module dragonBones {
 	 * 不保存子骨骼列表和子插槽列表
 	 * 不能动态添加子骨骼和子插槽
 	 */
+	/**
+	 * @class dragonBones.FastBone
+	 * @classdesc
+	 * FastBone 实例代表 FastArmature 中的一个骨头。一个FastArmature实例可以由很多 FastBone组成。
+	 * FastBone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
+	 * 和Bone相比，FastBone不能动态添加子骨骼和子插槽
+	 * @extends dragonBones.FastDBObject
+	 * @see dragonBones.FastArmature
+	 * @see dragonBones.FastSlot
+	 * @see dragonBones.BoneData
+	 */
 	export class FastBone extends FastDBObject{
 		public static initWithBoneData(boneData:BoneData):FastBone{
 			var outputBone:FastBone = new FastBone();

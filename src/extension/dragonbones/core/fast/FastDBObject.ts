@@ -29,6 +29,13 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.FastDBObject
+	 * @classdesc
+	 * FastDBObject 是 FastBone 和 FastSlot 的基类
+	 * @see dragonBones.FastBone
+	 * @see dragonBones.FastSlot
+	 */
 	export class FastDBObject{
 		private _name:string;
 		
