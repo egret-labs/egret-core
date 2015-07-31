@@ -34,12 +34,14 @@ module egret {
      * The EventPhase class provides values for the eventPhase property of the Event class.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/EventPhase.ts
      */
     /**
      * @language zh_CN
      * EventPhase 可为 Event 类的 eventPhase 属性提供值。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/EventPhase.ts
      */
     export const enum EventPhase{
 

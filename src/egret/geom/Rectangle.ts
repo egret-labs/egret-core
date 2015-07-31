@@ -41,6 +41,7 @@ module egret {
      * if you change the bottom property, the value of the height property changes.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/geom/Rectangle.ts
      */
     /**
      * @language zh_CN
@@ -50,6 +51,7 @@ module egret {
      * 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/geom/Rectangle.ts
      */
     export class Rectangle extends HashObject {
 

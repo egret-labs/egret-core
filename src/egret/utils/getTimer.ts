@@ -41,6 +41,7 @@ module egret {
      * @returns The number of milliseconds since the Egret framework was initialized
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
      */
     /**
      * @language zh_CN
@@ -48,6 +49,7 @@ module egret {
      * @returns 启动 Egret 框架以来经过的毫秒数。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
      */
     export function getTimer():number {
         return Date.now() - $START_TIME;

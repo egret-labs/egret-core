@@ -34,6 +34,7 @@ module egret {
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android between language communication within the project
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/context/external/ExternalInterface.ts
      */
     /**
      * @language zh_CN
@@ -41,6 +42,7 @@ module egret {
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android项目内的语言间通讯
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/context/external/ExternalInterface.ts
      */
     export interface ExternalInterface {
 

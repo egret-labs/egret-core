@@ -40,6 +40,7 @@ module egret {
      * </pre>
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
      */
     /**
      * @language zh_CN
@@ -52,6 +53,7 @@ module egret {
      * </pre>
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
      */
     export function getQualifiedSuperclassName(value:any):string {
         if (!value || typeof value != "object") {

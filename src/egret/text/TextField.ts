@@ -187,6 +187,7 @@ module egret {
      * @event egret.FocusEvent.FOCUS_OUT Enter the text loses focus after dispatch.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/text/TextField.ts
      */
     /**
      * @language zh_CN
@@ -199,6 +200,7 @@ module egret {
      * @event egret.FocusEvent.FOCUS_OUT 输入文本失去焦点后调度。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/text/TextField.ts
      */
     export class TextField extends DisplayObject {
 

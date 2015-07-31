@@ -42,6 +42,7 @@ module egret {
      * @see egret.DisplayObject#blendMode
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/BlendMode.ts
      */
     /**
      * @language zh_CN
@@ -49,6 +50,7 @@ module egret {
      * @see egret.DisplayObject#blendMode
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/BlendMode.ts
      */
     export class BlendMode {
         /**

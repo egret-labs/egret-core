@@ -35,6 +35,7 @@ module egret {
      * Note: Because of browser compatibility, this property has not been achieved in html5
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/net/URLRequestHeader.ts
      */
     /**
      * @language zh_CN
@@ -42,6 +43,7 @@ module egret {
      * 注意：由于浏览器兼容性原因，在 html5 中并未实现
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/net/URLRequestHeader.ts
      */
     export class URLRequestHeader {
 

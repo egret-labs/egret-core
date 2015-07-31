@@ -34,6 +34,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html  MovieClip序列帧动画
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/MovieClip.ts
      */
     export class MovieClip extends DisplayObject {
 

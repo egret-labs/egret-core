@@ -39,6 +39,7 @@ module egret {
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/media/Sound.ts
      */
     /**
      * @language zh_CN
@@ -49,6 +50,7 @@ module egret {
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/media/Sound.ts
      */
     export class Sound extends egret.EventDispatcher {
 

@@ -37,6 +37,7 @@ module egret {
      * @see egret.Graphics
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Shape.ts
      */
     /**
      * @language zh_CN
@@ -44,6 +45,7 @@ module egret {
      * @see egret.Graphics
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Shape.ts
      */
     export class Shape extends DisplayObject {
 

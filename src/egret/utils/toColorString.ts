@@ -36,6 +36,7 @@ module egret {
 	 * @returns {string} Color character string, for example, #ffffff.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/toColorString.ts
      */
     /**
      * @language zh_CN
@@ -44,6 +45,7 @@ module egret {
 	 * @returns {string} 颜色字符串，例如"#ffffff"。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/toColorString.ts
      */
     export function toColorString(value:number):string{
         //value = +value || 0;

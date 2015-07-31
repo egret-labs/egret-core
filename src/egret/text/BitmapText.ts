@@ -73,12 +73,14 @@ module egret {
      * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/text/BitmapText.ts
      */
     /**
      * @language zh_CN
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/text/BitmapText.ts
      */
     export class BitmapText extends DisplayObject {
 

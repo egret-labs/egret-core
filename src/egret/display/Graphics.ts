@@ -37,6 +37,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  Draw Rectangle
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Graphics.ts
      */
     /**
      * @language zh_CN
@@ -45,6 +46,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/graphics/drawrect.html  绘制矩形
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Graphics.ts
      */
     export class Graphics extends HashObject {
 

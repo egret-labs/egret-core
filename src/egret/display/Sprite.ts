@@ -33,12 +33,14 @@ module egret {
      * The Sprite class is a basic display list building block: a display list node that can contain children.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
      */
     /**
      * @language zh_CN
      * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
      */
     export class Sprite extends DisplayObjectContainer implements IDisplayObjectContainer {
 

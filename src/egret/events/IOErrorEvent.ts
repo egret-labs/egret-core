@@ -35,12 +35,14 @@ module egret {
 	 * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
 	 */
 	/**
      * @language zh_CN
 	 * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
 	 */
     export class IOErrorEvent extends Event{
 

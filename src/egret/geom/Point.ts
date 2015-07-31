@@ -39,12 +39,14 @@ module egret {
      * axis and y represents the vertical axis.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/geom/Point.ts
      */
     /**
      * @language zh_CN
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/geom/Point.ts
      */
     export class Point extends HashObject {
 

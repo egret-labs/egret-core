@@ -35,6 +35,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/tween/Tween.ts
 	 */
 	/**
      * @language zh_CN
@@ -42,6 +43,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween ease animation
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/tween/Tween.ts
 	 */
     export class Tween extends EventDispatcher {
 		/**

@@ -84,6 +84,7 @@ module egret {
      * Note: The ByteArray class is applied to the advanced developers who need to access data at the byte layer.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/ByteArray.ts
      */
     /**
      * @language zh_CN
@@ -91,6 +92,7 @@ module egret {
      * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/ByteArray.ts
      */
     export class ByteArray {
         /**

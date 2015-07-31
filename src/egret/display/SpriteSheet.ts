@@ -40,6 +40,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/SpriteSheet.ts
      */
     /**
      * @language zh_CN
@@ -51,6 +52,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/SpriteSheet.ts
      */
     export class SpriteSheet extends HashObject {
 

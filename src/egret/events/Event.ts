@@ -45,6 +45,7 @@ module egret {
      * @see egret.EventDispatcher
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/Event.ts
      */
     /**
      * @language zh_CN
@@ -57,6 +58,7 @@ module egret {
      * @see egret.EventDispatcher
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/Event.ts
      */
     export class Event extends HashObject {
         /**

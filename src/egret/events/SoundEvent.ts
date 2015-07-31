@@ -34,6 +34,7 @@ module egret {
      * An event: SoundEvent.SOUND_COMPLETE
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/SoundEvent.ts
      */
     /**
      * @language zh_CN
@@ -41,6 +42,7 @@ module egret {
      * 有事件：SoundEvent.SOUND_COMPLETE
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/SoundEvent.ts
      */
     export class SoundEvent extends egret.Event {
 

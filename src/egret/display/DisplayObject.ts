@@ -175,6 +175,7 @@ module egret {
      * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/DisplayObject.ts
      */
     /**
      * @language zh_CN
@@ -199,6 +200,7 @@ module egret {
      * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE 当用户在启用触摸设备上的已启动接触的不同 DisplayObject 实例上抬起接触点时（例如，在配有触摸屏的移动电话或平板电脑的显示对象上的某一点处按下并释放手指）调度。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/DisplayObject.ts
      */
     export class DisplayObject extends EventDispatcher implements sys.Renderable {
 

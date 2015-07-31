@@ -35,12 +35,14 @@ module egret {
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/TextEvent.ts
      */
     /**
      * @language zh_CN
      * 用户在富文本中单击超链接时，对象将调度 TextEvent 对象。文本事件类型：TextEvent.LINK。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/TextEvent.ts
      */
     export class TextEvent extends Event {
 

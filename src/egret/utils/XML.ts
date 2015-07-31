@@ -74,12 +74,14 @@ module egret {
      * The XML class contains properties for working with XML objects.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
      */
     /**
      * @language zh_CN
      * XML 类包含用于处理 XML 对象的属性。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
      */
     export interface XML extends XMLNode {
         /**

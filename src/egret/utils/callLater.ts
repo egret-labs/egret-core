@@ -50,6 +50,7 @@ module egret {
      * @param ...args {any} Function parameter list
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
      */
     /**
      * @language zh_CN
@@ -59,6 +60,7 @@ module egret {
      * @param ...args {any} 函数参数列表
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
      */
     export function callLater(method:Function,thisObject:any,...args):void
     {

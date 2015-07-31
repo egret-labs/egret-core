@@ -36,6 +36,7 @@ module egret {
      * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 Text(Containing the specific usage of the bitmap font )
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/text/BitmapFont.ts
      */
     /**
      * @language zh_CN
@@ -44,6 +45,7 @@ module egret {
      * @see http://bbs.egret-labs.org/forum.php?mod=viewthread&tid=251 文本(含位图字体具体用法)
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/text/BitmapFont.ts
      */
     export class BitmapFont extends SpriteSheet {
 

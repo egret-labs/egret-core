@@ -41,6 +41,7 @@ module egret {
      * @param name The name of a class.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
      */
     /**
      * @language zh_CN
@@ -48,6 +49,7 @@ module egret {
      * @param name 类的名称。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
      */
     export function getDefinitionByName(name:string):any {
         if (!name)

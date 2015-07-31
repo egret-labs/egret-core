@@ -46,6 +46,7 @@ module egret {
      *
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/TouchEvent.ts
      */
     /**
      * @language zh_CN
@@ -58,6 +59,7 @@ module egret {
      *
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/events/TouchEvent.ts
      */
     export class TouchEvent extends Event {
 

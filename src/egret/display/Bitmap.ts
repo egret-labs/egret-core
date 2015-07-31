@@ -51,6 +51,7 @@ module egret {
      * @see egret.Texture
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Bitmap.ts
      */
     /**
      * @language zh_CN
@@ -64,6 +65,7 @@ module egret {
      * @see egret.Texture
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Bitmap.ts
      */
     export class Bitmap extends DisplayObject {
 

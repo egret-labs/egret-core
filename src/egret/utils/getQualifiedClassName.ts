@@ -41,6 +41,7 @@ module egret {
      * </pre>
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
      */
     /**
      * @language zh_CN
@@ -54,6 +55,7 @@ module egret {
      * </pre>
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
      */
     export function getQualifiedClassName(value:any):string {
         var type = typeof value;

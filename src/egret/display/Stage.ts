@@ -37,6 +37,7 @@ module egret {
      * @event egret.Event.RESIZE Emitted when the stageWidth or stageHeight property of the Stage object is changed.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Stage.ts
      */
     /**
      * @language zh_CN
@@ -50,6 +51,7 @@ module egret {
      *
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Stage.ts
      */
     export class Stage extends DisplayObjectContainer {
 

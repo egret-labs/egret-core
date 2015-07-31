@@ -40,6 +40,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/loader/getres.html Several ways of access to resources
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Texture.ts
      */
     /**
      * @language zh_CN
@@ -51,6 +52,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/Texture.ts
      */
     export class Texture extends HashObject {
 

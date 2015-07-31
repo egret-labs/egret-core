@@ -35,6 +35,7 @@ module egret {
      * @see http://docs.egret-labs.org/jkdoc/manual-net-websocket.html WebSocket
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample extension/socket/WebSocket.ts
      */
     /**
      * @language zh_CN
@@ -44,6 +45,7 @@ module egret {
      * @see http://docs.egret-labs.org/jkdoc/manual-net-websocket.html WebSocket
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample extension/socket/WebSocket.ts
      */
     export class WebSocket extends egret.EventDispatcher {
         /**

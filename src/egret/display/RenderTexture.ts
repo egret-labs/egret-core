@@ -31,12 +31,46 @@ module egret {
     var blendModes = ["source-over", "lighter", "destination-out"];
     var defaultCompositeOp = "source-over";
 
+    /**
+     * @language en_US
+     * RenderTexture is a dynamic texture
+     * @extends egret.Texture
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     */
+    /**
+     * @language zh_CN
+     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+     * @extends egret.Texture
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     */
     export class RenderTexture extends egret.Texture {
 
         constructor() {
             super();
         }
 
+        /**
+         * @language en_US
+         * The specified display object is drawn as a texture
+         * @param displayObject {egret.DisplayObject} the display to draw
+         * @param clipBounds {egret.Rectangle} clip rect
+         * @param scale {number} scale factor
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将指定显示对象绘制为一个纹理
+         * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
+         * @param clipBounds {egret.Rectangle} 绘制矩形区域
+         * @param scale {number} 缩放比例
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
             scale /= $TextureScaleFactor;
             var originParent = displayObject.$parent;

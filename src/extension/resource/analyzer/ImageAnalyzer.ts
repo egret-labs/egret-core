@@ -29,7 +29,9 @@
 
 
 module RES {
-
+    /**
+     * @private
+     */
     export class ImageAnalyzer extends BinAnalyzer{
 
         public constructor(){

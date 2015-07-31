@@ -35,12 +35,14 @@ module egret {
      * Injector
 	 * @version Egret 2.0
 	 * @platform Web,Native
+	 * @includeExample egret/utils/Injector.ts
      */
     /**
 	 * @language zh_CN
      * 注入器
 	 * @version Egret 2.0
 	 * @platform Web,Native
+	 * @includeExample egret/utils/Injector.ts
      */
 	export class Injector{
 		/**

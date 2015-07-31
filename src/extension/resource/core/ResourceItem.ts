@@ -32,6 +32,7 @@ module RES {
 	/**
 	 * @class RES.ResourceItem
 	 * @classdesc
+	 * @private
 	 */
 	export class ResourceItem{
 		/**

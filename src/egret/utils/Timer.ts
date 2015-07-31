@@ -38,6 +38,7 @@ module egret {
      * @see egret.TimerEvent
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
      */
     /**
      * @language zh_CN
@@ -48,6 +49,7 @@ module egret {
      * @see egret.TimerEvent
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
      */
     export class Timer extends EventDispatcher {
 

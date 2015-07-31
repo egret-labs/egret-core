@@ -36,6 +36,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
      * @version Egret 2.0
      * @platform Web,Native
+	 * @includeExample egret/net/URLRequestMethod.ts
 	 */
 	/**
      * @language zh_CN
@@ -44,6 +45,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
      * @version Egret 2.0
      * @platform Web,Native
+	 * @includeExample egret/net/URLRequestMethod.ts
 	 */
     export class URLRequestMethod {
 

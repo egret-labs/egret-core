@@ -37,8 +37,9 @@ module egret {
 	  * @returns {boolean} Whether the public definition exists
       * @example
       * egret.hasDefinition("egret.DisplayObject") //return true
-     * @version Egret 2.0
-     * @platform Web,Native
+      * @version Egret 2.0
+      * @platform Web,Native
+      * @includeExample egret/utils/hasDefinition.ts
       */
      /**
       * @language zh_CN
@@ -47,8 +48,9 @@ module egret {
 	  * @returns {boolean} 公共定义是否存在
       * @example
       * egret.hasDefinition("egret.DisplayObject") //返回 true
-     * @version Egret 2.0
-     * @platform Web,Native
+      * @version Egret 2.0
+      * @platform Web,Native
+      * @includeExample egret/utils/hasDefinition.ts
       */
     export function hasDefinition(name:string):boolean{
         var definition:any = getDefinitionByName(name);

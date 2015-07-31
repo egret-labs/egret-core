@@ -36,6 +36,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html Texture filling way
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/BitmapFillMode.ts
      */
     /**
      * @language zh_CN
@@ -44,6 +45,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/bitmap/bitmapfillmode.html 纹理的填充方式
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/display/BitmapFillMode.ts
      */
     export class BitmapFillMode {
 

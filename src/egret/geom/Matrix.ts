@@ -82,6 +82,7 @@ module egret {
      * translation (x and y repositioning), rotation, scaling, and skewing.
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/geom/Matrix.ts
      */
     /**
      * @language zh_CN
@@ -90,6 +91,7 @@ module egret {
      * 对象应用于显示对象的 matrix 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
      * @version Egret 2.0
      * @platform Web,Native
+     * @includeExample egret/geom/Matrix.ts
      */
     export class Matrix extends HashObject {
 
