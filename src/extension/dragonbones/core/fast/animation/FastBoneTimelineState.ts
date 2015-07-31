@@ -29,6 +29,15 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.FastBoneTimelineState
+	 * @classdesc
+	 * FastBoneTimelineState 负责计算 Bone 的时间轴动画。
+	 * FastBoneTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 FastBone生成一个 FastBoneTimelineState 实例.
+	 * @see dragonBones.FastAnimation
+	 * @see dragonBones.FastAnimationState
+	 * @see dragonBones.FastBone
+	 */
 	export class FastBoneTimelineState{
 		private static _pool:Array<FastBoneTimelineState> = [];
 		

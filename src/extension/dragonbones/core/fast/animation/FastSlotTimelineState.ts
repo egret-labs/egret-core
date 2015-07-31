@@ -29,6 +29,15 @@
 
 module dragonBones {
 
+	/**
+	 * @class dragonBones.FastSlotTimelineState
+	 * @classdesc
+	 * FastSlotTimelineState 负责计算 Slot 的时间轴动画。
+	 * FastSlotTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 Slot生成一个 FastSlotTimelineState 实例.
+	 * @see dragonBones.FastAnimation
+	 * @see dragonBones.FastAnimationState
+	 * @see dragonBones.FastSlot
+	 */
 	export class FastSlotTimelineState{
 		private static HALF_PI:number = Math.PI * 0.5;
 		private static DOUBLE_PI:number = Math.PI * 2;

@@ -33,11 +33,11 @@ module dragonBones {
 	/**
      * @class dragonBones.SlotTimelineState
      * @classdesc
-     * TimelineState 负责计算 Slot 的时间轴动画。
-     * TimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Slot生成一个 SlotTimelineState 实例.
+     * SlotTimelineState 负责计算 Slot 的时间轴动画。
+     * SlotTimelineState 实例隶属于 AnimationState. AnimationState在创建时会为每个包含动作的 Slot生成一个 SlotTimelineState 实例.
      * @see dragonBones.Animation
      * @see dragonBones.AnimationState
-     * @see dragonBones.Bone
+     * @see dragonBones.Slot
      */
 	export class SlotTimelineState{
 		private static HALF_PI:number = Math.PI * 0.5;

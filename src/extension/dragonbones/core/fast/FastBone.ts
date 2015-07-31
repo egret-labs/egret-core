@@ -57,21 +57,21 @@ module dragonBones {
 			super();
 			this._needUpdate = 2;
 		}
-		
+
 		/**
-		 * Get all Bone instance associated with this bone.
-		 * @return A Vector.&lt;Slot&gt; instance.
-		 * @see dragonBones.Slot
+		 * 获取当前骨头包含的所有 FastBone 实例
+		 * @param returnCopy {boolean} 是否返回拷贝。默认：true
+		 * @returns {FastBone[]}
 		 */
 		public getBones(returnCopy:boolean = true):Array<FastBone>
 		{
 			return returnCopy ? this.boneList.concat() : this.boneList;
 		}
-		
+
 		/**
-		 * Get all Slot instance associated with this bone.
-		 * @return A Vector.&lt;Slot&gt; instance.
-		 * @see dragonBones.Slot
+		 * 获取当前骨头包含的所有 FastSlot 实例
+		 * @param returnCopy {boolean} 是否返回拷贝。默认：true
+		 * @returns {FastSlot[]}
 		 */
 		public getSlots(returnCopy:boolean = true):Array<FastSlot>
 		{
@@ -88,7 +88,7 @@ module dragonBones {
 		
 	//动画
 		/**
-		 * Force update the bone in next frame even if the bone is not moving.
+		 * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
 		 */
 		public invalidUpdate():void{
 			this._needUpdate = 2;
@@ -135,7 +135,7 @@ module dragonBones {
 		}
 
 		/**
-		 * Unrecommended API. Recommend use slot.childArmature.
+		 * 不推荐的API,建议使用 slot.childArmature 替代
 		 */
 		public get childArmature():any
 		{
@@ -146,9 +146,9 @@ module dragonBones {
 			}
 			return null;
 		}
-		
+
 		/**
-		 * Unrecommended API. Recommend use slot.display.
+		 * 不推荐的API,建议使用 slot.display 替代
 		 */
 		public get display():any
 		{
@@ -183,7 +183,11 @@ module dragonBones {
 				}
 			}
 		}
-		
+
+		/**
+		 * 返回当前 FastBone 实例包含的第一个 FastSlot 实例
+		 * @member {FastSlot} dragonBones.FastBone#slot
+		 */
 		public get slot():FastSlot
 		{
 			return this.slotList.length > 0 ? this.slotList[0] : null;

@@ -272,33 +272,41 @@ module dragonBones {
 			this.enableCache = true;
 			return animationCacheManager;
 		}
-		
+
+		/**
+		 * 获取指定名称的 Bone
+		 * @param boneName {string} Bone名称
+		 * @returns {FastBone}
+		 */
 		public getBone(boneName:string):FastBone
 		{
 			return this._boneDic[boneName];
 		}
+		/**
+		 * 获取指定名称的 Slot
+		 * @param slotName {string} Slot名称
+		 * @returns {FastSlot}
+		 */
 		public getSlot(slotName:string):FastSlot
 		{
 			return this._slotDic[slotName];
 		}
-		
+
 		/**
-		 * Gets the Bone associated with this DisplayObject.
-		 * @param Instance type of this object varies from flash.display.DisplayObject to startling.display.DisplayObject and subclasses.
-		 * @return A Bone instance or null if no Bone with that DisplayObject exist..
-		 * @see dragonBones.Bone
+		 * 获取包含指定显示对象的 Bone
+		 * @param display {any} 显示对象实例
+		 * @returns {FastBone}
 		 */
 		public getBoneByDisplay(display:any):FastBone
 		{
 			var slot:FastSlot = this.getSlotByDisplay(display);
 			return slot?slot.parent:null;
 		}
-		
+
 		/**
-		 * Gets the Slot associated with this DisplayObject.
-		 * @param Instance type of this object varies from flash.display.DisplayObject to startling.display.DisplayObject and subclasses.
-		 * @return A Slot instance or null if no Slot with that DisplayObject exist.
-		 * @see dragonBones.Slot
+		 * 获取包含指定显示对象的 Slot
+		 * @param displayObj {any} 显示对象实例
+		 * @returns {FastSlot}
 		 */
 		public getSlotByDisplay(displayObj:any):FastSlot
 		{
@@ -314,12 +322,11 @@ module dragonBones {
 			}
 			return null;
 		}
-		
+
 		/**
-		 * Get all Slot instance associated with this armature.
-		 * @param if return Vector copy
-		 * @return A Vector.&lt;Slot&gt; instance.
-		 * @see dragonBones.Slot
+		 * 获取骨架包含的所有插槽
+		 * @param returnCopy {boolean} 是否返回拷贝。默认：true
+		 * @returns {FastSlot[]}
 		 */
 		public getSlots(returnCopy:boolean = true):Array<FastSlot>
 		{
@@ -334,13 +341,13 @@ module dragonBones {
 				bone.update();
 			}
 		}
-		
-		
+
+
 		/**
-		 * Add a Bone instance to this Armature instance.
-		 * @param A Bone instance.
-		 * @param (optional) The parent's name of this Bone instance.
-		 * @see dragonBones.Bone
+		 * 在骨架中为指定名称的 FastBone 添加一个子 FastBone.
+		 * 和Armature不同,FastArmature的这个方法不能在运行时动态添加骨骼
+		 * @param bone {FastBone} FastBone 实例
+		 * @param parentName {string} 父骨头名称 默认：null
 		 */
 		public addBone(bone:FastBone, parentName:string = null):void{
 			var parentBone:FastBone;
@@ -353,12 +360,13 @@ module dragonBones {
 			this.boneList.unshift(bone);
 			this._boneDic[bone.name] = bone;
 		}
-		
+
 		/**
-		 * Add a slot to a bone as child.
-		 * @param slot A Slot instance
-		 * @param boneName bone name
-		 * @see dragonBones.core.DBObject
+		 * 为指定名称的 FastBone 添加一个子 FastSlot.
+		 * 和Armature不同,FastArmature的这个方法不能在运行时动态添加插槽
+		 * @param slot {FastSlot} FastSlot 实例
+		 * @param boneName {string}
+		 * @see dragonBones.Bone
 		 */
 		public addSlot(slot:FastSlot, parentBoneName:string):void{
 			var bone:FastBone = this.getBone(parentBoneName);
@@ -378,9 +386,9 @@ module dragonBones {
 				throw new Error();
 			}
 		}
-		
+
 		/**
-		 * Sort all slots based on zOrder
+		 * 按照显示层级为所有 Slot 排序
 		 */
 		public updateSlotsZOrder():void{
 			this.slotList.sort(this.sortSlot);
@@ -470,7 +478,11 @@ module dragonBones {
 		private sortSlot(slot1:FastSlot, slot2:FastSlot):number{
 			return slot1.zOrder < slot2.zOrder?1: -1;
 		}
-		
+
+		/**
+		 * 获取FastAnimation实例
+		 * @returns {any} FastAnimation实例
+		 */
 		public getAnimation():any
 		{
 			return this._animation;
