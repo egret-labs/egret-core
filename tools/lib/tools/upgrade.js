@@ -36,7 +36,8 @@ var upgradeConfigArr = [
     {"v" : "1.7.3", "func":upgradeTo_1_7_3},
     {"v" : "2.0.0", "func":upgradeTo_2_0_0},
     {"v" : "2.0.1", "func":upgradeTo_2_0_1},
-    {"v" : "2.0.2", "func":upgradeTo_2_0_2}
+    {"v" : "2.0.2", "func":upgradeTo_2_0_2},
+    {"v" : "2.0.3", "func":upgradeTo_2_0_3}
 ];
 
 var currDir;
@@ -384,6 +385,14 @@ function upgradeTo_2_0_2() {
 
     projectConfig.init(currDir);
     projectConfig.data.egret_version = "2.0.2";
+    projectConfig.save();
+}
+
+function upgradeTo_2_0_3() {
+    globals.log(1704, "2.0.3");
+
+    projectConfig.init(currDir);
+    projectConfig.data.egret_version = "2.0.3";
     projectConfig.save();
 }
 

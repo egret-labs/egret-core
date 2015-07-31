@@ -15,7 +15,7 @@ var projectProperties = require("../core/projectProperties.js");
 var async = require('../core/async');
 
 var execFile = require("child_process").execFile;
-var binPath = require("../lib/webp-bin/webp-bin").path;
+var binPath = require("../lib/webp/webp-bin").path;
 
 var versionCtr;
 function run(dir, args, opts) {
@@ -334,14 +334,11 @@ function publishHtml5(opts, versionFile) {
             var needWebP = opts["-webp"];
             if (needWebP) {
                 //替换发布文件中对webp格式判断
-                var str = 'var img = new Image();\n' +
-                    '    img.onload = function (){\n' +
-                    '        egret.Browser.getInstance().webPSupport = true;\n' +
-                    '    };\n' +
-                    '    img.src = "data:image/webp;base64,UklGRjAAAABXRUJQVlA4ICQAAACyAgCdASoBAAEALy2Wy2WlpaWlpYEsSygABc6zbAAA/upgAAA=";';
+                var str = "useWebP = true;";
                 var txt = file.read(path.join(releaseOutputPath, "index.html"));
                 txt = txt.replace("//WebP_replace",str);
                 file.save(path.join(releaseOutputPath, "index.html"), txt);
+                file.copy(path.join(param.getEgretPath(), "tools", "lib", "lib", "webp", "4x4.webp"), path.join(releaseOutputPath, "4x4.webp"));
                 //图片转webp
                 var list = file.getDirectoryAllListing(path.join(releaseOutputPath, "resource"));
                 list = list.filter(function (item) {
