@@ -589,6 +589,10 @@ module dragonBones {
 			return slot1.zOrder < slot2.zOrder?1: -1;
 		}
 
+		/**
+		 * 获取Animation实例
+		 * @returns {any} Animation实例
+		 */
 		public getAnimation():any
 		{
 			return this._animation;

@@ -68,7 +68,11 @@ module dragonBones {
 			this.inheritRotation = true;
 			this.inheritScale = true;
 		}
-		
+
+		/**
+		 * 通过传入 SlotData 初始化FastSlot
+		 * @param slotData
+		 */
 		public initWithSlotData(slotData:SlotData):void{
 			this.name = slotData.name;
 			this.blendMode = slotData.blendMode;
@@ -242,7 +246,8 @@ module dragonBones {
 		}
 
 		/**
-		 * The DisplayObject list belonging to this Slot instance (display or armature). Replace it to implement switch texture.
+		 * 显示对象列表(包含 display 或者 子骨架)
+		 * @member {any[]} dragonBones.FastSlot#displayList
 		 */
 		public get displayList():Array<any>{
 			return this._displayList;
@@ -262,9 +267,10 @@ module dragonBones {
 				this.changeSlotDisplay(newDisplay);
 			}
 		}
-		
+
 		/**
-		 * The DisplayObject belonging to this Slot instance. Instance type of this object varies from flash.display.DisplayObject to startling.display.DisplayObject and subclasses.
+		 * 当前的显示对象(可能是 display 或者 子骨架)
+		 * @member {any} dragonBones.FastSlot#display
 		 */
 		public get display():any{
 			return this._currentDisplay;
@@ -280,21 +286,22 @@ module dragonBones {
 			
 			this.changeSlotDisplay(value);
 		}
-		
+
 		/**
-		 * The sub-armature of this Slot instance.
+		 * 当前的子骨架
+		 * @member {FastArmature} dragonBones.Slot#childArmature
 		 */
-		public get childArmature():FastArmature{
-			return this._displayList[this._currentDisplayIndex] instanceof FastArmature ? this._displayList[this._currentDisplayIndex] : null;
+		public get childArmature():any{
+			return this._displayList[this._currentDisplayIndex] instanceof IArmature ? this._displayList[this._currentDisplayIndex] : null;
 		}
 		
-		public set childArmature(value:FastArmature)
+		public set childArmature(value:any)
 		{
 			this.display = value;
 		}
 		/**
-		 * zOrder. Support decimal for ensure dynamically added slot work toghther with animation controled slot.  
-		 * @return zOrder.
+		 * 显示顺序。(支持小数用于实现动态插入slot)
+		 * @member {number} dragonBones.FastSlot#zOrder
 		 */
 		public get zOrder():number{
 			return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
@@ -307,10 +314,10 @@ module dragonBones {
 				}
 			}
 		}
-		
+
 		/**
-		 * blendMode
-		 * @return blendMode.
+		 * 混合模式
+		 * @member {string} dragonBones.FastSlot#blendMode
 		 */
 		public get blendMode():string{
 			return this._blendMode;

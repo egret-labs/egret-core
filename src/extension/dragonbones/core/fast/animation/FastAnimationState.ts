@@ -497,8 +497,11 @@ module dragonBones {
 		public get currentTime():number{
 			return this._currentTime < 0 ? 0 : this._currentTime * 0.001;
 		}
-		
-		
+
+		/**
+		 * 是否使用缓存
+		 * @member {boolean} dragonBones.FastAnimationState#isUseCache
+		 */
 		public isUseCache():boolean{
 			return this._armature.enableCache && this.animationCache && !this._fading;
 		}
@@ -515,6 +518,10 @@ module dragonBones {
 			}
 		}
 
+		/**
+		 * 动画播放进度
+		 * @member {number} dragonBones.FastAnimationState#progress
+		 */
 		public get progress():number
 		{
 			return this._progress;
