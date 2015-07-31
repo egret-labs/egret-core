@@ -38,6 +38,7 @@ module egret {
         }
 
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
+            scale /= $TextureScaleFactor;
             var originParent = displayObject.$parent;
             var c1 = new egret.DisplayObjectContainer();
             c1.addChild(displayObject);

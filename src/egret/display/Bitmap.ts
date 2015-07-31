@@ -503,7 +503,7 @@ module egret {
             var targetW2 = sourceW2 * $TextureScaleFactor;
             var targetH2 = sourceH2 * $TextureScaleFactor;
 
-            if (sourceW0 + sourceW2 > surfaceWidth || sourceH0 + sourceH2 > surfaceHeight) {
+            if ((sourceW0 + sourceW2) * $TextureScaleFactor > surfaceWidth || (sourceH0 + sourceH2) * $TextureScaleFactor > surfaceHeight) {
                 context.drawImage(image, 0, 0, surfaceWidth, surfaceHeight);
                 return;
             }
