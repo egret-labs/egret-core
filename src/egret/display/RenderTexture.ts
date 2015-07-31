@@ -59,6 +59,7 @@ module egret {
             root.$displayList = null;
             var bounds = displayObject.getBounds();
             var context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
+            context.clearRect(0, 0, bounds.width * scale, bounds.height * scale);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;
             if (!context) {
@@ -82,10 +83,10 @@ module egret {
                 displayObject.$renderRegion.moved = true;
                 displayObject.$update();
             }
-            else if(displayObject instanceof DisplayObjectContainer) {
+            else if (displayObject instanceof DisplayObjectContainer) {
                 var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
                 var length:number = children.length;
-                for (var i:number = 0 ; i < length ; i++){
+                for (var i:number = 0; i < length; i++) {
                     var child:DisplayObject = children[i];
                     this.$update(child);
                 }
