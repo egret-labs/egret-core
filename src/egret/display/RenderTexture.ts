@@ -50,16 +50,17 @@ module egret {
             }
 
             var root = new egret.DisplayObjectContainer();
-            root.$displayList = sys.DisplayList.create(root);
+            var displayList = sys.DisplayList.create(root);
+            root.$displayList = displayList;
             root.addChild(c1);
 
-            if (displayObject.$renderRegion) {
-                displayObject.$renderRegion.moved = true;
-            }
-            displayObject.$update();
-            c1.$displayList = null;
+            this.$update(displayObject);
+            sys.DisplayList.release(displayList);
+            root.$displayList = null;
             var bounds = displayObject.getBounds();
             var context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
+            this._offsetX = bounds.x * scale;
+            this._offsetY = bounds.y * scale;
             if (!context) {
                 return false;
             }
@@ -68,10 +69,27 @@ module egret {
                 return false;
             }
             this._setBitmapData(context.surface);
+            this._offsetX = bounds.x * scale;
+            this._offsetY = bounds.y * scale;
             if (originParent) {
                 originParent.addChild(displayObject);
             }
             return true;
+        }
+
+        private $update(displayObject:DisplayObject):void {
+            if (displayObject.$renderRegion) {
+                displayObject.$renderRegion.moved = true;
+                displayObject.$update();
+            }
+            else if(displayObject instanceof DisplayObjectContainer) {
+                var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
+                var length:number = children.length;
+                for (var i:number = 0 ; i < length ; i++){
+                    var child:DisplayObject = children[i];
+                    this.$update(child);
+                }
+            }
         }
 
         private drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext):number {
@@ -86,7 +104,7 @@ module egret {
                 drawCalls++;
                 context.globalAlpha = globalAlpha;
                 var m = node.$renderMatrix;
-                context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                context.setTransform(m.a, m.b, m.c, m.d, m.tx - this._offsetX, m.ty - this._offsetY);
                 node.$render(context);
             }
             var children = displayObject.$children;
