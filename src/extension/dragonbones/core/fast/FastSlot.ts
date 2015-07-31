@@ -303,7 +303,8 @@ module dragonBones {
 		 * @member {FastArmature} dragonBones.Slot#childArmature
 		 */
 		public get childArmature():any{
-			return this._displayList[this._currentDisplayIndex] instanceof IArmature ? this._displayList[this._currentDisplayIndex] : null;
+			return (this._displayList[this._currentDisplayIndex] instanceof Armature 
+				    || this._displayList[this._currentDisplayIndex] instanceof FastArmature) ? this._displayList[this._currentDisplayIndex] : null;
 		}
 		
 		public set childArmature(value:any)
@@ -347,7 +348,7 @@ module dragonBones {
 			return this._colorTransform;
 		}
 		
-		public get dispalyIndex():number{
+		public get displayIndex():number{
 			return this._currentDisplayIndex;
 		}
 		
