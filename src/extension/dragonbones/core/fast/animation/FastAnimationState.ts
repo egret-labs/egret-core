@@ -112,8 +112,6 @@ module dragonBones {
 		private _playTimes:number = 0;
 		
 		private _fading:boolean = false;
-		private _listenCompleteEvent:boolean;
-		private _listenLoopCompleteEvent:boolean;
 		
 		public _fadeTotalTime:number;
 		
@@ -197,8 +195,6 @@ module dragonBones {
 			this._fading = this._fadeTotalTime>0;
 			//default
 			this._isPlaying = true;
-			
-			this._listenCompleteEvent = this._armature.hasEventListener(AnimationEvent.COMPLETE);
 			
 			if(this._armature.enableCache && this.animationCache && this._fading && this._boneTimelineStateList){
 				this.updateTransformTimeline(this.progress);
@@ -333,15 +329,21 @@ module dragonBones {
 			
 			//抛事件
 			var event:AnimationEvent;
-			if(this._listenCompleteEvent && completeFlg){
-				event = new AnimationEvent(AnimationEvent.COMPLETE);
-				event.animationState = this;
-				this._armature._addEvent(event);
+			if(completeFlg){
+				if(this._armature.hasEventListener(AnimationEvent.COMPLETE))
+				{
+					event = new AnimationEvent(AnimationEvent.COMPLETE);
+					event.animationState = this;
+					this._armature._addEvent(event);
+				}
 			}
-			else if(this._listenLoopCompleteEvent && loopCompleteFlg){
-				event = new AnimationEvent(AnimationEvent.LOOP_COMPLETE);
-				event.animationState = this;
-				this._armature._addEvent(event);
+			else if(loopCompleteFlg){
+				if(this._armature.hasEventListener(AnimationEvent.LOOP_COMPLETE))
+				{
+					event = new AnimationEvent(AnimationEvent.LOOP_COMPLETE);
+					event.animationState = this;
+					this._armature._addEvent(event);
+				}
 			}
 		}
 		

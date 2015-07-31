@@ -42,6 +42,6 @@ module dragonBones {
 		globalTransformMatrix:Matrix;
 		colorChanged:boolean;
 		colorTransform:ColorTransform;
-		dispalyIndex:number;
+		displayIndex:number;
 	}
 }

@@ -329,7 +329,7 @@ module dragonBones {
 			return this._colorTransform;
 		}
 		
-		public get dispalyIndex():number{
+		public get displayIndex():number{
 			return this._currentDisplayIndex;
 		}
 		
