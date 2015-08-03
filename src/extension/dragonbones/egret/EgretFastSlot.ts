@@ -125,10 +125,12 @@ module dragonBones {
             aMultiplier:number,
             rMultiplier:number,
             gMultiplier:number,
-            bMultiplier:number):void{
-            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier);
+            bMultiplier:number,
+            colorChanged:boolean = false):void{
+            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChanged);
             if(this._egretDisplay)
             {
+
                 this._egretDisplay.alpha = aMultiplier;
                 //todo apply colorTransform after engine support it.
             }
