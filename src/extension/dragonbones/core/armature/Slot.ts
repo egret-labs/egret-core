@@ -586,5 +586,17 @@ module dragonBones {
 				}
 			}
 		}
+
+		public _updateGlobal():any {
+            this._calculateRelativeParentTransform();
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
+
+            var output:any = this._calculateParentTransform();
+            if (output) {
+                this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
+                TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
+            }
+            return output;
+        }
 	}
 }

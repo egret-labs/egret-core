@@ -141,7 +141,7 @@ module dragonBones {
 		}
 		
 		private static tempOutputObj:any = {};
-		public calculateParentTransform():any{
+		public _calculateParentTransform():any{
 			if(this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale)){
 				var parentGlobalTransform:DBTransform = this._parent._global;
 				var parentGlobalTransformMatrix:Matrix = this._parent._globalTransformMatrix;
@@ -174,9 +174,9 @@ module dragonBones {
 			return null;
 		}
 		
-		public updateGlobal():any{
+		public _updateGlobal():any{
 			this._calculateRelativeParentTransform();
-			var output:any = this.calculateParentTransform();
+			var output:any = this._calculateParentTransform();
 			if(output != null){
 				//计算父骨头绝对坐标
 				var parentMatrix:Matrix = output.parentGlobalTransformMatrix;

@@ -126,7 +126,7 @@ module dragonBones {
 			}
 			
 			//计算global
-			this.updateGlobal();
+			this._updateGlobal();
 		}
 		
 		/** @private When bone timeline enter a key frame, call this func*/
