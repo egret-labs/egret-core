@@ -29,7 +29,9 @@
 
 
 module RES {
-
+    /**
+     * @private
+     */
     export class FontAnalyzer extends SheetAnalyzer{
 
         public constructor(){

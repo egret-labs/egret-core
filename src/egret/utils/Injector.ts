@@ -33,8 +33,9 @@ module egret {
     /**
      * @classdesc 注入器
 	 * @class egret.Injector
+	 * @includeExample egret/utils/Injector.ts
      */
-	export class Injector{
+	export class Injector {
 		/**
 		 * 储存类的映射规则
 		 */		

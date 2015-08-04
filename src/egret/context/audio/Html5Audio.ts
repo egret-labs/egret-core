@@ -49,7 +49,7 @@ module egret {
         public _play(type?:string):void {
             this.removeListeners();
 
-            if (Html5Capatibility._System_OS != SystemOSType.WPHONE) {
+            if (Html5Capatibility._audioMustLoad) {
                 //this._audio = this._audio.cloneNode();
                 this._audio.load();
             }

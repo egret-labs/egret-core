@@ -35,6 +35,7 @@ module RES {
      * @param url {string} 配置文件路径(resource.json的路径)
      * @param resourceRoot {string} 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
      * @param type {string} 配置文件的格式。确定要用什么解析器来解析配置文件。默认"json"
+     * @see #setMaxRetryTimes
      */
     export function loadConfig(url:string,resourceRoot:string="",type="json"):void{
         instance.loadConfig(url,resourceRoot,type);
@@ -45,6 +46,7 @@ module RES {
      * @param name {string} 要加载资源组的组名
      * @param priority {number} 加载优先级,可以为负数,默认值为0。
      * 低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组会同时加载。
+     * @see #setMaxRetryTimes
      */
     export function loadGroup(name:string,priority:number=0):void{
         instance.loadGroup(name,priority);
@@ -54,6 +56,7 @@ module RES {
 	 * @method RES.isGroupLoaded
      * @param name {string} 组名
 	 * @returns {boolean}
+     * @see #setMaxRetryTimes
      */
     export function isGroupLoaded(name:string):boolean{
         return instance.isGroupLoaded(name);
@@ -63,6 +66,7 @@ module RES {
 	 * @method RES.getGroupByName
      * @param name {string} 组名
 	 * @returns {egret.ResourceItem}
+     * @see #setMaxRetryTimes
      */
     export function getGroupByName(name:string):Array<ResourceItem>{
         return instance.getGroupByName(name);
@@ -75,6 +79,7 @@ module RES {
      * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
      * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
      * @returns {boolean}
+     * @see #setMaxRetryTimes
      */
     export function createGroup(name:string,keys:Array<string>,override:boolean = false):boolean{
         return instance.createGroup(name,keys,override);
@@ -84,6 +89,7 @@ module RES {
 	 * @method RES.hasRes
      * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
 	 * @returns {boolean}
+     * @see #setMaxRetryTimes
      */
     export function hasRes(key:string):boolean{
         return instance.hasRes(key);
@@ -93,6 +99,7 @@ module RES {
      * @method RES.parseConfig
      * @param data {any} 配置文件数据，请参考resource.json的配置文件格式。传入对应的json对象即可。
      * @param folder {string} 加载项的路径前缀。
+     * @see #setMaxRetryTimes
      */
     export function parseConfig(data:any, folder:string=""):void {
         instance.parseConfig(data,folder);
@@ -102,6 +109,7 @@ module RES {
 	 * @method RES.getRes
      * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
 	 * @returns {any}
+     * @see #setMaxRetryTimes
      */
     export function getRes(key:string):any{
         return instance.getRes(key);
@@ -112,6 +120,7 @@ module RES {
      * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
      * @param compFunc {Function} 回调函数。示例：compFunc(data,key):void。
      * @param thisObject {any} 回调函数的this引用
+     * @see #setMaxRetryTimes
      */
     export function getResAsync(key:string,compFunc:Function,thisObject:any):void{
         instance.getResAsync(key,compFunc,thisObject);
@@ -123,6 +132,7 @@ module RES {
      * @param compFunc {Function} 回调函数。示例：compFunc(data,url):void。
      * @param thisObject {any} 回调函数的this引用
      * @param type {string} 文件类型(可选)。请使用ResourceItem类中定义的静态常量。若不设置将根据文件扩展名生成。
+     * @includeExample extension/resource/GetResByUrl.ts
      */
     export function getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
         instance.getResByUrl(url,compFunc,thisObject,type);
@@ -133,6 +143,7 @@ module RES {
      * @param name {string} 配置文件中加载项的name属性或资源组名
      * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
      * @returns {boolean}
+     * @see #setMaxRetryTimes
      */
     export function destroyRes(name:string, force?:boolean):boolean{
         return instance.destroyRes(name, force);
@@ -141,14 +152,16 @@ module RES {
      * 设置最大并发加载线程数量，默认值是2.
      * @method RES.setMaxLoadingThread
      * @param thread {number} 要设置的并发加载数。
+     * @see #setMaxRetryTimes
      */
     export function setMaxLoadingThread(thread:number):void{
         instance.setMaxLoadingThread(thread);
     }
-    
+
     /**
      * 设置资源加载失败时的重试次数，默认值是 3。
      * @param retry 要设置的重试次数。
+     * @includeExample extension/resource/Resource.ts
      */
     export function setMaxRetryTimes(retry: number): void {
         instance.setMaxRetryTimes(retry);
@@ -166,6 +179,7 @@ module RES {
      * 要在所有三个阶段都侦听事件，请调用 addEventListener 两次：一次将 useCapture 设置为 true，一次将 useCapture 设置为 false。
      * @param priority {number} 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
      * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
+     * @see #setMaxRetryTimes
      */
     export function addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
         instance.addEventListener(type,listener,thisObject,useCapture,priority);
@@ -177,13 +191,16 @@ module RES {
      * @param listener {Function} 侦听函数
      * @param thisObject {any} 侦听函数绑定的this对象
      * @param useCapture {boolean} 是否使用捕获，这个属性只在显示列表中生效。
+     * @see #setMaxRetryTimes
      */
     export function removeEventListener(type:string, listener:Function,thisObject:any,useCapture:boolean = false):void {
         instance.removeEventListener(type,listener,thisObject,useCapture);
     }
 
 
-
+    /**
+     * @private
+     */
     class Resource extends egret.EventDispatcher{
         /**
          * 构造函数
@@ -492,10 +509,10 @@ module RES {
         /**
          * 通过url获取资源
 		 * @method RES.getResByUrl
-		 * @param url {string} 
-		 * @param compFunc {Function} 
-		 * @param thisObject {any} 
-		 * @param type {string} 
+		 * @param url {string}
+		 * @param compFunc {Function}
+		 * @param thisObject {any}
+		 * @param type {string}
          */
         public getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
             if(!url){

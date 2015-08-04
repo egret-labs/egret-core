@@ -31,6 +31,7 @@
 module RES {
     /**
      * SpriteSheet解析器
+     * @private
      */
     export class SheetAnalyzer extends BinAnalyzer{
 

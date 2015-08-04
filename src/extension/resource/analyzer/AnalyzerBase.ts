@@ -31,6 +31,7 @@
 module RES {
     /**
      * @classic
+     * @private
      */
     export class AnalyzerBase extends egret.HashObject{
 

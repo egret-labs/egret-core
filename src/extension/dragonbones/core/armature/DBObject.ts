@@ -207,13 +207,30 @@ module dragonBones {
 
         public _updateGlobal():any {
             this._calculateRelativeParentTransform();
-            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
-
             var output:any = this._calculateParentTransform();
-            if (output) {
-                this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
-                TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
+            if(output != null){
+                //计算父骨头绝对坐标
+                var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
+                var parentGlobalTransform:DBTransform = output.parentGlobalTransform;
+                //计算绝对坐标
+                var x:number = this._global.x;
+                var y:number = this._global.y;
+                
+                this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
+                this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
+                
+                if(this.inheritRotation){
+                    this._global.skewX += parentGlobalTransform.skewX;
+                    this._global.skewY += parentGlobalTransform.skewY;
+                }
+                
+                if(this.inheritScale){
+                    this._global.scaleX *= parentGlobalTransform.scaleX;
+                    this._global.scaleY *= parentGlobalTransform.scaleY;
+                }
+
             }
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
             return output;
         }
 	}

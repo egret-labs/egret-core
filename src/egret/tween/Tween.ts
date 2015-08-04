@@ -35,6 +35,7 @@ module egret {
      * Tween是Egret的动画缓动类
 	 * @extends egret.EventDispatcher
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=150&terms1_id=25&terms2_id=34 Tween缓动动画
+     * @includeExample egret/tween/Tween.ts
 	 */
     export class Tween extends EventDispatcher {
 		/**
@@ -81,7 +82,7 @@ module egret {
 		/**
          * 激活一个对象，对其添加 Tween 动画
          * @param target {any} 要激活 Tween 的对象
-         * @param props {any} 参数
+         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
          * @param pluginData {any} 暂未实现
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false
 		 */

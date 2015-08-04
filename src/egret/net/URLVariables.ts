@@ -36,6 +36,7 @@ module egret {
      * 使用 URLVariables 类可以在应用程序和服务器之间传输变量。
      * 将 URLVariables 对象与 URLLoader 类的方法、URLRequest 类的 data 属性一起使用。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=163&terms1_id=25&terms2_id=37 发送带参数的请求
+     * @includeExample egret/net/URLVariables.ts
      */
     export class URLVariables extends HashObject {
 

@@ -38,6 +38,7 @@ module egret {
      * @param method {Function} 要延迟执行的函数
      * @param thisObject {any} 回调函数的this引用
      * @param ...args {any} 函数参数列表
+     * @includeExample egret/utils/callLater.ts
      */
     export function callLater(method:Function,thisObject:any,...args):void
     {
@@ -54,6 +55,7 @@ module egret {
      * @param method {Function} 要异步调用的函数
      * @param thisObject {any} 函数的this引用
      * @param ...args {any} 函数参数列表
+     * @includeExample egret/utils/callLater.ts
      */
     export function __callAsync(method:Function,thisObject:any,...args):void
     {

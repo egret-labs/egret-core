@@ -41,6 +41,8 @@ module egret {
      *
      * @event egret.TimerEvent.TIMER 每当 Timer 对象达到根据 Timer.delay 属性指定的间隔时调度。
      * @event egret.TimerEvent.TIMER_COMPLETE 每当它完成 Timer.repeatCount 设置的请求数后调度。
+     *
+     * @includeExample egret/utils/Timer.ts
 	 */
     export class Timer extends EventDispatcher {
 

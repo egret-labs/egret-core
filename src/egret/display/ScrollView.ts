@@ -34,6 +34,7 @@ module egret {
      * @classdesc
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @extends egret.DisplayObjectContainer
+     * @includeExample egret/display/ScrollView.ts
      */
     export class ScrollView extends DisplayObjectContainer {
 
@@ -52,6 +53,21 @@ module egret {
          * @member {number} egret.ScrollView#scrollSpeed
          */
         public scrollSpeed: number = 1;
+
+        
+        /**
+         * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+         * @default true
+         * @version Egret 2.4
+         */
+        public get bounces(): boolean {
+            return this._ScrV_Props_._bounces;
+        }
+
+        public set bounces(value: boolean) {
+            this._ScrV_Props_._bounces = !!value;
+        }
+
         /**
          * 创建一个 egret.ScrollView 对象
 		 * @method egret.ScrollView#constructor
@@ -167,11 +183,30 @@ module egret {
             if (!isOffset && this._ScrV_Props_._scrollTop == top
                 && this._ScrV_Props_._scrollLeft == left)
                 return;
+            var oldTop = this._ScrV_Props_._scrollTop,
+                oldLeft = this._ScrV_Props_._scrollLeft;
             if (isOffset) {
-                var isEdgeV = this._isOnTheEdge(true);
-                var isEdgeH = this._isOnTheEdge(false);
-                this._ScrV_Props_._scrollTop += isEdgeV ? top / 2 : top;
-                this._ScrV_Props_._scrollLeft += isEdgeH ? left / 2 : left;
+                var maxLeft = this.getMaxScrollLeft();
+                var maxTop = this.getMaxScrollTop();
+                if (oldTop <=0 ||oldTop >= maxTop) {
+                    top = top / 2;
+                }
+                if (oldLeft <= 0 || oldLeft >= maxLeft) {
+                    left = left / 2;
+                }
+                var newTop = oldTop + top;
+                var newLeft = oldLeft + left;
+
+                //判断是否回弹
+                var bounces = this._ScrV_Props_._bounces;
+                if (!bounces) {
+                    if (newTop <= 0 || newTop >= maxTop)
+                        newTop = Math.max(0, Math.min(newTop, maxTop));
+                    if (newLeft <= 0 || newLeft >= maxLeft)
+                        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                }
+                this._ScrV_Props_._scrollTop = newTop;
+                this._ScrV_Props_._scrollLeft = newLeft;
             }
             else {
                 this._ScrV_Props_._scrollTop = top;
@@ -179,15 +214,6 @@ module egret {
             }
             this._validatePosition(true, true);
             this._updateContentPosition();
-        }
-
-        private _isOnTheEdge(isVertical=true):boolean { 
-            var top = this._ScrV_Props_._scrollTop,
-                left = this._ScrV_Props_._scrollLeft;
-            if (isVertical)
-                return top < 0 || top > this.getMaxScrollTop();
-            else
-                return left < 0 || left > this.getMaxScrollLeft();
         }
 
         private _validatePosition(top = false,left = false):void {
@@ -513,6 +539,8 @@ module egret {
                 this.scrollTop = finalPosition;
                 return null;
             }
+            if (this._ScrV_Props_._bounces == false)
+                scrollTop = finalPosition;
             var vtween = egret.Tween.get(this).to({ scrollTop: scrollTop }, duration, egret.Ease.quartOut);
             if (finalPosition != scrollTop) {
                 vtween.to({ scrollTop: finalPosition }, 300, egret.Ease.quintOut);
@@ -533,6 +561,8 @@ module egret {
                 this.scrollLeft = finalPosition;
                 return null;
             }
+            if (this._ScrV_Props_._bounces == false)
+                scrollLeft = finalPosition;
             var htween = egret.Tween.get(this).to({ scrollLeft: scrollLeft }, duration, egret.Ease.quartOut);
             if (finalPosition != scrollLeft) {
                 htween.to({ scrollLeft: finalPosition }, 300, egret.Ease.quintOut);

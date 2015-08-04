@@ -100,6 +100,39 @@ module dragonBones {
 			this.scaleX = transform.scaleX;
 			this.scaleY = transform.scaleY;
 		}
+
+		/**
+		 * transform加法
+		 * @param node
+		 */
+		public add(transform:DBTransform):void
+		{
+			this.x += transform.x;
+			this.y += transform.y;
+			this.skewX += transform.skewX;
+			this.skewY += transform.skewY;
+			this.scaleX *= transform.scaleX;
+			this.scaleY *= transform.scaleY;
+		}
+		/**
+		 * transform减法
+		 * @param node
+		 */
+		public minus(transform:DBTransform):void{
+			this.x -= transform.x;
+			this.y -= transform.y;
+			this.skewX -= transform.skewX;
+			this.skewY -= transform.skewY;
+			this.scaleX /= transform.scaleX;
+			this.scaleY /= transform.scaleY;
+		}
+
+		public normalizeRotation():void
+		{
+			this.skewX = TransformUtil.normalizeRotation(this.skewX);	
+			this.skewY = TransformUtil.normalizeRotation(this.skewY);	
+		}
+
 		/**
 		 * 把DBTransform的所有属性转成用String类型表示
 		 * @return 一个字符串包含有DBTransform的所有属性

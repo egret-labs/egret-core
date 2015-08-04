@@ -81,9 +81,8 @@ egret_native.initLoadingUI = function () {
     textField = new egret.TextField();
     egret.MainContext.instance.stage.addChild(textField);
     textField.y = egret.MainContext.instance.stage.stageHeight / 2;
-    textField.x = egret.MainContext.instance.stage.stageWidth / 2;
-    textField.textAlign = "center";
-    textField.anchorX = textField.anchorY = 0.5;
+    textField.textAlign = egret.HorizontalAlign.CENTER;
+    textField.width = egret.MainContext.instance.stage.stageWidth;
 };
 
 egret_native.setProgress = function (current, total) {

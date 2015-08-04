@@ -43,6 +43,7 @@ module egret {
      * _draw();
      * getBounds();
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=102&terms1_id=25&terms2_id=27 显示对象的基本概念
+     * @includeExample egret/display/DisplayObject.ts
      *
      * @event egret.Event.ADDED 将显示对象添加到显示列表中时调度。
      * @event egret.Event.ADDED_TO_STAGE 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
@@ -50,6 +51,10 @@ module egret {
      * @event egret.Event.REMOVED_FROM_STAGE 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
      * @event egret.Event.ENTER_FRAME [广播事件] 播放头进入新帧时调度。
      * @event egret.Event.RENDER [广播事件] 将要更新和呈现显示列表时调度。
+     * @event egret.Event.TOUCH_BEGIN [触摸事件] 触摸开始时调度。
+     * @event egret.Event.TOUCH_MOVE [触摸事件] 触摸移动时调度。
+     * @event egret.Event.TOUCH_END [触摸事件] 触摸结束时调度。
+     * @event egret.Event.TOUCH_TAP [触摸事件] 单击时调度。
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
@@ -292,6 +297,7 @@ module egret {
          * 表示从对象相对锚点X。
          * @member {number} egret.DisplayObject#anchorX
          * @default 0
+         * @deprecated
          */
         public get anchorX():number {
             return this._DO_Props_._anchorX;
@@ -315,6 +321,7 @@ module egret {
          * 表示从对象相对锚点Y。
          * @member {number} egret.DisplayObject#anchorY
          * @default 0
+         * @deprecated
          */
         public get anchorY():number {
             return this._DO_Props_._anchorY;

@@ -58,6 +58,7 @@ module egret {
         public static _audioType:number = 0;
         public static _AudioClass;
 
+        public static _audioMustLoad:boolean = false;
 
         public static _QQRootPath:string = "";
 
@@ -77,12 +78,18 @@ module egret {
 
             Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
             Html5Capatibility._AudioClass = egret.Html5Audio;
+            Html5Capatibility._audioMustLoad = true;
 
             if (ua.indexOf("windows phone") >= 0) {//wphone windows
                 Html5Capatibility._System_OS = SystemOSType.WPHONE;
+                Html5Capatibility._audioMustLoad = false;
             }
             else if (ua.indexOf("android") >= 0) {//android
                 Html5Capatibility._System_OS = SystemOSType.ADNROID;
+                if (ua.indexOf("ucbrowser") >= 0) {
+                    Html5Capatibility._audioMustLoad = false;
+                }
+
                 if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
                     Html5Capatibility._AudioClass = egret.QQAudio;
                     Html5Capatibility._audioType = AudioType.QQ_AUDIO;

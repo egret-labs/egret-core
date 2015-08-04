@@ -110,6 +110,8 @@ exports.error_code = {
     1415:"Executing the detection command: {0}",
     1416:"You can modify the JAVA_HOME environment variable to modify JAVA path",
     1417:"Successful detection ",
+    1418:"WebP format fail : {0}",
+    1419:"Format WebP : {0} / {1}",
     //startserver
     1501:"Unable to start the server, please check the authority or whether the port is occupied",
     //create_app

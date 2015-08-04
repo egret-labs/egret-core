@@ -38,6 +38,7 @@ module egret {
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=135&terms1_id=25&terms2_id=31 纹理集的使用
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=123&terms1_id=25&terms2_id=30 获取资源的几种方式
+     * @includeExample egret/display/Texture.ts
      */
     export class Texture extends HashObject {
 
@@ -158,6 +159,29 @@ module egret {
          */
         public draw(context:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
+        }
+
+        /**
+         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
+         * @param type 转换的类型，如  "image/png"
+         * @param rect 需要转换的区域
+         * @returns {any} base64字符串
+         * @platform Web
+         * @version Egret 2.4
+         */
+        public toDataURL(type:string, rect?:egret.Rectangle):string {
+            throw new Error();
+        }
+
+        /**
+         * @private
+         * 下载base64字符串
+         * @param base64 base64字符串
+         * @platform Web
+         * @version Egret 2.4
+         */
+        download(base64:string) {
+            throw new Error();
         }
 
         public _drawForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
@@ -290,6 +314,9 @@ module egret {
                     var xhr = new XMLHttpRequest();
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";
+                    xhr.onerror = function () {
+                        callback(1, null);
+                    };
                     xhr.onload = function () {
                         if (this.status == 200) {
                             var blob = this.response;
