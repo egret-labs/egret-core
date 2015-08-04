@@ -39,8 +39,8 @@ module dragonBones {
      * @see dragonBones.AnimationData.
      *
      * @example
-     * <pre>
-     * //获取动画数据
+       <pre>
+       //获取动画数据
         var skeletonData = RES.getRes("skeleton");
         //获取纹理集数据
         var textureData = RES.getRes("textureConfig");
@@ -103,7 +103,7 @@ module dragonBones {
         egret.Ticker.getInstance().register(function (advancedTime) {
             dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
         }, this);
-     * </pre>
+       </pre>
      */
 	export class Animation{
 		public static NONE:string = "none";

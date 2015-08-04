@@ -42,8 +42,8 @@ module dragonBones {
      * @see dragonBones.SlotData
      *
      * @example
-     * <pre>
-     * //获取动画数据 本例使用Knight例子.
+       <pre>
+        //获取动画数据 本例使用Knight例子.
         //资源下载地址http://dragonbones.github.io/download_forwarding.html?download_url=downloads/dragonbonesdemos_v2.4.zip
         var skeletonData = RES.getRes("skeleton");
         //获取纹理集数据
@@ -99,7 +99,7 @@ module dragonBones {
         egret.Ticker.getInstance().register(function (advancedTime) {
             dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
         }, this);
-     *   </pre>
+       </pre>
      */
 	export class Slot extends DBObject{
 		/** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */

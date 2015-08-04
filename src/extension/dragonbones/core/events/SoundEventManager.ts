@@ -33,8 +33,8 @@ module dragonBones {
 	 *
 	 *
 	 * @example
-     * <pre>
-	 *  private exampleEvent():void
+       <pre>
+	    private exampleEvent():void
 	    {
 	        //获取动画数据
 	        var skeletonData = RES.getRes("skeleton");
@@ -117,7 +117,7 @@ module dragonBones {
 	        console.log("soundEvent",evt.sound);
 	    }
 
-	 * </pre>
+	   </pre>
 	 */
 	export class SoundEventManager extends EventDispatcher{
 
