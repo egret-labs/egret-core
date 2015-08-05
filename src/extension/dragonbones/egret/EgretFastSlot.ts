@@ -132,6 +132,16 @@ module dragonBones {
             {
 
                 this._egretDisplay.alpha = aMultiplier;
+            }
+        }
+
+        /** @private */
+        public _resetDisplayColor()
+        {
+            if(this._egretDisplay)
+            {
+
+                this._egretDisplay.alpha = 1;
                 //todo apply colorTransform after engine support it.
             }
         }

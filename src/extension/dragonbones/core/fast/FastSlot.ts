@@ -157,7 +157,10 @@ module dragonBones {
 					targetArmature.resetAnimation()
 				}
 			}
-			
+			if (this._isColorChanged)
+			{
+				this._resetDisplayColor();
+			}
 			var slotIndex:number = this._getDisplayIndex();
 			this._removeDisplayFromContainer();
 			return slotIndex;
@@ -442,6 +445,10 @@ module dragonBones {
 			this._isColorChanged = colorChanged;
 		}
 		
+		public _resetDisplayColor()
+		{
+
+		}
 		/**
 		 * @private
 		 * Update the blend mode of the display object.
