@@ -146,7 +146,10 @@ module egret.sys {
         public getDirtyRegions():Region[] {
             var dirtyList = this.dirtyList;
             if (this.clipRectChanged) {
-                this.clipRectChanged = false;
+                //todo 现在为全部dirty
+                if(MainContext.runtimeType != MainContext.RUNTIME_NATIVE) {
+                    this.clipRectChanged = false;
+                }
                 this.clear();
                 var region:Region = Region.create();
                 dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));

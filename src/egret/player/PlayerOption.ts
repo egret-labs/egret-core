@@ -27,62 +27,60 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
-
-    var surfacePool:NativeSurface[] = [];
-
+/**
+ * @private
+ */
+interface PlayerOption {
     /**
-     * @private
+     * 入口类完整类名
      */
-    export class OpenGLFactory implements sys.SurfaceFactory {
-
-        /**
-         * @private
-         */
-        public constructor() {
-            sys.sharedRenderContext = this.create().renderContext;
-            for (var i = 0; i < 3; i++) {
-                surfacePool.push(this.create());
-            }
-        }
-
-        /**
-         * @private
-         * 从对象池取出或创建一个新的Surface实例
-         * @param useOnce 表示对取出实例的使用是一次性的，用完后立即会释放。
-         */
-        public create(useOnce?:boolean):NativeSurface {
-            var surface:NativeSurface = (useOnce || surfacePool.length > 3) ? surfacePool.pop() : null;
-            if (!surface) {
-                surface = this.createSurface(new NativeSurface());
-            }
-            surface.$reload();
-            return surface;
-        }
-
-        /**
-         * @private
-         * 释放一个Surface实例
-         * @param surface 要释放的Surface实例
-         */
-        public release(surface:NativeSurface):void {
-            if (!surface) {
-                return;
-            }
-            surface.$dispose();
-            surface.width = surface.height = 1;
-            surfacePool.push(surface);
-        }
-
-        /**
-         * @private
-         */
-        private createSurface(canvas:NativeSurface):NativeSurface {
-            var context = canvas.renderContext;
-            context.surface = canvas;
-
-            return <NativeSurface><any>canvas;
-        }
-
-    }
+    entryClassName?:string;
+    /**
+     * 默认帧率
+     */
+    frameRate?:number;
+    /**
+     * 屏幕适配模式
+     */
+    scaleMode?:string;
+    /**
+     * 初始内容宽度
+     */
+    contentWidth?:number;
+    /**
+     * 初始内容高度
+     */
+    contentHeight?:number;
+    /**
+     * 屏幕方向
+     */
+    orientation?:string;
+    /**
+     * 是否显示重绘区域
+     */
+    showPaintRect?:boolean;
+    /**
+     * 显示FPS
+     */
+    showFPS?:boolean;
+    /**
+     *
+     */
+    fpsStyles?:Object;
+    /**
+     * 显示日志
+     */
+    showLog?:boolean;
+    /**
+     * 过滤日志的正则表达式
+     */
+    logFilter?:string;
+    /**
+     *
+     */
+    maxTouches?:number;
+    /**
+     *
+     */
+    textureScaleFactor?:number;
 }

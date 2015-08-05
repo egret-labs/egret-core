@@ -72,11 +72,9 @@ module egret.sys {
          * @param touchPointID 分配给触摸点的唯一标识号
          */
         public onTouchBegin(x:number, y:number, touchPointID:number):void {
-
             if (this.useTouchesCount >= this.maxTouches) {
                 return;
             }
-
             this.lastTouchX = x;
             this.lastTouchY = y;
 

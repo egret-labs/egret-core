@@ -555,7 +555,7 @@ module egret.sys {
                 }
                 var g = this.shape.$graphics.$renderContext;
                 g.clear();
-                g.fillStyle = "rgba(68,68,68,0.4)";
+                g.fillStyle = "rgba(68,68,68,1)";
                 g.fillRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
             };
             return <FPS><any>FPSImpl;

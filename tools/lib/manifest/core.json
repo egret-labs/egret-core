@@ -85,6 +85,7 @@
         "egret/player/DirtyRegion.ts",
         "egret/player/DisplayList.ts",
         "egret/player/IScreenAdapter.ts",
+        "egret/player/PlayerOption.ts",
         "egret/player/Player.ts",
         "egret/player/Region.ts",
         "egret/player/Renderable.ts",
@@ -119,6 +120,8 @@
         "egret/filters/DropShadowFilter.ts",
         "egret/media/Audio.ts",
         "egret/media/Sound.ts",
-        "egret/Types.ts"
+        "egret/Types.ts",
+
+        "egret/utils/PromiseObject.ts"
     ]
 }

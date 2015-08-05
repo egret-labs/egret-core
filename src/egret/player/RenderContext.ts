@@ -39,6 +39,11 @@ module egret.sys {
          * 与绘图上线文关联的画布实例
          */
         surface:Surface;
+
+        begin():void;
+
+        end():void;
+
         /**
          * @private
          * 设置新图像如何绘制到已有的图像上的规制

@@ -3,7 +3,7 @@
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
 //  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
+//  modification, are permitted provided this the following conditions are met:
 //
 //     * Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
@@ -26,63 +26,44 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
 module egret.native {
+    export class NativeTouchHandler extends HashObject {
+        private $touch:egret.sys.TouchHandler;
 
-    var surfacePool:NativeSurface[] = [];
+        constructor(stage:Stage) {
+            super();
+            this.$touch = new egret.sys.TouchHandler(stage);
 
-    /**
-     * @private
-     */
-    export class OpenGLFactory implements sys.SurfaceFactory {
+            var self = this;
+            egret_native.onTouchesBegin = function (num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
+                self.$executeTouchCallback(num, ids, xs_array, ys_array, self.$touch.onTouchBegin);
+            };
+            egret_native.onTouchesMove = function (num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
+                self.$executeTouchCallback(num, ids, xs_array, ys_array, self.$touch.onTouchMove);
+            };
+            egret_native.onTouchesEnd = function (num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
+                self.$executeTouchCallback(num, ids, xs_array, ys_array, self.$touch.onTouchEnd);
+            };
+            egret_native.onTouchesCancel = function (num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>) {
 
-        /**
-         * @private
-         */
-        public constructor() {
-            sys.sharedRenderContext = this.create().renderContext;
-            for (var i = 0; i < 3; i++) {
-                surfacePool.push(this.create());
+            };
+        }
+
+        private $executeTouchCallback(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>, callback:Function) {
+            for (var i = 0; i < num; i++) {
+                var id = ids[i];
+                var x = xs_array[i];
+                var y = ys_array[i];
+                callback.call(this.$touch, x, y, id);
             }
         }
 
         /**
          * @private
-         * 从对象池取出或创建一个新的Surface实例
-         * @param useOnce 表示对取出实例的使用是一次性的，用完后立即会释放。
+         * 更新同时触摸点的数量
          */
-        public create(useOnce?:boolean):NativeSurface {
-            var surface:NativeSurface = (useOnce || surfacePool.length > 3) ? surfacePool.pop() : null;
-            if (!surface) {
-                surface = this.createSurface(new NativeSurface());
-            }
-            surface.$reload();
-            return surface;
+        public $updateMaxTouches():void {
+            this.$touch.$setMaxTouches();
         }
-
-        /**
-         * @private
-         * 释放一个Surface实例
-         * @param surface 要释放的Surface实例
-         */
-        public release(surface:NativeSurface):void {
-            if (!surface) {
-                return;
-            }
-            surface.$dispose();
-            surface.width = surface.height = 1;
-            surfacePool.push(surface);
-        }
-
-        /**
-         * @private
-         */
-        private createSurface(canvas:NativeSurface):NativeSurface {
-            var context = canvas.renderContext;
-            context.surface = canvas;
-
-            return <NativeSurface><any>canvas;
-        }
-
     }
 }

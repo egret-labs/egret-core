@@ -2,8 +2,7 @@ require("launcher/native_require.js");
 
 egret_native.egtMain = function () {
     egret_native.egretInit();
-
-    egret_native.loadVersion(egret_native.loadAllChange);
+    egret_native.egretStart();
 };
 
 egret_native.loadAllChange = function () {

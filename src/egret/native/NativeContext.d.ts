@@ -38,6 +38,13 @@ declare module egret_native {
 
     function loglevel(logType):void;
 
+    function callRender():void;
+
+    function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesMove(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesEnd(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+    function onTouchesCancel(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+
     /**
      * 启动主循环
      * @param callback 主循环回调函数
@@ -97,6 +104,14 @@ declare module egret_native {
         function unloadEffect(path:string):void;
 
         function stopEffect(effectId:number):void;
+
+        function pauseBackgroundMusic():void;
+
+        function pauseAllEffects():void;
+
+        function resumeBackgroundMusic():void;
+
+        function resumeAllEffects():void;
     }
 
     function download(url:string, savePath:string, promise:any):void;
@@ -259,6 +274,10 @@ declare module egret_native {
         function save():void;
 
         function restore():void;
+
+        function createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient;
+
+        function createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient;
 
         export var lineWidth:number;
         export var strokeStyle:any;

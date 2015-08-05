@@ -32,7 +32,7 @@ module egret.native {
      * @private
      * 呈现最终绘图结果的画布
      */
-    export class NativeSurface extends egret.HashObject implements egret.sys.Surface{
+    export class NativeSurface extends egret.HashObject implements egret.sys.Surface {
         /**
          * @private
          */
@@ -44,18 +44,92 @@ module egret.native {
          * @private
          * @inheritDoc
          */
-        renderContext:egret.sys.RenderContext = new NativeRenderContext();
+        public renderContext:egret.sys.RenderContext = new NativeRenderContext();
+
+        public toDataURL(type?: string, ...args: any[]): string {
+            return null;
+        }
 
         /**
          * @private
          * @inheritDoc
          */
-        width: number;
+        public get width():number {
+            return this.$width;
+        }
+
+        public set width(value:number) {
+            this.$width = value;
+            if(!this.$isDispose) {
+                this.$widthReadySet = true;
+                this.createRenderTexture();
+            }
+        }
+        private $width: number;
+        private $widthReadySet:boolean = false;
 
         /**
          * @private
          * @inheritDoc
          */
-        height: number;
+        public get height():number {
+            return this.$height;
+        }
+
+        public set height(value:number) {
+            this.$height = value;
+            if(!this.$isDispose) {
+                this.$heightReadySet = true;
+                this.createRenderTexture();
+            }
+        }
+        private $height: number;
+        private $heightReadySet:boolean = false;
+
+        public $nativeRenderTexture;
+        public $isRoot:boolean = false;
+
+        private createRenderTexture():void {
+            if(this.$isRoot) {
+                return;
+            }
+            if(this.$widthReadySet && this.$heightReadySet) {
+                if(this.$nativeRenderTexture) {
+                    this.$nativeRenderTexture.dispose();
+                }
+                this.$nativeRenderTexture = new egret_native.RenderTexture(this.$width, this.$height);
+                this.$nativeRenderTexture["avaliable"] = true;
+                this.$widthReadySet = false;
+                this.$heightReadySet = false;
+            }
+        }
+
+        public begin():void {
+            if(this.$nativeRenderTexture) {
+                //console.log("begin");
+                this.$nativeRenderTexture.begin();
+            }
+        }
+
+        public end():void {
+            if(this.$nativeRenderTexture) {
+                //console.log("end");
+                this.$nativeRenderTexture.end();
+            }
+        }
+
+        private $isDispose:boolean = false;
+
+        public $dispose():void {
+            if(this.$nativeRenderTexture) {
+                this.$nativeRenderTexture.dispose();
+                this.$nativeRenderTexture = null;
+            }
+            this.$isDispose = true;
+        }
+
+        public $reload():void {
+            this.$isDispose = false;
+        }
     }
 }

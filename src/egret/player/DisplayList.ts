@@ -161,7 +161,9 @@ module egret.sys {
         $render(context:RenderContext):void {
             var data = this.surface;
             if (data) {
+                context.begin();
                 context.drawImage(data, this.offsetX, this.offsetY);
+                context.end();
             }
         }
 
@@ -280,6 +282,7 @@ module egret.sys {
                 this.changeSurfaceSize();
             }
             var context = this.renderContext;
+            context.begin();
             //绘制脏矩形区域
             context.save();
             context.beginPath();
@@ -298,10 +301,13 @@ module egret.sys {
             if(m){
                 context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            context.end();
             //绘制显示对象
             var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
             //清除脏矩形区域
+            context.begin();
             context.restore();
+            context.end();
             this.dirtyRegion.clear();
             this.needRedraw = false;
             return drawCalls;
@@ -343,6 +349,7 @@ module egret.sys {
                 }
                 if (node.$isDirty) {
                     drawCalls++;
+                    context.begin();
                     context.globalAlpha = globalAlpha;
                     var m = node.$renderMatrix;
                     if (rootMatrix) {
@@ -354,6 +361,7 @@ module egret.sys {
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         node.$render(context);
                     }
+                    context.end();
                     node.$isDirty = false;
                 }
             }
@@ -472,14 +480,17 @@ module egret.sys {
                 Matrix.release(displayMatrix);
                 return drawCalls;
             }
+            displayContext.begin();
             if (scrollRect) {
                 var m = displayMatrix;
+                displayContext.save();
                 displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                 displayContext.beginPath();
                 displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
                 displayContext.clip();
             }
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+            displayContext.end();
             var rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
             drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, rootM, displayObject.$displayList, region);
             Matrix.release(rootM);
@@ -493,24 +504,32 @@ module egret.sys {
                     Matrix.release(displayMatrix);
                     return drawCalls;
                 }
+                maskContext.begin();
                 maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                maskContext.end();
                 rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                 var calls = this.drawDisplayObject(mask, maskContext, dirtyList, rootM, mask.$displayList, region);
                 Matrix.release(rootM);
                 if (calls > 0) {
                     drawCalls += calls;
+                    displayContext.begin();
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.setTransform(1, 0, 0, 1, 0, 0);
                     displayContext.globalAlpha = 1;
                     displayContext.drawImage(maskContext.surface, 0, 0);
+                    displayContext.end();
                 }
                 surfaceFactory.release(maskContext.surface);
             }
 
+            if(scrollRect) {
+                displayContext.restore();
+            }
 
             //绘制结果到屏幕
             if (drawCalls > 0) {
                 drawCalls++;
+                context.begin();
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
@@ -528,6 +547,7 @@ module egret.sys {
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
+                context.end();
             }
             surfaceFactory.release(displayContext.surface);
             Region.release(region);
@@ -573,6 +593,7 @@ module egret.sys {
             }
 
             //绘制显示对象自身
+            context.begin();
             context.save();
             context.setTransform(m.a, m.b, m.c, m.d, m.tx-this.offsetX, m.ty-this.offsetY);
             context.beginPath();
@@ -581,8 +602,11 @@ module egret.sys {
             if(rootMatrix){
                 context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
             }
+            context.end();
             drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, region);
+            context.begin();
             context.restore();
+            context.end();
 
             Region.release(region);
             Matrix.release(m);
@@ -597,8 +621,14 @@ module egret.sys {
             if (!surface) {
                 return null;
             }
-            surface.width = Math.max(257, width);
-            surface.height = Math.max(257, height);
+            if(MainContext.runtimeType == MainContext.RUNTIME_HTML5) {
+                surface.width = Math.max(257, width);
+                surface.height = Math.max(257, height);
+            }
+            else {
+                surface.width = width;
+                surface.height = height;
+            }
             return surface.renderContext;
         }
 
@@ -634,14 +664,18 @@ module egret.sys {
                 newSurface.width = bounds.width;
                 newSurface.height = bounds.height;
                 if (oldSurface.width !== 0 && oldSurface.height !== 0) {
+                    newContext.begin();
                     newContext.setTransform(1, 0, 0, 1, 0, 0);
                     newContext.drawImage(oldSurface, oldOffsetX - bounds.x, oldOffsetY - bounds.y);
+                    newContext.end();
                 }
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             }
             this.rootMatrix.setTo(1, 0, 0, 1, - bounds.x, - bounds.y);
+            this.renderContext.begin();
             this.renderContext.setTransform(1, 0, 0, 1, - bounds.x, - bounds.y);
+            this.renderContext.end();
         }
 
     }

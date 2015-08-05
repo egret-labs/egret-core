@@ -27,89 +27,21 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
-
-    /**
-     * @private
-     * 刷新所有Egret播放器的显示区域尺寸。仅当使用外部JavaScript代码动态修改了Egret容器大小时，需要手动调用此方法刷新显示区域。
-     * 当网页尺寸发生改变时此方法会自动被调用。
-     */
-    function updateAllScreens():void {
-        var containerList = document.querySelectorAll(".egret-player");
-        var length = containerList.length;
-        for (var i = 0; i < length; i++) {
-            var container = containerList[i];
-            var player = <WebPlayer>container["egret-player"];
-            player.updateScreenSize();
-        }
-    }
-
-    /**
-     * @private
-     * 网页加载完成，实例化页面中定义的Egretsys标签
-     */
-    function runEgret():void {
-        if(DEBUG){
-            var language = navigator.language || navigator.browserLanguage || "en_US";
-            language = language.replace("-", "_");
-
-            if (language in egret.$locale_strings)
-                egret.$language = language;
-        }
-
+module egret.native {
+    function runEgret () {
         var ticker = egret.sys.$ticker = new sys.SystemTicker();
-        startTicker(ticker);
-        var surfaceFactory = new CanvasFactory();
-        sys.surfaceFactory = surfaceFactory;
+        var mainLoop = function (){
+            ticker.update();
+        };
+        egret_native.executeMainLoop(mainLoop, ticker);
+        sys.surfaceFactory = new OpenGLFactory();
         if (!egret.sys.screenAdapter) {
             egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
         }
 
-        var list = document.querySelectorAll(".egret-player");
-        var length = list.length;
-        for (var i = 0; i < length; i++) {
-            var container = <HTMLDivElement>list[i];
-            var player = new WebPlayer(container);
-            container["egret-player"] = player;
-        }
+        new NativePlayer();
     }
 
-    /**
-     * @private
-     * 启动心跳计时器。
-     */
-    function startTicker(ticker:egret.sys.SystemTicker):void {
-        var requestAnimationFrame =
-            window["requestAnimationFrame"] ||
-            window["webkitRequestAnimationFrame"] ||
-            window["mozRequestAnimationFrame"] ||
-            window["oRequestAnimationFrame"] ||
-            window["msRequestAnimationFrame"];
-
-        if (!requestAnimationFrame) {
-            requestAnimationFrame = function (callback) {
-                return window.setTimeout(callback, 1000 / 60);
-            };
-        }
-
-        requestAnimationFrame.call(window, onTick);
-        function onTick():void {
-            ticker.update();
-            requestAnimationFrame.call(window, onTick)
-        }
-    }
-
-    //覆盖原生的isNaN()方法实现，在不同浏览器上有2~10倍性能提升。
-    window["isNaN"] = function(value:number):boolean{
-        value = +value;
-        return value !== value;
-    };
-
-    /**
-     * @private
-     * 
-     * @param argument 
-     */
     function toArray(argument){
         var args = [];
         for(var i=0;i<argument.length;i++){
@@ -146,10 +78,5 @@ module egret.web {
         };
     }
 
-    //兼容runtime的RenderTexture，以后应该会废弃
-    CanvasRenderingContext2D.prototype["begin"] = function (){};
-    CanvasRenderingContext2D.prototype["end"] = function (){};
-
     egret.runEgret = runEgret;
-    egret.updateAllScreens = updateAllScreens;
 }
