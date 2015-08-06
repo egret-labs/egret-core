@@ -100,21 +100,6 @@ module egret {
          */
         public static ERASE = "erase";
 
-        /**
-         * @language en_US
-         * Erases the background based on the alpha value of the display object.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 根据显示对象的 Alpha 值擦除背景。Alpha 值为0的区域将被擦除。
-         * 注意：由于 CanvasAPI 的限制，只会保留 Alpha 值不为1的区域。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static ERASE_REVERSE = "eraseReverse";
-
     }
 }
 
