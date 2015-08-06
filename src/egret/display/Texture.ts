@@ -315,7 +315,7 @@ module egret {
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";
                     xhr.onerror = function () {
-                        callback(1, null);
+                        Texture._onError(url, bitmapData);
                     };
                     xhr.onload = function () {
                         if (this.status == 200) {
@@ -331,7 +331,7 @@ module egret {
                             bitmapData.src = winURL.createObjectURL(blob);
                         }
                         else {
-                            callback(1, null);
+                            Texture._onError(url, bitmapData);
                         }
                     };
                     xhr.send();
