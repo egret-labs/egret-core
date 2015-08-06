@@ -22,6 +22,8 @@ module egret.native {
         }
 
         private init(option:PlayerOption):void {
+            //暂时无法显示重绘区域
+            option.showPaintRect = false;
             var stage = new egret.Stage();
             stage.$screen = this;
             stage.$scaleMode = option.scaleMode;
