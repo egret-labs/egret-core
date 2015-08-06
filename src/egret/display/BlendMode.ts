@@ -105,7 +105,7 @@ module egret {
 
 module egret.sys {
 
-    var blendModeString = ["normal", "add", "erase", "eraseReverse"];
+    var blendModeString = ["normal", "add", "erase"];
     var blendModeNumber = {};
     var length = blendModeString.length;
     for (var i = 0; i < length; i++) {
