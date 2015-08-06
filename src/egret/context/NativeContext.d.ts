@@ -221,6 +221,8 @@ declare module egret_native {
         begin();
 
         end();
+        dispose();
+        toDataURL(type);
     }
 
     module rastergl {
