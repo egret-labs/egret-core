@@ -66,7 +66,10 @@ module egret.web {
 
         offsetX = Math.round(offsetX * scale);
         offsetY = Math.round(offsetY * scale);
+
         surface.begin();
+        renderContext.setAlpha(1, egret.BlendMode.NORMAL);
+        renderContext.setTransform(new egret.Matrix());
         RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX + rect.x / scale , texture._bitmapY + rect.y / scale,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
         surface.end();
