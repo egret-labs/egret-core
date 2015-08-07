@@ -93,13 +93,18 @@ module egret.web {
         }
     }
 
-    /**
-     * @private
-     */
-    function download(base64:string) {
 
+    function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
+        try {
+            var renderTexture = convertImageToRenderTexture(this, rect);
+            renderTexture.saveToFile(type, filePath);
+            renderTexture.dispose();
+        }
+        catch (e) {
+            egret.$error(1033);
+        }
     }
 
     Texture.prototype.toDataURL = toDataURL;
-    Texture.prototype.download = download;
+    Texture.prototype.saveToFile = saveToFile;
 }

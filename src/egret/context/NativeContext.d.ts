@@ -223,6 +223,7 @@ declare module egret_native {
         end();
         dispose();
         toDataURL(type);
+        saveToFile(type:string, filePath:string);
     }
 
     module rastergl {
