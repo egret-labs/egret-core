@@ -177,7 +177,7 @@ module egret {
          * 裁剪指定区域并保存成图片。
          * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
          * @param type 转换的类型，如  "image/png"
-         * @param filePath 图片的名称的路径（主目录为游戏的私有空间，路径中不能有 "../"）
+         * @param filePath 图片的名称的路径（主目录为游戏的私有空间，路径中不能有 "../"，目前此属性只在Native中有用。）
          * @param rect 需要转换的区域
          * @version Egret 2.4
          * @platform Native
