@@ -254,7 +254,6 @@ module egret {
          * @param rect The need to convert the area
          * @param smoothing Whether to convert data to the smoothing process
          * @returns {any} base64 string
-         * @platform Web
          * @version Egret 2.4
          */
         /**
@@ -263,7 +262,6 @@ module egret {
          * @param type 转换的类型，如  "image/png"
          * @param rect 需要转换的区域
          * @returns {any} base64字符串
-         * @platform Web
          * @version Egret 2.4
          */
         public toDataURL(type:string, rect?:egret.Rectangle):string {
@@ -271,20 +269,26 @@ module egret {
         }
 
         /**
-         * @private
          * @language en_US
-         * Download base64 string
-         * @param base64 base64 string
+         * 裁剪指定区域并保存成图片。
+         * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
+         * @param type 转换的类型，如  "image/png"
+         * @param filePath 图片的名称的路径（主目录为游戏的私有空间，路径中不能有 "../"）
+         * @param rect 需要转换的区域
+         * @version Egret 2.4
+         * @platform Native
          */
         /**
-         * @private
          * @language zh_CN
-         * 下载base64字符串
-         * @param base64 base64字符串
-         * @platform Web
+         * Crop designated area and save it as image.
+         * native support only "image / png" and "image / jpeg"; Web browser because of the various implementations are not the same, it is recommended to use only these two kinds.
+         * @param type Type conversions, such as "image / png"
+         * @param filePath The path name of the image (the home directory for the game's private space, the path can not have "../")
+         * @param rect The need to convert the area
          * @version Egret 2.4
+         * @platform Native
          */
-        download(base64:string) {
+        public saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
             throw new Error();
         }
 

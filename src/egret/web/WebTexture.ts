@@ -91,10 +91,8 @@ module egret.web {
         return null;
     }
 
-    /**
-     * @private
-     */
-    function download(base64:string) {
+    function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
+        var base64 = toDataURL.call(this, type, rect);
         if (base64 == null) {
             return;
         }
@@ -102,5 +100,5 @@ module egret.web {
     }
 
     Texture.prototype.toDataURL = toDataURL;
-    Texture.prototype.download = download;
+    Texture.prototype.saveToFile = saveToFile;
 }
