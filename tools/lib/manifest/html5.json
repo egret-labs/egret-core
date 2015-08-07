@@ -5,9 +5,7 @@
     "output":"core",
     "file_list": [
 
-        "egret/text/web/StageText.ts",
         "egret/text/web/HTML5StageText.ts",
-        "egret/text/web/InputController.ts",
 
         "egret/localStorage/web/WebLocalStorage.ts",
         "egret/external/web/WebExternalInterface.ts",

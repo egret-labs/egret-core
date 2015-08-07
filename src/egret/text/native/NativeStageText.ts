@@ -32,22 +32,19 @@ module egret {
 
     /**
      * @classdesc
-     * @extends egret.StageText
+     * @implements egret.StageText
      * @private
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export class NativeStageText extends StageText {
+    export class NativeStageText extends EventDispatcher implements StageText {
 
         /**
          * @private
          */
         private textValue:string = "";
 
-        /**
-         * @private
-         */
-        private tf:egret.TextField;
+        public $textfield:egret.TextField;
 
         /**
          * @private
@@ -73,8 +70,8 @@ module egret {
          */
         constructor() {
             super();
-            this.tf = new egret.TextField();
-            var tf:egret.TextField = this.tf;
+            this.$textfield = new egret.TextField();
+            var tf:egret.TextField = this.$textfield;
             tf.textColor = 0;
             tf.text = "";
             tf.textAlign = egret.HorizontalAlign.LEFT;
@@ -108,7 +105,7 @@ module egret {
                 container.addChild(textInputBackground);
                 textInputBackground.touchEnabled = true;
 
-                var tf:egret.TextField = this.tf;
+                var tf:egret.TextField = this.$textfield;
                 tf.x = 15;
                 tf.touchEnabled = true;
                 container.addChild(tf);
@@ -129,14 +126,14 @@ module egret {
             this.textBg.graphics.beginFill(0xffffff, 1);
 
             var h:number = 30;
-            if (this._multiline) {
+            if (this.$textfield.multiline) {
                 h = 90;
             }
             this.textBg.graphics.drawRect(4, 4, stageWidth - 8, h + 22);
             this.textBorder.graphics.drawRect(4, 4, stageWidth - 8, h + 22);
 
-            var maxH:number = Math.max(this.tf.height, h);
-            this.tf.y = h - maxH + 15;
+            var maxH:number = Math.max(this.$textfield.height, h);
+            this.$textfield.y = h - maxH + 15;
             this.textBg.height = h + 22;
             this.textBorder.height = h + 22;
 
@@ -149,7 +146,7 @@ module egret {
          * 
          * @returns 
          */
-        public _getText():string {
+        public $getText():string {
             if (!this.textValue) {
                 this.textValue = "";
             }
@@ -161,7 +158,7 @@ module egret {
          * 
          * @param value 
          */
-        public _setText(value:string):void {
+        public $setText(value:string):void {
             this.textValue = value;
 
             this.resetText();
@@ -172,7 +169,7 @@ module egret {
          * 
          * @param type 
          */
-        public _setTextType(type:string):void {
+        public $setTextType(type:string):void {
             this.textType = type;
 
             this.resetText();
@@ -183,7 +180,7 @@ module egret {
          * 
          * @returns 
          */
-        public _getTextType():string {
+        public $getTextType():string {
             return this.textType;
         }
 
@@ -205,18 +202,18 @@ module egret {
                             passwordStr += '*';
                     }
                 }
-                this.tf.text = passwordStr;
+                this.$textfield.text = passwordStr;
             }
             else {
-                this.tf.text = this.textValue;
+                this.$textfield.text = this.textValue;
             }
 
             var h:number = 30;
-            if (this._multiline) {
+            if (this.$textfield.multiline) {
                 h = 90;
             }
-            var maxH:number = Math.max(this.tf.height, h);
-            this.tf.y = h - maxH + 15;
+            var maxH:number = Math.max(this.$textfield.height, h);
+            this.$textfield.y = h - maxH + 15;
         }
 
         /**
@@ -228,7 +225,7 @@ module egret {
             var self = this;
             self.dispatchEvent(new egret.Event("blur"));
             egret_native.EGT_TextInput = function (appendText:string) {
-                if (self._multiline) {//多行文本
+                if (self.$textfield.multiline) {//多行文本
                     if (self.isFinishDown) {
                         self.isFinishDown = false;
 
@@ -251,7 +248,7 @@ module egret {
 
             //点击完成
             egret_native.EGT_keyboardFinish = function () {
-                if (self._multiline) {//多行文本
+                if (self.$textfield.multiline) {//多行文本
                     self.isFinishDown = true;
                 }
             };
@@ -270,7 +267,7 @@ module egret {
             var self = this;
 
             egret_native.EGT_TextInput = function (appendText:string) {
-                if (self._multiline) {//多行文本
+                if (self.$textfield.multiline) {//多行文本
 
                 }
                 else {
@@ -290,7 +287,7 @@ module egret {
             };
 
             egret_native.EGT_deleteBackward = function () {
-                var text = self._getText();
+                var text = self.$getText();
                 text = text.substr(0, text.length - 1);
                 self.textValue = text;
 
@@ -311,10 +308,10 @@ module egret {
          * @private
          * 
          */
-        public _show():void {
+        public $show():void {
             var self = this;
             egret_native.EGT_getTextEditerContentText = function () {
-                return self._getText();
+                return self.$getText();
             };
 
             egret_native.EGT_keyboardDidShow = function () {
@@ -329,7 +326,7 @@ module egret {
                 }
             };
 
-            egret_native.TextInputOp.setInputTextMaxLenght(self._maxChars > 0 ? self._maxChars : -1);
+            egret_native.TextInputOp.setInputTextMaxLenght(self.$textfield.maxChars > 0 ? self.$textfield.maxChars : -1);
 
             egret_native.TextInputOp.setKeybordOpen(true);
         }
@@ -338,7 +335,7 @@ module egret {
          * @private
          * 
          */
-        public _remove():void {
+        public $remove():void {
             var container = this.container;
             if (container && container.parent) {
                 container.parent.removeChild(container);
@@ -349,15 +346,28 @@ module egret {
          * @private
          * 
          */
-        public _hide():void {
-            this._remove();
+        public $hide():void {
+            this.$remove();
             this.dispatchEvent(new egret.Event("blur"));
             egret_native.TextInputOp.setKeybordOpen(false);
         }
+
+        $resetStageText():void {
+
+        }
+
+        public $addToStage():void {
+
+        }
+
+        public $removeFromStage():void {
+
+        }
+
+        public $setTextField(value:egret.TextField):void {
+
+        }
     }
-}
 
-
-egret.StageText.create = function () {
-    return new egret.NativeStageText();
+    StageText = NativeStageText;
 }

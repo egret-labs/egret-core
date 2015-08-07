@@ -553,6 +553,9 @@ module egret.sys {
                 if (this.showFPS) {
                     this.infoText.y = this.textField.height + 20;
                 }
+                if(egret.MainContext.runtimeType == egret.MainContext.RUNTIME_NATIVE) {
+                    return;
+                }
                 var g = this.shape.$graphics.$renderContext;
                 g.clear();
                 g.fillStyle = "rgba(68,68,68,1)";

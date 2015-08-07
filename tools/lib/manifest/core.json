@@ -103,6 +103,8 @@
         "egret/text/TextField.ts",
         "egret/text/VerticalAlign.ts",
         "egret/text/TextFieldUtils.ts",
+        "egret/text/StageText.ts",
+        "egret/text/InputController.ts",
         "egret/text/ITextElement.ts",
         "egret/text/HtmlTextParser.ts",
         "egret/text/BitmapFont.ts",
