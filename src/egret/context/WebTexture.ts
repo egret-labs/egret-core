@@ -89,7 +89,7 @@ module egret.web {
     }
 
     function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
-        var base64 = toDataURL(type, rect);
+        var base64 = toDataURL.call(this, type, rect);
         if (base64 == null) {
             return;
         }
