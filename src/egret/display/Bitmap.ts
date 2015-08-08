@@ -129,7 +129,7 @@ module egret {
         /**
          * @private
          */
-        private _scale9Grid:egret.Rectangle = null;
+        $scale9Grid:egret.Rectangle = null;
 
         /**
          * @language en_US
@@ -149,31 +149,62 @@ module egret {
          * @platform Web,Native
          */
         public get scale9Grid():egret.Rectangle {
-            return this._scale9Grid;
+            return this.$scale9Grid;
         }
 
         public set scale9Grid(value:egret.Rectangle) {
-            this._scale9Grid = value;
+            this.$scale9Grid = value;
             this.$invalidateContentBounds();
         }
 
 
         /**
-         * @language en_USDetermine the bitmap fill mode for size.
-         * When BitmapFillMode.REPEAT is set, area is filled in repeat mode; when BitmapFillMode.SCALE is set, area is filled in scale mode.
-         * @default egret.BitmapFillMode.SCALE
-         * @version Egret 2.0
+         * @private
+         */
+        $fillMode:string = "scale";
+        /**
+         * @language en_US
+         * Determines how the bitmap fills in the dimensions.
+         * <p>When set to <code>BitmapFillMode.CLIP</code>, the bitmap
+         * ends at the edge of the region.</p>
+         * <p>When set to <code>BitmapFillMode.REPEAT</code>, the bitmap
+         * repeats to fill the region.</p>
+         * <p>When set to <code>BitmapFillMode.SCALE</code>, the bitmap
+         * stretches to fill the region.</p>
+         *
+         * @default <code>BitmapFillMode.SCALE</code>
+         *
+         * @version Lark 1.0
+         * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 确定位图填充尺寸的方式。
-         * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域；BitmapFillMode.SCALE时，位图将拉伸以填充区域。
-         * @default egret.BitmapFillMode.SCALE
-         * @version Egret 2.0
+         * <p>设置为 <code>BitmapFillMode.CLIP</code>时，位图将在边缘处被截断。</p>
+         * <p>设置为 <code>BitmapFillMode.REPEAT</code>时，位图将重复以填充区域。</p>
+         * <p>设置为 <code>BitmapFillMode.SCALE</code>时，位图将拉伸以填充区域。</p>
+         *
+         * @default <code>BitmapFillMode.SCALE</code>
+         *
+         * @version Lark 1.0
+         * @version Swan 1.0
          * @platform Web,Native
          */
-        public fillMode:string = "scale";
+        public get fillMode():string {
+            return this.$fillMode;
+        }
+
+        public set fillMode(value:string) {
+            this.$setFillMode(value);
+        }
+
+        $setFillMode(value:string):void {
+            if (value == this.$fillMode) {
+                return;
+            }
+            this.$fillMode = value;
+        }
 
         /**
          * @private
