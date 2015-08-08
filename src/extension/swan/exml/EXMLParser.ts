@@ -189,7 +189,7 @@ module swan.sys {
                 return null;
             }
             if (hasClass && clazz) {
-                egret.registerClass2(clazz,className);
+                egret.registerClass(clazz,className);
                 var paths = className.split(".");
                 var length = paths.length;
                 var definition = __global;

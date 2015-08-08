@@ -106,6 +106,4 @@ module egret {
             this.$graphics.$render(context);
         }
     }
-
-    registerClass(Sprite, Types.Sprite, [Types.DisplayObjectContainer]);
 }

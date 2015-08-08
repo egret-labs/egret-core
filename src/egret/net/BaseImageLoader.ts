@@ -114,7 +114,4 @@ module egret {
          */
         protected static _bitmapCallbackMap:any = {};
     }
-
-    //registerClass(WebImageLoader, Types.ImageLoader);
-    //ImageLoader = WebImageLoader;
 }

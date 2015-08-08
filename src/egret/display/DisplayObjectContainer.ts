@@ -647,8 +647,6 @@ module egret {
 
     }
 
-    registerClass(DisplayObjectContainer, Types.DisplayObjectContainer, [Types.DisplayObjectContainer]);
-
     if(DEBUG){
         egret.$markReadOnly(DisplayObjectContainer,"numChildren");
     }

@@ -405,8 +405,6 @@ module egret {
         }
     }
 
-    registerClass(Point,Types.Point);
-
     if(DEBUG){
         $markReadOnly(Point,"length")
     }

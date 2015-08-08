@@ -112,8 +112,6 @@ module egret {
         }
     }
 
-    registerClass(Shape, Types.Shape);
-
     if (DEBUG) {
         egret.$markReadOnly(Shape, "graphics");
     }

@@ -772,8 +772,6 @@ module egret {
 
     }
 
-    registerClass(Event, Types.Event);
-
     if (DEBUG) {
         egret.$markReadOnly(Event, "type");
         egret.$markReadOnly(Event, "bubbles");

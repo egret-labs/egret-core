@@ -303,7 +303,6 @@ module egret {
         egret.$markCannotUse(Stage, "touchEnabled", true);
         egret.$markCannotUse(Stage, "matrix", null);
     }
-    registerClass(Stage, Types.Stage);
     if (DEBUG) {
         egret.$markReadOnly(Stage, "stageWidth");
         egret.$markReadOnly(Stage, "stageHeight");

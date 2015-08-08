@@ -1001,8 +1001,6 @@ module egret {
         }
     }
 
-    registerClass(GraphicsRenderContext, Types.GraphicsRenderContext);
-
     /**
      * @private
      *

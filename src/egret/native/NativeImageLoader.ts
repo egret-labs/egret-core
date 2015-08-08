@@ -89,7 +89,6 @@ module egret.native {
         }
     }
 
-    registerClass(NativeImageLoader, Types.ImageLoader);
     ImageLoader = NativeImageLoader;
     ImageLoader.disposeBitmapData = NativeImageLoader.disposeBitmapData;
 }

@@ -577,6 +577,4 @@ module egret {
             context.drawImage(image, sourceX2, sourceY2, sourceW2, sourceH2, targetX2, targetY2, targetW2, targetH2);
         }
     }
-
-    registerClass(Bitmap, Types.Bitmap);
 }

@@ -133,7 +133,6 @@ module egret.web {
         }
     }
 
-    registerClass(WebImageLoader, Types.ImageLoader);
     ImageLoader = WebImageLoader;
     ImageLoader.disposeBitmapData = WebImageLoader.disposeBitmapData;
 }

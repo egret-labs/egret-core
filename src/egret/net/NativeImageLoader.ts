@@ -96,7 +96,6 @@ module egret.web {
 
     }
 
-    registerClass(WebImageLoader, Types.ImageLoader);
     ImageLoader = NativeImageLoader;
 }
 

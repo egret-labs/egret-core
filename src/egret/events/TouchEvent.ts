@@ -382,8 +382,6 @@ module egret {
         }
     }
 
-    registerClass(TouchEvent, Types.TouchEvent);
-
     if (DEBUG) {
         egret.$markReadOnly(TouchEvent, "stageX");
         egret.$markReadOnly(TouchEvent, "stageY");

@@ -2026,8 +2026,6 @@ module egret {
 
     }
 
-    registerClass(DisplayObject, Types.DisplayObject);
-
     if (DEBUG) {
         egret.$markReadOnly(DisplayObject, "parent");
         egret.$markReadOnly(DisplayObject, "stage");

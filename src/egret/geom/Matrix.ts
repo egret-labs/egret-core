@@ -942,8 +942,6 @@ module egret {
         }
 
     }
-    registerClass(Matrix,Types.Matrix);
-
     /**
      * @private
      * 仅供框架内复用，要防止暴露引用到外部。

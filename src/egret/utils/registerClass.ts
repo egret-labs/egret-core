@@ -30,68 +30,75 @@
 module egret {
     /**
      * @language en_US
-     * Registers the class information at runtime for a class.This method will add some flags of class and interface to
-     * the class definition. After the registration,you can use egret.is() method to do the type checking for the instance
-     * of this class.<br/>
-     * Note: The value of the custom class flag or interface Flag must not in the type range of Egret framework (from 1 to 2000)
-     * or a third party library referenced to your project,it might result in a type check failure.
-     * @example the following code shows how to register the class flag for the EventDispatcher class:
+     * Registers the runtime class information for a class.This method adds some strings which represent the class name or
+     * some interface names to the class definition. After the registration,you can use lark.is() method to do the type checking
+     * for the instance of this class.<br/>
+     * Note:If you use the TypeScript programming language, the lark command line tool will automatically generate the registration code line.
+     * You don't need to manually call this method.
+     *
+     * @example the following code shows how to register the runtime class information for the EventEmitter class and do the type checking:
      * <pre>
-     *      egret.registerClass(egret.EventDispatcher,egret.Types.EventDispatcher,[egret.Types.IEventDispatcher]);
-     *      var emitter = new egret.EventDispatcher();
-     *      egret.log(egret.is(emitter, egret.Types.IEventDispatcher));  //true。
-     *      egret.log(egret.is(emitter, egret.Types.EventDispatcher));   //true。
-     *      egret.log(egret.is(emitter, egret.Types.Bitmap));   //false。
+     *      lark.registerClass(lark.EventEmitter,"lark.EventEmitter",["lark.IEventEmitter"]);
+     *      var emitter = new lark.EventEmitter();
+     *      lark.log(lark.is(emitter, "lark.IEventEmitter"));  //true。
+     *      lark.log(lark.is(emitter, "lark.EventEmitter"));   //true。
+     *      lark.log(lark.is(emitter, "lark.Bitmap"));   //false。
      * </pre>
      * @param classDefinition the class definition to be registered.
-     * @param classFlag  a unique identification number of the specific class
-     * @param interfaceFlags a list of unique identification numbers of the specific interfaces.
-     * @version Egret 2.0
+     * @param className  a unique identification string of the specific class
+     * @param interfaceNames a list of unique identification string of the specific interfaces.
+     * @version Lark 1.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
-     * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的枚举值。
-     * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个枚举值来判断实例类型。
-     * @example 以下代码演示了如何为EventEmitter类注册运行时类信息：
+     * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
+     * 在运行时，这个类的实例将可以使用 lark.is() 方法传入一个字符串来判断实例类型。
+     * @example 以下代码演示了如何为EventEmitter类注册运行时类信息并判断类型：
      * <pre>
-     *      //为egret.EventEmitter类注册运行时类信息，由于它实现了IEventEmitter接口，这里应同时传入两个枚举值。
-     *      egret.registerClass(egret.EventDispatcher,egret.Types.EventDispatcher,[egret.Types.IEventDispatcher]);
-     *      var emitter = new egret.EventDispatcher();
-     *      egret.log(egret.is(emitter, egret.Types.IEventDispatcher));  //true。
-     *      egret.log(egret.is(emitter, egret.Types.EventDispatcher));   //true。
-     *      egret.log(egret.is(emitter, egret.Types.Bitmap));   //false。
+     *      //为lark.EventEmitter类注册运行时类信息，由于它实现了IEventEmitter接口，这里应同时传入接口名对应的字符串。
+     *      lark.registerClass(lark.EventEmitter,"lark.EventEmitter",["lark.IEventEmitter"]);
+     *      var emitter = new lark.EventEmitter();
+     *      lark.log(lark.is(emitter, "lark.IEventEmitter"));  //true。
+     *      lark.log(lark.is(emitter, "lark.EventEmitter"));   //true。
+     *      lark.log(lark.is(emitter, "lark.Bitmap"));   //false。
      * </pre>
-     * 注意：传入的自定义枚举数值范围要避免与Egret框架(1~2000的数值)或其他第三方库的数值范围重合,
-     * 否则有可能会导致运行时 egret.is() 方法类型判断错误。
+     * 注意：若您使用 TypeScript 来编写程序，lark 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
      *
      * @param classDefinition 要注册的类定义。
-     * @param classFlag 要注册的类对应的枚举值。
-     * @param interfaceFlags 要注册的类所实现的接口的枚举值列表。
-     * @version Egret 2.0
+     * @param className 要注册的类名。
+     * @param interfaceNames 要注册的类所实现的接口名列表。
+     * @version Lark 1.0
      * @platform Web,Native
      */
-    export function registerClass(classDefinition:any,classFlag:number,interfaceFlags?:number[]):void{
+    export function registerClass(classDefinition:any, className:string, interfaceNames?:string[]):void {
         if (DEBUG) {
-            if(!classDefinition){
+            if (!classDefinition) {
                 $error(1003, "classDefinition");
             }
-            if(!classDefinition.prototype){
-                $error(1012,"classDefinition")
+            if (!classDefinition.prototype) {
+                $error(1012, "classDefinition")
             }
-            if(egret.isUndefined(classFlag)){
-                $error(1003, "classFlag");
+            if (className === void 0) {
+                $error(1003, "className");
             }
         }
-        var prototype: any = classDefinition.prototype;
-        prototype.__classFlag__ = classFlag;
-        var flags = [classFlag];
-        if(interfaceFlags){
-            flags = flags.concat(interfaceFlags);
+        var prototype:any = classDefinition.prototype;
+        prototype.__class__ = className;
+        var types = [className];
+        if (interfaceNames) {
+            types = types.concat(interfaceNames);
         }
-        if(prototype.__typeFlags__){
-            flags = flags.concat(prototype.__typeFlags__);
+        var superTypes = prototype.__types__;
+        if (prototype.__types__) {
+            var length = superTypes.length;
+            for(var i=0;i<length;i++){
+                var name = superTypes[i];
+                if(types.indexOf(name)==-1){
+                    types.push(name);
+                }
+            }
         }
-        prototype.__typeFlags__ = flags;
+        prototype.__types__ = types;
     }
 }

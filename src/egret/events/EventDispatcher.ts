@@ -293,7 +293,6 @@ module egret {
         }
     }
 
-    registerClass(EventDispatcher, Types.EventDispatcher, [Types.IEventDispatcher]);
 }
 
 module egret.sys {

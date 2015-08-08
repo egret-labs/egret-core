@@ -6,6 +6,7 @@
         "egret/i18n/tr.ts",
         "egret/i18n/en_US.ts",
         "egret/i18n/zh_CN.ts",
+        "egret/utils/registerClass.ts",
         "Defines.debug.ts",
         "egret/utils/extends.ts",
         "egret/utils/NumberUtils.ts",
@@ -20,7 +21,6 @@
         "egret/utils/toColorString.ts",
         "egret/utils/is.ts",
         "egret/utils/NONE.ts",
-        "egret/utils/registerClass.ts",
         "egret/utils/startTick.ts",
         "egret/utils/stopTick.ts",
         "egret/utils/XML.ts",
@@ -122,7 +122,6 @@
         "egret/filters/DropShadowFilter.ts",
         "egret/media/Audio.ts",
         "egret/media/Sound.ts",
-        "egret/Types.ts",
 
         "egret/utils/PromiseObject.ts"
     ]

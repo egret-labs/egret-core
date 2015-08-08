@@ -181,6 +181,4 @@ module egret {
         }
     }
 
-    registerClass(TimerEvent,Types.TimerEvent);
-
 }

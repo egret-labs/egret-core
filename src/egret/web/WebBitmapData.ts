@@ -33,9 +33,10 @@ if (window['HTMLVideoElement'] == undefined) {
 }
 module egret.web {
 
-    registerClass(HTMLImageElement,Types.BitmapData);
-    registerClass(HTMLCanvasElement,Types.BitmapData);
-    registerClass(HTMLVideoElement,Types.BitmapData);
+    var className = "egret.BitmapData";
+    registerClass(HTMLImageElement, className);
+    registerClass(HTMLCanvasElement, className);
+    registerClass(HTMLVideoElement, className);
 
     /**
      * @private
