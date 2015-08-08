@@ -49,7 +49,9 @@ var CompileEgret = (function () {
         if (configuration.minify) {
             fileName += ".min";
         }
-        var depends = m.dependencies.map(function (name) { return _this.getModuleOutputPath(name, name + '.d.ts'); });
+        var depends = m.dependencies.map(function (name) {
+            return _this.getModuleOutputPath(name, name + '.d.ts');
+        });
         if (platform.name != ANY) {
             depends.push(this.getModuleOutputPath(m.name, name + '.d.ts'));
         }
@@ -82,7 +84,9 @@ var CompileEgret = (function () {
         var dts = platform.declaration && configuration.declaration;
         var result = this.compiler.compile({ args: options, def: dts, out: singleFile, files: tss, outDir: null });
         if (result.exitStatus != 0) {
-            result.messages.forEach(function (m) { return console.log(m); });
+            result.messages.forEach(function (m) {
+                return console.log(m);
+            });
             return result.exitStatus;
         }
         if (dts) {
@@ -111,7 +115,9 @@ var CompileEgret = (function () {
             var tss = depends.concat(tempDtsName);
             var result = _this.compiler.compile({ args: egret.options, def: true, out: singleFile, files: tss, outDir: null });
             if (result.messages && result.messages.length) {
-                result.messages.forEach(function (m) { return console.log(m); });
+                result.messages.forEach(function (m) {
+                    return console.log(m);
+                });
             }
             FileUtil.remove(singleFile);
             FileUtil.remove(tempDtsName);
