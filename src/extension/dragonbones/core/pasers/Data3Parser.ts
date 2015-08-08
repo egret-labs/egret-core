@@ -171,7 +171,7 @@ module dragonBones {
 			slotData.zOrder = <number><any> (slotObject[ConstValues.A_Z_ORDER]);
             slotData.zOrder = Data3Parser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
 			slotData.blendMode = slotObject[ConstValues.A_BLENDMODE];
-			
+			slotData.displayIndex = 0;
 			return slotData;
 		}
 		
@@ -221,6 +221,8 @@ module dragonBones {
 			
 			var lastFrameDuration:number = animationData.duration;
 
+			var displayIndexChangeSlotTimelines:Array<SlotTimeline> = [];
+			var displayIndexChangeTimelines:Array<TransformTimeline> = [];
             var timelineObjectList:Array<any> = animationObject[ConstValues.TIMELINE];
 			if(timelineObjectList)
 			{
@@ -232,15 +234,77 @@ module dragonBones {
 					animationData.addTimeline(timeline);
 					var slotTimeline:SlotTimeline = Data3Parser.parseSlotTimeline(timelineObject, animationData.duration, frameRate);
 					animationData.addSlotTimeline(slotTimeline);
+
+					if(animationData.autoTween)
+					{
+						var displayIndexChange:boolean;
+						var slotFrame:SlotFrame;
+
+						for(var j:number = 0, jlen:number = slotTimeline.frameList.length; j < jlen; j++)
+						{
+							slotFrame = <SlotFrame>slotTimeline.frameList[j];
+							if(slotFrame && slotFrame.displayIndex < 0)
+							{
+								displayIndexChange = true;
+								break;
+							}
+						}
+						
+						if(displayIndexChange)
+						{
+							displayIndexChangeTimelines.push(timeline);
+							displayIndexChangeSlotTimelines.push(slotTimeline);
+						}
+						
+					}
+				}
+				
+				len = displayIndexChangeSlotTimelines.length;
+				var animationTween:number = animationData.tweenEasing;
+				if(len > 0)
+				{
+					
+					for ( i = 0; i < len; i++)
+					{
+						slotTimeline = displayIndexChangeSlotTimelines[i];
+						timeline = displayIndexChangeTimelines[i];
+						var curFrame:TransformFrame;
+						var curSlotFrame:SlotFrame;
+						var nextSlotFrame:SlotFrame;
+						for (j = 0, jlen = slotTimeline.frameList.length; j < jlen; j++)
+						{
+							curSlotFrame = <SlotFrame>slotTimeline.frameList[j];
+							curFrame = <TransformFrame>timeline.frameList[j];
+							nextSlotFrame = (j == jlen - 1) ? <SlotFrame>slotTimeline.frameList[0] : <SlotFrame>slotTimeline.frameList[j + 1];
+							if (curSlotFrame.displayIndex < 0 || nextSlotFrame.displayIndex < 0)
+							{
+								curFrame.tweenEasing = curSlotFrame.tweenEasing = NaN;
+							}
+							else if (animationTween == 10)
+							{
+								curFrame.tweenEasing = curSlotFrame.tweenEasing = 0;
+							}
+							else if (!isNaN(animationTween))
+							{
+								curFrame.tweenEasing = curSlotFrame.tweenEasing = animationTween;
+							}
+							else if(curFrame.tweenEasing == 10)
+							{
+								curFrame.tweenEasing = 0;
+							}
+						}
+					}
+					animationData.autoTween = false;
+					
 				}
 			}
+
 			
 			if(animationData.frameList.length > 0){
 				lastFrameDuration = Math.min(lastFrameDuration, animationData.frameList[animationData.frameList.length - 1].duration);
 			}
 			//取得timeline中最小的lastFrameDuration并保存
 			animationData.lastFrameDuration = lastFrameDuration;
-			
 			return animationData;
 		}
 
@@ -271,7 +335,7 @@ module dragonBones {
 			outputFrame.visible = !Data3Parser.getBoolean(frameObject, ConstValues.A_HIDE, false);
 
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10) || 10;
+			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
 			outputFrame.displayIndex = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
 
 			//如果为NaN，则说明没有改变过zOrder
@@ -315,7 +379,7 @@ module dragonBones {
 			outputFrame.visible = !Data3Parser.getBoolean(frameObject, ConstValues.A_HIDE, false);
 			
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
-			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10) || 10;
+			outputFrame.tweenEasing = Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
 			outputFrame.tweenRotate = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0) || 0);
 			outputFrame.tweenScale = Data3Parser.getBoolean(frameObject, ConstValues.A_TWEEN_SCALE, true);
 			//outputFrame.displayIndex = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);

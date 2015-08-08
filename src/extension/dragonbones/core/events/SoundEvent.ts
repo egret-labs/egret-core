@@ -29,13 +29,12 @@
 
 
 module dragonBones {
-
 	/**
-	 * @class dragonBones.AnimationEvent
+	 * @class dragonBones.SoundEvent
 	 * @extends dragonBones.Event
 	 * @classdesc
-	 * 动画事件
-	 * 
+	 * 声音事件
+	 *
 	 * @example
        <pre>
 	    private exampleEvent():void
@@ -123,83 +122,25 @@ module dragonBones {
 
 	   </pre>
 	 */
-	export class AnimationEvent extends Event{
-		/**
-		 * 不推荐使用.
-		 */
-		public static get MOVEMENT_CHANGE():string{
-			return AnimationEvent.FADE_IN;
-		}
-		
-		/**
-		 * 当动画缓入的时候派发
-		 */
-		public static FADE_IN:string = "fadeIn";
-		
-		/**
-		 * 当动画缓出的时候派发
-		 */
-		public static FADE_OUT:string = "fadeOut";
-		
-		/**
-		 * 当动画开始播放时派发
-		 */
-		public static START:string = "start";
-		
-		/**
-		 * 当动画停止时派发
-		 */
-		public static COMPLETE:string = "complete";
-		
-		/**
-		 * 当动画播放完一轮后派发
-		 */
-		public static LOOP_COMPLETE:string = "loopComplete";
-		
-		/**
-		 * 当动画缓入完成时派发
-		 */
-		public static FADE_IN_COMPLETE:string = "fadeInComplete";
-		
-		/**
-		 * 当动画缓出结束后派发
-		 */
-		public static FADE_OUT_COMPLETE:string = "fadeOutComplete";
-		
-		/**
-		 * 不推荐的API.
-		 * @member {string} dragonBones.AnimationEvent#movementID
-		 */
-		public get movementID():string{
-			return this.animationName;
-		}
-		
-		/**
-		 * animationState 的实例.
-		 * @member {dragonBones.AnimationState} dragonBones.AnimationEvent#animationState
-		 */
-		public animationState:any;
-		
-		/**
-		 * 配发出事件的骨架
-		 * @member {dragonBones.Armature} dragonBones.AnimationEvent#armature
-		 */
-		public get armature():Armature{
-			return <Armature><any> (this.target);
-		}
+	export class SoundEvent extends Event{
 
 		/**
-		 * 获取动画的名字
-		 * @returns {string}
-		 * @member {string} dragonBones.AnimationEvent#animationName
+		 * Dispatched when the animation of the animation enter a frame containing sound labels.
 		 */
-		public get animationName():string{
-			return this.animationState.name;
-		}
+		public static SOUND:string = "sound";
 		
 		/**
-		 * 创建一个新的 AnimationEvent 的实例
-		 * @param type 事件的类型
+		 * The armature that is the target of this event.
+		 */
+		public armature:Armature;
+		
+		public animationState:AnimationState;
+		
+		public sound:string;
+		
+		/**
+		 * Creates a new SoundEvent instance.
+		 * @param type
 		 * @param cancelable
 		 */
 		public constructor(type:string, cancelable:boolean = false){

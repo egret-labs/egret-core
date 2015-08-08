@@ -1,4 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -29,16 +30,15 @@
 
 
 module dragonBones {
-    /**
-     * @class dragonBones.EventDispatcher
-     * @classdesc
-     * 事件派发者
-     */
-    export class EventDispatcher extends egret.EventDispatcher {
 
-        public constructor(target:egret.IEventDispatcher = null) {
-            super(target);
-        }
+	/**
+	 * @class dragonBones.ITextureAltas
+	 * @classdesc
+	 * 纹理集的接口
+	 */
+	export interface IArmature extends IAnimatable{
 
-    }
+		getAnimation():any;
+		resetAnimation():void;
+	}
 }

@@ -307,6 +307,10 @@ module dragonBones {
 		 */
 		public static A_BLUE_MULTIPLIER:string = "bM";
 		/**
+		 * 动画曲线
+		 */
+		 public static A_CURVE:string = "curve";
+		/**
 		 * x方向缩放的偏移
 		 */
 		public static A_SCALE_X_OFFSET:string = "scXOffset";

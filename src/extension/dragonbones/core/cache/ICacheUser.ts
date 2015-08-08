@@ -27,18 +27,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 module dragonBones {
-    /**
-     * @class dragonBones.EventDispatcher
-     * @classdesc
-     * 事件派发者
-     */
-    export class EventDispatcher extends egret.EventDispatcher {
-
-        public constructor(target:egret.IEventDispatcher = null) {
-            super(target);
-        }
-
-    }
+	/**
+	 * @class dragonBones.ICacheUser
+	 * @classdesc
+	 * ICacheUser 接口定义了可以使用帧缓存的接口。
+	 * 目前只有FastSlot实现了该接口。
+	 * @see dragonBones.FastSlot
+	 * @see dragonBones.ISlotCacheGenerator
+	 */
+	export interface ICacheUser{
+		name:string;
+		frameCache:FrameCache;
+		
+	}
 }

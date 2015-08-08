@@ -35,7 +35,7 @@ module dragonBones {
      * @classdesc
      * egret引擎使用的插槽
      */
-    export class EgretSlot extends Slot {
+    export class EgretFastSlot extends FastSlot {
         private _egretDisplay:egret.DisplayObject;
 
         /**
@@ -55,8 +55,8 @@ module dragonBones {
                 var length:number = this._displayList.length;
                 for(var i:number = 0;i < length;i++){
                     var content:any = this._displayList[i];
-                    if(content instanceof Armature){
-                        (<Armature><any> content).dispose();
+                    if(content instanceof FastArmature){
+                        (<FastArmature><any> content).dispose();
                     }
                 }
             }
@@ -111,9 +111,9 @@ module dragonBones {
 
         /** @private */
         public _updateDisplayVisible(value:boolean):void{
-            if(this._egretDisplay && this._parent){
-                this._egretDisplay.visible = this._parent._visible && this._visible && value;
-            }
+            //if(this._egretDisplay && this._parent){
+            //    this._egretDisplay.visible = this._parent._visible && this._visible && value;
+            //}
         }
 
         /** @private */
@@ -125,10 +125,12 @@ module dragonBones {
             aMultiplier:number,
             rMultiplier:number,
             gMultiplier:number,
-            bMultiplier:number):void{
-            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier);
+            bMultiplier:number,
+            colorChanged:boolean = false):void{
+            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChanged);
             if(this._egretDisplay)
             {
+
                 this._egretDisplay.alpha = aMultiplier;
                 //todo apply colorTransform after engine support it.
             }
@@ -139,25 +141,6 @@ module dragonBones {
             if(this._egretDisplay && value)
             {
                 this._egretDisplay.blendMode = value;
-            }
-        }
-
-        public _calculateRelativeParentTransform():void
-        {
-            this._global.scaleX = this._origin.scaleX * this._offset.scaleX;
-            this._global.scaleY = this._origin.scaleY * this._offset.scaleY;
-            this._global.skewX = this._origin.skewX + this._offset.skewX;
-            this._global.skewY = this._origin.skewY + this._offset.skewY;
-            this._global.x = this._origin.x + this._offset.x + this._parent._tweenPivot.x;
-            this._global.y = this._origin.y + this._offset.y + this._parent._tweenPivot.y;
-
-            if(this._displayDataList && 
-               this._currentDisplayIndex >= 0 && 
-               this._displayDataList[this._currentDisplayIndex] &&
-               EgretTextureAtlas.rotatedDic[this._displayDataList[this._currentDisplayIndex].name] == 1)
-            {
-                this._global.skewX -= 1.57;
-                this._global.skewY -= 1.57;
             }
         }
     }

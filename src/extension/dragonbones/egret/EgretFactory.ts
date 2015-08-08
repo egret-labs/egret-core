@@ -58,15 +58,38 @@ module dragonBones {
             bitmap.texture = textureAtlas.getTexture(fullName);
             if(isNaN(pivotX)||isNaN(pivotY))
             {
-                bitmap.anchorOffsetX = bitmap.width/2;
-                bitmap.anchorOffsetY = bitmap.height/2;
+                var subTextureFrame:Rectangle = (textureAtlas).getFrame(fullName);
+                if(subTextureFrame != null)
+                {
+                    pivotX = subTextureFrame.width/2  + subTextureFrame.x;
+                    pivotY = subTextureFrame.height/2 + subTextureFrame.y;
+                }
+                else
+                {
+                    pivotX = bitmap.width/2;
+                    pivotY = bitmap.height/2;
+                }
             }
             else
             {
-                bitmap.anchorOffsetX = pivotX;
-                bitmap.anchorOffsetY = pivotY;
+                if(subTextureFrame != null)
+                {
+                    pivotX += subTextureFrame.x;
+                    pivotY += subTextureFrame.y;
+                }
             }
+            bitmap.anchorOffsetX = pivotX;
+            bitmap.anchorOffsetY = pivotY;
             return bitmap;
+        }
+
+        public _generateFastArmature():FastArmature {
+            var armature:FastArmature = new FastArmature(new egret.DisplayObjectContainer());
+            return armature;
+        }
+        public _generateFastSlot():FastSlot {
+            var slot:FastSlot = new EgretFastSlot();
+            return slot;
         }
     }
 }

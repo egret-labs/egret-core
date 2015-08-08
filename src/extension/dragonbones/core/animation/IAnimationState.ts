@@ -29,16 +29,14 @@
 
 
 module dragonBones {
-    /**
-     * @class dragonBones.EventDispatcher
-     * @classdesc
-     * 事件派发者
-     */
-    export class EventDispatcher extends egret.EventDispatcher {
 
-        public constructor(target:egret.IEventDispatcher = null) {
-            super(target);
-        }
-
-    }
+	/**
+	 * @class dragonBones.IAnimationState
+	 * @classdesc
+	 * 动画状态接口，目前只在动画缓存管理器中生成动画数据时使用
+	 * @see dragonBones.AnimationCacheManager
+	 */
+	export interface IAnimationState{
+		progress:number
+	}
 }
