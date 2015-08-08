@@ -96,8 +96,8 @@ module swan {
          */
         public constructor(text?:string) {
             super();
-            this.text = text;
             this.initializeUIValues();
+            this.text = text;
         }
 
         /**
