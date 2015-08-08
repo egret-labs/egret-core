@@ -59,10 +59,10 @@ var BuildCommand = (function () {
                     var fileList = dList.file_list.map(function (item) {
                         return file.relative(libRoot, file.join(outputPath, item)).replace(".ts", ".js");
                     });
-                    if (module["name"] == "html5") {
+                    if (moduleName == "html5") {
                         html5List = html5List.concat(fileList);
                     }
-                    else if (module["name"] == "native") {
+                    else if (moduleName == "native") {
                         nativeList = nativeList.concat(fileList);
                     }
                     else {

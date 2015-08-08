@@ -68,10 +68,10 @@ class BuildCommand implements egret.Command {
                         return file.relative(libRoot, file.join(outputPath, item)).replace(".ts", ".js");
                     });
 
-                    if (module["name"] == "html5") {
+                    if (moduleName == "html5") {
                         html5List = html5List.concat(fileList);
                     }
-                    else if (module["name"] == "native") {
+                    else if (moduleName == "native") {
                         nativeList = nativeList.concat(fileList);
                     }
                     else {
