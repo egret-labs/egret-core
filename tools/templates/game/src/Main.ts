@@ -124,12 +124,12 @@ class Main extends egret.DisplayObjectContainer {
 
         var icon:egret.Bitmap = this.createBitmapByName("egretIcon");
         this.addChild(icon);
+        icon.scaleX = 0.55;
+        icon.scaleY = 0.55;
         icon.anchorOffsetX = icon.width / 2;
         icon.anchorOffsetY = icon.height / 2;
         icon.x = stageW / 2;
         icon.y = stageH / 2 - 60;
-        icon.scaleX = 0.55;
-        icon.scaleY = 0.55;
 
         var colorLabel:egret.TextField = new egret.TextField();
         colorLabel.textColor = 0xffffff;
