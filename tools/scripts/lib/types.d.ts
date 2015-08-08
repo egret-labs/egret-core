@@ -32,10 +32,11 @@ declare module egret {
     export interface LarkToolArgs {
         action: string;
         projectDir: string;
+        launcherDir: string;
         getTmpDir(): string;
         srcDir: string;
         projManifest: any;
-        larkPropertiesFile: string;
+        egretPropertiesFile: string;
         debugDir: string;
         releaseDir: string;
         templateDir: string;
@@ -50,7 +51,7 @@ declare module egret {
         debug?: boolean;
 
         publish?: boolean;
-        includeLark?: boolean;
+        includeEgret?: boolean;
         minify?: boolean;
         sourceMap?: boolean;
         removeComments?: boolean;

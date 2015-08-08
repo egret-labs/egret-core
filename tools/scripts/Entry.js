@@ -44,6 +44,11 @@ var CompileFilesCommand = require('./commands/CompileFilesCommand');
 var CompressJsonCommand = require('./commands/CompressJsonCommand');
 var CreateManifestCommand = require('./commands/CreateManifestCommand');
 var CCSToDBCommand = require('./commands/CCSToDBCommand');
+var QuickBuildCommand = require("./commands/QuickBuildCommand");
+var AutoCompileCommand = require("./commands/AutoCompileCommand");
+var Parser = require("./parser/Parser");
+var service = require("./service/index");
+var ShutdownCommand = require("./commands/ShutdownCommand");
 var config = require("./lib/ProjectConfig");
 var parser = require("./ParamsParser");
 global.egret = global.egret || {};
@@ -51,6 +56,8 @@ exports.DontExitCode = -0xF000;
 function executeCommandLine() {
     parser.init();
     var cmdName = parser.getCommandName();
+    var options = Parser.parseCommandLine(process.argv.slice(2));
+    egret.options = options;
     if (parser.getNotNeedProjectCmds().indexOf(cmdName) < 0) {
         config.init();
         //检测版本
@@ -62,7 +69,8 @@ function executeCommandLine() {
             }
         }
     }
-    entry.executeOption();
+    var exitcode = entry.executeOption();
+    //entry.exit(exitcode);
 }
 exports.executeCommandLine = executeCommandLine;
 var Entry = (function () {
@@ -104,12 +112,6 @@ var Entry = (function () {
                 var upgrade = new UpgradeCommand();
                 upgrade.execute();
                 break;
-            case "quit":
-                break;
-            case "service":
-                break;
-            case "autocompile":
-                break;
             case "clean":
                 break;
             case "export_stu_db":
@@ -142,6 +144,22 @@ var Entry = (function () {
             case "showip":
                 var showip = new ShowIPCommand();
                 showip.execute();
+                break;
+            case "service":
+                service.run();
+                exitCode = exports.DontExitCode;
+                break;
+            case "autocompile":
+                new AutoCompileCommand().execute();
+                exitCode = exports.DontExitCode;
+                break;
+            case "quickbuild":
+                new QuickBuildCommand().execute();
+                exitCode = exports.DontExitCode;
+                break;
+            case "quit":
+                new ShutdownCommand().execute();
+                exitCode = exports.DontExitCode;
                 break;
             case "designservice":
                 break;

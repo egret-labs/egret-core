@@ -47,6 +47,12 @@ import CompressJsonCommand = require('./commands/CompressJsonCommand');
 import CreateManifestCommand = require('./commands/CreateManifestCommand');
 import CCSToDBCommand = require('./commands/CCSToDBCommand');
 
+import QuickBuildCommand = require("./commands/QuickBuildCommand");
+import AutoCompileCommand = require("./commands/AutoCompileCommand");
+import Parser = require("./parser/Parser");
+import service = require("./service/index");
+import ShutdownCommand = require("./commands/ShutdownCommand");
+
 import config = require("./lib/ProjectConfig");
 import parser = require("./ParamsParser");
 
@@ -58,6 +64,9 @@ export var DontExitCode = -0xF000;
 export function executeCommandLine():void {
     parser.init();
     var cmdName = parser.getCommandName();
+
+    var options = Parser.parseCommandLine(process.argv.slice(2));
+    egret.options = options;
 
     if (parser.getNotNeedProjectCmds().indexOf(cmdName) < 0) {
         config.init();
@@ -71,7 +80,8 @@ export function executeCommandLine():void {
         }
     }
 
-    entry.executeOption();
+    var exitcode = entry.executeOption();
+    //entry.exit(exitcode);
 }
 
 class Entry {
@@ -112,12 +122,6 @@ class Entry {
                 var upgrade = new UpgradeCommand();
                 upgrade.execute();
                 break;
-            case "quit":
-                break;
-            case "service":
-                break;
-            case "autocompile":
-                break;
             case "clean":
                 break;
             case "export_stu_db":
@@ -150,6 +154,22 @@ class Entry {
             case "showip":
                 var showip = new ShowIPCommand();
                 showip.execute();
+                break;
+            case "service":
+                service.run();
+                exitCode = DontExitCode;
+                break;
+            case "autocompile":
+                new AutoCompileCommand().execute();
+                exitCode = DontExitCode;
+                break;
+            case "quickbuild":
+                new QuickBuildCommand().execute();
+                exitCode = DontExitCode;
+                break;
+            case "quit":
+                new ShutdownCommand().execute();
+                exitCode = DontExitCode;
                 break;
             case "designservice":
                 break;
