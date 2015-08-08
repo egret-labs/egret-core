@@ -107,6 +107,13 @@ module egret.web {
             this.inputDiv.style.left = x * scaleX + "px";
             this.inputDiv.style.top = y * scaleY + "px";
 
+            if (this.$textfield.multiline) {
+                this.inputDiv.style.top = (y - this.$textfield.lineSpacing * cY / 2) * scaleY + "px";
+            }
+            else {
+                this.inputDiv.style.top = y * scaleY + "px";
+            }
+
             this._gscaleX = scaleX * cX;
             this._gscaleY = scaleY * cY;
         }
@@ -305,10 +312,15 @@ module egret.web {
                 this.setElementStyle("fontWeight", textfield.bold ? "bold" : "normal");
                 this.setElementStyle("textAlign", textfield.textAlign);
                 this.setElementStyle("fontSize", textfield.size * this._gscaleY + "px");
-                this.setElementStyle("lineHeight", textfield.size * this._gscaleY + "px");
+                this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                 this.setElementStyle("color", sys.toColorString(textfield.textColor));
                 this.setElementStyle("width", textfield.width * this._gscaleX + "px");
-                this.setElementStyle("height", textfield.height * this._gscaleY + "px");
+                if (textfield.multiline) {
+                    this.setElementStyle("height", (textfield.height + textfield.lineSpacing / 2) * this._gscaleY + "px");
+                }
+                else {
+                    this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+                }
                 this.setElementStyle("verticalAlign", textfield.verticalAlign);
             }
         }
