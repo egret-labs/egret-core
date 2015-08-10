@@ -1235,7 +1235,7 @@ module egret {
          * 不能重写$invalidateContentBounds，因为内部graphics调用clear时会触发$invalidateContentBounds这狗方法，从而导致死循环。
          */
         $invalidateTextField():void {
-            super.$invalidateContentBounds();
+            this.$invalidateContentBounds();
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
         }
         
