@@ -1245,14 +1245,10 @@ module egret {
         $measureContentBounds(bounds:Rectangle):void {
             var self = this;
             this._getLinesArr();
-            if (this.$TextField[sys.TextKeys.textWidth] == 0) {
-                bounds.setEmpty();
-            }
-            else {
-                var w:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
-                var h:number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
-                bounds.setTo(0, 0, w, h);
-            }
+
+            var w:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
+            var h:number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils._getTextHeight(self);
+            bounds.setTo(0, 0, w, h);
         }
 
         /**

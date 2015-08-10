@@ -479,7 +479,7 @@ module swan {
             values[Keys.delayTouchEvent] = touchEvent;
             if (!values[Keys.delayTouchTimer]) {
                 values[Keys.delayTouchTimer] = new egret.Timer(100, 1);
-                values[Keys.delayTouchTimer].on(egret.TimerEvent.TIMER_COMPLETE, this.onDelayTouchEventTimer, this);
+                values[Keys.delayTouchTimer].addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.onDelayTouchEventTimer, this);
             }
             values[Keys.delayTouchTimer].start();
         }
@@ -713,7 +713,7 @@ module swan {
             if (horizontalBar && horizontalBar.visible || verticalBar && verticalBar.visible) {
                 if (!values[Keys.autoHideTimer]) {
                     values[Keys.autoHideTimer] = new egret.Timer(200, 1);
-                    values[Keys.autoHideTimer].on(egret.TimerEvent.TIMER_COMPLETE, this.onAutoHideTimer, this);
+                    values[Keys.autoHideTimer].addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.onAutoHideTimer, this);
                 }
                 values[Keys.autoHideTimer].reset();
                 values[Keys.autoHideTimer].start();
