@@ -32,7 +32,6 @@ module RES {
 	/**
 	 * @class RES.ResourceItem
 	 * @classdesc
-	 * @private
 	 */
 	export class ResourceItem{
 		/**
@@ -82,6 +81,7 @@ module RES {
 		 * @param name {string} 加载项名称
 		 * @param url {string} 要加载的文件地址 
 		 * @param type {string} 加载项文件类型
+		 * @private
 		 */
 		public constructor(name:string,url:string,type:string){
 			this.name = name;
@@ -92,27 +92,32 @@ module RES {
 		/**
 		 * 加载项名称
 		 * @member {string} RES.ResourceItem#name
+		 * @private
 		 */
 		public name:string;
 		/**
 		 * 要加载的文件地址 
 		 * @member {string} RES.ResourceItem#url
+		 * @private
 		 */
 		public url:string;
 		/**
 		 * 加载项文件类型
 		 * @member {string} RES.ResourceItem#type
+		 * @private
 		 */
 		public type:string;
 
         /**
          * 所属组名
 		 * @member {string} RES.ResourceItem#groupName
+		 * @private
          */
 		public groupName:string = "";
 		/**
 		 * 被引用的原始数据对象
 		 * @member {any} RES.ResourceItem#data
+		 * @private
 		 */		
 		public data:any = null;
 		
@@ -120,6 +125,7 @@ module RES {
 		/**
 		 * 加载完成的标志
 		 * @member {boolean} RES.ResourceItem#loaded
+		 * @private
 		 */
 		public get loaded():boolean{
 			return this.data?this.data.loaded:this._loaded;
@@ -136,6 +142,7 @@ module RES {
 		 * 转成字符串
 		 * @method RES.ResourceItem#toString
 		 * @returns {string}
+		 * @private
 		 */
 		public toString():string{
 			return "[ResourceItem name=\""+this.name+"\" url=\""+this.url+"\" type=\""+this.type+"\"]";

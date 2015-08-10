@@ -34,7 +34,6 @@ module RES {
 	 * @class RES.ResourceEvent
 	 * @classdesc
 	 * @extends egret.Event
-	 * @private
 	 */
 	export class ResourceEvent extends egret.Event{
 		/**
@@ -106,7 +105,8 @@ module RES {
 		 * @param groupName {string} 
 		 * @param resItem {egret.ResourceItem} 
 		 * @param itemsLoaded {number} 
-		 * @param itemsTotal {number} 
+		 * @param itemsTotal {number}
+		 * @private
          */
         public static dispatchResourceEvent(target:egret.IEventDispatcher,type:string,
                                                     groupName:string="",resItem:ResourceItem=null,itemsLoaded:number=0,itemsTotal:number=0):boolean{
