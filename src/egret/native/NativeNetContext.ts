@@ -256,7 +256,7 @@ module egret.native {
          * @param url
          * @returns {string}
          */
-        private getVirtualUrl(url:string):string {
+        public getVirtualUrl(url:string):string {
             if (this._versionCtr) {
                 return this._versionCtr.getVirtualUrl(url);
             }
