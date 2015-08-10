@@ -283,8 +283,8 @@ module egret {
                 outline = properties._stroke;
             }
 
-
-            egret_native.Label.createLabel(TextField.default_fontFamily, size, "", outline);
+            var font:string = (<NativeNetContext>egret.MainContext.instance.netContext).getVirtualUrl(TextField.default_fontFamily);
+            egret_native.Label.createLabel(font, size, "", outline);
         }
 
         /**

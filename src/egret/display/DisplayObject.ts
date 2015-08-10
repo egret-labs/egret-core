@@ -980,7 +980,6 @@ module egret {
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             var self = this;
-            var do_props = self._DO_Props_;
             var do_privs = self._DO_Privs_;
             var p:egret.Point = self.globalToLocal(x, y);
             if (!shapeFlag) {
