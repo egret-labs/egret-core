@@ -34,7 +34,6 @@ module RES {
 	 * @class RES.ResourceEvent
 	 * @classdesc
 	 * @extends egret.Event
-	 * @private
 	 */
 	export class ResourceEvent extends egret.Event{
 		/**
@@ -72,7 +71,7 @@ module RES {
 		 * @method RES.ResourceEvent#constructor
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
-		 * @param cancelable {boolean} 
+		 * @param cancelable {boolean}
 		 */		
 		public constructor(type:string, bubbles:boolean=false, cancelable:boolean=false){
 			super(type, bubbles, cancelable);
@@ -106,7 +105,8 @@ module RES {
 		 * @param groupName {string} 
 		 * @param resItem {egret.ResourceItem} 
 		 * @param itemsLoaded {number} 
-		 * @param itemsTotal {number} 
+		 * @param itemsTotal {number}
+		 * @private
          */
         public static dispatchResourceEvent(target:egret.IEventDispatcher,type:string,
                                                     groupName:string="",resItem:ResourceItem=null,itemsLoaded:number=0,itemsTotal:number=0):void{
