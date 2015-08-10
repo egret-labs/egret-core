@@ -329,7 +329,7 @@ module egret {
 
             egret_native.Label.setTextColor(textColor);
             egret_native.Label.setStrokeColor(strokeColor);
-            egret_native.Label.drawText(text, x, y - 2);
+            egret_native.Label.drawText(text, x, y);
 
             super.drawText(textField, text, x, y, maxWidth, style);
         }
