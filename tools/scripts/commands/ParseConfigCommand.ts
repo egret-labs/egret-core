@@ -18,6 +18,7 @@ class ParseConfigCommand implements egret.Command {
         this.read("data-scale-mode", "scaleMode", true, '"showAll"');
         this.read("data-content-width", "contentWidth", false, "480");
         this.read("data-content-height", "contentHeight", false, "800");
+        this.read("data-show-paint-rect", "showPaintRect", false, 'false');
         this.read("data-show-fps", "showFPS", false, 'false');
         this.read("data-show-fps-style", "fpsStyles", true, '""');
         this.read("data-show-log", "showLog", false, 'false');

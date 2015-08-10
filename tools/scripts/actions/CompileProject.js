@@ -47,9 +47,7 @@ var CompileProject = (function () {
     };
     CompileProject.prototype.compileProject = function (option, files) {
         if (files && this.recompile) {
-            files = files.map(function (f) {
-                return f.replace(option.projectDir, "");
-            });
+            files = files.map(function (f) { return f.replace(option.projectDir, ""); });
             var result = this.recompile(files);
             return result;
         }

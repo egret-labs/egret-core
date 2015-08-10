@@ -41,7 +41,7 @@ egret_native.egretStart = function () {
         scaleMode: "scaleMode",
         contentWidth: "contentWidth",
         contentHeight: "contentHeight",
-        showPaintRect: false,
+        showPaintRect: "showPaintRect",
         showFPS: "showFPS",
         fpsStyles: "fpsStyles",
         showLog: "showLog",

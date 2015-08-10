@@ -137,6 +137,7 @@ module egret.native {
         public set lineWidth(value:number) {
             //console.log("set lineWidth" + value);
             this.$lineWidth = value;
+            egret_native.rastergl.lineWidth = value;
         }
 
         private $strokeStyle:any = "#000000";
@@ -153,6 +154,13 @@ module egret.native {
         }
 
         public set strokeStyle(value:any) {
+            if (value.indexOf("rgba") != -1) {
+                value = this.$parseRGBA(value);
+            }
+            else if (value.indexOf("rgb") != -1) {
+                value = this.$parseRGB(value);
+            }
+            //console.log("strokeStyle::" + value);
             this.$strokeStyle = value;
             egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
             egret_native.rastergl.strokeStyle = value;
@@ -425,6 +433,7 @@ module egret.native {
          * @platform Web,Native
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
+            //console.log("strokeRect");
             egret_native.rastergl.strokeRect(x, y, w, h);
         }
 

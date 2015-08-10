@@ -196,7 +196,9 @@ function _copy_dir(sourceDir, outputDir) {
 function remove(path) {
     path = escapePath(path);
     try {
-        FS.lstatSync(path).isDirectory() ? rmdir(path) : FS.unlinkSync(path);
+        FS.lstatSync(path).isDirectory()
+            ? rmdir(path)
+            : FS.unlinkSync(path);
     }
     catch (e) {
     }
@@ -375,7 +377,8 @@ function findFiles(filePath, list, extension, filterFunc, checkDir) {
         }
         else if (extension) {
             var len = extension.length;
-            if (path.charAt(path.length - len - 1) == "." && path.substr(path.length - len, len).toLowerCase() == extension) {
+            if (path.charAt(path.length - len - 1) == "." &&
+                path.substr(path.length - len, len).toLowerCase() == extension) {
                 list.push(path);
             }
         }
