@@ -5,6 +5,7 @@ var file = require('../lib/FileUtil');
 var FileAutoChangeCommand = require("./FileAutoChangeCommand");
 var config = require("../lib/ProjectConfig");
 var CopyFilesCommand = require("./CopyFilesCommand");
+var ParseConfigCommand = require("./ParseConfigCommand");
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
 var CreateAppCommand = (function () {
@@ -55,6 +56,8 @@ var CreateAppCommand = (function () {
             opts: {}
         });
         config.init();
+        //修改native项目配置
+        new ParseConfigCommand().execute();
         //修改文件
         var fileModify = new FileAutoChangeCommand();
         fileModify.needCompile = false;

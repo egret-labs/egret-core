@@ -9,6 +9,7 @@ var ChangeEntranceCMD = require("./ChangeEntranceCommand");
 var BuildProjectCommand = require("./BuildProjectCommand");
 var ModifyHtmlsCommand = require("./ModifyHtmlsCommand");
 var FileAutoChangeCommand = require("./FileAutoChangeCommand");
+var ParseConfigCommand = require("./ParseConfigCommand");
 var BuildCommand = (function () {
     function BuildCommand() {
     }
@@ -46,7 +47,7 @@ var BuildCommand = (function () {
                 });
             });
         }
-        if (true) {
+        if (true /*(needCompileEngine) || moduleReferenceList*/) {
             task.push(function (tempCallback) {
                 var moduleNames = config.getAllModuleNames();
                 var html5List = [];
@@ -101,6 +102,8 @@ var BuildCommand = (function () {
         return 0;
     };
     BuildCommand.prototype.copyFilesToNative = function () {
+        //修改native项目配置
+        new ParseConfigCommand().execute();
         //修改文件
         var fileModify = new FileAutoChangeCommand();
         fileModify.needCompile = false;

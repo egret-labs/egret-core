@@ -42,6 +42,14 @@ module egret.native {
             if (DEBUG) {
                 player.showPaintRect(option.showPaintRect);
                 if (option.showFPS || option.showLog) {
+                    var styleStr:string = <string>option.fpsStyles || "";
+                    var stylesArr:Array<string> = styleStr.split(",");
+                    var styles = {};
+                    for (var i = 0; i < stylesArr.length; i++) {
+                        var tempStyleArr = stylesArr[i].split(":");
+                        styles[tempStyleArr[0]] = tempStyleArr[1];
+                    }
+                    option.fpsStyles = styles;
                     player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
                 }
             }

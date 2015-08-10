@@ -52,6 +52,7 @@ import AutoCompileCommand = require("./commands/AutoCompileCommand");
 import Parser = require("./parser/Parser");
 import service = require("./service/index");
 import ShutdownCommand = require("./commands/ShutdownCommand");
+import ParseConfigCommand = require("./commands/ParseConfigCommand");
 
 import config = require("./lib/ProjectConfig");
 import parser = require("./ParamsParser");
@@ -172,6 +173,9 @@ class Entry {
                 exitCode = DontExitCode;
                 break;
             case "designservice":
+                break;
+            case "parseconfig":
+                new ParseConfigCommand().execute();
                 break;
             case "info":
             default:

@@ -29,25 +29,18 @@
 module egret.native {
     var callBackDic = {};
 
-    /**
-     * @private
-     * @param functionName
-     * @param value
-     */
-    function call(functionName:string, value:string):void {
-        var data:any = {};
-        data.functionName = functionName;
-        data.value = value;
-        egret_native.sendInfoToPlugin(JSON.stringify(data));
-    }
+    export class NativeExternalInterface implements ExternalInterface {
 
-    /**
-     * @private
-     * @param functionName
-     * @param listener
-     */
-    function addCallback(functionName:string, listener:(value)=>void):void {
-        callBackDic[functionName] = listener;
+        static call(functionName:string, value:string):void {
+            var data:any = {};
+            data.functionName = functionName;
+            data.value = value;
+            egret_native.sendInfoToPlugin(JSON.stringify(data));
+        }
+
+        static addCallback(functionName:string, listener:(value)=>void):void {
+            callBackDic[functionName] = listener;
+        }
     }
 
     /**
@@ -67,8 +60,7 @@ module egret.native {
         }
     }
 
-    ExternalInterface.call = call;
-    ExternalInterface.addCallback = addCallback;
+    ExternalInterface = NativeExternalInterface;
     //todo
     egret_native.receivedPluginInfo = onReceivedPluginInfo;
 }
