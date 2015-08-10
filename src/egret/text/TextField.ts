@@ -1012,12 +1012,13 @@ module egret {
          * @param value 
          */
         $setWidth(value:number):void {
-            value = +value;
             var values = this.$TextField;
-            if (value < 0 || value == values[sys.TextKeys.textFieldWidth]) {
+            values[sys.TextKeys.textFieldWidth] = isNaN(value) ? NaN : value;
+
+            value = +value;
+            if (value < 0) {
                 return;
             }
-            values[sys.TextKeys.textFieldWidth] = value;
             this.$invalidateTextField();
         }
 
@@ -1027,12 +1028,14 @@ module egret {
          * @param value 
          */
         $setHeight(value:number):void {
-            value = +value;
             var values = this.$TextField;
-            if (value < 0 || value == values[sys.TextKeys.textFieldHeight]) {
+            values[sys.TextKeys.textFieldHeight] = isNaN(value) ? NaN : value;
+
+            value = +value;
+            if (value < 0) {
                 return;
             }
-            values[sys.TextKeys.textFieldHeight] = value;
+            this.$invalidateTextField();
         }
 
         /**
@@ -1367,6 +1370,7 @@ module egret {
          * @platform Web,Native
          */
         public get textWidth():number {
+            this._getLinesArr();
             return this.$TextField[sys.TextKeys.textWidth];
         }
         /**
@@ -1382,6 +1386,7 @@ module egret {
          * @platform Web,Native
          */
         public get textHeight():number {
+            this._getLinesArr();
             return TextFieldUtils._getTextHeight(this);
         }
 

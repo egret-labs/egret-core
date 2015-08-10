@@ -31,9 +31,9 @@ module EXML {
 
     var parser = new swan.sys.EXMLParser();
 
-    var requestPool:egret.URLLoader[] = [];
+    var loaderPool:egret.URLLoader[] = [];
     var callBackMap:any = {};
-    var requestMap:any = {};
+    var loaderMap:any = {};
 
     /**
      * @language en_US
@@ -105,16 +105,16 @@ module EXML {
             list.push([callBack, thisObject]);
             return;
         }
-        var request = requestPool.pop();
-        if (!request) {
+        var loader = loaderPool.pop();
+        if (!loader) {
             var loader:egret.URLLoader = new egret.URLLoader();
             loader.dataFormat = egret.URLLoaderDataFormat.TEXT;
         }
         callBackMap[url] = [[callBack, thisObject]];
-        requestMap[request.$hashCode] = url;
-        request.addEventListener(egret.Event.COMPLETE, onLoadFinish, null);
-        request.addEventListener(egret.Event.IO_ERROR, onLoadFinish, null);
-        request.load(new egret.URLRequest(url));
+        loaderMap[loader.$hashCode] = url;
+        loader.addEventListener(egret.Event.COMPLETE, onLoadFinish, null);
+        loader.addEventListener(egret.Event.IO_ERROR, onLoadFinish, null);
+        loader.load(new egret.URLRequest(url));
     }
 
     /**
@@ -131,9 +131,9 @@ module EXML {
         if (text) {
             var clazz = parse(text);
         }
-        requestPool.push(loader);
-        var url = requestMap[loader.$hashCode];
-        delete requestMap[loader.$hashCode];
+        loaderPool.push(loader);
+        var url = loaderMap[loader.$hashCode];
+        delete loaderMap[loader.$hashCode];
         var list:any[] = callBackMap[url];
         delete callBackMap[url];
         var length = list.length;

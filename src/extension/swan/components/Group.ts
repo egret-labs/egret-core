@@ -63,7 +63,7 @@ module swan {
      * @version Swan 1.0
      * @platform Web,Native
      */
-    export class Group extends egret.Sprite implements IViewport {
+    export class Group extends egret.DisplayObjectContainer implements IViewport {
 
         /**
          * @language en_US
@@ -93,6 +93,7 @@ module swan {
                 5: false,    //touchThrough
             };
             this.$stateValues.parent = this;
+            this.$touchEnabled = true;
         }
 
         $Group:Object;

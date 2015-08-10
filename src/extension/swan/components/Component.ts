@@ -67,7 +67,7 @@ module swan {
      * @version Swan 1.0
      * @platform Web,Native
      */
-    export class Component extends egret.Sprite implements UIComponent {
+    export class Component extends egret.DisplayObjectContainer implements UIComponent {
         /**
          * Constructor.
          *
@@ -98,6 +98,7 @@ module swan {
                 7: false,        //explicitTouchEnabled
                 8: null          //skin
             };
+            this.$touchEnabled = true;
         }
 
         $Component:Object;
