@@ -36,19 +36,18 @@ egret_native.egretInit = function () {
 egret_native.egretStart = function () {
     //todo 脚本解析，更好的形式
     var option = {
-        entryClassName: "Main",
-        frameRate: 60,
-        scaleMode: "showAll",
-        contentWidth: 480,
-        contentHeight: 800,
-        orientation: "auto",
+        entryClassName: "entryClassName",
+        frameRate: "frameRate",
+        scaleMode: "scaleMode",
+        contentWidth: "contentWidth",
+        contentHeight: "contentHeight",
         showPaintRect: false,
-        showFPS: false,
-        fpsStyles: {x: 0, y: 0, size: 24, textColor: 0xffffff},
-        showLog: false,
-        logFilter: "",
-        maxTouches: 1,
-        textureScaleFactor: 1
+        showFPS: "showFPS",
+        fpsStyles: "fpsStyles",
+        showLog: "showLog",
+        logFilter: "logFilter",
+        maxTouches: "maxTouches",
+        textureScaleFactor: "textureScaleFactor"
     };
     egret.native.NativePlayer.option = option;
     egret.runEgret();

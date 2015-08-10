@@ -49,6 +49,7 @@ var AutoCompileCommand = require("./commands/AutoCompileCommand");
 var Parser = require("./parser/Parser");
 var service = require("./service/index");
 var ShutdownCommand = require("./commands/ShutdownCommand");
+var ParseConfigCommand = require("./commands/ParseConfigCommand");
 var config = require("./lib/ProjectConfig");
 var parser = require("./ParamsParser");
 global.egret = global.egret || {};
@@ -162,6 +163,9 @@ var Entry = (function () {
                 exitCode = exports.DontExitCode;
                 break;
             case "designservice":
+                break;
+            case "parseconfig":
+                new ParseConfigCommand().execute();
                 break;
             case "info":
             default:

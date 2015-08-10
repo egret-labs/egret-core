@@ -7,6 +7,7 @@ import BuildCommand = require("./BuildCommand");
 import FileAutoChangeCommand = require("./FileAutoChangeCommand");
 import config = require("../lib/ProjectConfig");
 import CopyFilesCommand = require("./CopyFilesCommand");
+import ParseConfigCommand = require("./ParseConfigCommand");
 
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
@@ -70,6 +71,9 @@ class CreateAppCommand implements egret.Command {
             opts: {}
         });
         config.init();
+
+        //修改native项目配置
+        new ParseConfigCommand().execute();
 
         //修改文件
         var fileModify = new FileAutoChangeCommand();

@@ -10,6 +10,7 @@ import ChangeEntranceCMD = require("./ChangeEntranceCommand");
 import BuildProjectCommand = require("./BuildProjectCommand");
 import ModifyHtmlsCommand = require("./ModifyHtmlsCommand");
 import FileAutoChangeCommand = require("./FileAutoChangeCommand");
+import ParseConfigCommand = require("./ParseConfigCommand");
 
 class BuildCommand implements egret.Command {
     execute(callback?:(exitCode:number)=>void):number {
@@ -118,6 +119,8 @@ class BuildCommand implements egret.Command {
     }
 
     private copyFilesToNative() {
+        //修改native项目配置
+        new ParseConfigCommand().execute();
         //修改文件
         var fileModify = new FileAutoChangeCommand();
         fileModify.needCompile = false;

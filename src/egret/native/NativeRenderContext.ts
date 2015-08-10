@@ -195,7 +195,7 @@ module egret.native {
             var index:number = str.indexOf("(");
             str = str.slice(index + 1, str.length - 1);
             var arr:Array<string> = str.split(",");
-            var a:string = (parseFloat(arr[3]) * 255).toString(16);
+            var a:string = parseInt(<any>(parseFloat(arr[3]) * 255)).toString(16);
             var r:string = parseInt(arr[0]).toString(16);
             var g:string = parseInt(arr[1]).toString(16);
             var b:string = parseInt(arr[2]).toString(16);
