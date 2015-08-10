@@ -293,6 +293,14 @@ module egret.native {
             }
             return [];
         }
+
+        static _instance:NativeNetContext;
+        static getNetContext():NativeNetContext {
+            if (NativeNetContext._instance == null) {
+                NativeNetContext._instance = new NativeNetContext();
+            }
+            return NativeNetContext._instance;
+        }
     }
 
     NetContext = NativeNetContext;

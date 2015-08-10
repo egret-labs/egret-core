@@ -244,6 +244,13 @@ module egret.web {
             return url;
         }
 
+        static _instance:HTML5NetContext;
+        static getNetContext():HTML5NetContext {
+            if (HTML5NetContext._instance == null) {
+                HTML5NetContext._instance = new HTML5NetContext();
+            }
+            return HTML5NetContext._instance;
+        }
     }
 
     NetContext = HTML5NetContext;

@@ -146,9 +146,8 @@ module egret {
         public load(request:URLRequest):void {
             this._request = request;
             this.data = null;
-            //MainContext.instance.netContext.proceed(this);
 
-            new egret.NetContext().proceed(this);
+            egret.NetContext.getNetContext().proceed(this);
         }
 
         /**

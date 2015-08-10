@@ -59,8 +59,10 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export var NetContext:{new():NetContext};
-
+    export var NetContext:{
+        new():NetContext;
+        getNetContext():NetContext;
+    };
 
     /**
      * @private
