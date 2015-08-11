@@ -31,6 +31,7 @@ module egret {
     /**
      * @class egret.MovieClipData
      * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
+     * MovieClipData 目前支持帧标签，帧脚本和帧事件
      * @extends egret.HashObject
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=151&terms1_id=25&terms2_id=34 MovieClip序列帧动画
      */
@@ -55,6 +56,15 @@ module egret {
          */
         public labels:any[] = null;
 
+        /**
+         * 帧标签列表
+         */
+        public frameScripts:any;
+
+        /**
+         * 帧标签列表
+         */
+        public frameEvents:any;
         /**
          * 帧率
          */
@@ -134,6 +144,8 @@ module egret {
             this.frameRate = mcData["frameRate"] || 24;
             this._fillFramesData(mcData.frames);
             this._fillFrameLabelsData(mcData.labels);
+            this._fillFrameEvents(mcData.events);
+            this._fillFrameScripts(mcData.scripts);
         }
 
         private _fillFramesData(framesData:any[]):void{
@@ -169,6 +181,33 @@ module egret {
             }
         }
 
+        private _fillFrameEvents(frameEventsData:any[]):void{
+            if(frameEventsData){
+                var length:number = frameEventsData.length;
+                if(length > 0){
+                    this.frameEvents = {};
+                    for(var i=0; i < length; i++){
+                        var eventData:any = frameEventsData[i];
+                        this.frameEvents[eventData.frame] = eventData.name;
+                    }
+                }
+            }
+        }
+
+        private _fillFrameScripts(frameScriptsData:any[]):void{
+            if(frameScriptsData){
+                var length:number = frameScriptsData.length;
+                if(length > 0){
+                    this.frameScripts = {};
+                    for(var i=0; i < length; i++){
+                        var scriptData:any = frameScriptsData[i];
+                        var func:any = scriptData.func;
+                        var args:any = scriptData.args;
+                        this.frameScripts[scriptData.frame] = {"func":func, "args":args ? args : []};
+                    }
+                }
+            }
+        }
         /**
          * MovieClip数据源
          * @member {any} egret.MovieClip#dataSource

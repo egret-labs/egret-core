@@ -41,6 +41,7 @@ module egret {
     export class MovieClip extends DisplayObject{
 
         private _isAddedToStage:boolean = false;
+        private _isHandlingScript:boolean = false;
     //Render Property
         private static renderFilter:RenderFilter = RenderFilter.getInstance();
         public _textureToRender:Texture = null;
@@ -50,6 +51,8 @@ module egret {
         private _frames:any[] = null;
         private _totalFrames:number = 0;
         public _frameLabels:any[] = null;
+        private _frameScripts:any;
+        private _frameEvents:any;
         private _frameIntervalTime:number = 0;
         public _eventPool:string[] = null;
 
@@ -85,11 +88,13 @@ module egret {
                 this._totalFrames = movieClipData.numFrames;
                 this._frameLabels = movieClipData.labels;
                 this._frameIntervalTime = 1000 / movieClipData.frameRate;
+                this._frameEvents = movieClipData.frameEvents;
+                this._frameScripts = movieClipData.frameScripts;
                 this._initFrame();
             }
         }
 
-        public _reset():void{
+        public _reset():void {
             this._frames = null;
             this._playTimes = 0;
             this._isPlaying = false;
@@ -306,9 +311,12 @@ module egret {
             }
 
             this._nextFrameNum = frameNum;
-            this._advanceFrame();
-            this._constructFrame();
-            this._handlePendingEvent();
+            if(!this._isHandlingScript)
+            {
+                this._advanceFrame();
+                this._constructFrame();
+                this._handlePendingEvent();
+            }
         }
 
         private _advanceTime(advancedTime:number):void{
@@ -321,6 +329,7 @@ module egret {
             if(num < 1){
                 return;
             }
+            var nextFrameNum:number;
             while(num >= 1) {
                 num--;
                 self._nextFrameNum++;
@@ -339,19 +348,30 @@ module egret {
                             self._nextFrameNum = self._totalFrames;
                             self._eventPool.push(Event.COMPLETE);
                             self.stop();
-                            break;
                         }
                     }
                 }
+
+                this._handleScript();
                 self._advanceFrame();
+                if(this._isStopped)
+                {
+                    break;
+                }
             }
             self._constructFrame();
             self._handlePendingEvent();
-            self._setDirty();
         }
 
         public _advanceFrame(): void{
             this._currentFrameNum = this._nextFrameNum;
+
+            if (this._frameEvents) {
+                var frameAction = this._frameEvents[this._nextFrameNum];
+                if (frameAction) {
+                    this._eventPool.push(frameAction);
+                }
+            }
         }
 
         private _constructFrame() {
@@ -360,8 +380,8 @@ module egret {
                 return;
             }
             this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
-            this._DO_Props_._sizeDirty = true;
             this._displayedKeyFrameNum = currentFrameNum;
+            this._setDirty();
         }
 
         private _handlePendingEvent():void{
@@ -388,6 +408,26 @@ module egret {
                 }
                 if(isComplete){
                     this.dispatchEventWith(Event.COMPLETE);
+                }
+            }
+        }
+
+        private _handleScript():void{
+            var currentFrameNum:number = this._currentFrameNum;
+            if (this._frameScripts) {
+                var frameScript = this._frameScripts[currentFrameNum];
+                if (frameScript) {
+                    this._isHandlingScript = true;
+                    var func:string = frameScript.func;
+                    try {
+                        this[func].apply(this, frameScript.args);
+                    }
+                    catch (e) {
+                        //ignore Error
+                        //this.stop();
+                        //throw e;
+                    }
+                    this._isHandlingScript = false;
                 }
             }
         }
