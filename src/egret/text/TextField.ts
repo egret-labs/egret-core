@@ -528,7 +528,7 @@ module egret {
         }
 
         public set textColor(value:number) {
-            //value = +value | 0;
+            value = +value | 0;
             var values = this.$TextField;
             if (values[sys.TextKeys.textColor] == value) {
                 return;
@@ -682,7 +682,7 @@ module egret {
             if (value == null) {
                 value = "";
             }
-
+            value = value.toString();
             this._isFlow = false;
             if (this.$TextField[sys.TextKeys.text] != value) {
                 this.$invalidateTextField();
