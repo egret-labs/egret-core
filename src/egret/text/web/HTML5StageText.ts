@@ -108,10 +108,14 @@ module egret.web {
             this.inputDiv.style.top = y * scaleY + "px";
 
             if (this.$textfield.multiline) {
-                this.inputDiv.style.top = (y - this.$textfield.lineSpacing * cY / 2) * scaleY + "px";
+                this.inputDiv.style.top = (y) * scaleY + "px";
+
+                this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) + "px";
             }
             else {
                 this.inputDiv.style.top = y * scaleY + "px";
+
+                this.inputElement.style.top = 0 + "px";
             }
 
             this._gscaleX = scaleX * cX;
@@ -243,6 +247,29 @@ module egret.web {
             egret.Event.dispatchEvent(self, "updateText", false);
         }
 
+        private setAreaHeight() {
+            var textfield:egret.TextField = this.$textfield;
+            if (textfield.multiline) {
+                var textheight = TextFieldUtils._getTextHeight(textfield);
+                if (textfield.height < textheight) {
+                    this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
+
+                    this.setElementStyle("padding", "0px");
+                }
+                else {
+                    this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
+
+                    var rap = (textfield.height - textheight) * this._gscaleY;
+                    var valign:number = TextFieldUtils._getValign(textfield);
+                    var top = rap * valign;
+                    var bottom = rap - top;
+                    this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
+                }
+
+                this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
+            }
+        }
+
         /**
          * @private
          * 
@@ -312,16 +339,35 @@ module egret.web {
                 this.setElementStyle("fontWeight", textfield.bold ? "bold" : "normal");
                 this.setElementStyle("textAlign", textfield.textAlign);
                 this.setElementStyle("fontSize", textfield.size * this._gscaleY + "px");
-                this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                 this.setElementStyle("color", sys.toColorString(textfield.textColor));
                 this.setElementStyle("width", textfield.width * this._gscaleX + "px");
+                this.setElementStyle("verticalAlign", textfield.verticalAlign);
                 if (textfield.multiline) {
-                    this.setElementStyle("height", (textfield.height + textfield.lineSpacing / 2) * this._gscaleY + "px");
+                    this.setAreaHeight();
                 }
                 else {
-                    this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+                    this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
+
+                    if (textfield.height < textfield.size) {
+                        this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+
+                        this.setElementStyle("padding", "0px");
+                    }
+                    else {
+                        this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
+
+                        var rap = (textfield.height - textfield.size) * this._gscaleY;
+                        var valign:number = TextFieldUtils._getValign(textfield);
+                        var top = rap * valign;
+                        var bottom = rap - top;
+                        this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
+                    }
+
                 }
-                this.setElementStyle("verticalAlign", textfield.verticalAlign);
+
+                this.inputDiv.style.clip = "rect(0px "+(textfield.width * this._gscaleX)+"px " +(textfield.height * this._gscaleY)+"px 0px)";
+                this.inputDiv.style.height = textfield.height * this._gscaleY + "px";
+                this.inputDiv.style.width = textfield.width * this._gscaleX + "px";
             }
         }
     }
@@ -582,6 +628,8 @@ module egret.web {
 
                 self._inputDIV.style.left = 0 + "px";
                 self._inputDIV.style.top = "-100px";
+                self._inputDIV.style.height = 0 + "px";
+                self._inputDIV.style.width = 0 + "px";
 
             }
 

@@ -107,12 +107,12 @@ module egret {
          */
         public static _getValign(textfield:egret.TextField):number{
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
-            if (textfield.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
-                if (textfield.$TextField[sys.TextKeys.multiline]) {
-                    return 0;
-                }
-                return 0.5;
-            }
+            //if (textfield.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
+            //    if (textfield.$TextField[sys.TextKeys.multiline]) {
+                    //return 0;
+                //}
+                //return 0.5;
+            //}
             var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
             if (!isNaN(textFieldHeight)) {//
                 if (textHeight < textFieldHeight) {//最大高度比需要显示的高度小
