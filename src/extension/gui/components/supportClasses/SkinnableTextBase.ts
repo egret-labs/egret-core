@@ -218,32 +218,6 @@ module egret.gui {
 		}
 		
 		/**
-		 * 表示用户可输入到文本字段中的字符集。如果 restrict 属性的值为 null，则可以输入任何字符。
-		 * 如果 restrict 属性的值为空字符串，则不能输入任何字符。如果 restrict 属性的值为一串字符，
-		 * 则只能在文本字段中输入该字符串中的字符。从左向右扫描该字符串。可以使用连字符 (-) 指定一个范围。
-		 * 只限制用户交互；脚本可将任何文本放入文本字段中。此属性不与属性检查器中的“嵌入字体”选项同步。<p/>
-		 * 如果字符串以尖号 (ˆ) 开头，则先接受所有字符，然后从接受字符集中排除字符串中 ˆ 之后的字符。
-		 * 如果字符串不以尖号 (ˆ) 开头，则最初不接受任何字符，然后将字符串中的字符包括在接受字符集中。
-		 */
-		public get restrict():string {
-			if(this.textDisplay)
-				return this.textDisplay.restrict;
-			var v:any = this.textDisplayProperties.restrict;
-			return (v === undefined) ? null : v;
-		}
-		
-		public set restrict(value:string){
-			if(this.textDisplay){
-				this.textDisplay.restrict = value;
-				this.textDisplayProperties.restrict = true;
-			}
-			else{
-				this.textDisplayProperties.restrict = value;
-			}
-			this.invalidateProperties();                    
-		}
-		
-		/**
 		 * 一个布尔值，表示文本字段是否可选。值 true 表示文本可选。selectable 属性控制文本字段是否可选，
 		 * 而不控制文本字段是否可编辑。动态文本字段即使不可编辑，它也可能是可选的。如果动态文本字段是不可选的，
 		 * 则用户不能选择其中的文本。 <p/>
@@ -543,11 +517,7 @@ module egret.gui {
 				newTextDisplayProperties.maxWidth = true;
 			}
 			
-			if(this.textDisplayProperties.restrict !== undefined){
-				this.textDisplay.restrict = this.textDisplayProperties.restrict;
-				newTextDisplayProperties.restrict = true;
-			}
-			
+
 			if(this.textDisplayProperties.selectable !== undefined){
 				this.textDisplay.selectable = this.textDisplayProperties.selectable;
 				newTextDisplayProperties.selectable = true;
@@ -602,10 +572,6 @@ module egret.gui {
 			
 			if(this.textDisplayProperties.maxWidth){
 				newTextDisplayProperties.maxWidth = this.textDisplay.maxWidth;
-			}
-			
-			if(this.textDisplayProperties.restrict){
-				newTextDisplayProperties.restrict = this.textDisplay.restrict;
 			}
 			
 			if(this.textDisplayProperties.selectable){
