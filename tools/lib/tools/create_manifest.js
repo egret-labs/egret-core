@@ -154,11 +154,13 @@ function getModuleReferenceList(referenceInfo){
     return moduleReferenceList;
 }
 
-
+var hasSwan = false;
 /**
  * 创建manifest列表
  */
-function create(srcPath,createAll,referenceInfo){
+function create(srcPath,createAll,referenceInfo, hasSwan1){
+    hasSwan = !!hasSwan1;
+
     srcPath = escapeSrcPath(srcPath);
     var manifest = getManifest(srcPath);
     if(referenceInfo){
@@ -182,7 +184,7 @@ function getManifest(srcPath){
     for(var i=manifest.length-1;i>=0;i--){
         var path = manifest[i];
         var ext = file.getExtension(path).toLowerCase();
-        if(ext=="exml"){
+        if(!hasSwan && ext=="exml"){
             exmlList.push(path);
         }
     }
@@ -199,7 +201,7 @@ function getManifest(srcPath){
     for (var i = 0; i < length; i++) {
         var path = manifest[i];
         var ext = file.getExtension(path).toLowerCase();
-        if(ext=="exml"){
+        if(!hasSwan && ext=="exml"){
             readClassNamesFromExml(path,srcPath);
         }
         else{
@@ -218,7 +220,7 @@ function filterFunc(item){
         thmList.push(item);
         return false;
     }
-    if((ext=="ts"&&item.indexOf(".d.ts")==-1)||ext=="exml"){
+    if((ext=="ts"&&item.indexOf(".d.ts")==-1)||(!hasSwan && ext=="exml")){
         return true;
     }
     return false;
@@ -234,7 +236,7 @@ function sortFileList(list,srcPath){
     for (var i = 0; i < length; i++) {
         var path = list[i];
         var ext = file.getExtension(path).toLowerCase();
-        if(ext=="exml"){
+        if(!hasSwan && ext=="exml"){
             readRelyOnFromExml(path,srcPath);
         }
         else{
@@ -244,7 +246,7 @@ function sortFileList(list,srcPath){
     for (i = 0; i < length; i++) {
         path = list[i];
         var ext = file.getExtension(path).toLowerCase();
-        if(ext=="exml"){
+        if(!hasSwan && ext=="exml"){
             readReferenceFromExml(path);
         }
         else{
@@ -498,6 +500,9 @@ function setPathLevel(path, level, pathLevelInfo, map,pathRelyInfo,throwError,ch
  * 读取一个EXML文件引用的类名列表
  */
 function readReferenceFromExml(path){
+    if (hasSwan) {
+        return;
+    }
     var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
@@ -639,6 +644,9 @@ function checkAllClassName(classNameToPath,path,list,moduleList,orgText){
  * 读取一个exml文件包含的类名
  */
 function readClassNamesFromExml(path,srcPath){
+    if (hasSwan) {
+        return;
+    }
     var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){
@@ -657,6 +665,9 @@ function readClassNamesFromExml(path,srcPath){
  * 读取一个exml文件依赖的类列表
  */
 function readRelyOnFromExml(path,srcPath){
+    if (hasSwan) {
+        return;
+    }
     var text = file.read(path);
     var exml = xml.parse(text);
     if(!exml){

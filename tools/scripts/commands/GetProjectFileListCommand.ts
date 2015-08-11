@@ -39,7 +39,7 @@ class GetProjectFileListCommand implements egret.Command {
                 referenceInfo = config.getModuleReferenceInfo();
             }
             var create_manifest = globals.getCreateManifest();
-            manifest = create_manifest.create(srcPath, false, referenceInfo);
+            manifest = create_manifest.create(srcPath, false, referenceInfo, config.hasSwan());
             this.moduleReferenceList = create_manifest.getModuleReferenceList();
         }
 
@@ -116,7 +116,7 @@ class GetProjectFileListCommand implements egret.Command {
         gameList = gameList.map(function(filePath) {
             filePath = file.relative(srcPath, filePath);
             var ext = file.getExtension(filePath).toLowerCase();
-            if (ext == "exml") {
+            if (!config.hasSwan() && ext == "exml") {
                 filePath = filePath.substring(0, filePath.length - 4) + "js";
             }
             else if (ext == "ts") {
