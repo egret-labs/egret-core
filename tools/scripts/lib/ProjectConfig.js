@@ -18,6 +18,16 @@ var ProjectConfig = (function () {
             this.modulesConfig["html5"] = { "name": "html5" };
             this.modulesConfig["native"] = { "name": "native" };
         }
+        if (this.modulesConfig["swan"] != null && this.modulesConfig["gui"] != null) {
+            globals.log2(8);
+            process.exit(1);
+        }
+    };
+    /**
+     * 是否有swan
+     */
+    ProjectConfig.prototype.hasSwan = function () {
+        return this.modulesConfig["swan"] != null;
     };
     /**
      * 获取项目的根路径

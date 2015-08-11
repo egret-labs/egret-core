@@ -24,9 +24,11 @@ var BuildProjectCommand = (function () {
         //获取需要的.d.ts文件
         var libs = config.getModulesDts();
         //加入gui皮肤的.d.ts相关编译代码
-        var dts = this.generateExmlDTS(srcPath);
-        if (dts != "") {
-            libs.push(file.join(projectPath, "libs", "exml.d.ts"));
+        if (!config.hasSwan()) {
+            var dts = this.generateExmlDTS(srcPath);
+            if (dts != "") {
+                libs.push(file.join(projectPath, "libs", "exml.d.ts"));
+            }
         }
         var keepGeneratedTypescript = params.getOption("-k");
         var compileConfig = {
@@ -101,7 +103,7 @@ var BuildProjectCommand = (function () {
             if (ext == "ts") {
                 tsList.push(p);
             }
-            else if (ext == "exml") {
+            else if (!config.hasSwan() && ext == "exml") {
                 exmlList.push(p);
                 tsList.push(p.substring(0, p.length - 4) + "ts");
             }
@@ -117,13 +119,13 @@ var BuildProjectCommand = (function () {
                     file.copy(item, file.join(output, itemName));
                 });
                 callback(null);
-                function filter(file) {
-                    var index = file.lastIndexOf(".");
+                function filter(tempFile) {
+                    var index = tempFile.lastIndexOf(".");
                     if (index == -1) {
                         return true;
                     }
-                    var ext = file.substring(index).toLowerCase();
-                    return ext != ".ts" && ext != ".exml";
+                    var ext = tempFile.substring(index).toLowerCase();
+                    return ext != ".ts" && !(!config.hasSwan() && ext == ".exml");
                 }
             },
             //编译exml文件

@@ -47,7 +47,7 @@ var BuildCommand = (function () {
                 });
             });
         }
-        if (true /*(needCompileEngine) || moduleReferenceList*/) {
+        if (true) {
             task.push(function (tempCallback) {
                 var moduleNames = config.getAllModuleNames();
                 var html5List = [];

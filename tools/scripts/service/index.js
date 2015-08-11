@@ -15,7 +15,9 @@ var serviceCreated = false;
 function run() {
     var server = net.createServer(function (socket) {
         var ss = new ServiceSocket(socket);
-        ss.on("message", function (msg) { return handleCommands(msg, ss); });
+        ss.on("message", function (msg) {
+            return handleCommands(msg, ss);
+        });
     });
     try {
         server.listen(exports.EGRET_SERVICE_PORT);
@@ -67,10 +69,14 @@ function execCommand(command, callback, startServer) {
         if (!serviceCreated) {
             startBackgroundService();
         }
-        setTimeout(function () { return execCommand(command, callback); }, 200);
+        setTimeout(function () {
+            return execCommand(command, callback);
+        }, 200);
     });
     ss.send(command);
-    ss.on('message', function (cmd) { return callback && callback(cmd); });
+    ss.on('message', function (cmd) {
+        return callback && callback(cmd);
+    });
     return ss;
 }
 exports.execCommand = execCommand;
@@ -98,7 +104,9 @@ function startBackgroundService() {
         cwd: process.cwd(),
         silent: true
     });
-    server.on("exit", function () { return serviceCreated = false; });
+    server.on("exit", function () {
+        return serviceCreated = false;
+    });
 }
 function shutdown() {
     for (var path in projects) {

@@ -7,11 +7,12 @@ var ShutdownCommand = (function () {
     }
     ShutdownCommand.prototype.execute = function (callback) {
         var options = egret.options;
-        if (FileUtil.exists(options.srcDir) == false ||
-            FileUtil.exists(options.launcherDir) == false) {
+        if (FileUtil.exists(options.srcDir) == false || FileUtil.exists(options.launcherDir) == false) {
             utils.exit(10015, options.projectDir);
         }
-        service.execCommand({ path: egret.options.projectDir, command: "shutdown" }, function () { return process.exit(0); }, true);
+        service.execCommand({ path: egret.options.projectDir, command: "shutdown" }, function () {
+            return process.exit(0);
+        }, true);
         return 0;
     };
     return ShutdownCommand;
