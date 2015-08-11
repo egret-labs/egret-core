@@ -72,6 +72,7 @@ module RES {
 		 * @param type {string} 
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean}
+		 * @private
 		 */		
 		public constructor(type:string, bubbles:boolean=false, cancelable:boolean=false){
 			super(type, bubbles, cancelable);
