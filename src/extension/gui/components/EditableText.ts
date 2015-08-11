@@ -143,7 +143,7 @@ module egret.gui {
 			this.invalidateProperties();
 		}
 		
-		private _multiline:boolean = true;
+		private _multiline:boolean = false;
 		
 		private multilineChanged:boolean = false;
 		/**

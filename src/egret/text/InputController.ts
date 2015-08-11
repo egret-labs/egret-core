@@ -92,7 +92,7 @@ module egret {
             this._isFocus = true;
             this._text._isTyping = true;
 
-            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN));
+            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
         }
 
         private blurHandler(event:Event):void {
@@ -100,7 +100,7 @@ module egret {
             this._isFocus = false;
             this._text._isTyping = false;
 
-            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT));
+            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT, true));
         }
 
         //点中文本
@@ -133,7 +133,7 @@ module egret {
             this.resetText();
 
             //抛出change事件
-            this._text.dispatchEvent(new egret.Event(egret.Event.CHANGE));
+            this._text.dispatchEvent(new egret.Event(egret.Event.CHANGE, true));
         }
 
         private resetText():void {

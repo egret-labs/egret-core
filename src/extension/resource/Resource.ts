@@ -486,14 +486,14 @@ module RES {
                 name = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(name);
                 if(type==""){
-                    compFunc.call(thisObject,null);
+                    egret.__callAsync(compFunc, thisObject);
                     return;
                 }
             }
             var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
             var res:any = analyzer.getRes(key);
             if(res){
-                compFunc.call(thisObject,res);
+                egret.__callAsync(compFunc, thisObject, res, key);
                 return;
             }
             var args:any = {key:key,compFunc:compFunc,thisObject:thisObject};
@@ -516,7 +516,7 @@ module RES {
          */
         public getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
             if(!url){
-                compFunc.call(thisObject,null);
+                egret.__callAsync(compFunc, thisObject);
                 return;
             }
             if(!type)
@@ -526,7 +526,7 @@ module RES {
             var name:string = url;
             var res:any = analyzer.getRes(name);
             if(res){
-                compFunc.call(thisObject,res);
+                egret.__callAsync(compFunc, thisObject, res, url);
                 return;
             }
             var args:any = {key:name,compFunc:compFunc,thisObject:thisObject};

@@ -52,7 +52,12 @@ module egret {
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
             this.inputDiv.style.left = x * scaleX + "px";
-            this.inputDiv.style.top = y * scaleY + "px";
+            if (this._textfield._TF_Props_._multiline) {
+                this.inputDiv.style.top = (y - this._textfield._TF_Props_._lineSpacing * cY / 2) * scaleY + "px";
+            }
+            else {
+                this.inputDiv.style.top = y * scaleY + "px";
+            }
 
             this._gscaleX = scaleX * cX;
             this._gscaleY = scaleY * cY;
@@ -187,10 +192,15 @@ module egret {
                 this.setElementStyle("fontWeight", propertie._bold ? "bold" : "normal");
                 this.setElementStyle("textAlign", propertie._textAlign);
                 this.setElementStyle("fontSize", propertie._size * this._gscaleY + "px");
-                this.setElementStyle("lineHeight", propertie._size * this._gscaleY + "px");
+                this.setElementStyle("lineHeight", (propertie._size + propertie._lineSpacing) * this._gscaleY + "px");
                 this.setElementStyle("color", propertie._textColorString);
                 this.setElementStyle("width", textfield._getSize(Rectangle.identity).width * this._gscaleX + "px");
-                this.setElementStyle("height", textfield._getSize(Rectangle.identity).height * this._gscaleY + "px");
+                if (propertie._multiline) {
+                    this.setElementStyle("height", (textfield._getSize(Rectangle.identity).height + propertie._lineSpacing / 2) * this._gscaleY + "px");
+                }
+                else {
+                    this.setElementStyle("height", (textfield._getSize(Rectangle.identity).height) * this._gscaleY + "px");
+                }
                 this.setElementStyle("verticalAlign", propertie._verticalAlign);
             }
         }

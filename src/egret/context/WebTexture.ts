@@ -88,16 +88,31 @@ module egret.web {
         }
     }
 
-    /**
-     * @private
-     */
-    function download(base64:string) {
+    function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
+        var base64 = toDataURL.call(this, type, rect);
         if (base64 == null) {
             return;
         }
-        document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
+
+        if (Html5Capatibility._canUseBlob) {
+            downloadFile(filePath, base64);
+        }
+        else {
+            document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
+        }
+    }
+
+    function downloadFile(fileName, content){
+        var aLink = document.createElement('a');
+        var blob = new Blob([content]);
+        var evt = document.createEvent("HTMLEvents");
+        evt.initEvent("click", false, false);//initEvent 不加后两个参数在FF下会报错
+        aLink['download'] = fileName;
+        var winURL = window["URL"] || window["webkitURL"];
+        aLink.href = winURL.createObjectURL(blob);
+        aLink.dispatchEvent(evt);
     }
 
     Texture.prototype.toDataURL = toDataURL;
-    Texture.prototype.download = download;
+    Texture.prototype.saveToFile = saveToFile;
 }
