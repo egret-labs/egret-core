@@ -183,14 +183,14 @@ module egret.native {
             }
 
             function onLoadComplete() {
-                //self.saveVersion(virtualUrl);
-                //var nativeAudio:NativeAudio = new NativeAudio();
-                //nativeAudio._setAudio(virtualUrl);
-                //
-                //var sound = new egret.Sound();
-                //sound._setAudio(nativeAudio);
-                //loader.data = sound;
-                //Event.dispatchEvent(loader, Event.COMPLETE);
+                self.saveVersion(virtualUrl);
+                var nativeAudio:NativeAudio = new NativeAudio();
+                nativeAudio.$setAudio(virtualUrl);
+
+                var sound = new egret.Sound();
+                sound.$setAudio(nativeAudio);
+                loader.data = sound;
+                Event.dispatchEvent(loader, Event.COMPLETE);
             }
         }
 
