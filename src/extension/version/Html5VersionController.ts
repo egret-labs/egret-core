@@ -34,11 +34,14 @@ module egret {
      */
     export class Html5VersionController extends egret.EventDispatcher implements VersionController {
 
-        constructor() {
+        constructor(stage:egret.Stage) {
             super();
         }
 
         public fetchVersion():void {
+            egret.callLater(function () {
+                this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+            }, this);
         }
 
         public checkIsNewVersion(virtualUrl:string):boolean {

@@ -33,7 +33,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export interface IVersionController {
+    export interface IVersionController extends egret.IEventDispatcher {
         /**
          * 
          * @version Egret 2.0
@@ -87,5 +87,5 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export var VersionController:{new():VersionController};
+    export var VersionController:{new(stage:egret.Stage):VersionController};
 }

@@ -107,9 +107,40 @@ module egret.sys {
             }
             this.isPlaying = true;
             if (!this.root) {
-                this.initialize();
+                this.loadVersion(this.initialize.bind(this));
+                //this.initialize();
             }
             $ticker.$addPlayer(this);
+        }
+
+        private loadVersion(completeCall:()=>void):void {
+            var egretNeedVersionCtr = false;
+            if (!egretNeedVersionCtr) {
+                completeCall();
+                return;
+            }
+
+            var ctr = new egret.VersionController(this.stage);
+            egret.NetContext.getNetContext().initVersion(ctr);
+
+            ctr.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
+            ctr.addEventListener(egret.Event.COMPLETE, loadComplete, this);
+            ctr.fetchVersion();
+
+            function loadError(e) {
+                ctr.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
+                ctr.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
+
+                console.log("Version control file loading failed. Please check");
+                completeCall();
+            }
+
+            function loadComplete(e) {
+                ctr.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, this);
+                ctr.removeEventListener(egret.Event.COMPLETE, loadComplete, this);
+
+                completeCall();
+            }
         }
 
         /**

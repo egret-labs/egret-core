@@ -39,7 +39,9 @@ module egret {
 
         private _localFileArr:Array<string> = [];
 
-        constructor() {
+        private _stage:egret.Stage;
+        constructor(stage:egret.Stage) {
+            this._stage = stage;
             super();
         }
 
@@ -61,7 +63,7 @@ module egret {
                 count++;
 
                 if (count == 2) {
-                    if (false) {//native 需要使用
+                    if (true) {//native 需要使用
                         self.loadAllChange();
                     }
                     else {
@@ -129,80 +131,80 @@ module egret {
         private _iLoadingView:egret.ILoadingView;
 
         private loadAllChange():void {
-            //var self = this;
-            //if (self._iLoadingView == null) {
-            //    self._iLoadingView = new egret.DefaultLoadingView();
-            //}
-            //
-            //egret.MainContext.instance.stage.addChild(<egret.DisplayObject><any>(self._iLoadingView));
-            //
-            //var list = this.getChangeList();
-            //var errorList = [];
-            //var errorCount = 0;
-            //
-            //var self = this;
-            //var loader = new egret.NativeResourceLoader();
-            //loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
-            //loader.addEventListener(egret.Event.COMPLETE, loadComplete, self);
-            //loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
-            //
-            //var loadBytes = 0;
-            //var totalBytes = 0;
-            //for (var key in list) {
-            //    totalBytes += list[key]["size"];
-            //}
-            //
-            //loadNext();
-            //function loadNext() {
-            //    if (list.length > 0) {
-            //        loader.load(list[0]["url"], list[0]["size"]);
-            //    }
-            //    else if (errorCount > 3) {
-            //        //结束，加载出错
-            //        //End with loading error
-            //        loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
-            //        loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
-            //        loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
-            //
-            //        self._iLoadingView.loadError();
-            //
-            //        egret.IOErrorEvent.dispatchIOErrorEvent(self);
-            //    }
-            //    else if (errorList.length > 0) {
-            //        list = errorList;
-            //        errorList = [];
-            //        errorCount++;
-            //
-            //        loadComplete();
-            //    }
-            //    else {
-            //        //结束，加载成功
-            //        //End with loading successfully
-            //        loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
-            //        loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
-            //        loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
-            //
-            //        egret.MainContext.instance.stage.removeChild(<egret.DisplayObject><any>(self._iLoadingView));
-            //
-            //        self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-            //    }
-            //}
-            //
-            //function loadComplete() {
-            //    loadBytes += parseInt(list[0]["size"]);
-            //    list.shift();
-            //    loadNext();
-            //}
-            //
-            //function loadProgress(e) {
-            //    self._iLoadingView.setProgress(loadBytes + e.bytesLoaded, totalBytes);
-            //}
-            //
-            //function loadError() {
-            //    errorList.push(list[0]);
-            //    list.shift();
-            //    loadComplete();
-            //}
+            var self = this;
+            if (self._iLoadingView == null) {
+                self._iLoadingView = new egret.DefaultLoadingView();
+            }
+
+            self._stage.addChild(<egret.DisplayObject><any>(self._iLoadingView));
+
+            var list = this.getChangeList();
+            var errorList = [];
+            var errorCount = 0;
+
+            var self = this;
+            var loader = new egret.NativeResourceLoader();
+            loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+            loader.addEventListener(egret.Event.COMPLETE, loadComplete, self);
+            loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
+
+            var loadBytes = 0;
+            var totalBytes = 0;
+            for (var key in list) {
+                totalBytes += list[key]["size"];
+            }
+
+            loadNext();
+            function loadNext() {
+                if (list.length > 0) {
+                    loader.load(list[0]["url"], list[0]["size"]);
+                }
+                else if (errorCount > 3) {
+                    //结束，加载出错
+                    //End with loading error
+                    loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+                    loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
+                    loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
+
+                    self._iLoadingView.loadError();
+
+                    egret.IOErrorEvent.dispatchIOErrorEvent(self);
+                }
+                else if (errorList.length > 0) {
+                    list = errorList;
+                    errorList = [];
+                    errorCount++;
+
+                    loadComplete();
+                }
+                else {
+                    //结束，加载成功
+                    //End with loading successfully
+                    loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+                    loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
+                    loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
+
+                    self._stage.removeChild(<egret.DisplayObject><any>(self._iLoadingView));
+
+                    self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+                }
+            }
+
+            function loadComplete() {
+                loadBytes += parseInt(list[0]["size"]);
+                list.shift();
+                loadNext();
+            }
+
+            function loadProgress(e) {
+                self._iLoadingView.setProgress(loadBytes + e.bytesLoaded, totalBytes);
+            }
+
+            function loadError() {
+                errorList.push(list[0]);
+                list.shift();
+                loadComplete();
+            }
         }
 
         private getLocalData(filePath):Object {

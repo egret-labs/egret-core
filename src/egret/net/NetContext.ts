@@ -52,6 +52,12 @@ module egret {
          * @platform Web,Native
          */
         getChangeList():Array<any>;
+
+        /**
+         *
+         * @param versionCtr
+         */
+        initVersion(versionCtr:egret.IVersionController):void;
     }
 
     /**
