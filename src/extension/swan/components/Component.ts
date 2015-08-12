@@ -52,7 +52,7 @@ module swan {
      * @event egret.Event.COMPLETE Emit when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
      * @includeExample examples/Samples/src/extension/swan/components/ComponentExample.ts
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -63,7 +63,7 @@ module swan {
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
      * @includeExample examples/Samples/src/extension/swan/components/ComponentExample.ts
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -72,7 +72,7 @@ module swan {
          * Constructor.
          *
          * @language en_US
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -80,7 +80,7 @@ module swan {
          * 构造函数。
          *
          * @language zh_CN
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -109,7 +109,7 @@ module swan {
          * Usually used for quering a default skin name in theme.
          * @default null
          * @see swan.Theme#getSkinName()
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -119,7 +119,7 @@ module swan {
          *
          * @default null
          * @see swan.Theme#getSkinName()
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -135,14 +135,14 @@ module swan {
          * @language en_US
          * Identifier of skin. Valid values: class definition of skin,
          * class name of skin, instance of skin, EXML or external EXML file path.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 皮肤标识符。有效值可为：皮肤类定义,皮肤类名,皮肤实例,EXML文件内容,或外部EXML文件路径，
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -216,14 +216,14 @@ module swan {
         /**
          * @language en_US
          * The instance of the skin class for this component instance.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 皮肤对象实例。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -234,14 +234,14 @@ module swan {
         /**
          * @language en_US
          * Setter for the skin instance.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置皮肤实例
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -305,7 +305,7 @@ module swan {
          * passed in as <code>instance</code>.
          * @param partName name of a skin part
          * @param instance instance of a skin part
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -315,7 +315,7 @@ module swan {
          * 在运行时，EXML文件内声明的id名称将作为此方法的partName参数，而id所对应的节点对象，将作为此方法的instance参数被依次传入。
          * @param partName 皮肤部件名称
          * @param instance 皮肤部件实例
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -340,7 +340,7 @@ module swan {
          * assign property values cached.
          * @param partName name of a skin part to add.
          * @param instance instance of a skin part to add.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -353,7 +353,7 @@ module swan {
          * 子类覆盖此方法，以在皮肤部件第一次附加时对其执行一些初始化操作，例如添加事件监听，赋值缓存的属性值等。
          * @param partName 要附加的皮肤部件名称。
          * @param instance 要附加的皮肤部件实例。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -371,7 +371,7 @@ module swan {
          * disconnect the cache reference
          * @param partName name of a skin part to remove.
          * @param instance instance of a skin part to remove.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -384,7 +384,7 @@ module swan {
          * 子类覆盖此方法，以在皮肤部件从逻辑组件卸载时对其执行一些清理操作，例如移除事件监听，断开缓存的引用等。
          * @param partName 要卸载的皮肤部件名称
          * @param instance 要卸载的皮肤部件实例
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -432,7 +432,7 @@ module swan {
          *
          * @default true
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -445,7 +445,7 @@ module swan {
          *
          * @default true
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -489,7 +489,7 @@ module swan {
          * Swan will explicit update state of skin and ignore the return of <code>getCurrentState()</code>.
          *
          * Set to <code>""</code> or <code>null</code> to reset the component back to its base state.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -499,7 +499,7 @@ module swan {
          * 将采用显式设置的值去更新皮肤状态，而忽略组件内部 getCurrentState() 方法返回的值。
          *
          * 将其设置为 "" 或 null 可将取消组件外部显式设置的视图状态名称，从而采用内部 getCurrentState() 方法返回的状态。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -522,14 +522,14 @@ module swan {
          * @language en_US
          * Marks the component so that the new state of the skin is set during a later screen update.
          * A subclass of SkinnableComponent must override <code>getCurrentState()</code> to return a value.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 标记组件当前的视图状态失效，调用此方法后，子类应该覆盖 <code>getCurrentState()</code> 方法来返回当前的视图状态名称。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -546,14 +546,14 @@ module swan {
          * @language en_US
          * Returns the name of the state to be applied to the skin.<p/>
          * A subclass of SkinnableComponent must override this method to return a value.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回组件当前的皮肤状态名称,子类覆盖此方法定义各种状态名
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -576,7 +576,7 @@ module swan {
          * Create child objects of the component. This is an advanced method that you might override
          * when creating a subclass of Component. This method will be called once it be added to stage.
          * You must invoke <code>super.createChildren()</code> to complete initialization of the parent class
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -584,7 +584,7 @@ module swan {
          * @language zh_CN
          * 子类覆盖此方法可以执行一些初始化子项操作。此方法仅在组件第一次添加到舞台时回调一次。
          * 请务必调用super.createChildren()以完成父类组件的初始化
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -607,14 +607,14 @@ module swan {
          * Performs any final processing after child objects are created.
          * This is an advanced method that you might override
          * when creating a subclass of Component.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建子对象后执行任何最终处理。此方法在创建 Component 的子类时覆盖。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -626,14 +626,14 @@ module swan {
          * @language en_US
          * Processes the properties set on the component.
          * You can override this method when creating a subclass of Component.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -651,14 +651,14 @@ module swan {
         /**
          * @language en_US
          * Calculates the default size.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 测量组件尺寸
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -697,14 +697,14 @@ module swan {
         /**
          * @language en_US
          * Draws the object and/or sizes and positions its children.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 更新显示列表
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -716,14 +716,14 @@ module swan {
          * @language en_US
          * Method to invalidate parent size and display list if
          * this object affects its layout (includeInLayout is true).
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此对象影响其布局时（includeInLayout 为 true），使父代大小和显示列表失效的方法。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -743,7 +743,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -751,7 +751,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -760,7 +760,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -769,7 +769,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -778,7 +778,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -787,7 +787,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -796,7 +796,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -805,7 +805,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -814,7 +814,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -823,7 +823,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -832,7 +832,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -841,7 +841,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -850,7 +850,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -859,7 +859,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -868,7 +868,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -877,7 +877,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -887,7 +887,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -897,7 +897,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -907,7 +907,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -917,7 +917,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -927,7 +927,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -937,7 +937,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -947,7 +947,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -957,7 +957,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -967,7 +967,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -977,7 +977,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -987,7 +987,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

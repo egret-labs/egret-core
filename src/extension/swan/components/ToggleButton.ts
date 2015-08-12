@@ -45,7 +45,7 @@ module swan {
 	 * This event is emitted only when the
 	 * user interacts with the control by touching.
 	 *
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/swan/components/ToggleButtonExample.ts
@@ -59,7 +59,7 @@ module swan {
 	 * @event egret.Event.CHANGE ToggleButtonBase 控件的 <code>selected</code> 属性更改时分派。
 	 * 仅当用户通过触摸与控件交互时，才分派此事件。
 
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/swan/components/ToggleButtonExample.ts
@@ -75,7 +75,7 @@ module swan {
 		 * Contains <code>true</code> if the button is in the down state,
 		 * and <code>false</code> if it is in the up state.
 		 *
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -83,7 +83,7 @@ module swan {
 		 * @language zh_CN
 		 * 按钮处于按下状态时为 <code>true</code>，而按钮处于弹起状态时为 <code>false</code>。
 		 *
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -112,7 +112,7 @@ module swan {
 		/**
 		 * @inheritDoc
 		 *
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -139,7 +139,7 @@ module swan {
 		/**
 		 * @inheritDoc
 		 *
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */

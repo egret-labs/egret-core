@@ -37,7 +37,7 @@ module swan {
      * You can use the <code>x</code> and <code>y</code> properties of the child,
      * or constraints to position each child.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/layout/BasicLayoutExample.ts
@@ -48,7 +48,7 @@ module swan {
      * BasicLayout（也称为绝对布局）要求显式定位每个容器子代。
      * 可以使用子代的 <code>x</code> 和 <code>y</code> 属性，或使用约束来定位每个子代。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/layout/BasicLayoutExample.ts
@@ -58,14 +58,14 @@ module swan {
         /**
          * @language en_US
          * Constructor.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -78,7 +78,7 @@ module swan {
          * @language en_US
          * BasicLayout does not support virtual layout, setting this property is invalid.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -86,7 +86,7 @@ module swan {
          * @language zh_CN
          * BasicLayout不支持虚拟布局，设置这个属性无效。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -95,7 +95,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -108,7 +108,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

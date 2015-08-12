@@ -47,7 +47,7 @@ module egret {
      * @param classDefinition the class definition to be registered.
      * @param className  a unique identification string of the specific class
      * @param interfaceNames a list of unique identification string of the specific interfaces.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -68,7 +68,7 @@ module egret {
      * @param classDefinition 要注册的类定义。
      * @param className 要注册的类名。
      * @param interfaceNames 要注册的类所实现的接口名列表。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function registerClass(classDefinition:any, className:string, interfaceNames?:string[]):void {

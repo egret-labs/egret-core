@@ -46,7 +46,7 @@ module swan {
      *      </s:Skin>
      * </pre>
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/SkinExample.ts
@@ -66,7 +66,7 @@ module swan {
      *      </s:Skin>
      * </pre>
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/SkinExample.ts
@@ -76,14 +76,14 @@ module swan {
         /**
          * @language en_US
          * The list of skin parts name
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 皮肤部件名称列表
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -96,7 +96,7 @@ module swan {
          *
          * @default 100000
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -106,7 +106,7 @@ module swan {
          *
          * @default 100000
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -118,7 +118,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -128,7 +128,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -140,7 +140,7 @@ module swan {
          *
          * @default 100000
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -150,7 +150,7 @@ module swan {
          *
          * @default 100000
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -162,7 +162,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -172,7 +172,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -183,7 +183,7 @@ module swan {
          * This property can only affect measure result of host component.
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -193,7 +193,7 @@ module swan {
          *
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -205,7 +205,7 @@ module swan {
          *
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -215,7 +215,7 @@ module swan {
          *
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -238,14 +238,14 @@ module swan {
         /**
          * @language en_US
          * The host component which the skin will be attached.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此皮肤附加到的主机组件
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -293,14 +293,14 @@ module swan {
         /**
          * @language en_US
          * The list of state for host component.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 为此组件定义的视图状态。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -310,14 +310,14 @@ module swan {
          * @language en_US
          * The current state of host component.
          * Set to <code>""</code> or <code>null</code> to reset the component back to its base state.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -327,7 +327,7 @@ module swan {
          * @language en_US
          * Check if contains the specifies state name.
          * @param stateName the state name need to be checked
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -335,7 +335,7 @@ module swan {
          * @language zh_CN
          * 返回是否含有指定名称的视图状态
          * @param stateName 要检查的视图状态名称
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

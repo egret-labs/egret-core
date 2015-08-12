@@ -38,7 +38,7 @@ module swan {
      * a base view state with minimal information, and a rich view state with
      * additional information.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -48,7 +48,7 @@ module swan {
      *
      * 例如，产品缩略图可以有两个视图状态，包含最少信息的基本视图状态和包含附加信息的丰富视图状态。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -64,7 +64,7 @@ module swan {
          * the IOverride interface. These overrides are applied in order when the
          * state is entered, and removed in reverse order when the state is exited.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -76,7 +76,7 @@ module swan {
          * @param overrides 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
          * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -92,7 +92,7 @@ module swan {
          * State names must be unique for a given component.
          * This property must be set.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -100,7 +100,7 @@ module swan {
          * @language zh_CN
          * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -112,7 +112,7 @@ module swan {
          * the IOverride interface. These overrides are applied in order when the
          * state is entered, and removed in reverse order when the state is exited.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -120,7 +120,7 @@ module swan {
          * @language zh_CN
          * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
          * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -128,14 +128,14 @@ module swan {
         /**
          * @language en_US
          * The state groups that this view state belongs to as an array of String.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此视图状态作为 string 数组所属的状态组。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -144,14 +144,14 @@ module swan {
         /**
          * @language en_US
          * Initialize this state and all of its overrides.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 初始化视图状态
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

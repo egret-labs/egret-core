@@ -61,7 +61,7 @@ module swan {
      * then the <code>value</code> property is also constrained to be a multiple of
      * <code>snapInterval</code>.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/supportClasses/RangeExample.ts
@@ -75,7 +75,7 @@ module swan {
      * 即<code>(minimum <= value <= maximum)</code> 为真。
      *
      * 如果<code>snapInterval</code>属性的值不是0，那么<code>value</code>的值也会被<code>snapInterval</code>所约束。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/supportClasses/RangeExample.ts
@@ -84,14 +84,14 @@ module swan {
         /**
          * @language en_US
          * Constructor.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 Range 实例。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -127,7 +127,7 @@ module swan {
          * @default 100
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -141,7 +141,7 @@ module swan {
          * @default 100
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -171,7 +171,7 @@ module swan {
          * @default 0
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -185,7 +185,7 @@ module swan {
          * @default 0
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -218,7 +218,7 @@ module swan {
          * @see #setValue()
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -233,7 +233,7 @@ module swan {
          * @see #setValue()
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -278,7 +278,7 @@ module swan {
          * @default 1
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -294,7 +294,7 @@ module swan {
          * @default 1
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -324,14 +324,14 @@ module swan {
         /**
          * @language en_US
          * Processes the properties set on the component.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 处理对组件设置的属性
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -397,7 +397,7 @@ module swan {
          * @param interval The value of snapInterval or an integer multiple of snapInterval.
          * @return The valid value that's closest to the input.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -423,7 +423,7 @@ module swan {
          * @param interval snapInterval 的值，或 snapInterval 的整数倍数。
          * @return 最近接输入值的有效值。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -461,7 +461,7 @@ module swan {
          * @param value The new value of the <code>value</code> property.
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -474,7 +474,7 @@ module swan {
          * @param value value属性的新值
          * @see #nearestValidValue()
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -495,14 +495,14 @@ module swan {
         /**
          * @language en_US
          * Draws the object and/or sizes and positions its children.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 绘制对象和/或设置其子项的大小和位置
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -516,7 +516,7 @@ module swan {
          * Update size and visible of skin parts.<p/>
          * Subclasses override this method to update skin parts display based on <code>minimum</code>, <code>maximum</code>
          * and <code>value</code> properties.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -524,7 +524,7 @@ module swan {
          * @language zh_CN
          * 更新皮肤部件（通常为滑块）的大小和可见性。<p/>
          * 子类覆盖此方法以基于 minimum、maximum 和 value 属性更新滑块的大小、位置和可见性。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

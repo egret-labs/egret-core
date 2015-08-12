@@ -34,14 +34,14 @@ module swan {
 	 * @language en_US
 	 * The IItemRenderer interface defines the basic set of APIs
 	 * that used for List class.
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
 	/**
 	 * @language zh_CN
 	 * 列表类组件的项呈示器接口。
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
@@ -49,14 +49,14 @@ module swan {
 		/**
 		 * @language en_US
 		 * The data to render or edit.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 要呈示或编辑的数据。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -65,14 +65,14 @@ module swan {
 		 * @language en_US
 		 * Contains <code>true</code> if the item renderer
 		 * can show itself as selected.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 如果项呈示器可以将其自身显示为已选中，则为 true。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -81,14 +81,14 @@ module swan {
 		 * @language en_US
 		 * The index of the item in the data provider
 		 * of the host component of the item renderer.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 项呈示器的数据提供程序中的项目索引。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */

@@ -46,7 +46,7 @@ module swan {
      *       </s:ViewStack>
      * </pre>
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/TabBarExample.ts
@@ -66,7 +66,7 @@ module swan {
      *       </s:ViewStack>
      * </pre>
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/TabBarExample.ts
@@ -77,7 +77,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -85,7 +85,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -98,7 +98,7 @@ module swan {
         /**
          * @inheritDoc
          * 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

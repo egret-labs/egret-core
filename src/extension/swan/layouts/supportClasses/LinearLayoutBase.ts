@@ -33,7 +33,7 @@ module swan {
      * Linear layout base class, usually as the parent class of
      * <code>HorizontalLayout</code> and <code>VerticalLayout</code>.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -41,7 +41,7 @@ module swan {
      * @language zh_CN
      * 线性布局基类，通常作为 <code>HorizontalLayout</code> 和 <code>VerticalLayout</code> 的父类。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -60,7 +60,7 @@ module swan {
          *
          * @default "left"
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -72,7 +72,7 @@ module swan {
          *
          * @default "left"
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -101,7 +101,7 @@ module swan {
          *
          * @default "top"
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -113,7 +113,7 @@ module swan {
          *
          * @default "top"
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -140,7 +140,7 @@ module swan {
          *
          * @default 6
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -150,7 +150,7 @@ module swan {
          *
          * @default 6
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -178,7 +178,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -188,7 +188,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -217,7 +217,7 @@ module swan {
          *
          *  @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -227,7 +227,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -256,7 +256,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -266,7 +266,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -295,7 +295,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -305,7 +305,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -328,7 +328,7 @@ module swan {
          * target's size and displayList so that both layout's <code>measure()</code>
          * and <code>updateDisplayList</code> methods get called.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -337,7 +337,7 @@ module swan {
          * 失效目标容器的尺寸和显示列表的简便方法，调用目标容器的
          * <code>measure()</code>和<code>updateDisplayList</code>方法
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -352,7 +352,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -371,7 +371,7 @@ module swan {
          * @language en_US
          * Compute exact values for measuredWidth and measuredHeight.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -379,7 +379,7 @@ module swan {
          * @language zh_CN
          * 计算目标容器 measuredWidth 和 measuredHeight 的精确值
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -390,7 +390,7 @@ module swan {
         /**
          * @language en_US
          * Compute potentially approximate values for measuredWidth and measuredHeight.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -398,7 +398,7 @@ module swan {
          * @language zh_CN
          * 计算目标容器 measuredWidth 和 measuredHeight 的近似值
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -409,7 +409,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -437,7 +437,7 @@ module swan {
          * @language en_US
          * An Array of the virtual layout elements size cache.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -445,7 +445,7 @@ module swan {
          * @language zh_CN
          * 虚拟布局使用的尺寸缓存。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -455,7 +455,7 @@ module swan {
          * @language en_US
          * Gets the starting position of the specified index element
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -463,7 +463,7 @@ module swan {
          * @language zh_CN
          * 获取指定索引元素的起始位置
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -475,7 +475,7 @@ module swan {
          * @language en_US
          * Gets the size of the specified index element
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -483,7 +483,7 @@ module swan {
          * @language zh_CN
          * 获取指定索引元素的尺寸
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -495,7 +495,7 @@ module swan {
          * @language en_US
          * Gets the sum of the size of cached elements
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -503,7 +503,7 @@ module swan {
          * @language zh_CN
          * 获取缓存的子对象尺寸总和
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -515,7 +515,7 @@ module swan {
          * @inheritDoc
          * 
          * @param index 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -529,7 +529,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -545,7 +545,7 @@ module swan {
          * @language en_US
          * The binary search to find the specified index position of the display object
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -553,7 +553,7 @@ module swan {
          * @language zh_CN
          * 折半查找法寻找指定位置的显示对象索引
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -575,7 +575,7 @@ module swan {
          * @language en_US
          * The first element index in the view of the virtual layout
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -583,7 +583,7 @@ module swan {
          * @language zh_CN
          * 虚拟布局使用的当前视图中的第一个元素索引
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -592,7 +592,7 @@ module swan {
          * @language en_US
          * The last element index in the view of the virtual layout
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -600,7 +600,7 @@ module swan {
          * @language zh_CN
          * 虚拟布局使用的当前视图中的最后一个元素的索引
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -609,7 +609,7 @@ module swan {
          * @language en_US
          * A Flag of the first element and the end element has been calculated.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -617,7 +617,7 @@ module swan {
          * @language zh_CN
          * 视图的第一个和最后一个元素的索引值已经计算好的标志
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -626,7 +626,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -649,7 +649,7 @@ module swan {
          *
          * @return has the index changed
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -659,7 +659,7 @@ module swan {
          *
          * @return 索引是否已改变
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -672,7 +672,7 @@ module swan {
          * The maximum size of elements
          *
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -680,7 +680,7 @@ module swan {
          * @language zh_CN
          * 子元素最大的尺寸
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -690,7 +690,7 @@ module swan {
          * @language en_US
          * Update the layout of the virtualized elements
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -698,7 +698,7 @@ module swan {
          * @language zh_CN
          * 更新虚拟布局的显示列表
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -711,7 +711,7 @@ module swan {
          * @language en_US
          * Update the layout of the reality elements
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -719,7 +719,7 @@ module swan {
          * @language zh_CN
          * 更新真实布局的显示列表
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -731,7 +731,7 @@ module swan {
          * @language en_US
          * Allocate blank area for each variable size element.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -739,7 +739,7 @@ module swan {
          * @language zh_CN
          * 为每个可变尺寸的子项分配空白区域。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

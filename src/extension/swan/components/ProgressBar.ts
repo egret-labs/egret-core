@@ -34,7 +34,7 @@ module swan {
      * @language en_US
      * The ProgressBar control provides a visual representation of the progress of a task over time.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ProgressBarExample.ts
@@ -43,7 +43,7 @@ module swan {
      * @language zh_CN
      * ProgressBar 控件为随时间而变的任务进度提供了形象化的表示。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ProgressBarExample.ts
@@ -54,7 +54,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -62,7 +62,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -77,7 +77,7 @@ module swan {
          *
          * @skinPart
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -87,7 +87,7 @@ module swan {
          *
          * @skinPart
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -98,7 +98,7 @@ module swan {
          *
          * @skinPart
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -108,7 +108,7 @@ module swan {
          *
          * @skinPart
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -123,7 +123,7 @@ module swan {
          * a text format callback function。example：
          * <code>labelFunction(value:Number,maximum:Number):String;</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -132,7 +132,7 @@ module swan {
          * 进度条文本格式化回调函数。示例：
          * <code>labelFunction(value:Number,maximum:Number):String;</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -156,7 +156,7 @@ module swan {
          *
          * @return a converted text
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -169,7 +169,7 @@ module swan {
          *
          * @return 转换后的文本
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -192,7 +192,7 @@ module swan {
          *
          * @default 500
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -202,7 +202,7 @@ module swan {
          *
          * @default 500
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -232,7 +232,7 @@ module swan {
          *
          * @default Direction.LTR
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -242,7 +242,7 @@ module swan {
          *
          * @default Direction.LTR
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -321,7 +321,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -335,7 +335,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -357,7 +357,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

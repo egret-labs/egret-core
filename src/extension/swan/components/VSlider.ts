@@ -37,7 +37,7 @@ module swan {
      * The current value of the slider is determined by the relative location of the thumb between
      * the end points of the slider, corresponding to the slider's minimum and maximum values.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/VSliderExample.ts
@@ -47,7 +47,7 @@ module swan {
      * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/VSliderExample.ts
@@ -57,7 +57,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -65,7 +65,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -76,7 +76,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -107,7 +107,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

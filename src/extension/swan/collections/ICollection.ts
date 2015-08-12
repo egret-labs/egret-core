@@ -33,7 +33,7 @@ module swan {
 	/**
 	 * @language en_US
 	 * An <code>ICollectionView</code> is a view onto a collection of data.
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
@@ -41,7 +41,7 @@ module swan {
 	 * @language zh_CN
 	 *
 	 * <code>ICollection</code>是一个列表的集合类数据源对象的查看接口。
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
@@ -51,7 +51,7 @@ module swan {
 		 * The number of items in this view.
 		 * 0 means no items, while -1 means that the length is unknown.
          * @readOnly
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -59,7 +59,7 @@ module swan {
 		 * @language zh_CN
 		 * 此集合中的项目数。0 表示不包含项目。
          * @readOnly
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -69,7 +69,7 @@ module swan {
 		 * Gets the item at the specified index.
 		 * @param index The index in the list from which to retrieve the item.
 		 * @return The item at that index, or <code>null</code> if there is none.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -78,7 +78,7 @@ module swan {
 		 * 获取指定索引处的项目。
 		 * @param index 要得到的项的指定位置。
 		 * @return 在索引位置的项，如果没有该项则返回null。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -88,7 +88,7 @@ module swan {
 		 * Returns the index of the item if it is in the list。-1 otherwise.
 		 * @param item The item to find.
 		 * @return The index of the item, or -1 if the item is not in the list.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -97,7 +97,7 @@ module swan {
 		 * 如果项目位于列表中,返回该项目的索引。否则返回-1。
 		 * @param item 要查找的项。
 		 * @return 项的索引，如果该项没有在列表中将返回-1.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */

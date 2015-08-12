@@ -174,9 +174,9 @@ module egret {
          *
          * @default <code>BitmapFillMode.SCALE</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
@@ -187,9 +187,9 @@ module egret {
          *
          * @default <code>BitmapFillMode.SCALE</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
-         * @platform Web,Native
+         * @platform Web
          */
         public get fillMode():string {
             return this.$fillMode;

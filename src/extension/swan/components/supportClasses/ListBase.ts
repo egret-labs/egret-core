@@ -83,7 +83,7 @@ module swan {
      *
      * @event swan.ItemTapEvent.ITEM_TAP emitted when the user tap an item in the control.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -96,7 +96,7 @@ module swan {
      *
      * @event swan.ItemTapEvent.ITEM_TAP 项呈示器单击事件。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -104,13 +104,13 @@ module swan {
 
         /**
          * @language en_US
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -135,14 +135,14 @@ module swan {
         /**
          * @language en_US
          * Static constant representing the value "no selection".
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 未选中任何项时的索引值
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -151,14 +151,14 @@ module swan {
         /**
          * @language en_US
          * Static constant representing no proposed selection.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 未设置缓存选中项的值
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -169,7 +169,7 @@ module swan {
          * If <code>true</code>, a data item must always be selected in the control.
          * If the value is <code>true</code>, the <code>selectedIndex</code> property
          * is always set to a value between 0 and (<code>dataProvider.length</code> - 1).
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -177,7 +177,7 @@ module swan {
          * @language zh_CN
          * 如果为 true，则控件中必须含有选中的数据项目。
          * 如果该值为 true，则始终将 selectedIndex 属性设置为 0 和 (dataProvider.length - 1) 之间的一个值。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -222,7 +222,7 @@ module swan {
          * it does not emits the <code>change</code> and <code>changing</code> events.</p>
          *
          * @default -1
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -244,7 +244,7 @@ module swan {
          * 当以编程方式更改 selectedIndex 属性的值时，此控件不分派 change 和 changing 事件。
          *
          * @default -1
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -276,7 +276,7 @@ module swan {
          * @param value the new index need to select.
          * @param emitChangeEvent if true, the component will emit a "change" event if the
          * value has changed.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -285,7 +285,7 @@ module swan {
          * 由程序或者用户设置选中项。
          * @param value 索引值。
          * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -326,7 +326,7 @@ module swan {
          * it does not emits the <code>change</code> and <code>changing</code> events.</p>
          *
          * @default undefined
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -349,7 +349,7 @@ module swan {
          * 当以编程方式更改 selectedItem 属性的值时，此控件不分派 change 和 changing 事件。<p/>
          *
          * @default undefined
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -375,7 +375,7 @@ module swan {
          * user interaction.
          * @param value the new item need to select.
          * @param emitChangeEvent if true, the component will emit a "change" event if the
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -384,7 +384,7 @@ module swan {
          * 由程序或用户设置选中项数据源。
          * @param value 要选中的项。
          * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -404,14 +404,14 @@ module swan {
         /**
          * @language en_US
          * Processes the properties set on the component.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 处理对组件设置的属性
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -467,14 +467,14 @@ module swan {
         /**
          * @language en_US
          * Updates an item renderer for use or reuse.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 更新项呈示器，以备使用或重用
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -490,7 +490,7 @@ module swan {
          * @param index The item index that was selected.
          * @param selected <code>true</code> if the item is selected,
          * and <code>false</code> if it is deselected.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -499,7 +499,7 @@ module swan {
          * 选中或取消选中项目时调用。子类必须覆盖此方法才可设置选中项。
          * @param index 已选中的项目索引。
          * @param selected <code>true</code>为选中，<code>false</code>取消选中
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -528,7 +528,7 @@ module swan {
          * @param emitChangedEvents if emit a "changed" event.
          * @return true if the selection was committed, or false if the selection
          * was cancelled.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -538,7 +538,7 @@ module swan {
          * 该方法将会提交选择项病根据参数派发“change”事件。
          * @param emitChangedEvents 是否派发一个“changed”事件。
          * @return true 表示提交成功, false表示被取消
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -605,7 +605,7 @@ module swan {
          * @param newIndex The new index.
          * @param add <code>true</code> if an item was added to the component,
          *  and <code>false</code> if an item was removed.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -614,7 +614,7 @@ module swan {
          * 仅调整选中索引值而不更新选中项,即在提交属性阶段itemSelected方法不会被调用，也不会触发changing和change事件。
          * @param newIndex 新索引。
          * @param add 如果已将项目添加到组件，则为<code>true</code>；如果已删除项目，则为<code>false</code>。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -634,7 +634,7 @@ module swan {
          * and caret related properties are adjusted accordingly.
          * @param item The item being added.
          * @param index The index of the item being added.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -643,7 +643,7 @@ module swan {
          * 数据项添加
          * @param item 被添加的项。
          * @param index 被添加的项的索引。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -666,7 +666,7 @@ module swan {
          * accordingly.
          * @param item The item being removed.
          * @param index The index of the item being removed.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -675,7 +675,7 @@ module swan {
          * 数据项移除
          * @param item 被移除的项。
          * @param index 被移除的项的索引。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -707,7 +707,7 @@ module swan {
          * @language en_US
          * Event Listener of source data changed.
          * @param The <code>egret.CollectionEvent</code> object.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -715,7 +715,7 @@ module swan {
          * @language zh_CN
          * 数据源改变事件处理。
          * @param event 事件 <code>egret.CollectionEvent</code> 的对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -734,14 +734,14 @@ module swan {
         /**
          * @language en_US
          * Default response to dataProvider refresh events: clear the selection and caret.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 数据源刷新
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -755,7 +755,7 @@ module swan {
          * @param renderer the renderer being added.
          * @param index the index of renderer
          * @param item the data of renderer
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -765,7 +765,7 @@ module swan {
          * @param renderer 添加的项呈示器
          * @param index 项呈示器的索引
          * @param item 项呈示器对应的数据
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -780,7 +780,7 @@ module swan {
          * @param renderer the renderer being removed.
          * @param index the index of renderer.
          * @param item the data of renderer.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -790,7 +790,7 @@ module swan {
          * @param renderer 移除的项呈示器
          * @param index 项呈示器的索引
          * @param item 项呈示器对应的数据
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -804,7 +804,7 @@ module swan {
          * Handles <code>egret.TouchEvent.TOUCH_BEGIN</code> events from any of the
          * item renderers. This method handles <code>egret.TouchEvent.TOUCH_END</code>.
          * @param event The <code>egret.TouchEvent</code> object.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -813,7 +813,7 @@ module swan {
          * 侦听项呈示器<code>egret.TouchEvent.TOUCH_BEGIN</code>事件的方法。同时会添加对舞台<code>egret.TouchEvent.TOUCH_END</code>
          * 事件的侦听。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -828,7 +828,7 @@ module swan {
          * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_END</code> events and emit <code>ItemTapEvent.ITEM_TAP</code> event.
          * @param event The <code>egret.TouchEvent</code> object.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -836,7 +836,7 @@ module swan {
          * @language zh_CN
          * 触摸在项呈示器上结束，抛出<code>ItemTapEvent.ITEM_TAP</code>事件。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

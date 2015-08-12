@@ -40,7 +40,7 @@ module swan {
      * provide scrolling functionality.</p>
      *
      * @includeExample examples/Samples/src/extension/swan/components/HScrollBarExample.ts
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -50,7 +50,7 @@ module swan {
      * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
      * @includeExample examples/Samples/src/extension/swan/components/HScrollBarExample.ts
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -59,7 +59,7 @@ module swan {
         /**
          * @inheritDoc
          * 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -99,7 +99,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

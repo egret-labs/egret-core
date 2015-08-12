@@ -40,7 +40,7 @@ module swan {
      * count, size, gap and justification of the columns and the rows
      * as well as element alignment within the cells.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/layout/TileLayoutExample.ts
@@ -50,7 +50,7 @@ module swan {
      * TileLayout 类在单元格大小相等的列和行中排列布局元素。
      * TileLayout 类使用许多属性来控制列和行的方向、计数、大小、间隙和两端对齐以及单元格内的元素对齐。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/layout/TileLayoutExample.ts
@@ -60,14 +60,14 @@ module swan {
         /**
          * @language en_US
          * Constructor.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -91,7 +91,7 @@ module swan {
          *
          * @default 6
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -101,7 +101,7 @@ module swan {
          *
          * @default 6
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -136,7 +136,7 @@ module swan {
          *
          * @default 6
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -146,7 +146,7 @@ module swan {
          *
          * @default 6
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -174,7 +174,7 @@ module swan {
          *
          * @default -1
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -184,7 +184,7 @@ module swan {
          *
          * @default -1
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -208,7 +208,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -221,7 +221,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -247,7 +247,7 @@ module swan {
          * @language en_US
          * The row count.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -255,7 +255,7 @@ module swan {
          * @language zh_CN
          *  行计数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -279,7 +279,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -292,7 +292,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -328,7 +328,7 @@ module swan {
          *
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -339,7 +339,7 @@ module swan {
          *
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -374,7 +374,7 @@ module swan {
          *
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -385,7 +385,7 @@ module swan {
          *
          * @default NaN
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -410,7 +410,7 @@ module swan {
         /**
          * @copy swan.LinearLayoutBase#paddingLeft
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -434,7 +434,7 @@ module swan {
         /**
          * @copy swan.LinearLayoutBase#paddingRight
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -458,7 +458,7 @@ module swan {
         /**
          * @copy swan.LinearLayoutBase#paddingTop
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -481,7 +481,7 @@ module swan {
         /**
          * @copy swan.LinearLayoutBase#paddingBottom
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -511,7 +511,7 @@ module swan {
          *
          * @default <code>JustifyAlign.JUSTIFY</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -523,7 +523,7 @@ module swan {
          *
          * @default <code>JustifyAlign.JUSTIFY</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -553,7 +553,7 @@ module swan {
          *
          * @default <code>swan.JustifyAlign.JUSTIFY</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -566,7 +566,7 @@ module swan {
          *
          * @default <code>swan.JustifyAlign.JUSTIFY</code>
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -614,7 +614,7 @@ module swan {
          *
          * @default ColumnAlign.LEFT
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -636,7 +636,7 @@ module swan {
          *
          * @default ColumnAlign.LEFT
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -682,7 +682,7 @@ module swan {
          *
          * @default RowAlign.TOP
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -704,7 +704,7 @@ module swan {
          *
          * @default RowAlign.TOP
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -731,7 +731,7 @@ module swan {
          *
          * @default TileOrientation.ROWS
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -741,7 +741,7 @@ module swan {
          *
          * @default TileOrientation.ROWS
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -772,7 +772,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -966,7 +966,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -995,7 +995,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -1082,7 +1082,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

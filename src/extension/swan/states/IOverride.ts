@@ -36,14 +36,14 @@ module swan {
 	 * All entries in the State class <code>overrides</code>
 	 * property array must implement this interface.
 	 *
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
 	/**
 	 * @language zh_CN
 	 * IOverride 接口定义视图状态的覆盖操作。State 类 overrides 属性数组中的所有条目均必须实现此接口。
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
@@ -58,7 +58,7 @@ module swan {
 		 *
 		 * @param host A component that contains view states.
 		 * @param parent The parent that a sub element be added.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -69,7 +69,7 @@ module swan {
 		 * 该方法是当进入状态的时候自动调用的，请不要直接调用此方法。
 		 * @param host 含有视图状态的组件。
 		 * @param parent 子项添加到的父级容器。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -83,7 +83,7 @@ module swan {
 		 * It should not be called directly.
 		 * @param host A component that contains view states.
 		 * @param parent The parent that a sub element be added.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -92,7 +92,7 @@ module swan {
 		 * 删除覆盖。在 apply() 方法中记住的值将被恢复。
 		 * @param host 含有视图状态的组件。
 		 * @param parent 子项添加到的父级容器。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */

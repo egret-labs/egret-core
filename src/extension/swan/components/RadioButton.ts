@@ -41,7 +41,7 @@ module swan {
      * The RadioButton component allows the user make a single choice
      * within a set of mutually exclusive choices.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/RadioButtonExample.ts
@@ -50,7 +50,7 @@ module swan {
      * @language zh_CN
      * RadioButton 组件使用户可在一组互相排斥的选择中做出一种选择
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/RadioButtonExample.ts
@@ -61,7 +61,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -69,7 +69,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -94,7 +94,7 @@ module swan {
          * The RadioButton component is enabled if the
          * RadioButtonGroup is enabled and the RadioButton itself is enabled.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -102,7 +102,7 @@ module swan {
          * @language zh_CN
          * 如果 RadioButtonGroup 启用且 RadioButton 本身也启用，则 RadioButton 组件启用。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -130,7 +130,7 @@ module swan {
          *
          * @see swan.RadioButton#groupName
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -141,7 +141,7 @@ module swan {
          *
          * @see swan.RadioButton#groupName
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -188,7 +188,7 @@ module swan {
          *
          * @see swan.RadioButton#group
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -200,7 +200,7 @@ module swan {
          *
          * @see swan.RadioButton#group
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -242,7 +242,7 @@ module swan {
          *
          * @default null
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -252,7 +252,7 @@ module swan {
          *
          * @default null
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -274,7 +274,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -290,7 +290,7 @@ module swan {
         /**
          * @inheritDoc
          * 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -307,7 +307,7 @@ module swan {
         /**
          * @inheritDoc
          * 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

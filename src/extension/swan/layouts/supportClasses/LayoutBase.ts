@@ -40,7 +40,7 @@ module swan {
      * the <code>measure()</code> method, which calculates the default
      * size of the <code>target</code>.</p>
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -52,7 +52,7 @@ module swan {
      * （定位 <code>target</code> Group 的子项并调整这些子项的大小）和 <code>measure()</code> 方法
      * （计算 <code>target</code> 的默认大小）。</p>
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -61,14 +61,14 @@ module swan {
         /**
          * @language en_US
          * Constructor.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -86,7 +86,7 @@ module swan {
          * The Group container whose elements are measured, sized and positioned
          * by this layout.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -94,7 +94,7 @@ module swan {
          * @language zh_CN
          * 此布局将测量其元素、调整其元素的大小并定位其元素的 Group 容器。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -126,7 +126,7 @@ module swan {
          *
          * @default false
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -138,7 +138,7 @@ module swan {
          *
          * @default false
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -176,7 +176,7 @@ module swan {
          * @param width the height of element
          * @param height the width of element
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -187,7 +187,7 @@ module swan {
          * @param width 元素的宽
          * @param height 元素的高
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -208,7 +208,7 @@ module swan {
          * Called when the <code>verticalScrollPosition</code> or
          * <code>horizontalScrollPosition</code> properties change.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -217,7 +217,7 @@ module swan {
          * <code>verticalScrollPosition</code> 或 <code>horizontalScrollPosition</code>
          * 属性更改时调用。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -230,7 +230,7 @@ module swan {
          * this method can be used by the layout target
          * to clear cached layout information when the target changes.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -239,7 +239,7 @@ module swan {
          * 如果 <code>useVirtualLayout</code> 为 <code>true</code>，
          * 则当布局目标改变时，布局目标可以使用此方法来清除已缓存布局信息。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -256,7 +256,7 @@ module swan {
          *
          * @param index The index of the element that was added.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -267,7 +267,7 @@ module swan {
          *
          * @param index 发生改变的子项索引
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -284,7 +284,7 @@ module swan {
          *
          * @param index The index of the element that was added.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -296,7 +296,7 @@ module swan {
          *
          * @param index 发生改变的子项索引
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -309,7 +309,7 @@ module swan {
          *
          * @return The indices of the visible element.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -319,7 +319,7 @@ module swan {
          *
          * @return 可见的元素的索引。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -331,7 +331,7 @@ module swan {
          * @language en_US
          * Measures the target's default size based on its content.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -339,7 +339,7 @@ module swan {
          * @language zh_CN
          * 基于目标的内容测量其默认大小
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -356,7 +356,7 @@ module swan {
          * @param unscaledHeight Specifies the height of the component, in pixels,
          * in the target's coordinates.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -367,7 +367,7 @@ module swan {
          * @param unscaledWidth 指定目标在目标坐标中的宽度（以像素为单位）。
          * @param unscaledHeight 指定组件在目标坐标中的高度（以像素为单位）。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

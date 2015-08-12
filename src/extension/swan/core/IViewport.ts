@@ -42,7 +42,7 @@ module swan {
 	 *
 	 * @see swan.Scroller
 	 *
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
@@ -56,7 +56,7 @@ module swan {
 	 *
 	 * @see swan.Scroller
 	 *
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
 	 */
@@ -74,7 +74,7 @@ module swan {
 		 * <code>contentWidth - width</code>.
 		 *
 		 * @readOnly
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -88,7 +88,7 @@ module swan {
 		 * 要在内容中水平滚动， 请在 0 和 contentWidth - width 之间更改 <code>scrollH</code> 。
 		 *
 		 * @readOnly
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -107,7 +107,7 @@ module swan {
 		 * <code>contentHeight - height</code>.
 		 *
 		 * @readOnly
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -120,7 +120,7 @@ module swan {
 		 * 之间更改 <code>scrollV</code>。
 		 *
 		 * @readOnly
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -130,14 +130,14 @@ module swan {
 		 * @language en_US
 		 * The x coordinate of the origin of the viewport in the component's coordinate system,
 		 * where the default value is (0,0) corresponding to the upper-left corner of the component.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 可视区域水平方向起始点。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -147,14 +147,14 @@ module swan {
 		 * @language en_US
 		 * The y coordinate of the origin of the viewport in the component's coordinate system,
 		 * where the default value is (0,0) corresponding to the upper-left corner of the component.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 可视区域竖直方向起始点。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -167,7 +167,7 @@ module swan {
 		 * regardless of the size specification of the component.
 		 *
 		 * @default false
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
@@ -177,7 +177,7 @@ module swan {
 		 * 如果为 false，则容器子代会从容器边界扩展过去，而设置scrollH和scrollV也无效。默认false。
 		 *
 		 * @default false
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */

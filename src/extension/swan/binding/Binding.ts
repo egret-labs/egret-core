@@ -33,7 +33,7 @@ module swan {
      * @language en_US
      * The Binding class defines utility methods for performing data binding.
      * You can use the methods defined in this class to configure data bindings.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/binding/BindingExample.ts
@@ -41,7 +41,7 @@ module swan {
     /**
      * @language zh_CN
      * 绑定工具类，用于执行数据绑定用的方法集。您可以使用此类中定义的方法来配置数据绑定。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/binding/BindingExample.ts
@@ -59,7 +59,7 @@ module swan {
          * @param prop The name of the public property defined in the <code>site</code> Object to be bound.
          * @returns A ChangeWatcher instance, if at least one property name has been specified
          * to the <code>chain</code> argument; null otherwise.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -72,7 +72,7 @@ module swan {
          * @param target 本次绑定要更新的目标对象。
          * @param prop 本次绑定要更新的目标属性名称。
          * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -98,7 +98,7 @@ module swan {
          * @param handler method to invoke with an argument of the current value of <code>chain</code> when that value changes.
          * @param thisObject <code>this</code> object of binding method
          * @returns A ChangeWatcher instance, if at least one property name has been  specified to the <code>chain</code> argument; null otherwise.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -110,7 +110,7 @@ module swan {
          * @param handler 在监视的目标属性链中任何属性的值发生改变时调用的事件处理函数。
          * @param thisObject handler 方法绑定的this对象
          * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

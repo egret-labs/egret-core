@@ -45,7 +45,7 @@ module EXML {
      *
      * @param text the text of a EXML file.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -56,7 +56,7 @@ module EXML {
      *
      * @param text 要解析的 EXML 文件内容。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -77,7 +77,7 @@ module EXML {
      * <code>undefined</code> if load or parse failed.
      * @param thisObject <code>this</code> object of callBack
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -90,7 +90,7 @@ module EXML {
      * @param callBack 加载并解析完成后的回调函数，无论加载成功还是失败，此函数均会被回调。失败时将传入 undefined 作为回调函数参数。
      * @param thisObject 回调函数的 this 引用。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */

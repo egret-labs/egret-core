@@ -34,7 +34,7 @@ module swan {
      * The Button component is a commonly used rectangular button.
      * The Button component looks like it can be pressed.
      * The default skin has a text label and a icon display object.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ButtonExample.ts
@@ -42,7 +42,7 @@ module swan {
     /**
      * @language zh_CN
      * Button 组件是常用的矩形按钮。Button 组件看起来可以按压。默认外观具有一个文本标签和图标显示对象。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ButtonExample.ts
@@ -51,14 +51,14 @@ module swan {
         /**
          * @language en_US
          * Constructor.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个按钮实例
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -72,7 +72,7 @@ module swan {
          * @language en_US
          * [SkinPart] A skin part that defines the label of the button.
          * @skinPart
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -80,7 +80,7 @@ module swan {
          * @language zh_CN
          * [SkinPart] 按钮上的文本标签。
          * @skinPart
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -93,14 +93,14 @@ module swan {
         /**
          * @language en_US
          * Text to appear on the Button control.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要在按钮上显示的文本。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -119,7 +119,7 @@ module swan {
          * @language en_US
          * [SkinPart] A skin part that defines an optional icon for the button.
          * @skinPart
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -127,7 +127,7 @@ module swan {
          * @language zh_CN
          * [SkinPart] 按钮上的图标显示对象。
          * @skinPart
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -140,14 +140,14 @@ module swan {
         /**
          * @language en_US
          * Icon to appear on the Button control.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要在按钮上显示的图标数据
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -172,7 +172,7 @@ module swan {
          * @language en_US
          * This method handles the touch events
          * @param  The <code>egret.TouchEvent</code> object.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -180,7 +180,7 @@ module swan {
          * @language zh_CN
          * 触碰事件处理。
          * @param event 事件 <code>egret.TouchEvent</code> 的对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -208,7 +208,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -225,7 +225,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -243,7 +243,7 @@ module swan {
          * This method is called when handling a <code>egret.TouchEvent.TOUCH_END</code> event
          * when the user touches on the button. It is only called when the button
          * is the target and when <code>touchCaptured</code> is <code>true</code>.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -251,7 +251,7 @@ module swan {
          * @language zh_CN
          * 当在用户单击按钮之后处理 <code>egret.TouchEvent.TOUCH_END</code> 事件时，将调用此方法。
          * 仅当以按钮为目标，并且 <code>touchCaptured</code> 为 <code>true</code> 时，才会调用此方法。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

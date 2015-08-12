@@ -38,7 +38,7 @@ module swan {
      * the end points of the slider, corresponding to the slider's minimum and maximum values.
      *
      * @includeExample examples/Samples/src/extension/swan/components/HSliderExample.ts
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -48,7 +48,7 @@ module swan {
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      *
      * @includeExample examples/Samples/src/extension/swan/components/HSliderExample.ts
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -58,7 +58,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -66,7 +66,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -77,7 +77,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -106,7 +106,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

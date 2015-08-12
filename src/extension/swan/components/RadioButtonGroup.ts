@@ -73,7 +73,7 @@ module swan {
      * @event egret.Event.CHANGE Emitted when the value of the selected RadioButton component in
      * this group changes.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/RadioButtonGroupExample.ts
@@ -84,7 +84,7 @@ module swan {
      *
      * @event egret.Event.CHANGE 此组中所选 RadioButton 组件的值更改时分派。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/RadioButtonGroupExample.ts
@@ -95,7 +95,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -103,7 +103,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -136,7 +136,7 @@ module swan {
          *
          * @see swan.RadioButtonGroup#numRadioButtons
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -151,7 +151,7 @@ module swan {
          *
          * @see swan.RadioButtonGroup#numRadioButtons
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -173,7 +173,7 @@ module swan {
          *
          * @default true
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -184,7 +184,7 @@ module swan {
          *
          * @default true
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -209,7 +209,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -219,7 +219,7 @@ module swan {
          *
          * @default 0
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -244,7 +244,7 @@ module swan {
          *
          * @default null
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -259,7 +259,7 @@ module swan {
          *
          * @default null
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -303,7 +303,7 @@ module swan {
          *
          * @default null
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -313,7 +313,7 @@ module swan {
          *
          * @default null
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

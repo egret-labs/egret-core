@@ -34,7 +34,7 @@ module swan {
      * @language en_US
      * The ToggleSwitch control defines an on-off control.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ToggleSwitchExample.ts
@@ -43,7 +43,7 @@ module swan {
      * @language zh_CN
      * ToggleSwitch 表示一个开关组件。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ToggleSwitchExample.ts
@@ -53,7 +53,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -61,7 +61,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

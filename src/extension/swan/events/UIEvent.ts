@@ -34,7 +34,7 @@ module swan {
      * @language en_US
      * The UIEvent class represents the event object passed to
      * the event listener for many UI events.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/UIEventExample.ts
@@ -42,7 +42,7 @@ module swan {
     /**
      * @language zh_CN
      * UI事件
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/UIEventExample.ts
@@ -59,7 +59,7 @@ module swan {
          * @param cancelable Specifies whether the behavior
          * associated with the event can be prevented.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -71,7 +71,7 @@ module swan {
          * @param bubbles 指定该事件是否可以在显示列表层次结构得到冒泡处理。
          * @param cancelable 指定是否可以防止与事件相关联的行为。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -82,14 +82,14 @@ module swan {
         /**
          * @language en_US
          * creation complete of component.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 组件创建完成
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -97,14 +97,14 @@ module swan {
         /**
          * @language en_US
          * the ending of change.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 改变结束
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -113,14 +113,14 @@ module swan {
         /**
          * @language en_US
          * The beginning of change.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 改变开始
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -129,14 +129,14 @@ module swan {
         /**
          * @language en_US
          * Before close the panel.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 即将关闭面板事件
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -145,14 +145,14 @@ module swan {
         /**
          * @language en_US
          * The coordinates of the UI components changed in it's parent.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * UI组件在父级容器中的坐标发生改变事件
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -166,7 +166,7 @@ module swan {
          * @param target the target of event emitter.
          * @param eventType The event type; indicates the action that triggered the event.
          * 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -177,7 +177,7 @@ module swan {
          * @param target 事件派发目标。
          * @param eventType 事件类型；指示触发事件的动作。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

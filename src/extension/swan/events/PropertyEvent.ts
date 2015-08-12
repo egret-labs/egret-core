@@ -36,7 +36,7 @@ module swan {
      * passed to the event listener when one of the properties of
      * an object has changed, and provides information about the change.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/PropertyEventExample.ts
@@ -45,7 +45,7 @@ module swan {
      * @language zh_CN
      * 对象的一个属性发生更改时传递到事件侦听器的事件。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/PropertyEventExample.ts
@@ -54,14 +54,14 @@ module swan {
         /**
          * @language en_US
          * Emit when a property changed.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 属性改变。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -78,7 +78,7 @@ module swan {
          * associated with the event can be prevented.
          * @param property Name of the property that changed.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -91,7 +91,7 @@ module swan {
          * @param cancelable 指定是否可以防止与事件相关联的行为。
          * @param property 发生改变的属性名称。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -103,14 +103,14 @@ module swan {
         /**
          * @language en_US
          * Name of the property that changed.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 发生改变的属性名称。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -125,7 +125,7 @@ module swan {
          * @param eventType The event type; indicates the action that triggered the event.
          * @param property Name of the property that changed.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -137,7 +137,7 @@ module swan {
          * @param eventType 事件类型；指示触发事件的动作。
          * @param property 发生改变的属性名称。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

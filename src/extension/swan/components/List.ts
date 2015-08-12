@@ -35,7 +35,7 @@ module swan {
      * The user can select one or more items from the list, depending
      * on the value of the <code>allowMultipleSelection</code> property.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ListExample.ts
@@ -44,7 +44,7 @@ module swan {
      * @language zh_CN
      * List 控件可显示垂直或水平的项目列表。用户可以根据 <code>allowMultipleSelection</code> 属性的值从列表中选择一个或多个项目。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ListExample.ts
@@ -60,7 +60,7 @@ module swan {
          *
          * @default false
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -71,7 +71,7 @@ module swan {
          *
          * @default false
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -94,7 +94,7 @@ module swan {
          *
          * @default []
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -104,7 +104,7 @@ module swan {
          *
          * @default []
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -121,7 +121,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -142,7 +142,7 @@ module swan {
          * @language en_US
          * An Array representing the currently selected data items.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -150,7 +150,7 @@ module swan {
          * @language zh_CN
          * 表示当前选定数据项的列表
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -194,7 +194,7 @@ module swan {
          * @param value An array of numbers representing the indices of the selected
          * @param emitChangeEvent whether emitted a change event.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -205,7 +205,7 @@ module swan {
          * @param value 选中项索引的数组
          * @param emitChangeEvent 是否派发changed事件
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -225,7 +225,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -239,7 +239,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -312,7 +312,7 @@ module swan {
          * items are newly added/removed from the selection interval and update
          * selection properties and view accordingly.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -320,7 +320,7 @@ module swan {
          * @language zh_CN
          * 从给定的选择区间中找出新增或者移除的项，并更新属性。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -385,7 +385,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -437,7 +437,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

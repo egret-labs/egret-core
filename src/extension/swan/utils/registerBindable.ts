@@ -39,7 +39,7 @@ module swan {
      * @param instance the instance to be registered.
      * @param property the property of specified instance to be registered.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -50,7 +50,7 @@ module swan {
      * @param instance 要标记的实例
      * @param property 可绑定的属性。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */

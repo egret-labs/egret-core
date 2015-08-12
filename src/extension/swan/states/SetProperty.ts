@@ -36,7 +36,7 @@ module swan {
      * during the parent view state.
      * You use this class in the <code>overrides</code> property of the State class.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -45,7 +45,7 @@ module swan {
      * @language zh_CN
      * SetProperty 类指定只在父视图状态期间有效的属性值。可以在 State 类的 overrides 属性中使用该类。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -59,7 +59,7 @@ module swan {
          * @param name The property to set.
          * @param value The value of the property in the view state.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -71,7 +71,7 @@ module swan {
          * @param name 要设置的属性。
          * @param value 视图状态中的属性值。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -88,7 +88,7 @@ module swan {
          * the SetProperty constructor or by setting
          * the property value directly.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -97,7 +97,7 @@ module swan {
          * 要更改的属性的名称。
          * 这个属性必须设置，在 SetProperty 构造函数中设置或通过直接设置该属性值设置。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -109,7 +109,7 @@ module swan {
          * If the property value is <code>null</code>, Swan uses the
          * immediate parent of the State object.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -117,7 +117,7 @@ module swan {
          * @language zh_CN
          * 包含要更改的属性的对象。如果属性值为 null，则 Swan 将使用 State 对象的直接父级。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -129,7 +129,7 @@ module swan {
          *
          * @default undefined
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -139,7 +139,7 @@ module swan {
          *
          * @default undefined
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -154,7 +154,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -169,7 +169,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

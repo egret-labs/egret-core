@@ -33,7 +33,7 @@ module swan {
      * @language en_US
      * The ItemRenderer class is the base class for item renderers.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ItemRendererExample.ts
@@ -42,7 +42,7 @@ module swan {
      * @language zh_CN
      * ItemRenderer 类是项呈示器的基类。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ItemRendererExample.ts
@@ -53,7 +53,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -61,7 +61,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -78,7 +78,7 @@ module swan {
          * @language en_US
          * The data to render or edit.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -86,7 +86,7 @@ module swan {
          * @language zh_CN
          * 要呈示或编辑的数据。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -104,7 +104,7 @@ module swan {
          * @language en_US
          * Update the view when the <code>data</code> property changes.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -112,7 +112,7 @@ module swan {
          * @language zh_CN
          * 当数据改变时，更新视图。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -129,7 +129,7 @@ module swan {
          * Contains <code>true</code> if the item renderer
          * can show itself as selected.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -137,7 +137,7 @@ module swan {
          * @language zh_CN
          * 如果项呈示器可以将其自身显示为已选中，则为 true。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -157,7 +157,7 @@ module swan {
          * The index of the item in the data provider
          * of the host component of the item renderer.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -165,7 +165,7 @@ module swan {
          * @language zh_CN
          * 项呈示器的数据提供程序中的项目索引。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -181,7 +181,7 @@ module swan {
          * @language en_US
          * Handles <code>TouchEvent.TOUCH_BEGIN</code> events
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -189,7 +189,7 @@ module swan {
          * @language zh_CN
          * 触碰开始时触发事件
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -214,7 +214,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

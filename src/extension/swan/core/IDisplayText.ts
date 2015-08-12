@@ -34,14 +34,14 @@ module swan {
      * @language en_US
      * The IDisplayText interface defines the properties
      * for simple text display.。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * IDisplayText 接口定义简单文本显示的属性.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -51,7 +51,7 @@ module swan {
          * @language en_US
          * The text displayed by this text component.
          * @readOnly
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -59,7 +59,7 @@ module swan {
          * @language zh_CN
          * 此文本组件所显示的文本。
          * @readOnly
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

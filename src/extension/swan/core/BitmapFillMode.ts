@@ -36,7 +36,7 @@ module swan {
      *
      * @see swan.Image#fillMode
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/core/BitmapFillModeExample.ts
@@ -48,7 +48,7 @@ module swan {
      *
      * @see swan.Image#fillMode
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/core/BitmapFillModeExample.ts
@@ -58,14 +58,14 @@ module swan {
         /**
          * @language en_US
          * The bitmap ends at the edge of the region.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在区域的边缘处截断不显示位图。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -73,14 +73,14 @@ module swan {
         /**
          * @language en_US
          * The bitmap is repeated to fill the region.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 重复位图以填充区域。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -88,14 +88,14 @@ module swan {
         /**
          * @language en_US
          * The bitmap fill stretches to fill the region.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 拉伸位图以填充区域。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

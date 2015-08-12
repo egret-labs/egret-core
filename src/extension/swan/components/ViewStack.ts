@@ -41,7 +41,7 @@ module swan {
      *
      * @event swan.CollectionEvent.COLLECTION_CHANGE Emitted when the ICollection has been updated in some way.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ViewStackExample.ts
@@ -54,7 +54,7 @@ module swan {
      *
      * @event swan.CollectionEvent.COLLECTION_CHANGE 以某种方式更新 ICollection 后分派。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/ViewStackExample.ts
@@ -64,7 +64,7 @@ module swan {
          * @language en_US
          * Constructor.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -72,7 +72,7 @@ module swan {
          * @language zh_CN
          * 构造函数。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -88,7 +88,7 @@ module swan {
          *
          * @default swan.BasicLayout
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -98,7 +98,7 @@ module swan {
          *
          * @default swan.BasicLayout
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -116,7 +116,7 @@ module swan {
          * The default is a reference to the first child.
          * If there are no children, this property is <code>null</code>.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -124,7 +124,7 @@ module swan {
          * @language zh_CN
          * 对当前可见子容器的引用。默认设置为对第一个子容器的引用。如果没有子项，则此属性为 <code>null</code>。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -159,7 +159,7 @@ module swan {
          * The default value is 0, corresponding to the first child.
          * If there are no children, the value of this property is <code>-1</code>.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -168,7 +168,7 @@ module swan {
          * 当前可见子容器的从零开始的索引。子索引的范围是 0、1、2、...、n - 1，其中 <code>n</code> 是子项的数目。
          * 默认值是 0，对应于第一个子项。如果不存在子容器，则此属性的值为 -1。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -244,7 +244,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -295,7 +295,7 @@ module swan {
          * @language en_US
          * number of children
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -303,7 +303,7 @@ module swan {
          * @language zh_CN
          * 子项数量
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -314,7 +314,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -326,7 +326,7 @@ module swan {
         /**
          * @inheritDoc
          * 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

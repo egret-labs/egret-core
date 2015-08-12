@@ -33,7 +33,7 @@ module swan {
      * @language en_US
      * Note: The skin name values in the skin theme are used as default values,which can not be changed while running.
      * You can change the skin of a component with the skinName property.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/core/ThemeExample.ts
@@ -41,7 +41,7 @@ module swan {
     /**
      * @language zh_CN
      * 皮肤主题。注意：皮肤主题是一次性设置的默认值,并不能运行时切换所有组件默认皮肤。切换单个皮肤您可以自行对Component.skinName赋值来修改。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/core/ThemeExample.ts
@@ -56,7 +56,7 @@ module swan {
          * @param stage current stage. The theme will register to the stage with this parameter.
          * If null, you need to register with stage.registerImplementation("swan.Theme",theme)
          * manually.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -67,7 +67,7 @@ module swan {
          * 之后需要在外部以代码方式手动调用 mapSkin() 方法完成每条默认皮肤名的注册。
          * @param stage 当前舞台引用。传入此参数，主题会自动注册自身到舞台上。
          * 若传入null，需要在外部手动调用 stage.registerImplementation("swan.Theme",theme) 来完成主题的注册。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -171,7 +171,7 @@ module swan {
          * <li>3. Use the parent class name of client to search.</li>
          * <li>4. Repeat step 3 until find the skin name or the parent is <code>swan.Component</code>.</li>
          * @param client the component need to get the default skin.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -183,7 +183,7 @@ module swan {
          * <li>3.使用client的父类名作为键查询默认皮肤名。</li>
          * <li>4.不断重复3直到查询到皮肤名或父类为swan.Component时停止。</li>
          * @param client 要获取默认皮肤的组件。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -225,7 +225,7 @@ module swan {
          * Map a default skin for the specified host component.
          * @param hostComponentKey the name of host component, such as "swan.Button".
          * @param skinName the name of skin, such as "app.MyButtonSkin".
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -234,7 +234,7 @@ module swan {
          * 为指定的主机组件映射一个默认皮肤。
          * @param hostComponentKey 主机组件名称，例如：“swan.Button”。
          * @param skinName 皮肤名称 例如："app.MyButtonSkin"。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

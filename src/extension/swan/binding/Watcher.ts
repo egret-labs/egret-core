@@ -62,7 +62,7 @@ module swan {
      * The Watcher class defines utility method that you can use with bindable properties.
      * These methods let you define an event handler that is executed whenever a bindable property is updated.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/binding/WatcherExample.ts
@@ -71,7 +71,7 @@ module swan {
      * @language zh_CN
      * Watcher 类能够监视可绑定属性的改变，您可以定义一个事件处理函数作为 Watcher 的回调方法，在每次可绑定属性的值改变时都执行此函数。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/binding/WatcherExample.ts
@@ -94,7 +94,7 @@ module swan {
          * @param thisObject <code>this</code> object of which binding with handler
          * @returns he ChangeWatcher instance, if at least one property name has been specified to
          * the <code>chain</code> argument; null otherwise.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -109,7 +109,7 @@ module swan {
          * @param handler 在监视的目标属性链中任何属性的值发生改变时调用的事件处理函数。
          * @param thisObject handler 方法绑定的this对象
          * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -177,14 +177,14 @@ module swan {
          * Constructor.
          * Not for public use. This method is called only from the <code>watch()</code> method.
          * See the <code>watch()</code> method for parameter usage.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数，非公开。只能从 watch() 方法中调用此方法。有关参数用法，请参阅 watch() 方法。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -228,14 +228,14 @@ module swan {
         /**
          * @language en_US
          * Detaches this Watcher instance, and its handler function, from the current host.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 从当前宿主中断开此 Watcher 实例及其处理函数。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -254,7 +254,7 @@ module swan {
          * <pre>
          * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
          * </pre>
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -265,7 +265,7 @@ module swan {
          * <pre>
          * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
          * </pre>
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -280,7 +280,7 @@ module swan {
          * @language en_US
          * Sets the handler function.s
          * @param handler The handler function. This argument must not be null.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -288,7 +288,7 @@ module swan {
          * @language zh_CN
          * 设置处理函数。
          * @param handler 处理函数，此参数必须为非空。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -305,7 +305,7 @@ module swan {
          * @language en_US
          * Resets this ChangeWatcher instance to use a new host object.
          * You can call this method to reuse a watcher instance on a different host.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -313,7 +313,7 @@ module swan {
          * @language zh_CN
          * 重置此 Watcher 实例使用新的宿主对象。
          * 您可以通过该方法实现一个Watcher实例用于不同的宿主。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

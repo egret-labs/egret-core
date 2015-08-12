@@ -39,7 +39,7 @@ module swan {
 	 * the CheckBox component sets its <code>selected</code> property
 	 * to <code>true</code> for checked, and to <code>false</code> for unchecked.
 	 *
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/CheckboxExample.ts
@@ -48,7 +48,7 @@ module swan {
 	 * @language zh_CN
 	 * CheckBox 组件包含一个可选标签和一个小方框，该方框内可以包含/不包含复选标记。<p/>
 	 * 用户单击 CheckBox 组件或其关联文本时，CheckBox 组件会将其 selected 属性设置为 true（表示选中）或 false（表示取消选中）。
-	 * @version Lark 1.0
+	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/CheckboxExample.ts
@@ -57,14 +57,14 @@ module swan {
 		/**
 		 * @language en_US
 		 * Constructor.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 创建一个CheckBox
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @version Swan 1.0
 		 * @platform Web,Native
 		 */

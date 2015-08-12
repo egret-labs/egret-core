@@ -32,7 +32,7 @@ module swan {
     /**
      * @language en_US
      * Represents events that are emitted when a item has been touched.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/ItemTapEventExample.ts
@@ -40,7 +40,7 @@ module swan {
     /**
      * @language zh_CN
      * 列表项触碰事件
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/ItemTapEventExample.ts
@@ -49,14 +49,14 @@ module swan {
         /**
          * @language en_US
          * The type of the event object for an <code>itemTap</code> event.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * <code>itemTap</code> 事件的对象类型。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -65,14 +65,14 @@ module swan {
         /**
          * @language en_US
          * The item in the data provider of the associated item.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 触发触摸事件的项呈示器数据源项。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -81,14 +81,14 @@ module swan {
         /**
          * @language en_US
          * The item renderer in the list of the associated item.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 触发触摸事件的项呈示器。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -97,14 +97,14 @@ module swan {
         /**
          * @language en_US
          * The index of the associated navigation item.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 触发触摸事件的项索引
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -113,7 +113,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -131,7 +131,7 @@ module swan {
          * @param eventType The event type; indicates the action that triggered the event.
          * @param itemRenderer The item renderer in the list of the associated item.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -143,7 +143,7 @@ module swan {
          * @param eventType 事件类型；指示触发事件的动作。
          * @param itemRenderer 触发触摸事件的项呈示器。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

@@ -37,7 +37,7 @@ module swan {
     /**
      * @language en_US
      * Default instance of interface <code>IAssetAdapter</code>.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/supportClasses/DefaultAssetAdapterExample.ts
@@ -45,7 +45,7 @@ module swan {
     /**
      * @language zh_CN
      * 默认的IAssetAdapter接口实现。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/components/supportClasses/DefaultAssetAdapterExample.ts
@@ -59,7 +59,7 @@ module swan {
          * @param callBack callback function when resolving complete
          * example：callBack(content:any,source:string):void;
          * @param thisObject <code>this</code> object of callback method
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -69,7 +69,7 @@ module swan {
          * @param source 待解析的新素材标识符
          * @param callBack 解析完成回调函数，示例：callBack(content:any,source:string):void;
          * @param thisObject callBack的 this 引用
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

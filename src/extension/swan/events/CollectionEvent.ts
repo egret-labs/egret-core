@@ -34,7 +34,7 @@ module swan {
      * @language en_US
      * The swan.CollectionEvent class represents an event that is
      * emitted when the associated collection changes.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/CollectionEventExample.ts
@@ -42,7 +42,7 @@ module swan {
     /**
      * @language zh_CN
      * 集合类型数据改变事件
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/events/CollectionEventExample.ts
@@ -51,14 +51,14 @@ module swan {
         /**
          * @language en_US
          * Emitted when a collection has changed.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 集合类数据发生改变
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -92,7 +92,7 @@ module swan {
          * @param oldItems When the <code>kine</code> is <code>CollectionEventKind.REPLACE</code> the value represents
          * a list of items before replaced.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -113,7 +113,7 @@ module swan {
          * @param items 受事件影响的项目的列表。
          * @param oldItems 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -146,14 +146,14 @@ module swan {
          * Indicates the kind of event that occured.
          * The parameter value can be one of the values in the CollectionEventKind
          * class, or <code>null</code>, which indicates that the kind is unknown.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -162,14 +162,14 @@ module swan {
          * @language en_US
          * Array of objects with information about the items.
          * affected by the event.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 受事件影响的项目的列表。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -178,14 +178,14 @@ module swan {
          * @language en_US
          * When the <code>kine</code> is <code>CollectionEventKind.REPLACE</code> the value represents
          * a list of items before replaced.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -200,7 +200,7 @@ module swan {
          * this value indicates at what location the item(s) specified
          * in the <code>items property</code> can be found
          * within the target collection.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -210,7 +210,7 @@ module swan {
          * CollectionEventKind.REMOVE 或 CollectionEventKind.REPLACE，
          * CollectionEventKind.UPDATE
          * 则此属性为 items 属性中指定的项目集合中零号元素的的索引。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -220,14 +220,14 @@ module swan {
          * this value indicates
          * the old location within the target collection
          * of the item(s) specified in the <code>items</code> property.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此属性为 items 属性中指定的项目在目标集合中原来位置的从零开始的索引。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -236,7 +236,7 @@ module swan {
         /**
          * @inheritDoc
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -271,7 +271,7 @@ module swan {
          * @param oldItems When the <code>kine</code> is <code>CollectionEventKind.REPLACE</code> the value represents
          * a list of items before replaced.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -291,7 +291,7 @@ module swan {
          * @param items 受事件影响的项目的列表。
          * @param oldItems 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

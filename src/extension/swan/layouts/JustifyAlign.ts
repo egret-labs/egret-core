@@ -34,7 +34,7 @@ module swan {
      * <code>horizontalAlign</code> 和 <code>verticalAlign</code> property of
      * Layout class.
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/layout/JustifyAlignExample.ts
@@ -43,7 +43,7 @@ module swan {
      * @language zh_CN
      * JustifyAlign 定义布局类中 horizontalAlign 与 verticalAlign 属性需要的两端对齐常量值。
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/swan/layout/JustifyAlignExample.ts
@@ -55,7 +55,7 @@ module swan {
          * This uniformly sizes all children to be the same size as the
          * container.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -63,7 +63,7 @@ module swan {
          * @language zh_CN
          * 相对于容器对齐子代。这会将所有子代的大小统一调整为与容器相同的尺寸。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -77,7 +77,7 @@ module swan {
          * If all children are smaller than the width/height of the container, then
          * all the children will be sized to the width/height of the container.
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -86,7 +86,7 @@ module swan {
          * 相对于容器对子代进行内容对齐。这会将所有子代的大小统一调整为容器的内容宽度/高度。
          * 容器的内容宽度/高度是最大子代的大小。如果所有子代都小于容器的宽度/高度，则会将所有子代的大小调整为容器的宽度/高度。
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */

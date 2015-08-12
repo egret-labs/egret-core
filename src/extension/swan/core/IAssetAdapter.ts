@@ -38,7 +38,7 @@ module swan {
      *      Stage.registerImplementation("swan.IAssetAdapter",assetAdapter)
      * </pre>
      *
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -51,7 +51,7 @@ module swan {
      *      var assetAdapter = new YourAssetAdapter();
      *      Stage.registerImplementation("swan.IAssetAdapter",assetAdapter)
      * </pre>
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
      */
@@ -62,7 +62,7 @@ module swan {
          * @param source identifier of a new asset need to be resolved.
          * @param callBack called when complete resolving. Example：callBack(content:any,source:string):void;
          * @param thisObject <code>this</code> object of callback.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
@@ -72,7 +72,7 @@ module swan {
          * @param source 待解析的新素材标识符。
          * @param callBack 解析完成回调函数，示例：callBack(content:any,source:string):void;。
          * @param thisObject callBack的this引用。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
