@@ -147,6 +147,7 @@ module egret {
             var self = this;
             var properties:egret.TextFieldProperties = self._TF_Props_;
 
+            value = value.toString();
             this._isFlow = false;
             if (properties._text != value) {
                 this._setTextDirty();
