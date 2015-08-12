@@ -162,11 +162,11 @@ module egret {
         }
 
         /**
-         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
-         * @param type 转换的类型，如  "image/png"
+         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null。
+         * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
+         * @param type 转换的类型，如  "image/png"。
          * @param rect 需要转换的区域
          * @returns {any} base64字符串
-         * @platform Web
          * @version Egret 2.4
          */
         public toDataURL(type:string, rect?:egret.Rectangle):string {
@@ -174,13 +174,15 @@ module egret {
         }
 
         /**
-         * @private
-         * 下载base64字符串
-         * @param base64 base64字符串
-         * @platform Web
+         * 裁剪指定区域并保存成图片。
+         * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
+         * @param type 转换的类型，如  "image/png"
+         * @param filePath 图片的名称的路径（主目录为游戏的私有空间，路径中不能有 "../"，Web只支持传名称。）
+         * @param rect 需要转换的区域
          * @version Egret 2.4
+         * @platform Native
          */
-        download(base64:string) {
+        public saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
             throw new Error();
         }
 
@@ -315,7 +317,7 @@ module egret {
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";
                     xhr.onerror = function () {
-                        callback(1, null);
+                        Texture._onError(url, bitmapData);
                     };
                     xhr.onload = function () {
                         if (this.status == 200) {
@@ -331,7 +333,7 @@ module egret {
                             bitmapData.src = winURL.createObjectURL(blob);
                         }
                         else {
-                            callback(1, null);
+                            Texture._onError(url, bitmapData);
                         }
                     };
                     xhr.send();

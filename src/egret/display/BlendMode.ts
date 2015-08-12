@@ -51,14 +51,14 @@ module egret {
         /**
          * 根据显示对象的 Alpha 值擦除背景。Alpha 值不为0的区域将被擦除。
          * @constant {string} egret.BlendMode.ERASE
-         * @private
          */
         public static ERASE:string = "erase";
 
         /**
          * 根据显示对象的 Alpha 值擦除背景。Alpha 值为0的区域将被擦除。
          * 注意：由于 CanvasAPI 的限制，只会保留 Alpha 值不为1的区域。
-         * @constant {string} egret.BlendMode.ERASE
+         * @constant {string} egret.BlendMode.ERASE_REVERSE
+         * @deprecated
          */
         public static ERASE_REVERSE:string = "eraseReverse";
     }

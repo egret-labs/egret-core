@@ -980,7 +980,6 @@ module egret {
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             var self = this;
-            var do_props = self._DO_Props_;
             var do_privs = self._DO_Privs_;
             var p:egret.Point = self.globalToLocal(x, y);
             if (!shapeFlag) {
@@ -991,8 +990,12 @@ module egret {
                     do_privs._hitTestPointTexture = new RenderTexture();
                 }
                 var testTexture:Texture = do_privs._hitTestPointTexture;
-                (<RenderTexture>testTexture).drawToTexture(self);
-                var pixelData:number[] = testTexture.getPixel32(p.x - do_privs._hitTestPointTexture._offsetX, p.y - do_privs._hitTestPointTexture._offsetY);
+
+                var px:number = p.x - do_privs._hitTestPointTexture._offsetX;
+                var py:number = p.y - do_privs._hitTestPointTexture._offsetY;
+
+                (<RenderTexture>testTexture).drawToTexture(self, new egret.Rectangle(px - 1, py - 1, 3, 3));
+                var pixelData:number[] = testTexture.getPixel32(1, 1);
                 if (pixelData[3] != 0) {
                     return true;
                 }
