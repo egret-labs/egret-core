@@ -213,7 +213,7 @@ module egret.native {
             }
 
             function createBitmapData() {
-                this._imageLoader.load(virtualUrl, function (code:number, bitmapData:any) {
+                self._imageLoader.load(virtualUrl, function (code:number, bitmapData:any) {
                     if (code == 0) {
                         onComplete(bitmapData);
                     }

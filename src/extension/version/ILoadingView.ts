@@ -33,7 +33,6 @@ module egret {
      * @private
      */
     export interface ILoadingView {
-        init():void;
         setProgress(current, total):void;
         loadError():void;
     }

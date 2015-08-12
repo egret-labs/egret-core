@@ -34,28 +34,29 @@ module egret {
      */
     export class DefaultLoadingView extends DisplayObjectContainer implements ILoadingView{
 
-        private textField;
+        private textField:egret.TextField;
         constructor() {
             super();
 
+            this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
         }
 
-        init():void {
+        private onAddToStage():void {
             this.textField = new egret.TextField();
             this.addChild(this.textField);
+            this.textField.width = this.stage.stageWidth;
             this.textField.y = this.stage.stageHeight / 2;
-            this.textField.x = this.stage.stageWidth / 2;
+            this.textField.size = 20;
             this.textField.textAlign = "center";
-            this.textField.anchorX = this.textField.anchorY = 0.5;
         }
 
-        setProgress(current, total):void {
+        public setProgress(current, total):void {
             console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
             this.textField.text = "Loading Resource..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
 
         }
 
-        loadError():void {
+        public loadError():void {
             this.textField.text = "Resource loading failed，please check the network connection and exit back into the game！";
         }
     }
