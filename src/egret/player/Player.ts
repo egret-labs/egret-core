@@ -114,12 +114,6 @@ module egret.sys {
         }
 
         private loadVersion(completeCall:()=>void):void {
-            var egretNeedVersionCtr = false;
-            if (!egretNeedVersionCtr) {
-                completeCall();
-                return;
-            }
-
             var ctr = new egret.VersionController(this.stage);
             egret.NetContext.getNetContext().initVersion(ctr);
 

@@ -50,7 +50,12 @@ module egret {
             self._versionPath = "all.manifest";
 
             self._versionInfo = self.getLocalData(self._versionPath);
-
+            if (self._versionInfo == null) {
+                egret.callLater(function() {
+                    self.dispatchEvent(new egret.IOErrorEvent(egret.IOErrorEvent.IO_ERROR));
+                }, self);
+                return;
+            }
             var count = 0;
             var loadOver = function (paths:Array<string>) {
                 if (paths) {
@@ -120,7 +125,7 @@ module egret {
         }
 
         public getVirtualUrl(url:string):string {
-            if (this._versionInfo[url]) {
+            if (this._versionInfo && this._versionInfo[url]) {
                 return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
             }
             else {
