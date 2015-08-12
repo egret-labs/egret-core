@@ -13,6 +13,8 @@
 
         "egret/media/native/NativeAudio.ts",
 
+        "extension/version/NativeVersionController.ts",
+
         "egret/native/NativeHideHandler.ts",
         "egret/native/NativeTouchHandler.ts",
         "egret/native/NativeImageLoader.ts",
@@ -23,6 +25,8 @@
         "egret/native/EgretNative.ts",
         "egret/native/NativeSurface.ts",
         "egret/native/NativePlayer.ts",
-        "egret/native/NativeRenderContext.ts"
+        "egret/native/NativeRenderContext.ts",
+
+        "egret/native/NativeGetOption.ts"
     ]
 }

@@ -61,6 +61,5 @@ module egret.native {
     }
 
     ExternalInterface = NativeExternalInterface;
-    //todo
     egret_native.receivedPluginInfo = onReceivedPluginInfo;
 }

@@ -25,6 +25,7 @@
         "egret/media/web/QQAudio.ts",
         "egret/media/web/WebAudio.ts",
 
+        "egret/web/WebGetOption.ts",
         "egret/web/WebTexture.ts",
         "egret/web/Html5Capatibility.ts"
     ]

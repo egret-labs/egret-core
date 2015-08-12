@@ -41,8 +41,8 @@ module egret {
 
         private _stage:egret.Stage;
         constructor(stage:egret.Stage) {
-            this._stage = stage;
             super();
+            this._stage = stage;
         }
 
         public fetchVersion():void {
