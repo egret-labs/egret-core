@@ -12,9 +12,8 @@ var UpgradeCommand = (function () {
             { "v": "1.5.1", "command": require("./upgrade/UpgradeCommand_1_5_1") },
             { "v": "1.5.2", "command": require("./upgrade/UpgradeCommand_1_5_2") },
             { "v": "1.5.5", "command": require("./upgrade/UpgradeCommand_1_5_5") },
-            { "v": "1.7.2" },
             { "v": "1.7.3", "command": require("./upgrade/UpgradeCommand_1_7_3") },
-            { "v": "2.4.0" }
+            { "v": "2.4.1" }
         ];
     }
     UpgradeCommand.prototype.execute = function () {
