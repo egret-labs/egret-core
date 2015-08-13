@@ -120,6 +120,9 @@ module egret {
          * @platform Web,Native
          */
         public static RUNTIME_NATIVE:string = "runtimeNative";
+
+
+
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
          * @method egret.MainContext#run

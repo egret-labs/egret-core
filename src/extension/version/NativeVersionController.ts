@@ -68,7 +68,7 @@ module egret {
                 count++;
 
                 if (count == 2) {
-                    if (true) {//native 需要使用
+                    if (egret_native.nativeType == "native") {//native 需要使用
                         self.loadAllChange();
                     }
                     else {

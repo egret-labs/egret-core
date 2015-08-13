@@ -29,6 +29,7 @@
 
 
 declare module egret_native {
+    var nativeType:string;
 
     /**
      * 游戏启动
