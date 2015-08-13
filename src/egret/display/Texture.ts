@@ -308,7 +308,16 @@ module egret {
                 callback(0, bitmapData);
                 return;
             }
-            bitmapData.crossOrigin = Texture.crossOrigin;
+
+            if (!Texture.crossOrigin) {
+                if (bitmapData.hasAttribute("crossOrigin")) {//兼容猎豹
+                    bitmapData.removeAttribute("crossOrigin");
+                }
+            }
+            else {
+                bitmapData.setAttribute("crossOrigin", Texture.crossOrigin);
+            }
+
             var winURL = window["URL"] || window["webkitURL"];
             if (Texture._bitmapCallbackMap[url] == null) {//非正在加载中
                 Texture._addToCallbackList(url, callback);
