@@ -16,7 +16,7 @@ class CreateCommand implements egret.Command {
         }
         var projectPath = file.resolve(projectName);
 
-        var type = params.getOption("--type", ["core", "gui", "empty"]);
+        var type = params.getOption("--type", ["core", "gui", "empty", "swan"]);
         var async = globals.getAsync();
         async.series([
             //创建新工程
@@ -35,6 +35,13 @@ class CreateCommand implements egret.Command {
                         file.remove(file.join(projectPath, "resource"));
 
                         this.copyFileDir(projectPath, "tools/templates/gui");
+                    }
+                    //gui 用gui覆盖刚拷贝的文件
+                    else if (type == "swan") {
+                        //删除assets文件夹
+                        file.remove(file.join(projectPath, "resource"));
+
+                        this.copyFileDir(projectPath, "tools/templates/swan");
                     }
                 }
 

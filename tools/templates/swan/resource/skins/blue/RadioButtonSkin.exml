@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin class="skins.RadioButtonSkin" states="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" xmlns:s="http://ns.egret.com/swan">
+    <s:Group width="100%" height="100%">
+        <s:layout>
+            <s:HorizontalLayout verticalAlign="middle"/>
+        </s:layout>
+        <s:Image fillMode="scale" alpha="1" alpha.disabled="0.5" alpha.down="0.7"
+                 source="resource/assets/blue/RadioButton/radiobutton_unselect.png"
+                 source.upAndSelected="resource/assets/blue/RadioButton/radiobutton_select_up.png"
+                 source.downAndSelected="resource/assets/blue/RadioButton/radiobutton_select_down.png"
+                 source.disabledAndSelected="resource/assets/blue/RadioButton/radiobutton_select_disabled.png"/>
+        <s:Label id="labelDisplay" size="20" textColor="0x707070"
+                 textAlign="center" verticalAlign="middle"
+                 fontFamily="Tahoma"/>
+    </s:Group>
+</s:Skin>

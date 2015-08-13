@@ -7,11 +7,8 @@
         {
             "name": "version"
         },
-        {
-            "name": "res"
-        },
 		{
-            "name": "gui"
+            "name": "swan"
         }
     ],
     "native": {

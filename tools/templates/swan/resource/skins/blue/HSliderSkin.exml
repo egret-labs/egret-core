@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin class="skins.HSliderSkin" minWidth="20" minHeight="8" xmlns:s="http://ns.egret.com/swan">
+    <s:Image id="track" source="resource/assets/blue/Slider/track.png" scale9Grid="1,1,4,4" width="100%"
+             height="6" verticalCenter="0"/>
+    <s:Image id="thumb" source="resource/assets/blue/Slider/thumb.png" verticalCenter="0"/>
+</s:Skin>

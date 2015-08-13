@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin class="skins.HScrollBarSkin" minWidth="20" minHeight="8" xmlns:s="http://ns.egret.com/swan">
+    <s:Image id="thumb" source="resource/assets/blue/ScrollBar/roundthumb.png" scale9Grid="3,3,2,2" height="8" width="30" verticalCenter="0"/>
+</s:Skin>
