@@ -995,7 +995,7 @@ module swan {
         }
     }
     registerProperty(Component, "skinName", "Class");
-    sys.implementUIComponent(Component, egret.Sprite, true);
+    sys.implementUIComponent(Component, egret.DisplayObjectContainer, true);
     if(DEBUG){
         egret.$markReadOnly(Component,"skin");
     }

@@ -889,7 +889,7 @@ module swan {
         }
     }
 
-    sys.implementUIComponent(Group, egret.Sprite, true);
+    sys.implementUIComponent(Group, egret.DisplayObjectContainer, true);
     sys.mixin(Group, sys.StateClient);
     registerProperty(Group, "elementsContent", "Array", true);
     registerProperty(Group, "states", "State[]");
