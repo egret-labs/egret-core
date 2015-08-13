@@ -241,12 +241,14 @@ module RES {
 		 * The raw data object to be referenced.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 被引用的原始数据对象。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @private
 		 */
 		public data:any = null;
 		
