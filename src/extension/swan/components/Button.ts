@@ -34,6 +34,9 @@ module swan {
      * The Button component is a commonly used rectangular button.
      * The Button component looks like it can be pressed.
      * The default skin has a text label and a icon display object.
+     * @state up Button up state
+     * @state down Button down state
+     * @state disabled Button disabled state
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -42,6 +45,9 @@ module swan {
     /**
      * @language zh_CN
      * Button 组件是常用的矩形按钮。Button 组件看起来可以按压。默认外观具有一个文本标签和图标显示对象。
+     * @state up 按钮弹起状态
+     * @state down 按钮按下状态
+     * @state disabled 按钮禁用状态
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native

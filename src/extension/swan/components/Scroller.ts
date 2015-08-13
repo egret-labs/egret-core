@@ -74,6 +74,7 @@ module swan {
      * @event swan.UIEvent.CHANGE_START Emitted when the scroll position is going to change
      * @event swan.UIEvent.CHANGE_END Emitted when the scroll position changed complete
      *
+     * @defaultProperty viewport
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -95,6 +96,8 @@ module swan {
      *
      * @event swan.UIEvent.CHANGE_START 滚动位置改变开始
      * @event swan.UIEvent.CHANGE_END 滚动位置改变结束
+     *
+     * @defaultProperty viewport
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -159,7 +162,7 @@ module swan {
                 10: null,           //delayTouchTimer,
                 11: null,           //delayTouchEvent
                 12: null,           //viewport
-                13: false          //viewprotRemovedEvent
+                13: false,          //viewprotRemovedEvent
             };
         }
 
@@ -200,7 +203,7 @@ module swan {
                 scrollerThrowEvent.currentPos = currentPos;
                 scrollerThrowEvent.toPos = toPos;
             }
-            //this.emit(scrollerThrowEvent);
+            //this.dispatchEvent(scrollerThrowEvent);
             return scrollerThrowEvent;
         }
 

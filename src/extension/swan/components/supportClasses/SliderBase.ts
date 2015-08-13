@@ -29,6 +29,9 @@
 
 module swan {
 
+    /**
+     * @private
+     */
     export const enum Keys {
         clickOffsetX,
         clickOffsetY,
@@ -98,7 +101,7 @@ module swan {
                 6: 300,      //slideDuration,
                 7: 0,        //pendingValue
                 8: 0,        //slideToValue,
-                9: true     //liveDragging
+                9: true,     //liveDragging
             };
             this.maximum = 10;
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);

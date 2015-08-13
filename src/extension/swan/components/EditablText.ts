@@ -66,9 +66,10 @@ module swan {
          */
         public constructor() {
             super();
-
             this.initializeUIValues();
+            //IF EGRET
             this.type = egret.TextFieldType.INPUT;
+            //*/
         }
 
         /**

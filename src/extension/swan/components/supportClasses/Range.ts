@@ -28,7 +28,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module swan.sys {
-
+    
+    /**
+     * @private
+     */
     export const enum RangeKeys{
         maximum,
         maxChanged,

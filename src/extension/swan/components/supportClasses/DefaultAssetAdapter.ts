@@ -81,15 +81,22 @@ module swan {
             }
             var loader = loaderPool.pop();
             if (!loader) {
-                var loader:egret.URLLoader = new egret.URLLoader();
+                loader = new egret.URLLoader();
+                //IF EGRET
                 loader.dataFormat = egret.URLLoaderDataFormat.TEXTURE;
+                //*/
             }
             callBackMap[source] = [[callBack, thisObject]];
             loaderMap[loader.$hashCode] = source;
 
             loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             loader.addEventListener(egret.Event.IO_ERROR, this.onLoadFinish, this);
+            /*//IF LARK
+            loader.load(source);
+            //*/
+            //IF EGRET
             loader.load(new egret.URLRequest(source));
+            //*/
         }
 
         /**

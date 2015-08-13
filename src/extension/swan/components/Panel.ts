@@ -38,6 +38,7 @@ module swan {
      * @event swan.UIEvent.CLOSING Emitted when the close button is taped
      * you can use <code>event.preventDefault()</code> to prevent close.
      *
+     * @defaultProperty elementsContent
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -50,6 +51,7 @@ module swan {
      * @event swan.UIEvent.CLOSING 面板即将关闭事件，在关闭按钮被点击后抛出，
      * 监听此事件并调用<code>event.preventDefault()</code>能够阻止面板被关闭。
      *
+     * @defaultProperty elementsContent
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native

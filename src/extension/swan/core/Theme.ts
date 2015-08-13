@@ -91,11 +91,17 @@ module swan {
          * @param url 
          */
         private load(url:string):void {
-            var loader:egret.URLLoader = new egret.URLLoader();
-            loader.addEventListener(egret.Event.COMPLETE,this.onConfigLoaded,this);
-            loader.addEventListener(egret.IOErrorEvent.IO_ERROR,this.onConfigLoaded,this);
-            loader.dataFormat = egret.URLLoaderDataFormat.TEXT;
-            loader.load(new egret.URLRequest(url));
+            var request = new egret.URLLoader();
+            request.addEventListener(egret.Event.COMPLETE, this.onConfigLoaded, this);
+            request.addEventListener(egret.Event.IO_ERROR, this.onConfigLoaded, this);
+            /*//IF LARK
+            request.open(url);
+            request.send();
+            //*/
+          //IF EGRET
+            request.dataFormat = egret.URLLoaderDataFormat.TEXT;
+            request.load(new egret.URLRequest(url));
+            //*/
         }
 
         /**
@@ -104,12 +110,16 @@ module swan {
          * @param event 
          */
         private onConfigLoaded(event:egret.Event):void {
-            var loader:egret.URLLoader = <egret.URLLoader> (event.target);
-            try{
-                var str:string = <string> loader.data;
-                var data:any = JSON.parse(str);
+            var request:egret.URLLoader = event.target;
+            try {
+                /*//IF LARK
+                var data = JSON.parse(request.response);
+                //*/
+                //IF EGRET
+                var data = JSON.parse(request.data);
+                //*/
             }
-            catch (e){
+            catch (e) {
                 if (DEBUG) {
                     egret.error(e.message);
                 }
@@ -192,7 +202,7 @@ module swan {
                 if (this.delayList.indexOf(client) == -1) {
                     this.delayList.push(client);
                 }
-                return;
+                return "";
             }
             var skinMap = this.skinMap;
             var skinName:string = skinMap[client.hostComponentKey];

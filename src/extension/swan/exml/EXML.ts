@@ -31,9 +31,9 @@ module EXML {
 
     var parser = new swan.sys.EXMLParser();
 
-    var loaderPool:egret.URLLoader[] = [];
+    var requestPool:egret.URLLoader[] = [];
     var callBackMap:any = {};
-    var loaderMap:any = {};
+    var requestMap:any = {};
 
     /**
      * @language en_US
@@ -105,16 +105,24 @@ module EXML {
             list.push([callBack, thisObject]);
             return;
         }
-        var loader = loaderPool.pop();
-        if (!loader) {
-            var loader:egret.URLLoader = new egret.URLLoader();
-            loader.dataFormat = egret.URLLoaderDataFormat.TEXT;
+        var request = requestPool.pop();
+        if (!request) {
+            request = new egret.URLLoader();
+            //IF EGRET
+            request.dataFormat = egret.URLLoaderDataFormat.TEXT;
+            //*/
         }
         callBackMap[url] = [[callBack, thisObject]];
-        loaderMap[loader.$hashCode] = url;
-        loader.addEventListener(egret.Event.COMPLETE, onLoadFinish, null);
-        loader.addEventListener(egret.Event.IO_ERROR, onLoadFinish, null);
-        loader.load(new egret.URLRequest(url));
+        requestMap[request.$hashCode] = url;
+        request.addEventListener(egret.Event.COMPLETE, onLoadFinish, null);
+        request.addEventListener(egret.Event.IO_ERROR, onLoadFinish, null);
+        /*//IF LARK
+        request.open(url);
+        request.send();
+        //*/
+        //IF EGRET
+        request.load(new egret.URLRequest(url));
+        //*/
     }
 
     /**
@@ -123,17 +131,21 @@ module EXML {
      * @param event 
      */
     function onLoadFinish(event:egret.Event):void {
-        var loader:egret.URLLoader = <egret.URLLoader> (event.target);
-
-        loader.removeEventListener(egret.Event.COMPLETE, onLoadFinish, null);
-        loader.removeEventListener(egret.Event.IO_ERROR, onLoadFinish, null);
-        var text:string = event.type == egret.Event.COMPLETE ? loader.data : "";
+        var request:egret.URLLoader = event.currentTarget;
+        request.removeEventListener(egret.Event.COMPLETE, onLoadFinish, null);
+        request.removeEventListener(egret.Event.IO_ERROR, onLoadFinish, null);
+        /*//IF LARK
+        var text:string = event.type == egret.Event.COMPLETE ? request.response : "";
+        //*/
+        //IF EGRET
+        var text:string = event.type == egret.Event.COMPLETE ? request.data : "";
+        //*/
         if (text) {
             var clazz = parse(text);
         }
-        loaderPool.push(loader);
-        var url = loaderMap[loader.$hashCode];
-        delete loaderMap[loader.$hashCode];
+        requestPool.push(request);
+        var url = requestMap[request.$hashCode];
+        delete requestMap[request.$hashCode];
         var list:any[] = callBackMap[url];
         delete callBackMap[url];
         var length = list.length;

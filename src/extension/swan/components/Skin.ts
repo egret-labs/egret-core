@@ -46,6 +46,7 @@ module swan {
      *      </s:Skin>
      * </pre>
      *
+     * @defaultProperty elementsContent
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -66,6 +67,7 @@ module swan {
      *      </s:Skin>
      * </pre>
      *
+     * @defaultProperty elementsContent
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native

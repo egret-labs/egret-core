@@ -28,6 +28,10 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module swan.sys {
+
+    /**
+     * @private
+     */
     export const enum ComponentKeys {
         hostComponentKey,
         skinName,
@@ -98,7 +102,9 @@ module swan {
                 7: false,        //explicitTouchEnabled
                 8: null          //skin
             };
+            //IF EGRET
             this.$touchEnabled = true;
+            //*/
         }
 
         $Component:Object;
@@ -186,6 +192,9 @@ module swan {
                     }
                     else{
                         clazz = egret.getDefinitionByName(skinName);
+                        if(!clazz) {
+                            DEBUG && egret.$error(2203,skinName);
+                        }
                     }
                     if (clazz) {
                         skin = new clazz();

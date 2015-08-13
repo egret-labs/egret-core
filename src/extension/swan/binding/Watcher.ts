@@ -81,7 +81,7 @@ module swan {
         /**
          * @language en_US
          * Creates and starts a Watcher instance.
-         * The Watcher can only watch the property of a Object which host is instance of IEventDispatcher.
+         * The Watcher can only watch the property of a Object which host is instance of egret.IEventDispatcher.
          * @param host The object that hosts the property or property chain to be watched.
          * You can use the use the <code>reset()</code> method to change the value of the <code>host</code> argument
          * after creating the Watcher instance.
@@ -100,7 +100,7 @@ module swan {
          */
         /**
          * @language zh_CN
-         * 创建并启动 Watcher 实例。注意：Watcher 只能监视 host 为 IEventDispatcher 对象的属性改变。若属性链中某个属性所对应的实例不是 IEventDispatcher，
+         * 创建并启动 Watcher 实例。注意：Watcher 只能监视 host 为 egret.IEventDispatcher 对象的属性改变。若属性链中某个属性所对应的实例不是 egret.IEventDispatcher，
          * 则属性链中在它之后的属性改变将无法检测到。
          * @param host 用于承载要监视的属性或属性链的对象。
          * 创建Watcher实例后，您可以利用<code>reset()</code>方法更改<code>host</code>参数的值。

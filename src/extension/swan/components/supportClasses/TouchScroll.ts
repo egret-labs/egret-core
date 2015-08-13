@@ -123,6 +123,10 @@ module swan.sys {
         /**
          * @private
          */
+        private previousTime:number = 0;
+        /**
+         * @private
+         */
         private velocity:number = 0;
         /**
          * @private
@@ -192,6 +196,7 @@ module swan.sys {
             this.started = true;
             this.velocity = 0;
             this.previousVelocity.length = 0;
+            this.previousTime = egret.getTimer();
             this.previousPosition = this.currentPosition = touchPoint;
             this.offsetPoint = scrollValue + touchPoint;
             egret.startTick(this.onTick, this);
@@ -282,7 +287,12 @@ module swan.sys {
          * @returns
          */
         private onTick(timeStamp:number):boolean {
+            /*//IF LARK
+            var timeOffset = timeStamp - this.previousTime;
+            //*/
+            //IF EGRET
             var timeOffset = timeStamp;
+            //*/
             if (timeOffset > 0) {
                 var previousVelocity = this.previousVelocity;
                 previousVelocity.push(this.velocity);
@@ -290,6 +300,7 @@ module swan.sys {
                     previousVelocity.shift();
                 }
                 this.velocity = (this.currentPosition - this.previousPosition) / timeOffset;
+                this.previousTime = timeStamp;
                 this.previousPosition = this.currentPosition;
             }
             return true;

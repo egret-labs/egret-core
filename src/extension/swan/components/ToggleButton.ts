@@ -45,6 +45,12 @@ module swan {
 	 * This event is emitted only when the
 	 * user interacts with the control by touching.
 	 *
+	 * @state up Button up state
+	 * @state down Button down state
+	 * @state disabled Button disabled state
+	 * @state upAndSelected Up state when the button is selected
+	 * @state downAndSelected Down state when the button is selected
+	 * @state disabledAndSelected Disabled state when the button is selected
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
@@ -58,7 +64,13 @@ module swan {
 	 *
 	 * @event egret.Event.CHANGE ToggleButtonBase 控件的 <code>selected</code> 属性更改时分派。
 	 * 仅当用户通过触摸与控件交互时，才分派此事件。
-
+	 *
+	 * @state up 按钮弹起状态
+	 * @state down 按钮按下状态
+	 * @state disabled 按钮禁用状态
+	 * @state upAndSelected 按钮选择时的弹起状态
+	 * @state downAndSelected 按钮选择时的按下状态
+	 * @state disabledAndSelected 按钮选择时的禁用状态
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native

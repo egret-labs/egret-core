@@ -30,6 +30,9 @@
 
 module swan {
 
+    /**
+     * @private
+     */
     const enum Keys{
         useVirtualLayout,
         useVirtualLayoutChanged,
@@ -54,7 +57,7 @@ module swan {
      * to hold data items as children.
      *
      * @see swan.Group
-     *
+     * @defaultProperty dataProvider
      * @includeExample examples/Samples/src/extension/swan/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version Swan 1.0
@@ -66,7 +69,7 @@ module swan {
      * 尽管此容器可以包含可视元素，但它通常仅用于包含作为子项的数据项目。
      *
      * @see swan.Group
-     *
+     * @defaultProperty dataProvider
      * @includeExample examples/Samples/src/extension/swan/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version Swan 1.0
