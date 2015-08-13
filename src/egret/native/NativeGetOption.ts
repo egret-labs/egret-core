@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.native {
+    /**
+     * @private
+     */
     export function getOption(key:string):string {
         return egret_native.getOption(key);
     }

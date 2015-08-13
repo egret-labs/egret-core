@@ -29,6 +29,9 @@
 module egret.native {
     var callBackDic = {};
 
+    /**
+     * @private
+     */
     export class NativeExternalInterface implements ExternalInterface {
 
         static call(functionName:string, value:string):void {

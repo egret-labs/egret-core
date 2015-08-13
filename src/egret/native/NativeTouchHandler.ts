@@ -26,7 +26,11 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+
 module egret.native {
+    /**
+     * @private
+     */
     export class NativeTouchHandler extends HashObject {
         private $touch:egret.sys.TouchHandler;
 

@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.web {
+    /**
+     * @private
+     */
     export class WebExternalInterface implements ExternalInterface {
         /**
          * @private

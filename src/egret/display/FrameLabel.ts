@@ -33,6 +33,7 @@ module egret {
     /**
      * @version Egret 2.0
      * @platform Web,Native
+     * @private
      */
     export class FrameLabel extends EventDispatcher {
         /**
