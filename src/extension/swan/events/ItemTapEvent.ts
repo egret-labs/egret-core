@@ -35,7 +35,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/events/ItemTapEventExample.ts
+     * @includeExample extension/swan/events/ItemTapEventExample.ts
      */
     /**
      * @language zh_CN
@@ -43,7 +43,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/events/ItemTapEventExample.ts
+     * @includeExample extension/swan/events/ItemTapEventExample.ts
      */
     export class ItemTapEvent extends egret.Event {
         /**

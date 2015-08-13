@@ -76,7 +76,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/RadioButtonGroupExample.ts
+     * @includeExample extension/swan/components/RadioButtonGroupExample.ts
      */
     /**
      * @language zh_CN
@@ -87,7 +87,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/RadioButtonGroupExample.ts
+     * @includeExample extension/swan/components/RadioButtonGroupExample.ts
      */
     export class RadioButtonGroup extends egret.EventDispatcher {
 

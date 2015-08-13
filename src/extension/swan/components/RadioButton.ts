@@ -44,7 +44,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/RadioButtonExample.ts
+     * @includeExample extension/swan/components/RadioButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -53,7 +53,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/RadioButtonExample.ts
+     * @includeExample extension/swan/components/RadioButtonExample.ts
      */
     export class RadioButton extends ToggleButton {
 

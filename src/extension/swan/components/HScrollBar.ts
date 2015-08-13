@@ -39,7 +39,7 @@ module swan {
      * you usually combine it as part of another group of components to
      * provide scrolling functionality.</p>
      *
-     * @includeExample examples/Samples/src/extension/swan/components/HScrollBarExample.ts
+     * @includeExample extension/swan/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -49,7 +49,7 @@ module swan {
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
      * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
-     * @includeExample examples/Samples/src/extension/swan/components/HScrollBarExample.ts
+     * @includeExample extension/swan/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native

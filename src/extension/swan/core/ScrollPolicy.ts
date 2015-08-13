@@ -37,7 +37,7 @@ module swan {
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
-	 * @includeExample examples/Samples/src/extension/swan/core/ScrollPolicyExample.ts
+	 * @includeExample extension/swan/core/ScrollPolicyExample.ts
 	 */
 	/**
 	 * @language zh_CN
@@ -47,7 +47,7 @@ module swan {
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
-	 * @includeExample examples/Samples/src/extension/swan/core/ScrollPolicyExample.ts
+	 * @includeExample extension/swan/core/ScrollPolicyExample.ts
 	 */
 	export class ScrollPolicy{
 		/**

@@ -50,7 +50,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/SkinExample.ts
+     * @includeExample extension/swan/components/SkinExample.ts
      */
     /**
      * @language zh_CN
@@ -71,7 +71,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/SkinExample.ts
+     * @includeExample extension/swan/components/SkinExample.ts
      */
     export class Skin extends egret.HashObject {
 

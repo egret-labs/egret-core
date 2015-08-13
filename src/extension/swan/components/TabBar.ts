@@ -49,7 +49,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/TabBarExample.ts
+     * @includeExample extension/swan/components/TabBarExample.ts
      */
     /**
      * @language zh_CN
@@ -69,7 +69,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/TabBarExample.ts
+     * @includeExample extension/swan/components/TabBarExample.ts
      */
     export class TabBar extends ListBase {
 

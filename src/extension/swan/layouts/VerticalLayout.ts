@@ -39,7 +39,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/layout/VerticalLayoutExample.ts
+     * @includeExample extension/swan/layout/VerticalLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -48,7 +48,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/layout/VerticalLayoutExample.ts
+     * @includeExample extension/swan/layout/VerticalLayoutExample.ts
      */
     export class VerticalLayout extends LinearLayoutBase {
 

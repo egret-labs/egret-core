@@ -42,7 +42,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/collections/ArrayCollectionExample.ts
+     * @includeExample extension/swan/collections/ArrayCollectionExample.ts
      */
     /**
      * @language zh_CN
@@ -55,7 +55,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/collections/ArrayCollectionExample.ts
+     * @includeExample extension/swan/collections/ArrayCollectionExample.ts
      */
     export class ArrayCollection extends egret.EventDispatcher implements ICollection {
         /**

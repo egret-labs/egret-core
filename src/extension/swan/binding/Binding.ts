@@ -36,7 +36,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/binding/BindingExample.ts
+     * @includeExample extension/swan/binding/BindingExample.ts
      */
     /**
      * @language zh_CN
@@ -44,7 +44,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/binding/BindingExample.ts
+     * @includeExample extension/swan/binding/BindingExample.ts
      */
     export class Binding {
 

@@ -36,7 +36,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/core/ThemeExample.ts
+     * @includeExample extension/swan/core/ThemeExample.ts
      */
     /**
      * @language zh_CN
@@ -44,7 +44,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/core/ThemeExample.ts
+     * @includeExample extension/swan/core/ThemeExample.ts
      */
     export class Theme extends egret.EventDispatcher {
 

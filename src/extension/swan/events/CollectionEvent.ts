@@ -37,7 +37,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/events/CollectionEventExample.ts
+     * @includeExample extension/swan/events/CollectionEventExample.ts
      */
     /**
      * @language zh_CN
@@ -45,7 +45,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/events/CollectionEventExample.ts
+     * @includeExample extension/swan/events/CollectionEventExample.ts
      */
     export class CollectionEvent extends egret.Event {
         /**

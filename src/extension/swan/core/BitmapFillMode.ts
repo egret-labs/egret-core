@@ -39,7 +39,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/core/BitmapFillModeExample.ts
+     * @includeExample extension/swan/core/BitmapFillModeExample.ts
      */
     /**
      * @language zh_CN
@@ -51,7 +51,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/core/BitmapFillModeExample.ts
+     * @includeExample extension/swan/core/BitmapFillModeExample.ts
      */
     export class BitmapFillMode{
 

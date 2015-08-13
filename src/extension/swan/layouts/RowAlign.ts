@@ -37,7 +37,7 @@ module swan {
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
-	 * @includeExample examples/Samples/src/extension/swan/layout/RowAlignExample.ts
+	 * @includeExample extension/swan/layout/RowAlignExample.ts
 	 */
 	/**
 	 * @language zh_CN
@@ -46,7 +46,7 @@ module swan {
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
-	 * @includeExample examples/Samples/src/extension/swan/layout/RowAlignExample.ts
+	 * @includeExample extension/swan/layout/RowAlignExample.ts
 	 */
 	export class RowAlign{
 		/**

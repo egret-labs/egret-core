@@ -39,7 +39,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/events/PropertyEventExample.ts
+     * @includeExample extension/swan/events/PropertyEventExample.ts
      */
     /**
      * @language zh_CN
@@ -48,7 +48,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/events/PropertyEventExample.ts
+     * @includeExample extension/swan/events/PropertyEventExample.ts
      */
     export class PropertyEvent extends egret.Event {
         /**

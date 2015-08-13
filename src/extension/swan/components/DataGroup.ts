@@ -58,7 +58,7 @@ module swan {
      *
      * @see swan.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/swan/components/DataGroupExample.ts
+     * @includeExample extension/swan/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -70,7 +70,7 @@ module swan {
      *
      * @see swan.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/swan/components/DataGroupExample.ts
+     * @includeExample extension/swan/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native

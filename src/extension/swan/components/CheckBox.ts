@@ -42,7 +42,7 @@ module swan {
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/CheckboxExample.ts
+     * @includeExample extension/swan/components/CheckboxExample.ts
 	 */
 	/**
 	 * @language zh_CN
@@ -52,7 +52,7 @@ module swan {
 	 * @version Egret 2.4
 	 * @version Swan 1.0
 	 * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/CheckboxExample.ts
+     * @includeExample extension/swan/components/CheckboxExample.ts
 	 */
 	export class CheckBox extends ToggleButton{
 		/**

@@ -42,7 +42,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/PanelExample.ts
+     * @includeExample extension/swan/components/PanelExample.ts
      */
     /**
      * @language zh_CN
@@ -55,7 +55,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/components/PanelExample.ts
+     * @includeExample extension/swan/components/PanelExample.ts
      */
     export class Panel extends Component {
 

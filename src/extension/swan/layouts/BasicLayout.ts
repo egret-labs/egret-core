@@ -40,7 +40,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/layout/BasicLayoutExample.ts
+     * @includeExample extension/swan/layout/BasicLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -51,7 +51,7 @@ module swan {
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/swan/layout/BasicLayoutExample.ts
+     * @includeExample extension/swan/layout/BasicLayoutExample.ts
      */
     export class BasicLayout extends LayoutBase {
 
