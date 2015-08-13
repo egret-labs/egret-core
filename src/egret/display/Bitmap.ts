@@ -226,14 +226,14 @@ module egret {
          * Whether or not the bitmap is smoothed when scaled.
          * @default true。
          * @version Egret 2.0
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
          * @default true。
          * @version Egret 2.0
-         * @platform Web,Native
+         * @platform Web
          */
         public get smoothing():boolean {
             return this.$smoothing;
@@ -450,6 +450,9 @@ module egret {
          */
         static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean, offsetX?:number, offsetY?:number):void {
             var bitmapData = texture;
+            if (!bitmapData._bitmapData["avaliable"]) {
+                return;
+            }
             context.imageSmoothingEnabled = smoothing;
 
             offsetX = offsetX || Math.round(bitmapData._offsetX);
