@@ -69,7 +69,7 @@ module swan {
             this.initializeUIValues();
             //IF EGRET
             this.type = egret.TextFieldType.INPUT;
-            //*/
+             //END IF*/
         }
 
         /**

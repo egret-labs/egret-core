@@ -97,11 +97,11 @@ module swan {
             /*//IF LARK
             request.open(url);
             request.send();
-            //*/
-          //IF EGRET
+            //END IF*/
+            //IF EGRET
             request.dataFormat = egret.URLLoaderDataFormat.TEXT;
             request.load(new egret.URLRequest(url));
-            //*/
+            //END IF*/
         }
 
         /**
@@ -114,10 +114,10 @@ module swan {
             try {
                 /*//IF LARK
                 var data = JSON.parse(request.response);
-                //*/
+                //END IF*/
                 //IF EGRET
                 var data = JSON.parse(request.data);
-                //*/
+                 //END IF*/
             }
             catch (e) {
                 if (DEBUG) {

@@ -110,7 +110,7 @@ module EXML {
             request = new egret.URLLoader();
             //IF EGRET
             request.dataFormat = egret.URLLoaderDataFormat.TEXT;
-            //*/
+             //END IF*/
         }
         callBackMap[url] = [[callBack, thisObject]];
         requestMap[request.$hashCode] = url;
@@ -119,10 +119,10 @@ module EXML {
         /*//IF LARK
         request.open(url);
         request.send();
-        //*/
+        //END IF*/
         //IF EGRET
         request.load(new egret.URLRequest(url));
-        //*/
+         //END IF*/
     }
 
     /**
@@ -136,10 +136,10 @@ module EXML {
         request.removeEventListener(egret.Event.IO_ERROR, onLoadFinish, null);
         /*//IF LARK
         var text:string = event.type == egret.Event.COMPLETE ? request.response : "";
-        //*/
+        //END IF*/
         //IF EGRET
         var text:string = event.type == egret.Event.COMPLETE ? request.data : "";
-        //*/
+         //END IF*/
         if (text) {
             var clazz = parse(text);
         }

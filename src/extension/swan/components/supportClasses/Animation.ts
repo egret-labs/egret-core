@@ -149,10 +149,10 @@ module swan.sys {
         private doInterval(currentTime:number):boolean {
             /*//IF LARK
             var runningTime = currentTime - this.startTime;
-            //*/
+            //END IF*/
             //IF EGRET
             var runningTime = egret.getTimer() - this.startTime;
-            //*/
+             //END IF*/
             if (!this.isPlaying) {
                 this.isPlaying = true;
             }
