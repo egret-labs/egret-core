@@ -404,7 +404,9 @@ module RES {
     }
 
 
-
+    /**
+     * @private
+     */
     class Resource extends egret.EventDispatcher{
         /**
          * 构造函数
