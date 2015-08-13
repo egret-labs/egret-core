@@ -53,10 +53,16 @@ module egret.web {
                 callback(0, bitmapData);
                 return;
             }
-            bitmapData.crossOrigin = BaseImageLoader.crossOrigin;
-            if (bitmapData.hasAttribute("crossOrigin") && !bitmapData.crossOrigin) {//兼容猎豹
-                bitmapData.removeAttribute("crossOrigin");
+
+            if (!BaseImageLoader.crossOrigin) {
+                if (bitmapData.hasAttribute("crossOrigin")) {//兼容猎豹
+                    bitmapData.removeAttribute("crossOrigin");
+                }
             }
+            else {
+                bitmapData.setAttribute("crossOrigin", BaseImageLoader.crossOrigin);
+            }
+
             var winURL = window["URL"] || window["webkitURL"];
             if (BaseImageLoader._bitmapCallbackMap[url] == null) {//非正在加载中
                 this._addToCallbackList(url, callback);
