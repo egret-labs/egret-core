@@ -41,6 +41,7 @@ module egret {
 
     egret_string_code[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
     egret_string_code[2001] = "RES加载了不存在或空的资源组:\"{0}\"";
+    egret_string_code[2002] = "请不要使用不同的类型方式来加载同一个素材！";
 
     egret_string_code[3000] = "主题配置文件加载失败: {0}";
     egret_string_code[3001] = "找不到主题中所配置的皮肤类名: {0}";
