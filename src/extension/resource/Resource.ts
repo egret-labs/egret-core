@@ -36,7 +36,7 @@ module RES {
      * @param resourceRoot Resource path. All URL in the configuration is the relative value of the path. The ultimate URL is the value of the sum of the URL of the string and the resource in the configuration.
      * @param type Configuration file format. Determine what parser to parse the configuration file. Default "json".
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -46,7 +46,7 @@ module RES {
      * @param resourceRoot 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
      * @param type 配置文件的格式。确定要用什么解析器来解析配置文件。默认"json"
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function loadConfig(url:string,resourceRoot:string="",type="json"):void{
@@ -59,7 +59,7 @@ module RES {
      * @param priority Load priority can be negative, the default value is 0.
      * <br>A low priority group must wait for the high priority group to complete the end of the load to start, and the same priority group will be loaded at the same time.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -69,7 +69,7 @@ module RES {
      * @param priority 加载优先级,可以为负数,默认值为 0。
      * <br>低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组会同时加载。
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function loadGroup(name:string,priority:number=0):void{
@@ -81,7 +81,7 @@ module RES {
      * @param name Group name。
      * @returns Is loading or not.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -90,7 +90,7 @@ module RES {
      * @param name 组名。
      * @returns 是否正在加载。
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function isGroupLoaded(name:string):boolean{
@@ -103,7 +103,7 @@ module RES {
      * @returns The resource item array of group.
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -113,7 +113,7 @@ module RES {
      * @returns 加载项列表。
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function getGroupByName(name:string):Array<ResourceItem>{
@@ -128,7 +128,7 @@ module RES {
      * @param override Is the default false for the same name resource group already exists.
      * @returns Create success or fail.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -140,7 +140,7 @@ module RES {
      * @param override 是否覆盖已经存在的同名资源组,默认 false。
      * @returns 是否创建成功。
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function createGroup(name:string,keys:Array<string>,override:boolean = false):boolean{
@@ -151,7 +151,7 @@ module RES {
      * Check whether the configuration file contains the specified resources.
      * @param key A sbuKeys attribute or name property in a configuration file.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -159,7 +159,7 @@ module RES {
      * 检查配置文件里是否含有指定的资源。
      * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function hasRes(key:string):boolean{
@@ -171,7 +171,7 @@ module RES {
      * @param data Configuration file data, please refer to the resource.json configuration file format. JSON object can be introduced into the corresponding.
      * @param folder Path prefix for load.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -180,7 +180,7 @@ module RES {
      * @param data 配置文件数据，请参考 resource.json 的配置文件格式。传入对应的 json 对象即可。
      * @param folder 加载项的路径前缀。
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function parseConfig(data:any, folder:string=""):void {
@@ -204,7 +204,7 @@ module RES {
      * @param key A sbuKeys attribute or name property in a configuration file.
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -224,7 +224,7 @@ module RES {
      * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
      * @see RES.ResourceItem
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function getRes(key:string):any{
@@ -237,7 +237,7 @@ module RES {
      * @param compFunc Call back function. Example：compFunc(data,key):void.
      * @param thisObject This pointer of call back function.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -247,7 +247,7 @@ module RES {
      * @param compFunc 回调函数。示例：compFunc(data,key):void。
      * @param thisObject 回调函数的 this 引用。
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function getResAsync(key:string,compFunc:Function,thisObject:any):void{
@@ -260,9 +260,9 @@ module RES {
      * @param compFunc Call back function. Example：compFunc(data,url):void。
      * @param thisObject This pointer of call back function.
      * @param type File type (optional). Use the static constants defined in the ResourceItem class. If you do not set the file name extension.
-     * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/resource/GetResByUrl.ts
      */
     /**
      * @language zh_CN
@@ -271,9 +271,9 @@ module RES {
      * @param compFunc 回调函数。示例：compFunc(data,url):void。
      * @param thisObject 回调函数的 this 引用。
      * @param type 文件类型(可选)。请使用 ResourceItem 类中定义的静态常量。若不设置将根据文件扩展名生成。
-     * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/resource/GetResByUrl.ts
      */
     export function getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
         instance.getResByUrl(url,compFunc,thisObject,type);
@@ -285,7 +285,7 @@ module RES {
      * @param force Destruction of a resource group when the other resources groups have the same resource situation whether the resources will be deleted, the default value true.
      * @returns Are successful destruction.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -295,7 +295,7 @@ module RES {
      * @param force 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值 true。
      * @see #setMaxRetryTimes
      * @returns 是否销毁成功。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function destroyRes(name:string, force?:boolean):boolean{
@@ -306,7 +306,7 @@ module RES {
      * Sets the maximum number of concurrent load threads, the default value is 2.
      * @param thread The number of concurrent loads to be set.
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -314,7 +314,7 @@ module RES {
      * 设置最大并发加载线程数量，默认值是 2。
      * @param thread 要设置的并发加载数。
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function setMaxLoadingThread(thread:number):void{
@@ -325,16 +325,16 @@ module RES {
      * @language en_US
      * Sets the number of retry times when the resource failed to load, and the default value is 3.
      * @param retry To set the retry count.
-     * @includeExample examples/Samples/src/extension/resource/ResourceExample.ts
-     * @version Lark 1.0
+     * @includeExample extension/resource/Resource.ts
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 设置资源加载失败时的重试次数，默认值是 3。
      * @param retry 要设置的重试次数。
-     * @includeExample examples/Samples/src/extension/resource/ResourceExample.ts
-     * @version Lark 1.0
+     * @includeExample extension/resource/Resource.ts
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function setMaxRetryTimes(retry: number): void {
@@ -356,7 +356,7 @@ module RES {
      * All listeners with a priority for n will be processed before the -1 n listener.
      * If two or more listeners share the same priority, they are processed in accordance with the order of their added. The default priority is 0.
      * @see RES.ResourceEvent
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -373,7 +373,7 @@ module RES {
      * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
      * @see RES.ResourceEvent
      * @see #setMaxRetryTimes
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function addEventListener(type:string, listener:(event:egret.Event)=>void, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
@@ -386,7 +386,7 @@ module RES {
      * @param listener Listening function。
      * @param thisObject The this object that is bound to a function.
      * @param useCapture Is used to capture, and this property is only valid in the display list.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -396,7 +396,7 @@ module RES {
      * @param listener 侦听函数。
      * @param thisObject 侦听函数绑定的this对象。
      * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function removeEventListener(type:string, listener:(event:egret.Event)=>void,thisObject:any,useCapture:boolean = false):void {
