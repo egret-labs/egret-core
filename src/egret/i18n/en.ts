@@ -41,6 +41,7 @@ module egret {
 
     egret_string_code[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
     egret_string_code[2001] = "RES loaded non-existed or empty resource group:\"{0}\"";
+    egret_string_code[2002] = "Do not use the different types of ways to load the same material!";
 
     egret_string_code[3000] = "Theme configuration file failed to load: {0}";
     egret_string_code[3001] = "Cannot find the skin name which is configured in Theme: {0}";
