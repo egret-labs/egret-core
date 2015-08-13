@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret {
+module egret.web {
     /**
      * @private
      */
@@ -105,5 +105,7 @@ module egret {
 
     }
 
-    ISocket = HTML5WebSocket;
+    if (egret.MainContext.runtimeType == egret.MainContext.RUNTIME_HTML5) {
+        ISocket = HTML5WebSocket;
+    }
 }

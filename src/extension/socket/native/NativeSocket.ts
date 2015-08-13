@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+module egret.native {
     /**
      * @private
      */
@@ -101,5 +101,7 @@ module egret {
             this.socket.close();
         }
     }
-    ISocket = HTML5WebSocket;
+    if (egret.MainContext.runtimeType == egret.MainContext.RUNTIME_NATIVE) {
+        ISocket = NativeSocket;
+    }
 }
