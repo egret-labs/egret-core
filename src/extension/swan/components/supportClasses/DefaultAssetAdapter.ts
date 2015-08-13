@@ -101,7 +101,7 @@ module swan {
             var loader = event.currentTarget;
             loader.removeEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             loader.removeEventListener(egret.Event.IO_ERROR, this.onLoadFinish, this);
-            var data:egret.BitmapData;
+            var data:egret.Texture;
             if (event.$type == egret.Event.COMPLETE) {
                 data = loader.data;
                 loader.data = null;

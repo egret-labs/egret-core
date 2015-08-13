@@ -22,7 +22,7 @@
     loaded() {
         new swan.Theme("resource/theme/blue-theme.json", this.stage);
         this.removeChildren();
-        var ui = utils.createClass("components.MainGroup");
+        var ui = new (egret.getDefinitionByName("components.MainGroup"))();
 
         ui.btnShowMessage.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
             this.addPanel();
