@@ -68,6 +68,7 @@ module egret.sys {
             var displayList = new DisplayList(stage);
             displayList.renderContext = context;
             stage.$displayList = displayList;
+            displayList.setClipRect(stage.$stageWidth, stage.$stageHeight);
             return displayList;
         }
 

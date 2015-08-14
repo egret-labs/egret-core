@@ -1225,6 +1225,8 @@ module egret {
             if (this.$renderRegion) {
                 parentCache.markDirty(this);
             }
+            this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
+            sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
         }
 
         /**

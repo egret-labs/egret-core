@@ -45,10 +45,13 @@ module egret.sys {
          */
         public static release(displayList:DisplayList):void {
             surfaceFactory.release(displayList.surface);
+            Matrix.release(displayList.$renderMatrix);
+            Matrix.release(displayList.$ratioMatrix);
             displayList.surface = null;
             displayList.renderContext = null;
             displayList.root = null;
             displayList.$renderMatrix = null;
+            displayList.$ratioMatrix = null;
             displayList.needRedraw = false;
             displayList.$isDirty = false;
             displayListPool.push(displayList);
@@ -63,15 +66,20 @@ module egret.sys {
             if (!displayList) {
                 displayList = new egret.sys.DisplayList(target);
             }
-            else {
-                displayList.root = target;
-            }
             var surface = surfaceFactory.create();
             if (!surface) {
                 return null;
             }
             displayList.surface = surface;
             displayList.renderContext = surface.renderContext;
+            displayList.root = target;
+            displayList.$renderMatrix = Matrix.create();
+            displayList.$renderMatrix.setTo(1, 0, 0, 1, 0, 0);
+            displayList.$pixelRatio = 1;
+            displayList.$ratioMatrix = Matrix.create();
+            displayList.$ratioMatrix.setTo(1, 0, 0, 1, 0, 0);
+            displayList.needRedraw = true;
+            displayList.$isDirty = true;
             return displayList;
         }
 
@@ -99,7 +107,14 @@ module egret.sys {
          * @private
          * 相对于显示列表根节点或位图缓存根节点的矩阵对象
          */
-        $renderMatrix:Matrix = new Matrix();
+        $renderMatrix: Matrix = new Matrix();
+
+        $ratioMatrix: Matrix = new Matrix();
+
+        $ratioChanged: boolean = false;
+
+        $pixelRatio: number = 1;
+
         /**
          * @private
          * 在显示列表根节点或位图缓存根节点上的显示区域
@@ -112,12 +127,22 @@ module egret.sys {
          */
         $update():boolean {
             var target = this.root;
+            //当cache对象的显示列表已经加入dirtyList，对象又取消cache的时候，root为空
+            if (target == null) {
+                return false;
+            }
             target.$removeFlagsUp(DisplayObjectFlags.Dirty);
             this.$renderAlpha = target.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = target.$getConcatenatedMatrix();
             var bounds = target.$getOriginalBounds();
             var displayList = target.$parentDisplayList;
+            var pixelRatio = 1;
+            if (displayList)
+                pixelRatio = displayList.$pixelRatio;
+            else if (target.stage && target.stage.$displayList)
+                pixelRatio = target.stage.$displayList.$pixelRatio;
+            this.setDevicePixelRatio(pixelRatio);
             var region = this.$renderRegion;
             if (this.needRedraw) {
                 this.updateDirtyRegions();
@@ -128,7 +153,7 @@ module egret.sys {
                 return false;
             }
 
-            if (!region.moved) {
+            if (!region.moved && !displayList.$ratioChanged) {
                 return false;
             }
             region.moved = false;
@@ -138,6 +163,7 @@ module egret.sys {
             if(root!==target.$stage){
                 target.$getConcatenatedMatrixAt(root,matrix);
             }
+            this.$ratioMatrix.$preMultiplyInto(matrix, matrix);
             region.updateRegion(bounds, matrix);
             return true;
         }
@@ -165,7 +191,7 @@ module egret.sys {
             var data = this.surface;
             if (data) {
                 context.begin();
-                context.drawImage(data, this.offsetX, this.offsetY);
+                context.drawImage(data, this.offsetX, this.offsetY, data.width / this.$pixelRatio, data.height / this.$pixelRatio);
                 context.end();
             }
         }
@@ -196,7 +222,9 @@ module egret.sys {
          * @private
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
          */
-        public setClipRect(width:number, height:number):void {
+        public setClipRect(width: number, height: number): void {
+            width *= this.$pixelRatio;
+            height *= this.$pixelRatio;
             this.dirtyRegion.setClipRect(width, height);
             this.rootMatrix = null;//只有舞台画布才能设置ClipRect
             var surface = this.renderContext.surface;
@@ -289,8 +317,8 @@ module egret.sys {
             //绘制脏矩形区域
             context.save();
             context.beginPath();
-            if(m){
-                context.setTransform(1,0,0,1,-this.offsetX,-this.offsetY);
+            if (m) {
+                context.setTransform(1, 0, 0, 1, -this.offsetX * this.$pixelRatio, -this.offsetY* this.$pixelRatio);
             }
             var dirtyList = this.dirtyList;
             this.dirtyList = null;
@@ -313,6 +341,7 @@ module egret.sys {
             context.end();
             this.dirtyRegion.clear();
             this.needRedraw = false;
+            this.$ratioChanged = false;
             return drawCalls;
         }
 
@@ -358,7 +387,7 @@ module egret.sys {
                     if (rootMatrix) {
                         context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         node.$render(context);
-                        context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                        context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx * this.$pixelRatio, rootMatrix.ty * this.$pixelRatio);
                     }
                     else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
@@ -379,7 +408,8 @@ module egret.sys {
                     if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
                         continue;
                     }
-                    if (child.$blendMode !== 0 || child.$mask) {
+                    if (child.$blendMode !== 0 ||
+                        (child.$mask&&child.$mask.$parentDisplayList)) {//若遮罩不在显示列表中，放弃绘制遮罩。
                         drawCalls += this.drawWithClip(child, context, dirtyList, rootMatrix, clipRegion);
                     }
                     else if (child.$scrollRect || child.$maskRect) {
@@ -414,6 +444,9 @@ module egret.sys {
 
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
+            if(mask&&!mask.$parentDisplayList){
+                mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
+            }
 
             //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
             var maskRegion:Region;
@@ -426,6 +459,7 @@ module egret.sys {
                 invertedMatrix.$preMultiplyInto(displayMatrix,displayMatrix);
             }
 
+            this.$ratioMatrix.$preMultiplyInto(displayMatrix, displayMatrix);
             if (mask) {
                 var bounds = mask.$getOriginalBounds();
                 maskRegion = Region.create();
@@ -434,6 +468,7 @@ module egret.sys {
                 if(invertedMatrix){
                     invertedMatrix.$preMultiplyInto(m,m);
                 }
+                this.$ratioMatrix.$preMultiplyInto(m, m);
                 maskRegion.updateRegion(bounds, m);
                 Matrix.release(m);
             }
@@ -540,7 +575,7 @@ module egret.sys {
                 if (rootMatrix) {
                     context.translate(region.minX, region.minY)
                     context.drawImage(displayContext.surface, 0, 0);
-                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx * this.$pixelRatio, rootMatrix.ty * this.$pixelRatio);
                 }
                 else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
                     context.setTransform(1, 0, 0, 1, region.minX, region.minY);
@@ -572,6 +607,7 @@ module egret.sys {
             if(root!==displayObject.$stage){
                 root.$getInvertedConcatenatedMatrix().$preMultiplyInto(m,m)
             }
+            this.$ratioMatrix.$preMultiplyInto(m, m);
             var region:Region = Region.create();
             if (!scrollRect.isEmpty()) {
                 region.updateRegion(scrollRect, m);
@@ -598,12 +634,18 @@ module egret.sys {
             //绘制显示对象自身
             context.begin();
             context.save();
-            context.setTransform(m.a, m.b, m.c, m.d, m.tx-this.offsetX, m.ty-this.offsetY);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx * this.$pixelRatio, rootMatrix.ty * this.$pixelRatio);
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            else {
+                context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
             context.beginPath();
             context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
             context.clip();
-            if(rootMatrix){
-                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx * this.$pixelRatio, rootMatrix.ty * this.$pixelRatio);
             }
             context.end();
             drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, region);
@@ -625,6 +667,7 @@ module egret.sys {
                 return null;
             }
             if(MainContext.runtimeType == MainContext.RUNTIME_HTML5) {
+                //在chrome里，小等于256*256的canvas会不启用GPU加速。
                 surface.width = Math.max(257, width);
                 surface.height = Math.max(257, height);
             }
@@ -644,19 +687,21 @@ module egret.sys {
          * @private
          * 改变画布的尺寸，由于画布尺寸修改会清空原始画布。所以这里将原始画布绘制到一个新画布上，再与原始画布交换。
          */
-        public changeSurfaceSize():void {
+        public changeSurfaceSize(): void {
             var root = this.root;
             var oldOffsetX = this.offsetX;
             var oldOffsetY = this.offsetY;
             var bounds = this.root.$getOriginalBounds();
+            var scaleX = this.$pixelRatio;
+            var scaleY = this.$pixelRatio;
             this.offsetX = bounds.x;
             this.offsetY = bounds.y;
             var oldContext = this.renderContext;
             var oldSurface = oldContext.surface;
             if (!this.sizeChanged) {
                 this.sizeChanged = true;
-                oldSurface.width = bounds.width;
-                oldSurface.height = bounds.height;
+                oldSurface.width = bounds.width * scaleX;
+                oldSurface.height = bounds.height * scaleY;
             }
             else if (bounds.width !== oldSurface.width || bounds.height !== oldSurface.height) {
                 var newContext = sys.sharedRenderContext;
@@ -664,22 +709,32 @@ module egret.sys {
                 sys.sharedRenderContext = oldContext;
                 this.renderContext = newContext;
                 this.surface = newSurface;
-                newSurface.width = bounds.width;
-                newSurface.height = bounds.height;
+                newSurface.width = bounds.width * scaleX;
+                newSurface.height = bounds.height * scaleY;
                 if (oldSurface.width !== 0 && oldSurface.height !== 0) {
                     newContext.begin();
                     newContext.setTransform(1, 0, 0, 1, 0, 0);
-                    newContext.drawImage(oldSurface, oldOffsetX - bounds.x, oldOffsetY - bounds.y);
+                    newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
                     newContext.end();
                 }
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             }
-            this.rootMatrix.setTo(1, 0, 0, 1, - bounds.x, - bounds.y);
+            this.rootMatrix.setTo(1, 0, 0, 1, - this.offsetX, - this.offsetY);
             this.renderContext.begin();
             this.renderContext.setTransform(1, 0, 0, 1, - bounds.x, - bounds.y);
             this.renderContext.end();
         }
 
+        public setDevicePixelRatio(ratio: number = 1) {
+            if (this.$pixelRatio == ratio && this.$ratioMatrix)
+                return;
+            if (!this.$ratioMatrix)
+                this.$ratioMatrix = Matrix.create();
+            this.$ratioChanged = true;
+            this.$pixelRatio = ratio;
+            this.$ratioMatrix.setTo(ratio, 0, 0, ratio, 0, 0);
+            this.root.$invalidate(true);
+        }
     }
 }
