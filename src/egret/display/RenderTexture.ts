@@ -104,6 +104,7 @@ module egret {
             if (drawCalls == 0) {
                 return false;
             }
+            context.surface["avaliable"] = true;
             this._setBitmapData(context.surface);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;
@@ -305,6 +306,18 @@ module egret {
             surface.width = Math.max(257, width);
             surface.height = Math.max(257, height);
             return surface.renderContext;
+        }
+
+        /**
+         * 销毁 RenderTexture 对象
+         * @method egret.RenderTexture#dispose
+         */
+        public dispose():void {
+            if (this._bitmapData) {
+                Texture.$dispose(this);
+
+                this._bitmapData = null;
+            }
         }
     }
 }

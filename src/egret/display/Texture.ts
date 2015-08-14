@@ -305,7 +305,61 @@ module egret {
          * @platform Web,Native
          */
         public dispose():void {
-            egret.ImageLoader.disposeBitmapData(this._bitmapData);
+            if (this._bitmapData) {
+                Texture.$dispose(this);
+
+                egret.ImageLoader.disposeBitmapData(this._bitmapData);
+            }
+        }
+
+        private static _displayList:Object = {};
+        static $addDisplayObject(displayObject:DisplayObject, texture:Texture):void {
+            var hashCode:number = texture._bitmapData.$hashCode;
+            if (!Texture._displayList[hashCode]) {
+                Texture._displayList[hashCode] = [displayObject];
+                return;
+            }
+
+            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
+            if (tempList.indexOf(displayObject) < 0) {
+                tempList.push(displayObject);
+            }
+        }
+
+        static $removeDisplayObject(displayObject:DisplayObject, texture:Texture):void {
+            var hashCode:number = texture._bitmapData.$hashCode;
+            if (!Texture._displayList[hashCode]) {
+                return;
+            }
+
+            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
+            var index:number = tempList.indexOf(displayObject);
+            if (index >= 0) {
+                tempList.splice(index);
+            }
+        }
+
+        static $dispose(texture:Texture):void {
+            var hashCode:number = texture._bitmapData.$hashCode;
+            if (!Texture._displayList[hashCode]) {
+                return;
+            }
+            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
+
+            for (var i:number = 0; i < tempList.length; i++) {
+                tempList[i].$invalidateContentBounds();
+            }
+        }
+
+        static $loaded(texture:Texture):void {
+            var hashCode:number = texture._bitmapData.$hashCode;
+            if (!Texture._displayList[hashCode]) {
+                return;
+            }
+            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
+            for (var i:number = 0; i < tempList.length; i++) {
+                tempList[i].$invalidateContentBounds();
+            }
         }
     }
 }

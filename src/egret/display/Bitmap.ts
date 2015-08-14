@@ -103,6 +103,30 @@ module egret {
 
         /**
          * @private
+         * 显示对象添加到舞台
+         */
+        $onAddToStage(stage:Stage, nestLevel:number):void {
+            super.$onAddToStage(stage, nestLevel);
+
+            if (this.$bitmapData) {
+                Texture.$addDisplayObject(this, this.$bitmapData);
+            }
+        }
+
+        /**
+         * @private
+         * 显示对象从舞台移除
+         */
+        $onRemoveFromStage():void {
+            super.$onRemoveFromStage();
+
+            if (this.$bitmapData) {
+                Texture.$removeDisplayObject(this, this.$bitmapData);
+            }
+        }
+
+        /**
+         * @private
          */
         $bitmapData:Texture;
 
@@ -124,6 +148,22 @@ module egret {
 
         public set texture(value:Texture) {
             this.$setBitmapData(value);
+        }
+
+        /**
+         * @private
+         */
+        $setBitmapData(value:Texture):void {
+            if (value == this.$bitmapData) {
+                return;
+            }
+            this.$bitmapData = value;
+
+            if (this.$stage) {
+                Texture.$addDisplayObject(this, value);
+            }
+
+            this.$invalidateContentBounds();
         }
 
         /**
@@ -204,17 +244,6 @@ module egret {
                 return;
             }
             this.$fillMode = value;
-        }
-
-        /**
-         * @private
-         */
-        $setBitmapData(value:Texture):void {
-            if (value == this.$bitmapData) {
-                return;
-            }
-            this.$bitmapData = value;
-            this.$invalidateContentBounds();
         }
 
         /**
@@ -450,7 +479,7 @@ module egret {
          */
         static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean, offsetX?:number, offsetY?:number):void {
             var bitmapData = texture;
-            if (!bitmapData._bitmapData["avaliable"]) {
+            if (!bitmapData._bitmapData || !bitmapData._bitmapData["avaliable"]) {
                 return;
             }
             context.imageSmoothingEnabled = smoothing;
