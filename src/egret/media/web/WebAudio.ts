@@ -98,6 +98,14 @@ module egret.web {
                 }
                 WebAudio.isDecoding = false;
                 WebAudio.decodeAudios();
+            }, function () {
+                alert(egret.getString(1034, decodeInfo["url"]));
+
+                if (decodeInfo["callback"]) {
+                    decodeInfo["callback"]();
+                }
+                WebAudio.isDecoding = false;
+                WebAudio.decodeAudios();
             });
         }
 
@@ -281,7 +289,7 @@ module egret.web {
             var self = this;
             this._arrayBuffer = buffer;
 
-            WebAudio.decodeArr.push({"buffer" : buffer, "callback" : callback, "self":self});
+            WebAudio.decodeArr.push({"buffer" : buffer, "callback" : callback, "self":self, "url" : this._url});
             WebAudio.decodeAudios();
         }
 
@@ -366,6 +374,7 @@ module egret.web {
 
         }
 
+        private _url:string;
         /**
          * @private
          * 
@@ -373,6 +382,7 @@ module egret.web {
          * @param callback 
          */
         public $loadByUrl(virtualUrl:string, callback:(code:number)=>void):void {
+            this._url = virtualUrl;
             var request = new XMLHttpRequest();
             request.open("GET", virtualUrl, true);
             request.responseType = "arraybuffer";
