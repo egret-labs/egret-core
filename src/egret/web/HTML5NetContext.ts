@@ -202,7 +202,7 @@ module egret.web {
          */
         private loadTexture(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            if(Html5Capatibility._WebPSupport) {
+            if(Html5Capatibility._WebPSupport && virtualUrl.indexOf("http:") != 0) {
                 if(virtualUrl.indexOf(".png") != -1) {
                     virtualUrl = virtualUrl.replace(".png",".webp");
                 }
