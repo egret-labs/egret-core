@@ -28,6 +28,7 @@ module egret {
     locale_strings[1028] = "调用了未配置的注入规则:{0}。 请先在项目初始化里配置指定的注入规则，再调用对应单例。";
     locale_strings[1029] = "Function.prototype.bind - what is trying to be bound is not callable";
     locale_strings[1033] = "跨域图片不可以使用toDataURL来转换成base64";
+    locale_strings[1034] = "音乐文件解码失败：\"{0}\"，请使用标准的转换工具重新转换下mp3。";
 
     //RES
     locale_strings[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";

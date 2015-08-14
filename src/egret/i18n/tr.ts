@@ -49,7 +49,7 @@ module egret.sys {
      * @param args 替换字符串中{0}标志的参数列表
      * @returns 返回拼接后的字符串
      */
-    export function tr(code:number,...args):string{
+    export function tr(code:number, ...args):string{
         var text = $locale_strings[$language][code];
         if(!text){
             return "{"+code+"}";
