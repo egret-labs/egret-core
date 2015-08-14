@@ -57,7 +57,7 @@ module egret {
             if (type == egret.Sound.EFFECT) {
                 QZAppExternal.playLocalSound(
                     function(data){
-                        alert(JSON.stringify(data));
+                        //alert(JSON.stringify(data));
                     },{
                         bid : -1,
                         url : this._path,

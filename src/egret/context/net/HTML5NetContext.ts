@@ -190,7 +190,7 @@ module egret {
             request.onload = function () {
                 var audio = new WebAudio();
 
-                audio._setArrayBuffer(request.response, function () {
+                audio._setArrayBuffer(request.response, virtualUrl, function () {
                     var sound = new Sound();
                     sound._setAudio(audio);
                     loader.data = sound;

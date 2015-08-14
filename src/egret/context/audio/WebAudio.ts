@@ -66,6 +66,14 @@ module egret {
                 }
                 WebAudio.isDecoding = false;
                 WebAudio.decodeAudios();
+            }, function () {
+                alert(egret.getString(1034, decodeInfo["url"]));
+
+                if (decodeInfo["callback"]) {
+                    decodeInfo["callback"]();
+                }
+                WebAudio.isDecoding = false;
+                WebAudio.decodeAudios();
             });
         }
 
@@ -207,14 +215,16 @@ module egret {
          * @method egret.Sound#load
          */
         public _load():void {
-            this._setArrayBuffer(this._arrayBuffer, null);
+            this._setArrayBuffer(this._arrayBuffer, this._url, null);
         }
 
-        public _setArrayBuffer(buffer:ArrayBuffer, callback:Function) {
+        private _url:string;
+        public _setArrayBuffer(buffer:ArrayBuffer, url:string, callback:Function) {
+            this._url = url;
             var self = this;
             this._arrayBuffer = buffer;
 
-            WebAudio.decodeArr.push({"buffer" : buffer, "callback" : callback, "self":self});
+            WebAudio.decodeArr.push({"buffer" : buffer, "callback" : callback, "self":self, "url":url});
             WebAudio.decodeAudios();
         }
 
