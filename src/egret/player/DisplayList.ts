@@ -63,6 +63,9 @@ module egret.sys {
             if (!displayList) {
                 displayList = new egret.sys.DisplayList(target);
             }
+            else {
+                displayList.root = target;
+            }
             var surface = surfaceFactory.create();
             if (!surface) {
                 return null;
