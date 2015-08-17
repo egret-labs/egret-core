@@ -133,8 +133,7 @@ module egret {
          * @platform Web
          */
         public getPixel32(x:number, y:number):number[] {
-            var result:any = this._bitmapData.getContext("2d").getImageData(x, y, 1, 1);
-            return result.data;
+            throw new Error();
         }
 
         /**

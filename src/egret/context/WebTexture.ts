@@ -105,6 +105,18 @@ module egret.web {
 
     }
 
+    function getPixel32(x:number, y:number):number[] {
+        if (this._bitmapData && this._bitmapData.getContext) {
+            var result:any = this._bitmapData.getContext("2d").getImageData(x - this._offsetX, y - this._offsetY, 1, 1);
+            return result.data;
+        }
+
+        var surface = convertImageToCanvas(this, new egret.Rectangle(x - 1, y - 1, 3, 3));
+        result = surface.getContext("2d").getImageData(1, 1, 1, 1);
+        return result.data;
+    }
+
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
+    Texture.prototype.getPixel32 = getPixel32;
 }
