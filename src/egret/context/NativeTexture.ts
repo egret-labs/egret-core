@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret.web {
+module egret.native {
 
     /**
      * @private
@@ -105,6 +105,12 @@ module egret.web {
         }
     }
 
+    function getPixel32(x:number, y:number):number[] {
+        egret.$error(1035);
+        return null;
+    }
+
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
+    Texture.prototype.getPixel32 = getPixel32;
 }
