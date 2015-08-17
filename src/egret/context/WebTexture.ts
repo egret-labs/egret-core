@@ -69,7 +69,7 @@ module egret.web {
 
         offsetX = Math.round(offsetX * scale);
         offsetY = Math.round(offsetY * scale);
-        RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX + rect.x / scale , texture._bitmapY + rect.y / scale,
+        RenderFilter.getInstance().drawImage(renderContext, thisObject, texture._bitmapX + rect.x / scale, texture._bitmapY + rect.y / scale,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
         return surface;
@@ -94,23 +94,15 @@ module egret.web {
             return;
         }
 
-        if (Html5Capatibility._canUseBlob) {
-            downloadFile(filePath, base64);
-        }
-        else {
-            document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
-        }
-    }
-
-    function downloadFile(fileName, content){
+        var href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
         var aLink = document.createElement('a');
-        var blob = new Blob([content]);
+        aLink['download'] = filePath;
+        aLink.href = href;
+
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent("click", false, false);//initEvent 不加后两个参数在FF下会报错
-        aLink['download'] = fileName;
-        var winURL = window["URL"] || window["webkitURL"];
-        aLink.href = winURL.createObjectURL(blob);
         aLink.dispatchEvent(evt);
+
     }
 
     Texture.prototype.toDataURL = toDataURL;
