@@ -174,8 +174,7 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param buffer 
+         * @param buffer
          */
         private _setArrayBuffer(buffer:ArrayBuffer):void {
             this.write_position = buffer.byteLength;
@@ -192,7 +191,6 @@ module egret {
 
         }
 
-        // getter setter
         public get buffer():ArrayBuffer {
             return this.data.buffer;
         }
@@ -220,6 +218,9 @@ module egret {
             this.write_position = value.byteLength;
         }
 
+        /**
+         * @private
+         */
         public get bufferOffset():number {
             return this.data.byteOffset;
         }

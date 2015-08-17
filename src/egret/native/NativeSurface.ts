@@ -47,7 +47,16 @@ module egret.native {
         public renderContext:egret.sys.RenderContext = new NativeRenderContext();
 
         public toDataURL(type?: string, ...args: any[]): string {
+            if(this.$nativeRenderTexture) {
+                return this.$nativeRenderTexture.toDataURL.apply(this, arguments);
+            }
             return null;
+        }
+
+        public saveToFile(type:string, filePath:string):void {
+            if(this.$nativeRenderTexture) {
+                this.$nativeRenderTexture.saveToFile(type, filePath);
+            }
         }
 
         /**

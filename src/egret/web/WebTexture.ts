@@ -97,25 +97,28 @@ module egret.web {
             return;
         }
 
-        if (Html5Capatibility._canUseBlob) {
-            downloadFile(filePath, base64);
-        }
-        else {
-            document.location.href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
-        }
-    }
-
-    function downloadFile(fileName, content){
+        var href = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
         var aLink = document.createElement('a');
-        var blob = new Blob([content]);
+        aLink['download'] = filePath;
+        aLink.href = href;
+
         var evt = document.createEvent("HTMLEvents");
         evt.initEvent("click", false, false);//initEvent 不加后两个参数在FF下会报错
-        aLink['download'] = fileName;
-        var winURL = window["URL"] || window["webkitURL"];
-        aLink.href = winURL.createObjectURL(blob);
         aLink.dispatchEvent(evt);
+    }
+
+    function getPixel32(x:number, y:number):number[] {
+        if (this._bitmapData && this._bitmapData.getContext) {
+            var result:any = this._bitmapData.getContext("2d").getImageData(x - this._offsetX, y - this._offsetY, 1, 1);
+            return result.data;
+        }
+
+        var surface = convertImageToCanvas(this, new egret.Rectangle(x - 1, y - 1, 3, 3));
+        result = surface.renderContext.getImageData(1, 1, 1, 1);
+        return result.data;
     }
 
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
+    Texture.prototype.getPixel32 = getPixel32;
 }

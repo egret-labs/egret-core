@@ -1289,6 +1289,7 @@ module egret {
         /**
          * @language zh_CN
          * 设置富文本
+         * @see http://edn.egret.com/cn/index.php/article/index/id/146
          */
         public set textFlow(textArr:Array<egret.ITextElement>) {
             this._isFlow = true;
