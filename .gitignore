@@ -3,8 +3,16 @@ bin-debug/
 tools/node_modules
 src/egret/**/*.js
 src/egret/**/**/*.js
-src/extension/**/*.js
-src/extension/**/**/*.js
+src/extension/dragonbones/*.js
+src/extension/dragonbones/**/*.js
+src/extension/gui/*.js
+src/extension/gui/**/*.js
+src/extension/resource/*.js
+src/extension/resource/**/*.js
+src/extension/socket/*.js
+src/extension/socket/**/*.js
+src/extension/version/*.js
+src/extension/version/**/*.js
 
 tools/nodejs/buildTS.local
 *.local
