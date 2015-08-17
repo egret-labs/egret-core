@@ -39,6 +39,7 @@ module egret {
 	 * @extends egret.EventDispatcher
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=160&terms1_id=25&terms2_id=37 构建通信请求
      * @event egret.Event.COMPLETE 加载完成后调度。
+     * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。
      * @includeExample egret/net/URLLoader.ts
 	 */
     export class URLLoader extends EventDispatcher {
