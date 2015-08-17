@@ -2,12 +2,12 @@
  * Created by yjtx on 15-5-27.
  */
 var file = require("../lib/FileUtil");
-function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo) {
-    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, "resource"));
+function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo, resourceName) {
+    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, resourceName));
     copyFilePathList.forEach(function (copyFilePath) {
         var filePath = file.relative(sourceRootPath, copyFilePath);
         if (versionInfo[filePath]) {
-            file.copy(file.join(copyFilePath), file.join(desRootPath, "resource", versionInfo[filePath]["v"].substring(0, 2), versionInfo[filePath]["v"] + "_" + versionInfo[filePath]["s"]));
+            file.copy(file.join(copyFilePath), file.join(desRootPath, resourceName, versionInfo[filePath]["v"].substring(0, 2), versionInfo[filePath]["v"] + "_" + versionInfo[filePath]["s"]));
         }
     });
 }

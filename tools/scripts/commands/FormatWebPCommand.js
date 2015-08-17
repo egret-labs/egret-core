@@ -10,6 +10,7 @@ var FormatWebPCommand = (function () {
     }
     FormatWebPCommand.prototype.initOptions = function (options) {
         this.path = options.path;
+        this.resourcePath = options.resourcePath;
         this.copyTestWebP = options.copyTestWebP;
     };
     FormatWebPCommand.prototype.execute = function (callback) {
@@ -24,7 +25,7 @@ var FormatWebPCommand = (function () {
                 file.copy(file.join(params.getEgretRoot(), "tools", "lib", "webp", "4x4.webp"), file.join(this.path, "4x4.webp"));
             }
             //图片转webp
-            var list = file.getDirectoryAllListing(file.join(this.path, "resource"));
+            var list = file.getDirectoryAllListing(this.resourcePath);
             list = list.filter(function (item) {
                 return item.indexOf(".png") != -1 || item.indexOf(".jpg") != -1;
             });

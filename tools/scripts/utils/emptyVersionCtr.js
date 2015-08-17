@@ -2,8 +2,8 @@
  * Created by yjtx on 15-5-27.
  */
 var file = require("../lib/FileUtil");
-function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo) {
-    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, "resource"));
+function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo, resourceName) {
+    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, resourceName));
     copyFilePathList.forEach(function (copyFilePath) {
         var filePath = file.relative(sourceRootPath, copyFilePath);
         if (versionInfo[filePath]) {

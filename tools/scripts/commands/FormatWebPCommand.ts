@@ -9,9 +9,11 @@ var binPath = require("../../lib/webp/webp-bin").path;
 
 class FormatWebPCommand implements egret.Command {
     private path:string;
+    private resourcePath:string;
     private copyTestWebP:boolean = false;
     initOptions(options:any):void {
         this.path = options.path;
+        this.resourcePath = options.resourcePath;
         this.copyTestWebP = options.copyTestWebP;
     }
 
@@ -27,7 +29,7 @@ class FormatWebPCommand implements egret.Command {
                 file.copy(file.join(params.getEgretRoot(), "tools", "lib", "webp", "4x4.webp"), file.join(this.path, "4x4.webp"));
             }
             //图片转webp
-            var list = file.getDirectoryAllListing(file.join(this.path, "resource"));
+            var list = file.getDirectoryAllListing(this.resourcePath);
             list = list.filter(function (item) {
                 return item.indexOf(".png") != -1 || item.indexOf(".jpg") != -1;
             });

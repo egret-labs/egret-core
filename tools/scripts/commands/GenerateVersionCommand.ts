@@ -34,7 +34,7 @@ class GenerateVersionCommand implements egret.Command {
             file.save(codePath, JSON.stringify({code:oldCode}));
         }
 
-        var list = file.search(file.join(projectPath, "resource"));
+        var list = file.search(file.join(projectPath, config.getResourceName()));
         ignorePathList = ignorePathList.map(function(item) {
             var reg = new RegExp(item);
             return reg;
@@ -100,8 +100,6 @@ class GenerateVersionCommand implements egret.Command {
             file.save(basePath, changeStr);
             file.save(codePath, JSON.stringify({code:newCode}));
             file.save(versionPath, "{}");
-
-            file.copy(file.join(projectPath, "resource/resource.json"), file.join(outputPath, "resource.json"));
             return;
         }
 

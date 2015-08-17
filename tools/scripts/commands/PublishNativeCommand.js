@@ -130,7 +130,7 @@ var PublishNativeCommand = (function () {
                 versionCtr.copyOtherManifest(releasePath, releaseOutputPath, nozip);
                 //获取已经筛选过的资源列表
                 var versionInfo = JSON.parse(file.read(file.join(releasePath, "nativeBase", "all.manifest")));
-                versionCtr.copyFilesWithIgnore(projectPath, releaseOutputPath, versionInfo);
+                versionCtr.copyFilesWithIgnore(projectPath, releaseOutputPath, versionInfo, config.getResourceName());
                 var compressJson = new CompressJsonCMD();
                 compressJson.initOptions({
                     "--source": releaseOutputPath

@@ -3,13 +3,13 @@
  */
 import file = require("../lib/FileUtil");
 
-export function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo) {
-    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, "resource"));
+export function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo, resourceName) {
+    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, resourceName));
 
     copyFilePathList.forEach(function (copyFilePath) {
         var filePath = file.relative(sourceRootPath, copyFilePath);
         if (versionInfo[filePath]) {//不在忽略列表的路径，拷贝过去
-            file.copy(file.join(copyFilePath), file.join(desRootPath, "resource", versionInfo[filePath]["v"].substring(0, 2), versionInfo[filePath]["v"] + "_" + versionInfo[filePath]["s"]));
+            file.copy(file.join(copyFilePath), file.join(desRootPath, resourceName, versionInfo[filePath]["v"].substring(0, 2), versionInfo[filePath]["v"] + "_" + versionInfo[filePath]["s"]));
         }
     });
 }

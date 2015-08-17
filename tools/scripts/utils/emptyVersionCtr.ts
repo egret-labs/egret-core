@@ -3,8 +3,8 @@
  */
 import file = require("../lib/FileUtil");
 
-export function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo) {
-    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, "resource"));
+export function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo, resourceName) {
+    var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, resourceName));
 
     copyFilePathList.forEach(function (copyFilePath) {
         var filePath = file.relative(sourceRootPath, copyFilePath);

@@ -3,6 +3,7 @@
 import globals = require("../Globals");
 import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
+import config = require('../lib/ProjectConfig');
 
 class CopyFilesCommand implements egret.Command {
     outputPath:string;
@@ -35,8 +36,8 @@ class CopyFilesCommand implements egret.Command {
         file.copy(file.join(projectPath, "libs"), file.join(url, "libs"));
 
         //resource
-        if (file.exists(file.join(projectPath, "resource"))) {
-            this.copyFilesWithIgnore(file.join(projectPath, "resource"), file.join(url, "resource"), ignorePathList);
+        if (file.exists(file.join(projectPath, config.getResourceName()))) {
+            this.copyFilesWithIgnore(file.join(projectPath, config.getResourceName()), file.join(url, config.getResourceName()), ignorePathList);
         }
 
         globals.log2(7, (Date.now() - startTime) / 1000);

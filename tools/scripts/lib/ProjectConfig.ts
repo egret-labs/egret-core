@@ -225,6 +225,13 @@ class ProjectConfig {
         var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
         return referenceInfo;
     }
+
+    getResourceName() {
+        if (this.properties["resource"]) {
+            return this.properties["resource"];
+        }
+        return "resource";
+    }
 }
 
 var config = config || new ProjectConfig();

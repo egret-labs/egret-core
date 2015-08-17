@@ -108,7 +108,7 @@ class PublishWebCommand implements egret.Command {
         //拷贝其他资源文件
         if (true) {//拷贝
             task.push((tempCallback)=> {
-                file.copy(file.join(projectPath, "resource"), file.join(releaseOutputPath, "resource"));
+                file.copy(file.join(projectPath, config.getResourceName()), file.join(releaseOutputPath, config.getResourceName()));
 
                 var compressJson = new CompressJsonCMD();
                 compressJson.initOptions({
@@ -117,7 +117,7 @@ class PublishWebCommand implements egret.Command {
                 compressJson.execute();
 
                 var formatWebP = new FormatWebPCMD();
-                formatWebP.initOptions({path:releaseOutputPath, copyTestWebP:true});
+                formatWebP.initOptions({path:releaseOutputPath, copyTestWebP:true, resourcePath:file.join(releaseOutputPath, config.getResourceName())});
                 formatWebP.execute(tempCallback);
             });
         }

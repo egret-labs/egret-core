@@ -195,6 +195,12 @@ var ProjectConfig = (function () {
         var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
         return referenceInfo;
     };
+    ProjectConfig.prototype.getResourceName = function () {
+        if (this.properties["resource"]) {
+            return this.properties["resource"];
+        }
+        return "resource";
+    };
     return ProjectConfig;
 })();
 var config = config || new ProjectConfig();
