@@ -506,6 +506,8 @@ module RES {
                 this.resLoader.loadItem(resItem);
             }
         }
+
+        private _loadedUrlTypes = {};
         /**
          * 通过url获取资源
 		 * @method RES.getResByUrl
@@ -521,6 +523,12 @@ module RES {
             }
             if(!type)
                 type = this.getTypeByUrl(url);
+
+            if (this._loadedUrlTypes[url] != null && this._loadedUrlTypes[url] != type) {
+                egret.$warn(2002);
+            }
+            this._loadedUrlTypes[url] = type;
+
             var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
 
             var name:string = url;
@@ -630,8 +638,18 @@ module RES {
             }
             else{
                 var type:string = this.resConfig.getType(name);
-                if(type=="")
-                    return false;
+                if (type == "") {
+                    type = this._loadedUrlTypes[name];
+
+                    if (type == null || type == "") {
+                        return false;
+                    }
+                    delete this._loadedUrlTypes[name];
+                    var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+                    analyzer.destroyRes(name);
+                    return true;
+                }
+
                 item = this.resConfig.getRawResourceItem(name);
                 item.loaded = false;
                 analyzer = this.getAnalyzerByType(type);

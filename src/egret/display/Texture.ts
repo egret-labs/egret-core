@@ -133,8 +133,7 @@ module egret {
          * @platform Web
          */
         public getPixel32(x:number, y:number):number[] {
-            var result:any = this._bitmapData.getContext("2d").getImageData(x, y, 1, 1);
-            return result.data;
+            throw new Error();
         }
 
         /**
@@ -308,7 +307,16 @@ module egret {
                 callback(0, bitmapData);
                 return;
             }
-            bitmapData.crossOrigin = Texture.crossOrigin;
+
+            if (!Texture.crossOrigin) {
+                if (bitmapData.hasAttribute("crossOrigin")) {//兼容猎豹
+                    bitmapData.removeAttribute("crossOrigin");
+                }
+            }
+            else {
+                bitmapData.setAttribute("crossOrigin", Texture.crossOrigin);
+            }
+
             var winURL = window["URL"] || window["webkitURL"];
             if (Texture._bitmapCallbackMap[url] == null) {//非正在加载中
                 Texture._addToCallbackList(url, callback);

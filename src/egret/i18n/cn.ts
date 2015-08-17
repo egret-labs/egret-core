@@ -38,9 +38,12 @@ module egret {
     egret_string_code[1031] = "setVolume已废弃，请使用this.volume = value代替";
     egret_string_code[1032] = "getVolume已废弃，请使用this.volume代替";
     egret_string_code[1033] = "跨域图片不可以使用toDataURL来转换成base64";
+    egret_string_code[1034] = "音乐文件解码失败：\"{0}\"，请使用标准的转换工具重新转换下mp3。";
+    egret_string_code[1035] = "Native 下暂未实现此功能！";
 
     egret_string_code[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
     egret_string_code[2001] = "RES加载了不存在或空的资源组:\"{0}\"";
+    egret_string_code[2002] = "请不要使用不同的类型方式来加载同一个素材！";
 
     egret_string_code[3000] = "主题配置文件加载失败: {0}";
     egret_string_code[3001] = "找不到主题中所配置的皮肤类名: {0}";

@@ -190,7 +190,7 @@ module egret {
             request.onload = function () {
                 var audio = new WebAudio();
 
-                audio._setArrayBuffer(request.response, function () {
+                audio._setArrayBuffer(request.response, virtualUrl, function () {
                     var sound = new Sound();
                     sound._setAudio(audio);
                     loader.data = sound;
@@ -231,7 +231,7 @@ module egret {
 
         private loadTexture(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            if (Browser.getInstance().webPSupport) {
+            if (Browser.getInstance().webPSupport && virtualUrl.indexOf("http:") != 0) {
                 if (virtualUrl.indexOf(".png") != -1) {
                     virtualUrl = virtualUrl.replace(".png", ".webp");
                 }
