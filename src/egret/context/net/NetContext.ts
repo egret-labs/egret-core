@@ -57,5 +57,14 @@ module egret {
         public getChangeList():Array<any> {
             return [];
         }
+
+        /**
+         * 获取虚拟url
+         * @param url
+         * @returns {string}
+         */
+        public getVirtualUrl(url:string):string {
+            return url;
+        }
     }
 }
