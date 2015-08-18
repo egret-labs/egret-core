@@ -822,6 +822,7 @@ module egret {
         /**
          * 设置富文本
          * @param textArr 富文本数据
+         * @see http://edn.egret.com/cn/index.php/article/index/id/146
          */
         public set textFlow(textArr:Array<egret.ITextElement>) {
             var self = this;
