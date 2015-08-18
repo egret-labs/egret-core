@@ -130,6 +130,35 @@ module egret {
         }
 
         private updateTextHandler(event:Event):void {
+            var values = this._text._TF_Props_;
+            var textValue = this.stageText._getText();
+            var isChanged:boolean = false;
+            if (values._restrictAnd != null) {//内匹配
+                var reg = new RegExp("[" + values._restrictAnd + "]", "g");
+                var result = textValue.match(reg);
+                if (result) {
+                    textValue = result.join("");
+                }
+                else {
+                    textValue = "";
+                }
+                isChanged = true;
+            }
+            if (values._restrictNot != null) {//外匹配
+                reg = new RegExp("[^" + values._restrictNot + "]", "g");
+                result = textValue.match(reg);
+                if (result) {
+                    textValue = result.join("");
+                }
+                else {
+                    textValue = "";
+                }
+                isChanged = true;
+            }
+
+            if (isChanged) {
+                this.stageText._setText(textValue);
+            }
             this.resetText();
 
             //抛出change事件
