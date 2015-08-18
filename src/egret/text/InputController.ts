@@ -172,6 +172,35 @@ module egret {
          * @param event 
          */
         private updateTextHandler(event:Event):void {
+            var values = this._text.$TextField;
+            var textValue = this.stageText.$getText();
+            var isChanged:boolean = false;
+            if (values[sys.TextKeys.restrictAnd] != null) {//内匹配
+                var reg = new RegExp("[" + values[sys.TextKeys.restrictAnd] + "]", "g");
+                var result = textValue.match(reg);
+                if (result) {
+                    textValue = result.join("");
+                }
+                else {
+                    textValue = "";
+                }
+                isChanged = true;
+            }
+            if (values[sys.TextKeys.restrictNot] != null) {//外匹配
+                reg = new RegExp("[^" + values[sys.TextKeys.restrictNot] + "]", "g");
+                result = textValue.match(reg);
+                if (result) {
+                    textValue = result.join("");
+                }
+                else {
+                    textValue = "";
+                }
+                isChanged = true;
+            }
+
+            if (isChanged) {
+                this.stageText.$setText(textValue);
+            }
             this.resetText();
 
             //抛出change事件
