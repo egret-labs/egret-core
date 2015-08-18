@@ -30,14 +30,14 @@
 
 module egret.gui {
 
-	/**
-	 * @class egret.gui.IEditableText
-	 * @interface
-	 * @classdesc
-	 * 可编辑文本控件接口
-	 * @extends egret.gui.IDisplayText
-	 */	
-	export interface IEditableText extends IDisplayText{ 
+    /**
+     * @class egret.gui.IEditableText
+     * @interface
+     * @classdesc
+     * 可编辑文本控件接口
+     * @extends egret.gui.IDisplayText
+     */
+    export interface IEditableText extends IDisplayText {
         /**
          * 文本颜色。
          * @member egret.gui.IEditableText#textColor
@@ -76,12 +76,23 @@ module egret.gui {
         multiline: boolean;
 
         /**
+         * 表示用户可输入到文本字段中的字符集。如果 restrict 属性的值为 null，则可以输入任何字符。
+         * 如果 restrict 属性的值为空字符串，则不能输入任何字符。如果 restrict 属性的值为一串字符，
+         * 则只能在文本字段中输入该字符串中的字符。从左向右扫描该字符串。可以使用连字符 (-) 指定一个范围。
+         * 只限制用户交互；脚本可将任何文本放入文本字段中。此属性不与属性检查器中的“嵌入字体”选项同步。 <p/>
+         * 如果字符串以尖号 (ˆ) 开头，则先接受所有字符，然后从接受字符集中排除字符串中 ˆ 之后的字符。
+         * 如果字符串不以尖号 (ˆ) 开头，则最初不接受任何字符，然后将字符串中的字符包括在接受字符集中。
+         * @member egret.gui.IEditableText#restrict
+         */
+        restrict: string;
+
+        /**
          * 一个布尔值，表示文本字段是否可选。值 true 表示文本可选。selectable 属性控制文本字段是否可选，
          * 而不控制文本字段是否可编辑。动态文本字段即使不可编辑，它也可能是可选的。
          * 如果动态文本字段是不可选的，则用户不能选择其中的文本。 <p/>
          * 如果 selectable 设置为 false，则文本字段中的文本不响应来自鼠标或键盘的选择命令，
          * 并且不能使用“复制”命令复制文本。如果 selectable 设置为 true，则可以使用鼠标或键盘选择文本字段中的文本，
-         * 并且可以使用“复制”命令复制文本。即使文本字段是动态文本字段而不是输入文本字段，您也可以用这种方式选择文本。 
+         * 并且可以使用“复制”命令复制文本。即使文本字段是动态文本字段而不是输入文本字段，您也可以用这种方式选择文本。
          * @member egret.gui.IEditableText#selectable
          */
         selectable: boolean;
@@ -115,7 +126,7 @@ module egret.gui {
          * @param beginIndex {number} 所选内容中第一个字符从零开始的索引值（例如，第一个字符的索引值是 0，第二个字符的索引值是 1，依此类推）。
          * @param endIndex {number} 所选内容中最后一个字符从零开始的索引值。
          */
-        setSelection(beginIndex: number, endIndex: number): void;
+        setSelection(beginIndex:number, endIndex:number): void;
 
         /**
          * 选中所有文本。
@@ -136,5 +147,5 @@ module egret.gui {
         heightInLines: number;
 
         setFocus(): void;
-	}
+    }
 }
