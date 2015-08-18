@@ -103,7 +103,7 @@ module egret {
          * audio音频对象
          * @member {any} egret.Sound#audio
          */
-        private audio:Audio = null;
+        private audio:IAudio = null;
 
         /**
          * @language en_US
@@ -429,7 +429,7 @@ module egret {
          * 
          * @param value 
          */
-        public $setAudio(value:Audio):void {
+        public $setAudio(value:IAudio):void {
             this.audio = value;
         }
 

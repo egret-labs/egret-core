@@ -43,7 +43,7 @@ module egret.web {
     /**
      * @private
      */
-    export class QQAudio implements Audio {
+    export class QQAudio implements IAudio {
 
         /**
          * @private

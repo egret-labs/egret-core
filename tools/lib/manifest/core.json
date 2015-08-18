@@ -120,7 +120,7 @@
         "egret/filters/BlurFilter.ts",
         "egret/filters/ColorMatrixFilter.ts",
         "egret/filters/DropShadowFilter.ts",
-        "egret/media/Audio.ts",
+        "egret/media/IAudio.ts",
         "egret/media/Sound.ts",
 
         "egret/utils/PromiseObject.ts"

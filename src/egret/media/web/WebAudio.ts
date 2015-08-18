@@ -31,7 +31,7 @@ module egret.web {
     /**
      * @private
      */
-    export class WebAudio implements Audio {
+    export class WebAudio implements IAudio {
         /**
          * @private
          */

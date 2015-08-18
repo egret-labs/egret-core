@@ -35,7 +35,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export interface Audio {
+    export interface IAudio {
         /**
          * @private
          * 
@@ -132,5 +132,5 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export var Audio:{new():Audio};
+    export var IAudio:{new():IAudio};
 }

@@ -30,7 +30,7 @@ module egret.native {
     /**
      * @private
      */
-    export class NativeAudio implements Audio {
+    export class NativeAudio implements IAudio {
         /**
          * audio音频对象
          * @member {any} egret.Sound#audio

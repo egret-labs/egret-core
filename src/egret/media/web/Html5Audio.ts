@@ -30,7 +30,7 @@ module egret.web {
     /**
      * @private
      */
-    export class Html5Audio implements Audio {
+    export class Html5Audio implements IAudio {
         /**
          * @private
          * audio音频对象
@@ -304,7 +304,7 @@ module egret.web {
          * @param callback 
          */
         public $loadByUrl(virtualUrl:string, callback:(code:number)=>void):void {
-            var audio = new window["Audio"](virtualUrl);
+            var audio = new Audio(virtualUrl);
             audio["$timeoutId"] = egret.setTimeout(soundPreloadCanplayHandler, this, 100);
             audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
             audio.addEventListener("error", soundPreloadErrorHandler, false);

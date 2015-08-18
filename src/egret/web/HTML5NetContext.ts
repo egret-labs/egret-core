@@ -146,7 +146,7 @@ module egret.web {
          */
         private loadSound(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            var audio = new egret.Audio();
+            var audio = new egret.IAudio();
             audio.$loadByUrl(virtualUrl, function (code:number) {
                 if (code != 0) {
                     IOErrorEvent.dispatchIOErrorEvent(loader);
