@@ -182,9 +182,18 @@ class ProjectConfig {
 
     getAllModuleNames() {
         var names = [];
-        for (var key in this.modulesConfig) {
-            names.push(key);
+
+        for (var key in this.properties["modules"]) {
+            names.push(this.properties["modules"][key]["name"]);
+            if (this.properties["modules"][key]["name"] == "core") {
+                names.push("html5");
+                names.push("native");
+            }
         }
+
+        //for (var key in this.modulesConfig) {
+        //    names.push(key);
+        //}
         return names;
     }
 
