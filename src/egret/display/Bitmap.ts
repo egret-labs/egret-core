@@ -346,6 +346,7 @@ module egret {
             }
             values[Keys.explicitScaleX] = value;
 
+            this.$invalidateContentBounds();
             return super.$setScaleX(1);
         }
 
@@ -367,6 +368,7 @@ module egret {
             }
             values[Keys.explicitScaleY] = value;
 
+            this.$invalidateContentBounds();
             return super.$setScaleY(1);
         }
 
