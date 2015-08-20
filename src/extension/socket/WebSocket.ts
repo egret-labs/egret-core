@@ -32,7 +32,9 @@ module egret {
      * The egret.WebSocket class enables code to establish a TCP socket connection, for sending and receiving character string or binary data.
      * To use the methods of the egret.WebSocket class, first use the constructor function new egret.WebSocket to create an egret.WebSocket object.
      * The socket transmits and receives data in asynchronous mode.
-     * @see http://docs.egret-labs.org/jkdoc/manual-net-websocket.html WebSocket
+     * @event egret.Event.CONNECT Successfully connect to the server。
+     * @event egret.ProgressEvent.SOCKET_DATA Receiving server data。
+     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
@@ -42,7 +44,9 @@ module egret {
      * egret.WebSocket 类启用代码以建立传输控制协议 (TCP) 套接字连接，用于发送和接收字符串或二进制数据。
      * 要使用 egret.WebSocket 类的方法，请先使用构造函数 new egret.WebSocket 创建一个 egret.WebSocket 对象。
      * 套接字以异步方式传输和接收数据。
-     * @see http://docs.egret-labs.org/jkdoc/manual-net-websocket.html WebSocket
+     * @event egret.Event.CONNECT 连接服务器成功。
+     * @event egret.ProgressEvent.SOCKET_DATA 接收服务器数据。
+     * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
