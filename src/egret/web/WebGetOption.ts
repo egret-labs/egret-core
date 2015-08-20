@@ -32,7 +32,7 @@ module egret.web {
      * @private
      */
     export function getOption(key:string):string {
-        if (window.hasOwnProperty("location")) {
+        if (window.location) {
             var search = location.search;
             if (search == "") {
                 return "";
