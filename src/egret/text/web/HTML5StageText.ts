@@ -242,9 +242,12 @@ module egret.web {
          */
         public _onInput():void {
             var self = this;
-            self.textValue = self.inputElement.value;
 
-            egret.Event.dispatchEvent(self, "updateText", false);
+            if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                self.textValue = self.inputElement.value;
+
+                egret.Event.dispatchEvent(self, "updateText", false);
+            }
         }
 
         private setAreaHeight() {
