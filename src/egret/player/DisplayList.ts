@@ -30,7 +30,7 @@
 module egret.sys {
 
     var displayListPool:DisplayList[] = [];
-    var blendModes = ["source-over", "lighter", "destination-out", "destination-in"];
+    var blendModes = ["source-over", "lighter", "destination-out"];
     var defaultCompositeOp = "source-over";
 
     /**
@@ -521,7 +521,6 @@ module egret.sys {
             displayContext.begin();
             if (scrollRect) {
                 var m = displayMatrix;
-                displayContext.save();
                 displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                 displayContext.beginPath();
                 displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
@@ -560,9 +559,6 @@ module egret.sys {
                 surfaceFactory.release(maskContext.surface);
             }
 
-            if(scrollRect) {
-                displayContext.restore();
-            }
 
             //绘制结果到屏幕
             if (drawCalls > 0) {
@@ -703,7 +699,7 @@ module egret.sys {
                 oldSurface.width = bounds.width * scaleX;
                 oldSurface.height = bounds.height * scaleY;
             }
-            else if (bounds.width !== oldSurface.width || bounds.height !== oldSurface.height) {
+            else {
                 var newContext = sys.sharedRenderContext;
                 var newSurface = newContext.surface;
                 sys.sharedRenderContext = oldContext;
