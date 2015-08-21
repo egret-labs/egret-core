@@ -304,12 +304,7 @@ module egret {
          * @platform Web,Native
          */
         public dispose():void {
-            if (this._bitmapData) {
-                Texture.$dispose(this);
-
-                //todo
-                egret.GameImageLoader.disposeBitmapData(this._bitmapData);
-            }
+            throw new Error();
         }
 
         private static _displayList:Object = {};

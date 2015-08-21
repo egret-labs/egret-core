@@ -42,7 +42,7 @@ module egret.native {
         var w = texture.$getTextureWidth();
         var h = texture.$getTextureHeight();
         if (rect == null) {
-            rect =  egret.$TempRectangle;
+            rect = egret.$TempRectangle;
             rect.x = 0;
             rect.y = 0;
             rect.width = w;
@@ -109,6 +109,12 @@ module egret.native {
     function getPixel32(x:number, y:number):number[] {
         egret.$error(1035);
         return null;
+    }
+
+    function dispose():void {
+        if (this._bitmapData) {
+            Texture.$dispose(this);
+        }
     }
 
     Texture.prototype.toDataURL = toDataURL;

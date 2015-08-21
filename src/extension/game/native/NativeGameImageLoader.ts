@@ -79,16 +79,7 @@ module egret.native {
             }
         }
 
-        /**
-         * @private
-         *
-         * @param bitmapData
-         */
-        public static disposeBitmapData(bitmapData:any):void {
-
-        }
     }
 
     GameImageLoader = NativeGameImageLoader;
-    GameImageLoader.disposeBitmapData = NativeGameImageLoader.disposeBitmapData;
 }

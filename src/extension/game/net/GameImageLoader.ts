@@ -78,6 +78,5 @@ module egret {
      */
     export var GameImageLoader:{
         new():GameImageLoader;
-        disposeBitmapData(bitmapData:any):void;
     };
 }
