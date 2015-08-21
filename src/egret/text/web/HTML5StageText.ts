@@ -236,6 +236,12 @@ module egret.web {
             }
         }
 
+        $onBlur():void {
+            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
+                egret.Event.dispatchEvent(this, "updateText", false);
+            }
+        }
+
         /**
          * @private
          * 
@@ -243,10 +249,20 @@ module egret.web {
         public _onInput():void {
             var self = this;
 
-            if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                self.textValue = self.inputElement.value;
+            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
+                var values = this.$textfield.$TextField;
+                if (values[sys.TextKeys.restrictAnd] == null && values[sys.TextKeys.restrictNot] == null) {
+                    self.textValue = self.inputElement.value;
 
-                egret.Event.dispatchEvent(self, "updateText", false);
+                    egret.Event.dispatchEvent(self, "updateText", false);
+                }
+            }
+            else {
+                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                    self.textValue = self.inputElement.value;
+
+                    egret.Event.dispatchEvent(self, "updateText", false);
+                }
             }
         }
 

@@ -86,6 +86,11 @@ module egret {
          */
         $removeFromStage():void;
 
+        /**
+         * @private
+         *
+         */
+        $onBlur():void;
     }
 
     /**

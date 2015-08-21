@@ -186,6 +186,13 @@ module egret {
 
         /**
          * @private
+         *
+         */
+        $onBlur():void {
+        }
+
+        /**
+         * @private
          * 
          */
         private resetText():void {
