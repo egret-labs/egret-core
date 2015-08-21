@@ -108,7 +108,8 @@ module egret.sys {
             }
             this.isPlaying = true;
             if (!this.root) {
-                this.loadVersion(this.initialize.bind(this));
+                //this.loadVersion(this.initialize.bind(this));
+                this.initialize();
             }
             $ticker.$addPlayer(this);
         }
