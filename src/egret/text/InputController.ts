@@ -100,6 +100,9 @@ module egret {
             this._isFocus = false;
             this._text._isTyping = false;
 
+            //失去焦点后调用
+            this.stageText.$onBlur();
+
             this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT, true));
         }
 
