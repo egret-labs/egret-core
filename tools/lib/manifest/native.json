@@ -7,6 +7,7 @@
         "egret/native/NativeContext.d.ts",
 
         "egret/text/native/NativeStageText.ts",
+        "egret/native/NativeDisplayList.ts",
 
         "egret/localStorage/native/NativeLocalStorage.ts",
         "egret/external/native/NativeExternalInterface.ts",

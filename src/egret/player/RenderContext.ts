@@ -40,10 +40,6 @@ module egret.sys {
          */
         surface:Surface;
 
-        begin():void;
-
-        end():void;
-
         /**
          * @private
          * 设置新图像如何绘制到已有的图像上的规制

@@ -286,7 +286,7 @@ module egret {
                 }
                 tweens.push(tween);
                 if (!Tween._inited) {
-                    sys.$ticker.$startTick(Tween.tick, null);
+                    egret.Ticker.getInstance().register(Tween.tick, null);
                     Tween._inited = true;
                 }
             } else {

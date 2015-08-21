@@ -140,6 +140,9 @@ module egret {
             this._text._isTyping = false;
             this._text.$invalidateContentBounds();
 
+            //失去焦点后调用
+            this.stageText.$onBlur();
+
             this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT, true));
         }
 
@@ -198,7 +201,7 @@ module egret {
                 isChanged = true;
             }
 
-            if (isChanged) {
+            if (isChanged && this.stageText.$getText() != textValue) {
                 this.stageText.$setText(textValue);
             }
             this.resetText();

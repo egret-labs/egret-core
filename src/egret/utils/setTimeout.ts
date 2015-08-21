@@ -33,6 +33,7 @@ module egret {
     var setTimeoutIndex:number = 0;
 
     var setTimeoutCount:number = 0;
+    var lastTime:number = 0;
     /**
      * @language en_US
      * Run the designated function in specified delay (in milliseconds).
@@ -62,6 +63,7 @@ module egret {
 
         setTimeoutCount++;
         if (setTimeoutCount == 1 && sys.$ticker) {
+            lastTime = egret.getTimer();
             sys.$ticker.$startTick(timeoutUpdate, null);
         }
 
@@ -101,7 +103,10 @@ module egret {
      * 
      * @param dt 
      */
-    function timeoutUpdate(dt:number):void {
+    function timeoutUpdate(timeStamp:number):void {
+        var dt:number = timeStamp - lastTime;
+        lastTime = timeStamp;
+
         for (var key in setTimeoutCache) {
             var data = setTimeoutCache[key];
             data.delay -= dt;

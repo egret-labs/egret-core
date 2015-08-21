@@ -3,6 +3,7 @@ module egret {
     var setIntervalIndex:number = 0;
 
     var setIntervalCount:number = 0;
+    var lastTime:number = 0;
 
     /**
      * @language en_US
@@ -33,6 +34,7 @@ module egret {
 
         setIntervalCount++;
         if (setIntervalCount == 1) {
+            lastTime = egret.getTimer();
             sys.$ticker.$startTick(intervalUpdate, null);
         }
         setIntervalIndex++;
@@ -72,7 +74,10 @@ module egret {
      * 
      * @param dt 
      */
-    function intervalUpdate(dt:number):void {
+    function intervalUpdate(timeStamp:number):void {
+        var dt:number = timeStamp - lastTime;
+        lastTime = timeStamp;
+
         for (var key in setIntervalCache) {
             var data = setIntervalCache[key];
             data.delay -= dt;
