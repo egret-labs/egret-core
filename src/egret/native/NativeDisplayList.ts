@@ -37,7 +37,7 @@ module egret.sys {
      * @private
      * 显示列表
      */
-    export class DisplayList extends HashObject implements Renderable {
+    export class NativeDisplayList extends HashObject implements Renderable {
 
         /**
          * @private
@@ -190,7 +190,9 @@ module egret.sys {
         $render(context:RenderContext):void {
             var data = this.surface;
             if (data) {
+                (<native.NativeRenderContext>context).begin();
                 context.drawImage(data, this.offsetX, this.offsetY, data.width / this.$pixelRatio, data.height / this.$pixelRatio);
+                (<native.NativeRenderContext>context).end();
             }
         }
 
@@ -311,6 +313,7 @@ module egret.sys {
                 this.changeSurfaceSize();
             }
             var context = this.renderContext;
+            (<native.NativeRenderContext>context).begin();
             //绘制脏矩形区域
             context.save();
             context.beginPath();
@@ -329,10 +332,13 @@ module egret.sys {
             if(m){
                 context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            (<native.NativeRenderContext>context).end();
             //绘制显示对象
             var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
             //清除脏矩形区域
+            (<native.NativeRenderContext>context).begin();
             context.restore();
+            (<native.NativeRenderContext>context).end();
             this.dirtyRegion.clear();
             this.needRedraw = false;
             this.$ratioChanged = false;
@@ -375,6 +381,7 @@ module egret.sys {
                 }
                 if (node.$isDirty) {
                     drawCalls++;
+                    (<native.NativeRenderContext>context).begin();
                     context.globalAlpha = globalAlpha;
                     var m = node.$renderMatrix;
                     if (rootMatrix) {
@@ -386,6 +393,7 @@ module egret.sys {
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         node.$render(context);
                     }
+                    (<native.NativeRenderContext>context).end();
                     node.$isDirty = false;
                 }
             }
@@ -510,6 +518,7 @@ module egret.sys {
                 Matrix.release(displayMatrix);
                 return drawCalls;
             }
+            (<native.NativeRenderContext>displayContext).begin();
             if (scrollRect) {
                 var m = displayMatrix;
                 displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
@@ -518,6 +527,7 @@ module egret.sys {
                 displayContext.clip();
             }
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+            (<native.NativeRenderContext>displayContext).end();
             var rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
             drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, rootM, displayObject.$displayList, region);
             Matrix.release(rootM);
@@ -531,16 +541,20 @@ module egret.sys {
                     Matrix.release(displayMatrix);
                     return drawCalls;
                 }
+                (<native.NativeRenderContext>maskContext).begin();
                 maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                (<native.NativeRenderContext>maskContext).end();
                 rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                 var calls = this.drawDisplayObject(mask, maskContext, dirtyList, rootM, mask.$displayList, region);
                 Matrix.release(rootM);
                 if (calls > 0) {
                     drawCalls += calls;
+                    (<native.NativeRenderContext>displayContext).begin();
                     displayContext.globalCompositeOperation = "destination-in";
                     displayContext.setTransform(1, 0, 0, 1, 0, 0);
                     displayContext.globalAlpha = 1;
                     displayContext.drawImage(maskContext.surface, 0, 0);
+                    (<native.NativeRenderContext>displayContext).end();
                 }
                 surfaceFactory.release(maskContext.surface);
             }
@@ -549,6 +563,7 @@ module egret.sys {
             //绘制结果到屏幕
             if (drawCalls > 0) {
                 drawCalls++;
+                (<native.NativeRenderContext>context).begin();
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
@@ -566,6 +581,7 @@ module egret.sys {
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
+                (<native.NativeRenderContext>context).end();
             }
             surfaceFactory.release(displayContext.surface);
             Region.release(region);
@@ -612,6 +628,7 @@ module egret.sys {
             }
 
             //绘制显示对象自身
+            (<native.NativeRenderContext>context).begin();
             context.save();
             if (rootMatrix) {
                 context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx * this.$pixelRatio, rootMatrix.ty * this.$pixelRatio);
@@ -626,8 +643,11 @@ module egret.sys {
             if (rootMatrix) {
                 context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx * this.$pixelRatio, rootMatrix.ty * this.$pixelRatio);
             }
+            (<native.NativeRenderContext>context).end();
             drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayObject.$displayList, region);
+            (<native.NativeRenderContext>context).begin();
             context.restore();
+            (<native.NativeRenderContext>context).end();
 
             Region.release(region);
             Matrix.release(m);
@@ -688,14 +708,18 @@ module egret.sys {
                 newSurface.width = bounds.width * scaleX;
                 newSurface.height = bounds.height * scaleY;
                 if (oldSurface.width !== 0 && oldSurface.height !== 0) {
+                    (<native.NativeRenderContext>newContext).begin();
                     newContext.setTransform(1, 0, 0, 1, 0, 0);
                     newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
+                    (<native.NativeRenderContext>newContext).end();
                 }
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             }
             this.rootMatrix.setTo(1, 0, 0, 1, - this.offsetX, - this.offsetY);
+            (<native.NativeRenderContext>this.renderContext).begin();
             this.renderContext.setTransform(1, 0, 0, 1, - bounds.x, - bounds.y);
+            (<native.NativeRenderContext>this.renderContext).end();
         }
 
         public setDevicePixelRatio(ratio: number = 1) {
@@ -709,4 +733,6 @@ module egret.sys {
             this.root.$invalidate(true);
         }
     }
+
+    DisplayList = NativeDisplayList;
 }

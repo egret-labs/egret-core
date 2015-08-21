@@ -37,15 +37,44 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public constructor(){
+        public constructor() {
             super();
             if (Ticker.instance != null) {
                 if (DEBUG) {
                     egret.$error(1033);
                 }
             }
+
+            sys.$ticker.$startTick(this.update, this);
         }
 
+        private _timeScale:number = 1;
+        private _paused:boolean = false;
+
+        private _callIndex:number = -1;
+        private _callList:Array<any>;
+        private _lastTime:number = 0;
+        private update(timeStamp:number):void {
+            var advancedTime:number = timeStamp - this._lastTime;
+            this._lastTime = timeStamp;
+
+            if (this._paused){
+                return;
+            }
+            var frameTime:number = advancedTime * this._timeScale;
+
+            this._callList = this.callBackList.concat();
+            this._callIndex = 0;
+            for (; this._callIndex < this._callList.length; this._callIndex++) {
+                var eventBin:any = this._callList[this._callIndex];
+                eventBin.listener.call(eventBin.thisObject, frameTime);
+            }
+
+            this._callIndex = -1;
+            this._callList = null;
+        }
+
+        private callBackList:Array<any> = [];
         /**
          * 注册帧回调事件，同一函数的重复监听会被忽略。
          * @method egret.Ticker#register
@@ -55,8 +84,8 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public register(callBack:Function, thisObject:any, priority:number = 0):void {
-            sys.$ticker.$startTick(callBack, thisObject);
+        public register(listener:Function, thisObject:any, priority:number = 0):void {
+            this.$insertEventBin(this.callBackList, "", listener, thisObject, false, priority, false);
         }
 
         /**
@@ -67,8 +96,44 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public unregister(callBack:Function, thisObject:any):void {
-            sys.$ticker.$stopTick(callBack, thisObject);
+        public unregister(listener:Function, thisObject:any):void {
+            this.$removeEventBin(this.callBackList, listener, thisObject);
+        }
+
+        /**
+         * @deprecated
+         * @param timeScale {number}
+         * @private
+         */
+        public setTimeScale(timeScale:number):void {
+            this._timeScale = timeScale;
+        }
+
+        /**
+         * @deprecated
+         * @method egret.Ticker#getTimeScale
+         * @private
+         */
+        public getTimeScale():number {
+            return this._timeScale;
+        }
+
+        /**
+         * 暂停
+         * @deprecated
+         * @method egret.Ticker#pause
+         */
+        public pause():void {
+            this._paused = true;
+        }
+
+        /**
+         * 继续
+         * @deprecated
+         * @method egret.Ticker#resume
+         */
+        public resume():void {
+            this._paused = false;
         }
 
         /**
@@ -89,268 +154,5 @@ module egret {
             return Ticker.instance;
         }
     }
-}
 
-module egret.sys {
-
-    /**
-     * @private
-     * 心跳计时器单例
-     */
-    export var $ticker:SystemTicker;
-    /**
-     * @private
-     * 是否要广播Event.RENDER事件的标志。
-     */
-    export var $invalidateRenderFlag:boolean = false;
-    /**
-     * @private
-     * 需要立即刷新屏幕的标志
-     */
-    export var $requestRenderingFlag:boolean = false;
-
-    /**
-     * @private
-     * Egret心跳计时器
-     */
-    export class SystemTicker {
-
-        /**
-         * @private
-         */
-        private lastTime:number = 0;
-        /**
-         * @private
-         */
-        public constructor() {
-            if (DEBUG && $ticker) {
-                $error(1008, "egret.sys.SystemTicker");
-            }
-            egret.$START_TIME = Date.now();
-            this.lastTime = 0;
-        }
-
-        /**
-         * @private
-         */
-        private playerList:Player[] = [];
-
-        /**
-         * @private
-         * 注册一个播放器实例并运行
-         */
-        $addPlayer(player:Player):void {
-            if (this.playerList.indexOf(player) != -1) {
-                return;
-            }
-            if (DEBUG) {
-                egret_stages.push(player.stage);
-            }
-            this.playerList = this.playerList.concat();
-            this.playerList.push(player);
-        }
-
-        /**
-         * @private
-         * 停止一个播放器实例的运行。
-         */
-        $removePlayer(player:Player):void {
-            var index = this.playerList.indexOf(player);
-            if (index !== -1) {
-                if (DEBUG) {
-                    var i = egret_stages.indexOf(player.stage);
-                    egret_stages.splice(i, 1);
-                }
-                this.playerList = this.playerList.concat();
-                this.playerList.splice(index, 1);
-            }
-        }
-
-        /**
-         * @private
-         */
-        private callBackList:Function[] = [];
-        /**
-         * @private
-         */
-        private thisObjectList:any[] = [];
-
-        /**
-         * @private
-         */
-        $startTick(callBack:Function, thisObject:any):void {
-            var index = this.getTickIndex(callBack, thisObject);
-            if (index != -1) {
-                return;
-            }
-            this.concatTick();
-            this.callBackList.push(callBack);
-            this.thisObjectList.push(thisObject);
-        }
-
-        /**
-         * @private
-         */
-        $stopTick(callBack:Function, thisObject:any):void {
-            var index = this.getTickIndex(callBack, thisObject);
-            if (index == -1) {
-                return;
-            }
-            this.concatTick();
-            this.callBackList.splice(index, 1);
-            this.thisObjectList.splice(index, 1);
-        }
-
-        /**
-         * @private
-         */
-        private getTickIndex(callBack:Function, thisObject:any):number {
-            var callBackList = this.callBackList;
-            var thisObjectList = this.thisObjectList;
-            for (var i = callBackList.length - 1; i >= 0; i--) {
-                if (callBackList[i] == callBack &&
-                    thisObjectList[i] == thisObject) {//这里不能用===，因为有可能传入undefined和null.
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        /**
-         * @private
-         * 
-         */
-        private concatTick():void {
-            this.callBackList = this.callBackList.concat();
-            this.thisObjectList = this.thisObjectList.concat();
-        }
-
-        /**
-         * @private
-         * 全局帧率
-         */
-        $frameRate:number = 30;
-
-        /**
-         * @private
-         */
-        private frameInterval:number = 2000;
-
-        /**
-         * @private
-         * 设置全局帧率
-         */
-        $setFrameRate(value:number):void {
-            //value = +value || 0;
-            if (value <= 0) {
-                return;
-            }
-            if (this.$frameRate == value) {
-                return;
-            }
-            this.$frameRate = value;
-            if (value > 60) {
-                value = 60;
-            }
-            //这里用60*1000来避免浮点数计算不准确的问题。
-            this.lastCount = this.frameInterval = Math.round(60000 / value);
-        }
-
-        /**
-         * @private
-         */
-        private lastCount:number = 2000;
-
-        /**
-         * @private
-         * 执行一次刷新
-         */
-        public update():void {
-            var callBackList = this.callBackList;
-            var thisObjectList = this.thisObjectList;
-            var length = callBackList.length;
-            var requestRenderingFlag = $requestRenderingFlag;
-            var timeStamp = egret.getTimer();
-            var advancedTime:number = timeStamp - this.lastTime;
-            this.lastTime = timeStamp;
-
-            for (var i = 0; i < length; i++) {
-                if (!callBackList[i].call(thisObjectList[i], advancedTime)) {
-                    requestRenderingFlag = true;
-                }
-
-            }
-            this.lastCount -= 1000;
-            if (this.lastCount > 0) {
-                if (requestRenderingFlag) {
-                    this.render(false);
-                }
-                return;
-            }
-            this.lastCount += this.frameInterval;
-            this.render(true);
-            this.broadcastEnterFrame();
-        }
-
-        /**
-         * @private
-         * 执行一次屏幕渲染
-         */
-        private render(triggerByFrame:boolean):void {
-            var playerList = this.playerList;
-            var length = playerList.length;
-            if (length == 0) {
-                return;
-            }
-            if ($invalidateRenderFlag) {
-                this.broadcastRender();
-                $invalidateRenderFlag = false;
-            }
-            for (var i = 0; i < length; i++) {
-                playerList[i].$render(triggerByFrame);
-            }
-            $requestRenderingFlag = false;
-        }
-
-        /**
-         * @private
-         * 广播EnterFrame事件。
-         */
-        private broadcastEnterFrame():void {
-            var list:Array<any> = DisplayObject.$enterFrameCallBackList;
-            var length = list.length;
-            if (length == 0) {
-                return;
-            }
-            list = list.concat();
-            for (var i = 0; i < length; i++) {
-                list[i].dispatchEventWith(Event.ENTER_FRAME);
-            }
-
-            list = Recycler._callBackList;
-            for (i = list.length - 1; i >= 0; i--) {
-                list[i].$checkFrame();
-            }
-        }
-
-        /**
-         * @private
-         * 广播Render事件。
-         */
-        private broadcastRender():void {
-            var list = DisplayObject.$renderCallBackList;
-            var length = list.length;
-            if (length == 0) {
-                return;
-            }
-            list = list.concat();
-            for (var i = 0; i < length; i++) {
-                list[i].dispatchEventWith(Event.RENDER);
-            }
-        }
-    }
-}
-
-if (DEBUG) {
-    var egret_stages:egret.Stage[] = [];
 }
