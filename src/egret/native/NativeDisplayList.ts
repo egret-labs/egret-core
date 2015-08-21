@@ -734,5 +734,5 @@ module egret.sys {
         }
     }
 
-    DisplayList = NativeDisplayList;
+    //egret.sys["DisplayList"] = egret.sys["NativeDisplayList"];
 }

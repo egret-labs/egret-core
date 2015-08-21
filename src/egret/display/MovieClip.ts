@@ -402,8 +402,12 @@ module egret {
          * @param advancedTime
          * @returns
          */
-        private advanceTime(advancedTime:number):boolean {
+        private advanceTime(timeStamp:number):boolean {
             var self = this;
+
+            var advancedTime:number = timeStamp - self.lastTime;
+            self.lastTime = timeStamp;
+
             var frameIntervalTime:number = self.frameIntervalTime;
             var currentTime = self.passedTime + advancedTime;
             self.passedTime = currentTime % frameIntervalTime;
@@ -618,8 +622,8 @@ module egret {
                 sys.$ticker.$stopTick(this.advanceTime, this);
             } else {
                 this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
-                sys.$ticker.$startTick(this.advanceTime, this);
                 this.lastTime = egret.getTimer();
+                sys.$ticker.$startTick(this.advanceTime, this);
             }
         }
     }

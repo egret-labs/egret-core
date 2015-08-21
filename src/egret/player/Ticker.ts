@@ -29,11 +29,13 @@
 
 module egret {
     /**
+     * @deprecated
      * @version Egret 2.0
      * @platform Web,Native
      */
     export class Ticker extends EventDispatcher {
         /**
+         * @deprecated
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -83,6 +85,7 @@ module egret {
          * @param priority {number} 事件优先级，开发者请勿传递 Number.NEGATIVE_INFINITY 和 Number.POSITIVE_INFINITY
          * @version Egret 2.0
          * @platform Web,Native
+         * @deprecated
          */
         public register(listener:Function, thisObject:any, priority:number = 0):void {
             this.$insertEventBin(this.callBackList, "", listener, thisObject, false, priority, false);
@@ -95,6 +98,7 @@ module egret {
          * @param thisObject {any} 侦听函数的this对象
          * @version Egret 2.0
          * @platform Web,Native
+         * @deprecated
          */
         public unregister(listener:Function, thisObject:any):void {
             this.$removeEventBin(this.callBackList, listener, thisObject);
@@ -146,6 +150,7 @@ module egret {
          * @returns {Ticker}
          * @version Egret 2.0
          * @platform Web,Native
+         * @deprecated
          */
         public static getInstance():egret.Ticker {
             if (Ticker.instance == null) {
