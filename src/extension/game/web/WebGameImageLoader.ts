@@ -33,7 +33,7 @@ module egret.web {
      * @private
      * ImageLoader 类可用于加载图像（JPG、PNG 或 GIF）文件。使用 load() 方法来启动加载。被加载的图像对象数据将存储在 ImageLoader.data 属性上 。
      */
-    export class WebImageLoader extends BaseImageLoader {
+    export class WebGameImageLoader extends BaseImageLoader {
 
         /**
          * @private
@@ -44,64 +44,28 @@ module egret.web {
         public load(url:string, callback:(code:number, bitmapData:any)=>void):void {
             var self = this;
             var bitmapData:HTMLImageElement = BaseImageLoader._bitmapDataFactory[url];
-            if (!bitmapData) {
-                bitmapData = document.createElement("img");
-                bitmapData.setAttribute("bitmapSrc", url);
-                BaseImageLoader._bitmapDataFactory[url] = bitmapData;
-            }
-            if (bitmapData["avaliable"]) {//已经加载完成
-                callback(0, bitmapData);
+
+            if (bitmapData && bitmapData["avaliable"]) {//已经加载完成
+                window.setTimeout(function() {
+                    callback(0, bitmapData)
+                }, 0);
                 return;
             }
 
-            if (!BaseImageLoader.crossOrigin) {
-                if (bitmapData.hasAttribute("crossOrigin")) {//兼容猎豹
-                    bitmapData.removeAttribute("crossOrigin");
-                }
-            }
-            else {
-                bitmapData.setAttribute("crossOrigin", BaseImageLoader.crossOrigin);
-            }
-
-            var winURL = window["URL"] || window["webkitURL"];
             if (BaseImageLoader._bitmapCallbackMap[url] == null) {//非正在加载中
                 this._addToCallbackList(url, callback);
 
-                if (url.indexOf("data:") != 0 && url.indexOf("http:") != 0 && url.indexOf("https:") != 0 && Html5Capatibility._canUseBlob) {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("get", url, true);
-                    xhr.responseType = "blob";
-                    xhr.onerror = function () {
-                        self._onError(url, bitmapData);
-                    };
-                    xhr.onload = function () {
-                        if (this.status == 200) {
-                            var blob = this.response;
-
-                            bitmapData.onload = function () {
-                                winURL.revokeObjectURL(bitmapData.src); // 清除释放
-                                self._onLoad(url, bitmapData);
-                            };
-                            bitmapData.onerror = function () {
-                                self._onError(url, bitmapData);
-                            };
-                            bitmapData.src = winURL.createObjectURL(blob);
-                        }
-                        else {
-                            self._onError(url, bitmapData);
-                        }
-                    };
-                    xhr.send();
-                }
-                else {
-                    bitmapData.onload = function () {
-                        self._onLoad(url, bitmapData);
-                    };
-                    bitmapData.onerror = function () {
-                        self._onError(url, bitmapData);
-                    };
-                    bitmapData.src = url;
-                }
+                var loader:ImageLoader = new ImageLoader();
+                loader.addEventListener(egret.Event.COMPLETE, function(e):void {
+                    bitmapData = <HTMLImageElement><any>loader.data;
+                    bitmapData.setAttribute("bitmapSrc", url);
+                    BaseImageLoader._bitmapDataFactory[url] = bitmapData;
+                    self._onLoad(url, bitmapData);
+                }, this);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, function(e):void {
+                    self._onError(url);
+                }, this);
+                loader.load(url);
             }
             else {
                 this._addToCallbackList(url, callback);
@@ -114,7 +78,7 @@ module egret.web {
          * @param bitmapData 
          */
         public static disposeBitmapData(bitmapData:any):void {
-            WebImageLoader.deleteWebGLTexture(bitmapData);
+            WebGameImageLoader.deleteWebGLTexture(bitmapData);
             bitmapData.onload = null;
             bitmapData.onerror = null;
             //替换为1x1透明图片
@@ -143,6 +107,6 @@ module egret.web {
         }
     }
 
-    ImageLoader = WebImageLoader;
-    ImageLoader.disposeBitmapData = WebImageLoader.disposeBitmapData;
+    GameImageLoader = WebGameImageLoader;
+    GameImageLoader.disposeBitmapData = WebGameImageLoader.disposeBitmapData;
 }

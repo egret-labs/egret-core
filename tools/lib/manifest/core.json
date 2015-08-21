@@ -69,16 +69,12 @@
         "egret/display/SpriteSheet.ts",
         "egret/display/ScrollView.ts",
         "egret/display/ScrollViewProperties.ts",
-        "egret/net/URLRequestMethod.ts",
-        "egret/net/URLLoaderDataFormat.ts",
-        "egret/net/URLVariables.ts",
-        "egret/net/URLRequestHeader.ts",
-        "egret/net/URLRequest.ts",
-        "egret/net/URLLoader.ts",
-        "egret/net/NetContext.ts",
-        "egret/net/IVersionController.ts",
-        "egret/net/BaseImageLoader.ts",
+
+        "egret/net/HttpMethod.ts",
+        "egret/net/HttpResponseType.ts",
+        "egret/net/HttpRequest.ts",
         "egret/net/ImageLoader.ts",
+
         "egret/player/EgretEntry.ts",
         "egret/player/Screen.ts",
         "egret/player/OrientationMode.ts",
@@ -95,7 +91,7 @@
         "egret/player/Surface.ts",
         "egret/player/SurfaceFactory.ts",
         "egret/player/SystemTicker.ts",
-        "egret/player/Ticker.ts",
+
         "egret/player/TouchHandler.ts",
         "egret/system/Capabilities.ts",
         "egret/system/Console.ts",
@@ -124,6 +120,22 @@
         "egret/media/IAudio.ts",
         "egret/media/Sound.ts",
 
-        "egret/utils/PromiseObject.ts"
+        "egret/utils/PromiseObject.ts",
+
+
+        "extension/game/net/URLRequestMethod.ts",
+        "extension/game/net/URLLoaderDataFormat.ts",
+        "extension/game/net/URLVariables.ts",
+        "extension/game/net/URLRequestHeader.ts",
+        "extension/game/net/URLRequest.ts",
+        "extension/game/net/URLLoader.ts",
+        "extension/game/net/NetContext.ts",
+        "extension/game/net/IVersionController.ts",
+        "extension/game/net/BaseImageLoader.ts",
+        "extension/game/net/GameImageLoader.ts",
+        "extension/game/player/Ticker.ts"
+
+
+
     ]
 }

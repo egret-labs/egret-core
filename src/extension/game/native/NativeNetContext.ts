@@ -42,12 +42,12 @@ module egret.native {
         /**
          * @private
          */
-        private _imageLoader:egret.ImageLoader;
+        private _imageLoader:egret.GameImageLoader;
 
         public constructor() {
             super();
 
-            this._imageLoader = new egret.ImageLoader();
+            this._imageLoader = new egret.GameImageLoader();
         }
 
         public initVersion(versionCtr:egret.IVersionController):void {

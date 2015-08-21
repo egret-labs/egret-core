@@ -35,7 +35,7 @@ module egret.web {
      * @extends egret.NetContext
      * @private
      */
-    export class HTML5NetContext extends HashObject implements NetContext{
+    export class HTML5NetContext extends HashObject implements NetContext {
 
         /**
          * @private
@@ -45,20 +45,25 @@ module egret.web {
         /**
          * @private
          */
-        private _imageLoader:egret.ImageLoader;
+        private _imageLoader:egret.GameImageLoader;
+
+        private _httpLoader:egret.HttpRequest;
+
         /**
          * @private
          */
         public constructor() {
             super();
 
-            this._imageLoader = new egret.ImageLoader();
+            this._imageLoader = new egret.GameImageLoader();
+
+            this._httpLoader = new egret.HttpRequest();
         }
 
         /**
          * @private
-         * 
-         * @param versionCtr 
+         *
+         * @param versionCtr
          */
         public initVersion(versionCtr:egret.IVersionController):void {
             this._versionCtr = versionCtr;
@@ -66,8 +71,8 @@ module egret.web {
 
         /**
          * @private
-         * 
-         * @param loader 
+         *
+         * @param loader
          */
         public proceed(loader:URLLoader):void {
             var self = this;
@@ -80,69 +85,99 @@ module egret.web {
                 return;
             }
 
-            var request:URLRequest = loader._request;
-            var xhr = this.getXHR();
-            xhr.onreadystatechange = onReadyStateChange;
 
+            var request:URLRequest = loader._request;
             var virtualUrl:string = self.getVirtualUrl(egret.$getUrl(request));
 
-            xhr.open(request.method, virtualUrl, true);
-            this.setResponseType(xhr, loader.dataFormat);
+            this._httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
+            this._httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+            this._httpLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, this);
+
+            this._httpLoader.open(virtualUrl, request.method);
+
+            this._httpLoader.responseType = this.getResponseType(loader.dataFormat);
             if (request.method == URLRequestMethod.GET || !request.data) {
-                xhr.send();
+                this._httpLoader.send();
             }
             else if (request.data instanceof URLVariables) {
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                this._httpLoader.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 var urlVars:URLVariables = <URLVariables> request.data;
-                xhr.send(urlVars.toString());
+                this._httpLoader.send(urlVars.toString());
             }
             else {
-                xhr.setRequestHeader("Content-Type", "multipart/form-data");
-                xhr.send(request.data);
+                this._httpLoader.setRequestHeader("Content-Type", "multipart/form-data");
+                this._httpLoader.send(request.data);
             }
 
 
-            function onReadyStateChange() {
-                if (xhr.readyState == 4) {// 4 = "loaded"
-                    if (xhr.status != loader._status) {
-                        loader._status = xhr.status;
-                        HTTPStatusEvent.dispatchHTTPStatusEvent(loader, xhr.status);
-                    }
+            /*function onReadyStateChange() {
+             if (xhr.readyState == 4) {// 4 = "loaded"
+             if (xhr.status != loader._status) {
+             loader._status = xhr.status;
+             HTTPStatusEvent.dispatchHTTPStatusEvent(loader, xhr.status);
+             }
 
-                    if (xhr.status >= 400 || xhr.status == 0) {//请求错误
-                        IOErrorEvent.dispatchIOErrorEvent(loader);
-                    }
-                    else {
-                        onLoadComplete();
-                    }
-                }
+             if (xhr.status >= 400 || xhr.status == 0) {//请求错误
+             IOErrorEvent.dispatchIOErrorEvent(loader);
+             }
+             else {
+             onLoadComplete();
+             }
+             }
+             }*/
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
+            }
+
+            function onError(event:egret.IOErrorEvent) {
+                loader.dispatchEvent(event);
             }
 
             function onLoadComplete() {
                 switch (loader.dataFormat) {
-                    case URLLoaderDataFormat.TEXT:
-                        loader.data = xhr.responseText;
-                        break;
-
                     case URLLoaderDataFormat.VARIABLES:
-                        loader.data = new URLVariables(xhr.responseText);
+                        loader.data = new URLVariables(self._httpLoader.response);
                         break;
 
-                    case URLLoaderDataFormat.BINARY:
-                        loader.data = xhr.response;
-                        break;
+                    //case URLLoaderDataFormat.TEXT:
+                    //    loader.data = self._httpLoader.response;
+                    //    break;
+                    //case URLLoaderDataFormat.BINARY:
+                    //    loader.data = self._httpLoader.response;
+                    //    break;
                     default:
-                        loader.data = xhr.responseText;
+                        loader.data = self._httpLoader.response;
                         break;
                 }
-                $callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
+                window.setTimeout(function () {
+                    Event.dispatchEvent(loader, Event.COMPLETE)
+                }, 0);
             }
         }
 
         /**
          * @private
-         * 
-         * @param loader 
+         *
+         * @param dataFormat
+         */
+        private getResponseType(dataFormat:string):string {
+            switch (dataFormat) {
+                case URLLoaderDataFormat.TEXT:
+                case URLLoaderDataFormat.VARIABLES:
+                    return URLLoaderDataFormat.TEXT;
+                case URLLoaderDataFormat.BINARY:
+                    return "arraybuffer";
+
+                default:
+                    return dataFormat;
+            }
+
+        }
+
+        /**
+         * @private
+         *
+         * @param loader
          */
         private loadSound(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
@@ -161,53 +196,17 @@ module egret.web {
 
         /**
          * @private
-         * 
-         * @returns 
-         */
-        private getXHR():any {
-            if (window["XMLHttpRequest"]) {
-                return new window["XMLHttpRequest"]();
-            } else {
-                return new ActiveXObject("MSXML2.XMLHTTP");
-            }
-        }
-
-        /**
-         * @private
-         * 
-         * @param xhr 
-         * @param responseType 
-         */
-        private setResponseType(xhr:XMLHttpRequest, responseType:string):void {
-            switch (responseType) {
-                case URLLoaderDataFormat.TEXT:
-                case URLLoaderDataFormat.VARIABLES:
-                    xhr.responseType = URLLoaderDataFormat.TEXT;
-                    break;
-
-                case URLLoaderDataFormat.BINARY:
-                    xhr.responseType = "arraybuffer";
-                    break;
-
-                default:
-                    xhr.responseType = responseType;
-                    break;
-            }
-        }
-
-        /**
-         * @private
-         * 
-         * @param loader 
+         *
+         * @param loader
          */
         private loadTexture(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            if(Html5Capatibility._WebPSupport && virtualUrl.indexOf("http:") != 0) {
-                if(virtualUrl.indexOf(".png") != -1) {
-                    virtualUrl = virtualUrl.replace(".png",".webp");
+            if (Html5Capatibility._WebPSupport && virtualUrl.indexOf("http:") != 0) {
+                if (virtualUrl.indexOf(".png") != -1) {
+                    virtualUrl = virtualUrl.replace(".png", ".webp");
                 }
-                else if(virtualUrl.indexOf(".jpg") != -1) {
-                    virtualUrl = virtualUrl.replace(".jpg",".webp");
+                else if (virtualUrl.indexOf(".jpg") != -1) {
+                    virtualUrl = virtualUrl.replace(".jpg", ".webp");
                 }
             }
             this._imageLoader.load(virtualUrl, function (code:number, bitmapData:HTMLImageElement) {
@@ -227,8 +226,8 @@ module egret.web {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public getChangeList():Array<any> {
             return [];
@@ -248,6 +247,7 @@ module egret.web {
         }
 
         static _instance:HTML5NetContext;
+
         static getNetContext():HTML5NetContext {
             if (HTML5NetContext._instance == null) {
                 HTML5NetContext._instance = new HTML5NetContext();

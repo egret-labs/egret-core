@@ -307,7 +307,8 @@ module egret {
             if (this._bitmapData) {
                 Texture.$dispose(this);
 
-                egret.ImageLoader.disposeBitmapData(this._bitmapData);
+                //todo
+                egret.GameImageLoader.disposeBitmapData(this._bitmapData);
             }
         }
 
