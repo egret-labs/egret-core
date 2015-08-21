@@ -196,7 +196,7 @@ module egret {
          * @returns 
          */
         private getHeadReg():RegExp {
-            return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|size|fontfamily|href)(\s)*=/;
+            return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|size|fontfamily|href|target)(\s)*=/;
         }
 
         /**
@@ -237,6 +237,9 @@ module egret {
                     break;
                 case "href" :
                     info.href = this.replaceSpecial(value);
+                    break;
+                case "target" :
+                    info.target = this.replaceSpecial(value);
                     break;
             }
         }

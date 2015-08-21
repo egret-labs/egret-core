@@ -94,6 +94,11 @@ module egret {
          * @platform Web,Native
          */
         href?:string;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        target?:string;
     }
 
     /**
