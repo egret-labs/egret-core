@@ -734,5 +734,5 @@ module egret.sys {
         }
     }
 
-    //egret.sys["DisplayList"] = egret.sys["NativeDisplayList"];
+    egret.sys["DisplayList"] = (<any>egret.sys)["NativeDisplayList"];
 }
