@@ -1,0 +1,108 @@
+{
+    "version": "1.0.1",
+    "registerClass":"egret",
+    "modules": [
+        {
+            "name": "egret",
+            "description": "Egret 核心库",
+            "files": [
+                { "path": "../Defines.debug.ts", "debug": true },
+                { "path": "../Defines.release.ts", "debug": false }
+            ],
+            "root": "src/egret",
+            "dependencies": [ ]
+        },
+        {
+            "name": "egret.gui",
+            "description": "GUI 图形界面库",
+            "files": [],
+            "root": "src/extension/gui",
+            "dependencies": [ "egret" ]
+        },
+        {
+            "name": "dragonbones",
+            "description": "dragonbones",
+            "files": [],
+            "root": "src/extension/dragonbones",
+            "dependencies": [ "egret" ]
+        },
+        {
+            "name": "resource",
+            "description": "RES 资源加载库",
+            "files": [],
+            "root": "src/extension/resource",
+            "dependencies": [ "egret" ]
+        }
+    ],
+    "platforms": [
+        {
+            "name": "any",
+            "declaration": true,
+            "hidden": true
+        },
+        {
+            "name": "web",
+            "description": "Web"
+        },
+        {
+          "name": "native",
+          "description": "Native"
+        }
+    ],
+    "templates": [
+    {
+      "name": "swan",
+      "description": "使用 swan 扩展库创建友好的交互界面",
+      "modules": [ "lark","swan","resource" ]
+    },
+    {
+      "name": "empty",
+      "description": "创建一个空项目",
+      "modules": [ "lark","swan","resource" ]
+    }
+    ],
+    "scaleModes": [
+        {
+            "name": "noScale",
+            "description": "不缩放应用程序内容。即使在更改播放器视口大小时，它仍然保持不变。如果播放器视口比内容小，则可能进行一些裁切。在此模式下，舞台尺寸（Stage.stageWidth,Stage.stageHeight）始终跟播放器视口大小保持一致。"
+        },
+        {
+            "name": "showAll",
+            "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较宽方向填满播放器视口，另一个方向的两侧可能会不够宽而留有黑边。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。"
+        },
+        {
+            "name": "noBorder",
+            "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。"
+        },
+        {
+            "name": "exactFit",
+            "description": "不保持原始宽高比缩放应用程序内容，缩放后应用程序内容正好填满播放器视口。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。"
+        },
+        {
+            "name": "fixedWidth",
+            "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。在此模式下，舞台宽度(Stage.stageWidth)始终等于初始化时外部传入的应用程序内容宽度。舞台高度(Stage.stageHeight)由当前的缩放比例与播放器视口高度决定。"
+        },
+        {
+            "name": "fixedHeight",
+            "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。在此模式下，舞台高度(Stage.stageHeight)始终等于初始化时外部传入的应用程序内容高度。舞台宽度(Stage.stageWidth)由当前的缩放比例与播放器视口宽度决定。"
+        }
+    ],
+    "orientationModes": [
+        {
+            "name": "auto",
+            "description":"不强制旋转应用程序。应用程序随设备旋转而旋转"
+        },
+        {
+            "name": "portrait",
+            "description":"强制旋转应用程序至竖屏状态。此模式下，当屏幕宽度大于屏幕高度时，会自动将应用程序逆时针旋转90°。"
+        },
+        {
+            "name": "landscape",
+            "description":"强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序顺时针旋转90°。"
+        },
+        {
+            "name": "landscapeFlipped",
+            "description":"强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序逆时针旋转90°。"
+        }
+    ]
+}

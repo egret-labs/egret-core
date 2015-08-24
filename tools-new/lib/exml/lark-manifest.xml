@@ -1,0 +1,40 @@
+<componentPackage>
+  <component id="ArrayCollection" super="lark.EventEmitter" default="source" show="false" module="swan"/>
+  <component id="BasicLayout" super="swan.LayoutBase" show="false" module="swan"/>
+  <component id="Button" super="swan.Component" state="up,down,disabled" show="true" module="swan"/>
+  <component id="CheckBox" super="swan.ToggleButton" show="true" module="swan"/>
+  <component id="Component" super="lark.Sprite" state="" show="true" module="swan"/>
+  <component id="DataGroup" super="swan.Group" default="dataProvider" show="true" module="swan"/>
+  <component id="EditableText" super="lark.TextInput" show="true" module="swan"/>
+  <component id="Group" super="lark.Sprite" default="elementsContent" show="true" module="swan"/>
+  <component id="HorizontalLayout" super="swan.LinearLayoutBase" show="false" module="swan"/>
+  <component id="HScrollBar" super="swan.ScrollBarBase" show="true" module="swan"/>
+  <component id="HSlider" super="swan.SliderBase" show="true" module="swan"/>
+  <component id="Image" super="lark.Bitmap" show="true" module="swan"/>
+  <component id="ItemRenderer" super="swan.Group" show="false" module="swan"/>
+  <component id="Label" super="lark.TextField" show="true" module="swan"/>
+  <component id="LayoutBase" super="lark.EventEmitter" show="false" module="swan"/>
+  <component id="List" super="swan.ListBase" show="true" module="swan"/>
+  <component id="ListBase" super="swan.DataGroup" show="false" module="swan"/>
+  <component id="Matrix" super="lark.LarkObject" show="false" module="lark"/>
+  <component id="Panel" default="elementsContent" super="swan.Component" show="true" module="swan"/>
+  <component id="Point" super="lark.LarkObject" show="false" module="lark"/>
+  <component id="ProgressBar" super="swan.Range" show="true" module="swan"/>
+  <component id="RadioButton" super="swan.ToggleButton" show="true" module="swan"/>
+  <component id="RadioButtonGroup" super="lark.EventEmitter" show="false" module="swan"/>
+  <component id="Range" super="swan.Component" show="false" module="swan"/>
+  <component id="Rectangle" super="lark.LarkObject" show="false" module="lark"/>
+  <component id="Scroller" super="swan.Component" default="viewport" show="true" module="swan"/>
+  <component id="ScrollBarBase" super="swan.Component" show="false" module="swan"/>
+  <component id="Skin" super="lark.LarkObject" default="elementsContent" show="false" module="swan"/>
+  <component id="SliderBase" super="swan.Range" show="false" module="swan"/>
+  <component id="State" super="lark.LarkObject" default="overrides" show="false" module="swan"/>
+  <component id="TabBar" super="swan.ListBase" show="true" module="swan"/>
+  <component id="TileLayout" super="swan.LayoutBase" show="false" module="swan"/>
+  <component id="ToggleButton" super="swan.Button" state="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" show="true" module="swan"/>
+  <component id="ToggleSwitch" super="swan.ToggleButton" show="true" module="swan"/>
+  <component id="VerticalLayout" super="swan.LayoutBase" show="false" module="swan"/>
+  <component id="ViewStack" super="swan.Group" show="true" module="swan"/>
+  <component id="VScrollBar" super="swan.ScrollBarBase" show="true" module="swan"/>
+  <component id="VSlider" super="swan.SliderBase" show="true" module="swan"/>
+</componentPackage>
