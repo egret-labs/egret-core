@@ -30,11 +30,6 @@ module egret.sys {
 
     /**
      * @private
-     * 心跳计时器单例
-     */
-    export var $ticker:SystemTicker;
-    /**
-     * @private
      * 是否要广播Event.RENDER事件的标志。
      */
     export var $invalidateRenderFlag:boolean = false;
@@ -275,6 +270,12 @@ module egret.sys {
             }
         }
     }
+
+    /**
+     * @private
+     * 心跳计时器单例
+     */
+    export var $ticker:SystemTicker = new sys.SystemTicker();
 }
 
 if (DEBUG) {
