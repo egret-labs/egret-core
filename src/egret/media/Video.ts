@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
-    
+
     /**
      * @language en_US
      * The Video class lets you work with video in an application.
@@ -36,7 +36,7 @@ module egret {
      * Note: On most mobile device, the video is playback in the full screen mode.<br/>
      *
      * @param url URL of the media to play, Video will start to load if the url is not empty
-     * 
+     *
      * @event lark.Event.COMPLETE Emit when the video resource is loaded and ready to play
      * @event lark.Event.ENDED Emit when the video playback ended
      * @event lark.Event.IO_ERROR when the video is failed to load
@@ -74,7 +74,7 @@ module egret {
          * @version Lark 1.0
          * @platform Web,Native
          */
-        load(url?: string): void;
+        load(url:string): void;
 
         /**
          * @language en_US
@@ -94,7 +94,7 @@ module egret {
          * @version Lark 1.0
          * @platform Web,Native
          */
-        play(startTime?: number, loop?: boolean);
+        play(startTime?:number, loop?:boolean);
 
         /**
          * @language en_US
@@ -123,7 +123,7 @@ module egret {
          * @platform Web,Native
          */
         src: string;
-        
+
         /**
          * @language en_US
          * The URL of an image you want to display before the video is loaded or video cannot been draw on the canvas on some mobile device.
@@ -214,5 +214,7 @@ module egret {
     /**
      * @copy lark.Video
      */
-    export var Video: { new (src?:string): Video };
+    export var Video:{
+        new (): Video
+    };
 }

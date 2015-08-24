@@ -38,54 +38,52 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public src: string;
+        public src:string;
         /**
          * @inheritDoc
          */
-        public poster: string;
-        
+        public poster:string;
+
         /**
          * @private
          */
-        private posterData: BitmapData;
+        private posterData:BitmapData;
         /**
          * @private
          */
-        private video: HTMLVideoElement;
+        private video:HTMLVideoElement;
         /**
          * @private
          */
-        private loaded: boolean = false;
+        private loaded:boolean = false;
         /**
          * @private
          */
-        private closed: boolean = false;
+        private closed:boolean = false;
         /**
          * @private
          */
-        private heightSet: number = NaN;
+        private heightSet:number = NaN;
         /**
          * @private
          */
-        private widthSet: number = NaN;
+        private widthSet:number = NaN;
 
         /**
          * @inheritDoc
          */
-        constructor(url?: string) {
+        constructor() {
             super();
             this.$renderRegion = new sys.Region();
-            this.src = url;
             this.once(egret.Event.ADDED_TO_STAGE, this.loadPoster, this);
-            if (url)
-                this.load();
         }
 
         /**
          * @inheritDoc
          */
-        public load(url?: string) {
-            url = url || this.src;
+        public load(url:string) {
+            this.src = url;
+
             if (DEBUG && !url) {
                 egret.$error(3002);
             }
@@ -107,16 +105,16 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public play(startTime?: number, loop: boolean = false) {
+        public play(startTime?:number, loop:boolean = false) {
             if (this.loaded == false) {
-                this.load();
+                this.load(this.src);
                 this.once(egret.Event.COMPLETE, e=> this.play(startTime, loop), this);
                 return;
             }
 
             var video = this.video;
             if (startTime != undefined)
-                video.currentTime = +startTime||0;
+                video.currentTime = +startTime || 0;
             video.loop = !!loop;
             video.play();
             video.style.position = "absolute";
@@ -154,12 +152,12 @@ module egret.web {
                     this.pause();
                 }
             };
-            video['onwebkitfullscreenerror'] = (e: any) => {
+            video['onwebkitfullscreenerror'] = (e:any) => {
                 egret.$error(3003);
             };
             return true;
         }
-        
+
         /**
          * @inheritDoc
          */
@@ -192,7 +190,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public get volume(): number {
+        public get volume():number {
             if (!this.video)
                 return 1;
             return this.video.volume;
@@ -201,7 +199,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public set volume(value: number) {
+        public set volume(value:number) {
             if (!this.video)
                 return;
             this.video.volume = value;
@@ -210,7 +208,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public get position(): number {
+        public get position():number {
             if (!this.video)
                 return 0;
             return this.video.currentTime;
@@ -219,9 +217,9 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public set position(value: number) {
+        public set position(value:number) {
             if (!this.video)
-                return ;
+                return;
             this.video.currentTime = value;
         }
 
@@ -229,26 +227,26 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public get fullscreen(): boolean {
+        public get fullscreen():boolean {
             return this._fullscreen;
         }
 
         /**
          * @inheritDoc
          */
-        public set fullscreen(value: boolean) {
+        public set fullscreen(value:boolean) {
             this._fullscreen = !!value;
             if (this.video && this.video.paused == false) {
                 this.goFullscreen();
             }
         }
 
-        private _bitmapData: BitmapData;
+        private _bitmapData:BitmapData;
 
         /**
          * @inheritDoc
          */
-        public get bitmapData(): BitmapData {
+        public get bitmapData():BitmapData {
             if (!this.video || !this.loaded)
                 return null;
             if (!this._bitmapData) {
@@ -282,7 +280,7 @@ module egret.web {
 
         /**
          * @private
-         * 
+         *
          */
         private onVideoLoaded = () => {
             this.video.removeEventListener("canplay", this.onVideoLoaded);
@@ -306,7 +304,7 @@ module egret.web {
 
         /**
          * @private
-         * 
+         *
          */
         private onVideoEnded() {
             this.dispatchEventWith(egret.Event.ENDED);
@@ -315,7 +313,7 @@ module egret.web {
 
         /**
          * @private
-         * 
+         *
          */
         private onVideoError() {
             this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
@@ -324,7 +322,7 @@ module egret.web {
         /**
          * @private
          */
-        $measureContentBounds(bounds: Rectangle): void {
+        $measureContentBounds(bounds:Rectangle):void {
             var bitmapData = this.bitmapData;
             var posterData = this.posterData;
             if (bitmapData) {
@@ -341,7 +339,7 @@ module egret.web {
         /**
          * @private
          */
-        $render(context: sys.RenderContext): void {
+        $render(context:sys.RenderContext):void {
             var bitmapData = this.bitmapData;
             var posterData = this.posterData;
             if ((!bitmapData || this.video && this.video.paused) && posterData) {
@@ -362,7 +360,7 @@ module egret.web {
          * @private
          * 设置显示高度
          */
-        $setHeight(value: number) {
+        $setHeight(value:number) {
             super.$setHeight(value);
             this.heightSet = +value || 0;
         }
@@ -371,7 +369,7 @@ module egret.web {
          * @private
          * 设置显示宽度
          */
-        $setWidth(value: number) {
+        $setWidth(value:number) {
             super.$setWidth(value);
             this.widthSet = +value || 0;
         }

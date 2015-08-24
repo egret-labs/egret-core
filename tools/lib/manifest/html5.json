@@ -21,12 +21,11 @@
 
         "egret/media/web/QQSound.ts",
         "egret/media/web/QQSoundChannel.ts",
-
         "egret/media/web/WebAudioSound.ts",
         "egret/media/web/WebAudioSoundChannel.ts",
-
         "egret/media/web/HtmlSound.ts",
         "egret/media/web/HtmlSoundChannel.ts",
+        "egret/media/web/WebVideo.ts",
 
         "egret/web/WebGetOption.ts",
         "egret/web/WebTexture.ts",

@@ -119,6 +119,7 @@
 
         "egret/media/SoundChannel.ts",
         "egret/media/Sound.ts",
+        "egret/media/Video.ts",
 
         "egret/utils/PromiseObject.ts",
 
