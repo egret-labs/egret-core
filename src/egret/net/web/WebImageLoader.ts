@@ -84,7 +84,7 @@ module egret.web {
                 if (!request) {
                     request = this.request = new egret.web.WebHttpRequest();
                     request.addEventListener(egret.Event.COMPLETE, this.onBlobLoaded, this);
-                    request.addEventListener(egret.Event.IO_ERROR, this.onBlobError, this);
+                    request.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onBlobError, this);
                     request.responseType = "blob";
                 }
                 if (DEBUG) {
@@ -162,10 +162,10 @@ module egret.web {
         private emitIOError(url:string):void {
             var self = this;
             window.setTimeout(function ():void {
-                if (DEBUG && !self.hasEventListener(Event.IO_ERROR)) {
+                if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {
                     $error(1011, url);
                 }
-                self.dispatchEventWith(Event.IO_ERROR);
+                self.dispatchEventWith(IOErrorEvent.IO_ERROR);
             }, 0);
         }
 

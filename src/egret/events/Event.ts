@@ -216,19 +216,6 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the net request is failed.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 网络请求加载失败
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static IO_ERROR:string = "ioError";
-        /**
-         * @language en_US
          * Emitted when the TextInput instance gets focus.
          * @version Egret 2.0
          * @platform Web,Native

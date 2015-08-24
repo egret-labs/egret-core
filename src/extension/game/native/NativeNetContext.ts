@@ -35,23 +35,11 @@ module egret.native {
      */
     export class NativeNetContext extends HashObject implements NetContext {
 
-        public _versionCtr:egret.IVersionController;
-
         public static __use_asyn:boolean = egret_native.readFileAsync == null ? false : true;
 
-        /**
-         * @private
-         */
-        private _imageLoader:egret.GameImageLoader;
 
         public constructor() {
             super();
-
-            this._imageLoader = new egret.GameImageLoader();
-        }
-
-        public initVersion(versionCtr:egret.IVersionController):void {
-            this._versionCtr = versionCtr;
         }
 
         private urlData:any = {};
@@ -104,9 +92,6 @@ module egret.native {
             else if (!egret_native.isFileExists(virtualUrl)) {
                 download();
             }
-            else if (!self.checkIsNewVersion(virtualUrl)) {
-                download();
-            }
             else {
                 if (NativeNetContext.__use_asyn) {
                     //异步读取
@@ -121,7 +106,6 @@ module egret.native {
             function readFileAsync() {
                 var promise = new egret.PromiseObject();
                 promise.onSuccessFunc = function (content) {
-                    self.saveVersion(virtualUrl);
                     loader.data = content;
                     Event.dispatchEvent(loader, Event.COMPLETE);
                 };
@@ -138,7 +122,6 @@ module egret.native {
             }
 
             function onLoadComplete() {
-                self.saveVersion(virtualUrl);
                 var content = egret_native.readFileSync(virtualUrl);
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);
@@ -166,9 +149,6 @@ module egret.native {
             else if (!egret_native.isFileExists(virtualUrl)) {
                 download();
             }
-            else if (!self.checkIsNewVersion(virtualUrl)) {
-                download();
-            }
             else {
                 $callAsync(onLoadComplete, self);
             }
@@ -183,7 +163,6 @@ module egret.native {
             }
 
             function onLoadComplete() {
-                self.saveVersion(virtualUrl);
                 var nativeAudio:NativeAudio = new NativeAudio();
                 nativeAudio.$setAudio(virtualUrl);
 
@@ -199,46 +178,44 @@ module egret.native {
             var request = loader._request;
             var virtualUrl:string = self.getVirtualUrl(request.url);
 
-            if (self.isNetUrl(virtualUrl)) {//网络请求
-                download();
-            }
-            else if (!egret_native.isFileExists(virtualUrl)) {
-                download();
-            }
-            else if (!self.checkIsNewVersion(virtualUrl)) {
-                download();
-            }
-            else {
-                $callAsync(createBitmapData, self);
+            var imageLoader:ImageLoader = new ImageLoader();
+            imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            imageLoader.load(virtualUrl);
+
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
             }
 
-            function createBitmapData() {
-                self._imageLoader.load(virtualUrl, function (code:number, bitmapData:any) {
-                    if (code == 0) {
-                        onComplete(bitmapData);
-                    }
-                    else {
-                        egret.IOErrorEvent.dispatchIOErrorEvent(loader);
-                    }
-                });
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                loader.dispatchEvent(event);
             }
 
-            function onComplete(bitmapData) {
-                self.saveVersion(virtualUrl);
+            function onLoadComplete(e) {
+                removeListeners();
 
-                var texture = new egret.Texture();
+                var bitmapData = <any>imageLoader.data;
+                //bitmapData.setAttribute("bitmapSrc", virtualUrl);
+                bitmapData["avaliable"] = true;
+
+                var texture:Texture = new Texture();
                 texture._setBitmapData(bitmapData);
+
+                Texture.$loaded(texture);
+
                 loader.data = texture;
-                egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+
+                window.setTimeout(function() {
+                    loader.dispatchEventWith(Event.COMPLETE);
+                }, self);
             }
 
-            function download() {
-                var promise = egret.PromiseObject.create();
-                promise.onSuccessFunc = createBitmapData;
-                promise.onErrorFunc = function () {
-                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
-                };
-                egret_native.download(virtualUrl, virtualUrl, promise);
+            function removeListeners():void {
+                imageLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                imageLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                imageLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
             }
         }
 
@@ -257,41 +234,7 @@ module egret.native {
          * @returns {string}
          */
         public getVirtualUrl(url:string):string {
-            if (this._versionCtr) {
-                return this._versionCtr.getVirtualUrl(url);
-            }
             return url;
-        }
-
-        /**
-         * 检查文件是否是最新版本
-         */
-        private checkIsNewVersion(virtualUrl:string):boolean {
-            if (this._versionCtr) {
-                return this._versionCtr.checkIsNewVersion(virtualUrl);
-            }
-            return true;
-        }
-
-        /**
-         * 保存本地版本信息文件
-         */
-        private saveVersion(virtualUrl:string):void {
-            if (this._versionCtr) {
-                this._versionCtr.saveVersion(virtualUrl);
-            }
-        }
-
-        /**
-         * 获取变化列表
-         * @deprecated
-         * @returns {any}
-         */
-        public getChangeList():Array<any> {
-            if (this._versionCtr) {
-                return this._versionCtr.getChangeList();
-            }
-            return [];
         }
 
         static _instance:NativeNetContext;

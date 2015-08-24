@@ -27,90 +27,94 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+module egret.native {
 
     /**
      * @private
      * ImageLoader 类可用于加载图像（JPG、PNG 或 GIF）文件。使用 load() 方法来启动加载。被加载的图像对象数据将存储在 ImageLoader.data 属性上 。
-     * @version Egret 2.0
-     * @platform Web,Native
      */
-    export class BaseImageLoader {
+    export class NativeImageLoader extends EventDispatcher implements ImageLoader {
+        /**
+         * @private
+         * 使用 load() 方法加载成功的 BitmapData 图像数据。
+         */
+        public data:BitmapData = null;
+
         /**
          * @private
          * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。
          * 可以设置为"anonymous","use-credentials"或null,设置为其他值将等同于"anonymous"。
-         * @version Egret 2.0
-         * @platform Web,Native
          */
-        public static crossOrigin:string = null;
+        public crossOrigin:string = null;
 
         /**
          * @private
-         * 
-         * @param url 
-         * @param bitmapData 
+         *
+         * @param url
+         * @param callback
          */
-        protected _onLoad(url, bitmapData):void {
-            bitmapData["avaliable"] = true;
-            if(bitmapData.onload){
-                bitmapData.onload = null;
-            }
-            if(bitmapData.onerror){
-                bitmapData.onerror = null;
-            }
-            var list = BaseImageLoader._bitmapCallbackMap[url];
-            if (list && list.length) {
-                delete BaseImageLoader._bitmapCallbackMap[url];
+        public load(url:string):void {
+            this.check(url);
+        }
 
-                var l = list.length;
-                for (var i:number = 0; i < l; i++) {
-                    var callback = list[i];
-                    callback(0, bitmapData);
-                }
+        private check(url:string):void {
+            var self = this;
+            if (self.isNetUrl(url)) {//网络请求
+                self.download(url);
+            }
+            else if (!egret_native.isFileExists(url)) {
+                self.download(url);
+            }
+            else {
+                self.loadTexture(url);
+            }
+        }
+
+        private download(url:string):void {
+            var self = this;
+            var promise = egret.PromiseObject.create();
+            promise.onSuccessFunc = function() {
+                self.loadTexture(url);
+            };
+            promise.onErrorFunc = function () {
+                self.dispatchEventWith(IOErrorEvent.IO_ERROR);
+            };
+            egret_native.download(url, url, promise);
+        }
+
+        private loadTexture(url:string):void {
+            var self = this;
+            if (egret["Net" + "Context"].__use_asyn) {//异步的
+                var promise = new egret.PromiseObject();
+                promise.onSuccessFunc = function (bitmapData) {
+                    self.data = bitmapData;
+
+                    self.dispatchEventWith(Event.COMPLETE);
+                };
+                promise.onErrorFunc = function () {
+                    self.dispatchEventWith(IOErrorEvent.IO_ERROR);
+                };
+                egret_native.Texture.addTextureAsyn(url, promise);
+            }
+            else {
+                var bitmapData = egret_native.Texture.addTexture(url);
+                self.data = bitmapData;
+
+                egret.$callAsync(function() {
+                    self.dispatchEventWith(Event.COMPLETE);
+                }, self);
             }
         }
 
         /**
-         * @private
-         * 
-         * @param url 
-         * @param bitmapData 
+         * 是否是网络地址
+         * @param url
+         * @returns {boolean}
          */
-        protected _onError(url):void {
-            var list = BaseImageLoader._bitmapCallbackMap[url];
-            if (list && list.length) {
-                delete BaseImageLoader._bitmapCallbackMap[url];
-
-                var l = list.length;
-                for (var i:number = 0; i < l; i++) {
-                    var callback = list[i];
-                    callback(1);
-                }
-            }
+        private isNetUrl(url:string):boolean {
+            return url.indexOf("http://") != -1;
         }
-
-        /**
-         * @private
-         * 
-         * @param url 
-         * @param callback 
-         */
-        protected _addToCallbackList(url, callback) {
-            var list = BaseImageLoader._bitmapCallbackMap[url];
-            if (!list) {
-                BaseImageLoader._bitmapCallbackMap[url] = list = [];
-            }
-            list.push(callback);
-        }
-
-        /**
-         * @private
-         */
-        protected static _bitmapDataFactory:any = {};
-        /**
-         * @private
-         */
-        protected static _bitmapCallbackMap:any = {};
     }
+
+    ImageLoader = NativeImageLoader;
 }

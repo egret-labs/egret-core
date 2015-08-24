@@ -130,9 +130,6 @@
         "extension/game/net/URLRequest.ts",
         "extension/game/net/URLLoader.ts",
         "extension/game/net/NetContext.ts",
-        "extension/game/net/IVersionController.ts",
-        "extension/game/net/BaseImageLoader.ts",
-        "extension/game/net/GameImageLoader.ts",
         "extension/game/player/Ticker.ts"
 
 

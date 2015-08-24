@@ -29,7 +29,7 @@
 
         "egret/native/NativeGetOption.ts",
 
-        "extension/game/native/NativeGameImageLoader.ts",
+        "egret/net/native/NativeImageLoader.ts",
         "extension/game/native/NativeNetContext.ts"
     ]
 }

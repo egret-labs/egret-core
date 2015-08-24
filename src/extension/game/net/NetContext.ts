@@ -45,28 +45,6 @@ module egret {
          */
         proceed(loader:URLLoader):void;
 
-        /**
-         * 
-         * @returns 
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        getChangeList():Array<any>;
-
-        /**
-         *
-         * @param versionCtr
-         */
-        initVersion(versionCtr:egret.IVersionController):void;
-
-        /**
-         *
-         * @param url
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        getVirtualUrl(url:string):string;
     }
 
     /**

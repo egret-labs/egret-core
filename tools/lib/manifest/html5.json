@@ -30,7 +30,6 @@
         "egret/net/web/WebHttpRequest.ts",
         "egret/net/web/WebImageLoader.ts",
 
-        "extension/game/web/HTML5NetContext.ts",
-        "extension/game/web/WebGameImageLoader.ts"
+        "extension/game/web/HTML5NetContext.ts"
     ]
 }
