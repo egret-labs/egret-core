@@ -130,10 +130,12 @@ module egret.web {
             }
 
             function onError(event:egret.IOErrorEvent) {
+                removeListeners();
                 loader.dispatchEvent(event);
             }
 
             function onLoadComplete() {
+                removeListeners();
                 switch (loader.dataFormat) {
                     case URLLoaderDataFormat.VARIABLES:
                         loader.data = new URLVariables(self._httpLoader.response);
@@ -152,6 +154,12 @@ module egret.web {
                 window.setTimeout(function () {
                     Event.dispatchEvent(loader, Event.COMPLETE)
                 }, 0);
+            }
+
+            function removeListeners():void {
+                self._httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                self._httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                self._httpLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
             }
         }
 
