@@ -347,7 +347,16 @@ module egret {
             values[Keys.explicitScaleX] = value;
 
             this.$invalidateContentBounds();
-            return super.$setScaleX(1);
+
+            if (value < 0) {
+                return super.$setScaleX(-1);
+            }
+            else if (value == 0) {
+                return super.$setScaleX(0);
+            }
+            else {
+                return super.$setScaleX(1);
+            }
         }
 
         /**
@@ -369,9 +378,17 @@ module egret {
             values[Keys.explicitScaleY] = value;
 
             this.$invalidateContentBounds();
-            return super.$setScaleY(1);
-        }
 
+            if (value < 0) {
+                return super.$setScaleY(-1);
+            }
+            else if (value == 0) {
+                return super.$setScaleY(0);
+            }
+            else {
+                return super.$setScaleY(1);
+            }
+        }
 
         /**
          * @private
@@ -383,7 +400,7 @@ module egret {
                 var h:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
 
                 var values = this.$Bitmap;
-                bounds.setTo(0, 0, w * values[Keys.explicitScaleX], h * values[Keys.explicitScaleY]);
+                bounds.setTo(0, 0, Math.abs(w * values[Keys.explicitScaleX]), Math.abs(h * values[Keys.explicitScaleY]));
             }
             else {
                 bounds.setEmpty();
@@ -400,9 +417,9 @@ module egret {
                 var destH:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
 
                 var values = this.$Bitmap;
-                destW *= values[Keys.explicitScaleX];
-                destH *= values[Keys.explicitScaleY];
-                Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing, bitmapData._offsetX * values[Keys.explicitScaleX], bitmapData._offsetY * values[Keys.explicitScaleY]);
+                destW *= Math.abs(values[Keys.explicitScaleX]);
+                destH *= Math.abs(values[Keys.explicitScaleY]);
+                Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing, Math.abs(bitmapData._offsetX * values[Keys.explicitScaleX]), Math.abs(bitmapData._offsetY * values[Keys.explicitScaleY]));
             }
         }
 
