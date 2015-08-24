@@ -77,7 +77,7 @@ module egret {
          * @param url 
          * @param bitmapData 
          */
-        protected _onError(url, bitmapData):void {
+        protected _onError(url):void {
             var list = BaseImageLoader._bitmapCallbackMap[url];
             if (list && list.length) {
                 delete BaseImageLoader._bitmapCallbackMap[url];
@@ -85,7 +85,7 @@ module egret {
                 var l = list.length;
                 for (var i:number = 0; i < l; i++) {
                     var callback = list[i];
-                    callback(1, bitmapData);
+                    callback(1);
                 }
             }
         }
@@ -99,10 +99,9 @@ module egret {
         protected _addToCallbackList(url, callback) {
             var list = BaseImageLoader._bitmapCallbackMap[url];
             if (!list) {
-                list = [];
+                BaseImageLoader._bitmapCallbackMap[url] = list = [];
             }
             list.push(callback);
-            BaseImageLoader._bitmapCallbackMap[url] = list;
         }
 
         /**

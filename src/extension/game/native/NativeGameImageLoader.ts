@@ -33,7 +33,7 @@ module egret.native {
      * @private
      * ImageLoader 类可用于加载图像（JPG、PNG 或 GIF）文件。使用 load() 方法来启动加载。被加载的图像对象数据将存储在 ImageLoader.data 属性上 。
      */
-    export class NativeImageLoader extends BaseImageLoader {
+    export class NativeGameImageLoader extends BaseImageLoader {
 
         /**
          * @private
@@ -57,7 +57,7 @@ module egret.native {
                             self._onLoad(url, bitmapData);
                         };
                         promise.onErrorFunc = function () {
-                            self._onError(url, null);
+                            self._onError(url);
                         };
                         egret_native.Texture.addTextureAsyn(url, promise);
                     }
@@ -79,16 +79,7 @@ module egret.native {
             }
         }
 
-        /**
-         * @private
-         *
-         * @param bitmapData
-         */
-        public static disposeBitmapData(bitmapData:any):void {
-
-        }
     }
 
-    ImageLoader = NativeImageLoader;
-    ImageLoader.disposeBitmapData = NativeImageLoader.disposeBitmapData;
+    GameImageLoader = NativeGameImageLoader;
 }

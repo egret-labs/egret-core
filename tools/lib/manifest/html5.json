@@ -17,9 +17,7 @@
         "egret/web/WebPlayer.ts",
         "egret/web/WebTouchHandler.ts",
         "egret/web/WebXML.ts",
-        "egret/web/HTML5NetContext.ts",
         "egret/web/WebHideHandler.ts",
-        "egret/web/WebImageLoader.ts",
 
         "egret/media/web/Html5Audio.ts",
         "egret/media/web/QQAudio.ts",
@@ -27,6 +25,12 @@
 
         "egret/web/WebGetOption.ts",
         "egret/web/WebTexture.ts",
-        "egret/web/Html5Capatibility.ts"
+        "egret/web/Html5Capatibility.ts",
+
+        "egret/net/web/WebHttpRequest.ts",
+        "egret/net/web/WebImageLoader.ts",
+
+        "extension/game/web/HTML5NetContext.ts",
+        "extension/game/web/WebGameImageLoader.ts"
     ]
 }

@@ -18,8 +18,7 @@
 
         "egret/native/NativeHideHandler.ts",
         "egret/native/NativeTouchHandler.ts",
-        "egret/native/NativeImageLoader.ts",
-        "egret/native/NativeNetContext.ts",
+
         "egret/native/OpenGLFactory.ts",
         "egret/native/NativeResourceLoader.ts",
         "egret/native/NativeTexture.ts",
@@ -28,6 +27,9 @@
         "egret/native/NativePlayer.ts",
         "egret/native/NativeRenderContext.ts",
 
-        "egret/native/NativeGetOption.ts"
+        "egret/native/NativeGetOption.ts",
+
+        "extension/game/native/NativeGameImageLoader.ts",
+        "extension/game/native/NativeNetContext.ts"
     ]
 }
