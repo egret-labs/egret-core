@@ -163,12 +163,12 @@ module egret.native {
             }
 
             function onLoadComplete() {
-                var nativeAudio:NativeAudio = new NativeAudio();
-                nativeAudio.$setAudio(virtualUrl);
-
-                var sound = new egret.Sound();
-                sound.$setAudio(nativeAudio);
-                loader.data = sound;
+                //var nativeAudio:NativeAudio = new NativeAudio();
+                //nativeAudio.$setAudio(virtualUrl);
+                //
+                //var sound = new egret.Sound();
+                //sound.$setAudio(nativeAudio);
+                //loader.data = sound;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }
         }

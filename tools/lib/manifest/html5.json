@@ -19,9 +19,14 @@
         "egret/web/WebXML.ts",
         "egret/web/WebHideHandler.ts",
 
-        "egret/media/web/Html5Audio.ts",
-        "egret/media/web/QQAudio.ts",
-        "egret/media/web/WebAudio.ts",
+        "egret/media/web/QQSound.ts",
+        "egret/media/web/QQSoundChannel.ts",
+
+        "egret/media/web/WebAudioSound.ts",
+        "egret/media/web/WebAudioSoundChannel.ts",
+
+        "egret/media/web/HtmlSound.ts",
+        "egret/media/web/HtmlSoundChannel.ts",
 
         "egret/web/WebGetOption.ts",
         "egret/web/WebTexture.ts",

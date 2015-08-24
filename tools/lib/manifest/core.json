@@ -43,7 +43,6 @@
         "egret/events/TouchEvent.ts",
         "egret/events/HTTPStatusEvent.ts",
         "egret/events/IOErrorEvent.ts",
-        "egret/events/SoundEvent.ts",
         "egret/events/TextEvent.ts",
         "egret/events/FocusEvent.ts",
         "egret/display/BlendMode.ts",
@@ -117,7 +116,8 @@
         "egret/filters/BlurFilter.ts",
         "egret/filters/ColorMatrixFilter.ts",
         "egret/filters/DropShadowFilter.ts",
-        "egret/media/IAudio.ts",
+
+        "egret/media/SoundChannel.ts",
         "egret/media/Sound.ts",
 
         "egret/utils/PromiseObject.ts",

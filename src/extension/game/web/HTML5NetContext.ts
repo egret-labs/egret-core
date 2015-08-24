@@ -168,17 +168,37 @@ module egret.web {
          */
         private loadSound(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            var audio = new egret.IAudio();
-            audio.$loadByUrl(virtualUrl, function (code:number) {
-                if (code != 0) {
-                    IOErrorEvent.dispatchIOErrorEvent(loader);
-                    return;
-                }
-                var sound = new Sound();
-                sound.$setAudio(audio);
+
+            var sound:egret.Sound = new egret.Sound();
+            sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            sound.load(virtualUrl);
+
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
+            }
+
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+
+            function onLoadComplete(e) {
+                removeListeners();
+
                 loader.data = sound;
-                $callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-            });
+
+                window.setTimeout(function() {
+                    loader.dispatchEventWith(Event.COMPLETE);
+                }, self);
+            }
+
+            function removeListeners():void {
+                sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            }
         }
 
         /**

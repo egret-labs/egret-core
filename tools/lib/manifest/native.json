@@ -12,8 +12,6 @@
         "egret/localStorage/native/NativeLocalStorage.ts",
         "egret/external/native/NativeExternalInterface.ts",
 
-        "egret/media/native/NativeAudio.ts",
-
         "extension/version/NativeVersionController.ts",
 
         "egret/native/NativeHideHandler.ts",
