@@ -94,7 +94,6 @@ module egret.web {
         public load(url:string) {
             var self = this;
 
-            url = url || this.url;
             this.url = url;
 
             if (DEBUG && !url) {

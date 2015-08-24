@@ -85,10 +85,7 @@ module egret.web {
          * @private
          */
         private url:string;
-        /**
-         * @private
-         */
-        private originAudio:HTMLAudioElement;
+
         /**
          * @private
          */
@@ -108,7 +105,6 @@ module egret.web {
         public load(url:string) {
             var self = this;
 
-            url = url || this.url;
             this.url = url;
 
             if (DEBUG && !url) {
@@ -118,6 +114,7 @@ module egret.web {
             QZAppExternal.preloadSound(
                 function (data) {
                     if (data.code == 0) {
+                        self.loaded = true;
 
                         self.dispatchEventWith(egret.Event.COMPLETE);
                     }
@@ -163,10 +160,6 @@ module egret.web {
          * @inheritDoc
          */
         public close() {
-            if (this.loaded == false && this.originAudio)
-                this.originAudio.src = "";
-            if (this.originAudio)
-                this.originAudio = null;
         }
     }
 }

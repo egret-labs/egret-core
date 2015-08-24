@@ -25,6 +25,9 @@
         "egret/native/NativePlayer.ts",
         "egret/native/NativeRenderContext.ts",
 
+        "egret/media/native/NativeSound.ts",
+        "egret/media/native/NativeSoundChannel.ts",
+
         "egret/native/NativeGetOption.ts",
 
         "egret/net/native/NativeImageLoader.ts",

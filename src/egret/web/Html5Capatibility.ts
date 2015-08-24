@@ -195,8 +195,6 @@ module egret.web {
             }
 
             egret.Sound = Html5Capatibility._AudioClass;
-            egret.Sound.EFFECT = Html5Capatibility._AudioClass.EFFECT;
-            egret.Sound.MUSIC = Html5Capatibility._AudioClass.MUSIC;
         }
 
         /**
