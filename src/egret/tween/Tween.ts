@@ -260,7 +260,10 @@ module egret {
          * @param delta 
          * @param paused 
          */
-        private static tick(delta, paused = false):void {
+        private static tick(timeStamp:number, paused = false):void {
+            var delta = timeStamp - Tween._lastTime;
+            Tween._lastTime = timeStamp;
+
             var tweens:Tween[] = Tween._tweens.concat();
             for (var i = tweens.length - 1; i >= 0; i--) {
                 var tween:Tween = tweens[i];
@@ -271,6 +274,7 @@ module egret {
             }
         }
 
+        private static _lastTime:number = 0;
         /**
          * @private
          * 
@@ -286,7 +290,8 @@ module egret {
                 }
                 tweens.push(tween);
                 if (!Tween._inited) {
-                    egret.Ticker.getInstance().register(Tween.tick, null);
+                    Tween._lastTime = egret.getTimer();
+                    sys.$ticker.$startTick(Tween.tick, null);
                     Tween._inited = true;
                 }
             } else {
