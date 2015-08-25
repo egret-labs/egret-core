@@ -10,6 +10,12 @@
                 { "path": "../Defines.release.ts", "debug": false },
                 { "path": "media/native/NativeSound.ts", "debug": false },
                 { "path": "native/NativeRenderContext.ts", "platform": false },
+                { "path": "native/NativeDisplayList.ts", "platform": false },
+                { "path": "native/NativeSurface.ts", "platform": false },
+                { "path": "native/NativeTexture.ts", "platform": false },
+                { "path": "native/OpenGLFactory.ts", "platform": false },
+                { "path": "native/NativePlayer.ts", "platform": false },
+                { "path": "native/EgretNative.ts", "platform": false },
                 { "path": "native/NativeGetOption.ts", "debug": false }
 
             ],
