@@ -98,7 +98,7 @@ module egret {
          * @language en_US
          * Generates a new SoundChannel object to play back the sound.
          * @param startTime The initial position in seconds at which playback should start, (default = 0)
-         * @param loop Plays, the default value is 0. Greater than 0 to the number of plays, such as 1 to play 1, less than or equal to 0, to loop.
+         * @param loops Plays, the default value is 0. Greater than 0 to the number of plays, such as 1 to play 1, less than or equal to 0, to loop.
          * @version Lark 1.0
          * @platform Web,Native
          */
