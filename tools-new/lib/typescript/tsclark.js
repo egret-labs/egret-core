@@ -20848,8 +20848,8 @@ var ts;
             orderedFileList = files.map(function (f) { return f.filename; });
             checker = chk;
             program = prog;
-            ts.forEach(files, function (file) { return _this.symbolTabelToFileMap(file, file.locals); });
-            this.sortFiles();
+            //ts.forEach(files, function (file) { return _this.symbolTabelToFileMap(file, file.locals); });
+            //this.sortFiles();
             var sources = prog.getSourceFiles();
             orderedFileList.forEach(function (f) {
                 for (var i = 0; i < sources.length; i++) {

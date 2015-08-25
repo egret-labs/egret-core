@@ -9,7 +9,7 @@
                 { "path": "../Defines.debug.ts", "debug": true },
                 { "path": "../Defines.release.ts", "debug": false },
                 { "path": "media/native/NativeSound.ts", "debug": false },
-                { "path": "native/NativeRenderContext.ts", "debug": false },
+                { "path": "native/NativeRenderContext.ts", "platform": false },
                 { "path": "native/NativeGetOption.ts", "debug": false }
 
             ],
