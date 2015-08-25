@@ -91,7 +91,7 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public load(url:string) {
+        public load(url:string):void {
             var self = this;
 
             this.url = url;
@@ -128,7 +128,10 @@ module egret.web {
         /**
          * @inheritDoc
          */
-        public play(startTime:number = 0, loops:number = 0):SoundChannel {
+        public play(startTime?:number, loops?:number):SoundChannel {
+            startTime = +startTime || 0;
+            loops = +loops || 0;
+
             if (DEBUG && this.loaded == false) {
                 egret.$error(3001);
             }
@@ -154,7 +157,7 @@ module egret.web {
             this.type = type;
 
             if (callback) {
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     callback.call(thisObj);
                 }, 0);
             }
@@ -169,6 +172,11 @@ module egret.web {
             if (this.originAudio)
                 this.originAudio = null;
             HtmlSound.$clear(this.url);
+        }
+
+        public destroy():void {
+            this.originAudio = null;
+            this.loaded = false;
         }
 
         /**

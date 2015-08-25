@@ -128,6 +128,20 @@ module egret {
 
         /**
          * @language en_US
+         * The current audio release
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 释放当前音频
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        destroy():void;
+
+        /**
+         * @language en_US
          * Type, default is egret.Sound.EFFECT.
          * In the native and runtime environment, while only play a background music, sound length so as not to be too long.
          * @version Egret 2.0

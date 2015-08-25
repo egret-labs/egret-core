@@ -91,7 +91,7 @@ module egret.native {
         /**
          * @inheritDoc
          */
-        public load(url:string) {
+        public load(url:string):void {
             var self = this;
 
             if (DEBUG && !url) {
@@ -144,7 +144,10 @@ module egret.native {
         /**
          * @inheritDoc
          */
-        public play(startTime:number = 0, loops:number = 0):SoundChannel {
+        public play(startTime?:number, loops?:number):SoundChannel {
+            startTime = +startTime || 0;
+            loops = +loops || 0;
+
             if (DEBUG && this.loaded == false) {
                 egret.$error(3001);
             }
@@ -163,6 +166,18 @@ module egret.native {
          */
         public close() {
         }
+
+        public destroy():void {
+            this.loaded = false;
+
+            if (this.type == egret.Sound.EFFECT) {
+                egret_native.Audio.unloadEffect(this.url);
+            }
+            else if (egret_native_sound.currentPath == this.url) {
+                egret_native.Audio.stopBackgroundMusic(true);
+            }
+        }
+
     }
 
     Sound = NativeSound;
