@@ -61,26 +61,34 @@ module egret.web {
         $play():void {
             var self = this;
             this._startTime = Date.now();
+
+            var loop:number = 0;
+            if (self.$loops > 0) {
+                loop = self.$loops - 1;
+            }
+            else {
+                loop = -1;
+            }
             if (this.$type == egret.Sound.EFFECT) {
                 QZAppExternal.playLocalSound(
                     function (data) {
-                        self.onPlayEnd();
+                        //self.onPlayEnd();
                         //alert(JSON.stringify(data));
                     }, {
                         bid: -1,
-                        url: this.$url,
-                        loop: this.$loops ? -1 : 0  //默认为0播放一次，背景音乐和音效同时最多各为一个
+                        url: self.$url,
+                        loop: loop  //默认为0播放一次，背景音乐和音效同时最多各为一个
                     });
             }
             else {
                 QZAppExternal.playLocalBackSound(
                     function (data) {
-                        self.onPlayEnd();
+                        //self.onPlayEnd();
                         //alert(JSON.stringify(data));
                     }, {
                         bid: -1,
-                        url: this.$url,
-                        loop: this.$loops ? -1 : 0  //默认为0  播放一次，-1为循环播放。背景音乐和音效同时最多各为一个
+                        url: self.$url,
+                        loop: loop  //默认为0  播放一次，-1为循环播放。背景音乐和音效同时最多各为一个
                     });
             }
         }

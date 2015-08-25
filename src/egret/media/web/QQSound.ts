@@ -123,7 +123,7 @@ module egret.web {
                     }
                 }, {
                     bid: -1,
-                    url: url,
+                    url: Html5Capatibility._QQRootPath + url,
                     refresh: 1
                 });
 
