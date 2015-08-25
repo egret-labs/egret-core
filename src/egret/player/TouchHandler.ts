@@ -62,7 +62,7 @@ module egret.sys {
         /**
          * @private
          */
-        private touchDownTarget:{[key:number]:number} = {};
+        private touchDownTarget:{[key:number]:DisplayObject} = {};
 
         /**
          * @private
@@ -80,7 +80,7 @@ module egret.sys {
 
             var target = this.findTarget(x, y);
             if (this.touchDownTarget[touchPointID] == null) {
-                this.touchDownTarget[touchPointID] = target.$hashCode;
+                this.touchDownTarget[touchPointID] = target;
                 this.useTouchesCount++;
             }
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_BEGIN, true, true, x, y, touchPointID, true);
@@ -131,17 +131,17 @@ module egret.sys {
             }
 
             var target = this.findTarget(x, y);
-            var oldTargetCode = this.touchDownTarget[touchPointID];
+            var oldTarget = this.touchDownTarget[touchPointID];
             delete this.touchDownTarget[touchPointID];
             this.useTouchesCount--;
 
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
             target = this.findTarget(x, y);
-            if (oldTargetCode == target.$hashCode) {
+            if (oldTarget == target) {
                 TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
             }
             else {
-                TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
+                TouchEvent.dispatchTouchEvent(oldTarget, TouchEvent.TOUCH_RELEASE_OUTSIDE, true, true, x, y, touchPointID, false);
             }
         }
 
