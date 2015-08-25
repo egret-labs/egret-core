@@ -12,8 +12,6 @@
         "egret/localStorage/native/NativeLocalStorage.ts",
         "egret/external/native/NativeExternalInterface.ts",
 
-        "egret/media/native/NativeAudio.ts",
-
         "extension/version/NativeVersionController.ts",
 
         "egret/native/NativeHideHandler.ts",
@@ -27,9 +25,12 @@
         "egret/native/NativePlayer.ts",
         "egret/native/NativeRenderContext.ts",
 
+        "egret/media/native/NativeSound.ts",
+        "egret/media/native/NativeSoundChannel.ts",
+
         "egret/native/NativeGetOption.ts",
 
-        "extension/game/native/NativeGameImageLoader.ts",
+        "egret/net/native/NativeImageLoader.ts",
         "extension/game/native/NativeNetContext.ts"
     ]
 }

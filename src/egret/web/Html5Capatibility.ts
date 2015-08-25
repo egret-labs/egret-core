@@ -123,7 +123,7 @@ module egret.web {
             Html5Capatibility._canUseBlob = false;
 
             Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
-            Html5Capatibility._AudioClass = egret.web.Html5Audio;
+            Html5Capatibility._AudioClass = egret.web.HtmlSound;
             Html5Capatibility._audioMustLoad = true;
 
 
@@ -144,7 +144,7 @@ module egret.web {
                 Html5Capatibility._System_OS = SystemOSType.ADNROID;
                 if (window.hasOwnProperty("QZAppExternal") && ua.indexOf("qzone") >= 0) {
                     Html5Capatibility._audioType = AudioType.QQ_AUDIO;
-                    Html5Capatibility._AudioClass = egret.web.QQAudio;
+                    Html5Capatibility._AudioClass = egret.web.QQSound;
 
                     var bases = document.getElementsByTagName('base');
                     if (bases && bases.length > 0) {
@@ -169,7 +169,7 @@ module egret.web {
                 if (Html5Capatibility.getIOSVersion() >= 7) {
                     Html5Capatibility._canUseBlob = true;
 
-                    Html5Capatibility._AudioClass = egret.web.WebAudio;
+                    Html5Capatibility._AudioClass = egret.web.WebAudioSound;
                     Html5Capatibility._audioType = AudioType.WEB_AUDIO;
                 }
             }
@@ -191,11 +191,10 @@ module egret.web {
             var canUseWebAudio = window["AudioContext"] || window["webkitAudioContext"] || window["mozAudioContext"];
             if (!canUseWebAudio && Html5Capatibility._audioType == AudioType.WEB_AUDIO) {
                 Html5Capatibility._audioType = AudioType.HTML5_AUDIO;
-                Html5Capatibility._AudioClass = egret.web.Html5Audio;
+                Html5Capatibility._AudioClass = egret.web.HtmlSound;
             }
 
-
-            egret.IAudio = Html5Capatibility._AudioClass;
+            egret.Sound = Html5Capatibility._AudioClass;
         }
 
         /**

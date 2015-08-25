@@ -43,7 +43,6 @@
         "egret/events/TouchEvent.ts",
         "egret/events/HTTPStatusEvent.ts",
         "egret/events/IOErrorEvent.ts",
-        "egret/events/SoundEvent.ts",
         "egret/events/TextEvent.ts",
         "egret/events/FocusEvent.ts",
         "egret/display/BlendMode.ts",
@@ -117,8 +116,10 @@
         "egret/filters/BlurFilter.ts",
         "egret/filters/ColorMatrixFilter.ts",
         "egret/filters/DropShadowFilter.ts",
-        "egret/media/IAudio.ts",
+
+        "egret/media/SoundChannel.ts",
         "egret/media/Sound.ts",
+        "egret/media/Video.ts",
 
         "egret/utils/PromiseObject.ts",
 
@@ -130,9 +131,6 @@
         "extension/game/net/URLRequest.ts",
         "extension/game/net/URLLoader.ts",
         "extension/game/net/NetContext.ts",
-        "extension/game/net/IVersionController.ts",
-        "extension/game/net/BaseImageLoader.ts",
-        "extension/game/net/GameImageLoader.ts",
         "extension/game/player/Ticker.ts"
 
 

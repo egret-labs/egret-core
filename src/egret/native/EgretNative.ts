@@ -29,7 +29,7 @@
 
 module egret.native {
     function runEgret () {
-        var ticker = egret.sys.$ticker = new sys.SystemTicker();
+        var ticker = egret.sys.$ticker;
         var mainLoop = function (){
             ticker.update();
         };

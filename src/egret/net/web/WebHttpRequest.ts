@@ -214,10 +214,10 @@ module egret.web {
                 var self = this;
                 window.setTimeout(function ():void {
                     if (ioError) {//请求错误
-                        if (DEBUG && !self.hasEventListener(Event.IO_ERROR)) {
+                        if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {
                             $error(1011, url);
                         }
-                        self.dispatchEventWith(Event.IO_ERROR);
+                        self.dispatchEventWith(IOErrorEvent.IO_ERROR);
                     }
                     else {
                         self.dispatchEventWith(Event.COMPLETE);

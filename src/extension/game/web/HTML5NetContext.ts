@@ -40,33 +40,8 @@ module egret.web {
         /**
          * @private
          */
-        public _versionCtr:egret.IVersionController;
-
-        /**
-         * @private
-         */
-        private _imageLoader:egret.GameImageLoader;
-
-        private _httpLoader:egret.HttpRequest;
-
-        /**
-         * @private
-         */
         public constructor() {
             super();
-
-            this._imageLoader = new egret.GameImageLoader();
-
-            this._httpLoader = new egret.HttpRequest();
-        }
-
-        /**
-         * @private
-         *
-         * @param versionCtr
-         */
-        public initVersion(versionCtr:egret.IVersionController):void {
-            this._versionCtr = versionCtr;
         }
 
         /**
@@ -89,24 +64,25 @@ module egret.web {
             var request:URLRequest = loader._request;
             var virtualUrl:string = self.getVirtualUrl(egret.$getUrl(request));
 
-            this._httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
-            this._httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
-            this._httpLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, this);
+            var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+            httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
+            httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+            httpLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, this);
 
-            this._httpLoader.open(virtualUrl, request.method);
+            httpLoader.open(virtualUrl, request.method);
 
-            this._httpLoader.responseType = this.getResponseType(loader.dataFormat);
+            httpLoader.responseType = this.getResponseType(loader.dataFormat);
             if (request.method == URLRequestMethod.GET || !request.data) {
-                this._httpLoader.send();
+                httpLoader.send();
             }
             else if (request.data instanceof URLVariables) {
-                this._httpLoader.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                httpLoader.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 var urlVars:URLVariables = <URLVariables> request.data;
-                this._httpLoader.send(urlVars.toString());
+                httpLoader.send(urlVars.toString());
             }
             else {
-                this._httpLoader.setRequestHeader("Content-Type", "multipart/form-data");
-                this._httpLoader.send(request.data);
+                httpLoader.setRequestHeader("Content-Type", "multipart/form-data");
+                httpLoader.send(request.data);
             }
 
 
@@ -130,28 +106,36 @@ module egret.web {
             }
 
             function onError(event:egret.IOErrorEvent) {
+                removeListeners();
                 loader.dispatchEvent(event);
             }
 
             function onLoadComplete() {
+                removeListeners();
                 switch (loader.dataFormat) {
                     case URLLoaderDataFormat.VARIABLES:
-                        loader.data = new URLVariables(self._httpLoader.response);
+                        loader.data = new URLVariables(httpLoader.response);
                         break;
 
                     //case URLLoaderDataFormat.TEXT:
-                    //    loader.data = self._httpLoader.response;
+                    //    loader.data = httpLoader.response;
                     //    break;
                     //case URLLoaderDataFormat.BINARY:
-                    //    loader.data = self._httpLoader.response;
+                    //    loader.data = httpLoader.response;
                     //    break;
                     default:
-                        loader.data = self._httpLoader.response;
+                        loader.data = httpLoader.response;
                         break;
                 }
                 window.setTimeout(function () {
                     Event.dispatchEvent(loader, Event.COMPLETE)
                 }, 0);
+            }
+
+            function removeListeners():void {
+                httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                httpLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
             }
         }
 
@@ -181,17 +165,37 @@ module egret.web {
          */
         private loadSound(loader:URLLoader):void {
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
-            var audio = new egret.IAudio();
-            audio.$loadByUrl(virtualUrl, function (code:number) {
-                if (code != 0) {
-                    IOErrorEvent.dispatchIOErrorEvent(loader);
-                    return;
-                }
-                var sound = new Sound();
-                sound.$setAudio(audio);
+
+            var sound:egret.Sound = new egret.Sound();
+            sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            sound.load(virtualUrl);
+
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
+            }
+
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+
+            function onLoadComplete(e) {
+                removeListeners();
+
                 loader.data = sound;
-                $callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-            });
+
+                window.setTimeout(function() {
+                    loader.dispatchEventWith(Event.COMPLETE);
+                }, self);
+            }
+
+            function removeListeners():void {
+                sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            }
         }
 
         /**
@@ -200,6 +204,8 @@ module egret.web {
          * @param loader
          */
         private loadTexture(loader:URLLoader):void {
+            var self = this;
+
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
             if (Html5Capatibility._WebPSupport && virtualUrl.indexOf("http:") != 0) {
                 if (virtualUrl.indexOf(".png") != -1) {
@@ -209,19 +215,46 @@ module egret.web {
                     virtualUrl = virtualUrl.replace(".jpg", ".webp");
                 }
             }
-            this._imageLoader.load(virtualUrl, function (code:number, bitmapData:HTMLImageElement) {
-                if (code != 0) {
-                    IOErrorEvent.dispatchIOErrorEvent(loader);
-                    return;
-                }
+
+            var imageLoader:ImageLoader = new ImageLoader();
+            imageLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            imageLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            imageLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            imageLoader.load(virtualUrl);
+
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
+            }
+
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+
+            function onLoadComplete(e) {
+                removeListeners();
+
+                var bitmapData = <HTMLImageElement><any>imageLoader.data;
+                bitmapData.setAttribute("bitmapSrc", virtualUrl);
+                bitmapData["avaliable"] = true;
+
                 var texture:Texture = new Texture();
                 texture._setBitmapData(bitmapData);
 
                 Texture.$loaded(texture);
 
                 loader.data = texture;
-                $callAsync(Event.dispatchEvent, Event, loader, Event.COMPLETE);
-            })
+
+                window.setTimeout(function() {
+                    loader.dispatchEventWith(Event.COMPLETE);
+                }, self);
+            }
+
+            function removeListeners():void {
+                imageLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                imageLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                imageLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            }
         }
 
         /**
@@ -240,9 +273,6 @@ module egret.web {
          * @returns {string}
          */
         public getVirtualUrl(url:string):string {
-            if (this._versionCtr) {
-                return this._versionCtr.getVirtualUrl(url);
-            }
             return url;
         }
 

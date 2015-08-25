@@ -216,19 +216,6 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the net request is failed.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 网络请求加载失败
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static IO_ERROR:string = "ioError";
-        /**
-         * @language en_US
          * Emitted when the TextInput instance gets focus.
          * @version Egret 2.0
          * @platform Web,Native
@@ -270,7 +257,6 @@ module egret {
 
         /**
          * 游戏激活
-         * @constant {string} egret.Event.ACTIVATE
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -278,7 +264,6 @@ module egret {
 
         /**
          * 取消激活
-         * @constant {string} egret.Event.DEACTIVATE
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -286,7 +271,6 @@ module egret {
 
         /**
          * Event.CLOSE 常量定义 close 事件对象的 type 属性的值。
-         * @constant {string} egret.Event.CLOSE
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -294,7 +278,6 @@ module egret {
 
         /**
          * Event.CONNECT 常量定义 connect 事件对象的 type 属性的值。
-         * @constant {string} egret.Event.CONNECT
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -303,11 +286,17 @@ module egret {
 
         /**
          * Event.LEAVE_STAGE 常量定义 leaveStage 事件对象的 type 属性的值。
-         * @constant {string} egret.Event.CONNECT
          * @version Egret 2.0
          * @platform Web,Native
          */
         public static LEAVE_STAGE:string = "leaveStage";
+
+        /**
+         * Event.SOUND_COMPLETE 常量定义 在声音完成播放后调度。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public static SOUND_COMPLETE:string = "soundComplete";
 
 
         /**

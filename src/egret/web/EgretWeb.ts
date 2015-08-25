@@ -57,7 +57,7 @@ module egret.web {
                 egret.$language = language;
         }
 
-        var ticker = egret.sys.$ticker = new sys.SystemTicker();
+        var ticker = egret.sys.$ticker;
         startTicker(ticker);
         var surfaceFactory = new CanvasFactory();
         sys.surfaceFactory = surfaceFactory;
