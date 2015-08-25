@@ -37,15 +37,11 @@ module egret.web {
      */
     export class HTML5NetContext extends HashObject implements NetContext {
 
-        private _httpLoader:egret.HttpRequest;
-
         /**
          * @private
          */
         public constructor() {
             super();
-
-            this._httpLoader = new egret.HttpRequest();
         }
 
         /**
@@ -68,24 +64,25 @@ module egret.web {
             var request:URLRequest = loader._request;
             var virtualUrl:string = self.getVirtualUrl(egret.$getUrl(request));
 
-            this._httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
-            this._httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
-            this._httpLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, this);
+            var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+            httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
+            httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+            httpLoader.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, this);
 
-            this._httpLoader.open(virtualUrl, request.method);
+            httpLoader.open(virtualUrl, request.method);
 
-            this._httpLoader.responseType = this.getResponseType(loader.dataFormat);
+            httpLoader.responseType = this.getResponseType(loader.dataFormat);
             if (request.method == URLRequestMethod.GET || !request.data) {
-                this._httpLoader.send();
+                httpLoader.send();
             }
             else if (request.data instanceof URLVariables) {
-                this._httpLoader.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                httpLoader.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 var urlVars:URLVariables = <URLVariables> request.data;
-                this._httpLoader.send(urlVars.toString());
+                httpLoader.send(urlVars.toString());
             }
             else {
-                this._httpLoader.setRequestHeader("Content-Type", "multipart/form-data");
-                this._httpLoader.send(request.data);
+                httpLoader.setRequestHeader("Content-Type", "multipart/form-data");
+                httpLoader.send(request.data);
             }
 
 
@@ -117,17 +114,17 @@ module egret.web {
                 removeListeners();
                 switch (loader.dataFormat) {
                     case URLLoaderDataFormat.VARIABLES:
-                        loader.data = new URLVariables(self._httpLoader.response);
+                        loader.data = new URLVariables(httpLoader.response);
                         break;
 
                     //case URLLoaderDataFormat.TEXT:
-                    //    loader.data = self._httpLoader.response;
+                    //    loader.data = httpLoader.response;
                     //    break;
                     //case URLLoaderDataFormat.BINARY:
-                    //    loader.data = self._httpLoader.response;
+                    //    loader.data = httpLoader.response;
                     //    break;
                     default:
-                        loader.data = self._httpLoader.response;
+                        loader.data = httpLoader.response;
                         break;
                 }
                 window.setTimeout(function () {
@@ -136,9 +133,9 @@ module egret.web {
             }
 
             function removeListeners():void {
-                self._httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
-                self._httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
-                self._httpLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+                httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                httpLoader.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
             }
         }
 
