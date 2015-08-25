@@ -140,6 +140,7 @@ module egret.web {
             else {
                 audio.load();
             }
+            audio.autoplay = true;
 
             var channel = new HtmlSoundChannel(audio);
             channel.$url = this.url;
