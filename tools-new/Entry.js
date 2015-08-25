@@ -30,23 +30,10 @@
 global.DEBUG = true;
 global.egret = global.egret || {};
 global.registerClass = "egret";
+global.DontExitCode = -0xF000;
 require('./locales/zh_CN');
-var EXML = require("./commands/EXMLCommand");
-var Run = require("./commands/RunCommand");
-var Make = require("./commands/MakeCommand");
-var CreateResource = require("./commands/CreateResource");
-var Build = require("./commands/BuildCommand");
-var Clean = require("./commands/CleanCommand");
-var Shutdown = require("./commands/ShutdownCommand");
-var DesignService = require("./commands/DesignService");
-var AutoCompile = require("./commands/AutoCompileCommand");
 var Parser = require("./parser/Parser");
-var Info = require("./commands/InfoCommand");
-var Help = require("./commands/HelpCommand");
-var Create = require("./commands/CreateCommand");
-var Publish = require("./commands/PublishCommand");
-var service = require("./service/index");
-exports.DontExitCode = -0xF000;
+var utils = require('./lib/utils');
 function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
@@ -54,86 +41,26 @@ function executeCommandLine(args) {
     entry.exit(exitcode);
 }
 exports.executeCommandLine = executeCommandLine;
-function executeOption(options) {
-    return entry.executeOption(options);
-}
-exports.executeOption = executeOption;
 var Entry = (function () {
     function Entry() {
     }
     Entry.prototype.executeOption = function (options) {
-        var exitCode = 0;
-        switch (options.command) {
-            case "publish":
-                var publish = new Publish();
-                exitCode = publish.execute();
-                break;
-            case "create":
-                var create = new Create();
-                exitCode = create.execute();
-                break;
-            case "help":
-                new Help().execute();
-                exitCode = exports.DontExitCode;
-                break;
-            case "run":
-                var run = new Run();
-                run.execute();
-                exitCode = exports.DontExitCode;
-                break;
-            case "exml":
-                var exml = new EXML();
-                exitCode = exml.execute();
-                break;
-            case "make":
-                var build = new Make();
-                build.execute();
-                break;
-            case "quit":
-                new Shutdown().execute();
-                exitCode = exports.DontExitCode;
-                break;
-            case "service":
-                service.run();
-                exitCode = exports.DontExitCode;
-                break;
-            case "autocompile":
-                new AutoCompile().execute();
-                exitCode = exports.DontExitCode;
-                break;
-            case "clean":
-                new Clean().execute();
-                exitCode = exports.DontExitCode;
-                break;
-            case "build":
-                new Build().execute();
-                exitCode = exports.DontExitCode;
-                break;
-            case "designservice":
-                exitCode = new DesignService().execute();
-                break;
-            case "createresource":
-                exitCode = new CreateResource().execute();
-                break;
-            case "info":
-            default:
-                exitCode = new Info().execute();
-                break;
+        options.command = options.command || "info";
+        try {
+            var command = require("./commands/" + options.command);
         }
+        catch (e) {
+            console.log(utils.tr(10002, options.command));
+            return 10002;
+        }
+        var exitCode = new command().execute();
         return exitCode;
     };
     Entry.prototype.exit = function (exitCode) {
-        if (exports.DontExitCode == exitCode)
+        if (DontExitCode == exitCode)
             return;
         process.exit(exitCode);
     };
     return Entry;
 })();
 var entry = new Entry();
-function gotCommandResult(cmd) {
-    if (cmd.messages) {
-        cmd.messages.forEach(function (m) { return console.log(m); });
-    }
-    process.exit(cmd.exitCode || 0);
-}
-exports.gotCommandResult = gotCommandResult;

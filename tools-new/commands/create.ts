@@ -1,17 +1,19 @@
+﻿
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
-var entry = require('../entry');
-var DoCreate = require('./DoCreateCommand');
-var server = require('../server/server');
-var FileUtil = require('../lib/FileUtil');
-var CreateCommand = (function () {
-    function CreateCommand() {
-    }
-    CreateCommand.prototype.execute = function () {
+
+import utils = require('../lib/utils');
+import entry = require('../entry');
+import createAction = require('../actions/Create');
+import server = require('../server/server');
+import FileUtil = require('../lib/FileUtil');
+
+class Create implements egret.Command {
+
+    execute(): number {
         var option = egret.args;
         var project = option.getProject(true);
-        if (project.template) {
-            var create = new DoCreate();
+        if (project.type) {
+            var create = new createAction();
             create.project = project;
             return create.execute();
         }
@@ -23,9 +25,10 @@ var CreateCommand = (function () {
                 url += "?exist=true";
             server.startServer(option, url);
             console.log(utils.tr(10016, url));
-            return entry.DontExitCode;
+            return DontExitCode;
         }
-    };
-    return CreateCommand;
-})();
-module.exports = CreateCommand;
+    }
+}
+
+
+export = Create;

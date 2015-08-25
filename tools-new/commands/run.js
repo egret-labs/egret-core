@@ -1,11 +1,11 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
 var watch = require("../lib/watch");
-var Build = require('./BuildCommand');
+var Build = require('./build');
 var server = require('../server/server');
 var service = require('../service/index');
-var RunCommand = (function () {
-    function RunCommand() {
+var Run = (function () {
+    function Run() {
         var _this = this;
         this.serverStarted = false;
         this.onBuildFinish = function (exitCode) {
@@ -22,12 +22,12 @@ var RunCommand = (function () {
             }
         };
     }
-    RunCommand.prototype.execute = function () {
+    Run.prototype.execute = function () {
         var build = new Build();
         build.execute(this.onBuildFinish);
-        return 0;
+        return DontExitCode;
     };
-    RunCommand.prototype.onGotPort = function (port) {
+    Run.prototype.onGotPort = function (port) {
         egret.args.port = port;
         console.log('\n');
         var addresses = utils.getNetworkAddress();
@@ -52,7 +52,7 @@ var RunCommand = (function () {
             console.log('    ' + utils.tr(10012));
         }
     };
-    RunCommand.prototype.watchFiles = function (dir) {
+    Run.prototype.watchFiles = function (dir) {
         var _this = this;
         watch.createMonitor(dir, { persistent: true, interval: 2007 }, function (m) {
             m.on("created", function () { return _this.sendBuildCMD(); })
@@ -60,7 +60,7 @@ var RunCommand = (function () {
                 .on("changed", function () { return _this.sendBuildCMD(); });
         });
     };
-    RunCommand.prototype.sendBuildCMD = function () {
+    Run.prototype.sendBuildCMD = function () {
         service.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, function (cmd) {
             if (!cmd.exitCode)
                 console.log('    ' + utils.tr(10011));
@@ -71,6 +71,6 @@ var RunCommand = (function () {
             }
         });
     };
-    return RunCommand;
+    return Run;
 })();
-module.exports = RunCommand;
+module.exports = Run;

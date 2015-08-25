@@ -1,12 +1,12 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
-var HelpCommand = (function () {
-    function HelpCommand() {
+var Help = (function () {
+    function Help() {
     }
-    HelpCommand.prototype.execute = function () {
+    Help.prototype.execute = function () {
         utils.open("https://github.com/egret-labs/Lark/blob/master/docs/cmd-tools.md");
-        return 0;
+        return DontExitCode;
     };
-    return HelpCommand;
+    return Help;
 })();
-module.exports = HelpCommand;
+module.exports = Help;

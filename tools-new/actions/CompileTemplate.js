@@ -1,22 +1,44 @@
 /// <reference path="../lib/types.d.ts" />
-var utils = require('../lib/utils');
+var doT = require('../lib/doT');
 var FileUtil = require('../lib/FileUtil');
+var project = require('../actions/project');
 var htmlparser = require("../lib/htmlparser");
 var CompileTemplate = (function () {
     function CompileTemplate() {
     }
     CompileTemplate.compileTemplates = function (options, scripts) {
-        var templateFile = FileUtil.joinPath(options.templateDir, "index.html");
-        if (!FileUtil.exists(templateFile))
+        var index = FileUtil.joinPath(options.templateDir, "index.html");
+        if (!FileUtil.exists(index))
             return;
-        var content = FileUtil.read(templateFile);
+        var content = FileUtil.read(index);
         if (options.publish)
             content = replaceReleaseScript(content);
         scripts = options.publish ? ['main.min.js'] : scripts;
-        var scriptTags = scripts.map(function (f) { return utils.format('<script src="{0}"></script>', f); }).join('\r\n    ');
-        content = content.replace('<script id="project"></script>', scriptTags);
+        var temp = doT.template(content);
+        content = temp({ scripts: scripts });
         var outputFile = FileUtil.joinPath(options.outDir, "index.html");
         FileUtil.save(outputFile, content);
+        CompileTemplate.compileNativeRequire(options);
+    };
+    CompileTemplate.compileNativeRequire = function (options) {
+        var index = FileUtil.joinPath(options.outDir, "index.html");
+        if (!FileUtil.exists(index))
+            return;
+        var content = FileUtil.read(index);
+        var projs = project.parseProjectInfo(content);
+        var proj;
+        if (projs.length == 0) {
+            proj = {};
+        }
+        else {
+            proj = projs[0];
+        }
+        project.normalize(proj);
+        var requirejs = FileUtil.joinPath(options.templateDir, 'launcher/native_require.js');
+        var requireContent = FileUtil.read(requirejs);
+        var temp = doT.template(requireContent);
+        requireContent = temp(proj);
+        FileUtil.save(FileUtil.joinPath(options.outDir, 'launcher/native_require.js'), requireContent);
     };
     return CompileTemplate;
 })();

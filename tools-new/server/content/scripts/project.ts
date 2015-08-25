@@ -27,7 +27,7 @@ module egret.portal {
         contentWidth: number = 480;
         contentHeight: number = 800;
         showPaintRects: boolean = false;
-        template: string = "swan";
+        type: string = "empty";
         port: number = 3000;
         isConfig = location.pathname.indexOf("/$/config") >= 0;
         isConfirmed = true;
@@ -38,7 +38,7 @@ module egret.portal {
 
         constructor() {
             this.larkManifest.modules.forEach(lm=> {
-                if (lm.name == 'lark')
+                if (lm.name == 'egret')
                     lm.checked = true;
                 this.modules.forEach(m=> {
                     if (lm.name == m.name)
@@ -49,7 +49,7 @@ module egret.portal {
                 if (lm.name == this.platform)
                     lm.checked = true;
             });
-            this.selectTemplate(this.template);
+            this.selectTemplate(this.type);
             var port = parseInt(location.port || "80");
             this.port = port;
             var exist = location.search && location.search.indexOf("exist=true") >= 0;
@@ -98,7 +98,7 @@ module egret.portal {
             this.contentWidth = n;
         }
         selectTemplate(name: string) {
-            this.template = name;
+            this.type = name;
             var templates = this.larkManifest.templates;
             for (var i = 0; i < templates.length; i++) {
                 if (templates[i].name == name) {

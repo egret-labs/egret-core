@@ -4,10 +4,10 @@ var service = require('../service/index');
 var FileUtil = require('../lib/FileUtil');
 var Native = require('../actions/NativeProject');
 var CopyFiles = require('../actions/CopyFiles');
-var BuildCommand = (function () {
-    function BuildCommand() {
+var Build = (function () {
+    function Build() {
     }
-    BuildCommand.prototype.execute = function (callback) {
+    Build.prototype.execute = function (callback) {
         callback = callback || defaultBuildCallback;
         var options = egret.args;
         if (FileUtil.exists(options.srcDir) == false ||
@@ -22,9 +22,9 @@ var BuildCommand = (function () {
             command: "build",
             option: egret.args
         }, function (cmd) { return onGotBuildCommandResult(cmd, callback); }, true);
-        return 0;
+        return DontExitCode;
     };
-    return BuildCommand;
+    return Build;
 })();
 function onGotBuildCommandResult(cmd, callback) {
     if (cmd.messages) {
@@ -43,4 +43,4 @@ function onGotBuildCommandResult(cmd, callback) {
 function defaultBuildCallback(code) {
     process.exit(code);
 }
-module.exports = BuildCommand;
+module.exports = Build;

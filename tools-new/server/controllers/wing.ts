@@ -2,7 +2,6 @@
 
 import url = require('url');
 import file = require('../../lib/FileUtil');
-import DoCreate = require('../../commands/DoCreateCommand');
 import Entry = require('../../Entry');
 import CompileOptions = require('../../parser/CompileOptions');
 

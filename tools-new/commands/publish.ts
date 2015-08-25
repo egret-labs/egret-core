@@ -10,7 +10,7 @@ import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 
-class PublishCommand implements egret.Command {
+class Publish implements egret.Command {
     execute():number {
         var options = egret.args;
         if (FileUtil.exists(options.srcDir) == false ||
@@ -34,4 +34,4 @@ class PublishCommand implements egret.Command {
     }
 }
 
-export = PublishCommand;
+export = Publish;

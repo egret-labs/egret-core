@@ -21,14 +21,14 @@
         </div>
     </div>
     <script>
-        var lark = lark || {
+        var egret = egret || {
             server:{},
             portal:{}
         };
-        lark.server.options = @{! JSON.stringify(repository.options) };
-        lark.server.IPs =  @{! JSON.stringify(repository.IPs) };
-        lark.manifest = @{! JSON.stringify(repository.manifest) };
-        lark.portal.project = lark.server.options.project;
+        egret.server.options = @{! JSON.stringify(repository.options) };
+        egret.server.IPs =  @{! JSON.stringify(repository.IPs) };
+        egret.manifest = @{! JSON.stringify(repository.manifest) };
+        egret.portal.project = egret.server.options.project;
     </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ var ServiceSocket = require('./ServiceSocket');
 var file = require('../lib/FileUtil');
 var childProcess = require('child_process');
 var parser = require('../parser/Parser');
-exports.LARK_SERVICE_PORT = 51598;
+exports.LARK_SERVICE_PORT = 51545;
 //Lark version, use to shutdown if the version is different to the value passed by the build command
 var version = process.argv[2];
 var projects = {};
@@ -104,7 +104,7 @@ function getProject(path) {
 function startBackgroundService() {
     serviceCreated = true;
     var options = egret.args;
-    var nodePath = process.execPath, service = file.joinPath(options.larkRoot, 'tools/bin/lark');
+    var nodePath = process.execPath, service = file.joinPath(options.larkRoot, 'tools-new/bin/egret');
     var startupParams = ['--expose-gc', service, 'service'];
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,

@@ -3,7 +3,7 @@
 
 import utils = require('../lib/utils');
 import watch = require("../lib/watch");
-import Build = require('./BuildCommand');
+import Build = require('./build');
 import server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
 import service = require('../service/index');
@@ -11,14 +11,14 @@ import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 
-class RunCommand implements egret.Command {
+class Run implements egret.Command {
 
     private serverStarted = false;
 
     execute(): number {
         var build = new Build();
         build.execute(this.onBuildFinish);
-        return 0;
+        return DontExitCode;
     }
 
     private onBuildFinish = (exitCode: number) => {
@@ -84,4 +84,4 @@ class RunCommand implements egret.Command {
 }
 
 
-export = RunCommand;
+export = Run;

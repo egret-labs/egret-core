@@ -1,7 +1,7 @@
 /// <reference path="../../lib/types.d.ts" />
 var url = require('url');
 var file = require('../../lib/FileUtil');
-var DoCreate = require('../../commands/DoCreateCommand');
+var CreateAction = require('../../actions/Create');
 var exportObject = {
     LarkStaticContentPath: '$/content/',
     UserProjectPath: null,
@@ -39,7 +39,7 @@ function doCreate() {
     var projJSON = self.req.query['proj'];
     try {
         var proj = JSON.parse(projJSON);
-        var create = new DoCreate();
+        var create = new CreateAction();
         create.project = proj;
         create.execute();
         self.res.send(200, 'OK');

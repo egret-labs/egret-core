@@ -59,8 +59,8 @@ var Project = (function () {
         var _this = this;
         console.log('buildWholeProject');
         this.shutdown(11);
-        var larkPath = FileUtil.joinPath(utils.getLarkRoot(), 'tools/bin/lark');
-        var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'autocompile', (this.option.sourceMap ? "-sourcemap" : "")], {
+        var larkPath = FileUtil.joinPath(utils.getLarkRoot(), 'tools-new/bin/egret');
+        var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'compileservice', (this.option.sourceMap ? "-sourcemap" : "")], {
             detached: true,
             cwd: this.path
         });

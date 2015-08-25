@@ -19,7 +19,7 @@ var egret;
                 this.contentWidth = 480;
                 this.contentHeight = 800;
                 this.showPaintRects = false;
-                this.template = "swan";
+                this.type = "empty";
                 this.port = 3000;
                 this.isConfig = location.pathname.indexOf("/$/config") >= 0;
                 this.isConfirmed = true;
@@ -28,7 +28,7 @@ var egret;
                 this.background = "#888888";
                 this.frameRate = 30;
                 this.larkManifest.modules.forEach(function (lm) {
-                    if (lm.name == 'lark')
+                    if (lm.name == 'egret')
                         lm.checked = true;
                     _this.modules.forEach(function (m) {
                         if (lm.name == m.name)
@@ -39,7 +39,7 @@ var egret;
                     if (lm.name == _this.platform)
                         lm.checked = true;
                 });
-                this.selectTemplate(this.template);
+                this.selectTemplate(this.type);
                 var port = parseInt(location.port || "80");
                 this.port = port;
                 var exist = location.search && location.search.indexOf("exist=true") >= 0;
@@ -84,7 +84,7 @@ var egret;
                 this.contentWidth = n;
             };
             Project.prototype.selectTemplate = function (name) {
-                this.template = name;
+                this.type = name;
                 var templates = this.larkManifest.templates;
                 for (var i = 0; i < templates.length; i++) {
                     if (templates[i].name == name) {

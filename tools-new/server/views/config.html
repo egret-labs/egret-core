@@ -5,7 +5,7 @@
         <h2>选择一个项目模板</h2>
         <div class="template" ng-repeat="template in model.larkManifest.templates"
              title="{{template.description}}"
-             ng-class="template.name==model.template?'active':''"
+             ng-class="template.name==model.type?'active':''"
              ng-click="model.selectTemplate(template.name)">
             {{template.name}}
 

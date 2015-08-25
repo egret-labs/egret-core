@@ -7,7 +7,7 @@
 declare module egret {
 
     export interface Command {
-        execute():number;
+        execute(): number;
     }
     
     export interface Action {
@@ -36,6 +36,7 @@ declare module egret {
         params?: string[];
         platform?: string;
 
+        native?: boolean;
         projectDir: string;
         getTmpDir(): string;
         srcDir: string;
@@ -95,12 +96,23 @@ declare module egret {
         scaleMode?: string;
         contentWidth?: number;
         contentHeight?: number;
-        template?: string;
+        type?: string;
         toJSON?(): ILarkProject;
         save?(path?: string);
         orientationMode?: string;
         frameRate?: number;
         background?: string;
+        entryClass?: string;
+        moduleScripts?: string[];
+        scripts?: string[];
+        resolutionMode?: string;
+        showFPS?: boolean;
+        showPaintRect?: boolean;
+        fpsStyles?: string;
+        showLog?: boolean;
+        logFilter?: string;
+        maxTouches?: number;
+        textureScaleFactor?: number;
     }
 
     export interface CommandLineOption {
@@ -200,3 +212,4 @@ declare module egret {
 }
 
 declare var DEBUG: boolean;
+declare var DontExitCode: number;

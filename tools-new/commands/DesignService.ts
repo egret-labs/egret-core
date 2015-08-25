@@ -15,7 +15,7 @@ class DesignService implements egret.Command {
 
     execute(): number {
         server.startServer(egret.args);
-        return Entry.DontExitCode;
+        return DontExitCode;
     }
 }
 

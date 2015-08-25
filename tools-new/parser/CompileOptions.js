@@ -152,7 +152,7 @@ var CompileOptions = (function () {
             if (empty || !FileUtil.exists(tmpFile))
                 this._tmpProj = {
                     port: this._port || 3000,
-                    template: this.template,
+                    type: this.template,
                     platforms: (this.platforms || []).map(function (p) { return { name: p }; }),
                     modules: (this.modules || []).map(function (m) { return { name: m }; }),
                     contentHeight: this.contentHeight,

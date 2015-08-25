@@ -1,28 +1,34 @@
+﻿
 /// <reference path="../lib/types.d.ts" />
-var FileUtil = require('../lib/FileUtil');
-var CreateResource = (function () {
-    function CreateResource() {
-    }
-    CreateResource.prototype.execute = function () {
-        FileUtil.getExtension;
+
+import utils = require('../lib/utils');
+import FileUtil = require('../lib/FileUtil');
+
+class GenerateResource {
+    execute(): number {
+        FileUtil.getExtension
         var resources = FileUtil.searchByFunction(egret.args.srcDir, isResource);
         var config = {
             resources: []
         };
-        config.resources = resources.map(function (f) {
+
+        config.resources = resources.map(f=> {
             var ext = FileUtil.getExtension(f);
             f = FileUtil.getRelativePath(egret.args.srcDir, f);
             return {
                 name: f,
                 type: extToType[ext] || "bin",
                 url: f
-            };
+            }
         });
+
         FileUtil.save(FileUtil.joinPath(egret.args.srcDir, "resource/default.res.json"), JSON.stringify(config, null, "  "));
         return 0;
-    };
-    return CreateResource;
-})();
+    }
+
+
+}
+
 var resourceExtensions = {
     png: true,
     jpg: true,
@@ -33,7 +39,7 @@ var resourceExtensions = {
     fnt: true,
     webp: true,
     mp4: true
-};
+}
 var extToType = {
     png: "image",
     jpg: "image",
@@ -45,8 +51,12 @@ var extToType = {
     txt: "text",
     mp4: "video"
 };
-function isResource(fileName) {
+
+function isResource(fileName: string) {
+
     var ext = FileUtil.getExtension(fileName);
     return ext in resourceExtensions;
+
 }
-module.exports = CreateResource;
+
+export = GenerateResource;

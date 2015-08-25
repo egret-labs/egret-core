@@ -1,12 +1,12 @@
 /// <reference path="../lib/types.d.ts" />
-var InfoCommand = (function () {
-    function InfoCommand() {
+var info = (function () {
+    function info() {
     }
-    InfoCommand.prototype.execute = function () {
+    info.prototype.execute = function () {
         console.log("当前Egret版本：" + egret.manifest.version);
         console.log('Egret安装路径：' + egret.args.larkRoot);
         return 0;
     };
-    return InfoCommand;
+    return info;
 })();
-module.exports = InfoCommand;
+module.exports = info;

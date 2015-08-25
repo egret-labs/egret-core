@@ -35,21 +35,21 @@ locale_strings[10003] = "TSC is trying to exit, exit code is: {0}";
 locale_strings[10004] = "No output file name when minify flag is true";
 locale_strings[10006] = "manifest.json has been generated";
 locale_strings[10008] = "Duplicate interface or class name：‘{0}’ is defined both in these files ：\n{1}\n{2}";
-locale_strings[10009] = "manifest.json is not in the right format, you may need to reinstall Lark.";
+locale_strings[10009] = "manifest.json is not in the right format, you may need to reinstall Egret.";
 locale_strings[10010] = "Auto compile service is running...";
 locale_strings[10011] = "Auto compile is done.";
 locale_strings[10012] = 'If you are not using auto compile on file save, you can enable auto compile by adding "-a" after the "run" command';
-locale_strings[10013] = "lark server is running, you can access by URL: {0}";
+locale_strings[10013] = "Egret server is running, you can access by URL: {0}";
 locale_strings[10014] = "Error occurred while compiling your code：";
-locale_strings[10015] = "\"{0}\" is not a valid Lark project folder";
+locale_strings[10015] = "\"{0}\" is not a valid Egret project folder";
 locale_strings[10016] = "Please visit {0} if no browser open it automatically";
-locale_strings[10017] = "Lark project is created, you can execute \"lark run\" to run the project";
+locale_strings[10017] = "Egret project is created, you can execute \"Egret run\" to run the project";
 locale_strings[10018] = "Found circular dependency when try to sort the TypeScript files. "
     + "Maybe you are create an instance of a subclass and assign it to a static member, "
     + "or using a subclass in immediately executing codes";
 locale_strings[10019] = "Cannot find the projects used to build native apps. These projects are not include on the Github."
-    + "Please visit http://www.egret.com to download the Lark Installer. If you have install Lark, please contact us.";
-locale_strings[12000] = "Create Lark Project";
+    + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
+locale_strings[12000] = "Create Egret Project";
 locale_strings[12001] = "Please select a template";
 locale_strings[12002] = "Please set the default screen size";
 locale_strings[12003] = "Please select the Scale Mode";

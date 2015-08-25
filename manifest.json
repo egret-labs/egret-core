@@ -11,27 +11,6 @@
             ],
             "root": "src/egret",
             "dependencies": [ ]
-        },
-        {
-            "name": "egret.gui",
-            "description": "GUI 图形界面库",
-            "files": [],
-            "root": "src/extension/gui",
-            "dependencies": [ "egret" ]
-        },
-        {
-            "name": "dragonbones",
-            "description": "dragonbones",
-            "files": [],
-            "root": "src/extension/dragonbones",
-            "dependencies": [ "egret" ]
-        },
-        {
-            "name": "resource",
-            "description": "RES 资源加载库",
-            "files": [],
-            "root": "src/extension/resource",
-            "dependencies": [ "egret" ]
         }
     ],
     "platforms": [

@@ -30,9 +30,6 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'port',
         type: 'number'
     }, {
-        name: 'template',
-        type: 'string'
-    }, {
         name: 'contentWidth',
         type: 'number'
     }, {
@@ -67,6 +64,9 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         type: 'array'
     }, {
         name: 'manifest',
+        type: 'string'
+    }, {
+        name: 'type',
         type: 'string'
     }
 ];

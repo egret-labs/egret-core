@@ -1,4 +1,4 @@
-
+﻿
 /// <reference path="../lib/types.d.ts" />
 
 import utils = require('../lib/utils');
@@ -11,12 +11,12 @@ import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 
-class BuildCommand implements egret.Command {
+class Build implements egret.Command {
     execute(callback?: (exitCode: number) => void): number {
         callback = callback || defaultBuildCallback;
         var options = egret.args;
         if (FileUtil.exists(options.srcDir) == false ||
-            FileUtil.exists(options.templateDir) == false) { 
+            FileUtil.exists(options.templateDir) == false) {
             utils.exit(10015, options.projectDir);
         }
         if (FileUtil.exists(FileUtil.joinPath(options.srcDir, 'libs/lark/')) == false) {
@@ -26,8 +26,8 @@ class BuildCommand implements egret.Command {
             path: egret.args.projectDir,
             command: "build",
             option: egret.args
-        }, cmd => onGotBuildCommandResult(cmd, callback),true);
-        return 0;
+        }, cmd => onGotBuildCommandResult(cmd, callback), true);
+        return DontExitCode;
     }
 }
 
@@ -52,4 +52,4 @@ function defaultBuildCallback(code) {
     process.exit(code);
 }
 
-export = BuildCommand;
+export = Build;
