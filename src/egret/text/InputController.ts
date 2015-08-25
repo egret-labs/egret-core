@@ -122,11 +122,15 @@ module egret {
          */
         private focusHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
-            this._isFocus = true;
-            this._text._isTyping = true;
-            this._text.$invalidateContentBounds();
+            if (!this._isFocus) {
+                this._isFocus = true;
+                if (!event["showing"]) {
+                    this._text._isTyping = true;
+                }
+                this._text.$invalidateContentBounds();
 
-            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
+                this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
+            }
         }
 
         /**
@@ -135,15 +139,17 @@ module egret {
          * @param event 
          */
         private blurHandler(event:Event):void {
-            //不再显示竖线，并且输入框显示最开始
-            this._isFocus = false;
-            this._text._isTyping = false;
-            this._text.$invalidateContentBounds();
+            if (this._isFocus) {
+                //不再显示竖线，并且输入框显示最开始
+                this._isFocus = false;
+                this._text._isTyping = false;
+                this._text.$invalidateContentBounds();
 
-            //失去焦点后调用
-            this.stageText.$onBlur();
+                //失去焦点后调用
+                this.stageText.$onBlur();
 
-            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT, true));
+                this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT, true));
+            }
         }
 
         //点中文本
@@ -158,7 +164,6 @@ module egret {
             if (this._isFocus) {
                 return;
             }
-            this._isFocus = true;
 
             //强制更新输入框位置
             this.stageText.$show();
