@@ -98,7 +98,7 @@ module egret {
          * @language en_US
          * Generates a new SoundChannel object to play back the sound.
          * @param startTime The initial position in seconds at which playback should start, (default = 0)
-         * @param loop Defines should play the audio again when the audio is ended. (default = false)
+         * @param loop Plays, the default value is 0. Greater than 0 to the number of plays, such as 1 to play 1, less than or equal to 0, to loop.
          * @version Lark 1.0
          * @platform Web,Native
          */
@@ -106,7 +106,7 @@ module egret {
          * @language zh_CN
          * 生成一个新的 SoundChannel 对象来播放该声音。此方法返回 SoundChannel 对象，访问该对象可停止声音调整音量。
          * @param startTime 应开始播放的初始位置（以秒为单位），默认值是 0
-         * @param loops 是否需要循环播放，默认值是 0
+         * @param loops 播放次数，默认值是 0，循环播放。 大于 0 为播放次数，如 1 为播放 1 次；小于等于 0，为循环播放。
          * @version Lark 1.0
          * @platform Web,Native
          */
