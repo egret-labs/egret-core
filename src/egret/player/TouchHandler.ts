@@ -136,7 +136,6 @@ module egret.sys {
             this.useTouchesCount--;
 
             TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_END, true, true, x, y, touchPointID, false);
-            target = this.findTarget(x, y);
             if (oldTarget == target) {
                 TouchEvent.dispatchTouchEvent(target, TouchEvent.TOUCH_TAP, true, true, x, y, touchPointID, false);
             }
