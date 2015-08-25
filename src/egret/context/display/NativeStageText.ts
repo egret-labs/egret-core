@@ -171,7 +171,10 @@ module egret {
         //全屏键盘
         private showScreenKeyboard():void {
             var self = this;
-            self.dispatchEvent(new egret.Event("blur"));
+
+            self.dispatchEvent(new egret.Event("focus"));
+            Event.dispatchEvent(self, "focus", false, {"showing" : true});
+
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self._multiline) {//多行文本
                     if (self.isFinishDown) {
@@ -191,6 +194,7 @@ module egret {
                     egret_native.TextInputOp.setKeybordOpen(false);
 
                     self.dispatchEvent(new egret.Event("updateText"));
+                    self.dispatchEvent(new egret.Event("blur"));
                 }
             };
 
@@ -199,16 +203,19 @@ module egret {
                 if (self._multiline) {//多行文本
                     self.isFinishDown = true;
                 }
+                self.dispatchEvent(new egret.Event("blur"));
             };
         }
 
         private showPartKeyboard():void {
+            var self = this;
+            self.dispatchEvent(new egret.Event("focus"));
+
             var container:egret.DisplayObjectContainer = this.container;
             var stage:egret.Stage = egret.MainContext.instance.stage;
             stage.addChild(container);
             this.createText();
 
-            var self = this;
 
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self._multiline) {//多行文本
