@@ -123,21 +123,13 @@ module egret.native {
                 }
             }
             else if (this.type == egret.Sound.EFFECT) {
-                if (egret.native.NativeNetContext.__use_asyn) {
-                    var promise = new egret.PromiseObject();
-                    promise.onSuccessFunc = function (soundId) {
-                        if (callback) {
-                            callback.call(thisObj);
-                        }
-                    };
-                    egret_native.Audio.preloadEffectAsync(this.url, promise);
-                }
-                else {
-                    egret_native.Audio.preloadEffect(this.url);
+                var promise = new egret.PromiseObject();
+                promise.onSuccessFunc = function (soundId) {
                     if (callback) {
-                        egret.callLater(callback, thisObj);
+                        callback.call(thisObj);
                     }
-                }
+                };
+                egret_native.Audio.preloadEffectAsync(this.url, promise);
             }
         }
 

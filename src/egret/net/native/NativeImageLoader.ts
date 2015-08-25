@@ -73,7 +73,7 @@ module egret.native {
         private download(url:string):void {
             var self = this;
             var promise = egret.PromiseObject.create();
-            promise.onSuccessFunc = function() {
+            promise.onSuccessFunc = function () {
                 self.loadTexture(url);
             };
             promise.onErrorFunc = function () {
@@ -84,26 +84,17 @@ module egret.native {
 
         private loadTexture(url:string):void {
             var self = this;
-            if (egret["Net" + "Context"].__use_asyn) {//异步的
-                var promise = new egret.PromiseObject();
-                promise.onSuccessFunc = function (bitmapData) {
-                    self.data = bitmapData;
-
-                    self.dispatchEventWith(Event.COMPLETE);
-                };
-                promise.onErrorFunc = function () {
-                    self.dispatchEventWith(IOErrorEvent.IO_ERROR);
-                };
-                egret_native.Texture.addTextureAsyn(url, promise);
-            }
-            else {
-                var bitmapData = egret_native.Texture.addTexture(url);
+            var promise = new egret.PromiseObject();
+            promise.onSuccessFunc = function (bitmapData) {
                 self.data = bitmapData;
 
-                egret.$callAsync(function() {
-                    self.dispatchEventWith(Event.COMPLETE);
-                }, self);
-            }
+                self.dispatchEventWith(Event.COMPLETE);
+            };
+            promise.onErrorFunc = function () {
+                self.dispatchEventWith(IOErrorEvent.IO_ERROR);
+            };
+            egret_native.Texture.addTextureAsyn(url, promise);
+
         }
 
         /**
