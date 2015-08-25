@@ -665,7 +665,7 @@ module egret.native {
          */
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
-            var font:string = (<NativeNetContext>NetContext.getNetContext()).getVirtualUrl(TextField.default_fontFamily);
+            var font:string = TextField.default_fontFamily;
             egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             this.$hasStrokeText = false;
             egret_native.Label.drawText(text, x, y);
@@ -684,7 +684,7 @@ module egret.native {
          * @platform Web,Native
          */
         public measureText(text:string):TextMetrics {
-            var font:string = (<NativeNetContext>NetContext.getNetContext()).getVirtualUrl(TextField.default_fontFamily);
+            var font:string = TextField.default_fontFamily;
             egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
