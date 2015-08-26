@@ -45,6 +45,8 @@
         "egret/events/IOErrorEvent.ts",
         "egret/events/TextEvent.ts",
         "egret/events/FocusEvent.ts",
+        "egret/events/GeolocationEvent.ts",
+        "egret/events/OrientationEvent.ts",
         "egret/display/BlendMode.ts",
         "egret/display/DisplayObject.ts",
         "egret/display/Bitmap.ts",
@@ -61,13 +63,7 @@
         "egret/display/Shape.ts",
         "egret/display/Sprite.ts",
         "egret/display/Stage.ts",
-        "egret/display/FrameLabel.ts",
-        "egret/display/MovieClipData.ts",
-        "egret/display/MovieClipDataFactory.ts",
-        "egret/display/MovieClip.ts",
         "egret/display/SpriteSheet.ts",
-        "egret/display/ScrollView.ts",
-        "egret/display/ScrollViewProperties.ts",
 
         "egret/net/HttpMethod.ts",
         "egret/net/HttpResponseType.ts",
@@ -105,9 +101,6 @@
         "egret/text/HtmlTextParser.ts",
         "egret/text/BitmapFont.ts",
         "egret/text/BitmapText.ts",
-        "egret/tween/Tween.ts",
-        "egret/tween/Ease.ts",
-        "egret/system/MainContext.ts",
         "egret/localStorage/localStorage.ts",
         "egret/external/ExternalInterface.ts",
         "egret/filters/BitmapFilterQuality.ts",
@@ -123,6 +116,17 @@
 
         "egret/utils/PromiseObject.ts",
 
+        "extension/game/system/MainContext.ts",
+
+        "extension/game/display/FrameLabel.ts",
+        "extension/game/display/MovieClipData.ts",
+        "extension/game/display/MovieClipDataFactory.ts",
+        "extension/game/display/MovieClip.ts",
+        "extension/game/display/ScrollView.ts",
+        "extension/game/display/ScrollViewProperties.ts",
+
+        "extension/game/tween/Tween.ts",
+        "extension/game/tween/Ease.ts",
 
         "extension/game/net/URLRequestMethod.ts",
         "extension/game/net/URLLoaderDataFormat.ts",

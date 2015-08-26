@@ -67,6 +67,9 @@ module egret.sys {
             if (this.playerList.indexOf(player) != -1) {
                 return;
             }
+
+            $TempStage = player.stage;
+
             if (DEBUG) {
                 egret_stages.push(player.stage);
             }
@@ -276,6 +279,8 @@ module egret.sys {
      * 心跳计时器单例
      */
     export var $ticker:SystemTicker = new sys.SystemTicker();
+
+    export var $TempStage:egret.Stage;
 }
 
 if (DEBUG) {

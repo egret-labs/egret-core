@@ -642,7 +642,7 @@ module egret.sys {
             if (!surface) {
                 return null;
             }
-            if(MainContext.runtimeType == MainContext.RUNTIME_HTML5) {
+            if(Capabilities.runtimeType == RuntimeType.WEB) {
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。
                 surface.width = Math.max(257, width);
                 surface.height = Math.max(257, height);

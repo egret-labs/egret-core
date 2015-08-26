@@ -101,7 +101,7 @@ module egret.native {
             this.socket.close();
         }
     }
-    if (egret.MainContext.runtimeType == egret.MainContext.RUNTIME_NATIVE) {
+    if (egret.Capabilities.runtimeType == RuntimeType.NATIVE) {
         ISocket = NativeSocket;
     }
 }

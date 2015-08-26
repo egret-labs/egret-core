@@ -105,7 +105,7 @@ module egret.web {
 
     }
 
-    if (egret.MainContext.runtimeType == egret.MainContext.RUNTIME_HTML5) {
+    if (egret.Capabilities.runtimeType == RuntimeType.WEB) {
         ISocket = HTML5WebSocket;
     }
 }

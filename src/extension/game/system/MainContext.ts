@@ -86,7 +86,9 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public stage:Stage = null;
+        public get stage():Stage {
+            return egret.sys.$TempStage;
+        }
 
         /**
          * @version Egret 2.0
@@ -153,7 +155,7 @@ module egret {
 }
 
 
-var testDeviceType = function () {
+var testDeviceType1 = function () {
     if (!this["navigator"]) {
         return true
     }
@@ -161,16 +163,16 @@ var testDeviceType = function () {
     return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
 };
 
-var testRuntimeType = function () {
+var testRuntimeType1 = function () {
     if (this["navigator"]) {
         return true;
     }
     return false;
 };
 
-egret.MainContext.deviceType = testDeviceType() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext.runtimeType = testRuntimeType() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
+egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
+egret.MainContext.runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 
 
-delete testDeviceType;
-delete testRuntimeType;
+delete testDeviceType1;
+delete testRuntimeType1;
