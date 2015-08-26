@@ -288,11 +288,10 @@ function sortFileList(list, srcPath) {
     }
     var pathList = sortOnPathLevel(paths, pathInfoList, true);
     var gameList = [];
-    for (var key in pathList) {
-        list = pathList[key];
+    pathList.forEach(function (list) {
         list = sortOnReference(list);
         gameList = list.concat(gameList);
-    }
+    });
     return gameList;
 }
 //function filterFileList(gameList, srcPath) {
@@ -410,7 +409,7 @@ function sortOnReference(list) {
     }
     var pathList = sortOnPathLevel(list, pathRelyInfo, false);
     var gameList = [];
-    for (var key in pathList) {
+    for (var key = 0; key < pathList.length; key++) {
         list = pathList[key];
         list.sort();
         gameList = list.concat(gameList);

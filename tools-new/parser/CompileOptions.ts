@@ -112,7 +112,7 @@ class CompileOptions implements egret.LarkToolArgs {
     platforms: string[];
     contentHeight: number;
     contentWidth: number;
-    template: string;
+    type: string;
     scaleMode: string;
     orientation: string;
     background: string;
@@ -141,7 +141,7 @@ class CompileOptions implements egret.LarkToolArgs {
             if (empty || !FileUtil.exists(tmpFile))
                 this._tmpProj = {
                     port: this._port || 3000,
-                    type: this.template,
+                    type: this.type,
                     platforms: (this.platforms || []).map(p=> { return { name: p } }),
                     modules: (this.modules || []).map(m=> { return { name: m } }),
                     contentHeight: this.contentHeight,
