@@ -33,11 +33,7 @@ module egret {
      */
     const enum Keys {
         explicitBitmapWidth,
-        explicitBitmapHeight,
-        explicitScaleX,
-        explicitScaleY,
-        explicitUnsignedScaleX,
-        explicitUnsignedScaleY
+        explicitBitmapHeight
     }
 
     /**
@@ -90,11 +86,7 @@ module egret {
             this.$renderRegion = new sys.Region();
             this.$Bitmap = {
                 0: NaN, //explicitBitmapWidth,
-                1: NaN,  //explicitBitmapHeight,
-                2: 1, //explicitScaleX,
-                3: 1, //explicitScaleY
-                4: 1, //explicitUnsignedScaleX,
-                5: 1 //explicitUnsignedScaleY
+                1: NaN  //explicitBitmapHeight,
             };
 
             this.texture = bitmapData;
@@ -331,71 +323,6 @@ module egret {
             return isNaN(values[Keys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[Keys.explicitBitmapHeight];
         }
 
-
-        /**
-         * @private
-         */
-        $getScaleX():number {
-            return this.$Bitmap[Keys.explicitScaleX];
-        }
-
-        /**
-         * @private
-         */
-        $setScaleX(value:number):boolean {
-            value = egret.getNumber(value);
-            var values = this.$Bitmap;
-            if (value == values[Keys.explicitScaleX]) {
-                return false;
-            }
-            values[Keys.explicitScaleX] = value;
-            values[Keys.explicitUnsignedScaleX] = Math.abs(value);
-
-            this.$invalidateContentBounds();
-
-            if (value < 0) {
-                return super.$setScaleX(-1);
-            }
-            else if (value == 0) {
-                return super.$setScaleX(0);
-            }
-            else {
-                return super.$setScaleX(1);
-            }
-        }
-
-        /**
-         * @private
-         */
-        $getScaleY():number {
-            return this.$Bitmap[Keys.explicitScaleY];
-        }
-
-        /**
-         * @private
-         */
-        $setScaleY(value:number):boolean {
-            value = egret.getNumber(value);
-            var values = this.$Bitmap;
-            if (value == values[Keys.explicitScaleY]) {
-                return false;
-            }
-            values[Keys.explicitScaleY] = value;
-            values[Keys.explicitUnsignedScaleY] = Math.abs(value);
-
-            this.$invalidateContentBounds();
-
-            if (value < 0) {
-                return super.$setScaleY(-1);
-            }
-            else if (value == 0) {
-                return super.$setScaleY(0);
-            }
-            else {
-                return super.$setScaleY(1);
-            }
-        }
-
         /**
          * @private
          */
@@ -405,8 +332,7 @@ module egret {
                 var w:number = !isNaN(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
                 var h:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
 
-                var values = this.$Bitmap;
-                bounds.setTo(0, 0, w * values[Keys.explicitUnsignedScaleX], h * values[Keys.explicitUnsignedScaleY]);
+                bounds.setTo(0, 0, w, h);
             }
             else {
                 bounds.setEmpty();
@@ -423,10 +349,8 @@ module egret {
                 var destH:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
 
                 var values = this.$Bitmap;
-                destW *= values[Keys.explicitUnsignedScaleX];
-                destH *= values[Keys.explicitUnsignedScaleY];
                 Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing,
-                    bitmapData._offsetX * values[Keys.explicitUnsignedScaleX], bitmapData._offsetY * values[Keys.explicitUnsignedScaleY]);
+                    bitmapData._offsetX, bitmapData._offsetY);
             }
         }
 
