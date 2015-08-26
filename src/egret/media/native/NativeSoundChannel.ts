@@ -27,11 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret_native_sound {
-    export var currentPath = "";
-}
-
-module egret.native {
+module egret.web {
 
     /**
      * @private
@@ -52,28 +48,29 @@ module egret.native {
          * @private
          */
         $startTime:number = 0;
-
-        $type:string;
-
-        private _effectId;
+        /**
+         * @private
+         */
+        private audio:HTMLAudioElement = null;
 
         /**
          * @private
          */
-        constructor() {
+        constructor(audio:HTMLAudioElement) {
             super();
+            audio.addEventListener("ended", this.onPlayEnd);
+            this.audio = audio;
         }
 
         $play():void {
-            var self = this;
-            this._startTime = Date.now();
-
-            if (this.$type == egret.Sound.MUSIC) {
-                egret_native_sound.currentPath = this.$url;
-                egret_native.Audio.playBackgroundMusic(this.$url, this.$loops > 0);
+            try {
+                this.audio.currentTime = this.$startTime;
             }
-            else if (this.$type == egret.Sound.EFFECT) {
-                this._effectId = egret_native.Audio.playEffect(this.$url, this.$loops > 0);
+            catch (e) {
+
+            }
+            finally {
+                this.audio.play();
             }
         }
 
@@ -83,6 +80,7 @@ module egret.native {
         private onPlayEnd = () => {
             if (this.$loops == 1) {
                 this.stop();
+
                 this.dispatchEventWith(egret.Event.SOUND_COMPLETE);
                 return;
             }
@@ -92,6 +90,7 @@ module egret.native {
             }
 
             /////////////
+            this.audio.load();
             this.$play();
         };
 
@@ -100,19 +99,14 @@ module egret.native {
          * @inheritDoc
          */
         public stop() {
-            if (this.$type == egret.Sound.MUSIC) {
-                if (this.$url == egret_native_sound.currentPath) {
-                    egret_native.Audio.stopBackgroundMusic(false);
-                }
-            }
-            else if (this.$type == egret.Sound.EFFECT) {
-                if (this._effectId) {
-                    egret_native.Audio.stopEffect(this._effectId);
-                    this._effectId = null;
-                }
-            }
+            if (!this.audio)
+                return;
+            var audio = this.audio;
+            audio.pause();
+            audio.removeEventListener("ended", this.onPlayEnd);
+            this.audio = null;
 
-            this.dispatchEventWith(egret.Event.SOUND_COMPLETE);
+            HtmlSound.$recycle(this.$url, audio);
         }
 
         /**
@@ -120,36 +114,28 @@ module egret.native {
          * @inheritDoc
          */
         public get volume():number {
-            return 1;
+            if (!this.audio)
+                return 1;
+            return this.audio.volume;
         }
 
         /**
          * @inheritDoc
          */
         public set volume(value:number) {
-            //this.audio.volume = value;
+            if (!this.audio)
+                return;
+            this.audio.volume = value;
         }
-
-        /**
-         * @private
-         */
-        private _startTime:number = 0;
 
         /**
          * @private
          * @inheritDoc
          */
         public get position():number {
-            return Math.floor((Date.now() - this._startTime));
-        }
-
-        public $destroy():void {
-            if (this.$type == egret.Sound.EFFECT) {
-                egret_native.Audio.unloadEffect(this.$url);
-            }
-            else if (egret_native_sound.currentPath == this.$url) {
-                egret_native.Audio.stopBackgroundMusic(true);
-            }
+            if (!this.audio)
+                return 0;
+            return this.audio.currentTime;
         }
     }
 }

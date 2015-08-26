@@ -129,16 +129,6 @@ module egret.web {
 
         }
 
-        public preload(type:string, callback:Function = null, thisObj:any = null):void {
-            this.type = type;
-
-            if (callback) {
-                window.setTimeout(function () {
-                    callback.call(thisObj);
-                }, 0);
-            }
-        }
-
         /**
          * @inheritDoc
          */
@@ -163,17 +153,6 @@ module egret.web {
          * @inheritDoc
          */
         public close() {
-        }
-
-        public destroy():void {
-            this.loaded = false;
-
-            if (this.type == egret.Sound.EFFECT) {
-                QZAppExternal.stopSound();
-            }
-            else {
-                QZAppExternal.stopBackSound();
-            }
         }
 
     }

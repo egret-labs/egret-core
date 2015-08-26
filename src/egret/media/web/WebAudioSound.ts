@@ -203,16 +203,6 @@ module egret.web {
             }
         }
 
-        public preload(type:string, callback:Function = null, thisObj:any = null):void {
-            this.type = type;
-
-            if (callback) {
-                window.setTimeout(function () {
-                    callback.call(thisObj);
-                }, 0);
-            }
-        }
-
         /**
          * @inheritDoc
          */
@@ -238,11 +228,5 @@ module egret.web {
          */
         public close() {
         }
-
-        public destroy():void {
-            this.loaded = false;
-
-        }
-
     }
 }
