@@ -5,7 +5,7 @@ import crypto = require('crypto');
 import FileUtil = require('../lib/FileUtil');
 
 
-class CompileOptions implements egret.LarkToolArgs {
+class CompileOptions implements egret.ToolArgs {
     command: string;
     action: string;
     params: string[];
@@ -158,7 +158,7 @@ class CompileOptions implements egret.LarkToolArgs {
         return this._tmpProj;
     }
 
-    static parse(option: egret.LarkToolArgs) {
+    static parse(option: egret.ToolArgs) {
         var it = new CompileOptions();
         for (var p in option)
         {
@@ -167,7 +167,7 @@ class CompileOptions implements egret.LarkToolArgs {
         return it;
     }
 
-    toJSON(): egret.LarkToolArgs {
+    toJSON(): egret.ToolArgs {
         var options = this;
         var json: any = {};
         for (var k in this) {

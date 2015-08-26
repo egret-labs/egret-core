@@ -6,7 +6,7 @@ module egret {
     export var app:ng.IModule = angular.module('lark', []);
 
     export module server {
-        export var options:LarkToolArgs = null;
+        export var options:ToolArgs = null;
     }
 
     export module portal {

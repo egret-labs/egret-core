@@ -3690,7 +3690,7 @@ declare module ts {
     function executeWithOption(commandLine: ParsedCommandLine): Compiler.LarkCompileResult;
 }
 export declare module Compiler {
-    export function executeWithOption(options: egret.LarkToolArgs, files: string[], out?: string, outDir?: string): Compiler.LarkCompileResult;
+    export function executeWithOption(options: egret.ToolArgs, files: string[], out?: string, outDir?: string): Compiler.LarkCompileResult;
     export function exit (exitCode: number) : number;
     export function write (msg: any): void;
     export interface LarkCompileResult {

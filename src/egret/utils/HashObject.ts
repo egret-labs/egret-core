@@ -27,6 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/// <reference path="registerclass.ts" />
 
 module egret {
     /**
@@ -91,5 +92,3 @@ module egret {
         egret.$markReadOnly(HashObject, "hashCode");
     }
 }
-
-egret.registerClass(function () { }, "_______");

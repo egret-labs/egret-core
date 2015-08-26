@@ -37,7 +37,7 @@ function parseProjectInfo(html) {
         if (el.attribs && el.attribs['class'] == "lark-player") {
             containers.push(el);
         }
-        if (el.type == "script") {
+        if (el.type == "script" && el.attribs) {
             scripts.push(el.attribs['src']);
         }
         if (el.children) {

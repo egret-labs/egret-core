@@ -2773,7 +2773,7 @@ var ts;
                 getImplementedInterfaces(node, interfaces, true);
                 //lark.registerClass(DisplayObject, "lark.DisplayObject", ["lark.IEventEmitter", "lark.sys.Renderable"]);
                 writeLine();
-                write('lark.registerClass(');
+                write('egret.registerClass(');
                 emit(node.name);
                 write(',"' + fullName + '"');
                 var interfacesArray = Object.keys(interfaces);
