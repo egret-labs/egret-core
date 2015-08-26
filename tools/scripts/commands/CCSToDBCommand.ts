@@ -9,6 +9,8 @@ class CCSToDBCommand implements egret.Command {
     private bones = {};
     private resultArr = [];
     private layersInfo = {};
+    private dbTexture = {};
+
 
     private outputPath;
     private sourcePath;
@@ -56,6 +58,11 @@ class CCSToDBCommand implements egret.Command {
         catch (e) {
             return;
         }
+
+        this.bones = {};
+        this.lresultArr = [];
+        this.layersInfo = {};
+        this.dbTexture = {};
 
         var filePathArr = fileUrl.split("/");
         var dbName = filePathArr[filePathArr.length - 4] + "_" + filePathArr[filePathArr.length - 3];
@@ -235,11 +242,9 @@ class CCSToDBCommand implements egret.Command {
         return result;
     }
 
-    private count = 0;
     private timelines;
 
     private setTimeline(dbTimelines, stuTimelines, dbData) {
-        this.count++;
         var tempDbTimelines = {};
 
         this.timelines = {};
@@ -291,8 +296,6 @@ class CCSToDBCommand implements egret.Command {
             this.setTimeline(dbAnimation["timeline"], stuAnimation["mov_bone_data"], dbData);
         }
     }
-
-    private dbTexture = {};
 
     private setDisplay(dbDisplays, stuDisplays, dbData) {
         for (var i = 0; stuDisplays && i < stuDisplays.length; i++) {
