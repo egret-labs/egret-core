@@ -57,17 +57,8 @@ module egret {
             this._audio.autoplay = true;
             this._audio.volume = this._volume;
 
-            var self = this;
-            var func = function (e) {
-                self._audio.removeEventListener("ended", func);
-
-                if (self._onEndedCall) {
-                    self._onEndedCall.call(null, e);
-                }
-
-                self.clear();
-            };
-            this._audio.addEventListener("ended", func);
+            this._audio.removeEventListener("ended", this.func);
+            this._audio.addEventListener("ended", this.func);
 
             this.initStart();
 
@@ -81,6 +72,16 @@ module egret {
                 this._audio.play();
             }
         }
+
+        private func = (e)=> {
+            this._audio.removeEventListener("ended", this.func);
+
+            if (this._onEndedCall) {
+                this._onEndedCall.call(null, e);
+            }
+
+            this.clear();
+        };
 
         private clear():void {
             try {

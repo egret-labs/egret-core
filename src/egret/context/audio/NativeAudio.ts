@@ -38,30 +38,47 @@ module egret {
         constructor() {
         }
 
-        //private _audio;
+        private _audio;
         private _loop:boolean = false;
-
-        private _type:string = "";
-
-        private _effectId;
-        private _path:string = "";
 
         /**
          * 播放声音
          * @method egret.Sound#play
          * @param loop {boolean} 是否循环播放，默认为false
          */
-
         public _play(type?:string):void {
-            this._type = type;
+            this.removeListeners();
 
-            if (this._type == egret.Sound.MUSIC) {
-                egret_native_sound.currentPath = this._path;
-                egret_native.Audio.playBackgroundMusic(this._path, this._loop);
+            this.paused = false;
+            this._audio.autoplay = true;
+            this._audio.volume = this._volume * 100;
+
+            this._audio.removeEventListener("ended", this.func);
+            this._audio.addEventListener("ended", this.func);
+
+            this.initStart();
+
+            this._audio.currentTime = this._startTime;
+            this._audio.play();
+        }
+
+        private func = (e)=> {
+            this._audio.removeEventListener("ended", this.func);
+
+            if (this._onEndedCall) {
+                this._onEndedCall.call(null, e);
             }
-            else if (this._type == egret.Sound.EFFECT) {
-                this._effectId = egret_native.Audio.playEffect(this._path, this._loop);
-            }
+
+            this.clear();
+        };
+
+        private clear():void {
+            this._audio.pause();
+            this.removeListeners();
+
+            if (this._loop && !this.paused)
+                this._play();
+
         }
 
         private paused:boolean = true;
@@ -72,18 +89,7 @@ module egret {
          */
         public _pause():void {
             this.paused = true;
-
-            if (this._type == egret.Sound.MUSIC) {
-                if (this._path == egret_native_sound.currentPath) {
-                    egret_native.Audio.stopBackgroundMusic(false);
-                }
-            }
-            else if (this._type == egret.Sound.EFFECT) {
-                if (this._effectId) {
-                    egret_native.Audio.stopEffect(this._effectId);
-                    this._effectId = null;
-                }
-            }
+            this._audio.pause();
         }
 
         /**
@@ -91,48 +97,24 @@ module egret {
          * @method egret.Sound#load
          */
         public _load():void {
+            this._audio.load();
         }
 
-        public _preload(type:string, callback:Function = null, thisObj:any = null):void {
-            this._type = type;
-            if (this._type == egret.Sound.MUSIC) {
-                egret_native.Audio.preloadBackgroundMusic(this._path);
-                if (callback) {
-                    egret.callLater(callback, thisObj);
-                }
-            }
-            else if (this._type == egret.Sound.EFFECT) {
-                if (egret.NativeNetContext.__use_asyn) {
-                    var promise = new egret.PromiseObject();
-                    promise.onSuccessFunc = function (soundId) {
-                        if (callback) {
-                            callback.call(thisObj);
-                        }
-                    };
-                    egret_native.Audio.preloadEffectAsync(this._path, promise);
-                }
-                else {
-                    egret_native.Audio.preloadEffect(this._path);
-                    if (callback) {
-                        egret.callLater(callback, thisObj);
-                    }
-                }
-            }
-        }
-
-        public _setAudio(path:string) {
-            this._path = path;
+        public _setAudio(audio):void {
+            this._audio = audio;
         }
 
         private initStart():void {
-            //var self = this;
-            //for (var i = 0; i < self._listeners.length; i++) {
-            //    var bin = self._listeners[i];
-            //    this._audio.addEventListener(bin.type, bin.listener, bin.useCapture);
-            //}
+            var self = this;
+            for (var i = 0; i < self._listeners.length; i++) {
+                var bin = self._listeners[i];
+                this._audio.addEventListener(bin.type, bin.listener, bin.useCapture);
+            }
         }
 
         private _listeners:Array<any> = [];
+
+        private _onEndedCall:Function = null;
 
         /**
          * 添加事件监听
@@ -140,42 +122,72 @@ module egret {
          * @param listener 监听函数
          */
         public _addEventListener(type:string, listener:Function, useCapture:boolean = false):void {
-            //this._listeners.push({ type: type, listener: listener, useCapture: useCapture });
-            //if (this._audio) {
-            //    this._audio.addEventListener(type, listener, useCapture);
-            //}
+            if (type == "ended") {
+                this._onEndedCall = listener;
+                return;
+            }
+
+            this._listeners.push({type: type, listener: listener, useCapture: useCapture});
+            if (this._audio) {
+                this._audio.addEventListener(type, listener, useCapture);
+            }
         }
 
-        /**s
+        private removeListeners():void {
+            var self = this;
+            for (var i = 0; i < self._listeners.length; i++) {
+                var bin = self._listeners[i];
+
+                if (this._audio) {
+                    this._audio.removeEventListener(bin.type, bin.listener, bin.useCapture);
+                }
+            }
+        }
+
+        /**
          * 移除事件监听
          * @param type 事件类型
          * @param listener 监听函数
          */
         public _removeEventListener(type:string, listener:Function, useCapture:boolean = false):void {
-            //var self = this;
-            //for (var i = 0; i < self._listeners.length; i++) {
-            //    var bin = self._listeners[i];
-            //    if (bin.listener == listener && bin.useCapture == useCapture && bin.type == type) {
-            //        self._listeners.splice(i, 1);
-            //        if (this._audio) {
-            //            this._audio.removeEventListener(type, listener, useCapture);
-            //        }
-            //        break;
-            //    }
-            //}
+            if (type == "ended") {
+                this._onEndedCall = null;
+                return;
+            }
+
+            var self = this;
+            for (var i = 0; i < self._listeners.length; i++) {
+                var bin = self._listeners[i];
+                if (bin.listener == listener && bin.useCapture == useCapture && bin.type == type) {
+                    self._listeners.splice(i, 1);
+                    if (this._audio) {
+                        this._audio.removeEventListener(type, listener, useCapture);
+                    }
+                    break;
+                }
+            }
         }
 
+        public _preload(type:string, callback:Function = null, thisObj:any = null):void {
+            egret.callLater(callback, thisObj);
+        }
+
+        public _destroy():void {
+
+        }
+
+        private _volume:number = 1;
         /**
          * 获取当前音量值
          * @returns number
          */
         public _getVolume():number {
-            //return this._audio.volume;
-            return 1;
+            return this._volume;
         }
 
         public _setVolume(value:number):void {
-            //this._audio.volume = Math.max(0, Math.min(value, 1));
+            this._volume = Math.max(0, Math.min(value, 1));
+            this._audio.volume = this._volume * 100;
         }
 
         public _setLoop(value:boolean):void {
@@ -185,26 +197,11 @@ module egret {
         private _startTime:number = 0;
 
         public _getCurrentTime():number {
-            //return this._audio.currentTime;
-            return 0;
+            return this._audio.currentTime;
         }
 
         public _setCurrentTime(value:number):void {
             this._startTime = value;
         }
-
-        public _destroy():void {
-            if (this._type == egret.Sound.EFFECT) {
-                egret_native.Audio.unloadEffect(this._path);
-            }
-            else if (egret_native_sound.currentPath == this._path) {
-                egret_native.Audio.stopBackgroundMusic(true);
-            }
-        }
-
     }
-}
-
-module egret_native_sound {
-    export var currentPath = "";
 }
