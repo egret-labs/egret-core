@@ -440,6 +440,7 @@ module egret {
             this.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
         }
 
+        private _tempStage:Stage;
         /**
          * @private
          *
@@ -458,9 +459,10 @@ module egret {
             if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
                 this._onScrollFinished();
             }
-            this.stage.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-            this.stage.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
-            this.stage.addEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+            this._tempStage = this.stage;
+            this._tempStage.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+            this._tempStage.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
+            this._tempStage.addEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
             this.addEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
 
             this._logTouchEvent(e);
@@ -597,9 +599,9 @@ module egret {
         public _onTouchEnd(event:TouchEvent):void {
             this.touchChildren = true;
             this._ScrV_Props_._scrollStarted = false;
-            egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-            egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
-            egret.MainContext.instance.stage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+            this._tempStage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+            this._tempStage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
+            this._tempStage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
             this.removeEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
 
             this._moveAfterTouchEnd();
