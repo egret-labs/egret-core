@@ -196,7 +196,7 @@ declare module egret_native {
 
     module TextInputOp {
 
-        function setKeybordOpen(isOpen:boolean):void
+        function setKeybordOpen(isOpen:boolean, jsonConfig?:Object):void
 
         function isFullScreenKeyBoard():boolean
 

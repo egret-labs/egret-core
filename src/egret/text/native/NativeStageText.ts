@@ -141,9 +141,12 @@ module egret {
                 }
             };
 
-            egret_native.TextInputOp.setInputTextMaxLenght(self.$textfield.maxChars > 0 ? self.$textfield.maxChars : -1);
-
-            egret_native.TextInputOp.setKeybordOpen(true);
+            var textfield:egret.TextField = this.$textfield;
+            var inputMode = textfield.multiline ? 0 : 6;
+            var inputFlag = -1;//textfield.displayAsPassword ? 0 : -1;
+            var returnType = 1;
+            var maxLength = textfield.maxChars <= 0 ? -1 : textfield.maxChars;
+            egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({"inputMode" : inputMode,  "inputFlag" : inputFlag,   "returnType" :returnType,   "maxLength" :maxLength}));
         }
 
         /**
@@ -156,7 +159,6 @@ module egret {
         }
 
         $resetStageText():void {
-
         }
 
         public $addToStage():void {
