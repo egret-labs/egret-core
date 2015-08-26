@@ -7,7 +7,6 @@ var CCSToDBCommand = (function () {
         this.bones = {};
         this.resultArr = [];
         this.layersInfo = {};
-        this.count = 0;
         this.dbTexture = {};
         this.defaultProperty = {
             "x": 0,
@@ -70,6 +69,10 @@ var CCSToDBCommand = (function () {
         catch (e) {
             return;
         }
+        this.bones = {};
+        this.lresultArr = [];
+        this.layersInfo = {};
+        this.dbTexture = {};
         var filePathArr = fileUrl.split("/");
         var dbName = filePathArr[filePathArr.length - 4] + "_" + filePathArr[filePathArr.length - 3];
         filePathArr.splice(filePathArr.length - 2, 1);
@@ -214,7 +217,6 @@ var CCSToDBCommand = (function () {
         return result;
     };
     CCSToDBCommand.prototype.setTimeline = function (dbTimelines, stuTimelines, dbData) {
-        this.count++;
         var tempDbTimelines = {};
         this.timelines = {};
         var maxIdx = 0;
