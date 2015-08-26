@@ -300,11 +300,10 @@ function sortFileList(list, srcPath) {
     var pathList = sortOnPathLevel(paths, pathInfoList, true);
 
     var gameList = [];
-    for (var key in pathList) {
-        list = pathList[key];
+    pathList.forEach(list=> {
         list = sortOnReference(list);
         gameList = list.concat(gameList);
-    }
+    });
 
     return gameList;
 }
@@ -431,7 +430,7 @@ function sortOnReference(list) {
 
     var pathList = sortOnPathLevel(list, pathRelyInfo, false);
     var gameList = [];
-    for (var key in pathList) {
+    for (var key = 0; key < pathList.length; key++) {
         list = pathList[key];
         list.sort();
         gameList = list.concat(gameList);
@@ -448,7 +447,6 @@ function sortOnPathLevel(list, pathRelyInfo, throwError) {
         var path = list[i];
         setPathLevel(path, 0, pathLevelInfo, [path], pathRelyInfo, throwError);
     }
-
     //pathList里存储每个level对应的文件路径列表
     var pathList = [];
     for (path in pathLevelInfo) {
