@@ -176,21 +176,34 @@ module egret {
                 egret_native.download(virtualUrl, virtualUrl, promise);
             }
 
-            var audio = new Audio(virtualUrl);
-            audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
-            audio.addEventListener("error", soundPreloadErrorHandler, false);
+            if (Audio) {
+                var audio = new Audio(virtualUrl);
+                audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
+                audio.addEventListener("error", soundPreloadErrorHandler, false);
+            }
 
             function onLoadComplete() {
                 self.saveVersion(virtualUrl);
 
-                audio.load();
+                if (Audio) {
+                    audio.load();
+                }
+                else {
+                    var nativeAudio:NativeAudio = new NativeAudio();
+                    nativeAudio._setAudio(virtualUrl);
+
+                    var sound = new egret.Sound();
+                    sound._setAudio(nativeAudio);
+                    loader.data = sound;
+                    Event.dispatchEvent(loader, Event.COMPLETE);
+                }
             }
 
             function soundPreloadCanplayHandler(event) {
                 audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
                 audio.removeEventListener("error", soundPreloadErrorHandler, false);
 
-                var nativeAudio:NativeAudio = new NativeAudio();
+                var nativeAudio:NaAudio = new NaAudio();
                 nativeAudio._setAudio(audio);
 
                 var sound = new egret.Sound();
