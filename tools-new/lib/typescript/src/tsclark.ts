@@ -313,7 +313,7 @@ module ts {
 
 
 class Compiler {
-    static executeWithOption(options: lark.LarkToolArgs, files: string[], out?: string, outDir?: string): ts.LarkCompileResult {
+    static executeWithOption(options: egret.ToolArgs, files: string[], out?: string, outDir?: string): ts.LarkCompileResult {
 
         var target = options.esTarget.toLowerCase();
         var targetEnum = ts.ScriptTarget.ES5;

@@ -50,7 +50,7 @@ export function executeCommandLine(args: string[]): void {
 
 class Entry {
 
-    executeOption(options: egret.LarkToolArgs) {
+    executeOption(options: egret.ToolArgs) {
         options.command = options.command || "info";
         try {
             var command: { new (): egret.Command } = require("./commands/" + options.command);

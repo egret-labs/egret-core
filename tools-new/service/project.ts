@@ -14,7 +14,7 @@ class Project {
     buildProcess: cprocess.ChildProcess;
     _buildPort: ServiceSocket;
     pendingRequest: ServiceSocket;
-    option: egret.LarkToolArgs;
+    option: egret.ToolArgs;
 
     set buildPort(value: ServiceSocket) {
         if (this._buildPort) {

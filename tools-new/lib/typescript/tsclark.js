@@ -11097,7 +11097,7 @@ var ts;
                 getImplementedInterfaces(node, interfaces, true);
                 //lark.registerClass(DisplayObject, "lark.DisplayObject", ["lark.IEventEmitter", "lark.sys.Renderable"]);
                 writeLine();
-                write(global.registerClass + '.registerClass(');
+                write('egret.registerClass(');
                 emit(node.name);
                 write(',"' + fullName + '"');
                 var interfacesArray = Object.keys(interfaces);
@@ -20749,6 +20749,7 @@ var ts;
     var functionCallToClassMap = {};
     var functionId = 0;
     var staticToClassNameMap = {};
+    var fileToReferenceMap = {};
     //sort
     var fileNodesList = [];
     var fileNameToNodeMap = {};
@@ -20770,8 +20771,10 @@ var ts;
         function SortHelper() {
             var _this = this;
             this.classNameToFileMap = classNameToFileMap;
-            this.findUsedClasses = function (node, name, collection) {
+            this.findUsedClasses = function (node, name, collection, nest) {
                 if (!node)
+                    return;
+                if (nest > 4)
                     return;
                 var nodeToGet = null;
                 switch (node.kind) {
@@ -20788,26 +20791,41 @@ var ts;
                 }
                 if (nodeToGet) {
                     var definedSymbol = checker.egretGetResolveSymbol(nodeToGet);
-                    if (definedSymbol && !(definedSymbol.exportSymbol && (definedSymbol.exportSymbol.flags & 1536 /* Module */)) && (definedSymbol.flags & 107455 /* Value */ || definedSymbol.flags & 29360128 /* Export */)) {
+                    if (definedSymbol
+                        && !(definedSymbol.exportSymbol && (definedSymbol.exportSymbol.flags & 1536 /* Module */))
+                        && (definedSymbol.flags & 107455 /* Value */ || definedSymbol.flags & 29360128 /* Export */)
+                        && definedSymbol.declarations && definedSymbol.declarations.length
+                        && !(definedSymbol.declarations[0].symbol.flags & 3 /* Variable */)) {
                         var targetName = checker.getFullyQualifiedName(definedSymbol);
                         if (targetName == "unknown")
                             return;
                         var classes = collection[name] || [];
                         classes.push(targetName);
                         collection[name] = classes;
-                        if (!(targetName in classNameToFileMap) && definedSymbol.declarations && definedSymbol.declarations.length) {
-                            var declareNode = definedSymbol.declarations[0];
-                            var source = ts.getAncestor(declareNode, 201 /* SourceFile */);
-                            addClassToFileMap(targetName, source.filename);
-                        }
                         if (!(name in classNameToFileMap)) {
                             var source = ts.getAncestor(nodeToGet, 201 /* SourceFile */);
                             addClassToFileMap(name, source.filename);
                         }
+                        if (!(targetName in classNameToFileMap) && definedSymbol.declarations && definedSymbol.declarations.length) {
+                            var declareNode = definedSymbol.declarations[0];
+                            var source = ts.getAncestor(declareNode, 201 /* SourceFile */);
+                            addClassToFileMap(targetName, source.filename);
+                            if (node.kind == 146 /* NewExpression */) {
+                                if (!(targetName in constructorToClassMap)) {
+                                    _this.constructorToClassName(source, declareNode, nest + 1);
+                                }
+                            }
+                        }
+                        if (node.kind == 145 /* CallExpression */)
+                            _this.findUsedClasses(declareNode, targetName, functionCallToClassMap, nest + 1);
+                        if (node.kind == 146 /* NewExpression */)
+                            constructorToClassMap[targetName] && constructorToClassMap[targetName].forEach(function (clazz) {
+                                classes.push(clazz);
+                            });
                     }
                 }
                 else {
-                    ts.forEachChild(node, function (n) { return _this.findUsedClasses(n, name, collection); });
+                    ts.forEachChild(node, function (n) { return _this.findUsedClasses(n, name, collection, nest); });
                 }
             };
         }
@@ -20843,13 +20861,14 @@ var ts;
             staticToClassNameMap = {};
             fileNodesList = [];
             fileNameToNodeMap = {};
+            fileToReferenceMap = {};
             var files = prog.getSourceFiles().concat();
             var libdts = files.shift();
             orderedFileList = files.map(function (f) { return f.filename; });
             checker = chk;
             program = prog;
-            //ts.forEach(files, function (file) { return _this.symbolTabelToFileMap(file, file.locals); });
-            //this.sortFiles();
+            ts.forEach(files, function (file) { return _this.symbolTabelToFileMap(file, file.locals); });
+            this.sortFiles();
             var sources = prog.getSourceFiles();
             orderedFileList.forEach(function (f) {
                 for (var i = 0; i < sources.length; i++) {
@@ -20883,11 +20902,12 @@ var ts;
                 if (classtype.baseTypes && classtype.baseTypes.length) {
                     ts.forEach(classtype.baseTypes, function (t) { return _this.classNameToBaseClass(fullName, t); });
                 }
-                this.constructorToClassName(file, symbol.valueDeclaration);
+                this.constructorToClassName(file, symbol.valueDeclaration, 0);
             }
         };
         SortHelper.prototype.symbolTabelToFileMap = function (file, symbolTable) {
             var _this = this;
+            this.findFileRefers(file);
             ts.forEachValue(symbolTable, function (symbol) {
                 symbol = symbol.exportSymbol || symbol;
                 if (symbol.name == "prototype")
@@ -20916,14 +20936,19 @@ var ts;
                         node.kind == 146 /* NewExpression */ ||
                         node.kind == 63 /* Identifier */) {
                         var name = "callExpression" + ++functionId;
-                        self.findUsedClasses(node, name, functionCallToClassMap);
+                        self.findUsedClasses(node, name, functionCallToClassMap, 0);
                     }
                     else
                         findFunctionCall(node);
                 });
             }
         };
-        SortHelper.prototype.constructorToClassName = function (file, classNode) {
+        SortHelper.prototype.findFileRefers = function (file) {
+            var refers = file.referencedFiles;
+            if (refers)
+                fileToReferenceMap[file.filename] = refers.map(function (r) { return ts.normalizePath(ts.combinePaths(ts.getDirectoryPath(file.filename), r.filename)); });
+        };
+        SortHelper.prototype.constructorToClassName = function (file, classNode, nest) {
             var _this = this;
             if (!classNode || !classNode.symbol)
                 return;
@@ -20940,7 +20965,7 @@ var ts;
             if (!nodesToCheck.length) {
                 return;
             }
-            nodesToCheck.forEach(function (node) { return _this.findUsedClasses(node, className, constructorToClassMap); });
+            nodesToCheck.forEach(function (node) { return _this.findUsedClasses(node, className, constructorToClassMap, 0); });
         };
         SortHelper.prototype.staticMemberToClassName = function (file, symbol) {
             symbol = symbol.exportSymbol || symbol;
@@ -20972,16 +20997,23 @@ var ts;
                 console.log(file);
             }
             typeNode.name = file;
-            typeNode.subs = [];
-            typeNode.depends = [];
+            typeNode.calls = [];
             typeNode.supers = [];
-            typeNode.subdepends = [];
             fileNodesList.push(typeNode);
             fileNameToNodeMap[file] = typeNode;
             return typeNode;
         };
         SortHelper.prototype.sortFiles = function () {
             var _this = this;
+            console.log(fileToReferenceMap);
+            ts.forEachKey(fileToReferenceMap, function (fileName) {
+                var fileNode = _this.getFileNode(fileName);
+                var refers = fileToReferenceMap[fileName];
+                refers.forEach(function (r) {
+                    var referNode = _this.getFileNode(r);
+                    fileNode.addRefer(referNode);
+                });
+            });
             ts.forEachKey(classNameToFileMap, function (className) {
                 var file = classNameToFileMap[className];
                 if (typeof (file) != 'string')
@@ -20995,7 +21027,6 @@ var ts;
                         if (dependFile && dependFile['map'] || dependFile == fileName || dependFile[fileName])
                             return;
                         var dependNode = _this.getFileNode(dependFile);
-                        dependNode.addSub(fileNode);
                         fileNode.addSuper(dependNode);
                     });
                 }
@@ -21007,8 +21038,7 @@ var ts;
                         var dependFile = classNameToFileMap[depend];
                         if (dependFile && dependFile['map'] == undefined && dependFile != file && typeof (dependFile) == 'string') {
                             var dependFileNode = _this.getFileNode(dependFile);
-                            fileNode.addDepends(dependFileNode);
-                            dependFileNode.addSubDepends(fileNode);
+                            fileNode.addCall(dependFileNode);
                         }
                     });
                 }
@@ -21020,54 +21050,38 @@ var ts;
                         if (dependFile && dependFile['map'] || dependFile == file || typeof (dependFile) != 'string')
                             return;
                         var dependNode = _this.getFileNode(dependFile);
-                        dependNode.addSub(fileNode);
-                        fileNode.addSuper(dependNode);
+                        fileNode.addCall(dependNode);
                     });
                 }
             });
             var singleTypes = [], bottomTypes = [], topTypes = [], otherTypes = [];
             fileNodesList.forEach(function (t) {
-                if ((t.subs.length || t.supers.length || t.depends.length || t.subdepends.length) == 0)
-                    singleTypes.push(t);
-                else if (t.subs.length == 0 && t.subdepends.length == 0)
-                    bottomTypes.push(t);
-                else if (t.supers.length == 0 && t.depends.length == 0)
-                    topTypes.push(t);
-                else
-                    otherTypes.push(t);
+                t.markHardDepends();
             });
-            if (hasRefCircle()) {
-            }
-            else {
-                topTypes.forEach(function (t) { return t.setOrder(0); });
-                bottomTypes.forEach(function (t) { return t.setOrder(t.order); });
-                fileNodesList.sort(function (a, b) { return compareFileNode(a, b); });
-            }
+            fileNodesList.forEach(function (t) {
+                t.markSoftDepends();
+            });
             orderedFileList = [];
-            for (var i = 0, length = fileNodesList.length, registerClassAdded = false; i < length; i++) {
-                var name = fileNodesList[i].name;
-                if (registerClassAdded == false && name.indexOf('registerClass') > 0) {
-                    orderedFileList.unshift(name);
-                    registerClassAdded = true;
-                }
-                else
-                    orderedFileList.push(name);
+            var sorted = [];
+            var sortedMap = {};
+            function insert(file) {
+                if (file.name.toLowerCase() in sortedMap)
+                    return;
+                for (var i in file.depends)
+                    insert(fileNameToNodeMap[i]);
+                sorted.push(file);
+                sortedMap[file.name.toLowerCase()] = true;
             }
-            for (var i = 0, length = orderedFileList.length; i < length; i++) {
-                var name = orderedFileList[i];
-                if (name.indexOf('Defines.debug.ts') > 0) {
-                    orderedFileList.splice(i, 1);
-                    orderedFileList.unshift(name);
-                }
-            }
+            fileNodesList.forEach(function (e) {
+                insert(e);
+            });
+            orderedFileList = sorted.map(function (n) { return n.name; });
+            console.log(orderedFileList);
         };
         return SortHelper;
     })();
     ts.SortHelper = SortHelper;
     var fileToFileMap = {};
-    function hasRefCircle() {
-        return fileNodesList.some(function (f) { return f.checkCircle() == false; });
-    }
     var UsedFileResolver = (function () {
         function UsedFileResolver() {
         }
@@ -21082,15 +21096,6 @@ var ts;
         return UsedFileResolver;
     })();
     ts.UsedFileResolver = UsedFileResolver;
-    function compareFileNode(a, b) {
-        if (a.order != b.order)
-            return a.order - b.order;
-        if (a.subs.length == 0 && a.subdepends.length == 0)
-            return -1;
-        if (b.subs.length == 0 && b.subdepends.length == 0)
-            return 1;
-        return 0;
-    }
     /**
     * no export properties may have same name, add id after the name
     */
@@ -21111,83 +21116,125 @@ var ts;
         }
         return name;
     }
+    var fileHashCode = 1;
     var FileNode = (function () {
         function FileNode() {
-            this._order = 0;
+            this.supers = [];
+            this.calls = [];
+            this.refers = [];
+            this.hashCode = fileHashCode++;
         }
         FileNode.prototype.addSuper = function (node) {
-            if (this.depends.indexOf(node) >= 0)
+            if (this.supers.indexOf(node) >= 0)
                 return;
-            this.depends.push(node);
+            this.supers.push(node);
         };
-        FileNode.prototype.addDepends = function (node) {
-            if (this.depends.indexOf(node) >= 0)
+        FileNode.prototype.addRefer = function (node) {
+            if (this.refers.indexOf(node) >= 0)
                 return;
-            this.depends.push(node);
+            this.refers.push(node);
         };
-        FileNode.prototype.checkCircle = function () {
-            var self = this;
-            var path = [];
-            function getSupers(node) {
-                path.push(node.name);
-                var supers = node.depends.concat();
-                for (var i = supers.length - 1; i >= 0; i--) {
-                    var sup = supers[i];
-                    if (sup == self) {
-                        path.push(sup.name);
-                        errors.push({
-                            code: 10018,
-                            category: ts.DiagnosticCategory.Error,
-                            file: null,
-                            messageText: "Found circular dependency:" + path.join("=>"),
-                            start: 0,
-                            length: 0,
-                            isEarly: false
-                        });
-                        return false;
-                    }
-                    var ok = getSupers(sup);
-                    return ok;
-                }
-            }
-            return getSupers(this);
-        };
-        FileNode.prototype.addSub = function (node) {
-            if (this.subdepends.indexOf(node) >= 0)
+        FileNode.prototype.addCall = function (node) {
+            if (this.calls.indexOf(node) >= 0)
                 return;
-            this.subdepends.push(node);
+            this.calls.push(node);
         };
-        FileNode.prototype.addSubDepends = function (node) {
-            if (this.subdepends.indexOf(node) >= 0)
-                return;
-            this.subdepends.push(node);
-        };
-        FileNode.prototype.setOrder = function (value, nest) {
+        FileNode.prototype.markHardDepends = function () {
             var _this = this;
-            if (nest === void 0) { nest = 0; }
-            this.depends.forEach(function (s) {
-                if (s.order > value)
-                    value = s.order + 1;
-            });
-            var offset = value - this._order;
-            this._order = value;
-            this.subdepends.forEach(function (s) {
-                if (s._order <= _this._order)
-                    s.setOrder(_this._order + 1, nest + 1);
-                s.setOrder(s._order + offset, nest + 1);
+            if (this.depends)
+                return;
+            this.depends = {};
+            var files = this.supers.concat(this.refers);
+            files.forEach(function (f) {
+                if (!f.depends)
+                    f.markHardDepends();
+                for (var i in f.depends)
+                    if (i == _this.name) {
+                        _this.logCircular(_this.name, i);
+                    }
+                    else {
+                        _this.depends[i] = true;
+                    }
+                _this.depends[f.name] = true;
             });
         };
-        Object.defineProperty(FileNode.prototype, "order", {
-            get: function () {
-                return this._order;
-                ;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        FileNode.prototype.markSoftDepends = function () {
+            var _this = this;
+            if (this.softdepends)
+                return;
+            var files = this.calls.concat();
+            this.softdepends = {};
+            files.forEach(function (f) {
+                if (f.name == _this.name)
+                    return;
+                if (!f.softdepends)
+                    f.markSoftDepends();
+                for (var i in f.softdepends) {
+                    if (fileNameToNodeMap[i].depends[_this.name])
+                        continue;
+                    if (i == _this.name) {
+                        _this.logCircular(_this.name, i);
+                    }
+                    else {
+                        _this.softdepends[i] = true;
+                        _this.depends[i] = true;
+                    }
+                }
+                if (fileNameToNodeMap[f.name].depends[_this.name])
+                    return;
+                _this.softdepends[f.name] = true;
+            });
+        };
+        FileNode.prototype.logCircular = function (file, other) {
+            console.log("Found circular dependency:" + [file, other].join("=>"));
+        };
         return FileNode;
     })();
 })(ts || (ts = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    egret.XML;
+})(egret || (egret = {}));
 /// <reference path="core.ts"/>
 /// <reference path="sys.ts"/>
 /// <reference path="types.ts"/>

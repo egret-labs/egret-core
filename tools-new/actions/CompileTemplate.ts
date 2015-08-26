@@ -10,7 +10,7 @@ import htmlparser = require("../lib/htmlparser");
 import tsclark = require("../lib/typescript/tsclark");
 
 class CompileTemplate {
-	public static compileTemplates(options: egret.LarkToolArgs,scripts:string[]) {
+	public static compileTemplates(options: egret.ToolArgs,scripts:string[]) {
 
         var index = FileUtil.joinPath(options.templateDir, "index.html");
         if (!FileUtil.exists(index))
@@ -30,7 +30,7 @@ class CompileTemplate {
         CompileTemplate.compileNativeRequire(options);
     }
 
-    public static compileNativeRequire(options: egret.LarkToolArgs) {
+    public static compileNativeRequire(options: egret.ToolArgs) {
 
         var index = FileUtil.joinPath(options.outDir, "index.html");
         if (!FileUtil.exists(index))

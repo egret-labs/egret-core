@@ -2,7 +2,6 @@
 var utils = require('../lib/utils');
 var file = require('../lib/FileUtil');
 var tsclark = require("../lib/typescript/tsclark");
-var manifest = require('../lib/create-manifest');
 var Compiler = (function () {
     function Compiler() {
     }
@@ -10,8 +9,8 @@ var Compiler = (function () {
         var args = option.args, def = option.def, files = option.files, out = option.out, outDir = option.outDir;
         var defTemp = args.declaration;
         args.declaration = def;
-        files = manifest.create(egret.args.srcDir, true, null, null, files);
-        console.log(files);
+        //files = manifest.create(egret.args.srcDir, true, null, null, files);
+        //console.log(files);
         var cwd = file.escapePath(process.cwd() + "/");
         files = files.map(function (f) { return f.replace(cwd, ""); });
         var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);

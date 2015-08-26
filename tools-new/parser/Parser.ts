@@ -194,7 +194,7 @@ export function parseCommandLine(commandLine: string[]) {
 }
 
 
-export function parseJSON(json: egret.LarkToolArgs): egret.LarkToolArgs {
+export function parseJSON(json: egret.ToolArgs): egret.ToolArgs {
 
     var options = new CompileOptions();
     var filenames: string[] = [];

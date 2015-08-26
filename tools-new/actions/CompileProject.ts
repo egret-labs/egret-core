@@ -8,7 +8,7 @@ import tsclark = require("../lib/typescript/tsclark");
 
 
 class CompileProject {
-    public compileProject(option:egret.LarkToolArgs, files?:string[]) {
+    public compileProject(option:egret.ToolArgs, files?:string[]) {
         var compileResult: tsclark.Compiler.LarkCompileResult;
         if (files && this.recompile) {
             files = files.map(f=> f.replace(option.projectDir, ""));

@@ -12,7 +12,7 @@ import Default = require('./controllers/default');
 global.lark = global.lark || {};
 
 
-export function startServer(options: egret.LarkToolArgs, startupUrl?:string) {
+export function startServer(options: egret.ToolArgs, startupUrl?:string) {
 
     var total: TotalJS.Framework = require('../lib/totaljs/');
     total.setRoot(__dirname);

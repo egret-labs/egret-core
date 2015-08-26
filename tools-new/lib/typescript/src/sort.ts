@@ -22,6 +22,7 @@ module ts {
     var functionCallToClassMap: Map<string[]> = {};
     var functionId = 0;
     var staticToClassNameMap: Map<string> = {};
+    var fileToReferenceMap: Map<string[]> = {};
     
     //sort
     var fileNodesList: FileNode[] = [];
@@ -83,6 +84,7 @@ module ts {
 
             fileNodesList = [];
             fileNameToNodeMap = {};
+            fileToReferenceMap = {};
 
             var files = prog.getSourceFiles().concat();
             var libdts = files.shift();
@@ -135,7 +137,7 @@ module ts {
 
         }
         private symbolTabelToFileMap(file: SourceFile, symbolTable: SymbolTable) {
-
+            this.findFileRefers(file);
             ts.forEachValue(symbolTable, symbol=> {
                 symbol = symbol.exportSymbol || symbol;
                 if (symbol.name == "prototype")
@@ -173,6 +175,12 @@ module ts {
             }
             
             
+        }
+
+        private findFileRefers(file: SourceFile) {
+            var refers = file.referencedFiles;
+            if (refers)
+                fileToReferenceMap[file.filename] = refers.map(r=> ts.normalizePath(ts.combinePaths(ts.getDirectoryPath(file.filename), r.filename)));
         }
 
         private constructorToClassName(file: SourceFile, classNode: ClassDeclaration, nest: number) {
@@ -304,10 +312,8 @@ module ts {
                 console.log(file);
             }
             typeNode.name = file;
-            typeNode.subs = [];
-            typeNode.depends = [];
+            typeNode.calls = [];
             typeNode.supers = [];
-            typeNode.subdepends = [];
 
             fileNodesList.push(typeNode);
             fileNameToNodeMap[file] = typeNode;
@@ -316,12 +322,25 @@ module ts {
         }
 
         private sortFiles() {
+            console.log(fileToReferenceMap);
+            forEachKey(fileToReferenceMap, fileName=> {
+                var fileNode = this.getFileNode(fileName);
+                var refers = fileToReferenceMap[fileName];
+                refers.forEach(r=> {
+                    var referNode = this.getFileNode(r);
+                    fileNode.addRefer(referNode);
+                });
+            });
+
             forEachKey(classNameToFileMap, className=> {
                 var file = classNameToFileMap[className];
                 if(typeof(file)!='string')
                     return;
                 var fileName:string = <string>file;
                 var fileNode = this.getFileNode(fileName);
+
+
+
                 var supers = classNameToBaseClassMap[className];
                 if (supers) {
                     supers.forEach(superClass=> {
@@ -329,7 +348,6 @@ module ts {
                         if (dependFile && dependFile['map'] || dependFile == fileName || dependFile[fileName])
                             return;
                         var dependNode = this.getFileNode(<string>dependFile);
-                        dependNode.addSub(fileNode);
                         fileNode.addSuper(dependNode);
                     })
                 }
@@ -342,8 +360,7 @@ module ts {
 
                         if (dependFile && dependFile['map']==undefined && dependFile != file&& typeof(dependFile) =='string' ) {
                             var dependFileNode = this.getFileNode(<string>dependFile);
-                            fileNode.addDepends(dependFileNode);
-                            dependFileNode.addSubDepends(fileNode);
+                            fileNode.addCall(dependFileNode);
                         }
                     });
                 }
@@ -355,8 +372,7 @@ module ts {
                         if (dependFile && dependFile['map'] ||dependFile == file || typeof(dependFile)!='string')
                             return;
                         var dependNode = this.getFileNode(<string>dependFile);
-                        dependNode.addSub(fileNode);
-                        fileNode.addSuper(dependNode);
+                        fileNode.addCall(dependNode);
                     })
                 }
             });
@@ -367,48 +383,42 @@ module ts {
                 otherTypes: FileNode[] = [];
 
             fileNodesList.forEach(t=> {
-                if ((t.subs.length || t.supers.length || t.depends.length||t.subdepends.length) == 0)
-                    singleTypes.push(t);
-                else if (t.subs.length == 0&&t.subdepends.length==0)
-                    bottomTypes.push(t);
-                else if (t.supers.length == 0 && t.depends.length == 0)
-                    topTypes.push(t);
-                else
-                    otherTypes.push(t);
+                t.markHardDepends();
             });
-            if(hasRefCircle()){
-            }
-            else{
-                topTypes.forEach(t=> t.setOrder(0));
-                bottomTypes.forEach(t=> t.setOrder(t.order));
-                fileNodesList.sort((a, b) => compareFileNode(a, b));
-            }
+            fileNodesList.forEach(t=> {
+                t.markSoftDepends();
+            });
+
+            
+
             orderedFileList = [];
-            for (var i = 0, length = fileNodesList.length, registerClassAdded=false; i < length; i++) {
-                var name = fileNodesList[i].name;
-                if (registerClassAdded == false && name.indexOf('registerClass') > 0) {
-                    orderedFileList.unshift(name);
-                    registerClassAdded = true;
-                }
-                else
-                    orderedFileList.push(name);
+
+
+            var sorted: FileNode[] = []
+            var sortedMap: any = {};
+
+
+
+            function insert(file: FileNode) {
+                if (file.name.toLowerCase() in sortedMap)
+                    return;
+                for (var i in file.depends)
+                    insert(fileNameToNodeMap[i]);
+                sorted.push(file);
+                sortedMap[file.name.toLowerCase()] = true;
             }
-            for (var i = 0, length = orderedFileList.length; i < length; i++) {
-                var name = orderedFileList[i];
-                if (name.indexOf('Defines.debug.ts') > 0) {
-                    orderedFileList.splice(i, 1);
-                    orderedFileList.unshift(name);
-                }
-            }
+
+            fileNodesList.forEach(e=> {
+                insert(e);
+            });
+
+            orderedFileList = sorted.map(n=> n.name);
+            console.log(orderedFileList);
         }
 
     }
 
     var fileToFileMap: Map<Map<boolean>> = {};
-
-    function hasRefCircle() {
-        return fileNodesList.some(f=>f.checkCircle()==false);
-    }
 
     export class UsedFileResolver{
         
@@ -424,21 +434,7 @@ module ts {
 
     }
 
-
-
-    function compareFileNode(a: FileNode, b: FileNode) {
-        if (a.order != b.order)
-            return a.order - b.order;
-
-        if (a.subs.length == 0 && a.subdepends.length == 0)
-            return -1;
-
-        if (b.subs.length == 0 && b.subdepends.length == 0)
-            return 1;
-
-        return 0;
-
-    }
+    
 
 
     /**
@@ -472,101 +468,83 @@ module ts {
 
     class FileNode {
         name: string;
-        supers: FileNode[];
-        subs: FileNode[];
-        depends: FileNode[];
-        subdepends: FileNode[];
-        file: string;
+        supers: FileNode[] = [];
+        calls: FileNode[] = [];
+        refers: FileNode[] = [];
         hashCode: number;
+        depends: Map<boolean>;
+        softdepends: Map<boolean>;
         constructor() {
             this.hashCode = fileHashCode++;
         }
 
         addSuper(node: FileNode) {
-            if (this.depends.indexOf(node) >= 0)
+            if (this.supers.indexOf(node) >= 0)
                 return;
-            this.depends.push(node);
+            this.supers.push(node);
         }
 
-        addDepends(node: FileNode) {
-            if (this.depends.indexOf(node) >= 0)
+        addRefer(node: FileNode) {
+            if (this.refers.indexOf(node) >= 0)
                 return;
-            this.depends.push(node);
+            this.refers.push(node);
         }
-        
-        checkCircle():boolean{
-            var self = this;
-            var path = [];
-            var supersChecked: any = {};
-            function getSupers(node:FileNode):boolean {
-                path.push(node.name);
-                supersChecked[node.name] = true;
-                var supers = node.subdepends.concat();
-                for(var i= supers.length-1;i>=0;i--){
-                    var sup = supers[i];
-                    if (sup == self || supersChecked[sup.name]) {
-                        path.push(sup.name);
-                        errors.push({
-                            code: 10018,
-                            category: DiagnosticCategory.Error,
-                            file: null,
-                            messageText: "Found circular dependency:" + path.join("=>"),
-                            start: 0,
-                            length: 0,
-                            isEarly:false
-                        });
-                        console.log("Found circular dependency:" + path.join("=>"));
-                        node.subdepends.splice(i, 1);
+
+        addCall(node: FileNode) {
+            if (this.calls.indexOf(node) >= 0)
+                return;
+            this.calls.push(node);
+        }
+
+        markHardDepends() {
+            if (this.depends)
+                return;
+            this.depends = {};
+            var files = this.supers.concat(this.refers);
+            files.forEach(f=> {
+                if (!f.depends)
+                    f.markHardDepends();
+
+                for (var i in f.depends)
+                    if (i == this.name) {
+                        this.logCircular(this.name, i);
+                    } else {
+                        this.depends[i] = true;
                     }
-                    var ok = getSupers(sup);
-                    if (!ok)
-                        return ok;
-                }
-                return true;
-            }
-            return getSupers(this);
-        }
-
-        addSub(node: FileNode) {
-            if (this.subdepends.indexOf(node) >= 0)
-                return;
-            this.subdepends.push(node);
-        }
-
-        addSubDepends(node: FileNode) {
-            if (this.subdepends.indexOf(node) >= 0)
-                return;
-            this.subdepends.push(node);
-        }
-
-        _order: number = 0;
-        
-
-        setOrder(value: number, nest: number = 0) {
-            //if (nest > 30)
-            //    console.log(nest, value, this.name);
-            //if (nest > 50)
-            //    process.exit();
-            this.depends.forEach(s=> {
-                if (s.order > value)
-                    value = s.order + 1;
-                
-            })
-
-            var offset = value - this._order;
-            this._order = value;
-
-            this.subdepends.forEach(s=> {
-                
-                if (s._order <= this._order)
-                    s.setOrder( this._order + 1,nest+1);
-                s.setOrder(s._order + offset, nest + 1);
-                
+                this.depends[f.name] = true;
             });
         }
 
-        get order(): number {
-            return this._order;;
+        markSoftDepends() {
+            if (this.softdepends)
+                return;
+            var files = this.calls.concat();
+            this.softdepends = {};
+            files.forEach(f=> {
+                if (f.name == this.name)
+                    return;
+                if (!f.softdepends)
+                    f.markSoftDepends();
+
+                for (var i in f.softdepends) {
+                    if (fileNameToNodeMap[i].depends[this.name])
+                        continue;
+
+                    if (i == this.name) {
+                        this.logCircular(this.name, i);
+                    } else {
+                        this.softdepends[i] = true;
+                        this.depends[i] = true;
+                    }
+                }
+                if (fileNameToNodeMap[f.name].depends[this.name])
+                    return;
+                this.softdepends[f.name] = true;
+            });
+        }
+
+        logCircular(file: string, other: string) {
+            console.log("Found circular dependency:" + [file, other].join("=>"));
         }
     }
 }

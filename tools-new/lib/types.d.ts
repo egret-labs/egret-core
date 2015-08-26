@@ -30,7 +30,7 @@ declare module egret {
         Error,
         Message,
     }
-    export interface LarkToolArgs {
+    export interface ToolArgs {
         command: string;
         action?: string;
         params?: string[];
@@ -128,7 +128,7 @@ declare module egret {
         command: string;
         path?: string;
         version?: string;
-        option: LarkToolArgs;
+        option: ToolArgs;
     }
 
     export interface ServiceBuildCommand extends ServiceCommand {
@@ -139,12 +139,12 @@ declare module egret {
         messages: string[];
     }
 
-    export var args: LarkToolArgs;
+    export var args: ToolArgs;
 
     module server {
-        export var options: LarkToolArgs;
+        export var options: ToolArgs;
         export interface ViewModel {
-            options: LarkToolArgs;
+            options: ToolArgs;
         }
         export var console: {
             on(event: string, listener: Function): any;
