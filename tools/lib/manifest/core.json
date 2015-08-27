@@ -15,8 +15,6 @@
         "egret/utils/getDefinitionByName.ts",
         "egret/utils/getQualifiedClassName.ts",
         "egret/utils/getQualifiedSuperclassName.ts",
-        "egret/utils/Injector.ts",
-        "egret/utils/Recycler.ts",
         "egret/utils/getTimer.ts",
         "egret/utils/toColorString.ts",
         "egret/utils/is.ts",
@@ -25,8 +23,6 @@
         "egret/utils/stopTick.ts",
         "egret/utils/XML.ts",
         "egret/utils/callLater.ts",
-        "egret/utils/setTimeout.ts",
-        "egret/utils/setInterval.ts",
         "egret/utils/Logger.ts",
         "egret/utils/hasDefinition.ts",
         "egret/utils/getOption.ts",
@@ -114,8 +110,11 @@
         "egret/media/Sound.ts",
         "egret/media/Video.ts",
 
-        "egret/utils/PromiseObject.ts",
 
+        "extension/game/utils/setTimeout.ts",
+        "extension/game/utils/setInterval.ts",
+        "extension/game/utils/Injector.ts",
+        "extension/game/utils/Recycler.ts",
         "extension/game/system/MainContext.ts",
 
         "extension/game/display/FrameLabel.ts",

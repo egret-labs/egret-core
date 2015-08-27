@@ -250,11 +250,6 @@ module egret.sys {
             for (var i = 0; i < length; i++) {
                 list[i].dispatchEventWith(Event.ENTER_FRAME);
             }
-
-            list = Recycler._callBackList;
-            for (i = list.length - 1; i >= 0; i--) {
-                list[i].$checkFrame();
-            }
         }
 
         /**
