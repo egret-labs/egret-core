@@ -163,16 +163,6 @@ module egret.web {
             return channel;
         }
 
-        public preload(type:string, callback:Function = null, thisObj:any = null):void {
-            this.type = type;
-
-            if (callback) {
-                window.setTimeout(function () {
-                    callback.call(thisObj);
-                }, 0);
-            }
-        }
-
         /**
          * @inheritDoc
          */
@@ -182,11 +172,6 @@ module egret.web {
             if (this.originAudio)
                 this.originAudio = null;
             NativeSound.$clear(this.url);
-        }
-
-        public destroy():void {
-            this.originAudio = null;
-            this.loaded = false;
         }
 
         /**
