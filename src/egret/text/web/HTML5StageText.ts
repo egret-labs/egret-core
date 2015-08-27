@@ -358,7 +358,7 @@ module egret.web {
                 this.setElementStyle("fontWeight", textfield.bold ? "bold" : "normal");
                 this.setElementStyle("textAlign", textfield.textAlign);
                 this.setElementStyle("fontSize", textfield.size * this._gscaleY + "px");
-                this.setElementStyle("color", sys.toColorString(textfield.textColor));
+                this.setElementStyle("color", toColorString(textfield.textColor));
                 this.setElementStyle("width", textfield.width * this._gscaleX + "px");
                 this.setElementStyle("verticalAlign", textfield.verticalAlign);
                 if (textfield.multiline) {
