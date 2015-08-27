@@ -66,7 +66,7 @@ declare module egret {
         startUrl: string;
         debug?: boolean;
         getStartURL(address: string): string;
-
+        template?: string;
 
 
         publish?: boolean;

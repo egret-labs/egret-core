@@ -97,6 +97,10 @@ export var optionDeclarations: egret.CommandLineOption[] = [
     }, {
         name: 'all',
         type: 'boolean'
+    }, {
+        name: 'buildEngine',
+        type: 'boolean',
+        shortName: "e"
     }
 ];
 

@@ -33,9 +33,11 @@ global.registerClass = "egret";
 global.DontExitCode = -0xF000;
 require('./locales/zh_CN');
 var Parser = require("./parser/Parser");
+var earlyParams = require("./parser/ParseEarlyVersionParams");
 var utils = require('./lib/utils');
 function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
+    earlyParams.parse(options, args);
     egret.args = options;
     var exitcode = entry.executeOption(options);
     entry.exit(exitcode);
