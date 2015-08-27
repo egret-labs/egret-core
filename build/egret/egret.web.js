@@ -251,16 +251,6 @@ var egret;
                 channel.$play();
                 return channel;
             };
-            p.preload = function (type, callback, thisObj) {
-                if (callback === void 0) { callback = null; }
-                if (thisObj === void 0) { thisObj = null; }
-                this.type = type;
-                if (callback) {
-                    window.setTimeout(function () {
-                        callback.call(thisObj);
-                    }, 0);
-                }
-            };
             /**
              * @inheritDoc
              */
@@ -270,10 +260,6 @@ var egret;
                 if (this.originAudio)
                     this.originAudio = null;
                 HtmlSound.$clear(this.url);
-            };
-            p.destroy = function () {
-                this.originAudio = null;
-                this.loaded = false;
             };
             HtmlSound.$clear = function (url) {
                 var array = HtmlSound.audios[url];
@@ -535,16 +521,6 @@ var egret;
                     refresh: 1
                 });
             };
-            p.preload = function (type, callback, thisObj) {
-                if (callback === void 0) { callback = null; }
-                if (thisObj === void 0) { thisObj = null; }
-                this.type = type;
-                if (callback) {
-                    window.setTimeout(function () {
-                        callback.call(thisObj);
-                    }, 0);
-                }
-            };
             /**
              * @inheritDoc
              */
@@ -566,15 +542,6 @@ var egret;
              * @inheritDoc
              */
             p.close = function () {
-            };
-            p.destroy = function () {
-                this.loaded = false;
-                if (this.type == egret.Sound.EFFECT) {
-                    QZAppExternal.stopSound();
-                }
-                else {
-                    QZAppExternal.stopBackSound();
-                }
             };
             /**
              * @language en_US
@@ -885,16 +852,6 @@ var egret;
                     self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                 }
             };
-            p.preload = function (type, callback, thisObj) {
-                if (callback === void 0) { callback = null; }
-                if (thisObj === void 0) { thisObj = null; }
-                this.type = type;
-                if (callback) {
-                    window.setTimeout(function () {
-                        callback.call(thisObj);
-                    }, 0);
-                }
-            };
             /**
              * @inheritDoc
              */
@@ -916,9 +873,6 @@ var egret;
              * @inheritDoc
              */
             p.close = function () {
-            };
-            p.destroy = function () {
-                this.loaded = false;
             };
             /**
              * @language en_US
@@ -3631,7 +3585,6 @@ var egret;
                 this.updateScreenSize();
                 this.updateMaxTouches();
                 player.start();
-                egret.MainContext.instance.stage = stage;
             };
             /**
              * 读取初始化参数
