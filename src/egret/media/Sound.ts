@@ -74,28 +74,6 @@ module egret {
 
         /**
          * @language en_US
-         * The sound file is loaded into memory，
-         * the use of native, html5 in empty achieve
-         * @param type Sound Type
-         * @param callback callback
-         * @param thisObj Listener function to bind this object
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将声音文件加载到内存，
-         * native中使用，html5里为空实现
-         * @param type 声音类型
-         * @param callback 回调函数
-         * @param thisObj 侦听函数绑定的this对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-         preload(type:string, callback?:Function, thisObj?:any):void;
-
-        /**
-         * @language en_US
          * Generates a new SoundChannel object to play back the sound.
          * @param startTime The initial position in seconds at which playback should start, (default = 0)
          * @param loops Plays, the default value is 0. Greater than 0 to the number of plays, such as 1 to play 1, less than or equal to 0, to loop.
@@ -125,20 +103,6 @@ module egret {
          * @platform Web,Native
          */
         close():void;
-
-        /**
-         * @language en_US
-         * The current audio release
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 释放当前音频
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        destroy():void;
 
         /**
          * @language en_US

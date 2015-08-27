@@ -425,6 +425,10 @@ module egret {
                 }
             }
 
+            if (end) {
+                this.setPaused(true);
+            }
+
             //执行actions
             if (actionsMode != 0 && this._actions.length > 0) {
                 if (this._useTicks) {
@@ -437,10 +441,6 @@ module egret {
                 } else {
                     this._runActions(prevPos, t);
                 }
-            }
-
-            if (end) {
-                this.setPaused(true);
             }
 
             this.dispatchEventWith("change");

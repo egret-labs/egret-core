@@ -544,7 +544,7 @@ module egret {
                 return;
             }
             values[sys.TextKeys.textColor] = value;
-            values[sys.TextKeys.textColorString] = sys.toColorString(value);
+            values[sys.TextKeys.textColorString] = toColorString(value);
             this.$invalidate();
         }
 
@@ -1905,22 +1905,6 @@ module egret.sys {
         font += (style.fontSize || 12) + "px ";
         font += (style.fontFamily || "sans-serif");
         return font;
-    }
-
-    /**
-     * @private
-     * 返回字符串形式的颜色值
-     */
-    export function toColorString(value:number):string {
-        if (value < 0)
-            value = 0;
-        if (value > 16777215)
-            value = 16777215;
-        var color = value.toString(16).toUpperCase();
-        while (color.length < 6) {
-            color = "0" + color;
-        }
-        return "#" + color;
     }
 
     if(DEBUG){

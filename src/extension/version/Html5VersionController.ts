@@ -38,10 +38,39 @@ module egret {
             super();
         }
 
+        private _versionInfo:Object = {};
+
         public fetchVersion():void {
-            egret.callLater(function () {
-                this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-            }, this);
+            var self = this;
+
+            var virtualUrl:string = "all.manifest";
+
+            var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+            httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
+            httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+
+            httpLoader.open(virtualUrl, "get");
+            httpLoader.send();
+
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                self.dispatchEvent(event);
+            }
+
+            function onLoadComplete() {
+                removeListeners();
+
+                self._versionInfo = JSON.parse(httpLoader.response);
+
+                window.setTimeout(function () {
+                    self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+                }, 0);
+            }
+
+            function removeListeners():void {
+                httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            }
         }
 
         public checkIsNewVersion(virtualUrl:string):boolean {
@@ -60,7 +89,12 @@ module egret {
         }
 
         public getVirtualUrl(url:string):string {
-            return url;
+            if (this._versionInfo && this._versionInfo[url]) {
+                return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
+            }
+            else {
+                return url;
+            }
         }
     }
 

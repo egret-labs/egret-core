@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+module egret.web {
 
     /**
      * @private
@@ -94,42 +94,44 @@ module egret.native {
         public load(url:string):void {
             var self = this;
 
+            this.url = url;
+
             if (DEBUG && !url) {
                 egret.$error(3002);
             }
+
 
             var promise = PromiseObject.create();
             promise.onSuccessFunc = onAudioLoaded;
             promise.onErrorFunc = onAudioError;
             egret_native.download(url, url, promise);
 
+            var audio = new Audio(url);
+            audio.addEventListener("canplaythrough", onCanPlay);
+            audio.addEventListener("error", onAudioError);
+            this.originAudio = audio;
             function onAudioLoaded():void {
+                audio.load();
+
+                NativeSound.$recycle(this.url, audio);
+            }
+
+            function onCanPlay():void {
+                removeListeners();
+
                 self.loaded = true;
                 self.dispatchEventWith(egret.Event.COMPLETE);
             }
 
             function onAudioError():void {
+                removeListeners();
 
                 self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             }
-        }
 
-        public preload(type:string, callback:Function = null, thisObj:any = null):void {
-            this.type = type;
-            if (this.type == egret.Sound.MUSIC) {
-                egret_native.Audio.preloadBackgroundMusic(this.url);
-                if (callback) {
-                    egret.callLater(callback, thisObj);
-                }
-            }
-            else if (this.type == egret.Sound.EFFECT) {
-                var promise = new egret.PromiseObject();
-                promise.onSuccessFunc = function (soundId) {
-                    if (callback) {
-                        callback.call(thisObj);
-                    }
-                };
-                egret_native.Audio.preloadEffectAsync(this.url, promise);
+            function removeListeners():void {
+                audio.removeEventListener("canplaythrough", onAudioLoaded);
+                audio.removeEventListener("error", onAudioError);
             }
         }
 
@@ -144,11 +146,19 @@ module egret.native {
                 egret.$error(3001);
             }
 
-            var channel = new NativeSoundChannel();
+            var audio = NativeSound.$pop(this.url);
+            if (audio == null) {
+                audio = new Audio(this.url);
+            }
+            else {
+                audio.load();
+            }
+            audio.autoplay = true;
+
+            var channel = new NativeSoundChannel(audio);
             channel.$url = this.url;
             channel.$loops = loops;
             channel.$startTime = startTime;
-            channel.$type = this.type;
             channel.$play();
             return channel;
         }
@@ -157,20 +167,39 @@ module egret.native {
          * @inheritDoc
          */
         public close() {
+            if (this.loaded == false && this.originAudio)
+                this.originAudio.src = "";
+            if (this.originAudio)
+                this.originAudio = null;
+            NativeSound.$clear(this.url);
         }
 
-        public destroy():void {
-            this.loaded = false;
+        /**
+         * @private
+         */
+        private static audios:Object = {};
 
-            if (this.type == egret.Sound.EFFECT) {
-                egret_native.Audio.unloadEffect(this.url);
-            }
-            else if (egret_native_sound.currentPath == this.url) {
-                egret_native.Audio.stopBackgroundMusic(true);
+        static $clear(url:string):void {
+            var array:HTMLAudioElement[] = NativeSound.audios[url];
+            if (array) {
+                array.length = 0;
             }
         }
 
+        static $pop(url:string):HTMLAudioElement {
+            var array:HTMLAudioElement[] = NativeSound.audios[url];
+            if (array && array.length > 0) {
+                return array.pop();
+            }
+            return null;
+        }
+
+        static $recycle(url:string, audio:HTMLAudioElement):void {
+            var array:HTMLAudioElement[] = NativeSound.audios[url];
+            if (NativeSound.audios[url] == null) {
+                array = NativeSound.audios[url] = [];
+            }
+            array.push(audio);
+        }
     }
-
-    Sound = NativeSound;
 }

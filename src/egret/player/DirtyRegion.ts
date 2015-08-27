@@ -147,7 +147,7 @@ module egret.sys {
             var dirtyList = this.dirtyList;
             if (this.clipRectChanged) {
                 //todo 现在为全部dirty
-                if(MainContext.runtimeType != MainContext.RUNTIME_NATIVE) {
+                if(Capabilities.runtimeType != RuntimeType.NATIVE) {
                     this.clipRectChanged = false;
                 }
                 this.clear();

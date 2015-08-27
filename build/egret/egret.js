@@ -2489,11 +2489,7 @@ var egret;
             this.$renderRegion = new egret.sys.Region();
             this.$Bitmap = {
                 0: NaN,
-                1: NaN,
-                2: 1,
-                3: 1,
-                4: 1,
-                5: 1 //explicitUnsignedScaleY
+                1: NaN //explicitBitmapHeight,
             };
             this.texture = bitmapData;
         }
@@ -2694,69 +2690,12 @@ var egret;
         /**
          * @private
          */
-        p.$getScaleX = function () {
-            return this.$Bitmap[2 /* explicitScaleX */];
-        };
-        /**
-         * @private
-         */
-        p.$setScaleX = function (value) {
-            value = egret.getNumber(value);
-            var values = this.$Bitmap;
-            if (value == values[2 /* explicitScaleX */]) {
-                return false;
-            }
-            values[2 /* explicitScaleX */] = value;
-            values[4 /* explicitUnsignedScaleX */] = Math.abs(value);
-            this.$invalidateContentBounds();
-            if (value < 0) {
-                return _super.prototype.$setScaleX.call(this, -1);
-            }
-            else if (value == 0) {
-                return _super.prototype.$setScaleX.call(this, 0);
-            }
-            else {
-                return _super.prototype.$setScaleX.call(this, 1);
-            }
-        };
-        /**
-         * @private
-         */
-        p.$getScaleY = function () {
-            return this.$Bitmap[3 /* explicitScaleY */];
-        };
-        /**
-         * @private
-         */
-        p.$setScaleY = function (value) {
-            value = egret.getNumber(value);
-            var values = this.$Bitmap;
-            if (value == values[3 /* explicitScaleY */]) {
-                return false;
-            }
-            values[3 /* explicitScaleY */] = value;
-            values[5 /* explicitUnsignedScaleY */] = Math.abs(value);
-            this.$invalidateContentBounds();
-            if (value < 0) {
-                return _super.prototype.$setScaleY.call(this, -1);
-            }
-            else if (value == 0) {
-                return _super.prototype.$setScaleY.call(this, 0);
-            }
-            else {
-                return _super.prototype.$setScaleY.call(this, 1);
-            }
-        };
-        /**
-         * @private
-         */
         p.$measureContentBounds = function (bounds) {
             var bitmapData = this.$bitmapData;
             if (bitmapData) {
                 var w = !isNaN(this.$Bitmap[0 /* explicitBitmapWidth */]) ? this.$Bitmap[0 /* explicitBitmapWidth */] : (bitmapData.$getTextureWidth());
                 var h = !isNaN(this.$Bitmap[1 /* explicitBitmapHeight */]) ? this.$Bitmap[1 /* explicitBitmapHeight */] : (bitmapData.$getTextureHeight());
-                var values = this.$Bitmap;
-                bounds.setTo(0, 0, w * values[4 /* explicitUnsignedScaleX */], h * values[5 /* explicitUnsignedScaleY */]);
+                bounds.setTo(0, 0, w, h);
             }
             else {
                 bounds.setEmpty();
@@ -2771,9 +2710,7 @@ var egret;
                 var destW = !isNaN(this.$Bitmap[0 /* explicitBitmapWidth */]) ? this.$Bitmap[0 /* explicitBitmapWidth */] : (bitmapData.$getTextureWidth());
                 var destH = !isNaN(this.$Bitmap[1 /* explicitBitmapHeight */]) ? this.$Bitmap[1 /* explicitBitmapHeight */] : (bitmapData.$getTextureHeight());
                 var values = this.$Bitmap;
-                destW *= values[4 /* explicitUnsignedScaleX */];
-                destH *= values[5 /* explicitUnsignedScaleY */];
-                Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing, bitmapData._offsetX * values[4 /* explicitUnsignedScaleX */], bitmapData._offsetY * values[5 /* explicitUnsignedScaleY */]);
+                Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing, bitmapData._offsetX, bitmapData._offsetY);
             }
         };
         d(p, "pixelHitTest"
@@ -3209,727 +3146,6 @@ var egret;
         }
         sys.numberToBlendMode = numberToBlendMode;
     })(sys = egret.sys || (egret.sys = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * The Event class is used as the base class for the creation of Event objects, which are passed as parameters to event
-     * listeners when an event occurs.The properties of the Event class carry basic information about an event, such as
-     * the event's type or whether the event's default behavior can be canceled. For many events, such as the events represented
-     * by the Event class constants, this basic information is sufficient. Other events, however, may require more detailed
-     * information. Events associated with a touch tap, for example, need to include additional information about the
-     * location of the touch event. You can pass such additional information to event listeners by extending the Event class,
-     * which is what the TouchEvent class does. Egret API defines several Event subclasses for common events that require
-     * additional information. Events associated with each of the Event subclasses are described in the documentation for
-     * each class.The methods of the Event class can be used in event listener functions to affect the behavior of the event
-     * object. Some events have an associated default behavior. Your event listener can cancel this behavior by calling the
-     * preventDefault() method. You can also make the current event listener the last one to process an event by calling
-     * the stopPropagation() or stopImmediatePropagation() method.
-     * @see egret.EventDispatcher
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/events/Event.ts
-     */
-    /**
-     * @language zh_CN
-     * Event 类作为创建事件实例的基类，当发生事件时，Event 实例将作为参数传递给事件侦听器。Event 类的属性包含有关事件的基本信息，例如事件
-     * 的类型或者是否可以取消事件的默认行为。对于许多事件（如由 Event 类常量表示的事件），此基本信息就足够了。但其他事件可能需要更详细的信息。
-     * 例如，与触摸关联的事件需要包括有关触摸事件的位置信息。您可以通过扩展 Event 类（TouchEvent 类执行的操作）将此类其他信息传递给事件侦听器。
-     * Egret API 为需要其他信息的常见事件定义多个 Event 子类。与每个 Event 子类关联的事件将在每个类的文档中加以介绍。Event 类的方法可以在
-     * 事件侦听器函数中使用以影响事件对象的行为。某些事件有关联的默认行为，通过调用 preventDefault() 方法，您的事件侦听器可以取消此行为。
-     * 可以通过调用 stopPropagation() 或 stopImmediatePropagation() 方法，将当前事件侦听器作为处理事件的最后一个事件侦听器。
-     * @see egret.EventDispatcher
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/events/Event.ts
-     */
-    var Event = (function (_super) {
-        __extends(Event, _super);
-        /**
-         * @language en_US
-         * Creates an Event object to pass as a parameter to event listeners.
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @param data the optional data associated with this event
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 创建一个作为参数传递给事件侦听器的 Event 对象。
-         * @param type  事件的类型，可以作为 Event.type 访问。
-         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @param data 与此事件对象关联的可选数据。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function Event(type, bubbles, cancelable, data) {
-            _super.call(this);
-            /**
-             * @private
-             */
-            this.$eventPhase = 2;
-            /**
-             * @private
-             */
-            this.$currentTarget = null;
-            /**
-             * @private
-             */
-            this.$target = null;
-            /**
-             * @private
-             */
-            this.$isDefaultPrevented = false;
-            /**
-             * @private
-             */
-            this.$isPropagationStopped = false;
-            /**
-             * @private
-             */
-            this.$isPropagationImmediateStopped = false;
-            this.$type = type;
-            this.$bubbles = !!bubbles;
-            this.$cancelable = !!cancelable;
-            this.data = data;
-        }
-        var d = __define,c=Event;p=c.prototype;
-        d(p, "type"
-            /**
-             * @language en_US
-             * The type of event. The type is case-sensitive.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 事件的类型。类型区分大小写。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$type;
-            }
-        );
-        d(p, "bubbles"
-            /**
-             * @language en_US
-             * Indicates whether an event is a bubbling event.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 表示事件是否为冒泡事件。如果事件可以冒泡，则此值为 true；否则为 false。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$bubbles;
-            }
-        );
-        d(p, "cancelable"
-            /**
-             * @language en_US
-             * Indicates whether the behavior associated with the event can be prevented. If the behavior can be
-             * canceled, this value is true; otherwise it is false.
-             * @see #preventDefault()
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 表示是否可以阻止与事件相关联的行为。如果可以取消该行为，则此值为 true；否则为 false。
-             * @see #preventDefault()
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$cancelable;
-            }
-        );
-        d(p, "eventPhase"
-            /**
-             * @language en_US
-             * The current phase in the event flow. This property can contain the following numeric values:
-             * The capture phase (EventPhase.CAPTURING_PHASE).
-             * The target phase (EventPhase.AT_TARGET)
-             * The bubbling phase (EventPhase.BUBBLING_PHASE).
-             * @see egret.EventPhase
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 事件流中的当前阶段。此属性可以包含以下数值：
-             * 捕获阶段 (EventPhase.CAPTURING_PHASE)。
-             * 目标阶段 (EventPhase.AT_TARGET)。
-             * 冒泡阶段 (EventPhase.BUBBLING_PHASE)。
-             * @see egret.EventPhase
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$eventPhase;
-            }
-        );
-        d(p, "currentTarget"
-            /**
-             * @language en_US
-             * The object that is actively processing the Event object with an event listener. For example, if a
-             * user clicks an OK button, the current target could be the node containing that button or one of its ancestors
-             * that has registered an event listener for that event.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 当前正在使用某个事件侦听器处理 Event 对象的对象。例如，如果用户单击“确定”按钮，
-             * 则当前目标可以是包含该按钮的节点，也可以是它的已为该事件注册了事件侦听器的始祖之一。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$currentTarget;
-            }
-        );
-        d(p, "target"
-            /**
-             * @language en_US
-             * The event target. This property contains the target node. For example, if a user clicks an OK button,
-             * the target node is the display list node containing that button.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 事件目标。此属性包含目标节点。例如，如果用户单击“确定”按钮，则目标节点就是包含该按钮的显示列表节点。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$target;
-            }
-        );
-        p.$setTarget = function (target) {
-            this.$target = target;
-        };
-        /**
-         * @language en_US
-         * Checks whether the preventDefault() method has been called on the event. If the preventDefault() method has been
-         * called, returns true; otherwise, returns false.
-         * @returns If preventDefault() has been called, returns true; otherwise, returns false.
-         * @see #preventDefault()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 检查是否已对事件调用 preventDefault() 方法。
-         * @returns 如果已调用 preventDefault() 方法，则返回 true；否则返回 false。
-         * @see #preventDefault()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.isDefaultPrevented = function () {
-            return this.$isDefaultPrevented;
-        };
-        /**
-         * @language en_US
-         * Cancels an event's default behavior if that behavior can be canceled.Many events have associated behaviors that
-         * are carried out by default. For example, if a user types a character into a text input, the default behavior
-         * is that the character is displayed in the text input. Because the TextEvent.TEXT_INPUT event's default behavior
-         * can be canceled, you can use the preventDefault() method to prevent the character from appearing.
-         * You can use the Event.cancelable property to check whether you can prevent the default behavior associated with
-         * a particular event. If the value of Event.cancelable is true, then preventDefault() can be used to cancel the event;
-         * otherwise, preventDefault() has no effect.
-         * @see #cancelable
-         * @see #isDefaultPrevented
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果可以取消事件的默认行为，则取消该行为。
-         * 许多事件都有默认执行的关联行为。例如，如果用户在文本字段中键入一个字符，则默认行为就是在文本字段中显示该字符。
-         * 由于可以取消 TextEvent.TEXT_INPUT 事件的默认行为，因此您可以使用 preventDefault() 方法来防止显示该字符。
-         * 您可以使用 Event.cancelable 属性来检查是否可以防止与特定事件关联的默认行为。如果 Event.cancelable 的值为 true，
-         * 则可以使用 preventDefault() 来取消事件；否则，preventDefault() 无效。
-         * @see #cancelable
-         * @see #isDefaultPrevented
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.preventDefault = function () {
-            if (this.$cancelable)
-                this.$isDefaultPrevented = true;
-        };
-        /**
-         * @language en_US
-         * Prevents processing of any event listeners in nodes subsequent to the current node in the event flow. This method
-         * does not affect any event listeners in the current node (currentTarget). In contrast, the stopImmediatePropagation()
-         * method prevents processing of event listeners in both the current node and subsequent nodes. Additional calls to this
-         * method have no effect. This method can be called in any phase of the event flow.<br/>
-         * Note: This method does not cancel the behavior associated with this event; see preventDefault() for that functionality.
-         * @see #stopImmediatePropagation()
-         * @see #preventDefault()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 防止对事件流中当前节点的后续节点中的所有事件侦听器进行处理。此方法不会影响当前节点 currentTarget 中的任何事件侦听器。
-         * 相比之下，stopImmediatePropagation() 方法可以防止对当前节点中和后续节点中的事件侦听器进行处理。
-         * 对此方法的其它调用没有任何效果。可以在事件流的任何阶段中调用此方法。<br/>
-         * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
-         * @see #stopImmediatePropagation()
-         * @see #preventDefault()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.stopPropagation = function () {
-            if (this.$bubbles)
-                this.$isPropagationStopped = true;
-        };
-        /**
-         * @language en_US
-         * Prevents processing of any event listeners in the current node and any subsequent nodes in the event flow.
-         * This method takes effect immediately, and it affects event listeners in the current node. In contrast, the
-         * stopPropagation() method doesn't take effect until all the event listeners in the current node finish processing.<br/>
-         * Note: This method does not cancel the behavior associated with this event; see preventDefault() for that functionality.
-         * @see #stopPropagation()
-         * @see #preventDefault()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 防止对事件流中当前节点中和所有后续节点中的事件侦听器进行处理。此方法会立即生效，并且会影响当前节点中的事件侦听器。
-         * 相比之下，在当前节点中的所有事件侦听器都完成处理之前，stopPropagation() 方法不会生效。<br/>
-         * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
-         * @see #stopPropagation()
-         * @see #preventDefault()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.stopImmediatePropagation = function () {
-            if (this.$bubbles)
-                this.$isPropagationImmediateStopped = true;
-        };
-        /**
-         * @language en_US
-         * This method will be called automatically when you pass the event object as the parameters to the Event.release() method.
-         * If your custom event is designed for reusable,you should override this method to make sure all the references to external
-         * objects are cleaned. if not,it may cause memory leaking.
-         * @see egret.Event.create()
-         * @see egret.Event.release()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 当事件实例传递给Event.release()静态方法时，实例上的clean()方法将会被自动调用。
-         * 若此自定义事件的实例设计为可以循环复用的，为了避免引起内存泄露，自定义事件需要覆盖此方法来确保实例被缓存前断开对外部对象的一切引用。
-         * @see egret.Event.create()
-         * @see egret.Event.release()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.clean = function () {
-            this.data = this.$currentTarget = null;
-            this.$setTarget(null);
-        };
-        /**
-         * 使用指定的 EventDispatcher 对象来抛出 Event 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target {egret.IEventDispatcher} 派发事件目标
-         * @param type {string} 事件类型
-         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param data {any} 事件data
-         * @method egret.Event.dispatchEvent
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.dispatchEvent = function (target, type, bubbles, data) {
-            if (bubbles === void 0) { bubbles = false; }
-            var event = Event.create(Event, type, bubbles);
-            var props = Event._getPropertyData(Event);
-            if (data != undefined) {
-                props.data = data;
-            }
-            var result = target.dispatchEvent(event);
-            Event.release(event);
-            return result;
-        };
-        /**
-         * @private
-         *
-         * @param EventClass
-         * @returns
-         */
-        Event._getPropertyData = function (EventClass) {
-            var props = EventClass._props;
-            if (!props)
-                props = EventClass._props = {};
-            return props;
-        };
-        /**
-         * @language en_US
-         * Gets one event instance from the object pool or create a new one. We highly recommend using the Event.create()
-         * and Event.release() methods to create and release an event object,it can reduce the number of reallocate objects,
-         * which allows you to get better code execution performance.<br/>
-         * Note: If you want to use this method to initialize your custom event object,you must make sure the constructor
-         * of your custom event is the same as the constructor of egret.Event.
-         * @example
-         * <pre>
-         *    var event = Event.create(Event,type, bubbles);
-         *    event.data = data;    //optional,initializes custom data here
-         *    this.dispatchEvent(event);
-         *    Event.release(event);
-         * </pre>
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 从对象池中取出或创建一个新的事件实例。我们建议您尽可能使用Event.create()和Event.release() 这一对方法来创建和释放事件对象，
-         * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
-         * 注意：若使用此方法来创建自定义事件的实例，自定义的构造函数参数列表必须跟Event类一致。
-         * @example
-         * <pre>
-         *    var event = Event.create(Event,type, bubbles);
-         *    event.data = data;  //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
-         *    this.dispatchEvent(event);
-         *    Event.release(event);
-         * </pre>
-         * @see #clean()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.create = function (EventClass, type, bubbles, cancelable) {
-            var eventPool = EventClass.eventPool;
-            if (!eventPool) {
-                eventPool = EventClass.eventPool = [];
-            }
-            if (eventPool.length) {
-                var event = eventPool.pop();
-                event.$type = type;
-                event.$bubbles = !!bubbles;
-                event.$cancelable = !!cancelable;
-                event.$isDefaultPrevented = false;
-                event.$isPropagationStopped = false;
-                event.$isPropagationImmediateStopped = false;
-                event.$eventPhase = 2 /* AT_TARGET */;
-                return event;
-            }
-            return new EventClass(type, bubbles, cancelable);
-        };
-        /**
-         * @language en_US
-         * Releases an event object and cache it into the object pool.We highly recommend using the Event.create()
-         * and Event.release() methods to create and release an event object,it can reduce the number of reallocate objects,
-         * which allows you to get better code execution performance.<br/>
-         * Note: The parameters of this method only accepts an instance created by the Event.create() method.
-         * if not,it may throw an error.
-         * @example
-         * <pre>
-         *    var event = Event.create(Event,type, bubbles);
-         *    event.data = data; //optional,initializes custom data here
-         *    this.dispatchEvent(event);
-         *    Event.release(event);
-         * </pre>
-         * @see #clean()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 释放一个事件对象，并缓存到对象池。我们建议您尽可能使用Event.create()和Event.release() 这一对方法来创建和释放事件对象，
-         * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
-         * 注意：此方法只能传入由Event.create()创建的事件实例，传入非法对象实例可能会导致报错。
-         * @example
-         * <pre>
-         *    var event = Event.create(Event,type, bubbles);
-         *    event.data = data;   //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
-         *    this.dispatchEvent(event);
-         *    Event.release(event);
-         * </pre>
-         * @see #clean()
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.release = function (event) {
-            event.clean();
-            var EventClass = Object.getPrototypeOf(event).constructor;
-            EventClass.eventPool.push(event);
-        };
-        /**
-         * @language en_US
-         * Emitted when a display object is added to the on stage display list, either directly or through the addition
-         * of a sub tree in which the display object is contained.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.ADDED_TO_STAGE = "addedToStage";
-        /**
-         * @language en_US
-         * Emitted when a display object is about to be removed from the display list, either directly or through the removal
-         * of a sub tree in which the display object is contained.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.REMOVED_FROM_STAGE = "removedFromStage";
-        /**
-         * @language en_US
-         * Emitted when a display object is added to the display list.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将显示对象添加到显示列表中时调度。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.ADDED = "added";
-        /**
-         * @language en_US
-         * Emitted when a display object is about to be removed from the display list.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将要从显示列表中删除显示对象时调度。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.REMOVED = "removed";
-        /**
-         * @language en_US
-         * [broadcast event] Emitted when the playhead is entering a new frame.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * [广播事件] 进入新的一帧,监听此事件将会在下一帧开始时触发一次回调。这是一个广播事件，可以在任何一个显示对象上监听，无论它是否在显示列表中。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.ENTER_FRAME = "enterFrame";
-        /**
-         * @language en_US
-         * Emitted when the display list is about to be updated and rendered.
-         * Note: Every time you want to receive a render event,you must call the stage.invalidate() method.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 渲染事件，监听此事件将会在本帧末即将开始渲染的前一刻触发回调，这是一个广播事件，可以在任何一个显示对象上监听，无论它是否在显示列表中。
-         * 注意：每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 stage.invalidate() 方法，由于每帧只会触发一次屏幕刷新，
-         * 若在 Event.RENDER 回调函数执行期间再次调用stage.invalidate()，将会被忽略。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.RENDER = "render";
-        /**
-         * @language en_US
-         * Emitted when the size of stage or UIComponent is changed.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 舞台尺寸或UI组件尺寸发生改变
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.RESIZE = "resize";
-        /**
-         * @language en_US
-         * Emitted when the value or selection of a property is chaned.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 属性值或状态发生改变。通常是按钮的选中状态，或者列表的选中项索引改变。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.CHANGE = "change";
-        /**
-         * @language en_US
-         * Emitted when the value or selection of a property is going to change.you can cancel this by calling the
-         * preventDefault() method.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 属性值或状态即将发生改变,通常是按钮的选中状态，或者列表的选中项索引改变。可以通过调用 preventDefault() 方法阻止索引发生更改。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.CHANGING = "changing";
-        /**
-         * @language en_US
-         * Emitted when the net request is complete.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 网络请求加载完成
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.COMPLETE = "complete";
-        /**
-         * @language en_US
-         * Emitted when loop completed.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 循环完成
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.LOOP_COMPLETE = "loopComplete";
-        /**
-         * @language en_US
-         * Emitted when the TextInput instance gets focus.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * TextInput实例获得焦点
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.FOCUS_IN = "focusIn";
-        /**
-         * @language en_US
-         * Emitted when the TextInput instance loses focus.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * TextInput实例失去焦点
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.FOCUS_OUT = "focusOut";
-        /**
-         * @language en_US
-         * Emitted when the playback is ended.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 动画声音等播放完成
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.ENDED = "ended";
-        /**
-         * 游戏激活
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.ACTIVATE = "activate";
-        /**
-         * 取消激活
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.DEACTIVATE = "deactivate";
-        /**
-         * Event.CLOSE 常量定义 close 事件对象的 type 属性的值。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.CLOSE = "close";
-        /**
-         * Event.CONNECT 常量定义 connect 事件对象的 type 属性的值。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.CONNECT = "connect";
-        /**
-         * Event.LEAVE_STAGE 常量定义 leaveStage 事件对象的 type 属性的值。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.LEAVE_STAGE = "leaveStage";
-        /**
-         * Event.SOUND_COMPLETE 常量定义 在声音完成播放后调度。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Event.SOUND_COMPLETE = "soundComplete";
-        return Event;
-    })(egret.HashObject);
-    egret.Event = Event;
-    egret.registerClass(Event,"egret.Event");
-    if (DEBUG) {
-        egret.$markReadOnly(Event, "type");
-        egret.$markReadOnly(Event, "bubbles");
-        egret.$markReadOnly(Event, "cancelable");
-        egret.$markReadOnly(Event, "eventPhase");
-        egret.$markReadOnly(Event, "currentTarget");
-        egret.$markReadOnly(Event, "target");
-    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4542,107 +3758,6 @@ var egret;
     if (DEBUG) {
         egret.$markReadOnly(DisplayObjectContainer, "numChildren");
     }
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @private
-     */
-    var FrameLabel = (function (_super) {
-        __extends(FrameLabel, _super);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function FrameLabel(name, frame /*int*/) {
-            _super.call(this);
-            this._name = name;
-            this._frame = frame | 0;
-        }
-        var d = __define,c=FrameLabel;p=c.prototype;
-        d(p, "name"
-            /**
-             * @language en_US
-             * Frame number
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 标签名
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._name;
-            }
-        );
-        d(p, "frame"
-            /**
-             * @language en_US
-             * Frame serial number of the label
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 标签所在帧序号
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._frame;
-            }
-        );
-        /**
-         * @language en_US
-         * Duplicate the current frame label object
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 复制当前帧标签对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.clone = function () {
-            return new FrameLabel(this._name, this._frame);
-        };
-        return FrameLabel;
-    })(egret.EventDispatcher);
-    egret.FrameLabel = FrameLabel;
-    egret.registerClass(FrameLabel,"egret.FrameLabel");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -6272,1016 +5387,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    /**
-     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
-     * @extends egret.DisplayObject
-     * @event egret.Event.COMPLETE 动画播放完成。
-     * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/151 MovieClip序列帧动画
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/display/MovieClip.ts
-     */
-    var MovieClip = (function (_super) {
-        __extends(MovieClip, _super);
-        //Construct Function
-        /**
-         * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
-         * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function MovieClip(movieClipData) {
-            _super.call(this);
-            //Render Property
-            this.$bitmapData = null;
-            //Data Property
-            this.$movieClipData = null;
-            /**
-             * @private
-             */
-            this.frames = null;
-            /**
-             * @private
-             */
-            this.$totalFrames = 0;
-            /**
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.frameLabels = null;
-            /**
-             * @private
-             */
-            this.frameIntervalTime = 0;
-            /**
-             * @private
-             */
-            this.$eventPool = null;
-            //Animation Property
-            this.$isPlaying = false;
-            /**
-             * @private
-             */
-            this.isStopped = true;
-            /**
-             * @private
-             */
-            this.playTimes = 0;
-            /**
-             * @private
-             */
-            this.$currentFrameNum = 0;
-            /**
-             * @private
-             */
-            this.$nextFrameNum = 0;
-            /**
-             * @private
-             */
-            this.displayedKeyFrameNum = 0;
-            /**
-             * @private
-             */
-            this.passedTime = 0;
-            /**
-             * @private
-             */
-            this.lastTime = 0;
-            this.$renderRegion = new egret.sys.Region();
-            this.setMovieClipData(movieClipData);
-        }
-        var d = __define,c=MovieClip;p=c.prototype;
-        /**
-         * @private
-         *
-         */
-        p.$init = function () {
-            this.$reset();
-            var movieClipData = this.$movieClipData;
-            if (movieClipData && movieClipData.$isDataValid()) {
-                this.frames = movieClipData.frames;
-                this.$totalFrames = movieClipData.numFrames;
-                this.frameLabels = movieClipData.labels;
-                this.frameIntervalTime = 1000 / movieClipData.frameRate;
-                this._initFrame();
-            }
-        };
-        /**
-         * @private
-         *
-         */
-        p.$reset = function () {
-            this.frames = null;
-            this.playTimes = 0;
-            this.$isPlaying = false;
-            this.setIsStopped(true);
-            this.$currentFrameNum = 0;
-            this.$nextFrameNum = 1;
-            this.displayedKeyFrameNum = 0;
-            this.passedTime = 0;
-            this.$eventPool = [];
-        };
-        /**
-         * @private
-         *
-         */
-        p._initFrame = function () {
-            if (this.$movieClipData.$isTextureValid()) {
-                this.advanceFrame();
-                this.constructFrame();
-            }
-        };
-        /**
-         * @private
-         */
-        p.$render = function (context) {
-            var texture = this.$bitmapData;
-            if (texture) {
-                context.imageSmoothingEnabled = false;
-                var offsetX = Math.round(texture._offsetX);
-                var offsetY = Math.round(texture._offsetY);
-                var bitmapWidth = texture._bitmapWidth;
-                var bitmapHeight = texture._bitmapHeight;
-                var destW = Math.round(texture.$getScaleBitmapWidth());
-                var destH = Math.round(texture.$getScaleBitmapHeight());
-                context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
-            }
-        };
-        /**
-         * @private
-         */
-        p.$measureContentBounds = function (bounds) {
-            var texture = this.$bitmapData;
-            if (texture) {
-                var x = texture._offsetX;
-                var y = texture._offsetY;
-                var w = texture.$getTextureWidth();
-                var h = texture.$getTextureHeight();
-                bounds.setTo(x, y, w, h);
-            }
-            else {
-                bounds.setEmpty();
-            }
-        };
-        /**
-         * @private
-         *
-         * @param stage
-         * @param nestLevel
-         */
-        p.$onAddToStage = function (stage, nestLevel) {
-            _super.prototype.$onAddToStage.call(this, stage, nestLevel);
-            if (this.$isPlaying && this.$totalFrames > 1) {
-                this.setIsStopped(false);
-            }
-        };
-        /**
-         * @private
-         *
-         */
-        p.$onRemoveFromStage = function () {
-            _super.prototype.$onRemoveFromStage.call(this);
-            this.setIsStopped(true);
-        };
-        //Data Function
-        /**
-         * @private
-         * 返回帧标签为指定字符串的FrameLabel对象
-         * @param labelName {string} 帧标签名
-         * @param ignoreCase {boolean} 是否忽略大小写，可选参数，默认false
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        p.getFrameLabelByName = function (labelName, ignoreCase) {
-            if (ignoreCase === void 0) { ignoreCase = false; }
-            if (ignoreCase) {
-                labelName = labelName.toLowerCase();
-            }
-            var frameLabels = this.frameLabels;
-            if (frameLabels) {
-                var outputFramelabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
-                    outputFramelabel = frameLabels[i];
-                    if (ignoreCase ? outputFramelabel.name.toLowerCase() == labelName : outputFramelabel.name == labelName) {
-                        return outputFramelabel;
-                    }
-                }
-            }
-            return null;
-        };
-        /**
-         * @private
-         * 返回指定序号的帧的FrameLabel对象
-         * @param frame {number} 帧序号
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        p.getFrameLabelByFrame = function (frame) {
-            var frameLabels = this.frameLabels;
-            if (frameLabels) {
-                var outputFramelabel = null;
-                for (var i = 0; i < frameLabels.length; i++) {
-                    outputFramelabel = frameLabels[i];
-                    if (outputFramelabel.frame == frame) {
-                        return outputFramelabel;
-                    }
-                }
-            }
-            return null;
-        };
-        /**
-         * @private
-         * 返回指定序号的帧对应的FrameLabel对象，如果当前帧没有标签，则返回前面最近的有标签的帧的FrameLabel对象
-         * @method egret.MovieClip#getFrameLabelForFrame
-         * @param frame {number} 帧序号
-         * @returns {egret.FrameLabel} FrameLabel对象
-         */
-        p.getFrameLabelForFrame = function (frame) {
-            var outputFrameLabel = null;
-            var tempFrameLabel = null;
-            var frameLabels = this.frameLabels;
-            if (frameLabels) {
-                for (var i = 0; i < frameLabels.length; i++) {
-                    tempFrameLabel = frameLabels[i];
-                    if (tempFrameLabel.frame > frame) {
-                        return outputFrameLabel;
-                    }
-                    outputFrameLabel = tempFrameLabel;
-                }
-            }
-            return outputFrameLabel;
-        };
-        //Animation Function
-        /**
-         * 继续播放当前动画
-         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.play = function (playTimes) {
-            if (playTimes === void 0) { playTimes = 0; }
-            this.$isPlaying = true;
-            this.setPlayTimes(playTimes);
-            if (this.$totalFrames > 1 && this.$stage) {
-                this.setIsStopped(false);
-            }
-        };
-        /**
-         * 暂停播放动画
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.stop = function () {
-            this.$isPlaying = false;
-            this.setIsStopped(true);
-        };
-        /**
-         * 将播放头移到前一帧并停止
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.prevFrame = function () {
-            this.gotoAndStop(this.$currentFrameNum - 1);
-        };
-        /**
-         * 跳到后一帧并停止
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.nextFrame = function () {
-            this.gotoAndStop(this.$currentFrameNum + 1);
-        };
-        /**
-         * 将播放头移到指定帧并播放
-         * @param frame {any} 指定帧的帧号或帧标签
-         * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.gotoAndPlay = function (frame, playTimes) {
-            if (playTimes === void 0) { playTimes = 0; }
-            if (arguments.length == 0 || arguments.length > 2) {
-                egret.$error(1022, "MovieClip.gotoAndPlay()");
-            }
-            this.play(playTimes);
-            this.gotoFrame(frame);
-        };
-        /**
-         * 将播放头移到指定帧并停止
-         * @param frame {any} 指定帧的帧号或帧标签
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.gotoAndStop = function (frame) {
-            if (arguments.length != 1) {
-                egret.$error(1022, "MovieClip.gotoAndStop()");
-            }
-            this.stop();
-            this.gotoFrame(frame);
-        };
-        /**
-         * @private
-         *
-         * @param frame
-         */
-        p.gotoFrame = function (frame) {
-            var frameNum;
-            if (typeof frame === "string") {
-                frameNum = this.getFrameLabelByName(frame).frame;
-            }
-            else {
-                frameNum = parseInt(frame + '', 10);
-                if (frameNum != frame) {
-                    egret.$error(1022, "Frame Label Not Found");
-                }
-            }
-            if (frameNum < 1) {
-                frameNum = 1;
-            }
-            else if (frameNum > this.$totalFrames) {
-                frameNum = this.$totalFrames;
-            }
-            if (frameNum == this.$nextFrameNum) {
-                return;
-            }
-            this.$nextFrameNum = frameNum;
-            this.advanceFrame();
-            this.constructFrame();
-            this.handlePendingEvent();
-        };
-        /**
-         * @private
-         *
-         * @param advancedTime
-         * @returns
-         */
-        p.advanceTime = function (timeStamp) {
-            var self = this;
-            var advancedTime = timeStamp - self.lastTime;
-            self.lastTime = timeStamp;
-            var frameIntervalTime = self.frameIntervalTime;
-            var currentTime = self.passedTime + advancedTime;
-            self.passedTime = currentTime % frameIntervalTime;
-            var num = currentTime / frameIntervalTime;
-            if (num < 1) {
-                return true;
-            }
-            while (num >= 1) {
-                num--;
-                self.$nextFrameNum++;
-                if (self.$nextFrameNum > self.$totalFrames) {
-                    if (self.playTimes == -1) {
-                        self.$eventPool.push(egret.Event.LOOP_COMPLETE);
-                        self.$nextFrameNum = 1;
-                    }
-                    else {
-                        self.playTimes--;
-                        if (self.playTimes > 0) {
-                            self.$eventPool.push(egret.Event.LOOP_COMPLETE);
-                            self.$nextFrameNum = 1;
-                        }
-                        else {
-                            self.$nextFrameNum = self.$totalFrames;
-                            self.$eventPool.push(egret.Event.COMPLETE);
-                            self.stop();
-                            break;
-                        }
-                    }
-                }
-                self.advanceFrame();
-            }
-            self.constructFrame();
-            self.handlePendingEvent();
-            return false;
-        };
-        /**
-         * @private
-         *
-         */
-        p.advanceFrame = function () {
-            this.$currentFrameNum = this.$nextFrameNum;
-        };
-        /**
-         * @private
-         *
-         */
-        p.constructFrame = function () {
-            var currentFrameNum = this.$currentFrameNum;
-            if (this.displayedKeyFrameNum == currentFrameNum) {
-                return;
-            }
-            this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
-            this.$invalidateContentBounds();
-            this.displayedKeyFrameNum = currentFrameNum;
-        };
-        /**
-         * @private
-         *
-         */
-        p.handlePendingEvent = function () {
-            if (this.$eventPool.length != 0) {
-                this.$eventPool.reverse();
-                var eventPool = this.$eventPool;
-                var length = eventPool.length;
-                var isComplete = false;
-                var isLoopComplete = false;
-                for (var i = 0; i < length; i++) {
-                    var event = eventPool.pop();
-                    if (event == egret.Event.LOOP_COMPLETE) {
-                        isLoopComplete = true;
-                    }
-                    else if (event == egret.Event.COMPLETE) {
-                        isComplete = true;
-                    }
-                    else {
-                        this.dispatchEventWith(event);
-                    }
-                }
-                if (isLoopComplete) {
-                    this.dispatchEventWith(egret.Event.LOOP_COMPLETE);
-                }
-                if (isComplete) {
-                    this.dispatchEventWith(egret.Event.COMPLETE);
-                }
-            }
-        };
-        d(p, "totalFrames"
-            //Properties
-            /**
-             * MovieClip 实例中帧的总数
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$totalFrames;
-            }
-        );
-        d(p, "currentFrame"
-            /**
-             * MovieClip 实例当前播放的帧的序号
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$currentFrameNum;
-            }
-        );
-        d(p, "currentFrameLabel"
-            /**
-             * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                var label = this.getFrameLabelByFrame(this.$currentFrameNum);
-                return label && label.name;
-            }
-        );
-        d(p, "currentLabel"
-            /**
-             * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                var label = this.getFrameLabelForFrame(this.$currentFrameNum);
-                return label ? label.name : null;
-            }
-        );
-        d(p, "frameRate"
-            /**
-             * MovieClip 实例的帧频
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$movieClipData.frameRate;
-            }
-            ,function (value) {
-                if (value == this.$movieClipData.frameRate) {
-                    return;
-                }
-                this.$movieClipData.frameRate = value;
-                this.frameIntervalTime = 1000 / this.$movieClipData.frameRate;
-            }
-        );
-        d(p, "isPlaying"
-            /**
-             * MovieClip 实例当前是否正在播放
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$isPlaying;
-            }
-        );
-        d(p, "movieClipData"
-            /**
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$movieClipData;
-            }
-            /**
-             * MovieClip数据源
-             */
-            ,function (value) {
-                this.setMovieClipData(value);
-            }
-        );
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.setMovieClipData = function (value) {
-            if (this.$movieClipData == value) {
-                return;
-            }
-            this.$movieClipData = value;
-            this.$init();
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.setPlayTimes = function (value) {
-            if (value < 0 || value >= 1) {
-                this.playTimes = value < 0 ? -1 : Math.floor(value);
-            }
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.setIsStopped = function (value) {
-            if (this.isStopped == value) {
-                return;
-            }
-            this.isStopped = value;
-            if (value) {
-                this.playTimes = 0;
-                egret.sys.$ticker.$stopTick(this.advanceTime, this);
-            }
-            else {
-                this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
-                this.lastTime = egret.getTimer();
-                egret.sys.$ticker.$startTick(this.advanceTime, this);
-            }
-        };
-        return MovieClip;
-    })(egret.DisplayObject);
-    egret.MovieClip = MovieClip;
-    egret.registerClass(MovieClip,"egret.MovieClip");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
-     * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    var MovieClipData = (function (_super) {
-        __extends(MovieClipData, _super);
-        /**
-         * 创建一个 egret.MovieClipData 对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function MovieClipData() {
-            _super.call(this);
-            /**
-             * @private
-             * MovieClip数据
-             */
-            this.$mcData = null;
-            /**
-             * 总帧数
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.numFrames = 1;
-            /**
-             * 帧数据列表
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.frames = [];
-            /**
-             * 帧标签列表
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.labels = null;
-            /**
-             * 帧率
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.frameRate = 0;
-            /**
-             * 纹理数据
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.textureData = null;
-            /**
-             * 纹理集
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.spriteSheet = null;
-        }
-        var d = __define,c=MovieClipData;p=c.prototype;
-        /**
-         * @private
-         *
-         * @param mcData
-         * @param textureData
-         * @param spriteSheet
-         */
-        p.$init = function (mcData, textureData, spriteSheet) {
-            this.textureData = textureData;
-            this.spriteSheet = spriteSheet;
-            this.setMCData(mcData);
-        };
-        /**
-         * 根据指定帧序号获取该帧对应的关键帧数据
-         * @param frame {number} 帧序号
-         * @returns {any} 帧数据对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.getKeyFrameData = function (frame) {
-            var outputFrameData = this.frames[frame - 1];
-            if (outputFrameData.frame) {
-                outputFrameData = this.frames[outputFrameData.frame - 1];
-            }
-            return outputFrameData;
-        };
-        /**
-         * 根据指定帧序号获取该帧对应的Texture对象
-         * @param frame {number} 帧序号
-         * @returns {egret.Texture} Texture对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.getTextureByFrame = function (frame) {
-            var frameData = this.getKeyFrameData(frame);
-            if (frameData.res) {
-                var outputTexture = this.getTextureByResName(frameData.res);
-                outputTexture._offsetX = frameData.x | 0;
-                outputTexture._offsetY = frameData.y | 0;
-                return outputTexture;
-            }
-            return null;
-        };
-        /**
-         * @private
-         *
-         * @param resName
-         * @returns
-         */
-        p.getTextureByResName = function (resName) {
-            var texture = this.spriteSheet.getTexture(resName);
-            if (!texture) {
-                var textureData = this.textureData[resName];
-                texture = this.spriteSheet.createTexture(resName, textureData.x, textureData.y, textureData.w, textureData.h);
-            }
-            return texture;
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p.$isDataValid = function () {
-            return this.frames.length > 0;
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p.$isTextureValid = function () {
-            return this.textureData != null && this.spriteSheet != null;
-        };
-        /**
-         * @private
-         *
-         * @param mcData
-         */
-        p.$fillMCData = function (mcData) {
-            this.frameRate = mcData["frameRate"] || 24;
-            this.fillFramesData(mcData.frames);
-            this.fillFrameLabelsData(mcData.labels);
-        };
-        /**
-         * @private
-         *
-         * @param framesData
-         */
-        p.fillFramesData = function (framesData) {
-            var frames = this.frames;
-            var length = framesData ? framesData.length : 0;
-            var keyFramePosition;
-            for (var i = 0; i < length; i++) {
-                var frameData = framesData[i];
-                frames.push(frameData);
-                if (frameData.duration) {
-                    var duration = parseInt(frameData.duration);
-                    if (duration > 1) {
-                        keyFramePosition = frames.length;
-                        for (var j = 1; j < duration; j++) {
-                            frames.push({ "frame": keyFramePosition });
-                        }
-                    }
-                }
-            }
-            this.numFrames = frames.length;
-        };
-        /**
-         * @private
-         *
-         * @param frameLabelsData
-         */
-        p.fillFrameLabelsData = function (frameLabelsData) {
-            if (frameLabelsData) {
-                var length = frameLabelsData.length;
-                if (length > 0) {
-                    this.labels = [];
-                    for (var i = 0; i < length; i++) {
-                        var label = frameLabelsData[i];
-                        this.labels.push(new egret.FrameLabel(label.name, label.frame));
-                    }
-                }
-            }
-        };
-        d(p, "mcData"
-            /**
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$mcData;
-            }
-            /**
-             * MovieClip数据源
-             */
-            ,function (value) {
-                this.setMCData(value);
-            }
-        );
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.setMCData = function (value) {
-            if (this.$mcData == value) {
-                return;
-            }
-            this.$mcData = value;
-            if (value) {
-                this.$fillMCData(value);
-            }
-        };
-        return MovieClipData;
-    })(egret.HashObject);
-    egret.MovieClipData = MovieClipData;
-    egret.registerClass(MovieClipData,"egret.MovieClipData");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @classdesc 使用 MovieClipDataFactory 类，可以生成 MovieClipData 对象用于创建MovieClip
-     * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    var MovieClipDataFactory = (function (_super) {
-        __extends(MovieClipDataFactory, _super);
-        /**
-         * 创建一个 egret.MovieClipDataFactory 对象
-         * @param movieClipDataSet {any} MovieClip数据集，该数据集必须由Egret官方工具生成
-         * @param texture {Texture} 纹理
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function MovieClipDataFactory(movieClipDataSet, texture) {
-            _super.call(this);
-            /**
-             * 是否开启缓存
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.enableCache = true;
-            /**
-             * @private
-             */
-            this.$mcDataCache = {};
-            this.$mcDataSet = movieClipDataSet;
-            this.setTexture(texture);
-        }
-        var d = __define,c=MovieClipDataFactory;p=c.prototype;
-        /**
-         * 清空缓存
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.clearCache = function () {
-            this.$mcDataCache = {};
-        };
-        /**
-         * 根据名字生成一个MovieClipData实例。可以用于创建MovieClip。
-         * @param movieClipName {string} MovieClip名字. 可选参数，默认为"", 相当于取第一个MovieClip数据
-         * @returns {MovieClipData} 生成的MovieClipData对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.generateMovieClipData = function (movieClipName) {
-            if (movieClipName === void 0) { movieClipName = ""; }
-            if (movieClipName == "") {
-                if (this.$mcDataSet) {
-                    for (movieClipName in this.$mcDataSet.mc) {
-                        break;
-                    }
-                }
-            }
-            if (movieClipName == "") {
-                return null;
-            }
-            var output = this.findFromCache(movieClipName, this.$mcDataCache);
-            if (!output) {
-                output = new egret.MovieClipData();
-                this.fillData(movieClipName, output, this.$mcDataCache);
-            }
-            return output;
-        };
-        /**
-         * @private
-         *
-         * @param movieClipName
-         * @param cache
-         * @returns
-         */
-        p.findFromCache = function (movieClipName, cache) {
-            if (this.enableCache && cache[movieClipName]) {
-                return cache[movieClipName];
-            }
-            return null;
-        };
-        /**
-         * @private
-         *
-         * @param movieClipName
-         * @param movieClip
-         * @param cache
-         */
-        p.fillData = function (movieClipName, movieClip, cache) {
-            if (this.$mcDataSet) {
-                var mcData = this.$mcDataSet.mc[movieClipName];
-                if (mcData) {
-                    movieClip.$init(mcData, this.$mcDataSet.res, this.$spriteSheet);
-                    if (this.enableCache) {
-                        cache[movieClipName] = movieClip;
-                    }
-                }
-            }
-        };
-        d(p, "mcDataSet"
-            /**
-             * MovieClip数据集
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$mcDataSet;
-            }
-            ,function (value) {
-                this.$mcDataSet = value;
-            }
-        );
-        d(p, "texture",undefined
-            /**
-             * MovieClip需要使用的纹理图
-             */
-            ,function (value) {
-                this.setTexture(value);
-            }
-        );
-        d(p, "spriteSheet"
-            /**
-             * 由纹理图生成的精灵表
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$spriteSheet;
-            }
-        );
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.setTexture = function (value) {
-            this.$spriteSheet = value ? new egret.SpriteSheet(value) : null;
-        };
-        return MovieClipDataFactory;
-    })(egret.EventDispatcher);
-    egret.MovieClipDataFactory = MovieClipDataFactory;
-    egret.registerClass(MovieClipDataFactory,"egret.MovieClipDataFactory");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
     egret.$TextureScaleFactor = 1;
     /**
      * @language en_US
@@ -7896,1090 +6001,6 @@ var egret;
     })(egret.Texture);
     egret.RenderTexture = RenderTexture;
     egret.registerClass(RenderTexture,"egret.RenderTexture");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * ScrollView auxiliary classes for slides, you will pass a display object constructor. It can display more than the range display object within the specified size range. And can easily drag in this range.
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/display/ScrollView.ts
-     */
-    /**
-     * @language zh_CN
-     * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/display/ScrollView.ts
-     */
-    var ScrollView = (function (_super) {
-        __extends(ScrollView, _super);
-        /**
-         * @language en_US
-         * Create a egret.ScrollView objects
-         * @param content {egret.DisplayObject} You need to scroll object
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 创建一个 egret.ScrollView 对象
-         * @param content {egret.DisplayObject} 需要滚动的对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function ScrollView(content) {
-            if (content === void 0) { content = null; }
-            _super.call(this);
-            /**
-             * @language en_US
-             * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.scrollBeginThreshold = 10;
-            /**
-             * @language en_US
-             * Scrolling speed, the speed is required and the default speed ratio.
-             * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 滚动速度，这个值为需要的速度与默认速度的比值。
-             * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.scrollSpeed = 1;
-            /**
-             * @private
-             */
-            this._content = null;
-            /**
-             * @private
-             */
-            this.delayTouchBeginEvent = null;
-            /**
-             * @private
-             */
-            this.touchBeginTimer = null;
-            this.touchEnabled = true;
-            this._ScrV_Props_ = new egret.ScrollViewProperties();
-            if (content) {
-                this.setContent(content);
-            }
-        }
-        var d = __define,c=ScrollView;p=c.prototype;
-        d(p, "bounces"
-            /**
-             * @language en_US
-             * Whether to enable rebound, rebound When enabled, ScrollView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
-             * @default true
-             * @version Egret 2.0
-             */
-            /**
-             * @language zh_CN
-             * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
-             * @default true
-             * @version Egret 2.0
-             */
-            ,function () {
-                return this._ScrV_Props_._bounces;
-            }
-            ,function (value) {
-                this._ScrV_Props_._bounces = !!value;
-            }
-        );
-        /**
-         * @language en_US
-         * Set to scroll object
-         * @param content {egret.DisplayObject} You need to scroll object
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置需要滚动的对象
-         * @param content {egret.DisplayObject} 需要滚动的对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.setContent = function (content) {
-            if (this._content === content)
-                return;
-            this.removeContent();
-            if (content) {
-                this._content = content;
-                _super.prototype.addChild.call(this, content);
-                this._addEvents();
-            }
-        };
-        /**
-         * @language en_US
-         * Remove rolling objects
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 移除滚动的对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.removeContent = function () {
-            if (this._content) {
-                this._removeEvents();
-                _super.prototype.removeChildAt.call(this, 0);
-            }
-            this._content = null;
-        };
-        d(p, "verticalScrollPolicy"
-            /**
-             * @language en_US
-             * Vertical scroll bar display policy, on / off / auto.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 垂直滚动条显示策略，on/off/auto。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._ScrV_Props_._verticalScrollPolicy;
-            }
-            ,function (value) {
-                if (value == this._ScrV_Props_._verticalScrollPolicy)
-                    return;
-                this._ScrV_Props_._verticalScrollPolicy = value;
-            }
-        );
-        d(p, "horizontalScrollPolicy"
-            /**
-             * @language en_US
-             * The horizontal scroll bar display policy, on / off / auto.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 水平滚动条显示策略，on/off/auto。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._ScrV_Props_._horizontalScrollPolicy;
-            }
-            ,function (value) {
-                if (value == this._ScrV_Props_._horizontalScrollPolicy)
-                    return;
-                this._ScrV_Props_._horizontalScrollPolicy = value;
-            }
-        );
-        d(p, "scrollLeft"
-            /**
-             * @language en_US
-             * Gets or sets the horizontal scroll position
-             * @returns {number}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 获取或设置水平滚动位置,
-             * @returns {number}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._ScrV_Props_._scrollLeft;
-            }
-            ,function (value) {
-                if (value == this._ScrV_Props_._scrollLeft)
-                    return;
-                this._ScrV_Props_._scrollLeft = value;
-                this._validatePosition(false, true);
-                this._updateContentPosition();
-            }
-        );
-        d(p, "scrollTop"
-            /**
-             * @language en_US
-             * Gets or sets the vertical scroll position
-             * @returns {number}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 获取或设置垂直滚动位置,
-             * @returns {number}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._ScrV_Props_._scrollTop;
-            }
-            ,function (value) {
-                if (value == this._ScrV_Props_._scrollTop)
-                    return;
-                this._ScrV_Props_._scrollTop = value;
-                this._validatePosition(true, false);
-                this._updateContentPosition();
-            }
-        );
-        /**
-         * @language en_US
-         * Set scroll position
-         * @param top {number} The vertical scroll position
-         * @param left {number} The horizontal scroll position
-         * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置滚动位置
-         * @param top {number} 垂直滚动位置
-         * @param left {number} 水平滚动位置
-         * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.setScrollPosition = function (top, left, isOffset) {
-            if (isOffset === void 0) { isOffset = false; }
-            if (isOffset && top == 0 && left == 0)
-                return;
-            if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left)
-                return;
-            var oldTop = this._ScrV_Props_._scrollTop, oldLeft = this._ScrV_Props_._scrollLeft;
-            if (isOffset) {
-                var maxLeft = this.getMaxScrollLeft();
-                var maxTop = this.getMaxScrollTop();
-                if (oldTop <= 0 || oldTop >= maxTop) {
-                    top = top / 2;
-                }
-                if (oldLeft <= 0 || oldLeft >= maxLeft) {
-                    left = left / 2;
-                }
-                var newTop = oldTop + top;
-                var newLeft = oldLeft + left;
-                //判断是否回弹
-                var bounces = this._ScrV_Props_._bounces;
-                if (!bounces) {
-                    if (newTop <= 0 || newTop >= maxTop)
-                        newTop = Math.max(0, Math.min(newTop, maxTop));
-                    if (newLeft <= 0 || newLeft >= maxLeft)
-                        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-                }
-                this._ScrV_Props_._scrollTop = newTop;
-                this._ScrV_Props_._scrollLeft = newLeft;
-            }
-            else {
-                this._ScrV_Props_._scrollTop = top;
-                this._ScrV_Props_._scrollLeft = left;
-            }
-            this._validatePosition(true, true);
-            this._updateContentPosition();
-        };
-        /**
-         * @private
-         *
-         * @param top
-         * @param left
-         */
-        p._validatePosition = function (top, left) {
-            if (top === void 0) { top = false; }
-            if (left === void 0) { left = false; }
-            if (top) {
-                var height = this.height;
-                var contentHeight = this._getContentHeight();
-                this._ScrV_Props_._scrollTop = Math.max(this._ScrV_Props_._scrollTop, (0 - height) / 2);
-                this._ScrV_Props_._scrollTop = Math.min(this._ScrV_Props_._scrollTop, contentHeight > height ? (contentHeight - height / 2) : height / 2);
-            }
-            if (left) {
-                var width = this.width;
-                var contentWidth = this._getContentWidth();
-                this._ScrV_Props_._scrollLeft = Math.max(this._ScrV_Props_._scrollLeft, (0 - width) / 2);
-                this._ScrV_Props_._scrollLeft = Math.min(this._ScrV_Props_._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : width / 2);
-            }
-        };
-        /**
-         * @private
-         * @inheritDoc
-         */
-        p.$setWidth = function (value) {
-            if (this.$getExplicitWidth() == value) {
-                return;
-            }
-            _super.prototype.$setWidth.call(this, value);
-            this._updateContentPosition();
-        };
-        /**
-         * @private
-         * @inheritDoc
-         */
-        p.$setHeight = function (value) {
-            if (this.$getExplicitHeight() == value)
-                return;
-            _super.prototype.$setHeight.call(this, value);
-            this._updateContentPosition();
-        };
-        /**
-         * @private
-         *
-         */
-        p._updateContentPosition = function () {
-            var height = this.height;
-            var width = this.width;
-            //这里将坐标取整，避免有些浏览器精度低产生“黑线”问题
-            this.scrollRect = new egret.Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
-            this.dispatchEvent(new egret.Event(egret.Event.CHANGE));
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p._checkScrollPolicy = function () {
-            var hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
-            var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
-            this._ScrV_Props_._hCanScroll = hCanScroll;
-            var vpolicy = this._ScrV_Props_._verticalScrollPolicy;
-            var vCanScroll = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
-            this._ScrV_Props_._vCanScroll = vCanScroll;
-            return hCanScroll || vCanScroll;
-        };
-        /**
-         * @private
-         *
-         * @param policy
-         * @param contentLength
-         * @param viewLength
-         * @returns
-         */
-        p.__checkScrollPolicy = function (policy, contentLength, viewLength) {
-            if (policy == "on")
-                return true;
-            if (policy == "off")
-                return false;
-            return contentLength > viewLength;
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p._addEvents = function () {
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
-            this.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p._removeEvents = function () {
-            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
-            this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
-            this.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-        };
-        /**
-         * @private
-         *
-         * @param e
-         */
-        p._onTouchBegin = function (e) {
-            if (e.$isDefaultPrevented) {
-                return;
-            }
-            var canScroll = this._checkScrollPolicy();
-            if (!canScroll) {
-                return;
-            }
-            this._ScrV_Props_._touchStartPosition.x = e.stageX;
-            this._ScrV_Props_._touchStartPosition.y = e.stageY;
-            if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
-                this._onScrollFinished();
-            }
-            this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-            this.stage.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
-            this.stage.addEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
-            this.addEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
-            this._logTouchEvent(e);
-            e.preventDefault();
-        };
-        /**
-         * @private
-         *
-         * @param event
-         */
-        p._onTouchBeginCapture = function (event) {
-            var canScroll = this._checkScrollPolicy();
-            if (!canScroll) {
-                return;
-            }
-            var target = event.target;
-            while (target != this) {
-                if ("_checkScrollPolicy" in target) {
-                    canScroll = target._checkScrollPolicy();
-                    if (canScroll) {
-                        return;
-                    }
-                }
-                target = target.parent;
-            }
-            event.stopPropagation();
-            var evt = this.cloneTouchEvent(event);
-            this.delayTouchBeginEvent = evt;
-            if (!this.touchBeginTimer) {
-                this.touchBeginTimer = new egret.Timer(100, 1);
-                this.touchBeginTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this._onTouchBeginTimer, this);
-            }
-            this.touchBeginTimer.start();
-            this._onTouchBegin(event);
-        };
-        /**
-         * @private
-         *
-         * @param event
-         * @returns
-         */
-        p._onTouchEndCapture = function (event) {
-            if (!this.delayTouchBeginEvent) {
-                return;
-            }
-            this._onTouchBeginTimer();
-        };
-        /**
-         * @private
-         *
-         */
-        p._onTouchBeginTimer = function () {
-            this.touchBeginTimer.stop();
-            var event = this.delayTouchBeginEvent;
-            this.delayTouchBeginEvent = null;
-            //Dispatch event only if the scroll view is still on the stage
-            if (this.stage)
-                this.dispatchPropagationEvent(event);
-        };
-        /**
-         * @private
-         *
-         * @param event
-         * @returns
-         */
-        p.dispatchPropagationEvent = function (event) {
-            var target = event.$target;
-            var list = this.$getPropagationList(target);
-            var length = list.length;
-            var targetIndex = list.length * 0.5;
-            var startIndex = -1;
-            for (var i = 0; i < length; i++) {
-                if (list[i] === this._content) {
-                    startIndex = i;
-                    break;
-                }
-            }
-            list.splice(0, startIndex + 1);
-            targetIndex -= startIndex + 1;
-            this.$emitPropagationEvent(event, list, targetIndex);
-            egret.Event.release(event);
-        };
-        /**
-         * @private
-         *
-         * @param event
-         * @returns
-         */
-        p._onTouchMove = function (event) {
-            if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY)
-                return;
-            if (!this._ScrV_Props_._scrollStarted) {
-                var x = event.stageX - this._ScrV_Props_._touchStartPosition.x, y = event.stageY - this._ScrV_Props_._touchStartPosition.y;
-                var distance = Math.sqrt(x * x + y * y);
-                if (distance < this.scrollBeginThreshold) {
-                    this._logTouchEvent(event);
-                    return;
-                }
-            }
-            this._ScrV_Props_._scrollStarted = true;
-            if (this.delayTouchBeginEvent) {
-                this.delayTouchBeginEvent = null;
-                this.touchBeginTimer.stop();
-            }
-            this.touchChildren = false;
-            var offset = this._getPointChange(event);
-            this.setScrollPosition(offset.y, offset.x, true);
-            this._calcVelocitys(event);
-            this._logTouchEvent(event);
-        };
-        /**
-         * @private
-         *
-         * @param event
-         * @returns
-         */
-        p._onTouchEnd = function (event) {
-            this.touchChildren = true;
-            this._ScrV_Props_._scrollStarted = false;
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
-            this.removeEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
-            this._moveAfterTouchEnd();
-        };
-        /**
-         * @private
-         *
-         * @param event
-         * @returns
-         */
-        p._onEnterFrame = function (event) {
-            var time = egret.getTimer();
-            if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
-                this._calcVelocitys(this._ScrV_Props_._lastTouchEvent);
-            }
-        };
-        /**
-         * @private
-         *
-         * @param e
-         * @returns
-         */
-        p._logTouchEvent = function (e) {
-            this._ScrV_Props_._lastTouchPosition.x = e.stageX;
-            this._ScrV_Props_._lastTouchPosition.y = e.stageY;
-            this._ScrV_Props_._lastTouchEvent = this.cloneTouchEvent(e);
-            this._ScrV_Props_._lastTouchTime = egret.getTimer();
-        };
-        /**
-         * @private
-         *
-         * @param e
-         * @returns
-         */
-        p._getPointChange = function (e) {
-            return {
-                x: this._ScrV_Props_._hCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.x - e.stageX),
-                y: this._ScrV_Props_._vCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.y - e.stageY)
-            };
-        };
-        /**
-         * @private
-         *
-         * @param e
-         * @returns
-         */
-        p._calcVelocitys = function (e) {
-            var time = egret.getTimer();
-            if (this._ScrV_Props_._lastTouchTime == 0) {
-                this._ScrV_Props_._lastTouchTime = time;
-                return;
-            }
-            var change = this._getPointChange(e);
-            var timeoffset = time - this._ScrV_Props_._lastTouchTime;
-            change.x /= timeoffset;
-            change.y /= timeoffset;
-            this._ScrV_Props_._velocitys.push(change);
-            if (this._ScrV_Props_._velocitys.length > 5)
-                this._ScrV_Props_._velocitys.shift();
-            this._ScrV_Props_._lastTouchPosition.x = e.stageX;
-            this._ScrV_Props_._lastTouchPosition.y = e.stageY;
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p._getContentWidth = function () {
-            return this._content.$getExplicitWidth() || this._content.width;
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p._getContentHeight = function () {
-            return this._content.$getExplicitHeight() || this._content.height;
-        };
-        /**
-         * @language en_US
-         * The left side of the maximum distance
-         * @returns The left side of the maximum distance
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 距离左侧的最大值
-         * @returns 距离左侧最大值
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.getMaxScrollLeft = function () {
-            var max = this._getContentWidth() - this.width;
-            return Math.max(0, max);
-        };
-        /**
-         * @language en_US
-         * Above the maximum distance
-         * @returns Above the maximum distance
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 距离上方最大值
-         * @returns 距离上方最大值
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.getMaxScrollTop = function () {
-            var max = this._getContentHeight() - this.height;
-            return Math.max(0, max);
-        };
-        /**
-         * @private
-         *
-         */
-        p._moveAfterTouchEnd = function () {
-            if (this._ScrV_Props_._velocitys.length == 0)
-                return;
-            var sum = { x: 0, y: 0 }, totalW = 0;
-            for (var i = 0; i < this._ScrV_Props_._velocitys.length; i++) {
-                var v = this._ScrV_Props_._velocitys[i];
-                var w = ScrollView.weight[i];
-                sum.x += v.x * w;
-                sum.y += v.y * w;
-                totalW += w;
-            }
-            this._ScrV_Props_._velocitys.length = 0;
-            if (this.scrollSpeed <= 0)
-                this.scrollSpeed = 1;
-            var x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
-            var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
-            var maxLeft = this.getMaxScrollLeft();
-            var maxTop = this.getMaxScrollTop();
-            var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
-                position: this._ScrV_Props_._scrollLeft,
-                duration: 1
-            };
-            var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
-                position: this._ScrV_Props_._scrollTop,
-                duration: 1
-            };
-            this.setScrollLeft(datax.position, datax.duration);
-            this.setScrollTop(datay.position, datay.duration);
-        };
-        /**
-         * @private
-         *
-         * @param tw
-         */
-        p._onTweenFinished = function (tw) {
-            if (tw == this._ScrV_Props_._vScrollTween)
-                this._ScrV_Props_._isVTweenPlaying = false;
-            if (tw == this._ScrV_Props_._hScrollTween)
-                this._ScrV_Props_._isHTweenPlaying = false;
-            if (this._ScrV_Props_._isHTweenPlaying == false && this._ScrV_Props_._isVTweenPlaying == false) {
-                this._onScrollFinished();
-            }
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p._onScrollStarted = function () {
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p._onScrollFinished = function () {
-            egret.Tween.removeTweens(this);
-            this._ScrV_Props_._hScrollTween = null;
-            this._ScrV_Props_._vScrollTween = null;
-            this._ScrV_Props_._isHTweenPlaying = false;
-            this._ScrV_Props_._isVTweenPlaying = false;
-            this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-        };
-        /**
-         * @language en_US
-         * Set the scroll position above the distance
-         * @param scrollTop Position above distance
-         * @param duration Easing of time, in milliseconds
-         * @returns Get tween vertical scrolling
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置滚动距离上方的位置
-         * @param scrollTop 距离上方的位置
-         * @param duration 缓动时间，毫秒单位
-         * @returns 获取垂直滚动的tween
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.setScrollTop = function (scrollTop, duration) {
-            if (duration === void 0) { duration = 0; }
-            var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
-            if (duration == 0) {
-                this.scrollTop = finalPosition;
-                return null;
-            }
-            if (this._ScrV_Props_._bounces == false)
-                scrollTop = finalPosition;
-            var vtween = egret.Tween.get(this).to({ scrollTop: scrollTop }, duration, egret.Ease.quartOut);
-            if (finalPosition != scrollTop) {
-                vtween.to({ scrollTop: finalPosition }, 300, egret.Ease.quintOut);
-            }
-            this._ScrV_Props_._isVTweenPlaying = true;
-            this._ScrV_Props_._vScrollTween = vtween;
-            vtween.call(this._onTweenFinished, this, [vtween]);
-            if (!this._ScrV_Props_._isHTweenPlaying)
-                this._onScrollStarted();
-            return vtween;
-        };
-        /**
-         * @language en_US
-         * Set the scroll position from the left side
-         * @param scrollLeft From the position on the left side
-         * @param duration Get tween vertical scrolling
-         * @returns Gets the horizontal scroll tween
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置滚动距离左侧的位置
-         * @param scrollLeft 距离左侧的位置
-         * @param duration 缓动时间，毫秒单位
-         * @returns 获取水平滚动的tween
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.setScrollLeft = function (scrollLeft, duration) {
-            if (duration === void 0) { duration = 0; }
-            var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
-            if (duration == 0) {
-                this.scrollLeft = finalPosition;
-                return null;
-            }
-            if (this._ScrV_Props_._bounces == false)
-                scrollLeft = finalPosition;
-            var htween = egret.Tween.get(this).to({ scrollLeft: scrollLeft }, duration, egret.Ease.quartOut);
-            if (finalPosition != scrollLeft) {
-                htween.to({ scrollLeft: finalPosition }, 300, egret.Ease.quintOut);
-            }
-            this._ScrV_Props_._isHTweenPlaying = true;
-            this._ScrV_Props_._hScrollTween = htween;
-            htween.call(this._onTweenFinished, this, [htween]);
-            if (!this._ScrV_Props_._isVTweenPlaying)
-                this._onScrollStarted();
-            return htween;
-        };
-        /**
-         * @private
-         *
-         * @param pixelsPerMS
-         * @param curPos
-         * @param maxPos
-         * @returns
-         */
-        p.getAnimationDatas = function (pixelsPerMS, curPos, maxPos) {
-            var absPixelsPerMS = Math.abs(pixelsPerMS);
-            var extraFricition = 0.95;
-            var duration = 0;
-            var friction = 0.998;
-            var minVelocity = 0.02;
-            var posTo = curPos + pixelsPerMS * 500;
-            if (posTo < 0 || posTo > maxPos) {
-                posTo = curPos;
-                while (Math.abs(pixelsPerMS) != Infinity && Math.abs(pixelsPerMS) > minVelocity) {
-                    posTo += pixelsPerMS;
-                    if (posTo < 0 || posTo > maxPos) {
-                        pixelsPerMS *= friction * extraFricition;
-                    }
-                    else {
-                        pixelsPerMS *= friction;
-                    }
-                    duration++;
-                }
-            }
-            else {
-                duration = -Math.log(minVelocity / absPixelsPerMS) * 500;
-            }
-            var result = {
-                position: Math.min(maxPos + 50, Math.max(posTo, -50)),
-                duration: duration
-            };
-            return result;
-        };
-        /**
-         * @private
-         *
-         * @param event
-         * @returns
-         */
-        p.cloneTouchEvent = function (event) {
-            var evt = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
-            evt.touchPointID = event.touchPointID;
-            evt.$stageX = event.stageX;
-            evt.$stageY = event.stageY;
-            //evt.ctrlKey = event.ctrlKey;
-            //evt.altKey = event.altKey;
-            //evt.shiftKey = event.shiftKey;
-            evt.touchDown = event.touchDown;
-            evt.$isDefaultPrevented = false;
-            evt.$target = event.target;
-            return evt;
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p.throwNotSupportedError = function () {
-            egret.$error(1023);
-        };
-        /**
-         * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.addChild = function (child) {
-            this.throwNotSupportedError();
-            return null;
-        };
-        /**
-         * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @returns {DisplayObject}
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.addChildAt = function (child, index) {
-            this.throwNotSupportedError();
-            return null;
-        };
-        /**
-         * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.removeChild = function (child) {
-            this.throwNotSupportedError();
-            return null;
-        };
-        /**
-         * @deprecated
-         * @param index {number}
-         * @returns {DisplayObject}
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.removeChildAt = function (index) {
-            this.throwNotSupportedError();
-            return null;
-        };
-        /**
-         * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.setChildIndex = function (child, index) {
-            this.throwNotSupportedError();
-        };
-        /**
-         * @deprecated
-         * @param child1 {DisplayObject}
-         * @param child2 {DisplayObject}
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.swapChildren = function (child1, child2) {
-            this.throwNotSupportedError();
-        };
-        /**
-         * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.swapChildrenAt = function (index1, index2) {
-            this.throwNotSupportedError();
-        };
-        /**
-         * @private
-         */
-        ScrollView.weight = [1, 1.33, 1.66, 2, 2.33];
-        return ScrollView;
-    })(egret.DisplayObjectContainer);
-    egret.ScrollView = ScrollView;
-    egret.registerClass(ScrollView,"egret.ScrollView");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @private
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    var ScrollViewProperties = (function () {
-        function ScrollViewProperties() {
-            /**
-             * @private
-             */
-            this._verticalScrollPolicy = "auto";
-            /**
-             * @private
-             */
-            this._horizontalScrollPolicy = "auto";
-            /**
-             * @private
-             */
-            this._scrollLeft = 0;
-            /**
-             * @private
-             */
-            this._scrollTop = 0;
-            /**
-             * @private
-             */
-            this._hCanScroll = false;
-            /**
-             * @private
-             */
-            this._vCanScroll = false;
-            /**
-             * @private
-             */
-            this._lastTouchPosition = new egret.Point(0, 0);
-            /**
-             * @private
-             */
-            this._touchStartPosition = new egret.Point(0, 0);
-            /**
-             * @private
-             */
-            this._scrollStarted = false;
-            /**
-             * @private
-             */
-            this._lastTouchTime = 0;
-            /**
-             * @private
-             */
-            this._lastTouchEvent = null;
-            /**
-             * @private
-             */
-            this._velocitys = [];
-            /**
-             * @private
-             */
-            this._isHTweenPlaying = false;
-            /**
-             * @private
-             */
-            this._isVTweenPlaying = false;
-            /**
-             * @private
-             */
-            this._hScrollTween = null;
-            /**
-             * @private
-             */
-            this._vScrollTween = null;
-            /**
-             * @private
-             */
-            this._bounces = true;
-        }
-        var d = __define,c=ScrollViewProperties;p=c.prototype;
-        return ScrollViewProperties;
-    })();
-    egret.ScrollViewProperties = ScrollViewProperties;
-    egret.registerClass(ScrollViewProperties,"egret.ScrollViewProperties");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9708,6 +6729,727 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * The Event class is used as the base class for the creation of Event objects, which are passed as parameters to event
+     * listeners when an event occurs.The properties of the Event class carry basic information about an event, such as
+     * the event's type or whether the event's default behavior can be canceled. For many events, such as the events represented
+     * by the Event class constants, this basic information is sufficient. Other events, however, may require more detailed
+     * information. Events associated with a touch tap, for example, need to include additional information about the
+     * location of the touch event. You can pass such additional information to event listeners by extending the Event class,
+     * which is what the TouchEvent class does. Egret API defines several Event subclasses for common events that require
+     * additional information. Events associated with each of the Event subclasses are described in the documentation for
+     * each class.The methods of the Event class can be used in event listener functions to affect the behavior of the event
+     * object. Some events have an associated default behavior. Your event listener can cancel this behavior by calling the
+     * preventDefault() method. You can also make the current event listener the last one to process an event by calling
+     * the stopPropagation() or stopImmediatePropagation() method.
+     * @see egret.EventDispatcher
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/events/Event.ts
+     */
+    /**
+     * @language zh_CN
+     * Event 类作为创建事件实例的基类，当发生事件时，Event 实例将作为参数传递给事件侦听器。Event 类的属性包含有关事件的基本信息，例如事件
+     * 的类型或者是否可以取消事件的默认行为。对于许多事件（如由 Event 类常量表示的事件），此基本信息就足够了。但其他事件可能需要更详细的信息。
+     * 例如，与触摸关联的事件需要包括有关触摸事件的位置信息。您可以通过扩展 Event 类（TouchEvent 类执行的操作）将此类其他信息传递给事件侦听器。
+     * Egret API 为需要其他信息的常见事件定义多个 Event 子类。与每个 Event 子类关联的事件将在每个类的文档中加以介绍。Event 类的方法可以在
+     * 事件侦听器函数中使用以影响事件对象的行为。某些事件有关联的默认行为，通过调用 preventDefault() 方法，您的事件侦听器可以取消此行为。
+     * 可以通过调用 stopPropagation() 或 stopImmediatePropagation() 方法，将当前事件侦听器作为处理事件的最后一个事件侦听器。
+     * @see egret.EventDispatcher
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/events/Event.ts
+     */
+    var Event = (function (_super) {
+        __extends(Event, _super);
+        /**
+         * @language en_US
+         * Creates an Event object to pass as a parameter to event listeners.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @param data the optional data associated with this event
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个作为参数传递给事件侦听器的 Event 对象。
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param data 与此事件对象关联的可选数据。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        function Event(type, bubbles, cancelable, data) {
+            _super.call(this);
+            /**
+             * @private
+             */
+            this.$eventPhase = 2;
+            /**
+             * @private
+             */
+            this.$currentTarget = null;
+            /**
+             * @private
+             */
+            this.$target = null;
+            /**
+             * @private
+             */
+            this.$isDefaultPrevented = false;
+            /**
+             * @private
+             */
+            this.$isPropagationStopped = false;
+            /**
+             * @private
+             */
+            this.$isPropagationImmediateStopped = false;
+            this.$type = type;
+            this.$bubbles = !!bubbles;
+            this.$cancelable = !!cancelable;
+            this.data = data;
+        }
+        var d = __define,c=Event;p=c.prototype;
+        d(p, "type"
+            /**
+             * @language en_US
+             * The type of event. The type is case-sensitive.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 事件的类型。类型区分大小写。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$type;
+            }
+        );
+        d(p, "bubbles"
+            /**
+             * @language en_US
+             * Indicates whether an event is a bubbling event.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 表示事件是否为冒泡事件。如果事件可以冒泡，则此值为 true；否则为 false。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$bubbles;
+            }
+        );
+        d(p, "cancelable"
+            /**
+             * @language en_US
+             * Indicates whether the behavior associated with the event can be prevented. If the behavior can be
+             * canceled, this value is true; otherwise it is false.
+             * @see #preventDefault()
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 表示是否可以阻止与事件相关联的行为。如果可以取消该行为，则此值为 true；否则为 false。
+             * @see #preventDefault()
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$cancelable;
+            }
+        );
+        d(p, "eventPhase"
+            /**
+             * @language en_US
+             * The current phase in the event flow. This property can contain the following numeric values:
+             * The capture phase (EventPhase.CAPTURING_PHASE).
+             * The target phase (EventPhase.AT_TARGET)
+             * The bubbling phase (EventPhase.BUBBLING_PHASE).
+             * @see egret.EventPhase
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 事件流中的当前阶段。此属性可以包含以下数值：
+             * 捕获阶段 (EventPhase.CAPTURING_PHASE)。
+             * 目标阶段 (EventPhase.AT_TARGET)。
+             * 冒泡阶段 (EventPhase.BUBBLING_PHASE)。
+             * @see egret.EventPhase
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$eventPhase;
+            }
+        );
+        d(p, "currentTarget"
+            /**
+             * @language en_US
+             * The object that is actively processing the Event object with an event listener. For example, if a
+             * user clicks an OK button, the current target could be the node containing that button or one of its ancestors
+             * that has registered an event listener for that event.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 当前正在使用某个事件侦听器处理 Event 对象的对象。例如，如果用户单击“确定”按钮，
+             * 则当前目标可以是包含该按钮的节点，也可以是它的已为该事件注册了事件侦听器的始祖之一。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$currentTarget;
+            }
+        );
+        d(p, "target"
+            /**
+             * @language en_US
+             * The event target. This property contains the target node. For example, if a user clicks an OK button,
+             * the target node is the display list node containing that button.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 事件目标。此属性包含目标节点。例如，如果用户单击“确定”按钮，则目标节点就是包含该按钮的显示列表节点。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$target;
+            }
+        );
+        p.$setTarget = function (target) {
+            this.$target = target;
+        };
+        /**
+         * @language en_US
+         * Checks whether the preventDefault() method has been called on the event. If the preventDefault() method has been
+         * called, returns true; otherwise, returns false.
+         * @returns If preventDefault() has been called, returns true; otherwise, returns false.
+         * @see #preventDefault()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 检查是否已对事件调用 preventDefault() 方法。
+         * @returns 如果已调用 preventDefault() 方法，则返回 true；否则返回 false。
+         * @see #preventDefault()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.isDefaultPrevented = function () {
+            return this.$isDefaultPrevented;
+        };
+        /**
+         * @language en_US
+         * Cancels an event's default behavior if that behavior can be canceled.Many events have associated behaviors that
+         * are carried out by default. For example, if a user types a character into a text input, the default behavior
+         * is that the character is displayed in the text input. Because the TextEvent.TEXT_INPUT event's default behavior
+         * can be canceled, you can use the preventDefault() method to prevent the character from appearing.
+         * You can use the Event.cancelable property to check whether you can prevent the default behavior associated with
+         * a particular event. If the value of Event.cancelable is true, then preventDefault() can be used to cancel the event;
+         * otherwise, preventDefault() has no effect.
+         * @see #cancelable
+         * @see #isDefaultPrevented
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果可以取消事件的默认行为，则取消该行为。
+         * 许多事件都有默认执行的关联行为。例如，如果用户在文本字段中键入一个字符，则默认行为就是在文本字段中显示该字符。
+         * 由于可以取消 TextEvent.TEXT_INPUT 事件的默认行为，因此您可以使用 preventDefault() 方法来防止显示该字符。
+         * 您可以使用 Event.cancelable 属性来检查是否可以防止与特定事件关联的默认行为。如果 Event.cancelable 的值为 true，
+         * 则可以使用 preventDefault() 来取消事件；否则，preventDefault() 无效。
+         * @see #cancelable
+         * @see #isDefaultPrevented
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.preventDefault = function () {
+            if (this.$cancelable)
+                this.$isDefaultPrevented = true;
+        };
+        /**
+         * @language en_US
+         * Prevents processing of any event listeners in nodes subsequent to the current node in the event flow. This method
+         * does not affect any event listeners in the current node (currentTarget). In contrast, the stopImmediatePropagation()
+         * method prevents processing of event listeners in both the current node and subsequent nodes. Additional calls to this
+         * method have no effect. This method can be called in any phase of the event flow.<br/>
+         * Note: This method does not cancel the behavior associated with this event; see preventDefault() for that functionality.
+         * @see #stopImmediatePropagation()
+         * @see #preventDefault()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 防止对事件流中当前节点的后续节点中的所有事件侦听器进行处理。此方法不会影响当前节点 currentTarget 中的任何事件侦听器。
+         * 相比之下，stopImmediatePropagation() 方法可以防止对当前节点中和后续节点中的事件侦听器进行处理。
+         * 对此方法的其它调用没有任何效果。可以在事件流的任何阶段中调用此方法。<br/>
+         * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
+         * @see #stopImmediatePropagation()
+         * @see #preventDefault()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.stopPropagation = function () {
+            if (this.$bubbles)
+                this.$isPropagationStopped = true;
+        };
+        /**
+         * @language en_US
+         * Prevents processing of any event listeners in the current node and any subsequent nodes in the event flow.
+         * This method takes effect immediately, and it affects event listeners in the current node. In contrast, the
+         * stopPropagation() method doesn't take effect until all the event listeners in the current node finish processing.<br/>
+         * Note: This method does not cancel the behavior associated with this event; see preventDefault() for that functionality.
+         * @see #stopPropagation()
+         * @see #preventDefault()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 防止对事件流中当前节点中和所有后续节点中的事件侦听器进行处理。此方法会立即生效，并且会影响当前节点中的事件侦听器。
+         * 相比之下，在当前节点中的所有事件侦听器都完成处理之前，stopPropagation() 方法不会生效。<br/>
+         * 注意：此方法不会取消与此事件相关联的行为；有关此功能的信息，请参阅 preventDefault()。
+         * @see #stopPropagation()
+         * @see #preventDefault()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.stopImmediatePropagation = function () {
+            if (this.$bubbles)
+                this.$isPropagationImmediateStopped = true;
+        };
+        /**
+         * @language en_US
+         * This method will be called automatically when you pass the event object as the parameters to the Event.release() method.
+         * If your custom event is designed for reusable,you should override this method to make sure all the references to external
+         * objects are cleaned. if not,it may cause memory leaking.
+         * @see egret.Event.create()
+         * @see egret.Event.release()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当事件实例传递给Event.release()静态方法时，实例上的clean()方法将会被自动调用。
+         * 若此自定义事件的实例设计为可以循环复用的，为了避免引起内存泄露，自定义事件需要覆盖此方法来确保实例被缓存前断开对外部对象的一切引用。
+         * @see egret.Event.create()
+         * @see egret.Event.release()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.clean = function () {
+            this.data = this.$currentTarget = null;
+            this.$setTarget(null);
+        };
+        /**
+         * 使用指定的 EventDispatcher 对象来抛出 Event 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {string} 事件类型
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param data {any} 事件data
+         * @method egret.Event.dispatchEvent
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.dispatchEvent = function (target, type, bubbles, data) {
+            if (bubbles === void 0) { bubbles = false; }
+            var event = Event.create(Event, type, bubbles);
+            var props = Event._getPropertyData(Event);
+            if (data != undefined) {
+                props.data = data;
+            }
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
+        };
+        /**
+         * @private
+         *
+         * @param EventClass
+         * @returns
+         */
+        Event._getPropertyData = function (EventClass) {
+            var props = EventClass._props;
+            if (!props)
+                props = EventClass._props = {};
+            return props;
+        };
+        /**
+         * @language en_US
+         * Gets one event instance from the object pool or create a new one. We highly recommend using the Event.create()
+         * and Event.release() methods to create and release an event object,it can reduce the number of reallocate objects,
+         * which allows you to get better code execution performance.<br/>
+         * Note: If you want to use this method to initialize your custom event object,you must make sure the constructor
+         * of your custom event is the same as the constructor of egret.Event.
+         * @example
+         * <pre>
+         *    var event = Event.create(Event,type, bubbles);
+         *    event.data = data;    //optional,initializes custom data here
+         *    this.dispatchEvent(event);
+         *    Event.release(event);
+         * </pre>
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 从对象池中取出或创建一个新的事件实例。我们建议您尽可能使用Event.create()和Event.release() 这一对方法来创建和释放事件对象，
+         * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
+         * 注意：若使用此方法来创建自定义事件的实例，自定义的构造函数参数列表必须跟Event类一致。
+         * @example
+         * <pre>
+         *    var event = Event.create(Event,type, bubbles);
+         *    event.data = data;  //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
+         *    this.dispatchEvent(event);
+         *    Event.release(event);
+         * </pre>
+         * @see #clean()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.create = function (EventClass, type, bubbles, cancelable) {
+            var eventPool = EventClass.eventPool;
+            if (!eventPool) {
+                eventPool = EventClass.eventPool = [];
+            }
+            if (eventPool.length) {
+                var event = eventPool.pop();
+                event.$type = type;
+                event.$bubbles = !!bubbles;
+                event.$cancelable = !!cancelable;
+                event.$isDefaultPrevented = false;
+                event.$isPropagationStopped = false;
+                event.$isPropagationImmediateStopped = false;
+                event.$eventPhase = 2 /* AT_TARGET */;
+                return event;
+            }
+            return new EventClass(type, bubbles, cancelable);
+        };
+        /**
+         * @language en_US
+         * Releases an event object and cache it into the object pool.We highly recommend using the Event.create()
+         * and Event.release() methods to create and release an event object,it can reduce the number of reallocate objects,
+         * which allows you to get better code execution performance.<br/>
+         * Note: The parameters of this method only accepts an instance created by the Event.create() method.
+         * if not,it may throw an error.
+         * @example
+         * <pre>
+         *    var event = Event.create(Event,type, bubbles);
+         *    event.data = data; //optional,initializes custom data here
+         *    this.dispatchEvent(event);
+         *    Event.release(event);
+         * </pre>
+         * @see #clean()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 释放一个事件对象，并缓存到对象池。我们建议您尽可能使用Event.create()和Event.release() 这一对方法来创建和释放事件对象，
+         * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
+         * 注意：此方法只能传入由Event.create()创建的事件实例，传入非法对象实例可能会导致报错。
+         * @example
+         * <pre>
+         *    var event = Event.create(Event,type, bubbles);
+         *    event.data = data;   //可选，若指定义事件上需要附加其他参数，可以在获取实例后在此处设置。
+         *    this.dispatchEvent(event);
+         *    Event.release(event);
+         * </pre>
+         * @see #clean()
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.release = function (event) {
+            event.clean();
+            var EventClass = Object.getPrototypeOf(event).constructor;
+            EventClass.eventPool.push(event);
+        };
+        /**
+         * @language en_US
+         * Emitted when a display object is added to the on stage display list, either directly or through the addition
+         * of a sub tree in which the display object is contained.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.ADDED_TO_STAGE = "addedToStage";
+        /**
+         * @language en_US
+         * Emitted when a display object is about to be removed from the display list, either directly or through the removal
+         * of a sub tree in which the display object is contained.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.REMOVED_FROM_STAGE = "removedFromStage";
+        /**
+         * @language en_US
+         * Emitted when a display object is added to the display list.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将显示对象添加到显示列表中时调度。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.ADDED = "added";
+        /**
+         * @language en_US
+         * Emitted when a display object is about to be removed from the display list.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将要从显示列表中删除显示对象时调度。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.REMOVED = "removed";
+        /**
+         * @language en_US
+         * [broadcast event] Emitted when the playhead is entering a new frame.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * [广播事件] 进入新的一帧,监听此事件将会在下一帧开始时触发一次回调。这是一个广播事件，可以在任何一个显示对象上监听，无论它是否在显示列表中。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.ENTER_FRAME = "enterFrame";
+        /**
+         * @language en_US
+         * Emitted when the display list is about to be updated and rendered.
+         * Note: Every time you want to receive a render event,you must call the stage.invalidate() method.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 渲染事件，监听此事件将会在本帧末即将开始渲染的前一刻触发回调，这是一个广播事件，可以在任何一个显示对象上监听，无论它是否在显示列表中。
+         * 注意：每次您希望 Egret 发送 Event.RENDER 事件时，都必须调用 stage.invalidate() 方法，由于每帧只会触发一次屏幕刷新，
+         * 若在 Event.RENDER 回调函数执行期间再次调用stage.invalidate()，将会被忽略。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.RENDER = "render";
+        /**
+         * @language en_US
+         * Emitted when the size of stage or UIComponent is changed.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 舞台尺寸或UI组件尺寸发生改变
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.RESIZE = "resize";
+        /**
+         * @language en_US
+         * Emitted when the value or selection of a property is chaned.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 属性值或状态发生改变。通常是按钮的选中状态，或者列表的选中项索引改变。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.CHANGE = "change";
+        /**
+         * @language en_US
+         * Emitted when the value or selection of a property is going to change.you can cancel this by calling the
+         * preventDefault() method.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 属性值或状态即将发生改变,通常是按钮的选中状态，或者列表的选中项索引改变。可以通过调用 preventDefault() 方法阻止索引发生更改。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.CHANGING = "changing";
+        /**
+         * @language en_US
+         * Emitted when the net request is complete.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 网络请求加载完成
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.COMPLETE = "complete";
+        /**
+         * @language en_US
+         * Emitted when loop completed.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 循环完成
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.LOOP_COMPLETE = "loopComplete";
+        /**
+         * @language en_US
+         * Emitted when the TextInput instance gets focus.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * TextInput实例获得焦点
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.FOCUS_IN = "focusIn";
+        /**
+         * @language en_US
+         * Emitted when the TextInput instance loses focus.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * TextInput实例失去焦点
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.FOCUS_OUT = "focusOut";
+        /**
+         * @language en_US
+         * Emitted when the playback is ended.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 动画声音等播放完成
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.ENDED = "ended";
+        /**
+         * 游戏激活
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.ACTIVATE = "activate";
+        /**
+         * 取消激活
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.DEACTIVATE = "deactivate";
+        /**
+         * Event.CLOSE 常量定义 close 事件对象的 type 属性的值。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.CLOSE = "close";
+        /**
+         * Event.CONNECT 常量定义 connect 事件对象的 type 属性的值。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.CONNECT = "connect";
+        /**
+         * Event.LEAVE_STAGE 常量定义 leaveStage 事件对象的 type 属性的值。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.LEAVE_STAGE = "leaveStage";
+        /**
+         * Event.SOUND_COMPLETE 常量定义 在声音完成播放后调度。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        Event.SOUND_COMPLETE = "soundComplete";
+        return Event;
+    })(egret.HashObject);
+    egret.Event = Event;
+    egret.registerClass(Event,"egret.Event");
+    if (DEBUG) {
+        egret.$markReadOnly(Event, "type");
+        egret.$markReadOnly(Event, "bubbles");
+        egret.$markReadOnly(Event, "cancelable");
+        egret.$markReadOnly(Event, "eventPhase");
+        egret.$markReadOnly(Event, "currentTarget");
+        egret.$markReadOnly(Event, "target");
+    }
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -9808,6 +7550,86 @@ var egret;
     })(egret.Event);
     egret.FocusEvent = FocusEvent;
     egret.registerClass(FocusEvent,"egret.FocusEvent");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * The GeolocationEvent represents the position and altitude of the device on Earth,
+     * and show errors occurred while getting the location of the device.
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * GeolocationEvent 提供设备的地理位置信息和获取位置时发生的错误信息
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    var GeolocationEvent = (function (_super) {
+        __extends(GeolocationEvent, _super);
+        function GeolocationEvent() {
+            _super.apply(this, arguments);
+        }
+        var d = __define,c=GeolocationEvent;p=c.prototype;
+        /**
+         * @language en_US
+         * The acquisition of the location information failed because of app don't have permission.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 由于用户拒绝访问位置信息，获取位置信息失败
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        GeolocationEvent.PERMISSION_DENIED = "permissionDenied";
+        /**
+         * @language en_US
+         * The acquisition of the location failed because at least one internal source of position returned an internal error.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设备位置服务不可用或者超时等原因没有得到位置信息
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        GeolocationEvent.UNAVAILABLE = "unavailable";
+        return GeolocationEvent;
+    })(egret.Event);
+    egret.GeolocationEvent = GeolocationEvent;
+    egret.registerClass(GeolocationEvent,"egret.GeolocationEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -10076,6 +7898,63 @@ var egret;
     })(egret.Event);
     egret.IOErrorEvent = IOErrorEvent;
     egret.registerClass(IOErrorEvent,"egret.IOErrorEvent");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * The OrientationEvent provides information from the physical orientation of the device.
+     * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
+     * Take care about this while using them.
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * OrientationEvent 提供设备的方向信息
+     * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
+     * 比如使用两次方向数据的变化而不是直接使用方向的值
+     * @version Lark 1.0
+     * @platform Web,Native
+     */
+    var OrientationEvent = (function (_super) {
+        __extends(OrientationEvent, _super);
+        function OrientationEvent() {
+            _super.apply(this, arguments);
+        }
+        var d = __define,c=OrientationEvent;p=c.prototype;
+        return OrientationEvent;
+    })(egret.Event);
+    egret.OrientationEvent = OrientationEvent;
+    egret.registerClass(OrientationEvent,"egret.OrientationEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -13955,7 +11834,7 @@ var egret;
                 var dirtyList = this.dirtyList;
                 if (this.clipRectChanged) {
                     //todo 现在为全部dirty
-                    if (egret.MainContext.runtimeType != egret.MainContext.RUNTIME_NATIVE) {
+                    if (egret.Capabilities.runtimeType != egret.RuntimeType.NATIVE) {
                         this.clipRectChanged = false;
                     }
                     this.clear();
@@ -14609,7 +12488,7 @@ var egret;
                 if (!surface) {
                     return null;
                 }
-                if (egret.MainContext.runtimeType == egret.MainContext.RUNTIME_HTML5) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
                     //在chrome里，小等于256*256的canvas会不启用GPU加速。
                     surface.width = Math.max(257, width);
                     surface.height = Math.max(257, height);
@@ -15532,7 +13411,7 @@ var egret;
                     if (this.showFPS) {
                         this.infoText.y = this.textField.height + 20;
                     }
-                    if (egret.MainContext.runtimeType == egret.MainContext.RUNTIME_NATIVE) {
+                    if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
                         return;
                     }
                     var g = this.shape.$graphics.$renderContext;
@@ -16013,6 +13892,7 @@ var egret;
                 if (this.playerList.indexOf(player) != -1) {
                     return;
                 }
+                sys.$TempStage = player.stage;
                 if (DEBUG) {
                     egret_stages.push(player.stage);
                 }
@@ -16186,6 +14066,7 @@ var egret;
          * 心跳计时器单例
          */
         sys.$ticker = new sys.SystemTicker();
+        sys.$TempStage;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 if (DEBUG) {
@@ -16337,6 +14218,27 @@ var egret;
         egret.registerClass(TouchHandler,"egret.sys.TouchHandler");
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * @copy egret.Geolocation
+     */
+    egret.Geolocation;
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * @copy egret.Motion
+     */
+    egret.Motion;
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * @copy egret.Orientation
+     */
+    egret.Orientation = null;
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -16367,6 +14269,16 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    var RuntimeType = (function () {
+        function RuntimeType() {
+        }
+        var d = __define,c=RuntimeType;p=c.prototype;
+        RuntimeType.WEB = "web";
+        RuntimeType.NATIVE = "native";
+        return RuntimeType;
+    })();
+    egret.RuntimeType = RuntimeType;
+    egret.registerClass(RuntimeType,"egret.RuntimeType");
     /**
      * @language en_US
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
@@ -16469,6 +14381,21 @@ var egret;
                 return Capabilities.$os;
             }
         );
+        d(Capabilities, "runtimeType"
+            /**
+             * @language zh_CN
+             * 指示当前的运行类型。runtimeType 属性返回下列字符串：
+             * <ul>
+             * <li>运行在Web上     egret.RuntimeType.WEB</li>
+             * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
+             * </ul>
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return Capabilities.$runtimeType;
+            }
+        );
         d(Capabilities, "hasGeolocation"
             /**
              * @language en_US
@@ -16528,6 +14455,10 @@ var egret;
          * @private
          */
         Capabilities.$os = "Unknown";
+        /**
+         * @private
+         */
+        Capabilities.$runtimeType = "Unknown";
         return Capabilities;
     })();
     egret.Capabilities = Capabilities;
@@ -16540,170 +14471,6 @@ var egret;
         egret.$markReadOnly(Capabilities, "hasGeolocation", false);
         egret.$markReadOnly(Capabilities, "os", false);
     }
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @class egret.MainContext
-     * @classdesc
-     * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
-     * @extends egret.EventDispatcher
-     * @private
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    var MainContext = (function (_super) {
-        __extends(MainContext, _super);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function MainContext() {
-            _super.call(this);
-            /**
-             * 渲染Context
-             * @member egret.MainContext#rendererContext
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            //public rendererContext:RendererContext = null;
-            /**
-             * 触摸Context
-             * @member egret.MainContext#touchContext
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            //public touchContext:TouchContext = null;
-            /**
-             * 网络Context
-             * @member egret.MainContext#netContext
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            //public netContext:NetContext = null;
-            /**
-             * 设备divice
-             * @member egret.MainContext#deviceContext
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            //public deviceContext:DeviceContext = null;
-            /**
-             * 舞台
-             * @member egret.MainContext#stage
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            this.stage = null;
-        }
-        var d = __define,c=MainContext;p=c.prototype;
-        /**
-         * 游戏启动，开启主循环，参考Flash的滑动跑道模型
-         * @method egret.MainContext#run
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.run = function () {
-        };
-        d(MainContext, "instance"
-            /**
-             * @method egret.Ticker.getInstance
-             * @returns {Ticker}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                if (MainContext._instance == null) {
-                    MainContext._instance = new MainContext();
-                }
-                return MainContext._instance;
-            }
-        );
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        MainContext.deviceType = null;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        MainContext.DEVICE_PC = "web";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        MainContext.DEVICE_MOBILE = "native";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        MainContext.RUNTIME_HTML5 = "runtimeHtml5";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        MainContext.RUNTIME_NATIVE = "runtimeNative";
-        return MainContext;
-    })(egret.EventDispatcher);
-    egret.MainContext = MainContext;
-    egret.registerClass(MainContext,"egret.MainContext");
 })(egret || (egret = {}));
 var testDeviceType = function () {
     if (!this["navigator"]) {
@@ -16718,10 +14485,36 @@ var testRuntimeType = function () {
     }
     return false;
 };
-egret.MainContext.deviceType = testDeviceType() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext.runtimeType = testRuntimeType() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
-delete testDeviceType;
-delete testRuntimeType;
+egret.Capabilities.$isMobile = testDeviceType();
+egret.Capabilities.$runtimeType = testRuntimeType() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -17743,6 +15536,34 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     /**
@@ -17967,34 +15788,6 @@ var egret;
     egret.InputController = InputController;
     egret.registerClass(InputController,"egret.InputController");
 })(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -20151,1185 +17944,6 @@ var egret;
 (function (egret) {
     /**
      * @language en_US
-     * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
-     * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween and Ease
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
-     * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    var Ease = (function () {
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function Ease() {
-            egret.$error(1014);
-        }
-        var d = __define,c=Ease;p=c.prototype;
-        /**
-         *
-         * @param amount
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.get = function (amount) {
-            if (amount < -1) {
-                amount = -1;
-            }
-            if (amount > 1) {
-                amount = 1;
-            }
-            return function (t) {
-                if (amount == 0) {
-                    return t;
-                }
-                if (amount < 0) {
-                    return t * (t * -amount + 1 + amount);
-                }
-                return t * ((2 - t) * amount + (1 - amount));
-            };
-        };
-        /**
-         *
-         * @param pow
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getPowIn = function (pow) {
-            return function (t) {
-                return Math.pow(t, pow);
-            };
-        };
-        /**
-         *
-         * @param pow
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getPowOut = function (pow) {
-            return function (t) {
-                return 1 - Math.pow(1 - t, pow);
-            };
-        };
-        /**
-         *
-         * @param pow
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getPowInOut = function (pow) {
-            return function (t) {
-                if ((t *= 2) < 1)
-                    return 0.5 * Math.pow(t, pow);
-                return 1 - 0.5 * Math.abs(Math.pow(2 - t, pow));
-            };
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.sineIn = function (t) {
-            return 1 - Math.cos(t * Math.PI / 2);
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.sineOut = function (t) {
-            return Math.sin(t * Math.PI / 2);
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.sineInOut = function (t) {
-            return -0.5 * (Math.cos(Math.PI * t) - 1);
-        };
-        /**
-         *
-         * @param amount
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getBackIn = function (amount) {
-            return function (t) {
-                return t * t * ((amount + 1) * t - amount);
-            };
-        };
-        /**
-         *
-         * @param amount
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getBackOut = function (amount) {
-            return function (t) {
-                return (--t * t * ((amount + 1) * t + amount) + 1);
-            };
-        };
-        /**
-         *
-         * @param amount
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getBackInOut = function (amount) {
-            amount *= 1.525;
-            return function (t) {
-                if ((t *= 2) < 1)
-                    return 0.5 * (t * t * ((amount + 1) * t - amount));
-                return 0.5 * ((t -= 2) * t * ((amount + 1) * t + amount) + 2);
-            };
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.circIn = function (t) {
-            return -(Math.sqrt(1 - t * t) - 1);
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.circOut = function (t) {
-            return Math.sqrt(1 - (--t) * t);
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.circInOut = function (t) {
-            if ((t *= 2) < 1) {
-                return -0.5 * (Math.sqrt(1 - t * t) - 1);
-            }
-            return 0.5 * (Math.sqrt(1 - (t -= 2) * t) + 1);
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.bounceIn = function (t) {
-            return 1 - Ease.bounceOut(1 - t);
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.bounceOut = function (t) {
-            if (t < 1 / 2.75) {
-                return (7.5625 * t * t);
-            }
-            else if (t < 2 / 2.75) {
-                return (7.5625 * (t -= 1.5 / 2.75) * t + 0.75);
-            }
-            else if (t < 2.5 / 2.75) {
-                return (7.5625 * (t -= 2.25 / 2.75) * t + 0.9375);
-            }
-            else {
-                return (7.5625 * (t -= 2.625 / 2.75) * t + 0.984375);
-            }
-        };
-        /**
-         *
-         * @param t
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.bounceInOut = function (t) {
-            if (t < 0.5)
-                return Ease.bounceIn(t * 2) * .5;
-            return Ease.bounceOut(t * 2 - 1) * 0.5 + 0.5;
-        };
-        /**
-         *
-         * @param amplitude
-         * @param period
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getElasticIn = function (amplitude, period) {
-            var pi2 = Math.PI * 2;
-            return function (t) {
-                if (t == 0 || t == 1)
-                    return t;
-                var s = period / pi2 * Math.asin(1 / amplitude);
-                return -(amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
-            };
-        };
-        /**
-         *
-         * @param amplitude
-         * @param period
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getElasticOut = function (amplitude, period) {
-            var pi2 = Math.PI * 2;
-            return function (t) {
-                if (t == 0 || t == 1)
-                    return t;
-                var s = period / pi2 * Math.asin(1 / amplitude);
-                return (amplitude * Math.pow(2, -10 * t) * Math.sin((t - s) * pi2 / period) + 1);
-            };
-        };
-        /**
-         *
-         * @param amplitude
-         * @param period
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.getElasticInOut = function (amplitude, period) {
-            var pi2 = Math.PI * 2;
-            return function (t) {
-                var s = period / pi2 * Math.asin(1 / amplitude);
-                if ((t *= 2) < 1)
-                    return -0.5 * (amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
-                return amplitude * Math.pow(2, -10 * (t -= 1)) * Math.sin((t - s) * pi2 / period) * 0.5 + 1;
-            };
-        };
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quadIn = Ease.getPowIn(2);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quadOut = Ease.getPowOut(2);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quadInOut = Ease.getPowInOut(2);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.cubicIn = Ease.getPowIn(3);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.cubicOut = Ease.getPowOut(3);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.cubicInOut = Ease.getPowInOut(3);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quartIn = Ease.getPowIn(4);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quartOut = Ease.getPowOut(4);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quartInOut = Ease.getPowInOut(4);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quintIn = Ease.getPowIn(5);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quintOut = Ease.getPowOut(5);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.quintInOut = Ease.getPowInOut(5);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.backIn = Ease.getBackIn(1.7);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.backOut = Ease.getBackOut(1.7);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.backInOut = Ease.getBackInOut(1.7);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.elasticIn = Ease.getElasticIn(1, 0.3);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.elasticOut = Ease.getElasticOut(1, 0.3);
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Ease.elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
-        return Ease;
-    })();
-    egret.Ease = Ease;
-    egret.registerClass(Ease,"egret.Ease");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * Tween is the animation easing class of Egret
-     * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/tween/Tween.ts
-     */
-    /**
-     * @language zh_CN
-     * Tween是Egret的动画缓动类
-     * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween ease animation
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/tween/Tween.ts
-     */
-    var Tween = (function (_super) {
-        __extends(Tween, _super);
-        /**
-         * 创建一个 egret.Tween 对象
-         * @private
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function Tween(target, props, pluginData) {
-            _super.call(this);
-            /**
-             * @private
-             */
-            this._target = null;
-            /**
-             * @private
-             */
-            this._useTicks = false;
-            /**
-             * @private
-             */
-            this.ignoreGlobalPause = false;
-            /**
-             * @private
-             */
-            this.loop = false;
-            /**
-             * @private
-             */
-            this.pluginData = null;
-            /**
-             * @private
-             */
-            this._steps = null;
-            /**
-             * @private
-             */
-            this._actions = null;
-            /**
-             * @private
-             */
-            this.paused = false;
-            /**
-             * @private
-             */
-            this.duration = 0;
-            /**
-             * @private
-             */
-            this._prevPos = -1;
-            /**
-             * @private
-             */
-            this.position = null;
-            /**
-             * @private
-             */
-            this._prevPosition = 0;
-            /**
-             * @private
-             */
-            this._stepPosition = 0;
-            /**
-             * @private
-             */
-            this.passive = false;
-            this.initialize(target, props, pluginData);
-        }
-        var d = __define,c=Tween;p=c.prototype;
-        /**
-         * @language en_US
-         * Activate an object and add a Tween animation to the object
-         * @param target {any} The object to be activated
-         * @param props {any} Parameters, support loop onChange onChangeObj
-         * @param pluginData {any} Write realized
-         * @param override {boolean} Whether to remove the object before adding a tween, the default value false
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 激活一个对象，对其添加 Tween 动画
-         * @param target {any} 要激活 Tween 的对象
-         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
-         * @param pluginData {any} 暂未实现
-         * @param override {boolean} 是否移除对象之前添加的tween，默认值false
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Tween.get = function (target, props, pluginData, override) {
-            if (props === void 0) { props = null; }
-            if (pluginData === void 0) { pluginData = null; }
-            if (override === void 0) { override = false; }
-            if (override) {
-                Tween.removeTweens(target);
-            }
-            return new Tween(target, props, pluginData);
-        };
-        /**
-         * @language en_US
-         * Delete all Tween animations from an object
-         * @param target The object whose Tween to be deleted
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 删除一个对象上的全部 Tween 动画
-         * @param target  需要移除 Tween 的对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Tween.removeTweens = function (target) {
-            if (!target.tween_count) {
-                return;
-            }
-            var tweens = Tween._tweens;
-            for (var i = tweens.length - 1; i >= 0; i--) {
-                if (tweens[i]._target == target) {
-                    tweens[i].paused = true;
-                    tweens.splice(i, 1);
-                }
-            }
-            target.tween_count = 0;
-        };
-        /**
-         * @language en_US
-         * Pause all Tween animations of a certain object
-         * @param target The object whose Tween to be paused
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 暂停某个对象的所有 Tween
-         * @param target 要暂停 Tween 的对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Tween.pauseTweens = function (target) {
-            if (!target.tween_count) {
-                return;
-            }
-            var tweens = egret.Tween._tweens;
-            for (var i = tweens.length - 1; i >= 0; i--) {
-                if (tweens[i]._target == target) {
-                    tweens[i].paused = true;
-                }
-            }
-        };
-        /**
-         * @language en_US
-         * Resume playing all easing of a certain object
-         * @param target The object whose Tween to be resumed
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 继续播放某个对象的所有缓动
-         * @param target 要继续播放 Tween 的对象
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Tween.resumeTweens = function (target) {
-            if (!target.tween_count) {
-                return;
-            }
-            var tweens = egret.Tween._tweens;
-            for (var i = tweens.length - 1; i >= 0; i--) {
-                if (tweens[i]._target == target) {
-                    tweens[i].paused = false;
-                }
-            }
-        };
-        /**
-         * @private
-         *
-         * @param delta
-         * @param paused
-         */
-        Tween.tick = function (timeStamp, paused) {
-            if (paused === void 0) { paused = false; }
-            var delta = timeStamp - Tween._lastTime;
-            Tween._lastTime = timeStamp;
-            var tweens = Tween._tweens.concat();
-            for (var i = tweens.length - 1; i >= 0; i--) {
-                var tween = tweens[i];
-                if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
-                    continue;
-                }
-                tween.tick(tween._useTicks ? 1 : delta);
-            }
-        };
-        /**
-         * @private
-         *
-         * @param tween
-         * @param value
-         */
-        Tween._register = function (tween, value) {
-            var target = tween._target;
-            var tweens = Tween._tweens;
-            if (value) {
-                if (target) {
-                    target.tween_count = target.tween_count > 0 ? target.tween_count + 1 : 1;
-                }
-                tweens.push(tween);
-                if (!Tween._inited) {
-                    Tween._lastTime = egret.getTimer();
-                    egret.sys.$ticker.$startTick(Tween.tick, null);
-                    Tween._inited = true;
-                }
-            }
-            else {
-                if (target) {
-                    target.tween_count--;
-                }
-                var i = tweens.length;
-                while (i--) {
-                    if (tweens[i] == tween) {
-                        tweens.splice(i, 1);
-                        return;
-                    }
-                }
-            }
-        };
-        /**
-         * @language en_US
-         * Delete all Tween
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 删除所有 Tween
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Tween.removeAllTweens = function () {
-            var tweens = Tween._tweens;
-            for (var i = 0, l = tweens.length; i < l; i++) {
-                var tween = tweens[i];
-                tween.paused = true;
-                tween._target.tweenjs_count = 0;
-            }
-            tweens.length = 0;
-        };
-        /**
-         * @private
-         *
-         * @param target
-         * @param props
-         * @param pluginData
-         */
-        p.initialize = function (target, props, pluginData) {
-            this._target = target;
-            if (props) {
-                this._useTicks = props.useTicks;
-                this.ignoreGlobalPause = props.ignoreGlobalPause;
-                this.loop = props.loop;
-                props.onChange && this.addEventListener("change", props.onChange, props.onChangeObj);
-                if (props.override) {
-                    Tween.removeTweens(target);
-                }
-            }
-            this.pluginData = pluginData || {};
-            this._curQueueProps = {};
-            this._initQueueProps = {};
-            this._steps = [];
-            this._actions = [];
-            if (props && props.paused) {
-                this.paused = true;
-            }
-            else {
-                Tween._register(this, true);
-            }
-            if (props && props.position != null) {
-                this.setPosition(props.position, Tween.NONE);
-            }
-        };
-        /**
-         * @private
-         *
-         * @param value
-         * @param actionsMode
-         * @returns
-         */
-        p.setPosition = function (value, actionsMode) {
-            if (actionsMode === void 0) { actionsMode = 1; }
-            if (value < 0) {
-                value = 0;
-            }
-            //正常化位置
-            var t = value;
-            var end = false;
-            if (t >= this.duration) {
-                if (this.loop) {
-                    t = t % this.duration;
-                }
-                else {
-                    t = this.duration;
-                    end = true;
-                }
-            }
-            if (t == this._prevPos) {
-                return end;
-            }
-            var prevPos = this._prevPos;
-            this.position = this._prevPos = t;
-            this._prevPosition = value;
-            if (this._target) {
-                if (end) {
-                    //结束
-                    this._updateTargetProps(null, 1);
-                }
-                else if (this._steps.length > 0) {
-                    for (var i = 0, l = this._steps.length; i < l; i++) {
-                        if (this._steps[i].t > t) {
-                            break;
-                        }
-                    }
-                    var step = this._steps[i - 1];
-                    this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
-                }
-            }
-            //执行actions
-            if (actionsMode != 0 && this._actions.length > 0) {
-                if (this._useTicks) {
-                    this._runActions(t, t);
-                }
-                else if (actionsMode == 1 && t < prevPos) {
-                    if (prevPos != this.duration) {
-                        this._runActions(prevPos, this.duration);
-                    }
-                    this._runActions(0, t, true);
-                }
-                else {
-                    this._runActions(prevPos, t);
-                }
-            }
-            if (end) {
-                this.setPaused(true);
-            }
-            this.dispatchEventWith("change");
-            return end;
-        };
-        /**
-         * @private
-         *
-         * @param startPos
-         * @param endPos
-         * @param includeStart
-         */
-        p._runActions = function (startPos, endPos, includeStart) {
-            if (includeStart === void 0) { includeStart = false; }
-            var sPos = startPos;
-            var ePos = endPos;
-            var i = -1;
-            var j = this._actions.length;
-            var k = 1;
-            if (startPos > endPos) {
-                //把所有的倒置
-                sPos = endPos;
-                ePos = startPos;
-                i = j;
-                j = k = -1;
-            }
-            while ((i += k) != j) {
-                var action = this._actions[i];
-                var pos = action.t;
-                if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
-                    action.f.apply(action.o, action.p);
-                }
-            }
-        };
-        /**
-         * @private
-         *
-         * @param step
-         * @param ratio
-         */
-        p._updateTargetProps = function (step, ratio) {
-            var p0, p1, v, v0, v1, arr;
-            if (!step && ratio == 1) {
-                this.passive = false;
-                p0 = p1 = this._curQueueProps;
-            }
-            else {
-                this.passive = !!step.v;
-                //不更新props.
-                if (this.passive) {
-                    return;
-                }
-                //使用ease
-                if (step.e) {
-                    ratio = step.e(ratio, 0, 1, 1);
-                }
-                p0 = step.p0;
-                p1 = step.p1;
-            }
-            for (var n in this._initQueueProps) {
-                if ((v0 = p0[n]) == null) {
-                    p0[n] = v0 = this._initQueueProps[n];
-                }
-                if ((v1 = p1[n]) == null) {
-                    p1[n] = v1 = v0;
-                }
-                if (v0 == v1 || ratio == 0 || ratio == 1 || (typeof (v0) != "number")) {
-                    v = ratio == 1 ? v1 : v0;
-                }
-                else {
-                    v = v0 + (v1 - v0) * ratio;
-                }
-                var ignore = false;
-                if (arr = Tween._plugins[n]) {
-                    for (var i = 0, l = arr.length; i < l; i++) {
-                        var v2 = arr[i].tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
-                        if (v2 == Tween.IGNORE) {
-                            ignore = true;
-                        }
-                        else {
-                            v = v2;
-                        }
-                    }
-                }
-                if (!ignore) {
-                    this._target[n] = v;
-                }
-            }
-        };
-        /**
-         * @language en_US
-         * Whether setting is paused
-         * @param value {boolean} Whether to pause
-         * @returns Tween object itself
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置是否暂停
-         * @param value {boolean} 是否暂停
-         * @returns Tween对象本身
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.setPaused = function (value) {
-            this.paused = value;
-            Tween._register(this, !value);
-            return this;
-        };
-        /**
-         * @private
-         *
-         * @param props
-         * @returns
-         */
-        p._cloneProps = function (props) {
-            var o = {};
-            for (var n in props) {
-                o[n] = props[n];
-            }
-            return o;
-        };
-        /**
-         * @private
-         *
-         * @param o
-         * @returns
-         */
-        p._addStep = function (o) {
-            if (o.d > 0) {
-                this._steps.push(o);
-                o.t = this.duration;
-                this.duration += o.d;
-            }
-            return this;
-        };
-        /**
-         * @private
-         *
-         * @param o
-         * @returns
-         */
-        p._appendQueueProps = function (o) {
-            var arr, oldValue, i, l, injectProps;
-            for (var n in o) {
-                if (egret.isUndefined(this._initQueueProps[n])) {
-                    oldValue = this._target[n];
-                    //设置plugins
-                    if (arr = Tween._plugins[n]) {
-                        for (i = 0, l = arr.length; i < l; i++) {
-                            oldValue = arr[i].init(this, n, oldValue);
-                        }
-                    }
-                    this._initQueueProps[n] = this._curQueueProps[n] = (oldValue === undefined) ? null : oldValue;
-                }
-                else {
-                    oldValue = this._curQueueProps[n];
-                }
-            }
-            for (var n in o) {
-                oldValue = this._curQueueProps[n];
-                if (arr = Tween._plugins[n]) {
-                    injectProps = injectProps || {};
-                    for (i = 0, l = arr.length; i < l; i++) {
-                        if (arr[i].step) {
-                            arr[i].step(this, n, oldValue, o[n], injectProps);
-                        }
-                    }
-                }
-                this._curQueueProps[n] = o[n];
-            }
-            if (injectProps) {
-                this._appendQueueProps(injectProps);
-            }
-            return this._curQueueProps;
-        };
-        /**
-         * @private
-         *
-         * @param o
-         * @returns
-         */
-        p._addAction = function (o) {
-            o.t = this.duration;
-            this._actions.push(o);
-            return this;
-        };
-        /**
-         * @private
-         *
-         * @param props
-         * @param o
-         */
-        p._set = function (props, o) {
-            for (var n in props) {
-                o[n] = props[n];
-            }
-        };
-        /**
-         * @language en_US
-         * Wait the specified milliseconds before the execution of the next animation
-         * @param duration {number} Waiting time, in milliseconds
-         * @param passive {boolean} Whether properties are updated during the waiting time
-         * @returns Tween object itself
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等待指定毫秒后执行下一个动画
-         * @param duration {number} 要等待的时间，以毫秒为单位
-         * @param passive {boolean} 等待期间属性是否会更新
-         * @returns Tween对象本身
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.wait = function (duration, passive) {
-            if (duration == null || duration <= 0) {
-                return this;
-            }
-            var o = this._cloneProps(this._curQueueProps);
-            return this._addStep({ d: duration, p0: o, p1: o, v: passive });
-        };
-        /**
-         * @language en_US
-         * Modify the property of the specified display object to a specified value
-         * @param props {Object} Property set of an object
-         * @param duration {number} Duration
-         * @param ease {egret.Ease} Easing algorithm
-         * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将指定显示对象的属性修改为指定值
-         * @param props {Object} 对象的属性集合
-         * @param duration {number} 持续时间
-         * @param ease {egret.Ease} 缓动算法
-         * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.to = function (props, duration, ease) {
-            if (ease === void 0) { ease = undefined; }
-            if (isNaN(duration) || duration < 0) {
-                duration = 0;
-            }
-            return this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
-        };
-        /**
-         * @language en_US
-         * Execute callback function
-         * @param callback {Function} Callback method
-         * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
-         * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 执行回调函数
-         * @param callback {Function} 回调方法
-         * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
-         * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.call = function (callback, thisObj, params) {
-            if (thisObj === void 0) { thisObj = undefined; }
-            if (params === void 0) { params = undefined; }
-            return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
-        };
-        /**
-         *
-         * @param props
-         * @param target
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.set = function (props, target) {
-            if (target === void 0) { target = null; }
-            return this._addAction({ f: this._set, o: this, p: [props, target ? target : this._target] });
-        };
-        /**
-         * @language en_US
-         * Execute
-         * @param tween {egret.Tween} The Tween object to be operated. Default: this
-         * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 执行
-         * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
-         * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.play = function (tween) {
-            if (!tween) {
-                tween = this;
-            }
-            return this.call(tween.setPaused, tween, [false]);
-        };
-        /**
-         * @language en_US
-         * Pause
-         * @param tween {egret.Tween} The Tween object to be operated. Default: this
-         * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 暂停
-         * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
-         * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.pause = function (tween) {
-            if (!tween) {
-                tween = this;
-            }
-            return this.call(tween.setPaused, tween, [true]);
-        };
-        /**
-         * @method egret.Tween#tick
-         * @param delta {number}
-         * @private
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.tick = function (delta) {
-            if (this.paused) {
-                return;
-            }
-            this.setPosition(this._prevPosition + delta);
-        };
-        /**
-         * 不做特殊处理
-         * @constant {number} egret.Tween.NONE
-         * @private
-         */
-        Tween.NONE = 0;
-        /**
-         * 循环
-         * @constant {number} egret.Tween.LOOP
-         * @private
-         */
-        Tween.LOOP = 1;
-        /**
-         * 倒序
-         * @constant {number} egret.Tween.REVERSE
-         * @private
-         */
-        Tween.REVERSE = 2;
-        /**
-         * @private
-         */
-        Tween._tweens = [];
-        /**
-         * @private
-         */
-        Tween.IGNORE = {};
-        /**
-         * @private
-         */
-        Tween._plugins = {};
-        /**
-         * @private
-         */
-        Tween._inited = false;
-        Tween._lastTime = 0;
-        return Tween;
-    })(egret.EventDispatcher);
-    egret.Tween = Tween;
-    egret.registerClass(Tween,"egret.Tween");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
      * The Endian class contains values that denote the byte order used to represent multibyte numbers.
      * The byte order is either bigEndian (most significant byte first) or littleEndian (least significant byte first).
      * @version Egret 2.0
@@ -22409,622 +19023,6 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @private
-     */
-    egret.$callLaterFunctionList = [];
-    /**
-     * @private
-     */
-    egret.$callLaterThisList = [];
-    /**
-     * @private
-     */
-    egret.$callLaterArgsList = [];
-    /**
-     * @language en_US
-     * Delay the function to run unless screen is redrawn.
-     * @param method {Function} The function to be delayed to run
-     * @param thisObject {any} this reference of callback function
-     * @param ...args {any} Function parameter list
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
-     */
-    /**
-     * @language zh_CN
-     * 延迟函数到屏幕重绘前执行。
-     * @param method {Function} 要延迟执行的函数
-     * @param thisObject {any} 回调函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
-     */
-    function callLater(method, thisObject) {
-        var args = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            args[_i - 2] = arguments[_i];
-        }
-        egret.$callLaterFunctionList.push(method);
-        egret.$callLaterThisList.push(thisObject);
-        egret.$callLaterArgsList.push(args);
-    }
-    egret.callLater = callLater;
-    /**
-     * @private
-     */
-    egret.$callAsyncFunctionList = [];
-    /**
-     * @private
-     */
-    egret.$callAsyncThisList = [];
-    /**
-     * @private
-     */
-    egret.$callAsyncArgsList = [];
-    /**
-     * 异步调用函数
-     * @param method {Function} 要异步调用的函数
-     * @param thisObject {any} 函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @private
-     */
-    function $callAsync(method, thisObject) {
-        var args = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            args[_i - 2] = arguments[_i];
-        }
-        egret.$callAsyncFunctionList.push(method);
-        egret.$callAsyncThisList.push(thisObject);
-        egret.$callAsyncArgsList.push(args);
-    }
-    egret.$callAsync = $callAsync;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-function __extends(d, b) {
-    for (var p in b)
-        if (b.hasOwnProperty(p))
-            d[p] = b[p];
-    function __() {
-        this.constructor = d;
-    }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-}
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
-     * @param thisObj The current object. Always this
-     * @param type Setter property names need to call
-     * @param values Value passed to the parent class
-     *
-     * @exmaple egret.superSetter(this, "alpha", 1);
-     */
-    /**
-     * @language zh_CN
-     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
-     * @param thisObj 当前对象。永远都this
-     * @param type 需要调用的setter属性名称
-     * @param values 传给父类的值
-     *
-     * @exmaple egret.superSetter(this, "alpha", 1);
-     */
-    function superSetter(thisObj, type) {
-        var values = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            values[_i - 2] = arguments[_i];
-        }
-        var cla = Object.getPrototypeOf(thisObj);
-        var seters = cla["__sets__"];
-        if (seters == null) {
-            seters = cla["__sets__"] = {};
-        }
-        var setF = seters[type];
-        if (setF) {
-            return setF.apply(thisObj, values);
-        }
-        var d = Object.getPrototypeOf(cla);
-        while (!d.hasOwnProperty(type)) {
-            d = Object.getPrototypeOf(d);
-        }
-        setF = Object.getOwnPropertyDescriptor(d, type).set;
-        seters[type] = setF;
-        setF.apply(thisObj, values);
-    }
-    egret.superSetter = superSetter;
-    /**
-     * @language en_US
-     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
-     * @param thisObj 当前对象。永远都this
-     * @param type 需要调用的setter属性名称
-     * @returns {any} The value returned by the parent
-     *
-     * @exmaple egret.superGetter(this, "alpha");
-     */
-    /**
-     * @language zh_CN
-     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
-     * @param thisObj 当前对象。永远都this
-     * @param type 需要调用的setter属性名称
-     * @returns {any} 父类返回的值
-     *
-     * @exmaple egret.superGetter(this, "alpha");
-     */
-    function superGetter(thisObj, type) {
-        var cla = Object.getPrototypeOf(thisObj);
-        var geters = cla["__gets__"];
-        if (geters == null) {
-            geters = cla["__gets__"] = {};
-        }
-        var getF = geters[type];
-        if (getF) {
-            return getF.call(thisObj);
-        }
-        var d = Object.getPrototypeOf(cla);
-        while (!d.hasOwnProperty(type)) {
-            d = Object.getPrototypeOf(d);
-        }
-        getF = Object.getOwnPropertyDescriptor(d, type).get;
-        geters[type] = getF;
-        return getF.call(thisObj);
-    }
-    egret.superGetter = superGetter;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @private
-     */
-    var getDefinitionByNameCache = {};
-    /**
-     * @language en_US
-     * Returns a reference to the class object of the class specified by the name parameter.
-     * @param name The name of a class.
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
-     */
-    /**
-     * @language zh_CN
-     * 返回 name 参数指定的类的类对象引用。
-     * @param name 类的名称。
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
-     */
-    function getDefinitionByName(name) {
-        if (!name)
-            return null;
-        var definition = getDefinitionByNameCache[name];
-        if (definition) {
-            return definition;
-        }
-        var paths = name.split(".");
-        var length = paths.length;
-        definition = __global;
-        for (var i = 0; i < length; i++) {
-            var path = paths[i];
-            definition = definition[path];
-            if (!definition) {
-                return null;
-            }
-        }
-        getDefinitionByNameCache[name] = definition;
-        return definition;
-    }
-    egret.getDefinitionByName = getDefinitionByName;
-    if (DEBUG) {
-        egret["cleanCache"] = function () {
-            getDefinitionByNameCache = {};
-        };
-    }
-})(egret || (egret = {}));
-var __global = __global || this;
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * Get browser or Runtime parameters, returns an empty string if not set
-     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
-     * @method egret.getOption
-     * @param key {string} Parameters key
-     * @private
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
-     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
-     * @method egret.getOption
-     * @param key {string} 参数key
-     * @private
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    egret.getOption;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * Return the fully qualified class name of an object
-     * @param value The object for which a fully qualified class name is desired. Any JavaScript value may be passed to
-     * this method including all available JavaScript types, object instances, primitive types such as number, and class objects.
-     * @returns A string containing the fully qualified class name.
-     * @example
-     * <pre>
-     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedClassName.ts
-     */
-    /**
-     * @language zh_CN
-     * 返回对象的完全限定类名。
-     * @param value 需要完全限定类名称的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型
-     * （如number)和类对象
-     * @returns 包含完全限定类名称的字符串。
-     * @example
-     * <pre>
-     *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedClassName.ts
-     */
-    function getQualifiedClassName(value) {
-        var type = typeof value;
-        if (!value || (type != "object" && !value.prototype)) {
-            return type;
-        }
-        var prototype = value.prototype ? value.prototype : Object.getPrototypeOf(value);
-        if (prototype.hasOwnProperty("__class__")) {
-            return prototype["__class__"];
-        }
-        var constructorString = prototype.constructor.toString();
-        var index = constructorString.indexOf("(");
-        var className = constructorString.substring(9, index);
-        Object.defineProperty(prototype, "__class__", {
-            value: className,
-            enumerable: false,
-            writable: true
-        });
-        return className;
-    }
-    egret.getQualifiedClassName = getQualifiedClassName;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /** @language en_US
-     * Returns the fully qualified class name of the base class of the object specified by the value parameter.
-     * @param value The object for which a parent class is desired. Any JavaScript value may be passed to this method including
-     * all available JavaScript types, object instances, primitive types such as number, and class objects.
-     * @returns  A fully qualified base class name, or null if none exists.
-     * @example
-     * <pre>
-     *  egret.getQualifiedSuperclassName(egret.Bitmap) //return "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedSuperclassName.ts
-     */
-    /**
-     * @language zh_CN
-     * 返回 value 参数指定的对象的基类的完全限定类名。
-     * @param value 需要取得父类的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型（如number）和类对象
-     * @returns 完全限定的基类名称，或 null（如果不存在基类名称）。
-     * @example
-     * <pre>
-     *  egret.getQualifiedSuperclassName(egret.Sprite) //返回 "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedSuperclassName.ts
-     */
-    function getQualifiedSuperclassName(value) {
-        if (!value || typeof value != "object") {
-            return null;
-        }
-        var prototype = value.prototype ? value.prototype : Object.getPrototypeOf(value);
-        var superProto = Object.getPrototypeOf(prototype);
-        if (!superProto) {
-            return null;
-        }
-        var superClass = egret.getQualifiedClassName(superProto.constructor);
-        if (!superClass) {
-            return null;
-        }
-        return superClass;
-    }
-    egret.getQualifiedSuperclassName = getQualifiedSuperclassName;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @private
-     */
-    egret.$START_TIME = 0;
-    /**
-     * @language en_US
-     * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
-     * @returns The number of milliseconds since the Egret framework was initialized
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getTimer.ts
-     */
-    /**
-     * @language zh_CN
-     * 用于计算相对时间。此方法返回自启动 Egret 框架以来经过的毫秒数。
-     * @returns 启动 Egret 框架以来经过的毫秒数。
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/getTimer.ts
-     */
-    function getTimer() {
-        return Date.now() - egret.$START_TIME;
-    }
-    egret.getTimer = getTimer;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * Check whether a public definition exists in the specified application domain. The definition can be that of a class, a naming space or a function.
-     * @param name {string} Name of the definition.
-     * @returns {boolean} Whether the public definition exists
-     * @example
-     * egret.hasDefinition("egret.DisplayObject") //return true
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/hasDefinition.ts
-     */
-    /**
-     * @language zh_CN
-     * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
-     * @param name {string} 定义的名称。
-     * @returns {boolean} 公共定义是否存在
-     * @example
-     * egret.hasDefinition("egret.DisplayObject") //返回 true
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/hasDefinition.ts
-     */
-    function hasDefinition(name) {
-        var definition = egret.getDefinitionByName(name);
-        return definition ? true : false;
-    }
-    egret.hasDefinition = hasDefinition;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
      * @language en_US
      * Injector
      * @version Egret 2.0
@@ -23168,84 +19166,6 @@ var egret;
     })();
     egret.Injector = Injector;
     egret.registerClass(Injector,"egret.Injector");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance
-     * compared width the instanceOf operator,and it can indicate whether an object is a instance of the specific interface.
-     * @param instance the instance to be checked.
-     * @param typeName the string value representing a specific class or interface.
-     * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
-     * @example
-     * <pre>
-     *     var instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
-     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
-     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
-     * </pre>
-     * @see egret.registerClass()
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 检查指定对象是否为 Egret 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
-     * @param instance 要判断的实例。
-     * @param typeName 类或接口的完全名称.
-     * @returns 返回true表示当前对象是指定类或接口的实例。
-     * @example
-     * <pre>
-     *     var instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
-     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
-     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
-     * </pre>
-     * @see egret.registerClass()
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    function is(instance, typeName) {
-        if (!instance || typeof instance != "object") {
-            return false;
-        }
-        var prototype = Object.getPrototypeOf(instance);
-        var types = prototype ? prototype.__types__ : null;
-        if (!types) {
-            return false;
-        }
-        return (types.indexOf(typeName) !== -1);
-    }
-    egret.is = is;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -23978,6 +19898,990 @@ var egret;
     egret.Recycler = Recycler;
     egret.registerClass(Recycler,"egret.Recycler");
 })(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
+     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
+     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
+     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
+     * slightly offset intervals.
+     * @see egret.TimerEvent
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    /**
+     * @language zh_CN
+     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
+     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
+     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
+     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
+     * @see egret.TimerEvent
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    var Timer = (function (_super) {
+        __extends(Timer, _super);
+        /**
+         * @language en_US
+         * Constructs a new Timer object with the specified delay and repeatCount states.
+         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
+         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
+         * the timer runs the specified number of times and then stops.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
+         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        function Timer(delay, repeatCount) {
+            if (repeatCount === void 0) { repeatCount = 0; }
+            _super.call(this);
+            /**
+             * @private
+             */
+            this._delay = 0;
+            /**
+             * @private
+             */
+            this._currentCount = 0;
+            /**
+             * @private
+             */
+            this._running = false;
+            /**
+             * @private
+             */
+            this.updateInterval = 1000;
+            /**
+             * @private
+             */
+            this.lastCount = 1000;
+            this.delay = delay;
+            this.repeatCount = +repeatCount | 0;
+        }
+        var d = __define,c=Timer;p=c.prototype;
+        d(p, "delay"
+            /**
+             * @language en_US
+             * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
+             * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
+             * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this._delay;
+            }
+            ,function (value) {
+                //value = +value||0;
+                if (value < 1) {
+                    value = 1;
+                }
+                if (this._delay == value) {
+                    return;
+                }
+                this._delay = value;
+                this.lastCount = this.updateInterval = Math.round(60 * value);
+            }
+        );
+        d(p, "currentCount"
+            /**
+             * @language en_US
+             * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this._currentCount;
+            }
+        );
+        d(p, "running"
+            /**
+             * @language en_US
+             * The timer's current state; true if the timer is running, otherwise false.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this._running;
+            }
+        );
+        /**
+         * @language en_US
+         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
+         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.reset = function () {
+            this.stop();
+            this._currentCount = 0;
+        };
+        /**
+         * @language en_US
+         * Starts the timer, if it is not already running.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器尚未运行，则启动计时器。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.start = function () {
+            if (this._running)
+                return;
+            egret.sys.$ticker.$startTick(this.$update, this);
+            this._running = true;
+        };
+        /**
+         * @language en_US
+         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
+         * repetitions, as set by the repeatCount property.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        p.stop = function () {
+            if (!this._running)
+                return;
+            egret.stopTick(this.$update, this);
+            this._running = false;
+        };
+        /**
+         * @private
+         * Ticker以60FPS频率刷新此方法
+         */
+        p.$update = function (timeStamp) {
+            this.lastCount -= 1000;
+            if (this.lastCount > 0) {
+                return true;
+            }
+            this.lastCount += this.updateInterval;
+            this._currentCount++;
+            var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
+            egret.TimerEvent.emitTimerEvent(this, egret.TimerEvent.TIMER);
+            if (complete) {
+                this.stop();
+                egret.TimerEvent.emitTimerEvent(this, egret.TimerEvent.TIMER_COMPLETE);
+            }
+            return false;
+        };
+        return Timer;
+    })(egret.EventDispatcher);
+    egret.Timer = Timer;
+    egret.registerClass(Timer,"egret.Timer");
+    if (DEBUG) {
+        egret.$markReadOnly(Timer, "currentCount");
+        egret.$markReadOnly(Timer, "running");
+    }
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    egret.XML;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    egret.$callLaterFunctionList = [];
+    /**
+     * @private
+     */
+    egret.$callLaterThisList = [];
+    /**
+     * @private
+     */
+    egret.$callLaterArgsList = [];
+    /**
+     * @language en_US
+     * Delay the function to run unless screen is redrawn.
+     * @param method {Function} The function to be delayed to run
+     * @param thisObject {any} this reference of callback function
+     * @param ...args {any} Function parameter list
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     */
+    /**
+     * @language zh_CN
+     * 延迟函数到屏幕重绘前执行。
+     * @param method {Function} 要延迟执行的函数
+     * @param thisObject {any} 回调函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     */
+    function callLater(method, thisObject) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        egret.$callLaterFunctionList.push(method);
+        egret.$callLaterThisList.push(thisObject);
+        egret.$callLaterArgsList.push(args);
+    }
+    egret.callLater = callLater;
+    /**
+     * @private
+     */
+    egret.$callAsyncFunctionList = [];
+    /**
+     * @private
+     */
+    egret.$callAsyncThisList = [];
+    /**
+     * @private
+     */
+    egret.$callAsyncArgsList = [];
+    /**
+     * 异步调用函数
+     * @param method {Function} 要异步调用的函数
+     * @param thisObject {any} 函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @private
+     */
+    function $callAsync(method, thisObject) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        egret.$callAsyncFunctionList.push(method);
+        egret.$callAsyncThisList.push(thisObject);
+        egret.$callAsyncArgsList.push(args);
+    }
+    egret.$callAsync = $callAsync;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+function __extends(d, b) {
+    for (var p in b)
+        if (b.hasOwnProperty(p))
+            d[p] = b[p];
+    function __() {
+        this.constructor = d;
+    }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+}
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
+     * @param values Value passed to the parent class
+     *
+     * @exmaple egret.superSetter(this, "alpha", 1);
+     */
+    /**
+     * @language zh_CN
+     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
+     * @param thisObj 当前对象。永远都this
+     * @param type 需要调用的setter属性名称
+     * @param values 传给父类的值
+     *
+     * @exmaple egret.superSetter(this, "alpha", 1);
+     */
+    function superSetter(thisObj, type) {
+        var values = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            values[_i - 2] = arguments[_i];
+        }
+        var cla = Object.getPrototypeOf(thisObj);
+        var seters = cla["__sets__"];
+        if (seters == null) {
+            seters = cla["__sets__"] = {};
+        }
+        var setF = seters[type];
+        if (setF) {
+            return setF.apply(thisObj, values);
+        }
+        var d = Object.getPrototypeOf(cla);
+        while (!d.hasOwnProperty(type)) {
+            d = Object.getPrototypeOf(d);
+        }
+        setF = Object.getOwnPropertyDescriptor(d, type).set;
+        seters[type] = setF;
+        setF.apply(thisObj, values);
+    }
+    egret.superSetter = superSetter;
+    /**
+     * @language en_US
+     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
+     * @param thisObj 当前对象。永远都this
+     * @param type 需要调用的setter属性名称
+     * @returns {any} The value returned by the parent
+     *
+     * @exmaple egret.superGetter(this, "alpha");
+     */
+    /**
+     * @language zh_CN
+     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
+     * @param thisObj 当前对象。永远都this
+     * @param type 需要调用的setter属性名称
+     * @returns {any} 父类返回的值
+     *
+     * @exmaple egret.superGetter(this, "alpha");
+     */
+    function superGetter(thisObj, type) {
+        var cla = Object.getPrototypeOf(thisObj);
+        var geters = cla["__gets__"];
+        if (geters == null) {
+            geters = cla["__gets__"] = {};
+        }
+        var getF = geters[type];
+        if (getF) {
+            return getF.call(thisObj);
+        }
+        var d = Object.getPrototypeOf(cla);
+        while (!d.hasOwnProperty(type)) {
+            d = Object.getPrototypeOf(d);
+        }
+        getF = Object.getOwnPropertyDescriptor(d, type).get;
+        geters[type] = getF;
+        return getF.call(thisObj);
+    }
+    egret.superGetter = superGetter;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    var getDefinitionByNameCache = {};
+    /**
+     * @language en_US
+     * Returns a reference to the class object of the class specified by the name parameter.
+     * @param name The name of a class.
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     */
+    /**
+     * @language zh_CN
+     * 返回 name 参数指定的类的类对象引用。
+     * @param name 类的名称。
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     */
+    function getDefinitionByName(name) {
+        if (!name)
+            return null;
+        var definition = getDefinitionByNameCache[name];
+        if (definition) {
+            return definition;
+        }
+        var paths = name.split(".");
+        var length = paths.length;
+        definition = __global;
+        for (var i = 0; i < length; i++) {
+            var path = paths[i];
+            definition = definition[path];
+            if (!definition) {
+                return null;
+            }
+        }
+        getDefinitionByNameCache[name] = definition;
+        return definition;
+    }
+    egret.getDefinitionByName = getDefinitionByName;
+    if (DEBUG) {
+        egret["cleanCache"] = function () {
+            getDefinitionByNameCache = {};
+        };
+    }
+})(egret || (egret = {}));
+var __global = __global || this;
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * Get browser or Runtime parameters, returns an empty string if not set
+     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
+     * @method egret.getOption
+     * @param key {string} Parameters key
+     * @private
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
+     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
+     * @method egret.getOption
+     * @param key {string} 参数key
+     * @private
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    egret.getOption;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * Return the fully qualified class name of an object
+     * @param value The object for which a fully qualified class name is desired. Any JavaScript value may be passed to
+     * this method including all available JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns A string containing the fully qualified class name.
+     * @example
+     * <pre>
+     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
+     */
+    /**
+     * @language zh_CN
+     * 返回对象的完全限定类名。
+     * @param value 需要完全限定类名称的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型
+     * （如number)和类对象
+     * @returns 包含完全限定类名称的字符串。
+     * @example
+     * <pre>
+     *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
+     */
+    function getQualifiedClassName(value) {
+        var type = typeof value;
+        if (!value || (type != "object" && !value.prototype)) {
+            return type;
+        }
+        var prototype = value.prototype ? value.prototype : Object.getPrototypeOf(value);
+        if (prototype.hasOwnProperty("__class__")) {
+            return prototype["__class__"];
+        }
+        var constructorString = prototype.constructor.toString();
+        var index = constructorString.indexOf("(");
+        var className = constructorString.substring(9, index);
+        Object.defineProperty(prototype, "__class__", {
+            value: className,
+            enumerable: false,
+            writable: true
+        });
+        return className;
+    }
+    egret.getQualifiedClassName = getQualifiedClassName;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /** @language en_US
+     * Returns the fully qualified class name of the base class of the object specified by the value parameter.
+     * @param value The object for which a parent class is desired. Any JavaScript value may be passed to this method including
+     * all available JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns  A fully qualified base class name, or null if none exists.
+     * @example
+     * <pre>
+     *  egret.getQualifiedSuperclassName(egret.Bitmap) //return "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
+     */
+    /**
+     * @language zh_CN
+     * 返回 value 参数指定的对象的基类的完全限定类名。
+     * @param value 需要取得父类的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型（如number）和类对象
+     * @returns 完全限定的基类名称，或 null（如果不存在基类名称）。
+     * @example
+     * <pre>
+     *  egret.getQualifiedSuperclassName(egret.Sprite) //返回 "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
+     */
+    function getQualifiedSuperclassName(value) {
+        if (!value || typeof value != "object") {
+            return null;
+        }
+        var prototype = value.prototype ? value.prototype : Object.getPrototypeOf(value);
+        var superProto = Object.getPrototypeOf(prototype);
+        if (!superProto) {
+            return null;
+        }
+        var superClass = egret.getQualifiedClassName(superProto.constructor);
+        if (!superClass) {
+            return null;
+        }
+        return superClass;
+    }
+    egret.getQualifiedSuperclassName = getQualifiedSuperclassName;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    egret.$START_TIME = 0;
+    /**
+     * @language en_US
+     * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
+     * @returns The number of milliseconds since the Egret framework was initialized
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
+     */
+    /**
+     * @language zh_CN
+     * 用于计算相对时间。此方法返回自启动 Egret 框架以来经过的毫秒数。
+     * @returns 启动 Egret 框架以来经过的毫秒数。
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
+     */
+    function getTimer() {
+        return Date.now() - egret.$START_TIME;
+    }
+    egret.getTimer = getTimer;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * Check whether a public definition exists in the specified application domain. The definition can be that of a class, a naming space or a function.
+     * @param name {string} Name of the definition.
+     * @returns {boolean} Whether the public definition exists
+     * @example
+     * egret.hasDefinition("egret.DisplayObject") //return true
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/hasDefinition.ts
+     */
+    /**
+     * @language zh_CN
+     * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
+     * @param name {string} 定义的名称。
+     * @returns {boolean} 公共定义是否存在
+     * @example
+     * egret.hasDefinition("egret.DisplayObject") //返回 true
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/hasDefinition.ts
+     */
+    function hasDefinition(name) {
+        var definition = egret.getDefinitionByName(name);
+        return definition ? true : false;
+    }
+    egret.hasDefinition = hasDefinition;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance
+     * compared width the instanceOf operator,and it can indicate whether an object is a instance of the specific interface.
+     * @param instance the instance to be checked.
+     * @param typeName the string value representing a specific class or interface.
+     * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
+     * @example
+     * <pre>
+     *     var instance = new egret.Sprite();
+     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
+     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
+     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
+     * </pre>
+     * @see egret.registerClass()
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 检查指定对象是否为 Egret 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
+     * @param instance 要判断的实例。
+     * @param typeName 类或接口的完全名称.
+     * @returns 返回true表示当前对象是指定类或接口的实例。
+     * @example
+     * <pre>
+     *     var instance = new egret.Sprite();
+     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
+     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
+     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
+     * </pre>
+     * @see egret.registerClass()
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    function is(instance, typeName) {
+        if (!instance || typeof instance != "object") {
+            return false;
+        }
+        var prototype = Object.getPrototypeOf(instance);
+        var types = prototype ? prototype.__types__ : null;
+        if (!types) {
+            return false;
+        }
+        return (types.indexOf(typeName) !== -1);
+    }
+    egret.is = is;
+})(egret || (egret = {}));
 var egret;
 (function (egret) {
     var setIntervalCache = {};
@@ -24331,252 +21235,6 @@ var egret;
 (function (egret) {
     /**
      * @language en_US
-     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
-     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
-     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
-     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
-     * slightly offset intervals.
-     * @see egret.TimerEvent
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    /**
-     * @language zh_CN
-     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
-     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
-     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
-     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
-     * @see egret.TimerEvent
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    var Timer = (function (_super) {
-        __extends(Timer, _super);
-        /**
-         * @language en_US
-         * Constructs a new Timer object with the specified delay and repeatCount states.
-         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
-         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
-         * the timer runs the specified number of times and then stops.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
-         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        function Timer(delay, repeatCount) {
-            if (repeatCount === void 0) { repeatCount = 0; }
-            _super.call(this);
-            /**
-             * @private
-             */
-            this._delay = 0;
-            /**
-             * @private
-             */
-            this._currentCount = 0;
-            /**
-             * @private
-             */
-            this._running = false;
-            /**
-             * @private
-             */
-            this.updateInterval = 1000;
-            /**
-             * @private
-             */
-            this.lastCount = 1000;
-            this.delay = delay;
-            this.repeatCount = +repeatCount | 0;
-        }
-        var d = __define,c=Timer;p=c.prototype;
-        d(p, "delay"
-            /**
-             * @language en_US
-             * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
-             * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
-             * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._delay;
-            }
-            ,function (value) {
-                //value = +value||0;
-                if (value < 1) {
-                    value = 1;
-                }
-                if (this._delay == value) {
-                    return;
-                }
-                this._delay = value;
-                this.lastCount = this.updateInterval = Math.round(60 * value);
-            }
-        );
-        d(p, "currentCount"
-            /**
-             * @language en_US
-             * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._currentCount;
-            }
-        );
-        d(p, "running"
-            /**
-             * @language en_US
-             * The timer's current state; true if the timer is running, otherwise false.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this._running;
-            }
-        );
-        /**
-         * @language en_US
-         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
-         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.reset = function () {
-            this.stop();
-            this._currentCount = 0;
-        };
-        /**
-         * @language en_US
-         * Starts the timer, if it is not already running.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器尚未运行，则启动计时器。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.start = function () {
-            if (this._running)
-                return;
-            egret.sys.$ticker.$startTick(this.$update, this);
-            this._running = true;
-        };
-        /**
-         * @language en_US
-         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
-         * repetitions, as set by the repeatCount property.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        p.stop = function () {
-            if (!this._running)
-                return;
-            egret.stopTick(this.$update, this);
-            this._running = false;
-        };
-        /**
-         * @private
-         * Ticker以60FPS频率刷新此方法
-         */
-        p.$update = function (timeStamp) {
-            this.lastCount -= 1000;
-            if (this.lastCount > 0) {
-                return true;
-            }
-            this.lastCount += this.updateInterval;
-            this._currentCount++;
-            var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
-            egret.TimerEvent.emitTimerEvent(this, egret.TimerEvent.TIMER);
-            if (complete) {
-                this.stop();
-                egret.TimerEvent.emitTimerEvent(this, egret.TimerEvent.TIMER_COMPLETE);
-            }
-            return false;
-        };
-        return Timer;
-    })(egret.EventDispatcher);
-    egret.Timer = Timer;
-    egret.registerClass(Timer,"egret.Timer");
-    if (DEBUG) {
-        egret.$markReadOnly(Timer, "currentCount");
-        egret.$markReadOnly(Timer, "running");
-    }
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
      * Transfer number to color character string
      * @param value {number} color value ,such as 0xffffff
      * @returns {string} Color character string, for example, #ffffff.
@@ -24604,48 +21262,4 @@ var egret;
         return "#" + color;
     }
     egret.toColorString = toColorString;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    egret.XML;
 })(egret || (egret = {}));

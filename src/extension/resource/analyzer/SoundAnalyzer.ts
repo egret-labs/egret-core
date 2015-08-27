@@ -46,10 +46,10 @@ module RES {
             this.fileDic[name] = data;
             var config:any = resItem.data;
             if (config && config["soundType"]) {
-                data.preload(config.soundType);
+                //data.preload(config.soundType);
             }
             else {
-                data.preload(egret.Sound.EFFECT);
+                //data.preload(egret.Sound.EFFECT);
             }
         }
     }

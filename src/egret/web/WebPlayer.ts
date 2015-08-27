@@ -76,8 +76,6 @@ module egret.web {
             this.updateScreenSize();
             this.updateMaxTouches();
             player.start();
-
-            egret.MainContext.instance.stage = stage;
         }
 
         /**

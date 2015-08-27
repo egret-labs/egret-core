@@ -29,6 +29,11 @@
 
 module egret {
 
+    export class RuntimeType {
+        public static WEB:string = "web";
+        public static NATIVE:string = "native";
+    }
+
     /**
      * @language en_US
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
@@ -140,6 +145,24 @@ module egret {
             return Capabilities.$os;
         }
 
+        /**
+         * @private
+         */
+        static $runtimeType:string = "Unknown";
+
+        /**
+         * @language zh_CN
+         * 指示当前的运行类型。runtimeType 属性返回下列字符串：
+         * <ul>
+         * <li>运行在Web上     egret.RuntimeType.WEB</li>
+         * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
+         * </ul>
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public static get runtimeType():string {
+            return Capabilities.$runtimeType;
+        }
 
         /**
          * @private
@@ -217,3 +240,23 @@ module egret {
     }
 
 }
+
+
+var testDeviceType = function () {
+    if (!this["navigator"]) {
+        return true
+    }
+    var ua = navigator.userAgent.toLowerCase();
+    return (ua.indexOf('mobile') != -1 || ua.indexOf('android') != -1);
+};
+
+var testRuntimeType = function () {
+    if (this["navigator"]) {
+        return true;
+    }
+    return false;
+};
+
+egret.Capabilities.$isMobile = testDeviceType();
+egret.Capabilities.$runtimeType = testRuntimeType() ? egret.RuntimeType.WEB : egret.RuntimeType.NATIVE;
+

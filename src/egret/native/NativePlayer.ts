@@ -92,8 +92,6 @@ module egret.native {
             this.updateScreenSize();
             this.updateMaxTouches();
             player.start();
-
-            egret.MainContext.instance.stage = stage;
         }
 
         public updateScreenSize():void {

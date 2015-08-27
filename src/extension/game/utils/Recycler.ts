@@ -71,6 +71,18 @@ module egret {
          * @private
          */
         public static _callBackList:Array<any> = [];
+
+        public static $init():void {
+            sys.$ticker.$startTick(Recycler.onUpdate, Recycler);
+        }
+
+        public static onUpdate(timeStamp:number):void {
+            var list = Recycler._callBackList;
+            for (var i = list.length - 1; i >= 0; i--) {
+                list[i].$checkFrame();
+            }
+        }
+
         /**
          * @private
          * 多少帧后自动销毁对象。
@@ -191,4 +203,6 @@ module egret {
             }
         }
     }
+
+    Recycler.$init();
 }

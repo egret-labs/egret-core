@@ -214,7 +214,7 @@ module egret {
 
         public set fillStyle(value:any) {
             if (typeof value == "number") {
-                value = sys.toColorString(value);
+                value = toColorString(value);
             }
             this._fillStyle = value;
             this.pushCommand(sys.GraphicsCommandType.fillStyle, arguments);
@@ -312,7 +312,7 @@ module egret {
 
         public set strokeStyle(value:any) {
             if (typeof value == "number") {
-                value = sys.toColorString(value);
+                value = toColorString(value);
             }
             this._strokeStyle = value;
             this.pushCommand(sys.GraphicsCommandType.strokeStyle, arguments);

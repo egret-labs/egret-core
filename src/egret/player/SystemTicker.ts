@@ -67,6 +67,9 @@ module egret.sys {
             if (this.playerList.indexOf(player) != -1) {
                 return;
             }
+
+            $TempStage = player.stage;
+
             if (DEBUG) {
                 egret_stages.push(player.stage);
             }
@@ -247,11 +250,6 @@ module egret.sys {
             for (var i = 0; i < length; i++) {
                 list[i].dispatchEventWith(Event.ENTER_FRAME);
             }
-
-            list = Recycler._callBackList;
-            for (i = list.length - 1; i >= 0; i--) {
-                list[i].$checkFrame();
-            }
         }
 
         /**
@@ -276,6 +274,8 @@ module egret.sys {
      * 心跳计时器单例
      */
     export var $ticker:SystemTicker = new sys.SystemTicker();
+
+    export var $TempStage:egret.Stage;
 }
 
 if (DEBUG) {
