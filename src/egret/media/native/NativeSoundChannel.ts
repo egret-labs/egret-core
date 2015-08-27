@@ -51,12 +51,12 @@ module egret.web {
         /**
          * @private
          */
-        private audio:HTMLAudioElement = null;
+        private audio:any = null;
 
         /**
          * @private
          */
-        constructor(audio:HTMLAudioElement) {
+        constructor(audio:any) {
             super();
             audio.addEventListener("ended", this.onPlayEnd);
             this.audio = audio;
@@ -106,7 +106,7 @@ module egret.web {
             audio.removeEventListener("ended", this.onPlayEnd);
             this.audio = null;
 
-            HtmlSound.$recycle(this.$url, audio);
+            NativeSound.$recycle(this.$url, audio);
         }
 
         /**
