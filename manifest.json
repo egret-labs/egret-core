@@ -215,12 +215,15 @@
     {
       "name": "swan",
       "description": "使用 swan 扩展库创建友好的交互界面",
-      "modules": [ "lark", "swan", "resource" ]
+      "modules": [ "egret", "swan", "resource" ]
     },
     {
       "name": "empty",
-      "description": "创建一个空项目",
-      "modules": [ "lark", "swan", "resource" ]
+      "displayName": "空 Egret 项目",
+      "language": "TypeScript",
+      "tag": "game,app,TypeScript",
+      "description": "创建一个空项目,仅添加 Egret 相关模块引用",
+      "modules": [ "egret" ]
     }
   ],
   "scaleModes": [

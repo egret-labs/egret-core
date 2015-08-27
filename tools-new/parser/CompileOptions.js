@@ -8,6 +8,7 @@ var CompileOptions = (function () {
         this._host = null;
         this._port = NaN;
         this.esTarget = 'ES5';
+        this.runtime = "web";
         this._tmpDir = null;
     }
     Object.defineProperty(CompileOptions.prototype, "dirName", {

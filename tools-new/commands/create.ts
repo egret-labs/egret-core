@@ -15,6 +15,7 @@ class Create implements egret.Command {
         if (project.type) {
             var create = new createAction();
             create.project = project;
+            parseProjectInfoFromTemplate(project);
             return create.execute();
         }
         else {
@@ -27,6 +28,16 @@ class Create implements egret.Command {
             console.log(utils.tr(10016, url));
             return DontExitCode;
         }
+    }
+}
+
+function parseProjectInfoFromTemplate(project: egret.ILarkProject) {
+    if (!project.modules || !project.modules.length) {
+
+        var templates = egret.manifest.templates.filter(t=> t.name == egret.args.type)
+        var template = templates.length ? templates[0] : egret.manifest.templates[0];
+
+        project.modules = template.modules.map(t=> ({ name: t }));
     }
 }
 

@@ -12,6 +12,7 @@ var Create = (function () {
         if (project.type) {
             var create = new createAction();
             create.project = project;
+            parseProjectInfoFromTemplate(project);
             return create.execute();
         }
         else {
@@ -27,4 +28,11 @@ var Create = (function () {
     };
     return Create;
 })();
+function parseProjectInfoFromTemplate(project) {
+    if (!project.modules || !project.modules.length) {
+        var templates = egret.manifest.templates.filter(function (t) { return t.name == egret.args.type; });
+        var template = templates.length ? templates[0] : egret.manifest.templates[0];
+        project.modules = template.modules.map(function (t) { return ({ name: t }); });
+    }
+}
 module.exports = Create;

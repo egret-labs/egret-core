@@ -36,7 +36,17 @@ declare module egret {
         params?: string[];
         platform?: string;
 
+
+        type?: string;
         native?: boolean;
+        runtime?: string;
+        version?: string;
+        compile?: boolean;
+        password?: string;
+        keepEXMLTS: boolean;
+        log: boolean;
+        nativeTemplatePath: string;
+        all: boolean;
         projectDir: string;
         getTmpDir(): string;
         srcDir: string;

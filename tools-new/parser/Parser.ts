@@ -68,6 +68,35 @@ export var optionDeclarations: egret.CommandLineOption[] = [
     }, {
         name: 'type',
         type: 'string'
+    }, {
+        name: 'runtime',
+        type: 'string'
+    }, {
+        name: 'version',
+        type: 'string'
+    }, {
+        name: 'compile',
+        type: 'boolean'
+    }, {
+        name: 'password',
+        type: 'string'
+    }, {
+        name: 'keepEXMLTS',
+        type: 'boolean',
+        shortName: "k"
+    }, {
+        name: 'log',
+        type: 'boolean'
+    }, {
+        name: 'platform',
+        type: 'string'
+    }, {
+        name: 'nativeTemplatePath',
+        type: 'string',
+        shortName: "t"
+    }, {
+        name: 'all',
+        type: 'boolean'
     }
 ];
 
