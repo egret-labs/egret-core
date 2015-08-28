@@ -48,12 +48,19 @@ export function init() {
             opts[key] = opts[key][0] || true;
         }
     }
+
+    cmdRoot = process.cwd();
     setArgv({
         name: arr[0],
         currDir: process.cwd(),
         args: args,
         opts: opts
     });
+}
+
+var cmdRoot = "";
+export function getCommandRoot() {
+    return cmdRoot;
 }
 
 export function toString() {

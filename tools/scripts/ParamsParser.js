@@ -45,6 +45,7 @@ function init() {
             opts[key] = opts[key][0] || true;
         }
     }
+    cmdRoot = process.cwd();
     setArgv({
         name: arr[0],
         currDir: process.cwd(),
@@ -53,6 +54,11 @@ function init() {
     });
 }
 exports.init = init;
+var cmdRoot = "";
+function getCommandRoot() {
+    return cmdRoot;
+}
+exports.getCommandRoot = getCommandRoot;
 function toString() {
     var s = "";
     for (var key in argv["opts"]) {

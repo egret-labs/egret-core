@@ -41,7 +41,7 @@ class StartServerCommand implements egret.Command {
     }
 
     private writeFile(pathname, response) {
-        var realfile = file.join(process.cwd(), pathname);
+        var realfile = file.join(params.getCommandRoot(), pathname);
         var ext = file.getExtension(realfile);
 
         var fs = require('fs');
