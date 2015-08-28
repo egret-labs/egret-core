@@ -184,6 +184,9 @@ module egret.sys {
 }
 
 module egret {
+
+    var SplitRegex = /(?=[\u00BF-\u1FFF\u2C00-\uD7FF]|\b|\s)(?![。，！、》…）)}”】\.\,\!\?\]\:])/;
+
     /**
      * @language en_US
      * TextField is the text rendering class of egret. It conducts rendering by using the browser / device API. Due to different ways of font rendering in different browsers / devices, there may be differences in the rendering
@@ -1622,7 +1625,7 @@ module egret {
                                 var ww:number = 0;
                                 var word:string = textArr[j];
                                 if (this.$TextField[sys.TextKeys.wordWrap]) {
-                                    var words:Array<string> = word.split(/\b/);
+                                    var words:Array<string> = word.split(SplitRegex);
                                 }
                                 else {
                                     words = word.match(/./g);
