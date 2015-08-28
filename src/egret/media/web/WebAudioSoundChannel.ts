@@ -69,6 +69,8 @@ module egret.web {
          */
         private context = WebAudioDecode.ctx;
 
+        //声音是否已经播放完成
+        private isStopped:boolean = false;
 
         /**
          * @private
@@ -94,6 +96,11 @@ module egret.web {
         private _volume:number = 1;
 
         $play():void {
+            if (this.isStopped) {
+                egret.$error(1036);
+                return;
+            }
+
             if (this.bufferSource) {
                 this.bufferSource.onended = null;
                 this.bufferSource = null;
@@ -124,7 +131,11 @@ module egret.web {
                 }
                 this.bufferSource.disconnect();
                 this.bufferSource = null;
+
+                this.$audioBuffer = null;
             }
+
+            this.isStopped = true;
         }
 
         /**
@@ -157,6 +168,11 @@ module egret.web {
          * @inheritDoc
          */
         public set volume(value:number) {
+            if (this.isStopped) {
+                egret.$error(1036);
+                return;
+            }
+
             this._volume = value;
             this.gain.gain.value = value;
         }

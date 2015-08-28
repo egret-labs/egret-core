@@ -53,6 +53,9 @@ module egret.web {
          */
         private audio:any = null;
 
+        //声音是否已经播放完成
+        private isStopped:boolean = false;
+
         /**
          * @private
          */
@@ -63,6 +66,11 @@ module egret.web {
         }
 
         $play():void {
+            if (this.isStopped) {
+                egret.$error(1036);
+                return;
+            }
+
             try {
                 this.audio.currentTime = this.$startTime;
             }
@@ -123,6 +131,11 @@ module egret.web {
          * @inheritDoc
          */
         public set volume(value:number) {
+            if (this.isStopped) {
+                egret.$error(1036);
+                return;
+            }
+
             if (!this.audio)
                 return;
             this.audio.volume = value;

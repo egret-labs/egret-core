@@ -38,7 +38,7 @@ module egret {
      * More detailed control of the sound is performed through the SoundChannel
      *
      * @event egret.Event.COMPLETE Emit when the audio resource is loaded and ready to play
-     * @event egret.Event.IO_ERROR Emit when the audio resource is failed to load
+     * @event egret.IOErrorEvent.IO_ERROR Emit when the audio resource is failed to load
      * @version Lark 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
@@ -49,7 +49,7 @@ module egret {
      * 可通过 SoundChannel 对声音执行更精细的控制，如控制音量和监控播放进度。
      *
      * @event egret.Event.COMPLETE 音频加载完成时抛出
-     * @event egret.Event.IO_ERROR 音频加载失败时抛出
+     * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
      * @version Lark 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
