@@ -394,7 +394,7 @@ export function escapePath(path:string):string {
 /**
  * 连接路径,支持传入多于两个的参数。也支持"../"相对路径解析。返回的分隔符为Unix风格。
  */
-export function joinPath(dir:string, filename:string):string {
+export function joinPath(dir:string, ...filename:string[]):string {
     var path = Path.join.apply(null, arguments);
     path = escapePath(path);
     return path;

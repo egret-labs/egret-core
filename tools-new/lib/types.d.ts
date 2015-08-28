@@ -1,6 +1,7 @@
 ﻿/// <reference path="node.d.ts" />
 /// <reference path="totaljs/totaljs.d.ts" />
 /// <reference path="xml/xml.ts" />
+/// <reference path="../globals.ts" />
 
 
 
