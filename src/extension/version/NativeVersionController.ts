@@ -97,14 +97,10 @@ module egret {
         }
 
         public checkIsNewVersion(virtualUrl:string):boolean {
-            if (this._localFileArr.indexOf(virtualUrl) >= 0) {
-                return true;
-            }
-            return false;
+            return egret_native.isFileExists(virtualUrl);
         }
 
         public saveVersion(virtualUrl:string):void {
-            this._localFileArr.push(virtualUrl);
         }
 
         /**
@@ -248,5 +244,7 @@ module egret {
         }
     }
 
-    VersionController = NativeVersionController;
+    if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+        VersionController = NativeVersionController;
+    }
 }

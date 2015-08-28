@@ -207,7 +207,7 @@ module egret.native {
 
                 loader.data = texture;
 
-                window.setTimeout(function() {
+                egret.$callAsync(function() {
                     loader.dispatchEventWith(Event.COMPLETE);
                 }, self);
             }

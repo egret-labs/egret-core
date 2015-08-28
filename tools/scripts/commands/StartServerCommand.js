@@ -35,7 +35,7 @@ var StartServerCommand = (function () {
     };
     StartServerCommand.prototype.writeFile = function (pathname, response) {
         var _this = this;
-        var realfile = file.join(process.cwd(), pathname);
+        var realfile = file.join(params.getCommandRoot(), pathname);
         var ext = file.getExtension(realfile);
         var fs = require('fs');
         fs.exists(realfile, function (exists) {

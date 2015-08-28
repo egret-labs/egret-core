@@ -24,7 +24,7 @@ class UpgradeCommand implements egret.Command {
         for (var i = 0; i < this.upgradeConfigArr.length; i++) {
             var info = this.upgradeConfigArr[i];
             var v = info["v"];
-            var command = info["command"];
+            var command = new info["command"]();
 
             var result = globals.compressVersion(version, v);
             if (result < 0) {
@@ -69,7 +69,8 @@ class UpgradeCommand implements egret.Command {
         //{"v": "2.0.1"},
         //{"v": "2.0.2"},
         //{"v": "2.4.0"},
-        {"v": "2.4.1"}
+        //{"v": "2.4.1"},
+        {"v": "2.4.2", "command": require("./upgrade/UpgradeCommand_2_4_2")}
     ];
 }
 

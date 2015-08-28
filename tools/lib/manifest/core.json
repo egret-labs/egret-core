@@ -42,6 +42,7 @@
         "egret/events/TextEvent.ts",
         "egret/events/FocusEvent.ts",
         "egret/events/GeolocationEvent.ts",
+        "egret/events/MotionEvent.ts",
         "egret/events/OrientationEvent.ts",
         "egret/display/BlendMode.ts",
         "egret/display/DisplayObject.ts",
@@ -86,6 +87,11 @@
         "egret/player/TouchHandler.ts",
         "egret/system/Capabilities.ts",
         "egret/system/Console.ts",
+
+        "egret/sensor/Geolocation.ts",
+        "egret/sensor/Motion.ts",
+        "egret/sensor/Orientation.ts",
+
         "egret/text/HorizontalAlign.ts",
         "egret/text/TextFieldType.ts",
         "egret/text/TextField.ts",
@@ -124,8 +130,8 @@
         "extension/game/display/ScrollView.ts",
         "extension/game/display/ScrollViewProperties.ts",
 
-        "extension/game/tween/Tween.ts",
-        "extension/game/tween/Ease.ts",
+        "extension/tween/Tween.ts",
+        "extension/tween/Ease.ts",
 
         "extension/game/net/URLRequestMethod.ts",
         "extension/game/net/URLLoaderDataFormat.ts",

@@ -108,6 +108,7 @@ var egret;
         1702: "项目升级后，请执行一次 egret build {your_project} {color_green}-e{color_normal} 编译引擎，\n命令中请不要加上大括号{}",
         1703: "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n",
         1704: "正在更新到{0}",
+        1705: "{color_red}非常抱歉的通知您，新的引擎不能直接升级，您需要重新创建一个新项目并将项目代码、资源分别拷到新项目里。{color_normal}。",
         //info
         1801: "当前Egret版本：{0}",
         1802: "Egret安装路径：{0}",

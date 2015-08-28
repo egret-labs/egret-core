@@ -43,34 +43,34 @@ module egret {
         public fetchVersion():void {
             var self = this;
 
-            var virtualUrl:string = "all.manifest";
-
-            var httpLoader:egret.HttpRequest = new egret.HttpRequest();
-            httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
-            httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
-
-            httpLoader.open(virtualUrl, "get");
-            httpLoader.send();
-
-            function onError(event:egret.IOErrorEvent) {
-                removeListeners();
-                self.dispatchEvent(event);
-            }
-
-            function onLoadComplete() {
-                removeListeners();
-
-                self._versionInfo = JSON.parse(httpLoader.response);
-
-                window.setTimeout(function () {
+            //var virtualUrl:string = "all.manifest";
+            //
+            //var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+            //httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
+            //httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+            //
+            //httpLoader.open(virtualUrl, "get");
+            //httpLoader.send();
+            //
+            //function onError(event:egret.IOErrorEvent) {
+            //    removeListeners();
+            //    self.dispatchEvent(event);
+            //}
+            //
+            //function onLoadComplete() {
+            //    removeListeners();
+            //
+            //    self._versionInfo = JSON.parse(httpLoader.response);
+            //
+            //    window.setTimeout(function () {
                     self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-                }, 0);
-            }
-
-            function removeListeners():void {
-                httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
-                httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
-            }
+            //    }, 0);
+            //}
+            //
+            //function removeListeners():void {
+            //    httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            //    httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            //}
         }
 
         public checkIsNewVersion(virtualUrl:string):boolean {
@@ -98,5 +98,7 @@ module egret {
         }
     }
 
-    VersionController = Html5VersionController;
+    if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+        VersionController = NativeVersionController;
+    }
 }

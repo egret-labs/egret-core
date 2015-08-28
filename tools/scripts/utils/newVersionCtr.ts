@@ -3,15 +3,26 @@
  */
 import file = require("../lib/FileUtil");
 
-export function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo, resourceName) {
+export function copyFilesWithIgnore(sourceRootPath, desRootPath, versionInfo, resourceName, nozip) {
     var copyFilePathList = file.getDirectoryAllListing(file.join(sourceRootPath, resourceName));
 
-    copyFilePathList.forEach(function (copyFilePath) {
-        var filePath = file.relative(sourceRootPath, copyFilePath);
-        if (versionInfo[filePath]) {//不在忽略列表的路径，拷贝过去
-            file.copy(file.join(copyFilePath), file.join(desRootPath, resourceName, versionInfo[filePath]["v"].substring(0, 2), versionInfo[filePath]["v"] + "_" + versionInfo[filePath]["s"]));
-        }
-    });
+    if (nozip) {
+        copyFilePathList.forEach(function (copyFilePath) {
+            var filePath = file.relative(sourceRootPath, copyFilePath);
+            if (versionInfo[filePath]) {//不在忽略列表的路径，拷贝过去
+                var copyFileRePath = file.relative(sourceRootPath, copyFilePath);
+                file.copy(file.join(copyFilePath), file.join(desRootPath, copyFileRePath));
+            }
+        });
+    }
+    else {
+        copyFilePathList.forEach(function (copyFilePath) {
+            var filePath = file.relative(sourceRootPath, copyFilePath);
+            if (versionInfo[filePath]) {//不在忽略列表的路径，拷贝过去
+                file.copy(file.join(copyFilePath), file.join(desRootPath, resourceName, versionInfo[filePath]["v"].substring(0, 2), versionInfo[filePath]["v"] + "_" + versionInfo[filePath]["s"]));
+            }
+        });
+    }
 }
 
 //复制将要打包的manifest文件

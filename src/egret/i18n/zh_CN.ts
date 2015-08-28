@@ -30,6 +30,7 @@ module egret {
     locale_strings[1033] = "跨域图片不可以使用toDataURL来转换成base64";
     locale_strings[1034] = "音乐文件解码失败：\"{0}\"，请使用标准的转换工具重新转换下mp3。";
     locale_strings[1035] = "Native 下暂未实现此功能！";
+    locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
 
     //RES
     locale_strings[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";

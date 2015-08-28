@@ -33,10 +33,17 @@ var PublishNativeCommand = (function () {
         }
         file.createDirectory(releaseOutputPath);
         var task = [];
+        var nozip = params.hasOption("-nozip");
+        var needCompile = params.hasOption("-compile") || params.hasOption("-compiler");
+        //修改文件
+        var fileModify = new FileAutoChangeCommand();
+        fileModify.needCompile = needCompile;
+        fileModify.debug = nozip;
+        fileModify.versonCtrClassName = versionCtr.getClassName();
+        fileModify.execute();
         //js文件
         //获取gamelist以及egretlist
         var file_list = config.getAllFileList("native");
-        var needCompile = params.hasOption("-compile") || params.hasOption("-compiler");
         if (needCompile) {
             task.push(function (tempCallback) {
                 var adapt = new CompileFilesCMD();
@@ -81,18 +88,11 @@ var PublishNativeCommand = (function () {
                 tempCallback();
             });
         }
-        var nozip = params.hasOption("-nozip");
         if (true) {
             task.push(function (tempCallback) {
                 //拷贝需要zip的文件
                 //拷贝版本控制文件
                 versionCtr.copyZipManifest(releasePath, ziptempPath);
-                //修改文件
-                var fileModify = new FileAutoChangeCommand();
-                fileModify.needCompile = needCompile;
-                fileModify.debug = nozip;
-                fileModify.versonCtrClassName = versionCtr.getClassName();
-                fileModify.execute();
                 file.copy(file.join(projectPath, "launcher", "native_loader.js"), file.join(ziptempPath, "launcher", "native_loader.js"));
                 file.copy(file.join(projectPath, "launcher", "runtime_loader.js"), file.join(ziptempPath, "launcher", "runtime_loader.js"));
                 file.copy(file.join(projectPath, "launcher", "native_require.js"), file.join(ziptempPath, "launcher", "native_require.js"));
@@ -130,7 +130,7 @@ var PublishNativeCommand = (function () {
                 versionCtr.copyOtherManifest(releasePath, releaseOutputPath, nozip);
                 //获取已经筛选过的资源列表
                 var versionInfo = JSON.parse(file.read(file.join(releasePath, "nativeBase", "all.manifest")));
-                versionCtr.copyFilesWithIgnore(projectPath, releaseOutputPath, versionInfo, config.getResourceName());
+                versionCtr.copyFilesWithIgnore(projectPath, releaseOutputPath, versionInfo, config.getResourceName(), nozip);
                 var compressJson = new CompressJsonCMD();
                 compressJson.initOptions({
                     "--source": releaseOutputPath
