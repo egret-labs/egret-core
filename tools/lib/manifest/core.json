@@ -124,8 +124,8 @@
         "extension/game/display/ScrollView.ts",
         "extension/game/display/ScrollViewProperties.ts",
 
-        "extension/game/tween/Tween.ts",
-        "extension/game/tween/Ease.ts",
+        "extension/tween/Tween.ts",
+        "extension/tween/Ease.ts",
 
         "extension/game/net/URLRequestMethod.ts",
         "extension/game/net/URLLoaderDataFormat.ts",
