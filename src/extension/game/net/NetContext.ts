@@ -45,6 +45,7 @@ module egret {
          */
         proceed(loader:URLLoader):void;
 
+        initVersion(ctr:VersionController):void;
     }
 
     /**

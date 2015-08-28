@@ -4,7 +4,6 @@
     "output": "core/extension/version",
     "source": "src/extension/version",
     "file_list": [
-        "IVersionController.ts",
         "DefaultLoadingView.ts",
         "ILoadingView.ts",
         "Html5VersionController.ts"

@@ -44,10 +44,18 @@ class PublishNativeCommand implements egret.Command {
 
         var task = [];
 
+        var nozip = params.hasOption("-nozip");
+        var needCompile = params.hasOption("-compile") || params.hasOption("-compiler");
+        //修改文件
+        var fileModify = new FileAutoChangeCommand();
+        fileModify.needCompile = needCompile;
+        fileModify.debug = nozip;
+        fileModify.versonCtrClassName = versionCtr.getClassName();
+        fileModify.execute();
+
         //js文件
         //获取gamelist以及egretlist
         var file_list = config.getAllFileList("native");
-        var needCompile = params.hasOption("-compile") || params.hasOption("-compiler");
         if (needCompile) {//压缩js文件，并拷贝到ziptemp目录中
             task.push((tempCallback)=> {
                 var adapt = new CompileFilesCMD();
@@ -98,19 +106,11 @@ class PublishNativeCommand implements egret.Command {
             });
         }
 
-        var nozip = params.hasOption("-nozip");
         if (true) {//拷贝其他需要打到zip包里的文件
             task.push(function (tempCallback) {
                 //拷贝需要zip的文件
                 //拷贝版本控制文件
                 versionCtr.copyZipManifest(releasePath, ziptempPath);
-
-                //修改文件
-                var fileModify = new FileAutoChangeCommand();
-                fileModify.needCompile = needCompile;
-                fileModify.debug = nozip;
-                fileModify.versonCtrClassName = versionCtr.getClassName();
-                fileModify.execute();
 
                 file.copy(file.join(projectPath, "launcher", "native_loader.js"), file.join(ziptempPath, "launcher", "native_loader.js"));
                 file.copy(file.join(projectPath, "launcher", "runtime_loader.js"), file.join(ziptempPath, "launcher", "runtime_loader.js"));
@@ -153,7 +153,7 @@ class PublishNativeCommand implements egret.Command {
 
                 //获取已经筛选过的资源列表
                 var versionInfo = JSON.parse(file.read(file.join(releasePath, "nativeBase", "all.manifest")));
-                versionCtr.copyFilesWithIgnore(projectPath, releaseOutputPath, versionInfo, config.getResourceName());
+                versionCtr.copyFilesWithIgnore(projectPath, releaseOutputPath, versionInfo, config.getResourceName(), nozip);
 
                 var compressJson = new CompressJsonCMD();
                 compressJson.initOptions({

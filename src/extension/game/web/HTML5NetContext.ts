@@ -44,6 +44,10 @@ module egret.web {
             super();
         }
 
+        initVersion(ctr:VersionController):void {
+
+        }
+
         /**
          * @private
          *

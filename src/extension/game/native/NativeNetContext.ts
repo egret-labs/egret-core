@@ -44,6 +44,11 @@ module egret.native {
 
         private urlData:any = {};
 
+        private _versionCtr:VersionController;
+        initVersion(ctr:VersionController):void {
+            this._versionCtr = ctr;
+        }
+
         /**
          * @method egret.HTML5NetContext#proceed
          * @param loader {URLLoader}
@@ -207,7 +212,7 @@ module egret.native {
 
                 loader.data = texture;
 
-                window.setTimeout(function() {
+                egret.$callAsync(function() {
                     loader.dispatchEventWith(Event.COMPLETE);
                 }, self);
             }
@@ -234,7 +239,22 @@ module egret.native {
          * @returns {string}
          */
         public getVirtualUrl(url:string):string {
+            if (this._versionCtr) {
+                return this._versionCtr.getVirtualUrl(url);
+            }
             return url;
+        }
+
+        /**
+         * 获取变化列表
+         * @deprecated
+         * @returns {any}
+         */
+        public getChangeList():Array<any> {
+            if (this._versionCtr) {
+                return this._versionCtr.getChangeList();
+            }
+            return [];
         }
 
         static _instance:NativeNetContext;

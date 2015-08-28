@@ -127,6 +127,7 @@
         "extension/tween/Tween.ts",
         "extension/tween/Ease.ts",
 
+        "extension/game/net/IVersionController.ts",
         "extension/game/net/URLRequestMethod.ts",
         "extension/game/net/URLLoaderDataFormat.ts",
         "extension/game/net/URLVariables.ts",
