@@ -19,6 +19,11 @@
         "egret/web/WebXML.ts",
         "egret/web/WebHideHandler.ts",
 
+
+        "egret/sensor/web/WebGeolocation.ts",
+        "egret/sensor/web/WebMotion.ts",
+        "egret/sensor/web/WebOrientation.ts",
+
         "egret/media/web/QQSound.ts",
         "egret/media/web/QQSoundChannel.ts",
         "egret/media/web/WebAudioSound.ts",
