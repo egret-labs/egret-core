@@ -13,7 +13,7 @@ var UpgradeCommand = (function () {
             { "v": "1.5.2", "command": require("./upgrade/UpgradeCommand_1_5_2") },
             { "v": "1.5.5", "command": require("./upgrade/UpgradeCommand_1_5_5") },
             { "v": "1.7.3", "command": require("./upgrade/UpgradeCommand_1_7_3") },
-            { "v": "2.4.1" }
+            { "v": "2.4.2", "command": require("./upgrade/UpgradeCommand_2_4_2") }
         ];
     }
     UpgradeCommand.prototype.execute = function () {
@@ -32,7 +32,7 @@ var UpgradeCommand = (function () {
         for (var i = 0; i < this.upgradeConfigArr.length; i++) {
             var info = this.upgradeConfigArr[i];
             var v = info["v"];
-            var command = info["command"];
+            var command = new info["command"]();
             var result = globals.compressVersion(version, v);
             if (result < 0) {
                 globals.log(1704, v);
