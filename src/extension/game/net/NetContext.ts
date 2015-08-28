@@ -44,8 +44,6 @@ module egret {
          * @platform Web,Native
          */
         proceed(loader:URLLoader):void;
-
-        initVersion(ctr:VersionController):void;
     }
 
     /**
