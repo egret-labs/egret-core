@@ -13,8 +13,6 @@
         "egret/localStorage/native/NativeLocalStorage.ts",
         "egret/external/native/NativeExternalInterface.ts",
 
-        "extension/version/NativeVersionController.ts",
-
         "egret/native/NativeHideHandler.ts",
         "egret/native/NativeTouchHandler.ts",
 
