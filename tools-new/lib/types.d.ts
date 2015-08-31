@@ -220,6 +220,11 @@ declare module egret {
         description?: string;
         declaration?: boolean;
     }
+
+    export interface IEXMLHandler {
+        compile(): number;
+        compileSingle(path: string): number;
+    }
 }
 
 declare var DEBUG: boolean;

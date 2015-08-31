@@ -1,108 +1,93 @@
 {
-	"eumn":
-	{
-		"lark.BlendMode":["normal","add","erase"],
-		"lark.DisplayObject":
-		{
-			"blendMode":"lark.BlendMode"
-		},
-		"lark.HorizontalAlign":["left","right","center"],
-		"lark.TextField":
-		{
-			"textAlign":"lark.HorizontalAlign",
-			"verticalAlign":"lark.VerticalAlign"
-		},
-		"lark.VerticalAlign":["top","bottom","middle"],
-		"swan.BitmapFillMode":["repeat","scale","clip"],
-		"swan.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
-		"swan.Direction":["ltr","rtl","ttb","btt"],
-		"swan.Image":
-		{
-			"fillMode":"swan.BitmapFillMode"
-		},
-		"swan.LayoutHorizontalAlign":["left","right","center","justify","contentJustify"],
-		"swan.LayoutVerticalAlign":["top","bottom","middle","justify","contentJustify"],
-		"swan.LinearLayoutBase":
-		{
-			"horizontalAlign":"swan.LayoutHorizontalAlign",
-			"verticalAlign":"swan.LayoutVerticalAlign"
-		},
-		"swan.ProgressBar":
-		{
-			"direction":"swan.Direction"
-		},
-		"swan.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
-		"swan.ScrollPolicy":["auto","off","on"],
-		"swan.Scroller":
-		{
-			"scrollPolicyH":"swan.ScrollPolicy",
-			"scrollPolicyV":"swan.ScrollPolicy"
-		},
-		"swan.TileLayout":
-		{
-			"columnAlign":"swan.ColumnAlign",
-			"horizontalAlign":"swan.LayoutHorizontalAlign",
-			"orientation":"swan.TileOrientation",
-			"rowAlign":"swan.RowAlign",
-			"verticalAlign":"swan.LayoutVerticalAlign"
-		},
-		"swan.TileOrientation":["rows","columns"]
-	},
 	"lark.Bitmap":
 	{
-		"bitmapData":"any",
-		"pixelHitTest":"boolean",
-		"smoothing":"boolean",
-		"super":"lark.DisplayObject"
+		"fillMode":"string",
+		"scale9Grid":"lark.Rectangle",
+		"super":"lark.DisplayObject",
+		"texture":"lark.Texture"
+	},
+	"lark.BitmapFont":
+	{
+		"super":"lark.SpriteSheet"
+	},
+	"lark.BitmapText":
+	{
+		"font":"lark.BitmapFont",
+		"super":"lark.DisplayObject",
+		"text":"string"
+	},
+	"lark.BitmapTextSpriteSheet":
+	{
+		"super":"lark.BitmapFont"
+	},
+	"lark.BlurFilter":
+	{
+		"blurX":"number",
+		"super":"lark.Filter"
+	},
+	"lark.ByteArray":
+	{
+		"buffer":"ArrayBuffer",
+		"dataView":"DataView",
+		"endian":"string",
+		"length":"number",
+		"position":"number"
+	},
+	"lark.ColorTransform":
+	{
+		"matrix":"Array"
 	},
 	"lark.DisplayObject":
 	{
 		"alpha":"number",
+		"anchorOffsetX":"number",
+		"anchorOffsetY":"number",
+		"anchorX":"number",
+		"anchorY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
+		"colorTransform":"lark.ColorTransform",
+		"filter":"lark.Filter",
 		"height":"number",
-		"implements":["sys.Renderable"],
-		"mask":"lark.DisplayObject",
-		"matrix":"lark.Matrix",
+		"implements":["lark.RenderData"],
+		"mask":"lark.Rectangle",
 		"name":"string",
+		"needDraw":"boolean",
 		"rotation":"number",
 		"scaleX":"number",
 		"scaleY":"number",
 		"scrollRect":"lark.Rectangle",
-		"super":"lark.EventEmitter",
+		"skewX":"number",
+		"skewY":"number",
+		"super":"lark.EventDispatcher",
 		"touchEnabled":"boolean",
 		"visible":"boolean",
 		"width":"number",
+		"worldAlpha":"number",
 		"x":"number",
 		"y":"number"
 	},
-	"lark.Event":
+	"lark.DisplayObjectContainer":
 	{
-		"data":"any",
+		"super":"lark.DisplayObject",
+		"touchChildren":"boolean"
+	},
+	"lark.EventDispatcher":
+	{
+		"implements":["lark.IEventDispatcher"],
 		"super":"lark.HashObject"
 	},
-	"lark.EventEmitter":
+	"lark.Filter":
 	{
-		"implements":["lark.IEventEmitter"],
-		"super":"lark.HashObject"
+		"type":"string"
 	},
-	"lark.GeolocationEvent":
+	"lark.HTML5StageText":
 	{
-		"super":"lark.Event"
-	},
-	"lark.Graphics":
-	{
-		"fillStyle":"any",
-		"lineCap":"string",
-		"lineJoin":"string",
-		"lineWidth":"number",
-		"miterLimit":"number",
-		"strokeStyle":"any",
-		"super":"lark.HashObject"
+		"super":"lark.StageText"
 	},
 	"lark.HashObject":
 	{
-		
+		"implements":["lark.IHashObject"]
 	},
 	"lark.Matrix":
 	{
@@ -114,16 +99,33 @@
 		"tx":"number",
 		"ty":"number"
 	},
-	"lark.MotionEvent":
+	"lark.MovieClip":
 	{
-		"super":"lark.Event"
+		"frameRate":"number",
+		"movieClipData":"lark.MovieClipData",
+		"super":"lark.DisplayObject"
 	},
-	"lark.OrientationEvent":
+	"lark.MovieClipData":
 	{
-		"alpha":"number",
-		"beta":"number",
-		"gamma":"number",
-		"super":"lark.Event"
+		"frameRate":"number",
+		"frames":"any",
+		"labels":"any",
+		"mcData":"lark.MovieClipData",
+		"numFrames":"number",
+		"spriteSheet":"lark.SpriteSheet",
+		"super":"lark.HashObject",
+		"textureData":"any"
+	},
+	"lark.MovieClipDataFactory":
+	{
+		"enableCache":"boolean",
+		"mcDataSet":"any",
+		"super":"lark.EventDispatcher",
+		"texture":"lark.Texture"
+	},
+	"lark.NativeStageText":
+	{
+		"super":"lark.StageText"
 	},
 	"lark.Point":
 	{
@@ -131,23 +133,20 @@
 		"x":"number",
 		"y":"number"
 	},
-	"lark.ProgressEvent":
-	{
-		"bytesLoaded":"number",
-		"bytesTotal":"number",
-		"super":"lark.Event"
-	},
 	"lark.Rectangle":
 	{
 		"bottom":"number",
 		"height":"number",
-		"left":"number",
 		"right":"number",
 		"super":"lark.HashObject",
-		"top":"number",
 		"width":"number",
 		"x":"number",
 		"y":"number"
+	},
+	"lark.RenderCommand":
+	{
+		"callback":"any",
+		"thisObject":"any"
 	},
 	"lark.Shape":
 	{
@@ -155,395 +154,659 @@
 	},
 	"lark.Sprite":
 	{
-		"implements":["lark.DisplayObjectContainer"],
-		"super":"lark.DisplayObject",
-		"touchChildren":"boolean"
+		"super":"lark.DisplayObjectContainer"
 	},
-	"lark.Stage":
+	"lark.SpriteSheet":
 	{
-		"frameRate":"number",
-		"highResolutionMode":"string",
-		"scaleMode":"string",
-		"super":"lark.Sprite"
+		"super":"lark.HashObject"
+	},
+	"lark.StageText":
+	{
+		"super":"lark.EventDispatcher"
 	},
 	"lark.TextField":
 	{
 		"bold":"boolean",
+		"displayAsPassword":"boolean",
 		"fontFamily":"string",
-		"fontSize":"number",
 		"italic":"boolean",
 		"lineSpacing":"number",
+		"maxChars":"number",
+		"maxWidth":"any",
+		"multiline":"boolean",
+		"scrollV":"number",
+		"size":"number",
+		"stroke":"number",
+		"strokeColor":"number",
 		"super":"lark.DisplayObject",
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
-		"verticalAlign":"string",
-		"wordWrap":"boolean"
-	},
-	"lark.TextInput":
-	{
-		"displayAsPassword":"boolean",
-		"maxChars":"number",
-		"super":"lark.TextField"
+		"textFlow":"Array",
+		"type":"string",
+		"verticalAlign":"string"
 	},
 	"lark.Texture":
 	{
 		"super":"lark.HashObject"
 	},
-	"lark.Timer":
+	"lark.gui.AddItems":
 	{
-		"delay":"number",
-		"repeatCount":"number",
-		"super":"lark.EventEmitter"
-	},
-	"lark.TimerEvent":
-	{
-		"super":"lark.Event"
-	},
-	"lark.TouchEvent":
-	{
-		"super":"lark.Event",
-		"touchPointID":"number"
-	},
-	"styles":
-	{
-		
-	},
-	"swan.AddItems":
-	{
-		"implements":["swan.IOverride"],
-		"position":"number",
+		"position":"string",
 		"propertyName":"string",
 		"relativeTo":"string",
+		"super":"lark.gui.OverrideBase",
 		"target":"string"
 	},
-	"swan.ArrayCollection":
+	"lark.gui.Alert":
 	{
-		"implements":["swan.ICollection"],
+		"contentDisplay":"lark.gui.IDisplayText",
+		"contentText":"string",
+		"firstButton":"lark.gui.Button",
+		"firstButtonLabel":"string",
+		"secondButton":"lark.gui.Button",
+		"secondButtonLabel":"string",
+		"super":"lark.gui.TitleWindow"
+	},
+	"lark.gui.Animate":
+	{
+		"disableLayout":"boolean",
+		"easer":"lark.gui.IEaser",
+		"interpolator":"lark.gui.IInterpolator",
+		"motionPaths":"Array",
+		"repeatBehavior":"string",
+		"super":"lark.gui.Effect"
+	},
+	"lark.gui.AnimateInstance":
+	{
+		"animation":"lark.gui.Animation",
+		"autoRemoveTarget":"boolean",
+		"disableLayout":"boolean",
+		"easer":"lark.gui.IEaser",
+		"interpolator":"lark.gui.IInterpolator",
+		"motionPaths":"Array",
+		"repeatBehavior":"string",
+		"super":"lark.gui.EffectInstance"
+	},
+	"lark.gui.AnimateTransform":
+	{
+		"autoCenterTransform":"boolean",
+		"super":"lark.gui.Animate",
+		"transformX":"number",
+		"transformY":"number"
+	},
+	"lark.gui.AnimateTransformInstance":
+	{
+		"autoCenterTransform":"boolean",
+		"initialized":"boolean",
+		"super":"lark.gui.AnimateInstance",
+		"transformCenter":"lark.Point"
+	},
+	"lark.gui.ArrayCollection":
+	{
+		"implements":["lark.gui.ICollection"],
 		"source":"Array",
-		"super":"lark.EventEmitter"
+		"super":"lark.EventDispatcher"
 	},
-	"swan.BasicLayout":
+	"lark.gui.BasicLayout":
 	{
-		"super":"swan.LayoutBase"
+		"mouseWheelSpeed":"number",
+		"super":"lark.gui.LayoutBase"
 	},
-	"swan.Button":
+	"lark.gui.BitmapLabel":
 	{
-		"icon":"any",
-		"iconDisplay":"swan.Image",
-		"label":"string",
-		"labelDisplay":"swan.IDisplayText",
-		"super":"swan.Component"
-	},
-	"swan.CheckBox":
-	{
-		"super":"swan.ToggleButton"
-	},
-	"swan.CollectionEvent":
-	{
-		"items":"Array",
-		"kind":"string",
-		"location":"number",
-		"oldItems":"Array",
-		"oldLocation":"number",
-		"super":"lark.Event"
-	},
-	"swan.Component":
-	{
-		"bottom":"number",
-		"currentState":"string",
-		"enabled":"boolean",
-		"horizontalCenter":"number",
-		"hostComponentKey":"string",
-		"implements":["swan.UIComponent"],
-		"includeInLayout":"boolean",
-		"left":"number",
-		"maxHeight":"number",
-		"maxWidth":"number",
-		"minHeight":"number",
-		"minWidth":"number",
-		"percentHeight":"number",
-		"percentWidth":"number",
-		"right":"number",
-		"skinName":"any",
-		"super":"lark.Sprite",
-		"top":"number",
-		"verticalCenter":"number"
-	},
-	"swan.DataGroup":
-	{
-		"dataProvider":"swan.ICollection",
-		"itemRenderer":"any",
-		"itemRendererFunction":"Function",
-		"super":"swan.Group",
-		"useVirtualLayout":"boolean"
-	},
-	"swan.DefaultAssetAdapter":
-	{
-		"implements":["swan.IAssetAdapter"]
-	},
-	"swan.EditableText":
-	{
-		"bottom":"number",
-		"horizontalCenter":"number",
-		"implements":["swan.UIComponent","swan.IDisplayText"],
-		"includeInLayout":"boolean",
-		"left":"number",
-		"maxHeight":"number",
-		"maxWidth":"number",
-		"minHeight":"number",
-		"minWidth":"number",
-		"percentHeight":"number",
-		"percentWidth":"number",
-		"right":"number",
-		"super":"lark.TextInput",
-		"top":"number",
-		"verticalCenter":"number"
-	},
-	"swan.Group":
-	{
-		"bottom":"number",
-		"currentState":"string",
-		"elementsContent":"Array",
-		"horizontalCenter":"number",
-		"implements":["swan.IViewport"],
-		"includeInLayout":"boolean",
-		"layout":"swan.LayoutBase",
-		"left":"number",
-		"maxHeight":"number",
-		"maxWidth":"number",
-		"minHeight":"number",
-		"minWidth":"number",
-		"percentHeight":"number",
-		"percentWidth":"number",
-		"right":"number",
-		"scrollEnabled":"boolean",
-		"scrollH":"number",
-		"scrollV":"number",
-		"states":"Array",
-		"super":"lark.Sprite",
-		"top":"number",
-		"touchThrough":"boolean",
-		"verticalCenter":"number"
-	},
-	"swan.HScrollBar":
-	{
-		"super":"swan.ScrollBarBase"
-	},
-	"swan.HSlider":
-	{
-		"super":"swan.SliderBase"
-	},
-	"swan.HorizontalLayout":
-	{
-		"super":"swan.LinearLayoutBase"
-	},
-	"swan.Image":
-	{
-		"bottom":"number",
-		"fillMode":"string",
-		"horizontalCenter":"number",
-		"implements":["swan.UIComponent"],
-		"includeInLayout":"boolean",
-		"left":"number",
-		"maxHeight":"number",
-		"maxWidth":"number",
-		"minHeight":"number",
-		"minWidth":"number",
-		"percentHeight":"number",
-		"percentWidth":"number",
-		"right":"number",
-		"scale9Grid":"lark.Rectangle",
-		"source":"any",
-		"super":"lark.Bitmap",
-		"top":"number",
-		"verticalCenter":"number"
-	},
-	"swan.ItemRenderer":
-	{
-		"data":"any",
-		"implements":["swan.IItemRenderer"],
-		"itemIndex":"number",
-		"selected":"boolean",
-		"super":"swan.Group"
-	},
-	"swan.ItemTapEvent":
-	{
-		"item":"any",
-		"itemIndex":"number",
-		"itemRenderer":"swan.IItemRenderer",
-		"super":"lark.Event"
-	},
-	"swan.Label":
-	{
-		"bottom":"number",
-		"horizontalCenter":"number",
-		"implements":["swan.UIComponent","swan.IDisplayText"],
-		"includeInLayout":"boolean",
-		"left":"number",
-		"maxHeight":"number",
-		"maxWidth":"number",
-		"minHeight":"number",
-		"minWidth":"number",
-		"percentHeight":"number",
-		"percentWidth":"number",
-		"right":"number",
-		"super":"lark.TextField",
-		"top":"number",
-		"verticalCenter":"number"
-	},
-	"swan.LayoutBase":
-	{
-		"super":"lark.EventEmitter",
-		"target":"swan.Group",
-		"useVirtualLayout":"boolean"
-	},
-	"swan.LinearLayoutBase":
-	{
-		"gap":"number",
-		"horizontalAlign":"string",
+		"font":"any",
+		"implements":["lark.gui.IDisplayText"],
+		"padding":"number",
 		"paddingBottom":"number",
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
-		"super":"swan.LayoutBase",
+		"super":"lark.gui.UIComponent",
+		"text":"string"
+	},
+	"lark.gui.Bounce":
+	{
+		"implements":["lark.gui.IEaser"]
+	},
+	"lark.gui.Button":
+	{
+		"icon":"any",
+		"iconDisplay":"lark.gui.UIAsset",
+		"super":"lark.gui.ButtonBase"
+	},
+	"lark.gui.ButtonBase":
+	{
+		"autoRepeat":"boolean",
+		"hovered":"boolean",
+		"label":"string",
+		"labelDisplay":"lark.gui.IDisplayText",
+		"mouseCaptured":"boolean",
+		"repeatDelay":"number",
+		"repeatInterval":"number",
+		"stickyHighlighting":"boolean",
+		"super":"lark.gui.SkinnableComponent"
+	},
+	"lark.gui.ButtonSkin":
+	{
+		"iconDisplay":"lark.gui.UIAsset",
+		"labelDisplay":"lark.gui.Label",
+		"super":"lark.gui.Skin"
+	},
+	"lark.gui.CheckBox":
+	{
+		"super":"lark.gui.ToggleButtonBase"
+	},
+	"lark.gui.ClassFactory":
+	{
+		"generator":"any",
+		"implements":["lark.gui.IFactory"],
+		"super":"lark.HashObject"
+	},
+	"lark.gui.CompositeEffect":
+	{
+		"children":"Array",
+		"super":"lark.gui.Effect"
+	},
+	"lark.gui.CompositeEffectInstance":
+	{
+		"activeEffectQueue":"Array",
+		"childSets":"Array",
+		"endEffectCalled":"boolean",
+		"super":"lark.gui.EffectInstance",
+		"timerAnimation":"lark.gui.Animation"
+	},
+	"lark.gui.DataGroup":
+	{
+		"dataProvider":"lark.gui.ICollection",
+		"itemRenderer":"lark.gui.IFactory",
+		"itemRendererFunction":"Function",
+		"itemRendererSkinName":"Class",
+		"super":"lark.gui.GroupBase"
+	},
+	"lark.gui.DropDownList":
+	{
+		"labelDisplay":"lark.gui.IDisplayText",
+		"prompt":"string",
+		"super":"lark.gui.DropDownListBase"
+	},
+	"lark.gui.DropDownListBase":
+	{
+		"dropDown":"lark.DisplayObject",
+		"dropDownController":"lark.gui.DropDownController",
+		"openButton":"lark.gui.ButtonBase",
+		"super":"lark.gui.List"
+	},
+	"lark.gui.EaseInOutBase":
+	{
+		"easeInFraction":"number",
+		"implements":["lark.gui.IEaser"]
+	},
+	"lark.gui.EditableText":
+	{
+		"clipAndEnableScrolling":"boolean",
+		"displayAsPassword":"boolean",
+		"editable":"boolean",
+		"heightInLines":"number",
+		"horizontalScrollPosition":"number",
+		"implements":["lark.gui.IEditableText","lark.gui.IDisplayText","lark.gui.IViewport"],
+		"maxChars":"number",
+		"multiline":"boolean",
+		"restrict":"string",
+		"selectable":"boolean",
+		"super":"lark.gui.TextBase",
+		"verticalScrollPosition":"number",
+		"widthInChars":"number"
+	},
+	"lark.gui.Effect":
+	{
+		"duration":"number",
+		"durationExplicitlySet":"boolean",
+		"implements":["lark.gui.IEffect"],
+		"instanceClass":"any",
+		"parentCompositeEffect":"lark.gui.Effect",
+		"perElementOffset":"number",
+		"playReversed":"boolean",
+		"playheadTime":"number",
+		"repeatCount":"number",
+		"repeatDelay":"number",
+		"startDelay":"number",
+		"super":"lark.EventDispatcher",
+		"target":"any",
+		"targets":"Array"
+	},
+	"lark.gui.EffectInstance":
+	{
+		"delayTimer":"lark.Timer",
+		"duration":"number",
+		"durationExplicitlySet":"boolean",
+		"effect":"lark.gui.IEffect",
+		"implements":["lark.gui.IEffectInstance"],
+		"parentCompositeEffectInstance":"lark.gui.EffectInstance",
+		"playCount":"number",
+		"playReversed":"boolean",
+		"playheadTime":"number",
+		"repeatCount":"number",
+		"repeatDelay":"number",
+		"startDelay":"number",
+		"stopRepeat":"boolean",
+		"super":"lark.EventDispatcher",
+		"target":"any"
+	},
+	"lark.gui.Elastic":
+	{
+		"implements":["lark.gui.IEaser"]
+	},
+	"lark.gui.Fade":
+	{
+		"alphaFrom":"number",
+		"alphaTo":"number",
+		"super":"lark.gui.Animate"
+	},
+	"lark.gui.FadeInstance":
+	{
+		"alphaFrom":"number",
+		"alphaTo":"number",
+		"super":"lark.gui.AnimateInstance"
+	},
+	"lark.gui.Group":
+	{
+		"elementsContent":"Array",
+		"implements":["lark.gui.IVisualElementContainer"],
+		"super":"lark.gui.GroupBase"
+	},
+	"lark.gui.GroupBase":
+	{
+		"clipAndEnableScrolling":"boolean",
+		"horizontalScrollPosition":"number",
+		"implements":["lark.gui.IViewport"],
+		"layout":"lark.gui.LayoutBase",
+		"super":"lark.gui.UIComponent",
+		"verticalScrollPosition":"number"
+	},
+	"lark.gui.HScrollBar":
+	{
+		"super":"lark.gui.HSlider",
+		"thumbAlpha":"number",
+		"trackAlpha":"number"
+	},
+	"lark.gui.HSlider":
+	{
+		"super":"lark.gui.SliderBase"
+	},
+	"lark.gui.HorizontalLayout":
+	{
+		"gap":"number",
+		"horizontalAlign":"string",
+		"padding":"number",
+		"paddingBottom":"number",
+		"paddingLeft":"number",
+		"paddingRight":"number",
+		"paddingTop":"number",
+		"super":"lark.gui.LayoutBase",
 		"verticalAlign":"string"
 	},
-	"swan.List":
+	"lark.gui.ItemRenderer":
+	{
+		"data":"any",
+		"implements":["lark.gui.IItemRenderer"],
+		"itemIndex":"number",
+		"selected":"boolean",
+		"super":"lark.gui.ButtonBase"
+	},
+	"lark.gui.Keyframe":
+	{
+		"easer":"lark.gui.IEaser",
+		"time":"number",
+		"timeFraction":"number",
+		"value":"any",
+		"valueBy":"any"
+	},
+	"lark.gui.Label":
+	{
+		"maxDisplayedLines":"number",
+		"padding":"number",
+		"paddingBottom":"number",
+		"paddingLeft":"number",
+		"paddingRight":"number",
+		"paddingTop":"number",
+		"stroke":"number",
+		"strokeColor":"number",
+		"super":"lark.gui.TextBase"
+	},
+	"lark.gui.LayoutBase":
+	{
+		"super":"lark.EventDispatcher",
+		"target":"lark.gui.GroupBase",
+		"typicalLayoutRect":"lark.Rectangle",
+		"useVirtualLayout":"boolean"
+	},
+	"lark.gui.Linear":
+	{
+		"easeInFraction":"number",
+		"easeOutFraction":"number",
+		"implements":["lark.gui.IEaser"]
+	},
+	"lark.gui.List":
 	{
 		"allowMultipleSelection":"boolean",
 		"selectedIndices":"Array",
 		"selectedItems":"Array",
-		"super":"swan.ListBase"
+		"super":"lark.gui.ListBase"
 	},
-	"swan.ListBase":
+	"lark.gui.ListBase":
 	{
+		"labelField":"string",
+		"labelFunction":"Function",
 		"requireSelection":"boolean",
 		"selectedIndex":"number",
 		"selectedItem":"any",
-		"super":"swan.DataGroup"
+		"super":"lark.gui.SkinnableDataContainer",
+		"useVirtualLayout":"boolean"
 	},
-	"swan.Panel":
+	"lark.gui.MotionPath":
 	{
-		"closeButton":"swan.Button",
-		"elementsContent":"Array",
-		"moveArea":"lark.DisplayObject",
-		"super":"swan.Component",
-		"title":"string",
-		"titleDisplay":"swan.IDisplayText"
+		"interpolator":"lark.gui.IInterpolator",
+		"keyframes":"Array",
+		"property":"string"
 	},
-	"swan.ProgressBar":
+	"lark.gui.Move":
+	{
+		"super":"lark.gui.AnimateTransform",
+		"xBy":"number",
+		"xFrom":"number",
+		"xTo":"number",
+		"yBy":"number",
+		"yFrom":"number",
+		"yTo":"number"
+	},
+	"lark.gui.NumberInterpolator":
+	{
+		"implements":["lark.gui.IInterpolator"]
+	},
+	"lark.gui.ObjectCollection":
+	{
+		"implements":["lark.gui.ICollection","lark.gui.ITreeCollection"],
+		"openNodes":"Array",
+		"showRoot":"boolean",
+		"source":"any",
+		"super":"lark.EventDispatcher"
+	},
+	"lark.gui.OverrideBase":
+	{
+		"implements":["lark.gui.IOverride"],
+		"super":"lark.HashObject"
+	},
+	"lark.gui.Panel":
+	{
+		"super":"lark.gui.SkinnableContainer",
+		"title":"string",
+		"titleDisplay":"lark.gui.IDisplayText"
+	},
+	"lark.gui.Parallel":
+	{
+		"super":"lark.gui.CompositeEffect"
+	},
+	"lark.gui.ParallelInstance":
+	{
+		"super":"lark.gui.CompositeEffectInstance"
+	},
+	"lark.gui.PopUpAnchor":
+	{
+		"closeDuration":"number",
+		"displayPopUp":"boolean",
+		"openDuration":"number",
+		"popUp":"lark.gui.IVisualElement",
+		"popUpHeightMatchesAnchorHeight":"boolean",
+		"popUpPosition":"string",
+		"popUpWidthMatchesAnchorWidth":"boolean",
+		"super":"lark.gui.UIComponent"
+	},
+	"lark.gui.Power":
+	{
+		"exponent":"number",
+		"super":"lark.gui.EaseInOutBase"
+	},
+	"lark.gui.ProgressBar":
 	{
 		"direction":"string",
-		"labelDisplay":"swan.Label",
+		"labelDisplay":"lark.gui.Label",
 		"labelFunction":"Function",
 		"slideDuration":"number",
-		"super":"swan.Range",
-		"thumb":"swan.UIComponent"
+		"super":"lark.gui.Range",
+		"thumb":"lark.DisplayObject",
+		"track":"lark.DisplayObject"
 	},
-	"swan.PropertyEvent":
+	"lark.gui.RadioButton":
 	{
-		"property":"string",
-		"super":"lark.Event"
-	},
-	"swan.RadioButton":
-	{
-		"group":"swan.RadioButtonGroup",
+		"group":"lark.gui.RadioButtonGroup",
 		"groupName":"string",
-		"super":"swan.ToggleButton",
+		"super":"lark.gui.ToggleButtonBase",
 		"value":"any"
 	},
-	"swan.RadioButtonGroup":
+	"lark.gui.RadioButtonGroup":
 	{
 		"enabled":"boolean",
 		"selectedValue":"any",
-		"selection":"swan.RadioButton",
-		"super":"lark.EventEmitter"
+		"selection":"lark.gui.RadioButton",
+		"super":"lark.EventDispatcher"
 	},
-	"swan.Range":
+	"lark.gui.Range":
 	{
 		"maximum":"number",
 		"minimum":"number",
 		"snapInterval":"number",
-		"super":"swan.Component",
+		"stepSize":"number",
+		"super":"lark.gui.SkinnableComponent",
 		"value":"number"
 	},
-	"swan.ScrollBarBase":
+	"lark.gui.Rect":
 	{
-		"super":"swan.Component",
-		"thumb":"swan.UIComponent",
-		"viewport":"swan.IViewport"
+		"fillAlpha":"number",
+		"fillColor":"number",
+		"strokeAlpha":"number",
+		"strokeColor":"number",
+		"strokeWeight":"number",
+		"super":"lark.gui.UIComponent"
 	},
-	"swan.Scroller":
+	"lark.gui.Rotate":
 	{
-		"horizontalScrollBar":"swan.HScrollBar",
-		"scrollPolicyH":"string",
-		"scrollPolicyV":"string",
-		"super":"swan.Component",
-		"throwSpeed":"number",
-		"verticalScrollBar":"swan.VScrollBar",
-		"viewport":"swan.IViewport"
+		"angleBy":"number",
+		"angleFrom":"number",
+		"angleTo":"number",
+		"super":"lark.gui.AnimateTransform"
 	},
-	"swan.ScrollerThrowEvent":
+	"lark.gui.Scale":
 	{
-		"currentPos":"number",
-		"super":"lark.Event",
-		"toPos":"number"
+		"scaleXBy":"number",
+		"scaleXFrom":"number",
+		"scaleXTo":"number",
+		"scaleYBy":"number",
+		"scaleYFrom":"number",
+		"scaleYTo":"number",
+		"super":"lark.gui.AnimateTransform"
 	},
-	"swan.SetProperty":
+	"lark.gui.Scroller":
 	{
-		"implements":["swan.IOverride"],
+		"autoHideDelay":"number",
+		"autoHideScrollBars":"boolean",
+		"horizontalScrollBar":"lark.gui.HScrollBar",
+		"horizontalScrollPolicy":"string",
+		"implements":["lark.gui.IVisualElementContainer"],
+		"scrollBeginThreshold":"number",
+		"scrollSpeed":"number",
+		"super":"lark.gui.SkinnableComponent",
+		"verticalScrollBar":"lark.gui.VScrollBar",
+		"verticalScrollPolicy":"string",
+		"viewport":"lark.gui.IViewport"
+	},
+	"lark.gui.Sequence":
+	{
+		"super":"lark.gui.CompositeEffect"
+	},
+	"lark.gui.SequenceInstance":
+	{
+		"super":"lark.gui.CompositeEffectInstance"
+	},
+	"lark.gui.SetProperty":
+	{
 		"name":"string",
+		"super":"lark.gui.OverrideBase",
 		"target":"string",
 		"value":"any"
 	},
-	"swan.Skin":
+	"lark.gui.SetStyle":
+	{
+		"name":"string",
+		"super":"lark.gui.OverrideBase",
+		"target":"string",
+		"value":"any"
+	},
+	"lark.gui.SimpleMotionPath":
+	{
+		"super":"lark.gui.MotionPath",
+		"valueBy":"any",
+		"valueFrom":"any",
+		"valueTo":"any"
+	},
+	"lark.gui.Sine":
+	{
+		"super":"lark.gui.EaseInOutBase"
+	},
+	"lark.gui.Skin":
 	{
 		"currentState":"string",
 		"elementsContent":"Array",
 		"height":"number",
-		"hostComponent":"swan.Component",
+		"hostComponent":"lark.gui.SkinnableComponent",
+		"implements":["lark.gui.IStateClient","lark.gui.ISkin","lark.gui.IContainer"],
 		"maxHeight":"number",
 		"maxWidth":"number",
+		"measuredHeight":"number",
+		"measuredWidth":"number",
 		"minHeight":"number",
 		"minWidth":"number",
-		"skinParts":"Array",
 		"states":"Array",
-		"super":"lark.HashObject",
+		"super":"lark.EventDispatcher",
+		"transitions":"Array",
 		"width":"number"
 	},
-	"swan.SliderBase":
+	"lark.gui.SkinBasicLayout":
+	{
+		"super":"lark.HashObject",
+		"target":"lark.gui.Skin"
+	},
+	"lark.gui.SkinnableComponent":
+	{
+		"autoTouchEnabled":"boolean",
+		"hostComponentKey":"string",
+		"implements":["lark.gui.ISkinnableClient"],
+		"skinName":"Class",
+		"super":"lark.gui.UIComponent"
+	},
+	"lark.gui.SkinnableContainer":
+	{
+		"contentGroup":"lark.gui.Group",
+		"elementsContent":"Array",
+		"implements":["lark.gui.IVisualElementContainer"],
+		"layout":"lark.gui.LayoutBase",
+		"super":"lark.gui.SkinnableComponent"
+	},
+	"lark.gui.SkinnableDataContainer":
+	{
+		"dataGroup":"lark.gui.DataGroup",
+		"dataProvider":"lark.gui.ICollection",
+		"implements":["lark.gui.IItemRendererOwner"],
+		"itemRenderer":"lark.gui.IFactory",
+		"itemRendererFunction":"Function",
+		"itemRendererSkinName":"Class",
+		"layout":"lark.gui.LayoutBase",
+		"super":"lark.gui.SkinnableComponent"
+	},
+	"lark.gui.SkinnableTextBase":
+	{
+		"displayAsPassword":"boolean",
+		"editable":"boolean",
+		"focusEnabled":"boolean",
+		"maxChars":"number",
+		"prompt":"string",
+		"promptDisplay":"lark.gui.IDisplayText",
+		"restrict":"string",
+		"selectable":"boolean",
+		"super":"lark.gui.SkinnableComponent",
+		"text":"string",
+		"textColor":"number",
+		"textDisplay":"lark.gui.IEditableText"
+	},
+	"lark.gui.SliderBase":
 	{
 		"liveDragging":"boolean",
 		"pendingValue":"number",
-		"slideDuration":"number",
-		"super":"swan.Range",
-		"thumb":"swan.UIComponent",
-		"track":"swan.UIComponent",
+		"showTrackHighlight":"boolean",
+		"super":"lark.gui.TrackBase",
 		"trackHighlight":"lark.DisplayObject"
 	},
-	"swan.State":
+	"lark.gui.Spacer":
+	{
+		"super":"lark.gui.UIComponent"
+	},
+	"lark.gui.State":
 	{
 		"name":"string",
 		"overrides":"Array",
 		"stateGroups":"Array",
 		"super":"lark.HashObject"
 	},
-	"swan.TabBar":
+	"lark.gui.TabBar":
 	{
-		"super":"swan.ListBase"
+		"super":"lark.gui.List"
 	},
-	"swan.Theme":
+	"lark.gui.TabBarButton":
 	{
-		"super":"lark.EventEmitter"
+		"allowDeselection":"boolean",
+		"data":"any",
+		"implements":["lark.gui.IItemRenderer"],
+		"itemIndex":"number",
+		"super":"lark.gui.ToggleButtonBase"
 	},
-	"swan.TileLayout":
+	"lark.gui.TextArea":
+	{
+		"heightInLines":"number",
+		"horizontalScrollPolicy":"string",
+		"scroller":"lark.gui.Scroller",
+		"super":"lark.gui.SkinnableTextBase",
+		"verticalScrollPolicy":"string",
+		"widthInChars":"number"
+	},
+	"lark.gui.TextBase":
+	{
+		"bold":"boolean",
+		"focusEnabled":"boolean",
+		"fontFamily":"string",
+		"implements":["lark.gui.IDisplayText"],
+		"italic":"boolean",
+		"lineSpacing":"number",
+		"size":"number",
+		"super":"lark.gui.UIComponent",
+		"text":"string",
+		"textAlign":"string",
+		"textColor":"number",
+		"textFlow":"Array",
+		"verticalAlign":"string"
+	},
+	"lark.gui.TextInput":
+	{
+		"super":"lark.gui.SkinnableTextBase",
+		"widthInChars":"number"
+	},
+	"lark.gui.TileLayout":
 	{
 		"columnAlign":"string",
 		"columnWidth":"number",
 		"horizontalAlign":"string",
 		"horizontalGap":"number",
 		"orientation":"string",
+		"padding":"number",
 		"paddingBottom":"number",
 		"paddingLeft":"number",
 		"paddingRight":"number",
@@ -552,44 +815,216 @@
 		"requestedRowCount":"number",
 		"rowAlign":"string",
 		"rowHeight":"number",
-		"super":"swan.LayoutBase",
+		"super":"lark.gui.LayoutBase",
 		"verticalAlign":"string",
 		"verticalGap":"number"
 	},
-	"swan.ToggleButton":
+	"lark.gui.TitleWindow":
+	{
+		"autoBackToStage":"boolean",
+		"closeButton":"lark.gui.Button",
+		"moveArea":"lark.DisplayObject",
+		"showCloseButton":"boolean",
+		"super":"lark.gui.Panel"
+	},
+	"lark.gui.ToggleButton":
+	{
+		"icon":"any",
+		"iconDisplay":"lark.gui.UIAsset",
+		"super":"lark.gui.ToggleButtonBase"
+	},
+	"lark.gui.ToggleButtonBase":
 	{
 		"selected":"boolean",
-		"super":"swan.Button"
+		"super":"lark.gui.ButtonBase"
 	},
-	"swan.ToggleSwitch":
+	"lark.gui.ToggleSwitch":
 	{
-		"super":"swan.ToggleButton"
+		"super":"lark.gui.ToggleButtonBase"
 	},
-	"swan.UIEvent":
+	"lark.gui.TrackBase":
 	{
-		"super":"lark.Event"
+		"slideDuration":"number",
+		"super":"lark.gui.Range",
+		"thumb":"lark.gui.Button",
+		"track":"lark.gui.Button"
 	},
-	"swan.UILayer":
+	"lark.gui.Transition":
 	{
-		"super":"swan.Group"
+		"autoReverse":"boolean",
+		"effect":"lark.gui.IEffect",
+		"fromState":"string",
+		"interruptionBehavior":"string",
+		"toState":"string"
 	},
-	"swan.VScrollBar":
+	"lark.gui.Tree":
 	{
-		"super":"swan.ScrollBarBase"
+		"iconField":"string",
+		"iconFunction":"Function",
+		"super":"lark.gui.List"
 	},
-	"swan.VSlider":
+	"lark.gui.TreeItemRenderer":
 	{
-		"super":"swan.SliderBase"
+		"contentGroup":"lark.DisplayObject",
+		"depth":"number",
+		"disclosureButton":"lark.gui.ToggleButtonBase",
+		"hasChildren":"boolean",
+		"iconDisplay":"lark.gui.UIAsset",
+		"iconSkinName":"any",
+		"implements":["lark.gui.ITreeItemRenderer"],
+		"indentation":"number",
+		"opened":"boolean",
+		"super":"lark.gui.ItemRenderer"
 	},
-	"swan.VerticalLayout":
+	"lark.gui.UIAsset":
 	{
-		"super":"swan.LinearLayoutBase"
+		"autoScale":"boolean",
+		"fillMode":"string",
+		"scale9Grid":"lark.Rectangle",
+		"source":"any",
+		"super":"lark.gui.UIComponent"
 	},
-	"swan.ViewStack":
+	"lark.gui.UIComponent":
 	{
-		"implements":["swan.ICollection"],
-		"selectedChild":"lark.DisplayObject",
+		"bottom":"number",
+		"enabled":"boolean",
+		"horizontalCenter":"number",
+		"id":"string",
+		"implements":["lark.gui.IUIComponent","lark.gui.ILayoutManagerClient","lark.gui.ILayoutElement","lark.gui.IInvalidating","lark.gui.IVisualElement","lark.gui.IStyleClient"],
+		"includeInLayout":"boolean",
+		"initialized":"boolean",
+		"isPopUp":"boolean",
+		"left":"number",
+		"maxHeight":"number",
+		"maxWidth":"number",
+		"measuredHeight":"number",
+		"measuredWidth":"number",
+		"minHeight":"number",
+		"minWidth":"number",
+		"nestLevel":"number",
+		"percentHeight":"number",
+		"percentWidth":"number",
+		"right":"number",
+		"super":"lark.DisplayObjectContainer",
+		"top":"number",
+		"updateCompletePendingFlag":"boolean",
+		"verticalCenter":"number"
+	},
+	"lark.gui.VScrollBar":
+	{
+		"super":"lark.gui.VSlider",
+		"thumbAlpha":"number",
+		"trackAlpha":"number"
+	},
+	"lark.gui.VSlider":
+	{
+		"super":"lark.gui.SliderBase"
+	},
+	"lark.gui.VerticalLayout":
+	{
+		"gap":"number",
+		"horizontalAlign":"string",
+		"padding":"number",
+		"paddingBottom":"number",
+		"paddingLeft":"number",
+		"paddingRight":"number",
+		"paddingTop":"number",
+		"super":"lark.gui.LayoutBase",
+		"verticalAlign":"string"
+	},
+	"lark.gui.ViewStack":
+	{
+		"createAllChildren":"boolean",
+		"implements":["lark.gui.IViewStack","lark.gui.ICollection"],
+		"selectedChild":"lark.gui.IVisualElement",
 		"selectedIndex":"number",
-		"super":"swan.Group"
+		"super":"lark.gui.Group"
+	},
+	"eumn":
+	{
+		"lark.Bitmap":
+		{
+			"fillMode":"lark.BitmapFillMode"
+		},
+		"lark.BitmapFillMode":["repeat","scale"],
+		"lark.BlendMode":["normal","add"],
+		"lark.DisplayObject":
+		{
+			"blendMode":"lark.BlendMode"
+		},
+		"lark.HorizontalAlign":["left","right","center","justify","contentJustify"],
+		"lark.TextField":
+		{
+			"textAlign":"text_textAlign",
+			"verticalAlign":"text_verticalAlign"
+		},
+		"lark.TextFieldType":["dynamic","input"],
+		"lark.VerticalAlign":["top","bottom","middle","justify","contentJustify"],
+		"lark.gui.Animate":
+		{
+			"repeatBehavior":"lark.gui.RepeatBehavior"
+		},
+		"lark.gui.Animation":
+		{
+			"repeatBehavior":"lark.gui.RepeatBehavior"
+		},
+		"lark.gui.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
+		"lark.gui.HorizontalLayout":
+		{
+			"horizontalAlign":"lark.HorizontalAlign",
+			"verticalAlign":"lark.VerticalAlign"
+		},
+		"lark.gui.InterruptionBehavior":["end","stop"],
+		"lark.gui.PopUpAnchor":
+		{
+			"popUpPosition":"lark.gui.PopUpPosition"
+		},
+		"lark.gui.PopUpPosition":["above","below","center","topLeft","left","right"],
+		"lark.gui.ProgressBar":
+		{
+			"direction":"lark.gui.ProgressBarDirection"
+		},
+		"lark.gui.ProgressBarDirection":["leftToRight","rightToLeft","topToBottom","bottomToTop"],
+		"lark.gui.RepeatBehavior":["loop","reverse"],
+		"lark.gui.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
+		"lark.gui.ScrollPolicy":["auto","off","on"],
+		"lark.gui.Scroller":
+		{
+			"horizontalScrollPolicy":"lark.gui.ScrollPolicy",
+			"verticalScrollPolicy":"lark.gui.ScrollPolicy"
+		},
+		"lark.gui.TextBase":
+		{
+			"textAlign":"text_textAlign",
+			"verticalAlign":"text_verticalAlign"
+		},
+		"lark.gui.TileLayout":
+		{
+			"columnAlign":"lark.gui.ColumnAlign",
+			"horizontalAlign":"lark.HorizontalAlign",
+			"orientation":"lark.gui.TileOrientation",
+			"rowAlign":"lark.gui.RowAlign",
+			"verticalAlign":"lark.VerticalAlign"
+		},
+		"lark.gui.TileOrientation":["rows","columns"],
+		"lark.gui.Transition":
+		{
+			"interruptionBehavior":"lark.gui.InterruptionBehavior"
+		},
+		"lark.gui.UIAsset":
+		{
+			"fillMode":"lark.BitmapFillMode"
+		},
+		"lark.gui.VerticalLayout":
+		{
+			"horizontalAlign":"lark.HorizontalAlign",
+			"verticalAlign":"lark.VerticalAlign"
+		},
+		"text_textAlign":["left","right","center"],
+		"text_verticalAlign":["top","bottom","middle"]
+	},
+	"styles":
+	{
+		"lark.gui.TextBase":["bold","fontFamily","italic","size","textAlign","textColor","verticalAlign"]
 	}
 }

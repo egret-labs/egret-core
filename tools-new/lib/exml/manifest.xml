@@ -1,0 +1,82 @@
+<componentPackage>
+  <component id="ArrayCollection" super="lark.EventDispatcher" default="source" show="false" module="lark.gui"/>
+  <component id="BasicLayout" super="lark.gui.LayoutBase" show="false" module="lark.gui"/>
+  <component id="BitmapLabel" super="lark.gui.UIComponent" show="true" module="lark.gui"/>
+  <component id="Button" super="lark.gui.ButtonBase" show="true" module="lark.gui"/>
+  <component id="ButtonBase" super="lark.gui.SkinnableComponent" default="label" state="up,down,disabled" show="false" module="lark.gui"/>
+  <component id="CheckBox" super="lark.gui.ToggleButtonBase" show="true" module="lark.gui"/>
+  <component id="DataGroup" super="lark.gui.GroupBase" default="dataProvider" show="true" module="lark.gui"/>
+  <component id="DropDownList" super="lark.gui.DropDownListBase" show="true" module="lark.gui"/>
+  <component id="DropDownListBase" super="lark.gui.List" state="normal,open,disabled" show="false" module="lark.gui"/>
+  <component id="Group" super="lark.gui.GroupBase" default="elementsContent" show="true" module="lark.gui"/>
+  <component id="GroupBase" super="lark.gui.UIComponent" show="false" module="lark.gui"/>
+  <component id="HSlider" super="lark.gui.SliderBase" show="true" module="lark.gui"/>
+  <component id="HorizontalLayout" super="lark.gui.LayoutBase" show="false" module="lark.gui"/>
+  <component id="ItemRenderer" super="lark.gui.ButtonBase" show="false" module="lark.gui"/>
+  <component id="Label" super="lark.gui.TextBase" show="true" module="lark.gui"/>
+  <component id="LayoutBase" super="lark.EventDispatcher" show="false" module="lark.gui"/>
+  <component id="List" super="lark.gui.ListBase" show="true" module="lark.gui"/>
+  <component id="ListBase" super="lark.gui.SkinnableDataContainer" show="false" module="lark.gui"/>
+  <component id="Matrix" super="Object" show="false" module="lark"/>
+  <component id="ObjectCollection" super="lark.EventDispatcher" default="source" show="false" module="lark.gui"/>
+  <component id="Panel" super="lark.gui.SkinnableContainer" show="true" module="lark.gui"/>
+  <component id="Point" super="Object" show="false" module="lark"/>
+  <component id="PopUpAnchor" super="lark.gui.UIComponent" default="popUp" show="true" module="lark.gui"/>
+  <component id="ProgressBar" super="lark.gui.Range" show="true" module="lark.gui"/>
+  <component id="RadioButton" super="lark.gui.ToggleButtonBase" show="true" module="lark.gui"/>
+  <component id="RadioButtonGroup" super="lark.EventDispatcher" show="false" module="lark.gui"/>
+  <component id="Range" super="lark.gui.SkinnableComponent" show="false" module="lark.gui"/>
+  <component id="Rect" super="lark.gui.UIComponent" show="true" module="lark.gui"/>
+  <component id="Rectangle" super="Object" show="false" module="lark"/>
+  <component id="ViewportScroller" super="lark.ScrollView" show="false" module="lark.gui"/>
+  <component id="Skin" super="lark.EventDispatcher" default="elementsContent" show="false" module="lark.gui"/>
+  <component id="SkinnableComponent" super="lark.gui.UIAsset" state="normal,disabled" show="true" module="lark.gui"/>
+  <component id="SkinnableContainer" super="lark.gui.SkinnableComponent" default="elementsContent" show="true" module="lark.gui"/>
+  <component id="SkinnableDataContainer" super="lark.gui.SkinnableComponent" default="dataProvider" show="true" module="lark.gui"/>
+  <component id="SliderBase" super="lark.gui.TrackBase" show="false" module="lark.gui"/>
+  <component id="Scroller" super="lark.gui.SkinnableComponent" default="viewport" show="true" module="lark.gui"/>
+  <component id="Spacer" super="lark.gui.UIComponent" show="true" module="lark.gui"/>
+  <component id="State" super="lark.EventDispatcher" default="overrides" show="false" module="lark.gui"/>
+  <component id="TabBar" super="lark.gui.ListBase" show="true" module="lark.gui"/>
+  <component id="TabBarButton" super="lark.gui.ToggleButtonBase" show="false" module="lark.gui"/>
+  <component id="TextBase" super="lark.gui.UIComponent" show="false" module="lark.gui"/>
+  <component id="TileLayout" super="lark.gui.LayoutBase" show="false" module="lark.gui"/>
+  <component id="TitleWindow" super="lark.gui.Panel" show="true" module="lark.gui"/>
+  <component id="ToggleButton" super="lark.gui.ToggleButtonBase" show="true" module="lark.gui"/>
+  <component id="ToggleSwitch" super="lark.gui.ToggleButtonBase" show="true" module="lark.gui"/>
+  <component id="ToggleButtonBase" super="lark.gui.ButtonBase" state="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" show="false" module="lark.gui"/>
+  <component id="TrackBase" super="lark.gui.Range" show="false" module="lark.gui"/>
+  <component id="Tree" super="lark.gui.List" show="true" module="lark.gui"/>
+  <component id="TreeItemRenderer" super="lark.gui.ItemRenderer" show="false" module="lark.gui"/>
+  <component id="UIAsset" super="lark.gui.UIComponent" show="true" module="lark.gui"/>
+  <component id="UIComponent" super="lark.DisplayObjectContainer" show="false" module="lark.gui"/>
+  <component id="VSlider" super="lark.gui.SliderBase" show="true" module="lark.gui"/>
+  <component id="VerticalLayout" super="lark.gui.LayoutBase" show="false" module="lark.gui"/>
+  <component id="ViewStack" super="lark.gui.Group" show="true" module="lark.gui"/>
+  <component id="EditableText" super="lark.gui.TextBase" show="true" module="lark.gui"/>
+  <component id="SkinnableTextBase" super="lark.gui.SkinnableComponent" show="false" module="lark.gui"/>
+  <component id="TextArea" super="lark.gui.SkinnableTextBase" show="true" module="lark.gui"/>
+  <component id="TextInput" super="lark.gui.SkinnableTextBase" show="true" module="lark.gui"/>
+  <component id="HScrollBar" super="lark.gui.HSlider" show="true" module="lark.gui"/>
+  <component id="VScrollBar" super="lark.gui.VSlider" show="true" module="lark.gui"/>
+  
+  <!--Effects-->
+  <component id="Animate" super="lark.gui.Effect" default="motionPaths" show="false" module="lark.gui"/>
+  <component id="AnimateTransform" super="lark.gui.Animate" show="false" module="lark.gui"/>
+  <component id="CompositeEffect" super="lark.gui.Effect" default="children" show="false" module="lark.gui"/>
+  <component id="Fade" super="lark.gui.Animate" show="false" module="lark.gui"/>
+  <component id="Keyframe" super="Object" show="false" module="lark.gui"/>
+  <component id="MotionPath" super="Object" default="keyframes" show="false" module="lark.gui"/>
+  <component id="Move" super="lark.gui.AnimateTransform" show="false" module="lark.gui"/>
+  <component id="Parallel" super="lark.gui.CompositeEffect" show="false" module="lark.gui"/>
+  <component id="Rotate" super="lark.gui.Animate" show="false" module="lark.gui"/>
+  <component id="Scale" super="lark.gui.Animate" show="false" module="lark.gui"/>
+  <component id="Sequence" super="lark.gui.CompositeEffect" show="false" module="lark.gui"/>
+  <component id="SimpleMotionPath" super="lark.gui.MotionPath" show="false" module="lark.gui"/>
+  <component id="Transition" super="Object" default="effect" show="false" module="lark.gui"/>
+  <component id="Bounce" super="Object" show="false" module="lark.gui"/>
+  <component id="Elastic" super="Object" show="false" module="lark.gui"/>
+  <component id="Linear" super="Object" show="false" module="lark.gui"/>
+  <component id="Power" super="lark.gui.EaseInOutBase" show="false" module="lark.gui"/>
+  <component id="Sine" super="lark.gui.EaseInOutBase" show="false" module="lark.gui"/>
+</componentPackage>

@@ -1,32 +1,46 @@
 <xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret.com/swan" xmlns="http://ns.egret.com/swan" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://ns.egret-labs.org/manifest">
-  <xs:attributeGroup name="lark.Bitmap">
-    <xs:attributeGroup ref="lark.DisplayObject"/>
-    <xs:attribute name="bitmapData" type="xs:string"/>
-    <xs:attribute name="pixelHitTest" type="xs:boolean"/>
-    <xs:attribute name="smoothing" type="xs:boolean"/>
+  <xs:simpleType name="egret.BitmapFillMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="repeat"/>
+      <xs:enumeration value="scale"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="egret.Bitmap">
+    <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attribute name="fillMode" type="egret.BitmapFillMode"/>
+    <xs:attribute name="scale9Grid" type="xs:string"/>
+    <xs:attribute name="texture" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="any">
+  <xs:group name="string">
     <xs:choice>
-      <xs:any/>
+      <xs:element ref="string"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="any">
-    <xs:group ref="any"/>
+  <xs:complexType name="string">
+    <xs:group ref="string"/>
   </xs:complexType>
-  <xs:group name="boolean">
+  <xs:group name="egret.Rectangle">
     <xs:choice>
-      <xs:element ref="boolean"/>
+      <xs:element ref="Rectangle"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="boolean">
-    <xs:group ref="boolean"/>
+  <xs:complexType name="egret.Rectangle">
+    <xs:group ref="egret.Rectangle"/>
+  </xs:complexType>
+  <xs:group name="egret.Texture">
+    <xs:choice>
+      <xs:element ref="Texture"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.Texture">
+    <xs:group ref="egret.Texture"/>
   </xs:complexType>
   <xs:group name="Bitmap_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObject_attributeElement"/>
-      <xs:element name="bitmapData" type="any"/>
-      <xs:element name="pixelHitTest" type="boolean"/>
-      <xs:element name="smoothing" type="boolean"/>
+      <xs:element name="fillMode" type="string"/>
+      <xs:element name="scale9Grid" type="egret.Rectangle"/>
+      <xs:element name="texture" type="egret.Texture"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Bitmap">
@@ -35,39 +49,76 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Bitmap_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Bitmap"/>
+      <xs:attributeGroup ref="egret.Bitmap"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="lark.BlendMode">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="normal"/>
-      <xs:enumeration value="add"/>
-      <xs:enumeration value="erase"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:attributeGroup name="lark.DisplayObject">
-    <xs:attributeGroup ref="lark.EventEmitter"/>
-    <xs:attribute name="alpha" type="xs:decimal"/>
-    <xs:attribute name="blendMode" type="lark.BlendMode"/>
-    <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
-    <xs:attribute name="class" type="xs:string"/>
-    <xs:attribute name="excludeFrom" type="xs:string"/>
-    <xs:attribute name="height" type="xs:string"/>
-    <xs:attribute name="includeIn" type="xs:string"/>
-    <xs:attribute name="locked" type="xs:boolean"/>
-    <xs:attribute name="mask" type="xs:string"/>
-    <xs:attribute name="matrix" type="xs:string"/>
-    <xs:attribute name="name" type="xs:string"/>
-    <xs:attribute name="rotation" type="xs:decimal"/>
-    <xs:attribute name="scaleX" type="xs:decimal"/>
-    <xs:attribute name="scaleY" type="xs:decimal"/>
-    <xs:attribute name="scrollRect" type="xs:string"/>
-    <xs:attribute name="touchEnabled" type="xs:boolean"/>
-    <xs:attribute name="visible" type="xs:boolean"/>
-    <xs:attribute name="width" type="xs:string"/>
-    <xs:attribute name="x" type="xs:decimal"/>
-    <xs:attribute name="y" type="xs:decimal"/>
-    <xs:anyAttribute processContents="skip"/>
+  <xs:attributeGroup name="egret.BitmapFont">
+    <xs:attributeGroup ref="egret.SpriteSheet"/>
+  </xs:attributeGroup>
+  <xs:group name="BitmapFont_attributeElement">
+    <xs:choice>
+      <xs:group ref="SpriteSheet_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapFont">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapFont_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BitmapFont"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.BitmapText">
+    <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attribute name="font" type="xs:string"/>
+    <xs:attribute name="text" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.BitmapFont">
+    <xs:choice>
+      <xs:element ref="BitmapFont"/>
+      <xs:element ref="BitmapTextSpriteSheet"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.BitmapFont">
+    <xs:group ref="egret.BitmapFont"/>
+  </xs:complexType>
+  <xs:group name="BitmapText_attributeElement">
+    <xs:choice>
+      <xs:group ref="DisplayObject_attributeElement"/>
+      <xs:element name="font" type="egret.BitmapFont"/>
+      <xs:element name="text" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapText">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapText_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BitmapText"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.BitmapTextSpriteSheet">
+    <xs:attributeGroup ref="egret.BitmapFont"/>
+  </xs:attributeGroup>
+  <xs:group name="BitmapTextSpriteSheet_attributeElement">
+    <xs:choice>
+      <xs:group ref="BitmapFont_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapTextSpriteSheet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapTextSpriteSheet_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BitmapTextSpriteSheet"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.BlurFilter">
+    <xs:attributeGroup ref="egret.Filter"/>
+    <xs:attribute name="blurX" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="number">
     <xs:choice>
@@ -77,92 +128,160 @@
   <xs:complexType name="number">
     <xs:group ref="number"/>
   </xs:complexType>
-  <xs:group name="string">
+  <xs:group name="BlurFilter_attributeElement">
     <xs:choice>
-      <xs:element ref="string"/>
+      <xs:group ref="Filter_attributeElement"/>
+      <xs:element name="blurX" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="string">
-    <xs:group ref="string"/>
+  <xs:element name="BlurFilter">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BlurFilter_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.BlurFilter"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.ByteArray">
+    <xs:attribute name="buffer" type="xs:string"/>
+    <xs:attribute name="dataView" type="xs:string"/>
+    <xs:attribute name="endian" type="xs:string"/>
+    <xs:attribute name="length" type="xs:decimal"/>
+    <xs:attribute name="position" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="ArrayBuffer">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="ArrayBuffer">
+    <xs:group ref="ArrayBuffer"/>
   </xs:complexType>
-  <xs:group name="lark.DisplayObject">
-    <xs:choice>
-      <xs:element ref="Bitmap"/>
-      <xs:element ref="Button"/>
-      <xs:element ref="CheckBox"/>
-      <xs:element ref="Component"/>
-      <xs:element ref="DataGroup"/>
-      <xs:element ref="DisplayObject"/>
-      <xs:element ref="EditableText"/>
-      <xs:element ref="Group"/>
-      <xs:element ref="HScrollBar"/>
-      <xs:element ref="HSlider"/>
-      <xs:element ref="Image"/>
-      <xs:element ref="ItemRenderer"/>
-      <xs:element ref="Label"/>
-      <xs:element ref="List"/>
-      <xs:element ref="ListBase"/>
-      <xs:element ref="Panel"/>
-      <xs:element ref="ProgressBar"/>
-      <xs:element ref="RadioButton"/>
-      <xs:element ref="Range"/>
-      <xs:element ref="ScrollBarBase"/>
-      <xs:element ref="Scroller"/>
-      <xs:element ref="Shape"/>
-      <xs:element ref="SliderBase"/>
-      <xs:element ref="Sprite"/>
-      <xs:element ref="Stage"/>
-      <xs:element ref="TabBar"/>
-      <xs:element ref="TextField"/>
-      <xs:element ref="TextInput"/>
-      <xs:element ref="ToggleButton"/>
-      <xs:element ref="ToggleSwitch"/>
-      <xs:element ref="UILayer"/>
-      <xs:element ref="VScrollBar"/>
-      <xs:element ref="VSlider"/>
-      <xs:element ref="ViewStack"/>
-    </xs:choice>
+  <xs:group name="DataView">
+    <xs:choice/>
   </xs:group>
-  <xs:complexType name="lark.DisplayObject">
-    <xs:group ref="lark.DisplayObject"/>
+  <xs:complexType name="DataView">
+    <xs:group ref="DataView"/>
   </xs:complexType>
-  <xs:group name="lark.Matrix">
+  <xs:group name="ByteArray_attributeElement">
     <xs:choice>
-      <xs:element ref="Matrix"/>
+      <xs:element name="buffer" type="ArrayBuffer"/>
+      <xs:element name="dataView" type="DataView"/>
+      <xs:element name="endian" type="string"/>
+      <xs:element name="length" type="number"/>
+      <xs:element name="position" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="lark.Matrix">
-    <xs:group ref="lark.Matrix"/>
+  <xs:element name="ByteArray">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="ByteArray_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.ByteArray"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.ColorTransform">
+    <xs:attribute name="matrix" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="Array">
+    <xs:choice>
+      <xs:element ref="Array"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="Array">
+    <xs:group ref="Array"/>
   </xs:complexType>
-  <xs:group name="lark.Rectangle">
+  <xs:group name="ColorTransform_attributeElement">
     <xs:choice>
-      <xs:element ref="Rectangle"/>
+      <xs:element name="matrix" type="Array"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="lark.Rectangle">
-    <xs:group ref="lark.Rectangle"/>
+  <xs:element name="ColorTransform">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="ColorTransform_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.ColorTransform"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="egret.BlendMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="normal"/>
+      <xs:enumeration value="add"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="egret.DisplayObject">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+    <xs:attribute name="alpha" type="xs:decimal"/>
+    <xs:attribute name="blendMode" type="egret.BlendMode"/>
+    <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
+    <xs:attribute name="colorTransform" type="xs:string"/>
+    <xs:attribute name="filter" type="xs:string"/>
+    <xs:attribute name="height" type="xs:string"/>
+    <xs:attribute name="mask" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="needDraw" type="xs:boolean"/>
+    <xs:attribute name="rotation" type="xs:decimal"/>
+    <xs:attribute name="scaleX" type="xs:decimal"/>
+    <xs:attribute name="scaleY" type="xs:decimal"/>
+    <xs:attribute name="scrollRect" type="xs:string"/>
+    <xs:attribute name="skewX" type="xs:decimal"/>
+    <xs:attribute name="skewY" type="xs:decimal"/>
+    <xs:attribute name="touchEnabled" type="xs:boolean"/>
+    <xs:attribute name="visible" type="xs:boolean"/>
+    <xs:attribute name="width" type="xs:string"/>
+    <xs:attribute name="worldAlpha" type="xs:decimal"/>
+    <xs:attribute name="x" type="xs:decimal"/>
+    <xs:attribute name="y" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="boolean">
+    <xs:choice>
+      <xs:element ref="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="boolean">
+    <xs:group ref="boolean"/>
+  </xs:complexType>
+  <xs:group name="egret.ColorTransform">
+    <xs:choice>
+      <xs:element ref="ColorTransform"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.ColorTransform">
+    <xs:group ref="egret.ColorTransform"/>
+  </xs:complexType>
+  <xs:group name="egret.Filter">
+    <xs:choice>
+      <xs:element ref="BlurFilter"/>
+      <xs:element ref="Filter"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.Filter">
+    <xs:group ref="egret.Filter"/>
   </xs:complexType>
   <xs:group name="DisplayObject_attributeElement">
     <xs:choice>
-      <xs:group ref="EventEmitter_attributeElement"/>
+      <xs:group ref="EventDispatcher_attributeElement"/>
       <xs:element name="alpha" type="number"/>
       <xs:element name="blendMode" type="string"/>
       <xs:element name="cacheAsBitmap" type="boolean"/>
-      <xs:element name="class" type="string"/>
-      <xs:element name="excludeFrom" type="string"/>
+      <xs:element name="colorTransform" type="egret.ColorTransform"/>
+      <xs:element name="filter" type="egret.Filter"/>
       <xs:element name="height" type="number"/>
-      <xs:element name="includeIn" type="string"/>
-      <xs:element name="locked" type="boolean"/>
-      <xs:element name="mask" type="lark.DisplayObject"/>
-      <xs:element name="matrix" type="lark.Matrix"/>
+      <xs:element name="mask" type="egret.Rectangle"/>
       <xs:element name="name" type="string"/>
+      <xs:element name="needDraw" type="boolean"/>
       <xs:element name="rotation" type="number"/>
       <xs:element name="scaleX" type="number"/>
       <xs:element name="scaleY" type="number"/>
-      <xs:element name="scrollRect" type="lark.Rectangle"/>
+      <xs:element name="scrollRect" type="egret.Rectangle"/>
+      <xs:element name="skewX" type="number"/>
+      <xs:element name="skewY" type="number"/>
       <xs:element name="touchEnabled" type="boolean"/>
       <xs:element name="visible" type="boolean"/>
       <xs:element name="width" type="number"/>
+      <xs:element name="worldAlpha" type="number"/>
       <xs:element name="x" type="number"/>
       <xs:element name="y" type="number"/>
     </xs:choice>
@@ -173,92 +292,80 @@
         <xs:any namespace="##other"/>
         <xs:group ref="DisplayObject_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.DisplayObject"/>
+      <xs:attributeGroup ref="egret.DisplayObject"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Event">
-    <xs:attributeGroup ref="lark.HashObject"/>
-    <xs:attribute name="data" type="xs:string"/>
+  <xs:attributeGroup name="egret.DisplayObjectContainer">
+    <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attribute name="touchChildren" type="xs:boolean"/>
   </xs:attributeGroup>
-  <xs:group name="Event_attributeElement">
+  <xs:group name="DisplayObjectContainer_attributeElement">
+    <xs:choice>
+      <xs:group ref="DisplayObject_attributeElement"/>
+      <xs:element name="touchChildren" type="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="DisplayObjectContainer">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="DisplayObjectContainer_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.EventDispatcher">
+    <xs:attributeGroup ref="egret.HashObject"/>
+  </xs:attributeGroup>
+  <xs:group name="EventDispatcher_attributeElement">
     <xs:choice>
       <xs:group ref="HashObject_attributeElement"/>
-      <xs:element name="data" type="any"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Event">
+  <xs:element name="EventDispatcher">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="Event_attributeElement"/>
+        <xs:group ref="EventDispatcher_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Event"/>
+      <xs:attributeGroup ref="egret.EventDispatcher"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.EventEmitter">
-    <xs:attributeGroup ref="lark.HashObject"/>
+  <xs:attributeGroup name="egret.Filter">
+    <xs:attribute name="type" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="EventEmitter_attributeElement">
+  <xs:group name="Filter_attributeElement">
     <xs:choice>
-      <xs:group ref="HashObject_attributeElement"/>
+      <xs:element name="type" type="string"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="EventEmitter">
+  <xs:element name="Filter">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="EventEmitter_attributeElement"/>
+        <xs:group ref="Filter_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.EventEmitter"/>
+      <xs:attributeGroup ref="egret.Filter"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.GeolocationEvent">
-    <xs:attributeGroup ref="lark.Event"/>
+  <xs:attributeGroup name="egret.HTML5StageText">
+    <xs:attributeGroup ref="egret.StageText"/>
   </xs:attributeGroup>
-  <xs:group name="GeolocationEvent_attributeElement">
+  <xs:group name="HTML5StageText_attributeElement">
     <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
+      <xs:group ref="StageText_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="GeolocationEvent">
+  <xs:element name="HTML5StageText">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="GeolocationEvent_attributeElement"/>
+        <xs:group ref="HTML5StageText_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.GeolocationEvent"/>
+      <xs:attributeGroup ref="egret.HTML5StageText"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Graphics">
-    <xs:attributeGroup ref="lark.HashObject"/>
-    <xs:attribute name="fillStyle" type="xs:string"/>
-    <xs:attribute name="lineCap" type="xs:string"/>
-    <xs:attribute name="lineJoin" type="xs:string"/>
-    <xs:attribute name="lineWidth" type="xs:decimal"/>
-    <xs:attribute name="miterLimit" type="xs:decimal"/>
-    <xs:attribute name="strokeStyle" type="xs:string"/>
-  </xs:attributeGroup>
-  <xs:group name="Graphics_attributeElement">
-    <xs:choice>
-      <xs:group ref="HashObject_attributeElement"/>
-      <xs:element name="fillStyle" type="any"/>
-      <xs:element name="lineCap" type="string"/>
-      <xs:element name="lineJoin" type="string"/>
-      <xs:element name="lineWidth" type="number"/>
-      <xs:element name="miterLimit" type="number"/>
-      <xs:element name="strokeStyle" type="any"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="Graphics">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="Graphics_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="lark.Graphics"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="lark.HashObject">
+  <xs:attributeGroup name="egret.HashObject">
     <xs:attribute name="id" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="HashObject_attributeElement">
@@ -272,11 +379,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="HashObject_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.HashObject"/>
+      <xs:attributeGroup ref="egret.HashObject"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Matrix">
-    <xs:attributeGroup ref="lark.HashObject"/>
+  <xs:attributeGroup name="egret.Matrix">
+    <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="a" type="xs:decimal"/>
     <xs:attribute name="b" type="xs:decimal"/>
     <xs:attribute name="c" type="xs:decimal"/>
@@ -301,51 +408,129 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Matrix_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Matrix"/>
+      <xs:attributeGroup ref="egret.Matrix"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.MotionEvent">
-    <xs:attributeGroup ref="lark.Event"/>
+  <xs:attributeGroup name="egret.MovieClip">
+    <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attribute name="frameRate" type="xs:decimal"/>
+    <xs:attribute name="movieClipData" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="MotionEvent_attributeElement">
+  <xs:group name="egret.MovieClipData">
     <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
+      <xs:element ref="MovieClipData"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="MotionEvent">
+  <xs:complexType name="egret.MovieClipData">
+    <xs:group ref="egret.MovieClipData"/>
+  </xs:complexType>
+  <xs:group name="MovieClip_attributeElement">
+    <xs:choice>
+      <xs:group ref="DisplayObject_attributeElement"/>
+      <xs:element name="frameRate" type="number"/>
+      <xs:element name="movieClipData" type="egret.MovieClipData"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="MovieClip">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="MotionEvent_attributeElement"/>
+        <xs:group ref="MovieClip_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.MotionEvent"/>
+      <xs:attributeGroup ref="egret.MovieClip"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.OrientationEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-    <xs:attribute name="alpha" type="xs:decimal"/>
-    <xs:attribute name="beta" type="xs:decimal"/>
-    <xs:attribute name="gamma" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.MovieClipData">
+    <xs:attributeGroup ref="egret.HashObject"/>
+    <xs:attribute name="frameRate" type="xs:decimal"/>
+    <xs:attribute name="frames" type="xs:string"/>
+    <xs:attribute name="labels" type="xs:string"/>
+    <xs:attribute name="mcData" type="xs:string"/>
+    <xs:attribute name="numFrames" type="xs:decimal"/>
+    <xs:attribute name="spriteSheet" type="xs:string"/>
+    <xs:attribute name="textureData" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="OrientationEvent_attributeElement">
+  <xs:group name="any">
     <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-      <xs:element name="alpha" type="number"/>
-      <xs:element name="beta" type="number"/>
-      <xs:element name="gamma" type="number"/>
+      <xs:element ref="any"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="OrientationEvent">
+  <xs:complexType name="any">
+    <xs:group ref="any"/>
+  </xs:complexType>
+  <xs:group name="egret.SpriteSheet">
+    <xs:choice>
+      <xs:element ref="BitmapFont"/>
+      <xs:element ref="BitmapTextSpriteSheet"/>
+      <xs:element ref="SpriteSheet"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.SpriteSheet">
+    <xs:group ref="egret.SpriteSheet"/>
+  </xs:complexType>
+  <xs:group name="MovieClipData_attributeElement">
+    <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
+      <xs:element name="frameRate" type="number"/>
+      <xs:element name="frames" type="any"/>
+      <xs:element name="labels" type="any"/>
+      <xs:element name="mcData" type="egret.MovieClipData"/>
+      <xs:element name="numFrames" type="number"/>
+      <xs:element name="spriteSheet" type="egret.SpriteSheet"/>
+      <xs:element name="textureData" type="any"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="MovieClipData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="OrientationEvent_attributeElement"/>
+        <xs:group ref="MovieClipData_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.OrientationEvent"/>
+      <xs:attributeGroup ref="egret.MovieClipData"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Point">
-    <xs:attributeGroup ref="lark.HashObject"/>
+  <xs:attributeGroup name="egret.MovieClipDataFactory">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+    <xs:attribute name="enableCache" type="xs:boolean"/>
+    <xs:attribute name="mcDataSet" type="xs:string"/>
+    <xs:attribute name="texture" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="MovieClipDataFactory_attributeElement">
+    <xs:choice>
+      <xs:group ref="EventDispatcher_attributeElement"/>
+      <xs:element name="enableCache" type="boolean"/>
+      <xs:element name="mcDataSet" type="any"/>
+      <xs:element name="texture" type="egret.Texture"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="MovieClipDataFactory">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="MovieClipDataFactory_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.MovieClipDataFactory"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.NativeStageText">
+    <xs:attributeGroup ref="egret.StageText"/>
+  </xs:attributeGroup>
+  <xs:group name="NativeStageText_attributeElement">
+    <xs:choice>
+      <xs:group ref="StageText_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="NativeStageText">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="NativeStageText_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.NativeStageText"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.Point">
+    <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="x" type="xs:decimal"/>
     <xs:attribute name="y" type="xs:decimal"/>
   </xs:attributeGroup>
@@ -362,37 +547,14 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Point_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Point"/>
+      <xs:attributeGroup ref="egret.Point"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.ProgressEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-    <xs:attribute name="bytesLoaded" type="xs:decimal"/>
-    <xs:attribute name="bytesTotal" type="xs:decimal"/>
-  </xs:attributeGroup>
-  <xs:group name="ProgressEvent_attributeElement">
-    <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-      <xs:element name="bytesLoaded" type="number"/>
-      <xs:element name="bytesTotal" type="number"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="ProgressEvent">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="ProgressEvent_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="lark.ProgressEvent"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="lark.Rectangle">
-    <xs:attributeGroup ref="lark.HashObject"/>
+  <xs:attributeGroup name="egret.Rectangle">
+    <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
     <xs:attribute name="height" type="xs:string"/>
-    <xs:attribute name="left" type="xs:decimal"/>
     <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="top" type="xs:decimal"/>
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="x" type="xs:decimal"/>
     <xs:attribute name="y" type="xs:decimal"/>
@@ -402,9 +564,7 @@
       <xs:group ref="HashObject_attributeElement"/>
       <xs:element name="bottom" type="number"/>
       <xs:element name="height" type="number"/>
-      <xs:element name="left" type="number"/>
       <xs:element name="right" type="number"/>
-      <xs:element name="top" type="number"/>
       <xs:element name="width" type="number"/>
       <xs:element name="x" type="number"/>
       <xs:element name="y" type="number"/>
@@ -416,11 +576,30 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Rectangle_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Rectangle"/>
+      <xs:attributeGroup ref="egret.Rectangle"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Shape">
-    <xs:attributeGroup ref="lark.DisplayObject"/>
+  <xs:attributeGroup name="egret.RenderCommand">
+    <xs:attribute name="callback" type="xs:string"/>
+    <xs:attribute name="thisObject" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="RenderCommand_attributeElement">
+    <xs:choice>
+      <xs:element name="callback" type="any"/>
+      <xs:element name="thisObject" type="any"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="RenderCommand">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="RenderCommand_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.RenderCommand"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.Shape">
+    <xs:attributeGroup ref="egret.DisplayObject"/>
   </xs:attributeGroup>
   <xs:group name="Shape_attributeElement">
     <xs:choice>
@@ -433,17 +612,15 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Shape_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Shape"/>
+      <xs:attributeGroup ref="egret.Shape"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Sprite">
-    <xs:attributeGroup ref="lark.DisplayObject"/>
-    <xs:attribute name="touchChildren" type="xs:boolean"/>
+  <xs:attributeGroup name="egret.Sprite">
+    <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
   </xs:attributeGroup>
   <xs:group name="Sprite_attributeElement">
     <xs:choice>
-      <xs:group ref="DisplayObject_attributeElement"/>
-      <xs:element name="touchChildren" type="boolean"/>
+      <xs:group ref="DisplayObjectContainer_attributeElement"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Sprite">
@@ -452,72 +629,99 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Sprite_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Sprite"/>
+      <xs:attributeGroup ref="egret.Sprite"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Stage">
-    <xs:attributeGroup ref="lark.Sprite"/>
-    <xs:attribute name="frameRate" type="xs:decimal"/>
-    <xs:attribute name="highResolutionMode" type="xs:string"/>
-    <xs:attribute name="scaleMode" type="xs:string"/>
+  <xs:attributeGroup name="egret.SpriteSheet">
+    <xs:attributeGroup ref="egret.HashObject"/>
   </xs:attributeGroup>
-  <xs:group name="Stage_attributeElement">
+  <xs:group name="SpriteSheet_attributeElement">
     <xs:choice>
-      <xs:group ref="Sprite_attributeElement"/>
-      <xs:element name="frameRate" type="number"/>
-      <xs:element name="highResolutionMode" type="string"/>
-      <xs:element name="scaleMode" type="string"/>
+      <xs:group ref="HashObject_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Stage">
+  <xs:element name="SpriteSheet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="Stage_attributeElement"/>
+        <xs:group ref="SpriteSheet_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Stage"/>
+      <xs:attributeGroup ref="egret.SpriteSheet"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="lark.HorizontalAlign">
+  <xs:attributeGroup name="egret.StageText">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+  </xs:attributeGroup>
+  <xs:group name="StageText_attributeElement">
+    <xs:choice>
+      <xs:group ref="EventDispatcher_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="StageText">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="StageText_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.StageText"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="text_textAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
       <xs:enumeration value="right"/>
       <xs:enumeration value="center"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="lark.VerticalAlign">
+  <xs:simpleType name="text_verticalAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="top"/>
       <xs:enumeration value="bottom"/>
       <xs:enumeration value="middle"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="lark.TextField">
-    <xs:attributeGroup ref="lark.DisplayObject"/>
+  <xs:attributeGroup name="egret.TextField">
+    <xs:attributeGroup ref="egret.DisplayObject"/>
     <xs:attribute name="bold" type="xs:boolean"/>
+    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
     <xs:attribute name="fontFamily" type="xs:string"/>
-    <xs:attribute name="fontSize" type="xs:decimal"/>
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
+    <xs:attribute name="maxChars" type="xs:decimal"/>
+    <xs:attribute name="maxWidth" type="xs:string"/>
+    <xs:attribute name="multiline" type="xs:boolean"/>
+    <xs:attribute name="scrollV" type="xs:decimal"/>
+    <xs:attribute name="size" type="xs:decimal"/>
+    <xs:attribute name="stroke" type="xs:decimal"/>
+    <xs:attribute name="strokeColor" type="xs:string"/>
     <xs:attribute name="text" type="xs:string"/>
-    <xs:attribute name="textAlign" type="lark.HorizontalAlign"/>
+    <xs:attribute name="textAlign" type="text_textAlign"/>
     <xs:attribute name="textColor" type="xs:string"/>
-    <xs:attribute name="verticalAlign" type="lark.VerticalAlign"/>
-    <xs:attribute name="wordWrap" type="xs:boolean"/>
+    <xs:attribute name="textFlow" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
   </xs:attributeGroup>
   <xs:group name="TextField_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObject_attributeElement"/>
       <xs:element name="bold" type="boolean"/>
+      <xs:element name="displayAsPassword" type="boolean"/>
       <xs:element name="fontFamily" type="string"/>
-      <xs:element name="fontSize" type="number"/>
       <xs:element name="italic" type="boolean"/>
       <xs:element name="lineSpacing" type="number"/>
+      <xs:element name="maxChars" type="number"/>
+      <xs:element name="maxWidth" type="any"/>
+      <xs:element name="multiline" type="boolean"/>
+      <xs:element name="scrollV" type="number"/>
+      <xs:element name="size" type="number"/>
+      <xs:element name="stroke" type="number"/>
+      <xs:element name="strokeColor" type="number"/>
       <xs:element name="text" type="string"/>
       <xs:element name="textAlign" type="string"/>
       <xs:element name="textColor" type="number"/>
+      <xs:element name="textFlow" type="Array"/>
+      <xs:element name="type" type="string"/>
       <xs:element name="verticalAlign" type="string"/>
-      <xs:element name="wordWrap" type="boolean"/>
     </xs:choice>
   </xs:group>
   <xs:element name="TextField">
@@ -526,32 +730,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="TextField_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.TextField"/>
+      <xs:attributeGroup ref="egret.TextField"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.TextInput">
-    <xs:attributeGroup ref="lark.TextField"/>
-    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
-    <xs:attribute name="maxChars" type="xs:decimal"/>
-  </xs:attributeGroup>
-  <xs:group name="TextInput_attributeElement">
-    <xs:choice>
-      <xs:group ref="TextField_attributeElement"/>
-      <xs:element name="displayAsPassword" type="boolean"/>
-      <xs:element name="maxChars" type="number"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="TextInput">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="TextInput_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="lark.TextInput"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="lark.Texture">
-    <xs:attributeGroup ref="lark.HashObject"/>
+  <xs:attributeGroup name="egret.Texture">
+    <xs:attributeGroup ref="egret.HashObject"/>
   </xs:attributeGroup>
   <xs:group name="Texture_attributeElement">
     <xs:choice>
@@ -564,75 +747,20 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Texture_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="lark.Texture"/>
+      <xs:attributeGroup ref="egret.Texture"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="lark.Timer">
-    <xs:attributeGroup ref="lark.EventEmitter"/>
-    <xs:attribute name="delay" type="xs:decimal"/>
-    <xs:attribute name="repeatCount" type="xs:decimal"/>
-  </xs:attributeGroup>
-  <xs:group name="Timer_attributeElement">
-    <xs:choice>
-      <xs:group ref="EventEmitter_attributeElement"/>
-      <xs:element name="delay" type="number"/>
-      <xs:element name="repeatCount" type="number"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="Timer">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="Timer_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="lark.Timer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="lark.TimerEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-  </xs:attributeGroup>
-  <xs:group name="TimerEvent_attributeElement">
-    <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="TimerEvent">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="TimerEvent_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="lark.TimerEvent"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="lark.TouchEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-    <xs:attribute name="touchPointID" type="xs:decimal"/>
-  </xs:attributeGroup>
-  <xs:group name="TouchEvent_attributeElement">
-    <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-      <xs:element name="touchPointID" type="number"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="TouchEvent">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="TouchEvent_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="lark.TouchEvent"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="swan.AddItems">
-    <xs:attribute name="position" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.gui.AddItems">
+    <xs:attributeGroup ref="egret.gui.OverrideBase"/>
+    <xs:attribute name="position" type="xs:string"/>
     <xs:attribute name="propertyName" type="xs:string"/>
     <xs:attribute name="relativeTo" type="xs:string"/>
     <xs:attribute name="target" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="AddItems_attributeElement">
     <xs:choice>
-      <xs:element name="position" type="number"/>
+      <xs:group ref="OverrideBase_attributeElement"/>
+      <xs:element name="position" type="string"/>
       <xs:element name="propertyName" type="string"/>
       <xs:element name="relativeTo" type="string"/>
       <xs:element name="target" type="string"/>
@@ -644,38 +772,241 @@
         <xs:any namespace="##other"/>
         <xs:group ref="AddItems_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.AddItems"/>
+      <xs:attributeGroup ref="egret.gui.AddItems"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ArrayCollection">
-    <xs:attributeGroup ref="lark.EventEmitter"/>
-    <xs:attribute name="source" type="xs:string"/>
+  <xs:attributeGroup name="egret.gui.Alert">
+    <xs:attributeGroup ref="egret.gui.TitleWindow"/>
+    <xs:attribute name="contentDisplay" type="xs:string"/>
+    <xs:attribute name="contentText" type="xs:string"/>
+    <xs:attribute name="firstButton" type="xs:string"/>
+    <xs:attribute name="firstButtonLabel" type="xs:string"/>
+    <xs:attribute name="secondButton" type="xs:string"/>
+    <xs:attribute name="secondButtonLabel" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:complexType name="Array_any">
-    <xs:group ref="any"/>
-  </xs:complexType>
-  <xs:group name="ArrayCollection_attributeElement">
+  <xs:group name="egret.gui.IDisplayText">
     <xs:choice>
-      <xs:group ref="EventEmitter_attributeElement"/>
-      <xs:element name="source" type="Array_any"/>
+      <xs:element ref="BitmapLabel"/>
+      <xs:element ref="EditableText"/>
+      <xs:element ref="Label"/>
+      <xs:element ref="TextBase"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ArrayCollection" m:defaultProp="source" m:defaultPropType="Array_any">
+  <xs:complexType name="egret.gui.IDisplayText">
+    <xs:group ref="egret.gui.IDisplayText"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.Button">
+    <xs:choice>
+      <xs:element ref="Button"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.Button">
+    <xs:group ref="egret.gui.Button"/>
+  </xs:complexType>
+  <xs:group name="Alert_attributeElement">
+    <xs:choice>
+      <xs:group ref="TitleWindow_attributeElement"/>
+      <xs:element name="contentDisplay" type="egret.gui.IDisplayText"/>
+      <xs:element name="contentText" type="string"/>
+      <xs:element name="firstButton" type="egret.gui.Button"/>
+      <xs:element name="firstButtonLabel" type="string"/>
+      <xs:element name="secondButton" type="egret.gui.Button"/>
+      <xs:element name="secondButtonLabel" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Alert">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Alert_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Alert"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="egret.gui.RepeatBehavior">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="loop"/>
+      <xs:enumeration value="reverse"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="egret.gui.Animate">
+    <xs:attributeGroup ref="egret.gui.Effect"/>
+    <xs:attribute name="disableLayout" type="xs:boolean"/>
+    <xs:attribute name="easer" type="xs:string"/>
+    <xs:attribute name="interpolator" type="xs:string"/>
+    <xs:attribute name="motionPaths" type="xs:string"/>
+    <xs:attribute name="repeatBehavior" type="egret.gui.RepeatBehavior"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.IEaser">
+    <xs:choice>
+      <xs:element ref="Bounce"/>
+      <xs:element ref="EaseInOutBase"/>
+      <xs:element ref="Elastic"/>
+      <xs:element ref="Linear"/>
+      <xs:element ref="Power"/>
+      <xs:element ref="Sine"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.IEaser">
+    <xs:group ref="egret.gui.IEaser"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.IInterpolator">
+    <xs:choice>
+      <xs:element ref="NumberInterpolator"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.IInterpolator">
+    <xs:group ref="egret.gui.IInterpolator"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.MotionPath">
+    <xs:choice>
+      <xs:element ref="MotionPath"/>
+      <xs:element ref="SimpleMotionPath"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="Array_egret.gui.MotionPath">
+    <xs:group ref="egret.gui.MotionPath"/>
+  </xs:complexType>
+  <xs:group name="Animate_attributeElement">
+    <xs:choice>
+      <xs:group ref="Effect_attributeElement"/>
+      <xs:element name="disableLayout" type="boolean"/>
+      <xs:element name="easer" type="egret.gui.IEaser"/>
+      <xs:element name="interpolator" type="egret.gui.IInterpolator"/>
+      <xs:element name="motionPaths" type="Array_egret.gui.MotionPath"/>
+      <xs:element name="repeatBehavior" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Animate" m:defaultProp="motionPaths" m:defaultPropType="Array_egret.gui.MotionPath">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Animate_attributeElement"/>
+        <xs:group ref="egret.gui.MotionPath"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Animate"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.AnimateInstance">
+    <xs:attributeGroup ref="egret.gui.EffectInstance"/>
+    <xs:attribute name="animation" type="xs:string"/>
+    <xs:attribute name="autoRemoveTarget" type="xs:boolean"/>
+    <xs:attribute name="disableLayout" type="xs:boolean"/>
+    <xs:attribute name="easer" type="xs:string"/>
+    <xs:attribute name="interpolator" type="xs:string"/>
+    <xs:attribute name="motionPaths" type="xs:string"/>
+    <xs:attribute name="repeatBehavior" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.Animation">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="egret.gui.Animation">
+    <xs:group ref="egret.gui.Animation"/>
+  </xs:complexType>
+  <xs:group name="AnimateInstance_attributeElement">
+    <xs:choice>
+      <xs:group ref="EffectInstance_attributeElement"/>
+      <xs:element name="animation" type="egret.gui.Animation"/>
+      <xs:element name="autoRemoveTarget" type="boolean"/>
+      <xs:element name="disableLayout" type="boolean"/>
+      <xs:element name="easer" type="egret.gui.IEaser"/>
+      <xs:element name="interpolator" type="egret.gui.IInterpolator"/>
+      <xs:element name="motionPaths" type="Array_egret.gui.MotionPath"/>
+      <xs:element name="repeatBehavior" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="AnimateInstance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="AnimateInstance_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.AnimateInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.AnimateTransform">
+    <xs:attributeGroup ref="egret.gui.Animate"/>
+    <xs:attribute name="autoCenterTransform" type="xs:boolean"/>
+    <xs:attribute name="transformX" type="xs:decimal"/>
+    <xs:attribute name="transformY" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="AnimateTransform_attributeElement">
+    <xs:choice>
+      <xs:group ref="Animate_attributeElement"/>
+      <xs:element name="autoCenterTransform" type="boolean"/>
+      <xs:element name="transformX" type="number"/>
+      <xs:element name="transformY" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="AnimateTransform" m:defaultProp="motionPaths" m:defaultPropType="Array_egret.gui.MotionPath">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="AnimateTransform_attributeElement"/>
+        <xs:group ref="egret.gui.MotionPath"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.AnimateTransform"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.AnimateTransformInstance">
+    <xs:attributeGroup ref="egret.gui.AnimateInstance"/>
+    <xs:attribute name="autoCenterTransform" type="xs:boolean"/>
+    <xs:attribute name="initialized" type="xs:boolean"/>
+    <xs:attribute name="transformCenter" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.Point">
+    <xs:choice>
+      <xs:element ref="Point"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.Point">
+    <xs:group ref="egret.Point"/>
+  </xs:complexType>
+  <xs:group name="AnimateTransformInstance_attributeElement">
+    <xs:choice>
+      <xs:group ref="AnimateInstance_attributeElement"/>
+      <xs:element name="autoCenterTransform" type="boolean"/>
+      <xs:element name="initialized" type="boolean"/>
+      <xs:element name="transformCenter" type="egret.Point"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="AnimateTransformInstance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="AnimateTransformInstance_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.AnimateTransformInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ArrayCollection">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+    <xs:attribute name="source" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="ArrayCollection_attributeElement">
+    <xs:choice>
+      <xs:group ref="EventDispatcher_attributeElement"/>
+      <xs:element name="source" type="Array"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="ArrayCollection" m:defaultProp="source" m:defaultPropType="Array">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="ArrayCollection_attributeElement"/>
-        <xs:group ref="any"/>
+        <xs:group ref="Array"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ArrayCollection"/>
+      <xs:attributeGroup ref="egret.gui.ArrayCollection"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.BasicLayout">
-    <xs:attributeGroup ref="swan.LayoutBase"/>
+  <xs:attributeGroup name="egret.gui.BasicLayout">
+    <xs:attributeGroup ref="egret.gui.LayoutBase"/>
+    <xs:attribute name="mouseWheelSpeed" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="BasicLayout_attributeElement">
     <xs:choice>
       <xs:group ref="LayoutBase_attributeElement"/>
+      <xs:element name="mouseWheelSpeed" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="BasicLayout">
@@ -684,162 +1015,259 @@
         <xs:any namespace="##other"/>
         <xs:group ref="BasicLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.BasicLayout"/>
+      <xs:attributeGroup ref="egret.gui.BasicLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Button">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="egret.gui.BitmapLabel">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="font" type="xs:string"/>
+    <xs:attribute name="padding" type="xs:decimal"/>
+    <xs:attribute name="paddingBottom" type="xs:decimal"/>
+    <xs:attribute name="paddingLeft" type="xs:decimal"/>
+    <xs:attribute name="paddingRight" type="xs:decimal"/>
+    <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="text" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="BitmapLabel_attributeElement">
+    <xs:choice>
+      <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="font" type="any"/>
+      <xs:element name="padding" type="number"/>
+      <xs:element name="paddingBottom" type="number"/>
+      <xs:element name="paddingLeft" type="number"/>
+      <xs:element name="paddingRight" type="number"/>
+      <xs:element name="paddingTop" type="number"/>
+      <xs:element name="text" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapLabel">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapLabel_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.BitmapLabel"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Bounce">
+    <xs:complexType/>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Button">
+    <xs:attributeGroup ref="egret.gui.ButtonBase"/>
     <xs:attribute name="icon" type="xs:string"/>
     <xs:attribute name="iconDisplay" type="xs:string"/>
-    <xs:attribute name="label" type="xs:string"/>
-    <xs:attribute name="labelDisplay" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Image">
+  <xs:group name="egret.gui.UIAsset">
     <xs:choice>
-      <xs:element ref="Image"/>
+      <xs:element ref="UIAsset"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Image">
-    <xs:group ref="swan.Image"/>
-  </xs:complexType>
-  <xs:group name="swan.IDisplayText">
-    <xs:choice>
-      <xs:element ref="EditableText"/>
-      <xs:element ref="Label"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="swan.IDisplayText">
-    <xs:group ref="swan.IDisplayText"/>
+  <xs:complexType name="egret.gui.UIAsset">
+    <xs:group ref="egret.gui.UIAsset"/>
   </xs:complexType>
   <xs:group name="Button_attributeElement">
     <xs:choice>
-      <xs:group ref="Component_attributeElement"/>
+      <xs:group ref="ButtonBase_attributeElement"/>
       <xs:element name="icon" type="any"/>
-      <xs:element name="iconDisplay" type="swan.Image"/>
-      <xs:element name="label" type="string"/>
-      <xs:element name="labelDisplay" type="swan.IDisplayText"/>
+      <xs:element name="iconDisplay" type="egret.gui.UIAsset"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Button">
+  <xs:element name="Button" m:defaultProp="label" m:defaultPropType="string">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="Button_attributeElement"/>
+        <xs:group ref="string"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Button"/>
+      <xs:attributeGroup ref="egret.gui.Button"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.CheckBox">
-    <xs:attributeGroup ref="swan.ToggleButton"/>
+  <xs:attributeGroup name="egret.gui.ButtonBase">
+    <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    <xs:attribute name="autoRepeat" type="xs:boolean"/>
+    <xs:attribute name="hovered" type="xs:boolean"/>
+    <xs:attribute name="label" type="xs:string"/>
+    <xs:attribute name="labelDisplay" type="xs:string"/>
+    <xs:attribute name="mouseCaptured" type="xs:boolean"/>
+    <xs:attribute name="repeatDelay" type="xs:decimal"/>
+    <xs:attribute name="repeatInterval" type="xs:decimal"/>
+    <xs:attribute name="stickyHighlighting" type="xs:boolean"/>
+  </xs:attributeGroup>
+  <xs:group name="ButtonBase_attributeElement">
+    <xs:choice>
+      <xs:group ref="SkinnableComponent_attributeElement"/>
+      <xs:element name="autoRepeat" type="boolean"/>
+      <xs:element name="hovered" type="boolean"/>
+      <xs:element name="label" type="string"/>
+      <xs:element name="labelDisplay" type="egret.gui.IDisplayText"/>
+      <xs:element name="mouseCaptured" type="boolean"/>
+      <xs:element name="repeatDelay" type="number"/>
+      <xs:element name="repeatInterval" type="number"/>
+      <xs:element name="stickyHighlighting" type="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="ButtonBase" m:defaultProp="label" m:defaultPropType="string">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="ButtonBase_attributeElement"/>
+        <xs:group ref="string"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ButtonBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ButtonSkin">
+    <xs:attributeGroup ref="egret.gui.Skin"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
+    <xs:attribute name="labelDisplay" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.Label">
+    <xs:choice>
+      <xs:element ref="Label"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.Label">
+    <xs:group ref="egret.gui.Label"/>
+  </xs:complexType>
+  <xs:group name="ButtonSkin_attributeElement">
+    <xs:choice>
+      <xs:group ref="Skin_attributeElement"/>
+      <xs:element name="iconDisplay" type="egret.gui.UIAsset"/>
+      <xs:element name="labelDisplay" type="egret.gui.Label"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="ButtonSkin">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="ButtonSkin_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ButtonSkin"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.CheckBox">
+    <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
   </xs:attributeGroup>
   <xs:group name="CheckBox_attributeElement">
     <xs:choice>
-      <xs:group ref="ToggleButton_attributeElement"/>
+      <xs:group ref="ToggleButtonBase_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="CheckBox">
+  <xs:element name="CheckBox" m:defaultProp="label" m:defaultPropType="string">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="CheckBox_attributeElement"/>
+        <xs:group ref="string"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.CheckBox"/>
+      <xs:attributeGroup ref="egret.gui.CheckBox"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.CollectionEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-    <xs:attribute name="items" type="xs:string"/>
-    <xs:attribute name="kind" type="xs:string"/>
-    <xs:attribute name="location" type="xs:decimal"/>
-    <xs:attribute name="oldItems" type="xs:string"/>
-    <xs:attribute name="oldLocation" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.gui.ClassFactory">
+    <xs:attributeGroup ref="egret.HashObject"/>
+    <xs:attribute name="generator" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="CollectionEvent_attributeElement">
+  <xs:group name="ClassFactory_attributeElement">
     <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-      <xs:element name="items" type="Array_any"/>
-      <xs:element name="kind" type="string"/>
-      <xs:element name="location" type="number"/>
-      <xs:element name="oldItems" type="Array_any"/>
-      <xs:element name="oldLocation" type="number"/>
+      <xs:group ref="HashObject_attributeElement"/>
+      <xs:element name="generator" type="any"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="CollectionEvent">
+  <xs:element name="ClassFactory">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="CollectionEvent_attributeElement"/>
+        <xs:group ref="ClassFactory_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.CollectionEvent"/>
+      <xs:attributeGroup ref="egret.gui.ClassFactory"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Component">
-    <xs:attributeGroup ref="lark.Sprite"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="currentState" type="xs:string"/>
-    <xs:attribute name="enabled" type="xs:boolean"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
-    <xs:attribute name="hostComponentKey" type="xs:string"/>
-    <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
-    <xs:attribute name="maxHeight" type="xs:decimal"/>
-    <xs:attribute name="maxWidth" type="xs:decimal"/>
-    <xs:attribute name="minHeight" type="xs:decimal"/>
-    <xs:attribute name="minWidth" type="xs:decimal"/>
-    <xs:attribute name="percentHeight" type="xs:decimal"/>
-    <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="skinName" type="xs:string"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.gui.CompositeEffect">
+    <xs:attributeGroup ref="egret.gui.Effect"/>
+    <xs:attribute name="children" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="Component_attributeElement">
+  <xs:group name="egret.gui.IEffect">
     <xs:choice>
-      <xs:group ref="Sprite_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="currentState" type="string"/>
-      <xs:element name="enabled" type="boolean"/>
-      <xs:element name="horizontalCenter" type="number"/>
-      <xs:element name="hostComponentKey" type="string"/>
-      <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
-      <xs:element name="maxHeight" type="number"/>
-      <xs:element name="maxWidth" type="number"/>
-      <xs:element name="minHeight" type="number"/>
-      <xs:element name="minWidth" type="number"/>
-      <xs:element name="percentHeight" type="number"/>
-      <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="skinName" type="any"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
-      <xs:element ref="Skin"/>
+      <xs:element ref="Animate"/>
+      <xs:element ref="AnimateTransform"/>
+      <xs:element ref="CompositeEffect"/>
+      <xs:element ref="Effect"/>
+      <xs:element ref="Fade"/>
+      <xs:element ref="Move"/>
+      <xs:element ref="Parallel"/>
+      <xs:element ref="Rotate"/>
+      <xs:element ref="Scale"/>
+      <xs:element ref="Sequence"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Component">
+  <xs:complexType name="Array_egret.gui.IEffect">
+    <xs:group ref="egret.gui.IEffect"/>
+  </xs:complexType>
+  <xs:group name="CompositeEffect_attributeElement">
+    <xs:choice>
+      <xs:group ref="Effect_attributeElement"/>
+      <xs:element name="children" type="Array_egret.gui.IEffect"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="CompositeEffect" m:defaultProp="children" m:defaultPropType="Array_egret.gui.IEffect">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="Component_attributeElement"/>
+        <xs:group ref="CompositeEffect_attributeElement"/>
+        <xs:group ref="egret.gui.IEffect"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Component"/>
+      <xs:attributeGroup ref="egret.gui.CompositeEffect"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.DataGroup">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:attributeGroup name="egret.gui.CompositeEffectInstance">
+    <xs:attributeGroup ref="egret.gui.EffectInstance"/>
+    <xs:attribute name="activeEffectQueue" type="xs:string"/>
+    <xs:attribute name="childSets" type="xs:string"/>
+    <xs:attribute name="endEffectCalled" type="xs:boolean"/>
+    <xs:attribute name="timerAnimation" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="CompositeEffectInstance_attributeElement">
+    <xs:choice>
+      <xs:group ref="EffectInstance_attributeElement"/>
+      <xs:element name="activeEffectQueue" type="Array"/>
+      <xs:element name="childSets" type="Array"/>
+      <xs:element name="endEffectCalled" type="boolean"/>
+      <xs:element name="timerAnimation" type="egret.gui.Animation"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="CompositeEffectInstance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="CompositeEffectInstance_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.CompositeEffectInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.DataGroup">
+    <xs:attributeGroup ref="egret.gui.GroupBase"/>
     <xs:attribute name="dataProvider" type="xs:string"/>
     <xs:attribute name="itemRenderer" type="xs:string"/>
     <xs:attribute name="itemRendererFunction" type="xs:string"/>
-    <xs:attribute name="useVirtualLayout" type="xs:boolean"/>
+    <xs:attribute name="itemRendererSkinName" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.ICollection">
+  <xs:group name="egret.gui.ICollection">
     <xs:choice>
       <xs:element ref="ArrayCollection"/>
+      <xs:element ref="ObjectCollection"/>
       <xs:element ref="ViewStack"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.ICollection">
-    <xs:group ref="swan.ICollection"/>
+  <xs:complexType name="egret.gui.ICollection">
+    <xs:group ref="egret.gui.ICollection"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.IFactory">
+    <xs:choice>
+      <xs:element ref="ClassFactory"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.IFactory">
+    <xs:group ref="egret.gui.IFactory"/>
   </xs:complexType>
   <xs:group name="Function">
     <xs:choice/>
@@ -847,60 +1275,207 @@
   <xs:complexType name="Function">
     <xs:group ref="Function"/>
   </xs:complexType>
+  <xs:group name="Class">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="Class">
+    <xs:group ref="Class"/>
+  </xs:complexType>
   <xs:group name="DataGroup_attributeElement">
     <xs:choice>
-      <xs:group ref="Group_attributeElement"/>
-      <xs:element name="dataProvider" type="swan.ICollection"/>
-      <xs:element name="itemRenderer" type="any"/>
+      <xs:group ref="GroupBase_attributeElement"/>
+      <xs:element name="dataProvider" type="egret.gui.ICollection"/>
+      <xs:element name="itemRenderer" type="egret.gui.IFactory"/>
       <xs:element name="itemRendererFunction" type="Function"/>
-      <xs:element name="useVirtualLayout" type="boolean"/>
+      <xs:element name="itemRendererSkinName" type="Class"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="DataGroup" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="DataGroup" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="DataGroup_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="egret.gui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.DataGroup"/>
+      <xs:attributeGroup ref="egret.gui.DataGroup"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="DefaultAssetAdapter">
-    <xs:complexType/>
+  <xs:attributeGroup name="egret.gui.DropDownList">
+    <xs:attributeGroup ref="egret.gui.DropDownListBase"/>
+    <xs:attribute name="labelDisplay" type="xs:string"/>
+    <xs:attribute name="prompt" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="DropDownList_attributeElement">
+    <xs:choice>
+      <xs:group ref="DropDownListBase_attributeElement"/>
+      <xs:element name="labelDisplay" type="egret.gui.IDisplayText"/>
+      <xs:element name="prompt" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="DropDownList" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="DropDownList_attributeElement"/>
+        <xs:group ref="egret.gui.ICollection"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.DropDownList"/>
+    </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.EditableText">
-    <xs:attributeGroup ref="lark.TextInput"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
-    <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
-    <xs:attribute name="maxHeight" type="xs:decimal"/>
-    <xs:attribute name="maxWidth" type="xs:decimal"/>
-    <xs:attribute name="minHeight" type="xs:decimal"/>
-    <xs:attribute name="minWidth" type="xs:decimal"/>
-    <xs:attribute name="percentHeight" type="xs:decimal"/>
-    <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.gui.DropDownListBase">
+    <xs:attributeGroup ref="egret.gui.List"/>
+    <xs:attribute name="dropDown" type="xs:string"/>
+    <xs:attribute name="dropDownController" type="xs:string"/>
+    <xs:attribute name="openButton" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.DisplayObject">
+    <xs:choice>
+      <xs:element ref="Alert"/>
+      <xs:element ref="Bitmap"/>
+      <xs:element ref="BitmapLabel"/>
+      <xs:element ref="BitmapText"/>
+      <xs:element ref="Button"/>
+      <xs:element ref="ButtonBase"/>
+      <xs:element ref="CheckBox"/>
+      <xs:element ref="DataGroup"/>
+      <xs:element ref="DisplayObject"/>
+      <xs:element ref="DisplayObjectContainer"/>
+      <xs:element ref="DropDownList"/>
+      <xs:element ref="DropDownListBase"/>
+      <xs:element ref="EditableText"/>
+      <xs:element ref="Group"/>
+      <xs:element ref="GroupBase"/>
+      <xs:element ref="HScrollBar"/>
+      <xs:element ref="HSlider"/>
+      <xs:element ref="ItemRenderer"/>
+      <xs:element ref="Label"/>
+      <xs:element ref="List"/>
+      <xs:element ref="ListBase"/>
+      <xs:element ref="MovieClip"/>
+      <xs:element ref="Panel"/>
+      <xs:element ref="PopUpAnchor"/>
+      <xs:element ref="ProgressBar"/>
+      <xs:element ref="RadioButton"/>
+      <xs:element ref="Range"/>
+      <xs:element ref="Rect"/>
+      <xs:element ref="Scroller"/>
+      <xs:element ref="Shape"/>
+      <xs:element ref="SkinnableComponent"/>
+      <xs:element ref="SkinnableContainer"/>
+      <xs:element ref="SkinnableDataContainer"/>
+      <xs:element ref="SkinnableTextBase"/>
+      <xs:element ref="SliderBase"/>
+      <xs:element ref="Spacer"/>
+      <xs:element ref="Sprite"/>
+      <xs:element ref="TabBar"/>
+      <xs:element ref="TabBarButton"/>
+      <xs:element ref="TextArea"/>
+      <xs:element ref="TextBase"/>
+      <xs:element ref="TextField"/>
+      <xs:element ref="TextInput"/>
+      <xs:element ref="TitleWindow"/>
+      <xs:element ref="ToggleButton"/>
+      <xs:element ref="ToggleButtonBase"/>
+      <xs:element ref="ToggleSwitch"/>
+      <xs:element ref="TrackBase"/>
+      <xs:element ref="Tree"/>
+      <xs:element ref="TreeItemRenderer"/>
+      <xs:element ref="UIAsset"/>
+      <xs:element ref="UIComponent"/>
+      <xs:element ref="VScrollBar"/>
+      <xs:element ref="VSlider"/>
+      <xs:element ref="ViewStack"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.DisplayObject">
+    <xs:group ref="egret.DisplayObject"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.DropDownController">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="egret.gui.DropDownController">
+    <xs:group ref="egret.gui.DropDownController"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.ButtonBase">
+    <xs:choice>
+      <xs:element ref="Button"/>
+      <xs:element ref="ButtonBase"/>
+      <xs:element ref="CheckBox"/>
+      <xs:element ref="ItemRenderer"/>
+      <xs:element ref="RadioButton"/>
+      <xs:element ref="TabBarButton"/>
+      <xs:element ref="ToggleButton"/>
+      <xs:element ref="ToggleButtonBase"/>
+      <xs:element ref="ToggleSwitch"/>
+      <xs:element ref="TreeItemRenderer"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.ButtonBase">
+    <xs:group ref="egret.gui.ButtonBase"/>
+  </xs:complexType>
+  <xs:group name="DropDownListBase_attributeElement">
+    <xs:choice>
+      <xs:group ref="List_attributeElement"/>
+      <xs:element name="dropDown" type="egret.DisplayObject"/>
+      <xs:element name="dropDownController" type="egret.gui.DropDownController"/>
+      <xs:element name="openButton" type="egret.gui.ButtonBase"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="DropDownListBase" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="DropDownListBase_attributeElement"/>
+        <xs:group ref="egret.gui.ICollection"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.DropDownListBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.EaseInOutBase">
+    <xs:attribute name="easeInFraction" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="EaseInOutBase_attributeElement">
+    <xs:choice>
+      <xs:element name="easeInFraction" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="EaseInOutBase">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="EaseInOutBase_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.EaseInOutBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.EditableText">
+    <xs:attributeGroup ref="egret.gui.TextBase"/>
+    <xs:attribute name="clipAndEnableScrolling" type="xs:boolean"/>
+    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
+    <xs:attribute name="editable" type="xs:boolean"/>
+    <xs:attribute name="heightInLines" type="xs:decimal"/>
+    <xs:attribute name="horizontalScrollPosition" type="xs:decimal"/>
+    <xs:attribute name="maxChars" type="xs:decimal"/>
+    <xs:attribute name="multiline" type="xs:boolean"/>
+    <xs:attribute name="restrict" type="xs:string"/>
+    <xs:attribute name="selectable" type="xs:boolean"/>
+    <xs:attribute name="verticalScrollPosition" type="xs:decimal"/>
+    <xs:attribute name="widthInChars" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="EditableText_attributeElement">
     <xs:choice>
-      <xs:group ref="TextInput_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="horizontalCenter" type="number"/>
-      <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
-      <xs:element name="maxHeight" type="number"/>
-      <xs:element name="maxWidth" type="number"/>
-      <xs:element name="minHeight" type="number"/>
-      <xs:element name="minWidth" type="number"/>
-      <xs:element name="percentHeight" type="number"/>
-      <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:group ref="TextBase_attributeElement"/>
+      <xs:element name="clipAndEnableScrolling" type="boolean"/>
+      <xs:element name="displayAsPassword" type="boolean"/>
+      <xs:element name="editable" type="boolean"/>
+      <xs:element name="heightInLines" type="number"/>
+      <xs:element name="horizontalScrollPosition" type="number"/>
+      <xs:element name="maxChars" type="number"/>
+      <xs:element name="multiline" type="boolean"/>
+      <xs:element name="restrict" type="string"/>
+      <xs:element name="selectable" type="boolean"/>
+      <xs:element name="verticalScrollPosition" type="number"/>
+      <xs:element name="widthInChars" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="EditableText">
@@ -909,99 +1484,302 @@
         <xs:any namespace="##other"/>
         <xs:group ref="EditableText_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.EditableText"/>
+      <xs:attributeGroup ref="egret.gui.EditableText"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Group">
-    <xs:attributeGroup ref="lark.Sprite"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="currentState" type="xs:string"/>
-    <xs:attribute name="elementsContent" type="xs:string"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
-    <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="layout" type="xs:string"/>
-    <xs:attribute name="left" type="xs:decimal"/>
-    <xs:attribute name="maxHeight" type="xs:decimal"/>
-    <xs:attribute name="maxWidth" type="xs:decimal"/>
-    <xs:attribute name="minHeight" type="xs:decimal"/>
-    <xs:attribute name="minWidth" type="xs:decimal"/>
-    <xs:attribute name="percentHeight" type="xs:decimal"/>
-    <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="scrollEnabled" type="xs:boolean"/>
-    <xs:attribute name="scrollH" type="xs:decimal"/>
-    <xs:attribute name="scrollV" type="xs:decimal"/>
-    <xs:attribute name="states" type="xs:string"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="touchThrough" type="xs:boolean"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.gui.Effect">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+    <xs:attribute name="duration" type="xs:decimal"/>
+    <xs:attribute name="durationExplicitlySet" type="xs:boolean"/>
+    <xs:attribute name="instanceClass" type="xs:string"/>
+    <xs:attribute name="parentCompositeEffect" type="xs:string"/>
+    <xs:attribute name="perElementOffset" type="xs:decimal"/>
+    <xs:attribute name="playReversed" type="xs:boolean"/>
+    <xs:attribute name="playheadTime" type="xs:decimal"/>
+    <xs:attribute name="repeatCount" type="xs:decimal"/>
+    <xs:attribute name="repeatDelay" type="xs:decimal"/>
+    <xs:attribute name="startDelay" type="xs:decimal"/>
+    <xs:attribute name="target" type="xs:string"/>
+    <xs:attribute name="targets" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:complexType name="Array_lark.DisplayObject">
-    <xs:group ref="lark.DisplayObject"/>
-  </xs:complexType>
-  <xs:group name="swan.LayoutBase">
+  <xs:group name="egret.gui.Effect">
     <xs:choice>
-      <xs:element ref="BasicLayout"/>
-      <xs:element ref="HorizontalLayout"/>
-      <xs:element ref="LayoutBase"/>
-      <xs:element ref="LinearLayoutBase"/>
-      <xs:element ref="TileLayout"/>
-      <xs:element ref="VerticalLayout"/>
+      <xs:element ref="Animate"/>
+      <xs:element ref="AnimateTransform"/>
+      <xs:element ref="CompositeEffect"/>
+      <xs:element ref="Effect"/>
+      <xs:element ref="Fade"/>
+      <xs:element ref="Move"/>
+      <xs:element ref="Parallel"/>
+      <xs:element ref="Rotate"/>
+      <xs:element ref="Scale"/>
+      <xs:element ref="Sequence"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.LayoutBase">
-    <xs:group ref="swan.LayoutBase"/>
+  <xs:complexType name="egret.gui.Effect">
+    <xs:group ref="egret.gui.Effect"/>
   </xs:complexType>
-  <xs:group name="swan.State">
+  <xs:group name="Effect_attributeElement">
     <xs:choice>
-      <xs:element ref="State"/>
+      <xs:group ref="EventDispatcher_attributeElement"/>
+      <xs:element name="duration" type="number"/>
+      <xs:element name="durationExplicitlySet" type="boolean"/>
+      <xs:element name="instanceClass" type="any"/>
+      <xs:element name="parentCompositeEffect" type="egret.gui.Effect"/>
+      <xs:element name="perElementOffset" type="number"/>
+      <xs:element name="playReversed" type="boolean"/>
+      <xs:element name="playheadTime" type="number"/>
+      <xs:element name="repeatCount" type="number"/>
+      <xs:element name="repeatDelay" type="number"/>
+      <xs:element name="startDelay" type="number"/>
+      <xs:element name="target" type="any"/>
+      <xs:element name="targets" type="Array"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="Array_swan.State">
-    <xs:group ref="swan.State"/>
+  <xs:element name="Effect">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Effect_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Effect"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.EffectInstance">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+    <xs:attribute name="delayTimer" type="xs:string"/>
+    <xs:attribute name="duration" type="xs:decimal"/>
+    <xs:attribute name="durationExplicitlySet" type="xs:boolean"/>
+    <xs:attribute name="effect" type="xs:string"/>
+    <xs:attribute name="parentCompositeEffectInstance" type="xs:string"/>
+    <xs:attribute name="playCount" type="xs:decimal"/>
+    <xs:attribute name="playReversed" type="xs:boolean"/>
+    <xs:attribute name="playheadTime" type="xs:decimal"/>
+    <xs:attribute name="repeatCount" type="xs:decimal"/>
+    <xs:attribute name="repeatDelay" type="xs:decimal"/>
+    <xs:attribute name="startDelay" type="xs:decimal"/>
+    <xs:attribute name="stopRepeat" type="xs:boolean"/>
+    <xs:attribute name="target" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.Timer">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="egret.Timer">
+    <xs:group ref="egret.Timer"/>
+  </xs:complexType>
+  <xs:complexType name="egret.gui.IEffect">
+    <xs:group ref="egret.gui.IEffect"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.EffectInstance">
+    <xs:choice>
+      <xs:element ref="AnimateInstance"/>
+      <xs:element ref="AnimateTransformInstance"/>
+      <xs:element ref="CompositeEffectInstance"/>
+      <xs:element ref="EffectInstance"/>
+      <xs:element ref="FadeInstance"/>
+      <xs:element ref="ParallelInstance"/>
+      <xs:element ref="SequenceInstance"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.EffectInstance">
+    <xs:group ref="egret.gui.EffectInstance"/>
+  </xs:complexType>
+  <xs:group name="EffectInstance_attributeElement">
+    <xs:choice>
+      <xs:group ref="EventDispatcher_attributeElement"/>
+      <xs:element name="delayTimer" type="egret.Timer"/>
+      <xs:element name="duration" type="number"/>
+      <xs:element name="durationExplicitlySet" type="boolean"/>
+      <xs:element name="effect" type="egret.gui.IEffect"/>
+      <xs:element name="parentCompositeEffectInstance" type="egret.gui.EffectInstance"/>
+      <xs:element name="playCount" type="number"/>
+      <xs:element name="playReversed" type="boolean"/>
+      <xs:element name="playheadTime" type="number"/>
+      <xs:element name="repeatCount" type="number"/>
+      <xs:element name="repeatDelay" type="number"/>
+      <xs:element name="startDelay" type="number"/>
+      <xs:element name="stopRepeat" type="boolean"/>
+      <xs:element name="target" type="any"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="EffectInstance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="EffectInstance_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.EffectInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Elastic">
+    <xs:complexType/>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Fade">
+    <xs:attributeGroup ref="egret.gui.Animate"/>
+    <xs:attribute name="alphaFrom" type="xs:decimal"/>
+    <xs:attribute name="alphaTo" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Fade_attributeElement">
+    <xs:choice>
+      <xs:group ref="Animate_attributeElement"/>
+      <xs:element name="alphaFrom" type="number"/>
+      <xs:element name="alphaTo" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Fade" m:defaultProp="motionPaths" m:defaultPropType="Array_egret.gui.MotionPath">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Fade_attributeElement"/>
+        <xs:group ref="egret.gui.MotionPath"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Fade"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.FadeInstance">
+    <xs:attributeGroup ref="egret.gui.AnimateInstance"/>
+    <xs:attribute name="alphaFrom" type="xs:decimal"/>
+    <xs:attribute name="alphaTo" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="FadeInstance_attributeElement">
+    <xs:choice>
+      <xs:group ref="AnimateInstance_attributeElement"/>
+      <xs:element name="alphaFrom" type="number"/>
+      <xs:element name="alphaTo" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="FadeInstance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="FadeInstance_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.FadeInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Group">
+    <xs:attributeGroup ref="egret.gui.GroupBase"/>
+    <xs:attribute name="elementsContent" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.IVisualElement">
+    <xs:choice>
+      <xs:element ref="Alert"/>
+      <xs:element ref="BitmapLabel"/>
+      <xs:element ref="Button"/>
+      <xs:element ref="ButtonBase"/>
+      <xs:element ref="CheckBox"/>
+      <xs:element ref="DataGroup"/>
+      <xs:element ref="DropDownList"/>
+      <xs:element ref="DropDownListBase"/>
+      <xs:element ref="EditableText"/>
+      <xs:element ref="Group"/>
+      <xs:element ref="GroupBase"/>
+      <xs:element ref="HScrollBar"/>
+      <xs:element ref="HSlider"/>
+      <xs:element ref="ItemRenderer"/>
+      <xs:element ref="Label"/>
+      <xs:element ref="List"/>
+      <xs:element ref="ListBase"/>
+      <xs:element ref="Panel"/>
+      <xs:element ref="PopUpAnchor"/>
+      <xs:element ref="ProgressBar"/>
+      <xs:element ref="RadioButton"/>
+      <xs:element ref="Range"/>
+      <xs:element ref="Rect"/>
+      <xs:element ref="Scroller"/>
+      <xs:element ref="SkinnableComponent"/>
+      <xs:element ref="SkinnableContainer"/>
+      <xs:element ref="SkinnableDataContainer"/>
+      <xs:element ref="SkinnableTextBase"/>
+      <xs:element ref="SliderBase"/>
+      <xs:element ref="Spacer"/>
+      <xs:element ref="TabBar"/>
+      <xs:element ref="TabBarButton"/>
+      <xs:element ref="TextArea"/>
+      <xs:element ref="TextBase"/>
+      <xs:element ref="TextInput"/>
+      <xs:element ref="TitleWindow"/>
+      <xs:element ref="ToggleButton"/>
+      <xs:element ref="ToggleButtonBase"/>
+      <xs:element ref="ToggleSwitch"/>
+      <xs:element ref="TrackBase"/>
+      <xs:element ref="Tree"/>
+      <xs:element ref="TreeItemRenderer"/>
+      <xs:element ref="UIAsset"/>
+      <xs:element ref="UIComponent"/>
+      <xs:element ref="VScrollBar"/>
+      <xs:element ref="VSlider"/>
+      <xs:element ref="ViewStack"/>
+      <xs:element ref="Image"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="Array_egret.gui.IVisualElement">
+    <xs:group ref="egret.gui.IVisualElement"/>
   </xs:complexType>
   <xs:group name="Group_attributeElement">
     <xs:choice>
-      <xs:group ref="Sprite_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="currentState" type="string"/>
-      <xs:element name="elementsContent" type="Array_lark.DisplayObject"/>
-      <xs:element name="horizontalCenter" type="number"/>
-      <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="layout" type="swan.LayoutBase"/>
-      <xs:element name="left" type="number"/>
-      <xs:element name="maxHeight" type="number"/>
-      <xs:element name="maxWidth" type="number"/>
-      <xs:element name="minHeight" type="number"/>
-      <xs:element name="minWidth" type="number"/>
-      <xs:element name="percentHeight" type="number"/>
-      <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="scrollEnabled" type="boolean"/>
-      <xs:element name="scrollH" type="number"/>
-      <xs:element name="scrollV" type="number"/>
-      <xs:element name="states" type="Array_swan.State"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="touchThrough" type="boolean"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:group ref="GroupBase_attributeElement"/>
+      <xs:element name="elementsContent" type="Array_egret.gui.IVisualElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Group" m:defaultProp="elementsContent" m:defaultPropType="Array_lark.DisplayObject">
+  <xs:element name="Group" m:defaultProp="elementsContent" m:defaultPropType="Array_egret.gui.IVisualElement">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="Group_attributeElement"/>
-        <xs:group ref="lark.DisplayObject"/>
+        <xs:element ref="Skin"/>
+        <xs:group ref="egret.gui.IVisualElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Group"/>
+      <xs:attributeGroup ref="egret.gui.Group"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.HScrollBar">
-    <xs:attributeGroup ref="swan.ScrollBarBase"/>
+  <xs:attributeGroup name="egret.gui.GroupBase">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="clipAndEnableScrolling" type="xs:boolean"/>
+    <xs:attribute name="horizontalScrollPosition" type="xs:decimal"/>
+    <xs:attribute name="layout" type="xs:string"/>
+    <xs:attribute name="verticalScrollPosition" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.LayoutBase">
+    <xs:choice>
+      <xs:element ref="BasicLayout"/>
+      <xs:element ref="HorizontalLayout"/>
+      <xs:element ref="LayoutBase"/>
+      <xs:element ref="TileLayout"/>
+      <xs:element ref="VerticalLayout"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.LayoutBase">
+    <xs:group ref="egret.gui.LayoutBase"/>
+  </xs:complexType>
+  <xs:group name="GroupBase_attributeElement">
+    <xs:choice>
+      <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="clipAndEnableScrolling" type="boolean"/>
+      <xs:element name="horizontalScrollPosition" type="number"/>
+      <xs:element name="layout" type="egret.gui.LayoutBase"/>
+      <xs:element name="verticalScrollPosition" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="GroupBase">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="GroupBase_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.GroupBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.HScrollBar">
+    <xs:attributeGroup ref="egret.gui.HSlider"/>
+    <xs:attribute name="thumbAlpha" type="xs:decimal"/>
+    <xs:attribute name="trackAlpha" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="HScrollBar_attributeElement">
     <xs:choice>
-      <xs:group ref="ScrollBarBase_attributeElement"/>
+      <xs:group ref="HSlider_attributeElement"/>
+      <xs:element name="thumbAlpha" type="number"/>
+      <xs:element name="trackAlpha" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="HScrollBar">
@@ -1010,11 +1788,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="HScrollBar_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.HScrollBar"/>
+      <xs:attributeGroup ref="egret.gui.HScrollBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.HSlider">
-    <xs:attributeGroup ref="swan.SliderBase"/>
+  <xs:attributeGroup name="egret.gui.HSlider">
+    <xs:attributeGroup ref="egret.gui.SliderBase"/>
   </xs:attributeGroup>
   <xs:group name="HSlider_attributeElement">
     <xs:choice>
@@ -1027,15 +1805,49 @@
         <xs:any namespace="##other"/>
         <xs:group ref="HSlider_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.HSlider"/>
+      <xs:attributeGroup ref="egret.gui.HSlider"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.HorizontalLayout">
-    <xs:attributeGroup ref="swan.LinearLayoutBase"/>
+  <xs:simpleType name="egret.HorizontalAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="justify"/>
+      <xs:enumeration value="contentJustify"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="egret.VerticalAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="top"/>
+      <xs:enumeration value="bottom"/>
+      <xs:enumeration value="middle"/>
+      <xs:enumeration value="justify"/>
+      <xs:enumeration value="contentJustify"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="egret.gui.HorizontalLayout">
+    <xs:attributeGroup ref="egret.gui.LayoutBase"/>
+    <xs:attribute name="gap" type="xs:decimal"/>
+    <xs:attribute name="horizontalAlign" type="egret.HorizontalAlign"/>
+    <xs:attribute name="padding" type="xs:decimal"/>
+    <xs:attribute name="paddingBottom" type="xs:decimal"/>
+    <xs:attribute name="paddingLeft" type="xs:decimal"/>
+    <xs:attribute name="paddingRight" type="xs:decimal"/>
+    <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="verticalAlign" type="egret.VerticalAlign"/>
   </xs:attributeGroup>
   <xs:group name="HorizontalLayout_attributeElement">
     <xs:choice>
-      <xs:group ref="LinearLayoutBase_attributeElement"/>
+      <xs:group ref="LayoutBase_attributeElement"/>
+      <xs:element name="gap" type="number"/>
+      <xs:element name="horizontalAlign" type="string"/>
+      <xs:element name="padding" type="number"/>
+      <xs:element name="paddingBottom" type="number"/>
+      <xs:element name="paddingLeft" type="number"/>
+      <xs:element name="paddingRight" type="number"/>
+      <xs:element name="paddingTop" type="number"/>
+      <xs:element name="verticalAlign" type="string"/>
     </xs:choice>
   </xs:group>
   <xs:element name="HorizontalLayout">
@@ -1044,152 +1856,80 @@
         <xs:any namespace="##other"/>
         <xs:group ref="HorizontalLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.HorizontalLayout"/>
+      <xs:attributeGroup ref="egret.gui.HorizontalLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.BitmapFillMode">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="repeat"/>
-      <xs:enumeration value="scale"/>
-      <xs:enumeration value="clip"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:attributeGroup name="swan.Image">
-    <xs:attributeGroup ref="lark.Bitmap"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="fillMode" type="swan.BitmapFillMode"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
-    <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
-    <xs:attribute name="maxHeight" type="xs:decimal"/>
-    <xs:attribute name="maxWidth" type="xs:decimal"/>
-    <xs:attribute name="minHeight" type="xs:decimal"/>
-    <xs:attribute name="minWidth" type="xs:decimal"/>
-    <xs:attribute name="percentHeight" type="xs:decimal"/>
-    <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="scale9Grid" type="xs:string"/>
-    <xs:attribute name="source" type="xs:string"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
-  </xs:attributeGroup>
-  <xs:group name="Image_attributeElement">
-    <xs:choice>
-      <xs:group ref="Bitmap_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="fillMode" type="string"/>
-      <xs:element name="horizontalCenter" type="number"/>
-      <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
-      <xs:element name="maxHeight" type="number"/>
-      <xs:element name="maxWidth" type="number"/>
-      <xs:element name="minHeight" type="number"/>
-      <xs:element name="minWidth" type="number"/>
-      <xs:element name="percentHeight" type="number"/>
-      <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="scale9Grid" type="lark.Rectangle"/>
-      <xs:element name="source" type="any"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="Image">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="Image_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="swan.Image"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="swan.ItemRenderer">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:attributeGroup name="egret.gui.ItemRenderer">
+    <xs:attributeGroup ref="egret.gui.ButtonBase"/>
     <xs:attribute name="data" type="xs:string"/>
     <xs:attribute name="itemIndex" type="xs:decimal"/>
     <xs:attribute name="selected" type="xs:boolean"/>
   </xs:attributeGroup>
   <xs:group name="ItemRenderer_attributeElement">
     <xs:choice>
-      <xs:group ref="Group_attributeElement"/>
+      <xs:group ref="ButtonBase_attributeElement"/>
       <xs:element name="data" type="any"/>
       <xs:element name="itemIndex" type="number"/>
       <xs:element name="selected" type="boolean"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ItemRenderer" m:defaultProp="elementsContent" m:defaultPropType="Array_lark.DisplayObject">
+  <xs:element name="ItemRenderer" m:defaultProp="label" m:defaultPropType="string">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="ItemRenderer_attributeElement"/>
-        <xs:group ref="lark.DisplayObject"/>
+        <xs:group ref="string"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ItemRenderer"/>
+      <xs:attributeGroup ref="egret.gui.ItemRenderer"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ItemTapEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-    <xs:attribute name="item" type="xs:string"/>
-    <xs:attribute name="itemIndex" type="xs:decimal"/>
-    <xs:attribute name="itemRenderer" type="xs:string"/>
+  <xs:attributeGroup name="egret.gui.Keyframe">
+    <xs:attribute name="easer" type="xs:string"/>
+    <xs:attribute name="time" type="xs:decimal"/>
+    <xs:attribute name="timeFraction" type="xs:decimal"/>
+    <xs:attribute name="value" type="xs:string"/>
+    <xs:attribute name="valueBy" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.IItemRenderer">
+  <xs:group name="Keyframe_attributeElement">
     <xs:choice>
-      <xs:element ref="ItemRenderer"/>
+      <xs:element name="easer" type="egret.gui.IEaser"/>
+      <xs:element name="time" type="number"/>
+      <xs:element name="timeFraction" type="number"/>
+      <xs:element name="value" type="any"/>
+      <xs:element name="valueBy" type="any"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.IItemRenderer">
-    <xs:group ref="swan.IItemRenderer"/>
-  </xs:complexType>
-  <xs:group name="ItemTapEvent_attributeElement">
-    <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-      <xs:element name="item" type="any"/>
-      <xs:element name="itemIndex" type="number"/>
-      <xs:element name="itemRenderer" type="swan.IItemRenderer"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="ItemTapEvent">
+  <xs:element name="Keyframe">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="ItemTapEvent_attributeElement"/>
+        <xs:group ref="Keyframe_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ItemTapEvent"/>
+      <xs:attributeGroup ref="egret.gui.Keyframe"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Label">
-    <xs:attributeGroup ref="lark.TextField"/>
-    <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
-    <xs:attribute name="includeInLayout" type="xs:boolean"/>
-    <xs:attribute name="left" type="xs:decimal"/>
-    <xs:attribute name="maxHeight" type="xs:decimal"/>
-    <xs:attribute name="maxWidth" type="xs:decimal"/>
-    <xs:attribute name="minHeight" type="xs:decimal"/>
-    <xs:attribute name="minWidth" type="xs:decimal"/>
-    <xs:attribute name="percentHeight" type="xs:decimal"/>
-    <xs:attribute name="percentWidth" type="xs:decimal"/>
-    <xs:attribute name="right" type="xs:decimal"/>
-    <xs:attribute name="top" type="xs:decimal"/>
-    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.gui.Label">
+    <xs:attributeGroup ref="egret.gui.TextBase"/>
+    <xs:attribute name="maxDisplayedLines" type="xs:decimal"/>
+    <xs:attribute name="padding" type="xs:decimal"/>
+    <xs:attribute name="paddingBottom" type="xs:decimal"/>
+    <xs:attribute name="paddingLeft" type="xs:decimal"/>
+    <xs:attribute name="paddingRight" type="xs:decimal"/>
+    <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="stroke" type="xs:decimal"/>
+    <xs:attribute name="strokeColor" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Label_attributeElement">
     <xs:choice>
-      <xs:group ref="TextField_attributeElement"/>
-      <xs:element name="bottom" type="number"/>
-      <xs:element name="horizontalCenter" type="number"/>
-      <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="left" type="number"/>
-      <xs:element name="maxHeight" type="number"/>
-      <xs:element name="maxWidth" type="number"/>
-      <xs:element name="minHeight" type="number"/>
-      <xs:element name="minWidth" type="number"/>
-      <xs:element name="percentHeight" type="number"/>
-      <xs:element name="percentWidth" type="number"/>
-      <xs:element name="right" type="number"/>
-      <xs:element name="top" type="number"/>
-      <xs:element name="verticalCenter" type="number"/>
+      <xs:group ref="TextBase_attributeElement"/>
+      <xs:element name="maxDisplayedLines" type="number"/>
+      <xs:element name="padding" type="number"/>
+      <xs:element name="paddingBottom" type="number"/>
+      <xs:element name="paddingLeft" type="number"/>
+      <xs:element name="paddingRight" type="number"/>
+      <xs:element name="paddingTop" type="number"/>
+      <xs:element name="stroke" type="number"/>
+      <xs:element name="strokeColor" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Label">
@@ -1198,33 +1938,31 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Label_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Label"/>
+      <xs:attributeGroup ref="egret.gui.Label"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.LayoutBase">
-    <xs:attributeGroup ref="lark.EventEmitter"/>
+  <xs:attributeGroup name="egret.gui.LayoutBase">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="target" type="xs:string"/>
+    <xs:attribute name="typicalLayoutRect" type="xs:string"/>
     <xs:attribute name="useVirtualLayout" type="xs:boolean"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Group">
+  <xs:group name="egret.gui.GroupBase">
     <xs:choice>
       <xs:element ref="DataGroup"/>
       <xs:element ref="Group"/>
-      <xs:element ref="ItemRenderer"/>
-      <xs:element ref="List"/>
-      <xs:element ref="ListBase"/>
-      <xs:element ref="TabBar"/>
-      <xs:element ref="UILayer"/>
+      <xs:element ref="GroupBase"/>
       <xs:element ref="ViewStack"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Group">
-    <xs:group ref="swan.Group"/>
+  <xs:complexType name="egret.gui.GroupBase">
+    <xs:group ref="egret.gui.GroupBase"/>
   </xs:complexType>
   <xs:group name="LayoutBase_attributeElement">
     <xs:choice>
-      <xs:group ref="EventEmitter_attributeElement"/>
-      <xs:element name="target" type="swan.Group"/>
+      <xs:group ref="EventDispatcher_attributeElement"/>
+      <xs:element name="target" type="egret.gui.GroupBase"/>
+      <xs:element name="typicalLayoutRect" type="egret.Rectangle"/>
       <xs:element name="useVirtualLayout" type="boolean"/>
     </xs:choice>
   </xs:group>
@@ -1234,60 +1972,30 @@
         <xs:any namespace="##other"/>
         <xs:group ref="LayoutBase_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.LayoutBase"/>
+      <xs:attributeGroup ref="egret.gui.LayoutBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.LayoutHorizontalAlign">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="left"/>
-      <xs:enumeration value="right"/>
-      <xs:enumeration value="center"/>
-      <xs:enumeration value="justify"/>
-      <xs:enumeration value="contentJustify"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="swan.LayoutVerticalAlign">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="top"/>
-      <xs:enumeration value="bottom"/>
-      <xs:enumeration value="middle"/>
-      <xs:enumeration value="justify"/>
-      <xs:enumeration value="contentJustify"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:attributeGroup name="swan.LinearLayoutBase">
-    <xs:attributeGroup ref="swan.LayoutBase"/>
-    <xs:attribute name="gap" type="xs:decimal"/>
-    <xs:attribute name="horizontalAlign" type="swan.LayoutHorizontalAlign"/>
-    <xs:attribute name="paddingBottom" type="xs:decimal"/>
-    <xs:attribute name="paddingLeft" type="xs:decimal"/>
-    <xs:attribute name="paddingRight" type="xs:decimal"/>
-    <xs:attribute name="paddingTop" type="xs:decimal"/>
-    <xs:attribute name="verticalAlign" type="swan.LayoutVerticalAlign"/>
+  <xs:attributeGroup name="egret.gui.Linear">
+    <xs:attribute name="easeInFraction" type="xs:decimal"/>
+    <xs:attribute name="easeOutFraction" type="xs:decimal"/>
   </xs:attributeGroup>
-  <xs:group name="LinearLayoutBase_attributeElement">
+  <xs:group name="Linear_attributeElement">
     <xs:choice>
-      <xs:group ref="LayoutBase_attributeElement"/>
-      <xs:element name="gap" type="number"/>
-      <xs:element name="horizontalAlign" type="string"/>
-      <xs:element name="paddingBottom" type="number"/>
-      <xs:element name="paddingLeft" type="number"/>
-      <xs:element name="paddingRight" type="number"/>
-      <xs:element name="paddingTop" type="number"/>
-      <xs:element name="verticalAlign" type="string"/>
+      <xs:element name="easeInFraction" type="number"/>
+      <xs:element name="easeOutFraction" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="LinearLayoutBase">
+  <xs:element name="Linear">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="LinearLayoutBase_attributeElement"/>
+        <xs:group ref="Linear_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.LinearLayoutBase"/>
+      <xs:attributeGroup ref="egret.gui.Linear"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.List">
-    <xs:attributeGroup ref="swan.ListBase"/>
+  <xs:attributeGroup name="egret.gui.List">
+    <xs:attributeGroup ref="egret.gui.ListBase"/>
     <xs:attribute name="allowMultipleSelection" type="xs:boolean"/>
     <xs:attribute name="selectedIndices" type="xs:string"/>
     <xs:attribute name="selectedItems" type="xs:string"/>
@@ -1296,142 +2004,293 @@
     <xs:choice>
       <xs:group ref="ListBase_attributeElement"/>
       <xs:element name="allowMultipleSelection" type="boolean"/>
-      <xs:element name="selectedIndices" type="Array_any"/>
-      <xs:element name="selectedItems" type="Array_any"/>
+      <xs:element name="selectedIndices" type="Array"/>
+      <xs:element name="selectedItems" type="Array"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="List" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="List" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="List_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="egret.gui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.List"/>
+      <xs:attributeGroup ref="egret.gui.List"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ListBase">
-    <xs:attributeGroup ref="swan.DataGroup"/>
+  <xs:attributeGroup name="egret.gui.ListBase">
+    <xs:attributeGroup ref="egret.gui.SkinnableDataContainer"/>
+    <xs:attribute name="labelField" type="xs:string"/>
+    <xs:attribute name="labelFunction" type="xs:string"/>
     <xs:attribute name="requireSelection" type="xs:boolean"/>
     <xs:attribute name="selectedIndex" type="xs:decimal"/>
     <xs:attribute name="selectedItem" type="xs:string"/>
+    <xs:attribute name="useVirtualLayout" type="xs:boolean"/>
   </xs:attributeGroup>
   <xs:group name="ListBase_attributeElement">
     <xs:choice>
-      <xs:group ref="DataGroup_attributeElement"/>
+      <xs:group ref="SkinnableDataContainer_attributeElement"/>
+      <xs:element name="labelField" type="string"/>
+      <xs:element name="labelFunction" type="Function"/>
       <xs:element name="requireSelection" type="boolean"/>
       <xs:element name="selectedIndex" type="number"/>
       <xs:element name="selectedItem" type="any"/>
+      <xs:element name="useVirtualLayout" type="boolean"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ListBase" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="ListBase" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="ListBase_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="egret.gui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ListBase"/>
+      <xs:attributeGroup ref="egret.gui.ListBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Panel">
-    <xs:attributeGroup ref="swan.Component"/>
-    <xs:attribute name="closeButton" type="xs:string"/>
-    <xs:attribute name="elementsContent" type="xs:string"/>
-    <xs:attribute name="moveArea" type="xs:string"/>
+  <xs:attributeGroup name="egret.gui.MotionPath">
+    <xs:attribute name="interpolator" type="xs:string"/>
+    <xs:attribute name="keyframes" type="xs:string"/>
+    <xs:attribute name="property" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="MotionPath_attributeElement">
+    <xs:choice>
+      <xs:element name="interpolator" type="egret.gui.IInterpolator"/>
+      <xs:element name="keyframes" type="Array"/>
+      <xs:element name="property" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="MotionPath" m:defaultProp="keyframes" m:defaultPropType="Array">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="MotionPath_attributeElement"/>
+        <xs:group ref="Array"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.MotionPath"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Move">
+    <xs:attributeGroup ref="egret.gui.AnimateTransform"/>
+    <xs:attribute name="xBy" type="xs:decimal"/>
+    <xs:attribute name="xFrom" type="xs:decimal"/>
+    <xs:attribute name="xTo" type="xs:decimal"/>
+    <xs:attribute name="yBy" type="xs:decimal"/>
+    <xs:attribute name="yFrom" type="xs:decimal"/>
+    <xs:attribute name="yTo" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Move_attributeElement">
+    <xs:choice>
+      <xs:group ref="AnimateTransform_attributeElement"/>
+      <xs:element name="xBy" type="number"/>
+      <xs:element name="xFrom" type="number"/>
+      <xs:element name="xTo" type="number"/>
+      <xs:element name="yBy" type="number"/>
+      <xs:element name="yFrom" type="number"/>
+      <xs:element name="yTo" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Move" m:defaultProp="motionPaths" m:defaultPropType="Array_egret.gui.MotionPath">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Move_attributeElement"/>
+        <xs:group ref="egret.gui.MotionPath"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Move"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NumberInterpolator">
+    <xs:complexType/>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ObjectCollection">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
+    <xs:attribute name="openNodes" type="xs:string"/>
+    <xs:attribute name="showRoot" type="xs:boolean"/>
+    <xs:attribute name="source" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="ObjectCollection_attributeElement">
+    <xs:choice>
+      <xs:group ref="EventDispatcher_attributeElement"/>
+      <xs:element name="openNodes" type="Array"/>
+      <xs:element name="showRoot" type="boolean"/>
+      <xs:element name="source" type="any"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="ObjectCollection" m:defaultProp="source" m:defaultPropType="any">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="ObjectCollection_attributeElement"/>
+        <xs:group ref="any"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ObjectCollection"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.OverrideBase">
+    <xs:attributeGroup ref="egret.HashObject"/>
+  </xs:attributeGroup>
+  <xs:group name="OverrideBase_attributeElement">
+    <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="OverrideBase">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="OverrideBase_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.OverrideBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Panel">
+    <xs:attributeGroup ref="egret.gui.SkinnableContainer"/>
     <xs:attribute name="title" type="xs:string"/>
     <xs:attribute name="titleDisplay" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Button">
-    <xs:choice>
-      <xs:element ref="Button"/>
-      <xs:element ref="CheckBox"/>
-      <xs:element ref="RadioButton"/>
-      <xs:element ref="ToggleButton"/>
-      <xs:element ref="ToggleSwitch"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="swan.Button">
-    <xs:group ref="swan.Button"/>
-  </xs:complexType>
   <xs:group name="Panel_attributeElement">
     <xs:choice>
-      <xs:group ref="Component_attributeElement"/>
-      <xs:element name="closeButton" type="swan.Button"/>
-      <xs:element name="elementsContent" type="Array_lark.DisplayObject"/>
-      <xs:element name="moveArea" type="lark.DisplayObject"/>
+      <xs:group ref="SkinnableContainer_attributeElement"/>
       <xs:element name="title" type="string"/>
-      <xs:element name="titleDisplay" type="swan.IDisplayText"/>
+      <xs:element name="titleDisplay" type="egret.gui.IDisplayText"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Panel" m:defaultProp="elementsContent" m:defaultPropType="Array_lark.DisplayObject">
+  <xs:element name="Panel" m:defaultProp="elementsContent" m:defaultPropType="Array_egret.gui.IVisualElement">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="Panel_attributeElement"/>
-        <xs:group ref="lark.DisplayObject"/>
+        <xs:group ref="egret.gui.IVisualElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Panel"/>
+      <xs:attributeGroup ref="egret.gui.Panel"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.Direction">
+  <xs:attributeGroup name="egret.gui.Parallel">
+    <xs:attributeGroup ref="egret.gui.CompositeEffect"/>
+  </xs:attributeGroup>
+  <xs:group name="Parallel_attributeElement">
+    <xs:choice>
+      <xs:group ref="CompositeEffect_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Parallel" m:defaultProp="children" m:defaultPropType="Array_egret.gui.IEffect">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Parallel_attributeElement"/>
+        <xs:group ref="egret.gui.IEffect"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Parallel"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ParallelInstance">
+    <xs:attributeGroup ref="egret.gui.CompositeEffectInstance"/>
+  </xs:attributeGroup>
+  <xs:group name="ParallelInstance_attributeElement">
+    <xs:choice>
+      <xs:group ref="CompositeEffectInstance_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="ParallelInstance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="ParallelInstance_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ParallelInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="egret.gui.PopUpPosition">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="ltr"/>
-      <xs:enumeration value="rtl"/>
-      <xs:enumeration value="ttb"/>
-      <xs:enumeration value="btt"/>
+      <xs:enumeration value="above"/>
+      <xs:enumeration value="below"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="topLeft"/>
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="right"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.ProgressBar">
-    <xs:attributeGroup ref="swan.Range"/>
-    <xs:attribute name="direction" type="swan.Direction"/>
+  <xs:attributeGroup name="egret.gui.PopUpAnchor">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="closeDuration" type="xs:decimal"/>
+    <xs:attribute name="displayPopUp" type="xs:boolean"/>
+    <xs:attribute name="openDuration" type="xs:decimal"/>
+    <xs:attribute name="popUp" type="xs:string"/>
+    <xs:attribute name="popUpHeightMatchesAnchorHeight" type="xs:boolean"/>
+    <xs:attribute name="popUpPosition" type="egret.gui.PopUpPosition"/>
+    <xs:attribute name="popUpWidthMatchesAnchorWidth" type="xs:boolean"/>
+  </xs:attributeGroup>
+  <xs:complexType name="egret.gui.IVisualElement">
+    <xs:group ref="egret.gui.IVisualElement"/>
+  </xs:complexType>
+  <xs:group name="PopUpAnchor_attributeElement">
+    <xs:choice>
+      <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="closeDuration" type="number"/>
+      <xs:element name="displayPopUp" type="boolean"/>
+      <xs:element name="openDuration" type="number"/>
+      <xs:element name="popUp" type="egret.gui.IVisualElement"/>
+      <xs:element name="popUpHeightMatchesAnchorHeight" type="boolean"/>
+      <xs:element name="popUpPosition" type="string"/>
+      <xs:element name="popUpWidthMatchesAnchorWidth" type="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="PopUpAnchor" m:defaultProp="popUp" m:defaultPropType="egret.gui.IVisualElement">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="PopUpAnchor_attributeElement"/>
+        <xs:group ref="egret.gui.IVisualElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.PopUpAnchor"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Power">
+    <xs:attributeGroup ref="egret.gui.EaseInOutBase"/>
+    <xs:attribute name="exponent" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Power_attributeElement">
+    <xs:choice>
+      <xs:group ref="EaseInOutBase_attributeElement"/>
+      <xs:element name="exponent" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Power">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Power_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Power"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="egret.gui.ProgressBarDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="leftToRight"/>
+      <xs:enumeration value="rightToLeft"/>
+      <xs:enumeration value="topToBottom"/>
+      <xs:enumeration value="bottomToTop"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="egret.gui.ProgressBar">
+    <xs:attributeGroup ref="egret.gui.Range"/>
+    <xs:attribute name="direction" type="egret.gui.ProgressBarDirection"/>
     <xs:attribute name="labelDisplay" type="xs:string"/>
     <xs:attribute name="labelFunction" type="xs:string"/>
     <xs:attribute name="slideDuration" type="xs:decimal"/>
     <xs:attribute name="thumb" type="xs:string"/>
+    <xs:attribute name="track" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Label">
-    <xs:choice>
-      <xs:element ref="Label"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="swan.Label">
-    <xs:group ref="swan.Label"/>
-  </xs:complexType>
-  <xs:group name="swan.UIComponent">
-    <xs:choice>
-      <xs:element ref="Button"/>
-      <xs:element ref="CheckBox"/>
-      <xs:element ref="Component"/>
-      <xs:element ref="EditableText"/>
-      <xs:element ref="HScrollBar"/>
-      <xs:element ref="HSlider"/>
-      <xs:element ref="Image"/>
-      <xs:element ref="Label"/>
-      <xs:element ref="Panel"/>
-      <xs:element ref="ProgressBar"/>
-      <xs:element ref="RadioButton"/>
-      <xs:element ref="Range"/>
-      <xs:element ref="ScrollBarBase"/>
-      <xs:element ref="Scroller"/>
-      <xs:element ref="SliderBase"/>
-      <xs:element ref="ToggleButton"/>
-      <xs:element ref="ToggleSwitch"/>
-      <xs:element ref="VScrollBar"/>
-      <xs:element ref="VSlider"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="swan.UIComponent">
-    <xs:group ref="swan.UIComponent"/>
-  </xs:complexType>
   <xs:group name="ProgressBar_attributeElement">
     <xs:choice>
       <xs:group ref="Range_attributeElement"/>
       <xs:element name="direction" type="string"/>
-      <xs:element name="labelDisplay" type="swan.Label"/>
+      <xs:element name="labelDisplay" type="egret.gui.Label"/>
       <xs:element name="labelFunction" type="Function"/>
       <xs:element name="slideDuration" type="number"/>
-      <xs:element name="thumb" type="swan.UIComponent"/>
+      <xs:element name="thumb" type="egret.DisplayObject"/>
+      <xs:element name="track" type="egret.DisplayObject"/>
     </xs:choice>
   </xs:group>
   <xs:element name="ProgressBar">
@@ -1440,79 +2299,61 @@
         <xs:any namespace="##other"/>
         <xs:group ref="ProgressBar_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ProgressBar"/>
+      <xs:attributeGroup ref="egret.gui.ProgressBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.PropertyEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-    <xs:attribute name="property" type="xs:string"/>
-  </xs:attributeGroup>
-  <xs:group name="PropertyEvent_attributeElement">
-    <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-      <xs:element name="property" type="string"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="PropertyEvent">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="PropertyEvent_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="swan.PropertyEvent"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="swan.RadioButton">
-    <xs:attributeGroup ref="swan.ToggleButton"/>
+  <xs:attributeGroup name="egret.gui.RadioButton">
+    <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
     <xs:attribute name="group" type="xs:string"/>
     <xs:attribute name="groupName" type="xs:string"/>
     <xs:attribute name="value" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.RadioButtonGroup">
+  <xs:group name="egret.gui.RadioButtonGroup">
     <xs:choice>
       <xs:element ref="RadioButtonGroup"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.RadioButtonGroup">
-    <xs:group ref="swan.RadioButtonGroup"/>
+  <xs:complexType name="egret.gui.RadioButtonGroup">
+    <xs:group ref="egret.gui.RadioButtonGroup"/>
   </xs:complexType>
   <xs:group name="RadioButton_attributeElement">
     <xs:choice>
-      <xs:group ref="ToggleButton_attributeElement"/>
-      <xs:element name="group" type="swan.RadioButtonGroup"/>
+      <xs:group ref="ToggleButtonBase_attributeElement"/>
+      <xs:element name="group" type="egret.gui.RadioButtonGroup"/>
       <xs:element name="groupName" type="string"/>
       <xs:element name="value" type="any"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="RadioButton">
+  <xs:element name="RadioButton" m:defaultProp="label" m:defaultPropType="string">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="RadioButton_attributeElement"/>
+        <xs:group ref="string"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.RadioButton"/>
+      <xs:attributeGroup ref="egret.gui.RadioButton"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.RadioButtonGroup">
-    <xs:attributeGroup ref="lark.EventEmitter"/>
+  <xs:attributeGroup name="egret.gui.RadioButtonGroup">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="enabled" type="xs:boolean"/>
     <xs:attribute name="selectedValue" type="xs:string"/>
     <xs:attribute name="selection" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.RadioButton">
+  <xs:group name="egret.gui.RadioButton">
     <xs:choice>
       <xs:element ref="RadioButton"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.RadioButton">
-    <xs:group ref="swan.RadioButton"/>
+  <xs:complexType name="egret.gui.RadioButton">
+    <xs:group ref="egret.gui.RadioButton"/>
   </xs:complexType>
   <xs:group name="RadioButtonGroup_attributeElement">
     <xs:choice>
-      <xs:group ref="EventEmitter_attributeElement"/>
+      <xs:group ref="EventDispatcher_attributeElement"/>
       <xs:element name="enabled" type="boolean"/>
       <xs:element name="selectedValue" type="any"/>
-      <xs:element name="selection" type="swan.RadioButton"/>
+      <xs:element name="selection" type="egret.gui.RadioButton"/>
     </xs:choice>
   </xs:group>
   <xs:element name="RadioButtonGroup">
@@ -1521,22 +2362,24 @@
         <xs:any namespace="##other"/>
         <xs:group ref="RadioButtonGroup_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.RadioButtonGroup"/>
+      <xs:attributeGroup ref="egret.gui.RadioButtonGroup"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Range">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="egret.gui.Range">
+    <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
     <xs:attribute name="maximum" type="xs:decimal"/>
     <xs:attribute name="minimum" type="xs:decimal"/>
     <xs:attribute name="snapInterval" type="xs:decimal"/>
+    <xs:attribute name="stepSize" type="xs:decimal"/>
     <xs:attribute name="value" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="Range_attributeElement">
     <xs:choice>
-      <xs:group ref="Component_attributeElement"/>
+      <xs:group ref="SkinnableComponent_attributeElement"/>
       <xs:element name="maximum" type="number"/>
       <xs:element name="minimum" type="number"/>
       <xs:element name="snapInterval" type="number"/>
+      <xs:element name="stepSize" type="number"/>
       <xs:element name="value" type="number"/>
     </xs:choice>
   </xs:group>
@@ -1546,126 +2389,205 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Range_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Range"/>
+      <xs:attributeGroup ref="egret.gui.Range"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ScrollBarBase">
-    <xs:attributeGroup ref="swan.Component"/>
-    <xs:attribute name="thumb" type="xs:string"/>
-    <xs:attribute name="viewport" type="xs:string"/>
+  <xs:attributeGroup name="egret.gui.Rect">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="fillAlpha" type="xs:decimal"/>
+    <xs:attribute name="fillColor" type="xs:string"/>
+    <xs:attribute name="strokeAlpha" type="xs:decimal"/>
+    <xs:attribute name="strokeColor" type="xs:string"/>
+    <xs:attribute name="strokeWeight" type="xs:decimal"/>
   </xs:attributeGroup>
-  <xs:group name="swan.IViewport">
+  <xs:group name="Rect_attributeElement">
     <xs:choice>
-      <xs:element ref="DataGroup"/>
-      <xs:element ref="Group"/>
-      <xs:element ref="ItemRenderer"/>
-      <xs:element ref="List"/>
-      <xs:element ref="ListBase"/>
-      <xs:element ref="TabBar"/>
-      <xs:element ref="UILayer"/>
-      <xs:element ref="ViewStack"/>
+      <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="fillAlpha" type="number"/>
+      <xs:element name="fillColor" type="number"/>
+      <xs:element name="strokeAlpha" type="number"/>
+      <xs:element name="strokeColor" type="number"/>
+      <xs:element name="strokeWeight" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.IViewport">
-    <xs:group ref="swan.IViewport"/>
-  </xs:complexType>
-  <xs:group name="ScrollBarBase_attributeElement">
-    <xs:choice>
-      <xs:group ref="Component_attributeElement"/>
-      <xs:element name="thumb" type="swan.UIComponent"/>
-      <xs:element name="viewport" type="swan.IViewport"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="ScrollBarBase">
+  <xs:element name="Rect">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="ScrollBarBase_attributeElement"/>
+        <xs:group ref="Rect_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ScrollBarBase"/>
+      <xs:attributeGroup ref="egret.gui.Rect"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.ScrollPolicy">
+  <xs:attributeGroup name="egret.gui.Rotate">
+    <xs:attributeGroup ref="egret.gui.AnimateTransform"/>
+    <xs:attribute name="angleBy" type="xs:decimal"/>
+    <xs:attribute name="angleFrom" type="xs:decimal"/>
+    <xs:attribute name="angleTo" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Rotate_attributeElement">
+    <xs:choice>
+      <xs:group ref="AnimateTransform_attributeElement"/>
+      <xs:element name="angleBy" type="number"/>
+      <xs:element name="angleFrom" type="number"/>
+      <xs:element name="angleTo" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Rotate" m:defaultProp="motionPaths" m:defaultPropType="Array_egret.gui.MotionPath">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Rotate_attributeElement"/>
+        <xs:group ref="egret.gui.MotionPath"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Rotate"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Scale">
+    <xs:attributeGroup ref="egret.gui.AnimateTransform"/>
+    <xs:attribute name="scaleXBy" type="xs:decimal"/>
+    <xs:attribute name="scaleXFrom" type="xs:decimal"/>
+    <xs:attribute name="scaleXTo" type="xs:decimal"/>
+    <xs:attribute name="scaleYBy" type="xs:decimal"/>
+    <xs:attribute name="scaleYFrom" type="xs:decimal"/>
+    <xs:attribute name="scaleYTo" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Scale_attributeElement">
+    <xs:choice>
+      <xs:group ref="AnimateTransform_attributeElement"/>
+      <xs:element name="scaleXBy" type="number"/>
+      <xs:element name="scaleXFrom" type="number"/>
+      <xs:element name="scaleXTo" type="number"/>
+      <xs:element name="scaleYBy" type="number"/>
+      <xs:element name="scaleYFrom" type="number"/>
+      <xs:element name="scaleYTo" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Scale" m:defaultProp="motionPaths" m:defaultPropType="Array_egret.gui.MotionPath">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Scale_attributeElement"/>
+        <xs:group ref="egret.gui.MotionPath"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Scale"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="egret.gui.ScrollPolicy">
     <xs:restriction base="xs:string">
       <xs:enumeration value="auto"/>
       <xs:enumeration value="off"/>
       <xs:enumeration value="on"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.Scroller">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="egret.gui.Scroller">
+    <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    <xs:attribute name="autoHideDelay" type="xs:decimal"/>
+    <xs:attribute name="autoHideScrollBars" type="xs:boolean"/>
     <xs:attribute name="horizontalScrollBar" type="xs:string"/>
-    <xs:attribute name="scrollPolicyH" type="swan.ScrollPolicy"/>
-    <xs:attribute name="scrollPolicyV" type="swan.ScrollPolicy"/>
-    <xs:attribute name="throwSpeed" type="xs:decimal"/>
+    <xs:attribute name="horizontalScrollPolicy" type="egret.gui.ScrollPolicy"/>
+    <xs:attribute name="scrollBeginThreshold" type="xs:decimal"/>
+    <xs:attribute name="scrollSpeed" type="xs:decimal"/>
     <xs:attribute name="verticalScrollBar" type="xs:string"/>
+    <xs:attribute name="verticalScrollPolicy" type="egret.gui.ScrollPolicy"/>
     <xs:attribute name="viewport" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.HScrollBar">
+  <xs:group name="egret.gui.HScrollBar">
     <xs:choice>
       <xs:element ref="HScrollBar"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.HScrollBar">
-    <xs:group ref="swan.HScrollBar"/>
+  <xs:complexType name="egret.gui.HScrollBar">
+    <xs:group ref="egret.gui.HScrollBar"/>
   </xs:complexType>
-  <xs:group name="swan.VScrollBar">
+  <xs:group name="egret.gui.VScrollBar">
     <xs:choice>
       <xs:element ref="VScrollBar"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.VScrollBar">
-    <xs:group ref="swan.VScrollBar"/>
+  <xs:complexType name="egret.gui.VScrollBar">
+    <xs:group ref="egret.gui.VScrollBar"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.IViewport">
+    <xs:choice>
+      <xs:element ref="DataGroup"/>
+      <xs:element ref="EditableText"/>
+      <xs:element ref="Group"/>
+      <xs:element ref="GroupBase"/>
+      <xs:element ref="ViewStack"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.IViewport">
+    <xs:group ref="egret.gui.IViewport"/>
   </xs:complexType>
   <xs:group name="Scroller_attributeElement">
     <xs:choice>
-      <xs:group ref="Component_attributeElement"/>
-      <xs:element name="horizontalScrollBar" type="swan.HScrollBar"/>
-      <xs:element name="scrollPolicyH" type="string"/>
-      <xs:element name="scrollPolicyV" type="string"/>
-      <xs:element name="throwSpeed" type="number"/>
-      <xs:element name="verticalScrollBar" type="swan.VScrollBar"/>
-      <xs:element name="viewport" type="swan.IViewport"/>
+      <xs:group ref="SkinnableComponent_attributeElement"/>
+      <xs:element name="autoHideDelay" type="number"/>
+      <xs:element name="autoHideScrollBars" type="boolean"/>
+      <xs:element name="horizontalScrollBar" type="egret.gui.HScrollBar"/>
+      <xs:element name="horizontalScrollPolicy" type="string"/>
+      <xs:element name="scrollBeginThreshold" type="number"/>
+      <xs:element name="scrollSpeed" type="number"/>
+      <xs:element name="verticalScrollBar" type="egret.gui.VScrollBar"/>
+      <xs:element name="verticalScrollPolicy" type="string"/>
+      <xs:element name="viewport" type="egret.gui.IViewport"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Scroller" m:defaultProp="viewport" m:defaultPropType="swan.IViewport">
+  <xs:element name="Scroller" m:defaultProp="viewport" m:defaultPropType="egret.gui.IViewport">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="Scroller_attributeElement"/>
-        <xs:group ref="swan.IViewport"/>
+        <xs:group ref="egret.gui.IViewport"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Scroller"/>
+      <xs:attributeGroup ref="egret.gui.Scroller"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ScrollerThrowEvent">
-    <xs:attributeGroup ref="lark.Event"/>
-    <xs:attribute name="currentPos" type="xs:decimal"/>
-    <xs:attribute name="toPos" type="xs:decimal"/>
+  <xs:attributeGroup name="egret.gui.Sequence">
+    <xs:attributeGroup ref="egret.gui.CompositeEffect"/>
   </xs:attributeGroup>
-  <xs:group name="ScrollerThrowEvent_attributeElement">
+  <xs:group name="Sequence_attributeElement">
     <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
-      <xs:element name="currentPos" type="number"/>
-      <xs:element name="toPos" type="number"/>
+      <xs:group ref="CompositeEffect_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ScrollerThrowEvent">
+  <xs:element name="Sequence" m:defaultProp="children" m:defaultPropType="Array_egret.gui.IEffect">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="ScrollerThrowEvent_attributeElement"/>
+        <xs:group ref="Sequence_attributeElement"/>
+        <xs:group ref="egret.gui.IEffect"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ScrollerThrowEvent"/>
+      <xs:attributeGroup ref="egret.gui.Sequence"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.SetProperty">
+  <xs:attributeGroup name="egret.gui.SequenceInstance">
+    <xs:attributeGroup ref="egret.gui.CompositeEffectInstance"/>
+  </xs:attributeGroup>
+  <xs:group name="SequenceInstance_attributeElement">
+    <xs:choice>
+      <xs:group ref="CompositeEffectInstance_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SequenceInstance">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="SequenceInstance_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SequenceInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SetProperty">
+    <xs:attributeGroup ref="egret.gui.OverrideBase"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="target" type="xs:string"/>
     <xs:attribute name="value" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="SetProperty_attributeElement">
     <xs:choice>
+      <xs:group ref="OverrideBase_attributeElement"/>
       <xs:element name="name" type="string"/>
       <xs:element name="target" type="string"/>
       <xs:element name="value" type="any"/>
@@ -1677,92 +2599,358 @@
         <xs:any namespace="##other"/>
         <xs:group ref="SetProperty_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.SetProperty"/>
+      <xs:attributeGroup ref="egret.gui.SetProperty"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Skin">
-    <xs:attributeGroup ref="lark.HashObject"/>
-    <xs:attribute name="class" type="xs:string"/>
+  <xs:attributeGroup name="egret.gui.SetStyle">
+    <xs:attributeGroup ref="egret.gui.OverrideBase"/>
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="target" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="SetStyle_attributeElement">
+    <xs:choice>
+      <xs:group ref="OverrideBase_attributeElement"/>
+      <xs:element name="name" type="string"/>
+      <xs:element name="target" type="string"/>
+      <xs:element name="value" type="any"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SetStyle">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="SetStyle_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SetStyle"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SimpleMotionPath">
+    <xs:attributeGroup ref="egret.gui.MotionPath"/>
+    <xs:attribute name="valueBy" type="xs:string"/>
+    <xs:attribute name="valueFrom" type="xs:string"/>
+    <xs:attribute name="valueTo" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="SimpleMotionPath_attributeElement">
+    <xs:choice>
+      <xs:group ref="MotionPath_attributeElement"/>
+      <xs:element name="valueBy" type="any"/>
+      <xs:element name="valueFrom" type="any"/>
+      <xs:element name="valueTo" type="any"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SimpleMotionPath" m:defaultProp="keyframes" m:defaultPropType="Array">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="SimpleMotionPath_attributeElement"/>
+        <xs:group ref="Array"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SimpleMotionPath"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Sine">
+    <xs:attributeGroup ref="egret.gui.EaseInOutBase"/>
+  </xs:attributeGroup>
+  <xs:group name="Sine_attributeElement">
+    <xs:choice>
+      <xs:group ref="EaseInOutBase_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Sine">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Sine_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Sine"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Skin">
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
     <xs:attribute name="currentState" type="xs:string"/>
     <xs:attribute name="elementsContent" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="hostComponent" type="xs:string"/>
     <xs:attribute name="maxHeight" type="xs:decimal"/>
     <xs:attribute name="maxWidth" type="xs:decimal"/>
+    <xs:attribute name="measuredHeight" type="xs:decimal"/>
+    <xs:attribute name="measuredWidth" type="xs:decimal"/>
     <xs:attribute name="minHeight" type="xs:decimal"/>
     <xs:attribute name="minWidth" type="xs:decimal"/>
-    <xs:attribute name="skinParts" type="xs:string"/>
     <xs:attribute name="states" type="xs:string"/>
+    <xs:attribute name="transitions" type="xs:string"/>
     <xs:attribute name="width" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Component">
+  <xs:group name="egret.gui.SkinnableComponent">
     <xs:choice>
+      <xs:element ref="Alert"/>
       <xs:element ref="Button"/>
+      <xs:element ref="ButtonBase"/>
       <xs:element ref="CheckBox"/>
-      <xs:element ref="Component"/>
+      <xs:element ref="DropDownList"/>
+      <xs:element ref="DropDownListBase"/>
       <xs:element ref="HScrollBar"/>
       <xs:element ref="HSlider"/>
+      <xs:element ref="ItemRenderer"/>
+      <xs:element ref="List"/>
+      <xs:element ref="ListBase"/>
       <xs:element ref="Panel"/>
       <xs:element ref="ProgressBar"/>
       <xs:element ref="RadioButton"/>
       <xs:element ref="Range"/>
-      <xs:element ref="ScrollBarBase"/>
       <xs:element ref="Scroller"/>
+      <xs:element ref="SkinnableComponent"/>
+      <xs:element ref="SkinnableContainer"/>
+      <xs:element ref="SkinnableDataContainer"/>
+      <xs:element ref="SkinnableTextBase"/>
       <xs:element ref="SliderBase"/>
+      <xs:element ref="TabBar"/>
+      <xs:element ref="TabBarButton"/>
+      <xs:element ref="TextArea"/>
+      <xs:element ref="TextInput"/>
+      <xs:element ref="TitleWindow"/>
       <xs:element ref="ToggleButton"/>
+      <xs:element ref="ToggleButtonBase"/>
       <xs:element ref="ToggleSwitch"/>
+      <xs:element ref="TrackBase"/>
+      <xs:element ref="Tree"/>
+      <xs:element ref="TreeItemRenderer"/>
       <xs:element ref="VScrollBar"/>
       <xs:element ref="VSlider"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Component">
-    <xs:group ref="swan.Component"/>
+  <xs:complexType name="egret.gui.SkinnableComponent">
+    <xs:group ref="egret.gui.SkinnableComponent"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.State">
+    <xs:choice>
+      <xs:element ref="State"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="Array_egret.gui.State">
+    <xs:group ref="egret.gui.State"/>
+  </xs:complexType>
+  <xs:group name="egret.gui.Transition">
+    <xs:choice>
+      <xs:element ref="Transition"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="Array_egret.gui.Transition">
+    <xs:group ref="egret.gui.Transition"/>
   </xs:complexType>
   <xs:group name="Skin_attributeElement">
     <xs:choice>
-      <xs:group ref="HashObject_attributeElement"/>
-      <xs:element name="class" type="string"/>
+      <xs:group ref="EventDispatcher_attributeElement"/>
       <xs:element name="currentState" type="string"/>
-      <xs:element name="elementsContent" type="Array_lark.DisplayObject"/>
+      <xs:element name="elementsContent" type="Array_egret.gui.IVisualElement"/>
       <xs:element name="height" type="number"/>
-      <xs:element name="hostComponent" type="swan.Component"/>
+      <xs:element name="hostComponent" type="egret.gui.SkinnableComponent"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
+      <xs:element name="measuredHeight" type="number"/>
+      <xs:element name="measuredWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
       <xs:element name="minWidth" type="number"/>
-      <xs:element name="skinParts" type="Array_any"/>
-      <xs:element name="states" type="Array_swan.State"/>
+      <xs:element name="states" type="Array_egret.gui.State"/>
+      <xs:element name="transitions" type="Array_egret.gui.Transition"/>
       <xs:element name="width" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Skin" m:defaultProp="elementsContent" m:defaultPropType="Array_lark.DisplayObject">
+  <xs:element name="Skin" m:defaultProp="elementsContent" m:defaultPropType="Array_egret.gui.IVisualElement">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="Skin_attributeElement"/>
-        <xs:group ref="lark.DisplayObject"/>
+        <xs:group ref="egret.gui.IVisualElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Skin"/>
+      <xs:attributeGroup ref="egret.gui.Skin"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.SliderBase">
-    <xs:attributeGroup ref="swan.Range"/>
+  <xs:attributeGroup name="egret.gui.SkinBasicLayout">
+    <xs:attributeGroup ref="egret.HashObject"/>
+    <xs:attribute name="target" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.Skin">
+    <xs:choice>
+      <xs:element ref="ButtonSkin"/>
+      <xs:element ref="Skin"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.Skin">
+    <xs:group ref="egret.gui.Skin"/>
+  </xs:complexType>
+  <xs:group name="SkinBasicLayout_attributeElement">
+    <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
+      <xs:element name="target" type="egret.gui.Skin"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SkinBasicLayout">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="SkinBasicLayout_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SkinBasicLayout"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SkinnableComponent">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="autoTouchEnabled" type="xs:boolean"/>
+    <xs:attribute name="hostComponentKey" type="xs:string"/>
+    <xs:attribute name="skinName" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="SkinnableComponent_attributeElement">
+    <xs:choice>
+      <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="autoTouchEnabled" type="boolean"/>
+      <xs:element name="hostComponentKey" type="string"/>
+      <xs:element name="skinName" type="Class"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SkinnableComponent">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:element ref="Skin"/>
+        <xs:group ref="SkinnableComponent_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SkinnableContainer">
+    <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    <xs:attribute name="contentGroup" type="xs:string"/>
+    <xs:attribute name="elementsContent" type="xs:string"/>
+    <xs:attribute name="layout" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.Group">
+    <xs:choice>
+      <xs:element ref="Group"/>
+      <xs:element ref="ViewStack"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.Group">
+    <xs:group ref="egret.gui.Group"/>
+  </xs:complexType>
+  <xs:group name="SkinnableContainer_attributeElement">
+    <xs:choice>
+      <xs:group ref="SkinnableComponent_attributeElement"/>
+      <xs:element name="contentGroup" type="egret.gui.Group"/>
+      <xs:element name="elementsContent" type="Array_egret.gui.IVisualElement"/>
+      <xs:element name="layout" type="egret.gui.LayoutBase"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SkinnableContainer" m:defaultProp="elementsContent" m:defaultPropType="Array_egret.gui.IVisualElement">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="SkinnableContainer_attributeElement"/>
+        <xs:group ref="egret.gui.IVisualElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SkinnableContainer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SkinnableDataContainer">
+    <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    <xs:attribute name="dataGroup" type="xs:string"/>
+    <xs:attribute name="dataProvider" type="xs:string"/>
+    <xs:attribute name="itemRenderer" type="xs:string"/>
+    <xs:attribute name="itemRendererFunction" type="xs:string"/>
+    <xs:attribute name="itemRendererSkinName" type="xs:string"/>
+    <xs:attribute name="layout" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.DataGroup">
+    <xs:choice>
+      <xs:element ref="DataGroup"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.DataGroup">
+    <xs:group ref="egret.gui.DataGroup"/>
+  </xs:complexType>
+  <xs:group name="SkinnableDataContainer_attributeElement">
+    <xs:choice>
+      <xs:group ref="SkinnableComponent_attributeElement"/>
+      <xs:element name="dataGroup" type="egret.gui.DataGroup"/>
+      <xs:element name="dataProvider" type="egret.gui.ICollection"/>
+      <xs:element name="itemRenderer" type="egret.gui.IFactory"/>
+      <xs:element name="itemRendererFunction" type="Function"/>
+      <xs:element name="itemRendererSkinName" type="Class"/>
+      <xs:element name="layout" type="egret.gui.LayoutBase"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SkinnableDataContainer" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="SkinnableDataContainer_attributeElement"/>
+        <xs:group ref="egret.gui.ICollection"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SkinnableDataContainer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SkinnableTextBase">
+    <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
+    <xs:attribute name="editable" type="xs:boolean"/>
+    <xs:attribute name="focusEnabled" type="xs:boolean"/>
+    <xs:attribute name="maxChars" type="xs:decimal"/>
+    <xs:attribute name="prompt" type="xs:string"/>
+    <xs:attribute name="promptDisplay" type="xs:string"/>
+    <xs:attribute name="restrict" type="xs:string"/>
+    <xs:attribute name="selectable" type="xs:boolean"/>
+    <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="textColor" type="xs:string"/>
+    <xs:attribute name="textDisplay" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.IEditableText">
+    <xs:choice>
+      <xs:element ref="EditableText"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.IEditableText">
+    <xs:group ref="egret.gui.IEditableText"/>
+  </xs:complexType>
+  <xs:group name="SkinnableTextBase_attributeElement">
+    <xs:choice>
+      <xs:group ref="SkinnableComponent_attributeElement"/>
+      <xs:element name="displayAsPassword" type="boolean"/>
+      <xs:element name="editable" type="boolean"/>
+      <xs:element name="focusEnabled" type="boolean"/>
+      <xs:element name="maxChars" type="number"/>
+      <xs:element name="prompt" type="string"/>
+      <xs:element name="promptDisplay" type="egret.gui.IDisplayText"/>
+      <xs:element name="restrict" type="string"/>
+      <xs:element name="selectable" type="boolean"/>
+      <xs:element name="text" type="string"/>
+      <xs:element name="textColor" type="number"/>
+      <xs:element name="textDisplay" type="egret.gui.IEditableText"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="SkinnableTextBase">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="SkinnableTextBase_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.SkinnableTextBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.SliderBase">
+    <xs:attributeGroup ref="egret.gui.TrackBase"/>
     <xs:attribute name="liveDragging" type="xs:boolean"/>
     <xs:attribute name="pendingValue" type="xs:decimal"/>
-    <xs:attribute name="slideDuration" type="xs:decimal"/>
-    <xs:attribute name="thumb" type="xs:string"/>
-    <xs:attribute name="track" type="xs:string"/>
+    <xs:attribute name="showTrackHighlight" type="xs:boolean"/>
     <xs:attribute name="trackHighlight" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="SliderBase_attributeElement">
     <xs:choice>
-      <xs:group ref="Range_attributeElement"/>
+      <xs:group ref="TrackBase_attributeElement"/>
       <xs:element name="liveDragging" type="boolean"/>
       <xs:element name="pendingValue" type="number"/>
-      <xs:element name="slideDuration" type="number"/>
-      <xs:element name="thumb" type="swan.UIComponent"/>
-      <xs:element name="track" type="swan.UIComponent"/>
-      <xs:element name="trackHighlight" type="lark.DisplayObject"/>
+      <xs:element name="showTrackHighlight" type="boolean"/>
+      <xs:element name="trackHighlight" type="egret.DisplayObject"/>
     </xs:choice>
   </xs:group>
   <xs:element name="SliderBase">
@@ -1771,11 +2959,28 @@
         <xs:any namespace="##other"/>
         <xs:group ref="SliderBase_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.SliderBase"/>
+      <xs:attributeGroup ref="egret.gui.SliderBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.State">
-    <xs:attributeGroup ref="lark.HashObject"/>
+  <xs:attributeGroup name="egret.gui.Spacer">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+  </xs:attributeGroup>
+  <xs:group name="Spacer_attributeElement">
+    <xs:choice>
+      <xs:group ref="UIComponent_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Spacer">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Spacer_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Spacer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.State">
+    <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="overrides" type="xs:string"/>
     <xs:attribute name="stateGroups" type="xs:string"/>
@@ -1784,91 +2989,192 @@
     <xs:choice>
       <xs:group ref="HashObject_attributeElement"/>
       <xs:element name="name" type="string"/>
-      <xs:element name="overrides" type="Array_any"/>
-      <xs:element name="stateGroups" type="Array_any"/>
+      <xs:element name="overrides" type="Array"/>
+      <xs:element name="stateGroups" type="Array"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="State" m:defaultProp="overrides" m:defaultPropType="Array_any">
+  <xs:element name="State" m:defaultProp="overrides" m:defaultPropType="Array">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="State_attributeElement"/>
-        <xs:group ref="any"/>
+        <xs:group ref="Array"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.State"/>
+      <xs:attributeGroup ref="egret.gui.State"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.TabBar">
-    <xs:attributeGroup ref="swan.ListBase"/>
+  <xs:attributeGroup name="egret.gui.TabBar">
+    <xs:attributeGroup ref="egret.gui.List"/>
   </xs:attributeGroup>
   <xs:group name="TabBar_attributeElement">
     <xs:choice>
-      <xs:group ref="ListBase_attributeElement"/>
+      <xs:group ref="List_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="TabBar" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="TabBar" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="TabBar_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="egret.gui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.TabBar"/>
+      <xs:attributeGroup ref="egret.gui.TabBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Theme">
-    <xs:attributeGroup ref="lark.EventEmitter"/>
+  <xs:attributeGroup name="egret.gui.TabBarButton">
+    <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
+    <xs:attribute name="allowDeselection" type="xs:boolean"/>
+    <xs:attribute name="data" type="xs:string"/>
+    <xs:attribute name="itemIndex" type="xs:decimal"/>
   </xs:attributeGroup>
-  <xs:group name="Theme_attributeElement">
+  <xs:group name="TabBarButton_attributeElement">
     <xs:choice>
-      <xs:group ref="EventEmitter_attributeElement"/>
+      <xs:group ref="ToggleButtonBase_attributeElement"/>
+      <xs:element name="allowDeselection" type="boolean"/>
+      <xs:element name="data" type="any"/>
+      <xs:element name="itemIndex" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Theme">
+  <xs:element name="TabBarButton" m:defaultProp="label" m:defaultPropType="string">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="Theme_attributeElement"/>
+        <xs:group ref="TabBarButton_attributeElement"/>
+        <xs:group ref="string"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Theme"/>
+      <xs:attributeGroup ref="egret.gui.TabBarButton"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.ColumnAlign">
+  <xs:attributeGroup name="egret.gui.TextArea">
+    <xs:attributeGroup ref="egret.gui.SkinnableTextBase"/>
+    <xs:attribute name="heightInLines" type="xs:decimal"/>
+    <xs:attribute name="horizontalScrollPolicy" type="xs:string"/>
+    <xs:attribute name="scroller" type="xs:string"/>
+    <xs:attribute name="verticalScrollPolicy" type="xs:string"/>
+    <xs:attribute name="widthInChars" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.Scroller">
+    <xs:choice>
+      <xs:element ref="Scroller"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.Scroller">
+    <xs:group ref="egret.gui.Scroller"/>
+  </xs:complexType>
+  <xs:group name="TextArea_attributeElement">
+    <xs:choice>
+      <xs:group ref="SkinnableTextBase_attributeElement"/>
+      <xs:element name="heightInLines" type="number"/>
+      <xs:element name="horizontalScrollPolicy" type="string"/>
+      <xs:element name="scroller" type="egret.gui.Scroller"/>
+      <xs:element name="verticalScrollPolicy" type="string"/>
+      <xs:element name="widthInChars" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="TextArea">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="TextArea_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.TextArea"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.TextBase">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="bold" type="xs:boolean"/>
+    <xs:attribute name="focusEnabled" type="xs:boolean"/>
+    <xs:attribute name="fontFamily" type="xs:string"/>
+    <xs:attribute name="italic" type="xs:boolean"/>
+    <xs:attribute name="lineSpacing" type="xs:decimal"/>
+    <xs:attribute name="size" type="xs:decimal"/>
+    <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="textAlign" type="text_textAlign"/>
+    <xs:attribute name="textColor" type="xs:string"/>
+    <xs:attribute name="textFlow" type="xs:string"/>
+    <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
+  </xs:attributeGroup>
+  <xs:group name="TextBase_attributeElement">
+    <xs:choice>
+      <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="bold" type="boolean"/>
+      <xs:element name="focusEnabled" type="boolean"/>
+      <xs:element name="fontFamily" type="string"/>
+      <xs:element name="italic" type="boolean"/>
+      <xs:element name="lineSpacing" type="number"/>
+      <xs:element name="size" type="number"/>
+      <xs:element name="text" type="string"/>
+      <xs:element name="textAlign" type="string"/>
+      <xs:element name="textColor" type="number"/>
+      <xs:element name="textFlow" type="Array"/>
+      <xs:element name="verticalAlign" type="string"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="TextBase">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="TextBase_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.TextBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.TextInput">
+    <xs:attributeGroup ref="egret.gui.SkinnableTextBase"/>
+    <xs:attribute name="widthInChars" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="TextInput_attributeElement">
+    <xs:choice>
+      <xs:group ref="SkinnableTextBase_attributeElement"/>
+      <xs:element name="widthInChars" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="TextInput">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="TextInput_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.TextInput"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="egret.gui.ColumnAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
       <xs:enumeration value="justifyUsingGap"/>
       <xs:enumeration value="justifyUsingWidth"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="swan.TileOrientation">
+  <xs:simpleType name="egret.gui.TileOrientation">
     <xs:restriction base="xs:string">
       <xs:enumeration value="rows"/>
       <xs:enumeration value="columns"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="swan.RowAlign">
+  <xs:simpleType name="egret.gui.RowAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="top"/>
       <xs:enumeration value="justifyUsingGap"/>
       <xs:enumeration value="justifyUsingHeight"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.TileLayout">
-    <xs:attributeGroup ref="swan.LayoutBase"/>
-    <xs:attribute name="columnAlign" type="swan.ColumnAlign"/>
+  <xs:attributeGroup name="egret.gui.TileLayout">
+    <xs:attributeGroup ref="egret.gui.LayoutBase"/>
+    <xs:attribute name="columnAlign" type="egret.gui.ColumnAlign"/>
     <xs:attribute name="columnWidth" type="xs:decimal"/>
-    <xs:attribute name="horizontalAlign" type="swan.LayoutHorizontalAlign"/>
+    <xs:attribute name="horizontalAlign" type="egret.HorizontalAlign"/>
     <xs:attribute name="horizontalGap" type="xs:decimal"/>
-    <xs:attribute name="orientation" type="swan.TileOrientation"/>
+    <xs:attribute name="orientation" type="egret.gui.TileOrientation"/>
+    <xs:attribute name="padding" type="xs:decimal"/>
     <xs:attribute name="paddingBottom" type="xs:decimal"/>
     <xs:attribute name="paddingLeft" type="xs:decimal"/>
     <xs:attribute name="paddingRight" type="xs:decimal"/>
     <xs:attribute name="paddingTop" type="xs:decimal"/>
     <xs:attribute name="requestedColumnCount" type="xs:decimal"/>
     <xs:attribute name="requestedRowCount" type="xs:decimal"/>
-    <xs:attribute name="rowAlign" type="swan.RowAlign"/>
+    <xs:attribute name="rowAlign" type="egret.gui.RowAlign"/>
     <xs:attribute name="rowHeight" type="xs:decimal"/>
-    <xs:attribute name="verticalAlign" type="swan.LayoutVerticalAlign"/>
+    <xs:attribute name="verticalAlign" type="egret.VerticalAlign"/>
     <xs:attribute name="verticalGap" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="TileLayout_attributeElement">
@@ -1879,6 +3185,7 @@
       <xs:element name="horizontalAlign" type="string"/>
       <xs:element name="horizontalGap" type="number"/>
       <xs:element name="orientation" type="string"/>
+      <xs:element name="padding" type="number"/>
       <xs:element name="paddingBottom" type="number"/>
       <xs:element name="paddingLeft" type="number"/>
       <xs:element name="paddingRight" type="number"/>
@@ -1897,85 +3204,341 @@
         <xs:any namespace="##other"/>
         <xs:group ref="TileLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.TileLayout"/>
+      <xs:attributeGroup ref="egret.gui.TileLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ToggleButton">
-    <xs:attributeGroup ref="swan.Button"/>
-    <xs:attribute name="selected" type="xs:boolean"/>
+  <xs:attributeGroup name="egret.gui.TitleWindow">
+    <xs:attributeGroup ref="egret.gui.Panel"/>
+    <xs:attribute name="autoBackToStage" type="xs:boolean"/>
+    <xs:attribute name="closeButton" type="xs:string"/>
+    <xs:attribute name="moveArea" type="xs:string"/>
+    <xs:attribute name="showCloseButton" type="xs:boolean"/>
+  </xs:attributeGroup>
+  <xs:group name="TitleWindow_attributeElement">
+    <xs:choice>
+      <xs:group ref="Panel_attributeElement"/>
+      <xs:element name="autoBackToStage" type="boolean"/>
+      <xs:element name="closeButton" type="egret.gui.Button"/>
+      <xs:element name="moveArea" type="egret.DisplayObject"/>
+      <xs:element name="showCloseButton" type="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="TitleWindow" m:defaultProp="elementsContent" m:defaultPropType="Array_egret.gui.IVisualElement">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="TitleWindow_attributeElement"/>
+        <xs:group ref="egret.gui.IVisualElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.TitleWindow"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ToggleButton">
+    <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
+    <xs:attribute name="icon" type="xs:string"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="ToggleButton_attributeElement">
     <xs:choice>
-      <xs:group ref="Button_attributeElement"/>
-      <xs:element name="selected" type="boolean"/>
+      <xs:group ref="ToggleButtonBase_attributeElement"/>
+      <xs:element name="icon" type="any"/>
+      <xs:element name="iconDisplay" type="egret.gui.UIAsset"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ToggleButton">
+  <xs:element name="ToggleButton" m:defaultProp="label" m:defaultPropType="string">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="ToggleButton_attributeElement"/>
+        <xs:group ref="string"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ToggleButton"/>
+      <xs:attributeGroup ref="egret.gui.ToggleButton"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ToggleSwitch">
-    <xs:attributeGroup ref="swan.ToggleButton"/>
+  <xs:attributeGroup name="egret.gui.ToggleButtonBase">
+    <xs:attributeGroup ref="egret.gui.ButtonBase"/>
+    <xs:attribute name="selected" type="xs:boolean"/>
+  </xs:attributeGroup>
+  <xs:group name="ToggleButtonBase_attributeElement">
+    <xs:choice>
+      <xs:group ref="ButtonBase_attributeElement"/>
+      <xs:element name="selected" type="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="ToggleButtonBase" m:defaultProp="label" m:defaultPropType="string">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="ToggleButtonBase_attributeElement"/>
+        <xs:group ref="string"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.ToggleSwitch">
+    <xs:attributeGroup ref="egret.gui.ToggleButtonBase"/>
   </xs:attributeGroup>
   <xs:group name="ToggleSwitch_attributeElement">
     <xs:choice>
-      <xs:group ref="ToggleButton_attributeElement"/>
+      <xs:group ref="ToggleButtonBase_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ToggleSwitch">
+  <xs:element name="ToggleSwitch" m:defaultProp="label" m:defaultPropType="string">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="ToggleSwitch_attributeElement"/>
+        <xs:group ref="string"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ToggleSwitch"/>
+      <xs:attributeGroup ref="egret.gui.ToggleSwitch"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.UIEvent">
-    <xs:attributeGroup ref="lark.Event"/>
+  <xs:attributeGroup name="egret.gui.TrackBase">
+    <xs:attributeGroup ref="egret.gui.Range"/>
+    <xs:attribute name="slideDuration" type="xs:decimal"/>
+    <xs:attribute name="thumb" type="xs:string"/>
+    <xs:attribute name="track" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="UIEvent_attributeElement">
+  <xs:group name="TrackBase_attributeElement">
     <xs:choice>
-      <xs:group ref="Event_attributeElement"/>
+      <xs:group ref="Range_attributeElement"/>
+      <xs:element name="slideDuration" type="number"/>
+      <xs:element name="thumb" type="egret.gui.Button"/>
+      <xs:element name="track" type="egret.gui.Button"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="UIEvent">
+  <xs:element name="TrackBase">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="UIEvent_attributeElement"/>
+        <xs:group ref="TrackBase_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.UIEvent"/>
+      <xs:attributeGroup ref="egret.gui.TrackBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.UILayer">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:simpleType name="egret.gui.InterruptionBehavior">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="end"/>
+      <xs:enumeration value="stop"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="egret.gui.Transition">
+    <xs:attribute name="autoReverse" type="xs:boolean"/>
+    <xs:attribute name="effect" type="xs:string"/>
+    <xs:attribute name="fromState" type="xs:string"/>
+    <xs:attribute name="interruptionBehavior" type="egret.gui.InterruptionBehavior"/>
+    <xs:attribute name="toState" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="UILayer_attributeElement">
+  <xs:group name="Transition_attributeElement">
     <xs:choice>
-      <xs:group ref="Group_attributeElement"/>
+      <xs:element name="autoReverse" type="boolean"/>
+      <xs:element name="effect" type="egret.gui.IEffect"/>
+      <xs:element name="fromState" type="string"/>
+      <xs:element name="interruptionBehavior" type="string"/>
+      <xs:element name="toState" type="string"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="UILayer">
+  <xs:element name="Transition" m:defaultProp="effect" m:defaultPropType="egret.gui.IEffect">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="UILayer_attributeElement"/>
+        <xs:group ref="Transition_attributeElement"/>
+        <xs:group ref="egret.gui.IEffect"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.UILayer"/>
+      <xs:attributeGroup ref="egret.gui.Transition"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.VScrollBar">
-    <xs:attributeGroup ref="swan.ScrollBarBase"/>
+  <xs:attributeGroup name="egret.gui.Tree">
+    <xs:attributeGroup ref="egret.gui.List"/>
+    <xs:attribute name="iconField" type="xs:string"/>
+    <xs:attribute name="iconFunction" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="Tree_attributeElement">
+    <xs:choice>
+      <xs:group ref="List_attributeElement"/>
+      <xs:element name="iconField" type="string"/>
+      <xs:element name="iconFunction" type="Function"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Tree" m:defaultProp="dataProvider" m:defaultPropType="egret.gui.ICollection">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Tree_attributeElement"/>
+        <xs:group ref="egret.gui.ICollection"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Tree"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.TreeItemRenderer">
+    <xs:attributeGroup ref="egret.gui.ItemRenderer"/>
+    <xs:attribute name="contentGroup" type="xs:string"/>
+    <xs:attribute name="depth" type="xs:decimal"/>
+    <xs:attribute name="disclosureButton" type="xs:string"/>
+    <xs:attribute name="hasChildren" type="xs:boolean"/>
+    <xs:attribute name="iconDisplay" type="xs:string"/>
+    <xs:attribute name="iconSkinName" type="xs:string"/>
+    <xs:attribute name="indentation" type="xs:decimal"/>
+    <xs:attribute name="opened" type="xs:boolean"/>
+  </xs:attributeGroup>
+  <xs:group name="egret.gui.ToggleButtonBase">
+    <xs:choice>
+      <xs:element ref="CheckBox"/>
+      <xs:element ref="RadioButton"/>
+      <xs:element ref="TabBarButton"/>
+      <xs:element ref="ToggleButton"/>
+      <xs:element ref="ToggleButtonBase"/>
+      <xs:element ref="ToggleSwitch"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.gui.ToggleButtonBase">
+    <xs:group ref="egret.gui.ToggleButtonBase"/>
+  </xs:complexType>
+  <xs:group name="TreeItemRenderer_attributeElement">
+    <xs:choice>
+      <xs:group ref="ItemRenderer_attributeElement"/>
+      <xs:element name="contentGroup" type="egret.DisplayObject"/>
+      <xs:element name="depth" type="number"/>
+      <xs:element name="disclosureButton" type="egret.gui.ToggleButtonBase"/>
+      <xs:element name="hasChildren" type="boolean"/>
+      <xs:element name="iconDisplay" type="egret.gui.UIAsset"/>
+      <xs:element name="iconSkinName" type="any"/>
+      <xs:element name="indentation" type="number"/>
+      <xs:element name="opened" type="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="TreeItemRenderer" m:defaultProp="label" m:defaultPropType="string">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="TreeItemRenderer_attributeElement"/>
+        <xs:group ref="string"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.TreeItemRenderer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.UIAsset">
+    <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="autoScale" type="xs:boolean"/>
+    <xs:attribute name="fillMode" type="egret.BitmapFillMode"/>
+    <xs:attribute name="scale9Grid" type="xs:string"/>
+    <xs:attribute name="source" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="UIAsset_attributeElement">
+    <xs:choice>
+      <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="autoScale" type="boolean"/>
+      <xs:element name="fillMode" type="string"/>
+      <xs:element name="scale9Grid" type="egret.Rectangle"/>
+      <xs:element name="source" type="any"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="UIAsset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="UIAsset_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.UIAsset"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Image">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="UIAsset_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.UIAsset"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.UIComponent">
+    <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
+    <xs:attribute name="bold" type="xs:boolean"/>
+    <xs:attribute name="bottom" type="xs:decimal"/>
+    <xs:attribute name="enabled" type="xs:boolean"/>
+    <xs:attribute name="excludeFrom" type="xs:string"/>
+    <xs:attribute name="fontFamily" type="xs:string"/>
+    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="includeIn" type="xs:string"/>
+    <xs:attribute name="includeInLayout" type="xs:boolean"/>
+    <xs:attribute name="initialized" type="xs:boolean"/>
+    <xs:attribute name="isPopUp" type="xs:boolean"/>
+    <xs:attribute name="italic" type="xs:boolean"/>
+    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="locked" type="xs:boolean"/>
+    <xs:attribute name="maxHeight" type="xs:decimal"/>
+    <xs:attribute name="maxWidth" type="xs:decimal"/>
+    <xs:attribute name="measuredHeight" type="xs:decimal"/>
+    <xs:attribute name="measuredWidth" type="xs:decimal"/>
+    <xs:attribute name="minHeight" type="xs:decimal"/>
+    <xs:attribute name="minWidth" type="xs:decimal"/>
+    <xs:attribute name="nestLevel" type="xs:decimal"/>
+    <xs:attribute name="percentHeight" type="xs:decimal"/>
+    <xs:attribute name="percentWidth" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:decimal"/>
+    <xs:attribute name="size" type="xs:decimal"/>
+    <xs:attribute name="textAlign" type="text_textAlign"/>
+    <xs:attribute name="textColor" type="xs:string"/>
+    <xs:attribute name="top" type="xs:decimal"/>
+    <xs:attribute name="updateCompletePendingFlag" type="xs:boolean"/>
+    <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
+    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+    <xs:anyAttribute processContents="skip"/>
+  </xs:attributeGroup>
+  <xs:group name="UIComponent_attributeElement">
+    <xs:choice>
+      <xs:group ref="DisplayObjectContainer_attributeElement"/>
+      <xs:element name="bold" type="boolean"/>
+      <xs:element name="bottom" type="number"/>
+      <xs:element name="enabled" type="boolean"/>
+      <xs:element name="excludeFrom" type="string"/>
+      <xs:element name="fontFamily" type="string"/>
+      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="includeIn" type="string"/>
+      <xs:element name="includeInLayout" type="boolean"/>
+      <xs:element name="initialized" type="boolean"/>
+      <xs:element name="isPopUp" type="boolean"/>
+      <xs:element name="italic" type="boolean"/>
+      <xs:element name="left" type="number"/>
+      <xs:element name="locked" type="boolean"/>
+      <xs:element name="maxHeight" type="number"/>
+      <xs:element name="maxWidth" type="number"/>
+      <xs:element name="measuredHeight" type="number"/>
+      <xs:element name="measuredWidth" type="number"/>
+      <xs:element name="minHeight" type="number"/>
+      <xs:element name="minWidth" type="number"/>
+      <xs:element name="nestLevel" type="number"/>
+      <xs:element name="percentHeight" type="number"/>
+      <xs:element name="percentWidth" type="number"/>
+      <xs:element name="right" type="number"/>
+      <xs:element name="size" type="number"/>
+      <xs:element name="textAlign" type="string"/>
+      <xs:element name="textColor" type="number"/>
+      <xs:element name="top" type="number"/>
+      <xs:element name="updateCompletePendingFlag" type="boolean"/>
+      <xs:element name="verticalAlign" type="string"/>
+      <xs:element name="verticalCenter" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="UIComponent">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="UIComponent_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.VScrollBar">
+    <xs:attributeGroup ref="egret.gui.VSlider"/>
+    <xs:attribute name="thumbAlpha" type="xs:decimal"/>
+    <xs:attribute name="trackAlpha" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="VScrollBar_attributeElement">
     <xs:choice>
-      <xs:group ref="ScrollBarBase_attributeElement"/>
+      <xs:group ref="VSlider_attributeElement"/>
+      <xs:element name="thumbAlpha" type="number"/>
+      <xs:element name="trackAlpha" type="number"/>
     </xs:choice>
   </xs:group>
   <xs:element name="VScrollBar">
@@ -1984,11 +3547,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="VScrollBar_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.VScrollBar"/>
+      <xs:attributeGroup ref="egret.gui.VScrollBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.VSlider">
-    <xs:attributeGroup ref="swan.SliderBase"/>
+  <xs:attributeGroup name="egret.gui.VSlider">
+    <xs:attributeGroup ref="egret.gui.SliderBase"/>
   </xs:attributeGroup>
   <xs:group name="VSlider_attributeElement">
     <xs:choice>
@@ -2001,15 +3564,31 @@
         <xs:any namespace="##other"/>
         <xs:group ref="VSlider_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.VSlider"/>
+      <xs:attributeGroup ref="egret.gui.VSlider"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.VerticalLayout">
-    <xs:attributeGroup ref="swan.LinearLayoutBase"/>
+  <xs:attributeGroup name="egret.gui.VerticalLayout">
+    <xs:attributeGroup ref="egret.gui.LayoutBase"/>
+    <xs:attribute name="gap" type="xs:decimal"/>
+    <xs:attribute name="horizontalAlign" type="egret.HorizontalAlign"/>
+    <xs:attribute name="padding" type="xs:decimal"/>
+    <xs:attribute name="paddingBottom" type="xs:decimal"/>
+    <xs:attribute name="paddingLeft" type="xs:decimal"/>
+    <xs:attribute name="paddingRight" type="xs:decimal"/>
+    <xs:attribute name="paddingTop" type="xs:decimal"/>
+    <xs:attribute name="verticalAlign" type="egret.VerticalAlign"/>
   </xs:attributeGroup>
   <xs:group name="VerticalLayout_attributeElement">
     <xs:choice>
-      <xs:group ref="LinearLayoutBase_attributeElement"/>
+      <xs:group ref="LayoutBase_attributeElement"/>
+      <xs:element name="gap" type="number"/>
+      <xs:element name="horizontalAlign" type="string"/>
+      <xs:element name="padding" type="number"/>
+      <xs:element name="paddingBottom" type="number"/>
+      <xs:element name="paddingLeft" type="number"/>
+      <xs:element name="paddingRight" type="number"/>
+      <xs:element name="paddingTop" type="number"/>
+      <xs:element name="verticalAlign" type="string"/>
     </xs:choice>
   </xs:group>
   <xs:element name="VerticalLayout">
@@ -2018,29 +3597,37 @@
         <xs:any namespace="##other"/>
         <xs:group ref="VerticalLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.VerticalLayout"/>
+      <xs:attributeGroup ref="egret.gui.VerticalLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ViewStack">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:attributeGroup name="egret.gui.ViewStack">
+    <xs:attributeGroup ref="egret.gui.Group"/>
+    <xs:attribute name="createAllChildren" type="xs:boolean"/>
     <xs:attribute name="selectedChild" type="xs:string"/>
     <xs:attribute name="selectedIndex" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="ViewStack_attributeElement">
     <xs:choice>
       <xs:group ref="Group_attributeElement"/>
-      <xs:element name="selectedChild" type="lark.DisplayObject"/>
+      <xs:element name="createAllChildren" type="boolean"/>
+      <xs:element name="selectedChild" type="egret.gui.IVisualElement"/>
       <xs:element name="selectedIndex" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ViewStack" m:defaultProp="elementsContent" m:defaultPropType="Array_lark.DisplayObject">
+  <xs:element name="ViewStack" m:defaultProp="elementsContent" m:defaultPropType="Array_egret.gui.IVisualElement">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="ViewStack_attributeElement"/>
-        <xs:group ref="lark.DisplayObject"/>
+        <xs:group ref="egret.gui.IVisualElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ViewStack"/>
+      <xs:attributeGroup ref="egret.gui.ViewStack"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="any">
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:string"/>
+      <xs:anyAttribute processContents="skip"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="boolean">

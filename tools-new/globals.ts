@@ -15,8 +15,20 @@ module globals {
         console.log(utils.tr.apply(null, arguments));
     }
     export function log(code: number, ...args) {
-
+        console.log(utils.tr.apply(null, arguments));
     }
+    export function warn(code: number, ...args) {
+        var message = utils.tr.apply(null, arguments);
+        if (!message) {
+            exit(9999, code);
+        }
+        var length = arguments.length;
+        for (var i = 1; i < length; i++) {
+            message = message.replace("{" + (i - 1) + "}", arguments[i]);
+        }
+        console.log(message);
+    }
+
     export function debugLog(code: number, ...args) {
         if (egret.args.log) {
             console.log(utils.tr.apply(null, arguments));
