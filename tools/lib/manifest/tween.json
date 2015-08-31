@@ -1,0 +1,10 @@
+{
+    "name": "tween",
+    "dependence": ["core"],
+    "output": "core/extension/tween",
+    "source": "src/extension/tween",
+    "file_list": [
+        "Tween.ts",
+        "Ease.ts"
+    ]
+}
