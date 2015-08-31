@@ -127,6 +127,7 @@
         "extension/game/display/MovieClipData.ts",
         "extension/game/display/MovieClipDataFactory.ts",
         "extension/game/display/MovieClip.ts",
+        "extension/game/display/ScrollTween.ts",
         "extension/game/display/ScrollView.ts",
         "extension/game/display/ScrollViewProperties.ts",
 
