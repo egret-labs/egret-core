@@ -96,11 +96,11 @@ module egret {
         /**
          * @private
          */
-        public _hScrollTween:Tween = null;
+        public _hScrollTween:ScrollTween = null;
         /**
          * @private
          */
-        public _vScrollTween:Tween = null;
+        public _vScrollTween:ScrollTween = null;
 
         /**
          * @private
