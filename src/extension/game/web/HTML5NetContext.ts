@@ -241,8 +241,6 @@ module egret.web {
                 var texture:Texture = new Texture();
                 texture._setBitmapData(bitmapData);
 
-                Texture.$loaded(texture);
-
                 loader.data = texture;
 
                 window.setTimeout(function() {
