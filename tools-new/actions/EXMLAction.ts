@@ -3,7 +3,7 @@
 
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
-import exml = require("../lib/exml/EXML");
+import exml = require("../lib/swan/EXML");
 
 export function getSortedEXML(): exml.EXMLFile[]{
     

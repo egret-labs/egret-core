@@ -24,8 +24,25 @@ var globals;
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
+        console.log(utils.tr.apply(null, arguments));
     }
     globals.log = log;
+    function warn(code) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var message = utils.tr.apply(null, arguments);
+        if (!message) {
+            exit(9999, code);
+        }
+        var length = arguments.length;
+        for (var i = 1; i < length; i++) {
+            message = message.replace("{" + (i - 1) + "}", arguments[i]);
+        }
+        console.log(message);
+    }
+    globals.warn = warn;
     function debugLog(code) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
