@@ -4,7 +4,6 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import tsclark = require("../lib/typescript/tsclark");
-import manifest = require('../lib/create-manifest');
 
 interface CompileOption {
     args:egret.ToolArgs;
@@ -20,8 +19,6 @@ class Compiler {
                    out = option.out, outDir = option.outDir;
         var defTemp = args.declaration;
         args.declaration = def;
-        //files = manifest.create(egret.args.srcDir, true, null, null, files);
-        //console.log(files);
         var cwd = file.escapePath(process.cwd() + "/");
         files = files.map(f=> f.replace(cwd, ""));
         var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);

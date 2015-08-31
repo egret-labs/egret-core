@@ -390,7 +390,11 @@ exports.escapePath = escapePath;
 /**
  * 连接路径,支持传入多于两个的参数。也支持"../"相对路径解析。返回的分隔符为Unix风格。
  */
-function joinPath(dir, filename) {
+function joinPath(dir) {
+    var filename = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        filename[_i - 1] = arguments[_i];
+    }
     var path = Path.join.apply(null, arguments);
     path = escapePath(path);
     return path;

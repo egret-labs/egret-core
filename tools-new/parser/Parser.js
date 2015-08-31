@@ -91,6 +91,10 @@ exports.optionDeclarations = [
     }, {
         name: 'all',
         type: 'boolean'
+    }, {
+        name: 'buildEngine',
+        type: 'boolean',
+        shortName: "e"
     }
 ];
 var shortOptionNames = {};

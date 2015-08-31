@@ -35,13 +35,16 @@ global.registerClass = "egret";
 global.DontExitCode = -0xF000;
 
 require('./locales/zh_CN');
+require('./globals');
 import Parser = require("./parser/Parser");
+import earlyParams = require("./parser/ParseEarlyVersionParams");
 import utils = require('./lib/utils');
 
 
 
 export function executeCommandLine(args: string[]): void {
     var options = Parser.parseCommandLine(args);
+    earlyParams.parse(options,args);
     egret.args = options;
     var exitcode = entry.executeOption(options);
     entry.exit(exitcode);
@@ -67,6 +70,7 @@ class Entry {
         if(DontExitCode == exitCode)
             return;
         process.exit(exitCode);
+        
     }
 }
 

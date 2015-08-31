@@ -1,6 +1,7 @@
 ﻿/// <reference path="node.d.ts" />
 /// <reference path="totaljs/totaljs.d.ts" />
 /// <reference path="xml/xml.ts" />
+/// <reference path="../globals.ts" />
 
 
 
@@ -66,7 +67,7 @@ declare module egret {
         startUrl: string;
         debug?: boolean;
         getStartURL(address: string): string;
-
+        template?: string;
 
 
         publish?: boolean;
