@@ -181,6 +181,22 @@ module egret {
         public _bitmapData:any = null;
 
         /**
+         * @language en_US
+         * The BitmapData object being referenced.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 被引用的 BitmapData 对象。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        public get bitmapData():BitmapData {
+            return this._bitmapData;
+        }
+
+        /**
          * @private
          *
          * @param value
@@ -308,8 +324,8 @@ module egret {
         }
 
         private static _displayList:Object = {};
-        static $addDisplayObject(displayObject:DisplayObject, texture:Texture):void {
-            var hashCode:number = texture._bitmapData.$hashCode;
+        static $addDisplayObject(displayObject:DisplayObject, bitmapDataHashCode:number):void {
+            var hashCode:number = bitmapDataHashCode;
             if (!Texture._displayList[hashCode]) {
                 Texture._displayList[hashCode] = [displayObject];
                 return;
@@ -321,8 +337,9 @@ module egret {
             }
         }
 
-        static $removeDisplayObject(displayObject:DisplayObject, texture:Texture):void {
-            var hashCode:number = texture._bitmapData.$hashCode;
+        static $removeDisplayObject(displayObject:DisplayObject, bitmapDataHashCode:number):void {
+            var hashCode:number = bitmapDataHashCode;
+
             if (!Texture._displayList[hashCode]) {
                 return;
             }
@@ -334,20 +351,9 @@ module egret {
             }
         }
 
-        static $dispose(texture:Texture):void {
-            var hashCode:number = texture._bitmapData.$hashCode;
-            if (!Texture._displayList[hashCode]) {
-                return;
-            }
-            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
+        static $invalidate(bitmapDataHashCode:number):void {
+            var hashCode:number = bitmapDataHashCode;
 
-            for (var i:number = 0; i < tempList.length; i++) {
-                tempList[i].$invalidateContentBounds();
-            }
-        }
-
-        static $loaded(texture:Texture):void {
-            var hashCode:number = texture._bitmapData.$hashCode;
             if (!Texture._displayList[hashCode]) {
                 return;
             }

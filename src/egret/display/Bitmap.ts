@@ -105,7 +105,7 @@ module egret {
             super.$onAddToStage(stage, nestLevel);
 
             if (this.$bitmapData) {
-                Texture.$addDisplayObject(this, this.$bitmapData);
+                Texture.$addDisplayObject(this, this.$bitmapData._bitmapData.hashCode);
             }
         }
 
@@ -117,7 +117,7 @@ module egret {
             super.$onRemoveFromStage();
 
             if (this.$bitmapData) {
-                Texture.$removeDisplayObject(this, this.$bitmapData);
+                Texture.$removeDisplayObject(this, this.$bitmapData._bitmapData.hashCode);
             }
         }
 
@@ -156,7 +156,7 @@ module egret {
             this.$bitmapData = value;
 
             if (this.$stage) {
-                Texture.$addDisplayObject(this, value);
+                Texture.$addDisplayObject(this, value._bitmapData.hashCode);
             }
 
             this.$invalidateContentBounds();
