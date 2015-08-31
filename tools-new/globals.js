@@ -122,7 +122,7 @@ var globals;
         return java;
     }
     globals.getGlobalJava = getGlobalJava;
-    var CodeUtil = require("../lib/core/code_util.js");
+    var CodeUtil = require("./lib/exml/code_util.js");
     /**
      * 这个文件是否只含有接口
      */
