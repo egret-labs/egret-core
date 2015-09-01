@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require('../lib/FileUtil');
-var exml = require("../lib/swan/EXML");
+var exml = require("../lib/eui/EXML");
 function getSortedEXML() {
     var files = file.search(egret.args.srcDir, "exml");
     var exmls = files.map(function (path) { return ({

@@ -13,40 +13,40 @@
 			"verticalAlign":"lark.VerticalAlign"
 		},
 		"lark.VerticalAlign":["top","bottom","middle"],
-		"swan.BitmapFillMode":["repeat","scale","clip"],
-		"swan.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
-		"swan.Direction":["ltr","rtl","ttb","btt"],
-		"swan.Image":
+		"eui.BitmapFillMode":["repeat","scale","clip"],
+		"eui.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
+		"eui.Direction":["ltr","rtl","ttb","btt"],
+		"eui.Image":
 		{
-			"fillMode":"swan.BitmapFillMode"
+			"fillMode":"eui.BitmapFillMode"
 		},
-		"swan.LayoutHorizontalAlign":["left","right","center","justify","contentJustify"],
-		"swan.LayoutVerticalAlign":["top","bottom","middle","justify","contentJustify"],
-		"swan.LinearLayoutBase":
+		"eui.LayoutHorizontalAlign":["left","right","center","justify","contentJustify"],
+		"eui.LayoutVerticalAlign":["top","bottom","middle","justify","contentJustify"],
+		"eui.LinearLayoutBase":
 		{
-			"horizontalAlign":"swan.LayoutHorizontalAlign",
-			"verticalAlign":"swan.LayoutVerticalAlign"
+			"horizontalAlign":"eui.LayoutHorizontalAlign",
+			"verticalAlign":"eui.LayoutVerticalAlign"
 		},
-		"swan.ProgressBar":
+		"eui.ProgressBar":
 		{
-			"direction":"swan.Direction"
+			"direction":"eui.Direction"
 		},
-		"swan.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
-		"swan.ScrollPolicy":["auto","off","on"],
-		"swan.Scroller":
+		"eui.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
+		"eui.ScrollPolicy":["auto","off","on"],
+		"eui.Scroller":
 		{
-			"scrollPolicyH":"swan.ScrollPolicy",
-			"scrollPolicyV":"swan.ScrollPolicy"
+			"scrollPolicyH":"eui.ScrollPolicy",
+			"scrollPolicyV":"eui.ScrollPolicy"
 		},
-		"swan.TileLayout":
+		"eui.TileLayout":
 		{
-			"columnAlign":"swan.ColumnAlign",
-			"horizontalAlign":"swan.LayoutHorizontalAlign",
-			"orientation":"swan.TileOrientation",
-			"rowAlign":"swan.RowAlign",
-			"verticalAlign":"swan.LayoutVerticalAlign"
+			"columnAlign":"eui.ColumnAlign",
+			"horizontalAlign":"eui.LayoutHorizontalAlign",
+			"orientation":"eui.TileOrientation",
+			"rowAlign":"eui.RowAlign",
+			"verticalAlign":"eui.LayoutVerticalAlign"
 		},
-		"swan.TileOrientation":["rows","columns"]
+		"eui.TileOrientation":["rows","columns"]
 	},
 	"lark.Bitmap":
 	{
@@ -209,37 +209,37 @@
 	{
 		
 	},
-	"swan.AddItems":
+	"eui.AddItems":
 	{
-		"implements":["swan.IOverride"],
+		"implements":["eui.IOverride"],
 		"position":"number",
 		"propertyName":"string",
 		"relativeTo":"string",
 		"target":"string"
 	},
-	"swan.ArrayCollection":
+	"eui.ArrayCollection":
 	{
-		"implements":["swan.ICollection"],
+		"implements":["eui.ICollection"],
 		"source":"Array",
 		"super":"lark.EventEmitter"
 	},
-	"swan.BasicLayout":
+	"eui.BasicLayout":
 	{
-		"super":"swan.LayoutBase"
+		"super":"eui.LayoutBase"
 	},
-	"swan.Button":
+	"eui.Button":
 	{
 		"icon":"any",
-		"iconDisplay":"swan.Image",
+		"iconDisplay":"eui.Image",
 		"label":"string",
-		"labelDisplay":"swan.IDisplayText",
-		"super":"swan.Component"
+		"labelDisplay":"eui.IDisplayText",
+		"super":"eui.Component"
 	},
-	"swan.CheckBox":
+	"eui.CheckBox":
 	{
-		"super":"swan.ToggleButton"
+		"super":"eui.ToggleButton"
 	},
-	"swan.CollectionEvent":
+	"eui.CollectionEvent":
 	{
 		"items":"Array",
 		"kind":"string",
@@ -248,14 +248,14 @@
 		"oldLocation":"number",
 		"super":"lark.Event"
 	},
-	"swan.Component":
+	"eui.Component":
 	{
 		"bottom":"number",
 		"currentState":"string",
 		"enabled":"boolean",
 		"horizontalCenter":"number",
 		"hostComponentKey":"string",
-		"implements":["swan.UIComponent"],
+		"implements":["eui.UIComponent"],
 		"includeInLayout":"boolean",
 		"left":"number",
 		"maxHeight":"number",
@@ -270,23 +270,23 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"swan.DataGroup":
+	"eui.DataGroup":
 	{
-		"dataProvider":"swan.ICollection",
+		"dataProvider":"eui.ICollection",
 		"itemRenderer":"any",
 		"itemRendererFunction":"Function",
-		"super":"swan.Group",
+		"super":"eui.Group",
 		"useVirtualLayout":"boolean"
 	},
-	"swan.DefaultAssetAdapter":
+	"eui.DefaultAssetAdapter":
 	{
-		"implements":["swan.IAssetAdapter"]
+		"implements":["eui.IAssetAdapter"]
 	},
-	"swan.EditableText":
+	"eui.EditableText":
 	{
 		"bottom":"number",
 		"horizontalCenter":"number",
-		"implements":["swan.UIComponent","swan.IDisplayText"],
+		"implements":["eui.UIComponent","eui.IDisplayText"],
 		"includeInLayout":"boolean",
 		"left":"number",
 		"maxHeight":"number",
@@ -300,15 +300,15 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"swan.Group":
+	"eui.Group":
 	{
 		"bottom":"number",
 		"currentState":"string",
 		"elementsContent":"Array",
 		"horizontalCenter":"number",
-		"implements":["swan.IViewport"],
+		"implements":["eui.IViewport"],
 		"includeInLayout":"boolean",
-		"layout":"swan.LayoutBase",
+		"layout":"eui.LayoutBase",
 		"left":"number",
 		"maxHeight":"number",
 		"maxWidth":"number",
@@ -326,24 +326,24 @@
 		"touchThrough":"boolean",
 		"verticalCenter":"number"
 	},
-	"swan.HScrollBar":
+	"eui.HScrollBar":
 	{
-		"super":"swan.ScrollBarBase"
+		"super":"eui.ScrollBarBase"
 	},
-	"swan.HSlider":
+	"eui.HSlider":
 	{
-		"super":"swan.SliderBase"
+		"super":"eui.SliderBase"
 	},
-	"swan.HorizontalLayout":
+	"eui.HorizontalLayout":
 	{
-		"super":"swan.LinearLayoutBase"
+		"super":"eui.LinearLayoutBase"
 	},
-	"swan.Image":
+	"eui.Image":
 	{
 		"bottom":"number",
 		"fillMode":"string",
 		"horizontalCenter":"number",
-		"implements":["swan.UIComponent"],
+		"implements":["eui.UIComponent"],
 		"includeInLayout":"boolean",
 		"left":"number",
 		"maxHeight":"number",
@@ -359,26 +359,26 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"swan.ItemRenderer":
+	"eui.ItemRenderer":
 	{
 		"data":"any",
-		"implements":["swan.IItemRenderer"],
+		"implements":["eui.IItemRenderer"],
 		"itemIndex":"number",
 		"selected":"boolean",
-		"super":"swan.Group"
+		"super":"eui.Group"
 	},
-	"swan.ItemTapEvent":
+	"eui.ItemTapEvent":
 	{
 		"item":"any",
 		"itemIndex":"number",
-		"itemRenderer":"swan.IItemRenderer",
+		"itemRenderer":"eui.IItemRenderer",
 		"super":"lark.Event"
 	},
-	"swan.Label":
+	"eui.Label":
 	{
 		"bottom":"number",
 		"horizontalCenter":"number",
-		"implements":["swan.UIComponent","swan.IDisplayText"],
+		"implements":["eui.UIComponent","eui.IDisplayText"],
 		"includeInLayout":"boolean",
 		"left":"number",
 		"maxHeight":"number",
@@ -392,13 +392,13 @@
 		"top":"number",
 		"verticalCenter":"number"
 	},
-	"swan.LayoutBase":
+	"eui.LayoutBase":
 	{
 		"super":"lark.EventEmitter",
-		"target":"swan.Group",
+		"target":"eui.Group",
 		"useVirtualLayout":"boolean"
 	},
-	"swan.LinearLayoutBase":
+	"eui.LinearLayoutBase":
 	{
 		"gap":"number",
 		"horizontalAlign":"string",
@@ -406,103 +406,103 @@
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
-		"super":"swan.LayoutBase",
+		"super":"eui.LayoutBase",
 		"verticalAlign":"string"
 	},
-	"swan.List":
+	"eui.List":
 	{
 		"allowMultipleSelection":"boolean",
 		"selectedIndices":"Array",
 		"selectedItems":"Array",
-		"super":"swan.ListBase"
+		"super":"eui.ListBase"
 	},
-	"swan.ListBase":
+	"eui.ListBase":
 	{
 		"requireSelection":"boolean",
 		"selectedIndex":"number",
 		"selectedItem":"any",
-		"super":"swan.DataGroup"
+		"super":"eui.DataGroup"
 	},
-	"swan.Panel":
+	"eui.Panel":
 	{
-		"closeButton":"swan.Button",
+		"closeButton":"eui.Button",
 		"elementsContent":"Array",
 		"moveArea":"lark.DisplayObject",
-		"super":"swan.Component",
+		"super":"eui.Component",
 		"title":"string",
-		"titleDisplay":"swan.IDisplayText"
+		"titleDisplay":"eui.IDisplayText"
 	},
-	"swan.ProgressBar":
+	"eui.ProgressBar":
 	{
 		"direction":"string",
-		"labelDisplay":"swan.Label",
+		"labelDisplay":"eui.Label",
 		"labelFunction":"Function",
 		"slideDuration":"number",
-		"super":"swan.Range",
-		"thumb":"swan.UIComponent"
+		"super":"eui.Range",
+		"thumb":"eui.UIComponent"
 	},
-	"swan.PropertyEvent":
+	"eui.PropertyEvent":
 	{
 		"property":"string",
 		"super":"lark.Event"
 	},
-	"swan.RadioButton":
+	"eui.RadioButton":
 	{
-		"group":"swan.RadioButtonGroup",
+		"group":"eui.RadioButtonGroup",
 		"groupName":"string",
-		"super":"swan.ToggleButton",
+		"super":"eui.ToggleButton",
 		"value":"any"
 	},
-	"swan.RadioButtonGroup":
+	"eui.RadioButtonGroup":
 	{
 		"enabled":"boolean",
 		"selectedValue":"any",
-		"selection":"swan.RadioButton",
+		"selection":"eui.RadioButton",
 		"super":"lark.EventEmitter"
 	},
-	"swan.Range":
+	"eui.Range":
 	{
 		"maximum":"number",
 		"minimum":"number",
 		"snapInterval":"number",
-		"super":"swan.Component",
+		"super":"eui.Component",
 		"value":"number"
 	},
-	"swan.ScrollBarBase":
+	"eui.ScrollBarBase":
 	{
-		"super":"swan.Component",
-		"thumb":"swan.UIComponent",
-		"viewport":"swan.IViewport"
+		"super":"eui.Component",
+		"thumb":"eui.UIComponent",
+		"viewport":"eui.IViewport"
 	},
-	"swan.Scroller":
+	"eui.Scroller":
 	{
-		"horizontalScrollBar":"swan.HScrollBar",
+		"horizontalScrollBar":"eui.HScrollBar",
 		"scrollPolicyH":"string",
 		"scrollPolicyV":"string",
-		"super":"swan.Component",
+		"super":"eui.Component",
 		"throwSpeed":"number",
-		"verticalScrollBar":"swan.VScrollBar",
-		"viewport":"swan.IViewport"
+		"verticalScrollBar":"eui.VScrollBar",
+		"viewport":"eui.IViewport"
 	},
-	"swan.ScrollerThrowEvent":
+	"eui.ScrollerThrowEvent":
 	{
 		"currentPos":"number",
 		"super":"lark.Event",
 		"toPos":"number"
 	},
-	"swan.SetProperty":
+	"eui.SetProperty":
 	{
-		"implements":["swan.IOverride"],
+		"implements":["eui.IOverride"],
 		"name":"string",
 		"target":"string",
 		"value":"any"
 	},
-	"swan.Skin":
+	"eui.Skin":
 	{
 		"currentState":"string",
 		"elementsContent":"Array",
 		"height":"number",
-		"hostComponent":"swan.Component",
+		"hostComponent":"eui.Component",
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"minHeight":"number",
@@ -512,32 +512,32 @@
 		"super":"lark.HashObject",
 		"width":"number"
 	},
-	"swan.SliderBase":
+	"eui.SliderBase":
 	{
 		"liveDragging":"boolean",
 		"pendingValue":"number",
 		"slideDuration":"number",
-		"super":"swan.Range",
-		"thumb":"swan.UIComponent",
-		"track":"swan.UIComponent",
+		"super":"eui.Range",
+		"thumb":"eui.UIComponent",
+		"track":"eui.UIComponent",
 		"trackHighlight":"lark.DisplayObject"
 	},
-	"swan.State":
+	"eui.State":
 	{
 		"name":"string",
 		"overrides":"Array",
 		"stateGroups":"Array",
 		"super":"lark.HashObject"
 	},
-	"swan.TabBar":
+	"eui.TabBar":
 	{
-		"super":"swan.ListBase"
+		"super":"eui.ListBase"
 	},
-	"swan.Theme":
+	"eui.Theme":
 	{
 		"super":"lark.EventEmitter"
 	},
-	"swan.TileLayout":
+	"eui.TileLayout":
 	{
 		"columnAlign":"string",
 		"columnWidth":"number",
@@ -552,44 +552,44 @@
 		"requestedRowCount":"number",
 		"rowAlign":"string",
 		"rowHeight":"number",
-		"super":"swan.LayoutBase",
+		"super":"eui.LayoutBase",
 		"verticalAlign":"string",
 		"verticalGap":"number"
 	},
-	"swan.ToggleButton":
+	"eui.ToggleButton":
 	{
 		"selected":"boolean",
-		"super":"swan.Button"
+		"super":"eui.Button"
 	},
-	"swan.ToggleSwitch":
+	"eui.ToggleSwitch":
 	{
-		"super":"swan.ToggleButton"
+		"super":"eui.ToggleButton"
 	},
-	"swan.UIEvent":
+	"eui.UIEvent":
 	{
 		"super":"lark.Event"
 	},
-	"swan.UILayer":
+	"eui.UILayer":
 	{
-		"super":"swan.Group"
+		"super":"eui.Group"
 	},
-	"swan.VScrollBar":
+	"eui.VScrollBar":
 	{
-		"super":"swan.ScrollBarBase"
+		"super":"eui.ScrollBarBase"
 	},
-	"swan.VSlider":
+	"eui.VSlider":
 	{
-		"super":"swan.SliderBase"
+		"super":"eui.SliderBase"
 	},
-	"swan.VerticalLayout":
+	"eui.VerticalLayout":
 	{
-		"super":"swan.LinearLayoutBase"
+		"super":"eui.LinearLayoutBase"
 	},
-	"swan.ViewStack":
+	"eui.ViewStack":
 	{
-		"implements":["swan.ICollection"],
+		"implements":["eui.ICollection"],
 		"selectedChild":"lark.DisplayObject",
 		"selectedIndex":"number",
-		"super":"swan.Group"
+		"super":"eui.Group"
 	}
 }

@@ -1,40 +1,40 @@
 <componentPackage>
-  <component id="ArrayCollection" super="lark.EventEmitter" default="source" show="false" module="swan"/>
-  <component id="BasicLayout" super="swan.LayoutBase" show="false" module="swan"/>
-  <component id="Button" super="swan.Component" state="up,down,disabled" show="true" module="swan"/>
-  <component id="CheckBox" super="swan.ToggleButton" show="true" module="swan"/>
-  <component id="Component" super="lark.Sprite" state="" show="true" module="swan"/>
-  <component id="DataGroup" super="swan.Group" default="dataProvider" show="true" module="swan"/>
-  <component id="EditableText" super="lark.TextInput" show="true" module="swan"/>
-  <component id="Group" super="lark.Sprite" default="elementsContent" show="true" module="swan"/>
-  <component id="HorizontalLayout" super="swan.LinearLayoutBase" show="false" module="swan"/>
-  <component id="HScrollBar" super="swan.ScrollBarBase" show="true" module="swan"/>
-  <component id="HSlider" super="swan.SliderBase" show="true" module="swan"/>
-  <component id="Image" super="lark.Bitmap" show="true" module="swan"/>
-  <component id="ItemRenderer" super="swan.Group" show="false" module="swan"/>
-  <component id="Label" super="lark.TextField" show="true" module="swan"/>
-  <component id="LayoutBase" super="lark.EventEmitter" show="false" module="swan"/>
-  <component id="List" super="swan.ListBase" show="true" module="swan"/>
-  <component id="ListBase" super="swan.DataGroup" show="false" module="swan"/>
+  <component id="ArrayCollection" super="lark.EventEmitter" default="source" show="false" module="eui"/>
+  <component id="BasicLayout" super="eui.LayoutBase" show="false" module="eui"/>
+  <component id="Button" super="eui.Component" state="up,down,disabled" show="true" module="eui"/>
+  <component id="CheckBox" super="eui.ToggleButton" show="true" module="eui"/>
+  <component id="Component" super="lark.Sprite" state="" show="true" module="eui"/>
+  <component id="DataGroup" super="eui.Group" default="dataProvider" show="true" module="eui"/>
+  <component id="EditableText" super="lark.TextInput" show="true" module="eui"/>
+  <component id="Group" super="lark.Sprite" default="elementsContent" show="true" module="eui"/>
+  <component id="HorizontalLayout" super="eui.LinearLayoutBase" show="false" module="eui"/>
+  <component id="HScrollBar" super="eui.ScrollBarBase" show="true" module="eui"/>
+  <component id="HSlider" super="eui.SliderBase" show="true" module="eui"/>
+  <component id="Image" super="lark.Bitmap" show="true" module="eui"/>
+  <component id="ItemRenderer" super="eui.Group" show="false" module="eui"/>
+  <component id="Label" super="lark.TextField" show="true" module="eui"/>
+  <component id="LayoutBase" super="lark.EventEmitter" show="false" module="eui"/>
+  <component id="List" super="eui.ListBase" show="true" module="eui"/>
+  <component id="ListBase" super="eui.DataGroup" show="false" module="eui"/>
   <component id="Matrix" super="lark.LarkObject" show="false" module="lark"/>
-  <component id="Panel" default="elementsContent" super="swan.Component" show="true" module="swan"/>
+  <component id="Panel" default="elementsContent" super="eui.Component" show="true" module="eui"/>
   <component id="Point" super="lark.LarkObject" show="false" module="lark"/>
-  <component id="ProgressBar" super="swan.Range" show="true" module="swan"/>
-  <component id="RadioButton" super="swan.ToggleButton" show="true" module="swan"/>
-  <component id="RadioButtonGroup" super="lark.EventEmitter" show="false" module="swan"/>
-  <component id="Range" super="swan.Component" show="false" module="swan"/>
+  <component id="ProgressBar" super="eui.Range" show="true" module="eui"/>
+  <component id="RadioButton" super="eui.ToggleButton" show="true" module="eui"/>
+  <component id="RadioButtonGroup" super="lark.EventEmitter" show="false" module="eui"/>
+  <component id="Range" super="eui.Component" show="false" module="eui"/>
   <component id="Rectangle" super="lark.LarkObject" show="false" module="lark"/>
-  <component id="Scroller" super="swan.Component" default="viewport" show="true" module="swan"/>
-  <component id="ScrollBarBase" super="swan.Component" show="false" module="swan"/>
-  <component id="Skin" super="lark.LarkObject" default="elementsContent" show="false" module="swan"/>
-  <component id="SliderBase" super="swan.Range" show="false" module="swan"/>
-  <component id="State" super="lark.LarkObject" default="overrides" show="false" module="swan"/>
-  <component id="TabBar" super="swan.ListBase" show="true" module="swan"/>
-  <component id="TileLayout" super="swan.LayoutBase" show="false" module="swan"/>
-  <component id="ToggleButton" super="swan.Button" state="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" show="true" module="swan"/>
-  <component id="ToggleSwitch" super="swan.ToggleButton" show="true" module="swan"/>
-  <component id="VerticalLayout" super="swan.LayoutBase" show="false" module="swan"/>
-  <component id="ViewStack" super="swan.Group" show="true" module="swan"/>
-  <component id="VScrollBar" super="swan.ScrollBarBase" show="true" module="swan"/>
-  <component id="VSlider" super="swan.SliderBase" show="true" module="swan"/>
+  <component id="Scroller" super="eui.Component" default="viewport" show="true" module="eui"/>
+  <component id="ScrollBarBase" super="eui.Component" show="false" module="eui"/>
+  <component id="Skin" super="lark.LarkObject" default="elementsContent" show="false" module="eui"/>
+  <component id="SliderBase" super="eui.Range" show="false" module="eui"/>
+  <component id="State" super="lark.LarkObject" default="overrides" show="false" module="eui"/>
+  <component id="TabBar" super="eui.ListBase" show="true" module="eui"/>
+  <component id="TileLayout" super="eui.LayoutBase" show="false" module="eui"/>
+  <component id="ToggleButton" super="eui.Button" state="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" show="true" module="eui"/>
+  <component id="ToggleSwitch" super="eui.ToggleButton" show="true" module="eui"/>
+  <component id="VerticalLayout" super="eui.LayoutBase" show="false" module="eui"/>
+  <component id="ViewStack" super="eui.Group" show="true" module="eui"/>
+  <component id="VScrollBar" super="eui.ScrollBarBase" show="true" module="eui"/>
+  <component id="VSlider" super="eui.SliderBase" show="true" module="eui"/>
 </componentPackage>

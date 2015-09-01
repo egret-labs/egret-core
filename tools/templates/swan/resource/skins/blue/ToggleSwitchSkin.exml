@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Skin class="skins.ToggleSwitchSkin" states="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" xmlns:s="http://ns.egret.com/swan">
+<s:Skin class="skins.ToggleSwitchSkin" states="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" xmlns:s="http://ns.egret.com/eui">
     <s:Image source="resource/assets/blue/ToggleSwitch/on.png"
              source.up="resource/assets/blue/ToggleSwitch/off.png"
              source.down="resource/assets/blue/ToggleSwitch/off.png"

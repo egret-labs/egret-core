@@ -14,7 +14,7 @@ var CreateCommand = (function () {
             globals.exit(1001);
         }
         var projectPath = file.resolve(projectName);
-        var type = params.getOption("--type", ["core", "gui", "empty", "swan"]);
+        var type = params.getOption("--type", ["core", "gui", "empty", "eui"]);
         var async = globals.getAsync();
         async.series([
             //创建新工程
@@ -31,10 +31,10 @@ var CreateCommand = (function () {
                         file.remove(file.join(projectPath, "resource"));
                         _this.copyFileDir(projectPath, "tools/templates/gui");
                     }
-                    else if (type == "swan") {
+                    else if (type == "eui") {
                         //删除assets文件夹
                         file.remove(file.join(projectPath, "resource"));
-                        _this.copyFileDir(projectPath, "tools/templates/swan");
+                        _this.copyFileDir(projectPath, "tools/templates/eui");
                     }
                 }
                 //根据package.json写入项目配置文件中的egret版本号

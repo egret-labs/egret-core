@@ -1,15 +1,15 @@
 {
   "skins":{
-    "swan.Button":"skins/blue/ButtonSkin.exml",
-    "swan.CheckBox":"skins/blue/CheckBoxSkin.exml",
-    "swan.HScrollBar":"skins/blue/HScrollBarSkin.exml",
-    "swan.HSlider":"skins/blue/HSliderSkin.exml",
-    "swan.Panel":"skins/blue/PanelSkin.exml",
-    "swan.ProgressBar":"skins/blue/ProgressBarSkin.exml",
-    "swan.RadioButton":"skins/blue/RadioButtonSkin.exml",
-    "swan.Scroller":"skins/blue/ScrollerSkin.exml",
-    "swan.ToggleSwitch":"skins/blue/ToggleSwitchSkin.exml",
-    "swan.VScrollBar":"skins/blue/VScrollBarSkin.exml",
-    "swan.VSlider":"skins/blue/VSliderSkin.exml"
+    "eui.Button":"skins/blue/ButtonSkin.exml",
+    "eui.CheckBox":"skins/blue/CheckBoxSkin.exml",
+    "eui.HScrollBar":"skins/blue/HScrollBarSkin.exml",
+    "eui.HSlider":"skins/blue/HSliderSkin.exml",
+    "eui.Panel":"skins/blue/PanelSkin.exml",
+    "eui.ProgressBar":"skins/blue/ProgressBarSkin.exml",
+    "eui.RadioButton":"skins/blue/RadioButtonSkin.exml",
+    "eui.Scroller":"skins/blue/ScrollerSkin.exml",
+    "eui.ToggleSwitch":"skins/blue/ToggleSwitchSkin.exml",
+    "eui.VScrollBar":"skins/blue/VScrollBarSkin.exml",
+    "eui.VSlider":"skins/blue/VSliderSkin.exml"
   }
 }

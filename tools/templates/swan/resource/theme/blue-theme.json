@@ -1,15 +1,15 @@
 {
   "skins":{
-    "swan.Button":"resource/skins/blue/ButtonSkin.exml",
-    "swan.CheckBox":"resource/skins/blue/CheckBoxSkin.exml",
-    "swan.HScrollBar":"resource/skins/blue/HScrollBarSkin.exml",
-    "swan.HSlider":"resource/skins/blue/HSliderSkin.exml",
-    "swan.Panel":"resource/skins/blue/PanelSkin.exml",
-    "swan.ProgressBar":"resource/skins/blue/ProgressBarSkin.exml",
-    "swan.RadioButton":"resource/skins/blue/RadioButtonSkin.exml",
-    "swan.Scroller":"resource/skins/blue/ScrollerSkin.exml",
-    "swan.ToggleSwitch":"resource/skins/blue/ToggleSwitchSkin.exml",
-    "swan.VScrollBar":"resource/skins/blue/VScrollBarSkin.exml",
-    "swan.VSlider":"resource/skins/blue/VSliderSkin.exml"
+    "eui.Button":"resource/skins/blue/ButtonSkin.exml",
+    "eui.CheckBox":"resource/skins/blue/CheckBoxSkin.exml",
+    "eui.HScrollBar":"resource/skins/blue/HScrollBarSkin.exml",
+    "eui.HSlider":"resource/skins/blue/HSliderSkin.exml",
+    "eui.Panel":"resource/skins/blue/PanelSkin.exml",
+    "eui.ProgressBar":"resource/skins/blue/ProgressBarSkin.exml",
+    "eui.RadioButton":"resource/skins/blue/RadioButtonSkin.exml",
+    "eui.Scroller":"resource/skins/blue/ScrollerSkin.exml",
+    "eui.ToggleSwitch":"resource/skins/blue/ToggleSwitchSkin.exml",
+    "eui.VScrollBar":"resource/skins/blue/VScrollBarSkin.exml",
+    "eui.VSlider":"resource/skins/blue/VSliderSkin.exml"
   }
 }

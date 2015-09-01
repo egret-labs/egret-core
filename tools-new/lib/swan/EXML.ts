@@ -40,9 +40,9 @@ egret.XML = xml;
  * @private
  * Swan 命名空间
  */
-export var NS_S: string = "http://ns.egret.com/swan";
+export var NS_S: string = "http://ns.egret.com/eui";
 export var NS_W: string = "http://ns.egret.com/wing";
-var MODULE_NAME = "swan.";
+var MODULE_NAME = "eui.";
 var basicTypes: string[] = ["Array", "boolean", "string", "number"];
 
 
