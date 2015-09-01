@@ -45,7 +45,7 @@ module egret {
         5: "请确定执行路径",
         6: "manifest.json生成成功",
         7: "native拷贝共计耗时：{0}秒",
-        8: "{color_red} gui 与 swan 不能同时存在，请去掉一个!{color_normal}",
+        8: "{color_red} gui 与 eui 不能同时存在，请去掉一个!{color_normal}",
         //create
         1001: "请输入项目名称。例: {color_green}egret create [project_name]{color_normal}",
         1002: "该项目已存在",

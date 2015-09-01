@@ -171,14 +171,14 @@ function listModuleFiles(m) {
     });
 }
 function delSwanTemp(m) {
-    if (m.name != "swan" || !m.sourceRoot) {
+    if (m.name != "eui" || !m.sourceRoot) {
         return;
     }
     var pathBefore = FileUtil.joinPath(egret.args.larkRoot, m.root);
     FileUtil.remove(pathBefore);
 }
 function preduceSwanModule(m) {
-    if (m.name != "swan" || !m.sourceRoot) {
+    if (m.name != "eui" || !m.sourceRoot) {
         return;
     }
     var replaces = [

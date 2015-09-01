@@ -1,4 +1,4 @@
-<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret.com/swan" xmlns="http://ns.egret.com/swan" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://ns.egret-labs.org/manifest">
+<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret.com/eui" xmlns="http://ns.egret.com/eui" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://ns.egret-labs.org/manifest">
   <xs:attributeGroup name="lark.Bitmap">
     <xs:attributeGroup ref="lark.DisplayObject"/>
     <xs:attribute name="bitmapData" type="xs:string"/>
@@ -624,7 +624,7 @@
       <xs:attributeGroup ref="lark.TouchEvent"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.AddItems">
+  <xs:attributeGroup name="eui.AddItems">
     <xs:attribute name="position" type="xs:decimal"/>
     <xs:attribute name="propertyName" type="xs:string"/>
     <xs:attribute name="relativeTo" type="xs:string"/>
@@ -644,10 +644,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="AddItems_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.AddItems"/>
+      <xs:attributeGroup ref="eui.AddItems"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ArrayCollection">
+  <xs:attributeGroup name="eui.ArrayCollection">
     <xs:attributeGroup ref="lark.EventEmitter"/>
     <xs:attribute name="source" type="xs:string"/>
   </xs:attributeGroup>
@@ -667,11 +667,11 @@
         <xs:group ref="ArrayCollection_attributeElement"/>
         <xs:group ref="any"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ArrayCollection"/>
+      <xs:attributeGroup ref="eui.ArrayCollection"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.BasicLayout">
-    <xs:attributeGroup ref="swan.LayoutBase"/>
+  <xs:attributeGroup name="eui.BasicLayout">
+    <xs:attributeGroup ref="eui.LayoutBase"/>
   </xs:attributeGroup>
   <xs:group name="BasicLayout_attributeElement">
     <xs:choice>
@@ -684,40 +684,40 @@
         <xs:any namespace="##other"/>
         <xs:group ref="BasicLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.BasicLayout"/>
+      <xs:attributeGroup ref="eui.BasicLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Button">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="eui.Button">
+    <xs:attributeGroup ref="eui.Component"/>
     <xs:attribute name="icon" type="xs:string"/>
     <xs:attribute name="iconDisplay" type="xs:string"/>
     <xs:attribute name="label" type="xs:string"/>
     <xs:attribute name="labelDisplay" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Image">
+  <xs:group name="eui.Image">
     <xs:choice>
       <xs:element ref="Image"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Image">
-    <xs:group ref="swan.Image"/>
+  <xs:complexType name="eui.Image">
+    <xs:group ref="eui.Image"/>
   </xs:complexType>
-  <xs:group name="swan.IDisplayText">
+  <xs:group name="eui.IDisplayText">
     <xs:choice>
       <xs:element ref="EditableText"/>
       <xs:element ref="Label"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.IDisplayText">
-    <xs:group ref="swan.IDisplayText"/>
+  <xs:complexType name="eui.IDisplayText">
+    <xs:group ref="eui.IDisplayText"/>
   </xs:complexType>
   <xs:group name="Button_attributeElement">
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
       <xs:element name="icon" type="any"/>
-      <xs:element name="iconDisplay" type="swan.Image"/>
+      <xs:element name="iconDisplay" type="eui.Image"/>
       <xs:element name="label" type="string"/>
-      <xs:element name="labelDisplay" type="swan.IDisplayText"/>
+      <xs:element name="labelDisplay" type="eui.IDisplayText"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Button">
@@ -726,11 +726,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Button_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Button"/>
+      <xs:attributeGroup ref="eui.Button"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.CheckBox">
-    <xs:attributeGroup ref="swan.ToggleButton"/>
+  <xs:attributeGroup name="eui.CheckBox">
+    <xs:attributeGroup ref="eui.ToggleButton"/>
   </xs:attributeGroup>
   <xs:group name="CheckBox_attributeElement">
     <xs:choice>
@@ -743,10 +743,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="CheckBox_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.CheckBox"/>
+      <xs:attributeGroup ref="eui.CheckBox"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.CollectionEvent">
+  <xs:attributeGroup name="eui.CollectionEvent">
     <xs:attributeGroup ref="lark.Event"/>
     <xs:attribute name="items" type="xs:string"/>
     <xs:attribute name="kind" type="xs:string"/>
@@ -770,10 +770,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="CollectionEvent_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.CollectionEvent"/>
+      <xs:attributeGroup ref="eui.CollectionEvent"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Component">
+  <xs:attributeGroup name="eui.Component">
     <xs:attributeGroup ref="lark.Sprite"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
     <xs:attribute name="currentState" type="xs:string"/>
@@ -822,24 +822,24 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Component_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Component"/>
+      <xs:attributeGroup ref="eui.Component"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.DataGroup">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:attributeGroup name="eui.DataGroup">
+    <xs:attributeGroup ref="eui.Group"/>
     <xs:attribute name="dataProvider" type="xs:string"/>
     <xs:attribute name="itemRenderer" type="xs:string"/>
     <xs:attribute name="itemRendererFunction" type="xs:string"/>
     <xs:attribute name="useVirtualLayout" type="xs:boolean"/>
   </xs:attributeGroup>
-  <xs:group name="swan.ICollection">
+  <xs:group name="eui.ICollection">
     <xs:choice>
       <xs:element ref="ArrayCollection"/>
       <xs:element ref="ViewStack"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.ICollection">
-    <xs:group ref="swan.ICollection"/>
+  <xs:complexType name="eui.ICollection">
+    <xs:group ref="eui.ICollection"/>
   </xs:complexType>
   <xs:group name="Function">
     <xs:choice/>
@@ -850,26 +850,26 @@
   <xs:group name="DataGroup_attributeElement">
     <xs:choice>
       <xs:group ref="Group_attributeElement"/>
-      <xs:element name="dataProvider" type="swan.ICollection"/>
+      <xs:element name="dataProvider" type="eui.ICollection"/>
       <xs:element name="itemRenderer" type="any"/>
       <xs:element name="itemRendererFunction" type="Function"/>
       <xs:element name="useVirtualLayout" type="boolean"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="DataGroup" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="DataGroup" m:defaultProp="dataProvider" m:defaultPropType="eui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="DataGroup_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="eui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.DataGroup"/>
+      <xs:attributeGroup ref="eui.DataGroup"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="DefaultAssetAdapter">
     <xs:complexType/>
   </xs:element>
-  <xs:attributeGroup name="swan.EditableText">
+  <xs:attributeGroup name="eui.EditableText">
     <xs:attributeGroup ref="lark.TextInput"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
     <xs:attribute name="horizontalCenter" type="xs:decimal"/>
@@ -909,10 +909,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="EditableText_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.EditableText"/>
+      <xs:attributeGroup ref="eui.EditableText"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Group">
+  <xs:attributeGroup name="eui.Group">
     <xs:attributeGroup ref="lark.Sprite"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
     <xs:attribute name="currentState" type="xs:string"/>
@@ -939,7 +939,7 @@
   <xs:complexType name="Array_lark.DisplayObject">
     <xs:group ref="lark.DisplayObject"/>
   </xs:complexType>
-  <xs:group name="swan.LayoutBase">
+  <xs:group name="eui.LayoutBase">
     <xs:choice>
       <xs:element ref="BasicLayout"/>
       <xs:element ref="HorizontalLayout"/>
@@ -949,16 +949,16 @@
       <xs:element ref="VerticalLayout"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.LayoutBase">
-    <xs:group ref="swan.LayoutBase"/>
+  <xs:complexType name="eui.LayoutBase">
+    <xs:group ref="eui.LayoutBase"/>
   </xs:complexType>
-  <xs:group name="swan.State">
+  <xs:group name="eui.State">
     <xs:choice>
       <xs:element ref="State"/>
     </xs:choice>
   </xs:group>
   <xs:complexType name="Array_swan.State">
-    <xs:group ref="swan.State"/>
+    <xs:group ref="eui.State"/>
   </xs:complexType>
   <xs:group name="Group_attributeElement">
     <xs:choice>
@@ -968,7 +968,7 @@
       <xs:element name="elementsContent" type="Array_lark.DisplayObject"/>
       <xs:element name="horizontalCenter" type="number"/>
       <xs:element name="includeInLayout" type="boolean"/>
-      <xs:element name="layout" type="swan.LayoutBase"/>
+      <xs:element name="layout" type="eui.LayoutBase"/>
       <xs:element name="left" type="number"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
@@ -993,11 +993,11 @@
         <xs:group ref="Group_attributeElement"/>
         <xs:group ref="lark.DisplayObject"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Group"/>
+      <xs:attributeGroup ref="eui.Group"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.HScrollBar">
-    <xs:attributeGroup ref="swan.ScrollBarBase"/>
+  <xs:attributeGroup name="eui.HScrollBar">
+    <xs:attributeGroup ref="eui.ScrollBarBase"/>
   </xs:attributeGroup>
   <xs:group name="HScrollBar_attributeElement">
     <xs:choice>
@@ -1010,11 +1010,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="HScrollBar_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.HScrollBar"/>
+      <xs:attributeGroup ref="eui.HScrollBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.HSlider">
-    <xs:attributeGroup ref="swan.SliderBase"/>
+  <xs:attributeGroup name="eui.HSlider">
+    <xs:attributeGroup ref="eui.SliderBase"/>
   </xs:attributeGroup>
   <xs:group name="HSlider_attributeElement">
     <xs:choice>
@@ -1027,11 +1027,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="HSlider_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.HSlider"/>
+      <xs:attributeGroup ref="eui.HSlider"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.HorizontalLayout">
-    <xs:attributeGroup ref="swan.LinearLayoutBase"/>
+  <xs:attributeGroup name="eui.HorizontalLayout">
+    <xs:attributeGroup ref="eui.LinearLayoutBase"/>
   </xs:attributeGroup>
   <xs:group name="HorizontalLayout_attributeElement">
     <xs:choice>
@@ -1044,20 +1044,20 @@
         <xs:any namespace="##other"/>
         <xs:group ref="HorizontalLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.HorizontalLayout"/>
+      <xs:attributeGroup ref="eui.HorizontalLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.BitmapFillMode">
+  <xs:simpleType name="eui.BitmapFillMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="repeat"/>
       <xs:enumeration value="scale"/>
       <xs:enumeration value="clip"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.Image">
+  <xs:attributeGroup name="eui.Image">
     <xs:attributeGroup ref="lark.Bitmap"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
-    <xs:attribute name="fillMode" type="swan.BitmapFillMode"/>
+    <xs:attribute name="fillMode" type="eui.BitmapFillMode"/>
     <xs:attribute name="horizontalCenter" type="xs:decimal"/>
     <xs:attribute name="includeInLayout" type="xs:boolean"/>
     <xs:attribute name="left" type="xs:decimal"/>
@@ -1100,11 +1100,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Image_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Image"/>
+      <xs:attributeGroup ref="eui.Image"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ItemRenderer">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:attributeGroup name="eui.ItemRenderer">
+    <xs:attributeGroup ref="eui.Group"/>
     <xs:attribute name="data" type="xs:string"/>
     <xs:attribute name="itemIndex" type="xs:decimal"/>
     <xs:attribute name="selected" type="xs:boolean"/>
@@ -1124,29 +1124,29 @@
         <xs:group ref="ItemRenderer_attributeElement"/>
         <xs:group ref="lark.DisplayObject"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ItemRenderer"/>
+      <xs:attributeGroup ref="eui.ItemRenderer"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ItemTapEvent">
+  <xs:attributeGroup name="eui.ItemTapEvent">
     <xs:attributeGroup ref="lark.Event"/>
     <xs:attribute name="item" type="xs:string"/>
     <xs:attribute name="itemIndex" type="xs:decimal"/>
     <xs:attribute name="itemRenderer" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.IItemRenderer">
+  <xs:group name="eui.IItemRenderer">
     <xs:choice>
       <xs:element ref="ItemRenderer"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.IItemRenderer">
-    <xs:group ref="swan.IItemRenderer"/>
+  <xs:complexType name="eui.IItemRenderer">
+    <xs:group ref="eui.IItemRenderer"/>
   </xs:complexType>
   <xs:group name="ItemTapEvent_attributeElement">
     <xs:choice>
       <xs:group ref="Event_attributeElement"/>
       <xs:element name="item" type="any"/>
       <xs:element name="itemIndex" type="number"/>
-      <xs:element name="itemRenderer" type="swan.IItemRenderer"/>
+      <xs:element name="itemRenderer" type="eui.IItemRenderer"/>
     </xs:choice>
   </xs:group>
   <xs:element name="ItemTapEvent">
@@ -1155,10 +1155,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="ItemTapEvent_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ItemTapEvent"/>
+      <xs:attributeGroup ref="eui.ItemTapEvent"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Label">
+  <xs:attributeGroup name="eui.Label">
     <xs:attributeGroup ref="lark.TextField"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
     <xs:attribute name="horizontalCenter" type="xs:decimal"/>
@@ -1198,15 +1198,15 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Label_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Label"/>
+      <xs:attributeGroup ref="eui.Label"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.LayoutBase">
+  <xs:attributeGroup name="eui.LayoutBase">
     <xs:attributeGroup ref="lark.EventEmitter"/>
     <xs:attribute name="target" type="xs:string"/>
     <xs:attribute name="useVirtualLayout" type="xs:boolean"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Group">
+  <xs:group name="eui.Group">
     <xs:choice>
       <xs:element ref="DataGroup"/>
       <xs:element ref="Group"/>
@@ -1218,13 +1218,13 @@
       <xs:element ref="ViewStack"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Group">
-    <xs:group ref="swan.Group"/>
+  <xs:complexType name="eui.Group">
+    <xs:group ref="eui.Group"/>
   </xs:complexType>
   <xs:group name="LayoutBase_attributeElement">
     <xs:choice>
       <xs:group ref="EventEmitter_attributeElement"/>
-      <xs:element name="target" type="swan.Group"/>
+      <xs:element name="target" type="eui.Group"/>
       <xs:element name="useVirtualLayout" type="boolean"/>
     </xs:choice>
   </xs:group>
@@ -1234,10 +1234,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="LayoutBase_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.LayoutBase"/>
+      <xs:attributeGroup ref="eui.LayoutBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.LayoutHorizontalAlign">
+  <xs:simpleType name="eui.LayoutHorizontalAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
       <xs:enumeration value="right"/>
@@ -1246,7 +1246,7 @@
       <xs:enumeration value="contentJustify"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="swan.LayoutVerticalAlign">
+  <xs:simpleType name="eui.LayoutVerticalAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="top"/>
       <xs:enumeration value="bottom"/>
@@ -1255,15 +1255,15 @@
       <xs:enumeration value="contentJustify"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.LinearLayoutBase">
-    <xs:attributeGroup ref="swan.LayoutBase"/>
+  <xs:attributeGroup name="eui.LinearLayoutBase">
+    <xs:attributeGroup ref="eui.LayoutBase"/>
     <xs:attribute name="gap" type="xs:decimal"/>
-    <xs:attribute name="horizontalAlign" type="swan.LayoutHorizontalAlign"/>
+    <xs:attribute name="horizontalAlign" type="eui.LayoutHorizontalAlign"/>
     <xs:attribute name="paddingBottom" type="xs:decimal"/>
     <xs:attribute name="paddingLeft" type="xs:decimal"/>
     <xs:attribute name="paddingRight" type="xs:decimal"/>
     <xs:attribute name="paddingTop" type="xs:decimal"/>
-    <xs:attribute name="verticalAlign" type="swan.LayoutVerticalAlign"/>
+    <xs:attribute name="verticalAlign" type="eui.LayoutVerticalAlign"/>
   </xs:attributeGroup>
   <xs:group name="LinearLayoutBase_attributeElement">
     <xs:choice>
@@ -1283,11 +1283,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="LinearLayoutBase_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.LinearLayoutBase"/>
+      <xs:attributeGroup ref="eui.LinearLayoutBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.List">
-    <xs:attributeGroup ref="swan.ListBase"/>
+  <xs:attributeGroup name="eui.List">
+    <xs:attributeGroup ref="eui.ListBase"/>
     <xs:attribute name="allowMultipleSelection" type="xs:boolean"/>
     <xs:attribute name="selectedIndices" type="xs:string"/>
     <xs:attribute name="selectedItems" type="xs:string"/>
@@ -1300,18 +1300,18 @@
       <xs:element name="selectedItems" type="Array_any"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="List" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="List" m:defaultProp="dataProvider" m:defaultPropType="eui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="List_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="eui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.List"/>
+      <xs:attributeGroup ref="eui.List"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ListBase">
-    <xs:attributeGroup ref="swan.DataGroup"/>
+  <xs:attributeGroup name="eui.ListBase">
+    <xs:attributeGroup ref="eui.DataGroup"/>
     <xs:attribute name="requireSelection" type="xs:boolean"/>
     <xs:attribute name="selectedIndex" type="xs:decimal"/>
     <xs:attribute name="selectedItem" type="xs:string"/>
@@ -1324,25 +1324,25 @@
       <xs:element name="selectedItem" type="any"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ListBase" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="ListBase" m:defaultProp="dataProvider" m:defaultPropType="eui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="ListBase_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="eui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ListBase"/>
+      <xs:attributeGroup ref="eui.ListBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Panel">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="eui.Panel">
+    <xs:attributeGroup ref="eui.Component"/>
     <xs:attribute name="closeButton" type="xs:string"/>
     <xs:attribute name="elementsContent" type="xs:string"/>
     <xs:attribute name="moveArea" type="xs:string"/>
     <xs:attribute name="title" type="xs:string"/>
     <xs:attribute name="titleDisplay" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Button">
+  <xs:group name="eui.Button">
     <xs:choice>
       <xs:element ref="Button"/>
       <xs:element ref="CheckBox"/>
@@ -1351,17 +1351,17 @@
       <xs:element ref="ToggleSwitch"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Button">
-    <xs:group ref="swan.Button"/>
+  <xs:complexType name="eui.Button">
+    <xs:group ref="eui.Button"/>
   </xs:complexType>
   <xs:group name="Panel_attributeElement">
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
-      <xs:element name="closeButton" type="swan.Button"/>
+      <xs:element name="closeButton" type="eui.Button"/>
       <xs:element name="elementsContent" type="Array_lark.DisplayObject"/>
       <xs:element name="moveArea" type="lark.DisplayObject"/>
       <xs:element name="title" type="string"/>
-      <xs:element name="titleDisplay" type="swan.IDisplayText"/>
+      <xs:element name="titleDisplay" type="eui.IDisplayText"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Panel" m:defaultProp="elementsContent" m:defaultPropType="Array_lark.DisplayObject">
@@ -1371,10 +1371,10 @@
         <xs:group ref="Panel_attributeElement"/>
         <xs:group ref="lark.DisplayObject"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Panel"/>
+      <xs:attributeGroup ref="eui.Panel"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.Direction">
+  <xs:simpleType name="eui.Direction">
     <xs:restriction base="xs:string">
       <xs:enumeration value="ltr"/>
       <xs:enumeration value="rtl"/>
@@ -1382,23 +1382,23 @@
       <xs:enumeration value="btt"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.ProgressBar">
-    <xs:attributeGroup ref="swan.Range"/>
-    <xs:attribute name="direction" type="swan.Direction"/>
+  <xs:attributeGroup name="eui.ProgressBar">
+    <xs:attributeGroup ref="eui.Range"/>
+    <xs:attribute name="direction" type="eui.Direction"/>
     <xs:attribute name="labelDisplay" type="xs:string"/>
     <xs:attribute name="labelFunction" type="xs:string"/>
     <xs:attribute name="slideDuration" type="xs:decimal"/>
     <xs:attribute name="thumb" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Label">
+  <xs:group name="eui.Label">
     <xs:choice>
       <xs:element ref="Label"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Label">
-    <xs:group ref="swan.Label"/>
+  <xs:complexType name="eui.Label">
+    <xs:group ref="eui.Label"/>
   </xs:complexType>
-  <xs:group name="swan.UIComponent">
+  <xs:group name="eui.UIComponent">
     <xs:choice>
       <xs:element ref="Button"/>
       <xs:element ref="CheckBox"/>
@@ -1421,17 +1421,17 @@
       <xs:element ref="VSlider"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.UIComponent">
-    <xs:group ref="swan.UIComponent"/>
+  <xs:complexType name="eui.UIComponent">
+    <xs:group ref="eui.UIComponent"/>
   </xs:complexType>
   <xs:group name="ProgressBar_attributeElement">
     <xs:choice>
       <xs:group ref="Range_attributeElement"/>
       <xs:element name="direction" type="string"/>
-      <xs:element name="labelDisplay" type="swan.Label"/>
+      <xs:element name="labelDisplay" type="eui.Label"/>
       <xs:element name="labelFunction" type="Function"/>
       <xs:element name="slideDuration" type="number"/>
-      <xs:element name="thumb" type="swan.UIComponent"/>
+      <xs:element name="thumb" type="eui.UIComponent"/>
     </xs:choice>
   </xs:group>
   <xs:element name="ProgressBar">
@@ -1440,10 +1440,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="ProgressBar_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ProgressBar"/>
+      <xs:attributeGroup ref="eui.ProgressBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.PropertyEvent">
+  <xs:attributeGroup name="eui.PropertyEvent">
     <xs:attributeGroup ref="lark.Event"/>
     <xs:attribute name="property" type="xs:string"/>
   </xs:attributeGroup>
@@ -1459,27 +1459,27 @@
         <xs:any namespace="##other"/>
         <xs:group ref="PropertyEvent_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.PropertyEvent"/>
+      <xs:attributeGroup ref="eui.PropertyEvent"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.RadioButton">
-    <xs:attributeGroup ref="swan.ToggleButton"/>
+  <xs:attributeGroup name="eui.RadioButton">
+    <xs:attributeGroup ref="eui.ToggleButton"/>
     <xs:attribute name="group" type="xs:string"/>
     <xs:attribute name="groupName" type="xs:string"/>
     <xs:attribute name="value" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.RadioButtonGroup">
+  <xs:group name="eui.RadioButtonGroup">
     <xs:choice>
       <xs:element ref="RadioButtonGroup"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.RadioButtonGroup">
-    <xs:group ref="swan.RadioButtonGroup"/>
+  <xs:complexType name="eui.RadioButtonGroup">
+    <xs:group ref="eui.RadioButtonGroup"/>
   </xs:complexType>
   <xs:group name="RadioButton_attributeElement">
     <xs:choice>
       <xs:group ref="ToggleButton_attributeElement"/>
-      <xs:element name="group" type="swan.RadioButtonGroup"/>
+      <xs:element name="group" type="eui.RadioButtonGroup"/>
       <xs:element name="groupName" type="string"/>
       <xs:element name="value" type="any"/>
     </xs:choice>
@@ -1490,29 +1490,29 @@
         <xs:any namespace="##other"/>
         <xs:group ref="RadioButton_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.RadioButton"/>
+      <xs:attributeGroup ref="eui.RadioButton"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.RadioButtonGroup">
+  <xs:attributeGroup name="eui.RadioButtonGroup">
     <xs:attributeGroup ref="lark.EventEmitter"/>
     <xs:attribute name="enabled" type="xs:boolean"/>
     <xs:attribute name="selectedValue" type="xs:string"/>
     <xs:attribute name="selection" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.RadioButton">
+  <xs:group name="eui.RadioButton">
     <xs:choice>
       <xs:element ref="RadioButton"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.RadioButton">
-    <xs:group ref="swan.RadioButton"/>
+  <xs:complexType name="eui.RadioButton">
+    <xs:group ref="eui.RadioButton"/>
   </xs:complexType>
   <xs:group name="RadioButtonGroup_attributeElement">
     <xs:choice>
       <xs:group ref="EventEmitter_attributeElement"/>
       <xs:element name="enabled" type="boolean"/>
       <xs:element name="selectedValue" type="any"/>
-      <xs:element name="selection" type="swan.RadioButton"/>
+      <xs:element name="selection" type="eui.RadioButton"/>
     </xs:choice>
   </xs:group>
   <xs:element name="RadioButtonGroup">
@@ -1521,11 +1521,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="RadioButtonGroup_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.RadioButtonGroup"/>
+      <xs:attributeGroup ref="eui.RadioButtonGroup"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Range">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="eui.Range">
+    <xs:attributeGroup ref="eui.Component"/>
     <xs:attribute name="maximum" type="xs:decimal"/>
     <xs:attribute name="minimum" type="xs:decimal"/>
     <xs:attribute name="snapInterval" type="xs:decimal"/>
@@ -1546,15 +1546,15 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Range_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Range"/>
+      <xs:attributeGroup ref="eui.Range"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ScrollBarBase">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="eui.ScrollBarBase">
+    <xs:attributeGroup ref="eui.Component"/>
     <xs:attribute name="thumb" type="xs:string"/>
     <xs:attribute name="viewport" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.IViewport">
+  <xs:group name="eui.IViewport">
     <xs:choice>
       <xs:element ref="DataGroup"/>
       <xs:element ref="Group"/>
@@ -1566,14 +1566,14 @@
       <xs:element ref="ViewStack"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.IViewport">
-    <xs:group ref="swan.IViewport"/>
+  <xs:complexType name="eui.IViewport">
+    <xs:group ref="eui.IViewport"/>
   </xs:complexType>
   <xs:group name="ScrollBarBase_attributeElement">
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
-      <xs:element name="thumb" type="swan.UIComponent"/>
-      <xs:element name="viewport" type="swan.IViewport"/>
+      <xs:element name="thumb" type="eui.UIComponent"/>
+      <xs:element name="viewport" type="eui.IViewport"/>
     </xs:choice>
   </xs:group>
   <xs:element name="ScrollBarBase">
@@ -1582,63 +1582,63 @@
         <xs:any namespace="##other"/>
         <xs:group ref="ScrollBarBase_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ScrollBarBase"/>
+      <xs:attributeGroup ref="eui.ScrollBarBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.ScrollPolicy">
+  <xs:simpleType name="eui.ScrollPolicy">
     <xs:restriction base="xs:string">
       <xs:enumeration value="auto"/>
       <xs:enumeration value="off"/>
       <xs:enumeration value="on"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.Scroller">
-    <xs:attributeGroup ref="swan.Component"/>
+  <xs:attributeGroup name="eui.Scroller">
+    <xs:attributeGroup ref="eui.Component"/>
     <xs:attribute name="horizontalScrollBar" type="xs:string"/>
-    <xs:attribute name="scrollPolicyH" type="swan.ScrollPolicy"/>
-    <xs:attribute name="scrollPolicyV" type="swan.ScrollPolicy"/>
+    <xs:attribute name="scrollPolicyH" type="eui.ScrollPolicy"/>
+    <xs:attribute name="scrollPolicyV" type="eui.ScrollPolicy"/>
     <xs:attribute name="throwSpeed" type="xs:decimal"/>
     <xs:attribute name="verticalScrollBar" type="xs:string"/>
     <xs:attribute name="viewport" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.HScrollBar">
+  <xs:group name="eui.HScrollBar">
     <xs:choice>
       <xs:element ref="HScrollBar"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.HScrollBar">
-    <xs:group ref="swan.HScrollBar"/>
+  <xs:complexType name="eui.HScrollBar">
+    <xs:group ref="eui.HScrollBar"/>
   </xs:complexType>
-  <xs:group name="swan.VScrollBar">
+  <xs:group name="eui.VScrollBar">
     <xs:choice>
       <xs:element ref="VScrollBar"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.VScrollBar">
-    <xs:group ref="swan.VScrollBar"/>
+  <xs:complexType name="eui.VScrollBar">
+    <xs:group ref="eui.VScrollBar"/>
   </xs:complexType>
   <xs:group name="Scroller_attributeElement">
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
-      <xs:element name="horizontalScrollBar" type="swan.HScrollBar"/>
+      <xs:element name="horizontalScrollBar" type="eui.HScrollBar"/>
       <xs:element name="scrollPolicyH" type="string"/>
       <xs:element name="scrollPolicyV" type="string"/>
       <xs:element name="throwSpeed" type="number"/>
-      <xs:element name="verticalScrollBar" type="swan.VScrollBar"/>
-      <xs:element name="viewport" type="swan.IViewport"/>
+      <xs:element name="verticalScrollBar" type="eui.VScrollBar"/>
+      <xs:element name="viewport" type="eui.IViewport"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="Scroller" m:defaultProp="viewport" m:defaultPropType="swan.IViewport">
+  <xs:element name="Scroller" m:defaultProp="viewport" m:defaultPropType="eui.IViewport">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="Scroller_attributeElement"/>
-        <xs:group ref="swan.IViewport"/>
+        <xs:group ref="eui.IViewport"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Scroller"/>
+      <xs:attributeGroup ref="eui.Scroller"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ScrollerThrowEvent">
+  <xs:attributeGroup name="eui.ScrollerThrowEvent">
     <xs:attributeGroup ref="lark.Event"/>
     <xs:attribute name="currentPos" type="xs:decimal"/>
     <xs:attribute name="toPos" type="xs:decimal"/>
@@ -1656,10 +1656,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="ScrollerThrowEvent_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ScrollerThrowEvent"/>
+      <xs:attributeGroup ref="eui.ScrollerThrowEvent"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.SetProperty">
+  <xs:attributeGroup name="eui.SetProperty">
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="target" type="xs:string"/>
     <xs:attribute name="value" type="xs:string"/>
@@ -1677,10 +1677,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="SetProperty_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.SetProperty"/>
+      <xs:attributeGroup ref="eui.SetProperty"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Skin">
+  <xs:attributeGroup name="eui.Skin">
     <xs:attributeGroup ref="lark.HashObject"/>
     <xs:attribute name="class" type="xs:string"/>
     <xs:attribute name="currentState" type="xs:string"/>
@@ -1695,7 +1695,7 @@
     <xs:attribute name="states" type="xs:string"/>
     <xs:attribute name="width" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="swan.Component">
+  <xs:group name="eui.Component">
     <xs:choice>
       <xs:element ref="Button"/>
       <xs:element ref="CheckBox"/>
@@ -1715,8 +1715,8 @@
       <xs:element ref="VSlider"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="swan.Component">
-    <xs:group ref="swan.Component"/>
+  <xs:complexType name="eui.Component">
+    <xs:group ref="eui.Component"/>
   </xs:complexType>
   <xs:group name="Skin_attributeElement">
     <xs:choice>
@@ -1725,7 +1725,7 @@
       <xs:element name="currentState" type="string"/>
       <xs:element name="elementsContent" type="Array_lark.DisplayObject"/>
       <xs:element name="height" type="number"/>
-      <xs:element name="hostComponent" type="swan.Component"/>
+      <xs:element name="hostComponent" type="eui.Component"/>
       <xs:element name="maxHeight" type="number"/>
       <xs:element name="maxWidth" type="number"/>
       <xs:element name="minHeight" type="number"/>
@@ -1742,11 +1742,11 @@
         <xs:group ref="Skin_attributeElement"/>
         <xs:group ref="lark.DisplayObject"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Skin"/>
+      <xs:attributeGroup ref="eui.Skin"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.SliderBase">
-    <xs:attributeGroup ref="swan.Range"/>
+  <xs:attributeGroup name="eui.SliderBase">
+    <xs:attributeGroup ref="eui.Range"/>
     <xs:attribute name="liveDragging" type="xs:boolean"/>
     <xs:attribute name="pendingValue" type="xs:decimal"/>
     <xs:attribute name="slideDuration" type="xs:decimal"/>
@@ -1760,8 +1760,8 @@
       <xs:element name="liveDragging" type="boolean"/>
       <xs:element name="pendingValue" type="number"/>
       <xs:element name="slideDuration" type="number"/>
-      <xs:element name="thumb" type="swan.UIComponent"/>
-      <xs:element name="track" type="swan.UIComponent"/>
+      <xs:element name="thumb" type="eui.UIComponent"/>
+      <xs:element name="track" type="eui.UIComponent"/>
       <xs:element name="trackHighlight" type="lark.DisplayObject"/>
     </xs:choice>
   </xs:group>
@@ -1771,10 +1771,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="SliderBase_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.SliderBase"/>
+      <xs:attributeGroup ref="eui.SliderBase"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.State">
+  <xs:attributeGroup name="eui.State">
     <xs:attributeGroup ref="lark.HashObject"/>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="overrides" type="xs:string"/>
@@ -1795,28 +1795,28 @@
         <xs:group ref="State_attributeElement"/>
         <xs:group ref="any"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.State"/>
+      <xs:attributeGroup ref="eui.State"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.TabBar">
-    <xs:attributeGroup ref="swan.ListBase"/>
+  <xs:attributeGroup name="eui.TabBar">
+    <xs:attributeGroup ref="eui.ListBase"/>
   </xs:attributeGroup>
   <xs:group name="TabBar_attributeElement">
     <xs:choice>
       <xs:group ref="ListBase_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="TabBar" m:defaultProp="dataProvider" m:defaultPropType="swan.ICollection">
+  <xs:element name="TabBar" m:defaultProp="dataProvider" m:defaultPropType="eui.ICollection">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
         <xs:group ref="TabBar_attributeElement"/>
-        <xs:group ref="swan.ICollection"/>
+        <xs:group ref="eui.ICollection"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.TabBar"/>
+      <xs:attributeGroup ref="eui.TabBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.Theme">
+  <xs:attributeGroup name="eui.Theme">
     <xs:attributeGroup ref="lark.EventEmitter"/>
   </xs:attributeGroup>
   <xs:group name="Theme_attributeElement">
@@ -1830,45 +1830,45 @@
         <xs:any namespace="##other"/>
         <xs:group ref="Theme_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.Theme"/>
+      <xs:attributeGroup ref="eui.Theme"/>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="swan.ColumnAlign">
+  <xs:simpleType name="eui.ColumnAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
       <xs:enumeration value="justifyUsingGap"/>
       <xs:enumeration value="justifyUsingWidth"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="swan.TileOrientation">
+  <xs:simpleType name="eui.TileOrientation">
     <xs:restriction base="xs:string">
       <xs:enumeration value="rows"/>
       <xs:enumeration value="columns"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="swan.RowAlign">
+  <xs:simpleType name="eui.RowAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="top"/>
       <xs:enumeration value="justifyUsingGap"/>
       <xs:enumeration value="justifyUsingHeight"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:attributeGroup name="swan.TileLayout">
-    <xs:attributeGroup ref="swan.LayoutBase"/>
-    <xs:attribute name="columnAlign" type="swan.ColumnAlign"/>
+  <xs:attributeGroup name="eui.TileLayout">
+    <xs:attributeGroup ref="eui.LayoutBase"/>
+    <xs:attribute name="columnAlign" type="eui.ColumnAlign"/>
     <xs:attribute name="columnWidth" type="xs:decimal"/>
-    <xs:attribute name="horizontalAlign" type="swan.LayoutHorizontalAlign"/>
+    <xs:attribute name="horizontalAlign" type="eui.LayoutHorizontalAlign"/>
     <xs:attribute name="horizontalGap" type="xs:decimal"/>
-    <xs:attribute name="orientation" type="swan.TileOrientation"/>
+    <xs:attribute name="orientation" type="eui.TileOrientation"/>
     <xs:attribute name="paddingBottom" type="xs:decimal"/>
     <xs:attribute name="paddingLeft" type="xs:decimal"/>
     <xs:attribute name="paddingRight" type="xs:decimal"/>
     <xs:attribute name="paddingTop" type="xs:decimal"/>
     <xs:attribute name="requestedColumnCount" type="xs:decimal"/>
     <xs:attribute name="requestedRowCount" type="xs:decimal"/>
-    <xs:attribute name="rowAlign" type="swan.RowAlign"/>
+    <xs:attribute name="rowAlign" type="eui.RowAlign"/>
     <xs:attribute name="rowHeight" type="xs:decimal"/>
-    <xs:attribute name="verticalAlign" type="swan.LayoutVerticalAlign"/>
+    <xs:attribute name="verticalAlign" type="eui.LayoutVerticalAlign"/>
     <xs:attribute name="verticalGap" type="xs:decimal"/>
   </xs:attributeGroup>
   <xs:group name="TileLayout_attributeElement">
@@ -1897,11 +1897,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="TileLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.TileLayout"/>
+      <xs:attributeGroup ref="eui.TileLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ToggleButton">
-    <xs:attributeGroup ref="swan.Button"/>
+  <xs:attributeGroup name="eui.ToggleButton">
+    <xs:attributeGroup ref="eui.Button"/>
     <xs:attribute name="selected" type="xs:boolean"/>
   </xs:attributeGroup>
   <xs:group name="ToggleButton_attributeElement">
@@ -1916,11 +1916,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="ToggleButton_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ToggleButton"/>
+      <xs:attributeGroup ref="eui.ToggleButton"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ToggleSwitch">
-    <xs:attributeGroup ref="swan.ToggleButton"/>
+  <xs:attributeGroup name="eui.ToggleSwitch">
+    <xs:attributeGroup ref="eui.ToggleButton"/>
   </xs:attributeGroup>
   <xs:group name="ToggleSwitch_attributeElement">
     <xs:choice>
@@ -1933,10 +1933,10 @@
         <xs:any namespace="##other"/>
         <xs:group ref="ToggleSwitch_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ToggleSwitch"/>
+      <xs:attributeGroup ref="eui.ToggleSwitch"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.UIEvent">
+  <xs:attributeGroup name="eui.UIEvent">
     <xs:attributeGroup ref="lark.Event"/>
   </xs:attributeGroup>
   <xs:group name="UIEvent_attributeElement">
@@ -1950,11 +1950,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="UIEvent_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.UIEvent"/>
+      <xs:attributeGroup ref="eui.UIEvent"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.UILayer">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:attributeGroup name="eui.UILayer">
+    <xs:attributeGroup ref="eui.Group"/>
   </xs:attributeGroup>
   <xs:group name="UILayer_attributeElement">
     <xs:choice>
@@ -1967,11 +1967,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="UILayer_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.UILayer"/>
+      <xs:attributeGroup ref="eui.UILayer"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.VScrollBar">
-    <xs:attributeGroup ref="swan.ScrollBarBase"/>
+  <xs:attributeGroup name="eui.VScrollBar">
+    <xs:attributeGroup ref="eui.ScrollBarBase"/>
   </xs:attributeGroup>
   <xs:group name="VScrollBar_attributeElement">
     <xs:choice>
@@ -1984,11 +1984,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="VScrollBar_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.VScrollBar"/>
+      <xs:attributeGroup ref="eui.VScrollBar"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.VSlider">
-    <xs:attributeGroup ref="swan.SliderBase"/>
+  <xs:attributeGroup name="eui.VSlider">
+    <xs:attributeGroup ref="eui.SliderBase"/>
   </xs:attributeGroup>
   <xs:group name="VSlider_attributeElement">
     <xs:choice>
@@ -2001,11 +2001,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="VSlider_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.VSlider"/>
+      <xs:attributeGroup ref="eui.VSlider"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.VerticalLayout">
-    <xs:attributeGroup ref="swan.LinearLayoutBase"/>
+  <xs:attributeGroup name="eui.VerticalLayout">
+    <xs:attributeGroup ref="eui.LinearLayoutBase"/>
   </xs:attributeGroup>
   <xs:group name="VerticalLayout_attributeElement">
     <xs:choice>
@@ -2018,11 +2018,11 @@
         <xs:any namespace="##other"/>
         <xs:group ref="VerticalLayout_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.VerticalLayout"/>
+      <xs:attributeGroup ref="eui.VerticalLayout"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="swan.ViewStack">
-    <xs:attributeGroup ref="swan.Group"/>
+  <xs:attributeGroup name="eui.ViewStack">
+    <xs:attributeGroup ref="eui.Group"/>
     <xs:attribute name="selectedChild" type="xs:string"/>
     <xs:attribute name="selectedIndex" type="xs:decimal"/>
   </xs:attributeGroup>
@@ -2040,7 +2040,7 @@
         <xs:group ref="ViewStack_attributeElement"/>
         <xs:group ref="lark.DisplayObject"/>
       </xs:choice>
-      <xs:attributeGroup ref="swan.ViewStack"/>
+      <xs:attributeGroup ref="eui.ViewStack"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="boolean">

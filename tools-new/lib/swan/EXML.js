@@ -34,9 +34,9 @@ egret.XML = xml;
  * @private
  * Swan 命名空间
  */
-exports.NS_S = "http://ns.egret.com/swan";
+exports.NS_S = "http://ns.egret.com/eui";
 exports.NS_W = "http://ns.egret.com/wing";
-var MODULE_NAME = "swan.";
+var MODULE_NAME = "eui.";
 var basicTypes = ["Array", "boolean", "string", "number"];
 var allClasses = {};
 var allEXMLs = {};

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<s:Skin class="skins.ButtonSkin" states="up,down,disabled" minHeight="50" minWidth="100" xmlns:s="http://ns.egret.com/swan">
+<s:Skin class="skins.ButtonSkin" states="up,down,disabled" minHeight="50" minWidth="100" xmlns:s="http://ns.egret.com/eui">
     <s:Image width="100%" height="100%" scale9Grid="1,3,8,8" alpha.disabled="0.5"
              source="resource/assets/blue/Button/button_up.png"
              source.down="resource/assets/blue/Button/button_down.png"/>
