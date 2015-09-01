@@ -27,6 +27,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/// <reference path="../core/classfactory.ts" />
+/// <reference path="supportclasses/itemrenderer.ts" />
 
 module egret.gui {
 
