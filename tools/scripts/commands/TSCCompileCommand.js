@@ -21,3 +21,4 @@ var TSCCompileCommand = (function () {
     return TSCCompileCommand;
 })();
 module.exports = TSCCompileCommand;
+//# sourceMappingURL=TSCCompileCommand.js.map

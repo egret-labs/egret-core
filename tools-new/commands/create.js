@@ -36,3 +36,4 @@ function parseProjectInfoFromTemplate(project) {
     }
 }
 module.exports = Create;
+//# sourceMappingURL=create.js.map

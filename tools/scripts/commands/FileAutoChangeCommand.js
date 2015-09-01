@@ -22,3 +22,4 @@ var FileAutoChangeCommand = (function () {
     return FileAutoChangeCommand;
 })();
 module.exports = FileAutoChangeCommand;
+//# sourceMappingURL=FileAutoChangeCommand.js.map

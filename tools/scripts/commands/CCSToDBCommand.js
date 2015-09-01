@@ -233,6 +233,7 @@ var CCSToDBCommand = (function () {
             this.setFrame(dbTimeline["frame"], stuTimeline["frame_data"], this.bones[dbTimeline["name"]], i, dbData);
         }
         this.sortArrayObj(tempDbTimelines, dbTimelines);
+        //设置层级
         for (var i = 0; i < dbTimelines.length; i++) {
             var frames = dbTimelines[i]["frame"];
             for (var k = 0; k < frames.length; k++) {
@@ -376,3 +377,4 @@ var CCSToDBCommand = (function () {
     return CCSToDBCommand;
 })();
 module.exports = CCSToDBCommand;
+//# sourceMappingURL=CCSToDBCommand.js.map

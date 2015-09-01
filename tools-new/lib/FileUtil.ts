@@ -303,6 +303,25 @@ export function getDirectoryListing(path:string, relative:boolean = false):strin
 }
 
 /**
+ * 获取指定文件夹下全部的文件列表，包括子文件夹
+ * @param path
+ * @returns {any}
+ */
+export function getDirectoryAllListing(path:string):string[] {
+    var list = [];
+    if (isDirectory(path)) {
+        var fileList = getDirectoryListing(path);
+        for (var key in fileList) {
+            list = list.concat(getDirectoryAllListing(fileList[key]));
+        }
+
+        return list;
+    }
+
+    return [path];
+}
+
+/**
  * 使用指定扩展名搜索文件夹及其子文件夹下所有的文件
  * @param dir 要搜索的文件夹
  * @param extension 要搜索的文件扩展名,不包含点字符，例如："png"。不设置表示获取所有类型文件。
@@ -404,4 +423,17 @@ export function joinPath(dir:string, ...filename:string[]):string {
 export function getRelativePath(dir: string, filename: string) {
     var relative = Path.relative(dir, filename);
     return escapePath(relative);;
+}
+
+export function basename(p: string, ext?: string): string {
+    var path = Path.basename.apply(null, arguments);
+    path = escapePath(path);
+    return path;
+}
+
+//获取相对路径 to相对于from的路径
+export function relative(from: string, to: string) {
+    var path = Path.relative.apply(null, arguments);
+    path = escapePath(path);
+    return path;
 }

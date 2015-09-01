@@ -18,6 +18,7 @@ var CreateCommand = (function () {
         var async = globals.getAsync();
         async.series([
             //创建新工程
+            //创建新工程
             function (callback) {
                 globals.log(1003);
                 //拷贝空模板
@@ -44,6 +45,7 @@ var CreateCommand = (function () {
                 file.save(file.join(projectPath, "egretProperties.json"), egretPropertiesTxt);
                 callback();
             },
+            //编译工程
             //编译工程
             function (callback) {
                 globals.log2(1004);
@@ -76,3 +78,4 @@ var CreateCommand = (function () {
     return CreateCommand;
 })();
 module.exports = CreateCommand;
+//# sourceMappingURL=CreateCommand.js.map

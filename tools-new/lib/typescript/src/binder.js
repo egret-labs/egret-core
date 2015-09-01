@@ -463,3 +463,4 @@ var ts;
     }
     ts.bindSourceFile = bindSourceFile;
 })(ts || (ts = {}));
+//# sourceMappingURL=binder.js.map

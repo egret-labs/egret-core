@@ -1,6 +1,4 @@
-﻿
-
-/// <reference path="lib/types.d.ts" />
+﻿/// <reference path="lib/types.d.ts" />
 
 
 
@@ -48,36 +46,36 @@ module globals {
 
 
     export function getAsync() {
-        return require('../lib/core/async');
+        return require('./lib/core/async');
     }
 
     export function getCrc32() {
-        return require("../lib/core/crc32");
+        return require("./lib/core/crc32");
     }
 
     export function getCompiler(method) {
         if (method == "uglify") {
-            return require("../lib/uglify-js/uglify_adapt");
+            return require("./lib/uglify-js/uglify_adapt");
         }
         else {
-            return require("../lib/core/closureCompiler");
+            return require("./lib/core/closureCompiler");
         }
     }
 
     export function getExmlc() {
-        return require("../lib/exml/exmlc");
+        return require("./lib/exml/exmlc");
     }
 
     export function getCodeUtil() {
-        return require("../lib/core/code_util");
+        return require("./lib/core/code_util");
     }
 
     export function getOpen() {
-        return require("../lib/core/open");
+        return require("./lib/core/open");
     }
 
     export function getCreateManifest() {
-        return require("../lib/tools/create_manifest.js");
+        return require("./lib/tools/create_manifest.js");
     }
 
     export function addQuotes(str) {
@@ -87,7 +85,7 @@ module globals {
     export function getGlobalJava() {
         var JAVA_EXT = process.platform == 'win32' ? '.exe' : '';
 
-        var java = file.joinPath(process.execPath, "../jre/bin", "java" + JAVA_EXT);
+        var java = file.joinPath(process.execPath, "./jre/bin", "java" + JAVA_EXT);
         if (!file.exists(java)) {
             java = null;
             if (process.env["JAVA_HOME"]) {
@@ -106,7 +104,7 @@ module globals {
         return java;
     }
 
-    var CodeUtil = require("../lib/core/code_util.js");
+    var CodeUtil = require("./lib/core/code_util.js");
     /**
      * 这个文件是否只含有接口
      */

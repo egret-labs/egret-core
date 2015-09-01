@@ -11,6 +11,7 @@ var UpgradeCommand_1_5_0 = (function () {
     };
     UpgradeCommand_1_5_0.prototype.upgradeTo_1_5_0 = function () {
         var projectDir = params.getProjectRoot();
+        //更新egretProperties.json
         try {
             var modify = require("./upgrade/ModifyProperties");
             var properties = modify.getProperties();
@@ -48,3 +49,4 @@ var UpgradeCommand_1_5_0 = (function () {
     return UpgradeCommand_1_5_0;
 })();
 module.exports = UpgradeCommand_1_5_0;
+//# sourceMappingURL=UpgradeCommand_1_5_0.js.map

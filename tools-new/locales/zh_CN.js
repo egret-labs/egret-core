@@ -77,4 +77,15 @@ var egret;
     locale_strings[12003] = "选择屏幕缩放模式";
     locale_strings[12004] = "选择扩展模块";
     locale_strings[12005] = "请选择希望发布的平台";
+    //create_app
+    locale_strings[1601] = "请输入项目名称, h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
+    locale_strings[1602] = "缺少egretProperties.json或格式不正确。 \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
+    locale_strings[1603] = "缺少create_app.json。\n请从以下地址下载最新手机平台支持库\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS: http://www.egret-labs.org/download/egret-ios-packager-download.html";
+    locale_strings[1604] = "执行egret build命令失败";
+    locale_strings[1605] = "移动平台项目目录不能与html5项目目录为同一目录，请修改移动平台项目目录。";
+    locale_strings[1606] = "创建完毕，共计耗时：{0}秒";
+    locale_strings[1607] = "> copy from project template ...";
+    locale_strings[1608] = "> replace all configure elements ...";
+    locale_strings[1609] = "> rename project name ...";
 })(egret || (egret = {}));
+//# sourceMappingURL=zh_CN.js.map

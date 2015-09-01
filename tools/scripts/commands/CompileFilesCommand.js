@@ -37,3 +37,4 @@ var CompileFilesCommand = (function () {
     return CompileFilesCommand;
 })();
 module.exports = CompileFilesCommand;
+//# sourceMappingURL=CompileFilesCommand.js.map

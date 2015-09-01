@@ -432,6 +432,7 @@ var ts;
         You_cannot_rename_this_element: { code: 8000, category: ts.DiagnosticCategory.Error, key: "You cannot rename this element." },
         yield_expressions_are_not_currently_supported: { code: 9000, category: ts.DiagnosticCategory.Error, key: "'yield' expressions are not currently supported." },
         Generators_are_not_currently_supported: { code: 9001, category: ts.DiagnosticCategory.Error, key: "Generators are not currently supported." },
-        Computed_property_names_are_not_currently_supported: { code: 9002, category: ts.DiagnosticCategory.Error, key: "Computed property names are not currently supported." },
+        Computed_property_names_are_not_currently_supported: { code: 9002, category: ts.DiagnosticCategory.Error, key: "Computed property names are not currently supported." }
     };
 })(ts || (ts = {}));
+//# sourceMappingURL=diagnosticInformationMap.generated.js.map

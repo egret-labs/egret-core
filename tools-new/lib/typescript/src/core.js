@@ -572,7 +572,7 @@ var ts;
                 pos: 0,
                 end: 0,
                 flags: 0,
-                parent: undefined,
+                parent: undefined
             };
             return Node;
         },
@@ -603,3 +603,4 @@ var ts;
         Debug.fail = fail;
     })(Debug = ts.Debug || (ts.Debug = {}));
 })(ts || (ts = {}));
+//# sourceMappingURL=core.js.map

@@ -58,3 +58,4 @@ var HelpCommand = (function () {
     return HelpCommand;
 })();
 module.exports = HelpCommand;
+//# sourceMappingURL=HelpCommand.js.map

@@ -16,3 +16,4 @@ var InfoCommand = (function () {
     return InfoCommand;
 })();
 module.exports = InfoCommand;
+//# sourceMappingURL=InfoCommand.js.map

@@ -19,3 +19,4 @@ var PublishCommand = (function () {
     return PublishCommand;
 })();
 module.exports = PublishCommand;
+//# sourceMappingURL=PublishCommand.js.map

@@ -61,3 +61,4 @@ var CompressJsonCommand = (function () {
     return CompressJsonCommand;
 })();
 module.exports = CompressJsonCommand;
+//# sourceMappingURL=CompressJsonCommand.js.map

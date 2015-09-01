@@ -137,3 +137,4 @@ var BuildModuleCommand = (function () {
     return BuildModuleCommand;
 })();
 module.exports = BuildModuleCommand;
+//# sourceMappingURL=BuildModuleCommand.js.map

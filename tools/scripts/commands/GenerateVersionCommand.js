@@ -99,3 +99,4 @@ var GenerateVersionCommand = (function () {
     return GenerateVersionCommand;
 })();
 module.exports = GenerateVersionCommand;
+//# sourceMappingURL=GenerateVersionCommand.js.map

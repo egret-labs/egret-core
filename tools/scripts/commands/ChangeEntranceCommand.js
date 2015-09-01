@@ -102,3 +102,4 @@ var ChangeEntranceCommand = (function () {
     return ChangeEntranceCommand;
 })();
 module.exports = ChangeEntranceCommand;
+//# sourceMappingURL=ChangeEntranceCommand.js.map

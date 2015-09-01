@@ -29,3 +29,4 @@ var CreateManifestCommand = (function () {
     return CreateManifestCommand;
 })();
 module.exports = CreateManifestCommand;
+//# sourceMappingURL=CreateManifestCommand.js.map

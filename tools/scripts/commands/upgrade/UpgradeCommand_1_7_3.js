@@ -10,6 +10,7 @@ var UpgradeCommand_1_7_3 = (function () {
     };
     UpgradeCommand_1_7_3.prototype.upgradeTo_1_7_3 = function () {
         var projectDir = params.getProjectRoot();
+        //更新egretProperties.json， 将版本控制变成一个单独的模块，并且将新的版本控制作为默认模块
         try {
             var modify = require("./upgrade/ModifyProperties");
             var properties = modify.getProperties();
@@ -43,3 +44,4 @@ var UpgradeCommand_1_7_3 = (function () {
     return UpgradeCommand_1_7_3;
 })();
 module.exports = UpgradeCommand_1_7_3;
+//# sourceMappingURL=UpgradeCommand_1_7_3.js.map

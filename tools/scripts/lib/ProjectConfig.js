@@ -3,15 +3,15 @@
  */
 var params = require("../ParamsParser");
 var file = require('../lib/FileUtil');
-var globals = require('../Globals');
+//import globals = require('../Globals');
 var ProjectConfig = (function () {
     function ProjectConfig() {
         this.modulesConfig = {};
     }
     ProjectConfig.prototype.init = function () {
         var projectRoot = params.getProjectRoot();
-        if (file.exists(file.join(projectRoot, "egretProperties.json"))) {
-            this.properties = JSON.parse(file.read(file.join(projectRoot, "egretProperties.json")));
+        if (file.exists(file.joinPath(projectRoot, "egretProperties.json"))) {
+            this.properties = JSON.parse(file.read(file.joinPath(projectRoot, "egretProperties.json")));
             for (var key in this.properties["modules"]) {
                 this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
             }
@@ -97,7 +97,7 @@ var ProjectConfig = (function () {
     };
     ProjectConfig.prototype.getNativePath = function (platform) {
         if (globals.hasKeys(this.properties, ["native", platform + "_path"])) {
-            return file.join(this.getProjectRoot(), this.properties["native"][platform + "_path"]);
+            return file.joinPath(this.getProjectRoot(), this.properties["native"][platform + "_path"]);
         }
         return null;
     };
@@ -111,10 +111,10 @@ var ProjectConfig = (function () {
         var moduleJsonPath;
         var modulePath = this.getModulePath(moduleName);
         if (modulePath == null) {
-            moduleJsonPath = file.join(params.getEgretRoot(), "tools/lib/manifest", moduleName + ".json");
+            moduleJsonPath = file.joinPath(params.getEgretRoot(), "tools/lib/manifest", moduleName + ".json");
         }
         else {
-            moduleJsonPath = file.join(this.getProjectRoot(), modulePath, moduleName + ".json");
+            moduleJsonPath = file.joinPath(this.getProjectRoot(), modulePath, moduleName + ".json");
         }
         var content = file.read(moduleJsonPath);
         if (!content) {
@@ -125,7 +125,7 @@ var ProjectConfig = (function () {
     //绝对路径
     ProjectConfig.prototype.getModuleOutput = function (moduleName) {
         var output = this.getModuleConfig(moduleName)["output"] || moduleName;
-        return file.join(this.getProjectRoot(), "libs", output);
+        return file.joinPath(this.getProjectRoot(), "libs", output);
     };
     ProjectConfig.prototype.getModuleFileList = function (moduleName) {
         return this.getModuleConfig(moduleName)["file_list"].concat();
@@ -135,13 +135,13 @@ var ProjectConfig = (function () {
         var prefix = this.getModulePrefixPath(moduleName);
         var source = this.getModuleSourcePath(moduleName);
         return list.map(function (item) {
-            return file.join(prefix, source, item);
+            return file.joinPath(prefix, source, item);
         });
     };
     ProjectConfig.prototype.getModulePrefixPath = function (moduleName) {
         var modulePath = this.getModulePath(moduleName);
         if (modulePath == null) {
-            return file.join(params.getEgretRoot());
+            return file.joinPath(params.getEgretRoot());
         }
         else {
             return file.join(this.getProjectRoot(), modulePath);
@@ -212,3 +212,4 @@ var ProjectConfig = (function () {
 })();
 var config = config || new ProjectConfig();
 module.exports = config;
+//# sourceMappingURL=ProjectConfig.js.map

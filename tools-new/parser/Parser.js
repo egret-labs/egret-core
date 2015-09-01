@@ -219,3 +219,4 @@ function parseJSON(json) {
     return options;
 }
 exports.parseJSON = parseJSON;
+//# sourceMappingURL=Parser.js.map

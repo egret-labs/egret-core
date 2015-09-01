@@ -127,3 +127,4 @@ var Project = (function () {
 })();
 module.exports = Project;
 /// <reference path="../lib/types.d.ts" /> 
+//# sourceMappingURL=project.js.map

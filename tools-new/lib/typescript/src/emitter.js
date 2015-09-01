@@ -86,7 +86,7 @@ var ts;
             getTextPos: function () { return output.length; },
             getLine: function () { return lineCount + 1; },
             getColumn: function () { return lineStart ? indent * getIndentSize() + 1 : output.length - linePos + 1; },
-            getText: function () { return output; },
+            getText: function () { return output; }
         };
     }
     function getLineOfLocalPosition(currentSourceFile, pos) {
@@ -1091,7 +1091,7 @@ var ts;
                 }
                 return {
                     diagnosticMessage: diagnosticMessage,
-                    errorNode: node.name || node,
+                    errorNode: node.name || node
                 };
             }
         }
@@ -1270,7 +1270,7 @@ var ts;
             reportedDeclarationError: reportedDeclarationError,
             aliasDeclarationEmitInfo: aliasDeclarationEmitInfo,
             synchronousDeclarationOutput: writer.getText(),
-            referencePathsOutput: referencePathsOutput,
+            referencePathsOutput: referencePathsOutput
         };
     }
     function getDeclarationDiagnostics(program, resolver, targetSourceFile) {
@@ -3556,3 +3556,4 @@ var ts;
     }
     ts.emitFiles = emitFiles;
 })(ts || (ts = {}));
+//# sourceMappingURL=emitter.js.map

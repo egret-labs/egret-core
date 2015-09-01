@@ -58,3 +58,4 @@ var CheckCommand = (function () {
     return CheckCommand;
 })();
 module.exports = CheckCommand;
+//# sourceMappingURL=CheckCommand.js.map

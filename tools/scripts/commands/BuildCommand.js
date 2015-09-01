@@ -47,7 +47,7 @@ var BuildCommand = (function () {
                 });
             });
         }
-        if (true) {
+        if (true /*(needCompileEngine) || moduleReferenceList*/) {
             task.push(function (tempCallback) {
                 var moduleNames = config.getAllModuleNames();
                 var html5List = [];
@@ -146,3 +146,4 @@ var BuildCommand = (function () {
     return BuildCommand;
 })();
 module.exports = BuildCommand;
+//# sourceMappingURL=BuildCommand.js.map

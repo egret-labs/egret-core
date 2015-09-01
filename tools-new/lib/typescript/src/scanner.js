@@ -109,7 +109,7 @@ var ts;
         ">>>=": 59 /* GreaterThanGreaterThanGreaterThanEqualsToken */,
         "&=": 60 /* AmpersandEqualsToken */,
         "|=": 61 /* BarEqualsToken */,
-        "^=": 62 /* CaretEqualsToken */,
+        "^=": 62 /* CaretEqualsToken */
     };
     /*
         As per ECMAScript Language Specification 3th Edition, Section 7.6: Identifiers
@@ -1144,8 +1144,9 @@ var ts;
             setText: setText,
             setTextPos: setTextPos,
             tryScan: tryScan,
-            lookAhead: lookAhead,
+            lookAhead: lookAhead
         };
     }
     ts.createScanner = createScanner;
 })(ts || (ts = {}));
+//# sourceMappingURL=scanner.js.map

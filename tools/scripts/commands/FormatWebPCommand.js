@@ -56,3 +56,4 @@ var FormatWebPCommand = (function () {
     return FormatWebPCommand;
 })();
 module.exports = FormatWebPCommand;
+//# sourceMappingURL=FormatWebPCommand.js.map

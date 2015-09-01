@@ -9,9 +9,7 @@ var Compiler = (function () {
         var defTemp = args.declaration;
         args.declaration = def;
         var cwd = file.escapePath(process.cwd() + "/");
-        files = files.map(function (f) {
-            return f.replace(cwd, "");
-        });
+        files = files.map(function (f) { return f.replace(cwd, ""); });
         var compileResult = tsc.Compiler.executeWithOption(args, files, out, outDir);
         args.declaration = defTemp;
         return compileResult;
@@ -19,3 +17,4 @@ var Compiler = (function () {
     return Compiler;
 })();
 module.exports = Compiler;
+//# sourceMappingURL=Compiler.js.map

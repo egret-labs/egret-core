@@ -7,21 +7,21 @@ var ts;
     ts.optionDeclarations = [
         {
             name: "charset",
-            type: "string",
+            type: "string"
         },
         {
             name: "codepage",
-            type: "number",
+            type: "number"
         },
         {
             name: "declaration",
             shortName: "d",
             type: "boolean",
-            description: ts.Diagnostics.Generates_corresponding_d_ts_file,
+            description: ts.Diagnostics.Generates_corresponding_d_ts_file
         },
         {
             name: "diagnostics",
-            type: "boolean",
+            type: "boolean"
         },
         {
             name: "emitBOM",
@@ -31,17 +31,17 @@ var ts;
             name: "help",
             shortName: "h",
             type: "boolean",
-            description: ts.Diagnostics.Print_this_message,
+            description: ts.Diagnostics.Print_this_message
         },
         {
             name: "locale",
-            type: "string",
+            type: "string"
         },
         {
             name: "mapRoot",
             type: "string",
             description: ts.Diagnostics.Specifies_the_location_where_debugger_should_locate_map_files_instead_of_generated_locations,
-            paramType: ts.Diagnostics.LOCATION,
+            paramType: ts.Diagnostics.LOCATION
         },
         {
             name: "module",
@@ -57,36 +57,36 @@ var ts;
         {
             name: "noEmitOnError",
             type: "boolean",
-            description: ts.Diagnostics.Do_not_emit_outputs_if_any_type_checking_errors_were_reported,
+            description: ts.Diagnostics.Do_not_emit_outputs_if_any_type_checking_errors_were_reported
         },
         {
             name: "noImplicitAny",
             type: "boolean",
-            description: ts.Diagnostics.Warn_on_expressions_and_declarations_with_an_implied_any_type,
+            description: ts.Diagnostics.Warn_on_expressions_and_declarations_with_an_implied_any_type
         },
         {
             name: "noLib",
-            type: "boolean",
+            type: "boolean"
         },
         {
             name: "noLibCheck",
-            type: "boolean",
+            type: "boolean"
         },
         {
             name: "noResolve",
-            type: "boolean",
+            type: "boolean"
         },
         {
             name: "out",
             type: "string",
             description: ts.Diagnostics.Concatenate_and_emit_output_to_single_file,
-            paramType: ts.Diagnostics.FILE,
+            paramType: ts.Diagnostics.FILE
         },
         {
             name: "outDir",
             type: "string",
             description: ts.Diagnostics.Redirect_output_structure_to_the_directory,
-            paramType: ts.Diagnostics.DIRECTORY,
+            paramType: ts.Diagnostics.DIRECTORY
         },
         {
             name: "preserveConstEnums",
@@ -96,23 +96,23 @@ var ts;
         {
             name: "removeComments",
             type: "boolean",
-            description: ts.Diagnostics.Do_not_emit_comments_to_output,
+            description: ts.Diagnostics.Do_not_emit_comments_to_output
         },
         {
             name: "sourceMap",
             type: "boolean",
-            description: ts.Diagnostics.Generates_corresponding_map_file,
+            description: ts.Diagnostics.Generates_corresponding_map_file
         },
         {
             name: "sourceRoot",
             type: "string",
             description: ts.Diagnostics.Specifies_the_location_where_debugger_should_locate_TypeScript_files_instead_of_source_locations,
-            paramType: ts.Diagnostics.LOCATION,
+            paramType: ts.Diagnostics.LOCATION
         },
         {
             name: "suppressImplicitAnyIndexErrors",
             type: "boolean",
-            description: ts.Diagnostics.Suppress_noImplicitAny_errors_for_indexing_objects_lacking_index_signatures,
+            description: ts.Diagnostics.Suppress_noImplicitAny_errors_for_indexing_objects_lacking_index_signatures
         },
         {
             name: "target",
@@ -126,13 +126,13 @@ var ts;
             name: "version",
             shortName: "v",
             type: "boolean",
-            description: ts.Diagnostics.Print_the_compiler_s_version,
+            description: ts.Diagnostics.Print_the_compiler_s_version
         },
         {
             name: "watch",
             shortName: "w",
             type: "boolean",
-            description: ts.Diagnostics.Watch_input_files,
+            description: ts.Diagnostics.Watch_input_files
         }
     ];
     var shortOptionNames = {};
@@ -244,3 +244,4 @@ var ts;
     }
     ts.parseCommandLine = parseCommandLine;
 })(ts || (ts = {}));
+//# sourceMappingURL=commandLineParser.js.map

@@ -79,11 +79,12 @@ var BuildProjectCommand = (function () {
         globals.debugLog(1107, (Date.now() - saoTime) / 1000);
         var async = require('../../lib/core/async');
         async.series([function (tempCallback) {
-            _this.compile(tempCallback, file.join(projectPath), sourceList.concat(libs), compileConfig);
-        }, function (tempCallback) {
-            globals.log2(1108, (Date.now() - time) / 1000);
-            tempCallback();
-        }], callback);
+                _this.compile(tempCallback, file.join(projectPath), sourceList.concat(libs), compileConfig);
+            }, function (tempCallback) {
+                globals.log2(1108, (Date.now() - time) / 1000);
+                tempCallback();
+            }
+        ], callback);
         return 0;
     };
     BuildProjectCommand.prototype.compile = function (callback, projectDir, sourceList, projectConfig) {
@@ -112,6 +113,7 @@ var BuildProjectCommand = (function () {
         var async = globals.getAsync();
         async.waterfall([
             //cp所有非ts/exml文件
+            //cp所有非ts/exml文件
             function (callback) {
                 var all_file = file.searchByFunction(srcPath, filter);
                 all_file.forEach(function (item) {
@@ -129,6 +131,7 @@ var BuildProjectCommand = (function () {
                 }
             },
             //编译exml文件
+            //编译exml文件
             function (callback) {
                 exmlList.forEach(function (item) {
                     var exmlc = globals.getExmlc();
@@ -136,6 +139,7 @@ var BuildProjectCommand = (function () {
                 });
                 callback();
             },
+            //编译ts文件
             //编译ts文件
             function (callback) {
                 tsList = tsList.map(function (item) {
@@ -214,3 +218,4 @@ var BuildProjectCommand = (function () {
     return BuildProjectCommand;
 })();
 module.exports = BuildProjectCommand;
+//# sourceMappingURL=BuildProjectCommand.js.map

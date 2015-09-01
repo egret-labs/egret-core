@@ -10,3 +10,4 @@ var info = (function () {
     return info;
 })();
 module.exports = info;
+//# sourceMappingURL=info.js.map

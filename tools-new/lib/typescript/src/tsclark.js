@@ -293,3 +293,4 @@ ts.sys.exit = function (code) {
 ts.sys.write = function (msg) {
     return Compiler.write(msg);
 };
+//# sourceMappingURL=tsclark.js.map

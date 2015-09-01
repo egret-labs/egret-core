@@ -821,7 +821,7 @@ var ts;
                             return {
                                 accessibility: 1 /* NotAccessible */,
                                 errorSymbolName: symbolToString(initialSymbol, enclosingDeclaration, meaning),
-                                errorModuleName: symbol !== initialSymbol ? symbolToString(symbol, enclosingDeclaration, 1536 /* Namespace */) : undefined,
+                                errorModuleName: symbol !== initialSymbol ? symbolToString(symbol, enclosingDeclaration, 1536 /* Namespace */) : undefined
                             };
                         }
                         return hasAccessibleDeclarations;
@@ -858,7 +858,7 @@ var ts;
                 // Just a local name that is not accessible
                 return {
                     accessibility: 1 /* NotAccessible */,
-                    errorSymbolName: symbolToString(initialSymbol, enclosingDeclaration, meaning),
+                    errorSymbolName: symbolToString(initialSymbol, enclosingDeclaration, meaning)
                 };
             }
             return { accessibility: 0 /* Accessible */ };
@@ -3773,7 +3773,7 @@ var ts;
                 inferUnionTypes: inferUnionTypes,
                 inferenceCount: 0,
                 inferences: inferences,
-                inferredTypes: new Array(typeParameters.length),
+                inferredTypes: new Array(typeParameters.length)
             };
         }
         function inferTypes(context, source, target) {
@@ -8554,7 +8554,7 @@ var ts;
                 writeReturnTypeOfSignatureDeclaration: writeReturnTypeOfSignatureDeclaration,
                 isSymbolAccessible: isSymbolAccessible,
                 isEntityNameVisible: isEntityNameVisible,
-                getConstantValue: getConstantValue,
+                getConstantValue: getConstantValue
             };
         }
         function invokeEmitter(targetSourceFile) {
@@ -8598,3 +8598,4 @@ var ts;
     }
     ts.createTypeChecker = createTypeChecker;
 })(ts || (ts = {}));
+//# sourceMappingURL=checker.js.map

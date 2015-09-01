@@ -10,3 +10,4 @@ var Service = (function () {
     return Service;
 })();
 module.exports = Service;
+//# sourceMappingURL=service.js.map

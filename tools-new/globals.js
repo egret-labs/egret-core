@@ -65,36 +65,36 @@ var globals;
     }
     globals.hasKeys = hasKeys;
     function getAsync() {
-        return require('../lib/core/async');
+        return require('./lib/core/async');
     }
     globals.getAsync = getAsync;
     function getCrc32() {
-        return require("../lib/core/crc32");
+        return require("./lib/core/crc32");
     }
     globals.getCrc32 = getCrc32;
     function getCompiler(method) {
         if (method == "uglify") {
-            return require("../lib/uglify-js/uglify_adapt");
+            return require("./lib/uglify-js/uglify_adapt");
         }
         else {
-            return require("../lib/core/closureCompiler");
+            return require("./lib/core/closureCompiler");
         }
     }
     globals.getCompiler = getCompiler;
     function getExmlc() {
-        return require("../lib/exml/exmlc");
+        return require("./lib/exml/exmlc");
     }
     globals.getExmlc = getExmlc;
     function getCodeUtil() {
-        return require("../lib/core/code_util");
+        return require("./lib/core/code_util");
     }
     globals.getCodeUtil = getCodeUtil;
     function getOpen() {
-        return require("../lib/core/open");
+        return require("./lib/core/open");
     }
     globals.getOpen = getOpen;
     function getCreateManifest() {
-        return require("../lib/tools/create_manifest.js");
+        return require("./lib/tools/create_manifest.js");
     }
     globals.getCreateManifest = getCreateManifest;
     function addQuotes(str) {
@@ -103,7 +103,7 @@ var globals;
     globals.addQuotes = addQuotes;
     function getGlobalJava() {
         var JAVA_EXT = process.platform == 'win32' ? '.exe' : '';
-        var java = file.joinPath(process.execPath, "../jre/bin", "java" + JAVA_EXT);
+        var java = file.joinPath(process.execPath, "./jre/bin", "java" + JAVA_EXT);
         if (!file.exists(java)) {
             java = null;
             if (process.env["JAVA_HOME"]) {
@@ -122,7 +122,7 @@ var globals;
         return java;
     }
     globals.getGlobalJava = getGlobalJava;
-    var CodeUtil = require("../lib/core/code_util.js");
+    var CodeUtil = require("./lib/core/code_util.js");
     /**
      * 这个文件是否只含有接口
      */
@@ -193,3 +193,4 @@ var globals;
     globals.compressVersion = compressVersion;
 })(globals || (globals = {}));
 global.globals = globals;
+//# sourceMappingURL=globals.js.map

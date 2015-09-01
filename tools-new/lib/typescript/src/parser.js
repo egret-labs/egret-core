@@ -4532,7 +4532,7 @@ var ts;
             getDiagnostics: getDiagnostics,
             getGlobalDiagnostics: getGlobalDiagnostics,
             getTypeChecker: function (fullTypeCheckMode) { return ts.createTypeChecker(program, fullTypeCheckMode); },
-            getCommonSourceDirectory: function () { return commonSourceDirectory; },
+            getCommonSourceDirectory: function () { return commonSourceDirectory; }
         };
         return program;
         function getSourceFile(filename) {
@@ -4758,3 +4758,4 @@ var ts;
     }
     ts.createProgram = createProgram;
 })(ts || (ts = {}));
+//# sourceMappingURL=parser.js.map

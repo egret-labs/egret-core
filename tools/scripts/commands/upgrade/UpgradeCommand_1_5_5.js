@@ -9,6 +9,7 @@ var UpgradeCommand_1_5_5 = (function () {
     };
     UpgradeCommand_1_5_5.prototype.upgradeTo_1_5_5 = function () {
         var projectDir = params.getProjectRoot();
+        //更新egretProperties.json， 将res变成一个单独的模块
         try {
             var modify = require("./upgrade/ModifyProperties");
             var properties = modify.getProperties();
@@ -31,3 +32,4 @@ var UpgradeCommand_1_5_5 = (function () {
     return UpgradeCommand_1_5_5;
 })();
 module.exports = UpgradeCommand_1_5_5;
+//# sourceMappingURL=UpgradeCommand_1_5_5.js.map

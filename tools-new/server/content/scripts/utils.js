@@ -86,3 +86,4 @@ var egret;
         portal.Http = Http;
     })(portal = egret.portal || (egret.portal = {}));
 })(egret || (egret = {}));
+//# sourceMappingURL=utils.js.map

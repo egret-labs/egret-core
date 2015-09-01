@@ -201,3 +201,4 @@ var PublishNativeCommand = (function () {
     return PublishNativeCommand;
 })();
 module.exports = PublishNativeCommand;
+//# sourceMappingURL=PublishNativeCommand.js.map
