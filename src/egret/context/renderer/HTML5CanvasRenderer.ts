@@ -85,16 +85,19 @@ module egret {
                         break;
                     }
                 }
-                Object.defineProperty(context, "imageSmoothingEnabled", {
-                    get: function () {
-                        return this[key];
-                    },
-                    set: function (value) {
-                        this[key] = value;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
+                try {
+                    Object.defineProperty(context, "imageSmoothingEnabled", {
+                        get: function () {
+                            return this[key];
+                        },
+                        set: function (value) {
+                            this[key] = value;
+                        }
+                    });
+                }
+                catch (e) {
+                    context["imageSmoothingEnabled"] = context[key];
+                }
             }
 
             this.onResize();
