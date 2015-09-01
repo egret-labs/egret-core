@@ -191,7 +191,7 @@ function listModuleFiles(m:egret.EgretModule) {
 }
 
 function delSwanTemp(m) {
-    if (m.name != "swan" || !m.sourceRoot) {
+    if (m.name != "eui" || !m.sourceRoot) {
         return;
     }
     var pathBefore = FileUtil.joinPath(egret.args.larkRoot, m.root);
@@ -199,7 +199,7 @@ function delSwanTemp(m) {
 }
 
 function preduceSwanModule(m: egret.EgretModule) {
-    if (m.name != "swan" || !m.sourceRoot) {
+    if (m.name != "eui" || !m.sourceRoot) {
         return;
     }
 

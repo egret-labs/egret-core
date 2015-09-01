@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<s:Group class="components.MainGroup" touchThrough="true" xmlns:s="http://ns.egret.com/swan" xmlns:c="components.*"
+<s:Group class="components.MainGroup" touchThrough="true" xmlns:s="http://ns.egret.com/eui" xmlns:c="components.*"
     verticalCenter="0" horizontalCenter="0" width="480" height="800">
     <s:Image source="resource/assets/bg.jpg" width="480" height="800"/>
     <c:ListGroup width="300" height="400" verticalCenter="0" horizontalCenter="0"/>

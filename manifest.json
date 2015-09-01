@@ -213,9 +213,9 @@
   ],
   "templates": [
     {
-      "name": "swan",
-      "description": "使用 swan 扩展库创建友好的交互界面",
-      "modules": [ "egret", "swan", "resource" ]
+      "name": "eui",
+      "description": "使用 eui 扩展库创建友好的交互界面",
+      "modules": [ "egret", "eui", "resource" ]
     },
     {
       "name": "empty",
