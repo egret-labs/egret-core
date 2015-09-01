@@ -216,7 +216,7 @@ export function parseCommandLine(commandLine: string[]) {
         }
         options.projectDir = file.joinPath(options.projectDir, "/");
 
-        properties.init();
+        properties.init(options.projectDir);
         options.properties = properties;
 
         var manifestPath = file.joinPath(options.larkRoot, (options["manifest"]||"")+ "manifest.json");

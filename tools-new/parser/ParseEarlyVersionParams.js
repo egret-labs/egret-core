@@ -4,7 +4,7 @@ function parse(args, rawArgs) {
         "c": convertCreate,
         "create": convertCreate,
         "b": convertBuild,
-        "build": convertCreate,
+        "build": convertBuild,
         "startserver": convertStartServer
     };
     var convertor = commandMap[args.command];

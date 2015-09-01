@@ -71,10 +71,6 @@
           "platform": "native"
         },
         {
-          "path": "native/NativeContext.d.ts",
-          "platform": "native"
-        },
-        {
           "path": "media/native/NativeSoundChannel.ts",
           "platform": "native"
         },
@@ -194,6 +190,35 @@
       ],
       "root": "src/egret",
       "dependencies": [ ]
+    },
+    {
+      "name": "game",
+      "description": "Egret Game Extension",
+      "files": [
+        {
+          "path": "native/NativeNetContext.ts",
+          "platform": "native"
+        },
+        {
+          "path": "web/HTML5NetContext.ts",
+          "platform": "web"
+        }],
+      "root": "src/extension/game",
+      "dependencies": [ "egret" ]
+    },
+    {
+      "name": "gui",
+      "description": "Egret UI Framework",
+      "files": [ ],
+      "root": "src/extension/gui",
+      "dependencies": [ "egret","game" ]
+    },
+    {
+      "name": "res",
+      "description": "Egret Resource Loader",
+      "files": [ ],
+      "root": "src/extension/resource",
+      "dependencies": [ "egret","game" ]
     }
   ],
   "platforms": [
@@ -215,7 +240,7 @@
     {
       "name": "eui",
       "description": "使用 eui 扩展库创建友好的交互界面",
-      "modules": [ "egret", "eui", "resource" ]
+      "modules": [ "egret", "eui", "res" ]
     },
     {
       "name": "empty",
@@ -224,6 +249,14 @@
       "tag": "game,app,TypeScript",
       "description": "创建一个空项目,仅添加 Egret 相关模块引用",
       "modules": [ "egret" ]
+    },
+    {
+      "name": "gui",
+      "displayName": "Egret GUI 项目",
+      "language": "TypeScript",
+      "tag": "game,app,TypeScript",
+      "description": "创建一个Egret GUI 项目",
+      "modules": [ "egret","game","res","gui" ]
     }
   ],
   "scaleModes": [

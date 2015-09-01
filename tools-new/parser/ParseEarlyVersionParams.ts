@@ -5,7 +5,7 @@ export function parse(args: egret.ToolArgs, rawArgs: string[]) {
         "c": convertCreate,
         "create": convertCreate,
         "b": convertBuild,
-        "build": convertCreate,
+        "build": convertBuild,
         "startserver": convertStartServer
     }
 

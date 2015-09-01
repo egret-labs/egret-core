@@ -8,8 +8,7 @@ class EgretProperties implements egret.EgretProperties {
     properties: Object;
     modulesConfig: Object = {};
 
-    init() {
-        var projectRoot = egret.args.projectDir;
+    init(projectRoot: string) {
         if (file.exists(file.joinPath(projectRoot, "egretProperties.json"))) {
             this.properties = JSON.parse(file.read(file.joinPath(projectRoot, "egretProperties.json")));
             for (var key in this.properties["modules"]) {

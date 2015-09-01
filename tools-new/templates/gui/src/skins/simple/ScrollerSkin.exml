@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minHeight="230" minWidth="370" maxWidth="710">
+    <w:HostComponent name="egret.gui.Scroller" />
+  <e:HScrollBar id="horizontalScrollBar" skinName="skins.simple.HScrollBarSkin" />
+  <e:VScrollBar id="verticalScrollBar" skinName="skins.simple.VScrollBarSkin" />
+</e:Skin>

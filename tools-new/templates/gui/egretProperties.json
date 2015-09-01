@@ -1,0 +1,20 @@
+{
+    "document_class": "Main",
+    "modules": [
+        {
+            "name": "egret"
+        },
+        {
+            "name": "version"
+        },
+		{
+            "name": "gui"
+        }
+    ],
+    "native": {
+        "path_ignore": [
+
+        ]
+    },
+    "egret_version":"2.5"
+}

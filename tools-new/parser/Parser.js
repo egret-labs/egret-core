@@ -186,7 +186,7 @@ function parseCommandLine(commandLine) {
             }
         }
         options.projectDir = file.joinPath(options.projectDir, "/");
-        properties.init();
+        properties.init(options.projectDir);
         options.properties = properties;
         var manifestPath = file.joinPath(options.larkRoot, (options["manifest"] || "") + "manifest.json");
         var content = file.read(manifestPath);

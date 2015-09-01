@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        height="60" minWidth="140">
+    <w:HostComponent name="egret.gui.ToggleButton" />
+    <e:states>
+        <e:State name="up" />
+        <e:State name="down" />
+        <e:State name="disabled" />
+        <e:State name="upAndSelected" />
+        <e:State name="downAndSelected" />
+        <e:State name="disabledAndSelected" />
+    </e:states>
+    <e:UIAsset width="100%" height="100%"
+               source="togglebutton_normal_png"
+               source.down="togglebutton_over_png"
+               source.disabled="togglebutton_disabled_png"
+               source.downAndSelected="togglebutton_over_png"
+               source.upAndSelected="togglebutton_selected_png"
+               source.disabledAndSelected="togglebutton_disabled_png" />
+    <e:Group left="10" right="10" top="10" bottom="10">
+        <e:layout>
+            <e:HorizontalLayout gap="0" verticalAlign="middle" horizontalAlign="center"/>
+        </e:layout>
+        <e:UIAsset id="iconDisplay"/>
+        <e:Label id="labelDisplay" size="20" verticalAlign="middle"
+                 textAlign="center" fontFamily="Tahoma" textColor="0x1e7465"
+                 textColor.down="0x1e7465" textColor.disabled="0xcccccc"
+                 textColor.downAndSelected="0x1e7465" textColor.upAndSelected="0xeeedec"
+                 textColor.disabledAndSelected="0xcccccc" />
+    </e:Group>
+
+</e:Skin>

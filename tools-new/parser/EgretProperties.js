@@ -4,8 +4,7 @@ var EgretProperties = (function () {
     function EgretProperties() {
         this.modulesConfig = {};
     }
-    EgretProperties.prototype.init = function () {
-        var projectRoot = egret.args.projectDir;
+    EgretProperties.prototype.init = function (projectRoot) {
         if (file.exists(file.joinPath(projectRoot, "egretProperties.json"))) {
             this.properties = JSON.parse(file.read(file.joinPath(projectRoot, "egretProperties.json")));
             for (var key in this.properties["modules"]) {

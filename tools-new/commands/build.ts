@@ -19,7 +19,7 @@ class Build implements egret.Command {
             FileUtil.exists(options.templateDir) == false) {
             utils.exit(10015, options.projectDir);
         }
-        if (FileUtil.exists(FileUtil.joinPath(options.srcDir, 'libs/lark/')) == false) {
+        if (FileUtil.exists(FileUtil.joinPath(options.srcDir, 'libs/egret/')) == false) {
             CopyFiles.copyLark();
         }
         service.execCommand({

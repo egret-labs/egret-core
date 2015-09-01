@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minWidth="10" minHeight="10">
+    <w:HostComponent name="egret.gui.VScrollBar"/>
+    <e:states>
+        <e:State name="normal" />
+        <e:State name="disabled" />
+    </e:states>
+    <e:UIAsset id="track" source="vscrolltrack_png" width="10"
+               height="100%" horizontalCenter="0" top="10" bottom="10"/>
+    <e:Button id="thumb" skinName="skins.simple.VScrollBarThumbSkin" height="20" width="10"
+              horizontalCenter="0" />
+</e:Skin>

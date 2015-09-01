@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minHeight="30" minWidth="100">
+    <w:HostComponent name="egret.gui.TextArea" />
+    <e:states>
+        <e:State name="normal" />
+        <e:State name="disabled" />
+    </e:states>
+  <e:UIAsset width="100%" height="100%" source="textbox_png" />
+  <e:EditableText id="textDisplay"
+                  textColor="0x000000"
+                  textColor.disabled="0xAAAAAA"
+                  width="100%" height="100%" size="20"
+                  left="10" right="10" top="8" bottom="8"/>
+</e:Skin>
