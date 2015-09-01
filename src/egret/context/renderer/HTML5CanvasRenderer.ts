@@ -92,7 +92,9 @@ module egret {
                         },
                         set: function (value) {
                             this[key] = value;
-                        }
+                        },
+                        enumerable: true,
+                        configurable: true
                     });
                 }
                 catch (e) {

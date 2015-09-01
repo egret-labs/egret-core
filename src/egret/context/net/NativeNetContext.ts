@@ -176,7 +176,7 @@ module egret {
                 egret_native.download(virtualUrl, virtualUrl, promise);
             }
 
-            if (Audio) {
+            if (__global.Audio) {
                 var audio = new Audio(virtualUrl);
                 audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
                 audio.addEventListener("error", soundPreloadErrorHandler, false);
@@ -185,7 +185,7 @@ module egret {
             function onLoadComplete() {
                 self.saveVersion(virtualUrl);
 
-                if (Audio) {
+                if (__global.Audio) {
                     audio.load();
                 }
                 else {
