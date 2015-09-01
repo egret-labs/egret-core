@@ -6,7 +6,8 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 
 var fileExtensionToIgnore = {
-    "ts":true
+    "ts": true,
+    "exml": true
 };
 
 class CopyFiles {

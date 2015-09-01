@@ -5,10 +5,10 @@ import http = require("http");
 import utils = require('../lib/utils');
 import server = require('../server/server');
 import service = require('../service/index');
-import exml = require('../actions/EXMLAction');
 import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
 import CopyFiles = require('../actions/CopyFiles');
+import exmlActions = require('../actions/exml');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
@@ -50,15 +50,25 @@ class AutoCompileCommand implements egret.Command {
     buildProject() {
         var exitCode = 0;
         var options = egret.args;
-        utils.clean(options.debugDir);
         var compileProject = new CompileProject();
-        var _scripts = this._scripts || [];
-        var result = compileProject.compileProject(options);
         this.compileProject = compileProject;
+        var _scripts = this._scripts || [];
+
+        //预处理
+        utils.clean(options.debugDir);
+        exmlActions.beforeBuild();
+
+        //编译
+        exmlActions.build();
+        var result = compileProject.compileProject(options);
+
+        //操作其他文件
         CopyFiles.copyProjectFiles();
         _scripts = result.files.length > 0 ? result.files : _scripts;
         CompileTemplate.compileTemplates(options, _scripts);
-        exml.updateSetting(false);
+        exmlActions.afterBuild();
+
+
         this._scripts = result.files;
         this._lastExitCode = result.exitStatus;
         this._lastMessages = result.messages;
@@ -72,15 +82,20 @@ class AutoCompileCommand implements egret.Command {
         if (!this.compileProject)
             return this.buildProject();
         var codes: string[] = [];
+        var exmls: string[] = [];
         var others: string[] = [];
 
         filesChanged.forEach(f=> {
             if (/\.ts$/.test(f))
                 codes.push(f);
+            else if (/\.exml$/.test(f))
+                exmls.push(f);
             else
                 others.push(f);
         });
+        var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
+        codes = codes.concat(exmlTS);
         if (codes.length) {
             var result = this.buildChangedTS(codes);
             if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
@@ -90,6 +105,9 @@ class AutoCompileCommand implements egret.Command {
             this._lastExitCode = result.exitStatus;
             this._lastMessages = result.messages;
         }
+        if (exmls.length) {
+            exmlActions.afterBuild();
+        }
         this.sendCommand();
         global.gc && global.gc();
         return this._lastExitCode;
@@ -98,6 +116,18 @@ class AutoCompileCommand implements egret.Command {
     private buildChangedTS(filesChanged: string[]) {
         filesChanged = filesChanged.map(f=> f.replace(FileUtil.escapePath(process.cwd() + "/"), ""));
         return this.compileProject.compileProject(egret.args, filesChanged);
+    }
+
+    private buildChangedEXML(filesChanges: string[]): string[]{
+        exmlActions.buildChanges(filesChanges);
+        var exmlTS: string[] = [];
+        filesChanges.forEach(exml => {
+            var ts = exml.replace(/\.exml$/, ".ts");
+            if (FileUtil.exists(ts))
+                exmlTS.push(ts);
+        });
+
+        return exmlTS;
     }
 
     private buildChangedRes(fileNames: string[]) {
@@ -130,8 +160,6 @@ class AutoCompileCommand implements egret.Command {
 
             if (fileName.indexOf(start) >= 0)
                 return this.onTemplateIndexChanged();
-            if (fileName.indexOf('.exml') >= 0)
-                exml.updateSetting(false);
         });
     }
 
@@ -141,11 +169,6 @@ class AutoCompileCommand implements egret.Command {
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
         CompileTemplate.compileTemplates(egret.args, this._scripts);
-        return 0;
-    }
-
-    private onEXMLChanged(): number {
-        exml.updateSetting(false);
         return 0;
     }
 

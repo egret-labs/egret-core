@@ -5,12 +5,47 @@ import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import exml = require("../lib/swan/EXML");
 
-export function getSortedEXML(): exml.EXMLFile[]{
-    
+export function beforeBuild() {
+
+}
+
+export function build() {
+
+    var exmls = file.search(egret.args.srcDir, 'exml');
+    exmls.forEach(exml=> {
+        var pathToSrc = exml.substring(egret.args.srcDir.length);
+        var target = file.joinPath(egret.args.outDir, pathToSrc);
+        file.copy(exml, target);
+    });
+
+}
+
+export function buildChanges(exmls: string[]) {
+
+    if (!exmls || exmls.length == 0)
+        return;
+
+    exmls.forEach(exml=> {
+        var pathToSrc = exml.substring(egret.args.srcDir.length);
+        var target = file.joinPath(egret.args.outDir, pathToSrc);
+        file.copy(exml, target);
+    });
+
+}
+
+export function afterBuild() {
+    updateSetting(egret.args.publish);
+}
+
+
+
+
+function getSortedEXML(): exml.EXMLFile[] {
+
     var files = file.search(egret.args.srcDir, "exml");
     var exmls: exml.EXMLFile[] = files.map(path=> ({
-            path: path,
-            content: file.read(path)
+        path: path,
+        content: file.read(path)
     }));
     exmls.forEach(it=> it.path = file.getRelativePath(egret.args.srcDir, it.path));
     exmls = exml.sort(exmls);
@@ -19,9 +54,9 @@ export function getSortedEXML(): exml.EXMLFile[]{
 
 
 export function updateSetting(merge = false) {
-    
+
     var themeDatas: egret.ILarkTheme[] = [];
-    
+
     var themes = searchTheme();
     if (themes.length == 0) {
         return;
@@ -39,7 +74,7 @@ export function updateSetting(merge = false) {
 
     var oldEXMLS: EXMLFile[] = [];
 
-    themeDatas.forEach((thm,i)=> {
+    themeDatas.forEach((thm, i) => {
         thm.exmls && thm.exmls.forEach(e=> {
             var path = e.path ? e.path : e;
             if (oldEXMLS[path]) {
@@ -48,13 +83,13 @@ export function updateSetting(merge = false) {
             }
             var exmlFile = {
                 path: path,
-                theme:","+ themes[i]+","
+                theme: "," + themes[i] + ","
             }
             oldEXMLS[path] = exmlFile;
             oldEXMLS.push(exmlFile);
         });
     });
-    
+
 
     var exmls = getSortedEXML();
 
@@ -63,11 +98,11 @@ export function updateSetting(merge = false) {
     exmls.forEach(e=> {
         var epath = e.path;
         var exmlEl = merge ? { path: e.path, content: e.content } : epath;
-        themeDatas.forEach((thm,i)=> {
+        themeDatas.forEach((thm, i) => {
             if (epath in oldEXMLS) {
                 var thmPath = themes[i];
                 var exmlFile = oldEXMLS[epath];
-                if (exmlFile.theme.indexOf("," + thmPath+",") >= 0)
+                if (exmlFile.theme.indexOf("," + thmPath + ",") >= 0)
                     thm.exmls.push(exmlEl);
             }
             else
@@ -75,7 +110,7 @@ export function updateSetting(merge = false) {
         });
 
     });
-    
+
 
     themes.forEach((thm, i) => {
         if (themeDatas[i].autoGenerateExmlsList == false)
@@ -84,11 +119,11 @@ export function updateSetting(merge = false) {
         var thmData = JSON.stringify(themeDatas[i], null, "  ");
         file.save(path, thmData);
     });
-    
+
 }
 
-function searchTheme(): string[]{
-    var files = file.searchByFunction(egret.args.srcDir, f=>f.indexOf('.thm.json')>0);
+function searchTheme(): string[] {
+    var files = file.searchByFunction(egret.args.srcDir, f=> f.indexOf('.thm.json') > 0);
     files = files.map(it=> file.getRelativePath(egret.args.srcDir, it));
     console.log(files);
     return files;

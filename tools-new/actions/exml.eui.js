@@ -1,6 +1,32 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require('../lib/FileUtil');
 var exml = require("../lib/swan/EXML");
+function beforeBuild() {
+}
+exports.beforeBuild = beforeBuild;
+function build() {
+    var exmls = file.search(egret.args.srcDir, 'exml');
+    exmls.forEach(function (exml) {
+        var pathToSrc = exml.substring(egret.args.srcDir.length);
+        var target = file.joinPath(egret.args.outDir, pathToSrc);
+        file.copy(exml, target);
+    });
+}
+exports.build = build;
+function buildChanges(exmls) {
+    if (!exmls || exmls.length == 0)
+        return;
+    exmls.forEach(function (exml) {
+        var pathToSrc = exml.substring(egret.args.srcDir.length);
+        var target = file.joinPath(egret.args.outDir, pathToSrc);
+        file.copy(exml, target);
+    });
+}
+exports.buildChanges = buildChanges;
+function afterBuild() {
+    updateSetting(egret.args.publish);
+}
+exports.afterBuild = afterBuild;
 function getSortedEXML() {
     var files = file.search(egret.args.srcDir, "exml");
     var exmls = files.map(function (path) { return ({
@@ -11,7 +37,6 @@ function getSortedEXML() {
     exmls = exml.sort(exmls);
     return exmls;
 }
-exports.getSortedEXML = getSortedEXML;
 function updateSetting(merge) {
     if (merge === void 0) { merge = false; }
     var themeDatas = [];

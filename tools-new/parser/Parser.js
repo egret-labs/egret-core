@@ -2,6 +2,7 @@
 var utils = require('../lib/utils');
 var file = require('../lib/FileUtil');
 var CompileOptions = require("./CompileOptions");
+var properties = require("./EgretProperties");
 exports.optionDeclarations = [
     {
         name: "action",
@@ -185,6 +186,8 @@ function parseCommandLine(commandLine) {
             }
         }
         options.projectDir = file.joinPath(options.projectDir, "/");
+        properties.init();
+        options.properties = properties;
         var manifestPath = file.joinPath(options.larkRoot, (options["manifest"] || "") + "manifest.json");
         var content = file.read(manifestPath);
         var manifest = egret.manifest;

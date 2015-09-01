@@ -1,7 +1,8 @@
 /// <reference path="../lib/types.d.ts" />
 var FileUtil = require('../lib/FileUtil');
 var fileExtensionToIgnore = {
-    "ts": true
+    "ts": true,
+    "exml": true
 };
 var CopyFiles = (function () {
     function CopyFiles() {
