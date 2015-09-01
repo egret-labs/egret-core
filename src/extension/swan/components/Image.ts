@@ -91,13 +91,6 @@ module swan {
         }
 
         /**
-         * @private
-         */
-        /*//if lark
-        private _scale9Grid:egret.Rectangle = null;
-        //endif*/
-
-        /**
          * @language en_US
          * Represent a Rectangle Area that the 9 scale area of Image.
          * Notice: This property is valid only when <code>fillMode</code>
@@ -117,32 +110,15 @@ module swan {
          * @platform Web,Native
          */
         public get scale9Grid():egret.Rectangle {
-            /*//if lark
-            return this._scale9Grid;
-            //endif*/
-            //if egret
             return this.$scale9Grid;
-            //endif*/
         }
 
         public set scale9Grid(value:egret.Rectangle) {
-            /*//if lark
-            this._scale9Grid = value;
-            this.invalidateDisplayList();
-            //endif*/
-            //if egret
             this.$scale9Grid = value;
             this.$invalidateContentBounds();
             this.invalidateDisplayList();
-            //endif*/
         }
 
-        /**
-         * @private
-         */
-        /*//if lark
-        private _fillMode:string = "scale";
-        //endif*/
         /**
          * @language en_US
          * Determines how the bitmap fills in the dimensions.
@@ -173,27 +149,14 @@ module swan {
          * @platform Web,Native
          */
         public get fillMode():string {
-            /*//if lark
-            return this._fillMode;
-            //endif*/
-            //if egret
             return this.$fillMode;
-            //endif*/
         }
 
         public set fillMode(value:string) {
-            /*//if lark
-            if (value == this._fillMode) {
-                return;
-            }
-            this._fillMode = value;
-            //endif*/
-            //if egret
             if (value == this.$fillMode) {
                 return;
             }
             this.$fillMode = value;
-             //endif*/
             this.invalidateDisplayList();
         }
 
@@ -242,22 +205,6 @@ module swan {
             this.invalidateProperties();
         }
 
-        /**
-         * @private
-         */
-        /*//if lark
-        $setBitmapData(value:egret.Texture|egret.Texture):void {
-            var values = this.$Bitmap;
-            if (value == values[egret.egret.sys.BitmapKeys.bitmapData]) {
-                return;
-            }
-            super.$setBitmapData(value);
-            this.sourceChanged = false;
-            this.invalidateSize();
-            this.invalidateDisplayList();
-        }
-        //endif*/
-        //if egret
         $setBitmapData(value:egret.Texture):void {
             if (value == this.$Bitmap[egret.sys.BitmapKeys.bitmapData]) {
                 return;
@@ -267,7 +214,6 @@ module swan {
             this.invalidateSize();
             this.invalidateDisplayList();
         }
-         //endif*/
 
         /**
          * @private
@@ -295,12 +241,7 @@ module swan {
         private contentChanged(data:any, source:any):void {
             if (source !== this._source)
                 return;
-            /*//if lark
-            if (!egret.is(data, "egret.Texture") && !(data instanceof egret.Texture))
-            //endif*/
-            //if egret
             if (!egret.is(data, "egret.Texture"))
-             //endif*/
             {
                 return;
             }
@@ -313,38 +254,6 @@ module swan {
             }
         }
 
-        /**
-         * @private
-         */
-        /*//if lark
-        $measureContentBounds(bounds:egret.Rectangle):void {
-            var values = this.$Bitmap;
-            var image = values[egret.egret.sys.BitmapKeys.image];
-            if (image) {
-                var uiValues = this.$UIComponent;
-                var width = uiValues[sys.UIKeys.width];
-                var height = uiValues[sys.UIKeys.height];
-                if (isNaN(width) || isNaN(height)) {
-                    bounds.setEmpty();
-                    return;
-                }
-                if (this._fillMode == "clip")
-                {
-                    if (width > values[egret.egret.sys.BitmapKeys.width]) {
-                        width = values[egret.egret.sys.BitmapKeys.width];
-                    }
-                    if (height > values[egret.egret.sys.BitmapKeys.height]) {
-                        height = values[egret.egret.sys.BitmapKeys.height];
-                    }
-                }
-                bounds.setTo(0, 0, width, height);
-            }
-            else {
-                bounds.setEmpty();
-            }
-        }
-        //endif*/
-        //if egret
         $measureContentBounds(bounds:egret.Rectangle):void {
             var values = this.$Bitmap;
             var image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
@@ -371,7 +280,6 @@ module swan {
                 bounds.setEmpty();
             }
         }
-         //endif*/
 
         /**
          * @private
@@ -379,13 +287,7 @@ module swan {
          * @param context
          */
         $render(context:egret.sys.RenderContext):void {
-            /*//if lark
-            var values = this.$Bitmap;
-            var image = values[egret.egret.sys.BitmapKeys.image];
-            //endif*/
-            //if egret
             var image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
-             //endif*/
             if (!image) {
                 return;
             }
@@ -395,124 +297,13 @@ module swan {
             if (width === 0 || height === 0) {
                 return;
             }
-            /*//if lark
-            switch (this._fillMode) {
-                case "clip":
-                    if (width > values[egret.egret.sys.BitmapKeys.width]) {
-                        width = values[egret.egret.sys.BitmapKeys.width];
-                    }
-                    if (height > values[egret.egret.sys.BitmapKeys.height]) {
-                        height = values[egret.egret.sys.BitmapKeys.height];
-                    }
-                    context.drawImage(image, 0, 0, width, height, 0, 0, width, height);
-                    break;
-                case "repeat":
-                    var pattern = context.createPattern(image, "repeat");
-                    context.beginPath();
-                    context.rect(0, 0, width, height);
-                    context.fillStyle = pattern;
-                    context.fill();
-                    break;
-                default ://scale
-                    context.imageSmoothingEnabled = values[egret.egret.sys.BitmapKeys.smoothing];
-                    if (this._scale9Grid) {
-                        this.drawScale9GridImage(context, image, this._scale9Grid, width, height);
-                    }
-                    else {
-                        context.drawImage(image, 0, 0, width, height);
-                    }
-                    break;
-            }
-            //endif*/
-            //if egret
+
             var values = this.$Bitmap;
             egret.Bitmap.$drawImage(context, values[egret.sys.BitmapKeys.image],
                 values[egret.sys.BitmapKeys.clipX], values[egret.sys.BitmapKeys.clipY], values[egret.sys.BitmapKeys.clipWidth], values[egret.sys.BitmapKeys.clipHeight],
                 values[egret.sys.BitmapKeys.offsetX], values[egret.sys.BitmapKeys.offsetY], values[egret.sys.BitmapKeys.width], values[egret.sys.BitmapKeys.height],
                 width, height, this.$scale9Grid, this.$fillMode, this.$smoothing);
-            //endif*/
         }
-
-        /**
-         * @private
-         * 绘制九宫格位图
-         */
-        /*//if lark
-        private drawScale9GridImage(context:egret.sys.RenderContext, image:egret.Texture,
-                                    scale9Grid:egret.Rectangle, surfaceWidth?:number, surfaceHeight?:number):void {
-
-            var imageWidth = image.width;
-            var imageHeight = image.height;
-
-            var sourceW0 = scale9Grid.x;
-            var sourceH0 = scale9Grid.y;
-            var sourceW1 = scale9Grid.width;
-            var sourceH1 = scale9Grid.height;
-
-            //防止空心的情况出现。
-            if (sourceH1 == 0) {
-                sourceH1 = 1;
-                if (sourceH0 >= imageHeight) {
-                    sourceH0--;
-                }
-            }
-            if (sourceW1 == 0) {
-                sourceW1 = 1;
-                if (sourceW0 >= imageWidth) {
-                    sourceW0--;
-                }
-            }
-            var sourceX0 = 0;
-            var sourceX1 = sourceX0 + sourceW0;
-            var sourceX2 = sourceX1 + sourceW1;
-            var sourceW2 = imageWidth - sourceW0 - sourceW1;
-
-            var sourceY0 = 0;
-            var sourceY1 = sourceY0 + sourceH0;
-            var sourceY2 = sourceY1 + sourceH1;
-            var sourceH2 = imageHeight - sourceH0 - sourceH1;
-
-            if (sourceW0 + sourceW2 > surfaceWidth || sourceH0 + sourceH2 > surfaceHeight) {
-                context.drawImage(image, 0, 0, surfaceWidth, surfaceHeight);
-                return;
-            }
-
-            var targetX0 = 0;
-            var targetX1 = targetX0 + sourceW0;
-            var targetX2 = targetX0 + surfaceWidth - sourceW2;
-            var targetW1 = surfaceWidth - sourceW0 - sourceW2;
-
-            var targetY0 = 0;
-            var targetY1 = targetY0 + sourceH0;
-            var targetY2 = targetY0 + surfaceHeight - sourceH2;
-            var targetH1 = surfaceHeight - sourceH0 - sourceH2;
-
-            //
-            //             x0     x1     x2
-            //          y0 +------+------+------+
-            //             |      |      |      | h0
-            //             |      |      |      |
-            //          y1 +------+------+------+
-            //             |      |      |      | h1
-            //             |      |      |      |
-            //          y2 +------+------+------+
-            //             |      |      |      | h2
-            //             |      |      |      |
-            //             +------+------+------+
-            //                w0     w1     w2
-            //
-
-            context.drawImage(image, sourceX0, sourceY0, sourceW0, sourceH0, targetX0, targetY0, sourceW0, sourceH0);
-            context.drawImage(image, sourceX1, sourceY0, sourceW1, sourceH0, targetX1, targetY0, targetW1, sourceH0);
-            context.drawImage(image, sourceX2, sourceY0, sourceW2, sourceH0, targetX2, targetY0, sourceW2, sourceH0);
-            context.drawImage(image, sourceX0, sourceY1, sourceW0, sourceH1, targetX0, targetY1, sourceW0, targetH1);
-            context.drawImage(image, sourceX1, sourceY1, sourceW1, sourceH1, targetX1, targetY1, targetW1, targetH1);
-            context.drawImage(image, sourceX2, sourceY1, sourceW2, sourceH1, targetX2, targetY1, sourceW2, targetH1);
-            context.drawImage(image, sourceX0, sourceY2, sourceW0, sourceH2, targetX0, targetY2, sourceW0, sourceH2);
-            context.drawImage(image, sourceX1, sourceY2, sourceW1, sourceH2, targetX1, targetY2, targetW1, sourceH2);
-            context.drawImage(image, sourceX2, sourceY2, sourceW2, sourceH2, targetX2, targetY2, sourceW2, sourceH2);
-        }
-        //endif*/
 
         //=======================UIComponent接口实现===========================
         /**
@@ -565,17 +356,6 @@ module swan {
          * @platform Web,Native
          */
         protected measure():void {
-            /*//if lark
-            var values = this.$Bitmap;
-            var image = values[egret.egret.sys.BitmapKeys.image];
-            if (image) {
-                this.setMeasuredSize(values[egret.egret.sys.BitmapKeys.width], values[egret.egret.sys.BitmapKeys.height]);
-            }
-            else {
-                this.setMeasuredSize(0, 0);
-            }
-            //endif*/
-            //if egret
             var bitmapData = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (bitmapData) {
                 this.setMeasuredSize(bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight());
@@ -583,7 +363,6 @@ module swan {
             else {
                 this.setMeasuredSize(0, 0);
             }
-            //endif*/
         }
 
         /**

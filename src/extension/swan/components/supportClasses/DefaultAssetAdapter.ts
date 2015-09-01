@@ -30,7 +30,7 @@
 
 module swan {
 
-    var loaderPool:egret.URLLoader[] = [];
+    var loaderPool:egret.ImageLoader[] = [];
     var callBackMap:any = {};
     var loaderMap:any = {};
 
@@ -81,22 +81,14 @@ module swan {
             }
             var loader = loaderPool.pop();
             if (!loader) {
-                loader = new egret.URLLoader();
-                //if egret
-                loader.dataFormat = egret.URLLoaderDataFormat.TEXTURE;
-                 //endif*/
+                loader = new egret.ImageLoader();
             }
             callBackMap[source] = [[callBack, thisObject]];
             loaderMap[loader.$hashCode] = source;
 
             loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
-            /*//if lark
             loader.load(source);
-            //endif*/
-            //if egret
-            loader.load(new egret.URLRequest(source));
-             //endif*/
         }
 
         /**
@@ -110,7 +102,8 @@ module swan {
             loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
             var data:egret.Texture;
             if (event.$type == egret.Event.COMPLETE) {
-                data = loader.data;
+                data = new egret.Texture();
+                data._setBitmapData(loader.data);
                 loader.data = null;
             }
             loaderPool.push(loader);
