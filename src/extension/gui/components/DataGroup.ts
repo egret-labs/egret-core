@@ -27,6 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/// <reference path="../core/ClassFactory.ts" />
+/// <reference path="supportClasses/ItemRenderer.ts" />
+
 
 module egret.gui {
 
@@ -41,14 +44,14 @@ module egret.gui {
 		/**
 		 * 构造函数
 		 * @method egret.gui.DataGroup#constructor
-		 */		
+		 */
 		public constructor(){
 			super();
 		}
 
 		/**
 		 * @method egret.gui.DataGroup.defaultRendererFactory
-		 * @param ClassFactory {any} 
+		 * @param ClassFactory {any}
 		 */
         public static defaultRendererFactory:ClassFactory = new ClassFactory(ItemRenderer);
         /**
@@ -69,13 +72,13 @@ module egret.gui {
 		 */
 		public set layout(value:LayoutBase){
 			if (value == this.layout)
-				return; 
-			
+				return;
+
 			if (this.layout){
 				this.layout.typicalLayoutRect = null;
 				this.layout.removeEventListener("useVirtualLayoutChanged", this.layout_useVirtualLayoutChangedHandler, this);
 			}
-			
+
 			if (this.layout && value && (this.layout.useVirtualLayout != value.useVirtualLayout))
 				this.changeUseVirtualLayout();
 			this._setLayout(value);
@@ -84,23 +87,23 @@ module egret.gui {
 				value.addEventListener("useVirtualLayoutChanged", this.layout_useVirtualLayoutChangedHandler, this);
 			}
 		}
-		
+
 		/**
 		 * 是否使用虚拟布局标记改变
-		 */		
+		 */
 		private layout_useVirtualLayoutChangedHandler(event:Event):void{
 			this.changeUseVirtualLayout();
 		}
-		
+
 		/**
-		 * 存储当前可见的项呈示器索引列表 
-		 */		
+		 * 存储当前可见的项呈示器索引列表
+		 */
 		private virtualRendererIndices:Array<number>;
-		
+
 		/**
 		 * @method egret.gui.DataGroup#setVirtualElementIndicesInView
-		 * @param startIndex {number} 
-		 * @param endIndex {number} 
+		 * @param startIndex {number}
+		 * @param endIndex {number}
 		 */
 		public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void{
 			if(!this.layout||!this.layout.useVirtualLayout)
@@ -116,10 +119,10 @@ module egret.gui {
 				}
 			}
 		}
-		
+
 		/**
 		 * @method egret.gui.DataGroup#getVirtualElementAt
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {IVisualElement}
 		 */
 		public getVirtualElementAt(index:number):IVisualElement{
@@ -142,13 +145,13 @@ module egret.gui {
 			}
 			return element;
 		}
-		
+
 		private rendererToClassMap:Array<any> = [];
 		private freeRenderers:Array<any> = [];
-		
+
 		/**
 		 * 释放指定索引处的项呈示器
-		 */		
+		 */
 		private freeRendererByIndex(index:number):void{
 			if(!this.indexToRenderer[index])
 				return;
@@ -160,7 +163,7 @@ module egret.gui {
 		}
 		/**
 		 * 释放指定的项呈示器
-		 */		
+		 */
 		private doFreeRenderer(renderer:IItemRenderer):void{
 			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
             var hashCode:number = rendererFactory.hashCode;
@@ -170,12 +173,12 @@ module egret.gui {
 			this.freeRenderers[hashCode].push(renderer);
 			(<DisplayObject><any>renderer).visible = false;
 		}
-		
+
 		/**
-		 * 是否创建了新的项呈示器标志 
-		 */		
+		 * 是否创建了新的项呈示器标志
+		 */
 		private createNewRendererFlag:boolean = false;
-		
+
 		/**
 		 * 标记组件，以便在稍后屏幕更新期间调用该组件的 measure() 方法
 		 * @method egret.gui.DataGroup#invalidateSize
@@ -184,10 +187,10 @@ module egret.gui {
 			if(!this.createNewRendererFlag)//虚拟布局时创建子项不需要重新验证
 				super.invalidateSize();
 		}
-		
+
 		/**
 		 * 为指定索引创建虚拟的项呈示器
-		 */		
+		 */
 		private createVirtualRenderer(index:number):IItemRenderer{
 			var item:any = this.dataProvider.getItemAt(index);
 			var renderer:IItemRenderer;
@@ -204,7 +207,7 @@ module egret.gui {
 		}
 		/**
 		 * 根据rendererClass创建一个Renderer,并添加到显示列表
-		 */		
+		 */
 		private createOneRenderer(rendererFactory:IFactory):IItemRenderer{
 			var renderer:IItemRenderer;
             var hashCode:number = rendererFactory.hashCode;
@@ -229,7 +232,7 @@ module egret.gui {
 		}
 		/**
 		 * 设置项呈示器的默认皮肤
-		 */		
+		 */
 		private setItemRenderSkinName(renderer:IItemRenderer):void{
 			if(!renderer)
 				return;
@@ -244,11 +247,11 @@ module egret.gui {
 					client.skinName = this._itemRendererSkinName;
 			}
 		}
-		
+
 		private cleanTimer:Timer = null;
 		/**
 		 * 虚拟布局结束清理不可见的项呈示器
-		 */		
+		 */
 		private finishVirtualLayout():void{
 			if(!this.virtualLayoutUnderway)
 				return;
@@ -272,7 +275,7 @@ module egret.gui {
 		}
 		/**
 		 * 延迟清理多余的在显示列表中的ItemRenderer。
-		 */		
+		 */
 		private cleanAllFreeRenderer(event:TimerEvent=null):void{
 			var renderer:IItemRenderer;
             var freeRenderers:Array<any> = this.freeRenderers;
@@ -288,7 +291,7 @@ module egret.gui {
 			this.freeRenderers = [];
 			this.cleanFreeRenderer = false;
 		}
-		
+
 		/**
 		 * @method egret.gui.DataGroup#getElementIndicesInView
 		 * @returns {number}
@@ -298,19 +301,19 @@ module egret.gui {
 				return this.virtualRendererIndices?this.virtualRendererIndices:[];
 			return super.getElementIndicesInView();
 		}
-		
+
 		/**
 		 * 更改是否使用虚拟布局
-		 */		
+		 */
 		private changeUseVirtualLayout():void{
 			this.useVirtualLayoutChanged = true;
 			this.cleanFreeRenderer = true;
 			this.removeDataProviderListener();
 			this.invalidateProperties();
 		}
-		
+
 		private dataProviderChanged:boolean = false;
-		
+
 		private _dataProvider:ICollection = null;
 		/**
 		 * 列表数据源，请使用实现了ICollection接口的数据类型，例如ArrayCollection
@@ -333,14 +336,14 @@ module egret.gui {
 		}
 		/**
 		 * 移除数据源监听
-		 */		
+		 */
 		private removeDataProviderListener():void{
 			if(this._dataProvider)
 				this._dataProvider.removeEventListener(CollectionEvent.COLLECTION_CHANGE,this.onCollectionChange,this);
 		}
 		/**
 		 * 数据源改变事件处理
-		 */		
+		 */
 		private onCollectionChange(event:CollectionEvent):void{
 			switch(event.kind){
 				case CollectionEventKind.ADD:
@@ -374,10 +377,10 @@ module egret.gui {
 			this.invalidateSize();
 			this.invalidateDisplayList();
 		}
-		
+
 		/**
 		 * 数据源添加项目事件处理
-		 */		
+		 */
 		private itemAddedHandler(items:Array<any>,index:number):void{
 			var length:number = items.length;
 			for (var i:number = 0; i < length; i++){
@@ -387,7 +390,7 @@ module egret.gui {
 		}
 		/**
 		 * 数据源移动项目事件处理
-		 */		
+		 */
 		private itemMovedHandler(item:any,location:number,oldLocation:number):void{
 			this.itemRemoved(item,oldLocation);
 			this.itemAdded(item,location);
@@ -395,22 +398,22 @@ module egret.gui {
 		}
 		/**
 		 * 数据源移除项目事件处理
-		 */		
+		 */
 		private itemRemovedHandler(items:Array<any>,location:number):void{
 			var length:number = items.length;
 			for (var i:number = length-1; i >= 0; i--){
 				this.itemRemoved(items[i], location + i);
 			}
-			
+
 			this.resetRenderersIndices();
 		}
 		/**
 		 * 添加一项
-		 */		
+		 */
 		private itemAdded(item:any,index:number):void{
 			if (this.layout)
 				this.layout.elementAdded(index);
-			
+
 			if (this.layout && this.layout.useVirtualLayout){
                 var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
 				if (virtualRendererIndices){
@@ -420,7 +423,7 @@ module egret.gui {
 						if (vrIndex >= index)
 							virtualRendererIndices[i] = vrIndex + 1;
 					}
-					this.indexToRenderer.splice(index, 0, null); 
+					this.indexToRenderer.splice(index, 0, null);
 				}
 				return;
 			}
@@ -433,16 +436,16 @@ module egret.gui {
             RendererExistenceEvent.dispatchRendererExistenceEvent(this,
                 RendererExistenceEvent.RENDERER_ADD,renderer, index, item);
 		}
-		
+
 		/**
 		 * 移除一项
-		 */		
+		 */
 		private itemRemoved(item:any, index:number):void{
 			if (this.layout)
 				this.layout.elementRemoved(index);
             var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
 			if (virtualRendererIndices && (virtualRendererIndices.length > 0)){
-				var vrItemIndex:number = -1; 
+				var vrItemIndex:number = -1;
 				var length:number = virtualRendererIndices.length;
 				for (var i:number = 0; i < length; i++){
 					var vrIndex:number = virtualRendererIndices[i];
@@ -455,7 +458,7 @@ module egret.gui {
 					virtualRendererIndices.splice(vrItemIndex, 1);
 			}
 			var oldRenderer:IItemRenderer = this.indexToRenderer[index];
-			
+
 			if (this.indexToRenderer.length > index)
 				this.indexToRenderer.splice(index, 1);
 
@@ -469,11 +472,11 @@ module egret.gui {
 
 		/**
 		 * 对象池字典
-		 */		
+		 */
 		private recyclerDic:Array<any> = [];
 		/**
 		 * 回收一个ItemRenderer实例
-		 */		
+		 */
 		private recycle(renderer:IItemRenderer):void{
 			this._removeFromDisplayList(<DisplayObject><any> renderer);
 			if("ownerChanged" in renderer){
@@ -488,11 +491,11 @@ module egret.gui {
 		}
 		/**
 		 * 更新当前所有项的索引
-		 */		
+		 */
 		private resetRenderersIndices():void{
 			if (this.indexToRenderer.length == 0)
 				return;
-			
+
 			if (this.layout && this.layout.useVirtualLayout){
                 var virtualRendererIndices:Array<any> = this.virtualRendererIndices;
                 var length:number =  virtualRendererIndices.length;
@@ -509,28 +512,28 @@ module egret.gui {
 		}
 		/**
 		 * 数据源更新或替换项目事件处理
-		 */	
+		 */
 		private itemUpdatedHandler(item:any,location:number):void{
 			if (this.renderersBeingUpdated)
 				return;//防止无限循环
-			
+
 			var renderer:IItemRenderer = this.indexToRenderer[location];
 			if(renderer)
 				this.updateRenderer(renderer,location,item);
 		}
 		/**
 		 * 调整指定项呈示器的索引值
-		 */		
+		 */
 		private resetRendererItemIndex(index:number):void{
 			var renderer:IItemRenderer = <IItemRenderer> (this.indexToRenderer[index]);
 			if (renderer)
-				renderer.itemIndex = index;    
+				renderer.itemIndex = index;
 		}
-		
-		
+
+
 		/**
 		 * 项呈示器改变
-		 */		
+		 */
 		private itemRendererChanged:boolean = false;
         /**
          * 这里不直接使用Class类型是因为JS里不能用对象作为键，所以需要hashCode。而只有实例对象才有hashCode，Class无法作为键。
@@ -555,9 +558,9 @@ module egret.gui {
 			this.removeDataProviderListener();
 			this.invalidateProperties();
 		}
-		
+
 		private itemRendererSkinNameChange:boolean = false;
-		
+
 		private _itemRendererSkinName:any = null;
 		/**
 		 * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
@@ -585,16 +588,16 @@ module egret.gui {
 		 * 应该定义一个与此示例函数类似的呈示器函数： <br/>
 		 * function myItemRendererFunction(item:Object):IFactory
 		 * @member egret.gui.DataGroup#itemRendererFunction
-		 */		
+		 */
 		public get itemRendererFunction():Function{
 			return this._itemRendererFunction;
 		}
-		
+
 		public set itemRendererFunction(value:Function){
 			if(this._itemRendererFunction==value)
 				return;
 			this._itemRendererFunction = value;
-			
+
 			this.itemRendererChanged = true;
 			this.typicalItemChanged = true;
 			this.removeDataProviderListener();
@@ -602,7 +605,7 @@ module egret.gui {
 		}
 		/**
 		 * 为特定的数据项返回项呈示器的工厂实例
-		 */		
+		 */
 		private itemToRendererClass(item:any):IFactory{
 			var rendererFactory:IFactory;
 			if(this._itemRendererFunction!=null){
@@ -615,13 +618,13 @@ module egret.gui {
 			}
 			return rendererFactory?rendererFactory:DataGroup.defaultRendererFactory;
 		}
-		
+
 		/**
 		 * @method egret.gui.DataGroup#createChildren
          * 设置默认的ItemRenderer
 		 * @private
 		 *
-		 */		
+		 */
 		public createChildren():void{
 			if(!this.layout){
 				var _layout:VerticalLayout = new VerticalLayout();
@@ -631,8 +634,8 @@ module egret.gui {
 			}
 			super.createChildren();
 		}
-		
-		
+
+
 		/**
 		 * 处理对组件设置的属性
 		 * @method egret.gui.DataGroup#commitProperties
@@ -659,9 +662,9 @@ module egret.gui {
 					this.verticalScrollPosition = this.horizontalScrollPosition = 0;
 				}
 			}
-			
+
 			super.commitProperties();
-			
+
 			if(this.typicalItemChanged){
 				this.typicalItemChanged = false;
 				if (this._dataProvider&&this._dataProvider.length > 0){
@@ -687,28 +690,28 @@ module egret.gui {
 				}
 			}
 		}
-		
+
 		/**
 		 * 计算组件的默认大小和（可选）默认最小大小
 		 * @method egret.gui.DataGroup#measure
 		 */
 		public measure():void{
 			if(this.layout&&this.layout.useVirtualLayout){
-				this.ensureTypicalLayoutElement();	
+				this.ensureTypicalLayoutElement();
 			}
 			super.measure();
 		}
-		
+
 		/**
-		 * 正在进行虚拟布局阶段 
-		 */		
+		 * 正在进行虚拟布局阶段
+		 */
 		private virtualLayoutUnderway:boolean = false;
-		
+
 		/**
 		 * 绘制对象和/或设置其子项的大小和位置
 		 * @method egret.gui.DataGroup#updateDisplayList
-		 * @param unscaledWidth {number} 
-		 * @param unscaledHeight {number} 
+		 * @param unscaledWidth {number}
+		 * @param unscaledHeight {number}
 		 */
 		public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
 			if(this._layoutInvalidateDisplayListFlag&&this.layout&&this.layout.useVirtualLayout){
@@ -719,7 +722,7 @@ module egret.gui {
 			if(this.virtualLayoutUnderway)
 				this.finishVirtualLayout();
 		}
-		
+
 		/**
 		 * 用于测试默认大小的数据
 		 */
@@ -732,16 +735,16 @@ module egret.gui {
 		private ensureTypicalLayoutElement():void{
 			if (this.layout.typicalLayoutRect)
 				return;
-			
+
 			if (this._dataProvider&&this._dataProvider.length > 0){
 				this.typicalItem = this._dataProvider.getItemAt(0);
 				this.measureRendererSize();
 			}
 		}
-		
+
 		/**
 		 * 测量项呈示器默认尺寸
-		 */		
+		 */
 		private measureRendererSize():void{
 			if(!this.typicalItem){
 				this.setTypicalLayoutRect(null);
@@ -762,33 +765,33 @@ module egret.gui {
 			this.recycle(typicalRenderer);
 			this.setTypicalLayoutRect(rect);
 			this.createNewRendererFlag = false;
-		} 
-		
+		}
+
 		/**
 		 * 项呈示器的默认尺寸
-		 */		
+		 */
 		private typicalLayoutRect:Rectangle = null;
 		/**
 		 * 设置项目默认大小
-		 */		
+		 */
 		private setTypicalLayoutRect(rect:Rectangle):void{
 			this.typicalLayoutRect = rect;
 			if(this.layout)
 				this.layout.typicalLayoutRect = rect;
 		}
-		
-		
+
+
 		/**
-		 * 索引到项呈示器的转换数组 
-		 */		
+		 * 索引到项呈示器的转换数组
+		 */
 		private indexToRenderer:Array<any> = [];
 		/**
 		 * 清理freeRenderer标志
-		 */		
+		 */
 		private cleanFreeRenderer:boolean = false;
 		/**
 		 * 移除所有项呈示器
-		 */		
+		 */
 		private removeAllRenderers():void{
 			var length:number = this.indexToRenderer.length;
 			var renderer:IItemRenderer;
@@ -806,10 +809,10 @@ module egret.gui {
 				return;
 			this.cleanAllFreeRenderer();
 		}
-		
+
 		/**
 		 * 为数据项创建项呈示器
-		 */		
+		 */
 		private createRenderers():void{
 			if(!this._dataProvider)
 				return;
@@ -830,20 +833,20 @@ module egret.gui {
 		}
 		/**
 		 * 正在更新数据项的标志
-		 */		
+		 */
 		private renderersBeingUpdated:boolean = false;
-		
+
 		/**
 		 * 更新项呈示器
 		 * @method egret.gui.DataGroup#updateRenderer
-		 * @param renderer {IItemRenderer} 
-		 * @param itemIndex {number} 
-		 * @param data {any} 
+		 * @param renderer {IItemRenderer}
+		 * @param itemIndex {number}
+		 * @param data {any}
 		 * @returns {IItemRenderer}
-		 */		
+		 */
 		public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer{
 			this.renderersBeingUpdated = true;
-			
+
 			if(this._rendererOwner){
 				renderer = this._rendererOwner.updateRenderer(renderer,itemIndex,data);
 			}
@@ -855,38 +858,38 @@ module egret.gui {
 				renderer.label = this.itemToLabel(data);
 				renderer.data = data;
 			}
-			
+
 			this.renderersBeingUpdated = false;
 			return renderer;
 		}
-		
+
 		/**
 		 * 返回可在项呈示器中显示的 String。
-		 * 若DataGroup被作为SkinnableDataContainer的皮肤组件,此方法将不会执行，被SkinnableDataContainer.itemToLabel()所替代。 
+		 * 若DataGroup被作为SkinnableDataContainer的皮肤组件,此方法将不会执行，被SkinnableDataContainer.itemToLabel()所替代。
 		 * @method egret.gui.DataGroup#itemToLabel
-		 * @param item {any} 
+		 * @param item {any}
 		 * @returns {string}
-		 */		
+		 */
 		public itemToLabel(item:any):string{
 			if (item)
 				return item.toString();
 			else return " ";
 		}
-		
+
 		/**
 		 * 返回位于指定索引处的子显示对象实例
 		 * @method egret.gui.DataGroup#getElementAt
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {IVisualElement}
 		 */
 		public getElementAt(index:number):IVisualElement{
 			return this.indexToRenderer[index];
 		}
-		
+
 		/**
 		 * 返回 element 实例的索引位置
 		 * @method egret.gui.DataGroup#getElementIndex
-		 * @param element {IVisualElement} 
+		 * @param element {IVisualElement}
 		 * @returns {number}
 		 */
 		public getElementIndex(element:IVisualElement):number{
@@ -894,7 +897,7 @@ module egret.gui {
 				return -1;
 			return this.indexToRenderer.indexOf(element);
 		}
-		
+
 		/**
 		 * 获得对象容器的子对象总数
 		 * @member egret.gui.DataGroup#numElements
@@ -904,14 +907,14 @@ module egret.gui {
 				return 0;
 			return this._dataProvider.length;
 		}
-		
+
 		/**
 		 * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中
 		 * @method egret.gui.DataGroup#addChild
 		 * @deprecated
-		 * @param child {DisplayObject} 
+		 * @param child {DisplayObject}
 		 * @returns {DisplayObject}
-		 */		
+		 */
 		public addChild(child:DisplayObject):DisplayObject{
 			egret.$error(3004, egret.sys.tr(3003));
 			return null;
@@ -980,6 +983,6 @@ module egret.gui {
 		public swapChildrenAt(index1:number, index2:number):void{
 			egret.$error(3010, egret.sys.tr(3003));
 		}
-		
+
 	}
 }

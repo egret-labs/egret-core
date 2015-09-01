@@ -59,7 +59,7 @@ var Project = (function () {
         var _this = this;
         console.log('buildWholeProject');
         this.shutdown(11);
-        var larkPath = FileUtil.joinPath(utils.getLarkRoot(), 'tools-new/bin/egret');
+        var larkPath = FileUtil.joinPath(utils.getLarkRoot(), 'tools/bin/egret');
         var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'compileservice', (this.option.sourceMap ? "-sourcemap" : "")], {
             detached: true,
             cwd: this.path
@@ -131,5 +131,5 @@ var Project = (function () {
     return Project;
 })();
 module.exports = Project;
-/// <reference path="../lib/types.d.ts" /> 
+/// <reference path="../lib/types.d.ts" />
 //# sourceMappingURL=project.js.map

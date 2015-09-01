@@ -71,16 +71,10 @@ declare module egret {
      * @includeExample egret/display/MovieClip.ts
      */
     class MovieClip extends DisplayObject {
-        $bitmapData: Texture;
-        $movieClipData: MovieClipData;
         /**
          * @private
          */
         private frames;
-        /**
-         * @private
-         */
-        $totalFrames: number;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -93,24 +87,11 @@ declare module egret {
         /**
          * @private
          */
-        $eventPool: string[];
-        $isPlaying: boolean;
-        /**
-         * @private
-         */
         private isStopped;
         /**
          * @private
          */
         private playTimes;
-        /**
-         * @private
-         */
-        $currentFrameNum: number;
-        /**
-         * @private
-         */
-        $nextFrameNum: number;
         /**
          * @private
          */
@@ -130,37 +111,7 @@ declare module egret {
          * @private
          *
          */
-        $init(): void;
-        /**
-         * @private
-         *
-         */
-        $reset(): void;
-        /**
-         * @private
-         *
-         */
         private _initFrame();
-        /**
-         * @private
-         */
-        $render(context: sys.RenderContext): void;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         *
-         * @param stage
-         * @param nestLevel
-         */
-        $onAddToStage(stage: Stage, nestLevel: number): void;
-        /**
-         * @private
-         *
-         */
-        $onRemoveFromStage(): void;
         /**
          * @private
          * 返回帧标签为指定字符串的FrameLabel对象
@@ -329,11 +280,6 @@ declare module egret {
      */
     class MovieClipData extends HashObject {
         /**
-         * @private
-         * MovieClip数据
-         */
-        $mcData: any;
-        /**
          * 总帧数
          * @version Egret 2.0
          * @platform Web,Native
@@ -376,14 +322,6 @@ declare module egret {
          */
         constructor();
         /**
-         * @private
-         *
-         * @param mcData
-         * @param textureData
-         * @param spriteSheet
-         */
-        $init(mcData: any, textureData: any, spriteSheet: SpriteSheet): void;
-        /**
          * 根据指定帧序号获取该帧对应的关键帧数据
          * @param frame {number} 帧序号
          * @returns {any} 帧数据对象
@@ -406,24 +344,6 @@ declare module egret {
          * @returns
          */
         private getTextureByResName(resName);
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $isDataValid(): boolean;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $isTextureValid(): boolean;
-        /**
-         * @private
-         *
-         * @param mcData
-         */
-        $fillMCData(mcData: any): void;
         /**
          * @private
          *
@@ -466,18 +386,6 @@ declare module egret {
          * @platform Web,Native
          */
         enableCache: boolean;
-        /**
-         * @private
-         */
-        $mcDataSet: any;
-        /**
-         * @private
-         */
-        $spriteSheet: SpriteSheet;
-        /**
-         * @private
-         */
-        $mcDataCache: any;
         /**
          * 创建一个 egret.MovieClipDataFactory 对象
          * @param movieClipDataSet {any} MovieClip数据集，该数据集必须由Egret官方工具生成
@@ -1049,16 +957,6 @@ declare module egret {
         private _validatePosition(top?, left?);
         /**
          * @private
-         * @inheritDoc
-         */
-        $setWidth(value: number): void;
-        /**
-         * @private
-         * @inheritDoc
-         */
-        $setHeight(value: number): void;
-        /**
-         * @private
          *
          */
         _updateContentPosition(): void;
@@ -1568,13 +1466,6 @@ declare module egret {
         new (): NetContext;
         getNetContext(): NetContext;
     };
-    /**
-     * @private
-     *
-     * @param request
-     * @returns
-     */
-    function $getUrl(request: URLRequest): string;
 }
 declare module egret {
     /**
@@ -2301,7 +2192,6 @@ declare module egret {
          * @private
          */
         static _callBackList: Array<any>;
-        static $init(): void;
         static onUpdate(timeStamp: number): void;
         /**
          * @private
@@ -2312,11 +2202,6 @@ declare module egret {
          * @private
          */
         private frameCount;
-        /**
-         * @private
-         *
-         */
-        $checkFrame(): void;
         /**
          * @private
          */

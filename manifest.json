@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "2.4",
   "registerClass": "egret",
   "modules": [
     {
@@ -13,10 +13,6 @@
         {
           "path": "../Defines.release.ts",
           "debug": false
-        },
-        {
-          "path": "native/NativeContext.d.ts",
-          "platform": "native"
         },
         {
           "path": "media/native/NativeSound.ts",

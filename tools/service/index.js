@@ -104,7 +104,7 @@ function getProject(path) {
 function startBackgroundService() {
     serviceCreated = true;
     var options = egret.args;
-    var nodePath = process.execPath, service = file.joinPath(options.larkRoot, 'tools-new/bin/egret');
+    var nodePath = process.execPath, service = file.joinPath(options.larkRoot, 'tools/bin/egret');
     var startupParams = ['--expose-gc', service, 'service'];
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,
@@ -131,5 +131,5 @@ function getServiceURL(params) {
     var json = JSON.stringify(params);
     return "http://127.0.0.1:" + exports.LARK_SERVICE_PORT + "/?q=" + encodeURIComponent(json);
 }
-/// <reference path="../lib/types.d.ts" /> 
+/// <reference path="../lib/types.d.ts" />
 //# sourceMappingURL=index.js.map

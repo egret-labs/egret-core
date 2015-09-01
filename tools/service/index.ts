@@ -37,7 +37,7 @@ export function run() {
         console.error("Service.run", e);
     }
     process.on('uncaughtException', function (e) {
-        
+
     });
     process.on('exit', shutdown);
 }
@@ -128,7 +128,7 @@ function startBackgroundService() {
     serviceCreated = true;
     var options = egret.args;
     var nodePath = process.execPath,
-        service = file.joinPath(options.larkRoot, 'tools-new/bin/egret');
+        service = file.joinPath(options.larkRoot, 'tools/bin/egret');
     var startupParams = ['--expose-gc', service, 'service'];
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,

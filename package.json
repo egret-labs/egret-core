@@ -1,5 +1,5 @@
 {
-    "name": "eg",
+    "name": "egret",
     "version": "2.4.2",
     "private": true,
     "author":"egret-labs",
@@ -7,9 +7,7 @@
         "start": "node app"
     },
     "bin": {
-        "egret": "./tools/bin/egret",
-        "eg": "./tools-new/bin/egret"
+        "egret": "./tools/bin/egret"
     },
     "i18n":"cn"
 }
-

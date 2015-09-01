@@ -1,10 +1,6 @@
 declare var DEBUG: boolean;
 declare var RELEASE: boolean;
 declare module egret {
-    function $error(code: number, ...params: any[]): void;
-    function $warn(code: number, ...params: any[]): void;
-    function $markReadOnly(instance: any, property: string, isProperty?: boolean): void;
-    function $markCannotUse(instance: any, property: string, defaultVale: any): void;
 }
 declare module egret {
     /**
@@ -86,10 +82,6 @@ declare module egret {
          */
         constructor();
         /**
-         * @private
-         */
-        $hashCode: number;
-        /**
          * @language en_US
          * a unique identification number assigned to this instance.
          * @version Egret 2.0
@@ -160,16 +152,6 @@ declare module egret {
          */
         constructor(target?: IEventDispatcher);
         /**
-         * @private
-         */
-        $EventDispatcher: Object;
-        /**
-         * @private
-         *
-         * @param useCapture
-         */
-        $getEventMap(useCapture?: boolean): any;
-        /**
          * @inheritDoc
          * @version Egret 2.0
          * @platform Web,Native
@@ -182,17 +164,11 @@ declare module egret {
          */
         once(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void;
         /**
-         * @private
-         */
-        $addListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, emitOnce?: boolean): void;
-        $insertEventBin(list: Array<any>, type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, emitOnce?: boolean): boolean;
-        /**
          * @inheritDoc
          * @version Egret 2.0
          * @platform Web,Native
          */
         removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void;
-        $removeEventBin(list: Array<any>, listener: Function, thisObject: any): boolean;
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -211,10 +187,6 @@ declare module egret {
          * @platform Web,Native
          */
         dispatchEvent(event: Event): boolean;
-        /**
-         * @private
-         */
-        $notifyListener(event: Event, capturePhase: boolean): boolean;
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -494,10 +466,6 @@ declare module egret {
          */
         invert(): void;
         /**
-         * @private
-         */
-        $invertInto(target: Matrix): void;
-        /**
          * @language en_US
          * Applies a rotation transformation to the Matrix object.
          * The rotate() method alters the a, b, c, and d properties of the Matrix object.
@@ -753,36 +721,7 @@ declare module egret {
         /**
          * @private
          */
-        $transformBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
         private getDeterminant();
-        /**
-         * @private
-         */
-        $getScaleX(): number;
-        /**
-         * @private
-         */
-        $getScaleY(): number;
-        /**
-         * @private
-         */
-        $getSkewX(): number;
-        /**
-         * @private
-         */
-        $getSkewY(): number;
-        /**
-         * @private
-         */
-        $updateScaleAndRotation(scaleX: number, scaleY: number, skewX: number, skewY: number): void;
-        /**
-         * @private
-         * target = other * this
-         */
-        $preMultiplyInto(other: Matrix, target: Matrix): void;
     }
     /**
      * @private
@@ -1487,49 +1426,6 @@ declare module egret {
         constructor();
         /**
          * @private
-         */
-        $DisplayObject: Object;
-        /**
-         * @private
-         */
-        $displayFlags: number;
-        /**
-         * @private
-         * 添加一个标志量
-         */
-        $setFlags(flags: number): void;
-        /**
-         * @private
-         * 移除一个标志量
-         */
-        $removeFlags(flags: number): void;
-        /**
-         * @private
-         * 沿着显示列表向上移除标志量，如果标志量没被设置过就停止移除。
-         */
-        $removeFlagsUp(flags: number): void;
-        /**
-         * @private
-         * 是否含有指定的所有标志量
-         */
-        $hasFlags(flags: number): boolean;
-        /**
-         * @private
-         * 沿着显示列表向上传递标志量，如果标志量已经被设置过就停止传递。
-         */
-        $propagateFlagsUp(flags: number): void;
-        /**
-         * @private
-         * 沿着显示列表向下传递标志量，非容器直接设置自身的flag，此方法会在 DisplayObjectContainer 中被覆盖。
-         */
-        $propagateFlagsDown(flags: number): void;
-        /**
-         * @private
-         * 是否含有多个标志量其中之一。
-         */
-        $hasAnyFlags(flags: number): boolean;
-        /**
-         * @private
          * 标记矩阵失效
          */
         private invalidateMatrix();
@@ -1538,11 +1434,6 @@ declare module egret {
          * 标记这个显示对象在父级容器的位置发生了改变。
          */
         private invalidatePosition();
-        /**
-         * @private
-         * 能够含有子项的类将子项列表存储在这个属性里。
-         */
-        $children: DisplayObject[];
         /**
          * @language en_US
          * Indicates the instance name of the DisplayObject. The object can be identified in the child list of its parent
@@ -1559,10 +1450,6 @@ declare module egret {
          */
         name: string;
         /**
-         * @private
-         */
-        $parent: DisplayObjectContainer;
-        /**
          * @language en_US
          * Indicates the DisplayObjectContainer object that contains this display object. Use the parent property to specify
          * a relative path to display objects that are above the current display object in the display list hierarchy.
@@ -1577,30 +1464,6 @@ declare module egret {
          * @platform Web,Native
          */
         parent: DisplayObjectContainer;
-        /**
-         * @private
-         * 设置父级显示对象
-         */
-        $setParent(parent: DisplayObjectContainer): void;
-        /**
-         * @private
-         * 显示对象添加到舞台
-         */
-        $onAddToStage(stage: Stage, nestLevel: number): void;
-        /**
-         * @private
-         * 显示对象从舞台移除
-         */
-        $onRemoveFromStage(): void;
-        /**
-         * @private
-         */
-        $stage: Stage;
-        /**
-         * @private
-         * 这个对象在显示列表中的嵌套深度，舞台为1，它的子项为2，子项的子项为3，以此类推。当对象不在显示列表中时此属性值为0.
-         */
-        $nestLevel: number;
         /**
          * @language en_US
          * The Stage of the display object. you can create and load multiple display objects into the display list, and
@@ -1647,26 +1510,6 @@ declare module egret {
          */
         matrix: Matrix;
         /**
-         * @private
-         * 获取矩阵
-         */
-        $getMatrix(): Matrix;
-        /**
-         * @private
-         * 设置矩阵
-         */
-        $setMatrix(matrix: Matrix, useProperties?: boolean): void;
-        /**
-         * @private
-         * 获得这个显示对象以及它所有父级对象的连接矩阵。
-         */
-        $getConcatenatedMatrix(): Matrix;
-        /**
-         * @private
-         * 获取链接矩阵
-         */
-        $getInvertedConcatenatedMatrix(): Matrix;
-        /**
          * @language en_US
          * Indicates the x coordinate of the DisplayObject instance relative to the local coordinates of the parent
          * DisplayObjectContainer.<br/>
@@ -1688,16 +1531,6 @@ declare module egret {
          * @platform Web,Native
          */
         x: number;
-        /**
-         * @private
-         * 获取x坐标
-         */
-        $getX(): number;
-        /**
-         * @private
-         * 设置x坐标
-         */
-        $setX(value: number): boolean;
         /**
          * @language en_US
          * Indicates the y coordinate of the DisplayObject instance relative to the local coordinates of the parent
@@ -1721,16 +1554,6 @@ declare module egret {
          */
         y: number;
         /**
-         * @private
-         * 获取y坐标
-         */
-        $getY(): number;
-        /**
-         * @private
-         * 设置y坐标
-         */
-        $setY(value: number): boolean;
-        /**
          * @language en_US
          * Indicates the horizontal scale (percentage) of the object as applied from the registration point. <br/>
          * The default 1.0 equals 100% scale.Scaling the local coordinate system changes the x and y property values, which are
@@ -1749,17 +1572,6 @@ declare module egret {
          */
         scaleX: number;
         /**
-         * @private
-         *
-         * @returns
-         */
-        $getScaleX(): number;
-        /**
-         * @private
-         * 设置水平缩放值
-         */
-        $setScaleX(value: number): boolean;
-        /**
          * @language en_US
          * Indicates the vertical scale (percentage) of an object as applied from the registration point of the object.
          * 1.0 is 100% scale.Scaling the local coordinate system changes the x and y property values, which are defined
@@ -1777,17 +1589,6 @@ declare module egret {
          * @platform Web,Native
          */
         scaleY: number;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $getScaleY(): number;
-        /**
-         * @private
-         * 设置垂直缩放值
-         */
-        $setScaleY(value: number): boolean;
         /**
          * @language en_US
          * Indicates the rotation of the DisplayObject instance, in degrees, from its original orientation. Values from
@@ -1809,13 +1610,6 @@ declare module egret {
          */
         rotation: number;
         /**
-         * @private
-         *
-         * @returns
-         */
-        $getRotation(): number;
-        $setRotation(value: number): void;
-        /**
          * 表示DisplayObject的x方向斜切
          * @member {number} egret.DisplayObject#skewX
          * @default 0
@@ -1824,12 +1618,6 @@ declare module egret {
          */
         skewX: number;
         /**
-         * @private
-         *
-         * @param value
-         */
-        $setSkewX(value: number): void;
-        /**
          * 表示DisplayObject的y方向斜切
          * @member {number} egret.DisplayObject#skewY
          * @default 0
@@ -1837,12 +1625,6 @@ declare module egret {
          * @platform Web,Native
          */
         skewY: number;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setSkewY(value: number): void;
         /**
          * @language en_US
          * Indicates the width of the display object, in pixels. The width is calculated based on the bounds of the content
@@ -1858,22 +1640,6 @@ declare module egret {
          */
         width: number;
         /**
-         * @private
-         * 获取显示宽度
-         */
-        $getWidth(): number;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $getExplicitWidth(): number;
-        /**
-         * @private
-         * 设置显示宽度
-         */
-        $setWidth(value: number): void;
-        /**
          * @language en_US
          * Indicates the height of the display object, in pixels. The height is calculated based on the bounds of the
          * content of the display object. When you set the height property, the scaleY property is adjusted accordingly.
@@ -1887,22 +1653,6 @@ declare module egret {
          * @platform Web,Native
          */
         height: number;
-        /**
-         * @private
-         * 获取显示高度
-         */
-        $getHeight(): number;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $getExplicitHeight(): number;
-        /**
-         * @private
-         * 设置显示高度
-         */
-        $setHeight(value: number): void;
         /**
          * 测量宽度
          * @returns {number}
@@ -1935,13 +1685,6 @@ declare module egret {
          */
         anchorOffsetX: number;
         /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setAnchorOffsetX(value: number): boolean;
-        /**
          * @language en_US
          * Y represents the object of which is the anchor.
          * @default 0
@@ -1956,17 +1699,6 @@ declare module egret {
          * @platform Web,Native
          */
         anchorOffsetY: number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setAnchorOffsetY(value: number): boolean;
-        /**
-         * @private
-         */
-        $visible: boolean;
         /**
          * @language en_US
          * Whether or not the display object is visible. Display objects that are not visible are disabled. For example,
@@ -1983,11 +1715,6 @@ declare module egret {
          * @platform Web,Native
          */
         visible: boolean;
-        /**
-         * @private
-         * cacheAsBitmap创建的缓存位图节点。
-         */
-        $displayList: egret.sys.DisplayList;
         /**
          * @language en_US
          * If set to true, Egret runtime caches an internal bitmap representation of the display object. This caching can
@@ -2012,15 +1739,6 @@ declare module egret {
          */
         cacheAsBitmap: boolean;
         /**
-         * @private
-         * cacheAsBitmap属性改变
-         */
-        $cacheAsBitmapChanged(): void;
-        /**
-         * @private
-         */
-        $alpha: number;
-        /**
          * @language en_US
          * Indicates the alpha transparency value of the object specified. Valid values are 0 (fully transparent) to 1 (fully opaque).
          * The default value is 1. Display objects with alpha set to 0 are active, even though they are invisible.
@@ -2037,18 +1755,6 @@ declare module egret {
          * @platform Web,Native
          */
         alpha: number;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setAlpha(value: number): void;
-        /**
-         * @private
-         * 获取这个显示对象跟它所有父级透明度的乘积
-         */
-        $getConcatenatedAlpha(): number;
-        $touchEnabled: boolean;
         /**
          * @language en_US
          * Specifies whether this object receives touch or other user input. The default value is true, which means that
@@ -2072,20 +1778,6 @@ declare module egret {
          * @platform Web,Native
          */
         touchEnabled: boolean;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $getTouchEnabled(): boolean;
-        /**
-         * @private
-         */
-        $setTouchEnabled(value: boolean): void;
-        /**
-         * @private
-         */
-        $scrollRect: Rectangle;
         /**
          * @language en_US
          * The scroll rectangle bounds of the display object. The display object is cropped to the size defined by the rectangle,
@@ -2124,16 +1816,6 @@ declare module egret {
          */
         scrollRect: Rectangle;
         /**
-         * @private
-         *
-         * @param value
-         */
-        $setScrollRect(value: Rectangle): void;
-        /**
-         * @private
-         */
-        $blendMode: number;
-        /**
          * @language en_US
          * A value from the BlendMode class that specifies which blend mode to use. Determine how a source image (new one)
          * is drawn on the target image (old one).<br/>
@@ -2153,19 +1835,6 @@ declare module egret {
          * @platform Web,Native
          */
         blendMode: string;
-        /**
-         * @private
-         * 被遮罩的对象
-         */
-        $maskedObject: DisplayObject;
-        /**
-         * @private
-         */
-        $mask: DisplayObject;
-        /**
-         * @private
-         */
-        $maskRect: Rectangle;
         /**
          * @language en_US
          * The calling display object is masked by the specified mask object. To ensure that masking works when the Stage
@@ -2196,7 +1865,6 @@ declare module egret {
          * @platform Web,Native
          */
         mask: DisplayObject | Rectangle;
-        $setMaskRect(value: Rectangle): void;
         /**
          * @language en_US
          * Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
@@ -2236,10 +1904,6 @@ declare module egret {
          * @platform Web,Native
          */
         getBounds(resultRect?: Rectangle, calculateAnchor?: boolean): egret.Rectangle;
-        /**
-         * @private
-         */
-        $getTransformedBounds(targetCoordinateSpace: DisplayObject, resultRect?: Rectangle): Rectangle;
         /**
          * @language en_US
          * Converts the point object from the Stage (global) coordinates to the display object's (local) coordinates.
@@ -2285,89 +1949,6 @@ declare module egret {
          */
         localToGlobal(localX: number, localY: number, resultPoint?: Point): Point;
         /**
-         * @private
-         * 标记自身的测量尺寸失效
-         */
-        $invalidateContentBounds(): void;
-        /**
-         * @private
-         * 获取显示对象占用的矩形区域集合，通常包括自身绘制的测量区域，如果是容器，还包括所有子项占据的区域。
-         */
-        $getOriginalBounds(): Rectangle;
-        /**
-         * @private
-         * 测量子项占用的矩形区域
-         * @param bounds 测量结果存储在这个矩形对象内
-         */
-        $measureChildBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        $getContentBounds(): Rectangle;
-        /**
-         * @private
-         * 测量自身占用的矩形区域，注意：此测量结果并不包括子项占据的区域。
-         * @param bounds 测量结果存储在这个矩形对象内
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        $parentDisplayList: egret.sys.DisplayList;
-        /**
-         * @private
-         * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
-         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
-         */
-        $invalidate(notifyChildren?: boolean): void;
-        /**
-         * @private
-         * 标记自身以及所有子项在父级中变换叠加的显示内容失效。此方法不会触发自身的cacheAsBitmap重绘。
-         * 通常用于矩阵改变或从显示列表添加和移除时。若自身的显示内容已经改变需要重绘，应该调用$invalidate()。
-         */
-        $invalidateTransform(): void;
-        /**
-         * @private
-         * 是否需要重绘的标志，此属性在渲染时会被访问，所以单独声明一个直接的变量。
-         */
-        $isDirty: boolean;
-        /**
-         * @private
-         * 这个对象在舞台上的整体透明度
-         */
-        $renderAlpha: number;
-        /**
-         * @private
-         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
-         */
-        $renderMatrix: Matrix;
-        /**
-         * @private
-         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
-         */
-        $renderRegion: sys.Region;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         */
-        $update(): boolean;
-        /**
-         * @private
-         * 获取相对于指定根节点的连接矩阵。
-         * @param root 根节点显示对象
-         * @param matrix 目标显示对象相对于舞台的完整连接矩阵。
-         */
-        $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void;
-        /**
-         * @private
-         * 执行渲染,绘制自身到屏幕
-         */
-        $render(context: sys.RenderContext): void;
-        /**
-         * @private
-         */
-        $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
          * @language en_US
          * Calculate the display object to determine whether it overlaps or crosses with the points specified by the x and y parameters. The x and y parameters specify the points in the coordinates of the stage, rather than the points in the display object container that contains display objects (except the situation where the display object container is a stage).
          * Note: Don't use accurate pixel collision detection on a large number of objects. Otherwise, this will cause serious performance deterioration.
@@ -2391,18 +1972,6 @@ declare module egret {
          */
         hitTestPoint(x: number, y: number, shapeFlag?: boolean): boolean;
         /**
-         * @private
-         */
-        static $enterFrameCallBackList: DisplayObject[];
-        /**
-         * @private
-         */
-        static $renderCallBackList: DisplayObject[];
-        /**
-         * @private
-         */
-        $addListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number, emitOnce?: boolean): void;
-        /**
          * @inheritDoc
          * @version Egret 2.0
          * @platform Web,Native
@@ -2414,25 +1983,6 @@ declare module egret {
          * @platform Web,Native
          */
         dispatchEvent(event: Event): boolean;
-        /**
-         * @private
-         * 获取事件流列表。注意：Egret框架的事件流与Flash实现并不一致。
-         *
-         * 事件流有三个阶段：捕获，目标，冒泡。
-         * Flash里默认的的事件监听若不开启useCapture将监听目标和冒泡阶段。若开始capture将只能监听捕获当不包括目标的事件。
-         * 可以在Flash中写一个简单的测试：实例化一个非容器显示对象，例如TextField。分别监听useCapture为true和false时的鼠标事件。
-         * 点击后将只有useCapture为false的回调函数输出信息。也就带来一个问题「Flash的捕获阶段不能监听到最内层对象本身，只在父级列表有效」。
-         *
-         * 而HTML里的事件流设置useCapture为true时是能监听到目标阶段的，也就是目标阶段会被触发两次，在捕获和冒泡过程各触发一次。这样可以避免
-         * 前面提到的监听捕获无法监听目标本身的问题。
-         *
-         * Egret最终采用了HTML里目标节点触发两次的事件流方式。
-         */
-        $getPropagationList(target: DisplayObject): DisplayObject[];
-        /**
-         * @private
-         */
-        $emitPropagationEvent(event: Event, list: DisplayObject[], targetIndex: number): void;
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -2464,34 +2014,6 @@ declare module egret.sys {
         constructor(root: DisplayObject);
         /**
          * @private
-         * 是否需要重绘
-         */
-        $isDirty: boolean;
-        /**
-         * @private
-         * 在舞台上的透明度
-         */
-        $renderAlpha: number;
-        /**
-         * @private
-         * 相对于显示列表根节点或位图缓存根节点的矩阵对象
-         */
-        $renderMatrix: Matrix;
-        $ratioMatrix: Matrix;
-        $ratioChanged: boolean;
-        $pixelRatio: number;
-        /**
-         * @private
-         * 在显示列表根节点或位图缓存根节点上的显示区域
-         */
-        $renderRegion: Region;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         */
-        $update(): boolean;
-        /**
-         * @private
          * 呈现绘制结果的目标画布
          */
         surface: Surface;
@@ -2503,12 +2025,6 @@ declare module egret.sys {
          * @private
          */
         offsetY: number;
-        /**
-         * @private
-         *
-         * @param context
-         */
-        $render(context: RenderContext): void;
         /**
          * @private
          * 显示列表根节点
@@ -2660,20 +2176,6 @@ declare module egret {
          */
         constructor(bitmapData?: BitmapData | Texture);
         /**
-         * @private
-         */
-        $Bitmap: Object;
-        /**
-         * @private
-         * 显示对象添加到舞台
-         */
-        $onAddToStage(stage: Stage, nestLevel: number): void;
-        /**
-         * @private
-         * 显示对象从舞台移除
-         */
-        $onRemoveFromStage(): void;
-        /**
          * @language en_US
          * The BitmapData object being referenced.
          * @version Lark 1.0
@@ -2690,15 +2192,7 @@ declare module egret {
         /**
          * @private
          */
-        $setBitmapData(value: BitmapData | Texture): void;
-        /**
-         * @private
-         */
         private setImageData(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, width, height);
-        /**
-         * @private
-         */
-        $scale9Grid: egret.Rectangle;
         /**
          * @language en_US
          * Represent a Rectangle Area that the 9 scale area of Image.
@@ -2717,10 +2211,6 @@ declare module egret {
          * @platform Web,Native
          */
         scale9Grid: egret.Rectangle;
-        /**
-         * @private
-         */
-        $fillMode: string;
         /**
          * @language en_US
          * Determines how the bitmap fills in the dimensions.
@@ -2751,11 +2241,6 @@ declare module egret {
          * @platform Web
          */
         fillMode: string;
-        $setFillMode(value: string): void;
-        /**
-         * @private
-         */
-        $smoothing: boolean;
         /**
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
@@ -2771,36 +2256,6 @@ declare module egret {
          * @platform Web
          */
         smoothing: boolean;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setWidth(value: number): void;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setHeight(value: number): void;
-        /**
-         * @private
-         * 获取显示宽度
-         */
-        $getWidth(): number;
-        /**
-         * @private
-         * 获取显示宽度
-         */
-        $getHeight(): number;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        $render(context: sys.RenderContext): void;
         private _pixelHitTest;
         /**
          * @language en_US
@@ -2821,28 +2276,10 @@ declare module egret {
          * @platform Web,Native
          */
         pixelHitTest: boolean;
-        $hitTest(stageX: number, stageY: number): DisplayObject;
         /**
          * @private
          */
         private hitTestPixel(stageX, stageY);
-        /**
-         * @private
-         *
-         * @param context
-         * @param texture
-         * @param destW
-         * @param destH
-         * @param scale9Grid
-         * @param fillMode
-         * @param smoothing
-         */
-        static $drawImage(context: sys.RenderContext, image: any, clipX: number, clipY: number, clipWidth: number, clipHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, destW: number, destH: number, scale9Grid: egret.Rectangle, fillMode: string, smoothing: boolean): void;
-        /**
-         * @private
-         * 绘制九宫格位图
-         */
-        private static $drawScale9GridImage(context, image, scale9Grid, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, textureWidth, textureHeight, surfaceWidth, surfaceHeight);
     }
 }
 declare module egret {
@@ -2989,14 +2426,6 @@ declare module egret {
      */
     class DisplayObjectContainer extends DisplayObject implements IDisplayObjectContainer {
         /**
-         * @private
-         */
-        static $EVENT_ADD_TO_STAGE_LIST: DisplayObject[];
-        /**
-         * @private
-         */
-        static $EVENT_REMOVE_FROM_STAGE_LIST: DisplayObject[];
-        /**
          * @language en_US
          * Creates a new DisplayObjectContainer instance.
          * @version Egret 2.0
@@ -3009,10 +2438,6 @@ declare module egret {
          * @platform Web,Native
          */
         constructor();
-        /**
-         * @private
-         */
-        $propagateFlagsDown(flags: sys.DisplayObjectFlags): void;
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -3031,10 +2456,6 @@ declare module egret {
          * @platform Web,Native
          */
         addChildAt(child: DisplayObject, index: number): DisplayObject;
-        /**
-         * @private
-         */
-        $doAddChild(child: DisplayObject, index: number, notifyListeners?: boolean): DisplayObject;
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -3072,10 +2493,6 @@ declare module egret {
          */
         removeChildAt(index: number): DisplayObject;
         /**
-         * @private
-         */
-        $doRemoveChild(index: number, notifyListeners?: boolean): DisplayObject;
-        /**
          * @inheritDoc
          * @version Egret 2.0
          * @platform Web,Native
@@ -3108,32 +2525,6 @@ declare module egret {
          */
         removeChildren(): void;
         /**
-         * @private
-         * 一个子项被添加到容器内，此方法不仅在操作addChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
-         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
-         */
-        $childAdded(child: DisplayObject, index: number): void;
-        /**
-         * @private
-         * 一个子项从容器内移除，此方法不仅在操作removeChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
-         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
-         */
-        $childRemoved(child: DisplayObject, index: number): void;
-        /**
-         * @private
-         */
-        $onAddToStage(stage: Stage, nestLevel: number): void;
-        /**
-         * @private
-         *
-         */
-        $onRemoveFromStage(): void;
-        /**
-         * @private
-         */
-        $measureChildBounds(bounds: Rectangle): void;
-        $touchChildren: boolean;
-        /**
          * @inheritDoc
          * @version Egret 2.0
          * @platform Web,Native
@@ -3141,42 +2532,12 @@ declare module egret {
         touchChildren: boolean;
         /**
          * @private
-         *
-         * @returns
-         */
-        $getTouchChildren(): boolean;
-        /**
-         * @private
-         */
-        $setTouchChildren(value: boolean): void;
-        /**
-         * @private
-         * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
-         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
-         */
-        $invalidate(notifyChildren?: boolean): void;
-        /**
-         * @private
-         * 标记自身以及所有子项在父级中变换叠加的显示内容失效。此方法不会触发自身的cacheAsBitmap重绘。
-         * 通常用于矩阵改变或从显示列表添加和移除时。若自身的显示内容已经改变需要重绘，应该调用$invalidate()。
-         */
-        $invalidateTransform(): void;
-        /**
-         * @private
          */
         private markChildDirty(child, parentCache);
         /**
          * @private
          */
-        $cacheAsBitmapChanged(): void;
-        /**
-         * @private
-         */
         private assignParentDisplayList(child, parentCache, newParent);
-        /**
-         * @private
-         */
-        $hitTest(stageX: number, stageY: number): DisplayObject;
     }
 }
 declare module egret {
@@ -3199,10 +2560,6 @@ declare module egret {
      * @includeExample egret/display/Graphics.ts
      */
     class Graphics extends HashObject {
-        /**
-         * @private
-         */
-        $renderContext: GraphicsRenderContext;
         /**
          * @private
          */
@@ -3232,18 +2589,6 @@ declare module egret {
          * @platform Web,Native
          */
         constructor();
-        /**
-         * @private
-         */
-        $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        $render(context: sys.RenderContext): void;
         /**
          * @language en_US
          * Specify a simple single color fill that will be used for subsequent calls to other Graphics methods (for example, lineTo() and drawCircle()) when drawing.
@@ -4201,16 +3546,6 @@ declare module egret {
         private reset();
         /**
          * @private
-         * 目标显示对象
-         */
-        $targetDisplay: DisplayObject;
-        /**
-         * @private
-         * 绘图命令列表
-         */
-        $commands: sys.GraphicsCommand[];
-        /**
-         * @private
          */
         private pushCommand(graphicsType, args);
         /**
@@ -4221,14 +3556,6 @@ declare module egret {
          * @private
          */
         private extendByPoint(x, y);
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        $render(context: sys.RenderContext, forHitTest?: boolean): void;
     }
 }
 declare module egret.sys {
@@ -4729,7 +4056,6 @@ declare module egret {
          * @platform Web,Native
          */
         textureWidth: number;
-        $getTextureWidth(): number;
         /**
          * @private
          * 纹理高度
@@ -4748,9 +4074,6 @@ declare module egret {
          * @platform Web,Native
          */
         textureHeight: number;
-        $getTextureHeight(): number;
-        $getScaleBitmapWidth(): number;
-        $getScaleBitmapHeight(): number;
         /**
          * @private
          * 表示bitmapData.width
@@ -4784,21 +4107,6 @@ declare module egret {
          * @param value
          */
         _setBitmapData(value: any): void;
-        /**
-         * @private
-         * 设置Texture数据
-         * @param bitmapX
-         * @param bitmapY
-         * @param bitmapWidth
-         * @param bitmapHeight
-         * @param offsetX
-         * @param offsetY
-         * @param textureWidth
-         * @param textureHeight
-         * @param sourceWidth
-         * @param sourceHeight
-         */
-        $setData(bitmapX: number, bitmapY: number, bitmapWidth: number, bitmapHeight: number, offsetX: number, offsetY: number, textureWidth: number, textureHeight: number, sourceWidth: number, sourceHeight: number): void;
         /**
          * @language en_US
          * Obtain the color value of a pixel point
@@ -4871,9 +4179,6 @@ declare module egret {
          */
         dispose(): void;
         private static _displayList;
-        static $addDisplayObject(displayObject: DisplayObject, bitmapDataHashCode: number): void;
-        static $removeDisplayObject(displayObject: DisplayObject, bitmapDataHashCode: number): void;
-        static $invalidate(bitmapDataHashCode: number): void;
     }
 }
 declare module egret {
@@ -4914,7 +4219,6 @@ declare module egret {
          * @platform Web,Native
          */
         drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
-        private $update(displayObject);
         private drawDisplayObject(displayObject, context);
         private drawWithClip(displayObject, context);
         private drawWithScrollRect(displayObject, context);
@@ -4959,10 +4263,6 @@ declare module egret {
          */
         constructor();
         /**
-         * @private
-         */
-        $graphics: Graphics;
-        /**
          * @language en_US
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
          * @version Egret 2.0
@@ -4975,15 +4275,6 @@ declare module egret {
          * @platform Web,Native
          */
         graphics: Graphics;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        $render(context: sys.RenderContext): void;
     }
 }
 declare module egret {
@@ -5016,10 +4307,6 @@ declare module egret {
          */
         constructor();
         /**
-         * @private
-         */
-        $graphics: Graphics;
-        /**
          * @language en_US
          * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
          * @version Egret 2.0
@@ -5032,15 +4319,6 @@ declare module egret {
          * @platform Web,Native
          */
         graphics: Graphics;
-        $hitTest(stageX: number, stageY: number): DisplayObject;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        $render(context: sys.RenderContext): void;
     }
 }
 declare module egret {
@@ -5222,10 +4500,6 @@ declare module egret {
          */
         frameRate: number;
         /**
-         * @private
-         */
-        $stageWidth: number;
-        /**
          * @language en_US
          * Indicates the width of the stage, in pixels.
          * @version Egret 2.0
@@ -5238,10 +4512,6 @@ declare module egret {
          * @platform Web,Native
          */
         stageWidth: number;
-        /**
-         * @private
-         */
-        $stageHeight: number;
         /**
          * @language en_US
          * Indicates the height of the stage, in pixels.
@@ -5311,12 +4581,6 @@ declare module egret {
          */
         getImplementation(interfaceName: string): any;
         /**
-         * @private
-         * 设备屏幕引用
-         */
-        $screen: egret.sys.Screen;
-        $scaleMode: string;
-        /**
          * @language en_US
          * A StageScaleMode class that specifies which scale mode to use. The following are valid values:<br/>
          * <ul>
@@ -5354,7 +4618,6 @@ declare module egret {
          * @default 1
          */
         textureScaleFactor: number;
-        $maxTouches: number;
         /**
          * @language en_US
          * Set the number of screens can simultaneously touch. Above this amount will not be triggered in response.
@@ -5661,10 +4924,6 @@ declare module egret {
          */
         data: any;
         /**
-         * @private
-         */
-        $type: string;
-        /**
          * @language en_US
          * The type of event. The type is case-sensitive.
          * @version Egret 2.0
@@ -5678,10 +4937,6 @@ declare module egret {
          */
         type: string;
         /**
-         * @private
-         */
-        $bubbles: boolean;
-        /**
          * @language en_US
          * Indicates whether an event is a bubbling event.
          * @version Egret 2.0
@@ -5694,10 +4949,6 @@ declare module egret {
          * @platform Web,Native
          */
         bubbles: boolean;
-        /**
-         * @private
-         */
-        $cancelable: boolean;
         /**
          * @language en_US
          * Indicates whether the behavior associated with the event can be prevented. If the behavior can be
@@ -5714,10 +4965,6 @@ declare module egret {
          * @platform Web,Native
          */
         cancelable: boolean;
-        /**
-         * @private
-         */
-        $eventPhase: number;
         /**
          * @language en_US
          * The current phase in the event flow. This property can contain the following numeric values:
@@ -5740,10 +4987,6 @@ declare module egret {
          */
         eventPhase: number;
         /**
-         * @private
-         */
-        $currentTarget: any;
-        /**
          * @language en_US
          * The object that is actively processing the Event object with an event listener. For example, if a
          * user clicks an OK button, the current target could be the node containing that button or one of its ancestors
@@ -5760,10 +5003,6 @@ declare module egret {
          */
         currentTarget: any;
         /**
-         * @private
-         */
-        $target: any;
-        /**
          * @language en_US
          * The event target. This property contains the target node. For example, if a user clicks an OK button,
          * the target node is the display list node containing that button.
@@ -5777,11 +5016,6 @@ declare module egret {
          * @platform Web,Native
          */
         target: any;
-        $setTarget(target: any): void;
-        /**
-         * @private
-         */
-        $isDefaultPrevented: boolean;
         /**
          * @language en_US
          * Checks whether the preventDefault() method has been called on the event. If the preventDefault() method has been
@@ -5828,10 +5062,6 @@ declare module egret {
          */
         preventDefault(): void;
         /**
-         * @private
-         */
-        $isPropagationStopped: boolean;
-        /**
          * @language en_US
          * Prevents processing of any event listeners in nodes subsequent to the current node in the event flow. This method
          * does not affect any event listeners in the current node (currentTarget). In contrast, the stopImmediatePropagation()
@@ -5855,10 +5085,6 @@ declare module egret {
          * @platform Web,Native
          */
         stopPropagation(): void;
-        /**
-         * @private
-         */
-        $isPropagationImmediateStopped: boolean;
         /**
          * @language en_US
          * Prevents processing of any event listeners in the current node and any subsequent nodes in the event flow.
@@ -7575,14 +6801,6 @@ declare module egret {
          */
         constructor(type: string, bubbles?: boolean, cancelable?: boolean, stageX?: number, stageY?: number, touchPointID?: number);
         /**
-         * @private
-         */
-        $setTo(stageX: number, stageY: number, touchPointID: number): void;
-        /**
-         * @private
-         */
-        $stageX: number;
-        /**
          * @language en_US
          * The horizontal coordinate at which the event occurred in global Stage coordinates.
          * @version Egret 2.0
@@ -7595,10 +6813,6 @@ declare module egret {
          * @platform Web,Native
          */
         stageX: number;
-        /**
-         * @private
-         */
-        $stageY: number;
         /**
          * @language en_US
          * The vertical coordinate at which the event occurred in global Stage coordinates.
@@ -7645,7 +6859,6 @@ declare module egret {
          * @private
          */
         private getLocalXY();
-        $setTarget(target: any): void;
         /**
          * @language en_US
          * A unique identification number assigned to the touch point.
@@ -7840,10 +7053,6 @@ declare module egret {
         /**
          * @private
          */
-        $matrix: Array<number>;
-        /**
-         * @private
-         */
         private matrix2;
         /**
          * @version Egret 2.0
@@ -7882,18 +7091,6 @@ declare module egret {
         quality: number;
         inner: boolean;
         knockout: boolean;
-        /**
-         * @private
-         */
-        $red: number;
-        /**
-         * @private
-         */
-        $green: number;
-        /**
-         * @private
-         */
-        $blue: number;
         /**
          * 初始化 GlowFilter 对象
          * @method egret.GlowFilter#constructor
@@ -8258,10 +7455,6 @@ declare module egret {
          */
         inflate(dx: number, dy: number): void;
         /**
-         * @private
-         */
-        $intersectInPlace(clipRect: Rectangle): Rectangle;
-        /**
          * @language en_US
          * Determines whether the object specified in the toIntersect parameter intersects with this Rectangle object.
          * This method checks the x, y, width, and height properties of the specified Rectangle object to see if it
@@ -8460,14 +7653,6 @@ declare module egret {
          * @platform Web,Native
          */
         union(toUnion: Rectangle): Rectangle;
-        /**
-         * @private
-         */
-        $getBaseWidth(angle: number): number;
-        /**
-         * @private
-         */
-        $getBaseHeight(angle: number): number;
     }
     /**
      * @private
@@ -8945,6 +8130,151 @@ declare module egret {
     var Video: {
         new (): Video;
     };
+}
+declare module egret_native {
+    var nativeType: string;
+    /**
+     * 游戏启动
+     * @private
+     */
+    function startGame(): void;
+    function loglevel(logType: any): void;
+    function callRender(): void;
+    function onTouchesBegin(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
+    function onTouchesMove(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
+    function onTouchesEnd(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
+    function onTouchesCancel(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
+    /**
+     * 启动主循环
+     * @param callback 主循环回调函数
+     * @param thisObject
+     */
+    function executeMainLoop(callback: Function, thisObject: any): void;
+    function pauseApp(): void;
+    function resumeApp(): void;
+    function readXML(filepath: string): any;
+    function isFileExists(filepath: string): boolean;
+    function isRecordExists(filepath: string): boolean;
+    function readFileSync(filepath: string): any;
+    function readResourceFileSync(filepath: string): any;
+    function readUpdateFileSync(filepath: string): any;
+    function deleteUpdateFile(filepath: string): void;
+    function readFileAsync(filepath: string, promise: egret.PromiseObject): any;
+    function writeFileSync(filepath: string, fileContent: string): any;
+    function requireHttpSync(url: string, callback: Function): void;
+    function requireHttp(url: string, param: any, callback: Function): void;
+    function sendInfoToPlugin(info: string): void;
+    function receivedPluginInfo(info: string): void;
+    function loadRecord(filepath: string): string;
+    function saveRecord(filepath: string, fileContent: string): void;
+    function getOption(type: string): string;
+    module Audio {
+        function preloadBackgroundMusic(path: string): void;
+        function playBackgroundMusic(path: string, loop: boolean): void;
+        function stopBackgroundMusic(isRelease: boolean): void;
+        function preloadEffect(path: string): void;
+        function preloadEffectAsync(path: string, promise: egret.PromiseObject): void;
+        function playEffect(path: string, loop: boolean): void;
+        function unloadEffect(path: string): void;
+        function stopEffect(effectId: number): void;
+        function pauseBackgroundMusic(): void;
+        function pauseAllEffects(): void;
+        function resumeBackgroundMusic(): void;
+        function resumeAllEffects(): void;
+    }
+    function download(url: string, savePath: string, promise: any): void;
+    module Graphics {
+        function clearScreen(r: number, g: number, b: number): void;
+        function drawImage(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any): void;
+        function drawImageScale9(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, x: any, y: any, width: any, height: any): boolean;
+        function setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
+        function setGlobalAlpha(alpha: number): void;
+        function pushClip(x: number, y: number, w: number, h: number): void;
+        function popClip(): void;
+        function setGlobalColorTransform(colorTransformMatrix: Array<number>): void;
+        function setGlobalColorTransformEnabled(bool: boolean): void;
+        function setGlobalShader(filterData: any): void;
+        function lineStyle(thickness: number, color: number): void;
+        function lineTo(x: number, y: number): void;
+        function moveTo(x: number, y: number): void;
+        function beginFill(color: number, alpha: number): void;
+        function endFill(): void;
+        function setBlendArg(src: number, des: number): void;
+        function setTextureScaleFactor(value: number): void;
+    }
+    module Label {
+        function createLabel(font: string, size: number, defaultString: string, defaultStroke: number): void;
+        function setTextColor(color: number): void;
+        function setStrokeColor(color: number): void;
+        function drawText(text: string, x: number, y: number): void;
+        function setTextAlignment(type: string): void;
+        function getTextSize(text: string): Array<number>;
+    }
+    module EGTXML {
+        function readXML(filepath: string): void;
+    }
+    module Texture {
+        function create(filePath: string): any;
+        function addTexture(filePath: string): any;
+        function addTextureAsyn(filePath: string, promise: any): any;
+        function addTextureUnsyn(filePath: string, promise: any): any;
+        function removeTexture(filePath: string): void;
+    }
+    module TextInputOp {
+        function setKeybordOpen(isOpen: boolean, jsonConfig?: Object): void;
+        function isFullScreenKeyBoard(): boolean;
+        function setInputTextMaxLenght(value: number): void;
+    }
+    function EGT_TextInput(text: string): void;
+    function EGT_keyboardFinish(): void;
+    function EGT_deleteBackward(): void;
+    function EGT_keyboardDidHide(): void;
+    function EGT_keyboardDidShow(): void;
+    function EGT_getTextEditerContentText(): string;
+    module EGTView {
+        function getFrameWidth(): number;
+        function getFrameHeight(): number;
+        function setVisibleRect(x: number, y: number, w: number, h: number): number;
+        function setDesignSize(w: number, h: number): number;
+    }
+    class RenderTexture {
+        constructor(width: number, height: number);
+        begin(): any;
+        end(): any;
+        dispose(): any;
+        toDataURL(type: any): any;
+        saveToFile(type: string, filePath: string): any;
+    }
+    module rastergl {
+        function arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
+        function quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
+        function lineTo(x: number, y: number): void;
+        function fill(fillRule?: string): void;
+        function closePath(): void;
+        function rect(x: number, y: number, w: number, h: number): void;
+        function moveTo(x: number, y: number): void;
+        function fillRect(x: number, y: number, w: number, h: number): void;
+        function bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
+        function stroke(): void;
+        function strokeRect(x: number, y: number, w: number, h: number): void;
+        function beginPath(): void;
+        function arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void;
+        function transform(m11: number, m12: number, m21: number, m22: number, dx: number, dy: number): void;
+        function translate(x: number, y: number): void;
+        function scale(x: number, y: number): void;
+        function rotate(angle: number): void;
+        function save(): void;
+        function restore(): void;
+        function createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient;
+        function createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): CanvasGradient;
+        var lineWidth: number;
+        var strokeStyle: any;
+        var fillStyle: any;
+    }
+    module Game {
+        function listResource(root: any, promise: any): any;
+        function listUpdate(root: any, promise: any): any;
+    }
 }
 declare module egret {
     /**
@@ -9547,11 +8877,6 @@ declare module egret.sys {
         pause(): void;
         /**
          * @private
-         * 渲染屏幕
-         */
-        $render(triggerByFrame: boolean): void;
-        /**
-         * @private
          *
          */
         private callLaters();
@@ -9677,36 +9002,6 @@ declare module egret.sys {
      * @private
      */
     interface Renderable extends HashObject {
-        /**
-         * @private
-         * 是否需要重绘的标志
-         */
-        $isDirty: boolean;
-        /**
-         * @private
-         * 在舞台上的透明度
-         */
-        $renderAlpha: number;
-        /**
-         * @private
-         * 在舞台上的矩阵对象
-         */
-        $renderMatrix: Matrix;
-        /**
-         * @private
-         * 在屏幕上的显示区域
-         */
-        $renderRegion: Region;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         */
-        $update(): boolean;
-        /**
-         * @private
-         * 执行绘制
-         */
-        $render(context: RenderContext): void;
     }
 }
 declare module egret.sys {
@@ -9901,30 +9196,12 @@ declare module egret.sys {
         private playerList;
         /**
          * @private
-         * 注册一个播放器实例并运行
-         */
-        $addPlayer(player: Player): void;
-        /**
-         * @private
-         * 停止一个播放器实例的运行。
-         */
-        $removePlayer(player: Player): void;
-        /**
-         * @private
          */
         private callBackList;
         /**
          * @private
          */
         private thisObjectList;
-        /**
-         * @private
-         */
-        $startTick(callBack: Function, thisObject: any): void;
-        /**
-         * @private
-         */
-        $stopTick(callBack: Function, thisObject: any): void;
         /**
          * @private
          */
@@ -9936,18 +9213,8 @@ declare module egret.sys {
         private concatTick();
         /**
          * @private
-         * 全局帧率
-         */
-        $frameRate: number;
-        /**
-         * @private
          */
         private frameInterval;
-        /**
-         * @private
-         * 设置全局帧率
-         */
-        $setFrameRate(value: number): void;
         /**
          * @private
          */
@@ -9992,11 +9259,6 @@ declare module egret.sys {
          * @private
          */
         constructor(stage: Stage);
-        /**
-         * @private
-         * 设置同时触摸数量
-         */
-        $setMaxTouches(): void;
         /**
          * @private
          */
@@ -10429,10 +9691,6 @@ declare module egret {
      */
     class Capabilities {
         /**
-         * @private
-         */
-        static $language: string;
-        /**
          * @language en_US
          * Specifies the language code of the system on which the content is running. The language is specified as a lowercase
          * two-letter language code from ISO 639-1. For Chinese, an additional uppercase two-letter country code from ISO 3166
@@ -10465,10 +9723,6 @@ declare module egret {
          */
         static language: string;
         /**
-         * @private
-         */
-        static $isMobile: boolean;
-        /**
          * @language en_US
          * Specifies whether the system is running in a mobile device.(such as a mobile phone or tablet)
          * @version Egret 2.0
@@ -10481,10 +9735,6 @@ declare module egret {
          * @platform Web,Native
          */
         static isMobile: boolean;
-        /**
-         * @private
-         */
-        static $os: string;
         /**
          * @language en_US
          * Specifies the current operating system. The os property can return the following strings:
@@ -10515,10 +9765,6 @@ declare module egret {
          */
         static os: string;
         /**
-         * @private
-         */
-        static $runtimeType: string;
-        /**
          * @language zh_CN
          * 指示当前的运行类型。runtimeType 属性返回下列字符串：
          * <ul>
@@ -10529,10 +9775,6 @@ declare module egret {
          * @platform Web,Native
          */
         static runtimeType: string;
-        /**
-         * @private
-         */
-        static $hasGeolocation: boolean;
         /**
          * @language en_US
          * Specifies whether the system supports the geolocation services
@@ -10547,10 +9789,6 @@ declare module egret {
          */
         static hasGeolocation: boolean;
         /**
-         * @private
-         */
-        static $hasOrientation: boolean;
-        /**
          * @language en_US
          * Specifies whether the system supports detecting the device orientation.
          * @version Egret 2.0
@@ -10563,10 +9801,6 @@ declare module egret {
          * @platform Web,Native
          */
         static hasOrientation: boolean;
-        /**
-         * @private
-         */
-        static $hasMotion: boolean;
         /**
          * @language en_US
          * Specifies whether the system supports the motion Sensor
@@ -10755,10 +9989,6 @@ declare module egret {
          */
         constructor();
         /**
-         * @private
-         */
-        $BitmapText: Object;
-        /**
          * @language en_US
          * A string to display in the text field.
          * @version Egret 2.0
@@ -10771,30 +10001,6 @@ declare module egret {
          * @platform Web,Native
          */
         text: string;
-        /**
-         * @private
-         */
-        $setText(value: string): void;
-        /**
-         * @private
-         */
-        $getWidth(): number;
-        /**
-         * @private
-         */
-        $setWidth(value: number): void;
-        /**
-         * @private
-         */
-        $invalidateContentBounds(): void;
-        /**
-         * @private
-         */
-        $getHeight(): number;
-        /**
-         * @private
-         */
-        $setHeight(value: number): void;
         /**
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
@@ -10810,7 +10016,6 @@ declare module egret {
          * @platform Web,Native
          */
         font: BitmapFont;
-        $setFont(value: BitmapFont): void;
         /**
         /**
          * @language en_US
@@ -10847,14 +10052,6 @@ declare module egret {
          * @platform Web,Native
          */
         static EMPTY_FACTOR: number;
-        /**
-         * @private
-         */
-        $render(context: egret.sys.RenderContext): void;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
         /**
          * @private
          */
@@ -11070,6 +10267,101 @@ declare module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
+    class InputController extends HashObject {
+        /**
+         * @private
+         */
+        private stageText;
+        /**
+         * @private
+         */
+        private _text;
+        /**
+         * @private
+         */
+        private _isFocus;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        constructor();
+        /**
+         *
+         * @param text
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        init(text: TextField): void;
+        /**
+         * @private
+         *
+         */
+        _addStageText(): void;
+        /**
+         * @private
+         *
+         */
+        _removeStageText(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _getText(): string;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        _setText(value: string): void;
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private focusHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private blurHandler(event);
+        private onMouseDownHandler(event);
+        private onStageDownHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private updateTextHandler(event);
+        /**
+         * @private
+         *
+         */
+        private resetText();
+        /**
+         * @private
+         *
+         */
+        _hideInput(): void;
+        /**
+         * @private
+         *
+         */
+        private _updateTransform();
+        /**
+         * @private
+         *
+         */
+        _updateProperties(): void;
+    }
+}
+declare module egret {
+    /**
+     * @private
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
     interface IHitTextElement {
         /**
          * @version Egret 2.0
@@ -11213,157 +10505,10 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @private
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    class InputController extends HashObject {
-        /**
-         * @private
-         */
-        private stageText;
-        /**
-         * @private
-         */
-        private _text;
-        /**
-         * @private
-         */
-        private _isFocus;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         *
-         * @param text
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        init(text: TextField): void;
-        /**
-         * @private
-         *
-         */
-        _addStageText(): void;
-        /**
-         * @private
-         *
-         */
-        _removeStageText(): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        _getText(): string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setText(value: string): void;
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private focusHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private blurHandler(event);
-        private onMouseDownHandler(event);
-        private onStageDownHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private updateTextHandler(event);
-        /**
-         * @private
-         *
-         */
-        private resetText();
-        /**
-         * @private
-         *
-         */
-        _hideInput(): void;
-        /**
-         * @private
-         *
-         */
-        private _updateTransform();
-        /**
-         * @private
-         *
-         */
-        _updateProperties(): void;
-    }
-}
-declare module egret {
-    /**
      * @version Egret 2.0
      * @platform Web,Native
      */
     interface StageText extends EventDispatcher {
-        /**
-         * @private
-         */
-        $textfield: egret.TextField;
-        /**
-         * @private
-         *
-         * @param textfield
-         */
-        $setTextField(textfield: egret.TextField): void;
-        /**
-         * @private
-         *
-         */
-        $resetStageText(): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $getText(): string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setText(value: string): void;
-        /**
-         * @private
-         *
-         */
-        $show(): void;
-        /**
-         * @private
-         *
-         */
-        $hide(): void;
-        /**
-         * @private
-         *
-         */
-        $addToStage(): void;
-        /**
-         * @private
-         *
-         */
-        $removeFromStage(): void;
-        /**
-         * @private
-         *
-         */
-        $onBlur(): void;
     }
     /**
      * @version Egret 2.0
@@ -11568,10 +10713,6 @@ declare module egret {
         constructor();
         /**
          * @private
-         */
-        $TextField: Object;
-        /**
-         * @private
          *
          * @returns
          */
@@ -11766,21 +10907,9 @@ declare module egret {
         /**
          * @private
          *
-         * @returns
-         */
-        $getText(): string;
-        /**
-         * @private
-         *
          * @param value
          */
         _setBaseText(value: string): void;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setText(value: string): void;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -11919,19 +11048,6 @@ declare module egret {
          */
         caretIndex: number;
         /**
-         * @private
-         *
-         * @param beginIndex
-         * @param endIndex
-         */
-        $setSelection(beginIndex: number, endIndex: number): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $getLineHeight(): number;
-        /**
          * @language en_US
          * Number of lines of text.
          * @version Egret 2.0
@@ -11994,28 +11110,6 @@ declare module egret {
          * @default null
          */
         restrict: string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setWidth(value: number): void;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setHeight(value: number): void;
-        /**
-         * @private
-         * 获取显示宽度
-         */
-        $getWidth(): number;
-        /**
-         * @private
-         * 获取显示宽度
-         */
-        $getHeight(): number;
         /**
          * @private
          */
@@ -12103,32 +11197,6 @@ declare module egret {
          * @platform Web,Native
          */
         setFocus(): void;
-        /**
-         * @private
-         *
-         */
-        $onRemoveFromStage(): void;
-        /**
-         * @private
-         *
-         * @param stage
-         * @param nestLevel
-         */
-        $onAddToStage(stage: Stage, nestLevel: number): void;
-        /**
-         * 不能重写$invalidateContentBounds，因为内部graphics调用clear时会触发$invalidateContentBounds这狗方法，从而导致死循环。
-         */
-        $invalidateTextField(): void;
-        /**
-         * @private
-         */
-        $measureContentBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         * @see egret.DisplayObject._render
-         * @param renderContext
-         */
-        $render(renderContext: sys.RenderContext): void;
         /**
          * @private
          */
@@ -13075,535 +12143,6 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @language en_US
-     * Logger is an entrance for the log processing module of the engine
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * Logger是引擎的日志处理模块入口
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    class Logger {
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static ALL: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static DEBUG: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static INFO: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static WARN: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static ERROR: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static OFF: string;
-        /**
-         * @private
-         */
-        private static logFuncs;
-        /**
-         * @language en_US
-         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF
-         *
-         * <Ul>
-         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
-         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
-         * <Li> Logger.INFO - print info, log, warn, error. </ li>
-         * <Li> Logger.WARN - can print warn, error. </ li>
-         * <Li> Logger.ERROR - You can print error. </ li>
-         * <Li> Logger.OFF - all closed. </ li>
-         * </ Ul>
-         *param LogType from this level to start printing.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF
-         *
-         * <ul>
-         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
-         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
-         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
-         * <li>Logger.WARN -- 可以打印warn、error。</li>
-         * <li>Logger.ERROR -- 可以打印error。</li>
-         * <li>Logger.OFF -- 全部关闭。</li>
-         * </ul>
-         * @param logType 从这个等级开始打印。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static logLevel: string;
-    }
-    /**
-     * @private
-     */
-    function getString(id: number, ...args: any[]): string;
-}
-declare module egret {
-    /**
-     *
-     * @param value
-     * @returns
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    function isUndefined(value: any): boolean;
-    /**
-     *
-     * @param value
-     * @returns
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    function getNumber(value: number): number;
-}
-declare module egret {
-    /**
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    class NumberUtils {
-        /**
-         *
-         * @param value
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static isNumber(value: any): boolean;
-        /**
-         * @language en_US
-         * Obtain the approximate sin value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} sin value
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static sin(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static sinInt(value);
-        /**
-         * @language en_US
-         * Obtain the approximate cos value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} cos value
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static cos(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static cosInt(value);
-    }
-}
-declare var egret_sin_map: {};
-declare var egret_cos_map: {};
-declare var DEG_TO_RAD: number;
-declare module egret {
-    /**
-     * @language en_US
-     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
-     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
-     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
-     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
-     * slightly offset intervals.
-     * @see egret.TimerEvent
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    /**
-     * @language zh_CN
-     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
-     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
-     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
-     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
-     * @see egret.TimerEvent
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    class Timer extends EventDispatcher {
-        /**
-         * @language en_US
-         * Constructs a new Timer object with the specified delay and repeatCount states.
-         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
-         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
-         * the timer runs the specified number of times and then stops.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
-         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        constructor(delay: number, repeatCount?: number);
-        /**
-         * @private
-         */
-        private _delay;
-        /**
-         * @language en_US
-         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
-         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
-         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        delay: number;
-        /**
-         * @language en_US
-         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
-         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
-         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
-         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        repeatCount: number;
-        /**
-         * @private
-         */
-        private _currentCount;
-        /**
-         * @language en_US
-         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        currentCount: number;
-        /**
-         * @private
-         */
-        private _running;
-        /**
-         * @language en_US
-         * The timer's current state; true if the timer is running, otherwise false.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        running: boolean;
-        /**
-         * @language en_US
-         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
-         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        reset(): void;
-        /**
-         * @language en_US
-         * Starts the timer, if it is not already running.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器尚未运行，则启动计时器。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        start(): void;
-        /**
-         * @language en_US
-         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
-         * repetitions, as set by the repeatCount property.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        private updateInterval;
-        /**
-         * @private
-         */
-        private lastCount;
-        /**
-         * @private
-         * Ticker以60FPS频率刷新此方法
-         */
-        $update(timeStamp: number): boolean;
-    }
-}
-declare module egret {
-    /**
-     * @language en_US
-     * The XMLNode class is the base class for all xml node.
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML节点基类
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    interface XMLNode {
-        /**
-         * @language en_US
-         * a integer representing the type of the node, 1：XML，2：XMLAttribute，3：XMLText
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点类型，1：XML，2：XMLAttribute，3：XMLText
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        nodeType: number;
-        /**
-         * @language en_US
-         * the parent node of this xml node.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点所属的父级节点
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        parent: XML;
-    }
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/XML.ts
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/XML.ts
-     */
-    interface XML extends XMLNode {
-        /**
-         * @language en_US
-         * the attributes of this xml node.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 当前节点上的属性列表
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        attributes: any;
-        /**
-         * @language en_US
-         * the children of the xml node.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 当前节点的子节点列表
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        children: XMLNode[];
-        /**
-         * @language en_US
-         * the full name of this xml node. For example,the name of <s:Button/> is "s:Button".
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点完整名称。例如节点 <s:Button/> 的 name 为："s:Button"
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        name: string;
-        /**
-         * @language en_US
-         * thie namesapce prefix of this xml node.For example,the prefix of <s:Button/> is "s".
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        prefix: string;
-        /**
-         * @language en_US
-         * the local name of this xml node. For example,the local name of <s:Button/> is "Button".
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        localName: string;
-        /**
-         * @language en_US
-         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/eui"/> is "http://ns.egret.com/eui".
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        namespace: string;
-    }
-    /**
-     * @language en_US
-     * The XMLText class represents a string node in the XML.
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XMLText 类表示在XML中的文本节点
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    interface XMLText extends XMLNode {
-        /**
-         * @language en_US
-         * the text content
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 文本内容
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        text: string;
-    }
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    var XML: {
-        /**
-         * @language en_US
-         * parses a text to XML instance.
-         * @param text the text to be parsed.
-         */
-        /**
-         * @language zh_CN
-         * 解析字符串为XML对象
-         * @param text 要解析的XML对象。
-         */
-        parse(text: string): XML;
-    };
-}
-declare module egret {
-    /**
      * @private
      */
     var $callLaterFunctionList: Array<any>;
@@ -13648,14 +12187,6 @@ declare module egret {
      * @private
      */
     var $callAsyncArgsList: Array<any>;
-    /**
-     * 异步调用函数
-     * @param method {Function} 要异步调用的函数
-     * @param thisObject {any} 函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @private
-     */
-    function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
 }
 declare function __extends(d: any, b: any): void;
 declare module egret {
@@ -13890,6 +12421,178 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
+     * Logger is an entrance for the log processing module of the engine
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Logger是引擎的日志处理模块入口
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    class Logger {
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static ALL: string;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static DEBUG: string;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static INFO: string;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static WARN: string;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static ERROR: string;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static OFF: string;
+        /**
+         * @private
+         */
+        private static logFuncs;
+        /**
+         * @language en_US
+         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF
+         *
+         * <Ul>
+         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
+         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
+         * <Li> Logger.INFO - print info, log, warn, error. </ li>
+         * <Li> Logger.WARN - can print warn, error. </ li>
+         * <Li> Logger.ERROR - You can print error. </ li>
+         * <Li> Logger.OFF - all closed. </ li>
+         * </ Ul>
+         *param LogType from this level to start printing.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF
+         *
+         * <ul>
+         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
+         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
+         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
+         * <li>Logger.WARN -- 可以打印warn、error。</li>
+         * <li>Logger.ERROR -- 可以打印error。</li>
+         * <li>Logger.OFF -- 全部关闭。</li>
+         * </ul>
+         * @param logType 从这个等级开始打印。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static logLevel: string;
+    }
+    /**
+     * @private
+     */
+    function getString(id: number, ...args: any[]): string;
+}
+declare module egret {
+    /**
+     *
+     * @param value
+     * @returns
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    function isUndefined(value: any): boolean;
+    /**
+     *
+     * @param value
+     * @returns
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    function getNumber(value: number): number;
+}
+declare module egret {
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    class NumberUtils {
+        /**
+         *
+         * @param value
+         * @returns
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static isNumber(value: any): boolean;
+        /**
+         * @language en_US
+         * Obtain the approximate sin value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} sin value
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 得到对应角度值的sin近似值
+         * @param value {number} 角度值
+         * @returns {number} sin值
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static sin(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static sinInt(value);
+        /**
+         * @language en_US
+         * Obtain the approximate cos value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} cos value
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 得到对应角度值的cos近似值
+         * @param value {number} 角度值
+         * @returns {number} cos值
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static cos(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static cosInt(value);
+    }
+}
+declare var egret_sin_map: {};
+declare var egret_cos_map: {};
+declare var DEG_TO_RAD: number;
+declare module egret {
+    /**
+     * @language en_US
      * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
      * Note: After the registration,it will notify the callback method continuously,you can call the stopTick () method to stop it.
      * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
@@ -13935,6 +12638,170 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
+     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
+     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
+     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
+     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
+     * slightly offset intervals.
+     * @see egret.TimerEvent
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    /**
+     * @language zh_CN
+     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
+     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
+     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
+     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
+     * @see egret.TimerEvent
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    class Timer extends EventDispatcher {
+        /**
+         * @language en_US
+         * Constructs a new Timer object with the specified delay and repeatCount states.
+         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
+         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
+         * the timer runs the specified number of times and then stops.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
+         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        constructor(delay: number, repeatCount?: number);
+        /**
+         * @private
+         */
+        private _delay;
+        /**
+         * @language en_US
+         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
+         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
+         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        delay: number;
+        /**
+         * @language en_US
+         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
+         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
+         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
+         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        repeatCount: number;
+        /**
+         * @private
+         */
+        private _currentCount;
+        /**
+         * @language en_US
+         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        currentCount: number;
+        /**
+         * @private
+         */
+        private _running;
+        /**
+         * @language en_US
+         * The timer's current state; true if the timer is running, otherwise false.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        running: boolean;
+        /**
+         * @language en_US
+         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
+         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        reset(): void;
+        /**
+         * @language en_US
+         * Starts the timer, if it is not already running.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器尚未运行，则启动计时器。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        start(): void;
+        /**
+         * @language en_US
+         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
+         * repetitions, as set by the repeatCount property.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        stop(): void;
+        /**
+         * @private
+         */
+        private updateInterval;
+        /**
+         * @private
+         */
+        private lastCount;
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
      * Transfer number to color character string
      * @param value {number} color value ,such as 0xffffff
      * @returns {string} Color character string, for example, #ffffff.
@@ -13952,4 +12819,192 @@ declare module egret {
      * @includeExample egret/utils/toColorString.ts
      */
     function toColorString(value: number): string;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * The XMLNode class is the base class for all xml node.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML节点基类
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    interface XMLNode {
+        /**
+         * @language en_US
+         * a integer representing the type of the node, 1：XML，2：XMLAttribute，3：XMLText
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点类型，1：XML，2：XMLAttribute，3：XMLText
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        nodeType: number;
+        /**
+         * @language en_US
+         * the parent node of this xml node.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点所属的父级节点
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        parent: XML;
+    }
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
+     */
+    interface XML extends XMLNode {
+        /**
+         * @language en_US
+         * the attributes of this xml node.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点上的属性列表
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        attributes: any;
+        /**
+         * @language en_US
+         * the children of the xml node.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点的子节点列表
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        children: XMLNode[];
+        /**
+         * @language en_US
+         * the full name of this xml node. For example,the name of <s:Button/> is "s:Button".
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点完整名称。例如节点 <s:Button/> 的 name 为："s:Button"
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        name: string;
+        /**
+         * @language en_US
+         * thie namesapce prefix of this xml node.For example,the prefix of <s:Button/> is "s".
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        prefix: string;
+        /**
+         * @language en_US
+         * the local name of this xml node. For example,the local name of <s:Button/> is "Button".
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        localName: string;
+        /**
+         * @language en_US
+         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/eui"/> is "http://ns.egret.com/eui".
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        namespace: string;
+    }
+    /**
+     * @language en_US
+     * The XMLText class represents a string node in the XML.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XMLText 类表示在XML中的文本节点
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    interface XMLText extends XMLNode {
+        /**
+         * @language en_US
+         * the text content
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本内容
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        text: string;
+    }
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    var XML: {
+        /**
+         * @language en_US
+         * parses a text to XML instance.
+         * @param text the text to be parsed.
+         */
+        /**
+         * @language zh_CN
+         * 解析字符串为XML对象
+         * @param text 要解析的XML对象。
+         */
+        parse(text: string): XML;
+    };
 }

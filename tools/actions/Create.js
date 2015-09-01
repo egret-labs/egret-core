@@ -7,7 +7,7 @@ var projectAction = require('../actions/project');
 var CompileTemplate = require('../actions/CompileTemplate');
 var FileUtil = require('../lib/FileUtil');
 var doT = require('../lib/doT');
-var TemplatesRoot = "tools-new/templates/";
+var TemplatesRoot = "tools/templates/";
 var Create = (function () {
     function Create() {
     }

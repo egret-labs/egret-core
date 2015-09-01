@@ -7,8 +7,11 @@
         {
             "name": "version"
         },
-		{
+		    {
             "name": "gui"
+        },
+		    {
+            "name": "res"
         }
     ],
     "native": {

@@ -11,7 +11,7 @@ import CompileTemplate = require('../actions/CompileTemplate');
 import FileUtil = require('../lib/FileUtil');
 import doT = require('../lib/doT');
 
-var TemplatesRoot = "tools-new/templates/";
+var TemplatesRoot = "tools/templates/";
 
 class Create implements egret.Command {
     project: egret.ILarkProject;
@@ -50,7 +50,7 @@ function compileTemplate(project: egret.ILarkProject) {
         if (FileUtil.exists(FileUtil.joinPath(options.srcDir, scriptName + ".js")))
             moduleScripts.push(scriptName);
     });
-    
+
     var scriptTemplate = `<!--{{~it.scripts :value:index}}-->
     <script src="{{=value}}"></script>
     <!--{{~}}-->`;

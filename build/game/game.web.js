@@ -186,7 +186,7 @@ var egret;
             p.loadTexture = function (loader) {
                 var self = this;
                 var virtualUrl = this.getVirtualUrl(loader._request.url);
-                if (Html5Capatibility._WebPSupport && virtualUrl.indexOf("http:") != 0) {
+                if (egret['web']['Html5Capatibility']._WebPSupport && virtualUrl.indexOf("http:") != 0) {
                     if (virtualUrl.indexOf(".png") != -1) {
                         virtualUrl = virtualUrl.replace(".png", ".webp");
                     }
