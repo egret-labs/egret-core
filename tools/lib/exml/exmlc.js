@@ -26,12 +26,12 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __extends = this.__extends || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        __.prototype = b.prototype;
-        d.prototype = new __();
-    };
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 /// <reference path="node.d.ts"/>
 /// <reference path="exml_config.ts"/>
 var xml = require("../core/xml.js");
@@ -187,7 +187,8 @@ var EXMLCompiler = (function () {
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var node = children[i];
-                if (node.namespace == EXMLCompiler.W && node.localName == EXMLCompiler.DECLARATIONS) {
+                if (node.namespace == EXMLCompiler.W &&
+                    node.localName == EXMLCompiler.DECLARATIONS) {
                     this.declarations = node;
                     break;
                 }
@@ -685,7 +686,8 @@ var EXMLCompiler = (function () {
         }
         else if (key == "scale9Grid" && type == "egret.Rectangle") {
             var rect = value.split(",");
-            if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) || isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
+            if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) ||
+                isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
                 globals.exit(2016, this.exmlPath, this.toXMLString(node));
             }
             value = "egret.gui.getScale9Grid(\"" + value + "\")";
@@ -1731,7 +1733,8 @@ var CpFunction = (function (_super) {
         else if (this.isSet) {
             getSetStr = "set ";
         }
-        var returnStr = noteStr + indentStr + this.modifierName + " " + staticStr + getSetStr + this.name + "(";
+        var returnStr = noteStr + indentStr + this.modifierName + " "
+            + staticStr + getSetStr + this.name + "(";
         var isFirst = true;
         index = 0;
         while (this.argumentBlock.length > index) {
@@ -1831,7 +1834,8 @@ var CpVariable = (function (_super) {
         if (this.defaultValue != "" && this.defaultValue != null) {
             valueStr = " = " + this.defaultValue;
         }
-        return noteStr + this.getIndent() + this.modifierName + " " + staticStr + this.name + ":" + this.type + valueStr + ";";
+        return noteStr + this.getIndent() + this.modifierName + " " + staticStr +
+            this.name + ":" + this.type + valueStr + ";";
     };
     return CpVariable;
 })(CodeBase);
@@ -1967,4 +1971,4 @@ var Modifiers = (function () {
     Modifiers.M_STATIC = "static";
     return Modifiers;
 })();
-//# sourceMappingURL=exmlc.js.map 
+//# sourceMappingURL=exmlc.js.map

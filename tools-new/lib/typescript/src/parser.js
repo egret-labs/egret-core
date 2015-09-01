@@ -265,13 +265,13 @@ var ts;
         function getCanonicalFileName(fileName) {
             // if underlying system can distinguish between two files whose names differs only in cases then file name already in canonical form.
             // otherwise use toLowerCase as a canonical form.
-            return ts.sys.useCaseSensitiveFileNames ? fileName : fileName.toLowerCase();
+            return sys.useCaseSensitiveFileNames ? fileName : fileName.toLowerCase();
         }
         // returned by CScript sys environment
         var unsupportedFileEncodingErrorCode = -2147024809;
         function getSourceFile(filename, languageVersion, onError) {
             try {
-                var text = ts.sys.readFile(filename, options.charset);
+                var text = sys.readFile(filename, options.charset);
             }
             catch (e) {
                 if (onError) {
@@ -288,7 +288,7 @@ var ts;
                 if (ts.hasProperty(existingDirectories, directoryPath)) {
                     return true;
                 }
-                if (ts.sys.directoryExists(directoryPath)) {
+                if (sys.directoryExists(directoryPath)) {
                     existingDirectories[directoryPath] = true;
                     return true;
                 }
@@ -298,12 +298,12 @@ var ts;
                 if (directoryPath.length > ts.getRootLength(directoryPath) && !directoryExists(directoryPath)) {
                     var parentDirectory = ts.getDirectoryPath(directoryPath);
                     ensureDirectoriesExist(parentDirectory);
-                    ts.sys.createDirectory(directoryPath);
+                    sys.createDirectory(directoryPath);
                 }
             }
             try {
                 ensureDirectoriesExist(ts.getDirectoryPath(ts.normalizePath(fileName)));
-                ts.sys.writeFile(fileName, data, writeByteOrderMark);
+                sys.writeFile(fileName, data, writeByteOrderMark);
             }
             catch (e) {
                 if (onError) {
@@ -313,12 +313,12 @@ var ts;
         }
         return {
             getSourceFile: getSourceFile,
-            getDefaultLibFilename: function (options) { return ts.combinePaths(ts.getDirectoryPath(ts.normalizePath(ts.sys.getExecutingFilePath())), options.target === 2 /* ES6 */ ? "lib.es6.d.ts" : "lib.d.ts"); },
+            getDefaultLibFilename: function (options) { return ts.combinePaths(ts.getDirectoryPath(ts.normalizePath(sys.getExecutingFilePath())), options.target === 2 /* ES6 */ ? "lib.es6.d.ts" : "lib.d.ts"); },
             writeFile: writeFile,
-            getCurrentDirectory: function () { return currentDirectory || (currentDirectory = ts.sys.getCurrentDirectory()); },
-            useCaseSensitiveFileNames: function () { return ts.sys.useCaseSensitiveFileNames; },
+            getCurrentDirectory: function () { return currentDirectory || (currentDirectory = sys.getCurrentDirectory()); },
+            useCaseSensitiveFileNames: function () { return sys.useCaseSensitiveFileNames; },
             getCanonicalFileName: getCanonicalFileName,
-            getNewLine: function () { return ts.sys.newLine; }
+            getNewLine: function () { return sys.newLine; }
         };
     }
     ts.createCompilerHost = createCompilerHost;

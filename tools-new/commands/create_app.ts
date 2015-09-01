@@ -25,13 +25,16 @@ class CreateAppCommand implements egret.Command {
         //if (!params.hasOption("-f") || !params.hasOption("-t")) {
         //    globals.exit(1601);
         //}
-
         //var arg_app_name = params.getCommandArgs()[0];
         //var template_path = params.getOption("-t");
         //var arg_h5_path = params.getOption("-f");
         var arg_app_name = option.projectDir;
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
+
+        if(!template_path || !arg_h5_path){
+            globals.exit(1601);
+        }
 
         option.projectDir = arg_h5_path;
 

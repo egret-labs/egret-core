@@ -26,6 +26,9 @@ var CreateAppCommand = (function () {
         var arg_app_name = option.projectDir;
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
+        if (!template_path || !arg_h5_path) {
+            globals.exit(1601);
+        }
         option.projectDir = arg_h5_path;
         var startTime = Date.now();
         var app_data = this.read_json_from(file.joinPath(template_path, "create_app.json"));

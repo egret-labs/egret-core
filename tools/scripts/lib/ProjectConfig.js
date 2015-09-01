@@ -3,7 +3,7 @@
  */
 var params = require("../ParamsParser");
 var file = require('../lib/FileUtil');
-//import globals = require('../Globals');
+var globals = require('../Globals');
 var ProjectConfig = (function () {
     function ProjectConfig() {
         this.modulesConfig = {};

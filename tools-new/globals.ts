@@ -104,11 +104,8 @@ module globals {
         return java;
     }
 
-<<<<<<< HEAD
-    var CodeUtil = require("./lib/core/code_util.js");
-=======
     var CodeUtil = require("./lib/exml/code_util.js");
->>>>>>> origin/merge
+
     /**
      * 这个文件是否只含有接口
      */

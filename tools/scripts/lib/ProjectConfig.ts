@@ -3,7 +3,7 @@
  */
 import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
-//import globals = require('../Globals');
+import globals = require('../Globals');
 
 class ProjectConfig {
     properties:Object;
