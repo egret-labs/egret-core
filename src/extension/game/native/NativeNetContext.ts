@@ -203,8 +203,6 @@ module egret.native {
                 var texture:Texture = new Texture();
                 texture._setBitmapData(bitmapData);
 
-                Texture.$loaded(texture);
-
                 loader.data = texture;
 
                 egret.$callAsync(function() {

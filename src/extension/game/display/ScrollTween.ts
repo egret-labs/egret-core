@@ -63,6 +63,11 @@ module egret {
                 return t * ((2 - t) * amount + (1 - amount));
             }
         }
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public static quintOut = ScrollEase.getPowOut(5);
 
         /**
          *

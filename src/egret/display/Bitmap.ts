@@ -27,15 +27,28 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+module egret.sys {
     /**
      * @private
      */
-    const enum Keys {
+    export const enum BitmapKeys {
+        bitmapData,
+        image,
+        clipX,
+        clipY,
+        clipWidth,
+        clipHeight,
+        offsetX,
+        offsetY,
+        width,
+        height,
+        smoothing,
         explicitBitmapWidth,
         explicitBitmapHeight
     }
+}
 
+module egret {
     /**
      * @language en_US
      * The Bitmap class represents display objects that represent bitmap images.
@@ -81,15 +94,26 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public constructor(bitmapData?:Texture) {
+        public constructor(bitmapData?:BitmapData|Texture) {
             super();
             this.$renderRegion = new sys.Region();
             this.$Bitmap = {
-                0: NaN, //explicitBitmapWidth,
-                1: NaN  //explicitBitmapHeight,
+                0: null,     // bitmapData,
+                1: null,     // image,
+                2: 0,        // clipX,
+                3: 0,        // clipY,
+                4: 0,        // clipWidth,
+                5: 0,        // clipHeight,
+                6: 0,        // offsetX,
+                7: 0,        // offsetY,
+                8: 0,        // width,
+                9: 0,        // height
+                10: true,    // smoothing
+                11: NaN, //explicitBitmapWidth,
+                12: NaN  //explicitBitmapHeight,
             };
 
-            this.texture = bitmapData;
+            this.$setBitmapData(bitmapData);
         }
 
         /**
@@ -104,8 +128,14 @@ module egret {
         $onAddToStage(stage:Stage, nestLevel:number):void {
             super.$onAddToStage(stage, nestLevel);
 
-            if (this.$bitmapData) {
-                Texture.$addDisplayObject(this, this.$bitmapData);
+            var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            if (bitmapData) {
+                if (bitmapData instanceof Texture) {
+                    Texture.$addDisplayObject(this, bitmapData._bitmapData.hashCode);
+                }
+                else {
+                    Texture.$addDisplayObject(this, bitmapData.hashCode);
+                }
             }
         }
 
@@ -116,50 +146,96 @@ module egret {
         $onRemoveFromStage():void {
             super.$onRemoveFromStage();
 
-            if (this.$bitmapData) {
-                Texture.$removeDisplayObject(this, this.$bitmapData);
+            var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            if (bitmapData) {
+                if (bitmapData instanceof Texture) {
+                    Texture.$removeDisplayObject(this, bitmapData._bitmapData.hashCode);
+                }
+                else {
+                    Texture.$removeDisplayObject(this, bitmapData.hashCode);
+                }
             }
         }
 
         /**
-         * @private
-         */
-        $bitmapData:Texture;
-
-        /**
          * @language en_US
-         * bitmapData The Texture object being referenced.
-         * @version Egret 2.0
+         * The BitmapData object being referenced.
+         * @version Lark 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 被引用的 Texture 对象。
-         * @version Egret 2.0
+         * 被引用的 BitmapData 对象。
+         * @version Lark 1.0
          * @platform Web,Native
          */
-        public get texture():Texture {
-            return this.$bitmapData;
+        public get bitmapData():BitmapData|Texture {
+            return this.$Bitmap[sys.BitmapKeys.bitmapData];
         }
 
-        public set texture(value:Texture) {
+        public set bitmapData(value:BitmapData|Texture) {
+            this.$setBitmapData(value);
+        }
+
+        public get texture():BitmapData|Texture {
+            return this.$Bitmap[sys.BitmapKeys.bitmapData];
+        }
+
+        public set texture(value:BitmapData|Texture) {
             this.$setBitmapData(value);
         }
 
         /**
          * @private
          */
-        $setBitmapData(value:Texture):void {
-            if (value == this.$bitmapData) {
+        $setBitmapData(value:BitmapData|Texture):void {
+            var values = this.$Bitmap;
+            if (value == values[sys.BitmapKeys.bitmapData]) {
                 return;
             }
-            this.$bitmapData = value;
+            values[sys.BitmapKeys.bitmapData] = value;
+            if (value) {
+                if (value instanceof Texture) {
+                    var texture = <Texture>value;
+
+                    this.setImageData(texture._bitmapData, texture._bitmapX, texture._bitmapY, texture._bitmapWidth,
+                        texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.$getTextureWidth(), texture.$getTextureHeight());
+                }
+                else {
+                    this.setImageData(<BitmapData>value, 0, 0, (<BitmapData>value).width, (<BitmapData>value).height, 0, 0, (<BitmapData>value).width, (<BitmapData>value).height);
+                }
+            }
+            else {
+                this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
 
             if (this.$stage) {
-                Texture.$addDisplayObject(this, value);
+                if (value instanceof Texture) {
+                    Texture.$addDisplayObject(this, value._bitmapData.hashCode);
+                }
+                else {
+                    Texture.$addDisplayObject(this, value.hashCode);
+                }
             }
 
             this.$invalidateContentBounds();
+        }
+
+        /**
+         * @private
+         */
+        private setImageData(image:BitmapData, clipX:number, clipY:number, clipWidth:number, clipHeight:number,
+                             offsetX:number, offsetY:number, width:number, height:number):void {
+            var values = this.$Bitmap;
+            values[sys.BitmapKeys.image] = image;
+            values[sys.BitmapKeys.clipX] = clipX;
+            values[sys.BitmapKeys.clipY] = clipY;
+            values[sys.BitmapKeys.clipWidth] = clipWidth;
+            values[sys.BitmapKeys.clipHeight] = clipHeight;
+            values[sys.BitmapKeys.offsetX] = offsetX;
+            values[sys.BitmapKeys.offsetY] = offsetY;
+            values[sys.BitmapKeys.width] = width;
+            values[sys.BitmapKeys.height] = height;
         }
 
         /**
@@ -192,7 +268,6 @@ module egret {
             this.$scale9Grid = value;
             this.$invalidateContentBounds();
         }
-
 
         /**
          * @private
@@ -281,10 +356,10 @@ module egret {
         $setWidth(value:number):void {
             //value = +value || 0;
             var values = this.$Bitmap;
-            if (value < 0 || value == values[Keys.explicitBitmapWidth]) {
+            if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapWidth]) {
                 return;
             }
-            values[Keys.explicitBitmapWidth] = value;
+            values[sys.BitmapKeys.explicitBitmapWidth] = value;
 
             this.$invalidateContentBounds();
         }
@@ -297,10 +372,10 @@ module egret {
         $setHeight(value:number):void {
             //value = +value || 0;
             var values = this.$Bitmap;
-            if (value < 0 || value == values[Keys.explicitBitmapHeight]) {
+            if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapHeight]) {
                 return;
             }
-            values[Keys.explicitBitmapHeight] = value;
+            values[sys.BitmapKeys.explicitBitmapHeight] = value;
 
             this.$invalidateContentBounds();
         }
@@ -311,7 +386,7 @@ module egret {
          */
         $getWidth():number {
             var values = this.$Bitmap;
-            return isNaN(values[Keys.explicitBitmapWidth]) ? this.$getContentBounds().width : values[Keys.explicitBitmapWidth];
+            return isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? this.$getContentBounds().width : values[sys.BitmapKeys.explicitBitmapWidth];
         }
 
         /**
@@ -320,17 +395,18 @@ module egret {
          */
         $getHeight():number {
             var values = this.$Bitmap;
-            return isNaN(values[Keys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[Keys.explicitBitmapHeight];
+            return isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? this.$getContentBounds().height : values[sys.BitmapKeys.explicitBitmapHeight];
         }
 
         /**
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            var bitmapData = this.$bitmapData;
-            if (bitmapData) {
-                var w:number = !isNaN(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
-                var h:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
+            var values = this.$Bitmap;
+            if (values[sys.BitmapKeys.image]) {
+                var values = this.$Bitmap;
+                var w:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
+                var h:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.height];
 
                 bounds.setTo(0, 0, w, h);
             }
@@ -343,14 +419,15 @@ module egret {
          * @private
          */
         $render(context:sys.RenderContext):void {
-            var bitmapData = this.$bitmapData;
-            if (bitmapData) {
-                var destW:number = !isNaN(this.$Bitmap[Keys.explicitBitmapWidth]) ? this.$Bitmap[Keys.explicitBitmapWidth] : (bitmapData.$getTextureWidth());
-                var destH:number = !isNaN(this.$Bitmap[Keys.explicitBitmapHeight]) ? this.$Bitmap[Keys.explicitBitmapHeight] : (bitmapData.$getTextureHeight());
+            var values = this.$Bitmap;
+            if (values[sys.BitmapKeys.image]) {
+                var destW:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
+                var destH:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.height];
 
-                var values = this.$Bitmap;
-                Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid, this.fillMode, this.$smoothing,
-                    bitmapData._offsetX, bitmapData._offsetY);
+                Bitmap.$drawImage(context, values[sys.BitmapKeys.image],
+                    values[sys.BitmapKeys.clipX], values[sys.BitmapKeys.clipY], values[sys.BitmapKeys.clipWidth], values[sys.BitmapKeys.clipHeight],
+                    values[sys.BitmapKeys.offsetX], values[sys.BitmapKeys.offsetY], values[sys.BitmapKeys.width], values[sys.BitmapKeys.height],
+                    destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
             }
         }
 
@@ -427,33 +504,31 @@ module egret {
          * @param fillMode
          * @param smoothing
          */
-        static $drawImage(context:sys.RenderContext, texture:egret.Texture, destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean, offsetX?:number, offsetY?:number):void {
-            var bitmapData = texture;
-            if (!bitmapData._bitmapData || !bitmapData._bitmapData["avaliable"]) {
+        static $drawImage(context:sys.RenderContext, image:any,
+                          clipX:number, clipY:number, clipWidth:number, clipHeight:number, offsetX:number, offsetY:number, textureWidth:number, textureHeight:number,
+                          destW:number, destH:number, scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean):void {
+            if (!image) {
                 return;
             }
             context.imageSmoothingEnabled = smoothing;
 
-            offsetX = offsetX || Math.round(bitmapData._offsetX);
-            offsetY = offsetY || Math.round(bitmapData._offsetY);
-            var bitmapWidth:number = bitmapData._bitmapWidth;
-            var bitmapHeight:number = bitmapData._bitmapHeight;
-
             if (scale9Grid) {
-                Bitmap.$drawScale9GridImage(context, bitmapData, scale9Grid, destW, destH);
+                Bitmap.$drawScale9GridImage(context, image, scale9Grid,
+                    clipX, clipY, clipWidth,
+                    clipHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
-                context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth() / bitmapData.$getTextureWidth() * destW, bitmapData.$getScaleBitmapHeight() / bitmapData.$getTextureHeight() * destH);
+                context.drawImage(image, clipX, clipY,
+                    clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
             }
             else {
-                var tempImage:egret.BitmapData = bitmapData._bitmapData;
+                var tempImage:egret.BitmapData = image;
                 var tempCanvas;
-                if (tempImage.width != bitmapWidth || tempImage.height != bitmapHeight || egret.$TextureScaleFactor != 1) {
+                if (tempImage.width != clipWidth || tempImage.height != clipHeight || egret.$TextureScaleFactor != 1) {
                     tempCanvas = egret.sys.surfaceFactory.create(true);
-                    tempCanvas.width = bitmapData.$getTextureWidth();
-                    tempCanvas.height = bitmapData.$getTextureHeight();
-                    tempCanvas.renderContext.drawImage(tempImage, bitmapData._bitmapX, bitmapData._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, bitmapData.$getScaleBitmapWidth(), bitmapData.$getScaleBitmapHeight());
+                    tempCanvas.width = textureWidth;
+                    tempCanvas.height = textureHeight;
+                    tempCanvas.renderContext.drawImage(tempImage, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, textureWidth, textureHeight);
                     tempImage = tempCanvas;
                 }
 
@@ -473,18 +548,17 @@ module egret {
          * @private
          * 绘制九宫格位图
          */
-        private static $drawScale9GridImage(context:egret.sys.RenderContext, texture:egret.Texture,
-                                            scale9Grid:egret.Rectangle, surfaceWidth?:number, surfaceHeight?:number):void {
-            var image:egret.BitmapData = texture._bitmapData;
-            var imageWidth:number = texture._bitmapWidth;
-            var imageHeight:number = texture._bitmapHeight;
+        private static $drawScale9GridImage(context:egret.sys.RenderContext, image:any,
+                                            scale9Grid:egret.Rectangle, clipX:number, clipY:number, clipWidth:number, clipHeight:number, offsetX:number, offsetY:number, textureWidth:number, textureHeight:number, surfaceWidth:number, surfaceHeight:number):void {
+            var imageWidth:number = clipWidth;
+            var imageHeight:number = clipHeight;
 
-            surfaceWidth = surfaceWidth - (texture.$getTextureWidth() - texture.$getScaleBitmapWidth());
-            surfaceHeight = surfaceHeight - (texture.$getTextureHeight() - texture.$getScaleBitmapHeight());
+            surfaceWidth = surfaceWidth - (textureWidth - clipWidth * $TextureScaleFactor);
+            surfaceHeight = surfaceHeight - (textureHeight - clipHeight * $TextureScaleFactor);
 
 
-            var targetW0 = scale9Grid.x - texture._offsetX;
-            var targetH0 = scale9Grid.y - texture._offsetY;
+            var targetW0 = scale9Grid.x - offsetX;
+            var targetH0 = scale9Grid.y - offsetY;
 
             var sourceW0 = targetW0 / $TextureScaleFactor;
             var sourceH0 = targetH0 / $TextureScaleFactor;
@@ -505,12 +579,12 @@ module egret {
                     sourceW0--;
                 }
             }
-            var sourceX0 = texture._bitmapX;
+            var sourceX0 = clipX;
             var sourceX1 = sourceX0 + sourceW0;
             var sourceX2 = sourceX1 + sourceW1;
             var sourceW2 = imageWidth - sourceW0 - sourceW1;
 
-            var sourceY0 = texture._bitmapY;
+            var sourceY0 = clipY;
             var sourceY1 = sourceY0 + sourceH0;
             var sourceY2 = sourceY1 + sourceH1;
             var sourceH2 = imageHeight - sourceH0 - sourceH1;
@@ -523,12 +597,12 @@ module egret {
                 return;
             }
 
-            var targetX0 = texture._offsetX;
+            var targetX0 = offsetX;
             var targetX1 = targetX0 + targetW0;
             var targetX2 = targetX0 + (surfaceWidth - targetW2);
             var targetW1 = surfaceWidth - targetW0 - targetW2;
 
-            var targetY0 = texture._offsetY;
+            var targetY0 = offsetY;
             var targetY1 = targetY0 + targetH0;
             var targetY2 = targetY0 + surfaceHeight - targetH2;
             var targetH1 = surfaceHeight - targetH0 - targetH2;

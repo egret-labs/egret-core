@@ -259,7 +259,9 @@ module egret.gui {
 					destH = bitmapData.$getTextureHeight();
 				}
 
-				Bitmap.$drawImage(context, bitmapData, destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
+                Bitmap.$drawImage(context, bitmapData._bitmapData,
+                    bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(),
+                    destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
 
 				//var offsetX:number = Math.round(bitmapData._offsetX);
 				//var offsetY:number = Math.round(bitmapData._offsetY);
