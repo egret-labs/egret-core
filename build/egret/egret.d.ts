@@ -3385,7 +3385,7 @@ declare module egret {
         /**
          * @language en_US
          * Adds an interface-name-to-implementation-class mapping to the registry.
-         * @param interfaceName the interface name to register. For example："eui.IAssetAdapter","eui.Theme"
+         * @param interfaceName the interface name to register. For example："swan.IAssetAdapter","swan.Theme"
          * @param instance the instance to register.
          * @version Egret 2.0
          * @platform Web,Native
@@ -3393,7 +3393,7 @@ declare module egret {
         /**
          * @language zh_CN
          * 注册一个接口实现。
-         * @param interfaceName 注入的接口名称。例如："eui.IAssetAdapter","eui.Theme"
+         * @param interfaceName 注入的接口名称。例如："swan.IAssetAdapter","swan.Theme"
          * @param instance 实现此接口的实例。
          * @version Egret 2.0
          * @platform Web,Native
@@ -3403,7 +3403,7 @@ declare module egret {
          * @language en_US
          * Returns the singleton instance of the implementation class that was registered for the specified interface.
          * This method is usually called by egret framework.
-         * @param interfaceName The interface name to identify. For example："eui.IAssetAdapter","eui.Theme"
+         * @param interfaceName The interface name to identify. For example："swan.IAssetAdapter","swan.Theme"
          * @returns the singleton instance of the implementation class
          * @version Egret 2.0
          * @platform Web,Native
@@ -3411,7 +3411,7 @@ declare module egret {
         /**
          * @language zh_CN
          * 获取一个接口实现。此方法通常由框架内部调用。获取项目注入的自定义实现实例。
-         * @param interfaceName 要获取的接口名称。例如："eui.IAssetAdapter","eui.Theme"
+         * @param interfaceName 要获取的接口名称。例如："swan.IAssetAdapter","swan.Theme"
          * @returns 返回实现此接口的实例。
          * @version Egret 2.0
          * @platform Web,Native
@@ -12500,13 +12500,13 @@ declare module egret {
         localName: string;
         /**
          * @language en_US
-         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/eui"/> is "http://ns.egret.com/eui".
+         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/swan"/> is "http://ns.egret.com/swan".
          * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
+         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/swan"/> 的 namespace 为： http://ns.egret.com/swan
          * @version Egret 2.0
          * @platform Web,Native
          */

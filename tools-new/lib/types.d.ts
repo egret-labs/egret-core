@@ -51,7 +51,6 @@ declare module egret {
         projectDir: string;
         getTmpDir(): string;
         srcDir: string;
-        manifest: IProjectManifest;
         manifestPath: string;
         larkPropertiesFile: string;
         debugDir: string;
@@ -68,6 +67,10 @@ declare module egret {
         debug?: boolean;
         getStartURL(address: string): string;
         template?: string;
+        /**
+        * egretProperties.json 信息
+        */
+        properties: EgretProperties;
 
 
         publish?: boolean;
@@ -94,10 +97,72 @@ declare module egret {
         autoGenerateExmlsList?: boolean;
     }
 
-    export interface IProjectManifest {
-        themes?: string[];
-        defaultTheme?: string;
-        platform?: string;
+    export interface EgretProperties {
+        properties: Object;
+        modulesConfig: Object;
+
+        /**
+         * 是否有swan
+         */
+        hasSwan(): boolean;
+
+        /**
+         * 获取项目的根路径
+         * @returns {*}
+         */
+        getProjectRoot(): string
+
+        /**
+         * 获取项目使用的egret版本号
+         * @returns {any}
+         */
+        getVersion(): string 
+
+        /**
+         * 发布路径的根目录
+         * @returns {string}
+         */
+        getReleaseRoot(): string
+        
+        /**
+         * 获取已经生成的js文件列表
+         * @param runtime
+         * @returns {string[]|T[]}
+         */
+        getAllFileList(runtime): Array <any> 
+
+        getVersionCode(runtime)
+
+        getIgnorePath(): Array <any>
+
+        getNativePath(platform)
+
+        getModulePath(moduleName)
+
+        getModuleConfig(moduleName)
+
+        //绝对路径
+        getModuleOutput(moduleName)
+
+        getModuleFileList(moduleName)
+        getModuleFileListWithAbsolutePath(moduleName)
+
+        getModulePrefixPath(moduleName)
+
+        getModuleSourcePath(moduleName)
+
+        getModuleDependenceList(moduleName)
+
+        getAllModuleNames()
+
+        getModuleDecouple(moduleName)
+
+        //获取项目需要的所有模块的.d.ts文件
+        getModulesDts()
+
+        getModuleReferenceInfo()
+
+        getResourceName()
     }
 
     export interface ILarkProject {

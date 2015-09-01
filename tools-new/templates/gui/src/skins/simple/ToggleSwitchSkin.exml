@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing">
+    <w:HostComponent name="egret.gui.ToggleSwitch" />
+    <e:states>
+        <e:State name="up" />
+        <e:State name="down" />
+        <e:State name="disabled" />
+        <e:State name="upAndSelected" />
+        <e:State name="downAndSelected" />
+        <e:State name="disabledAndSelected" />
+    </e:states>
+    <e:UIAsset visible="false" visible.down="true" visible.disabled="true" visible.up="true" source="onoffbutton_off_track_png"/>
+    <e:UIAsset visible="false" visible.down="true" visible.disabled="true" visible.up="true" source="onoffbutton_off_thumb_png" left="1" verticalCenter="0"/>
+    <e:UIAsset visible="false" visible.down="true" visible.disabled="true" visible.up="true" source="onoffbutton_off_label_png" right="15" verticalCenter="0"/>
+
+    <e:UIAsset visible="false" visible.downAndSelected="true" visible.disabledAndSelected="true" visible.upAndSelected="true" source="onoffbutton_on_track_png"/>
+    <e:UIAsset visible="false" visible.downAndSelected="true" visible.disabledAndSelected="true" visible.upAndSelected="true" source="onoffbutton_on_thumb_png" right="1" verticalCenter="0"/>
+    <e:UIAsset visible="false"  visible.downAndSelected="true" visible.disabledAndSelected="true" visible.upAndSelected="true" source="onoffbutton_on_label_png" left="15" verticalCenter="0"/>
+</e:Skin>

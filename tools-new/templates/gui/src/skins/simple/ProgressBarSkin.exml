@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin height="20" xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing">
+  <w:HostComponent name="egret.gui.ProgressBar"/>
+  <e:states>
+    <e:State name="normal"/>
+    <e:State name="disabled"/>
+  </e:states>
+  <e:Group height="100%" width="100%">
+    <e:UIAsset source="progressbar_track_png" height="100%" width="100%" />
+    <e:Group id="track" height="100%" width="100%" />
+    <!-- thumb will be set the same position and size with track, please set track's layout when you want to change the thumb's position -->
+    <!-- ProgressBar 中 thumb 会被设置为与 track 在相同的位置和宽高，所以需要调整进度条显示的位置时，请调整 track 的位置-->
+    <e:UIAsset id="thumb" source="progressbar_fill_png"/>
+    <e:Label id="labelDisplay" textAlign="center" verticalAlign="middle"
+		         maxDisplayedLines="1" size="20"
+		         textColor="0x707070" horizontalCenter="0" verticalCenter="0"/>
+  </e:Group>
+</e:Skin>

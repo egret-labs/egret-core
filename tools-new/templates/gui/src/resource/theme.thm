@@ -1,0 +1,30 @@
+{
+    "skins":
+    {
+        "egret.gui.Alert":"skins.simple.AlertSkin",
+        "egret.gui.Button":"skins.simple.ButtonSkin",
+        "egret.gui.CheckBox":"skins.simple.CheckBoxSkin",
+        "egret.gui.DropDownList":"skins.simple.DropDownListSkin",
+        "egret.gui.HSlider":"skins.simple.HSliderSkin",
+        "egret.gui.ItemRenderer":"skins.simple.ItemRendererSkin",
+        "egret.gui.List":"skins.simple.ListSkin",
+        "egret.gui.Panel":"skins.simple.PanelSkin",
+        "egret.gui.ProgressBar":"skins.simple.ProgressBarSkin",
+        "egret.gui.RadioButton":"skins.simple.RadioButtonSkin",
+        "egret.gui.SkinnableContainer":"skins.simple.SkinnableContainerSkin",
+        "egret.gui.SkinnableDataContainer":"skins.simple.SkinnableDataContainerSkin",
+        "egret.gui.TabBar":"skins.simple.TabBarSkin",
+        "egret.gui.TabBarButton":"skins.simple.TabBarButtonSkin",
+        "egret.gui.Tree":"skins.simple.TreeSkin",
+        "egret.gui.TreeItemRenderer":"skins.simple.TreeItemRendererSkin",
+        "egret.gui.TitleWindow":"skins.simple.TitleWindowSkin",
+        "egret.gui.ToggleButton":"skins.simple.ToggleButtonSkin",
+        "egret.gui.ToggleSwitch":"skins.simple.ToggleSwitchSkin",
+        "egret.gui.VSlider":"skins.simple.VSliderSkin",
+        "egret.gui.Scroller":"skins.simple.ScrollerSkin",
+        "egret.gui.HScrollBar":"skins.simple.HScrollBarSkin",
+        "egret.gui.VScrollBar":"skins.simple.VScrollBarSkin",
+        "egret.gui.TextInput":"skins.simple.TextInputSkin",
+        "egret.gui.TextArea":"skins.simple.TextAreaSkin"
+    }
+}

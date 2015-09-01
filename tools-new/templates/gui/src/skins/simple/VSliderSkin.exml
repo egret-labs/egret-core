@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minWidth="13" minHeight="13">
+    <w:HostComponent name="egret.gui.VSlider" />
+    <e:states>
+        <e:State name="normal" />
+        <e:State name="disabled" />
+    </e:states>
+    <e:UIAsset id="track" source="vslider_track_png" height="100%"
+               width="10" horizontalCenter="0" />
+    <e:UIAsset id="trackHighlight" source="vslider_fill_png"
+               width="10" horizontalCenter="0" />
+    <e:Button id="thumb"  skinName="skins.simple.VSliderThumbSkin" width="24" height="24"
+              horizontalCenter="0" />
+</e:Skin>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing">
+    <w:HostComponent name="egret.gui.List"/>
+    <e:states>
+        <e:State name="normal"/>
+        <e:State name="disabled"/>
+    </e:states>
+    <e:Scroller width="100%" height="100%" horizontalScrollPolicy="off">
+        <e:DataGroup id="dataGroup">
+            <e:layout>
+                <e:VerticalLayout gap="0" horizontalAlign="contentJustify"/>
+            </e:layout>
+        </e:DataGroup>
+    </e:Scroller>
+</e:Skin>

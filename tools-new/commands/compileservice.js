@@ -1,9 +1,9 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
 var service = require('../service/index');
-var exml = require('../actions/EXMLAction');
 var FileUtil = require('../lib/FileUtil');
 var CopyFiles = require('../actions/CopyFiles');
+var exmlActions = require('../actions/exml');
 var CompileProject = require('../actions/CompileProject');
 var CompileTemplate = require('../actions/CompileTemplate');
 var parser = require('../parser/Parser');
@@ -38,15 +38,20 @@ var AutoCompileCommand = (function () {
     AutoCompileCommand.prototype.buildProject = function () {
         var exitCode = 0;
         var options = egret.args;
-        utils.clean(options.debugDir);
         var compileProject = new CompileProject();
-        var _scripts = this._scripts || [];
-        var result = compileProject.compileProject(options);
         this.compileProject = compileProject;
+        var _scripts = this._scripts || [];
+        //预处理
+        utils.clean(options.debugDir);
+        exmlActions.beforeBuild();
+        //编译
+        exmlActions.build();
+        var result = compileProject.compileProject(options);
+        //操作其他文件
         CopyFiles.copyProjectFiles();
         _scripts = result.files.length > 0 ? result.files : _scripts;
         CompileTemplate.compileTemplates(options, _scripts);
-        exml.updateSetting(false);
+        exmlActions.afterBuild();
         this._scripts = result.files;
         this._lastExitCode = result.exitStatus;
         this._lastMessages = result.messages;
@@ -59,14 +64,19 @@ var AutoCompileCommand = (function () {
         if (!this.compileProject)
             return this.buildProject();
         var codes = [];
+        var exmls = [];
         var others = [];
         filesChanged.forEach(function (f) {
             if (/\.ts$/.test(f))
                 codes.push(f);
+            else if (/\.exml$/.test(f))
+                exmls.push(f);
             else
                 others.push(f);
         });
+        var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
+        codes = codes.concat(exmlTS);
         if (codes.length) {
             var result = this.buildChangedTS(codes);
             if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
@@ -76,6 +86,9 @@ var AutoCompileCommand = (function () {
             this._lastExitCode = result.exitStatus;
             this._lastMessages = result.messages;
         }
+        if (exmls.length) {
+            exmlActions.afterBuild();
+        }
         this.sendCommand();
         global.gc && global.gc();
         return this._lastExitCode;
@@ -83,6 +96,16 @@ var AutoCompileCommand = (function () {
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
         filesChanged = filesChanged.map(function (f) { return f.replace(FileUtil.escapePath(process.cwd() + "/"), ""); });
         return this.compileProject.compileProject(egret.args, filesChanged);
+    };
+    AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
+        exmlActions.buildChanges(filesChanges);
+        var exmlTS = [];
+        filesChanges.forEach(function (exml) {
+            var ts = exml.replace(/\.exml$/, ".ts");
+            if (FileUtil.exists(ts))
+                exmlTS.push(ts);
+        });
+        return exmlTS;
     };
     AutoCompileCommand.prototype.buildChangedRes = function (fileNames) {
         var _this = this;
@@ -106,8 +129,6 @@ var AutoCompileCommand = (function () {
             }
             if (fileName.indexOf(start) >= 0)
                 return _this.onTemplateIndexChanged();
-            if (fileName.indexOf('.exml') >= 0)
-                exml.updateSetting(false);
         });
     };
     AutoCompileCommand.prototype.onTemplateIndexChanged = function () {
@@ -115,10 +136,6 @@ var AutoCompileCommand = (function () {
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
         CompileTemplate.compileTemplates(egret.args, this._scripts);
-        return 0;
-    };
-    AutoCompileCommand.prototype.onEXMLChanged = function () {
-        exml.updateSetting(false);
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {

@@ -3,6 +3,7 @@
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import CompileOptions = require("./CompileOptions");
+import properties = require("./EgretProperties");
 
 
 
@@ -215,6 +216,8 @@ export function parseCommandLine(commandLine: string[]) {
         }
         options.projectDir = file.joinPath(options.projectDir, "/");
 
+        properties.init(options.projectDir);
+        options.properties = properties;
 
         var manifestPath = file.joinPath(options.larkRoot, (options["manifest"]||"")+ "manifest.json");
         var content = file.read(manifestPath);

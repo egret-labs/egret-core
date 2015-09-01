@@ -13,7 +13,7 @@ src/extension/socket/*.js
 src/extension/socket/**/*.js
 src/extension/version/*.js
 src/extension/version/**/*.js
-
+src/extension/eui/**/*.js
 tools/nodejs/buildTS.local
 *.local
 *.map

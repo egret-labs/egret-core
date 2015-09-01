@@ -42,9 +42,9 @@ var EXMLConfig = (function () {
         this.componentDic = {};
         this.idMap = {};
         this.basicTypes = ["void", "any", "number", "string", "boolean", "Object", "Array", "Function"];
-        var exmlPath = egret.args.larkRoot + "/tools/lib/exml/";
+        var exmlPath = egret.args.larkRoot + "/tools-new/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
-        var str = file.read(exmlPath + "manifest.xml");
+        var str = file.read(exmlPath + "egret-manifest.xml");
         var manifest = xml.parse(str);
         this.parseManifest(manifest);
         str = file.read(exmlPath + "properties.json");

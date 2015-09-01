@@ -1,43 +1,43 @@
 {
-	"lark.Bitmap":
+	"egret.Bitmap":
 	{
 		"fillMode":"string",
-		"scale9Grid":"lark.Rectangle",
-		"super":"lark.DisplayObject",
-		"texture":"lark.Texture"
+		"scale9Grid":"egret.Rectangle",
+		"super":"egret.DisplayObject",
+		"texture":"egret.Texture"
 	},
-	"lark.BitmapFont":
+	"egret.BitmapFont":
 	{
-		"super":"lark.SpriteSheet"
+		"super":"egret.SpriteSheet"
 	},
-	"lark.BitmapText":
+	"egret.BitmapText":
 	{
-		"font":"lark.BitmapFont",
-		"super":"lark.DisplayObject",
+		"font":"egret.BitmapFont",
+		"letterSpacing":"number",
+		"lineSpacing":"number",
+		"super":"egret.DisplayObject",
 		"text":"string"
 	},
-	"lark.BitmapTextSpriteSheet":
+	"egret.BitmapTextSpriteSheet":
 	{
-		"super":"lark.BitmapFont"
+		"super":"egret.BitmapFont"
 	},
-	"lark.BlurFilter":
+	"egret.BlurFilter":
 	{
 		"blurX":"number",
-		"super":"lark.Filter"
+		"super":"egret.Filter"
 	},
-	"lark.ByteArray":
+	"egret.ByteArray":
 	{
-		"buffer":"ArrayBuffer",
-		"dataView":"DataView",
 		"endian":"string",
 		"length":"number",
 		"position":"number"
 	},
-	"lark.ColorTransform":
+	"egret.ColorTransform":
 	{
 		"matrix":"Array"
 	},
-	"lark.DisplayObject":
+	"egret.DisplayObject":
 	{
 		"alpha":"number",
 		"anchorOffsetX":"number",
@@ -46,127 +46,128 @@
 		"anchorY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
-		"colorTransform":"lark.ColorTransform",
-		"filter":"lark.Filter",
 		"height":"number",
-		"implements":["lark.RenderData"],
-		"mask":"lark.Rectangle",
+		"implements":["egret.RenderData"],
+		"mask":"egret.Rectangle",
 		"name":"string",
 		"needDraw":"boolean",
 		"rotation":"number",
 		"scaleX":"number",
 		"scaleY":"number",
-		"scrollRect":"lark.Rectangle",
+		"scrollRect":"egret.Rectangle",
 		"skewX":"number",
 		"skewY":"number",
-		"super":"lark.EventDispatcher",
+		"super":"egret.EventDispatcher",
 		"touchEnabled":"boolean",
 		"visible":"boolean",
 		"width":"number",
-		"worldAlpha":"number",
 		"x":"number",
 		"y":"number"
 	},
-	"lark.DisplayObjectContainer":
+	"egret.DisplayObjectContainer":
 	{
-		"super":"lark.DisplayObject",
+		"super":"egret.DisplayObject",
 		"touchChildren":"boolean"
 	},
-	"lark.EventDispatcher":
+	"egret.EventDispatcher":
 	{
-		"implements":["lark.IEventDispatcher"],
-		"super":"lark.HashObject"
+		"implements":["egret.IEventDispatcher"],
+		"super":"egret.HashObject"
 	},
-	"lark.Filter":
+	"egret.Filter":
 	{
 		"type":"string"
 	},
-	"lark.HTML5StageText":
+	"egret.HTML5StageText":
 	{
-		"super":"lark.StageText"
+		"super":"egret.StageText"
 	},
-	"lark.HashObject":
+	"egret.HashObject":
 	{
-		"implements":["lark.IHashObject"]
+		"implements":["egret.IHashObject"]
 	},
-	"lark.Matrix":
+	"egret.Matrix":
 	{
 		"a":"number",
 		"b":"number",
 		"c":"number",
 		"d":"number",
-		"super":"lark.HashObject",
+		"super":"egret.HashObject",
 		"tx":"number",
 		"ty":"number"
 	},
-	"lark.MovieClip":
+	"egret.MovieClip":
 	{
 		"frameRate":"number",
-		"movieClipData":"lark.MovieClipData",
-		"super":"lark.DisplayObject"
+		"movieClipData":"egret.MovieClipData",
+		"super":"egret.DisplayObject"
 	},
-	"lark.MovieClipData":
+	"egret.MovieClipData":
 	{
 		"frameRate":"number",
 		"frames":"any",
 		"labels":"any",
-		"mcData":"lark.MovieClipData",
+		"mcData":"egret.MovieClipData",
 		"numFrames":"number",
-		"spriteSheet":"lark.SpriteSheet",
-		"super":"lark.HashObject",
+		"spriteSheet":"egret.SpriteSheet",
+		"super":"egret.HashObject",
 		"textureData":"any"
 	},
-	"lark.MovieClipDataFactory":
+	"egret.MovieClipDataFactory":
 	{
 		"enableCache":"boolean",
 		"mcDataSet":"any",
-		"super":"lark.EventDispatcher",
-		"texture":"lark.Texture"
+		"super":"egret.EventDispatcher",
+		"texture":"egret.Texture"
 	},
-	"lark.NativeStageText":
+	"egret.NativeStageText":
 	{
-		"super":"lark.StageText"
+		"super":"egret.StageText"
 	},
-	"lark.Point":
+	"egret.Point":
 	{
-		"super":"lark.HashObject",
+		"super":"egret.HashObject",
 		"x":"number",
 		"y":"number"
 	},
-	"lark.Rectangle":
+	"egret.Rectangle":
 	{
 		"bottom":"number",
 		"height":"number",
 		"right":"number",
-		"super":"lark.HashObject",
+		"super":"egret.HashObject",
 		"width":"number",
 		"x":"number",
 		"y":"number"
 	},
-	"lark.RenderCommand":
+	"egret.RenderCommand":
 	{
 		"callback":"any",
 		"thisObject":"any"
 	},
-	"lark.Shape":
+	"egret.Shape":
 	{
-		"super":"lark.DisplayObject"
+		"super":"egret.DisplayObject"
 	},
-	"lark.Sprite":
+	"egret.Sprite":
 	{
-		"super":"lark.DisplayObjectContainer"
+		"super":"egret.DisplayObjectContainer"
 	},
-	"lark.SpriteSheet":
+	"egret.SpriteSheet":
 	{
-		"super":"lark.HashObject"
+		"super":"egret.HashObject"
 	},
-	"lark.StageText":
+	"egret.StageText":
 	{
-		"super":"lark.EventDispatcher"
+		"super":"egret.EventDispatcher"
 	},
-	"lark.TextField":
+	"egret.TextField":
 	{
+		"background":"boolean",
+		"backgroundColor":"number",
 		"bold":"boolean",
+		"border":"boolean",
+		"borderColor":"number",
 		"displayAsPassword":"boolean",
 		"fontFamily":"string",
 		"italic":"boolean",
@@ -178,7 +179,7 @@
 		"size":"number",
 		"stroke":"number",
 		"strokeColor":"number",
-		"super":"lark.DisplayObject",
+		"super":"egret.DisplayObject",
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
@@ -186,255 +187,246 @@
 		"type":"string",
 		"verticalAlign":"string"
 	},
-	"lark.Texture":
+	"egret.Texture":
 	{
-		"super":"lark.HashObject"
+		"super":"egret.HashObject"
 	},
-	"lark.gui.AddItems":
+	"egret.gui.AddItems":
 	{
 		"position":"string",
 		"propertyName":"string",
 		"relativeTo":"string",
-		"super":"lark.gui.OverrideBase",
+		"super":"egret.gui.OverrideBase",
 		"target":"string"
 	},
-	"lark.gui.Alert":
+	"egret.gui.Alert":
 	{
-		"contentDisplay":"lark.gui.IDisplayText",
+		"contentDisplay":"egret.gui.IDisplayText",
 		"contentText":"string",
-		"firstButton":"lark.gui.Button",
+		"firstButton":"egret.gui.Button",
 		"firstButtonLabel":"string",
-		"secondButton":"lark.gui.Button",
+		"secondButton":"egret.gui.Button",
 		"secondButtonLabel":"string",
-		"super":"lark.gui.TitleWindow"
+		"super":"egret.gui.TitleWindow"
 	},
-	"lark.gui.Animate":
+	"egret.gui.Animate":
 	{
 		"disableLayout":"boolean",
-		"easer":"lark.gui.IEaser",
-		"interpolator":"lark.gui.IInterpolator",
+		"easer":"egret.gui.IEaser",
+		"interpolator":"egret.gui.IInterpolator",
 		"motionPaths":"Array",
 		"repeatBehavior":"string",
-		"super":"lark.gui.Effect"
+		"super":"egret.gui.Effect"
 	},
-	"lark.gui.AnimateInstance":
+	"egret.gui.AnimateInstance":
 	{
-		"animation":"lark.gui.Animation",
-		"autoRemoveTarget":"boolean",
+		"animation":"egret.gui.Animation",
 		"disableLayout":"boolean",
-		"easer":"lark.gui.IEaser",
-		"interpolator":"lark.gui.IInterpolator",
+		"easer":"egret.gui.IEaser",
+		"interpolator":"egret.gui.IInterpolator",
 		"motionPaths":"Array",
 		"repeatBehavior":"string",
-		"super":"lark.gui.EffectInstance"
+		"super":"egret.gui.EffectInstance"
 	},
-	"lark.gui.AnimateTransform":
+	"egret.gui.AnimateTransform":
 	{
 		"autoCenterTransform":"boolean",
-		"super":"lark.gui.Animate",
+		"super":"egret.gui.Animate",
 		"transformX":"number",
 		"transformY":"number"
 	},
-	"lark.gui.AnimateTransformInstance":
+	"egret.gui.AnimateTransformInstance":
 	{
 		"autoCenterTransform":"boolean",
 		"initialized":"boolean",
-		"super":"lark.gui.AnimateInstance",
-		"transformCenter":"lark.Point"
+		"super":"egret.gui.AnimateInstance",
+		"transformCenter":"egret.Point"
 	},
-	"lark.gui.ArrayCollection":
+	"egret.gui.ArrayCollection":
 	{
-		"implements":["lark.gui.ICollection"],
+		"implements":["egret.gui.ICollection"],
 		"source":"Array",
-		"super":"lark.EventDispatcher"
+		"super":"egret.EventDispatcher"
 	},
-	"lark.gui.BasicLayout":
+	"egret.gui.BasicLayout":
 	{
 		"mouseWheelSpeed":"number",
-		"super":"lark.gui.LayoutBase"
+		"super":"egret.gui.LayoutBase"
 	},
-	"lark.gui.BitmapLabel":
+	"egret.gui.BitmapLabel":
 	{
 		"font":"any",
-		"implements":["lark.gui.IDisplayText"],
+		"implements":["egret.gui.IDisplayText"],
+		"letterSpacing":"number",
+		"lineSpacing":"number",
 		"padding":"number",
 		"paddingBottom":"number",
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
-		"super":"lark.gui.UIComponent",
+		"super":"egret.gui.UIComponent",
 		"text":"string"
 	},
-	"lark.gui.Bounce":
+	"egret.gui.Bounce":
 	{
-		"implements":["lark.gui.IEaser"]
+		"implements":["egret.gui.IEaser"]
 	},
-	"lark.gui.Button":
+	"egret.gui.Button":
 	{
 		"icon":"any",
-		"iconDisplay":"lark.gui.UIAsset",
-		"super":"lark.gui.ButtonBase"
+		"iconDisplay":"egret.gui.UIAsset",
+		"super":"egret.gui.ButtonBase"
 	},
-	"lark.gui.ButtonBase":
+	"egret.gui.ButtonBase":
 	{
 		"autoRepeat":"boolean",
 		"hovered":"boolean",
 		"label":"string",
-		"labelDisplay":"lark.gui.IDisplayText",
+		"labelDisplay":"egret.gui.IDisplayText",
 		"mouseCaptured":"boolean",
 		"repeatDelay":"number",
 		"repeatInterval":"number",
 		"stickyHighlighting":"boolean",
-		"super":"lark.gui.SkinnableComponent"
+		"super":"egret.gui.SkinnableComponent"
 	},
-	"lark.gui.ButtonSkin":
+	"egret.gui.ButtonSkin":
 	{
-		"iconDisplay":"lark.gui.UIAsset",
-		"labelDisplay":"lark.gui.Label",
-		"super":"lark.gui.Skin"
+		"iconDisplay":"egret.gui.UIAsset",
+		"labelDisplay":"egret.gui.Label",
+		"super":"egret.gui.Skin"
 	},
-	"lark.gui.CheckBox":
+	"egret.gui.CheckBox":
 	{
-		"super":"lark.gui.ToggleButtonBase"
+		"super":"egret.gui.ToggleButtonBase"
 	},
-	"lark.gui.ClassFactory":
+	"egret.gui.ClassFactory":
 	{
 		"generator":"any",
-		"implements":["lark.gui.IFactory"],
-		"super":"lark.HashObject"
+		"implements":["egret.gui.IFactory"],
+		"super":"egret.HashObject"
 	},
-	"lark.gui.CompositeEffect":
+	"egret.gui.CompositeEffect":
 	{
 		"children":"Array",
-		"super":"lark.gui.Effect"
+		"super":"egret.gui.Effect"
 	},
-	"lark.gui.CompositeEffectInstance":
+	"egret.gui.CompositeEffectInstance":
 	{
-		"activeEffectQueue":"Array",
-		"childSets":"Array",
-		"endEffectCalled":"boolean",
-		"super":"lark.gui.EffectInstance",
-		"timerAnimation":"lark.gui.Animation"
+		"super":"egret.gui.EffectInstance"
 	},
-	"lark.gui.DataGroup":
+	"egret.gui.DataGroup":
 	{
-		"dataProvider":"lark.gui.ICollection",
-		"itemRenderer":"lark.gui.IFactory",
+		"dataProvider":"egret.gui.ICollection",
+		"itemRenderer":"egret.gui.IFactory",
 		"itemRendererFunction":"Function",
 		"itemRendererSkinName":"Class",
-		"super":"lark.gui.GroupBase"
+		"super":"egret.gui.GroupBase"
 	},
-	"lark.gui.DropDownList":
+	"egret.gui.DropDownList":
 	{
-		"labelDisplay":"lark.gui.IDisplayText",
+		"labelDisplay":"egret.gui.IDisplayText",
 		"prompt":"string",
-		"super":"lark.gui.DropDownListBase"
+		"super":"egret.gui.DropDownListBase"
 	},
-	"lark.gui.DropDownListBase":
+	"egret.gui.DropDownListBase":
 	{
-		"dropDown":"lark.DisplayObject",
-		"dropDownController":"lark.gui.DropDownController",
-		"openButton":"lark.gui.ButtonBase",
-		"super":"lark.gui.List"
+		"dropDown":"egret.DisplayObject",
+		"dropDownController":"egret.gui.DropDownController",
+		"openButton":"egret.gui.ButtonBase",
+		"super":"egret.gui.List"
 	},
-	"lark.gui.EaseInOutBase":
+	"egret.gui.EaseInOutBase":
 	{
 		"easeInFraction":"number",
-		"implements":["lark.gui.IEaser"]
+		"implements":["egret.gui.IEaser"]
 	},
-	"lark.gui.EditableText":
+	"egret.gui.EditableText":
 	{
 		"clipAndEnableScrolling":"boolean",
 		"displayAsPassword":"boolean",
 		"editable":"boolean",
 		"heightInLines":"number",
 		"horizontalScrollPosition":"number",
-		"implements":["lark.gui.IEditableText","lark.gui.IDisplayText","lark.gui.IViewport"],
+		"implements":["egret.gui.IEditableText","egret.gui.IDisplayText","egret.gui.IViewport"],
 		"maxChars":"number",
 		"multiline":"boolean",
 		"restrict":"string",
 		"selectable":"boolean",
-		"super":"lark.gui.TextBase",
+		"super":"egret.gui.TextBase",
 		"verticalScrollPosition":"number",
 		"widthInChars":"number"
 	},
-	"lark.gui.Effect":
+	"egret.gui.Effect":
 	{
 		"duration":"number",
 		"durationExplicitlySet":"boolean",
-		"implements":["lark.gui.IEffect"],
+		"implements":["egret.gui.IEffect"],
 		"instanceClass":"any",
-		"parentCompositeEffect":"lark.gui.Effect",
 		"perElementOffset":"number",
 		"playReversed":"boolean",
 		"playheadTime":"number",
 		"repeatCount":"number",
 		"repeatDelay":"number",
 		"startDelay":"number",
-		"super":"lark.EventDispatcher",
+		"super":"egret.EventDispatcher",
 		"target":"any",
 		"targets":"Array"
 	},
-	"lark.gui.EffectInstance":
+	"egret.gui.EffectInstance":
 	{
-		"delayTimer":"lark.Timer",
 		"duration":"number",
 		"durationExplicitlySet":"boolean",
-		"effect":"lark.gui.IEffect",
-		"implements":["lark.gui.IEffectInstance"],
-		"parentCompositeEffectInstance":"lark.gui.EffectInstance",
-		"playCount":"number",
+		"effect":"egret.gui.IEffect",
+		"implements":["egret.gui.IEffectInstance"],
+		"parentCompositeEffectInstance":"egret.gui.EffectInstance",
 		"playReversed":"boolean",
 		"playheadTime":"number",
 		"repeatCount":"number",
 		"repeatDelay":"number",
 		"startDelay":"number",
-		"stopRepeat":"boolean",
-		"super":"lark.EventDispatcher",
+		"super":"egret.EventDispatcher",
 		"target":"any"
 	},
-	"lark.gui.Elastic":
+	"egret.gui.Elastic":
 	{
-		"implements":["lark.gui.IEaser"]
+		"implements":["egret.gui.IEaser"]
 	},
-	"lark.gui.Fade":
-	{
-		"alphaFrom":"number",
-		"alphaTo":"number",
-		"super":"lark.gui.Animate"
-	},
-	"lark.gui.FadeInstance":
+	"egret.gui.Fade":
 	{
 		"alphaFrom":"number",
 		"alphaTo":"number",
-		"super":"lark.gui.AnimateInstance"
+		"super":"egret.gui.Animate"
 	},
-	"lark.gui.Group":
+	"egret.gui.FadeInstance":
+	{
+		"alphaFrom":"number",
+		"alphaTo":"number",
+		"super":"egret.gui.AnimateInstance"
+	},
+	"egret.gui.Group":
 	{
 		"elementsContent":"Array",
-		"implements":["lark.gui.IVisualElementContainer"],
-		"super":"lark.gui.GroupBase"
+		"implements":["egret.gui.IVisualElementContainer"],
+		"super":"egret.gui.GroupBase"
 	},
-	"lark.gui.GroupBase":
+	"egret.gui.GroupBase":
 	{
 		"clipAndEnableScrolling":"boolean",
 		"horizontalScrollPosition":"number",
-		"implements":["lark.gui.IViewport"],
-		"layout":"lark.gui.LayoutBase",
-		"super":"lark.gui.UIComponent",
+		"implements":["egret.gui.IViewport"],
+		"layout":"egret.gui.LayoutBase",
+		"super":"egret.gui.UIComponent",
 		"verticalScrollPosition":"number"
 	},
-	"lark.gui.HScrollBar":
+	"egret.gui.HScrollBar":
 	{
-		"super":"lark.gui.HSlider",
-		"thumbAlpha":"number",
-		"trackAlpha":"number"
+		"super":"egret.gui.HSlider"
 	},
-	"lark.gui.HSlider":
+	"egret.gui.HSlider":
 	{
-		"super":"lark.gui.SliderBase"
+		"super":"egret.gui.SliderBase"
 	},
-	"lark.gui.HorizontalLayout":
+	"egret.gui.HorizontalLayout":
 	{
 		"gap":"number",
 		"horizontalAlign":"string",
@@ -443,26 +435,25 @@
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
-		"super":"lark.gui.LayoutBase",
+		"super":"egret.gui.LayoutBase",
 		"verticalAlign":"string"
 	},
-	"lark.gui.ItemRenderer":
+	"egret.gui.ItemRenderer":
 	{
 		"data":"any",
-		"implements":["lark.gui.IItemRenderer"],
+		"implements":["egret.gui.IItemRenderer"],
 		"itemIndex":"number",
 		"selected":"boolean",
-		"super":"lark.gui.ButtonBase"
+		"super":"egret.gui.ButtonBase"
 	},
-	"lark.gui.Keyframe":
+	"egret.gui.Keyframe":
 	{
-		"easer":"lark.gui.IEaser",
+		"easer":"egret.gui.IEaser",
 		"time":"number",
-		"timeFraction":"number",
 		"value":"any",
 		"valueBy":"any"
 	},
-	"lark.gui.Label":
+	"egret.gui.Label":
 	{
 		"maxDisplayedLines":"number",
 		"padding":"number",
@@ -472,47 +463,47 @@
 		"paddingTop":"number",
 		"stroke":"number",
 		"strokeColor":"number",
-		"super":"lark.gui.TextBase"
+		"super":"egret.gui.TextBase"
 	},
-	"lark.gui.LayoutBase":
+	"egret.gui.LayoutBase":
 	{
-		"super":"lark.EventDispatcher",
-		"target":"lark.gui.GroupBase",
-		"typicalLayoutRect":"lark.Rectangle",
+		"super":"egret.EventDispatcher",
+		"target":"egret.gui.GroupBase",
+		"typicalLayoutRect":"egret.Rectangle",
 		"useVirtualLayout":"boolean"
 	},
-	"lark.gui.Linear":
+	"egret.gui.Linear":
 	{
 		"easeInFraction":"number",
 		"easeOutFraction":"number",
-		"implements":["lark.gui.IEaser"]
+		"implements":["egret.gui.IEaser"]
 	},
-	"lark.gui.List":
+	"egret.gui.List":
 	{
 		"allowMultipleSelection":"boolean",
 		"selectedIndices":"Array",
 		"selectedItems":"Array",
-		"super":"lark.gui.ListBase"
+		"super":"egret.gui.ListBase"
 	},
-	"lark.gui.ListBase":
+	"egret.gui.ListBase":
 	{
 		"labelField":"string",
 		"labelFunction":"Function",
 		"requireSelection":"boolean",
 		"selectedIndex":"number",
 		"selectedItem":"any",
-		"super":"lark.gui.SkinnableDataContainer",
+		"super":"egret.gui.SkinnableDataContainer",
 		"useVirtualLayout":"boolean"
 	},
-	"lark.gui.MotionPath":
+	"egret.gui.MotionPath":
 	{
-		"interpolator":"lark.gui.IInterpolator",
+		"interpolator":"egret.gui.IInterpolator",
 		"keyframes":"Array",
 		"property":"string"
 	},
-	"lark.gui.Move":
+	"egret.gui.Move":
 	{
-		"super":"lark.gui.AnimateTransform",
+		"super":"egret.gui.AnimateTransform",
 		"xBy":"number",
 		"xFrom":"number",
 		"xTo":"number",
@@ -520,103 +511,103 @@
 		"yFrom":"number",
 		"yTo":"number"
 	},
-	"lark.gui.NumberInterpolator":
+	"egret.gui.NumberInterpolator":
 	{
-		"implements":["lark.gui.IInterpolator"]
+		"implements":["egret.gui.IInterpolator"]
 	},
-	"lark.gui.ObjectCollection":
+	"egret.gui.ObjectCollection":
 	{
-		"implements":["lark.gui.ICollection","lark.gui.ITreeCollection"],
+		"implements":["egret.gui.ICollection","egret.gui.ITreeCollection"],
 		"openNodes":"Array",
 		"showRoot":"boolean",
 		"source":"any",
-		"super":"lark.EventDispatcher"
+		"super":"egret.EventDispatcher"
 	},
-	"lark.gui.OverrideBase":
+	"egret.gui.OverrideBase":
 	{
-		"implements":["lark.gui.IOverride"],
-		"super":"lark.HashObject"
+		"implements":["egret.gui.IOverride"],
+		"super":"egret.HashObject"
 	},
-	"lark.gui.Panel":
+	"egret.gui.Panel":
 	{
-		"super":"lark.gui.SkinnableContainer",
+		"super":"egret.gui.SkinnableContainer",
 		"title":"string",
-		"titleDisplay":"lark.gui.IDisplayText"
+		"titleDisplay":"egret.gui.IDisplayText"
 	},
-	"lark.gui.Parallel":
+	"egret.gui.Parallel":
 	{
-		"super":"lark.gui.CompositeEffect"
+		"super":"egret.gui.CompositeEffect"
 	},
-	"lark.gui.ParallelInstance":
+	"egret.gui.ParallelInstance":
 	{
-		"super":"lark.gui.CompositeEffectInstance"
+		"super":"egret.gui.CompositeEffectInstance"
 	},
-	"lark.gui.PopUpAnchor":
+	"egret.gui.PopUpAnchor":
 	{
 		"closeDuration":"number",
 		"displayPopUp":"boolean",
 		"openDuration":"number",
-		"popUp":"lark.gui.IVisualElement",
+		"popUp":"egret.gui.IVisualElement",
 		"popUpHeightMatchesAnchorHeight":"boolean",
 		"popUpPosition":"string",
 		"popUpWidthMatchesAnchorWidth":"boolean",
-		"super":"lark.gui.UIComponent"
+		"super":"egret.gui.UIComponent"
 	},
-	"lark.gui.Power":
+	"egret.gui.Power":
 	{
 		"exponent":"number",
-		"super":"lark.gui.EaseInOutBase"
+		"super":"egret.gui.EaseInOutBase"
 	},
-	"lark.gui.ProgressBar":
+	"egret.gui.ProgressBar":
 	{
 		"direction":"string",
-		"labelDisplay":"lark.gui.Label",
+		"labelDisplay":"egret.gui.Label",
 		"labelFunction":"Function",
 		"slideDuration":"number",
-		"super":"lark.gui.Range",
-		"thumb":"lark.DisplayObject",
-		"track":"lark.DisplayObject"
+		"super":"egret.gui.Range",
+		"thumb":"egret.DisplayObject",
+		"track":"egret.DisplayObject"
 	},
-	"lark.gui.RadioButton":
+	"egret.gui.RadioButton":
 	{
-		"group":"lark.gui.RadioButtonGroup",
+		"group":"egret.gui.RadioButtonGroup",
 		"groupName":"string",
-		"super":"lark.gui.ToggleButtonBase",
+		"super":"egret.gui.ToggleButtonBase",
 		"value":"any"
 	},
-	"lark.gui.RadioButtonGroup":
+	"egret.gui.RadioButtonGroup":
 	{
 		"enabled":"boolean",
 		"selectedValue":"any",
-		"selection":"lark.gui.RadioButton",
-		"super":"lark.EventDispatcher"
+		"selection":"egret.gui.RadioButton",
+		"super":"egret.EventDispatcher"
 	},
-	"lark.gui.Range":
+	"egret.gui.Range":
 	{
 		"maximum":"number",
 		"minimum":"number",
 		"snapInterval":"number",
 		"stepSize":"number",
-		"super":"lark.gui.SkinnableComponent",
+		"super":"egret.gui.SkinnableComponent",
 		"value":"number"
 	},
-	"lark.gui.Rect":
+	"egret.gui.Rect":
 	{
 		"fillAlpha":"number",
 		"fillColor":"number",
 		"strokeAlpha":"number",
 		"strokeColor":"number",
 		"strokeWeight":"number",
-		"super":"lark.gui.UIComponent"
+		"super":"egret.gui.UIComponent"
 	},
-	"lark.gui.Rotate":
+	"egret.gui.Rotate":
 	{
 		"angleBy":"number",
 		"angleFrom":"number",
 		"angleTo":"number",
-		"super":"lark.gui.AnimateTransform"
+		"super":"egret.gui.AnimateTransform"
 	},
-	"lark.gui.Scale":
+	"egret.gui.Scale":
 	{
 		"scaleXBy":"number",
 		"scaleXFrom":"number",
@@ -624,62 +615,60 @@
 		"scaleYBy":"number",
 		"scaleYFrom":"number",
 		"scaleYTo":"number",
-		"super":"lark.gui.AnimateTransform"
+		"super":"egret.gui.AnimateTransform"
 	},
-	"lark.gui.Scroller":
+	"egret.gui.Scroller":
 	{
 		"autoHideDelay":"number",
 		"autoHideScrollBars":"boolean",
-		"horizontalScrollBar":"lark.gui.HScrollBar",
+		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
-		"implements":["lark.gui.IVisualElementContainer"],
-		"scrollBeginThreshold":"number",
-		"scrollSpeed":"number",
-		"super":"lark.gui.SkinnableComponent",
-		"verticalScrollBar":"lark.gui.VScrollBar",
+		"implements":["egret.gui.IVisualElementContainer"],
+		"super":"egret.gui.SkinnableComponent",
+		"verticalScrollBar":"egret.gui.VScrollBar",
 		"verticalScrollPolicy":"string",
-		"viewport":"lark.gui.IViewport"
+		"viewport":"egret.gui.IViewport"
 	},
-	"lark.gui.Sequence":
+	"egret.gui.Sequence":
 	{
-		"super":"lark.gui.CompositeEffect"
+		"super":"egret.gui.CompositeEffect"
 	},
-	"lark.gui.SequenceInstance":
+	"egret.gui.SequenceInstance":
 	{
-		"super":"lark.gui.CompositeEffectInstance"
+		"super":"egret.gui.CompositeEffectInstance"
 	},
-	"lark.gui.SetProperty":
+	"egret.gui.SetProperty":
 	{
 		"name":"string",
-		"super":"lark.gui.OverrideBase",
+		"super":"egret.gui.OverrideBase",
 		"target":"string",
 		"value":"any"
 	},
-	"lark.gui.SetStyle":
+	"egret.gui.SetStyle":
 	{
 		"name":"string",
-		"super":"lark.gui.OverrideBase",
+		"super":"egret.gui.OverrideBase",
 		"target":"string",
 		"value":"any"
 	},
-	"lark.gui.SimpleMotionPath":
+	"egret.gui.SimpleMotionPath":
 	{
-		"super":"lark.gui.MotionPath",
+		"super":"egret.gui.MotionPath",
 		"valueBy":"any",
 		"valueFrom":"any",
 		"valueTo":"any"
 	},
-	"lark.gui.Sine":
+	"egret.gui.Sine":
 	{
-		"super":"lark.gui.EaseInOutBase"
+		"super":"egret.gui.EaseInOutBase"
 	},
-	"lark.gui.Skin":
+	"egret.gui.Skin":
 	{
 		"currentState":"string",
 		"elementsContent":"Array",
 		"height":"number",
-		"hostComponent":"lark.gui.SkinnableComponent",
-		"implements":["lark.gui.IStateClient","lark.gui.ISkin","lark.gui.IContainer"],
+		"hostComponent":"egret.gui.SkinnableComponent",
+		"implements":["egret.gui.IStateClient","egret.gui.ISkin","egret.gui.IContainer"],
 		"maxHeight":"number",
 		"maxWidth":"number",
 		"measuredHeight":"number",
@@ -687,119 +676,119 @@
 		"minHeight":"number",
 		"minWidth":"number",
 		"states":"Array",
-		"super":"lark.EventDispatcher",
+		"super":"egret.EventDispatcher",
 		"transitions":"Array",
 		"width":"number"
 	},
-	"lark.gui.SkinBasicLayout":
+	"egret.gui.SkinBasicLayout":
 	{
-		"super":"lark.HashObject",
-		"target":"lark.gui.Skin"
+		"super":"egret.HashObject",
+		"target":"egret.gui.Skin"
 	},
-	"lark.gui.SkinnableComponent":
+	"egret.gui.SkinnableComponent":
 	{
 		"autoTouchEnabled":"boolean",
 		"hostComponentKey":"string",
-		"implements":["lark.gui.ISkinnableClient"],
+		"implements":["egret.gui.ISkinnableClient"],
 		"skinName":"Class",
-		"super":"lark.gui.UIComponent"
+		"super":"egret.gui.UIComponent"
 	},
-	"lark.gui.SkinnableContainer":
+	"egret.gui.SkinnableContainer":
 	{
-		"contentGroup":"lark.gui.Group",
+		"contentGroup":"egret.gui.Group",
 		"elementsContent":"Array",
-		"implements":["lark.gui.IVisualElementContainer"],
-		"layout":"lark.gui.LayoutBase",
-		"super":"lark.gui.SkinnableComponent"
+		"implements":["egret.gui.IVisualElementContainer"],
+		"layout":"egret.gui.LayoutBase",
+		"super":"egret.gui.SkinnableComponent"
 	},
-	"lark.gui.SkinnableDataContainer":
+	"egret.gui.SkinnableDataContainer":
 	{
-		"dataGroup":"lark.gui.DataGroup",
-		"dataProvider":"lark.gui.ICollection",
-		"implements":["lark.gui.IItemRendererOwner"],
-		"itemRenderer":"lark.gui.IFactory",
+		"dataGroup":"egret.gui.DataGroup",
+		"dataProvider":"egret.gui.ICollection",
+		"implements":["egret.gui.IItemRendererOwner"],
+		"itemRenderer":"egret.gui.IFactory",
 		"itemRendererFunction":"Function",
 		"itemRendererSkinName":"Class",
-		"layout":"lark.gui.LayoutBase",
-		"super":"lark.gui.SkinnableComponent"
+		"layout":"egret.gui.LayoutBase",
+		"super":"egret.gui.SkinnableComponent"
 	},
-	"lark.gui.SkinnableTextBase":
+	"egret.gui.SkinnableTextBase":
 	{
 		"displayAsPassword":"boolean",
 		"editable":"boolean",
 		"focusEnabled":"boolean",
 		"maxChars":"number",
 		"prompt":"string",
-		"promptDisplay":"lark.gui.IDisplayText",
+		"promptDisplay":"egret.gui.IDisplayText",
 		"restrict":"string",
 		"selectable":"boolean",
-		"super":"lark.gui.SkinnableComponent",
+		"super":"egret.gui.SkinnableComponent",
 		"text":"string",
 		"textColor":"number",
-		"textDisplay":"lark.gui.IEditableText"
+		"textDisplay":"egret.gui.IEditableText"
 	},
-	"lark.gui.SliderBase":
+	"egret.gui.SliderBase":
 	{
 		"liveDragging":"boolean",
 		"pendingValue":"number",
 		"showTrackHighlight":"boolean",
-		"super":"lark.gui.TrackBase",
-		"trackHighlight":"lark.DisplayObject"
+		"super":"egret.gui.TrackBase",
+		"trackHighlight":"egret.DisplayObject"
 	},
-	"lark.gui.Spacer":
+	"egret.gui.Spacer":
 	{
-		"super":"lark.gui.UIComponent"
+		"super":"egret.gui.UIComponent"
 	},
-	"lark.gui.State":
+	"egret.gui.State":
 	{
 		"name":"string",
 		"overrides":"Array",
 		"stateGroups":"Array",
-		"super":"lark.HashObject"
+		"super":"egret.HashObject"
 	},
-	"lark.gui.TabBar":
+	"egret.gui.TabBar":
 	{
-		"super":"lark.gui.List"
+		"super":"egret.gui.List"
 	},
-	"lark.gui.TabBarButton":
+	"egret.gui.TabBarButton":
 	{
 		"allowDeselection":"boolean",
 		"data":"any",
-		"implements":["lark.gui.IItemRenderer"],
+		"implements":["egret.gui.IItemRenderer"],
 		"itemIndex":"number",
-		"super":"lark.gui.ToggleButtonBase"
+		"super":"egret.gui.ToggleButtonBase"
 	},
-	"lark.gui.TextArea":
+	"egret.gui.TextArea":
 	{
 		"heightInLines":"number",
 		"horizontalScrollPolicy":"string",
-		"scroller":"lark.gui.Scroller",
-		"super":"lark.gui.SkinnableTextBase",
+		"scroller":"egret.gui.Scroller",
+		"super":"egret.gui.SkinnableTextBase",
 		"verticalScrollPolicy":"string",
 		"widthInChars":"number"
 	},
-	"lark.gui.TextBase":
+	"egret.gui.TextBase":
 	{
 		"bold":"boolean",
 		"focusEnabled":"boolean",
 		"fontFamily":"string",
-		"implements":["lark.gui.IDisplayText"],
+		"implements":["egret.gui.IDisplayText"],
 		"italic":"boolean",
 		"lineSpacing":"number",
 		"size":"number",
-		"super":"lark.gui.UIComponent",
+		"super":"egret.gui.UIComponent",
 		"text":"string",
 		"textAlign":"string",
 		"textColor":"number",
 		"textFlow":"Array",
 		"verticalAlign":"string"
 	},
-	"lark.gui.TextInput":
+	"egret.gui.TextInput":
 	{
-		"super":"lark.gui.SkinnableTextBase",
+		"super":"egret.gui.SkinnableTextBase",
 		"widthInChars":"number"
 	},
-	"lark.gui.TileLayout":
+	"egret.gui.TileLayout":
 	{
 		"columnAlign":"string",
 		"columnWidth":"number",
@@ -815,82 +804,82 @@
 		"requestedRowCount":"number",
 		"rowAlign":"string",
 		"rowHeight":"number",
-		"super":"lark.gui.LayoutBase",
+		"super":"egret.gui.LayoutBase",
 		"verticalAlign":"string",
 		"verticalGap":"number"
 	},
-	"lark.gui.TitleWindow":
+	"egret.gui.TitleWindow":
 	{
 		"autoBackToStage":"boolean",
-		"closeButton":"lark.gui.Button",
-		"moveArea":"lark.DisplayObject",
+		"closeButton":"egret.gui.Button",
+		"moveArea":"egret.DisplayObject",
 		"showCloseButton":"boolean",
-		"super":"lark.gui.Panel"
+		"super":"egret.gui.Panel"
 	},
-	"lark.gui.ToggleButton":
+	"egret.gui.ToggleButton":
 	{
 		"icon":"any",
-		"iconDisplay":"lark.gui.UIAsset",
-		"super":"lark.gui.ToggleButtonBase"
+		"iconDisplay":"egret.gui.UIAsset",
+		"super":"egret.gui.ToggleButtonBase"
 	},
-	"lark.gui.ToggleButtonBase":
+	"egret.gui.ToggleButtonBase":
 	{
 		"selected":"boolean",
-		"super":"lark.gui.ButtonBase"
+		"super":"egret.gui.ButtonBase"
 	},
-	"lark.gui.ToggleSwitch":
+	"egret.gui.ToggleSwitch":
 	{
-		"super":"lark.gui.ToggleButtonBase"
+		"super":"egret.gui.ToggleButtonBase"
 	},
-	"lark.gui.TrackBase":
+	"egret.gui.TrackBase":
 	{
 		"slideDuration":"number",
-		"super":"lark.gui.Range",
-		"thumb":"lark.gui.Button",
-		"track":"lark.gui.Button"
+		"super":"egret.gui.Range",
+		"thumb":"egret.gui.Button",
+		"track":"egret.gui.Button"
 	},
-	"lark.gui.Transition":
+	"egret.gui.Transition":
 	{
 		"autoReverse":"boolean",
-		"effect":"lark.gui.IEffect",
+		"effect":"egret.gui.IEffect",
 		"fromState":"string",
 		"interruptionBehavior":"string",
 		"toState":"string"
 	},
-	"lark.gui.Tree":
+	"egret.gui.Tree":
 	{
 		"iconField":"string",
 		"iconFunction":"Function",
-		"super":"lark.gui.List"
+		"super":"egret.gui.List"
 	},
-	"lark.gui.TreeItemRenderer":
+	"egret.gui.TreeItemRenderer":
 	{
-		"contentGroup":"lark.DisplayObject",
+		"contentGroup":"egret.DisplayObject",
 		"depth":"number",
-		"disclosureButton":"lark.gui.ToggleButtonBase",
+		"disclosureButton":"egret.gui.ToggleButtonBase",
 		"hasChildren":"boolean",
-		"iconDisplay":"lark.gui.UIAsset",
+		"iconDisplay":"egret.gui.UIAsset",
 		"iconSkinName":"any",
-		"implements":["lark.gui.ITreeItemRenderer"],
+		"implements":["egret.gui.ITreeItemRenderer"],
 		"indentation":"number",
 		"opened":"boolean",
-		"super":"lark.gui.ItemRenderer"
+		"super":"egret.gui.ItemRenderer"
 	},
-	"lark.gui.UIAsset":
+	"egret.gui.UIAsset":
 	{
 		"autoScale":"boolean",
 		"fillMode":"string",
-		"scale9Grid":"lark.Rectangle",
+		"scale9Grid":"egret.Rectangle",
 		"source":"any",
-		"super":"lark.gui.UIComponent"
+		"super":"egret.gui.UIComponent"
 	},
-	"lark.gui.UIComponent":
+	"egret.gui.UIComponent":
 	{
 		"bottom":"number",
 		"enabled":"boolean",
 		"horizontalCenter":"number",
 		"id":"string",
-		"implements":["lark.gui.IUIComponent","lark.gui.ILayoutManagerClient","lark.gui.ILayoutElement","lark.gui.IInvalidating","lark.gui.IVisualElement","lark.gui.IStyleClient"],
+		"implements":["egret.gui.IUIComponent","egret.gui.ILayoutManagerClient","egret.gui.ILayoutElement","egret.gui.IInvalidating","egret.gui.IVisualElement","egret.gui.IStyleClient"],
 		"includeInLayout":"boolean",
 		"initialized":"boolean",
 		"isPopUp":"boolean",
@@ -905,22 +894,20 @@
 		"percentHeight":"number",
 		"percentWidth":"number",
 		"right":"number",
-		"super":"lark.DisplayObjectContainer",
+		"super":"egret.DisplayObjectContainer",
 		"top":"number",
 		"updateCompletePendingFlag":"boolean",
 		"verticalCenter":"number"
 	},
-	"lark.gui.VScrollBar":
+	"egret.gui.VScrollBar":
 	{
-		"super":"lark.gui.VSlider",
-		"thumbAlpha":"number",
-		"trackAlpha":"number"
+		"super":"egret.gui.VSlider"
 	},
-	"lark.gui.VSlider":
+	"egret.gui.VSlider":
 	{
-		"super":"lark.gui.SliderBase"
+		"super":"egret.gui.SliderBase"
 	},
-	"lark.gui.VerticalLayout":
+	"egret.gui.VerticalLayout":
 	{
 		"gap":"number",
 		"horizontalAlign":"string",
@@ -929,102 +916,102 @@
 		"paddingLeft":"number",
 		"paddingRight":"number",
 		"paddingTop":"number",
-		"super":"lark.gui.LayoutBase",
+		"super":"egret.gui.LayoutBase",
 		"verticalAlign":"string"
 	},
-	"lark.gui.ViewStack":
+	"egret.gui.ViewStack":
 	{
 		"createAllChildren":"boolean",
-		"implements":["lark.gui.IViewStack","lark.gui.ICollection"],
-		"selectedChild":"lark.gui.IVisualElement",
+		"implements":["egret.gui.IViewStack","egret.gui.ICollection"],
+		"selectedChild":"egret.gui.IVisualElement",
 		"selectedIndex":"number",
-		"super":"lark.gui.Group"
+		"super":"egret.gui.Group"
 	},
 	"eumn":
 	{
-		"lark.Bitmap":
+		"egret.Bitmap":
 		{
-			"fillMode":"lark.BitmapFillMode"
+			"fillMode":"egret.BitmapFillMode"
 		},
-		"lark.BitmapFillMode":["repeat","scale"],
-		"lark.BlendMode":["normal","add"],
-		"lark.DisplayObject":
+		"egret.BitmapFillMode":["repeat","scale"],
+		"egret.BlendMode":["normal","add"],
+		"egret.DisplayObject":
 		{
-			"blendMode":"lark.BlendMode"
+			"blendMode":"egret.BlendMode"
 		},
-		"lark.HorizontalAlign":["left","right","center","justify","contentJustify"],
-		"lark.TextField":
+		"egret.HorizontalAlign":["left","right","center","justify","contentJustify"],
+		"egret.TextField":
 		{
 			"textAlign":"text_textAlign",
 			"verticalAlign":"text_verticalAlign"
 		},
-		"lark.TextFieldType":["dynamic","input"],
-		"lark.VerticalAlign":["top","bottom","middle","justify","contentJustify"],
-		"lark.gui.Animate":
+		"egret.TextFieldType":["dynamic","input"],
+		"egret.VerticalAlign":["top","bottom","middle","justify","contentJustify"],
+		"egret.gui.Animate":
 		{
-			"repeatBehavior":"lark.gui.RepeatBehavior"
+			"repeatBehavior":"egret.gui.RepeatBehavior"
 		},
-		"lark.gui.Animation":
+		"egret.gui.Animation":
 		{
-			"repeatBehavior":"lark.gui.RepeatBehavior"
+			"repeatBehavior":"egret.gui.RepeatBehavior"
 		},
-		"lark.gui.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
-		"lark.gui.HorizontalLayout":
+		"egret.gui.ColumnAlign":["left","justifyUsingGap","justifyUsingWidth"],
+		"egret.gui.HorizontalLayout":
 		{
-			"horizontalAlign":"lark.HorizontalAlign",
-			"verticalAlign":"lark.VerticalAlign"
+			"horizontalAlign":"egret.HorizontalAlign",
+			"verticalAlign":"egret.VerticalAlign"
 		},
-		"lark.gui.InterruptionBehavior":["end","stop"],
-		"lark.gui.PopUpAnchor":
+		"egret.gui.InterruptionBehavior":["end","stop"],
+		"egret.gui.PopUpAnchor":
 		{
-			"popUpPosition":"lark.gui.PopUpPosition"
+			"popUpPosition":"egret.gui.PopUpPosition"
 		},
-		"lark.gui.PopUpPosition":["above","below","center","topLeft","left","right"],
-		"lark.gui.ProgressBar":
+		"egret.gui.PopUpPosition":["above","below","center","topLeft","left","right"],
+		"egret.gui.ProgressBar":
 		{
-			"direction":"lark.gui.ProgressBarDirection"
+			"direction":"egret.gui.ProgressBarDirection"
 		},
-		"lark.gui.ProgressBarDirection":["leftToRight","rightToLeft","topToBottom","bottomToTop"],
-		"lark.gui.RepeatBehavior":["loop","reverse"],
-		"lark.gui.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
-		"lark.gui.ScrollPolicy":["auto","off","on"],
-		"lark.gui.Scroller":
+		"egret.gui.ProgressBarDirection":["leftToRight","rightToLeft","topToBottom","bottomToTop"],
+		"egret.gui.RepeatBehavior":["loop","reverse"],
+		"egret.gui.RowAlign":["top","justifyUsingGap","justifyUsingHeight"],
+		"egret.gui.ScrollPolicy":["auto","off","on"],
+		"egret.gui.Scroller":
 		{
-			"horizontalScrollPolicy":"lark.gui.ScrollPolicy",
-			"verticalScrollPolicy":"lark.gui.ScrollPolicy"
+			"horizontalScrollPolicy":"egret.gui.ScrollPolicy",
+			"verticalScrollPolicy":"egret.gui.ScrollPolicy"
 		},
-		"lark.gui.TextBase":
+		"egret.gui.TextBase":
 		{
 			"textAlign":"text_textAlign",
 			"verticalAlign":"text_verticalAlign"
 		},
-		"lark.gui.TileLayout":
+		"egret.gui.TileLayout":
 		{
-			"columnAlign":"lark.gui.ColumnAlign",
-			"horizontalAlign":"lark.HorizontalAlign",
-			"orientation":"lark.gui.TileOrientation",
-			"rowAlign":"lark.gui.RowAlign",
-			"verticalAlign":"lark.VerticalAlign"
+			"columnAlign":"egret.gui.ColumnAlign",
+			"horizontalAlign":"egret.HorizontalAlign",
+			"orientation":"egret.gui.TileOrientation",
+			"rowAlign":"egret.gui.RowAlign",
+			"verticalAlign":"egret.VerticalAlign"
 		},
-		"lark.gui.TileOrientation":["rows","columns"],
-		"lark.gui.Transition":
+		"egret.gui.TileOrientation":["rows","columns"],
+		"egret.gui.Transition":
 		{
-			"interruptionBehavior":"lark.gui.InterruptionBehavior"
+			"interruptionBehavior":"egret.gui.InterruptionBehavior"
 		},
-		"lark.gui.UIAsset":
+		"egret.gui.UIAsset":
 		{
-			"fillMode":"lark.BitmapFillMode"
+			"fillMode":"egret.BitmapFillMode"
 		},
-		"lark.gui.VerticalLayout":
+		"egret.gui.VerticalLayout":
 		{
-			"horizontalAlign":"lark.HorizontalAlign",
-			"verticalAlign":"lark.VerticalAlign"
+			"horizontalAlign":"egret.HorizontalAlign",
+			"verticalAlign":"egret.VerticalAlign"
 		},
 		"text_textAlign":["left","right","center"],
 		"text_verticalAlign":["top","bottom","middle"]
 	},
 	"styles":
 	{
-		"lark.gui.TextBase":["bold","fontFamily","italic","size","textAlign","textColor","verticalAlign"]
+		"egret.gui.TextBase":["bold","fontFamily","italic","size","textAlign","textColor","verticalAlign"]
 	}
 }

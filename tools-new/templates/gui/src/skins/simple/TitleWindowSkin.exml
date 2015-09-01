@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin xmlns:e="http://ns.egret-labs.org/egret" xmlns:w="http://ns.egret-labs.org/wing"
+        minHeight="230" minWidth="470" maxWidth="710">
+    <w:HostComponent name="egret.gui.TitleWindow" />
+    <e:states>
+        <e:State name="normal"/>
+        <e:State name="disabled"/>
+    </e:states>
+    <e:UIAsset left="-4" right="-10" bottom="-10"  top="-4" source="panel_back_png" />
+    <e:Group left="0" right="0" height="50"  id="moveArea" >
+        <e:UIAsset left="-3" right="-3" bottom="-4"  top="-2" source="panel_headeback_png"/>
+        <e:Label id="titleDisplay" fontFamily="Tahoma" size="26"
+                 textColor="0x727070" maxDisplayedLines="1" left="5" right="5" verticalCenter="0"
+                 minHeight="28" verticalAlign="middle" textAlign="center" />
+        <e:Button id="closeButton" verticalCenter="0" right="10" skinName="skins.simple.CloseButtonSkin"/>
+    </e:Group>
+
+    <e:Group width="100%" bottom="0" top="51" id="contentGroup" clipAndEnableScrolling="true">
+    </e:Group>
+</e:Skin>
