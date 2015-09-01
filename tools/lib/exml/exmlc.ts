@@ -1,44 +1,42 @@
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Copyright (c) 2014,lark.com
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the lark.com nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY lark-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL lark-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-/// <reference path="node.d.ts"/>
+/// <reference path="../types.d.ts" />
 /// <reference path="exml_config.ts"/>
 
-var xml = require("../core/xml.js");
-var globals = require("../core/globals.js");
-var CodeUtil = require("../core/code_util.js");
-var file = require("../core/file.js");
-var exml_config = require("./exml_config.js");
+import xml = require("../xml/index");
+import utils = require("../utils");
+import file = require("../FileUtil");
+import CodeUtil = require("./code_util");
+import exml_config = require("./exml_config");
 
 var compiler:EXMLCompiler;
 
-function compile(exmlPath:string,srcPath:string):void{
+export function compile(exmlPath: string, srcPath: string): void{
     exmlPath = exmlPath.split("\\").join("/");
     srcPath = srcPath.split("\\").join("/");
     if(srcPath.charAt(srcPath.length-1)!="/"){
@@ -68,7 +66,6 @@ function compile(exmlPath:string,srcPath:string):void{
 };
 
 
-exports.compile = compile;
 class EXMLCompiler{
     /**
      * Egret命名空间
@@ -90,7 +87,7 @@ class EXMLCompiler{
     /**
      * 配置管理器实例
      */
-    private exmlConfig:EXMLConfig;
+    private exmlConfig: exml_config;
 
     /**
      * 获取重复的ID名
@@ -189,7 +186,7 @@ class EXMLCompiler{
      */
     public compile(xmlData:any,className:string,srcPath:string,exmlPath:string):string{
         if(!this.exmlConfig){
-            this.exmlConfig = new exml_config.getInstance();
+            this.exmlConfig = exml_config.getInstance();
         }
         this.exmlPath = exmlPath;
         this.currentXML = xmlData;

@@ -1,0 +1,23 @@
+{
+    "document_class": "Main",
+    "modules": [
+        {
+            "name": "core"
+        },
+        {
+            "name": "version"
+        },
+        {
+            "name": "res"
+        },
+		{
+            "name": "gui"
+        }
+    ],
+    "native": {
+        "path_ignore": [
+
+        ]
+    },
+    "egret_version":"{version_replace}"
+}

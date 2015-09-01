@@ -369,6 +369,8 @@ var egret;
                  * @private
                  */
                 this.audio = null;
+                //声音是否已经播放完成
+                this.isStopped = false;
                 /**
                  * @private
                  */
@@ -390,6 +392,10 @@ var egret;
             }
             var d = __define,c=HtmlSoundChannel;p=c.prototype;
             p.$play = function () {
+                if (this.isStopped) {
+                    egret.$error(1036);
+                    return;
+                }
                 try {
                     this.audio.currentTime = this.$startTime;
                 }
@@ -426,6 +432,10 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
+                    if (this.isStopped) {
+                        egret.$error(1036);
+                        return;
+                    }
                     if (!this.audio)
                         return;
                     this.audio.volume = value;
@@ -623,6 +633,8 @@ var egret;
                  * @private
                  */
                 this.$startTime = 0;
+                //声音是否已经播放完成
+                this.isStopped = false;
                 /**
                  * @private
                  */
@@ -645,6 +657,10 @@ var egret;
             }
             var d = __define,c=QQSoundChannel;p=c.prototype;
             p.$play = function () {
+                if (this.isStopped) {
+                    egret.$error(1036);
+                    return;
+                }
                 var self = this;
                 this._startTime = Date.now();
                 var loop = 0;
@@ -699,6 +715,10 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
+                    if (this.isStopped) {
+                        egret.$error(1036);
+                        return;
+                    }
                 }
             );
             d(p, "position"
@@ -962,6 +982,8 @@ var egret;
                  * @private
                  */
                 this.context = web.WebAudioDecode.ctx;
+                //声音是否已经播放完成
+                this.isStopped = false;
                 /**
                  * @private
                  */
@@ -998,6 +1020,10 @@ var egret;
             }
             var d = __define,c=WebAudioSoundChannel;p=c.prototype;
             p.$play = function () {
+                if (this.isStopped) {
+                    egret.$error(1036);
+                    return;
+                }
                 if (this.bufferSource) {
                     this.bufferSource.onended = null;
                     this.bufferSource = null;
@@ -1026,7 +1052,9 @@ var egret;
                     }
                     this.bufferSource.disconnect();
                     this.bufferSource = null;
+                    this.$audioBuffer = null;
                 }
+                this.isStopped = true;
             };
             d(p, "volume"
                 /**
@@ -1040,6 +1068,10 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
+                    if (this.isStopped) {
+                        egret.$error(1036);
+                        return;
+                    }
                     this._volume = value;
                     this.gain.gain.value = value;
                 }
@@ -1103,7 +1135,7 @@ var egret;
             /**
              * @inheritDoc
              */
-            function WebVideo() {
+            function WebVideo(url) {
                 var _this = this;
                 _super.call(this);
                 /**
@@ -1146,7 +1178,10 @@ var egret;
                     _this.dispatchEventWith(egret.Event.COMPLETE);
                 };
                 this.$renderRegion = new egret.sys.Region();
+                this.src = url;
                 this.once(egret.Event.ADDED_TO_STAGE, this.loadPoster, this);
+                if (url)
+                    this.load();
             }
             var d = __define,c=WebVideo;p=c.prototype;
             /**
@@ -1154,6 +1189,7 @@ var egret;
              */
             p.load = function (url) {
                 var _this = this;
+                url = url || this.src;
                 this.src = url;
                 if (DEBUG && !url) {
                     egret.$error(3002);
@@ -1161,14 +1197,25 @@ var egret;
                 if (this.video && this.video.src == url)
                     return;
                 var video = document.createElement("video");
-                video.src = url;
-                video.setAttribute("webkit-playsinline", "webkit-playsinline");
+                video.controls = null;
+                video.src = url; //
+                //video["autoplay"] = "autoplay";
+                video.setAttribute("autoplay", "autoplay");
+                video.setAttribute("webkit-playsinline", "true");
                 video.addEventListener("canplay", this.onVideoLoaded);
+                setTimeout(this.onVideoLoaded.bind(this), this, 100);
                 video.addEventListener("error", function () { return _this.onVideoError(); });
                 video.addEventListener("ended", function () { return _this.onVideoEnded(); });
                 video.load();
                 video.play();
-                egret.setTimeout(function () { return video.pause(); }, this, 16);
+                video.style.position = "absolute";
+                video.style.top = "0px";
+                video.style.zIndex = "-88888";
+                video.style.left = "0px";
+                video.height = 1;
+                video.width = 1;
+                document.body.appendChild(video);
+                window.setTimeout(function () { return video.pause(); }, 16);
                 this.video = video;
             };
             /**
@@ -1186,19 +1233,20 @@ var egret;
                 if (startTime != undefined)
                     video.currentTime = +startTime || 0;
                 video.loop = !!loop;
-                video.play();
+                video.style.zIndex = "9999";
                 video.style.position = "absolute";
                 video.style.top = "0px";
                 video.style.left = "0px";
-                video.style.height = "0";
-                video.style.width = "0";
+                video.height = this.heightSet;
+                video.width = this.widthSet;
                 document.body.appendChild(video);
+                video.play();
                 var fullscreen = false;
                 if (this._fullscreen) {
                     fullscreen = this.goFullscreen();
                 }
                 if (fullscreen == false) {
-                    video.setAttribute("webkit-playsinline", "webkit-playsinline");
+                    video.setAttribute("webkit-playsinline", "true");
                     egret.startTick(this.markDirty, this);
                 }
             };
@@ -1231,15 +1279,18 @@ var egret;
              * @inheritDoc
              */
             p.close = function () {
+                var _this = this;
+                this.closed = true;
+                this.video.removeEventListener("canplay", this.onVideoLoaded);
+                this.video.removeEventListener("error", function () { return _this.onVideoError(); });
+                this.video.removeEventListener("ended", function () { return _this.onVideoEnded(); });
                 this.pause();
                 if (this.loaded == false && this.video)
                     this.video.src = "";
                 if (this.video) {
-                    if (this.video['remove'])
-                        this.video['remove']();
+                    this.video.parentElement.removeChild(this.video);
                     this.video = null;
                 }
-                this.closed = true;
                 this.loaded = false;
             };
             /**
@@ -1248,7 +1299,9 @@ var egret;
             p.pause = function () {
                 if (this.video) {
                     this.video.pause();
-                    this.onVideoEnded();
+                    if (!this.closed) {
+                        this.onVideoEnded();
+                    }
                 }
                 egret.stopTick(this.markDirty, this);
             };
@@ -2122,7 +2175,7 @@ var egret;
                     this.setElementStyle("fontWeight", textfield.bold ? "bold" : "normal");
                     this.setElementStyle("textAlign", textfield.textAlign);
                     this.setElementStyle("fontSize", textfield.size * this._gscaleY + "px");
-                    this.setElementStyle("color", egret.sys.toColorString(textfield.textColor));
+                    this.setElementStyle("color", egret.toColorString(textfield.textColor));
                     this.setElementStyle("width", textfield.width * this._gscaleX + "px");
                     this.setElementStyle("verticalAlign", textfield.verticalAlign);
                     if (textfield.multiline) {
@@ -3806,7 +3859,7 @@ var egret;
         }
         function dispose() {
             if (this._bitmapData) {
-                egret.Texture.$dispose(this);
+                egret.Texture.$invalidate(this.hashCode);
                 disposeBitmapData(this._bitmapData);
             }
         }

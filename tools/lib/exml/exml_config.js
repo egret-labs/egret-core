@@ -1,37 +1,34 @@
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-/// <reference path="node.d.ts"/>
-var file = require("../core/file.js");
-var xml = require("../core/xml.js");
-var param = require("../core/params_analyze.js");
-var CodeUtil = require("../core/code_util.js");
-var create_manifest = require("../tools/create_manifest.js");
+/*
+ * Copyright (c) 2014,egret.com
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the egret.com nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY EGRET-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL EGRET-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+/// <reference path="../types.d.ts" />
+var file = require("../FileUtil");
+var xml = require("../xml/index");
+var CodeUtil = require("./code_util");
+var create_manifest = require("./createManifest");
 var properties = {};
 var stylesMap = {};
 var EXMLConfig = (function () {
@@ -45,7 +42,7 @@ var EXMLConfig = (function () {
         this.componentDic = {};
         this.idMap = {};
         this.basicTypes = ["void", "any", "number", "string", "boolean", "Object", "Array", "Function"];
-        var exmlPath = param.getEgretPath() + "/tools/lib/exml/";
+        var exmlPath = egret.args.larkRoot + "/tools-new/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
         var str = file.read(exmlPath + "egret-manifest.xml");
         var manifest = xml.parse(str);
@@ -54,6 +51,12 @@ var EXMLConfig = (function () {
         properties = JSON.parse(str);
         this.findStyles(properties);
     }
+    EXMLConfig.getInstance = function () {
+        if (!exmlConfig) {
+            exmlConfig = new EXMLConfig();
+        }
+        return exmlConfig;
+    };
     EXMLConfig.prototype.findStyles = function (properties) {
         var data = properties["styles"];
         if (!data) {
@@ -562,12 +565,5 @@ var Component = (function () {
     return Component;
 })();
 var exmlConfig;
-function getInstance() {
-    if (!exmlConfig) {
-        exmlConfig = new EXMLConfig();
-    }
-    return exmlConfig;
-}
-exports.EXMLConfig = EXMLConfig;
-exports.getInstance = getInstance;
+module.exports = EXMLConfig;
 //# sourceMappingURL=exml_config.js.map

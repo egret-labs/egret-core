@@ -15,6 +15,10 @@
           "debug": false
         },
         {
+          "path": "native/NativeContext.d.ts",
+          "platform": "native"
+        },
+        {
           "path": "media/native/NativeSound.ts",
           "platform": "native"
         },

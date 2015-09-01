@@ -115,16 +115,6 @@ var egret;
                 channel.$play();
                 return channel;
             };
-            p.preload = function (type, callback, thisObj) {
-                if (callback === void 0) { callback = null; }
-                if (thisObj === void 0) { thisObj = null; }
-                this.type = type;
-                if (callback) {
-                    window.setTimeout(function () {
-                        callback.call(thisObj);
-                    }, 0);
-                }
-            };
             /**
              * @inheritDoc
              */
@@ -134,10 +124,6 @@ var egret;
                 if (this.originAudio)
                     this.originAudio = null;
                 NativeSound.$clear(this.url);
-            };
-            p.destroy = function () {
-                this.originAudio = null;
-                this.loaded = false;
             };
             NativeSound.$clear = function (url) {
                 var array = NativeSound.audios[url];
@@ -1787,7 +1773,7 @@ var egret;
         }
         function dispose() {
             if (this._bitmapData) {
-                egret.Texture.$dispose(this);
+                egret.Texture.$invalidate(this.hashCode);
             }
         }
         egret.Texture.prototype.toDataURL = toDataURL;
@@ -2345,6 +2331,8 @@ var egret;
                  * @private
                  */
                 this.audio = null;
+                //声音是否已经播放完成
+                this.isStopped = false;
                 /**
                  * @private
                  */
@@ -2366,6 +2354,10 @@ var egret;
             }
             var d = __define,c=NativeSoundChannel;p=c.prototype;
             p.$play = function () {
+                if (this.isStopped) {
+                    egret.$error(1036);
+                    return;
+                }
                 try {
                     this.audio.currentTime = this.$startTime;
                 }
@@ -2402,6 +2394,10 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
+                    if (this.isStopped) {
+                        egret.$error(1036);
+                        return;
+                    }
                     if (!this.audio)
                         return;
                     this.audio.volume = value;
