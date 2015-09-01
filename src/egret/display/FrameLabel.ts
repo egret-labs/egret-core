@@ -37,12 +37,14 @@ module egret {
     {
         private _name: string;
         private _frame: number /*int*/;
+        private _end: number = 0 /*int*/;
 
-        constructor (name: string, frame: number /*int*/)
+        constructor (name: string, frame: number /*int*/,end?:any/*int*/)
         {
             super();
             this._name = name;
             this._frame = frame | 0;
+            if(end) this._end = end | 0;
         }
 
         /**
@@ -60,13 +62,19 @@ module egret {
         public get frame(): number /*int*/ {
             return this._frame;
         }
-
+        /**
+         * 标签对应的结束帧序号
+         * @member {number} egret.FrameLabel#frame
+         */
+        public get end(): number /*int*/ {
+            return this._end;
+        }
         /**
          * 复制当前帧标签对象
          * @method egret.FrameLabel#clone
          */
         public clone() {
-            return new FrameLabel(this._name, this._frame);
+            return new FrameLabel(this._name, this._frame ,this._end);
         }
     }
 
