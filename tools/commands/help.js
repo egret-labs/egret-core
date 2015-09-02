@@ -10,4 +10,3 @@ var Help = (function () {
     return Help;
 })();
 module.exports = Help;
-//# sourceMappingURL=help.js.map

@@ -66,4 +66,3 @@ function generateExmlDTS() {
 function getExmlDtsPath() {
     return file.joinPath(egret.args.srcDir, "libs", "exml.d.ts");
 }
-//# sourceMappingURL=exml.gui.js.map

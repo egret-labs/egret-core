@@ -104,7 +104,7 @@ declare module egret {
         /**
          * 是否有swan
          */
-        hasSwan(): boolean;
+        hasEUI(): boolean;
 
         /**
          * 获取项目的根路径

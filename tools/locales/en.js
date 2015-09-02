@@ -44,12 +44,14 @@ locale_strings[10014] = "Error occurred while compiling your code：";
 locale_strings[10015] = "\"{0}\" is not a valid Egret project folder";
 locale_strings[10016] = "Please visit {0} if no browser open it automatically";
 locale_strings[10017] = "Egret project is created, you can execute \"Egret run\" to run the project";
-locale_strings[10018] = "Found circular dependency when try to sort the TypeScript files. " + "Maybe you are create an instance of a subclass and assign it to a static member, " + "or using a subclass in immediately executing codes";
-locale_strings[10019] = "Cannot find the projects used to build native apps. These projects are not include on the Github." + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
+locale_strings[10018] = "Found circular dependency when try to sort the TypeScript files. "
+    + "Maybe you are create an instance of a subclass and assign it to a static member, "
+    + "or using a subclass in immediately executing codes";
+locale_strings[10019] = "Cannot find the projects used to build native apps. These projects are not include on the Github."
+    + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
 locale_strings[12000] = "Create Egret Project";
 locale_strings[12001] = "Please select a template";
 locale_strings[12002] = "Please set the default screen size";
 locale_strings[12003] = "Please select the Scale Mode";
 locale_strings[12004] = "Please select modules";
 locale_strings[12005] = "Please select the platform";
-//# sourceMappingURL=en.js.map

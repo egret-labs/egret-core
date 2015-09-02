@@ -87,4 +87,3 @@ var egret;
     locale_strings[1608] = "> replace all configure elements ...";
     locale_strings[1609] = "> rename project name ...";
 })(egret || (egret = {}));
-//# sourceMappingURL=zh_CN.js.map

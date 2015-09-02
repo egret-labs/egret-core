@@ -72,4 +72,3 @@ var LarkMessageBody = (function () {
     return LarkMessageBody;
 })();
 module.exports = ServiceSocket;
-//# sourceMappingURL=ServiceSocket.js.map

@@ -18,7 +18,7 @@ class EgretProperties implements egret.EgretProperties {
             this.modulesConfig["native"] = { "name": "native" };
         }
 
-        if (this.modulesConfig["swan"] != null && this.modulesConfig["gui"] != null) {
+        if (this.modulesConfig["eui"] != null && this.modulesConfig["gui"] != null) {
             globals.log2(8);
 
             process.exit(1);
@@ -28,8 +28,8 @@ class EgretProperties implements egret.EgretProperties {
     /**
      * 是否有swan
      */
-    hasSwan(): boolean {
-        return this.modulesConfig["swan"] != null;
+    hasEUI(): boolean {
+        return this.modulesConfig["eui"] != null;
     }
 
     /**

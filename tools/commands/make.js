@@ -11,4 +11,3 @@ var MakeCommand = (function () {
     return MakeCommand;
 })();
 module.exports = MakeCommand;
-//# sourceMappingURL=make.js.map

@@ -56,4 +56,3 @@ function compileTemplate(project) {
         NativeProject.copyNativeTemplate();
 }
 module.exports = Create;
-//# sourceMappingURL=Create.js.map

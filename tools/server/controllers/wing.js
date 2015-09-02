@@ -47,4 +47,3 @@ function getUserProjectContentFullName(req) {
     return fullpath;
 }
 module.exports = exportObject;
-//# sourceMappingURL=wing.js.map

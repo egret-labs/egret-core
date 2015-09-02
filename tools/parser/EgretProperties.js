@@ -13,7 +13,7 @@ var EgretProperties = (function () {
             this.modulesConfig["html5"] = { "name": "html5" };
             this.modulesConfig["native"] = { "name": "native" };
         }
-        if (this.modulesConfig["swan"] != null && this.modulesConfig["gui"] != null) {
+        if (this.modulesConfig["eui"] != null && this.modulesConfig["gui"] != null) {
             globals.log2(8);
             process.exit(1);
         }
@@ -21,8 +21,8 @@ var EgretProperties = (function () {
     /**
      * 是否有swan
      */
-    EgretProperties.prototype.hasSwan = function () {
-        return this.modulesConfig["swan"] != null;
+    EgretProperties.prototype.hasEUI = function () {
+        return this.modulesConfig["eui"] != null;
     };
     /**
      * 获取项目的根路径
@@ -207,4 +207,3 @@ var EgretProperties = (function () {
 })();
 var config = config || new EgretProperties();
 module.exports = config;
-//# sourceMappingURL=EgretProperties.js.map

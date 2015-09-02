@@ -23,4 +23,3 @@ tsclark.Compiler.exit = function (exitCode) {
     return exitCode;
 };
 module.exports = Compiler;
-//# sourceMappingURL=Compiler.js.map

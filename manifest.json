@@ -219,6 +219,13 @@
       "files": [ ],
       "root": "src/extension/resource",
       "dependencies": [ "egret","game" ]
+    },
+    {
+      "name": "eui",
+      "description": "Egret UI",
+      "files": [ ],
+      "root": "src/extension/eui",
+      "dependencies": [ "egret" ]
     }
   ],
   "platforms": [

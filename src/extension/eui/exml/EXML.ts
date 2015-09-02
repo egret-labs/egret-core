@@ -27,11 +27,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/// <reference path="EXMLParser.ts" />
+
 module EXML {
 
     var parser = new eui.sys.EXMLParser();
 
-    var requestPool:egret.URLLoader[] = [];
+    var requestPool: egret.HttpRequest[] = [];
     var callBackMap:any = {};
     var parsedClasses:any = {};
 
@@ -195,21 +197,22 @@ module EXML {
 
         var request = requestPool.pop();
         if (!request) {
-            request = new egret.URLLoader();
-            request.dataFormat = egret.URLLoaderDataFormat.TEXT;
+            request = new egret.HttpRequest();
         }
 
         var onRequestLoaded = e => {
             request.removeEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
             request.removeEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
-            var text:string = e.type == egret.Event.COMPLETE ? request.data : "";
+            var text: string = e.type == egret.Event.COMPLETE ? request.response : "";
             requestPool.push(request);
             callback(url, text);
         };
 
         request.addEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
         request.addEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
-        request.load(new egret.URLRequest(url));
+        request.open(url);
+        request.responseType = egret.HttpResponseType.TEXT;
+        request.send();
 
     }
 
