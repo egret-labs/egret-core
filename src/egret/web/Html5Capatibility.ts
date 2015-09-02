@@ -91,12 +91,6 @@ module egret.web {
          * @private
          */
         public static _System_OS:number = 0;
-
-        /**
-         * @private
-         */
-        public static _WebPSupport:boolean = false;
-
         /**
          * @private
          */
