@@ -7,6 +7,7 @@ import htmlparser = require("../lib/htmlparser");
 
 export function normalize(project: egret.ILarkProject) {
     project.entryClass = project.entryClass || "Main";
+    project.platform = project.platform || "web";
     project.background = project.background || "#888888";
     project.scaleMode = project.scaleMode || "noScale"
     project.orientationMode = project.orientationMode || "auto"

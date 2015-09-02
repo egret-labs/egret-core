@@ -226,6 +226,13 @@
       "files": [ ],
       "root": "src/extension/eui",
       "dependencies": [ "egret" ]
+    },
+    {
+      "name": "tween",
+      "description": "Egret Tween",
+      "files": [ ],
+      "root": "src/extension/tween",
+      "dependencies": [ "egret" ]
     }
   ],
   "platforms": [
@@ -245,17 +252,25 @@
   ],
   "templates": [
     {
-      "name": "eui",
-      "description": "使用 eui 扩展库创建友好的交互界面",
-      "modules": [ "egret", "eui", "res" ]
-    },
-    {
       "name": "empty",
       "displayName": "空 Egret 项目",
       "language": "TypeScript",
       "tag": "game,app,TypeScript",
       "description": "创建一个空项目,仅添加 Egret 相关模块引用",
       "modules": [ "egret" ]
+    },
+    {
+      "name": "game",
+      "displayName": "Egret 游戏项目",
+      "language": "TypeScript",
+      "tag": "game,TypeScript",
+      "description": "创建一个Egret 游戏项目",
+      "modules": [ "egret","game","tween","res" ]
+    },
+    {
+      "name": "eui",
+      "description": "使用 eui 扩展库创建友好的交互界面",
+      "modules": [ "egret", "eui", "res" ]
     },
     {
       "name": "gui",

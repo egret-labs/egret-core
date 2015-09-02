@@ -19,6 +19,8 @@ class Create implements egret.Command {
         var proj = this.project;
         var options = egret.args;
 
+        projectAction.normalize(proj);
+
         var template = FileUtil.joinPath(options.larkRoot, TemplatesRoot + proj.type);
         FileUtil.copy(template, options.projectDir);
 
@@ -54,10 +56,8 @@ function compileTemplate(project: egret.ILarkProject) {
     var scriptTemplate = `<!--{{~it.scripts :value:index}}-->
     <script src="{{=value}}"></script>
     <!--{{~}}-->`;
-
     project.moduleScripts = moduleScripts;
     project['scriptTemplate'] = scriptTemplate;
-    projectAction.normalize(project);
 
     var files = FileUtil.searchByFunction(options.projectDir, f=> f.indexOf("html") > 0);
     files.forEach(file=> {

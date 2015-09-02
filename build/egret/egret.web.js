@@ -3159,10 +3159,6 @@ var egret;
             /**
              * @private
              */
-            Html5Capatibility._WebPSupport = false;
-            /**
-             * @private
-             */
             Html5Capatibility.ua = "";
             return Html5Capatibility;
         })(egret.HashObject);

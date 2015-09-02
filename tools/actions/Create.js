@@ -14,6 +14,7 @@ var Create = (function () {
     Create.prototype.execute = function () {
         var proj = this.project;
         var options = egret.args;
+        projectAction.normalize(proj);
         var template = FileUtil.joinPath(options.larkRoot, TemplatesRoot + proj.type);
         FileUtil.copy(template, options.projectDir);
         CopyFiles.copyLark();
@@ -44,7 +45,6 @@ function compileTemplate(project) {
     var scriptTemplate = "<!--{{~it.scripts :value:index}}-->\n    <script src=\"{{=value}}\"></script>\n    <!--{{~}}-->";
     project.moduleScripts = moduleScripts;
     project['scriptTemplate'] = scriptTemplate;
-    projectAction.normalize(project);
     var files = FileUtil.searchByFunction(options.projectDir, function (f) { return f.indexOf("html") > 0; });
     files.forEach(function (file) {
         var content = FileUtil.read(file);

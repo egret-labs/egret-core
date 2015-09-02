@@ -2,6 +2,7 @@
 var htmlparser = require("../lib/htmlparser");
 function normalize(project) {
     project.entryClass = project.entryClass || "Main";
+    project.platform = project.platform || "web";
     project.background = project.background || "#888888";
     project.scaleMode = project.scaleMode || "noScale";
     project.orientationMode = project.orientationMode || "auto";

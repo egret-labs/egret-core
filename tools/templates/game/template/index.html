@@ -1,0 +1,62 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Egret</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="full-screen" content="true"/>
+    <meta name="screen-orientation" content="portrait"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta name="360-fullscreen" content="true"/>
+    <style>
+        html, body {
+            -ms-touch-action: none;
+            background: {{=it.background}};
+            padding: 0;
+            border: 0;
+            margin: 0;
+            height: 100%;
+        }
+    </style>
+
+    {{~it.moduleScripts :value:index}}
+    <script src="{{=value}}.js" src-release="{{=value}}.min.js"></script>
+    {{~}}
+
+    <!--这个标签会被替换为项目中所有的 javascript 文件-->
+    {{=it.scriptTemplate}}
+</head>
+<body>
+
+    <div id="lark-sample" style="margin: auto;width: 100%;height: 100%;" class="egret-player"
+         data-entry-class="Main"
+         data-orientation="{{=it.orientationMode}}"
+         data-scale-mode="{{=it.scaleMode}}"
+         data-resolution-mode="{{=it.resolutionMode}}"
+         data-frame-rate="{{=it.frameRate}}"
+         data-content-width="{{=it.contentWidth}}"
+         data-content-height="{{=it.contentHeight}}"
+         data-show-paint-rect="false"
+         data-multi-fingered="2"
+         data-show-fps="false" data-show-log="false"
+         data-log-filter="" data-log-color="#b0b0b0">
+    </div>
+    <script>
+        egret.runEgret();
+
+    //处理屏幕大小改变
+    //implement for screen size change
+    var resizeTimer = null;
+    var doResize = function () {
+        egret.updateAllScreens();
+        resizeTimer = null;
+    };
+    window.onresize = function () {
+        if (resizeTimer == null) {
+            resizeTimer = setTimeout(doResize, 300);
+        }
+    };
+    </script>
+</body>
+</html>
