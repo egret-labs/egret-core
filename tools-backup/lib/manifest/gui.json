@@ -46,6 +46,7 @@
         "states/SetProperty.ts",
         "states/SetStyle.ts",
         "states/State.ts",
+        "utils/Adapter.ts",
         "utils/LayoutUtil.ts",
         "utils/getScale9Grid.ts",
         "utils/setProperties.ts",

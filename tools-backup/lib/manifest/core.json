@@ -119,7 +119,6 @@
 
         "extension/game/utils/setTimeout.ts",
         "extension/game/utils/setInterval.ts",
-        "extension/game/utils/Injector.ts",
         "extension/game/utils/Recycler.ts",
         "extension/game/system/MainContext.ts",
 

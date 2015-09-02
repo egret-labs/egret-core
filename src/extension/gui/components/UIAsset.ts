@@ -146,7 +146,7 @@ module egret.gui {
         private getAdapter():IAssetAdapter{
             var adapter:IAssetAdapter;
             try{
-                adapter = Injector.getInstance("egret.gui.IAssetAdapter");
+                adapter = $getAdapter("egret.gui.IAssetAdapter");
             }
             catch(e){
                 adapter = new DefaultAssetAdapter();
