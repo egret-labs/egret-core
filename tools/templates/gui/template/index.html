@@ -43,23 +43,7 @@
          data-log-filter="" data-log-color="#b0b0b0">
     </div>
     <script>
-    var useWebP = false;
-    //WebP_replace
-    if(useWebP && (navigator.userAgent.indexOf("Chrome") != -1 || navigator.userAgent.indexOf("MQQBrowser") != -1)) {
-        var img = new Image();
-        img.onload = function () {
-            egret.web.Html5Capatibility._WebPSupport = true;
-            egret.runEgret();
-        };
-        img.onerror = function (){
-            egret.web.Html5Capatibility._WebPSupport = false;
-            egret.runEgret();
-        };
-        img.src = "4x4.webp";
-    }
-    else {
         egret.runEgret();
-    }
 
     //处理屏幕大小改变
     //implement for screen size change
