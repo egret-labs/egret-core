@@ -62,13 +62,13 @@ module egret.gui {
             }
             else if(typeof(source)=="string"){
                 var url:string = <string>source;
-                var loader:URLLoader = new URLLoader();
-                loader.dataFormat = URLLoaderDataFormat.TEXTURE;
+                var loader:ImageLoader = new ImageLoader();
                 loader.addEventListener(Event.COMPLETE, function(event:Event){
-                    content = loader.data;
+                    content = new egret.Texture();
+                    content._setBitmapData(loader.data);
                     compFunc.call(thisObject,content,source);
                 }, this);
-                loader.load(new URLRequest(url));
+                loader.load(url);
             }
             else{
                 compFunc.call(thisObject,content,source);

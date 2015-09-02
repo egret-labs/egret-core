@@ -49,30 +49,34 @@ module egret.gui {
             SkinnableComponent._defaultTheme = new Theme(configURL);
         }
 
+        private _configURL:string;
         private loadConfig(configURL:string):void{
-            var loader:egret.URLLoader = new URLLoader();
+            this._configURL = configURL;
+
+            var loader:egret.HttpRequest = new HttpRequest();
             loader.addEventListener(Event.COMPLETE,this.onLoadComplete,this);
             loader.addEventListener(IOErrorEvent.IO_ERROR,this.onLoadError,this);
-            loader.dataFormat = URLLoaderDataFormat.TEXT;
-            loader.load(new URLRequest(configURL));
+            loader.responseType = egret.HttpResponseType.TEXT;
+            loader.open(configURL);
+            loader.send();
         }
 
         private onLoadComplete(event:Event):void{
-            var loader:egret.URLLoader = <egret.URLLoader> (event.target);
+            var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
             try{
-                var str:string = <string> loader.data;
+                var str:string = <string> loader.response;
                 var data:any = JSON.parse(str);
                 this.skinMap = data.skins;
             }
             catch (e){
-                egret.$warn(1017, loader._request.url, loader.data);
+                egret.$warn(1017, this._configURL, loader.response);
             }
             this.handleDelyList();
         }
 
         private onLoadError(event:IOErrorEvent):void{
-            var loader:egret.URLLoader = <egret.URLLoader> (event.target);
-            egret.$warn(3000, loader._request.url);
+            var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+            egret.$warn(3000, this._configURL);
             this.handleDelyList();
         }
 

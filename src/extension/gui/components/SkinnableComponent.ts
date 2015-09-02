@@ -124,12 +124,7 @@ module egret.gui {
          */
         private getSkinAdapter():ISkinAdapter{
             var adapter:ISkinAdapter;
-            try{
-                adapter = Injector.getInstance("egret.gui.ISkinAdapter");
-            }
-            catch(e){
-                adapter = new DefaultSkinAdapter();
-            }
+            adapter = new DefaultSkinAdapter();
             SkinnableComponent.skinAdapter = adapter;
             return adapter;
         }

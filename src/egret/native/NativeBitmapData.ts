@@ -27,16 +27,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+module egret.native {
 
-module RES {
+    var className = "egret.BitmapData";
+
     /**
      * @private
+     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
      */
-    export class TextAnalyzer extends BinAnalyzer{
-
-        public constructor(){
-            super();
-            this._dataFormat = egret.HttpResponseType.TEXT;
-        }
+    export function toBitmapData(data:any):BitmapData {
+        data["hashCode"] = data["$hashCode"] = $hashCount++;
+        return <BitmapData><any>data;
     }
 }

@@ -52,12 +52,7 @@ module egret.gui {
 		 */		
 		private static getImpl():IPopUpManager{
 			if (!PopUpManager._impl){
-				try{
-					PopUpManager._impl = Injector.getInstance("egret.gui.IPopUpManager");
-				}
-				catch(e){
-					PopUpManager._impl = new PopUpManagerImpl();
-				}
+				PopUpManager._impl = new PopUpManagerImpl();
 			}
 			return PopUpManager._impl;
 		}

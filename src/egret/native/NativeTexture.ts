@@ -111,12 +111,6 @@ module egret.native {
         return null;
     }
 
-    function dispose():void {
-        if (this._bitmapData) {
-            Texture.$invalidate(this.hashCode);
-        }
-    }
-
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
     Texture.prototype.getPixel32 = getPixel32;

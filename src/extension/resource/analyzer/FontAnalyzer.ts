@@ -32,70 +32,70 @@ module RES {
     /**
      * @private
      */
-    export class FontAnalyzer extends SheetAnalyzer{
+    export class FontAnalyzer extends SheetAnalyzer {
 
-        public constructor(){
+        public constructor() {
             super();
         }
 
-        public analyzeConfig(resItem:ResourceItem,data:string):string{
+        public analyzeConfig(resItem:ResourceItem, data:string):string {
             var name:string = resItem.name;
             var config:any;
             var imageUrl:string = "";
-            try{
+            try {
                 var str:string = <string> data;
                 config = JSON.parse(str);
             }
-            catch (e){
+            catch (e) {
             }
-            if(config){
-                imageUrl = this.getRelativePath(resItem.url,config["file"]);
+            if (config) {
+                imageUrl = this.getRelativePath(resItem.url, config["file"]);
             }
-            else{
+            else {
                 config = <string> data;
-                imageUrl = this.getTexturePath(resItem.url,config);
+                imageUrl = this.getTexturePath(resItem.url, config);
             }
             this.sheetMap[name] = config;
             return imageUrl;
         }
 
-        public analyzeBitmap(resItem:ResourceItem,data:egret.Texture):void {
+        public analyzeBitmap(resItem:ResourceItem, texture:egret.Texture):void {
 
             var name:string = resItem.name;
-            if (this.fileDic[name] || !data) {
+            if (this.fileDic[name] || !texture) {
                 return;
             }
-            var texture:egret.Texture = data;
+
             var config:any = this.sheetMap[name];
             delete this.sheetMap[name];
-            var bitmapFont:egret.BitmapFont = new egret.BitmapFont(texture,config);
+            var bitmapFont:egret.BitmapFont = new egret.BitmapFont(texture, config);
             this.fileDic[name] = bitmapFont;
         }
 
-        private getTexturePath(url:string,fntText:string):string{
+        private getTexturePath(url:string, fntText:string):string {
 
             var file:string = "";
             var lines = fntText.split("\n");
             var pngLine = lines[2];
             var index:number = pngLine.indexOf("file=\"");
-            if(index!=-1){
-                pngLine = pngLine.substring(index+6);
+            if (index != -1) {
+                pngLine = pngLine.substring(index + 6);
                 index = pngLine.indexOf("\"");
-                file = pngLine.substring(0,index);
+                file = pngLine.substring(0, index);
             }
 
             url = url.split("\\").join("/");
             var index:number = url.lastIndexOf("/");
-            if(index!=-1){
-                url = url.substring(0,index+1)+file;
+            if (index != -1) {
+                url = url.substring(0, index + 1) + file;
             }
-            else{
+            else {
                 url = file;
             }
             return url;
         }
 
-        protected onResourceDestroy(font:egret.BitmapFont){
+        protected onResourceDestroy(font:egret.BitmapFont) {
             font.dispose();
         }
     }
