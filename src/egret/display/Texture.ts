@@ -320,7 +320,12 @@ module egret {
          * @platform Web,Native
          */
         public dispose():void {
-            throw new Error();
+            if (this._bitmapData) {
+                Texture.$dispose(this._bitmapData.hashCode);
+
+                console.log("dispose Texture");
+                this._bitmapData = null;
+            }
         }
 
         private static _displayList:Object = {};
@@ -359,6 +364,21 @@ module egret {
             }
             var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
             for (var i:number = 0; i < tempList.length; i++) {
+                tempList[i].$invalidateContentBounds();
+            }
+        }
+
+        static $dispose(bitmapDataHashCode:number):void {
+            var hashCode:number = bitmapDataHashCode;
+
+            if (!Texture._displayList[hashCode]) {
+                return;
+            }
+            var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
+            for (var i:number = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    (<egret.Bitmap>tempList[i]).$Bitmap[sys.BitmapKeys.image] = null;
+                }
                 tempList[i].$invalidateContentBounds();
             }
         }

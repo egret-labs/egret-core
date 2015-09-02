@@ -307,17 +307,5 @@ module egret {
             surface.height = Math.max(257, height);
             return surface.renderContext;
         }
-
-        /**
-         * 销毁 RenderTexture 对象
-         * @method egret.RenderTexture#dispose
-         */
-        public dispose():void {
-            if (this._bitmapData) {
-                Texture.$invalidate(this.hashCode);
-
-                this._bitmapData = null;
-            }
-        }
     }
 }
