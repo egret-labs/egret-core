@@ -32,33 +32,122 @@ module RES {
     /**
      * @private
      */
-    export class ImageAnalyzer extends BinAnalyzer{
+    export class ImageAnalyzer extends AnalyzerBase {
 
-        public constructor(){
+        /**
+         * 构造函数
+         */
+        public constructor() {
             super();
-            this._dataFormat = egret.URLLoaderDataFormat.TEXTURE;
+        }
+
+        /**
+         * 字节流数据缓存字典
+         */
+        protected fileDic:any = {};
+        /**
+         * 加载项字典
+         */
+        protected resItemDic:Array<any> = [];
+
+        /**
+         * @inheritDoc
+         */
+        public loadFile(resItem:ResourceItem, compFunc:Function, thisObject:any):void {
+            if (this.fileDic[resItem.name]) {
+                compFunc.call(thisObject, resItem);
+                return;
+            }
+            var loader = this.getLoader();
+            this.resItemDic[loader.$hashCode] = {item: resItem, func: compFunc, thisObject: thisObject};
+            loader.load(resItem.url);
+        }
+
+        /**
+         * Loader对象池
+         */
+        protected recycler:egret.ImageLoader[] = [];
+
+        /**
+         * 获取一个Loader对象
+         */
+        private getLoader():egret.ImageLoader {
+            var loader = this.recycler.pop();
+            if (!loader) {
+                loader = new egret.ImageLoader();
+                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
+            }
+            return loader;
+        }
+
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event:egret.Event):void {
+            var request = <egret.ImageLoader> (event.$target);
+            var data:any = this.resItemDic[request.$hashCode];
+            delete this.resItemDic[request.$hashCode];
+            var resItem:ResourceItem = data.item;
+            var compFunc:Function = data.func;
+            resItem.loaded = (event.$type == egret.Event.COMPLETE);
+            if (resItem.loaded) {
+                this.analyzeData(resItem, request.data)
+            }
+            this.recycler.push(request);
+            compFunc.call(data.thisObject, resItem);
         }
 
         /**
          * 解析并缓存加载成功的数据
          */
-        public analyzeData(resItem:ResourceItem,data:any):void{
+        protected analyzeData(resItem:ResourceItem, data:egret.BitmapData):void {
             var name:string = resItem.name;
-            if(this.fileDic[name]||!data){
+            if (this.fileDic[name] || !data) {
                 return;
             }
-            this.fileDic[name] = data;
+
+            var texture:egret.Texture = new egret.Texture();
+            texture._setBitmapData(data);
+
+            this.fileDic[name] = texture;
             var config:any = resItem.data;
-            if(config&&config["scale9grid"]){
+            if (config && config["scale9grid"]) {
                 var str:string = config["scale9grid"];
                 var list:Array<string> = str.split(",");
-                data["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
+                texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
             }
         }
 
-        protected onResourceDestroy(texture:any){
+        /**
+         * @inheritDoc
+         */
+        public getRes(name:string):any {
+            return this.fileDic[name];
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public hasRes(name:string):boolean {
+            var res:any = this.getRes(name);
+            return res != null;
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public destroyRes(name:string):boolean {
+            if (this.fileDic[name]) {
+                this.onResourceDestroy(this.fileDic[name]);
+                delete this.fileDic[name];
+                return true;
+            }
+            return false;
+        }
+
+        protected onResourceDestroy(texture:any) {
             texture.dispose();
-            //console.log (resource);
         }
     }
 }

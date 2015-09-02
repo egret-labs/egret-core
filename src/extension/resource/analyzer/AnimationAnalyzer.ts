@@ -38,7 +38,7 @@ module RES {
 
         public constructor() {
             super();
-            this._dataFormat = egret.URLLoaderDataFormat.TEXT;
+            this._dataFormat = egret.HttpResponseType.TEXT;
         }
 
         /**
@@ -139,7 +139,7 @@ module RES {
             return url;
         }
 
-        private parseAnimation(texture:egret.BitmapData, data:any, name:string):egret.Texture[] {
+        private parseAnimation(bitmapData:egret.BitmapData, data:any, name:string):egret.Texture[] {
             var attributes = Object.keys(data.mc);
             var list:Array<any> = data.mc[attributes[0]].frames;
             var len = list.length;
@@ -147,7 +147,9 @@ module RES {
             var animationFrames:egret.Texture[] = [];
             for (var i = 0; i < len; i++) {
                 config = data.res[list[i].res];
-                animationFrames[i] = new egret.Texture(texture, config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH);
+                var texture = new egret.Texture();
+                texture._bitmapData = bitmapData;
+                texture.$setData(config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH, bitmapData.width, bitmapData.height);
             }
             return animationFrames;
         }
@@ -176,8 +178,8 @@ module RES {
             var loader = this.recyclerIamge.pop();
             if (!loader) {
                 loader = new egret.ImageLoader();
-                loader.on(egret.Event.COMPLETE, this.onLoadFinish, this);
-                loader.on(egret.Event.IO_ERROR, this.onLoadFinish, this);
+                loader.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
             }
             return loader;
         }

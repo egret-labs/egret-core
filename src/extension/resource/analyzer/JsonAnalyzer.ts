@@ -32,26 +32,26 @@ module RES {
     /**
      * @private
      */
-    export class JsonAnalyzer extends BinAnalyzer{
+    export class JsonAnalyzer extends BinAnalyzer {
 
-        public constructor(){
+        public constructor() {
             super();
-            this._dataFormat = egret.URLLoaderDataFormat.TEXT;
+            this._dataFormat = egret.HttpResponseType.TEXT;
         }
 
         /**
          * 解析并缓存加载成功的数据
          */
-        public analyzeData(resItem:ResourceItem,data:any):void{
+        public analyzeData(resItem:ResourceItem, data:any):void {
             var name:string = resItem.name;
-            if(this.fileDic[name]||!data){
+            if (this.fileDic[name] || !data) {
                 return;
             }
-            try{
+            try {
                 var str:string = <string> data;
                 this.fileDic[name] = JSON.parse(str);
             }
-            catch (e){
+            catch (e) {
                 egret.$warn(1017, resItem.url, data);
             }
         }
