@@ -159,14 +159,10 @@ module RES {
                     this.onItemComplete(resItem);
                 }
                 else{
-                    var analyzer:AnalyzerBase = this.analyzerDic[resItem.type];
-                    if(!analyzer){
-                        analyzer = this.analyzerDic[resItem.type] = egret.Injector.getInstance(AnalyzerBase,resItem.type);
-                    }
+					var analyzer:AnalyzerBase = this.resInstance.$getAnalyzerByType(resItem.type);
                     analyzer.loadFile(resItem,this.onItemComplete,this);
                 }
             }
-
 		}
 		
 		/**

@@ -31,6 +31,26 @@
 module RES {
     /**
      * @language en_US
+     * Conduct mapping injection with class definition as the value.
+     * @param type Injection type.
+     * @param analyzerClass Injection type classes need to be resolved.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 以类定义为值进行映射注入。
+     * @param type 注入的类型。
+     * @param analyzerClass 注入类型需要解析的类。
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    export function registerAnalzer(type:string, analyzerClass:any) {
+        instance.registerAnalzer(type, analyzerClass);
+    }
+
+    /**
+     * @language en_US
      * Load configuration file and parse.
      * @param url Configuration file path (path resource.json).
      * @param resourceRoot Resource path. All URL in the configuration is the relative value of the path. The ultimate URL is the value of the sum of the URL of the string and the resource in the configuration.
@@ -422,15 +442,35 @@ module RES {
          * 解析器字典
          */
         private analyzerDic:any = {};
+
+
+        private analyzerClassMap:any = {};
+
         /**
          * 根据type获取对应的文件解析库
          */
-        private getAnalyzerByType(type:string):AnalyzerBase{
+        $getAnalyzerByType(type:string):AnalyzerBase{
             var analyzer:AnalyzerBase = this.analyzerDic[type];
-            if(!analyzer){
-                analyzer = this.analyzerDic[type] = egret.Injector.getInstance(AnalyzerBase,type);
+            if (!analyzer) {
+                var clazz = this.analyzerClassMap[type];
+                if (!clazz) {
+                    if (DEBUG) {
+                        egret.$error(2003, type);
+                    }
+                    return null;
+                }
+                analyzer = this.analyzerDic[type] = new clazz();
             }
             return analyzer;
+        }
+
+        /**
+         * 注册一个自定义文件类型解析器
+         * @param type 文件类型字符串，例如：bin,text,image,json等。
+         * @param analyzerClass 自定义解析器的类定义
+         */
+        public registerAnalzer(type:string, analyzerClass:any):void {
+            this.analyzerClassMap[type] = analyzerClass;
         }
 
         /**
@@ -441,22 +481,17 @@ module RES {
          * 初始化
          */
         private init():void{
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_BIN))
-                egret.Injector.mapClass(AnalyzerBase,BinAnalyzer,ResourceItem.TYPE_BIN);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_IMAGE))
-                egret.Injector.mapClass(AnalyzerBase,ImageAnalyzer,ResourceItem.TYPE_IMAGE);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_TEXT))
-                egret.Injector.mapClass(AnalyzerBase,TextAnalyzer,ResourceItem.TYPE_TEXT);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_JSON))
-                egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
-                egret.Injector.mapClass(AnalyzerBase,SheetAnalyzer,ResourceItem.TYPE_SHEET);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_FONT))
-                egret.Injector.mapClass(AnalyzerBase,FontAnalyzer,ResourceItem.TYPE_FONT);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SOUND))
-                egret.Injector.mapClass(AnalyzerBase,SoundAnalyzer,ResourceItem.TYPE_SOUND);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_XML))
-                egret.Injector.mapClass(AnalyzerBase,XMLAnalyzer,ResourceItem.TYPE_XML);
+            var analyzerClassMap = this.analyzerClassMap;
+            //analyzerClassMap[ResourceItem.TYPE_ANIMATION] = AnimationAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_BIN] = BinAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_IMAGE] = ImageAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_TEXT] = TextAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_JSON] = JsonAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_SHEET] = SheetAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_FONT] = FontAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_SOUND] = SoundAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_XML] = XMLAnalyzer;
+
             this.resConfig = new ResourceConfig();
             this.resLoader = new ResourceLoader();
             this.resLoader.callBack = this.onResourceItemComp;
@@ -585,7 +620,7 @@ module RES {
                 var length:number = this.loadingConfigList.length;
                 for(var i:number = 0;i < length;i++){
                     var config:any = this.loadingConfigList[i];
-                    var resolver:AnalyzerBase = this.getAnalyzerByType(config.type);
+                    var resolver:AnalyzerBase = this.$getAnalyzerByType(config.type);
                     var data:any = resolver.getRes(config.url);
                     resolver.destroyRes(config.url);
                     this.resConfig.parseConfig(data,config.resourceRoot);
@@ -671,7 +706,7 @@ module RES {
                 }
             }
 
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
             return analyzer.getRes(key);
         }
 
@@ -697,7 +732,7 @@ module RES {
                     return;
                 }
             }
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
             var res:any = analyzer.getRes(key);
             if(res){
                 egret.$callAsync(compFunc, thisObject, res, key);
@@ -736,7 +771,7 @@ module RES {
             }
             this._loadedUrlTypes[url] = type;
 
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
 
             var name:string = url;
             var res:any = analyzer.getRes(name);
@@ -806,7 +841,7 @@ module RES {
         private onResourceItemComp(item:ResourceItem):void{
             var argsList:Array<any> = this.asyncDic[item.name];
             delete this.asyncDic[item.name];
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
             var length:number = argsList.length;
             for(var i:number=0;i<length;i++){
                 var args:any = argsList[i];
@@ -836,7 +871,7 @@ module RES {
                     }
                     else {
                         item.loaded = false;
-                        var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
+                        var analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
                         analyzer.destroyRes(item.name);
                         this.removeLoadedGroupsByItemName(item.name);
                     }
@@ -852,13 +887,13 @@ module RES {
                         return false;
                     }
                     delete this._loadedUrlTypes[name];
-                    var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+                    var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
                     analyzer.destroyRes(name);
                     return true;
                 }
                 item = this.resConfig.getRawResourceItem(name);
                 item.loaded = false;
-                analyzer = this.getAnalyzerByType(type);
+                analyzer = this.$getAnalyzerByType(type);
                 var result = analyzer.destroyRes(name);
                 this.removeLoadedGroupsByItemName(item.name);
                 return result;

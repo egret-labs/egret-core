@@ -120,7 +120,7 @@ module egret.web {
 
     function dispose():void {
         if (this._bitmapData) {
-            Texture.$invalidate(this.hashCode);
+            Texture.$invalidate(this._bitmapData.hashCode);
 
             disposeBitmapData(this._bitmapData);
         }

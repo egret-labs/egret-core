@@ -33,11 +33,6 @@ module egret {
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
 
-    //RES
-    locale_strings[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
-    locale_strings[2001] = "RES loaded non-existed or empty resource group:\"{0}\"";
-    locale_strings[2002] = "Do not use the different types of ways to load the same material!";
-
     //gui
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
