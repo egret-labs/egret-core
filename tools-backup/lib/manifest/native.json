@@ -17,6 +17,7 @@
         "egret/native/NativeTouchHandler.ts",
 
         "egret/native/OpenGLFactory.ts",
+        "egret/native/NativeBitmapData.ts",
         "egret/native/NativeResourceLoader.ts",
         "egret/native/NativeTexture.ts",
         "egret/native/EgretNative.ts",
