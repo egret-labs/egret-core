@@ -32,13 +32,6 @@
 module egret.web {
 
     var winURL = window["URL"] || window["webkitURL"];
-    var useXHR = winURL && Capabilities.os == "iOS";
-    if (useXHR) {
-        var value = window.navigator.userAgent.toLowerCase().match(/cpu [^\d]*\d.*like mac os x/)[0];
-        if (parseInt(value.match(/\d(_\d)*/)[0].charAt(0)) < 7) {
-            useXHR = false;
-        }
-    }
 
     /**
      * @private
@@ -79,7 +72,7 @@ module egret.web {
          * @param url 要加载的图像文件的地址。
          */
         public load(url:string):void {
-            if (useXHR && url.indexOf("data:") != 0 &&
+            if (Html5Capatibility._canUseBlob && url.indexOf("data:") != 0 &&
                 url.indexOf("http:") != 0 &&
                 url.indexOf("https:") != 0) {//如果是base64编码或跨域访问的图片，直接使用Image.src解析。
                 var request = this.request;
@@ -176,8 +169,14 @@ module egret.web {
          */
         private getImage(event:any):HTMLImageElement {
             var image:HTMLImageElement = event.target;
-            if (useXHR) {
-                winURL.revokeObjectURL(image.src);
+            var url:string = image.src;
+            if (url.indexOf("blob:") == 0) {
+                try {
+                    winURL.revokeObjectURL(image.src);
+                }
+                catch(e) {
+                    egret.$warn(1037);
+                }
             }
             image.onerror = null;
             image.onload = null;

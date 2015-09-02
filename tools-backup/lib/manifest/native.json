@@ -4,7 +4,7 @@
     "output":"core",
     "source":"src",
     "file_list": [
-        "egret/native/NativeContext.d.ts",
+        "egret/native/NativeContext.ts",
         "egret/native/PromiseObject.ts",
 
         "egret/text/native/NativeStageText.ts",

@@ -31,11 +31,9 @@ module egret {
     locale_strings[1034] = "音乐文件解码失败：\"{0}\"，请使用标准的转换工具重新转换下mp3。";
     locale_strings[1035] = "Native 下暂未实现此功能！";
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
+    locale_strings[1037] = "非正确的blob加载！";
 
-    //RES
-    locale_strings[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
-    locale_strings[2001] = "RES加载了不存在或空的资源组:\"{0}\"";
-    locale_strings[2002] = "请不要使用不同的类型方式来加载同一个素材！";
+    //RES 2000-2999
 
     //gui
     locale_strings[3000] = "主题配置文件加载失败: {0}";
