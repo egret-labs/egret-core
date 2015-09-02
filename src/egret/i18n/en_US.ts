@@ -31,6 +31,7 @@ module egret {
     locale_strings[1034] = "Music file decoding failed: \"{0}\", please use the standard conversion tool reconversion under mp3.";
     locale_strings[1035] = "Native does not support this feature!";
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
+    locale_strings[1037] = "Non-load the correct blob!";
 
     //RES
     locale_strings[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
