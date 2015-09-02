@@ -387,7 +387,7 @@ module egret {
             }
             var event = this._frameEvents[currentFrameNum];
             if(event && event!=""){
-                this.dispatchEvent(new egret.Event(event));
+                MovieClipEvent.dispatchMovieClipEvent(this,MovieClipEvent.FRAME_LABEL,event);
             }
             this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
             this._DO_Props_._sizeDirty = true;
