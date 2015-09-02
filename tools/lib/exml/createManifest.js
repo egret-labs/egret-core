@@ -463,7 +463,8 @@ function setPathLevel(path, level, pathLevelInfo, map, pathRelyInfo, throwError,
         if (map.indexOf(relyPath) != -1) {
             if (throwError) {
                 map.push(relyPath);
-                utils.exit(10007, map.join("\n"));
+                var message = utils.tr(10007, map.join("\n"));
+                throw message;
             }
             break;
         }
@@ -691,7 +692,8 @@ function checkRepeatClass(newPath, oldPath, className) {
     if (list && list.indexOf(className) != -1) {
         return;
     }
-    utils.exit(10008, className, newPath, oldPath);
+    var message = utils.tr(10008, className, newPath, oldPath);
+    throw message;
 }
 /**
  * 分析一个ts文件

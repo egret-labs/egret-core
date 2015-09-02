@@ -63,7 +63,9 @@ export function format(text: string, ...args): string {
 
 export function exit(code: number, ...args) {
     var message = tr.apply(this, [code].concat(args));
-    console.error(message);
+    var e = new Error("dd");
+    console.log(e.stack);
+    console.error("exit:---------",message);
     process.exit(code);
 }
 

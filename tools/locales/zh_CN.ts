@@ -86,8 +86,6 @@ module egret {
     locale_strings[12004] = "选择扩展模块";
     locale_strings[12005] = "请选择希望发布的平台";
 
-<<<<<<< HEAD
-=======
 
     locale_strings[0] = "执行成功";
     locale_strings[1] = "请先设置环境变量 {color_green}EGRET_PATH{color_normal}。您可以访问 {color_underline}https://github.com/egret-team/egret/wiki/Setting-environment-variables{color_normal} 获取更多细节";
@@ -151,7 +149,7 @@ module egret {
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
     //startserver
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
->>>>>>> origin/merge
+
     //create_app
     locale_strings[1601] = "请输入项目名称, h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
     locale_strings[1602] = "缺少egretProperties.json或格式不正确。 \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
@@ -162,9 +160,7 @@ module egret {
     locale_strings[1607] = "> copy from project template ...";
     locale_strings[1608] = "> replace all configure elements ...";
     locale_strings[1609] = "> rename project name ...";
-<<<<<<< HEAD
 
-=======
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级后，请执行一次 egret build {your_project} {color_green}-e{color_normal} 编译引擎，\n命令中请不要加上大括号{}";
@@ -208,5 +204,4 @@ module egret {
     locale_strings[2020] = "{0}: error 在w:Declarations内的子节点，不允许使用includeIn和excludeFrom属性\n{1}";
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
->>>>>>> origin/merge
 }

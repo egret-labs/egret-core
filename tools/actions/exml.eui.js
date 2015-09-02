@@ -6,11 +6,7 @@ function beforeBuild() {
 exports.beforeBuild = beforeBuild;
 function build() {
     var exmls = file.search(egret.args.srcDir, 'exml');
-    exmls.forEach(function (exml) {
-        var pathToSrc = exml.substring(egret.args.srcDir.length);
-        var target = file.joinPath(egret.args.outDir, pathToSrc);
-        file.copy(exml, target);
-    });
+    return buildChanges(exmls);
 }
 exports.build = build;
 function buildChanges(exmls) {
@@ -21,6 +17,7 @@ function buildChanges(exmls) {
         var target = file.joinPath(egret.args.outDir, pathToSrc);
         file.copy(exml, target);
     });
+    return { exitCode: 0, messages: [] };
 }
 exports.buildChanges = buildChanges;
 function afterBuild() {

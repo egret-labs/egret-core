@@ -8,11 +8,23 @@ function beforeBuild() {
 exports.beforeBuild = beforeBuild;
 function build() {
     var exmls = file.search(egret.args.srcDir, 'exml');
-    exmls.forEach(function (exml) { return exmlc.compile(exml, egret.args.srcDir); });
+    return buildChanges(exmls);
 }
 exports.build = build;
 function buildChanges(exmls) {
+    var state = {
+        exitCode: 0,
+        messages: []
+    };
     exmls.forEach(function (exml) { return exmlc.compile(exml, egret.args.srcDir); });
+    exmls.forEach(function (exml) {
+        var result = exmlc.compile(exml, egret.args.srcDir);
+        if (result.exitCode != 0) {
+            state.exitCode = result.exitCode;
+            state.messages = state.messages.concat(result.messages);
+        }
+    });
+    return state;
 }
 exports.buildChanges = buildChanges;
 function afterBuild() {
@@ -21,7 +33,7 @@ function afterBuild() {
     var exmls = file.search(egret.args.srcDir, 'exml');
     //删除exml编译的ts文件
     exmls.forEach(function (exml) {
-        var tsPath = exml.substring(0, exml.length - 4) + "ts";
+        var tsPath = exml.substring(0, exml.length - 4) + "g.ts";
         file.remove(tsPath);
     });
     generateExmlDTS();
@@ -64,5 +76,5 @@ function generateExmlDTS() {
     return dts;
 }
 function getExmlDtsPath() {
-    return file.joinPath(egret.args.srcDir, "libs", "exml.d.ts");
+    return file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");
 }

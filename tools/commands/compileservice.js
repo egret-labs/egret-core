@@ -9,8 +9,8 @@ var CompileTemplate = require('../actions/CompileTemplate');
 var parser = require('../parser/Parser');
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
-        this._lastExitCode = 0;
-        this._lastMessages = [];
+        this.exitCode = [0, 0];
+        this.messages = [[], []];
         this._request = null;
         this._lastBuildTime = Date.now();
     }
@@ -45,7 +45,9 @@ var AutoCompileCommand = (function () {
         utils.clean(options.debugDir);
         exmlActions.beforeBuild();
         //编译
-        exmlActions.build();
+        var exmlresult = exmlActions.build();
+        this.exitCode[0] = exmlresult.exitCode;
+        this.messages[0] = exmlresult.messages;
         var result = compileProject.compileProject(options);
         //操作其他文件
         CopyFiles.copyProjectFiles();
@@ -53,8 +55,8 @@ var AutoCompileCommand = (function () {
         CompileTemplate.compileTemplates(options, _scripts);
         exmlActions.afterBuild();
         this._scripts = result.files;
-        this._lastExitCode = result.exitStatus;
-        this._lastMessages = result.messages;
+        this.exitCode[1] = result.exitStatus;
+        this.messages[1] = result.messages;
         this.sendCommand();
         global.gc && global.gc();
         return exitCode;
@@ -83,22 +85,26 @@ var AutoCompileCommand = (function () {
                 this._scripts = result.files;
                 this.onTemplateIndexChanged();
             }
-            this._lastExitCode = result.exitStatus;
-            this._lastMessages = result.messages;
+            this.exitCode[1] = result.exitStatus;
+            this.messages[1] = result.messages;
         }
         if (exmls.length) {
             exmlActions.afterBuild();
         }
         this.sendCommand();
         global.gc && global.gc();
-        return this._lastExitCode;
+        return this.exitCode[0] || this.exitCode[1];
     };
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
         filesChanged = filesChanged.map(function (f) { return f.replace(FileUtil.escapePath(process.cwd() + "/"), ""); });
         return this.compileProject.compileProject(egret.args, filesChanged);
     };
     AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
-        exmlActions.buildChanges(filesChanges);
+        if (!filesChanges || filesChanges.length == 0)
+            return [];
+        var result = exmlActions.buildChanges(filesChanges);
+        this.exitCode[0] = result.exitCode;
+        this.messages[0] = result.messages;
         var exmlTS = [];
         filesChanges.forEach(function (exml) {
             var ts = exml.replace(/\.exml$/, ".ts");
@@ -149,10 +155,10 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.sendCommand = function (cmd) {
         if (!cmd) {
-            var msg = this._lastMessages;
+            var msg = this.messages[0].concat(this.messages[1]);
             cmd = {
                 command: 'buildResult',
-                exitCode: this._lastExitCode,
+                exitCode: this.exitCode[0] || this.exitCode[1],
                 messages: msg,
                 path: egret.args.projectDir,
                 option: egret.args

@@ -12,17 +12,30 @@ export function beforeBuild() {
     file.remove(exmlDtsPath);
 }
 
-export function build() {
+export function build(): egret.TaskResult {
 
     var exmls = file.search(egret.args.srcDir, 'exml');
-    exmls.forEach(exml=> exmlc.compile(exml, egret.args.srcDir));
+    return buildChanges(exmls);
 
 }
 
-export function buildChanges(exmls: string[]) {
+export function buildChanges(exmls: string[]): egret.TaskResult {
+
+    var state: egret.TaskResult = {
+        exitCode: 0,
+        messages: []
+    };
 
     exmls.forEach(exml=> exmlc.compile(exml, egret.args.srcDir));
+    exmls.forEach(exml=> {
+        var result = exmlc.compile(exml, egret.args.srcDir);
+        if (result.exitCode != 0) {
+            state.exitCode = result.exitCode;
+            state.messages = state.messages.concat(result.messages);
+        }
+    });
 
+    return state;
 }
 
 export function afterBuild() {
@@ -33,7 +46,7 @@ export function afterBuild() {
     var exmls = file.search(egret.args.srcDir, 'exml');
     //删除exml编译的ts文件
     exmls.forEach(exml => {
-        var tsPath = exml.substring(0, exml.length - 4) + "ts";
+        var tsPath = exml.substring(0, exml.length - 4) + "g.ts";
         file.remove(tsPath);
     });
 
@@ -46,7 +59,7 @@ function generateExmlDTS(): string {
     var srcPath = egret.args.srcDir;
     var projectPath = egret.args.projectDir;
     var sourceList = file.search(srcPath, "exml");
-    
+
     var length = sourceList.length;
     var dts = "";
     for (var i = 0; i < length; i++) {
@@ -84,5 +97,5 @@ function generateExmlDTS(): string {
 
 
 function getExmlDtsPath() {
-    return file.joinPath(egret.args.srcDir, "libs", "exml.d.ts");
+    return file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");
 }

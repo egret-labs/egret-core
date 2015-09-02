@@ -64,13 +64,14 @@ class Run implements egret.Command {
 
     private watchFiles(dir:string) {
 
-        watch.createMonitor(dir, { persistent: true, interval: 2007 }, m=> {
-            m.on("created", () => this.sendBuildCMD())
-                .on("removed", () => this.sendBuildCMD())
-                .on("changed", () => this.sendBuildCMD());
+        watch.createMonitor(dir, { persistent: true, interval: 2007, filter: (f, stat) => !f.match(/\.g(\.d)?\.ts/) }, m=> {
+            m.on("created", (f) => this.sendBuildCMD(f))
+                .on("removed", (f) => this.sendBuildCMD(f))
+                .on("changed", (f) => this.sendBuildCMD(f));
         })
     }
-    private sendBuildCMD() {
+    private sendBuildCMD(f) {
+        console.log(f);
         service.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, (cmd: egret.ServiceCommandResult) => {
             if (!cmd.exitCode)
                 console.log('    ' +utils.tr(10011));

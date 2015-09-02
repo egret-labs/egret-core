@@ -10,9 +10,9 @@ declare module egret {
     export interface Command {
         execute(): number;
     }
-    
+
     export interface Action {
-        
+
     }
 
     export interface Map<T> {
@@ -116,20 +116,20 @@ declare module egret {
          * 获取项目使用的egret版本号
          * @returns {any}
          */
-        getVersion(): string 
+        getVersion(): string
 
         /**
          * 发布路径的根目录
          * @returns {string}
          */
         getReleaseRoot(): string
-        
+
         /**
          * 获取已经生成的js文件列表
          * @param runtime
          * @returns {string[]|T[]}
          */
-        getAllFileList(runtime): Array <any> 
+        getAllFileList(runtime): Array <any>
 
         getVersionCode(runtime)
 
@@ -207,6 +207,11 @@ declare module egret {
         option: ToolArgs;
     }
 
+    export interface TaskResult {
+        exitCode: number;
+        messages: string[];
+    }
+
     export interface ServiceBuildCommand extends ServiceCommand {
         changes: string[];
     }
@@ -254,8 +259,8 @@ declare module egret {
         description: string;
         modules: string[];
     }
-    
-    
+
+
     export interface EgretModule {
         name: string;
         description?: string;

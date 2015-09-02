@@ -41,8 +41,8 @@ class AutoCompileCommand implements egret.Command {
     }
 
 
-    private _lastExitCode = 0;
-    private _lastMessages: string[] = [];
+    private exitCode: [number, number] = [0, 0];
+    private messages: [string[], string[]] = [[], []];
     private _request: ServiceSocket = null;
     private _scripts: string[];
     private _lastBuildTime = Date.now();
@@ -59,7 +59,9 @@ class AutoCompileCommand implements egret.Command {
         exmlActions.beforeBuild();
 
         //编译
-        exmlActions.build();
+        var exmlresult = exmlActions.build();
+        this.exitCode[0] = exmlresult.exitCode;
+        this.messages[0] = exmlresult.messages;
         var result = compileProject.compileProject(options);
 
         //操作其他文件
@@ -70,8 +72,8 @@ class AutoCompileCommand implements egret.Command {
 
 
         this._scripts = result.files;
-        this._lastExitCode = result.exitStatus;
-        this._lastMessages = result.messages;
+        this.exitCode[1] = result.exitStatus;
+        this.messages[1] = result.messages;
         this.sendCommand();
         global.gc && global.gc();
         return exitCode;
@@ -84,6 +86,7 @@ class AutoCompileCommand implements egret.Command {
         var codes: string[] = [];
         var exmls: string[] = [];
         var others: string[] = [];
+        
 
         filesChanged.forEach(f=> {
             if (/\.ts$/.test(f))
@@ -102,15 +105,16 @@ class AutoCompileCommand implements egret.Command {
                 this._scripts = result.files;
                 this.onTemplateIndexChanged();
             }
-            this._lastExitCode = result.exitStatus;
-            this._lastMessages = result.messages;
+            this.exitCode[1] = result.exitStatus;
+            this.messages[1] = result.messages;
+            
         }
         if (exmls.length) {
             exmlActions.afterBuild();
         }
         this.sendCommand();
         global.gc && global.gc();
-        return this._lastExitCode;
+        return this.exitCode[0] || this.exitCode[1];
     }
 
     private buildChangedTS(filesChanged: string[]) {
@@ -119,7 +123,14 @@ class AutoCompileCommand implements egret.Command {
     }
 
     private buildChangedEXML(filesChanges: string[]): string[]{
-        exmlActions.buildChanges(filesChanges);
+
+        if (!filesChanges || filesChanges.length == 0)
+            return [];
+
+        var result = exmlActions.buildChanges(filesChanges);
+        this.exitCode[0] = result.exitCode;
+        this.messages[0] = result.messages;
+
         var exmlTS: string[] = [];
         filesChanges.forEach(exml => {
             var ts = exml.replace(/\.exml$/, ".ts");
@@ -184,10 +195,10 @@ class AutoCompileCommand implements egret.Command {
 
     private sendCommand(cmd?: egret.ServiceCommand) {
         if (!cmd) {
-            var msg = this._lastMessages;
+            var msg = this.messages[0].concat(this.messages[1]);
             cmd = {
                 command: 'buildResult',
-                exitCode: this._lastExitCode,
+                exitCode: this.exitCode[0] || this.exitCode[1],
                 messages: msg,
                 path: egret.args.projectDir,
                 option: egret.args

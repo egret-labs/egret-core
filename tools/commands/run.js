@@ -54,13 +54,14 @@ var Run = (function () {
     };
     Run.prototype.watchFiles = function (dir) {
         var _this = this;
-        watch.createMonitor(dir, { persistent: true, interval: 2007 }, function (m) {
-            m.on("created", function () { return _this.sendBuildCMD(); })
-                .on("removed", function () { return _this.sendBuildCMD(); })
-                .on("changed", function () { return _this.sendBuildCMD(); });
+        watch.createMonitor(dir, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
+            m.on("created", function (f) { return _this.sendBuildCMD(f); })
+                .on("removed", function (f) { return _this.sendBuildCMD(f); })
+                .on("changed", function (f) { return _this.sendBuildCMD(f); });
         });
     };
-    Run.prototype.sendBuildCMD = function () {
+    Run.prototype.sendBuildCMD = function (f) {
+        console.log(f);
         service.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, function (cmd) {
             if (!cmd.exitCode)
                 console.log('    ' + utils.tr(10011));

@@ -9,18 +9,14 @@ export function beforeBuild() {
 
 }
 
-export function build() {
+export function build(): egret.TaskResult {
 
     var exmls = file.search(egret.args.srcDir, 'exml');
-    exmls.forEach(exml=> {
-        var pathToSrc = exml.substring(egret.args.srcDir.length);
-        var target = file.joinPath(egret.args.outDir, pathToSrc);
-        file.copy(exml, target);
-    });
+    return buildChanges(exmls);
 
 }
 
-export function buildChanges(exmls: string[]) {
+export function buildChanges(exmls: string[]): egret.TaskResult {
 
     if (!exmls || exmls.length == 0)
         return;
@@ -31,6 +27,7 @@ export function buildChanges(exmls: string[]) {
         file.copy(exml, target);
     });
 
+    return { exitCode: 0, messages:[] };
 }
 
 export function afterBuild() {
