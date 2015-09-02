@@ -92,7 +92,10 @@ module RES {
             var compFunc:Function = data.func;
             resItem.loaded = (event.$type == egret.Event.COMPLETE);
             if (resItem.loaded) {
-                this.analyzeData(resItem, request.data)
+                var texture:egret.Texture = new egret.Texture();
+                texture._setBitmapData(request.data);
+
+                this.analyzeData(resItem, texture)
             }
             this.recycler.push(request);
             compFunc.call(data.thisObject, resItem);
@@ -101,14 +104,11 @@ module RES {
         /**
          * 解析并缓存加载成功的数据
          */
-        protected analyzeData(resItem:ResourceItem, data:egret.BitmapData):void {
+        protected analyzeData(resItem:ResourceItem, texture:egret.Texture):void {
             var name:string = resItem.name;
-            if (this.fileDic[name] || !data) {
+            if (this.fileDic[name] || !texture) {
                 return;
             }
-
-            var texture:egret.Texture = new egret.Texture();
-            texture._setBitmapData(data);
 
             this.fileDic[name] = texture;
             var config:any = resItem.data;

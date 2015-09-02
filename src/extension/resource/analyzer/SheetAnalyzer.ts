@@ -78,7 +78,9 @@ module RES {
                     }
                 }
                 else {
-                    this.analyzeBitmap(resItem, (<egret.ImageLoader>request).data);
+                    var texture:egret.Texture = new egret.Texture();
+                    texture._setBitmapData(request.data);
+                    this.analyzeBitmap(resItem, texture);
                 }
             }
             if (request instanceof egret.HttpRequest) {
@@ -118,15 +120,15 @@ module RES {
         /**
          * 解析并缓存加载成功的位图数据
          */
-        public analyzeBitmap(resItem:ResourceItem, data:egret.BitmapData):void {
+        public analyzeBitmap(resItem:ResourceItem, texture:egret.Texture):void {
             var name:string = resItem.name;
-            if (this.fileDic[name] || !data) {
+            if (this.fileDic[name] || !texture) {
                 return;
             }
             var config:any = this.sheetMap[name];
             delete this.sheetMap[name];
             var targetName:string = resItem.data && resItem.data.subkeys ? "" : name;
-            var spriteSheet:any = this.parseSpriteSheet(data, config, targetName);
+            var spriteSheet:any = this.parseSpriteSheet(texture, config, targetName);
             this.fileDic[name] = spriteSheet;
         }
 
@@ -145,7 +147,7 @@ module RES {
             return url;
         }
 
-        private parseSpriteSheet(bitmapData:egret.BitmapData, data:any, name:string):any {
+        private parseSpriteSheet(texture:egret.Texture, data:any, name:string):any {
             var frames:any = data.frames;
             if (!frames) {
                 return null;
@@ -157,8 +159,8 @@ module RES {
                 var config:any = frames[subkey];
 
                 var subTexture = new egret.Texture();
-                subTexture._bitmapData = bitmapData;
-                subTexture.$setData(config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH, bitmapData.width, bitmapData.height);
+                subTexture._bitmapData = texture._bitmapData;
+                subTexture.$setData(config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH, texture._sourceWidth, texture._sourceHeight);
 
                 spriteSheet[subkey] = subTexture;
                 if (config["scale9grid"]) {

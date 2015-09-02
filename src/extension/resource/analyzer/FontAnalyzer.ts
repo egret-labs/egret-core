@@ -59,14 +59,12 @@ module RES {
             return imageUrl;
         }
 
-        public analyzeBitmap(resItem:ResourceItem, data:egret.BitmapData):void {
+        public analyzeBitmap(resItem:ResourceItem, texture:egret.Texture):void {
 
             var name:string = resItem.name;
-            if (this.fileDic[name] || !data) {
+            if (this.fileDic[name] || !texture) {
                 return;
             }
-            var texture:egret.Texture = new egret.Texture();
-            texture._setBitmapData(data);
 
             var config:any = this.sheetMap[name];
             delete this.sheetMap[name];
