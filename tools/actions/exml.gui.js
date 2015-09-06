@@ -3,9 +3,19 @@ var file = require('../lib/FileUtil');
 var exmlc = require('../lib/exml/exmlc');
 function beforeBuild() {
     var exmlDtsPath = getExmlDtsPath();
-    file.remove(exmlDtsPath);
+    file.save(exmlDtsPath, "");
 }
 exports.beforeBuild = beforeBuild;
+function beforeBuildChanges(exmlsChanged) {
+    if (!exmlsChanged || exmlsChanged.length == 0)
+        return;
+    var addedOrRemoved = exmlsChanged.filter(function (e) { return e.type == "added" || e.type == "removed"; });
+    if (addedOrRemoved.length == 0) {
+        return;
+    }
+    beforeBuild();
+}
+exports.beforeBuildChanges = beforeBuildChanges;
 function build() {
     var exmls = file.search(egret.args.srcDir, 'exml');
     return buildChanges(exmls);
@@ -16,7 +26,6 @@ function buildChanges(exmls) {
         exitCode: 0,
         messages: []
     };
-    exmls.forEach(function (exml) { return exmlc.compile(exml, egret.args.srcDir); });
     exmls.forEach(function (exml) {
         var result = exmlc.compile(exml, egret.args.srcDir);
         if (result.exitCode != 0) {
@@ -39,6 +48,23 @@ function afterBuild() {
     generateExmlDTS();
 }
 exports.afterBuild = afterBuild;
+function afterBuildChanges(exmlsChanged) {
+    if (egret.args.keepEXMLTS)
+        return;
+    if (!exmlsChanged || exmlsChanged.length == 0)
+        return;
+    //删除exml编译的ts文件
+    exmlsChanged.forEach(function (exml) {
+        var tsPath = exml.fileName.substring(0, exml.fileName.length - 4) + "g.ts";
+        file.remove(tsPath);
+    });
+    var addedOrRemoved = exmlsChanged.filter(function (e) { return e.type == "added" || e.type == "removed"; });
+    if (addedOrRemoved.length == 0) {
+        return;
+    }
+    generateExmlDTS();
+}
+exports.afterBuildChanges = afterBuildChanges;
 function generateExmlDTS() {
     var srcPath = egret.args.srcDir;
     var projectPath = egret.args.projectDir;
@@ -67,12 +93,7 @@ function generateExmlDTS() {
     }
     //保存exml
     var exmlDtsPath = getExmlDtsPath();
-    if (dts != "") {
-        file.save(exmlDtsPath, dts);
-    }
-    else {
-        file.remove(exmlDtsPath);
-    }
+    file.save(exmlDtsPath, dts);
     return dts;
 }
 function getExmlDtsPath() {

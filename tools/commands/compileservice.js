@@ -4,6 +4,7 @@ var service = require('../service/index');
 var FileUtil = require('../lib/FileUtil');
 var CopyFiles = require('../actions/CopyFiles');
 var exmlActions = require('../actions/exml');
+var state = require('../lib/DirectoryState');
 var CompileProject = require('../actions/CompileProject');
 var CompileTemplate = require('../actions/CompileTemplate');
 var parser = require('../parser/Parser');
@@ -32,6 +33,9 @@ var AutoCompileCommand = (function () {
             });
             _this.exitAfter5Minutes();
         }, 60000);
+        this.dirState = new state.DirectoryState();
+        this.dirState.path = egret.args.projectDir;
+        this.dirState.init();
         setTimeout(function () { return _this.buildProject(); }, 20);
         return DontExitCode;
     };
@@ -54,6 +58,7 @@ var AutoCompileCommand = (function () {
         _scripts = result.files.length > 0 ? result.files : _scripts;
         CompileTemplate.compileTemplates(options, _scripts);
         exmlActions.afterBuild();
+        this.dirState.init();
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
         this.messages[1] = result.messages;
@@ -62,25 +67,34 @@ var AutoCompileCommand = (function () {
         return exitCode;
     };
     AutoCompileCommand.prototype.buildChanges = function (filesChanged) {
+        var _this = this;
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
             return this.buildProject();
         var codes = [];
         var exmls = [];
         var others = [];
+        filesChanged = filesChanged || this.dirState.checkChanges();
         filesChanged.forEach(function (f) {
-            if (/\.ts$/.test(f))
+            if (_this.shouldSkip(f.fileName)) {
+                return;
+            }
+            if (/\.ts$/.test(f.fileName))
                 codes.push(f);
-            else if (/\.exml$/.test(f))
+            else if (/\.exml$/.test(f.fileName))
                 exmls.push(f);
             else
                 others.push(f);
         });
+        if (exmls.length) {
+            exmlActions.beforeBuildChanges(exmls);
+        }
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
         if (codes.length) {
             var result = this.buildChangedTS(codes);
+            console.log("result.files:", result.files);
             if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
                 this._scripts = result.files;
                 this.onTemplateIndexChanged();
@@ -89,34 +103,39 @@ var AutoCompileCommand = (function () {
             this.messages[1] = result.messages;
         }
         if (exmls.length) {
-            exmlActions.afterBuild();
+            exmlActions.afterBuildChanges(exmls);
         }
+        this.dirState.init();
         this.sendCommand();
         global.gc && global.gc();
         return this.exitCode[0] || this.exitCode[1];
     };
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
-        filesChanged = filesChanged.map(function (f) { return f.replace(FileUtil.escapePath(process.cwd() + "/"), ""); });
+        console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     };
     AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
         if (!filesChanges || filesChanges.length == 0)
             return [];
-        var result = exmlActions.buildChanges(filesChanges);
+        var result = exmlActions.buildChanges(filesChanges.map(function (f) { return f.fileName; }));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
         var exmlTS = [];
         filesChanges.forEach(function (exml) {
-            var ts = exml.replace(/\.exml$/, ".ts");
+            var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
             if (FileUtil.exists(ts))
-                exmlTS.push(ts);
+                exmlTS.push({
+                    fileName: ts,
+                    type: exml.type
+                });
         });
         return exmlTS;
     };
     AutoCompileCommand.prototype.buildChangedRes = function (fileNames) {
         var _this = this;
         var src = egret.args.srcDir, temp = egret.args.templateDir, proj = egret.args.larkPropertiesFile, start = "index.html";
-        fileNames.forEach(function (fileName) {
+        fileNames.forEach(function (f) {
+            var fileName = f.fileName;
             if (fileName == proj) {
                 _this.buildProject();
             }
@@ -171,6 +190,11 @@ var AutoCompileCommand = (function () {
         var timespan = (now - this._lastBuildTime) / 1000 / 60;
         if (timespan > 5)
             process.exit(0);
+    };
+    AutoCompileCommand.prototype.shouldSkip = function (file) {
+        if (file.indexOf("exml.g.d.ts") >= 0)
+            return true;
+        return false;
     };
     return AutoCompileCommand;
 })();

@@ -4,6 +4,9 @@ var exml = require("../lib/swan/EXML");
 function beforeBuild() {
 }
 exports.beforeBuild = beforeBuild;
+function beforeBuildChanges(exmlsChanged) {
+}
+exports.beforeBuildChanges = beforeBuildChanges;
 function build() {
     var exmls = file.search(egret.args.srcDir, 'exml');
     return buildChanges(exmls);
@@ -24,6 +27,10 @@ function afterBuild() {
     updateSetting(egret.args.publish);
 }
 exports.afterBuild = afterBuild;
+function afterBuildChanges(exmlsChanged) {
+    afterBuild();
+}
+exports.afterBuildChanges = afterBuildChanges;
 function getSortedEXML() {
     var files = file.search(egret.args.srcDir, "exml");
     var exmls = files.map(function (path) { return ({

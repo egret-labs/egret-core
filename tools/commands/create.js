@@ -9,6 +9,8 @@ var Create = (function () {
     Create.prototype.execute = function () {
         var option = egret.args;
         var project = option.getProject(true);
+        //默认使用命令行创建
+        project.type = project.type || "game";
         if (project.type) {
             var create = new createAction();
             create.project = project;

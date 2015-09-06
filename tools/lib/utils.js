@@ -71,9 +71,6 @@ function exit(code) {
         args[_i - 1] = arguments[_i];
     }
     var message = tr.apply(this, [code].concat(args));
-    var e = new Error("dd");
-    console.log(e.stack);
-    console.error("exit:---------", message);
     process.exit(code);
 }
 exports.exit = exit;

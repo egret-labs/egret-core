@@ -45,7 +45,7 @@ function compileTemplate(project) {
     var scriptTemplate = "<!--{{~it.scripts :value:index}}-->\n    <script src=\"{{=value}}\"></script>\n    <!--{{~}}-->";
     project.moduleScripts = moduleScripts;
     project['scriptTemplate'] = scriptTemplate;
-    var files = FileUtil.searchByFunction(options.projectDir, function (f) { return f.indexOf("html") > 0; });
+    var files = FileUtil.searchByFunction(options.projectDir, function (f) { return f.indexOf("index.html") > 0; });
     files.forEach(function (file) {
         var content = FileUtil.read(file);
         var temp = doT.template(content);

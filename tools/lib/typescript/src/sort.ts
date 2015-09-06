@@ -322,7 +322,6 @@ module ts {
         }
 
         private sortFiles() {
-            console.log(fileToReferenceMap);
             forEachKey(fileToReferenceMap, fileName=> {
                 var fileNode = this.getFileNode(fileName);
                 var refers = fileToReferenceMap[fileName];
@@ -413,7 +412,6 @@ module ts {
             });
 
             orderedFileList = sorted.map(n=> n.name);
-            console.log(orderedFileList);
         }
 
     }
@@ -544,7 +542,7 @@ module ts {
         }
 
         logCircular(file: string, other: string) {
-            console.log("Found circular dependency:" + [file, other].join("=>"));
+            console.log("Warning:Found circular dependency:" + [file].join("=>"));
         }
     }
 }

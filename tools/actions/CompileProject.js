@@ -7,7 +7,7 @@ var CompileProject = (function () {
     CompileProject.prototype.compileProject = function (option, files) {
         var compileResult;
         if (files && this.recompile) {
-            files = files.map(function (f) { return f.replace(option.projectDir, ""); });
+            files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
             compileResult = this.recompile(files);
         }
         else {
@@ -21,8 +21,8 @@ var CompileProject = (function () {
             });
             this.recompile = compileResult.compileWithChanges;
         }
-        var files = GetJavaScriptFileNames(compileResult.files, /^src\//);
-        compileResult.files = files;
+        var fileResult = GetJavaScriptFileNames(compileResult.files, /^src\//);
+        compileResult.files = fileResult;
         return compileResult;
     };
     return CompileProject;

@@ -3,6 +3,7 @@ var utils = require('../lib/utils');
 var watch = require("../lib/watch");
 var Build = require('./build');
 var server = require('../server/server');
+var FileUtil = require('../lib/FileUtil');
 var service = require('../service/index');
 var Run = (function () {
     function Run() {
@@ -55,13 +56,15 @@ var Run = (function () {
     Run.prototype.watchFiles = function (dir) {
         var _this = this;
         watch.createMonitor(dir, { persistent: true, interval: 2007, filter: function (f, stat) { return !f.match(/\.g(\.d)?\.ts/); } }, function (m) {
-            m.on("created", function (f) { return _this.sendBuildCMD(f); })
-                .on("removed", function (f) { return _this.sendBuildCMD(f); })
-                .on("changed", function (f) { return _this.sendBuildCMD(f); });
+            m.on("created", function (f) { return _this.sendBuildCMD(f, "added"); })
+                .on("removed", function (f) { return _this.sendBuildCMD(f, "removed"); })
+                .on("changed", function (f) { return _this.sendBuildCMD(f, "modified"); });
         });
     };
-    Run.prototype.sendBuildCMD = function (f) {
-        console.log(f);
+    Run.prototype.sendBuildCMD = function (file, type) {
+        file = FileUtil.escapePath(file);
+        console.log(type, file);
+        egret.args[type] = [file];
         service.execCommand({ command: "build", path: egret.args.projectDir, option: egret.args }, function (cmd) {
             if (!cmd.exitCode)
                 console.log('    ' + utils.tr(10011));

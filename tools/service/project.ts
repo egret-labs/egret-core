@@ -1,6 +1,5 @@
 ﻿
 import http = require('http');
-import state = require('./state');
 import cprocess = require('child_process')
 import utils = require('../lib/utils');
 import FileUtil = require('../lib/FileUtil');
@@ -8,8 +7,7 @@ import ServiceSocket = require('./ServiceSocket');
 
 class Project {
     path: string;
-    state: state.DirectoryState;
-    changes: state.FileChanges;
+    changes: egret.FileChanges;
     timer: NodeJS.Timer;
     buildProcess: cprocess.ChildProcess;
     _buildPort: ServiceSocket;
@@ -30,10 +28,7 @@ class Project {
     }
 
     init() {
-        var stat = new state.DirectoryState();
-        stat.path = this.path;
-        stat.init();
-        this.state = stat;
+
     }
 
     fileChanged(socket: ServiceSocket, task: egret.ServiceCommand, path?: string, changeType?: string) {
@@ -42,7 +37,10 @@ class Project {
         this.pendingRequest = socket;
         if (path && changeType) {
             this.initChanges();
-            this.changes[changeType].push(path);
+            this.changes.push({
+                fileName: path,
+                type: changeType
+            });
         }
         if (this.timer)
             clearTimeout(this.timer);
@@ -50,20 +48,7 @@ class Project {
     }
 
     build() {
-        this.timer = null;
-
-        if (this.changes == null) {
-            console.log("scan file changes.......................");
-            this.changes = this.state.checkChanges();
-        }
-
-        if (this.showBuildWholeProject()) {
-            this.buildWholeProject();
-        }
-        else {
-            this.buildWithExistBuildService();
-        }
-        this.state.init();
+        this.buildWithExistBuildService();
         this.changes = null;
     }
 
@@ -87,12 +72,11 @@ class Project {
             return;
         }
 
-        console.log('buildWithExistBuildService');
-        console.log(this.changes);
+        console.log("this.changes:", this.changes);
 
         this.sendCommand({
             command: "build",
-            changes: this.changes.added.concat(this.changes.modified).concat(this.changes.removed),
+            changes: this.changes,
             option: this.option
         });
 
@@ -135,19 +119,13 @@ class Project {
     }
 
     private showBuildWholeProject() {
-        var tsAddorRemove = this.changes.added.concat(this.changes.removed).filter(f=> /\.ts/.test(f));
-        console.log(tsAddorRemove);
-        return tsAddorRemove.length > 0;
+        return false;
     }
 
     private initChanges() {
         if (this.changes)
             return;
-        this.changes = {
-            added: [],
-            modified: [],
-            removed: []
-        };
+        this.changes = []
     }
 }
 

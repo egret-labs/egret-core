@@ -8,6 +8,9 @@ import exml = require("../lib/swan/EXML");
 export function beforeBuild() {
 
 }
+export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
+
+}
 
 export function build(): egret.TaskResult {
 
@@ -32,6 +35,9 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
 
 export function afterBuild() {
     updateSetting(egret.args.publish);
+}
+export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
+    afterBuild();
 }
 
 

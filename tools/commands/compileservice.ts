@@ -9,13 +9,14 @@ import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
 import CopyFiles = require('../actions/CopyFiles');
 import exmlActions = require('../actions/exml');
+import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
 
 class AutoCompileCommand implements egret.Command {
     private compileProject: CompileProject;
-
+    private dirState: state.DirectoryState;
     execute(): number {
         this._request = service.execCommand({
             command: "init",
@@ -34,6 +35,10 @@ class AutoCompileCommand implements egret.Command {
             });
             this.exitAfter5Minutes();
         }, 60000);
+
+        this.dirState = new state.DirectoryState();
+        this.dirState.path = egret.args.projectDir;
+        this.dirState.init();
 
         setTimeout(() => this.buildProject(), 20);
 
@@ -70,6 +75,7 @@ class AutoCompileCommand implements egret.Command {
         CompileTemplate.compileTemplates(options, _scripts);
         exmlActions.afterBuild();
 
+        this.dirState.init();
 
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
@@ -79,28 +85,38 @@ class AutoCompileCommand implements egret.Command {
         return exitCode;
     }
 
-    buildChanges(filesChanged: string[]) {
+    buildChanges(filesChanged: egret.FileChanges) {
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
             return this.buildProject();
-        var codes: string[] = [];
-        var exmls: string[] = [];
-        var others: string[] = [];
-        
+        var codes: egret.FileChanges = [];
+        var exmls: egret.FileChanges = [];
+        var others: egret.FileChanges = [];
+
+        filesChanged = filesChanged || this.dirState.checkChanges();
 
         filesChanged.forEach(f=> {
-            if (/\.ts$/.test(f))
+            if (this.shouldSkip(f.fileName)) {
+                return;
+            }
+            if (/\.ts$/.test(f.fileName))
                 codes.push(f);
-            else if (/\.exml$/.test(f))
+            else if (/\.exml$/.test(f.fileName))
                 exmls.push(f);
             else
                 others.push(f);
         });
+
+        if (exmls.length) {
+            exmlActions.beforeBuildChanges(exmls);
+        }
+
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
         if (codes.length) {
             var result = this.buildChangedTS(codes);
+            console.log("result.files:", result.files);
             if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
                 this._scripts = result.files;
                 this.onTemplateIndexChanged();
@@ -110,38 +126,44 @@ class AutoCompileCommand implements egret.Command {
             
         }
         if (exmls.length) {
-            exmlActions.afterBuild();
+            exmlActions.afterBuildChanges(exmls);
         }
+
+        this.dirState.init();
+
         this.sendCommand();
         global.gc && global.gc();
         return this.exitCode[0] || this.exitCode[1];
     }
 
-    private buildChangedTS(filesChanged: string[]) {
-        filesChanged = filesChanged.map(f=> f.replace(FileUtil.escapePath(process.cwd() + "/"), ""));
+    private buildChangedTS(filesChanged: egret.FileChanges) {
+        console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     }
 
-    private buildChangedEXML(filesChanges: string[]): string[]{
+    private buildChangedEXML(filesChanges: egret.FileChanges): egret.FileChanges{
 
         if (!filesChanges || filesChanges.length == 0)
             return [];
 
-        var result = exmlActions.buildChanges(filesChanges);
+        var result = exmlActions.buildChanges(filesChanges.map(f=> f.fileName));
         this.exitCode[0] = result.exitCode;
         this.messages[0] = result.messages;
 
-        var exmlTS: string[] = [];
+        var exmlTS: egret.FileChanges = [];
         filesChanges.forEach(exml => {
-            var ts = exml.replace(/\.exml$/, ".ts");
+            var ts = exml.fileName.replace(/\.exml$/, ".g.ts");
             if (FileUtil.exists(ts))
-                exmlTS.push(ts);
+                exmlTS.push({
+                    fileName: ts,
+                    type: exml.type
+                });
         });
 
         return exmlTS;
     }
 
-    private buildChangedRes(fileNames: string[]) {
+    private buildChangedRes(fileNames: egret.FileChanges) {
 
 
         var src = egret.args.srcDir,
@@ -150,7 +172,8 @@ class AutoCompileCommand implements egret.Command {
             start = "index.html";
 
 
-        fileNames.forEach(fileName => {
+        fileNames.forEach(f => {
+            var fileName = f.fileName;
             if (fileName == proj) {
                 this.buildProject();
             }
@@ -214,6 +237,11 @@ class AutoCompileCommand implements egret.Command {
             process.exit(0);
     }
 
+    private shouldSkip(file: string) {
+        if (file.indexOf("exml.g.d.ts") >= 0)
+            return true;
+        return false;
+    }
 }
 
 export = AutoCompileCommand;

@@ -440,19 +440,19 @@ var ts;
     ts.getNormalizedPathFromPathComponents = getNormalizedPathFromPathComponents;
     function getNormalizedPathComponentsOfUrl(url) {
         // Get root length of http://www.website.com/folder1/foler2/
-        // In this example the root is:  http://www.website.com/
+        // In this example the root is:  http://www.website.com/ 
         // normalized path components should be ["http://www.website.com/", "folder1", "folder2"]
         var urlLength = url.length;
         // Initial root length is http:// part
         var rootLength = url.indexOf("://") + "://".length;
         while (rootLength < urlLength) {
-            // Consume all immediate slashes in the protocol
+            // Consume all immediate slashes in the protocol 
             // eg.initial rootlength is just file:// but it needs to consume another "/" in file:///
             if (url.charCodeAt(rootLength) === 47 /* slash */) {
                 rootLength++;
             }
             else {
-                // non slash character means we continue proceeding to next component of root search
+                // non slash character means we continue proceeding to next component of root search 
                 break;
             }
         }
@@ -463,15 +463,15 @@ var ts;
         // Find the index of "/" after website.com so the root can be http://www.website.com/ (from existing http://)
         var indexOfNextSlash = url.indexOf(ts.directorySeparator, rootLength);
         if (indexOfNextSlash !== -1) {
-            // Found the "/" after the website.com so the root is length of http://www.website.com/
+            // Found the "/" after the website.com so the root is length of http://www.website.com/ 
             // and get components afetr the root normally like any other folder components
             rootLength = indexOfNextSlash + 1;
             return normalizedPathComponents(url, rootLength);
         }
         else {
-            // Can't find the host assume the rest of the string as component
+            // Can't find the host assume the rest of the string as component 
             // but make sure we append "/"  to it as root is not joined using "/"
-            // eg. if url passed in was http://website.com we want to use root as [http://website.com/]
+            // eg. if url passed in was http://website.com we want to use root as [http://website.com/] 
             // so that other path manipulations will be correct and it can be merged with relative paths correctly
             return [url + ts.directorySeparator];
         }
@@ -1517,7 +1517,7 @@ var ts;
     function getLineAndCharacterOfPosition(lineStarts, position) {
         var lineNumber = ts.binarySearch(lineStarts, position);
         if (lineNumber < 0) {
-            // If the actual position was not found,
+            // If the actual position was not found, 
             // the binary search returns the negative value of the next line start
             // e.g. if the line starts at [5, 10, 23, 80] and the position requested was 20
             // then the search will return -2
@@ -2487,7 +2487,7 @@ var ts;
             //  b) any of it's children reported that it had an error.
             var val = hasFlag(node.parserContextFlags, 16 /* ContainsError */) ||
                 ts.forEachChild(node, containsParseError);
-            // If so, mark ourselves accordingly.
+            // If so, mark ourselves accordingly. 
             if (val) {
                 node.parserContextFlags |= 16 /* ContainsError */;
             }
@@ -2633,7 +2633,7 @@ var ts;
         // If parameter/type parameter, the prev token trailing comments are part of this node too
         if (node.kind === 123 /* Parameter */ || node.kind === 122 /* TypeParameter */) {
             // e.g.   (/** blah */ a, /** blah */ b);
-            return ts.concatenate(ts.getTrailingCommentRanges(sourceFileOfNode.text, node.pos),
+            return ts.concatenate(ts.getTrailingCommentRanges(sourceFileOfNode.text, node.pos), 
             // e.g.:     (
             //            /** blah */ a,
             //            /** blah */ b);
@@ -3476,13 +3476,13 @@ var ts;
         var lineStarts;
         // Flags that dictate what parsing context we're in.  For example:
         // Whether or not we are in strict parsing mode.  All that changes in strict parsing mode is
-        // that some tokens that would be considered identifiers may be considered keywords.  When
+        // that some tokens that would be considered identifiers may be considered keywords.  When 
         // rewinding, we need to store and restore this as the mode may have changed.
         //
-        // When adding more parser context flags, consider which is the more common case that the
+        // When adding more parser context flags, consider which is the more common case that the 
         // flag will be in.  This should be hte 'false' state for that flag.  The reason for this is
         // that we don't store data in our nodes unless the value is in the *non-default* state.  So,
-        // for example, more often than code 'allows-in' (or doesn't 'disallow-in').  We opt for
+        // for example, more often than code 'allows-in' (or doesn't 'disallow-in').  We opt for 
         // 'disallow-in' set to 'false'.  Otherwise, if we had 'allowsIn' set to 'true', then almost
         // all nodes would need extra state on them to store this info.
         //
@@ -3502,27 +3502,27 @@ var ts;
         //      EqualityExpression[?In, ?Yield] === RelationalExpression[?In, ?Yield]
         //      EqualityExpression[?In, ?Yield] !== RelationalExpression[?In, ?Yield]
         //
-        // Where you have to be careful is then understanding what the points are in the grammar
+        // Where you have to be careful is then understanding what the points are in the grammar 
         // where the values are *not* passed along.  For example:
         //
         // SingleNameBinding[Yield,GeneratorParameter]
         //      [+GeneratorParameter]BindingIdentifier[Yield] Initializer[In]opt
         //      [~GeneratorParameter]BindingIdentifier[?Yield]Initializer[In, ?Yield]opt
         //
-        // Here this is saying that if the GeneratorParameter context flag is set, that we should
+        // Here this is saying that if the GeneratorParameter context flag is set, that we should 
         // explicitly set the 'yield' context flag to false before calling into the BindingIdentifier
         // and we should explicitly unset the 'yield' context flag before calling into the Initializer.
-        // production.  Conversely, if the GeneratorParameter context flag is not set, then we
+        // production.  Conversely, if the GeneratorParameter context flag is not set, then we 
         // should leave the 'yield' context flag alone.
         //
-        // Getting this all correct is tricky and requires careful reading of the grammar to
+        // Getting this all correct is tricky and requires careful reading of the grammar to 
         // understand when these values should be changed versus when they should be inherited.
         //
         // Note: it should not be necessary to save/restore these flags during speculative/lookahead
         // parsing.  These context flags are naturally stored and restored through normal recursive
         // descent parsing and unwinding.
         var contextFlags = 0;
-        // Whether or not we've had a parse error since creating the last AST node.  If we have
+        // Whether or not we've had a parse error since creating the last AST node.  If we have 
         // encountered an error, it will be stored on the next AST node we create.  Parse errors
         // can be broken down into three categories:
         //
@@ -3533,7 +3533,7 @@ var ts;
         //    by the 'parseExpected' function.
         //
         // 3) A token was present that no parsing function was able to consume.  This type of error
-        //    only occurs in the 'abortParsingListOrMoveToNextToken' function when the parser
+        //    only occurs in the 'abortParsingListOrMoveToNextToken' function when the parser 
         //    decides to skip the token.
         //
         // In all of these cases, we want to mark the next node as having had an error before it.
@@ -3542,8 +3542,8 @@ var ts;
         // node.  in that event we would then not produce the same errors as we did before, causing
         // significant confusion problems.
         //
-        // Note: it is necessary that this value be saved/restored during speculative/lookahead
-        // parsing.  During lookahead parsing, we will often create a node.  That node will have
+        // Note: it is necessary that this value be saved/restored during speculative/lookahead 
+        // parsing.  During lookahead parsing, we will often create a node.  That node will have 
         // this value attached, and then this value will be set back to 'false'.  If we decide to
         // rewind, we must get back to the same value we had prior to the lookahead.
         //
@@ -3642,7 +3642,7 @@ var ts;
             if (!lastError || start !== lastError.start) {
                 sourceFile.parseDiagnostics.push(ts.createFileDiagnostic(sourceFile, start, length, message, arg0));
             }
-            // Mark that we've encountered an error.  We'll set an appropriate bit on the next
+            // Mark that we've encountered an error.  We'll set an appropriate bit on the next 
             // node we finish so that it can't be reused incrementally.
             parseErrorBeforeNextFinishedNode = true;
         }
@@ -3672,19 +3672,19 @@ var ts;
             return token = scanner.reScanTemplateToken();
         }
         function speculationHelper(callback, isLookAhead) {
-            // Keep track of the state we'll need to rollback to if lookahead fails (or if the
+            // Keep track of the state we'll need to rollback to if lookahead fails (or if the 
             // caller asked us to always reset our state).
             var saveToken = token;
             var saveParseDiagnosticsLength = sourceFile.parseDiagnostics.length;
             var saveParseErrorBeforeNextFinishedNode = parseErrorBeforeNextFinishedNode;
             // Note: it is not actually necessary to save/restore the context flags here.  That's
             // because the saving/restorating of these flags happens naturally through the recursive
-            // descent nature of our parser.  However, we still store this here just so we can
+            // descent nature of our parser.  However, we still store this here just so we can 
             // assert that that invariant holds.
             var saveContextFlags = contextFlags;
             // If we're only looking ahead, then tell the scanner to only lookahead as well.
-            // Otherwise, if we're actually speculatively parsing, then tell the scanner to do the
-            // same.
+            // Otherwise, if we're actually speculatively parsing, then tell the scanner to do the 
+            // same. 
             var result = isLookAhead
                 ? scanner.lookAhead(callback)
                 : scanner.tryScan(callback);
@@ -3698,14 +3698,14 @@ var ts;
             }
             return result;
         }
-        // Invokes the provided callback then unconditionally restores the parser to the state it
+        // Invokes the provided callback then unconditionally restores the parser to the state it 
         // was in immediately prior to invoking the callback.  The result of invoking the callback
         // is returned from this function.
         function lookAhead(callback) {
             return speculationHelper(callback, true);
         }
         // Invokes the provided callback.  If the callback returns something falsy, then it restores
-        // the parser to the state it was in immediately prior to invoking the callback.  If the
+        // the parser to the state it was in immediately prior to invoking the callback.  If the 
         // callback returns something truthy, then the parser state is not rolled back.  The result
         // of invoking the callback is returned from this function.
         function tryParse(callback) {
@@ -3715,7 +3715,7 @@ var ts;
             if (token === 63 /* Identifier */) {
                 return true;
             }
-            // If we have a 'yield' keyword, and we're in the [yield] context, then 'yield' is
+            // If we have a 'yield' keyword, and we're in the [yield] context, then 'yield' is 
             // considered a keyword and is not an identifier.
             if (token === 108 /* YieldKeyword */ && inYieldContext()) {
                 return false;
@@ -3848,7 +3848,7 @@ var ts;
             //     LiteralPropertyName
             //     [+GeneratorParameter] ComputedPropertyName
             //     [~GeneratorParameter] ComputedPropertyName[?Yield]
-            //
+            // 
             // ComputedPropertyName[Yield] :
             //     [ AssignmentExpression[In, ?Yield] ]
             //
@@ -3983,12 +3983,12 @@ var ts;
             }
         }
         function isVariableDeclaratorListTerminator() {
-            // If we can consume a semicolon (either explicitly, or with ASI), then consider us done
+            // If we can consume a semicolon (either explicitly, or with ASI), then consider us done 
             // with parsing the list of  variable declarators.
             if (canParseSemicolon()) {
                 return true;
             }
-            // in the case where we're parsing the variable declarator of a 'for-in' statement, we
+            // in the case where we're parsing the variable declarator of a 'for-in' statement, we 
             // are done if we see an 'in' keyword in front of us.
             if (token === 84 /* InKeyword */) {
                 return true;
@@ -4134,21 +4134,21 @@ var ts;
             //      name.
             //      keyword identifierNameOrKeyword
             //
-            // Note: the newlines are important here.  For example, if that above code
+            // Note: the newlines are important here.  For example, if that above code 
             // were rewritten into:
             //
             //      name.keyword
             //      identifierNameOrKeyword
             //
             // Then we would consider it valid.  That's because ASI would take effect and
-            // the code would be implicitly: "name.keyword; identifierNameOrKeyword".
+            // the code would be implicitly: "name.keyword; identifierNameOrKeyword".  
             // In the first case though, ASI will not take effect because there is not a
             // line terminator after the keyword.
             if (scanner.hasPrecedingLineBreak() && scanner.isReservedWord()) {
                 var matchesPattern = lookAhead(nextTokenIsIdentifierOrKeywordOnSameLine);
                 if (matchesPattern) {
-                    // Report that we need an identifier.  However, report it right after the dot,
-                    // and not on the next token.  This is because the next token might actually
+                    // Report that we need an identifier.  However, report it right after the dot, 
+                    // and not on the next token.  This is because the next token might actually 
                     // be an identifier and the error woudl be quite confusing.
                     return createMissingNode(63 /* Identifier */, true, ts.Diagnostics.Identifier_expected);
                 }
@@ -4229,7 +4229,7 @@ var ts;
             var node = createNode(122 /* TypeParameter */);
             node.name = parseIdentifier();
             if (parseOptional(77 /* ExtendsKeyword */)) {
-                // It's not uncommon for people to write improper constraints to a generic.  If the
+                // It's not uncommon for people to write improper constraints to a generic.  If the 
                 // user writes a constraint that is an expression and not an actual type, then parse
                 // it out as an expression (so we can recover well), but report that a type is needed
                 // instead.
@@ -4283,7 +4283,7 @@ var ts;
                 : parseIdentifier();
             if (ts.getFullWidth(node.name) === 0 && node.flags === 0 && ts.isModifier(token)) {
                 // in cases like
-                // 'use strict'
+                // 'use strict' 
                 // function foo(static)
                 // isParameter('static') === true, because of isModifier('static')
                 // however 'static' is not a legal identifier in a strict mode.
@@ -4322,7 +4322,7 @@ var ts;
                 signature.type = parseType();
             }
         }
-        // Note: after careful analysis of the grammar, it does not appear to be possible to
+        // Note: after careful analysis of the grammar, it does not appear to be possible to 
         // have 'Yield' And 'GeneratorParameter' not in sync.  i.e. any production calling
         // this FormalParameters production either always sets both to true, or always sets
         // both to false.  As such we only have a single parameter to represent both.
@@ -4367,7 +4367,7 @@ var ts;
             if (parseSemicolon()) {
                 return;
             }
-            // If we don't have a semicolon, then the user may have written a comma instead
+            // If we don't have a semicolon, then the user may have written a comma instead 
             // accidently (pretty easy to do since commas are so prevalent as list separators). So
             // just consume the comma and keep going.  Note: we'll have already reported the error
             // about the missing semicolon above.
@@ -4737,7 +4737,7 @@ var ts;
         }
         function parseExpression() {
             // Expression[in]:
-            //      AssignmentExpression[in]
+            //      AssignmentExpression[in] 
             //      Expression[in] , AssignmentExpression[in]
             var expr = parseAssignmentExpressionOrHigher();
             while (parseOptional(22 /* CommaToken */)) {
@@ -4750,13 +4750,13 @@ var ts;
                 // It's not uncommon during typing for the user to miss writing the '=' token.  Check if
                 // there is no newline after the last token and if we're on an expression.  If so, parse
                 // this as an equals-value clause with a missing equals.
-                // NOTE: There are two places where we allow equals-value clauses.  The first is in a
+                // NOTE: There are two places where we allow equals-value clauses.  The first is in a 
                 // variable declarator.  The second is with a parameter.  For variable declarators
                 // it's more likely that a { would be a allowed (as an object literal).  While this
                 // is also allowed for parameters, the risk is that we consume the { as an object
                 // literal when it really will be for the block following the parameter.
                 if (scanner.hasPrecedingLineBreak() || (inParameter && token === 13 /* OpenBraceToken */) || !isStartOfExpression()) {
-                    // preceding line break, open brace in a parameter (likely a function body) or current token is not an expression -
+                    // preceding line break, open brace in a parameter (likely a function body) or current token is not an expression - 
                     // do not try to parse initializer
                     return undefined;
                 }
@@ -4774,7 +4774,7 @@ var ts;
             //      4) ArrowFunctionExpression[?in,?yield]
             //      5) [+Yield] YieldExpression[?In]
             //
-            // Note: for ease of implementation we treat productions '2' and '3' as the same thing.
+            // Note: for ease of implementation we treat productions '2' and '3' as the same thing. 
             // (i.e. they're both BinaryExpressions with an assignment operator in it).
             // First, do the simple check if we have a YieldExpression (production '5').
             if (isYieldExpression()) {
@@ -4782,7 +4782,7 @@ var ts;
             }
             // Then, check if we have an arrow function (production '4') that starts with a parenthesized
             // parameter list. If we do, we must *not* recurse for productions 1, 2 or 3. An ArrowFunction is
-            // not a  LeftHandSideExpression, nor does it start a ConditionalExpression.  So we are done
+            // not a  LeftHandSideExpression, nor does it start a ConditionalExpression.  So we are done 
             // with AssignmentExpression if we see one.
             var arrowExpression = tryParseParenthesizedArrowFunctionExpression();
             if (arrowExpression) {
@@ -4792,9 +4792,9 @@ var ts;
             // start with a LogicalOrExpression, while the assignment productions can only start with
             // LeftHandSideExpressions.
             //
-            // So, first, we try to just parse out a BinaryExpression.  If we get something that is a
-            // LeftHandSide or higher, then we can try to parse out the assignment expression part.
-            // Otherwise, we try to parse out the conditional expression bit.  We want to allow any
+            // So, first, we try to just parse out a BinaryExpression.  If we get something that is a 
+            // LeftHandSide or higher, then we can try to parse out the assignment expression part.  
+            // Otherwise, we try to parse out the conditional expression bit.  We want to allow any 
             // binary expression here, so we pass in the 'lowest' precedence here so that it matches
             // and consumes anything.
             var expr = parseBinaryExpressionOrHigher(0);
@@ -4805,7 +4805,7 @@ var ts;
                 return parseSimpleArrowFunctionExpression(expr);
             }
             // Now see if we might be in cases '2' or '3'.
-            // If the expression was a LHS expression, and we have an assignment operator, then
+            // If the expression was a LHS expression, and we have an assignment operator, then 
             // we're in '2' or '3'. Consume the assignment and return.
             //
             // Note: we call reScanGreaterToken so that we get an appropriately merged token
@@ -4820,7 +4820,7 @@ var ts;
         }
         function isYieldExpression() {
             if (token === 108 /* YieldKeyword */) {
-                // If we have a 'yield' keyword, and htis is a context where yield expressions are
+                // If we have a 'yield' keyword, and htis is a context where yield expressions are 
                 // allowed, then definitely parse out a yield expression.
                 if (inYieldContext()) {
                     return true;
@@ -4833,12 +4833,12 @@ var ts;
                 // We're in a context where 'yield expr' is not allowed.  However, if we can
                 // definitely tell that the user was trying to parse a 'yield expr' and not
                 // just a normal expr that start with a 'yield' identifier, then parse out
-                // a 'yield expr'.  We can then report an error later that they are only
+                // a 'yield expr'.  We can then report an error later that they are only 
                 // allowed in generator expressions.
-                //
+                // 
                 // for example, if we see 'yield(foo)', then we'll have to treat that as an
                 // invocation expression of something called 'yield'.  However, if we have
-                // 'yield foo' then that is not legal as a normal expression, so we can
+                // 'yield foo' then that is not legal as a normal expression, so we can 
                 // definitely recognize this as a yield expression.
                 //
                 // for now we just check if the next token is an identifier.  More heuristics
@@ -4866,7 +4866,7 @@ var ts;
                 return finishNode(node);
             }
             else {
-                // if the next token is not on the same line as yield.  or we don't have an '*' or
+                // if the next token is not on the same line as yield.  or we don't have an '*' or 
                 // the start of an expressin, then this is just a simple "yield" expression.
                 return finishNode(node);
             }
@@ -4901,7 +4901,7 @@ var ts;
                 // Didn't appear to actually be a parenthesized arrow function.  Just bail out.
                 return undefined;
             }
-            // If we have an arrow, then try to parse the body. Even if not, try to parse if we
+            // If we have an arrow, then try to parse the body. Even if not, try to parse if we 
             // have an opening brace, just in case we're in an error state.
             if (parseExpected(31 /* EqualsGreaterThanToken */) || token === 13 /* OpenBraceToken */) {
                 arrowFunction.body = parseArrowFunctionExpressionBody();
@@ -4991,7 +4991,7 @@ var ts;
             // If we're speculatively parsing a signature for a parenthesized arrow function, then
             // we have to have a complete parameter list.  Otherwise we might see something like
             // a => (b => c)
-            // And think that "(b =>" was actually a parenthesized arrow function with a missing
+            // And think that "(b =>" was actually a parenthesized arrow function with a missing 
             // close paren.
             fillSignature(50 /* ColonToken */, false, !allowAmbiguity, node);
             // If we couldn't get parameters, we definitely could not parse out an arrow function.
@@ -5019,7 +5019,7 @@ var ts;
             if (isStatement(true) && !isStartOfExpressionStatement() && token !== 81 /* FunctionKeyword */) {
                 // Check if we got a plain statement (i.e. no expression-statements, no functions expressions/declarations)
                 //
-                // Here we try to recover from a potential error situation in the case where the
+                // Here we try to recover from a potential error situation in the case where the 
                 // user meant to supply a block. For example, if the user wrote:
                 //
                 //  a =>
@@ -5040,8 +5040,8 @@ var ts;
             if (!parseOptional(49 /* QuestionToken */)) {
                 return leftOperand;
             }
-            // Note: we explicitly 'allowIn' in the whenTrue part of the condition expression, and
-            // we do not that for the 'whenFalse' part.
+            // Note: we explicitly 'allowIn' in the whenTrue part of the condition expression, and 
+            // we do not that for the 'whenFalse' part.  
             var node = createNode(158 /* ConditionalExpression */, leftOperand.pos);
             node.condition = leftOperand;
             node.whenTrue = allowInAnd(parseAssignmentExpressionOrHigher);
@@ -5055,7 +5055,7 @@ var ts;
         }
         function parseBinaryExpressionRest(precedence, leftOperand) {
             while (true) {
-                // We either have a binary operator here, or we're finished.  We call
+                // We either have a binary operator here, or we're finished.  We call 
                 // reScanGreaterToken so that we merge token sequences like > and = into >=
                 reScanGreaterToken();
                 var newPrecedence = getBinaryOperatorPrecedence();
@@ -5185,15 +5185,15 @@ var ts;
         }
         function parseLeftHandSideExpressionOrHigher() {
             // Original Ecma:
-            // LeftHandSideExpression: See 11.2
+            // LeftHandSideExpression: See 11.2 
             //      NewExpression
-            //      CallExpression
+            //      CallExpression 
             //
             // Our simplification:
             //
-            // LeftHandSideExpression: See 11.2
-            //      MemberExpression
-            //      CallExpression
+            // LeftHandSideExpression: See 11.2 
+            //      MemberExpression  
+            //      CallExpression 
             //
             // See comment in parseMemberExpressionOrHigher on how we replaced NewExpression with
             // MemberExpression to make our lives easier.
@@ -5202,14 +5202,14 @@ var ts;
             // out into its own productions:
             //
             // CallExpression:
-            //      MemberExpression Arguments
+            //      MemberExpression Arguments 
             //      CallExpression Arguments
             //      CallExpression[Expression]
             //      CallExpression.IdentifierName
             //      super   (   ArgumentListopt   )
             //      super.IdentifierName
             //
-            // Because of the recursion in these calls, we need to bottom out first.  There are two
+            // Because of the recursion in these calls, we need to bottom out first.  There are two 
             // bottom out states we can run into.  Either we see 'super' which must start either of
             // the last two CallExpression productions.  Or we have a MemberExpression which either
             // completes the LeftHandSideExpression, or starts the beginning of the first four
@@ -5217,7 +5217,7 @@ var ts;
             var expression = token === 89 /* SuperKeyword */
                 ? parseSuperExpression()
                 : parseMemberExpressionOrHigher();
-            // Now, we *may* be complete.  However, we might have consumed the start of a
+            // Now, we *may* be complete.  However, we might have consumed the start of a 
             // CallExpression.  As such, we need to consume the rest of it here to be complete.
             return parseCallExpressionRest(expression);
         }
@@ -5226,39 +5226,39 @@ var ts;
             // place ObjectCreationExpression and FunctionExpression into PrimaryExpression.
             // like so:
             //
-            //   PrimaryExpression : See 11.1
+            //   PrimaryExpression : See 11.1 
             //      this
             //      Identifier
             //      Literal
             //      ArrayLiteral
             //      ObjectLiteral
-            //      (Expression)
+            //      (Expression) 
             //      FunctionExpression
             //      new MemberExpression Arguments?
             //
-            //   MemberExpression : See 11.2
-            //      PrimaryExpression
+            //   MemberExpression : See 11.2 
+            //      PrimaryExpression 
             //      MemberExpression[Expression]
             //      MemberExpression.IdentifierName
             //
-            //   CallExpression : See 11.2
-            //      MemberExpression
+            //   CallExpression : See 11.2 
+            //      MemberExpression 
             //      CallExpression Arguments
             //      CallExpression[Expression]
-            //      CallExpression.IdentifierName
+            //      CallExpression.IdentifierName 
             //
             // Technically this is ambiguous.  i.e. CallExpression defines:
             //
             //   CallExpression:
             //      CallExpression Arguments
-            //
+            // 
             // If you see: "new Foo()"
             //
-            // Then that could be treated as a single ObjectCreationExpression, or it could be
+            // Then that could be treated as a single ObjectCreationExpression, or it could be 
             // treated as the invocation of "new Foo".  We disambiguate that in code (to match
             // the original grammar) by making sure that if we see an ObjectCreationExpression
             // we always consume arguments if they are there. So we treat "new Foo()" as an
-            // object creation only, and not at all as an invocation)  Another way to think
+            // object creation only, and not at all as an invocation)  Another way to think 
             // about this is that for every "new" that we see, we will consume an argument list if
             // it is there as part of the *associated* object creation node.  Any additional
             // argument lists we see, will become invocation expressions.
@@ -5336,7 +5336,7 @@ var ts;
                 expression = parseMemberExpressionRest(expression);
                 if (token === 23 /* LessThanToken */) {
                     // See if this is the start of a generic invocation.  If so, consume it and
-                    // keep checking for postfix expressions.  Otherwise, it's just a '<' that's
+                    // keep checking for postfix expressions.  Otherwise, it's just a '<' that's 
                     // part of an arithmetic expression.  Break out so we consume it higher in the
                     // stack.
                     var typeArguments = tryParse(parseTypeArgumentsInExpression);
@@ -5383,8 +5383,8 @@ var ts;
         }
         function canFollowTypeArgumentsInExpression() {
             switch (token) {
-                case 15 /* OpenParenToken */: // foo<x>(
-                // this case are the only case where this token can legally follow a type argument
+                case 15 /* OpenParenToken */: // foo<x>(   
+                // this case are the only case where this token can legally follow a type argument 
                 // list.  So we definitely want to treat this as a type arg list.
                 case 19 /* DotToken */: // foo<x>.
                 case 16 /* CloseParenToken */: // foo<x>)
@@ -5404,7 +5404,7 @@ var ts;
                 case 43 /* BarToken */: // foo<x> |
                 case 14 /* CloseBraceToken */: // foo<x> }
                 case 1 /* EndOfFileToken */:
-                    // these cases can't legally follow a type arg list.  However, they're not legal
+                    // these cases can't legally follow a type arg list.  However, they're not legal 
                     // expressions either.  The user is probably in the middle of a generic type. So
                     // treat it as such.
                     return true;
@@ -5584,7 +5584,7 @@ var ts;
             node.expression = allowInAnd(parseExpression);
             parseExpected(16 /* CloseParenToken */);
             // From: https://mail.mozilla.org/pipermail/es-discuss/2011-August/016188.html
-            // 157 min --- All allen at wirfs-brock.com CONF --- "do{;}while(false)false" prohibited in
+            // 157 min --- All allen at wirfs-brock.com CONF --- "do{;}while(false)false" prohibited in 
             // spec but allowed in consensus reality. Approved -- this is the de-facto standard whereby
             //  do;while(0)x will have a semicolon inserted before x.
             parseOptional(21 /* SemicolonToken */);
@@ -5711,9 +5711,9 @@ var ts;
         function parseThrowStatement() {
             // ThrowStatement[Yield] :
             //      throw [no LineTerminator here]Expression[In, ?Yield];
-            // Because of automatic semicolon insertion, we need to report error if this
+            // Because of automatic semicolon insertion, we need to report error if this 
             // throw could be terminated with a semicolon.  Note: we can't call 'parseExpression'
-            // directly as that might consume an expression on the following line.
+            // directly as that might consume an expression on the following line.  
             // We just return 'undefined' in that case.  The actual error will be reported in the
             // grammar walker.
             var node = createNode(178 /* ThrowStatement */);
@@ -5737,7 +5737,7 @@ var ts;
         function parseTokenAndBlock(token) {
             var pos = getNodePos();
             parseExpected(token);
-            var result = parseBlock(token === 94 /* TryKeyword */ ? 180 /* TryBlock */ : 181 /* FinallyBlock */,
+            var result = parseBlock(token === 94 /* TryKeyword */ ? 180 /* TryBlock */ : 181 /* FinallyBlock */, 
             /* ignoreMissingOpenBrace */ false, false);
             result.pos = pos;
             return result;
@@ -5851,7 +5851,7 @@ var ts;
                     return parseBlock(163 /* Block */, false, false);
                 case 96 /* VarKeyword */:
                 case 68 /* ConstKeyword */:
-                    // const here should always be parsed as const declaration because of check in 'isStatement'
+                    // const here should always be parsed as const declaration because of check in 'isStatement' 
                     return parseVariableStatement(scanner.getStartPos(), undefined);
                 case 81 /* FunctionKeyword */:
                     return parseFunctionDeclaration(scanner.getStartPos(), undefined);
@@ -6244,11 +6244,11 @@ var ts;
             var node = createNode(193 /* ExternalModuleReference */);
             parseExpected(115 /* RequireKeyword */);
             parseExpected(15 /* OpenParenToken */);
-            // We allow arbitrary expressions here, even though the grammar only allows string
+            // We allow arbitrary expressions here, even though the grammar only allows string 
             // literals.  We check to ensure that it is only a string literal later in the grammar
             // walker.
             node.expression = parseExpression();
-            // Ensure the string being required is in our 'identifier' table.  This will ensure
+            // Ensure the string being required is in our 'identifier' table.  This will ensure 
             // that features like 'find refs' will look inside this file when search for its name.
             if (node.expression.kind === 7 /* StringLiteral */) {
                 internIdentifier(node.expression.text);
@@ -6368,8 +6368,8 @@ var ts;
             var referencedFiles = [];
             var amdDependencies = [];
             var amdModuleName;
-            // Keep scanning all the leading trivia in the file until we get to something that
-            // isn't trivia.  Any single line comment will be analyzed to see if it is a
+            // Keep scanning all the leading trivia in the file until we get to something that 
+            // isn't trivia.  Any single line comment will be analyzed to see if it is a 
             // reference comment.
             while (true) {
                 var kind = triviaScanner.scan();
@@ -6428,7 +6428,7 @@ var ts;
         function getSyntacticDiagnostics() {
             if (syntacticDiagnostics === undefined) {
                 if (sourceFile.parseDiagnostics.length > 0) {
-                    // Don't bother doing any grammar checks if there are already parser errors.
+                    // Don't bother doing any grammar checks if there are already parser errors.  
                     // Otherwise we may end up with too many cascading errors.
                     syntacticDiagnostics = sourceFile.referenceDiagnostics.concat(sourceFile.parseDiagnostics);
                 }
@@ -6538,7 +6538,7 @@ var ts;
         }
         function checkNodeAndChildren(node) {
             var nodeKind = node.kind;
-            // First, check if you have a statement in a place where it is not allowed.  We want
+            // First, check if you have a statement in a place where it is not allowed.  We want 
             // to do this before recursing, because we'd prefer to report these errors at the top
             // level instead of at some nested level.
             if (inAmbientContext && checkForStatementInAmbientContext(node, nodeKind)) {
@@ -6672,7 +6672,7 @@ var ts;
             if (node.parserContextFlags & 1 /* StrictMode */) {
                 if (isLeftHandSideExpression(node.left) && isAssignmentOperator(node.operator)) {
                     if (isEvalOrArgumentsIdentifier(node.left)) {
-                        // ECMA 262 (Annex C) The identifier eval or arguments may not appear as the LeftHandSideExpression of an
+                        // ECMA 262 (Annex C) The identifier eval or arguments may not appear as the LeftHandSideExpression of an 
                         // Assignment operator(11.13) or of a PostfixExpression(11.3)
                         return reportInvalidUseInStrictMode(node.left);
                     }
@@ -6793,7 +6793,7 @@ var ts;
                 return grammarErrorAtPos(colonStart, ":".length, ts.Diagnostics.Catch_clause_parameter_cannot_have_a_type_annotation);
             }
             if (node.parserContextFlags & 1 /* StrictMode */ && isEvalOrArgumentsIdentifier(node.name)) {
-                // It is a SyntaxError if a TryStatement with a Catch occurs within strict code and the Identifier of the
+                // It is a SyntaxError if a TryStatement with a Catch occurs within strict code and the Identifier of the 
                 // Catch production is eval or arguments
                 return reportInvalidUseInStrictMode(node.name);
             }
@@ -6854,7 +6854,7 @@ var ts;
         }
         function checkDeleteExpression(node) {
             if (node.parserContextFlags & 1 /* StrictMode */ && node.expression.kind === 63 /* Identifier */) {
-                // When a delete operator occurs within strict mode code, a SyntaxError is thrown if its
+                // When a delete operator occurs within strict mode code, a SyntaxError is thrown if its 
                 // UnaryExpression is a direct reference to a variable, function argument, or function name
                 return grammarErrorOnNode(node.expression, ts.Diagnostics.delete_cannot_be_called_on_an_identifier_in_strict_mode);
             }
@@ -6946,7 +6946,7 @@ var ts;
         }
         function checkFunctionName(name) {
             if (name && name.parserContextFlags & 1 /* StrictMode */ && isEvalOrArgumentsIdentifier(name)) {
-                // It is a SyntaxError to use within strict mode code the identifiers eval or arguments as the
+                // It is a SyntaxError to use within strict mode code the identifiers eval or arguments as the 
                 // Identifier of a FunctionLikeDeclaration or FunctionExpression or as a formal parameter name(13.1)
                 return reportInvalidUseInStrictMode(name);
             }
@@ -7047,7 +7047,7 @@ var ts;
                 if (checkForInvalidQuestionMark(node, node.questionToken, ts.Diagnostics.A_class_member_cannot_be_declared_optional)) {
                     return true;
                 }
-                // Technically, computed properties in ambient contexts is disallowed
+                // Technically, computed properties in ambient contexts is disallowed 
                 // for property declarations and accessors too, not just methods.
                 // However, property declarations disallow computed names in general,
                 // and accessors are not allowed in ambient contexts in general,
@@ -7111,14 +7111,14 @@ var ts;
                 if (prop.kind === 161 /* OmittedExpression */ || name.kind === 121 /* ComputedPropertyName */) {
                     continue;
                 }
-                // ECMA-262 11.1.5 Object Initialiser
+                // ECMA-262 11.1.5 Object Initialiser 
                 // If previous is not undefined then throw a SyntaxError exception if any of the following conditions are true
-                // a.This production is contained in strict code and IsDataDescriptor(previous) is true and
+                // a.This production is contained in strict code and IsDataDescriptor(previous) is true and 
                 // IsDataDescriptor(propId.descriptor) is true.
                 //    b.IsDataDescriptor(previous) is true and IsAccessorDescriptor(propId.descriptor) is true.
                 //    c.IsAccessorDescriptor(previous) is true and IsDataDescriptor(propId.descriptor) is true.
-                //    d.IsAccessorDescriptor(previous) is true and IsAccessorDescriptor(propId.descriptor) is true
-                // and either both previous and propId.descriptor have[[Get]] fields or both previous and propId.descriptor have[[Set]] fields
+                //    d.IsAccessorDescriptor(previous) is true and IsAccessorDescriptor(propId.descriptor) is true 
+                // and either both previous and propId.descriptor have[[Get]] fields or both previous and propId.descriptor have[[Set]] fields 
                 var currentKind;
                 if (prop.kind === 198 /* PropertyAssignment */ ||
                     prop.kind === 199 /* ShorthandPropertyAssignment */ ||
@@ -7289,11 +7289,11 @@ var ts;
             }
         }
         function checkParameter(node) {
-            // It is a SyntaxError if the Identifier "eval" or the Identifier "arguments" occurs as the
-            // Identifier in a PropertySetParameterList of a PropertyAssignment that is contained in strict code
+            // It is a SyntaxError if the Identifier "eval" or the Identifier "arguments" occurs as the 
+            // Identifier in a PropertySetParameterList of a PropertyAssignment that is contained in strict code 
             // or if its FunctionBody is strict code(11.1.5).
-            // It is a SyntaxError if the identifier eval or arguments appears within a FormalParameterList of a
-            // strict mode FunctionLikeDeclaration or FunctionExpression(13.1)
+            // It is a SyntaxError if the identifier eval or arguments appears within a FormalParameterList of a 
+            // strict mode FunctionLikeDeclaration or FunctionExpression(13.1) 
             if (node.parserContextFlags & 1 /* StrictMode */ && isEvalOrArgumentsIdentifier(node.name)) {
                 return reportInvalidUseInStrictMode(node.name);
             }
@@ -7341,17 +7341,17 @@ var ts;
             }
         }
         function checkPostfixUnaryExpression(node) {
-            // The identifier eval or arguments may not appear as the LeftHandSideExpression of an
-            // Assignment operator(11.13) or of a PostfixExpression(11.3) or as the UnaryExpression
-            // operated upon by a Prefix Increment(11.4.4) or a Prefix Decrement(11.4.5) operator.
+            // The identifier eval or arguments may not appear as the LeftHandSideExpression of an 
+            // Assignment operator(11.13) or of a PostfixExpression(11.3) or as the UnaryExpression 
+            // operated upon by a Prefix Increment(11.4.4) or a Prefix Decrement(11.4.5) operator. 
             if (node.parserContextFlags & 1 /* StrictMode */ && isEvalOrArgumentsIdentifier(node.operand)) {
                 return reportInvalidUseInStrictMode(node.operand);
             }
         }
         function checkPrefixUnaryExpression(node) {
             if (node.parserContextFlags & 1 /* StrictMode */) {
-                // The identifier eval or arguments may not appear as the LeftHandSideExpression of an
-                // Assignment operator(11.13) or of a PostfixExpression(11.3) or as the UnaryExpression
+                // The identifier eval or arguments may not appear as the LeftHandSideExpression of an 
+                // Assignment operator(11.13) or of a PostfixExpression(11.3) or as the UnaryExpression 
                 // operated upon by a Prefix Increment(11.4.4) or a Prefix Decrement(11.4.5) operator
                 if ((node.operator === 37 /* PlusPlusToken */ || node.operator === 38 /* MinusMinusToken */) && isEvalOrArgumentsIdentifier(node.operand)) {
                     return reportInvalidUseInStrictMode(node.operand);
@@ -7544,8 +7544,8 @@ var ts;
                 return grammarErrorOnNode(node, ts.Diagnostics.const_declarations_must_be_initialized);
             }
             if (node.parserContextFlags & 1 /* StrictMode */ && isEvalOrArgumentsIdentifier(node.name)) {
-                // It is a SyntaxError if a VariableDeclaration or VariableDeclarationNoIn occurs within strict code
-                // and its Identifier is eval or arguments
+                // It is a SyntaxError if a VariableDeclaration or VariableDeclarationNoIn occurs within strict code 
+                // and its Identifier is eval or arguments 
                 return reportInvalidUseInStrictMode(node.name);
             }
         }
@@ -7598,8 +7598,8 @@ var ts;
         }
         function checkWithStatement(node) {
             if (node.parserContextFlags & 1 /* StrictMode */) {
-                // Strict mode code may not include a WithStatement. The occurrence of a WithStatement in such
-                // a context is an
+                // Strict mode code may not include a WithStatement. The occurrence of a WithStatement in such 
+                // a context is an 
                 return grammarErrorOnFirstToken(node, ts.Diagnostics.with_statements_are_not_allowed_in_strict_mode);
             }
         }
@@ -7763,7 +7763,7 @@ var ts;
                 }
                 else if (node.kind === 189 /* ModuleDeclaration */ && node.name.kind === 7 /* StringLiteral */ && (node.flags & 2 /* Ambient */ || ts.isDeclarationFile(file))) {
                     // TypeScript 1.0 spec (April 2014): 12.1.6
-                    // An AmbientExternalModuleDeclaration declares an external module.
+                    // An AmbientExternalModuleDeclaration declares an external module. 
                     // This type of declaration is permitted only in the global module.
                     // The StringLiteral must specify a top - level external module name.
                     // Relative external module names are not permitted
@@ -7774,7 +7774,7 @@ var ts;
                             var moduleName = nameLiteral.text;
                             if (moduleName) {
                                 // TypeScript 1.0 spec (April 2014): 12.1.6
-                                // An ExternalImportDeclaration in anAmbientExternalModuleDeclaration may reference other external modules
+                                // An ExternalImportDeclaration in anAmbientExternalModuleDeclaration may reference other external modules 
                                 // only through top - level external module names. Relative external module names are not permitted.
                                 var searchName = ts.normalizePath(ts.combinePaths(basePath, moduleName));
                                 var tsFile = findModuleSourceFile(searchName + ".ts", nameLiteral);
@@ -7847,7 +7847,7 @@ var ts;
                 });
                 commonSourceDirectory = ts.getNormalizedPathFromPathComponents(commonPathComponents);
                 if (commonSourceDirectory) {
-                    // Make sure directory path ends with directory separator so this string can directly
+                    // Make sure directory path ends with directory separator so this string can directly 
                     // used to replace with "" to get the relative path of the source file and the relative path doesn't
                     // start with / making it rooted path
                     commonSourceDirectory += ts.directorySeparator;
@@ -7864,7 +7864,7 @@ var ts;
 var ts;
 (function (ts) {
     function getModuleInstanceState(node) {
-        // A module is uninstantiated if it contains only
+        // A module is uninstantiated if it contains only 
         // 1. interface declarations
         if (node.kind === 186 /* InterfaceDeclaration */) {
             return 0 /* NonInstantiated */;
@@ -7999,7 +7999,7 @@ var ts;
             symbol.parent = parent;
             if (node.kind === 185 /* ClassDeclaration */ && symbol.exports) {
                 // TypeScript 1.0 spec (April 2014): 8.4
-                // Every class automatically contains a static property member named 'prototype',
+                // Every class automatically contains a static property member named 'prototype', 
                 // the type of which is an instantiation of the class type with type Any supplied as a type argument for each type parameter.
                 // It is an error to explicitly declare a static property member with the name 'prototype'.
                 var prototypeSymbol = createSymbol(4 /* Property */ | 536870912 /* Prototype */, "prototype");
@@ -8027,7 +8027,7 @@ var ts;
             // ExportType, or ExportContainer flag, and an associated export symbol with all the correct flags set
             // on it. There are 2 main reasons:
             //
-            //   1. We treat locals and exports of the same name as mutually exclusive within a container.
+            //   1. We treat locals and exports of the same name as mutually exclusive within a container. 
             //      That means the binder will issue a Duplicate Identifier error if you mix locals and exports
             //      with the same name in the same container.
             //      TODO: Make this a more specific error and decouple it from the exclusion logic.
@@ -8160,8 +8160,8 @@ var ts;
             // For a given function symbol "<...>(...) => T" we want to generate a symbol identical
             // to the one we would get for: { <...>(...): T }
             //
-            // We do that by making an anonymous type literal symbol, and then setting the function
-            // symbol as its sole member. To the rest of the system, this symbol will be  indistinguishable
+            // We do that by making an anonymous type literal symbol, and then setting the function 
+            // symbol as its sole member. To the rest of the system, this symbol will be  indistinguishable 
             // from an actual type literal symbol you would have gotten had you used the long form.
             var symbolKind = node.kind === 133 /* FunctionType */ ? 131072 /* CallSignature */ : 262144 /* ConstructSignature */;
             var symbol = createSymbol(symbolKind, getDeclarationName(node));
@@ -8466,7 +8466,7 @@ var ts;
                     // }
                     // module m {
                     //     /* this is line 1 -- Assume current writer indent 8
-                    //      * line                                                --3 = 8 - 4 + 5
+                    //      * line                                                --3 = 8 - 4 + 5 
                     //            More right indented comment */                  --4 = 8 - 4 + 11
                     //     class c { }
                     // }
@@ -8638,7 +8638,7 @@ var ts;
                 // Eg.
                 // export function bar(a: foo.Foo) { }
                 // import foo = require("foo");
-                // Writing of function bar would mark alias declaration foo as visible but we haven't yet visited that declaration so do nothing,
+                // Writing of function bar would mark alias declaration foo as visible but we haven't yet visited that declaration so do nothing, 
                 // we would write alias foo declaration when we visit it since it would now be marked as visible
                 if (aliasEmitInfo) {
                     createAndSetNewTextWriterWithSymbolWriter();
@@ -8761,7 +8761,7 @@ var ts;
                     ts.Debug.fail("Unknown type annotation: " + type.kind);
             }
             function emitEntityName(entityName) {
-                var visibilityResult = resolver.isEntityNameVisible(entityName,
+                var visibilityResult = resolver.isEntityNameVisible(entityName, 
                 // Aliases can be written asynchronously so use correct enclosing declaration
                 entityName.parent.kind === 191 /* ImportDeclaration */ ? entityName.parent : enclosingDeclaration);
                 handleSymbolAccessibilityError(visibilityResult);
@@ -8833,7 +8833,7 @@ var ts;
         function emitModuleElementDeclarationFlags(node) {
             // If the node is parented in the current source file we need to emit export declare or just export
             if (node.parent === currentSourceFile) {
-                // If the node is exported
+                // If the node is exported 
                 if (node.flags & 1 /* Export */) {
                     write("export ");
                 }
@@ -8866,7 +8866,7 @@ var ts;
             }
         }
         function writeImportDeclaration(node) {
-            // note usage of writer. methods instead of aliases created, just to make sure we are using
+            // note usage of writer. methods instead of aliases created, just to make sure we are using 
             // correct writer especially to handle asynchronous alias writing
             emitJsDocComments(node);
             if (node.flags & 1 /* Export */) {
@@ -9182,7 +9182,7 @@ var ts;
             }
         }
         function emitTypeOfVariableDeclarationFromTypeLiteral(node) {
-            // if this is property of type literal,
+            // if this is property of type literal, 
             // or is parameter of method/call/construct/index signature of type literal
             // emit only if type is specified
             if (node.type) {
@@ -9536,8 +9536,8 @@ var ts;
                     return emitSourceFile(node);
             }
         }
-        // Contains the reference paths that needs to go in the declaration file.
-        // Collecting this separately because reference paths need to be first thing in the declaration file
+        // Contains the reference paths that needs to go in the declaration file. 
+        // Collecting this separately because reference paths need to be first thing in the declaration file 
         // and we could be collecting these paths from multiple files into single one with --out option
         var referencePathsOutput = "";
         function writeReferencePath(referencedFile) {
@@ -9546,7 +9546,7 @@ var ts;
                 : shouldEmitToOwnFile(referencedFile, compilerOptions)
                     ? getOwnEmitOutputFilePath(referencedFile, program, ".d.ts") // Own output file so get the .d.ts file
                     : ts.removeFileExtension(compilerOptions.out) + ".d.ts"; // Global out file
-            declFileName = ts.getRelativePathToDirectoryOrUrl(ts.getDirectoryPath(ts.normalizeSlashes(jsFilePath)), declFileName, compilerHost.getCurrentDirectory(), compilerHost.getCanonicalFileName,
+            declFileName = ts.getRelativePathToDirectoryOrUrl(ts.getDirectoryPath(ts.normalizeSlashes(jsFilePath)), declFileName, compilerHost.getCurrentDirectory(), compilerHost.getCanonicalFileName, 
             /*isAbsolutePathAnUrl*/ false);
             referencePathsOutput += "/// <reference path=\"" + declFileName + "\" />" + newLine;
         }
@@ -9698,11 +9698,11 @@ var ts;
                     }
                     // 1. Relative Column 0 based
                     sourceMapData.sourceMapMappings += base64VLQFormatEncode(lastRecordedSourceMapSpan.emittedColumn - prevEncodedEmittedColumn);
-                    // 2. Relative sourceIndex
+                    // 2. Relative sourceIndex 
                     sourceMapData.sourceMapMappings += base64VLQFormatEncode(lastRecordedSourceMapSpan.sourceIndex - lastEncodedSourceMapSpan.sourceIndex);
                     // 3. Relative sourceLine 0 based
                     sourceMapData.sourceMapMappings += base64VLQFormatEncode(lastRecordedSourceMapSpan.sourceLine - lastEncodedSourceMapSpan.sourceLine);
-                    // 4. Relative sourceColumn 0 based
+                    // 4. Relative sourceColumn 0 based 
                     sourceMapData.sourceMapMappings += base64VLQFormatEncode(lastRecordedSourceMapSpan.sourceColumn - lastEncodedSourceMapSpan.sourceColumn);
                     // 5. Relative namePosition 0 based
                     if (lastRecordedSourceMapSpan.nameIndex >= 0) {
@@ -9789,10 +9789,10 @@ var ts;
                 }
                 function recordNewSourceFileStart(node) {
                     // Add the file to tsFilePaths
-                    // If sourceroot option: Use the relative path corresponding to the common directory path
+                    // If sourceroot option: Use the relative path corresponding to the common directory path 
                     // otherwise source locations relative to map file location
                     var sourcesDirectoryPath = compilerOptions.sourceRoot ? program.getCommonSourceDirectory() : sourceMapDir;
-                    sourceMapData.sourceMapSources.push(ts.getRelativePathToDirectoryOrUrl(sourcesDirectoryPath, node.filename, compilerHost.getCurrentDirectory(), compilerHost.getCanonicalFileName,
+                    sourceMapData.sourceMapSources.push(ts.getRelativePathToDirectoryOrUrl(sourcesDirectoryPath, node.filename, compilerHost.getCurrentDirectory(), compilerHost.getCanonicalFileName, 
                     /*isAbsolutePathAnUrl*/ true));
                     sourceMapSourceIndex = sourceMapData.sourceMapSources.length - 1;
                     // The one that can be used from program to get the actual source file
@@ -9895,7 +9895,7 @@ var ts;
                     sourceMapMappings: "",
                     sourceMapDecodedMappings: []
                 };
-                // Normalize source root and make sure it has trailing "/" so that it can be used to combine paths with the
+                // Normalize source root and make sure it has trailing "/" so that it can be used to combine paths with the 
                 // relative paths of the sources list in the sourcemap
                 sourceMapData.sourceMapSourceRoot = ts.normalizeSlashes(sourceMapData.sourceMapSourceRoot);
                 if (sourceMapData.sourceMapSourceRoot.length && sourceMapData.sourceMapSourceRoot.charCodeAt(sourceMapData.sourceMapSourceRoot.length - 1) !== 47 /* slash */) {
@@ -9911,7 +9911,7 @@ var ts;
                     if (!ts.isRootedDiskPath(sourceMapDir) && !ts.isUrl(sourceMapDir)) {
                         // The relative paths are relative to the common directory
                         sourceMapDir = ts.combinePaths(program.getCommonSourceDirectory(), sourceMapDir);
-                        sourceMapData.jsSourceMappingURL = ts.getRelativePathToDirectoryOrUrl(ts.getDirectoryPath(ts.normalizePath(jsFilePath)), ts.combinePaths(sourceMapDir, sourceMapData.jsSourceMappingURL), compilerHost.getCurrentDirectory(), compilerHost.getCanonicalFileName,
+                        sourceMapData.jsSourceMappingURL = ts.getRelativePathToDirectoryOrUrl(ts.getDirectoryPath(ts.normalizePath(jsFilePath)), ts.combinePaths(sourceMapDir, sourceMapData.jsSourceMappingURL), compilerHost.getCurrentDirectory(), compilerHost.getCanonicalFileName, 
                         /*isAbsolutePathAnUrl*/ true);
                     }
                     else {
@@ -10106,10 +10106,10 @@ var ts;
                 function comparePrecedenceToBinaryPlus(expression) {
                     // All binary expressions have lower precedence than '+' apart from '*', '/', and '%'.
                     // All unary operators have a higher precedence apart from yield.
-                    // Arrow functions and conditionals have a lower precedence,
+                    // Arrow functions and conditionals have a lower precedence, 
                     // although we convert the former into regular function expressions in ES5 mode,
                     // and in ES6 mode this function won't get called anyway.
-                    //
+                    // 
                     // TODO (drosen): Note that we need to account for the upcoming 'yield' and
                     //                spread ('...') unary operators that are anticipated for ES6.
                     ts.Debug.assert(compilerOptions.target <= 1 /* ES5 */);
@@ -10391,14 +10391,14 @@ var ts;
                 if (node.expression.kind === 148 /* TypeAssertionExpression */) {
                     var operand = node.expression.expression;
                     // Make sure we consider all nested cast expressions, e.g.:
-                    // (<any><number><any>-A).x;
+                    // (<any><number><any>-A).x; 
                     while (operand.kind == 148 /* TypeAssertionExpression */) {
                         operand = operand.expression;
                     }
                     // We have an expression of the form: (<Type>SubExpr)
                     // Emitting this as (SubExpr) is really not desirable. We would like to emit the subexpr as is.
                     // Omitting the parentheses, however, could cause change in the semantics of the generated
-                    // code if the casted expression has a lower precedence than the rest of the expression, e.g.:
+                    // code if the casted expression has a lower precedence than the rest of the expression, e.g.: 
                     //      (<any>new A).foo should be emitted as (new A).foo and not new A.foo
                     //      (<any>typeof A).toString() should be emitted as (typeof A).toString() and not typeof A.toString()
                     //      new (<any>A()) should be emitted as new (A()) and not new A()
@@ -11724,7 +11724,7 @@ var ts;
                             var commentLine = getLineOfLocalPosition(currentSourceFile, comment.pos);
                             if (commentLine >= lastCommentLine + 2) {
                                 // There was a blank line between the last comment and this comment.  This
-                                // comment is not part of the copyright comments.  Return what we have so
+                                // comment is not part of the copyright comments.  Return what we have so 
                                 // far.
                                 return detachedComments;
                             }
@@ -11788,7 +11788,7 @@ var ts;
         }
         function writeDeclarationFile(jsFilePath, sourceFile) {
             var emitDeclarationResult = emitDeclarations(program, resolver, diagnostics, jsFilePath, sourceFile);
-            // TODO(shkamat): Should we not write any declaration file if any of them can produce error,
+            // TODO(shkamat): Should we not write any declaration file if any of them can produce error, 
             // or should we just not write this file like we are doing now
             if (!emitDeclarationResult.reportedDeclarationError) {
                 var declarationOutput = emitDeclarationResult.referencePathsOutput;
@@ -12193,10 +12193,10 @@ var ts;
                         break;
                     case 124 /* Property */:
                         // TypeScript 1.0 spec (April 2014): 8.4.1
-                        // Initializer expressions for instance member variables are evaluated in the scope
-                        // of the class constructor body but are not permitted to reference parameters or
-                        // local variables of the constructor. This effectively means that entities from outer scopes
-                        // by the same name as a constructor parameter or local variable are inaccessible
+                        // Initializer expressions for instance member variables are evaluated in the scope 
+                        // of the class constructor body but are not permitted to reference parameters or 
+                        // local variables of the constructor. This effectively means that entities from outer scopes 
+                        // by the same name as a constructor parameter or local variable are inaccessible 
                         // in initializer expressions for instance member variables.
                         if (location.parent.kind === 185 /* ClassDeclaration */ && !(location.flags & 128 /* Static */)) {
                             var ctor = findConstructorDeclaration(location.parent);
@@ -12453,7 +12453,7 @@ var ts;
                     var node = exportInformation.exportAssignments[0];
                     if (exportInformation.hasExportedMember) {
                         // TypeScript 1.0 spec (April 2014): 11.2.3
-                        // If an external module contains an export assignment it is an error
+                        // If an external module contains an export assignment it is an error 
                         // for the external module to also contain export declarations.
                         // The two types of exports are mutually exclusive.
                         error(node, ts.Diagnostics.An_export_assignment_cannot_be_used_in_a_module_with_other_exported_elements);
@@ -12631,7 +12631,7 @@ var ts;
                 function isAccessible(symbolFromSymbolTable, resolvedAliasSymbol) {
                     if (symbol === (resolvedAliasSymbol || symbolFromSymbolTable)) {
                         // if the symbolFromSymbolTable is not external module (it could be if it was determined as ambient external module and would be in globals table)
-                        // and if symbolfrom symbolTable or alias resolution matches the symbol,
+                        // and if symbolfrom symbolTable or alias resolution matches the symbol, 
                         // check the symbol can be qualified, it is only then this symbol is accessible
                         return !ts.forEach(symbolFromSymbolTable.declarations, function (declaration) { return hasExternalModuleSymbol(declaration); }) &&
                             canQualifySymbol(symbolFromSymbolTable, meaning);
@@ -12717,13 +12717,13 @@ var ts;
                     // }
                     // var x: typeof m.c
                     // In the above example when we start with checking if typeof m.c symbol is accessible,
-                    // we are going to see if c can be accessed in scope directly.
+                    // we are going to see if c can be accessed in scope directly. 
                     // But it can't, hence the accessible is going to be undefined, but that doesn't mean m.c is inaccessible
                     // It is accessible if the parent m is accessible because then m.c can be accessed through qualification
                     meaningToLook = getQualifiedLeftMeaning(meaning);
                     symbol = getParentOfSymbol(symbol);
                 }
-                // This could be a symbol that is not exported in the external module
+                // This could be a symbol that is not exported in the external module 
                 // or it could be a symbol from different external module that is not aliased and hence cannot be named
                 var symbolExternalModule = ts.forEach(initialSymbol.declarations, function (declaration) { return getExternalModuleContainer(declaration); });
                 if (symbolExternalModule) {
@@ -12764,7 +12764,7 @@ var ts;
             return { accessibility: 0 /* Accessible */, aliasesToMakeVisible: aliasesToMakeVisible };
             function getIsDeclarationVisible(declaration) {
                 if (!isDeclarationVisible(declaration)) {
-                    // Mark the unexported alias as visible if its parent is visible
+                    // Mark the unexported alias as visible if its parent is visible 
                     // because these kind of aliases can be used to name types in declaration file
                     if (declaration.kind === 191 /* ImportDeclaration */ &&
                         !(declaration.flags & 1 /* Export */) &&
@@ -12796,7 +12796,7 @@ var ts;
             else if (entityName.kind === 120 /* QualifiedName */ ||
                 entityName.parent.kind === 191 /* ImportDeclaration */) {
                 // Left identifier from type reference or TypeAlias
-                // Entity name of the import declaration
+                // Entity name of the import declaration 
                 meaning = 1536 /* Namespace */;
             }
             else {
@@ -12890,8 +12890,8 @@ var ts;
                     parentSymbol = symbol;
                     appendSymbolNameOnly(symbol, writer);
                 }
-                // Let the writer know we just wrote out a symbol.  The declaration emitter writer uses
-                // this to determine if an import it has previously seen (and not written out) needs
+                // Let the writer know we just wrote out a symbol.  The declaration emitter writer uses 
+                // this to determine if an import it has previously seen (and not written out) needs 
                 // to be written to the file once the walk of the tree is complete.
                 //
                 // NOTE(cyrusn): This approach feels somewhat unfortunate.  A simple pass over the tree
@@ -12924,7 +12924,7 @@ var ts;
                         }
                     }
                 }
-                // Get qualified name
+                // Get qualified name 
                 if (enclosingDeclaration &&
                     // TypeParameters do not need qualification
                     !(symbol.flags & 1048576 /* TypeParameter */)) {
@@ -13116,7 +13116,7 @@ var ts;
                         writer.writeLine();
                     }
                     if (resolved.stringIndexType) {
-                        // [x: string]:
+                        // [x: string]: 
                         writePunctuation(writer, 17 /* OpenBracketToken */);
                         writer.writeParameter(getIndexerParameterName(resolved, 0 /* String */, "x"));
                         writePunctuation(writer, 50 /* ColonToken */);
@@ -13130,7 +13130,7 @@ var ts;
                         writer.writeLine();
                     }
                     if (resolved.numberIndexType) {
-                        // [x: number]:
+                        // [x: number]: 
                         writePunctuation(writer, 17 /* OpenBracketToken */);
                         writer.writeParameter(getIndexerParameterName(resolved, 1 /* Number */, "x"));
                         writePunctuation(writer, 50 /* ColonToken */);
@@ -13393,7 +13393,7 @@ var ts;
         }
         function getTypeOfPrototypeProperty(prototype) {
             // TypeScript 1.0 spec (April 2014): 8.4
-            // Every class automatically contains a static property member named 'prototype',
+            // Every class automatically contains a static property member named 'prototype', 
             // the type of which is an instantiation of the class type with type Any supplied as a type argument for each type parameter.
             // It is an error to explicitly declare a static property member with the name 'prototype'.
             var classType = getDeclaredTypeOfSymbol(prototype.parent);
@@ -14422,10 +14422,10 @@ var ts;
                         var symbol = resolveName(typeParameter, n.typeName.text, 3152352 /* Type */, undefined, undefined);
                         if (symbol && (symbol.flags & 1048576 /* TypeParameter */)) {
                             // TypeScript 1.0 spec (April 2014): 3.4.1
-                            // Type parameters declared in a particular type parameter list
+                            // Type parameters declared in a particular type parameter list 
                             // may not be referenced in constraints in that type parameter list
                             // symbol.declaration.parent === typeParameter.parent
-                            // -> typeParameter and symbol.declaration originate from the same type parameter list
+                            // -> typeParameter and symbol.declaration originate from the same type parameter list 
                             // -> illegal for all declarations in symbol
                             // forEach === exists
                             links.isIllegalTypeReferenceInConstraint = ts.forEach(symbol.declarations, function (d) { return d.parent == typeParameter.parent; });
@@ -14450,7 +14450,7 @@ var ts;
                     var type;
                     if ((symbol.flags & 1048576 /* TypeParameter */) && isTypeParameterReferenceIllegalInConstraint(node, symbol)) {
                         // TypeScript 1.0 spec (April 2014): 3.4.1
-                        // Type parameters declared in a particular type parameter list
+                        // Type parameters declared in a particular type parameter list 
                         // may not be referenced in constraints in that type parameter list
                         // Implementation: such type references are resolved to 'unknown' type that usually denotes error
                         type = unknownType;
@@ -14485,7 +14485,7 @@ var ts;
                 // TypeScript 1.0 spec (April 2014): 3.6.3
                 // The expression is processed as an identifier expression (section 4.3)
                 // or property access expression(section 4.10),
-                // the widened type(section 3.9) of which becomes the result.
+                // the widened type(section 3.9) of which becomes the result. 
                 links.resolvedType = getWidenedType(checkExpressionOrQualifiedName(node.exprName));
             }
             return links.resolvedType;
@@ -14799,7 +14799,7 @@ var ts;
                 symbol = links.target;
                 mapper = combineTypeMappers(links.mapper, mapper);
             }
-            // Keep the flags from the symbol we're instantiating.  Mark that is instantiated, and
+            // Keep the flags from the symbol we're instantiating.  Mark that is instantiated, and 
             // also transient so that we can just store data on it directly.
             var result = createSymbol(67108864 /* Instantiated */ | 268435456 /* Transient */ | symbol.flags, symbol.name);
             result.declarations = symbol.declarations;
@@ -15229,7 +15229,7 @@ var ts;
                                 // S is a subtype of a type T, and T is a supertype of S if ...
                                 // S' and T are object types and, for each member M in T..
                                 // M is a property and S' contains a property N where
-                                // if M is a required property, N is also a required property
+                                // if M is a required property, N is also a required property 
                                 // (M - property in T)
                                 // (N - property in S)
                                 if (reportErrors) {
@@ -15959,9 +15959,9 @@ var ts;
         }
         function getTypeOfSymbolAtLocation(symbol, node) {
             resolveLocation(node);
-            // Get the narrowed type of symbol at given location instead of just getting
+            // Get the narrowed type of symbol at given location instead of just getting 
             // the type of the symbol.
-            // eg.
+            // eg. 
             // function foo(a: string | number) {
             //     if (typeof a === "string") {
             //         a/**/
@@ -16530,8 +16530,8 @@ var ts;
         }
         // Return the contextual signature for a given expression node. A contextual type provides a
         // contextual signature if it has a single call signature and if that call signature is non-generic.
-        // If the contextual type is a union type, get the signature from each type possible and if they are
-        // all identical ignoring their return type, the result is same signature but with return type as
+        // If the contextual type is a union type, get the signature from each type possible and if they are 
+        // all identical ignoring their return type, the result is same signature but with return type as 
         // union type of return types from these signatures
         function getContextualSignature(node) {
             ts.Debug.assert(node.kind !== 125 /* Method */ || ts.isObjectLiteralMethod(node));
@@ -16654,9 +16654,9 @@ var ts;
                     }
                     else {
                         // TypeScript 1.0 spec (April 2014)
-                        // A get accessor declaration is processed in the same manner as
+                        // A get accessor declaration is processed in the same manner as 
                         // an ordinary function declaration(section 6.1) with no parameters.
-                        // A set accessor declaration is processed in the same manner
+                        // A set accessor declaration is processed in the same manner 
                         // as an ordinary function declaration with a single parameter and a Void return type.
                         var getAccessor = ts.getDeclarationOfKind(member, 127 /* GetAccessor */);
                         if (getAccessor) {
@@ -16762,11 +16762,11 @@ var ts;
                 getNodeLinks(node).resolvedSymbol = prop;
                 if (prop.parent && prop.parent.flags & 32 /* Class */) {
                     // TS 1.0 spec (April 2014): 4.8.2
-                    // - In a constructor, instance member function, instance member accessor, or
-                    //   instance member variable initializer where this references a derived class instance,
+                    // - In a constructor, instance member function, instance member accessor, or 
+                    //   instance member variable initializer where this references a derived class instance, 
                     //   a super property access is permitted and must specify a public instance member function of the base class.
-                    // - In a static member function or static member accessor
-                    //   where this references the constructor function object of a derived class,
+                    // - In a static member function or static member accessor 
+                    //   where this references the constructor function object of a derived class, 
                     //   a super property access is permitted and must specify a public static member function of the base class.
                     if (left.kind === 89 /* SuperKeyword */ && getDeclarationKindFromSymbol(prop) !== 125 /* Method */) {
                         error(right, ts.Diagnostics.Only_public_and_protected_methods_of_the_base_class_are_accessible_via_the_super_keyword);
@@ -16810,11 +16810,11 @@ var ts;
                 error(node.argumentExpression, ts.Diagnostics.Index_expression_arguments_in_const_enums_must_be_of_type_string);
             }
             // TypeScript 1.0 spec (April 2014): 4.10 Property Access
-            // - If IndexExpr is a string literal or a numeric literal and ObjExpr's apparent type has a property with the name
+            // - If IndexExpr is a string literal or a numeric literal and ObjExpr's apparent type has a property with the name 
             //    given by that literal(converted to its string representation in the case of a numeric literal), the property access is of the type of that property.
-            // - Otherwise, if ObjExpr's apparent type has a numeric index signature and IndexExpr is of type Any, the Number primitive type, or an enum type,
+            // - Otherwise, if ObjExpr's apparent type has a numeric index signature and IndexExpr is of type Any, the Number primitive type, or an enum type, 
             //    the property access is of the type of that index signature.
-            // - Otherwise, if ObjExpr's apparent type has a string index signature and IndexExpr is of type Any, the String or Number primitive type, or an enum type,
+            // - Otherwise, if ObjExpr's apparent type has a string index signature and IndexExpr is of type Any, the String or Number primitive type, or an enum type, 
             //    the property access is of the type of that index signature.
             // - Otherwise, if IndexExpr is of type Any, the String or Number primitive type, or an enum type, the property access is of type Any.
             // See if we can index as a property.
@@ -17628,16 +17628,16 @@ var ts;
             }
             function isReferenceOrErrorExpression(n) {
                 // TypeScript 1.0 spec (April 2014):
-                // Expressions are classified as values or references.
+                // Expressions are classified as values or references. 
                 // References are the subset of expressions that are permitted as the target of an assignment.
-                // Specifically, references are combinations of identifiers(section 4.3), parentheses(section 4.7),
+                // Specifically, references are combinations of identifiers(section 4.3), parentheses(section 4.7), 
                 // and property accesses(section 4.10).
                 // All other expression constructs described in this chapter are classified as values.
                 switch (n.kind) {
                     case 63 /* Identifier */:
                         var symbol = findSymbol(n);
                         // TypeScript 1.0 spec (April 2014): 4.3
-                        // An identifier expression that references a variable or parameter is classified as a reference.
+                        // An identifier expression that references a variable or parameter is classified as a reference. 
                         // An identifier expression that references any other kind of entity is classified as a value(and therefore cannot be the target of an assignment).
                         return !symbol || symbol === unknownSymbol || symbol === argumentsSymbol || (symbol.flags & 3 /* Variable */) !== 0;
                     case 143 /* PropertyAccessExpression */:
@@ -17743,7 +17743,7 @@ var ts;
         function checkInstanceOfExpression(node, leftType, rightType) {
             // TypeScript 1.0 spec (April 2014): 4.15.4
             // The instanceof operator requires the left operand to be of type Any, an object type, or a type parameter type,
-            // and the right operand to be of type Any or a subtype of the 'Function' interface type.
+            // and the right operand to be of type Any or a subtype of the 'Function' interface type. 
             // The result is always of the Boolean primitive type.
             // NOTE: do not raise error if leftType is unknown as related error was already reported
             if (!(leftType.flags & 1 /* Any */ || isStructuredType(leftType))) {
@@ -17795,7 +17795,7 @@ var ts;
                 case 60 /* AmpersandEqualsToken */:
                     // TypeScript 1.0 spec (April 2014): 4.15.1
                     // These operators require their operands to be of type Any, the Number primitive type,
-                    // or an enum type. Operands of an enum type are treated
+                    // or an enum type. Operands of an enum type are treated 
                     // as having the primitive type Number. If one operand is the null or undefined value,
                     // it is treated as having the type of the other operand.
                     // The result is always of the Number primitive type.
@@ -17804,7 +17804,7 @@ var ts;
                     if (rightType.flags & (32 /* Undefined */ | 64 /* Null */))
                         rightType = leftType;
                     var suggestedOperator;
-                    // if a user tries to apply a bitwise operator to 2 boolean operands
+                    // if a user tries to apply a bitwise operator to 2 boolean operands 
                     // try and return them a helpful suggestion
                     if ((leftType.flags & 8 /* Boolean */) &&
                         (rightType.flags & 8 /* Boolean */) &&
@@ -17812,7 +17812,7 @@ var ts;
                         error(node, ts.Diagnostics.The_0_operator_is_not_allowed_for_boolean_types_Consider_using_1_instead, ts.tokenToString(node.operator), ts.tokenToString(suggestedOperator));
                     }
                     else {
-                        // otherwise just check each operand separately and report errors as normal
+                        // otherwise just check each operand separately and report errors as normal 
                         var leftOk = checkArithmeticOperandType(node.left, leftType, ts.Diagnostics.The_left_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_or_an_enum_type);
                         var rightOk = checkArithmeticOperandType(node.right, rightType, ts.Diagnostics.The_right_hand_side_of_an_arithmetic_operation_must_be_of_type_any_number_or_an_enum_type);
                         if (leftOk && rightOk) {
@@ -17900,7 +17900,7 @@ var ts;
                     // An assignment of the form
                     //    VarExpr = ValueExpr
                     // requires VarExpr to be classified as a reference
-                    // A compound assignment furthermore requires VarExpr to be classified as a reference (section 4.1)
+                    // A compound assignment furthermore requires VarExpr to be classified as a reference (section 4.1) 
                     // and the type of the non - compound operation to be assignable to the type of VarExpr.
                     var ok = checkReferenceExpression(node.left, ts.Diagnostics.Invalid_left_hand_side_of_assignment_expression, ts.Diagnostics.Left_hand_side_of_assignment_expression_cannot_be_a_constant);
                     // Use default messages
@@ -17983,7 +17983,7 @@ var ts;
             }
             if (isConstEnumObjectType(type)) {
                 // enum object type for const enums are only permitted in:
-                // - 'left' in property access
+                // - 'left' in property access 
                 // - 'object' in indexed access
                 // - target in rhs of import statement
                 var ok = (node.parent.kind === 143 /* PropertyAccessExpression */ && node.parent.expression === node) ||
@@ -18087,7 +18087,7 @@ var ts;
             function checkReferencesInInitializer(n) {
                 if (n.kind === 63 /* Identifier */) {
                     var referencedSymbol = getNodeLinks(n).resolvedSymbol;
-                    // check FunctionLikeDeclaration.locals (stores parameters\function local variable)
+                    // check FunctionLikeDeclaration.locals (stores parameters\function local variable) 
                     // if it contains entry with a specified name and if this entry matches the resolved symbol
                     if (referencedSymbol && referencedSymbol !== unknownSymbol && getSymbol(parameterDeclaration.parent.locals, referencedSymbol.name, 107455 /* Value */) === referencedSymbol) {
                         if (referencedSymbol.valueDeclaration.kind === 123 /* Parameter */) {
@@ -18227,13 +18227,13 @@ var ts;
                     !!n.initializer;
             }
             // TS 1.0 spec (April 2014): 8.3.2
-            // Constructors of classes with no extends clause may not contain super calls, whereas
+            // Constructors of classes with no extends clause may not contain super calls, whereas 
             // constructors of derived classes must contain at least one super call somewhere in their function body.
             if (ts.getClassBaseTypeNode(node.parent)) {
                 if (containsSuperCall(node.body)) {
                     // The first statement in the body of a constructor must be a super call if both of the following are true:
                     // - The containing class is a derived class.
-                    // - The constructor declares parameter properties
+                    // - The constructor declares parameter properties 
                     //   or the containing class declares instance member variables with initializers.
                     var superCallShouldBeFirst = ts.forEach(node.parent.members, isInstancePropertyWithInitializer) ||
                         ts.forEach(node.parameters, function (p) { return p.flags & (16 /* Public */ | 32 /* Private */ | 64 /* Protected */); });
@@ -18545,8 +18545,8 @@ var ts;
                     // checkSpecializedSignatureDeclaration
                     if (!bodySignature.hasStringLiterals) {
                         // TypeScript 1.0 spec (April 2014): 6.1
-                        // If a function declaration includes overloads, the overloads determine the call
-                        // signatures of the type given to the function object
+                        // If a function declaration includes overloads, the overloads determine the call 
+                        // signatures of the type given to the function object 
                         // and the function implementation signature must be assignable to that type
                         //
                         // TypeScript 1.0 spec (April 2014): 3.8.4
@@ -18590,7 +18590,7 @@ var ts;
             if (ts.getDeclarationOfKind(symbol, node.kind) !== node) {
                 return;
             }
-            // we use SymbolFlags.ExportValue, SymbolFlags.ExportType and SymbolFlags.ExportNamespace
+            // we use SymbolFlags.ExportValue, SymbolFlags.ExportType and SymbolFlags.ExportNamespace 
             // to denote disjoint declarationSpaces (without making new enum type).
             var exportedDeclarationSpaces = 0;
             var nonExportedDeclarationSpaces = 0;
@@ -18724,10 +18724,10 @@ var ts;
             //        var x = { get baz() { return _i; } }
             //    }
             // }
-            //
+            // 
             // at runtime '_i' referenced in getter will be resolved to the generated index variable '_i' used to initialize rest parameters.
             // legitimate case: when '_i' is defined inside the function declaration with rest parameters.
-            //
+            // 
             // function foo(...a) {
             //    var _i = "!";
             //    function bar() {
@@ -18856,11 +18856,11 @@ var ts;
             // declaration. the problem is if the declaration has an initializer. this will act as a write to the
             // block declared value. this is fine for let, but not const.
             //
-            // Only consider declarations with initializers, uninitialized var declarations will not
+            // Only consider declarations with initializers, uninitialized var declarations will not 
             // step on a const variable.
-            // Do not consider let and const declarations, as duplicate block-scoped declarations
+            // Do not consider let and const declarations, as duplicate block-scoped declarations 
             // are handled by the binder.
-            // We are only looking for var declarations that step on const declarations from a
+            // We are only looking for var declarations that step on const declarations from a 
             // different scope. e.g.:
             //      var x = 0;
             //      {
@@ -18957,7 +18957,7 @@ var ts;
             // In a 'for-in' statement of the form
             // for (var VarDecl in Expr) Statement
             //   VarDecl must be a variable declaration without a type annotation that declares a variable of type Any,
-            //   and Expr must be an expression of type Any, an object type, or a type parameter type.
+            //   and Expr must be an expression of type Any, an object type, or a type parameter type.                        
             if (node.declarations) {
                 if (node.declarations.length >= 1) {
                     var decl = node.declarations[0];
@@ -19206,13 +19206,13 @@ var ts;
             // Inheritance means that a derived class implicitly contains all non - overridden members of the base class.
             // Both public and private property members are inherited, but only public property members can be overridden.
             // A property member in a derived class is said to override a property member in a base class
-            // when the derived class property member has the same name and kind(instance or static)
+            // when the derived class property member has the same name and kind(instance or static) 
             // as the base class property member.
             // The type of an overriding property member must be assignable(section 3.8.4)
             // to the type of the overridden property member, or otherwise a compile - time error occurs.
             // Base class instance member functions can be overridden by derived class instance member functions,
             // but not by other kinds of members.
-            // Base class instance member variables and accessors can be overridden by
+            // Base class instance member variables and accessors can be overridden by 
             // derived class instance member variables and accessors, but not by other kinds of members.
             // NOTE: assignability is checked in checkClassDeclaration
             var baseProperties = getPropertiesOfObjectType(baseType);
@@ -19378,7 +19378,7 @@ var ts;
                             }
                             else if (!ambient) {
                                 // Only here do we need to check that the initializer is assignable to the enum type.
-                                // If it is a constant value (not undefined), it is syntactically constrained to be a number.
+                                // If it is a constant value (not undefined), it is syntactically constrained to be a number. 
                                 // Also, we do not need to check this for ambients because there is already
                                 // a syntax error if it is not a constant.
                                 checkTypeAssignableTo(checkExpression(initializer), enumType, initializer, undefined);
@@ -19626,7 +19626,7 @@ var ts;
                 }
                 else if (node.parent.kind === 190 /* ModuleBlock */ && node.parent.parent.name.kind === 7 /* StringLiteral */) {
                     // TypeScript 1.0 spec (April 2013): 12.1.6
-                    // An ExternalImportDeclaration in an AmbientExternalModuleDeclaration may reference
+                    // An ExternalImportDeclaration in an AmbientExternalModuleDeclaration may reference 
                     // other external modules only through top - level external module names.
                     // Relative external module names are not permitted.
                     if (ts.getExternalModuleImportDeclarationExpression(node).kind === 7 /* StringLiteral */) {
@@ -20071,7 +20071,7 @@ var ts;
                 return getSymbolOfNode(entityName.parent);
             }
             if (entityName.parent.kind === 192 /* ExportAssignment */) {
-                return resolveEntityName(entityName.parent.parent, entityName,
+                return resolveEntityName(entityName.parent.parent, entityName, 
                 /*all meanings*/ 107455 /* Value */ | 3152352 /* Type */ | 1536 /* Namespace */ | 33554432 /* Import */);
             }
             if (entityName.kind !== 143 /* PropertyAccessExpression */) {
@@ -20988,7 +20988,7 @@ var ts;
                 bases.push(fullName);
             classNameToBaseClassMap[className] = bases;
         };
-        //todo
+        //todo 
         SortHelper.prototype.getFileNode = function (file) {
             if (file in fileNameToNodeMap)
                 return fileNameToNodeMap[file];
@@ -21184,55 +21184,11 @@ var ts;
             });
         };
         FileNode.prototype.logCircular = function (file, other) {
-            console.log("Found circular dependency:" + [file, other].join("=>"));
+            console.log("Warning:Found circular dependency:" + [file].join("=>"));
         };
         return FileNode;
     })();
 })(ts || (ts = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Lark 1.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Lark 1.0
-     * @platform Web,Native
-     */
-    egret.XML;
-})(egret || (egret = {}));
 /// <reference path="core.ts"/>
 /// <reference path="sys.ts"/>
 /// <reference path="types.ts"/>
@@ -21387,12 +21343,26 @@ var ts;
         result.compileWithChanges = compileWithChanges;
         return result;
         function compileWithChanges(filesChanged) {
-            filesChanged.forEach(function (filename) { return updatedFiles[getCanonicalName(filename)] = true; });
+            filesChanged.forEach(function (file) {
+                if (file.type == "added") {
+                    commandLine.filenames.push(file.fileName);
+                    updatedFiles[getCanonicalName(file.fileName)] = true;
+                }
+                else if (file.type == "removed") {
+                    var index = commandLine.filenames.indexOf(file.fileName);
+                    if (index >= 0)
+                        commandLine.filenames.splice(index, 1);
+                }
+                else {
+                    updatedFiles[getCanonicalName(file.fileName)] = true;
+                }
+            });
             var changedFiles = updatedFiles;
             updatedFiles = {};
             return recompile(changedFiles);
         }
         function recompile(changedFiles) {
+            console.log(changedFiles);
             // Reuse source files from the last compilation so long as they weren't changed.
             var oldSourceFiles = ts.arrayToMap(ts.filter(program.getSourceFiles(), function (file) { return !ts.hasProperty(changedFiles, getCanonicalName(file.filename)); }), function (file) { return getCanonicalName(file.filename); });
             // We create a new compiler host for this compilation cycle.

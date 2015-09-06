@@ -11,37 +11,43 @@ export class DirectoryState {
         this.lastStates = updateMTime(this.path);
     }
 
-    checkChanges():FileChanges {
+    checkChanges():egret.FileChanges {
         var lastStates = this.lastStates;
         var currentStates = updateMTime(this.path);
         var lastFiles = Object.keys(lastStates);
         var currentFiles = Object.keys(currentStates);
-
-        var fileChanged: string[] = [];
-        var fileAdded: string[] = [];
-        var fileRemoved: string[] = [];
+        
+        var fileChanges: egret.FileChanges = [];
         currentFiles.forEach((path, index) => {
             var lastState = lastStates[path];
             if (lastState) {
                 var currentState = currentStates[path];
-                if (currentState.mtime > lastState.mtime)
-                    fileChanged.push(path);
+                if (currentState.mtime != lastState.mtime || currentState.size != lastState.size) {
+                    fileChanges.push({
+                        fileName: path,
+                        type: "modified"
+                    });
+                }
             }
             else {
-                fileAdded.push(path);
+                fileChanges.push({
+                    fileName: path,
+                    type: "added"
+                });
             }
         });
 
         lastFiles.forEach(path=> {
-            if (!currentStates[path])
-                fileRemoved.push(path);
+            if (!currentStates[path]) {
+                fileChanges.push({
+                    fileName: path,
+                    type: "removed"
+                });
+            }
         });
         this.lastStates = currentStates;
-        return {
-            added: fileAdded,
-            removed: fileRemoved,
-            modified: fileChanged
-        };
+        console.log("Directory.fileChanges:", fileChanges);
+        return fileChanges;
     }
 }
 
@@ -56,6 +62,7 @@ interface Map<T> {
 
 interface FileState {
     mtime: number;
+    size: number;
 }
 
 export interface FileChanges {
@@ -81,7 +88,8 @@ function updateMTime(filePath: string, states: Map<FileState> = {}) {
         }
         else {
             states[path] = {
-                mtime: stat.mtime.getTime()
+                mtime: stat.mtime.getTime(),
+                size: stat.size
             };
         }
     }

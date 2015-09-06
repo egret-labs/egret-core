@@ -213,7 +213,7 @@ declare module egret {
     }
 
     export interface ServiceBuildCommand extends ServiceCommand {
-        changes: string[];
+        changes: FileChanges;
     }
     export interface ServiceCommandResult extends ServiceCommand {
         exitCode: number;
@@ -294,6 +294,13 @@ declare module egret {
     export interface IEXMLHandler {
         compile(): number;
         compileSingle(path: string): number;
+    }
+
+    export type FileChanges = Array<FileChange>;
+
+    export interface FileChange {
+        fileName: string;
+        type: string;
     }
 }
 

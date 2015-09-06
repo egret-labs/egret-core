@@ -9,7 +9,17 @@ import exmlc = require('../lib/exml/exmlc');
 export function beforeBuild() {
 
     var exmlDtsPath = getExmlDtsPath();
-    file.remove(exmlDtsPath);
+    file.save(exmlDtsPath, "");
+}
+export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
+
+    if (!exmlsChanged || exmlsChanged.length == 0)
+        return;
+    var addedOrRemoved = exmlsChanged.filter(e=> e.type == "added" || e.type == "removed");
+    if (addedOrRemoved.length == 0) {
+        return;
+    }
+    beforeBuild();
 }
 
 export function build(): egret.TaskResult {
@@ -25,8 +35,7 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
         exitCode: 0,
         messages: []
     };
-
-    exmls.forEach(exml=> exmlc.compile(exml, egret.args.srcDir));
+    
     exmls.forEach(exml=> {
         var result = exmlc.compile(exml, egret.args.srcDir);
         if (result.exitCode != 0) {
@@ -49,6 +58,29 @@ export function afterBuild() {
         var tsPath = exml.substring(0, exml.length - 4) + "g.ts";
         file.remove(tsPath);
     });
+
+    generateExmlDTS();
+}
+
+
+export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
+
+    if (egret.args.keepEXMLTS)
+        return;
+
+    if (!exmlsChanged || exmlsChanged.length == 0)
+        return;
+
+    //删除exml编译的ts文件
+    exmlsChanged.forEach(exml => {
+        var tsPath = exml.fileName.substring(0, exml.fileName.length - 4) + "g.ts";
+        file.remove(tsPath);
+    });
+
+    var addedOrRemoved = exmlsChanged.filter(e=> e.type == "added" || e.type == "removed");
+    if (addedOrRemoved.length == 0) {
+        return;
+    }
 
     generateExmlDTS();
 }
@@ -85,12 +117,7 @@ function generateExmlDTS(): string {
 
     //保存exml
     var exmlDtsPath = getExmlDtsPath();
-    if (dts != "") {
-        file.save(exmlDtsPath, dts);
-    }
-    else {
-        file.remove(exmlDtsPath);
-    }
+    file.save(exmlDtsPath, dts);
 
     return dts;
 }

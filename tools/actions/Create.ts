@@ -59,7 +59,7 @@ function compileTemplate(project: egret.ILarkProject) {
     project.moduleScripts = moduleScripts;
     project['scriptTemplate'] = scriptTemplate;
 
-    var files = FileUtil.searchByFunction(options.projectDir, f=> f.indexOf("html") > 0);
+    var files = FileUtil.searchByFunction(options.projectDir, f=> f.indexOf("index.html") > 0);
     files.forEach(file=> {
         var content = FileUtil.read(file);
         var temp = doT.template(content);

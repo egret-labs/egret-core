@@ -8,10 +8,10 @@ import tsclark = require("../lib/typescript/tsclark");
 
 
 class CompileProject {
-    public compileProject(option:egret.ToolArgs, files?:string[]) {
-        var compileResult: tsclark.Compiler.LarkCompileResult;
+    public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
+        var compileResult: tsclark.LarkCompileResult;
         if (files && this.recompile) {
-            files = files.map(f=> f.replace(option.projectDir, ""));
+            files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""))
             compileResult = this.recompile(files);
         }
         else {
@@ -27,13 +27,13 @@ class CompileProject {
         }
         
         
-        var files: string[] = GetJavaScriptFileNames(compileResult.files, /^src\//);
-        compileResult.files = files;
+        var fileResult: string[] = GetJavaScriptFileNames(compileResult.files, /^src\//);
+        compileResult.files = fileResult;
         return compileResult;
 
     }
-    
-    private recompile: (files: string[]) => tsclark.Compiler.LarkCompileResult;
+
+    private recompile: (files: egret.FileChanges) => tsclark.LarkCompileResult;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {

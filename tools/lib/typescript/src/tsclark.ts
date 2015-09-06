@@ -181,8 +181,22 @@ module ts {
         result.compileWithChanges = compileWithChanges;
         return result;
 
-        function compileWithChanges(filesChanged: string[]): LarkCompileResult {
-            filesChanged.forEach(filename=> updatedFiles[getCanonicalName(filename)] = true);
+        function compileWithChanges(filesChanged: egret.FileChanges): LarkCompileResult {
+
+            filesChanged.forEach(file=> {
+                if (file.type == "added") {
+                    commandLine.filenames.push(file.fileName);
+                    updatedFiles[getCanonicalName(file.fileName)] = true
+                }
+                else if (file.type == "removed") {
+                    var index = commandLine.filenames.indexOf(file.fileName);
+                    if (index >= 0)
+                        commandLine.filenames.splice(index, 1);
+                }
+                else {
+                    updatedFiles[getCanonicalName(file.fileName)] = true
+                }
+            });
             var changedFiles = updatedFiles;
             updatedFiles = {};
             return recompile(changedFiles);
@@ -228,8 +242,14 @@ module ts {
         program: ts.Program;
         files?: string[];
         exitStatus: EmitReturnStatus;
-        compileWithChanges?: (filesChanged: string[]) => LarkCompileResult;
+        compileWithChanges?: (filesChanged: egret.FileChanges) => LarkCompileResult;
         messages?: string[];
+    }
+
+    export interface FileChanges {
+        added: string[];
+        modified: string[];
+        removed: string[];
     }
 
     function compile(commandLine: ParsedCommandLine, compilerHost: CompilerHost, changedFiles?:string[]): LarkCompileResult {

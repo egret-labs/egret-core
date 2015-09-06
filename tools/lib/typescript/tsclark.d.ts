@@ -1,83 +1,5 @@
 /// <reference path="../types.d.ts" />
 declare module ts {
-    const enum Ternary {
-        False = 0,
-        Maybe = 1,
-        True = -1,
-    }
-    const enum Comparison {
-        LessThan = -1,
-        EqualTo = 0,
-        GreaterThan = 1,
-    }
-    interface StringSet extends Map<any> {
-    }
-    function forEach<T, U>(array: T[], callback: (element: T) => U): U;
-    function contains<T>(array: T[], value: T): boolean;
-    function indexOf<T>(array: T[], value: T): number;
-    function countWhere<T>(array: T[], predicate: (x: T) => boolean): number;
-    function filter<T>(array: T[], f: (x: T) => boolean): T[];
-    function map<T, U>(array: T[], f: (x: T) => U): U[];
-    function concatenate<T>(array1: T[], array2: T[]): T[];
-    function deduplicate<T>(array: T[]): T[];
-    function sum(array: any[], prop: string): number;
-    function lastOrUndefined<T>(array: T[]): T;
-    function binarySearch(array: number[], value: number): number;
-    function hasProperty<T>(map: Map<T>, key: string): boolean;
-    function getProperty<T>(map: Map<T>, key: string): T;
-    function isEmpty<T>(map: Map<T>): boolean;
-    function clone<T>(object: T): T;
-    function forEachValue<T, U>(map: Map<T>, callback: (value: T) => U): U;
-    function forEachKey<T, U>(map: Map<T>, callback: (key: string) => U): U;
-    function lookUp<T>(map: Map<T>, key: string): T;
-    function mapToArray<T>(map: Map<T>): T[];
-    function arrayToMap<T>(array: T[], makeKey: (value: T) => string): Map<T>;
-    var localizedDiagnosticMessages: Map<string>;
-    function getLocaleSpecificMessage(message: string): string;
-    function createFileDiagnostic(file: SourceFile, start: number, length: number, message: DiagnosticMessage, ...args: any[]): Diagnostic;
-    function createCompilerDiagnostic(message: DiagnosticMessage, ...args: any[]): Diagnostic;
-    function chainDiagnosticMessages(details: DiagnosticMessageChain, message: DiagnosticMessage, ...args: any[]): DiagnosticMessageChain;
-    function concatenateDiagnosticMessageChains(headChain: DiagnosticMessageChain, tailChain: DiagnosticMessageChain): DiagnosticMessageChain;
-    function flattenDiagnosticChain(file: SourceFile, start: number, length: number, diagnosticChain: DiagnosticMessageChain, newLine: string): Diagnostic;
-    function compareValues<T>(a: T, b: T): Comparison;
-    function compareDiagnostics(d1: Diagnostic, d2: Diagnostic): number;
-    function deduplicateSortedDiagnostics(diagnostics: Diagnostic[]): Diagnostic[];
-    function normalizeSlashes(path: string): string;
-    function getRootLength(path: string): number;
-    var directorySeparator: string;
-    function normalizePath(path: string): string;
-    function getDirectoryPath(path: string): string;
-    function isUrl(path: string): boolean;
-    function isRootedDiskPath(path: string): boolean;
-    function getNormalizedPathComponents(path: string, currentDirectory: string): string[];
-    function getNormalizedAbsolutePath(filename: string, currentDirectory: string): string;
-    function getNormalizedPathFromPathComponents(pathComponents: string[]): string;
-    function getRelativePathToDirectoryOrUrl(directoryPathOrUrl: string, relativeOrAbsolutePath: string, currentDirectory: string, getCanonicalFileName: (fileName: string) => string, isAbsolutePathAnUrl: boolean): string;
-    function getBaseFilename(path: string): string;
-    function combinePaths(path1: string, path2: string): string;
-    function fileExtensionIs(path: string, extension: string): boolean;
-    function removeFileExtension(path: string): string;
-    function escapeString(s: string): string;
-    interface ObjectAllocator {
-        getNodeConstructor(kind: SyntaxKind): new () => Node;
-        getSymbolConstructor(): new (flags: SymbolFlags, name: string) => Symbol;
-        getTypeConstructor(): new (checker: TypeChecker, flags: TypeFlags) => Type;
-        getSignatureConstructor(): new (checker: TypeChecker) => Signature;
-    }
-    var objectAllocator: ObjectAllocator;
-    const enum AssertionLevel {
-        None = 0,
-        Normal = 1,
-        Aggressive = 2,
-        VeryAggressive = 3,
-    }
-    module Debug {
-        function shouldAssert(level: AssertionLevel): boolean;
-        function assert(expression: boolean, message?: string, verboseDebugInfo?: () => string): void;
-        function fail(message?: string): void;
-    }
-}
-declare module ts {
     interface Map<T> {
         [index: string]: T;
     }
@@ -419,6 +341,14 @@ declare module ts {
         questionToken?: Node;
         initializer: Expression;
     }
+    /**
+     * Several node kinds share function-like features such as a signature,
+     * a name, and a body. These nodes should extend FunctionLikeDeclaration.
+     * Examples:
+     *  FunctionDeclaration
+     *  MethodDeclaration
+     *  AccessorDeclaration
+     */
     interface FunctionLikeDeclaration extends SignatureDeclaration {
         _functionLikeDeclarationBrand: any;
         asteriskToken?: Node;
@@ -1131,6 +1061,9 @@ declare module ts {
         messageText: string;
         category: DiagnosticCategory;
         code: number;
+        /**
+          * Early error - any error (can be produced at parsing\binding\typechecking step) that blocks emit
+          */
         isEarly?: boolean;
     }
     enum DiagnosticCategory {
@@ -1333,6 +1266,122 @@ declare module ts {
         useCaseSensitiveFileNames(): boolean;
         getNewLine(): string;
     }
+}
+declare module ts {
+    const enum Ternary {
+        False = 0,
+        Maybe = 1,
+        True = -1,
+    }
+    const enum Comparison {
+        LessThan = -1,
+        EqualTo = 0,
+        GreaterThan = 1,
+    }
+    interface StringSet extends Map<any> {
+    }
+    function forEach<T, U>(array: T[], callback: (element: T) => U): U;
+    function contains<T>(array: T[], value: T): boolean;
+    function indexOf<T>(array: T[], value: T): number;
+    function countWhere<T>(array: T[], predicate: (x: T) => boolean): number;
+    function filter<T>(array: T[], f: (x: T) => boolean): T[];
+    function map<T, U>(array: T[], f: (x: T) => U): U[];
+    function concatenate<T>(array1: T[], array2: T[]): T[];
+    function deduplicate<T>(array: T[]): T[];
+    function sum(array: any[], prop: string): number;
+    /**
+     * Returns the last element of an array if non-empty, undefined otherwise.
+     */
+    function lastOrUndefined<T>(array: T[]): T;
+    function binarySearch(array: number[], value: number): number;
+    function hasProperty<T>(map: Map<T>, key: string): boolean;
+    function getProperty<T>(map: Map<T>, key: string): T;
+    function isEmpty<T>(map: Map<T>): boolean;
+    function clone<T>(object: T): T;
+    function forEachValue<T, U>(map: Map<T>, callback: (value: T) => U): U;
+    function forEachKey<T, U>(map: Map<T>, callback: (key: string) => U): U;
+    function lookUp<T>(map: Map<T>, key: string): T;
+    function mapToArray<T>(map: Map<T>): T[];
+    /**
+     * Creates a map from the elements of an array.
+     *
+     * @param array the array of input elements.
+     * @param makeKey a function that produces a key for a given element.
+     *
+     * This function makes no effort to avoid collisions; if any two elements produce
+     * the same key with the given 'makeKey' function, then the element with the higher
+     * index in the array will be the one associated with the produced key.
+     */
+    function arrayToMap<T>(array: T[], makeKey: (value: T) => string): Map<T>;
+    var localizedDiagnosticMessages: Map<string>;
+    function getLocaleSpecificMessage(message: string): string;
+    function createFileDiagnostic(file: SourceFile, start: number, length: number, message: DiagnosticMessage, ...args: any[]): Diagnostic;
+    function createCompilerDiagnostic(message: DiagnosticMessage, ...args: any[]): Diagnostic;
+    function chainDiagnosticMessages(details: DiagnosticMessageChain, message: DiagnosticMessage, ...args: any[]): DiagnosticMessageChain;
+    function concatenateDiagnosticMessageChains(headChain: DiagnosticMessageChain, tailChain: DiagnosticMessageChain): DiagnosticMessageChain;
+    function flattenDiagnosticChain(file: SourceFile, start: number, length: number, diagnosticChain: DiagnosticMessageChain, newLine: string): Diagnostic;
+    function compareValues<T>(a: T, b: T): Comparison;
+    function compareDiagnostics(d1: Diagnostic, d2: Diagnostic): number;
+    function deduplicateSortedDiagnostics(diagnostics: Diagnostic[]): Diagnostic[];
+    function normalizeSlashes(path: string): string;
+    function getRootLength(path: string): number;
+    var directorySeparator: string;
+    function normalizePath(path: string): string;
+    function getDirectoryPath(path: string): string;
+    function isUrl(path: string): boolean;
+    function isRootedDiskPath(path: string): boolean;
+    function getNormalizedPathComponents(path: string, currentDirectory: string): string[];
+    function getNormalizedAbsolutePath(filename: string, currentDirectory: string): string;
+    function getNormalizedPathFromPathComponents(pathComponents: string[]): string;
+    function getRelativePathToDirectoryOrUrl(directoryPathOrUrl: string, relativeOrAbsolutePath: string, currentDirectory: string, getCanonicalFileName: (fileName: string) => string, isAbsolutePathAnUrl: boolean): string;
+    function getBaseFilename(path: string): string;
+    function combinePaths(path1: string, path2: string): string;
+    function fileExtensionIs(path: string, extension: string): boolean;
+    function removeFileExtension(path: string): string;
+    /** NOTE: This *does not* support the full escape characters, it only supports the subset that can be used in file names
+      * or string literals. If the information encoded in the map changes, this needs to be revisited. */
+    function escapeString(s: string): string;
+    interface ObjectAllocator {
+        getNodeConstructor(kind: SyntaxKind): new () => Node;
+        getSymbolConstructor(): new (flags: SymbolFlags, name: string) => Symbol;
+        getTypeConstructor(): new (checker: TypeChecker, flags: TypeFlags) => Type;
+        getSignatureConstructor(): new (checker: TypeChecker) => Signature;
+    }
+    var objectAllocator: ObjectAllocator;
+    const enum AssertionLevel {
+        None = 0,
+        Normal = 1,
+        Aggressive = 2,
+        VeryAggressive = 3,
+    }
+    module Debug {
+        function shouldAssert(level: AssertionLevel): boolean;
+        function assert(expression: boolean, message?: string, verboseDebugInfo?: () => string): void;
+        function fail(message?: string): void;
+    }
+}
+declare module ts {
+    interface System {
+        args: string[];
+        newLine: string;
+        useCaseSensitiveFileNames: boolean;
+        write(s: string): void;
+        readFile(fileName: string, encoding?: string): string;
+        writeFile(fileName: string, data: string, writeByteOrderMark?: boolean): void;
+        watchFile?(fileName: string, callback: (fileName: string) => void): FileWatcher;
+        resolvePath(path: string): string;
+        fileExists(path: string): boolean;
+        directoryExists(path: string): boolean;
+        createDirectory(directoryName: string): void;
+        getExecutingFilePath(): string;
+        getCurrentDirectory(): string;
+        getMemoryUsage?(): number;
+        exit(exitCode?: number): number;
+    }
+    interface FileWatcher {
+        close(): void;
+    }
+    var sys: System;
 }
 declare module ts {
     var Diagnostics: {
@@ -3626,9 +3675,16 @@ declare module ts {
         ConstEnumOnly = 2,
     }
     function getModuleInstanceState(node: Node): ModuleInstanceState;
+    /**
+     * Returns false if any of the following are true:
+     *   1. declaration has no name
+     *   2. declaration has a literal name (not computed)
+     *   3. declaration has a computed property name that is a known symbol
+     */
     function hasComputedNameButNotSymbol(declaration: Declaration): boolean;
     function bindSourceFile(file: SourceFile): void;
 }
+declare var global: any;
 declare module ts {
     function getIndentString(level: number): string;
     function shouldEmitToOwnFile(sourceFile: SourceFile, compilerOptions: CompilerOptions): boolean;
@@ -3640,41 +3696,20 @@ declare module ts {
     function createTypeChecker(program: Program, fullTypeCheck: boolean): TypeChecker;
 }
 declare module ts {
-    interface System {
-        args: string[];
-        newLine: string;
-        useCaseSensitiveFileNames: boolean;
-        write(s: string): void;
-        readFile(fileName: string, encoding?: string): string;
-        writeFile(fileName: string, data: string, writeByteOrderMark?: boolean): void;
-        watchFile?(fileName: string, callback: (fileName: string) => void): FileWatcher;
-        resolvePath(path: string): string;
-        fileExists(path: string): boolean;
-        directoryExists(path: string): boolean;
-        createDirectory(directoryName: string): void;
-        getExecutingFilePath(): string;
-        getCurrentDirectory(): string;
-        getMemoryUsage?(): number;
-        exit(exitCode?: number): number;
-    }
-    interface FileWatcher {
-        close(): void;
-    }
-    var sys: System;
-}
-declare module ts {
     var optionDeclarations: CommandLineOption[];
     function parseCommandLine(commandLine: string[]): ParsedCommandLine;
 }
 declare module ts {
-    class TreeGenerator {
+    class SortHelper {
         static getOrderedFiles(): string[];
+        static getErrors(): Diagnostic[];
         static getClassNameAndProps(): {};
         classNameToFileMap: Map<string | Map<boolean>>;
         orderFiles(chk: TypeChecker, prog: Program): void;
         private symbolToFileMap(file, symbol);
         private symbolTabelToFileMap(file, symbolTable);
-        private constructorToClassName(file, classNode);
+        private findFileRefers(file);
+        private constructorToClassName(file, classNode, nest);
         private findUsedClasses;
         private staticMemberToClassName(file, symbol);
         private addStaticDepend(staticMemberName, className);
@@ -3686,20 +3721,49 @@ declare module ts {
         static mapFile(source: string, used: string): void;
     }
 }
-declare module ts {
-    function executeWithOption(commandLine: ParsedCommandLine): Compiler.LarkCompileResult;
+declare module globals {
+    function exit(code: number, ...args: any[]): any;
+    function log2(code: number, ...args: any[]): void;
+    function log(code: number, ...args: any[]): void;
+    function warn(code: number, ...args: any[]): void;
+    function debugLog(code: number, ...args: any[]): void;
+    function hasKeys(obj: Object, keys: Array<string>): boolean;
+    function getAsync(): any;
+    function getCrc32(): any;
+    function getCompiler(method: any): any;
+    function getExmlc(): any;
+    function getCodeUtil(): any;
+    function getOpen(): any;
+    function getCreateManifest(): any;
+    function addQuotes(str: any): string;
+    function getGlobalJava(): any;
+    /**
+     * 这个文件是否只含有接口
+     */
+    function isInterface(path: any): boolean;
+    function compressVersion(v1: any, v2: any): number;
 }
-export declare module Compiler {
-    export function executeWithOption(options: egret.ToolArgs, files: string[], out?: string, outDir?: string): Compiler.LarkCompileResult;
-    export function exit (exitCode: number) : number;
-    export function write (msg: any): void;
-    export interface LarkCompileResult {
-        program: ts.Program;
-        files?: string[];
-        exitStatus: ts.EmitReturnStatus;
-        compileWithChanges?: (filesChanged: string[]) => LarkCompileResult;
-        messages?: string[];
-    }
+declare module ts {
+    function executeWithOption(commandLine: ParsedCommandLine): LarkCompileResult;
+}
+export declare class Compiler {
+    static executeWithOption(options: egret.ToolArgs, files: string[], out?: string, outDir?: string): LarkCompileResult;
+    static exit: (exitCode: number) => number;
+    static write: (msg: any) => void;
 }
 
-export declare var tsc:typeof ts;
+export interface LarkCompileResult {
+    program: ts.Program;
+    files?: string[];
+    exitStatus: ts.EmitReturnStatus;
+    compileWithChanges?: (filesChanged: egret.FileChanges) => LarkCompileResult;
+    messages?: string[];
+}
+
+export interface FileChanges {
+    added: string[];
+    modified: string[];
+    removed: string[];
+}
+
+export declare var tsc: typeof ts;
