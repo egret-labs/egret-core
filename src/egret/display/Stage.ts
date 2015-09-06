@@ -108,6 +108,8 @@ module egret {
          * egret.sys.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。
          * egret.sys.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。
          * egret.sys.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。
+         * @platform Web
+         * @version 2.4
          */
         public get orientation():string {
             return this._orientation;
