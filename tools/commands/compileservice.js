@@ -170,7 +170,7 @@ var AutoCompileCommand = (function () {
         if (msg.command == 'build')
             this.buildChanges(msg.changes);
         if (msg.command == 'shutdown')
-            process.exit(0);
+            utils.exit(0);
     };
     AutoCompileCommand.prototype.sendCommand = function (cmd) {
         if (!cmd) {

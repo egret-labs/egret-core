@@ -21,7 +21,10 @@ class Create implements egret.Command {
 
         projectAction.normalize(proj);
 
+        var emptyTemplate = FileUtil.joinPath(options.larkRoot, TemplatesRoot + "empty");
         var template = FileUtil.joinPath(options.larkRoot, TemplatesRoot + proj.type);
+
+        FileUtil.copy(emptyTemplate, options.projectDir);
         FileUtil.copy(template, options.projectDir);
 
         CopyFiles.copyLark();
@@ -45,6 +48,8 @@ function compileTemplate(project: egret.ILarkProject) {
 
     var modules = project.modules;
     var platform = project.platform;
+
+    updateEgretProperties(modules);
 
     modules.forEach(m=> {
         moduleScripts.push(utils.format("libs/{0}/{0}", m.name));
@@ -71,5 +76,13 @@ function compileTemplate(project: egret.ILarkProject) {
         NativeProject.copyNativeTemplate();
 }
 
+function updateEgretProperties(modules: egret.EgretModule[]) {
+    var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
+    var jsonString = FileUtil.read(propFile);
+    var props: egret.EgretProperties = JSON.parse(jsonString);
+    props.egret_version = egret.manifest.version;
+    props.modules = modules.map(m=> ({ name: m.name }));
+    FileUtil.save(propFile, JSON.stringify(props, null, "  "));
+}
 
 export = Create;

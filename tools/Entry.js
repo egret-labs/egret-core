@@ -62,7 +62,7 @@ var Entry = (function () {
     Entry.prototype.exit = function (exitCode) {
         if (DontExitCode == exitCode)
             return;
-        process.exit(exitCode);
+        utils.exit(exitCode);
     };
     return Entry;
 })();

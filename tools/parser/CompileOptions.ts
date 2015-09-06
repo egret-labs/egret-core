@@ -11,7 +11,7 @@ class CompileOptions implements egret.ToolArgs {
     params: string[];
     platform: string;
     projectDir: string;
-    properties: egret.EgretProperties;
+    properties: egret.EgretPropertiesClass;
 
     get dirName(): string {
         return FileUtil.getFileName(this.projectDir);

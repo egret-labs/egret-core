@@ -36,7 +36,7 @@ class Create implements egret.Command {
 function parseProjectInfoFromTemplate(project: egret.ILarkProject) {
     if (!project.modules || !project.modules.length) {
 
-        var templates = egret.manifest.templates.filter(t=> t.name == egret.args.type)
+        var templates = egret.manifest.templates.filter(t=> t.name == project.type)
         var template = templates.length ? templates[0] : egret.manifest.templates[0];
 
         project.modules = template.modules.map(t=> ({ name: t }));

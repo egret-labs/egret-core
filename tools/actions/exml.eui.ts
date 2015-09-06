@@ -3,7 +3,7 @@
 
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
-import exml = require("../lib/swan/EXML");
+import exml = require("../lib/eui/EXML");
 
 export function beforeBuild() {
 

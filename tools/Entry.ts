@@ -69,7 +69,7 @@ class Entry {
     exit(exitCode) {
         if(DontExitCode == exitCode)
             return;
-        process.exit(exitCode);
+        utils.exit(exitCode);
         
     }
 }

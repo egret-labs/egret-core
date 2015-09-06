@@ -4,7 +4,7 @@ import os = require('os');
 import crypto = require('crypto');
 import file = require('../lib/FileUtil');
 
-class EgretProperties implements egret.EgretProperties {
+class EgretProperties implements egret.EgretPropertiesClass {
     properties: Object;
     modulesConfig: Object = {};
 

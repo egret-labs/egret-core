@@ -1,6 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require('../lib/FileUtil');
-var exml = require("../lib/swan/EXML");
+var exml = require("../lib/eui/EXML");
 function beforeBuild() {
 }
 exports.beforeBuild = beforeBuild;

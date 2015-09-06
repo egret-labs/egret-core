@@ -15,7 +15,9 @@ var Create = (function () {
         var proj = this.project;
         var options = egret.args;
         projectAction.normalize(proj);
+        var emptyTemplate = FileUtil.joinPath(options.larkRoot, TemplatesRoot + "empty");
         var template = FileUtil.joinPath(options.larkRoot, TemplatesRoot + proj.type);
+        FileUtil.copy(emptyTemplate, options.projectDir);
         FileUtil.copy(template, options.projectDir);
         CopyFiles.copyLark();
         compileTemplate(proj);
@@ -36,6 +38,7 @@ function compileTemplate(project) {
     var moduleScripts = [];
     var modules = project.modules;
     var platform = project.platform;
+    updateEgretProperties(modules);
     modules.forEach(function (m) {
         moduleScripts.push(utils.format("libs/{0}/{0}", m.name));
         var scriptName = utils.format("libs/{0}/{0}.{1}", m.name, platform);
@@ -54,5 +57,13 @@ function compileTemplate(project) {
     });
     if (platform == 'native')
         NativeProject.copyNativeTemplate();
+}
+function updateEgretProperties(modules) {
+    var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
+    var jsonString = FileUtil.read(propFile);
+    var props = JSON.parse(jsonString);
+    props.egret_version = egret.manifest.version;
+    props.modules = modules.map(function (m) { return ({ name: m.name }); });
+    FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }
 module.exports = Create;

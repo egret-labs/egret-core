@@ -32,7 +32,7 @@ var Create = (function () {
 })();
 function parseProjectInfoFromTemplate(project) {
     if (!project.modules || !project.modules.length) {
-        var templates = egret.manifest.templates.filter(function (t) { return t.name == egret.args.type; });
+        var templates = egret.manifest.templates.filter(function (t) { return t.name == project.type; });
         var template = templates.length ? templates[0] : egret.manifest.templates[0];
         project.modules = template.modules.map(function (t) { return ({ name: t }); });
     }

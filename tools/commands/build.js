@@ -41,6 +41,6 @@ function onGotBuildCommandResult(cmd, callback) {
         callback(cmd.exitCode || 0);
 }
 function defaultBuildCallback(code) {
-    process.exit(code);
+    utils.exit(code);
 }
 module.exports = Build;

@@ -213,7 +213,7 @@ class AutoCompileCommand implements egret.Command {
         if (msg.command == 'build')
             this.buildChanges(msg.changes);
         if (msg.command == 'shutdown')
-            process.exit(0);
+            utils.exit(0);
     }
 
     private sendCommand(cmd?: egret.ServiceCommand) {
