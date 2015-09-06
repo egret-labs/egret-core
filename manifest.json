@@ -211,14 +211,14 @@
       "description": "Egret UI Framework",
       "files": [ ],
       "root": "src/extension/gui",
-      "dependencies": [ "egret","game" ]
+      "dependencies": [ "egret" ]
     },
     {
       "name": "res",
       "description": "Egret Resource Loader",
       "files": [ ],
       "root": "src/extension/resource",
-      "dependencies": [ "egret","game" ]
+      "dependencies": [ "egret" ]
     },
     {
       "name": "eui",

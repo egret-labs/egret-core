@@ -3605,6 +3605,7 @@ var egret;
                 var stage = new egret.Stage();
                 stage.$screen = this;
                 stage.$scaleMode = option.scaleMode;
+                stage.$orientation = option.orientation;
                 stage.$maxTouches = option.maxTouches;
                 stage.frameRate = option.frameRate;
                 stage.textureScaleFactor = option.textureScaleFactor;
@@ -3644,7 +3645,7 @@ var egret;
                 option.frameRate = +container.getAttribute("data-frame-rate") || 30;
                 option.contentWidth = +container.getAttribute("data-content-width") || 480;
                 option.contentHeight = +container.getAttribute("data-content-height") || 800;
-                option.orientation = container.getAttribute("data-orientation") || egret.sys.OrientationMode.AUTO;
+                option.orientation = container.getAttribute("data-orientation") || egret.OrientationMode.AUTO;
                 option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
                 option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
                 if (DEBUG) {
@@ -3691,8 +3692,9 @@ var egret;
                 var option = this.playerOption;
                 var screenRect = this.container.getBoundingClientRect();
                 var shouldRotate = false;
-                if (option.orientation != egret.sys.OrientationMode.AUTO) {
-                    shouldRotate = option.orientation != egret.sys.OrientationMode.PORTRAIT && screenRect.height > screenRect.width || option.orientation == egret.sys.OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
+                var orientation = this.stage.$orientation;
+                if (orientation != egret.OrientationMode.AUTO) {
+                    shouldRotate = orientation != egret.OrientationMode.PORTRAIT && screenRect.height > screenRect.width || orientation == egret.OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
                 }
                 var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
                 var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
@@ -3712,7 +3714,7 @@ var egret;
                 canvas.style.height = displayHeight + "px";
                 var rotation = 0;
                 if (shouldRotate) {
-                    if (option.orientation == egret.sys.OrientationMode.LANDSCAPE) {
+                    if (orientation == egret.OrientationMode.LANDSCAPE) {
                         rotation = 90;
                         canvas.style.top = (screenRect.height - displayWidth) / 2 + "px";
                         canvas.style.left = (screenRect.width + displayHeight) / 2 + "px";
