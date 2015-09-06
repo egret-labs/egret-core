@@ -144,7 +144,7 @@ module egret.native {
             var errorCount = 0;
 
             var self = this;
-            var loader = new egret.NativeResourceLoader();
+            var loader = new egret["NativeResourceLoader"]();
             loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
             loader.addEventListener(egret.Event.COMPLETE, loadComplete, self);
             loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
