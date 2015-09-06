@@ -180,13 +180,13 @@ module egret {
         /**
          * 根据帧标签，设置开始和结束的帧数
          */
-        private _setFrameLabelFrames(lableName:string):void{
+        private _setFrameLabelFrames(labelName:string):void{
             var frameLabels = this._frameLabels;
             if(frameLabels){
                 var outputFramelabel:FrameLabel = null;                
                 for (var i = 0; i < frameLabels.length; i++) {
                     outputFramelabel = frameLabels[i];
-                    if(lableName == outputFramelabel.name){
+                    if(labelName == outputFramelabel.name){
                         this._labelStartFrame = outputFramelabel.frame;
                         this._labelEndFrame = outputFramelabel.end;
                         break;
@@ -288,6 +288,9 @@ module egret {
             }
             if (typeof frame === "string") {
                 this._setFrameLabelFrames(frame);
+            }else{
+                this._labelStartFrame = 0;
+                this._labelEndFrame = 0;
             }
             this.play(playTimes);            
             this._gotoFrame(frame);
@@ -387,7 +390,7 @@ module egret {
             }
             var event = this._frameEvents[currentFrameNum];
             if(event && event!=""){
-                this.dispatchEvent(new egret.Event(event));
+                MovieClipEvent.dispatchMovieClipEvent(this,MovieClipEvent.FRAME_LABEL,event);
             }
             this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
             this._DO_Props_._sizeDirty = true;

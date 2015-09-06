@@ -25,6 +25,7 @@
         "egret/events/EventPhase.ts",
         "egret/events/IEventDispatcher.ts",
         "egret/events/EventDispatcher.ts",
+        "egret/events/MovieClipEvent.ts",
         "egret/context/MainContext.ts",
         "egret/utils/Profiler.ts",
         "egret/context/Ticker.ts",
