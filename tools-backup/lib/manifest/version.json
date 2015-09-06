@@ -7,7 +7,7 @@
         "IVersionController.ts",
         "DefaultLoadingView.ts",
         "ILoadingView.ts",
-        "Html5VersionController.ts",
-        "NativeVersionController.ts"
+        "web/Html5VersionController.ts",
+        "native/NativeVersionController.ts"
     ]
 }
