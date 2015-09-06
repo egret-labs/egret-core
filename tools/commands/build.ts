@@ -49,7 +49,7 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
 }
 
 function defaultBuildCallback(code) {
-    process.exit(code);
+    utils.exit(code);
 }
 
 export = Build;

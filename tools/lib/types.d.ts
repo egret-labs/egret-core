@@ -70,7 +70,7 @@ declare module egret {
         /**
         * egretProperties.json 信息
         */
-        properties: EgretProperties;
+        properties: EgretPropertiesClass;
 
 
         publish?: boolean;
@@ -98,6 +98,12 @@ declare module egret {
     }
 
     export interface EgretProperties {
+        document_class?: string;
+        modules?: EgretModule[];
+        native?: any;
+        egret_version?: string;
+    }
+    export interface EgretPropertiesClass {
         properties: Object;
         modulesConfig: Object;
 

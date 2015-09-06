@@ -70,7 +70,10 @@ function exit(code) {
     for (var _i = 1; _i < arguments.length; _i++) {
         args[_i - 1] = arguments[_i];
     }
-    var message = tr.apply(this, [code].concat(args));
+    if (code) {
+        var message = tr.apply(this, [code].concat(args));
+        console.error(message);
+    }
     process.exit(code);
 }
 exports.exit = exit;
