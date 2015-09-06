@@ -287,7 +287,7 @@ module eui {
 
         public set scrollPolicyV(value:string) {
             var values = this.$Scroller;
-            if (value[Keys.scrollPolicyV] == value) {
+            if (values[Keys.scrollPolicyV] == value) {
                 return;
             }
             values[Keys.scrollPolicyV] = value;
