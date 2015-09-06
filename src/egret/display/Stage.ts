@@ -103,11 +103,11 @@ module egret {
 
         /**
          * 屏幕显示方式
-         * 一个 egret.sys.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：
-         * egret.sys.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。
-         * egret.sys.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。
-         * egret.sys.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。
-         * egret.sys.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。
+         * 一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：
+         * egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。
+         * egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。
+         * egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。
+         * egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。
          * @platform Web
          * @version 2.4
          */

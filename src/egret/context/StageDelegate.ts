@@ -167,9 +167,9 @@ module egret {
             var clientWidth = this._getClientWidth();
             var clientHeight = this._getClientHeight();
             var shouldRotate = false;
-            if (orientation != sys.OrientationMode.AUTO) {
-                shouldRotate = orientation != sys.OrientationMode.PORTRAIT && clientHeight > clientWidth
-                || orientation == sys.OrientationMode.PORTRAIT && clientWidth > clientHeight;
+            if (orientation != OrientationMode.AUTO) {
+                shouldRotate = orientation != OrientationMode.PORTRAIT && clientHeight > clientWidth
+                || orientation == OrientationMode.PORTRAIT && clientWidth > clientHeight;
             }
 
             if (!shouldRotate) {
@@ -205,7 +205,7 @@ module egret {
 
             var rotation = 0;
             if (shouldRotate) {
-                if (orientation == sys.OrientationMode.LANDSCAPE) {//
+                if (orientation == OrientationMode.LANDSCAPE) {//
                     rotation = 90;
                     canvasDiv.style.top = Math.max((clientHeight - styleW) / 2, 0) + "px";
                     canvasDiv.style.left = Math.min((clientWidth - (clientWidth - styleH) / 2), clientWidth) + "px";
