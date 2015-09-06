@@ -102,6 +102,7 @@ module egret {
         public _setResolutionPolicy(resolutionPolicy:ResolutionPolicy):void {
             this._resolutionPolicy = resolutionPolicy;
             resolutionPolicy.init(this);
+
             resolutionPolicy._apply(this, this._designWidth, this._designHeight);
         }
 
@@ -133,7 +134,7 @@ module egret {
     export class ResolutionPolicy {
 
         private _containerStrategy;
-        private _contentStrategy;
+        private _contentStrategy:ContentStrategy;
 
         constructor(containerStg, contentStg) {
             this._containerStrategy = containerStg;
@@ -157,7 +158,97 @@ module egret {
          */
         public _apply(view, designedResolutionWidth, designedResolutionHeight) {
             this._containerStrategy._apply(view, designedResolutionWidth, designedResolutionHeight);
-            this._contentStrategy._apply(view, designedResolutionWidth, designedResolutionHeight);
+
+            var orientation = "auto";
+            if (egret.MainContext.instance.stage) {
+                orientation = egret.MainContext.instance.stage.orientation;
+            }
+
+            var clientWidth = this._getClientWidth();
+            var clientHeight = this._getClientHeight();
+            var shouldRotate = false;
+            if (orientation != sys.OrientationMode.AUTO) {
+                shouldRotate = orientation != sys.OrientationMode.PORTRAIT && clientHeight > clientWidth
+                || orientation == sys.OrientationMode.PORTRAIT && clientWidth > clientHeight;
+            }
+
+            if (!shouldRotate) {
+                this._contentStrategy._apply(view, designedResolutionWidth, designedResolutionHeight, clientWidth, clientHeight);
+            }
+            else {
+                this._contentStrategy._apply(view, designedResolutionWidth, designedResolutionHeight, clientHeight, clientWidth);
+            }
+            this.$setEgretSize(this._contentStrategy.$stageWidth, this._contentStrategy.$stageHeight,
+                this._contentStrategy.$displayWidth, this._contentStrategy.$displayHeight, clientWidth, clientHeight, shouldRotate, orientation);
+
+        }
+
+        $setEgretSize(stageW:number, stageH:number, styleW:number, styleH:number, clientWidth:number, clientHeight:number, shouldRotate:boolean, orientation:string):void {
+            egret.StageDelegate.getInstance()._stageWidth = Math.round(stageW);
+            egret.StageDelegate.getInstance()._stageHeight = Math.round(stageH);
+
+            var canvasDiv:any = document.getElementById(StageDelegate.canvas_div_name);
+            var container:any = document.getElementById(StageDelegate.egret_root_div);
+            if (!canvasDiv) {
+                canvasDiv = egret.Browser.getInstance().$new("div");
+                canvasDiv.id = StageDelegate.canvas_div_name;
+                container.appendChild(canvasDiv);
+            }
+            canvasDiv.style.position = "absolute";
+            canvasDiv.style[egret.Browser.getInstance().getTrans("transformOrigin")] = "0% 0% 0px";
+
+            canvasDiv.style.width = styleW + "px";
+            canvasDiv.style.height = styleH + "px";
+
+            container.style.width = clientWidth + "px";
+            container.style.height = clientHeight + "px";
+
+            var rotation = 0;
+            if (shouldRotate) {
+                if (orientation == sys.OrientationMode.LANDSCAPE) {//
+                    rotation = 90;
+                    canvasDiv.style.top = Math.max((clientHeight - styleW) / 2, 0) + "px";
+                    canvasDiv.style.left = Math.min((clientWidth - (clientWidth - styleH) / 2), clientWidth) + "px";
+                }
+                else {
+                    rotation = -90;
+                    canvasDiv.style.top = Math.min((clientHeight - (clientHeight - styleW) / 2), clientHeight) + "px";
+                    canvasDiv.style.left = Math.max((clientWidth - styleH) / 2, 0) + "px";
+                }
+            }
+            else {
+                canvasDiv.style.top = Math.max((clientHeight - styleH) / 2, 0) + "px";
+                canvasDiv.style.left = Math.max((clientWidth - styleW) / 2, 0) + "px";
+            }
+
+            egret.MainContext.instance.touchContext.$rotation = rotation;
+
+            var transform = `rotate(${ rotation }deg)`;
+            canvasDiv.style[egret.Browser.getInstance().getTrans("transform")] = transform;
+
+            var stageDelegateDiv = egret.Browser.getInstance().$("#StageDelegateDiv");
+            if (stageDelegateDiv) {
+                stageDelegateDiv.style.left = canvasDiv.style.left;
+                stageDelegateDiv.style.top = canvasDiv.style.top;
+
+                stageDelegateDiv.style[egret.Browser.getInstance().getTrans("transform")] = canvasDiv.style[egret.Browser.getInstance().getTrans("transform")];
+            }
+        }
+
+        /**
+         * 显示区域分辨率宽
+         * @returns {number}
+         */
+        public _getClientWidth():number {
+            return document.documentElement.clientWidth;
+        }
+
+        /**
+         * 显示区域分辨率高
+         * @returns {number}
+         */
+        public _getClientHeight():number {
+            return document.documentElement.clientHeight;
         }
     }
 
@@ -228,6 +319,10 @@ module egret {
      * @private
      */
     export class ContentStrategy {
+        $stageWidth:number;
+        $stageHeight:number;
+        $displayWidth:number;
+        $displayHeight:number;
 
         /**
          * @method egret.ContentStrategy#init
@@ -243,27 +338,7 @@ module egret {
          * @param designedResolutionWidth {number}
          * @param designedResolutionHeight {number}
          */
-        public _apply(delegate:egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-        }
-
-        public setEgretSize(w:number, h:number, styleW:number, styleH:number, left:number = 0, top:number = 0):void {
-            egret.StageDelegate.getInstance()._stageWidth = Math.round(w);
-            egret.StageDelegate.getInstance()._stageHeight = Math.round(h);
-
-            var canvasDiv:any = document.getElementById(StageDelegate.canvas_div_name);
-            var container:any = document.getElementById(StageDelegate.egret_root_div);
-            if (!canvasDiv) {
-                canvasDiv = egret.Browser.getInstance().$new("div");
-                canvasDiv.id = StageDelegate.canvas_div_name;
-                container.appendChild(canvasDiv);
-            }
-
-            canvasDiv.style.width = styleW + "px";
-            canvasDiv.style.height = styleH + "px";
-
-            container.style.width = styleW + "px";
-            container.style.height = styleH + "px";
-            container.style.top = top + "px";
+        public _apply(delegate:egret.StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number, clientWidth:number, clientHeight:number):void {
         }
 
         /**
@@ -296,7 +371,7 @@ module egret {
          * 构造函数
          * @param minWidth 最终游戏内适配的最小stageWidth，默认没有最小宽度
          */
-            constructor(minWidth:number = 0) {
+        constructor(minWidth:number = 0) {
             super();
             this.minWidth = minWidth;
         }
@@ -307,12 +382,9 @@ module egret {
          * @param designedResolutionWidth {any}
          * @param designedResolutionHeight {any}
          */
-        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = this._getClientWidth();//分辨率宽
-            var viewPortHeight:number = this._getClientHeight();//分辨率高
-
-            var scale:number = viewPortHeight / designedResolutionHeight;
-            var designW:number = viewPortWidth / scale;
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number, clientWidth:number, clientHeight:number):void {
+            var scale:number = clientHeight / designedResolutionHeight;
+            var designW:number = clientWidth / scale;
             var designH:number = designedResolutionHeight;
 
             var scale2:number = 1;
@@ -320,7 +392,10 @@ module egret {
                 scale2 = Math.min(1, designW / this.minWidth);
             }
 
-            this.setEgretSize(designW / scale2, designH, viewPortWidth, viewPortHeight * scale2);
+            this.$stageWidth = designW / scale2;
+            this.$stageHeight = designH;
+            this.$displayWidth = clientWidth;
+            this.$displayHeight = clientHeight * scale2;
 
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
@@ -341,69 +416,30 @@ module egret {
          * 构造函数
          * @param minHeight 最终游戏内适配的最小stageHeight，默认没有最小高度
          */
-            constructor(minHeight:number = 0) {
+        constructor(minHeight:number = 0) {
             super();
             this.minHeight = minHeight;
         }
 
-        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = this._getClientWidth();//分辨率宽
-            var viewPortHeight:number = this._getClientHeight();//分辨率高
-
-            var scale:number = viewPortWidth / designedResolutionWidth;
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number, clientWidth:number, clientHeight:number):void {
+            var scale:number = clientWidth / designedResolutionWidth;
             var designW:number = designedResolutionWidth;
-            var designH:number = viewPortHeight / scale;
+            var designH:number = clientHeight / scale;
 
             var scale2:number = 1;
             if (this.minHeight != 0) {
                 scale2 = Math.min(1, designH / this.minHeight);
             }
 
-            var offsetX:number = viewPortWidth * ( 1 - scale2 ) / 2;
-
-            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight, offsetX);
+            this.$stageWidth = designW;
+            this.$stageHeight = designH / scale2;
+            this.$displayWidth = clientWidth * scale2;
+            this.$displayHeight = clientHeight;
 
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
         }
     }
-
-
-    /**
-     * @class egret.FixedSize
-     * @classdesc
-     * @extends egret.ContentStrategy
-     * @private
-     */
-    export class FixedSize extends ContentStrategy {
-
-        private width;
-        private height;
-
-        constructor(width, height) {
-            super();
-            this.width = width;
-            this.height = height;
-        }
-
-        /**
-         * @method egret.FixedSize#_apply
-         * @param delegate {egret.StageDelegate}
-         * @param designedResolutionWidth {number}
-         * @param designedResolutionHeight {number}
-         */
-        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth = this.width;
-            var viewPortHeight = this.height;
-            var scale = viewPortWidth / designedResolutionWidth;
-
-            this.setEgretSize(designedResolutionWidth, viewPortHeight / scale, viewPortWidth, viewPortHeight);
-
-            delegate._scaleX = scale;
-            delegate._scaleY = scale;
-        }
-    }
-
 
     /**
      * @class egret.NoScale
@@ -423,10 +459,11 @@ module egret {
          * @param designedResolutionWidth {number}
          * @param designedResolutionHeight {number}
          */
-        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var offsetX:number = Math.floor((designedResolutionWidth - designedResolutionWidth) / 2);
-
-            this.setEgretSize(designedResolutionWidth, designedResolutionHeight, designedResolutionWidth, designedResolutionHeight, offsetX);
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number, clientWidth:number, clientHeight:number):void {
+            this.$stageWidth = designedResolutionWidth;
+            this.$stageHeight = designedResolutionHeight;
+            this.$displayWidth = designedResolutionWidth;
+            this.$displayHeight = designedResolutionHeight;
 
             delegate._scaleX = 1;
             delegate._scaleY = 1;
@@ -450,10 +487,7 @@ module egret {
          * @param designedResolutionWidth {number}
          * @param designedResolutionHeight {number}
          */
-        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var clientWidth:number = this._getClientWidth();//分辨率宽
-            var clientHeight:number = this._getClientHeight();//分辨率宽
-
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number, clientWidth:number, clientHeight:number):void {
             var viewPortWidth:number = clientWidth;
             var viewPortHeight:number = clientHeight;
 
@@ -464,14 +498,15 @@ module egret {
             var viewPortWidth = designW * scale;
             var viewPortHeight = designH * scale;
 
-            var scale2:number = 1;
-
-            var offsetX:number = Math.floor((clientWidth - viewPortWidth) / 2);
             delegate._offSetY = Math.floor((clientHeight - viewPortHeight) / 2);
-            this.setEgretSize(designW, designH / scale2, viewPortWidth * scale2, viewPortHeight, offsetX, delegate._offSetY);
 
-            delegate._scaleX = scale * scale2;
-            delegate._scaleY = scale * scale2;
+            this.$stageWidth = designW;
+            this.$stageHeight = designH;
+            this.$displayWidth = viewPortWidth;
+            this.$displayHeight = viewPortHeight;
+
+            delegate._scaleX = scale;
+            delegate._scaleY = scale;
 
         }
     }
@@ -492,9 +527,9 @@ module egret {
          * @param designedResolutionWidth {number}
          * @param designedResolutionHeight {number}
          */
-        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number):void {
-            var viewPortWidth:number = this._getClientWidth();//分辨率宽
-            var viewPortHeight:number = this._getClientHeight();//分辨率高
+        public _apply(delegate:StageDelegate, designedResolutionWidth:number, designedResolutionHeight:number, clientWidth:number, clientHeight:number):void {
+            var viewPortWidth:number = clientWidth;//分辨率宽
+            var viewPortHeight:number = clientHeight;//分辨率高
 
             var designW:number = designedResolutionWidth;
             var designH:number = designedResolutionHeight;
@@ -504,7 +539,10 @@ module egret {
             viewPortWidth = designW * scalex;
             viewPortHeight = designH * scaley;
 
-            this.setEgretSize(designW, designH, viewPortWidth, viewPortHeight);
+            this.$stageWidth = designW;
+            this.$stageHeight = designH;
+            this.$displayWidth = viewPortWidth;
+            this.$displayHeight = viewPortHeight;
 
             delegate._scaleX = scalex;
             delegate._scaleY = scaley;

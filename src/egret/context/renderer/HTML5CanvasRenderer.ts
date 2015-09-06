@@ -133,6 +133,9 @@ module egret {
                 var container = document.getElementById(egret.StageDelegate.canvas_div_name);
                 canvas = egret.Browser.getInstance().$new("canvas");
                 canvas.id = "egretCanvas";
+                canvas.style.position = "absolute";
+                canvas.style[egret.Browser.getInstance().getTrans("transformOrigin")] = "0% 0% 0px";
+
                 container.appendChild(canvas);
             }
             egret.MainContext.instance.stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
@@ -147,7 +150,6 @@ module egret {
                 this.canvas.height = egret.MainContext.instance.stage.stageHeight; //stageH
                 this.canvas.style.width = container.style.width;
                 this.canvas.style.height = container.style.height;
-//              this.canvas.style.position = "absolute";
 
                 if (this.useCacheCanvas) {
                     this._cacheCanvas.width = this.canvas.width;

@@ -175,9 +175,32 @@ egret.ContentStrategy.prototype._getClientHeight = function () {
     return result;
 };
 
-egret.ContentStrategy.prototype.setEgretSize = function (w:number, h:number, styleW:number, styleH:number, left:number = 0, top:number = 0) {
+egret.ResolutionPolicy.prototype._getClientWidth = function () {
+    var result = egret_native.EGTView.getFrameWidth();
+    return result;
+};
+
+egret.ResolutionPolicy.prototype._getClientHeight = function () {
+    var result = egret_native.EGTView.getFrameHeight();
+    return result;
+};
+
+egret.ResolutionPolicy.prototype._apply = function (view, designedResolutionWidth, designedResolutionHeight) {
+    var self:any = <egret.ResolutionPolicy>this;
+    var clientWidth = this._getClientWidth();
+    var clientHeight = this._getClientHeight();
+
+    self._containerStrategy._apply(view, designedResolutionWidth, designedResolutionHeight);
+    self._contentStrategy._apply(view, designedResolutionWidth, designedResolutionHeight, clientWidth, clientHeight);
+    this.$setEgretSize(self._contentStrategy.$stageWidth, self._contentStrategy.$stageHeight, self._contentStrategy.$displayWidth, self._contentStrategy.$displayHeight, clientWidth, clientHeight, false, "auto");
+};
+
+egret.ResolutionPolicy.prototype.$setEgretSize = function (w:number, h:number, styleW:number, styleH:number, clientWidth:number, clientHeight:number, shouldRotate:boolean, orientation:string) {
     egret.StageDelegate.getInstance()._stageWidth = w;
     egret.StageDelegate.getInstance()._stageHeight = h;
+
+    var top = Math.max((clientHeight - styleH) / 2, 0);
+    var left = Math.max((clientWidth - styleW) / 2, 0);
 
 //    console.log("setVisibleRect:" + left + "|" + top + "|" + styleW + "|" + styleH);
     egret_native.EGTView.setVisibleRect(left, top, styleW, styleH);

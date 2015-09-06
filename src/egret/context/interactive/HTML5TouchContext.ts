@@ -223,8 +223,21 @@ module egret {
                 ty = event.clientY;
             }
             var result = Point.identity;
-            result.x = (tx - left) / StageDelegate.getInstance().getScaleX();
-            result.y = (ty - top) / StageDelegate.getInstance().getScaleY();
+
+            var x = tx - left, newx = x;
+            var y = ty - top, newy = y;
+
+            if (this.$rotation == 90) {
+                newx = y;
+                newy = box.width - x;
+            }
+            else if (this.$rotation == -90) {
+                newx = box.height - y;
+                newy = x;
+            }
+
+            result.x = newx / StageDelegate.getInstance().getScaleX();
+            result.y = newy / StageDelegate.getInstance().getScaleY();
             return result;
 
         }
