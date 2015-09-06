@@ -47,10 +47,12 @@ var egret;
          * @version Egret 2.0
          * @platform Web,Native
          */
-        function FrameLabel(name, frame /*int*/) {
+        function FrameLabel(name, frame /*int*/, end /*int*/) {
             _super.call(this);
             this._name = name;
             this._frame = frame | 0;
+            if (end)
+                this._end = end | 0;
         }
         var d = __define,c=FrameLabel;p=c.prototype;
         d(p, "name"
@@ -87,6 +89,23 @@ var egret;
                 return this._frame;
             }
         );
+        d(p, "end"
+            /**
+             * @language en_US
+             * Frame serial number, the end of the label
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 标签对应的结束帧序号
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this._end;
+            }
+        );
         /**
          * @language en_US
          * Duplicate the current frame label object
@@ -100,7 +119,7 @@ var egret;
          * @platform Web,Native
          */
         p.clone = function () {
-            return new FrameLabel(this._name, this._frame);
+            return new FrameLabel(this._name, this._frame, this._end);
         };
         return FrameLabel;
     })(egret.EventDispatcher);
@@ -178,6 +197,19 @@ var egret;
             /**
              * @private
              */
+            this.$frameLabelStart = 0;
+            /**
+             * @private
+             */
+            this.$frameLabelEnd = 0;
+            /**
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            this.frameEvents = null;
+            /**
+             * @private
+             */
             this.frameIntervalTime = 0;
             /**
              * @private
@@ -228,6 +260,7 @@ var egret;
                 this.frames = movieClipData.frames;
                 this.$totalFrames = movieClipData.numFrames;
                 this.frameLabels = movieClipData.labels;
+                this.frameEvents = movieClipData.events;
                 this.frameIntervalTime = 1000 / movieClipData.frameRate;
                 this._initFrame();
             }
@@ -336,6 +369,25 @@ var egret;
         };
         /**
          * @private
+         * 根据帧标签，设置开始和结束的帧数
+         * @param labelName {string} 帧标签名
+         */
+        p.getFrameStartEnd = function (labelName) {
+            var frameLabels = this.frameLabels;
+            if (frameLabels) {
+                var outputFramelabel = null;
+                for (var i = 0; i < frameLabels.length; i++) {
+                    outputFramelabel = frameLabels[i];
+                    if (labelName == outputFramelabel.name) {
+                        this.$frameLabelStart = outputFramelabel.frame;
+                        this.$frameLabelEnd = outputFramelabel.end;
+                        break;
+                    }
+                }
+            }
+        };
+        /**
+         * @private
          * 返回指定序号的帧的FrameLabel对象
          * @param frame {number} 帧序号
          * @returns {egret.FrameLabel} FrameLabel对象
@@ -427,6 +479,13 @@ var egret;
             if (arguments.length == 0 || arguments.length > 2) {
                 egret.$error(1022, "MovieClip.gotoAndPlay()");
             }
+            if (typeof frame === "string") {
+                this.getFrameStartEnd(frame);
+            }
+            else {
+                this.$frameLabelStart = 0;
+                this.$frameLabelEnd = 0;
+            }
             this.play(playTimes);
             this.gotoFrame(frame);
         };
@@ -493,7 +552,7 @@ var egret;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
-                if (self.$nextFrameNum > self.$totalFrames) {
+                if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(egret.Event.LOOP_COMPLETE);
                         self.$nextFrameNum = 1;
@@ -511,6 +570,9 @@ var egret;
                             break;
                         }
                     }
+                }
+                if (self.$currentFrameNum == self.$frameLabelEnd) {
+                    self.$nextFrameNum = self.$frameLabelStart;
                 }
                 self.advanceFrame();
             }
@@ -533,6 +595,10 @@ var egret;
             var currentFrameNum = this.$currentFrameNum;
             if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
+            }
+            var event = this.frameEvents[currentFrameNum];
+            if (event && event != "") {
+                egret.MovieClipEvent.dispatchMovieClipEvent(this, egret.MovieClipEvent.FRAME_LABEL, event);
             }
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
             this.$invalidateContentBounds();
@@ -770,6 +836,12 @@ var egret;
              */
             this.labels = null;
             /**
+             * 帧事件列表
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            this.events = null;
+            /**
              * 帧率
              * @version Egret 2.0
              * @platform Web,Native
@@ -871,6 +943,7 @@ var egret;
             this.frameRate = mcData["frameRate"] || 24;
             this.fillFramesData(mcData.frames);
             this.fillFrameLabelsData(mcData.labels);
+            this.fillFrameEventsData(mcData.events);
         };
         /**
          * @private
@@ -908,7 +981,24 @@ var egret;
                     this.labels = [];
                     for (var i = 0; i < length; i++) {
                         var label = frameLabelsData[i];
-                        this.labels.push(new egret.FrameLabel(label.name, label.frame));
+                        this.labels.push(new egret.FrameLabel(label.name, label.frame, label.end));
+                    }
+                }
+            }
+        };
+        /**
+         * @private
+         *
+         * @param frameEventsData
+         */
+        p.fillFrameEventsData = function (frameEventsData) {
+            if (frameEventsData) {
+                var length = frameEventsData.length;
+                if (length > 0) {
+                    this.events = [];
+                    for (var i = 0; i < length; i++) {
+                        var events = frameEventsData[i];
+                        this.events[events.frame] = events.name;
                     }
                 }
             }
@@ -1116,6 +1206,135 @@ var egret;
     })(egret.EventDispatcher);
     egret.MovieClipDataFactory = MovieClipDataFactory;
     egret.registerClass(MovieClipDataFactory,"egret.MovieClipDataFactory");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
+     * When the movieClip's current frame have a frameLabel, dispatches MovieClipEvent object. FrameLabel Event type: MovieClipEvent.FRAME_LABEL
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 当动画的当前帧有事件，将调度 MovieClipEvent 对象。帧事件类型 MovieClipEvent.FRAME_LABEL.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    var MovieClipEvent = (function (_super) {
+        __extends(MovieClipEvent, _super);
+        /**
+         * @language en_US
+         * TextEvent create an object that contains information about movieClip events.
+         * @param type Type of event, you can access the MovieClipEvent.type.
+         * @param bubbles Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determine whether the Event object can be canceled. The default value is false.
+         * @param frameLabel When the current frame have a frameLabel, the event listeners can access this information through the frameLabel property.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 MovieClipEvent 对象，其中包含有关帧事件的信息。
+         * @param type 事件的类型，可以作为 MovieClipEvent.type 访问。
+         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param frameLabel 动画上的帧事件。事件侦听器可以通过 frameLabel 属性访问此信息。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        function MovieClipEvent(type, bubbles, cancelable, frameLabel) {
+            if (bubbles === void 0) { bubbles = false; }
+            if (cancelable === void 0) { cancelable = false; }
+            if (frameLabel === void 0) { frameLabel = null; }
+            _super.call(this, type, bubbles, cancelable);
+            /**
+             * @language en_US
+             * In MovieClipEvent.FRAME_LABEL event, event corresponding string.
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 在 MovieClipEvent.FRAME_LABEL 事件中，event对应的字符串。
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            this.frameLabel = null;
+            this.frameLabel = frameLabel;
+        }
+        var d = __define,c=MovieClipEvent;p=c.prototype;
+        /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown MovieClipEvent. The objects will be thrown in the object cache pool for the next round robin.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param text  MovieClipEvent object frameLabel
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的EventDispatcher对象来抛出 MovieClipEvent 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target 派发事件目标
+         * @param type  事件类型
+         * @param text  MovieClipEvent 对象的 frameLabel 赋值
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        MovieClipEvent.dispatchMovieClipEvent = function (target, type, frameLabel) {
+            if (frameLabel === void 0) { frameLabel = null; }
+            var event = egret.Event.create(MovieClipEvent, type);
+            event.frameLabel = frameLabel;
+            var result = target.dispatchEvent(event);
+            egret.Event.release(event);
+            return result;
+        };
+        /**
+         * @language en_US
+         * Emitted whenever the current frame have a frameLabel.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 动画的当前帧上有事件时调度
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        MovieClipEvent.FRAME_LABEL = "frame_label";
+        return MovieClipEvent;
+    })(egret.Event);
+    egret.MovieClipEvent = MovieClipEvent;
+    egret.registerClass(MovieClipEvent,"egret.MovieClipEvent");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3978,181 +4197,6 @@ egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBI
 egret.MainContext.runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 delete testDeviceType1;
 delete testRuntimeType1;
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     * @language en_US
-     * Injector
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Injector.ts
-     */
-    /**
-     * @language zh_CN
-     * 注入器
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Injector.ts
-     */
-    var Injector = (function () {
-        function Injector() {
-        }
-        var d = __define,c=Injector;p=c.prototype;
-        /**
-         * @language en_US
-         * Conduct mapping injection with class definition as the value. It will be instantiated only when it's singleton is requested for the first time by using getInstance ().
-         * @param whenAskedFor {any} whenAskedFor passes class definition or fully qualified name of the class as the key to map.
-         * @param instantiateClass {any} instantiateClass passes the class as a value to be mapped, and its constructor function must be empty. If not empty, use Injector.mapValue () method to directly inject the instance.
-         * @param named {string} named, optional parameter. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings. Import the same parameters when calling getInstance () method.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 以类定义为值进行映射注入，当第一次用getInstance()请求它的单例时才会被实例化。
-         * @param whenAskedFor {any} whenAskedFor 传递类定义或类完全限定名作为需要映射的键。
-         * @param instantiateClass {any} instantiateClass 传递类作为需要映射的值，它的构造函数必须为空。若不为空，请使用Injector.mapValue()方法直接注入实例。
-         * @param named {string} named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Injector.mapClass = function (whenAskedFor, instantiateClass, named) {
-            if (named === void 0) { named = ""; }
-            var requestName = this.getKey(whenAskedFor) + "#" + named;
-            this.mapClassDic[requestName] = instantiateClass;
-        };
-        /**
-         * @private
-         * 获取完全限定类名
-         */
-        Injector.getKey = function (hostComponentKey) {
-            if (typeof (hostComponentKey) == "string")
-                return hostComponentKey;
-            return egret.getQualifiedClassName(hostComponentKey);
-        };
-        /**
-         * @language en_US
-         * Conduct mapping injection with instance as the value, and always return this injected instance when a singleton is requested by using getInstance ().
-         * @param whenAskedFor {any} Pass class definition or fully qualified name of the class as the key to map.
-         * @param useValue {any} Pass object instance as a value to be mapped.
-         * @param named {string} Optional. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings. Import the same parameters when calling getInstance () method.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 以实例为值进行映射注入,当用getInstance()请求单例时始终返回注入的这个实例。
-         * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
-         * @param useValue {any} 传递对象实例作为需要映射的值。
-         * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Injector.mapValue = function (whenAskedFor, useValue, named) {
-            if (named === void 0) { named = ""; }
-            var requestName = this.getKey(whenAskedFor) + "#" + named;
-            this.mapValueDic[requestName] = useValue;
-        };
-        /**
-         * @language en_US
-         * Check whether there is any specified mapping rule
-         * @param whenAskedFor {any} Pass class definition or fully qualified name of the class as the key to map.
-         * @param named {string} Optional. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings.
-         * @returns {boolean} Whether there is any specified mapping rule
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 检查指定的映射规则是否存在
-         * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
-         * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
-         * @returns {boolean} 指定的映射规则是否存在
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Injector.hasMapRule = function (whenAskedFor, named) {
-            if (named === void 0) { named = ""; }
-            var requestName = this.getKey(whenAskedFor) + "#" + named;
-            if (this.mapValueDic[requestName] || this.mapClassDic[requestName]) {
-                return true;
-            }
-            return false;
-        };
-        /**
-         * @language en_US
-         * Get a singleton mapped by the specified class. Note: This method always returns a globally unique instance, and will not create repeatedly.
-         * @param clazz {any} Class definition or fully qualified name of the class
-         * @param named {string} Optional. If this value is set when calling mapClass () mapping, the same character string needs to be import ed in order to obtain the corresponding singleton
-         * @returns {any} Get a singleton mapped by the specified class
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 获取指定类映射的单例，注意:这个方法总是返回全局唯一的实例，不会重复创建。
-         * @param clazz {any} 类定义或类的完全限定名
-         * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
-         * @returns {any} 获取指定类映射的单例
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Injector.getInstance = function (clazz, named) {
-            if (named === void 0) { named = ""; }
-            var requestName = this.getKey(clazz) + "#" + named;
-            if (this.mapValueDic[requestName])
-                return this.mapValueDic[requestName];
-            var returnClass = (this.mapClassDic[requestName]);
-            if (returnClass) {
-                var instance = new returnClass();
-                this.mapValueDic[requestName] = instance;
-                delete this.mapClassDic[requestName];
-                return instance;
-            }
-            egret.$error(1028, requestName);
-        };
-        /**
-         * @private
-         * 储存类的映射规则
-         */
-        Injector.mapClassDic = {};
-        /**
-         * @private
-         */
-        Injector.mapValueDic = {};
-        return Injector;
-    })();
-    egret.Injector = Injector;
-    egret.registerClass(Injector,"egret.Injector");
-})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.

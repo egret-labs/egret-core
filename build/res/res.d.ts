@@ -65,13 +65,13 @@ declare module RES {
         loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
         _dataFormat: string;
         /**
-         * URLLoader对象池
+         * Loader对象池
          */
-        recycler: egret.Recycler;
+        protected recycler: egret.HttpRequest[];
         /**
          * 获取一个URLLoader对象
          */
-        private getLoader();
+        private getRequest();
         /**
          * 一项加载结束
          */
@@ -100,11 +100,42 @@ declare module RES {
      * SpriteSheet解析器
      * @private
      */
-    class SheetAnalyzer extends BinAnalyzer {
+    class AnimationAnalyzer extends BinAnalyzer {
         constructor();
         /**
-         * @inheritDoc
+         * 一项加载结束
          */
+        onLoadFinish(event: egret.Event): void;
+        sheetMap: any;
+        /**
+         * 解析并缓存加载成功的配置文件
+         */
+        analyzeConfig(resItem: ResourceItem, data: string): string;
+        /**
+         * 解析并缓存加载成功的位图数据
+         */
+        analyzeBitmap(resItem: ResourceItem, data: egret.BitmapData): void;
+        /**
+         * 获取相对位置
+         */
+        getRelativePath(url: string, file: string): string;
+        private parseAnimation(bitmapData, data, name);
+        destroyRes(name: string): boolean;
+        /**
+         * ImageLoader对象池
+         */
+        private recyclerIamge;
+        private loadImage(url, data);
+        private getImageLoader();
+    }
+}
+declare module RES {
+    /**
+     * SpriteSheet解析器
+     * @private
+     */
+    class SheetAnalyzer extends BinAnalyzer {
+        constructor();
         getRes(name: string): any;
         /**
          * 一项加载结束
@@ -119,17 +150,20 @@ declare module RES {
         /**
          * 解析并缓存加载成功的位图数据
          */
-        analyzeBitmap(resItem: ResourceItem, data: egret.Texture): void;
+        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
         /**
          * 获取相对位置
          */
         getRelativePath(url: string, file: string): string;
-        parseSpriteSheet(texture: egret.Texture, data: any, name: string): egret.SpriteSheet;
-        /**
-         * @inheritDoc
-         */
+        private parseSpriteSheet(texture, data, name);
         destroyRes(name: string): boolean;
-        protected onResourceDestroy(sheet: any): void;
+        /**
+         * ImageLoader对象池
+         */
+        private recyclerIamge;
+        private loadImage(url, data);
+        private getImageLoader();
+        protected onResourceDestroy(texture: any): void;
     }
 }
 declare module RES {
@@ -139,7 +173,7 @@ declare module RES {
     class FontAnalyzer extends SheetAnalyzer {
         constructor();
         analyzeConfig(resItem: ResourceItem, data: string): string;
-        analyzeBitmap(resItem: ResourceItem, data: egret.Texture): void;
+        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
         private getTexturePath(url, fntText);
         protected onResourceDestroy(font: egret.BitmapFont): void;
     }
@@ -148,12 +182,51 @@ declare module RES {
     /**
      * @private
      */
-    class ImageAnalyzer extends BinAnalyzer {
+    class ImageAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
         constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        protected fileDic: any;
+        /**
+         * 加载项字典
+         */
+        protected resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
+        /**
+         * Loader对象池
+         */
+        protected recycler: egret.ImageLoader[];
+        /**
+         * 获取一个Loader对象
+         */
+        private getLoader();
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event: egret.Event): void;
         /**
          * 解析并缓存加载成功的数据
          */
-        analyzeData(resItem: ResourceItem, data: any): void;
+        protected analyzeData(resItem: ResourceItem, texture: egret.Texture): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
         protected onResourceDestroy(texture: any): void;
     }
 }
@@ -173,9 +246,43 @@ declare module RES {
     /**
      * @private
      */
-    class SoundAnalyzer extends BinAnalyzer {
+    class SoundAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
         constructor();
-        analyzeData(resItem: ResourceItem, data: any): void;
+        /**
+         * 字节流数据缓存字典
+         */
+        protected soundDic: any;
+        /**
+         * 加载项字典
+         */
+        protected resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, callBack: Function, thisObject: any): void;
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        protected analyzeData(resItem: ResourceItem, data: egret.Sound): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
     }
 }
 declare module RES {
@@ -298,6 +405,19 @@ declare module RES {
      * @platform Web,Native
      */
     class ResourceItem {
+        /**
+         * @language en_US
+         * Animation configuration file. Currently supports Egret MovieClip file format.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        static TYPE_ANIMATION: string;
         /**
          * @language en_US
          * XML file.
@@ -817,7 +937,28 @@ declare module RES {
         static dispatchResourceEvent(target: egret.IEventDispatcher, type: string, groupName?: string, resItem?: ResourceItem, itemsLoaded?: number, itemsTotal?: number): boolean;
     }
 }
+declare module egret {
+}
+declare module egret {
+}
 declare module RES {
+    /**
+     * @language en_US
+     * Conduct mapping injection with class definition as the value.
+     * @param type Injection type.
+     * @param analyzerClass Injection type classes need to be resolved.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 以类定义为值进行映射注入。
+     * @param type 注入的类型。
+     * @param analyzerClass 注入类型需要解析的类。
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    function registerAnalzer(type: string, analyzerClass: any): void;
     /**
      * @language en_US
      * Load configuration file and parse.

@@ -1771,11 +1771,6 @@ var egret;
             egret.$error(1035);
             return null;
         }
-        function dispose() {
-            if (this._bitmapData) {
-                egret.Texture.$invalidate(this.hashCode);
-            }
-        }
         egret.Texture.prototype.toDataURL = toDataURL;
         egret.Texture.prototype.saveToFile = saveToFile;
         egret.Texture.prototype.getPixel32 = getPixel32;
@@ -2769,7 +2764,7 @@ var egret;
                 var self = this;
                 var promise = new egret.PromiseObject();
                 promise.onSuccessFunc = function (bitmapData) {
-                    self.data = bitmapData;
+                    self.data = native.toBitmapData(bitmapData);
                     self.dispatchEventWith(egret.Event.COMPLETE);
                 };
                 promise.onErrorFunc = function () {
