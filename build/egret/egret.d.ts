@@ -4223,11 +4223,6 @@ declare module egret {
         private drawWithClip(displayObject, context);
         private drawWithScrollRect(displayObject, context);
         private createRenderContext(width, height);
-        /**
-         * 销毁 RenderTexture 对象
-         * @method egret.RenderTexture#dispose
-         */
-        dispose(): void;
     }
 }
 declare module egret {
@@ -8130,6 +8125,13 @@ declare module egret {
     var Video: {
         new (): Video;
     };
+}
+declare module egret.native {
+    /**
+     * @private
+     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
+     */
+    function toBitmapData(data: any): BitmapData;
 }
 declare module egret_native {
     var nativeType: string;

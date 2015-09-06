@@ -2334,12 +2334,7 @@ var egret;
              */
             p.getSkinAdapter = function () {
                 var adapter;
-                try {
-                    adapter = egret.Injector.getInstance("egret.gui.ISkinAdapter");
-                }
-                catch (e) {
-                    adapter = new gui.DefaultSkinAdapter();
-                }
+                adapter = new gui.DefaultSkinAdapter();
                 SkinnableComponent.skinAdapter = adapter;
                 return adapter;
             };
@@ -3741,7 +3736,7 @@ var egret;
             p.getAdapter = function () {
                 var adapter;
                 try {
-                    adapter = egret.Injector.getInstance("egret.gui.IAssetAdapter");
+                    adapter = gui.$getAdapter("egret.gui.IAssetAdapter");
                 }
                 catch (e) {
                     adapter = new gui.DefaultAssetAdapter();
@@ -14636,13 +14631,13 @@ var egret;
                 }
                 else if (typeof (source) == "string") {
                     var url = source;
-                    var loader = new egret.URLLoader();
-                    loader.dataFormat = egret.URLLoaderDataFormat.TEXTURE;
+                    var loader = new egret.ImageLoader();
                     loader.addEventListener(egret.Event.COMPLETE, function (event) {
-                        content = loader.data;
+                        content = new egret.Texture();
+                        content._setBitmapData(loader.data);
                         compFunc.call(thisObject, content, source);
                     }, this);
-                    loader.load(new egret.URLRequest(url));
+                    loader.load(url);
                 }
                 else {
                     compFunc.call(thisObject, content, source);
@@ -15956,27 +15951,29 @@ var egret;
                 gui.SkinnableComponent._defaultTheme = new Theme(configURL);
             };
             p.loadConfig = function (configURL) {
-                var loader = new egret.URLLoader();
+                this._configURL = configURL;
+                var loader = new egret.HttpRequest();
                 loader.addEventListener(egret.Event.COMPLETE, this.onLoadComplete, this);
                 loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadError, this);
-                loader.dataFormat = egret.URLLoaderDataFormat.TEXT;
-                loader.load(new egret.URLRequest(configURL));
+                loader.responseType = egret.HttpResponseType.TEXT;
+                loader.open(configURL);
+                loader.send();
             };
             p.onLoadComplete = function (event) {
                 var loader = (event.target);
                 try {
-                    var str = loader.data;
+                    var str = loader.response;
                     var data = JSON.parse(str);
                     this.skinMap = data.skins;
                 }
                 catch (e) {
-                    egret.$warn(1017, loader._request.url, loader.data);
+                    egret.$warn(1017, this._configURL, loader.response);
                 }
                 this.handleDelyList();
             };
             p.onLoadError = function (event) {
                 var loader = (event.target);
-                egret.$warn(3000, loader._request.url);
+                egret.$warn(3000, this._configURL);
                 this.handleDelyList();
             };
             p.handleDelyList = function () {
@@ -17323,7 +17320,7 @@ var egret;
             p.getAdapter = function () {
                 var adapter;
                 try {
-                    adapter = egret.Injector.getInstance("egret.gui.IAssetAdapter");
+                    adapter = gui.$getAdapter("egret.gui.IAssetAdapter");
                 }
                 catch (e) {
                     adapter = new gui.DefaultAssetAdapter();
@@ -29575,12 +29572,7 @@ var egret;
              */
             PopUpManager.getImpl = function () {
                 if (!PopUpManager._impl) {
-                    try {
-                        PopUpManager._impl = egret.Injector.getInstance("egret.gui.IPopUpManager");
-                    }
-                    catch (e) {
-                        PopUpManager._impl = new gui.PopUpManagerImpl();
-                    }
+                    PopUpManager._impl = new gui.PopUpManagerImpl();
                 }
                 return PopUpManager._impl;
             };
@@ -30307,6 +30299,150 @@ var egret;
         })();
         gui.Transition = Transition;
         egret.registerClass(Transition,"egret.gui.Transition");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @language en_US
+         * Conduct mapping injection with class definition as the value.
+         * @param whenAskedFor {any} whenAskedFor passes class definition or fully qualified name of the class as the key to map.
+         * @param adapterClass {any} adapterClass passes the class as a value to be mapped, and its constructor function must be empty.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 以类定义为值进行映射注入。
+         * @param whenAskedFor {any} whenAskedFor 传递类定义或类完全限定名作为需要映射的键。
+         * @param adapterClass {any} adapterClass 传递类作为需要映射的值，它的构造函数必须为空。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        function registerAdapter(whenAskedFor, adapterClass) {
+            instance.mapClass(whenAskedFor, adapterClass);
+        }
+        gui.registerAdapter = registerAdapter;
+        /**
+         * @private
+         * @param type
+         * @returns {any}
+         */
+        function $getAdapter(whenAskedFor) {
+            return instance.getInstance(whenAskedFor);
+        }
+        gui.$getAdapter = $getAdapter;
+        /**
+         * @language en_US
+         * Injector
+         * @version Egret 2.0
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 注入器
+         * @version Egret 2.0
+         * @platform Web,Native
+         * @private
+         */
+        var Adapter = (function () {
+            function Adapter() {
+                /**
+                 * @private
+                 * 储存类的映射规则
+                 */
+                this.mapClassDic = {};
+                /**
+                 * @private
+                 */
+                this.mapValueDic = {};
+            }
+            var d = __define,c=Adapter;p=c.prototype;
+            p.mapClass = function (whenAskedFor, instantiateClass, named) {
+                if (named === void 0) { named = ""; }
+                var requestName = this.getKey(whenAskedFor) + "#" + named;
+                this.mapClassDic[requestName] = instantiateClass;
+            };
+            /**
+             * @private
+             * 获取完全限定类名
+             */
+            p.getKey = function (hostComponentKey) {
+                if (typeof (hostComponentKey) == "string")
+                    return hostComponentKey;
+                return egret.getQualifiedClassName(hostComponentKey);
+            };
+            /**
+             * @language en_US
+             * Get a singleton mapped by the specified class. Note: This method always returns a globally unique instance, and will not create repeatedly.
+             * @param clazz {any} Class definition or fully qualified name of the class
+             * @param named {string} Optional. If this value is set when calling mapClass () mapping, the same character string needs to be import ed in order to obtain the corresponding singleton
+             * @returns {any} Get a singleton mapped by the specified class
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 获取指定类映射的单例，注意:这个方法总是返回全局唯一的实例，不会重复创建。
+             * @param clazz {any} 类定义或类的完全限定名
+             * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
+             * @returns {any} 获取指定类映射的单例
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.getInstance = function (clazz, named) {
+                if (named === void 0) { named = ""; }
+                var requestName = this.getKey(clazz) + "#" + named;
+                if (this.mapValueDic[requestName])
+                    return this.mapValueDic[requestName];
+                var returnClass = (this.mapClassDic[requestName]);
+                if (returnClass) {
+                    var instance = new returnClass();
+                    this.mapValueDic[requestName] = instance;
+                    delete this.mapClassDic[requestName];
+                    return instance;
+                }
+                egret.$error(1028, requestName);
+            };
+            return Adapter;
+        })();
+        gui.Adapter = Adapter;
+        egret.registerClass(Adapter,"egret.gui.Adapter");
+        /**
+         * Resource单例
+         */
+        var instance = new Adapter();
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

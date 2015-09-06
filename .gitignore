@@ -23,6 +23,8 @@ tools/nodejs/buildTS.local
 /tools/lib/exml/src/code/components/Button.js
 /tools/lib/exml/src/egret.d.ts
 
+node_modules
+
 *~
 .DS_Store
 .[Tt]humb

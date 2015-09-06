@@ -61,7 +61,12 @@ module egret {
          * @platform Web,Native
          */
         public labels:any[] = null;
-
+        /**
+         * 帧事件列表
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public events:any[] = null;
         /**
          * 帧率
          * @version Egret 2.0
@@ -180,6 +185,7 @@ module egret {
             this.frameRate = mcData["frameRate"] || 24;
             this.fillFramesData(mcData.frames);
             this.fillFrameLabelsData(mcData.labels);
+            this.fillFrameEventsData(mcData.events);
         }
 
         /**
@@ -219,7 +225,24 @@ module egret {
                     this.labels = [];
                     for (var i = 0; i < length; i++) {
                         var label:any = frameLabelsData[i];
-                        this.labels.push(new FrameLabel(label.name, label.frame));
+                        this.labels.push(new FrameLabel(label.name, label.frame, label.end));
+                    }
+                }
+            }
+        }
+        /**
+         * @private
+         *
+         * @param frameEventsData
+         */
+        private fillFrameEventsData(frameEventsData:any[]):void{
+            if(frameEventsData){
+                var length:number = frameEventsData.length;
+                if(length>0){
+                    this.events = [];
+                    for (var i = 0; i < length; i++){
+                        var events:any = frameEventsData[i];
+                        this.events[events.frame] = events.name;
                     }
                 }
             }

@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
+module egret.web {
 
     /**
      * @private
@@ -99,6 +99,6 @@ module egret {
     }
 
     if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-        VersionController = NativeVersionController;
+        VersionController = Html5VersionController;
     }
 }

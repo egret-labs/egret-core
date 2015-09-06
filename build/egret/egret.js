@@ -7704,7 +7704,11 @@ var egret;
          * @platform Web,Native
          */
         p.dispose = function () {
-            throw new Error();
+            if (this._bitmapData) {
+                Texture.$dispose(this._bitmapData.hashCode);
+                console.log("dispose Texture");
+                this._bitmapData = null;
+            }
         };
         Texture.$addDisplayObject = function (displayObject, bitmapDataHashCode) {
             var hashCode = bitmapDataHashCode;
@@ -7735,6 +7739,19 @@ var egret;
             }
             var tempList = Texture._displayList[hashCode];
             for (var i = 0; i < tempList.length; i++) {
+                tempList[i].$invalidateContentBounds();
+            }
+        };
+        Texture.$dispose = function (bitmapDataHashCode) {
+            var hashCode = bitmapDataHashCode;
+            if (!Texture._displayList[hashCode]) {
+                return;
+            }
+            var tempList = Texture._displayList[hashCode];
+            for (var i = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    tempList[i].$Bitmap[1 /* image */] = null;
+                }
                 tempList[i].$invalidateContentBounds();
             }
         };
@@ -8035,16 +8052,6 @@ var egret;
             surface.width = Math.max(257, width);
             surface.height = Math.max(257, height);
             return surface.renderContext;
-        };
-        /**
-         * 销毁 RenderTexture 对象
-         * @method egret.RenderTexture#dispose
-         */
-        p.dispose = function () {
-            if (this._bitmapData) {
-                egret.Texture.$invalidate(this.hashCode);
-                this._bitmapData = null;
-            }
         };
         return RenderTexture;
     })(egret.Texture);
@@ -12369,10 +12376,7 @@ var egret;
     locale_strings[1034] = "Music file decoding failed: \"{0}\", please use the standard conversion tool reconversion under mp3.";
     locale_strings[1035] = "Native does not support this feature!";
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
-    //RES
-    locale_strings[2000] = "RES.createGroup() passed in non-existed key value in configuration: {0}";
-    locale_strings[2001] = "RES loaded non-existed or empty resource group:\"{0}\"";
-    locale_strings[2002] = "Do not use the different types of ways to load the same material!";
+    locale_strings[1037] = "Non-load the correct blob!";
     //gui
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -12497,10 +12501,8 @@ var egret;
     locale_strings[1034] = "音乐文件解码失败：\"{0}\"，请使用标准的转换工具重新转换下mp3。";
     locale_strings[1035] = "Native 下暂未实现此功能！";
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
-    //RES
-    locale_strings[2000] = "RES.createGroup()传入了配置中不存在的键值: {0}";
-    locale_strings[2001] = "RES加载了不存在或空的资源组:\"{0}\"";
-    locale_strings[2002] = "请不要使用不同的类型方式来加载同一个素材！";
+    locale_strings[1037] = "非正确的blob加载！";
+    //RES 2000-2999
     //gui
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
@@ -12719,6 +12721,50 @@ var egret;
      * @copy lark.Video
      */
     egret.Video;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var native;
+    (function (native) {
+        var className = "egret.BitmapData";
+        /**
+         * @private
+         * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
+         */
+        function toBitmapData(data) {
+            data["hashCode"] = data["$hashCode"] = egret.$hashCount++;
+            return data;
+        }
+        native.toBitmapData = toBitmapData;
+    })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

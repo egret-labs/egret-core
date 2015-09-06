@@ -14,10 +14,14 @@ declare module egret {
          */
         private _frame;
         /**
+         * @private
+         */
+        private _end;
+        /**
          * @version Egret 2.0
          * @platform Web,Native
          */
-        constructor(name: string, frame: number);
+        constructor(name: string, frame: number, end?: number);
         /**
          * @language en_US
          * Frame number
@@ -44,6 +48,19 @@ declare module egret {
          * @platform Web,Native
          */
         frame: number;
+        /**
+         * @language en_US
+         * Frame serial number, the end of the label
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 标签对应的结束帧序号
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        end: number;
         /**
          * @language en_US
          * Duplicate the current frame label object
@@ -80,6 +97,11 @@ declare module egret {
          * @platform Web,Native
          */
         frameLabels: any[];
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        frameEvents: any[];
         /**
          * @private
          */
@@ -120,6 +142,12 @@ declare module egret {
          * @returns {egret.FrameLabel} FrameLabel对象
          */
         private getFrameLabelByName(labelName, ignoreCase?);
+        /**
+         * @private
+         * 根据帧标签，设置开始和结束的帧数
+         * @param labelName {string} 帧标签名
+         */
+        private getFrameStartEnd(labelName);
         /**
          * @private
          * 返回指定序号的帧的FrameLabel对象
@@ -298,6 +326,12 @@ declare module egret {
          */
         labels: any[];
         /**
+         * 帧事件列表
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        events: any[];
+        /**
          * 帧率
          * @version Egret 2.0
          * @platform Web,Native
@@ -356,6 +390,12 @@ declare module egret {
          * @param frameLabelsData
          */
         private fillFrameLabelsData(frameLabelsData);
+        /**
+         * @private
+         *
+         * @param frameEventsData
+         */
+        private fillFrameEventsData(frameEventsData);
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -446,6 +486,88 @@ declare module egret {
          * @param value
          */
         private setTexture(value);
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
+     * When the movieClip's current frame have a frameLabel, dispatches MovieClipEvent object. FrameLabel Event type: MovieClipEvent.FRAME_LABEL
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 当动画的当前帧有事件，将调度 MovieClipEvent 对象。帧事件类型 MovieClipEvent.FRAME_LABEL.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    class MovieClipEvent extends Event {
+        /**
+         * @language en_US
+         * TextEvent create an object that contains information about movieClip events.
+         * @param type Type of event, you can access the MovieClipEvent.type.
+         * @param bubbles Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determine whether the Event object can be canceled. The default value is false.
+         * @param frameLabel When the current frame have a frameLabel, the event listeners can access this information through the frameLabel property.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 MovieClipEvent 对象，其中包含有关帧事件的信息。
+         * @param type 事件的类型，可以作为 MovieClipEvent.type 访问。
+         * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @param frameLabel 动画上的帧事件。事件侦听器可以通过 frameLabel 属性访问此信息。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean, frameLabel?: string);
+        /**
+         * @language en_US
+         * Emitted whenever the current frame have a frameLabel.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 动画的当前帧上有事件时调度
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static FRAME_LABEL: string;
+        /**
+         * @language en_US
+         * In MovieClipEvent.FRAME_LABEL event, event corresponding string.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在 MovieClipEvent.FRAME_LABEL 事件中，event对应的字符串。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        frameLabel: string;
+        /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown MovieClipEvent. The objects will be thrown in the object cache pool for the next round robin.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param text  MovieClipEvent object frameLabel
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的EventDispatcher对象来抛出 MovieClipEvent 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target 派发事件目标
+         * @param type  事件类型
+         * @param text  MovieClipEvent 对象的 frameLabel 赋值
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static dispatchMovieClipEvent(target: IEventDispatcher, type: string, frameLabel?: string): boolean;
     }
 }
 declare module egret {
@@ -2049,114 +2171,6 @@ declare module egret {
 }
 declare var testDeviceType1: () => boolean;
 declare var testRuntimeType1: () => boolean;
-declare module egret {
-    /**
-     * @language en_US
-     * Injector
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Injector.ts
-     */
-    /**
-     * @language zh_CN
-     * 注入器
-     * @version Egret 2.0
-     * @platform Web,Native
-     * @includeExample egret/utils/Injector.ts
-     */
-    class Injector {
-        /**
-         * @private
-         * 储存类的映射规则
-         */
-        private static mapClassDic;
-        /**
-         * @language en_US
-         * Conduct mapping injection with class definition as the value. It will be instantiated only when it's singleton is requested for the first time by using getInstance ().
-         * @param whenAskedFor {any} whenAskedFor passes class definition or fully qualified name of the class as the key to map.
-         * @param instantiateClass {any} instantiateClass passes the class as a value to be mapped, and its constructor function must be empty. If not empty, use Injector.mapValue () method to directly inject the instance.
-         * @param named {string} named, optional parameter. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings. Import the same parameters when calling getInstance () method.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 以类定义为值进行映射注入，当第一次用getInstance()请求它的单例时才会被实例化。
-         * @param whenAskedFor {any} whenAskedFor 传递类定义或类完全限定名作为需要映射的键。
-         * @param instantiateClass {any} instantiateClass 传递类作为需要映射的值，它的构造函数必须为空。若不为空，请使用Injector.mapValue()方法直接注入实例。
-         * @param named {string} named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static mapClass(whenAskedFor: any, instantiateClass: any, named?: string): void;
-        /**
-         * @private
-         * 获取完全限定类名
-         */
-        private static getKey(hostComponentKey);
-        /**
-         * @private
-         */
-        private static mapValueDic;
-        /**
-         * @language en_US
-         * Conduct mapping injection with instance as the value, and always return this injected instance when a singleton is requested by using getInstance ().
-         * @param whenAskedFor {any} Pass class definition or fully qualified name of the class as the key to map.
-         * @param useValue {any} Pass object instance as a value to be mapped.
-         * @param named {string} Optional. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings. Import the same parameters when calling getInstance () method.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 以实例为值进行映射注入,当用getInstance()请求单例时始终返回注入的这个实例。
-         * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
-         * @param useValue {any} 传递对象实例作为需要映射的值。
-         * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static mapValue(whenAskedFor: any, useValue: any, named?: string): void;
-        /**
-         * @language en_US
-         * Check whether there is any specified mapping rule
-         * @param whenAskedFor {any} Pass class definition or fully qualified name of the class as the key to map.
-         * @param named {string} Optional. When the same class serves as the key to map multiple rules, this parameter can be imported to distinguish different mappings.
-         * @returns {boolean} Whether there is any specified mapping rule
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 检查指定的映射规则是否存在
-         * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
-         * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
-         * @returns {boolean} 指定的映射规则是否存在
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static hasMapRule(whenAskedFor: any, named?: string): boolean;
-        /**
-         * @language en_US
-         * Get a singleton mapped by the specified class. Note: This method always returns a globally unique instance, and will not create repeatedly.
-         * @param clazz {any} Class definition or fully qualified name of the class
-         * @param named {string} Optional. If this value is set when calling mapClass () mapping, the same character string needs to be import ed in order to obtain the corresponding singleton
-         * @returns {any} Get a singleton mapped by the specified class
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 获取指定类映射的单例，注意:这个方法总是返回全局唯一的实例，不会重复创建。
-         * @param clazz {any} 类定义或类的完全限定名
-         * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
-         * @returns {any} 获取指定类映射的单例
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static getInstance(clazz: any, named?: string): any;
-    }
-}
 declare module egret {
     /**
      * @language en_US

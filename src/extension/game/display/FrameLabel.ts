@@ -44,15 +44,19 @@ module egret {
          * @private
          */
         private _frame:number /*int*/;
-
+        /**
+         * @private
+         */
+        private _end:number /*int*/;
         /**
          * @version Egret 2.0
          * @platform Web,Native
          */
-        constructor(name:string, frame:number /*int*/) {
+        constructor(name:string, frame:number /*int*/, end?:number /*int*/) {
             super();
             this._name = name;
             this._frame = frame | 0;
+            if (end) this._end = end | 0;
         }
 
         /**
@@ -86,6 +90,21 @@ module egret {
         public get frame():number /*int*/ {
             return this._frame;
         }
+        /**
+         * @language en_US
+         * Frame serial number, the end of the label
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 标签对应的结束帧序号
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public get end(): number /*int*/ {
+            return this._end;
+        }
 
         /**
          * @language en_US
@@ -100,7 +119,7 @@ module egret {
          * @platform Web,Native
          */
         public clone() {
-            return new FrameLabel(this._name, this._frame);
+            return new FrameLabel(this._name, this._frame, this._end);
         }
     }
 
