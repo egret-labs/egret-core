@@ -107,6 +107,7 @@
         "components/supportClasses/TrackBase.ts",
         "components/supportClasses/SliderBase.ts",
         "components/supportClasses/SkinnableTextBase.ts",
+        "components/scroller/ScrollerTimeout.ts",
         "components/scroller/ScrollerTween.ts",
         "components/scroller/ScrollerView.ts",
         "components/scroller/ScrollerViewProperties.ts",
