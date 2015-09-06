@@ -881,6 +881,7 @@ module egret {
          * @member {number} egret.TextField#textWidth
          */
         public get textWidth():number {
+            this._getLinesArr();
             return this._TF_Props_._textMaxWidth;
         }
 
@@ -889,6 +890,7 @@ module egret {
          * @member {number} egret.TextField#textHeight
          */
         public get textHeight():number {
+            this._getLinesArr();
             return TextFieldUtils._getTextHeight(this);
         }
 
