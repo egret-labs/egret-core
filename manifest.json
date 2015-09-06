@@ -233,6 +233,13 @@
       "files": [ ],
       "root": "src/extension/tween",
       "dependencies": [ "egret" ]
+    },
+    {
+      "name": "version",
+      "description": "Egret Version Controller",
+      "files": [ ],
+      "root": "src/extension/version",
+      "dependencies": [ "egret" ]
     }
   ],
   "platforms": [

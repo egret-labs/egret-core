@@ -1,0 +1,457 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var __define = this.__define || function (o, p, g, s) { 
+  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+var egret;
+(function (egret) {
+    /**
+     * @private
+     */
+    var DefaultLoadingView = (function (_super) {
+        __extends(DefaultLoadingView, _super);
+        function DefaultLoadingView() {
+            _super.call(this);
+            this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+        }
+        var d = __define,c=DefaultLoadingView;p=c.prototype;
+        p.onAddToStage = function () {
+            this.textField = new egret.TextField();
+            this.addChild(this.textField);
+            this.textField.width = this.stage.stageWidth;
+            this.textField.y = this.stage.stageHeight / 2;
+            this.textField.size = 20;
+            this.textField.textAlign = "center";
+        };
+        p.setProgress = function (current, total) {
+            console.log("egret_native  " + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB");
+            this.textField.text = "Loading Resource..." + Math.round(current / 1024) + "KB / " + Math.round(total / 1024) + "KB";
+        };
+        p.loadError = function () {
+            this.textField.text = "Resource loading failed，please check the network connection and exit back into the game！";
+        };
+        return DefaultLoadingView;
+    })(egret.DisplayObjectContainer);
+    egret.DefaultLoadingView = DefaultLoadingView;
+    egret.registerClass(DefaultLoadingView,"egret.DefaultLoadingView",["egret.ILoadingView"]);
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    egret.VersionController;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var native;
+    (function (native) {
+        /**
+         * @private
+         */
+        var NativeVersionController = (function (_super) {
+            __extends(NativeVersionController, _super);
+            function NativeVersionController(stage) {
+                _super.call(this);
+                this._versionInfo = {};
+                this._versionPath = "";
+                this._localFileArr = [];
+                this._stage = stage;
+            }
+            var d = __define,c=NativeVersionController;p=c.prototype;
+            p.fetchVersion = function () {
+                var self = this;
+                self._versionPath = "all.manifest";
+                self._versionInfo = self.getLocalData(self._versionPath);
+                if (self._versionInfo == null) {
+                    egret.callLater(function () {
+                        self.dispatchEvent(new egret.IOErrorEvent(egret.IOErrorEvent.IO_ERROR));
+                    }, self);
+                    return;
+                }
+                var count = 0;
+                var loadOver = function (paths) {
+                    if (paths) {
+                        for (var i = 0; i < paths.length; i++) {
+                            if (paths[i] && paths[i] != "") {
+                                self._localFileArr.push("resource/" + paths[i]);
+                            }
+                        }
+                    }
+                    count++;
+                    if (count == 2) {
+                        if (egret_native.nativeType == "native") {
+                            self.loadAllChange();
+                        }
+                        else {
+                            self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+                        }
+                    }
+                };
+                self.getList(loadOver, "assets", "resource");
+                self.getList(loadOver, "update", "resource");
+            };
+            p.getList = function (callback, type, root) {
+                if (root === void 0) { root = ""; }
+                var promise = egret.PromiseObject.create();
+                promise.onSuccessFunc = function (paths) {
+                    callback(paths);
+                };
+                promise.onErrorFunc = function () {
+                    console.error("list files error");
+                };
+                if (type == "assets") {
+                    egret_native.Game.listResource(root, promise);
+                }
+                else {
+                    egret_native.Game.listUpdate(root, promise);
+                }
+            };
+            p.checkIsNewVersion = function (virtualUrl) {
+                return egret_native.isFileExists(virtualUrl);
+            };
+            p.saveVersion = function (virtualUrl) {
+            };
+            /**
+             * 获取所有有变化的文件
+             * @returns {Array<string>}
+             */
+            p.getChangeList = function () {
+                var temp = [];
+                var localFileArr = this._localFileArr;
+                for (var key in this._versionInfo) {
+                    if (localFileArr.indexOf(this.getVirtualUrl(key)) < 0) {
+                        temp.push({ "url": this.getVirtualUrl(key), "size": this._versionInfo[key]["s"] });
+                    }
+                }
+                return temp;
+            };
+            p.getVirtualUrl = function (url) {
+                if (this._versionInfo && this._versionInfo[url]) {
+                    return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
+                }
+                else {
+                    return url;
+                }
+            };
+            p.loadAllChange = function () {
+                var self = this;
+                if (self._iLoadingView == null) {
+                    self._iLoadingView = new egret.DefaultLoadingView();
+                }
+                self._stage.addChild((self._iLoadingView));
+                var list = this.getChangeList();
+                var errorList = [];
+                var errorCount = 0;
+                var self = this;
+                var loader = new egret["NativeResourceLoader"]();
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+                loader.addEventListener(egret.Event.COMPLETE, loadComplete, self);
+                loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
+                var loadBytes = 0;
+                var totalBytes = 0;
+                for (var key in list) {
+                    totalBytes += list[key]["size"];
+                }
+                loadNext();
+                function loadNext() {
+                    if (list.length > 0) {
+                        loader.load(list[0]["url"], list[0]["size"]);
+                    }
+                    else if (errorCount > 3) {
+                        //结束，加载出错
+                        //End with loading error
+                        loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+                        loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
+                        loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
+                        self._iLoadingView.loadError();
+                        egret.IOErrorEvent.dispatchIOErrorEvent(self);
+                    }
+                    else if (errorList.length > 0) {
+                        list = errorList;
+                        errorList = [];
+                        errorCount++;
+                        loadComplete();
+                    }
+                    else {
+                        //结束，加载成功
+                        //End with loading successfully
+                        loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
+                        loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
+                        loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
+                        self._stage.removeChild((self._iLoadingView));
+                        self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+                    }
+                }
+                function loadComplete() {
+                    loadBytes += parseInt(list[0]["size"]);
+                    list.shift();
+                    loadNext();
+                }
+                function loadProgress(e) {
+                    self._iLoadingView.setProgress(loadBytes + e.bytesLoaded, totalBytes);
+                }
+                function loadError() {
+                    errorList.push(list[0]);
+                    list.shift();
+                    loadComplete();
+                }
+            };
+            p.getLocalData = function (filePath) {
+                if (egret_native.readUpdateFileSync && egret_native.readResourceFileSync) {
+                    //先取更新目录
+                    var content = egret_native.readUpdateFileSync(filePath);
+                    if (content != null) {
+                        return JSON.parse(content);
+                    }
+                    //再取资源目录
+                    content = egret_native.readResourceFileSync(filePath);
+                    if (content != null) {
+                        return JSON.parse(content);
+                    }
+                    return null;
+                }
+                else {
+                    return this.getLocalDataByOld(filePath);
+                }
+            };
+            //todo 旧方式
+            p.getLocalDataByOld = function (filePath) {
+                var data = null;
+                if (egret_native.isRecordExists(filePath)) {
+                    var str = egret_native.loadRecord(filePath);
+                    data = JSON.parse(str);
+                }
+                else if (egret_native.isFileExists(filePath)) {
+                    var str = egret_native.readFileSync(filePath);
+                    data = JSON.parse(str);
+                }
+                return data;
+            };
+            return NativeVersionController;
+        })(egret.EventDispatcher);
+        native.NativeVersionController = NativeVersionController;
+        egret.registerClass(NativeVersionController,"egret.native.NativeVersionController",["egret.VersionController","egret.IVersionController","egret.IEventDispatcher"]);
+        if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+            egret.VersionController = NativeVersionController;
+        }
+    })(native = egret.native || (egret.native = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var Html5VersionController = (function (_super) {
+            __extends(Html5VersionController, _super);
+            function Html5VersionController(stage) {
+                _super.call(this);
+                this._versionInfo = {};
+            }
+            var d = __define,c=Html5VersionController;p=c.prototype;
+            p.fetchVersion = function () {
+                var self = this;
+                //var virtualUrl:string = "all.manifest";
+                //
+                //var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+                //httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
+                //httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+                //
+                //httpLoader.open(virtualUrl, "get");
+                //httpLoader.send();
+                //
+                //function onError(event:egret.IOErrorEvent) {
+                //    removeListeners();
+                //    self.dispatchEvent(event);
+                //}
+                //
+                //function onLoadComplete() {
+                //    removeListeners();
+                //
+                //    self._versionInfo = JSON.parse(httpLoader.response);
+                //
+                //    window.setTimeout(function () {
+                self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+                //    }, 0);
+                //}
+                //
+                //function removeListeners():void {
+                //    httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                //    httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                //}
+            };
+            p.checkIsNewVersion = function (virtualUrl) {
+                return false;
+            };
+            p.saveVersion = function (virtualUrl) {
+            };
+            /**
+             * 获取所有有变化的文件
+             * @returns {Array<string>}
+             */
+            p.getChangeList = function () {
+                return [];
+            };
+            p.getVirtualUrl = function (url) {
+                if (this._versionInfo && this._versionInfo[url]) {
+                    return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
+                }
+                else {
+                    return url;
+                }
+            };
+            return Html5VersionController;
+        })(egret.EventDispatcher);
+        web.Html5VersionController = Html5VersionController;
+        egret.registerClass(Html5VersionController,"egret.web.Html5VersionController",["egret.VersionController","egret.IVersionController","egret.IEventDispatcher"]);
+        if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+            egret.VersionController = Html5VersionController;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
