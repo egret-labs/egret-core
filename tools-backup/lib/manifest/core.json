@@ -18,12 +18,11 @@
         "egret/utils/getTimer.ts",
         "egret/utils/toColorString.ts",
         "egret/utils/is.ts",
-        "egret/utils/NONE.ts",
+        "egret/player/NONE.ts",
         "egret/utils/startTick.ts",
         "egret/utils/stopTick.ts",
         "egret/utils/XML.ts",
         "egret/utils/callLater.ts",
-        "egret/utils/Logger.ts",
         "egret/utils/hasDefinition.ts",
         "egret/utils/getOption.ts",
         "egret/geom/Matrix.ts",
@@ -117,6 +116,7 @@
         "egret/media/Video.ts",
 
 
+        "extension/game/utils/Logger.ts",
         "extension/game/utils/setTimeout.ts",
         "extension/game/utils/setInterval.ts",
         "extension/game/utils/Recycler.ts",

@@ -153,13 +153,4 @@ module egret {
             }
         }
     }
-
-
-    /**
-     * @private
-     */
-    export function getString(id:number, ...args):string {
-        return egret.sys.tr.apply(egret.sys, arguments);
-    }
-
 }
