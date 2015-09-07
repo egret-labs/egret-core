@@ -119,6 +119,7 @@ export function updateSetting(merge = false) {
         if (themeDatas[i].autoGenerateExmlsList == false)
             return;
         var path = file.joinPath(egret.args.outDir, thm);
+        delete themeDatas[i].autoGenerateExmlsList;
         var thmData = JSON.stringify(themeDatas[i], null, "  ");
         file.save(path, thmData);
     });
