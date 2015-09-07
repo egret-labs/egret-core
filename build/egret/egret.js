@@ -32,6 +32,17 @@ this["DEBUG"] = true;
 this["RELEASE"] = false;
 var egret;
 (function (egret) {
+    /**
+     * @private
+     */
+    function _getString(code) {
+        var params = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            params[_i - 1] = arguments[_i];
+        }
+        return egret.sys.tr.apply(egret.sys, arguments);
+    }
+    egret.getString = _getString;
     function _error(code) {
         var params = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -2962,14 +2973,17 @@ var egret;
                 return this.$visible;
             }
             ,function (value) {
-                value = !!value;
-                if (value == this.$visible) {
-                    return;
-                }
-                this.$visible = value;
-                this.$invalidateTransform();
+                this.$setVisible(value);
             }
         );
+        p.$setVisible = function (value) {
+            value = !!value;
+            if (value == this.$visible) {
+                return;
+            }
+            this.$visible = value;
+            this.$invalidateTransform();
+        };
         d(p, "cacheAsBitmap"
             /**
              * @language en_US
@@ -3402,6 +3416,8 @@ var egret;
          * @platform Web,Native
          */
         p.globalToLocal = function (stageX, stageY, resultPoint) {
+            if (stageX === void 0) { stageX = 0; }
+            if (stageY === void 0) { stageY = 0; }
             var m = this.$getInvertedConcatenatedMatrix();
             return m.transformPoint(stageX, stageY, resultPoint);
         };
@@ -3427,6 +3443,8 @@ var egret;
          * @platform Web,Native
          */
         p.localToGlobal = function (localX, localY, resultPoint) {
+            if (localX === void 0) { localX = 0; }
+            if (localY === void 0) { localY = 0; }
             var m = this.$getConcatenatedMatrix();
             return m.transformPoint(localX, localY, resultPoint);
         };
@@ -5801,6 +5819,27 @@ var egret;
         egret.$markReadOnly(DisplayObjectContainer, "numChildren");
     }
 })(egret || (egret = {}));
+var egret;
+(function (egret) {
+    var GradientType = (function () {
+        function GradientType() {
+        }
+        var d = __define,c=GradientType;p=c.prototype;
+        /**
+         * 用于指定线性渐变填充的值
+         * @method egret.GradientType.LINEAR
+         */
+        GradientType.LINEAR = "linear";
+        /**
+         * 用于指定放射状渐变填充的值
+         * @method egret.GradientType.RADIAL
+         */
+        GradientType.RADIAL = "radial";
+        return GradientType;
+    })();
+    egret.GradientType = GradientType;
+    egret.registerClass(GradientType,"egret.GradientType");
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -5868,7 +5907,7 @@ var egret;
             /**
              * @private
              */
-            this.fillStyleColor = null;
+            this.fillStyle = null;
             /**
              * @private
              */
@@ -5962,8 +6001,8 @@ var egret;
          */
         p.beginFill = function (color, alpha) {
             if (alpha === void 0) { alpha = 1; }
-            this.fillStyleColor = this._parseColor(color, alpha);
-            this._setStyle(this.fillStyleColor);
+            this.fillStyle = this._parseColor(color, alpha);
+            this._setStyle(this.fillStyle);
         };
         /**
          * @private
@@ -5986,6 +6025,71 @@ var egret;
         p._setStyle = function (colorStr) {
             this.$renderContext.fillStyle = colorStr;
             this.$renderContext.beginPath();
+        };
+        /**
+         * @language en_US
+         * Specifies a gradient fill used by subsequent calls to other Graphics methods (such as lineTo() or drawCircle()) for the object.
+         * Calling the clear() method clears the fill.
+         * Note: Only support on Canvas
+         * @param type A value from the GradientType class that specifies which gradient type to use: GradientType.LINEAR or GradientType.RADIAL.
+         * @param colors An array of RGB hexadecimal color values used in the gradient; for example, red is 0xFF0000, blue is 0x0000FF, and so on. You can specify up to 15 colors. For each color, specify a corresponding value in the alphas and ratios parameters.
+         * @param alphas An array of alpha values for the corresponding colors in the colors array;
+         * @param ratios An array of color distribution ratios; valid values are 0-255.
+         * @param matrix A transformation matrix as defined by the flash.geom.Matrix class. The flash.geom.Matrix class includes a createGradientBox() method, which lets you conveniently set up the matrix for use with the beginGradientFill() method.
+         * @platform Web
+         * @version Egret 2.0
+         */
+        /**
+         * @language zh_CN
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
+         * 注：该方法目前仅支持H5 Canvas
+         * @param type 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
+         * @param colors 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
+         * @param alphas colors 数组中对应颜色的 alpha 值数组。
+         * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
+         * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         * @platform Web
+         * @version Egret 2.0
+         */
+        p.beginGradientFill = function (type, colors, alphas, ratios, matrix) {
+            if (matrix === void 0) { matrix = null; }
+            var gradient = this.getGradient(type, colors, alphas, ratios, matrix);
+            this.fillStyle = gradient;
+            this._setStyle(this.fillStyle);
+        };
+        p.getGradient = function (type, colors, alphas, ratios, matrix) {
+            var surface = egret.sys.surfaceFactory.create(true);
+            var context = surface.renderContext;
+            var m = new egret.Matrix();
+            if (matrix) {
+                m.a = matrix.a * 819.2;
+                m.b = matrix.b * 819.2;
+                m.c = matrix.c * 819.2;
+                m.d = matrix.d * 819.2;
+                m.tx = matrix.tx;
+                m.ty = matrix.ty;
+            }
+            else {
+                //默认值
+                m.a = 100;
+                m.d = 100;
+            }
+            var gradient;
+            if (type == egret.GradientType.LINEAR) {
+                gradient = context.createLinearGradient(-1, 0, 1, 0);
+            }
+            else {
+                gradient = context.createRadialGradient(0, 0, 0, 0, 0, 1);
+            }
+            //todo colors alphas ratios数量不一致情况处理
+            var l = colors.length;
+            for (var i = 0; i < l; i++) {
+                gradient.addColorStop(ratios[i] / 255, this._parseColor(colors[i], alphas[i]));
+            }
+            gradient["matrix"] = m;
+            egret.sys.surfaceFactory.release(surface);
+            return gradient;
         };
         /**
          * @language en_US
@@ -6327,7 +6431,7 @@ var egret;
             this.lineX = 0;
             this.lineY = 0;
             this.strokeStyleColor = null;
-            this.fillStyleColor = null;
+            this.fillStyle = null;
             this._minX = 0;
             this._minY = 0;
             this._maxX = 0;
@@ -6349,9 +6453,9 @@ var egret;
          * @platform Web,Native
          */
         p.endFill = function () {
-            if (this.fillStyleColor != null || this.strokeStyleColor != null) {
+            if (this.fillStyle != null || this.strokeStyleColor != null) {
                 this._fill();
-                this.fillStyleColor = null;
+                this.fillStyle = null;
             }
         };
         /**
@@ -6367,7 +6471,7 @@ var egret;
          *
          */
         p._fill = function () {
-            if (this.fillStyleColor) {
+            if (this.fillStyle) {
                 this._createEndFillCommand();
             }
             if (this.strokeStyleColor) {
@@ -13320,6 +13424,68 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    var sys;
+    (function (sys) {
+        /**
+         *
+         * @param value
+         * @returns
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        function isUndefined(value) {
+            return typeof value === "undefined";
+        }
+        sys.isUndefined = isUndefined;
+        /**
+         *
+         * @param value
+         * @returns
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        function getNumber(value) {
+            if (DEBUG) {
+                if (isNaN(value)) {
+                    egret.sys.tr(1013);
+                }
+            }
+            return +value || 0;
+            ;
+        }
+        sys.getNumber = getNumber;
+    })(sys = egret.sys || (egret.sys = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
     /**
      * @private
      * OrientationMode 类为舞台初始旋转模式提供值。
@@ -13610,13 +13776,13 @@ var egret;
                 fpsDisplay.updateInfo(info);
             };
             function displayFPS(showFPS, showLog, logFilter, styles) {
-                fpsStyle = egret.sys.isUndefined(styles) ? {} : styles;
+                fpsStyle = sys.isUndefined(styles) ? {} : styles;
                 showLog = !!showLog;
                 this.showFPS = !!showFPS;
                 this.showLog = showLog;
                 if (!this.fpsDisplay) {
-                    var x = egret.sys.isUndefined(styles["x"]) ? 0 : styles["x"];
-                    var y = egret.sys.isUndefined(styles["y"]) ? 0 : styles["y"];
+                    var x = sys.isUndefined(styles["x"]) ? 0 : styles["x"];
+                    var y = sys.isUndefined(styles["y"]) ? 0 : styles["y"];
                     fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                     fpsDisplay.x = x;
                     fpsDisplay.y = y;
@@ -14373,7 +14539,7 @@ var egret;
                 var requestRenderingFlag = sys.$requestRenderingFlag;
                 var timeStamp = egret.getTimer();
                 for (var i = 0; i < length; i++) {
-                    if (!callBackList[i].call(thisObjectList[i], timeStamp)) {
+                    if (callBackList[i].call(thisObjectList[i], timeStamp)) {
                         requestRenderingFlag = true;
                     }
                 }
@@ -15487,14 +15653,17 @@ var egret;
                 return this.$BitmapText[3 /* lineSpacing */];
             }
             ,function (value) {
-                //value = +value || 0;
-                var values = this.$BitmapText;
-                if (values[3 /* lineSpacing */] == value)
-                    return;
-                values[3 /* lineSpacing */] = value;
-                this.$invalidateContentBounds();
+                this.$setLineSpacing(value);
             }
         );
+        p.$setLineSpacing = function (value) {
+            value = +value || 0;
+            var values = this.$BitmapText;
+            if (values[3 /* lineSpacing */] == value)
+                return;
+            values[3 /* lineSpacing */] = value;
+            this.$invalidateContentBounds();
+        };
         d(p, "letterSpacing"
             /**
              * @language en_US
@@ -15514,14 +15683,17 @@ var egret;
                 return this.$BitmapText[4 /* letterSpacing */];
             }
             ,function (value) {
-                //value = +value || 0;
-                var values = this.$BitmapText;
-                if (values[4 /* letterSpacing */] == value)
-                    return;
-                values[4 /* letterSpacing */] = value;
-                this.$invalidateContentBounds();
+                this.$setLetterSpacing(value);
             }
         );
+        p.$setLetterSpacing = function (value) {
+            value = +value || 0;
+            var values = this.$BitmapText;
+            if (values[4 /* letterSpacing */] == value)
+                return;
+            values[4 /* letterSpacing */] = value;
+            this.$invalidateContentBounds();
+        };
         /**
          * @private
          */
@@ -16166,6 +16338,9 @@ var egret;
          *
          */
         p._addStageText = function () {
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = true;
+            }
             this.stageText.$addToStage();
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
@@ -16178,6 +16353,9 @@ var egret;
          *
          */
         p._removeStageText = function () {
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = false;
+            }
             this.stageText.$removeFromStage();
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
@@ -16306,7 +16484,7 @@ var egret;
          * @private
          *
          */
-        p._updateTransform = function () {
+        p.updateInput = function () {
             if (!this._text.$visible && this.stageText) {
                 this._hideInput();
             }
@@ -16319,7 +16497,7 @@ var egret;
             if (this._isFocus) {
                 //整体修改
                 this.stageText.$resetStageText();
-                this._updateTransform();
+                this.updateInput();
                 return;
             }
             var stage = this._text.$stage;
@@ -16342,7 +16520,7 @@ var egret;
             this.stageText.$setText(this._text.$TextField[13 /* text */]);
             //整体修改
             this.stageText.$resetStageText();
-            this._updateTransform();
+            this.updateInput();
         };
         return InputController;
     })(egret.HashObject);
@@ -16450,6 +16628,7 @@ var egret;
          */
         function TextField() {
             _super.call(this);
+            this.$inputEnabled = false;
             /**
              * @private
              */
@@ -16524,6 +16703,12 @@ var egret;
         p.isInput = function () {
             return this.$TextField[24 /* type */] == egret.TextFieldType.INPUT;
         };
+        p.$setTouchEnabled = function (value) {
+            _super.prototype.$setTouchEnabled.call(this, value);
+            if (this.isInput()) {
+                this.$inputEnabled = true;
+            }
+        };
         d(p, "fontFamily"
             /**
              * @language en_US
@@ -16543,14 +16728,17 @@ var egret;
                 return this.$TextField[8 /* fontFamily */];
             }
             ,function (value) {
-                var values = this.$TextField;
-                if (values[8 /* fontFamily */] == value) {
-                    return;
-                }
-                values[8 /* fontFamily */] = value;
-                this.invalidateFontString();
+                this.$setFontFamily(value);
             }
         );
+        p.$setFontFamily = function (value) {
+            var values = this.$TextField;
+            if (values[8 /* fontFamily */] == value) {
+                return;
+            }
+            values[8 /* fontFamily */] = value;
+            this.invalidateFontString();
+        };
         d(p, "size"
             /**
              * @language en_US
@@ -16570,15 +16758,18 @@ var egret;
                 return this.$TextField[0 /* fontSize */];
             }
             ,function (value) {
-                value = egret.sys.getNumber(value);
-                var values = this.$TextField;
-                if (values[0 /* fontSize */] == value) {
-                    return;
-                }
-                values[0 /* fontSize */] = value;
-                this.invalidateFontString();
+                this.$setSize(value);
             }
         );
+        p.$setSize = function (value) {
+            value = egret.sys.getNumber(value);
+            var values = this.$TextField;
+            if (values[0 /* fontSize */] == value) {
+                return;
+            }
+            values[0 /* fontSize */] = value;
+            this.invalidateFontString();
+        };
         d(p, "bold"
             ///**
             // * @private
@@ -16620,15 +16811,18 @@ var egret;
                 return this.$TextField[15 /* bold */];
             }
             ,function (value) {
-                value = !!value;
-                var values = this.$TextField;
-                if (value == values[15 /* bold */]) {
-                    return;
-                }
-                values[15 /* bold */] = value;
-                this.invalidateFontString();
+                this.$setBold(value);
             }
         );
+        p.$setBold = function (value) {
+            value = !!value;
+            var values = this.$TextField;
+            if (value == values[15 /* bold */]) {
+                return;
+            }
+            values[15 /* bold */] = value;
+            this.invalidateFontString();
+        };
         d(p, "italic"
             /**
              * @language en_US
@@ -16648,15 +16842,18 @@ var egret;
                 return this.$TextField[16 /* italic */];
             }
             ,function (value) {
-                value = !!value;
-                var values = this.$TextField;
-                if (value == values[16 /* italic */]) {
-                    return;
-                }
-                values[16 /* italic */] = value;
-                this.invalidateFontString();
+                this.$setItalic(value);
             }
         );
+        p.$setItalic = function (value) {
+            value = !!value;
+            var values = this.$TextField;
+            if (value == values[16 /* italic */]) {
+                return;
+            }
+            values[16 /* italic */] = value;
+            this.invalidateFontString();
+        };
         /**
          * @private
          *
@@ -16696,14 +16893,17 @@ var egret;
                 return this.$TextField[9 /* textAlign */];
             }
             ,function (value) {
-                var values = this.$TextField;
-                if (values[9 /* textAlign */] == value) {
-                    return;
-                }
-                values[9 /* textAlign */] = value;
-                this.$invalidateTextField();
+                this.$setTextAlign(value);
             }
         );
+        p.$setTextAlign = function (value) {
+            var values = this.$TextField;
+            if (values[9 /* textAlign */] == value) {
+                return;
+            }
+            values[9 /* textAlign */] = value;
+            this.$invalidateTextField();
+        };
         d(p, "verticalAlign"
             /**
              * @language en_US
@@ -16723,14 +16923,17 @@ var egret;
                 return this.$TextField[10 /* verticalAlign */];
             }
             ,function (value) {
-                var values = this.$TextField;
-                if (values[10 /* verticalAlign */] == value) {
-                    return;
-                }
-                values[10 /* verticalAlign */] = value;
-                this.$invalidateTextField();
+                this.$setVerticalAlign(value);
             }
         );
+        p.$setVerticalAlign = function (value) {
+            var values = this.$TextField;
+            if (values[10 /* verticalAlign */] == value) {
+                return;
+            }
+            values[10 /* verticalAlign */] = value;
+            this.$invalidateTextField();
+        };
         d(p, "lineSpacing"
             /**
              * @language en_US
@@ -16750,14 +16953,17 @@ var egret;
                 return this.$TextField[1 /* lineSpacing */];
             }
             ,function (value) {
-                value = egret.sys.getNumber(value);
-                var values = this.$TextField;
-                if (values[1 /* lineSpacing */] == value)
-                    return;
-                values[1 /* lineSpacing */] = value;
-                this.$invalidateTextField();
+                this.$setLineSpacing(value);
             }
         );
+        p.$setLineSpacing = function (value) {
+            value = egret.sys.getNumber(value);
+            var values = this.$TextField;
+            if (values[1 /* lineSpacing */] == value)
+                return;
+            values[1 /* lineSpacing */] = value;
+            this.$invalidateTextField();
+        };
         d(p, "textColor"
             /**
              * @language en_US
@@ -16777,16 +16983,19 @@ var egret;
                 return this.$TextField[2 /* textColor */];
             }
             ,function (value) {
-                value = +value | 0;
-                var values = this.$TextField;
-                if (values[2 /* textColor */] == value) {
-                    return;
-                }
-                values[2 /* textColor */] = value;
-                values[11 /* textColorString */] = egret.toColorString(value);
-                this.$invalidate();
+                this.$setTextColor(value);
             }
         );
+        p.$setTextColor = function (value) {
+            value = +value | 0;
+            var values = this.$TextField;
+            if (values[2 /* textColor */] == value) {
+                return;
+            }
+            values[2 /* textColor */] = value;
+            values[11 /* textColorString */] = egret.toColorString(value);
+            this.$invalidate();
+        };
         d(p, "wordWrap"
             /**
              * @language en_US
@@ -19569,234 +19778,6 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @language en_US
-     * Logger is an entrance for the log processing module of the engine
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * Logger是引擎的日志处理模块入口
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    var Logger = (function () {
-        function Logger() {
-        }
-        var d = __define,c=Logger;p=c.prototype;
-        d(Logger, "logLevel",undefined
-            /**
-             * @language en_US
-             * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF
-             *
-             * <Ul>
-             * <Li> Logger.ALL - all levels of log can be printed out. </ li>
-             * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
-             * <Li> Logger.INFO - print info, log, warn, error. </ li>
-             * <Li> Logger.WARN - can print warn, error. </ li>
-             * <Li> Logger.ERROR - You can print error. </ li>
-             * <Li> Logger.OFF - all closed. </ li>
-             * </ Ul>
-             *param LogType from this level to start printing.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF
-             *
-             * <ul>
-             * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
-             * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
-             * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
-             * <li>Logger.WARN -- 可以打印warn、error。</li>
-             * <li>Logger.ERROR -- 可以打印error。</li>
-             * <li>Logger.OFF -- 全部关闭。</li>
-             * </ul>
-             * @param logType 从这个等级开始打印。
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function (logType) {
-                if (Logger.logFuncs == null) {
-                    Logger.logFuncs = {
-                        "error": console.error,
-                        "debug": console.debug,
-                        "warn": console.warn,
-                        "info": console.info,
-                        "log": console.log
-                    };
-                }
-                switch (logType) {
-                    case Logger.OFF:
-                        console.error = function () {
-                        };
-                    case Logger.ERROR:
-                        console.warn = function () {
-                        };
-                    case Logger.WARN:
-                        console.info = function () {
-                        };
-                        console.log = function () {
-                        };
-                    case Logger.INFO:
-                        console.debug = function () {
-                        };
-                    default:
-                        break;
-                }
-                switch (logType) {
-                    case Logger.ALL:
-                    case Logger.DEBUG:
-                        console.debug = Logger.logFuncs["debug"];
-                    case Logger.INFO:
-                        console.log = Logger.logFuncs["log"];
-                        console.info = Logger.logFuncs["info"];
-                    case Logger.WARN:
-                        console.warn = Logger.logFuncs["warn"];
-                    case Logger.ERROR:
-                        console.error = Logger.logFuncs["error"];
-                    default:
-                        break;
-                }
-            }
-        );
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Logger.ALL = "all";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Logger.DEBUG = "debug";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Logger.INFO = "info";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Logger.WARN = "warn";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Logger.ERROR = "error";
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        Logger.OFF = "off";
-        return Logger;
-    })();
-    egret.Logger = Logger;
-    egret.registerClass(Logger,"egret.Logger");
-    /**
-     * @private
-     */
-    function getString(id) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
-        }
-        return egret.sys.tr.apply(egret.sys, arguments);
-    }
-    egret.getString = getString;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
-     *
-     * @param value
-     * @returns
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    function isUndefined(value) {
-        return typeof value === "undefined";
-    }
-    egret.sys.isUndefined = isUndefined;
-    /**
-     *
-     * @param value
-     * @returns
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    function getNumber(value) {
-        if (DEBUG) {
-            if (isNaN(value)) {
-                egret.sys.tr(1013);
-            }
-        }
-        return +value || 0;
-        ;
-    }
-    egret.sys.getNumber = getNumber;
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    /**
      * @version Egret 2.0
      * @platform Web,Native
      */
@@ -20157,7 +20138,7 @@ var egret;
         p.$update = function (timeStamp) {
             this.lastCount -= 1000;
             if (this.lastCount > 0) {
-                return true;
+                return false;
             }
             this.lastCount += this.updateInterval;
             this._currentCount++;

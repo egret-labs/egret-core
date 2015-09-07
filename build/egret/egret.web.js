@@ -3346,6 +3346,25 @@ var egret;
         };
         CanvasRenderingContext2D.prototype["end"] = function () {
         };
+        var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
+        CanvasRenderingContext2D.prototype.fill = function () {
+            var style = this.fillStyle;
+            if (!(typeof style == "string")) {
+                var matrix = style["matrix"];
+                if (matrix) {
+                    this.save();
+                    this.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+                    originCanvas2DFill.call(this);
+                    this.restore();
+                }
+                else {
+                    originCanvas2DFill.call(this);
+                }
+            }
+            else {
+                originCanvas2DFill.call(this);
+            }
+        };
         egret.runEgret = runEgret;
         egret.updateAllScreens = updateAllScreens;
     })(web = egret.web || (egret.web = {}));

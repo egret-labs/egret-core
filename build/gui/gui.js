@@ -17047,6 +17047,7 @@ var egret;
                     clearTimeout(key);
                 }
             }
+            return false;
         }
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
@@ -17290,6 +17291,7 @@ var egret;
                     }
                     tween.tick(tween._useTicks ? 1 : delta);
                 }
+                return false;
             };
             /**
              * @private

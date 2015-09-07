@@ -1,6 +1,7 @@
 declare var DEBUG: boolean;
 declare var RELEASE: boolean;
 declare module egret {
+    function getString(code: number, ...params: any[]): string;
 }
 declare module egret {
     /**
@@ -1925,7 +1926,7 @@ declare module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        globalToLocal(stageX: number, stageY: number, resultPoint?: Point): Point;
+        globalToLocal(stageX?: number, stageY?: number, resultPoint?: Point): Point;
         /**
          * @language en_US
          * Converts the point object from the display object's (local) coordinates to the Stage (global) coordinates.
@@ -1947,7 +1948,7 @@ declare module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        localToGlobal(localX: number, localY: number, resultPoint?: Point): Point;
+        localToGlobal(localX?: number, localY?: number, resultPoint?: Point): Point;
         /**
          * @language en_US
          * Calculate the display object to determine whether it overlaps or crosses with the points specified by the x and y parameters. The x and y parameters specify the points in the coordinates of the stage, rather than the points in the display object container that contains display objects (except the situation where the display object container is a stage).
@@ -2473,7 +2474,7 @@ declare module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        getChildIndex(child: DisplayObject): number;
+        getChildIndex(child: egret.DisplayObject): number;
         /**
          * @inheritDoc
          * @version Egret 2.0
@@ -2541,6 +2542,20 @@ declare module egret {
     }
 }
 declare module egret {
+    class GradientType {
+        /**
+         * 用于指定线性渐变填充的值
+         * @method egret.GradientType.LINEAR
+         */
+        static LINEAR: string;
+        /**
+         * 用于指定放射状渐变填充的值
+         * @method egret.GradientType.RADIAL
+         */
+        static RADIAL: string;
+    }
+}
+declare module egret {
     /**
      * @language en_US
      * The Graphics class contains a set of methods for creating vector shape. Display objects that support drawing include Sprite and Shape objects. Each class in these classes includes the graphics attribute that is a Graphics object.
@@ -2567,7 +2582,7 @@ declare module egret {
         /**
          * @private
          */
-        private fillStyleColor;
+        private fillStyle;
         /**
          * @private
          */
@@ -2622,6 +2637,34 @@ declare module egret {
          * @param colorStr
          */
         private _setStyle(colorStr);
+        /**
+         * @language en_US
+         * Specifies a gradient fill used by subsequent calls to other Graphics methods (such as lineTo() or drawCircle()) for the object.
+         * Calling the clear() method clears the fill.
+         * Note: Only support on Canvas
+         * @param type A value from the GradientType class that specifies which gradient type to use: GradientType.LINEAR or GradientType.RADIAL.
+         * @param colors An array of RGB hexadecimal color values used in the gradient; for example, red is 0xFF0000, blue is 0x0000FF, and so on. You can specify up to 15 colors. For each color, specify a corresponding value in the alphas and ratios parameters.
+         * @param alphas An array of alpha values for the corresponding colors in the colors array;
+         * @param ratios An array of color distribution ratios; valid values are 0-255.
+         * @param matrix A transformation matrix as defined by the flash.geom.Matrix class. The flash.geom.Matrix class includes a createGradientBox() method, which lets you conveniently set up the matrix for use with the beginGradientFill() method.
+         * @platform Web
+         * @version Egret 2.0
+         */
+        /**
+         * @language zh_CN
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
+         * 注：该方法目前仅支持H5 Canvas
+         * @param type 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
+         * @param colors 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
+         * @param alphas colors 数组中对应颜色的 alpha 值数组。
+         * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
+         * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         * @platform Web
+         * @version Egret 2.0
+         */
+        beginGradientFill(type: string, colors: Array<number>, alphas: Array<number>, ratios: Array<number>, matrix?: egret.Matrix): void;
+        private getGradient(type, colors, alphas, ratios, matrix);
         /**
          * @language en_US
          * Draw a rectangle
@@ -8816,6 +8859,24 @@ declare module egret.sys {
         displayHeight: number;
     }
 }
+declare module egret.sys {
+    /**
+     *
+     * @param value
+     * @returns
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    function isUndefined(value: any): boolean;
+    /**
+     *
+     * @param value
+     * @returns
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    function getNumber(value: number): number;
+}
 declare module egret {
     /**
      * @private
@@ -10522,7 +10583,7 @@ declare module egret {
          * @private
          *
          */
-        private _updateTransform();
+        private updateInput();
         /**
          * @private
          *
@@ -12170,111 +12231,6 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @language en_US
-     * Logger is an entrance for the log processing module of the engine
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * Logger是引擎的日志处理模块入口
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    class Logger {
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static ALL: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static DEBUG: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static INFO: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static WARN: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static ERROR: string;
-        /**
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static OFF: string;
-        /**
-         * @private
-         */
-        private static logFuncs;
-        /**
-         * @language en_US
-         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF
-         *
-         * <Ul>
-         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
-         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
-         * <Li> Logger.INFO - print info, log, warn, error. </ li>
-         * <Li> Logger.WARN - can print warn, error. </ li>
-         * <Li> Logger.ERROR - You can print error. </ li>
-         * <Li> Logger.OFF - all closed. </ li>
-         * </ Ul>
-         *param LogType from this level to start printing.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF
-         *
-         * <ul>
-         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
-         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
-         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
-         * <li>Logger.WARN -- 可以打印warn、error。</li>
-         * <li>Logger.ERROR -- 可以打印error。</li>
-         * <li>Logger.OFF -- 全部关闭。</li>
-         * </ul>
-         * @param logType 从这个等级开始打印。
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static logLevel: string;
-    }
-    /**
-     * @private
-     */
-    function getString(id: number, ...args: any[]): string;
-}
-declare module egret {
-    /**
-     *
-     * @param value
-     * @returns
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    function isUndefined(value: any): boolean;
-    /**
-     *
-     * @param value
-     * @returns
-     * @version Egret 2.0
-     * @platform Web,Native
-     */
-    function getNumber(value: number): number;
-}
-declare module egret {
-    /**
      * @version Egret 2.0
      * @platform Web,Native
      */
@@ -12990,7 +12946,7 @@ declare module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    function startTick(callBack: Function, thisObject: any): void;
+    function startTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
 }
 declare module egret {
     /**
@@ -13012,7 +12968,7 @@ declare module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    function stopTick(callBack: Function, thisObject: any): void;
+    function stopTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
 }
 declare module egret {
     /**

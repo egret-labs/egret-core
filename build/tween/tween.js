@@ -651,6 +651,7 @@ var egret;
                 }
                 tween.tick(tween._useTicks ? 1 : delta);
             }
+            return false;
         };
         /**
          * @private
