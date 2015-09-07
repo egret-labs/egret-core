@@ -56,7 +56,7 @@ module egret {
 
     export declare function $warn(code:number, ...params:any[]):void;
 
-    export declare function getString(code:number, ...params:any[]):void;
+    export declare function getString(code:number, ...params:any[]):string;
 
     export declare function $markReadOnly(instance:any, property:string, isProperty?:boolean):void;
     export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;

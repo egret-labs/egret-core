@@ -346,7 +346,7 @@ module egret {
         }
 
         $setSize(value:number):void {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
 
             var values = this.$TextField;
             if (values[sys.TextKeys.fontSize] == value) {
@@ -369,7 +369,7 @@ module egret {
         // * @private
         // */
         //public set fontSize(value:number) {
-        //    value = egret.getNumber(value);
+        //    value = egret.sys.getNumber(value);
         //
         //    var values = this.$TextField;
         //    if (values[sys.TextKeys.fontSize] == value) {
@@ -550,7 +550,7 @@ module egret {
         }
 
         $setLineSpacing(value:number):void {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
 
             var values = this.$TextField;
             if (values[sys.TextKeys.lineSpacing] == value)

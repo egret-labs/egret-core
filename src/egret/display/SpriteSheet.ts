@@ -152,10 +152,10 @@ module egret {
          * @platform Web,Native
          */
         public createTexture(name:string, bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number = 0, offsetY:number = 0, textureWidth?:number, textureHeight?:number):Texture {
-            if (egret.isUndefined(textureWidth)) {
+            if (egret.sys.isUndefined(textureWidth)) {
                 textureWidth = offsetX + bitmapWidth;
             }
-            if (egret.isUndefined(textureHeight)) {
+            if (egret.sys.isUndefined(textureHeight)) {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture:Texture = new egret.Texture();

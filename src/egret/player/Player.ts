@@ -490,20 +490,20 @@ module egret.sys {
                 this.shape = new egret.Shape();
                 this.addChild(this.shape);
                 var textField = new egret.TextField();
-                textField.size = egret.isUndefined(this.styles["size"]) ? 24 : parseInt(this.styles["size"]);
+                textField.size = egret.sys.isUndefined(this.styles["size"]) ? 24 : parseInt(this.styles["size"]);
                 this.addChild(textField);
                 this.textField = textField;
-                textField.textColor = egret.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+                textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
                 textField.fontFamily = "monospace";
                 textField.x = 10;
                 textField.y = 10;
                 var textField = new egret.TextField();
                 this.infoText = textField;
                 this.addChild(textField);
-                textField.textColor = egret.isUndefined(this.styles["textColor"]) ? 0xb0b0b0 : parseInt(this.styles["textColor"]);
+                textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0xb0b0b0 : parseInt(this.styles["textColor"]);
                 textField.fontFamily = "monospace";
                 textField.x = 10;
-                textField.size = egret.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
+                textField.size = egret.sys.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
                 textField.y = 10;
             };
             FPSImpl.prototype.update = function (drawCalls, dirtyRatio) {

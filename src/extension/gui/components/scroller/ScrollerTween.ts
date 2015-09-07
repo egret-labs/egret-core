@@ -537,7 +537,7 @@ module egret.gui {
         private _appendQueueProps(o):any {
             var arr, oldValue, i, l, injectProps;
             for (var n in o) {
-                if (egret.isUndefined(this._initQueueProps[n])) {
+                if (egret.sys.isUndefined(this._initQueueProps[n])) {
                     oldValue = this._target[n];
                     //设置plugins
                     if (arr = ScrollerTween._plugins[n]) {

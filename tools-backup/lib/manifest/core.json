@@ -52,6 +52,7 @@
         "egret/display/BitmapData.ts",
         "egret/display/IDisplayObjectContainer.ts",
         "egret/display/DisplayObjectContainer.ts",
+        "egret/display/GradientType.ts",
         "egret/display/GraphicsRenderContext.ts",
         "egret/display/GraphicsGradient.ts",
         "egret/display/GraphicsPattern.ts",
