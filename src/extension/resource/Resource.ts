@@ -57,8 +57,8 @@ module RES {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export function registerAnalzer(type:string, analyzerClass:any) {
-        instance.registerAnalzer(type, analyzerClass);
+    export function registerAnalyzer(type:string, analyzerClass:any) {
+        instance.registerAnalyzer(type, analyzerClass);
     }
 
     /**
@@ -481,7 +481,7 @@ module RES {
          * @param type 文件类型字符串，例如：bin,text,image,json等。
          * @param analyzerClass 自定义解析器的类定义
          */
-        public registerAnalzer(type:string, analyzerClass:any):void {
+        public registerAnalyzer(type:string, analyzerClass:any):void {
             this.analyzerClassMap[type] = analyzerClass;
         }
 
