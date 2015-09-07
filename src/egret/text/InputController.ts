@@ -72,6 +72,10 @@ module egret {
          * 
          */
         public _addStageText():void {
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = true;
+            }
+
             this.stageText.$addToStage();
 
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
@@ -87,6 +91,10 @@ module egret {
          * 
          */
         public _removeStageText():void {
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = false;
+            }
+
             this.stageText.$removeFromStage();
 
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
@@ -235,7 +243,7 @@ module egret {
          * @private
          * 
          */
-        private _updateTransform():void {//
+        private updateInput():void {//
             if (!this._text.$visible && this.stageText) {
                 this._hideInput();
             }
@@ -249,7 +257,7 @@ module egret {
             if (this._isFocus) {
                 //整体修改
                 this.stageText.$resetStageText();
-                this._updateTransform();
+                this.updateInput();
                 return;
             }
 
@@ -276,7 +284,7 @@ module egret {
             //整体修改
             this.stageText.$resetStageText();
 
-            this._updateTransform();
+            this.updateInput();
         }
     }
 }

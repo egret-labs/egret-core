@@ -283,6 +283,15 @@ module egret {
             return this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT;
         }
 
+        $inputEnabled:boolean = false;
+        $setTouchEnabled(value:boolean):void {
+            super.$setTouchEnabled(value);
+
+            if (this.isInput()) {
+                this.$inputEnabled = true;
+            }
+        }
+
         /**
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
@@ -302,6 +311,10 @@ module egret {
         }
 
         public set fontFamily(value:string) {
+            this.$setFontFamily(value);
+        }
+
+        $setFontFamily(value:string):void {
             var values = this.$TextField;
             if (values[sys.TextKeys.fontFamily] == value) {
                 return;
@@ -329,6 +342,10 @@ module egret {
         }
 
         public set size(value:number) {
+            this.$setSize(value);
+        }
+
+        $setSize(value:number):void {
             value = egret.getNumber(value);
 
             var values = this.$TextField;
@@ -381,6 +398,10 @@ module egret {
         }
 
         public set bold(value:boolean) {
+            this.$setBold(value);
+        }
+
+        $setBold(value:boolean):void {
             value = !!value;
             var values = this.$TextField;
             if (value == values[sys.TextKeys.bold]) {
@@ -409,6 +430,10 @@ module egret {
         }
 
         public set italic(value:boolean) {
+            this.$setItalic(value);
+        }
+
+        $setItalic(value:boolean):void {
             value = !!value;
             var values = this.$TextField;
             if (value == values[sys.TextKeys.italic]) {
@@ -459,6 +484,10 @@ module egret {
         }
 
         public set textAlign(value:string) {
+            this.$setTextAlign(value);
+        }
+
+        $setTextAlign(value:string):void {
             var values = this.$TextField;
             if (values[sys.TextKeys.textAlign] == value) {
                 return;
@@ -486,6 +515,10 @@ module egret {
         }
 
         public set verticalAlign(value:string) {
+            this.$setVerticalAlign(value);
+        }
+
+        $setVerticalAlign(value:string):void {
             var values = this.$TextField;
             if (values[sys.TextKeys.verticalAlign] == value) {
                 return;
@@ -513,6 +546,10 @@ module egret {
         }
 
         public set lineSpacing(value:number) {
+            this.$setLineSpacing(value);
+        }
+
+        $setLineSpacing(value:number):void {
             value = egret.getNumber(value);
 
             var values = this.$TextField;
@@ -541,6 +578,10 @@ module egret {
         }
 
         public set textColor(value:number) {
+            this.$setTextColor(value);
+        }
+
+        $setTextColor(value:number):void {
             value = +value | 0;
             var values = this.$TextField;
             if (values[sys.TextKeys.textColor] == value) {
