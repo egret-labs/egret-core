@@ -2457,7 +2457,7 @@ var egret;
          * 设置x坐标
          */
         p.$setX = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             var m = this.$DisplayObject[6 /* matrix */];
             if (value == m.tx) {
                 return false;
@@ -2507,7 +2507,7 @@ var egret;
          * 设置y坐标
          */
         p.$setY = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             var m = this.$DisplayObject[6 /* matrix */];
             if (value == m.ty) {
                 return false;
@@ -2554,7 +2554,7 @@ var egret;
          * 设置水平缩放值
          */
         p.$setScaleX = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             var values = this.$DisplayObject;
             if (value == values[0 /* scaleX */]) {
                 return false;
@@ -2601,7 +2601,7 @@ var egret;
          * 设置垂直缩放值
          */
         p.$setScaleY = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             if (value == this.$DisplayObject[1 /* scaleY */]) {
                 return false;
             }
@@ -2645,7 +2645,7 @@ var egret;
             return this.$DisplayObject[4 /* rotation */];
         };
         p.$setRotation = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             value = clampRotation(value);
             var values = this.$DisplayObject;
             if (value == values[4 /* rotation */]) {
@@ -2679,7 +2679,7 @@ var egret;
          * @param value
          */
         p.$setSkewX = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             value = clampRotation(value);
             value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
@@ -2710,7 +2710,7 @@ var egret;
          * @param value
          */
         p.$setSkewY = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             value = clampRotation(value);
             value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
@@ -2897,7 +2897,7 @@ var egret;
          * @returns
          */
         p.$setAnchorOffsetX = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             if (value == this.$DisplayObject[12 /* anchorOffsetX */]) {
                 return false;
             }
@@ -2934,7 +2934,7 @@ var egret;
          * @returns
          */
         p.$setAnchorOffsetY = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             if (value == this.$DisplayObject[13 /* anchorOffsetY */]) {
                 return false;
             }
@@ -3062,7 +3062,7 @@ var egret;
          * @param value
          */
         p.$setAlpha = function (value) {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             if (value == this.$alpha) {
                 return;
             }
@@ -5175,7 +5175,7 @@ var egret;
          */
         function blendModeToNumber(blendMode) {
             var num = blendModeNumber[blendMode];
-            return egret.isUndefined(num) ? 0 : num;
+            return egret.sys.isUndefined(num) ? 0 : num;
         }
         sys.blendModeToNumber = blendModeToNumber;
         /**
@@ -5184,7 +5184,7 @@ var egret;
          */
         function numberToBlendMode(blendMode) {
             var str = blendModeString[blendMode];
-            return egret.isUndefined(str) ? "normal" : str;
+            return egret.sys.isUndefined(str) ? "normal" : str;
         }
         sys.numberToBlendMode = numberToBlendMode;
     })(sys = egret.sys || (egret.sys = {}));
@@ -8422,10 +8422,10 @@ var egret;
         p.createTexture = function (name, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight) {
             if (offsetX === void 0) { offsetX = 0; }
             if (offsetY === void 0) { offsetY = 0; }
-            if (egret.isUndefined(textureWidth)) {
+            if (egret.sys.isUndefined(textureWidth)) {
                 textureWidth = offsetX + bitmapWidth;
             }
-            if (egret.isUndefined(textureHeight)) {
+            if (egret.sys.isUndefined(textureHeight)) {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture = new egret.Texture();
@@ -13610,13 +13610,13 @@ var egret;
                 fpsDisplay.updateInfo(info);
             };
             function displayFPS(showFPS, showLog, logFilter, styles) {
-                fpsStyle = egret.isUndefined(styles) ? {} : styles;
+                fpsStyle = egret.sys.isUndefined(styles) ? {} : styles;
                 showLog = !!showLog;
                 this.showFPS = !!showFPS;
                 this.showLog = showLog;
                 if (!this.fpsDisplay) {
-                    var x = egret.isUndefined(styles["x"]) ? 0 : styles["x"];
-                    var y = egret.isUndefined(styles["y"]) ? 0 : styles["y"];
+                    var x = egret.sys.isUndefined(styles["x"]) ? 0 : styles["x"];
+                    var y = egret.sys.isUndefined(styles["y"]) ? 0 : styles["y"];
                     fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                     fpsDisplay.x = x;
                     fpsDisplay.y = y;
@@ -13726,20 +13726,20 @@ var egret;
                     this.shape = new egret.Shape();
                     this.addChild(this.shape);
                     var textField = new egret.TextField();
-                    textField.size = egret.isUndefined(this.styles["size"]) ? 24 : parseInt(this.styles["size"]);
+                    textField.size = egret.sys.isUndefined(this.styles["size"]) ? 24 : parseInt(this.styles["size"]);
                     this.addChild(textField);
                     this.textField = textField;
-                    textField.textColor = egret.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+                    textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
                     textField.fontFamily = "monospace";
                     textField.x = 10;
                     textField.y = 10;
                     var textField = new egret.TextField();
                     this.infoText = textField;
                     this.addChild(textField);
-                    textField.textColor = egret.isUndefined(this.styles["textColor"]) ? 0xb0b0b0 : parseInt(this.styles["textColor"]);
+                    textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0xb0b0b0 : parseInt(this.styles["textColor"]);
                     textField.fontFamily = "monospace";
                     textField.x = 10;
-                    textField.size = egret.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
+                    textField.size = egret.sys.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
                     textField.y = 10;
                 };
                 FPSImpl.prototype.update = function (drawCalls, dirtyRatio) {
@@ -15198,13 +15198,13 @@ var egret;
                     var c = this.charList[str];
                     if (c) {
                         var sourceH = c.sourceH;
-                        if (egret.isUndefined(sourceH)) {
+                        if (egret.sys.isUndefined(sourceH)) {
                             var h = c.h;
                             if (h === undefined) {
                                 h = 0;
                             }
                             var offY = c.offY;
-                            if (egret.isUndefined(offY)) {
+                            if (egret.sys.isUndefined(offY)) {
                                 offY = 0;
                             }
                             sourceH = h + offY;
@@ -16570,7 +16570,7 @@ var egret;
                 return this.$TextField[0 /* fontSize */];
             }
             ,function (value) {
-                value = egret.getNumber(value);
+                value = egret.sys.getNumber(value);
                 var values = this.$TextField;
                 if (values[0 /* fontSize */] == value) {
                     return;
@@ -16593,7 +16593,7 @@ var egret;
             // * @private
             // */
             //public set fontSize(value:number) {
-            //    value = egret.getNumber(value);
+            //    value = egret.sys.getNumber(value);
             //
             //    var values = this.$TextField;
             //    if (values[sys.TextKeys.fontSize] == value) {
@@ -16750,7 +16750,7 @@ var egret;
                 return this.$TextField[1 /* lineSpacing */];
             }
             ,function (value) {
-                value = egret.getNumber(value);
+                value = egret.sys.getNumber(value);
                 var values = this.$TextField;
                 if (values[1 /* lineSpacing */] == value)
                     return;
@@ -19747,7 +19747,7 @@ var egret;
     function isUndefined(value) {
         return typeof value === "undefined";
     }
-    egret.isUndefined = isUndefined;
+    egret.sys.isUndefined = isUndefined;
     /**
      *
      * @param value
@@ -19764,7 +19764,7 @@ var egret;
         return +value || 0;
         ;
     }
-    egret.getNumber = getNumber;
+    egret.sys.getNumber = getNumber;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
