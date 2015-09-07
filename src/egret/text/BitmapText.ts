@@ -252,7 +252,11 @@ module egret {
         }
 
         public set lineSpacing(value:number) {
-            //value = +value || 0;
+            this.$setLineSpacing(value);
+        }
+
+        $setLineSpacing(value:number):void {
+            value = +value || 0;
             var values = this.$BitmapText;
             if (values[Keys.lineSpacing] == value)
                 return;
@@ -279,7 +283,11 @@ module egret {
         }
 
         public set letterSpacing(value:number) {
-            //value = +value || 0;
+            this.$setLetterSpacing(value);
+        }
+
+        $setLetterSpacing(value:number):void {
+            value = +value || 0;
             var values = this.$BitmapText;
             if (values[Keys.letterSpacing] == value)
                 return;

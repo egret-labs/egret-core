@@ -1152,6 +1152,10 @@ module egret {
         }
 
         public set visible(value:boolean) {
+            this.$setVisible(value);
+        }
+
+        $setVisible(value:boolean):void {
             value = !!value;
             if (value == this.$visible) {
                 return;
@@ -1641,7 +1645,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public globalToLocal(stageX:number, stageY:number, resultPoint?:Point):Point {
+        public globalToLocal(stageX:number = 0, stageY:number = 0, resultPoint?:Point):Point {
             var m = this.$getInvertedConcatenatedMatrix();
             return m.transformPoint(stageX, stageY, resultPoint);
         }
@@ -1667,7 +1671,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public localToGlobal(localX:number, localY:number, resultPoint?:Point):Point {
+        public localToGlobal(localX:number = 0, localY:number = 0, resultPoint?:Point):Point {
             var m = this.$getConcatenatedMatrix();
             return m.transformPoint(localX, localY, resultPoint);
         }
