@@ -48,7 +48,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export function stopTick(callBack:Function,thisObject:any):void{
+    export function stopTick(callBack:(timeStamp:number)=>boolean,thisObject:any):void{
         if (DEBUG && !callBack) {
             $error(1003, "callBack");
         }

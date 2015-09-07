@@ -241,7 +241,7 @@ module egret.gui {
          * @param delta 
          * @param paused 
          */
-        private static tick(timeStamp:number, paused = false):void {
+        private static tick(timeStamp:number, paused = false):boolean {
             var delta = timeStamp - ScrollerTween._lastTime;
             ScrollerTween._lastTime = timeStamp;
 
@@ -253,6 +253,7 @@ module egret.gui {
                 }
                 tween.tick(tween._useTicks ? 1 : delta);
             }
+            return false;
         }
 
         private static _lastTime:number = 0;

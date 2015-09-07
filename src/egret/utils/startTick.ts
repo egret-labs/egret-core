@@ -49,7 +49,7 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export function startTick(callBack:Function,thisObject:any):void {
+    export function startTick(callBack:(timeStamp:number)=>boolean,thisObject:any):void {
         if (DEBUG && !callBack) {
             $error(1003, "callBack");
         }

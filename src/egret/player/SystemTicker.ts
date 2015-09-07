@@ -105,7 +105,7 @@ module egret.sys {
         /**
          * @private
          */
-        $startTick(callBack:Function, thisObject:any):void {
+        $startTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
             var index = this.getTickIndex(callBack, thisObject);
             if (index != -1) {
                 return;
@@ -118,7 +118,7 @@ module egret.sys {
         /**
          * @private
          */
-        $stopTick(callBack:Function, thisObject:any):void {
+        $stopTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
             var index = this.getTickIndex(callBack, thisObject);
             if (index == -1) {
                 return;
@@ -200,7 +200,7 @@ module egret.sys {
             var timeStamp = egret.getTimer();
 
             for (var i = 0; i < length; i++) {
-                if (!callBackList[i].call(thisObjectList[i], timeStamp)) {
+                if (callBackList[i].call(thisObjectList[i], timeStamp)) {
                     requestRenderingFlag = true;
                 }
             }

@@ -242,7 +242,7 @@ module egret {
         $update(timeStamp:number):boolean {
             this.lastCount -= 1000;
             if(this.lastCount>0){
-                return true;
+                return false;
             }
             this.lastCount += this.updateInterval;
             this._currentCount++;

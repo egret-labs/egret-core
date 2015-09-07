@@ -76,11 +76,12 @@ module egret {
             sys.$ticker.$startTick(Recycler.onUpdate, Recycler);
         }
 
-        public static onUpdate(timeStamp:number):void {
+        public static onUpdate(timeStamp:number):boolean {
             var list = Recycler._callBackList;
             for (var i = list.length - 1; i >= 0; i--) {
                 list[i].$checkFrame();
             }
+            return false;
         }
 
         /**

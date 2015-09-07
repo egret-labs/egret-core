@@ -56,12 +56,12 @@ module egret {
         private _callIndex:number = -1;
         private _callList:Array<any>;
         private _lastTime:number = 0;
-        private update(timeStamp:number):void {
+        private update(timeStamp:number):boolean {
             var advancedTime:number = timeStamp - this._lastTime;
             this._lastTime = timeStamp;
 
             if (this._paused){
-                return;
+                return false;
             }
             var frameTime:number = advancedTime * this._timeScale;
 
@@ -74,6 +74,8 @@ module egret {
 
             this._callIndex = -1;
             this._callList = null;
+
+            return false;
         }
 
         private callBackList:Array<any> = [];

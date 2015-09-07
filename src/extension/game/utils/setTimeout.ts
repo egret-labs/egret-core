@@ -103,7 +103,7 @@ module egret {
      * 
      * @param dt 
      */
-    function timeoutUpdate(timeStamp:number):void {
+    function timeoutUpdate(timeStamp:number):boolean {
         var dt:number = timeStamp - lastTime;
         lastTime = timeStamp;
 
@@ -116,5 +116,7 @@ module egret {
                 clearTimeout(key);
             }
         }
+
+        return false;
     }
 }

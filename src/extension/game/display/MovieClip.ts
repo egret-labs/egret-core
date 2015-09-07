@@ -453,7 +453,7 @@ module egret {
 
             var num:number = currentTime / frameIntervalTime;
             if (num < 1) {
-                return true;
+                return false;
             }
             while (num >= 1) {
                 num--;

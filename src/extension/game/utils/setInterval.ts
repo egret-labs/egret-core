@@ -74,7 +74,7 @@ module egret {
      * 
      * @param dt 
      */
-    function intervalUpdate(timeStamp:number):void {
+    function intervalUpdate(timeStamp:number):boolean {
         var dt:number = timeStamp - lastTime;
         lastTime = timeStamp;
 
@@ -86,5 +86,6 @@ module egret {
                 data.listener.apply(data.thisObject, data.params);
             }
         }
+        return false;
     }
 }
