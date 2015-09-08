@@ -212,4 +212,3 @@ var ProjectConfig = (function () {
 })();
 var config = config || new ProjectConfig();
 module.exports = config;
-//# sourceMappingURL=ProjectConfig.js.map

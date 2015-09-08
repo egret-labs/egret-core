@@ -6,7 +6,6 @@
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
-import config = require("../ProjectConfig");
 
 class FileAutoChangeCommand implements egret.Command {
     needCompile:boolean;

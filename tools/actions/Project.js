@@ -68,3 +68,4 @@ function parseProjectInfo(html) {
     }
 }
 exports.parseProjectInfo = parseProjectInfo;
+//# sourceMappingURL=project.js.map

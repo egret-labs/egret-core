@@ -1,0 +1,1725 @@
+[
+    {
+        "desc": "class Logger{ * }",
+        "solution-url": "http://www.baidu.com/1.html",
+        "category-name": "Logger",
+        "category-type": "class",
+        "name": "*",
+        "solved": true
+    },
+    {
+        "desc": "class RenderCommand{ * }",
+        "solution-url": "http://www.baidu.com/1.html",
+        "category-name": "RenderCommand",
+        "category-type": "class",
+        "name": "*",
+        "solved": true
+    },
+    {
+        "desc": "interface RenderContext{ * }",
+        "solution-url": "http://www.baidu.com/1.html",
+        "category-name": "RenderContext",
+        "category-type": "interface",
+        "name": "*",
+        "solved": true
+    },
+    {
+        "desc": "class Profiler{ * }",
+        "solution-url": "http://www.baidu.com/3.html",
+        "category-name": "Profiler",
+        "category-type": "class",
+        "name": "*",
+        "solved": true
+    },
+    {
+        "desc": "class HashObject{ private static hashCount; }",
+        "solution-url": "http://www.baidu.com/2.html",
+        "category-name": "HashObject",
+        "category-type": "class",
+        "name": "hashCount",
+        "solved": true
+    },
+    {
+        "desc": "function $error(code: number, ...args: any[]): void;",
+        "solution-url": "http://www.baidu.com/3.html",
+        "category-name": "egret",
+        "category-type": "module",
+        "name": "$error",
+        "solved": true
+    },
+    {
+        "desc": "interface IHashObject{ hashCode: number; }",
+        "solution-url": "http://www.baidu.com/4.html",
+        "category-name": "IHashObject",
+        "category-type": "interface",
+        "name": "hashCode",
+        "solved": true
+    },
+    {
+        "desc": "enum IHashObject{ LOW = 1, }",
+        "solution-url": "http://www.baidu.com/5.html",
+        "category-name": "IHashObject",
+        "category-type": "enum",
+        "name": "LOW",
+        "solved": true
+    },
+    {
+        "desc": "interface IHashObject{ * }",
+        "solution-url": "http://www.baidu.com/ihashobject-all",
+        "category-name": "IHashObject",
+        "category-type": "interface",
+        "name": "*",
+        "solved": true
+    },
+    {
+        "desc": "*",
+        "solution-url": "http://www.baidu.com/ihashobject-all",
+        "category-name": "egret",
+        "category-type": "module",
+        "name": "*",
+        "solved": true
+    },
+    {
+        "desc": "class Recycler{ _checkFrame(): void; }",
+        "category-name": "Recycler",
+        "category-type": "class",
+        "name": "_checkFrame"
+    },
+    {
+        "desc": "class Event{ constructor(type: string, bubbles?: boolean, cancelable?: boolean); }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "constructor"
+    },
+    {
+        "desc": "class Event{ static FINISH_RENDER: string; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "FINISH_RENDER"
+    },
+    {
+        "desc": "class Event{ static FINISH_UPDATE_TRANSFORM: string; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "FINISH_UPDATE_TRANSFORM"
+    },
+    {
+        "desc": "class Event{ _type: string; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_type"
+    },
+    {
+        "desc": "class Event{ _bubbles: boolean; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_bubbles"
+    },
+    {
+        "desc": "class Event{ _eventPhase: number; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_eventPhase"
+    },
+    {
+        "desc": "class Event{ _currentTarget: any; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_currentTarget"
+    },
+    {
+        "desc": "class Event{ _target: any; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_target"
+    },
+    {
+        "desc": "class Event{ _isDefaultPrevented: boolean; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_isDefaultPrevented"
+    },
+    {
+        "desc": "class Event{ _isPropagationStopped: boolean; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_isPropagationStopped"
+    },
+    {
+        "desc": "class Event{ _isPropagationImmediateStopped: boolean; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_isPropagationImmediateStopped"
+    },
+    {
+        "desc": "class Event{ _reset(): void; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_reset"
+    },
+    {
+        "desc": "class Event{ __recycle(): void; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "__recycle"
+    },
+    {
+        "desc": "class Event{ static _dispatchByTarget(EventClass: any, target: IEventDispatcher, type: string, props?: Object, bubbles?: boolean, cancelable?: boolean): boolean; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "_dispatchByTarget"
+    },
+    {
+        "desc": "class Event{ static dispatchEvent(target: IEventDispatcher, type: string, bubbles?: boolean, data?: any): void; }",
+        "category-name": "Event",
+        "category-type": "class",
+        "name": "dispatchEvent"
+    },
+    {
+        "desc": "class HTTPStatusEvent{ static dispatchHTTPStatusEvent(target: IEventDispatcher, status: number): void; }",
+        "category-name": "HTTPStatusEvent",
+        "category-type": "class",
+        "name": "dispatchHTTPStatusEvent"
+    },
+    {
+        "desc": "class IOErrorEvent{ static dispatchIOErrorEvent(target: IEventDispatcher): void; }",
+        "category-name": "IOErrorEvent",
+        "category-type": "class",
+        "name": "dispatchIOErrorEvent"
+    },
+    {
+        "desc": "class TouchEvent{ constructor(type: string, bubbles?: boolean, cancelable?: boolean, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean); }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "constructor"
+    },
+    {
+        "desc": "class TouchEvent{ static TOUCH_OUT: string; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "TOUCH_OUT"
+    },
+    {
+        "desc": "class TouchEvent{ static TOUCH_OVER: string; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "TOUCH_OVER"
+    },
+    {
+        "desc": "class TouchEvent{ _stageX: number; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "_stageX"
+    },
+    {
+        "desc": "class TouchEvent{ _stageY: number; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "_stageY"
+    },
+    {
+        "desc": "class TouchEvent{ ctrlKey: boolean; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "ctrlKey"
+    },
+    {
+        "desc": "class TouchEvent{ shiftKey: boolean; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "shiftKey"
+    },
+    {
+        "desc": "class TouchEvent{ altKey: boolean; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "altKey"
+    },
+    {
+        "desc": "class TouchEvent{ static dispatchTouchEvent(target: IEventDispatcher, type: string, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean): void; }",
+        "category-name": "TouchEvent",
+        "category-type": "class",
+        "name": "dispatchTouchEvent"
+    },
+    {
+        "desc": "class TimerEvent{ static dispatchTimerEvent(target: IEventDispatcher, type: string): void; }",
+        "category-name": "TimerEvent",
+        "category-type": "class",
+        "name": "dispatchTimerEvent"
+    },
+    {
+        "desc": "class TextEvent{ static dispatchTextEvent(target: IEventDispatcher, type: string, text: string): void; }",
+        "category-name": "TextEvent",
+        "category-type": "class",
+        "name": "dispatchTextEvent"
+    },
+    {
+        "desc": "class ProgressEvent{ static dispatchProgressEvent(target: IEventDispatcher, type: string, bytesLoaded?: number, bytesTotal?: number): void; }",
+        "category-name": "ProgressEvent",
+        "category-type": "class",
+        "name": "dispatchProgressEvent"
+    },
+    {
+        "desc": "class EventDispatcher{ _eventsMap: Object; }",
+        "category-name": "EventDispatcher",
+        "category-type": "class",
+        "name": "_eventsMap"
+    },
+    {
+        "desc": "class EventDispatcher{ _captureEventsMap: Object; }",
+        "category-name": "EventDispatcher",
+        "category-type": "class",
+        "name": "_captureEventsMap"
+    },
+    {
+        "desc": "class EventDispatcher{ _insertEventBin(list: Array<any>, listener: Function, thisObject: any, priority: number, display?: any): boolean; }",
+        "category-name": "EventDispatcher",
+        "category-type": "class",
+        "name": "_insertEventBin"
+    },
+    {
+        "desc": "class EventDispatcher{ _removeEventBin(list: Array<any>, listener: Function, thisObject: any, display?: any, fromIdx?: number): boolean; }",
+        "category-name": "EventDispatcher",
+        "category-type": "class",
+        "name": "_removeEventBin"
+    },
+    {
+        "desc": "class EventDispatcher{ _notifyListener(event: Event): boolean; }",
+        "category-name": "EventDispatcher",
+        "category-type": "class",
+        "name": "_notifyListener"
+    },
+    {
+        "desc": "class EventDispatcher{ dispatchEventWith(type: string, bubbles?: boolean, data?: Object): void; }",
+        "category-name": "EventDispatcher",
+        "category-type": "class",
+        "name": "dispatchEventWith"
+    },
+    {
+        "desc": "class MainContext{ rendererContext: RendererContext; }",
+        "category-name": "MainContext",
+        "category-type": "class",
+        "name": "rendererContext"
+    },
+    {
+        "desc": "class MainContext{ touchContext: TouchContext; }",
+        "category-name": "MainContext",
+        "category-type": "class",
+        "name": "touchContext"
+    },
+    {
+        "desc": "class MainContext{ netContext: NetContext; }",
+        "category-name": "MainContext",
+        "category-type": "class",
+        "name": "netContext"
+    },
+    {
+        "desc": "class MainContext{ deviceContext: DeviceContext; }",
+        "category-name": "MainContext",
+        "category-type": "class",
+        "name": "deviceContext"
+    },
+    {
+        "desc": "class MainContext{ static __DRAW_COMMAND_LIST: Array<RenderCommand>; }",
+        "category-name": "MainContext",
+        "category-type": "class",
+        "name": "__DRAW_COMMAND_LIST"
+    },
+    {
+        "desc": "class MainContext{ static __use_new_draw: boolean; }",
+        "category-name": "MainContext",
+        "category-type": "class",
+        "name": "__use_new_draw"
+    },
+    {
+        "desc": "class MainContext{ static _renderLoopPhase: string; }",
+        "category-name": "MainContext",
+        "category-type": "class",
+        "name": "_renderLoopPhase"
+    },
+    {
+        "desc": "class Matrix{ static identity: Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "identity"
+    },
+    {
+        "desc": "class Matrix{ static DEG_TO_RAD: number; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "DEG_TO_RAD"
+    },
+    {
+        "desc": "class Matrix{ prependTransform(x: number, y: number, scaleX: number, scaleY: number, rotation: number, skewX: number, skewY: number, regX: number, regY: number): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "prependTransform"
+    },
+    {
+        "desc": "class Matrix{ appendTransform(x: number, y: number, scaleX: number, scaleY: number, rotation: number, skewX: number, skewY: number, regX: number, regY: number): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "appendTransform"
+    },
+    {
+        "desc": "class Matrix{ rotate(angle: number): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "rotate"
+    },
+    {
+        "desc": "class Matrix{ skew(skewX: number, skewY: number): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "skew"
+    },
+    {
+        "desc": "class Matrix{ scale(x: number, y: number): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "scale"
+    },
+    {
+        "desc": "class Matrix{ translate(x: number, y: number): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "translate"
+    },
+    {
+        "desc": "class Matrix{ identity(): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "identity"
+    },
+    {
+        "desc": "class Matrix{ identityMatrix(matrix: Matrix): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "identityMatrix"
+    },
+    {
+        "desc": "class Matrix{ invert(): Matrix; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "invert"
+    },
+    {
+        "desc": "class Matrix{ static transformCoords(matrix: Matrix, x: number, y: number): Point; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "transformCoords"
+    },
+    {
+        "desc": "class Matrix{ toArray(transpose: any): any; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "toArray"
+    },
+    {
+        "desc": "class Matrix{ setTo(aa: number, ba: number, ca: number, da: number, txa: number, tya: number): void; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "setTo"
+    },
+    {
+        "desc": "class Matrix{ copyFrom(sourceMatrix: Matrix): void; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "copyFrom"
+    },
+    {
+        "desc": "class Matrix{ concat(m: Matrix): void; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "concat"
+    },
+    {
+        "desc": "class Matrix{ deltaTransformPoint(point: egret.Point): egret.Point; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "deltaTransformPoint"
+    },
+    {
+        "desc": "class Matrix{ transformPoint(point: egret.Point): egret.Point; }",
+        "category-name": "Matrix",
+        "category-type": "class",
+        "name": "transformPoint"
+    },
+    {
+        "desc": "class Point{ static identity: Point; }",
+        "category-name": "Point",
+        "category-type": "class",
+        "name": "identity"
+    },
+    {
+        "desc": "class Point{ static distance(p1: egret.Point, p2: egret.Point): number; }",
+        "category-name": "Point",
+        "category-type": "class",
+        "name": "distance"
+    },
+    {
+        "desc": "class Point{ setTo(xa: number, ya: number): void; }",
+        "category-name": "Point",
+        "category-type": "class",
+        "name": "setTo"
+    },
+    {
+        "desc": "class Rectangle{ initialize(x: number, y: number, width: number, height: number): Rectangle; }",
+        "category-name": "Rectangle",
+        "category-type": "class",
+        "name": "initialize"
+    },
+    {
+        "desc": "class Rectangle{ static identity: Rectangle; }",
+        "category-name": "Rectangle",
+        "category-type": "class",
+        "name": "identity"
+    },
+    {
+        "desc": "class Rectangle{ setTo(xa: number, ya: number, widtha: number, heighta: number): void; }",
+        "category-name": "Rectangle",
+        "category-type": "class",
+        "name": "setTo"
+    },
+    {
+        "desc": "class Rectangle{ copyFrom(sourceRect: Rectangle): void; }",
+        "category-name": "Rectangle",
+        "category-type": "class",
+        "name": "copyFrom"
+    },
+    {
+        "desc": "class ColorMatrixFilter{ _matrix: Array<number>; }",
+        "category-name": "ColorMatrixFilter",
+        "category-type": "class",
+        "name": "_matrix"
+    },
+    {
+        "desc": "class GlowFilter{ _red: number; }",
+        "category-name": "GlowFilter",
+        "category-type": "class",
+        "name": "_red"
+    },
+    {
+        "desc": "class GlowFilter{ _green: number; }",
+        "category-name": "GlowFilter",
+        "category-type": "class",
+        "name": "_green"
+    },
+    {
+        "desc": "class GlowFilter{ _blue: number; }",
+        "category-name": "GlowFilter",
+        "category-type": "class",
+        "name": "_blue"
+    },
+    {
+        "desc": "class BlendMode{ static ERASE_REVERSE: string; }",
+        "category-name": "BlendMode",
+        "category-type": "class",
+        "name": "ERASE_REVERSE"
+    },
+    {
+        "desc": "class DisplayObject{ * }",
+        "solution-url": "http://www.baidu.com/html1"
+    },
+    {
+        "desc": "class DisplayObject{ _DO_Props_: DisplayObjectProperties; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_DO_Props_"
+    },
+    {
+        "desc": "class DisplayObject{ _texture_to_render: Texture; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_texture_to_render"
+    },
+    {
+        "desc": "class DisplayObject{ _worldTransform: egret.Matrix; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_worldTransform"
+    },
+    {
+        "desc": "class DisplayObject{ _worldBounds: egret.Rectangle; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_worldBounds"
+    },
+    {
+        "desc": "class DisplayObject{ __hack_local_matrix: any; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "__hack_local_matrix"
+    },
+    {
+        "desc": "class DisplayObject{ _sizeChangeCallBack: Function; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_sizeChangeCallBack"
+    },
+    {
+        "desc": "class DisplayObject{ _sizeChangeCallTarget: any; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_sizeChangeCallTarget"
+    },
+    {
+        "desc": "class DisplayObject{ _setDirty(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setDirty"
+    },
+    {
+        "desc": "class DisplayObject{ getDirty(): boolean; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "getDirty"
+    },
+    {
+        "desc": "class DisplayObject{ _setParentSizeDirty(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setParentSizeDirty"
+    },
+    {
+        "desc": "class DisplayObject{ _setSizeDirty(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setSizeDirty"
+    },
+    {
+        "desc": "class DisplayObject{ _clearDirty(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_clearDirty"
+    },
+    {
+        "desc": "class DisplayObject{ _clearSizeDirty(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_clearSizeDirty"
+    },
+    {
+        "desc": "class DisplayObject{ _parentChanged(parent: DisplayObjectContainer): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_parentChanged"
+    },
+    {
+        "desc": "class DisplayObject{ _setX(value: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setX"
+    },
+    {
+        "desc": "class DisplayObject{ _setY(value: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setY"
+    },
+    {
+        "desc": "class DisplayObject{ anchorX: number; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "anchorX"
+    },
+    {
+        "desc": "class DisplayObject{ _setAnchorX(value: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setAnchorX"
+    },
+    {
+        "desc": "class DisplayObject{ anchorY: number; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "anchorY"
+    },
+    {
+        "desc": "class DisplayObject{ _setAnchorY(value: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setAnchorY"
+    },
+    {
+        "desc": "class DisplayObject{ _setVisible(value: boolean): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setVisible"
+    },
+    {
+        "desc": "class DisplayObject{ _setAlpha(value: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setAlpha"
+    },
+    {
+        "desc": "class DisplayObject{ _setTouchEnabled(value: boolean): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setTouchEnabled"
+    },
+    {
+        "desc": "class DisplayObject{ _setScrollRect(value: Rectangle): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setScrollRect"
+    },
+    {
+        "desc": "class DisplayObject{ explicitWidth: number; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "explicitWidth"
+    },
+    {
+        "desc": "class DisplayObject{ explicitHeight: number; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "explicitHeight"
+    },
+    {
+        "desc": "class DisplayObject{ _getWidth(): number; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_getWidth"
+    },
+    {
+        "desc": "class DisplayObject{ _getHeight(): number; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_getHeight"
+    },
+    {
+        "desc": "class DisplayObject{ _setWidth(value: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setWidth"
+    },
+    {
+        "desc": "class DisplayObject{ _setHeight(value: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setHeight"
+    },
+    {
+        "desc": "class DisplayObject{ mask: Rectangle; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "mask"
+    },
+    {
+        "desc": "class DisplayObject{ worldAlpha: number; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "worldAlpha"
+    },
+    {
+        "desc": "class DisplayObject{ _draw(renderContext: RendererContext): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_draw"
+    },
+    {
+        "desc": "class DisplayObject{ _setGlobalFilters(renderContext: RendererContext): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setGlobalFilters"
+    },
+    {
+        "desc": "class DisplayObject{ _removeGlobalFilters(renderContext: RendererContext): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_removeGlobalFilters"
+    },
+    {
+        "desc": "class DisplayObject{ _hasFilters(): boolean; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_hasFilters"
+    },
+    {
+        "desc": "class DisplayObject{ _pushMask(renderContext: RendererContext): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_pushMask"
+    },
+    {
+        "desc": "class DisplayObject{ _popMask(renderContext: RendererContext): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_popMask"
+    },
+    {
+        "desc": "class DisplayObject{ needDraw: boolean; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "needDraw"
+    },
+    {
+        "desc": "class DisplayObject{ _updateTransform(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_updateTransform"
+    },
+    {
+        "desc": "class DisplayObject{ _calculateWorldTransform(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_calculateWorldTransform"
+    },
+    {
+        "desc": "class DisplayObject{ _render(renderContext: RendererContext): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class DisplayObject{ _getConcatenatedMatrix(): egret.Matrix; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_getConcatenatedMatrix"
+    },
+    {
+        "desc": "class DisplayObject{ localToGlobal(x?: number, y?: number, resultPoint?: Point): Point; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "localToGlobal"
+    },
+    {
+        "desc": "class DisplayObject{ globalToLocal(x?: number, y?: number, resultPoint?: Point): Point; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "globalToLocal"
+    },
+    {
+        "desc": "class DisplayObject{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "hitTest"
+    },
+    {
+        "desc": "class DisplayObject{ _getMatrix(parentMatrix?: Matrix): Matrix; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_getMatrix"
+    },
+    {
+        "desc": "class DisplayObject{ _getSize(resultRect: Rectangle): Rectangle; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_getSize"
+    },
+    {
+        "desc": "class DisplayObject{ _measureSize(resultRect: Rectangle): egret.Rectangle; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_measureSize"
+    },
+    {
+        "desc": "class DisplayObject{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class DisplayObject{ _getOffsetPoint(): egret.Point; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_getOffsetPoint"
+    },
+    {
+        "desc": "class DisplayObject{ _onAddToStage(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_onAddToStage"
+    },
+    {
+        "desc": "class DisplayObject{ _onRemoveFromStage(): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_onRemoveFromStage"
+    },
+    {
+        "desc": "class DisplayObject{ static _enterFrameCallBackList: Array<any>; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_enterFrameCallBackList"
+    },
+    {
+        "desc": "class DisplayObject{ static _renderCallBackList: Array<any>; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_renderCallBackList"
+    },
+    {
+        "desc": "class DisplayObject{ addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "addEventListener",
+        "solution-url":"http://www.baidu.com/我勒个去"
+    },
+    {
+        "desc": "class DisplayObject{ _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_dispatchPropagationEvent"
+    },
+    {
+        "desc": "class DisplayObject{ renderTexture: RenderTexture; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "renderTexture"
+    },
+    {
+        "desc": "class DisplayObject{ _makeBitmapCache(): boolean; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_makeBitmapCache"
+    },
+    {
+        "desc": "class DisplayObject{ _setCacheDirty(dirty?: boolean): void; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "_setCacheDirty"
+    },
+    {
+        "desc": "class DisplayObject{ static getTransformBounds(bounds: egret.Rectangle, mtx: egret.Matrix): egret.Rectangle; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "getTransformBounds"
+    },
+    {
+        "desc": "class DisplayObject{ filters: Array<Filter>; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "filters"
+    },
+    {
+        "desc": "class DisplayObject{ transform: Transform; }",
+        "category-name": "DisplayObject",
+        "category-type": "class",
+        "name": "transform"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ static __EVENT__ADD_TO_STAGE_LIST: Array<DisplayObject>; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "__EVENT__ADD_TO_STAGE_LIST"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ static __EVENT__REMOVE_FROM_STAGE_LIST: Array<DisplayObject>; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "__EVENT__REMOVE_FROM_STAGE_LIST"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _touchChildren: boolean; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_touchChildren"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _children: Array<DisplayObject>; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_children"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _doAddChild(child: DisplayObject, index: number, notifyListeners?: boolean): DisplayObject; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_doAddChild"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _doRemoveChild(index: number, notifyListeners?: boolean): DisplayObject; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_doRemoveChild"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ getChildIndex(child: egret.DisplayObject): number; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "getChildIndex"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _updateTransform(): void; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_updateTransform"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _render(renderContext: RendererContext): void; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "hitTest"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _onAddToStage(): void; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_onAddToStage"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _onRemoveFromStage(): void; }",
+        "category-name": "DisplayObjectContainer",
+        "category-type": "class",
+        "name": "_onRemoveFromStage"
+    },
+    {
+        "desc": "class Stage{ static _invalidateRenderFlag: boolean; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "_invalidateRenderFlag"
+    },
+    {
+        "desc": "class Stage{ _changeSizeDispatchFlag: boolean; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "_changeSizeDispatchFlag"
+    },
+    {
+        "desc": "class Stage{ constructor(width?: number, height?: number); }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "constructor"
+    },
+    {
+        "desc": "class Stage{ changeSize(): void; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "changeSize"
+    },
+    {
+        "desc": "class Stage{ hitTest(x: any, y: any, ignoreTouchEnabled?: boolean): DisplayObject; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "hitTest"
+    },
+    {
+        "desc": "class Stage{ getBounds(resultRect?: Rectangle): Rectangle; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "getBounds"
+    },
+    {
+        "desc": "class Stage{ _updateTransform(): void; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "_updateTransform"
+    },
+    {
+        "desc": "class Stage{ focus: DisplayObject; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "focus"
+    },
+    {
+        "desc": "class Stage{ static SCALE_MODE_ENUM: any; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "SCALE_MODE_ENUM"
+    },
+    {
+        "desc": "class Stage{ static registerScaleMode(key: string, value: ContentStrategy, override?: boolean): void; }",
+        "category-name": "Stage",
+        "category-type": "class",
+        "name": "registerScaleMode"
+    },
+    {
+        "desc": "class ScrollView{ _setWidth(value: number): void; }",
+        "category-name": "ScrollView",
+        "category-type": "class",
+        "name": "_setWidth"
+    },
+    {
+        "desc": "class ScrollView{ _setHeight(value: number): void; }",
+        "category-name": "ScrollView",
+        "category-type": "class",
+        "name": "_setHeight"
+    },
+    {
+        "desc": "class ScrollView{ _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void; }",
+        "category-name": "ScrollView",
+        "category-type": "class",
+        "name": "_dispatchPropagationEvent"
+    },
+    {
+        "desc": "class ScrollView{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+        "category-name": "ScrollView",
+        "category-type": "class",
+        "name": "hitTest"
+    },
+    {
+        "desc": "class Bitmap{ constructor(texture?: Texture); }",
+        "category-name": "Bitmap",
+        "category-type": "class",
+        "name": "constructor"
+    },
+    {
+        "desc": "class Bitmap{ scale9Grid: Rectangle; }",
+        "category-name": "Bitmap",
+        "category-type": "class",
+        "name": "scale9Grid"
+    },
+    {
+        "desc": "class Bitmap{ _render(renderContext: RendererContext): void; }",
+        "category-name": "Bitmap",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class Bitmap{ static _drawBitmap(renderContext: RendererContext, destW: number, destH: number, thisObject: any): void; }",
+        "category-name": "Bitmap",
+        "category-type": "class",
+        "name": "_drawBitmap"
+    },
+    {
+        "desc": "class Bitmap{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "Bitmap",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class BitmapText{ $setText(value: string): void; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "$setText"
+    },
+    {
+        "desc": "class BitmapText{ _font: BitmapFont; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_font"
+    },
+    {
+        "desc": "class BitmapText{ $setFont(value: BitmapFont): void; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "$setFont"
+    },
+    {
+        "desc": "class BitmapText{ _letterSpacing: number; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_letterSpacing"
+    },
+    {
+        "desc": "class BitmapText{ _setLetterSpacing(value: number): void; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_setLetterSpacing"
+    },
+    {
+        "desc": "class BitmapText{ _lineSpacing: number; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_lineSpacing"
+    },
+    {
+        "desc": "class BitmapText{ _setLineSpacing(value: number): void; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_setLineSpacing"
+    },
+    {
+        "desc": "class BitmapText{ _setSizeDirty(): void; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_setSizeDirty"
+    },
+    {
+        "desc": "class BitmapText{ _render(renderContext: RendererContext): void; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class BitmapText{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "BitmapText",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class Graphics{ static _currentFillStyle: any; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_currentFillStyle"
+    },
+    {
+        "desc": "class Graphics{ _renderContext: RenderContext; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_renderContext"
+    },
+    {
+        "desc": "class Graphics{ beginGradientFill(type: string, colors: Array<number>, alphas: Array<number>, ratios: Array<number>, matrix?: egret.Matrix): void; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "beginGradientFill"
+    },
+    {
+        "desc": "class Graphics{ _beginDraw(renderContext: RendererContext): void; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_beginDraw"
+    },
+    {
+        "desc": "class Graphics{ _endDraw(renderContext: RendererContext): void; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_endDraw"
+    },
+    {
+        "desc": "class Graphics{ _draw(renderContext: RendererContext): void; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_draw"
+    },
+    {
+        "desc": "class Graphics{ _checkRect(x: number, y: number, w: number, h: number): void; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_checkRect"
+    },
+    {
+        "desc": "class Graphics{ _checkPoint(x: number, y: number): void; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_checkPoint"
+    },
+    {
+        "desc": "class Graphics{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "Graphics",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class Shape{ _draw(renderContext: RendererContext): void; }",
+        "category-name": "Shape",
+        "category-type": "class",
+        "name": "_draw"
+    },
+    {
+        "desc": "class Shape{ _render(renderContext: RendererContext): void; }",
+        "category-name": "Shape",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class Shape{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "Shape",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class Sprite{ _draw(renderContext: RendererContext): void; }",
+        "category-name": "Sprite",
+        "category-type": "class",
+        "name": "_draw"
+    },
+    {
+        "desc": "class Sprite{ _render(renderContext: RendererContext): void; }",
+        "category-name": "Sprite",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class Sprite{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "Sprite",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class Sprite{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+        "category-name": "Sprite",
+        "category-type": "class",
+        "name": "hitTest"
+    },
+    {
+        "desc": "class TextField{ _inputEnabled: boolean; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_inputEnabled"
+    },
+    {
+        "desc": "class TextField{ _setTouchEnabled(value: boolean): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setTouchEnabled"
+    },
+    {
+        "desc": "class TextField{ _getText(): string; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_getText"
+    },
+    {
+        "desc": "class TextField{ _setSizeDirty(): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setSizeDirty"
+    },
+    {
+        "desc": "class TextField{ _setTextDirty(): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setTextDirty"
+    },
+    {
+        "desc": "class TextField{ _setText(value: string): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setText"
+    },
+    {
+        "desc": "class TextField{ _setFontFamily(value: string): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setFontFamily"
+    },
+    {
+        "desc": "class TextField{ _setSize(value: number): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setSize"
+    },
+    {
+        "desc": "class TextField{ _setItalic(value: boolean): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setItalic"
+    },
+    {
+        "desc": "class TextField{ _setBold(value: boolean): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setBold"
+    },
+    {
+        "desc": "class TextField{ _setTextColor(value: number): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setTextColor"
+    },
+    {
+        "desc": "class TextField{ _setTextAlign(value: string): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setTextAlign"
+    },
+    {
+        "desc": "class TextField{ _setVerticalAlign(value: string): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setVerticalAlign"
+    },
+    {
+        "desc": "class TextField{ maxWidth: any; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "maxWidth"
+    },
+    {
+        "desc": "class TextField{ _setSelection(beginIndex: number, endIndex: number): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setSelection"
+    },
+    {
+        "desc": "class TextField{ _setLineSpacing(value: number): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setLineSpacing"
+    },
+    {
+        "desc": "class TextField{ _getLineHeight(): number; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_getLineHeight"
+    },
+    {
+        "desc": "class TextField{ _setWidth(value: number): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setWidth"
+    },
+    {
+        "desc": "class TextField{ _setHeight(value: number): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_setHeight"
+    },
+    {
+        "desc": "class TextField{ _TF_Props_: TextFieldProperties; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_TF_Props_"
+    },
+    {
+        "desc": "class TextField{ _onRemoveFromStage(): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_onRemoveFromStage"
+    },
+    {
+        "desc": "class TextField{ _onAddToStage(): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_onAddToStage"
+    },
+    {
+        "desc": "class TextField{ _updateBaseTransform(): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_updateBaseTransform"
+    },
+    {
+        "desc": "class TextField{ _updateTransform(): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_updateTransform"
+    },
+    {
+        "desc": "class TextField{ _draw(renderContext: RendererContext): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_draw"
+    },
+    {
+        "desc": "class TextField{ _render(renderContext: RendererContext): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class TextField{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class TextField{ appendText(newText: string): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "appendText"
+    },
+    {
+        "desc": "class TextField{ appendElement(newElement: egret.ITextElement): void; }",
+        "category-name": "TextField",
+        "category-type": "class",
+        "name": "appendElement"
+    },
+    {
+        "desc": "class InputController{ _updateTransform(): void; }",
+        "category-name": "InputController",
+        "category-type": "class",
+        "name": "_updateTransform"
+    },
+    {
+        "desc": "class MovieClip{ _textureToRender: Texture; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_textureToRender"
+    },
+    {
+        "desc": "class MovieClip{ _movieClipData: MovieClipData; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_movieClipData"
+    },
+    {
+        "desc": "class MovieClip{ _frameLabels: any[]; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_frameLabels"
+    },
+    {
+        "desc": "class MovieClip{ _eventPool: string[]; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_eventPool"
+    },
+    {
+        "desc": "class MovieClip{ _currentFrameNum: number; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_currentFrameNum"
+    },
+    {
+        "desc": "class MovieClip{ _nextFrameNum: number; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_nextFrameNum"
+    },
+    {
+        "desc": "class MovieClip{ _init(): void; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_init"
+    },
+    {
+        "desc": "class MovieClip{ _reset(): void; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_reset"
+    },
+    {
+        "desc": "class MovieClip{ _render(renderContext: RendererContext): void; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_render"
+    },
+    {
+        "desc": "class MovieClip{ _measureBounds(): egret.Rectangle; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_measureBounds"
+    },
+    {
+        "desc": "class MovieClip{ _onAddToStage(): void; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_onAddToStage"
+    },
+    {
+        "desc": "class MovieClip{ _onRemoveFromStage(): void; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_onRemoveFromStage"
+    },
+    {
+        "desc": "class MovieClip{ _getFrameLabelByName(labelName: string, ignoreCase?: boolean): FrameLabel; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_getFrameLabelByName"
+    },
+    {
+        "desc": "class MovieClip{ _getFrameLabelByFrame(frame: number): FrameLabel; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_getFrameLabelByFrame"
+    },
+    {
+        "desc": "class MovieClip{ _getFrameLabelForFrame(frame: number): FrameLabel; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_getFrameLabelForFrame"
+    },
+    {
+        "desc": "class MovieClip{ _advanceFrame(): void; }",
+        "category-name": "MovieClip",
+        "category-type": "class",
+        "name": "_advanceFrame"
+    },
+    {
+        "desc": "class MovieClipData{ _mcData: any; }",
+        "category-name": "MovieClipData",
+        "category-type": "class",
+        "name": "_mcData"
+    },
+    {
+        "desc": "class MovieClipData{ _init(mcData: any, textureData: any, spriteSheet: SpriteSheet): void; }",
+        "category-name": "MovieClipData",
+        "category-type": "class",
+        "name": "_init"
+    },
+    {
+        "desc": "class MovieClipData{ _isDataValid(): boolean; }",
+        "category-name": "MovieClipData",
+        "category-type": "class",
+        "name": "_isDataValid"
+    },
+    {
+        "desc": "class MovieClipData{ _isTextureValid(): boolean; }",
+        "category-name": "MovieClipData",
+        "category-type": "class",
+        "name": "_isTextureValid"
+    },
+    {
+        "desc": "class MovieClipData{ _fillMCData(mcData: any): void; }",
+        "category-name": "MovieClipData",
+        "category-type": "class",
+        "name": "_fillMCData"
+    },
+    {
+        "desc": "class MovieClipDataFactory{ _mcDataSet: any; }",
+        "category-name": "MovieClipDataFactory",
+        "category-type": "class",
+        "name": "_mcDataSet"
+    },
+    {
+        "desc": "class MovieClipDataFactory{ _spriteSheet: SpriteSheet; }",
+        "category-name": "MovieClipDataFactory",
+        "category-type": "class",
+        "name": "_spriteSheet"
+    },
+    {
+        "desc": "class MovieClipDataFactory{ _mcDataCache: any; }",
+        "category-name": "MovieClipDataFactory",
+        "category-type": "class",
+        "name": "_mcDataCache"
+    },
+    {
+        "desc": "class Texture{ _textureWidth: number; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_textureWidth"
+    },
+    {
+        "desc": "class Texture{ _textureHeight: number; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_textureHeight"
+    },
+    {
+        "desc": "class Texture{ _clone(): Texture; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_clone"
+    },
+    {
+        "desc": "class Texture{ draw(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "draw"
+    },
+    {
+        "desc": "class Texture{ _drawForCanvas(context: CanvasRenderingContext2D, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_drawForCanvas"
+    },
+    {
+        "desc": "class Texture{ _drawForNative(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_drawForNative"
+    },
+    {
+        "desc": "class Texture{ _drawRepeatImageForNative(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, repeat: any): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_drawRepeatImageForNative"
+    },
+    {
+        "desc": "class Texture{ _drawRepeatImageForCanvas(context: CanvasRenderingContext2D, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, repeat: any): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_drawRepeatImageForCanvas"
+    },
+    {
+        "desc": "class Texture{ _disposeForCanvas(): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_disposeForCanvas"
+    },
+    {
+        "desc": "class Texture{ _disposeForNative(): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_disposeForNative"
+    },
+    {
+        "desc": "class Texture{ static deleteWebGLTexture(texture: Texture): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "deleteWebGLTexture"
+    },
+    {
+        "desc": "class Texture{ static createBitmapData(url: string, callback: (code: number, bitmapData: any) => void): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "createBitmapData"
+    },
+    {
+        "desc": "class Texture{ static crossOrigin: string; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "crossOrigin"
+    },
+    {
+        "desc": "class Texture{ static _createBitmapDataForCanvasAndWebGl(url: string, callback: (code: number, bitmapData: any) => void): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_createBitmapDataForCanvasAndWebGl"
+    },
+    {
+        "desc": "class Texture{ static _onLoad(url: any, bitmapData: any): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_onLoad"
+    },
+    {
+        "desc": "class Texture{ static _onError(url: any, bitmapData: any): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_onError"
+    },
+    {
+        "desc": "class Texture{ static _createBitmapDataForNative(url: string, callback: (code: number, bitmapData: any) => void): void; }",
+        "category-name": "Texture",
+        "category-type": "class",
+        "name": "_createBitmapDataForNative"
+    },
+    {
+        "desc": "class RenderTexture{ renderContext: any; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "renderContext"
+    },
+    {
+        "desc": "class RenderTexture{ init(): void; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "init"
+    },
+    {
+        "desc": "class RenderTexture{ static identityRectangle: egret.Rectangle; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "identityRectangle"
+    },
+    {
+        "desc": "class RenderTexture{ setSize(width: number, height: number): void; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "setSize"
+    },
+    {
+        "desc": "class RenderTexture{ begin(): void; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "begin"
+    },
+    {
+        "desc": "class RenderTexture{ end(): void; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "end"
+    },
+    {
+        "desc": "class RenderTexture{ static create(): RenderTexture; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "create"
+    },
+    {
+        "desc": "class RenderTexture{ static release(value: RenderTexture): void; }",
+        "category-name": "RenderTexture",
+        "category-type": "class",
+        "name": "release"
+    }
+]
