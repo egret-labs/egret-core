@@ -205,7 +205,7 @@ module RES {
         private loadImage(url:string, data:any):void {
             var loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
-            loader.load(url);
+            loader.load($getVirtualUrl(url));
         }
 
         private getImageLoader():egret.ImageLoader {

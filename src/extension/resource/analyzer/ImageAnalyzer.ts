@@ -60,7 +60,7 @@ module RES {
             }
             var loader = this.getLoader();
             this.resItemDic[loader.$hashCode] = {item: resItem, func: compFunc, thisObject: thisObject};
-            loader.load(resItem.url);
+            loader.load($getVirtualUrl(resItem.url));
         }
 
         /**

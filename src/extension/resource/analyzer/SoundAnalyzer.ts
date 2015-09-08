@@ -61,7 +61,7 @@ module RES {
             sound.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
             this.resItemDic[sound.$hashCode] = {item: resItem, func: callBack, thisObject: thisObject};
-            sound.load(resItem.url);
+            sound.load($getVirtualUrl(resItem.url));
         }
 
         /**

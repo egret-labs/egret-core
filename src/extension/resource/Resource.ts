@@ -62,6 +62,27 @@ module RES {
     }
 
     /**
+     * 根据url返回实际加载url地址
+     * @param call
+     */
+    export function registerUrlConvert(call:(url:string)=>string):void {
+        instance.$registerVirtualCall(call);
+    }
+
+    /**
+     * @private
+     * @param url
+     * @returns {string}
+     */
+    export function $getVirtualUrl(url:string):string {
+        if (instance.$urlCall) {
+            return instance.$urlCall(url);
+        }
+
+        return url;
+    }
+
+    /**
      * @language en_US
      * Load configuration file and parse.
      * @param url Configuration file path (path resource.json).
@@ -474,6 +495,11 @@ module RES {
                 analyzer = this.analyzerDic[type] = new clazz();
             }
             return analyzer;
+        }
+
+        $urlCall:(url:string)=>string;
+        $registerVirtualCall(call:(url:string)=>string):void {
+            this.$urlCall = call;
         }
 
         /**
