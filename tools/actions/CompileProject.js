@@ -44,3 +44,4 @@ function GetJavaScriptFileNames(tsFiles, root, prefix) {
     return files;
 }
 module.exports = CompileProject;
+//# sourceMappingURL=CompileProject.js.map
