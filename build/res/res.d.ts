@@ -1,911 +1,6 @@
 declare module RES {
     /**
      * @language en_US
-     * Resource term. One of the resources arrays in resource.json.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 资源项。对应 resource.json 中 resources 数组中的一项。
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class ResourceItem {
-        /**
-         * @language en_US
-         * Animation configuration file. Currently supports Egret MovieClip file format.
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        static TYPE_ANIMATION: string;
-        /**
-         * @language en_US
-         * XML file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * XML 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_XML: string;
-        /**
-         * @language en_US
-         * Picture file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 图片文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_IMAGE: string;
-        /**
-         * @language en_US
-         * Binary file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 二进制文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_BIN: string;
-        /**
-         * @language en_US
-         * Text file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 文本文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_TEXT: string;
-        /**
-         * @language en_US
-         * JSON file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * JSON 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_JSON: string;
-        /**
-         * @language en_US
-         * SpriteSheet file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * SpriteSheet 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_SHEET: string;
-        /**
-         * @private
-         * @language en_US
-         * BitmapTextSpriteSheet file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @private
-         * @language zh_CN
-         * BitmapTextSpriteSheet 文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_FONT: string;
-        /**
-         * @language en_US
-         * Sound file.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 声音文件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static TYPE_SOUND: string;
-        /**
-         * @language en_US
-         * Constructor.
-         * @param name Name of resource term.
-         * @param url URL of resource term.
-         * @param type Type of resource term.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         * @param name 加载项名称。
-         * @param url 要加载的文件地址。
-         * @param type 加载项文件类型。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        constructor(name: string, url: string, type: string);
-        /**
-         * @language en_US
-         * Name of resource term.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 加载项名称。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        name: string;
-        /**
-         * @language en_US
-         * URL of resource term.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 要加载的文件地址。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        url: string;
-        /**
-         * @language en_US
-         * Type of resource term.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 加载项文件类型。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        type: string;
-        /**
-         * @language en_US
-         * Name of the resource term group.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 资源所属的组名。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        groupName: string;
-        /**
-         * @language en_US
-         * The raw data object to be referenced.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 被引用的原始数据对象。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        data: any;
-        private _loaded;
-        /**
-         * @language en_US
-         * Load complete flag.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 加载完成的标志。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        loaded: boolean;
-        /**
-         * @language en_US
-         * Turn into a string.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 转成字符串。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        toString(): string;
-    }
-}
-declare module RES {
-    /**
-     * @class RES.ResourceConfig
-     * @classdesc
-     * @private
-     */
-    class ResourceConfig {
-        constructor();
-        /**
-         * 根据组名获取组加载项列表
-         * @method RES.ResourceConfig#getGroupByName
-         * @param name {string} 组名
-         * @returns {Array<egret.ResourceItem>}
-         */
-        getGroupByName(name: string): Array<ResourceItem>;
-        /**
-         * 根据组名获取原始的组加载项列表
-         * @method RES.ResourceConfig#getRawGroupByName
-         * @param name {string} 组名
-         * @returns {Array<any>}
-         */
-        getRawGroupByName(name: string): Array<any>;
-        /**
-         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
-         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-         * @method RES.ResourceConfig#createGroup
-         * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
-         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
-         * @returns {boolean}
-         */
-        createGroup(name: string, keys: Array<string>, override?: boolean): boolean;
-        /**
-         * 一级键名字典
-         */
-        private keyMap;
-        /**
-         * 加载组字典
-         */
-        private groupDic;
-        /**
-         * 解析一个配置文件
-         * @method RES.ResourceConfig#parseConfig
-         * @param data {any} 配置文件数据
-         * @param folder {string} 加载项的路径前缀。
-         */
-        parseConfig(data: any, folder: string): void;
-        /**
-         * 添加一个二级键名到配置列表。
-         * @method RES.ResourceConfig#addSubkey
-         * @param subkey {string} 要添加的二级键名
-         * @param name {string} 二级键名所属的资源name属性
-         */
-        addSubkey(subkey: string, name: string): void;
-        /**
-         * 添加一个加载项数据到列表
-         */
-        private addItemToKeyMap(item);
-        /**
-         * 获取加载项的name属性
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        getName(key: string): string;
-        /**
-         * 获取加载项类型。
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        getType(key: string): string;
-        getRawResourceItem(key: string): any;
-        /**
-         * 获取加载项信息对象
-         * @method RES.ResourceConfig#getResourceItem
-         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
-         * @returns {egret.ResourceItem}
-         */
-        getResourceItem(key: string): ResourceItem;
-        /**
-         * 转换Object数据为ResourceItem对象
-         */
-        private parseResourceItem(data);
-    }
-}
-declare module RES {
-    /**
-     * @class RES.ResourceLoader
-     * @classdesc
-     * @extends egret.EventDispatcher
-     * @private
-     */
-    class ResourceLoader extends egret.EventDispatcher {
-        /**
-         * 构造函数
-         * @method RES.ResourceLoader#constructor
-         */
-        constructor();
-        /**
-         * 最大并发加载数
-         */
-        thread: number;
-        /**
-         * 正在加载的线程计数
-         */
-        private loadingCount;
-        /**
-         * 一项加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：callBack(resItem:ResourceItem):void;
-         * @member {Function} RES.ResourceLoader#callBack
-         */
-        callBack: Function;
-        /**
-         * RES单例的引用
-         * @member {any} RES.ResourceLoader#resInstance
-         */
-        resInstance: any;
-        /**
-         * 当前组加载的项总个数,key为groupName
-         */
-        private groupTotalDic;
-        /**
-         * 已经加载的项个数,key为groupName
-         */
-        private numLoadedDic;
-        /**
-         * 正在加载的组列表,key为groupName
-         */
-        private itemListDic;
-        /**
-         * 加载失败的组,key为groupName
-         */
-        private groupErrorDic;
-        private retryTimesDic;
-        maxRetryTimes: number;
-        private failedList;
-        /**
-         * 优先级队列,key为priority，value为groupName列表
-         */
-        private priorityQueue;
-        /**
-         * 检查指定的组是否正在加载中
-         * @method RES.ResourceLoader#isGroupInLoading
-         * @param groupName {string}
-         * @returns {boolean}
-         */
-        isGroupInLoading(groupName: string): boolean;
-        /**
-         * 开始加载一组文件
-         * @method RES.ResourceLoader#loadGroup
-         * @param list {egret.Array<ResourceItem>} 加载项列表
-         * @param groupName {string} 组名
-         * @param priority {number} 加载优先级
-         */
-        loadGroup(list: Array<ResourceItem>, groupName: string, priority?: number): void;
-        /**
-         * 延迟加载队列
-         */
-        private lazyLoadList;
-        /**
-         * 加载一个文件
-         * @method RES.ResourceLoader#loadItem
-         * @param resItem {egret.ResourceItem} 要加载的项
-         */
-        loadItem(resItem: ResourceItem): void;
-        /**
-         * 资源解析库字典类
-         */
-        private analyzerDic;
-        /**
-         * 加载下一项
-         */
-        private next();
-        /**
-         * 当前应该加载同优先级队列的第几列
-         */
-        private queueIndex;
-        /**
-         * 获取下一个待加载项
-         */
-        private getOneResourceItem();
-        /**
-         * 加载结束
-         */
-        private onItemComplete(resItem);
-        /**
-         * 从优先级队列中移除指定的组名
-         */
-        private removeGroupName(groupName);
-    }
-}
-declare module RES {
-    /**
-     * @language en_US
-     * The events of resource loading.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 资源加载事件。
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class ResourceEvent extends egret.Event {
-        /**
-         * @language en_US
-         * Failure event for a load item.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 一个加载项加载失败事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static ITEM_LOAD_ERROR: string;
-        /**
-         * @language en_US
-         * Configure file to load and parse the completion event. Note: if a configuration file is loaded, it will not be thrown out, and if you want to handle the configuration loading failure, monitor the CONFIG_LOAD_ERROR event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 配置文件加载并解析完成事件。注意：若有配置文件加载失败，将不会抛出此事件，若要处理配置加载失败，请同时监听 CONFIG_LOAD_ERROR 事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static CONFIG_COMPLETE: string;
-        /**
-         * @language en_US
-         * Configuration file failed to load.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 配置文件加载失败事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static CONFIG_LOAD_ERROR: string;
-        /**
-         * @language en_US
-         * Delay load group resource loading progress event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 延迟加载组资源加载进度事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static GROUP_PROGRESS: string;
-        /**
-         * @language en_US
-         * Delay load group resource to complete event. Note: if you have a resource item loading failure, the event will not be thrown, if you want to handle the group load failure, please listen to the GROUP_LOAD_ERROR event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 延迟加载组资源加载完成事件。注意：若组内有资源项加载失败，将不会抛出此事件，若要处理组加载失败，请同时监听 GROUP_LOAD_ERROR 事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static GROUP_COMPLETE: string;
-        /**
-         * @language en_US
-         * Delayed load group resource failed event.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 延迟加载组资源加载失败事件。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static GROUP_LOAD_ERROR: string;
-        /**
-         * @language en_US
-         * Creates an Event object to pass as a parameter to event listeners.
-         * @param type  The type of the event, accessible as Event.type.
-         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        /**
-         * @language zh_CN
-         * 创建一个作为参数传递给事件侦听器的 Event 对象。
-         * @param type  事件的类型，可以作为 Event.type 访问。
-         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @version Egret 2.4
-         * @platform Web,Native
-         * @private
-         */
-        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
-        /**
-         * @language en_US
-         * File number that has been loaded.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 已经加载的文件数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        itemsLoaded: number;
-        /**
-         * @language en_US
-         * Total file number to load.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 要加载的总文件数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        itemsTotal: number;
-        /**
-         * @language en_US
-         * Resource group name.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 资源组名。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        groupName: string;
-        /**
-         * @language en_US
-         * An item of information that is finished by the end of a load.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 一次加载项加载结束的项信息对象。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        resItem: ResourceItem;
-        /**
-         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @method RES.ResourceEvent.dispatchResourceEvent
-         * @param target {egret.IEventDispatcher}
-         * @param type {string}
-         * @param groupName {string}
-         * @param resItem {egret.ResourceItem}
-         * @param itemsLoaded {number}
-         * @param itemsTotal {number}
-         * @private
-         */
-        static dispatchResourceEvent(target: egret.IEventDispatcher, type: string, groupName?: string, resItem?: ResourceItem, itemsLoaded?: number, itemsTotal?: number): boolean;
-    }
-}
-declare module RES {
-    /**
-     * @classic
-     * @private
-     */
-    class AnalyzerBase extends egret.HashObject {
-        constructor();
-        private resourceConfig;
-        /**
-         * 添加一个二级键名到配置列表。
-         * @method RES.ResourceConfig#addSubkey
-         * @param subkey {string} 要添加的二级键名
-         * @param name {string} 二级键名所属的资源name属性
-         */
-        addSubkey(subkey: string, name: string): void;
-        /**
-         * 加载一个资源文件
-         * @param resItem 加载项信息
-         * @param compFunc 加载完成回调函数,示例:compFunc(resItem:ResourceItem):void;
-         * @param thisObject 加载完成回调函数的this引用
-         */
-        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
-        /**
-         * 同步方式获取解析完成的数据
-         * @param name 对应配置文件里的name属性。
-         */
-        getRes(name: string): any;
-        /**
-         * 销毁某个资源文件的二进制数据,返回是否删除成功。
-         * @param name 配置文件中加载项的name属性
-         */
-        destroyRes(name: string): boolean;
-        /**
-         * 读取一个字符串里第一个点之前的内容。
-         * @param name {string} 要读取的字符串
-         */
-        static getStringPrefix(name: string): string;
-        /**
-         * 读取一个字符串里第一个点之后的内容。
-         * @param name {string} 要读取的字符串
-         */
-        static getStringTail(name: string): string;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class BinAnalyzer extends AnalyzerBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 字节流数据缓存字典
-         */
-        fileDic: any;
-        /**
-         * 加载项字典
-         */
-        resItemDic: Array<any>;
-        /**
-         * @inheritDoc
-         */
-        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
-        _dataFormat: string;
-        /**
-         * Loader对象池
-         */
-        protected recycler: egret.HttpRequest[];
-        /**
-         * 获取一个URLLoader对象
-         */
-        private getRequest();
-        /**
-         * 一项加载结束
-         */
-        onLoadFinish(event: egret.Event): void;
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        analyzeData(resItem: ResourceItem, data: any): void;
-        /**
-         * @inheritDoc
-         */
-        getRes(name: string): any;
-        /**
-         * @inheritDoc
-         */
-        hasRes(name: string): boolean;
-        /**
-         * @inheritDoc
-         */
-        destroyRes(name: string): boolean;
-        protected onResourceDestroy(resource: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class ImageAnalyzer extends AnalyzerBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 字节流数据缓存字典
-         */
-        protected fileDic: any;
-        /**
-         * 加载项字典
-         */
-        protected resItemDic: Array<any>;
-        /**
-         * @inheritDoc
-         */
-        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
-        /**
-         * Loader对象池
-         */
-        protected recycler: egret.ImageLoader[];
-        /**
-         * 获取一个Loader对象
-         */
-        private getLoader();
-        /**
-         * 一项加载结束
-         */
-        protected onLoadFinish(event: egret.Event): void;
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        protected analyzeData(resItem: ResourceItem, texture: egret.Texture): void;
-        /**
-         * @inheritDoc
-         */
-        getRes(name: string): any;
-        /**
-         * @inheritDoc
-         */
-        hasRes(name: string): boolean;
-        /**
-         * @inheritDoc
-         */
-        destroyRes(name: string): boolean;
-        protected onResourceDestroy(texture: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class TextAnalyzer extends BinAnalyzer {
-        constructor();
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class JsonAnalyzer extends BinAnalyzer {
-        constructor();
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        analyzeData(resItem: ResourceItem, data: any): void;
-    }
-}
-declare module RES {
-    /**
-     * SpriteSheet解析器
-     * @private
-     */
-    class SheetAnalyzer extends BinAnalyzer {
-        constructor();
-        getRes(name: string): any;
-        /**
-         * 一项加载结束
-         */
-        onLoadFinish(event: egret.Event): void;
-        sheetMap: any;
-        private textureMap;
-        /**
-         * 解析并缓存加载成功的配置文件
-         */
-        analyzeConfig(resItem: ResourceItem, data: string): string;
-        /**
-         * 解析并缓存加载成功的位图数据
-         */
-        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
-        /**
-         * 获取相对位置
-         */
-        getRelativePath(url: string, file: string): string;
-        private parseSpriteSheet(texture, data, name);
-        destroyRes(name: string): boolean;
-        /**
-         * ImageLoader对象池
-         */
-        private recyclerIamge;
-        private loadImage(url, data);
-        private getImageLoader();
-        protected onResourceDestroy(texture: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class FontAnalyzer extends SheetAnalyzer {
-        constructor();
-        analyzeConfig(resItem: ResourceItem, data: string): string;
-        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
-        private getTexturePath(url, fntText);
-        protected onResourceDestroy(font: egret.BitmapFont): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class SoundAnalyzer extends AnalyzerBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 字节流数据缓存字典
-         */
-        protected soundDic: any;
-        /**
-         * 加载项字典
-         */
-        protected resItemDic: Array<any>;
-        /**
-         * @inheritDoc
-         */
-        loadFile(resItem: ResourceItem, callBack: Function, thisObject: any): void;
-        /**
-         * 一项加载结束
-         */
-        protected onLoadFinish(event: egret.Event): void;
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        protected analyzeData(resItem: ResourceItem, data: egret.Sound): void;
-        /**
-         * @inheritDoc
-         */
-        getRes(name: string): any;
-        /**
-         * @inheritDoc
-         */
-        hasRes(name: string): boolean;
-        /**
-         * @inheritDoc
-         */
-        destroyRes(name: string): boolean;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class XMLAnalyzer extends BinAnalyzer {
-        constructor();
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        analyzeData(resItem: ResourceItem, data: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @language en_US
      * Conduct mapping injection with class definition as the value.
      * @param type Injection type.
      * @param analyzerClass Injection type classes need to be resolved.
@@ -920,12 +15,7 @@ declare module RES {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    function registerAnalyzer(type: string, analyzerClass: any): void;
-    /**
-     * 根据url返回实际加载url地址
-     * @param call
-     */
-    function registerUrlConvert(call: (url: string) => string): void;
+    function registerAnalzer(type: string, analyzerClass: any): void;
     /**
      * @language en_US
      * Load configuration file and parse.
@@ -1270,6 +360,103 @@ declare module RES {
 }
 declare module RES {
     /**
+     * @classic
+     * @private
+     */
+    class AnalyzerBase extends egret.HashObject {
+        constructor();
+        private resourceConfig;
+        /**
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
+         */
+        addSubkey(subkey: string, name: string): void;
+        /**
+         * 加载一个资源文件
+         * @param resItem 加载项信息
+         * @param compFunc 加载完成回调函数,示例:compFunc(resItem:ResourceItem):void;
+         * @param thisObject 加载完成回调函数的this引用
+         */
+        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
+        /**
+         * 同步方式获取解析完成的数据
+         * @param name 对应配置文件里的name属性。
+         */
+        getRes(name: string): any;
+        /**
+         * 销毁某个资源文件的二进制数据,返回是否删除成功。
+         * @param name 配置文件中加载项的name属性
+         */
+        destroyRes(name: string): boolean;
+        /**
+         * 读取一个字符串里第一个点之前的内容。
+         * @param name {string} 要读取的字符串
+         */
+        static getStringPrefix(name: string): string;
+        /**
+         * 读取一个字符串里第一个点之后的内容。
+         * @param name {string} 要读取的字符串
+         */
+        static getStringTail(name: string): string;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class BinAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        fileDic: any;
+        /**
+         * 加载项字典
+         */
+        resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
+        _dataFormat: string;
+        /**
+         * Loader对象池
+         */
+        protected recycler: egret.HttpRequest[];
+        /**
+         * 获取一个URLLoader对象
+         */
+        private getRequest();
+        /**
+         * 一项加载结束
+         */
+        onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        analyzeData(resItem: ResourceItem, data: any): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
+        protected onResourceDestroy(resource: any): void;
+    }
+}
+declare module RES {
+    /**
      * SpriteSheet解析器
      * @private
      */
@@ -1300,6 +487,814 @@ declare module RES {
         private recyclerIamge;
         private loadImage(url, data);
         private getImageLoader();
+    }
+}
+declare module RES {
+    /**
+     * SpriteSheet解析器
+     * @private
+     */
+    class SheetAnalyzer extends BinAnalyzer {
+        constructor();
+        getRes(name: string): any;
+        /**
+         * 一项加载结束
+         */
+        onLoadFinish(event: egret.Event): void;
+        sheetMap: any;
+        private textureMap;
+        /**
+         * 解析并缓存加载成功的配置文件
+         */
+        analyzeConfig(resItem: ResourceItem, data: string): string;
+        /**
+         * 解析并缓存加载成功的位图数据
+         */
+        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
+        /**
+         * 获取相对位置
+         */
+        getRelativePath(url: string, file: string): string;
+        private parseSpriteSheet(texture, data, name);
+        destroyRes(name: string): boolean;
+        /**
+         * ImageLoader对象池
+         */
+        private recyclerIamge;
+        private loadImage(url, data);
+        private getImageLoader();
+        protected onResourceDestroy(texture: any): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class FontAnalyzer extends SheetAnalyzer {
+        constructor();
+        analyzeConfig(resItem: ResourceItem, data: string): string;
+        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
+        private getTexturePath(url, fntText);
+        protected onResourceDestroy(font: egret.BitmapFont): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class ImageAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        protected fileDic: any;
+        /**
+         * 加载项字典
+         */
+        protected resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
+        /**
+         * Loader对象池
+         */
+        protected recycler: egret.ImageLoader[];
+        /**
+         * 获取一个Loader对象
+         */
+        private getLoader();
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        protected analyzeData(resItem: ResourceItem, texture: egret.Texture): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
+        protected onResourceDestroy(texture: any): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class JsonAnalyzer extends BinAnalyzer {
+        constructor();
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        analyzeData(resItem: ResourceItem, data: any): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class SoundAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        protected soundDic: any;
+        /**
+         * 加载项字典
+         */
+        protected resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, callBack: Function, thisObject: any): void;
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        protected analyzeData(resItem: ResourceItem, data: egret.Sound): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class TextAnalyzer extends BinAnalyzer {
+        constructor();
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class XMLAnalyzer extends BinAnalyzer {
+        constructor();
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        analyzeData(resItem: ResourceItem, data: any): void;
+    }
+}
+declare module RES {
+    /**
+     * @class RES.ResourceConfig
+     * @classdesc
+     * @private
+     */
+    class ResourceConfig {
+        constructor();
+        /**
+         * 根据组名获取组加载项列表
+         * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+         * @returns {Array<egret.ResourceItem>}
+         */
+        getGroupByName(name: string): Array<ResourceItem>;
+        /**
+         * 根据组名获取原始的组加载项列表
+         * @method RES.ResourceConfig#getRawGroupByName
+         * @param name {string} 组名
+         * @returns {Array<any>}
+         */
+        getRawGroupByName(name: string): Array<any>;
+        /**
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @method RES.ResourceConfig#createGroup
+         * @param name {string} 要创建的加载资源组的组名
+         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
+         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
+         * @returns {boolean}
+         */
+        createGroup(name: string, keys: Array<string>, override?: boolean): boolean;
+        /**
+         * 一级键名字典
+         */
+        private keyMap;
+        /**
+         * 加载组字典
+         */
+        private groupDic;
+        /**
+         * 解析一个配置文件
+         * @method RES.ResourceConfig#parseConfig
+         * @param data {any} 配置文件数据
+         * @param folder {string} 加载项的路径前缀。
+         */
+        parseConfig(data: any, folder: string): void;
+        /**
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
+         */
+        addSubkey(subkey: string, name: string): void;
+        /**
+         * 添加一个加载项数据到列表
+         */
+        private addItemToKeyMap(item);
+        /**
+         * 获取加载项的name属性
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        getName(key: string): string;
+        /**
+         * 获取加载项类型。
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        getType(key: string): string;
+        getRawResourceItem(key: string): any;
+        /**
+         * 获取加载项信息对象
+         * @method RES.ResourceConfig#getResourceItem
+         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
+         * @returns {egret.ResourceItem}
+         */
+        getResourceItem(key: string): ResourceItem;
+        /**
+         * 转换Object数据为ResourceItem对象
+         */
+        private parseResourceItem(data);
+    }
+}
+declare module RES {
+    /**
+     * @language en_US
+     * Resource term. One of the resources arrays in resource.json.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 资源项。对应 resource.json 中 resources 数组中的一项。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class ResourceItem {
+        /**
+         * @language en_US
+         * Animation configuration file. Currently supports Egret MovieClip file format.
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
+         * @version Lark 1.0
+         * @platform Web,Native
+         */
+        static TYPE_ANIMATION: string;
+        /**
+         * @language en_US
+         * XML file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * XML 文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_XML: string;
+        /**
+         * @language en_US
+         * Picture file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 图片文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_IMAGE: string;
+        /**
+         * @language en_US
+         * Binary file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 二进制文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_BIN: string;
+        /**
+         * @language en_US
+         * Text file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_TEXT: string;
+        /**
+         * @language en_US
+         * JSON file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * JSON 文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_JSON: string;
+        /**
+         * @language en_US
+         * SpriteSheet file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * SpriteSheet 文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_SHEET: string;
+        /**
+         * @private
+         * @language en_US
+         * BitmapTextSpriteSheet file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @private
+         * @language zh_CN
+         * BitmapTextSpriteSheet 文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_FONT: string;
+        /**
+         * @language en_US
+         * Sound file.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 声音文件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static TYPE_SOUND: string;
+        /**
+         * @language en_US
+         * Constructor.
+         * @param name Name of resource term.
+         * @param url URL of resource term.
+         * @param type Type of resource term.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 构造函数。
+         * @param name 加载项名称。
+         * @param url 要加载的文件地址。
+         * @param type 加载项文件类型。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        constructor(name: string, url: string, type: string);
+        /**
+         * @language en_US
+         * Name of resource term.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 加载项名称。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        name: string;
+        /**
+         * @language en_US
+         * URL of resource term.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 要加载的文件地址。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        url: string;
+        /**
+         * @language en_US
+         * Type of resource term.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 加载项文件类型。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        type: string;
+        /**
+         * @language en_US
+         * Name of the resource term group.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 资源所属的组名。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        groupName: string;
+        /**
+         * @language en_US
+         * The raw data object to be referenced.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 被引用的原始数据对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        data: any;
+        private _loaded;
+        /**
+         * @language en_US
+         * Load complete flag.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 加载完成的标志。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        loaded: boolean;
+        /**
+         * @language en_US
+         * Turn into a string.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 转成字符串。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        toString(): string;
+    }
+}
+declare module RES {
+    /**
+     * @class RES.ResourceLoader
+     * @classdesc
+     * @extends egret.EventDispatcher
+     * @private
+     */
+    class ResourceLoader extends egret.EventDispatcher {
+        /**
+         * 构造函数
+         * @method RES.ResourceLoader#constructor
+         */
+        constructor();
+        /**
+         * 最大并发加载数
+         */
+        thread: number;
+        /**
+         * 正在加载的线程计数
+         */
+        private loadingCount;
+        /**
+         * 一项加载结束回调函数。无论加载成功或者出错都将执行回调函数。示例：callBack(resItem:ResourceItem):void;
+         * @member {Function} RES.ResourceLoader#callBack
+         */
+        callBack: Function;
+        /**
+         * RES单例的引用
+         * @member {any} RES.ResourceLoader#resInstance
+         */
+        resInstance: any;
+        /**
+         * 当前组加载的项总个数,key为groupName
+         */
+        private groupTotalDic;
+        /**
+         * 已经加载的项个数,key为groupName
+         */
+        private numLoadedDic;
+        /**
+         * 正在加载的组列表,key为groupName
+         */
+        private itemListDic;
+        /**
+         * 加载失败的组,key为groupName
+         */
+        private groupErrorDic;
+        private retryTimesDic;
+        maxRetryTimes: number;
+        private failedList;
+        /**
+         * 优先级队列,key为priority，value为groupName列表
+         */
+        private priorityQueue;
+        /**
+         * 检查指定的组是否正在加载中
+         * @method RES.ResourceLoader#isGroupInLoading
+         * @param groupName {string}
+         * @returns {boolean}
+         */
+        isGroupInLoading(groupName: string): boolean;
+        /**
+         * 开始加载一组文件
+         * @method RES.ResourceLoader#loadGroup
+         * @param list {egret.Array<ResourceItem>} 加载项列表
+         * @param groupName {string} 组名
+         * @param priority {number} 加载优先级
+         */
+        loadGroup(list: Array<ResourceItem>, groupName: string, priority?: number): void;
+        /**
+         * 延迟加载队列
+         */
+        private lazyLoadList;
+        /**
+         * 加载一个文件
+         * @method RES.ResourceLoader#loadItem
+         * @param resItem {egret.ResourceItem} 要加载的项
+         */
+        loadItem(resItem: ResourceItem): void;
+        /**
+         * 资源解析库字典类
+         */
+        private analyzerDic;
+        /**
+         * 加载下一项
+         */
+        private next();
+        /**
+         * 当前应该加载同优先级队列的第几列
+         */
+        private queueIndex;
+        /**
+         * 获取下一个待加载项
+         */
+        private getOneResourceItem();
+        /**
+         * 加载结束
+         */
+        private onItemComplete(resItem);
+        /**
+         * 从优先级队列中移除指定的组名
+         */
+        private removeGroupName(groupName);
+    }
+}
+declare module RES {
+    /**
+     * @language en_US
+     * The events of resource loading.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 资源加载事件。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class ResourceEvent extends egret.Event {
+        /**
+         * @language en_US
+         * Failure event for a load item.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 一个加载项加载失败事件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static ITEM_LOAD_ERROR: string;
+        /**
+         * @language en_US
+         * Configure file to load and parse the completion event. Note: if a configuration file is loaded, it will not be thrown out, and if you want to handle the configuration loading failure, monitor the CONFIG_LOAD_ERROR event.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 配置文件加载并解析完成事件。注意：若有配置文件加载失败，将不会抛出此事件，若要处理配置加载失败，请同时监听 CONFIG_LOAD_ERROR 事件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static CONFIG_COMPLETE: string;
+        /**
+         * @language en_US
+         * Configuration file failed to load.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 配置文件加载失败事件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static CONFIG_LOAD_ERROR: string;
+        /**
+         * @language en_US
+         * Delay load group resource loading progress event.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 延迟加载组资源加载进度事件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static GROUP_PROGRESS: string;
+        /**
+         * @language en_US
+         * Delay load group resource to complete event. Note: if you have a resource item loading failure, the event will not be thrown, if you want to handle the group load failure, please listen to the GROUP_LOAD_ERROR event.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 延迟加载组资源加载完成事件。注意：若组内有资源项加载失败，将不会抛出此事件，若要处理组加载失败，请同时监听 GROUP_LOAD_ERROR 事件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static GROUP_COMPLETE: string;
+        /**
+         * @language en_US
+         * Delayed load group resource failed event.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 延迟加载组资源加载失败事件。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static GROUP_LOAD_ERROR: string;
+        /**
+         * @language en_US
+         * Creates an Event object to pass as a parameter to event listeners.
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        /**
+         * @language zh_CN
+         * 创建一个作为参数传递给事件侦听器的 Event 对象。
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @private
+         */
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
+        /**
+         * @language en_US
+         * File number that has been loaded.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 已经加载的文件数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        itemsLoaded: number;
+        /**
+         * @language en_US
+         * Total file number to load.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 要加载的总文件数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        itemsTotal: number;
+        /**
+         * @language en_US
+         * Resource group name.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 资源组名。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        groupName: string;
+        /**
+         * @language en_US
+         * An item of information that is finished by the end of a load.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 一次加载项加载结束的项信息对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        resItem: ResourceItem;
+        /**
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @method RES.ResourceEvent.dispatchResourceEvent
+         * @param target {egret.IEventDispatcher}
+         * @param type {string}
+         * @param groupName {string}
+         * @param resItem {egret.ResourceItem}
+         * @param itemsLoaded {number}
+         * @param itemsTotal {number}
+         * @private
+         */
+        static dispatchResourceEvent(target: egret.IEventDispatcher, type: string, groupName?: string, resItem?: ResourceItem, itemsLoaded?: number, itemsTotal?: number): boolean;
     }
 }
 declare module egret {

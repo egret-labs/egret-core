@@ -21,6 +21,10 @@ src/extension/version/*.js
 src/extension/version/**/*.js
 src/extension/eui/**/*.js
 tools/nodejs/buildTS.local
+
+tools/lib/typescript/src/*.js
+
+
 *.local
 *.map
 .idea
