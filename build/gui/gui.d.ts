@@ -6974,7 +6974,7 @@ declare module egret.gui {
          *
          * @param tw
          */
-        _onTweenFinished(tw: ScrollerTween): void;
+        private onTweenFinished(tw);
         /**
          * @private
          *
@@ -7549,7 +7549,6 @@ declare module egret.gui {
      * @classdesc
      * 素材适配器接口。
      * 若项目需要自定义UIAsset.source的解析规则，需要实现这个接口，
-     * 然后调用Injector.mapClass("egret.gui.IAssetAdapter",YourAssetAdapter)注入到框架即可。
      */
     interface IAssetAdapter {
         /**
@@ -7994,7 +7993,6 @@ declare module egret.gui {
      * @classdesc
      * 皮肤适配器接口。
      * 若项目需要自定义可设置外观组件的skinName属性的解析规则，需要实现这个接口，
-     * 然后调用Injector.mapClass("egret.gui.ISkinAdapter",YourSkinAdapter)注入到框架即可。
      */
     interface ISkinAdapter {
         /**
@@ -12058,10 +12056,7 @@ declare module egret.gui {
      * @class egret.gui.IPopUpManager
      * @interface
      * @classdesc
-     * 窗口弹出管理器接口。若项目需要自定义弹出框管理器，请实现此接口，
-     * 并在项目初始化前调用Injector.mapClass("egret.gui.IPopUpManager",YourPopUpManager)，
-     * 注入自定义的弹出框管理器类。
-     * @extends egret.IEventDispatcher
+     * 窗口弹出管理器接口。若项目需要自定义弹出框管理器，请实现此接口
      */
     interface IPopUpManager extends IEventDispatcher {
         /**
@@ -12112,9 +12107,7 @@ declare module egret.gui {
      * @class egret.gui.PopUpManager
      * @classdesc
      * 窗口弹出管理器<p/>
-     * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
-     * 并在项目初始化前调用Injector.mapClass("egret.gui.IPopUpManager",YourPopUpManager)，
-     * 注入自定义的弹出框管理器类。
+     * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口
      */
     class PopUpManager {
         /**

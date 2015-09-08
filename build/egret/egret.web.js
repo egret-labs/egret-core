@@ -2543,7 +2543,9 @@ var egret;
                 if (!surface) {
                     return;
                 }
-                surface.width = surface.height = 1;
+                if (!isQQBrowser) {
+                    surface.width = surface.height = 1;
+                }
                 surfacePool.push(surface);
             };
             /**

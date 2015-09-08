@@ -2691,7 +2691,7 @@ var egret;
          *
          * @param tw
          */
-        p._onTweenFinished = function (tw) {
+        p.onTweenFinished = function (tw) {
             if (tw == this._ScrV_Props_._vScrollTween)
                 this._ScrV_Props_._isVTweenPlaying = false;
             if (tw == this._ScrV_Props_._hScrollTween)
@@ -2753,7 +2753,7 @@ var egret;
             }
             this._ScrV_Props_._isVTweenPlaying = true;
             this._ScrV_Props_._vScrollTween = vtween;
-            vtween.call(this._onTweenFinished, this, [vtween]);
+            vtween.call(this.onTweenFinished, this, [vtween]);
             if (!this._ScrV_Props_._isHTweenPlaying)
                 this._onScrollStarted();
         };
@@ -2790,7 +2790,7 @@ var egret;
             }
             this._ScrV_Props_._isHTweenPlaying = true;
             this._ScrV_Props_._hScrollTween = htween;
-            htween.call(this._onTweenFinished, this, [htween]);
+            htween.call(this.onTweenFinished, this, [htween]);
             if (!this._ScrV_Props_._isVTweenPlaying)
                 this._onScrollStarted();
         };

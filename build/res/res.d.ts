@@ -922,6 +922,11 @@ declare module RES {
      */
     function registerAnalyzer(type: string, analyzerClass: any): void;
     /**
+     * 根据url返回实际加载url地址
+     * @param call
+     */
+    function registerUrlConvert(call: (url: string) => string): void;
+    /**
      * @language en_US
      * Load configuration file and parse.
      * @param url Configuration file path (path resource.json).

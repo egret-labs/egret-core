@@ -1247,7 +1247,7 @@ declare module egret {
          *
          * @param tw
          */
-        _onTweenFinished(tw: ScrollTween): void;
+        private onTweenFinished(tw);
         /**
          * @private
          *

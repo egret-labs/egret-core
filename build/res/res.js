@@ -1186,7 +1186,7 @@ var RES;
             }
             var request = this.getRequest();
             this.resItemDic[request.hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
-            request.open(resItem.url);
+            request.open(RES.$getVirtualUrl(resItem.url));
             request.send();
         };
         /**
@@ -1323,7 +1323,7 @@ var RES;
             }
             var loader = this.getLoader();
             this.resItemDic[loader.$hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
-            loader.load(resItem.url);
+            loader.load(RES.$getVirtualUrl(resItem.url));
         };
         /**
          * 获取一个Loader对象
@@ -1701,7 +1701,7 @@ var RES;
         p.loadImage = function (url, data) {
             var loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
-            loader.load(url);
+            loader.load(RES.$getVirtualUrl(url));
         };
         p.getImageLoader = function () {
             var loader = this.recyclerIamge.pop();
@@ -1881,7 +1881,7 @@ var RES;
             sound.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
             this.resItemDic[sound.$hashCode] = { item: resItem, func: callBack, thisObject: thisObject };
-            sound.load(resItem.url);
+            sound.load(RES.$getVirtualUrl(resItem.url));
         };
         /**
          * 一项加载结束
@@ -2060,6 +2060,26 @@ var RES;
         instance.registerAnalyzer(type, analyzerClass);
     }
     RES.registerAnalyzer = registerAnalyzer;
+    /**
+     * 根据url返回实际加载url地址
+     * @param call
+     */
+    function registerUrlConvert(call) {
+        instance.$registerVirtualCall(call);
+    }
+    RES.registerUrlConvert = registerUrlConvert;
+    /**
+     * @private
+     * @param url
+     * @returns {string}
+     */
+    function $getVirtualUrl(url) {
+        if (instance.$urlCall) {
+            return instance.$urlCall(url);
+        }
+        return url;
+    }
+    RES.$getVirtualUrl = $getVirtualUrl;
     /**
      * @language en_US
      * Load configuration file and parse.
@@ -2507,6 +2527,9 @@ var RES;
                 analyzer = this.analyzerDic[type] = new clazz();
             }
             return analyzer;
+        };
+        p.$registerVirtualCall = function (call) {
+            this.$urlCall = call;
         };
         /**
          * 注册一个自定义文件类型解析器
@@ -3126,7 +3149,7 @@ var RES;
         p.loadImage = function (url, data) {
             var loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
-            loader.load(url);
+            loader.load(RES.$getVirtualUrl(url));
         };
         p.getImageLoader = function () {
             var loader = this.recyclerIamge.pop();
