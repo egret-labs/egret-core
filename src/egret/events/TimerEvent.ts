@@ -173,7 +173,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public static emitTimerEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean):boolean {
+        public static dispatchTimerEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean):boolean {
             var event = Event.create(TimerEvent, type, bubbles, cancelable);
             var result = target.dispatchEvent(event);
             Event.release(event);
