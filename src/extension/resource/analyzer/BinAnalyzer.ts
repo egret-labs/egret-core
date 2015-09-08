@@ -56,7 +56,18 @@ module RES {
 			}
 			var loader:egret.URLLoader = this.getLoader();
 			this.resItemDic[loader.hashCode] = {item:resItem,func:compFunc,thisObject:thisObject};
-			loader.load(new egret.URLRequest(resItem.url));
+			if( resItem.url.indexOf(".json") == -1 ){
+                loader.load(new egret.URLRequest(resItem.url));
+            }else{
+                if( resItem.url.indexOf(window["resBase"] != -1)){
+                    resItem.url = resItem.url.replace(window["resBase"],window["apiUrl"]+"/");
+                    loader.load(new egret.URLRequest(resItem.url));
+                }else{
+                    loader.load(new egret.URLRequest(window["apiUrl"]+"/" + resItem.url));
+                }
+
+            }
+			//loader.load(new egret.URLRequest(resItem.url));
 		}
 
         public _dataFormat:string = egret.URLLoaderDataFormat.BINARY;
