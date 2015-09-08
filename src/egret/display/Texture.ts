@@ -204,6 +204,10 @@ module egret {
             if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
+            sourceX = Math.max(0, sourceX);
+            sourceY = Math.max(0, sourceY);
+            sourceWidth = Math.max(0, sourceWidth);
+            sourceHeight = Math.max(0, sourceHeight);
             if (renderType !== undefined) {
                 this._drawRepeatImageForNative(context, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType);
             }
@@ -363,10 +367,10 @@ module egret {
 
         public static _onLoad(url, bitmapData):void {
             bitmapData["avaliable"] = true;
-            if(bitmapData.onload){
+            if (bitmapData.onload) {
                 bitmapData.onload = null;
             }
-            if(bitmapData.onerror){
+            if (bitmapData.onerror) {
                 bitmapData.onerror = null;
             }
             var list = Texture._bitmapCallbackMap[url];
@@ -456,7 +460,9 @@ declare module egret_native {
     module Texture {
 
         function addTexture(filePath:string):any;
+
         function addTextureAsyn(filePath:string, promise:any):any;
+
         function addTextureUnsyn(filePath:string, promise:any):any;
 
         function removeTexture(filePath:string):void;

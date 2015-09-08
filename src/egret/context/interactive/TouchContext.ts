@@ -41,6 +41,11 @@ module egret {
         private touchDownTarget:any = {};
         public touchingIdentifiers:Array<any> = [];
 
+        /**
+         * @private
+         */
+        $rotation:number = 0;
+
         public constructor() {
             super();
         }

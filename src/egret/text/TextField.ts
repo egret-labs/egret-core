@@ -29,6 +29,7 @@
 
 
 module egret {
+    var SplitRegex = new RegExp("(?=[\\u00BF-\\u1FFF\\u2C00-\\uD7FF]|\\b|\\s)(?![。，！、》…）)}”】\\.\\,\\!\\?\\]\\:])");
     /**
      * @class egret.TextField
      * @classdesc
@@ -880,6 +881,7 @@ module egret {
          * @member {number} egret.TextField#textWidth
          */
         public get textWidth():number {
+            this._getLinesArr();
             return this._TF_Props_._textMaxWidth;
         }
 
@@ -888,6 +890,7 @@ module egret {
          * @member {number} egret.TextField#textHeight
          */
         public get textHeight():number {
+            this._getLinesArr();
             return TextFieldUtils._getTextHeight(this);
         }
 
@@ -1013,7 +1016,7 @@ module egret {
                                 var ww:number = 0;
                                 var word:string = textArr[j];
                                 if (this._TF_Props_._wordWrap) {
-                                    var words:Array<string> = word.split(/\b/);
+                                    var words:Array<string> = word.split(SplitRegex);
                                 }
                                 else {
                                     words = word.match(/./g);

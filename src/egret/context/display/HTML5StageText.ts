@@ -319,8 +319,11 @@ module egret {
 
                 self.initValue(stageDelegateDiv);
 
-                stageDelegateDiv.style.width = "0px";
-                stageDelegateDiv.style.height = "0px";
+                var canvasDiv = document.getElementById(egret.StageDelegate.canvas_div_name);
+                stageDelegateDiv.style.left = canvasDiv.style.left;
+                stageDelegateDiv.style.top = canvasDiv.style.top;
+                stageDelegateDiv.style[egret.Browser.getInstance().getTrans("transform")] = canvasDiv.style[egret.Browser.getInstance().getTrans("transform")];
+
 
                 self._inputDIV = egret.Browser.getInstance().$new("div");
                 self.initValue(self._inputDIV);
