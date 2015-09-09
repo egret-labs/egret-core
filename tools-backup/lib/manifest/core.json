@@ -43,6 +43,7 @@
         "egret/events/GeolocationEvent.ts",
         "egret/events/MotionEvent.ts",
         "egret/events/OrientationEvent.ts",
+        "egret/events/StageOrientationEvent.ts",
         "egret/display/BlendMode.ts",
         "egret/display/DisplayObject.ts",
         "egret/display/Bitmap.ts",

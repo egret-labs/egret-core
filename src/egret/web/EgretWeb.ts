@@ -172,4 +172,17 @@ module egret.web {
 
     egret.runEgret = runEgret;
     egret.updateAllScreens = updateAllScreens;
+
+    var resizeTimer:number = NaN;
+    function doResize() {
+        resizeTimer = NaN;
+
+        egret.updateAllScreens();
+    }
+
+    window.addEventListener("resize", function () {
+        if (isNaN(resizeTimer)) {
+            resizeTimer = window.setTimeout(doResize, 300);
+        }
+    });
 }
