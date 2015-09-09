@@ -105,4 +105,5 @@ function exec(command, params, callback) {
     cdvProcess.on("error", function (ee) { return console.log("error when build", ee); });
 }
 module.exports = NativeProject;
-//# sourceMappingURL=NativeProject.js.map
+
+//# sourceMappingURL=../actions/NativeProject.js.map

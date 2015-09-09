@@ -194,4 +194,5 @@ var CompileOptions = (function () {
     return CompileOptions;
 })();
 module.exports = CompileOptions;
-//# sourceMappingURL=CompileOptions.js.map
+
+//# sourceMappingURL=../parser/CompileOptions.js.map

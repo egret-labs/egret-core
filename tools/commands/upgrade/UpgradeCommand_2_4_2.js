@@ -11,7 +11,7 @@ var AutoLogger = {
     _api: null,
     _item: null,
     _logContent: {
-        title: 'API Math.abs discarded,solution:http//www.baidu.com/Math.abs'
+        title: 'API Math.abs discarded,solution:http//www.baidu.com/Math.abs',
     },
     _categoryQuickLST: {},
     init: function () {
@@ -142,4 +142,5 @@ var UpgradeCommand_2_4_2 = (function () {
     return UpgradeCommand_2_4_2;
 })();
 module.exports = UpgradeCommand_2_4_2;
-//# sourceMappingURL=UpgradeCommand_2_4_2.js.map
+
+//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_2_4_2.js.map

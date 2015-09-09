@@ -207,4 +207,5 @@ var EgretProperties = (function () {
 })();
 var config = config || new EgretProperties();
 module.exports = config;
-//# sourceMappingURL=EgretProperties.js.map
+
+//# sourceMappingURL=../parser/EgretProperties.js.map

@@ -31,3 +31,5 @@ var Clean = (function () {
     return Clean;
 })();
 module.exports = Clean;
+
+//# sourceMappingURL=../commands/clean.js.map

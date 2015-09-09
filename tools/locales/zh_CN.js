@@ -193,3 +193,5 @@ var egret;
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
 })(egret || (egret = {}));
+
+//# sourceMappingURL=../locales/zh_CN.js.map

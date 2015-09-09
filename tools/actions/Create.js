@@ -67,4 +67,5 @@ function updateEgretProperties(modules) {
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }
 module.exports = Create;
-//# sourceMappingURL=Create.js.map
+
+//# sourceMappingURL=../actions/Create.js.map
