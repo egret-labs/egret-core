@@ -507,8 +507,12 @@ module egret {
         /**
          * @private
          */
-        $setTouchChildren(value:boolean):void {
+        $setTouchChildren(value:boolean):boolean {
+            if (this.$touchChildren == value) {
+                return false;
+            }
             this.$touchChildren = value;
+            return true;
         }
 
         /**

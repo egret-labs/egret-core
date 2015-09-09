@@ -118,7 +118,7 @@ module eui {
          * 
          * @param value 
          */
-        $setDataProvider(value:ICollection){
+        $setDataProvider(value:ICollection):boolean{
             var dp = this.$dataProvider;
             if(dp&&dp instanceof eui.ViewStack){
                 dp.removeEventListener(PropertyEvent.PROPERTY_CHANGE,this.onViewStackIndexChange,this);
@@ -129,7 +129,7 @@ module eui {
                 value.addEventListener(PropertyEvent.PROPERTY_CHANGE,this.onViewStackIndexChange,this);
                 this.addEventListener(egret.Event.CHANGE,this.onIndexChanged,this);
             }
-            super.$setDataProvider(value);
+            return super.$setDataProvider(value);
         }
 
         /**

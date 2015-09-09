@@ -344,24 +344,28 @@ module egret.gui {
          * @private
          * @inheritDoc
          */
-        public $setWidth(value:number):void {
+        $setWidth(value:number):boolean {
             if (this.$getExplicitWidth() == value) {
-                return;
+                return false;
             }
 
-            super.$setWidth(value);
+            var result:boolean = super.$setWidth(value);
             this._updateContentPosition();
+
+            return result;
         }
 
         /**
          * @private
          * @inheritDoc
          */
-        public $setHeight(value:number):void {
+        $setHeight(value:number):boolean {
             if (this.$getExplicitHeight() == value)
-                return;
-            super.$setHeight(value);
+                return false;
+            var result:boolean = super.$setHeight(value);
             this._updateContentPosition();
+
+            return result;
         }
 
         /**

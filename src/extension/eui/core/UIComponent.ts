@@ -1164,17 +1164,19 @@ module eui.sys {
          *
          * @param value
          */
-        $setWidth(value:number) {
+        $setWidth(value:number):boolean {
             value = +value;
             var values = this.$UIComponent;
             if (value < 0 || values[UIKeys.width] === value && values[UIKeys.explicitWidth] === value)
-                return;
+                return false;
             values[UIKeys.explicitWidth] = value;
             if (isNaN(value))
                 this.invalidateSize();
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentLayout();
+
+            return true;
         }
 
         /**
@@ -1200,17 +1202,19 @@ module eui.sys {
          *
          * @param value
          */
-        $setHeight(value:number) {
+        $setHeight(value:number):boolean {
             value = +value;
             var values = this.$UIComponent;
             if (value < 0 || values[UIKeys.height] === value && values[UIKeys.explicitHeight] === value)
-                return;
+                return false;
             values[UIKeys.explicitHeight] = value;
             if (isNaN(value))
                 this.invalidateSize();
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentLayout();
+
+            return true;
         }
 
         /**

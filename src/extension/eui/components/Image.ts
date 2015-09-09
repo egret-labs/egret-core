@@ -163,9 +163,11 @@ module eui {
         }
 
         //if egret
-        $setFillMode(value:string):void {
-            super.$setFillMode(value);
+        $setFillMode(value:string):boolean {
+            var result:boolean = super.$setFillMode(value);
             this.invalidateDisplayList();
+
+            return result;
         }
          //endif*/
 
@@ -207,14 +209,16 @@ module eui {
             this.invalidateProperties();
         }
 
-        $setBitmapData(value:egret.Texture):void {
+        $setBitmapData(value:egret.Texture):boolean {
             if (value == this.$Bitmap[egret.sys.BitmapKeys.bitmapData]) {
-                return;
+                return false;
             }
-            super.$setBitmapData(value);
+            var result:boolean = super.$setBitmapData(value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
+
+            return result;
         }
 
         /**

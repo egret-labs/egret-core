@@ -160,7 +160,7 @@ module RES {
 
                 var subTexture = new egret.Texture();
                 subTexture._bitmapData = texture._bitmapData;
-                subTexture.$setData(config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH, texture._sourceWidth, texture._sourceHeight);
+                subTexture.$initData(config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH, texture._sourceWidth, texture._sourceHeight);
 
                 spriteSheet[subkey] = subTexture;
                 if (config["scale9grid"]) {

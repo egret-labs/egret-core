@@ -396,8 +396,12 @@ module egret {
          * @private
          * 设置父级显示对象
          */
-        $setParent(parent:DisplayObjectContainer):void {
+        $setParent(parent:DisplayObjectContainer):boolean {
+            if (this.$parent == parent) {
+                return false;
+            }
             this.$parent = parent;
+            return true;
         }
 
         /**
@@ -502,11 +506,11 @@ module egret {
          * @private
          * 设置矩阵
          */
-        $setMatrix(matrix:Matrix, useProperties:boolean = true):void {
+        $setMatrix(matrix:Matrix, useProperties:boolean = true):boolean {
             var values = this.$DisplayObject;
             var m = values[Keys.matrix];
             if (m.equals(matrix)) {
-                return;
+                return false;
             }
 
             m.copyFrom(matrix);
@@ -519,6 +523,8 @@ module egret {
             }
             this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
             this.invalidatePosition();
+
+            return true;
         }
 
 
@@ -808,12 +814,12 @@ module egret {
             this.$setRotation(value);
         }
 
-        $setRotation(value:number):void {
+        $setRotation(value:number):boolean {
             value = egret.sys.getNumber(value);
             value = clampRotation(value);
             var values = this.$DisplayObject;
             if (value == values[Keys.rotation]) {
-                return;
+                return false;
             }
             var delta = value - values[Keys.rotation];
             var angle = delta / 180 * Math.PI;
@@ -821,6 +827,8 @@ module egret {
             values[Keys.skewY] += angle;
             values[Keys.rotation] = value;
             this.invalidateMatrix();
+
+            return true;
         }
 
         /**
@@ -843,7 +851,7 @@ module egret {
          *
          * @param value
          */
-        $setSkewX(value:number):void {
+        $setSkewX(value:number):boolean {
             value = egret.sys.getNumber(value);
 
             value = clampRotation(value);
@@ -851,10 +859,12 @@ module egret {
 
             var values = this.$DisplayObject;
             if (value == values[Keys.skewX]) {
-                return;
+                return false;
             }
             values[Keys.skewX] = value;
             this.invalidateMatrix();
+
+            return true;
         }
 
         /**
@@ -877,7 +887,7 @@ module egret {
          *
          * @param value
          */
-        $setSkewY(value:number):void {
+        $setSkewY(value:number):boolean {
             value = egret.sys.getNumber(value);
 
             value = clampRotation(value);
@@ -885,11 +895,12 @@ module egret {
 
             var values = this.$DisplayObject;
             if (value == values[Keys.skewY]) {
-                return;
+                return false;
             }
             values[Keys.skewY] = value;
             this.invalidateMatrix();
 
+            return true;
         }
 
         /**
@@ -936,12 +947,12 @@ module egret {
          * @private
          * 设置显示宽度
          */
-        $setWidth(value:number):void {
+        $setWidth(value:number):boolean {
             this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
 
             if (false) {
@@ -951,13 +962,15 @@ module egret {
                 var angle = values[Keys.rotation] / 180 * Math.PI;
                 var baseWidth = originalBounds.$getBaseWidth(angle);
                 if (!baseWidth) {
-                    return;
+                    return false;
                 }
                 var baseHeight = originalBounds.$getBaseHeight(angle);
                 values[Keys.scaleY] = bounds.height / baseHeight;
                 values[Keys.scaleX] = value / baseWidth;
             }
             this.invalidateMatrix();
+
+            return true;
         }
 
         /**
@@ -1004,12 +1017,12 @@ module egret {
          * @private
          * 设置显示高度
          */
-        $setHeight(value:number):void {
+        $setHeight(value:number):boolean {
             this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
 
             if (false) {
@@ -1019,13 +1032,15 @@ module egret {
                 var angle = values[Keys.rotation] / 180 * Math.PI;
                 var baseHeight = originalBounds.$getBaseHeight(angle);
                 if (!baseHeight) {
-                    return;
+                    return false;
                 }
                 var baseWidth = originalBounds.$getBaseWidth(angle);
                 values[Keys.scaleY] = value / baseHeight;
                 values[Keys.scaleX] = bounds.width / baseWidth;
             }
             this.invalidateMatrix();
+
+            return true;
         }
 
 
@@ -1155,13 +1170,15 @@ module egret {
             this.$setVisible(value);
         }
 
-        $setVisible(value:boolean):void {
+        $setVisible(value:boolean):boolean {
             value = !!value;
             if (value == this.$visible) {
-                return;
+                return false;
             }
             this.$visible = value;
             this.$invalidateTransform();
+
+            return true;
         }
 
         /**
@@ -1268,14 +1285,16 @@ module egret {
          *
          * @param value
          */
-        $setAlpha(value:number):void {
+        $setAlpha(value:number):boolean {
             value = egret.sys.getNumber(value);
             if (value == this.$alpha) {
-                return;
+                return false;
             }
             this.$alpha = value;
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedAlpha);
             this.$invalidate(true);
+
+            return true;
         }
 
         /**
@@ -1339,8 +1358,12 @@ module egret {
         /**
          * @private
          */
-        $setTouchEnabled(value:boolean):void {
+        $setTouchEnabled(value:boolean):boolean {
+            if (this.$touchEnabled == value) {
+                return false;
+            }
             this.$touchEnabled = value;
+            return true;
         }
 
         /**
@@ -1397,9 +1420,9 @@ module egret {
          *
          * @param value
          */
-        $setScrollRect(value:Rectangle):void {
+        $setScrollRect(value:Rectangle):boolean {
             if (!value && !this.$scrollRect) {
-                return;
+                return false;
             }
             if (value) {
                 if (!this.$scrollRect) {
@@ -1411,6 +1434,8 @@ module egret {
                 this.$scrollRect = null;
             }
             this.invalidatePosition();
+
+            return true;
         }
 
         /**
@@ -1529,9 +1554,9 @@ module egret {
             this.$invalidateTransform();
         }
 
-        $setMaskRect(value:Rectangle):void {
+        $setMaskRect(value:Rectangle):boolean {
             if (!value && !this.$maskRect) {
-                return;
+                return false;
             }
             if (value) {
                 if (!this.$maskRect) {
@@ -1543,6 +1568,8 @@ module egret {
                 this.$maskRect = null;
             }
             this.invalidatePosition();
+
+            return true;
         }
 
         /**

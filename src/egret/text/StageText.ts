@@ -43,7 +43,7 @@ module egret {
          * 
          * @param textfield 
          */
-        $setTextField(textfield:egret.TextField):void;
+        $setTextField(textfield:egret.TextField):boolean;
 
         /**
          * @private
@@ -62,7 +62,7 @@ module egret {
          * 
          * @param value 
          */
-        $setText(value:string):void;
+        $setText(value:string):boolean;
 
         /**
          * @private

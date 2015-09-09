@@ -165,9 +165,9 @@ module eui {
          * 
          * @param value 
          */
-        $setLayout(value:LayoutBase):void {
+        $setLayout(value:LayoutBase):boolean {
             if (this.$layout == value)
-                return;
+                return false;
             if (this.$layout) {
                 this.$layout.target = null;
             }
@@ -179,6 +179,8 @@ module eui {
             }
             this.invalidateSize();
             this.invalidateDisplayList();
+
+            return true;
         }
 
         /**

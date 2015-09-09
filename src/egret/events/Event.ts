@@ -481,8 +481,9 @@ module egret {
             return this.$target;
         }
 
-        $setTarget(target:any):void {
+        $setTarget(target:any):boolean {
             this.$target = target;
+            return true;
         }
 
         /**

@@ -256,13 +256,15 @@ module eui {
          * 
          * @param newValue 
          */
-        $setValue(newValue:number) {
+        $setValue(newValue:number):boolean {
             if (newValue === this.value)
-                return;
+                return false;
             var values = this.$Range;
             values[sys.RangeKeys.changedValue] = newValue;
             values[sys.RangeKeys.valueChanged] = true;
             this.invalidateProperties();
+
+            return true;
         }
 
         /**

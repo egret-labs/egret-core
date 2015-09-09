@@ -383,9 +383,9 @@ module eui {
          * @private
          * 设置选中的单选按钮
          */
-        $setSelection(value:RadioButton, fireChange?:boolean):void {
+        $setSelection(value:RadioButton, fireChange?:boolean):boolean {
             if (this._selection == value)
-                return;
+                return false;
 
             if (!value) {
                 if (this._selection) {
@@ -405,6 +405,7 @@ module eui {
                 }
             }
             PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
+            return true;
         }
 
         /**

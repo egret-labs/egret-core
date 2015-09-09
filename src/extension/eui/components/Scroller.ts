@@ -477,7 +477,7 @@ module eui {
             }
             event.stopPropagation();
             var touchEvent = egret.Event.create(egret.TouchEvent, event.$type, event.$bubbles, event.$cancelable);
-            touchEvent.$setTo(event.$stageX, event.$stageY, event.touchPointID);
+            touchEvent.$initTo(event.$stageX, event.$stageY, event.touchPointID);
             touchEvent.$target = event.$target;
             values[Keys.delayTouchEvent] = touchEvent;
             if (!values[Keys.delayTouchTimer]) {

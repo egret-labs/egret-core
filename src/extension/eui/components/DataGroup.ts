@@ -142,9 +142,9 @@ module eui {
          * 
          * @param value 
          */
-        $setLayout(value:LayoutBase) {
+        $setLayout(value:LayoutBase):boolean {
             if (value == this.$layout)
-                return;
+                return false;
 
             if (this.$layout) {
                 this.$layout.setTypicalSize(0, 0);
@@ -153,7 +153,7 @@ module eui {
 
             if (this.$layout && value && (this.$layout.$useVirtualLayout != value.$useVirtualLayout))
                 this.onUseVirtualLayoutChanged();
-            super.$setLayout(value);
+            var result:boolean = super.$setLayout(value);
             if (value) {
                 var rect = this.$DataGroup[Keys.typicalLayoutRect];
                 if (rect) {
@@ -162,6 +162,8 @@ module eui {
                 value.useVirtualLayout = this.$DataGroup[Keys.useVirtualLayout];
                 value.addEventListener("useVirtualLayoutChanged", this.onUseVirtualLayoutChanged, this);
             }
+
+            return result;
         }
 
         /**
@@ -345,9 +347,9 @@ module eui {
          * 
          * @param value 
          */
-        $setDataProvider(value:ICollection):void {
+        $setDataProvider(value:ICollection):boolean {
             if (this.$dataProvider == value)
-                return;
+                return false;
             this.removeDataProviderListener();
             this.$dataProvider = value;
             this.$dataProviderChanged = true;
@@ -355,6 +357,8 @@ module eui {
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
+
+            return true;
         }
 
         /**

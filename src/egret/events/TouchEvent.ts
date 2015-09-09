@@ -178,13 +178,13 @@ module egret {
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number,
                            stageY?:number, touchPointID?:number) {
             super(type, bubbles, cancelable);
-            this.$setTo(stageX, stageY, touchPointID);
+            this.$initTo(stageX, stageY, touchPointID);
         }
 
         /**
          * @private
          */
-        $setTo(stageX:number, stageY:number, touchPointID:number):void {
+        $initTo(stageX:number, stageY:number, touchPointID:number):void {
             this.touchPointID = +touchPointID || 0;
             this.$stageX = +stageX || 0;
             this.$stageY = +stageY || 0;
@@ -285,9 +285,10 @@ module egret {
             this._localY = localPoint.y;
         }
 
-        $setTarget(target:any):void {
+        $setTarget(target:any):boolean {
             this.$target = target;
             this.targetChanged = !!target;
+            return true;
         }
 
         /**
@@ -375,7 +376,7 @@ module egret {
                 return true;
             }
             var event:TouchEvent = Event.create(TouchEvent, type, bubbles, cancelable);
-            event.$setTo(stageX, stageY, touchPointID);
+            event.$initTo(stageX, stageY, touchPointID);
             event.touchDown = touchDown;
             var result = target.dispatchEvent(event);
             Event.release(event);

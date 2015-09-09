@@ -121,7 +121,7 @@ module eui {
                            kind?:string, location?:number, oldLocation?:number,
                            items?:any[], oldItems?:any[]) {
             super(type, bubbles, cancelable);
-            this.$setTo(kind, location, oldLocation, items, oldItems);
+            this.$initTo(kind, location, oldLocation, items, oldItems);
         }
 
         /**
@@ -133,7 +133,7 @@ module eui {
          * @param items 
          * @param oldItems 
          */
-        $setTo(kind?:string, location?:number, oldLocation?:number, items?:any[], oldItems?:any[]):void {
+        $initTo(kind?:string, location?:number, oldLocation?:number, items?:any[], oldItems?:any[]):void {
             this.kind = kind;
             this.location = +location | 0;
             this.oldLocation = +oldLocation | 0;
@@ -301,7 +301,7 @@ module eui {
                 return true;
             }
             var event = egret.Event.create(CollectionEvent, eventType);
-            event.$setTo(kind, location, oldLocation, items, oldItems);
+            event.$initTo(kind, location, oldLocation, items, oldItems);
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;

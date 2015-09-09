@@ -141,12 +141,14 @@ module egret {
         /**
          * @private
          */
-        $setText(value:string):void{
+        $setText(value:string):boolean{
             var values = this.$BitmapText;
             if (value == values[Keys.text])
-                return;
+                return false;
             values[Keys.text] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -160,14 +162,16 @@ module egret {
         /**
          * @private
          */
-        $setWidth(value:number) {
+        $setWidth(value:number):boolean {
             //value = +value || 0;
             var values = this.$BitmapText;
             if (value < 0 || value == values[Keys.textFieldWidth]) {
-                return;
+                return false;
             }
             values[Keys.textFieldWidth] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -189,14 +193,16 @@ module egret {
         /**
          * @private
          */
-        $setHeight(value:number) {
+        $setHeight(value:number):boolean {
             //value = +value || 0;
             var values = this.$BitmapText;
             if (value < 0 || value == values[Keys.textFieldHeight]) {
-                return;
+                return false;
             }
             values[Keys.textFieldHeight] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -221,15 +227,17 @@ module egret {
             this.$setFont(value);
         }
 
-        $setFont(value:BitmapFont):void {
+        $setFont(value:BitmapFont):boolean {
             var values = this.$BitmapText;
             if (values[Keys.font] == value) {
-                return;
+                return false;
             }
             values[Keys.font] = value;
 
             this.$BitmapText[Keys.fontStringChanged] = true;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -255,13 +263,15 @@ module egret {
             this.$setLineSpacing(value);
         }
 
-        $setLineSpacing(value:number):void {
+        $setLineSpacing(value:number):boolean {
             value = +value || 0;
             var values = this.$BitmapText;
             if (values[Keys.lineSpacing] == value)
-                return;
+                return false;
             values[Keys.lineSpacing] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -286,13 +296,15 @@ module egret {
             this.$setLetterSpacing(value);
         }
 
-        $setLetterSpacing(value:number):void {
+        $setLetterSpacing(value:number):boolean {
             value = +value || 0;
             var values = this.$BitmapText;
             if (values[Keys.letterSpacing] == value)
-                return;
+                return false;
             values[Keys.letterSpacing] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**

@@ -70,8 +70,10 @@ module egret {
          * 
          * @param value 
          */
-        public $setText(value:string):void {
+        $setText(value:string):boolean {
             this.textValue = value;
+
+            return true;
         }
 
         /**
@@ -174,8 +176,10 @@ module egret {
          */
         $textfield:egret.TextField;
 
-        public $setTextField(value:egret.TextField):void {
+        $setTextField(value:egret.TextField):boolean {
             this.$textfield = value;
+
+            return true;
         }
     }
 

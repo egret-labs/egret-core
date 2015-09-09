@@ -112,13 +112,14 @@ module eui {
 		 * 
 		 * @param value 
 		 */
-		$setSelected(value:boolean):void{
+		$setSelected(value:boolean):boolean{
 			value = !!value;
 			if (value === this.$selected)
-				return;
+				return false;
 			this.$selected = value;
 			this.invalidateState();
 			PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selected");
+			return true;
 		}
 
 		/**

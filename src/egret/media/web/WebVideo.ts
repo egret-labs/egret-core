@@ -381,18 +381,20 @@ module egret.web {
          * @private
          * 设置显示高度
          */
-        $setHeight(value: number) {
-            super.$setHeight(value);
+        $setHeight(value: number):boolean {
             this.heightSet = +value || 0;
+
+            return super.$setHeight(value);
         }
 
         /**
          * @private
          * 设置显示宽度
          */
-        $setWidth(value: number) {
-            super.$setWidth(value);
+        $setWidth(value: number):boolean {
             this.widthSet = +value || 0;
+
+            return super.$setWidth(value);
         }
     }
 

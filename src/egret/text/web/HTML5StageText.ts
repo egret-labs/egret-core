@@ -56,8 +56,10 @@ module egret.web {
          * 
          * @param textfield 
          */
-        $setTextField(textfield:egret.TextField):void {
+        $setTextField(textfield:egret.TextField):boolean {
             this.$textfield = textfield;
+
+            return true;
         }
 
         /**
@@ -220,10 +222,12 @@ module egret.web {
          * 
          * @param value 
          */
-        $setText(value:string):void {
+        $setText(value:string):boolean {
             this.textValue = value;
 
             this.resetText();
+
+            return true;
         }
 
         /**

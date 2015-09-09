@@ -284,12 +284,14 @@ module egret {
         }
 
         $inputEnabled:boolean = false;
-        $setTouchEnabled(value:boolean):void {
-            super.$setTouchEnabled(value);
+        $setTouchEnabled(value:boolean):boolean {
+            var result:boolean = super.$setTouchEnabled(value);
 
             if (this.isInput()) {
                 this.$inputEnabled = true;
             }
+
+            return result;
         }
 
         /**
@@ -314,13 +316,15 @@ module egret {
             this.$setFontFamily(value);
         }
 
-        $setFontFamily(value:string):void {
+        $setFontFamily(value:string):boolean {
             var values = this.$TextField;
             if (values[sys.TextKeys.fontFamily] == value) {
-                return;
+                return false;
             }
             values[sys.TextKeys.fontFamily] = value;
             this.invalidateFontString();
+
+            return true;
         }
 
         /**
@@ -345,15 +349,17 @@ module egret {
             this.$setSize(value);
         }
 
-        $setSize(value:number):void {
+        $setSize(value:number):boolean {
             value = egret.sys.getNumber(value);
 
             var values = this.$TextField;
             if (values[sys.TextKeys.fontSize] == value) {
-                return;
+                return false;
             }
             values[sys.TextKeys.fontSize] = value;
             this.invalidateFontString();
+
+            return true;
         }
 
         ///**
@@ -401,14 +407,16 @@ module egret {
             this.$setBold(value);
         }
 
-        $setBold(value:boolean):void {
+        $setBold(value:boolean):boolean {
             value = !!value;
             var values = this.$TextField;
             if (value == values[sys.TextKeys.bold]) {
-                return;
+                return false;
             }
             values[sys.TextKeys.bold] = value;
             this.invalidateFontString();
+
+            return true;
         }
 
         /**
@@ -433,14 +441,16 @@ module egret {
             this.$setItalic(value);
         }
 
-        $setItalic(value:boolean):void {
+        $setItalic(value:boolean):boolean {
             value = !!value;
             var values = this.$TextField;
             if (value == values[sys.TextKeys.italic]) {
-                return;
+                return false;
             }
             values[sys.TextKeys.italic] = value;
             this.invalidateFontString();
+
+            return true;
         }
 
         /**
@@ -487,13 +497,15 @@ module egret {
             this.$setTextAlign(value);
         }
 
-        $setTextAlign(value:string):void {
+        $setTextAlign(value:string):boolean {
             var values = this.$TextField;
             if (values[sys.TextKeys.textAlign] == value) {
-                return;
+                return false;
             }
             values[sys.TextKeys.textAlign] = value;
             this.$invalidateTextField();
+
+            return true;
         }
 
         /**
@@ -518,13 +530,15 @@ module egret {
             this.$setVerticalAlign(value);
         }
 
-        $setVerticalAlign(value:string):void {
+        $setVerticalAlign(value:string):boolean {
             var values = this.$TextField;
             if (values[sys.TextKeys.verticalAlign] == value) {
-                return;
+                return false;
             }
             values[sys.TextKeys.verticalAlign] = value;
             this.$invalidateTextField();
+
+            return true;
         }
 
         /**
@@ -549,14 +563,16 @@ module egret {
             this.$setLineSpacing(value);
         }
 
-        $setLineSpacing(value:number):void {
+        $setLineSpacing(value:number):boolean {
             value = egret.sys.getNumber(value);
 
             var values = this.$TextField;
             if (values[sys.TextKeys.lineSpacing] == value)
-                return;
+                return false;
             values[sys.TextKeys.lineSpacing] = value;
             this.$invalidateTextField();
+
+            return true;
         }
 
         /**
@@ -581,15 +597,17 @@ module egret {
             this.$setTextColor(value);
         }
 
-        $setTextColor(value:number):void {
+        $setTextColor(value:number):boolean {
             value = +value | 0;
             var values = this.$TextField;
             if (values[sys.TextKeys.textColor] == value) {
-                return;
+                return false;
             }
             values[sys.TextKeys.textColor] = value;
             values[sys.TextKeys.textColorString] = toColorString(value);
             this.$invalidate();
+
+            return true;
         }
 
         /**
@@ -732,7 +750,7 @@ module egret {
          * 
          * @param value 
          */
-        public _setBaseText(value:string):void {
+        _setBaseText(value:string):boolean {
             if (value == null) {
                 value = "";
             }
@@ -750,7 +768,9 @@ module egret {
                 }
 
                 this.setMiddleStyle([<egret.ITextElement>{text: text}]);
+                return true;
             }
+            return false;
         }
 
         /**
@@ -758,14 +778,15 @@ module egret {
          * 
          * @param value 
          */
-        $setText(value:string):void {
+        $setText(value:string):boolean {
             if (value == null) {
                 value = "";
             }
-            this._setBaseText(value);
+            var result:boolean = this._setBaseText(value);
             if (this._inputUtils) {
                 this._inputUtils._setText(this.$TextField[sys.TextKeys.text]);
             }
+            return result;
         }
 
         /**
@@ -997,8 +1018,8 @@ module egret {
          * @param beginIndex 
          * @param endIndex 
          */
-        public $setSelection(beginIndex:number, endIndex:number) {
-
+        $setSelection(beginIndex:number, endIndex:number):boolean {
+            return false;
         }
 
         /**
@@ -1148,15 +1169,17 @@ module egret {
          * 
          * @param value 
          */
-        $setWidth(value:number):void {
+        $setWidth(value:number):boolean {
             var values = this.$TextField;
             values[sys.TextKeys.textFieldWidth] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
             this.$invalidateTextField();
+
+            return true;
         }
 
         /**
@@ -1164,15 +1187,17 @@ module egret {
          * 
          * @param value 
          */
-        $setHeight(value:number):void {
+        $setHeight(value:number):boolean {
             var values = this.$TextField;
             values[sys.TextKeys.textFieldHeight] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
             this.$invalidateTextField();
+
+            return true;
         }
 
         /**

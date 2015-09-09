@@ -206,7 +206,7 @@ module egret {
 
             var w = value.width * $TextureScaleFactor;
             var h = value.height * $TextureScaleFactor;
-            this.$setData(0, 0, w, h, 0, 0, w, h, w, h);
+            this.$initData(0, 0, w, h, 0, 0, w, h, w, h);
         }
 
         /**
@@ -223,7 +223,7 @@ module egret {
          * @param sourceWidth
          * @param sourceHeight
          */
-        public $setData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
+        public $initData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
                         textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number):void {
             var scale = $TextureScaleFactor;
             this._bitmapX = bitmapX / scale;

@@ -167,13 +167,13 @@ module egret.sys {
          * @private
          * 设置全局帧率
          */
-        $setFrameRate(value:number):void {
+        $setFrameRate(value:number):boolean {
             value = +value || 0;
             if (value <= 0) {
-                return;
+                return false;
             }
             if (this.$frameRate == value) {
-                return;
+                return false;
             }
             this.$frameRate = value;
             if (value > 60) {
@@ -181,6 +181,7 @@ module egret.sys {
             }
             //这里用60*1000来避免浮点数计算不准确的问题。
             this.lastCount = this.frameInterval = Math.round(60000 / value);
+            return true;
         }
 
         /**

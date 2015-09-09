@@ -225,9 +225,11 @@ module eui {
          * 
          * @param value 
          */
-        $setSelected(value:boolean) {
-            super.$setSelected(value);
+        $setSelected(value:boolean):boolean{
+            var result:boolean = super.$setSelected(value);
             this.invalidateDisplayList();
+
+            return result;
         }
 
 

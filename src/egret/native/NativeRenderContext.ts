@@ -476,7 +476,7 @@ module egret.native {
          */
         public transform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
             this.$matrix.append(a, b, c, d, tx, ty);
-            this.$setTransformToNative();
+            this.setTransformToNative();
         }
 
         /**
@@ -489,7 +489,7 @@ module egret.native {
          */
         public translate(x:number, y:number):void {
             this.$matrix.translate(x, y);
-            this.$setTransformToNative();
+            this.setTransformToNative();
         }
 
         /**
@@ -502,7 +502,7 @@ module egret.native {
          */
         public scale(x:number, y:number):void {
             this.$matrix.scale(x, y);
-            this.$setTransformToNative();
+            this.setTransformToNative();
         }
 
         /**
@@ -514,7 +514,7 @@ module egret.native {
          */
         public rotate(angle:number):void {
             this.$matrix.rotate(angle);
-            this.$setTransformToNative();
+            this.setTransformToNative();
         }
 
         /**
@@ -531,7 +531,7 @@ module egret.native {
                     for (var key in data) {
                         this[key] = data[key];
                     }
-                    this.$setTransformToNative();
+                    this.setTransformToNative();
                 }
                 //console.log("pop clip");
                 var index:number = this.$clipList.indexOf(this.$saveCount);
@@ -618,12 +618,12 @@ module egret.native {
          */
         public setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
             this.$matrix.setTo(a, b, c, d, tx, ty);
-            this.$setTransformToNative();
+            this.setTransformToNative();
         }
 
-        private $setTransformToNative():void {
+        private setTransformToNative():void {
             var m = this.$matrix;
-            //console.log("$setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
+            //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
             egret_native.Graphics.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
 
