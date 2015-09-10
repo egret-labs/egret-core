@@ -105,7 +105,7 @@ module egret.web {
          * @private
          */
         private onBlobError(event:egret.Event):void {
-            this.emitIOError(this.currentURL);
+            this.dispatchIOError(this.currentURL);
         }
 
         /**
@@ -151,10 +151,10 @@ module egret.web {
             if (!image) {
                 return;
             }
-            this.emitIOError(image.src);
+            this.dispatchIOError(image.src);
         }
 
-        private emitIOError(url:string):void {
+        private dispatchIOError(url:string):void {
             var self = this;
             window.setTimeout(function ():void {
                 if (DEBUG && !self.hasEventListener(IOErrorEvent.IO_ERROR)) {

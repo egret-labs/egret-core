@@ -38,7 +38,7 @@ module eui {
      * accessed and manipulated using the methods and properties of the <code>ICollection</code> interfaces.
      * ArrayCollection can notify the view to update item when data source changed.
      *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Emited when the ArrayCollection has been updated in some way.
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ArrayCollection has been updated in some way.
      *
      * @defaultProperty source
      * @version Egret 2.4
@@ -117,7 +117,7 @@ module eui {
             if (!value)
                 value = [];
             this._source = value;
-            this.emitCoEvent(CollectionEventKind.RESET);
+            this.dispatchCoEvent(CollectionEventKind.RESET);
         }
 
         /**
@@ -139,7 +139,7 @@ module eui {
          * @platform Web,Native
          */
         public refresh():void {
-            this.emitCoEvent(CollectionEventKind.REFRESH);
+            this.dispatchCoEvent(CollectionEventKind.REFRESH);
         }
 
         //--------------------------------------------------------------------------
@@ -178,7 +178,7 @@ module eui {
          */
         public addItem(item:any):void {
             this._source.push(item);
-            this.emitCoEvent(CollectionEventKind.ADD, this._source.length - 1, -1, [item]);
+            this.dispatchCoEvent(CollectionEventKind.ADD, this._source.length - 1, -1, [item]);
         }
 
         /**
@@ -209,7 +209,7 @@ module eui {
                 DEBUG && egret.$error(1007);
             }
             this._source.splice(index, 0, item);
-            this.emitCoEvent(CollectionEventKind.ADD, index, -1, [item]);
+            this.dispatchCoEvent(CollectionEventKind.ADD, index, -1, [item]);
         }
 
         /**
@@ -259,7 +259,7 @@ module eui {
         public itemUpdated(item:any):void {
             var index:number = this.getItemIndex(item);
             if (index != -1) {
-                this.emitCoEvent(CollectionEventKind.UPDATE, index, -1, [item]);
+                this.dispatchCoEvent(CollectionEventKind.UPDATE, index, -1, [item]);
             }
         }
 
@@ -280,7 +280,7 @@ module eui {
         public removeAll():void {
             var items:any[] = this._source.concat();
             this._source.length = 0;
-            this.emitCoEvent(CollectionEventKind.REMOVE, 0, -1, items);
+            this.dispatchCoEvent(CollectionEventKind.REMOVE, 0, -1, items);
         }
 
         /**
@@ -308,7 +308,7 @@ module eui {
                 return;
             }
             var item:any = this._source.splice(index, 1)[0];
-            this.emitCoEvent(CollectionEventKind.REMOVE, index, -1, [item]);
+            this.dispatchCoEvent(CollectionEventKind.REMOVE, index, -1, [item]);
             return item;
         }
 
@@ -338,7 +338,7 @@ module eui {
                 return;
             }
             var oldItem:any = this._source.splice(index, 1, item)[0];
-            this.emitCoEvent(CollectionEventKind.REPLACE, index, -1, [item], [oldItem]);
+            this.dispatchCoEvent(CollectionEventKind.REPLACE, index, -1, [item], [oldItem]);
             return oldItem;
         }
 
@@ -379,9 +379,9 @@ module eui {
          * @private
          * 抛出事件
          */
-        private emitCoEvent(kind:string, location?:number, oldLocation?:number, items?:any[], oldItems?:any[]):void {
+        private dispatchCoEvent(kind:string, location?:number, oldLocation?:number, items?:any[], oldItems?:any[]):void {
 
-            CollectionEvent.emitCollectionEvent(this, CollectionEvent.COLLECTION_CHANGE, kind, location, oldLocation, items, oldItems);
+            CollectionEvent.dispatchCollectionEvent(this, CollectionEvent.COLLECTION_CHANGE, kind, location, oldLocation, items, oldItems);
         }
     }
 

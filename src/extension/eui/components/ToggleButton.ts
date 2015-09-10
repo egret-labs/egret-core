@@ -40,9 +40,9 @@ module eui {
 	 * <p>You can get or set this state programmatically
 	 * by using the <code>selected</code> property.</p>
 	 *
-	 * @event egret.Event.CHANGE Emitted when the <code>selected</code> property
+	 * @event egret.Event.CHANGE Dispatched when the <code>selected</code> property
 	 * changes for the ToggleButton control.
-	 * This event is emitted only when the
+	 * This event is dispatched only when the
 	 * user interacts with the control by touching.
 	 *
 	 * @state up Button up state
@@ -118,7 +118,7 @@ module eui {
 				return false;
 			this.$selected = value;
 			this.invalidateState();
-			PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selected");
+			PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selected");
 			return true;
 		}
 

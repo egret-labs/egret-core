@@ -133,7 +133,7 @@ module egret {
             if (!this._isFocus) {
                 this._isFocus = true;
                 if (!event["showing"]) {
-                    this._text._isTyping = true;
+                    this._text.$isTyping = true;
                 }
                 this._text.$invalidateContentBounds();
 
@@ -150,7 +150,7 @@ module egret {
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
-                this._text._isTyping = false;
+                this._text.$isTyping = false;
                 this._text.$invalidateContentBounds();
 
                 //失去焦点后调用
@@ -228,7 +228,7 @@ module egret {
          * 
          */
         private resetText():void {
-            this._text._setBaseText(this.stageText.$getText());
+            this._text.$setBaseText(this.stageText.$getText());
         }
 
         /**

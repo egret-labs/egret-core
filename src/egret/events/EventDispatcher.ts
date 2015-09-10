@@ -49,14 +49,14 @@ module egret {
      * the IEventDispatcher interface and is the base class for the DisplayObject class. The EventDispatcher class allows
      * any object on the display list to be an event target and as such, to use the methods of the IEventDispatcher interface.
      * Event targets are an important part of the Egret event model. The event target serves as the focal point for how events
-     * flow through the display list hierarchy. When an event such as a touch tap, Egret emits an event object into the
+     * flow through the display list hierarchy. When an event such as a touch tap, Egret dispatches an event object into the
      * event flow from the root of the display list. The event object then makes its way through the display list until it
      * reaches the event target, at which point it begins its return trip through the display list. This round-trip journey
      * to the event target is conceptually divided into three phases: <br/>
      * the capture phase comprises the journey from the root to the last node before the event target's node, the target
      * phase comprises only the event target node, and the bubbling phase comprises any subsequent nodes encountered on
      * the return trip to the root of the display list. In general, the easiest way for a user-defined class to gain event
-     * emitting capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending
+     * dispatching capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending
      * another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member, and write simple
      * hooks to route calls into the aggregated EventDispatcher.
      * @see egret.IEventDispatcher
@@ -83,7 +83,7 @@ module egret {
         /**
          * @language en_US
          * create an instance of the EventDispatcher class.
-         * @param target The target object for events emitted to the EventDispatcher object. This parameter is used when
+         * @param target The target object for events dispatched to the EventDispatcher object. This parameter is used when
          * the EventDispatcher instance is aggregated by a class that implements IEventDispatcher; it is necessary so that the
          * containing object can be the target for events. Do not use this parameter in simple cases in which a class extends EventDispatcher.
          * @version Egret 2.0
@@ -144,7 +144,7 @@ module egret {
         /**
          * @private
          */
-        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
+        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):void {
             if (DEBUG && !listener) {
                 $error(1003, "listener");
             }
@@ -158,10 +158,10 @@ module egret {
                 eventMap[type] = list = list.concat();
             }
 
-            this.$insertEventBin(list, type, listener, thisObject, useCapture, priority, emitOnce);
+            this.$insertEventBin(list, type, listener, thisObject, useCapture, priority, dispatchOnce);
         }
 
-        $insertEventBin(list:Array<any>, type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):boolean {
+        $insertEventBin(list:Array<any>, type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):boolean {
             priority = +priority | 0;
             var insertIndex = -1;
             var length = list.length;
@@ -176,7 +176,7 @@ module egret {
             }
             var eventBin:sys.EventBin = {
                 type: type, listener: listener, thisObject: thisObject, priority: priority,
-                target: this, useCapture: useCapture, emitOnce: !!emitOnce
+                target: this, useCapture: useCapture, dispatchOnce: !!dispatchOnce
             };
             if (insertIndex !== -1) {
                 list.splice(insertIndex, 0, eventBin);
@@ -270,12 +270,12 @@ module egret {
                 return true;
             }
             var onceList = ONCE_EVENT_LIST;
-            //做个标记，防止外部修改原始数组导致遍历错误。这里不直接调用list.concat()因为emit()方法调用通常比on()等方法频繁。
+            //做个标记，防止外部修改原始数组导致遍历错误。这里不直接调用list.concat()因为dispatch()方法调用通常比on()等方法频繁。
             values[Keys.notifyLevel]++;
             for (var i = 0; i < length; i++) {
                 var eventBin = list[i];
                 eventBin.listener.call(eventBin.thisObject, event);
-                if (eventBin.emitOnce) {
+                if (eventBin.dispatchOnce) {
                     onceList.push(eventBin);
                 }
                 if (event.$isPropagationImmediateStopped) {
@@ -340,6 +340,6 @@ module egret.sys {
         /**
          * @private
          */
-        emitOnce:boolean;
+        dispatchOnce:boolean;
     }
 }

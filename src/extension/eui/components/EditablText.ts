@@ -110,7 +110,7 @@ module eui {
          */
         $setText(value:string):boolean {
             var result:boolean = super.$setText(value);
-            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
+            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
 
             return result;
         }

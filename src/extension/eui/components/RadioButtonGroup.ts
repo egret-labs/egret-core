@@ -70,7 +70,7 @@ module eui {
      * that act as a single mutually exclusive component; therefore,
      * a user can select only one RadioButton component at a time.
      *
-     * @event egret.Event.CHANGE Emitted when the value of the selected RadioButton component in
+     * @event egret.Event.CHANGE Dispatched when the value of the selected RadioButton component in
      * this group changes.
      *
      * @version Egret 2.4
@@ -285,7 +285,7 @@ module eui {
                     radioButton.label == value) {
                     this.changeSelection(i, false);
                     this._selectedValue = null;
-                    PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
+                    PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
                     break;
                 }
             }
@@ -404,7 +404,7 @@ module eui {
                     }
                 }
             }
-            PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
+            PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
             return true;
         }
 

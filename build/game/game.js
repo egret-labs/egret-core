@@ -840,7 +840,7 @@ var egret;
              * @version Egret 2.0
              * @platform Web,Native
              */
-            this.events = null;
+            this.events = [];
             /**
              * 帧率
              * @version Egret 2.0
@@ -1320,7 +1320,7 @@ var egret;
         };
         /**
          * @language en_US
-         * Emitted whenever the current frame have a frameLabel.
+         * Dispatched whenever the current frame have a frameLabel.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -2499,7 +2499,7 @@ var egret;
             }
             list.splice(0, startIndex + 1);
             targetIndex -= startIndex + 1;
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             egret.Event.release(event);
         };
         /**
@@ -3287,7 +3287,7 @@ var egret;
      * A URLLoader object downloads all of the data from a URL before making it available to code in the applications. It sends out notifications about the progress of the download,
      * which you can monitor through bytesLoaded and bytesTotal properties, as well as through dispatched events.
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
-     * @event egret.Event.COMPLETE Emitted when the net request is complete.
+     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
      * @event egret.IOErrorEvent.IO_ERROR io error.
      * @version Egret 2.0
      * @platform Web,Native

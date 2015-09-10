@@ -39,7 +39,7 @@ module eui {
      * the old one because it appears in the same location.
      * However, the old child container still exists; it is just invisible.
      *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Emitted when the ICollection has been updated in some way.
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ICollection has been updated in some way.
      *
      * @version Egret 2.4
      * @version Swan 1.0
@@ -191,7 +191,7 @@ module eui {
             }
             this.proposedSelectedIndex = value;
             this.invalidateProperties();
-            PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
+            PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
         }
 
         /**
@@ -209,7 +209,7 @@ module eui {
             else if (index <= this.selectedIndex && this.$stage) {
                 this.setSelectedIndex(selectedIndex + 1);
             }
-            CollectionEvent.emitCollectionEvent(this, CollectionEvent.COLLECTION_CHANGE,
+            CollectionEvent.dispatchCollectionEvent(this, CollectionEvent.COLLECTION_CHANGE,
                 CollectionEventKind.ADD, index, -1, [child.name]);
         }
 
@@ -237,7 +237,7 @@ module eui {
             else if (index < selectedIndex) {
                 this.setSelectedIndex(selectedIndex - 1);
             }
-            CollectionEvent.emitCollectionEvent(this, CollectionEvent.COLLECTION_CHANGE,
+            CollectionEvent.dispatchCollectionEvent(this, CollectionEvent.COLLECTION_CHANGE,
                 CollectionEventKind.REMOVE, index, -1, [child.name]);
         }
 

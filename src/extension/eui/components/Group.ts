@@ -244,10 +244,10 @@ module eui {
             values[Keys.contentWidth] = width;
             values[Keys.contentHeight] = height;
             if (wChange) {
-                PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "contentWidth");
+                PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "contentWidth");
             }
             if (hChange) {
-                PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "contentHeight");
+                PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "contentHeight");
             }
         }
         /**
@@ -290,7 +290,7 @@ module eui {
             if (this.updateScrollRect() && this.$layout) {
                 this.$layout.scrollPositionChanged();
             }
-            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "scrollH");
+            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "scrollH");
         }
 
         /**
@@ -313,7 +313,7 @@ module eui {
             if (this.updateScrollRect() && this.$layout) {
                 this.$layout.scrollPositionChanged();
             }
-            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "scrollV");
+            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "scrollV");
         }
 
         /**

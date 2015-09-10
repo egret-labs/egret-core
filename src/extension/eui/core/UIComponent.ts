@@ -40,9 +40,9 @@ module eui {
      * Associate a skin class with a component class by setting the <code>skinClass</code> style property of the
      * component class.
      *
-     * @event egret.Event.RESIZE Emit when the component is resized.
-     * @event eui.UIEvent.MOVE Emit when the object has moved.
-     * @event eui.UIEvent.CREATION_COMPLETE  Emit when the component has finished its construction,
+     * @event egret.Event.RESIZE Dispatch when the component is resized.
+     * @event eui.UIEvent.MOVE Dispatch when the object has moved.
+     * @event eui.UIEvent.CREATION_COMPLETE  Dispatch when the component has finished its construction,
      * property processing, measuring, layout, and drawing.
      *
      * @version Egret 2.4
@@ -918,7 +918,7 @@ module eui.sys {
                 this.dispatchEventWith(egret.Event.RESIZE);
             }
             if (values[UIKeys.oldX] != this.$getX() || values[UIKeys.oldY] != this.$getY()) {
-                UIEvent.emitUIEvent(this, UIEvent.MOVE);
+                UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
             }
         }
 
@@ -975,7 +975,7 @@ module eui.sys {
                 values[sys.UIKeys.initialized] = true;
                 this.createChildren();
                 this.childrenCreated();
-                UIEvent.emitUIEvent(this, UIEvent.CREATION_COMPLETE);
+                UIEvent.dispatchUIEvent(this, UIEvent.CREATION_COMPLETE);
             }
         }
 
@@ -1630,7 +1630,7 @@ module eui.sys {
             }
             var changed:boolean = this.$super.$setX.call(this, x);
             if (this.$super.$setY.call(this, y) || changed) {
-                UIEvent.emitUIEvent(this, UIEvent.MOVE);
+                UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
             }
         }
 

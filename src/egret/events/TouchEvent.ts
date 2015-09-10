@@ -66,7 +66,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
+         * Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -80,7 +80,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+         * Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -94,7 +94,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
+         * Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
          * or tablet with a touch screen).
          * @version Egret 2.0
          * @platform Web,Native
@@ -109,7 +109,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact
+         * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
          * was initiated on a touch-enabled device.
          * @version Egret 2.0
          * @platform Web,Native
@@ -123,7 +123,7 @@ module egret {
         public static TOUCH_TAP:string = "touchTap";
         /**
          * @language en_US
-         * Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact
+         * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
          * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
          * object on a mobile phone or tablet with a touch screen).
          * @version Egret 2.0
@@ -355,7 +355,7 @@ module egret {
          */
         /**
          * @language zh_CN
-         * 使用指定的EventEmitter对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 派发事件目标
          * @param type 事件的类型，可以作为 Event.type 访问。
          * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。

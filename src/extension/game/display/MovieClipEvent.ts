@@ -71,7 +71,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted whenever the current frame have a frameLabel.
+         * Dispatched whenever the current frame have a frameLabel.
          * @version Egret 2.0
          * @platform Web,Native
          */

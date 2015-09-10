@@ -269,7 +269,7 @@ module eui {
             this._value = value;
 
             if (this.$selected && this.group){
-                PropertyEvent.emitPropertyEvent(this.group,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
+                PropertyEvent.dispatchPropertyEvent(this.group,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
             }
         }
 

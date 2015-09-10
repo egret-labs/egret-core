@@ -162,17 +162,17 @@ module egret {
      * instance, but rather all DisplayObject instances, including those that are not on the display list. This means that you
      * can add a listener to any DisplayObject instance to listen for broadcast events.
      *
-     * @event egret.Event.ADDED Emitted when a display object is added to the display list.
-     * @event egret.Event.ADDED_TO_STAGE Emitted when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
-     * @event egret.Event.REMOVED Emitted when a display object is about to be removed from the display list.
-     * @event egret.Event.REMOVED_FROM_STAGE Emitted when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
-     * @event egret.Event.ENTER_FRAME [broadcast event] Emitted when the playhead is entering a new frame.
-     * @event egret.Event.RENDER [broadcast event] Emitted when the display list is about to be updated and rendered.
-     * @event egret.TouchEvent.TOUCH_MOVE Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
-     * @event egret.TouchEvent.TOUCH_BEGIN Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_END Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_TAP Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.Event.ADDED Dispatched when a display object is added to the display list.
+     * @event egret.Event.ADDED_TO_STAGE Dispatched when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
+     * @event egret.Event.REMOVED Dispatched when a display object is about to be removed from the display list.
+     * @event egret.Event.REMOVED_FROM_STAGE Dispatched when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
+     * @event egret.Event.ENTER_FRAME [broadcast event] Dispatched when the playhead is entering a new frame.
+     * @event egret.Event.RENDER [broadcast event] Dispatched when the display list is about to be updated and rendered.
+     * @event egret.TouchEvent.TOUCH_MOVE Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
+     * @event egret.TouchEvent.TOUCH_BEGIN Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_END Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_TAP Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
@@ -1951,8 +1951,8 @@ module egret {
         /**
          * @private
          */
-        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
-            super.$addListener(type, listener, thisObject, useCapture, priority, emitOnce);
+        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):void {
+            super.$addListener(type, listener, thisObject, useCapture, priority, dispatchOnce);
             var isEnterFrame = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
@@ -1992,7 +1992,7 @@ module egret {
             var list = this.$getPropagationList(this);
             var targetIndex = list.length * 0.5;
             event.$setTarget(this);
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             return !event.$isDefaultPrevented;
         }
 
@@ -2025,7 +2025,7 @@ module egret {
         /**
          * @private
          */
-        $emitPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
+        $dispatchPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
             var length = list.length;
             var captureIndex = targetIndex - 1;
             for (var i = 0; i < length; i++) {

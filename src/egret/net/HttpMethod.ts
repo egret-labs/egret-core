@@ -33,16 +33,16 @@ module egret {
      * @language en_US
      * The HttpMethod class provides values that specify whether the HttpRequest object should use the POST method
      * or the GET method when sending data to a server.
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * HttpRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
      * HttpRequest 对象应使用 POST 方法还是 GET 方法。
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class HttpMethod {
@@ -50,13 +50,13 @@ module egret {
         /**
          * @language en_US
          * Specifies that the HttpRequest object is a GET.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示 HttpRequest 对象是一个 GET。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static GET = "GET";
@@ -64,13 +64,13 @@ module egret {
         /**
          * @language en_US
          * Specifies that the HttpRequest object is a POST.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示 HttpRequest 对象是一个 POST。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static POST = "POST";

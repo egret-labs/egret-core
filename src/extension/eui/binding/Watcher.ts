@@ -165,7 +165,7 @@ module eui {
                     if (this[property] != value) {
                         orgSet.call(this, value);
                         if(isEventDispatcher){
-                            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
                         }
                         else{
                             notifyListener(this,property);
@@ -185,7 +185,7 @@ module eui {
                     if (this[newProp] != value) {
                         this[newProp] = value;
                         if(isEventDispatcher){
-                            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
                         }
                         else{
                             notifyListener(this,property);
