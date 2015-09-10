@@ -96,18 +96,11 @@ module egret.native {
             }
         }
 
-        public checkIsNewVersion(virtualUrl:string):boolean {
-            return egret_native.isFileExists(virtualUrl);
-        }
-
-        public saveVersion(virtualUrl:string):void {
-        }
-
         /**
          * 获取所有有变化的文件
-         * @returns {Array<string>}
+         * @returns {Array<any>}
          */
-        public getChangeList():Array<string> {
+        public getChangeList():Array<any> {
             var temp:Array<any> = [];
 
             var localFileArr = this._localFileArr;

@@ -73,18 +73,11 @@ module egret.web {
             //}
         }
 
-        public checkIsNewVersion(virtualUrl:string):boolean {
-            return false;
-        }
-
-        public saveVersion(virtualUrl:string):void {
-        }
-
         /**
          * 获取所有有变化的文件
-         * @returns {Array<string>}
+         * @returns {Array<any>}
          */
-        public getChangeList():Array<string> {
+        public getChangeList():Array<any> {
             return [];
         }
 

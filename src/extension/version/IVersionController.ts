@@ -42,28 +42,12 @@ module egret {
         fetchVersion():void;
 
         /**
-         * 
-         * @param url 
-         * @returns 
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        checkIsNewVersion(url:string):boolean;
-        /**
-         * 
-         * @param url 
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        saveVersion(url:string):void;
-
-        /**
          * 获取所有有变化的文件
-         * @returns {Array<string>}
+         * @returns {Array<any>}
          * @version Egret 2.0
          * @platform Web,Native
          */
-        getChangeList():Array<string>;
+        getChangeList():Array<any>;
 
         /**
          * 
