@@ -66,7 +66,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public events:any[] = null;
+        public events:any[] = [];
         /**
          * 帧率
          * @version Egret 2.0
