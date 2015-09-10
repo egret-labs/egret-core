@@ -15689,7 +15689,7 @@ var egret;
             /**
              * @private
              */
-            this._lineHeights = [];
+            this.$lineHeights = [];
             //this.cacheAsBitmap = true;
             this.$renderRegion = new egret.sys.Region();
             this.$BitmapText = {
@@ -15882,7 +15882,7 @@ var egret;
          */
         p.$render = function (context) {
             var self = this;
-            var textLines = self._getTextLines();
+            var textLines = self.$getTextLines();
             var length = textLines.length;
             if (length == 0) {
                 return;
@@ -15893,7 +15893,7 @@ var egret;
             var yPos = 0;
             var hasSetHeight = !isNaN(self.$BitmapText[1 /* textFieldHeight */]);
             var textFieldHeight = self.$BitmapText[1 /* textFieldHeight */];
-            var lineHeights = self._lineHeights;
+            var lineHeights = self.$lineHeights;
             for (var i = 0; i < length; i++) {
                 var lineHeight = lineHeights[i];
                 if (hasSetHeight && i > 0 && yPos + lineHeight > textFieldHeight) {
@@ -15926,7 +15926,7 @@ var egret;
          * @private
          */
         p.$measureContentBounds = function (bounds) {
-            var lines = this._getTextLines();
+            var lines = this.$getTextLines();
             if (lines.length == 0) {
                 bounds.setEmpty();
             }
@@ -15939,7 +15939,7 @@ var egret;
          *
          * @returns
          */
-        p._getTextLines = function () {
+        p.$getTextLines = function () {
             var self = this;
             if (!this.$BitmapText[7 /* textLinesChanged */]) {
                 return self._textLines;
@@ -15948,7 +15948,7 @@ var egret;
             self._textLines = textLines;
             this.$BitmapText[7 /* textLinesChanged */] = false;
             var lineHeights = [];
-            self._lineHeights = lineHeights;
+            self.$lineHeights = lineHeights;
             if (!self.$BitmapText[2 /* text */] || !self.$BitmapText[5 /* font */]) {
                 return textLines;
             }
@@ -17541,7 +17541,7 @@ var egret;
              */
             ,function () {
                 this._getLinesArr();
-                return Math.max(this.$TextField[29 /* numLines */] - egret.TextFieldUtils._getScrollNum(this) + 1, 1);
+                return Math.max(this.$TextField[29 /* numLines */] - egret.TextFieldUtils.$getScrollNum(this) + 1, 1);
             }
         );
         d(p, "selectionBeginIndex"
@@ -17939,7 +17939,7 @@ var egret;
             var self = this;
             this._getLinesArr();
             var w = !isNaN(this.$TextField[3 /* textFieldWidth */]) ? this.$TextField[3 /* textFieldWidth */] : this.$TextField[5 /* textWidth */];
-            var h = !isNaN(this.$TextField[4 /* textFieldHeight */]) ? this.$TextField[4 /* textFieldHeight */] : egret.TextFieldUtils._getTextHeight(self);
+            var h = !isNaN(this.$TextField[4 /* textFieldHeight */]) ? this.$TextField[4 /* textFieldHeight */] : egret.TextFieldUtils.$getTextHeight(self);
             if (self.border) {
                 w += 2;
                 h += 2;
@@ -18067,7 +18067,7 @@ var egret;
              */
             ,function () {
                 this._getLinesArr();
-                return egret.TextFieldUtils._getTextHeight(this);
+                return egret.TextFieldUtils.$getTextHeight(this);
             }
         );
         /**
@@ -18268,16 +18268,16 @@ var egret;
                 return;
             }
             var maxWidth = !isNaN(values[3 /* textFieldWidth */]) ? values[3 /* textFieldWidth */] : values[5 /* textWidth */];
-            var textHeight = egret.TextFieldUtils._getTextHeight(self);
+            var textHeight = egret.TextFieldUtils.$getTextHeight(self);
             var drawY = 0;
-            var startLine = egret.TextFieldUtils._getStartLine(self);
+            var startLine = egret.TextFieldUtils.$getStartLine(self);
             var textFieldHeight = values[4 /* textFieldHeight */];
             if (!isNaN(textFieldHeight) && textFieldHeight > textHeight) {
-                var valign = egret.TextFieldUtils._getValign(self);
+                var valign = egret.TextFieldUtils.$getValign(self);
                 drawY += valign * (textFieldHeight - textHeight);
             }
             drawY = Math.round(drawY);
-            var halign = egret.TextFieldUtils._getHalign(self);
+            var halign = egret.TextFieldUtils.$getHalign(self);
             var underLines = [];
             var drawX = 0;
             for (var i = startLine, numLinesLength = values[29 /* numLines */]; i < numLinesLength; i++) {
@@ -18331,7 +18331,7 @@ var egret;
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
                 return;
             }
-            var ele = egret.TextFieldUtils._getTextElement(this, e.localX, e.localY);
+            var ele = egret.TextFieldUtils.$getTextElement(this, e.localX, e.localY);
             if (ele == null) {
                 return;
             }
@@ -18569,8 +18569,8 @@ var egret;
          * @returns {number} 行数，从0开始
          * @private
          */
-        TextFieldUtils._getStartLine = function (textfield) {
-            var textHeight = TextFieldUtils._getTextHeight(textfield);
+        TextFieldUtils.$getStartLine = function (textfield) {
+            var textHeight = TextFieldUtils.$getTextHeight(textfield);
             var startLine = 0;
             var textFieldHeight = textfield.$TextField[4 /* textFieldHeight */];
             if (!isNaN(textFieldHeight)) {
@@ -18593,7 +18593,7 @@ var egret;
          * @returns {number} 水平比例
          * @private
          */
-        TextFieldUtils._getHalign = function (textfield) {
+        TextFieldUtils.$getHalign = function (textfield) {
             var lineArr = textfield._getLinesArr();
             var halign = 0;
             if (textfield.$TextField[9 /* textAlign */] == egret.HorizontalAlign.CENTER) {
@@ -18613,7 +18613,7 @@ var egret;
          * @param textfield
          * @returns
          */
-        TextFieldUtils._getTextHeight = function (textfield) {
+        TextFieldUtils.$getTextHeight = function (textfield) {
             var textHeight = (egret.TextFieldType.INPUT == textfield.$TextField[24 /* type */] && !textfield.$TextField[30 /* multiline */]) ? textfield.$TextField[0 /* fontSize */] : (textfield.$TextField[6 /* textHeight */] + (textfield.$TextField[29 /* numLines */] - 1) * textfield.$TextField[1 /* lineSpacing */]);
             return textHeight;
         };
@@ -18623,8 +18623,8 @@ var egret;
          * @returns {number} 垂直比例
          * @private
          */
-        TextFieldUtils._getValign = function (textfield) {
-            var textHeight = TextFieldUtils._getTextHeight(textfield);
+        TextFieldUtils.$getValign = function (textfield) {
+            var textHeight = TextFieldUtils.$getTextHeight(textfield);
             //if (textfield.$TextField[sys.TextKeys.type] == egret.TextFieldType.INPUT) {
             //    if (textfield.$TextField[sys.TextKeys.multiline]) {
             //return 0;
@@ -18652,8 +18652,8 @@ var egret;
          * @returns 文本单项
          * @private
          */
-        TextFieldUtils._getTextElement = function (textfield, x, y) {
-            var hitTextEle = TextFieldUtils._getHit(textfield, x, y);
+        TextFieldUtils.$getTextElement = function (textfield, x, y) {
+            var hitTextEle = TextFieldUtils.$getHit(textfield, x, y);
             var lineArr = textfield._getLinesArr();
             if (hitTextEle && lineArr[hitTextEle.lineIndex] && lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex]) {
                 return lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex];
@@ -18668,23 +18668,23 @@ var egret;
          * @returns 文本点击块
          * @private
          */
-        TextFieldUtils._getHit = function (textfield, x, y) {
+        TextFieldUtils.$getHit = function (textfield, x, y) {
             var lineArr = textfield._getLinesArr();
             if (textfield.$TextField[3 /* textFieldWidth */] == 0) {
                 return null;
             }
             var line = 0;
-            var textHeight = TextFieldUtils._getTextHeight(textfield);
+            var textHeight = TextFieldUtils.$getTextHeight(textfield);
             var startY = 0;
             var textFieldHeight = textfield.$TextField[4 /* textFieldHeight */];
             if (!isNaN(textFieldHeight) && textFieldHeight > textHeight) {
-                var valign = TextFieldUtils._getValign(textfield);
+                var valign = TextFieldUtils.$getValign(textfield);
                 startY = valign * (textFieldHeight - textHeight);
                 if (startY != 0) {
                     y -= startY;
                 }
             }
-            var startLine = TextFieldUtils._getStartLine(textfield);
+            var startLine = TextFieldUtils.$getStartLine(textfield);
             var lineH = 0;
             for (var i = startLine; i < lineArr.length; i++) {
                 var lineEle = lineArr[i];
@@ -18722,7 +18722,7 @@ var egret;
          * @returns {number} 显示的行数
          * @private
          */
-        TextFieldUtils._getScrollNum = function (textfield) {
+        TextFieldUtils.$getScrollNum = function (textfield) {
             var scrollNum = 1;
             if (textfield.$TextField[30 /* multiline */]) {
                 var height = textfield.height;

@@ -2104,7 +2104,7 @@ var egret;
             p.setAreaHeight = function () {
                 var textfield = this.$textfield;
                 if (textfield.multiline) {
-                    var textheight = egret.TextFieldUtils._getTextHeight(textfield);
+                    var textheight = egret.TextFieldUtils.$getTextHeight(textfield);
                     if (textfield.height < textheight) {
                         this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
                         this.setElementStyle("padding", "0px");
@@ -2112,7 +2112,7 @@ var egret;
                     else {
                         this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
                         var rap = (textfield.height - textheight) * this._gscaleY;
-                        var valign = egret.TextFieldUtils._getValign(textfield);
+                        var valign = egret.TextFieldUtils.$getValign(textfield);
                         var top = rap * valign;
                         var bottom = rap - top;
                         this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
@@ -2191,7 +2191,7 @@ var egret;
                         else {
                             this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
                             var rap = (textfield.height - textfield.size) * this._gscaleY;
-                            var valign = egret.TextFieldUtils._getValign(textfield);
+                            var valign = egret.TextFieldUtils.$getValign(textfield);
                             var top = rap * valign;
                             var bottom = rap - top;
                             this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");

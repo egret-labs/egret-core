@@ -318,7 +318,7 @@ module egret {
          */
         $render(context:egret.sys.RenderContext):void {
             var self = this;
-            var textLines:Array<string> = self._getTextLines();
+            var textLines:Array<string> = self.$getTextLines();
             var length:number = textLines.length;
             if (length == 0) {
                 return;
@@ -329,7 +329,7 @@ module egret {
             var yPos:number = 0;
             var hasSetHeight:boolean = !isNaN(self.$BitmapText[Keys.textFieldHeight]);
             var textFieldHeight:number = self.$BitmapText[Keys.textFieldHeight];
-            var lineHeights:Array<number> = self._lineHeights;
+            var lineHeights:Array<number> = self.$lineHeights;
             for (var i:number = 0; i < length; i++) {
                 var lineHeight:number = lineHeights[i];
                 if (hasSetHeight && i > 0 && yPos + lineHeight > textFieldHeight) {
@@ -366,7 +366,7 @@ module egret {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            var lines:Array<string> = this._getTextLines();
+            var lines:Array<string> = this.$getTextLines();
             if (lines.length == 0) {
                 bounds.setEmpty();
             }
@@ -400,14 +400,14 @@ module egret {
         /**
          * @private
          */
-        public _lineHeights:Array<number> = [];
+        public $lineHeights:Array<number> = [];
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
-        public _getTextLines():Array<string> {
+        $getTextLines():Array<string> {
             var self = this;
             if (!this.$BitmapText[Keys.textLinesChanged]) {
                 return self._textLines;
@@ -416,7 +416,7 @@ module egret {
             self._textLines = textLines;
             this.$BitmapText[Keys.textLinesChanged] = false;
             var lineHeights:Array<number> = [];
-            self._lineHeights = lineHeights;
+            self.$lineHeights = lineHeights;
             if (!self.$BitmapText[Keys.text] || !self.$BitmapText[Keys.font]) {
                 return textLines;
             }

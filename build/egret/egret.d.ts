@@ -10256,13 +10256,13 @@ declare module egret {
         /**
          * @private
          */
-        _lineHeights: Array<number>;
+        $lineHeights: Array<number>;
         /**
          * @private
          *
          * @returns
          */
-        _getTextLines(): Array<string>;
+        $getTextLines(): Array<string>;
     }
 }
 declare module egret {
@@ -11545,28 +11545,28 @@ declare module egret {
          * @returns {number} 行数，从0开始
          * @private
          */
-        static _getStartLine(textfield: egret.TextField): number;
+        static $getStartLine(textfield: egret.TextField): number;
         /**
          * 获取水平比例
          * @param textfield 文本
          * @returns {number} 水平比例
          * @private
          */
-        static _getHalign(textfield: egret.TextField): number;
+        static $getHalign(textfield: egret.TextField): number;
         /**
          * @private
          *
          * @param textfield
          * @returns
          */
-        static _getTextHeight(textfield: egret.TextField): number;
+        static $getTextHeight(textfield: egret.TextField): number;
         /**
          * 获取垂直比例
          * @param textfield 文本
          * @returns {number} 垂直比例
          * @private
          */
-        static _getValign(textfield: egret.TextField): number;
+        static $getValign(textfield: egret.TextField): number;
         /**
          * 根据x、y获取文本项
          * @param textfield 文本
@@ -11575,7 +11575,7 @@ declare module egret {
          * @returns 文本单项
          * @private
          */
-        static _getTextElement(textfield: egret.TextField, x: number, y: number): ITextElement;
+        static $getTextElement(textfield: egret.TextField, x: number, y: number): ITextElement;
         /**
          * 获取文本点击块
          * @param textfield 文本
@@ -11584,14 +11584,14 @@ declare module egret {
          * @returns 文本点击块
          * @private
          */
-        static _getHit(textfield: egret.TextField, x: number, y: number): IHitTextElement;
+        static $getHit(textfield: egret.TextField, x: number, y: number): IHitTextElement;
         /**
          * 获取当前显示多少行
          * @param textfield 文本
          * @returns {number} 显示的行数
          * @private
          */
-        static _getScrollNum(textfield: egret.TextField): number;
+        static $getScrollNum(textfield: egret.TextField): number;
     }
 }
 declare module egret {
