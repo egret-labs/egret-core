@@ -4281,47 +4281,7 @@ var egret;
              * @platform Web,Native
              */
             ,function (logType) {
-                if (Logger.logFuncs == null) {
-                    Logger.logFuncs = {
-                        "error": console.error,
-                        "debug": console.debug,
-                        "warn": console.warn,
-                        "info": console.info,
-                        "log": console.log
-                    };
-                }
-                switch (logType) {
-                    case Logger.OFF:
-                        console.error = function () {
-                        };
-                    case Logger.ERROR:
-                        console.warn = function () {
-                        };
-                    case Logger.WARN:
-                        console.info = function () {
-                        };
-                        console.log = function () {
-                        };
-                    case Logger.INFO:
-                        console.debug = function () {
-                        };
-                    default:
-                        break;
-                }
-                switch (logType) {
-                    case Logger.ALL:
-                    case Logger.DEBUG:
-                        console.debug = Logger.logFuncs["debug"];
-                    case Logger.INFO:
-                        console.log = Logger.logFuncs["log"];
-                        console.info = Logger.logFuncs["info"];
-                    case Logger.WARN:
-                        console.warn = Logger.logFuncs["warn"];
-                    case Logger.ERROR:
-                        console.error = Logger.logFuncs["error"];
-                    default:
-                        break;
-                }
+                throw new Error();
             }
         );
         /**

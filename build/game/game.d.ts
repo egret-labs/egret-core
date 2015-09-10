@@ -2216,10 +2216,6 @@ declare module egret {
          */
         static OFF: string;
         /**
-         * @private
-         */
-        private static logFuncs;
-        /**
          * @language en_US
          * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF
          *
