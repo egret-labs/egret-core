@@ -373,7 +373,7 @@ declare module eui {
      * accessed and manipulated using the methods and properties of the <code>ICollection</code> interfaces.
      * ArrayCollection can notify the view to update item when data source changed.
      *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Emited when the ArrayCollection has been updated in some way.
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ArrayCollection has been updated in some way.
      *
      * @defaultProperty source
      * @version Egret 2.4
@@ -615,7 +615,7 @@ declare module eui {
          * @private
          * 抛出事件
          */
-        private emitCoEvent(kind, location?, oldLocation?, items?, oldItems?);
+        private dispatchCoEvent(kind, location?, oldLocation?, items?, oldItems?);
     }
 }
 declare module eui {
@@ -819,9 +819,9 @@ declare module eui {
      * Associate a skin class with a component class by setting the <code>skinClass</code> style property of the
      * component class.
      *
-     * @event egret.Event.RESIZE Emit when the component is resized.
-     * @event eui.UIEvent.MOVE Emit when the object has moved.
-     * @event eui.UIEvent.CREATION_COMPLETE  Emit when the component has finished its construction,
+     * @event egret.Event.RESIZE Dispatch when the component is resized.
+     * @event eui.UIEvent.MOVE Dispatch when the object has moved.
+     * @event eui.UIEvent.CREATION_COMPLETE  Dispatch when the component has finished its construction,
      * property processing, measuring, layout, and drawing.
      *
      * @version Egret 2.4
@@ -1806,7 +1806,7 @@ declare module eui {
      * @language en_US
      *
      * @copy eui.UIComponents
-     * @event egret.Event.COMPLETE Emit when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
+     * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
      * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
@@ -2580,9 +2580,9 @@ declare module eui {
      * <p>You can get or set this state programmatically
      * by using the <code>selected</code> property.</p>
      *
-     * @event egret.Event.CHANGE Emitted when the <code>selected</code> property
+     * @event egret.Event.CHANGE Dispatched when the <code>selected</code> property
      * changes for the ToggleButton control.
-     * This event is emitted only when the
+     * This event is dispatched only when the
      * user interacts with the control by touching.
      *
      * @state up Button up state
@@ -4879,7 +4879,7 @@ declare module eui {
         /**
          * @language en_US
          * Specifies whether live dragging is enabled for the slider. If true, sets the value
-         * and values properties and emits the change event continuously as
+         * and values properties and dispatches the change event continuously as
          * the user moves the thumb.
          *
          * @default true
@@ -5183,7 +5183,7 @@ declare module eui {
      * to show the data. you can also set the <code>source</code> property, Image will auto load
      * and show the url image or the bitmapData.
      *
-     * @event egret.Event.COMPLETE Emitted when the image loaded complete.
+     * @event egret.Event.COMPLETE Dispatched when the image loaded complete.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -6105,7 +6105,7 @@ declare module eui.sys {
         /**
          * @private
          */
-        emitChangeAfterSelection = 4,
+        dispatchChangeAfterSelection = 4,
         /**
          * @private
          */
@@ -6125,14 +6125,14 @@ declare module eui {
      * @language en_US
      * The ListBase class is the base class for list component.
      * It can display items of list as vertical or horizontal such as SELECT of HTML.
-     * @event egret.Event.CHANGE Emitted after the selection has changed.
-     * This event is emitted when the user interacts with the control.
-     * @event egret.Event.CHANGING Emitted when the selection is going to change.
+     * @event egret.Event.CHANGE Dispatched after the selection has changed.
+     * This event is dispatched when the user interacts with the control.
+     * @event egret.Event.CHANGING Dispatched when the selection is going to change.
      * Calling the <code>preventDefault()</code> method
      * on the event prevents the selection from changing.<p/>
-     * This event is emitted when the user interacts with the control.
+     * This event is dispatched when the user interacts with the control.
      *
-     * @event eui.ItemTapEvent.ITEM_TAP emitted when the user tap an item in the control.
+     * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
      *
      * @version Egret 2.4
      * @version Swan 1.0
@@ -6232,9 +6232,9 @@ declare module eui {
          * </ul><p/>
          *
          * When the user changes the <code>selectedIndex</code> property by interacting with the control,
-         * the control emits the <code>change</code> and <code>changing</code> events.
+         * the control dispatches the <code>change</code> and <code>changing</code> events.
          * When you change the value of the <code>selectedIndex</code> property programmatically,
-         * it does not emits the <code>change</code> and <code>changing</code> events.</p>
+         * it does not dispatches the <code>change</code> and <code>changing</code> events.</p>
          *
          * @default -1
          * @version Egret 2.4
@@ -6269,7 +6269,7 @@ declare module eui {
          * Used internally to specify whether the selectedIndex changed programmatically or due to
          * user interaction.
          * @param value the new index need to select.
-         * @param emitChangeEvent if true, the component will emit a "change" event if the
+         * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * value has changed.
          * @version Egret 2.4
          * @version Swan 1.0
@@ -6279,12 +6279,12 @@ declare module eui {
          * @language zh_CN
          * 由程序或者用户设置选中项。
          * @param value 索引值。
-         * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
+         * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected setSelectedIndex(value: number, emitChangeEvent?: boolean): void;
+        protected setSelectedIndex(value: number, dispatchChangeEvent?: boolean): void;
         /**
          * @language en_US
          * The item that is currently selected.
@@ -6304,9 +6304,9 @@ declare module eui {
          * </ul><p/>
          *
          * When the user changes the <code>selectedItem</code> property by interacting with the control,
-         * the control emits the <code>change</code> and <code>changing</code> events.
+         * the control dispatches the <code>change</code> and <code>changing</code> events.
          * When you change the value of the <code>selectedIndex</code> property programmatically,
-         * it does not emits the <code>change</code> and <code>changing</code> events.</p>
+         * it does not dispatches the <code>change</code> and <code>changing</code> events.</p>
          *
          * @default undefined
          * @version Egret 2.4
@@ -6342,7 +6342,7 @@ declare module eui {
          * Used internally to specify whether the selectedItem changed programmatically or due to
          * user interaction.
          * @param value the new item need to select.
-         * @param emitChangeEvent if true, the component will emit a "change" event if the
+         * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -6351,12 +6351,12 @@ declare module eui {
          * @language zh_CN
          * 由程序或用户设置选中项数据源。
          * @param value 要选中的项。
-         * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
+         * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected setSelectedItem(value: any, emitChangeEvent?: boolean): void;
+        protected setSelectedItem(value: any, dispatchChangeEvent?: boolean): void;
         /**
          * @language en_US
          * Processes the properties set on the component.
@@ -6411,11 +6411,11 @@ declare module eui {
         /**
          * @language en_US
          * The selection validation and commitment workhorse method.
-         * Called to commit the pending selected index. This method emits
+         * Called to commit the pending selected index. This method dispatches
          * the "changing" event, and if the event is not cancelled,
-         * commits the selection change and then emits the "change"
+         * commits the selection change and then dispatches the "change"
          * event.
-         * @param emitChangedEvents if emit a "changed" event.
+         * @param dispatchChangedEvents if dispatch a "changed" event.
          * @return true if the selection was committed, or false if the selection
          * was cancelled.
          * @version Egret 2.4
@@ -6426,20 +6426,20 @@ declare module eui {
          * @language zh_CN
          * 提交选中项属性。该方法会派发一个“changing”事件，如果该事件没有被阻止，
          * 该方法将会提交选择项病根据参数派发“change”事件。
-         * @param emitChangedEvents 是否派发一个“changed”事件。
+         * @param dispatchChangedEvents 是否派发一个“changed”事件。
          * @return true 表示提交成功, false表示被取消
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected commitSelection(emitChangedEvents?: boolean): boolean;
+        protected commitSelection(dispatchChangedEvents?: boolean): boolean;
         /**
          * @language en_US
          * Adjusts the selected index to account for items being added to or
          * removed from this component.
-         * It does not emit a <code>change</code> event because the change did not
+         * It does not dispatch a <code>change</code> event because the change did not
          * occur as a direct result of user-interaction.  Moreover,
-         * it does not emit a <code>changing</code> event
+         * it does not dispatch a <code>changing</code> event
          * or allow the cancellation of the selection.
          * It also does not call the <code>itemSelected()</code> method,
          * since the same item is selected;
@@ -6596,7 +6596,7 @@ declare module eui {
         protected onRendererTouchBegin(event: egret.TouchEvent): void;
         /**
          * @language en_US
-         * Handles <code>egret.TouchEvent.TOUCH_END</code> events and emit <code>ItemTapEvent.ITEM_TAP</code> event.
+         * Handles <code>egret.TouchEvent.TOUCH_END</code> events and dispatch <code>ItemTapEvent.ITEM_TAP</code> event.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
          * @version Swan 1.0
@@ -6725,7 +6725,7 @@ declare module eui {
          * user interaction.
          *
          * @param value An array of numbers representing the indices of the selected
-         * @param emitChangeEvent whether emitted a change event.
+         * @param dispatchChangeEvent whether dispatched a change event.
          *
          * @version Egret 2.4
          * @version Swan 1.0
@@ -6736,13 +6736,13 @@ declare module eui {
          * 设置多个选中项。
          *
          * @param value 选中项索引的数组
-         * @param emitChangeEvent 是否派发changed事件
+         * @param dispatchChangeEvent 是否派发changed事件
          *
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected setSelectedIndices(value: number[], emitChangeEvent?: boolean): void;
+        protected setSelectedIndices(value: number[], dispatchChangeEvent?: boolean): void;
         /**
          * @inheritDoc
          *
@@ -6758,7 +6758,7 @@ declare module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected commitSelection(emitChangedEvents?: boolean): boolean;
+        protected commitSelection(dispatchChangedEvents?: boolean): boolean;
         /**
          * @private
          * 是否是有效的索引
@@ -6812,7 +6812,7 @@ declare module eui {
      * The Panel class defines a container that includes a title bar,
      * a closeButton, a moveArea, and a content area for its children.
      *
-     * @event eui.UIEvent.CLOSING Emitted when the close button is taped
+     * @event eui.UIEvent.CLOSING Dispatched when the close button is taped
      * you can use <code>event.preventDefault()</code> to prevent close.
      *
      * @defaultProperty elementsContent
@@ -6876,7 +6876,7 @@ declare module eui {
         /**
          * @language en_US
          * The skin part that defines the appearance of the close button.
-         * When taped, the close button emits a <code>closing</code> event.
+         * When taped, the close button dispatches a <code>closing</code> event.
          *
          * @skinPart
          *
@@ -6979,7 +6979,7 @@ declare module eui {
         protected partRemoved(partName: string, instance: any): void;
         /**
          * @language en_US
-         * Emites the "closing" event when the closeButton is clicked.
+         * Dispatch the "closing" event when the closeButton is clicked.
          *
          * @version Egret 2.4
          * @version Swan 1.0
@@ -7485,7 +7485,7 @@ declare module eui {
      * that act as a single mutually exclusive component; therefore,
      * a user can select only one RadioButton component at a time.
      *
-     * @event egret.Event.CHANGE Emitted when the value of the selected RadioButton component in
+     * @event egret.Event.CHANGE Dispatched when the value of the selected RadioButton component in
      * this group changes.
      *
      * @version Egret 2.4
@@ -7708,8 +7708,8 @@ declare module eui {
      * Rather than allow the child to extend past the boundaries of the parent container,
      * the Scroller specifies to clip the child to the boundaries and display scroll bars.</p>
      *
-     * @event eui.UIEvent.CHANGE_START Emitted when the scroll position is going to change
-     * @event eui.UIEvent.CHANGE_END Emitted when the scroll position changed complete
+     * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
+     * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -7945,7 +7945,7 @@ declare module eui {
          *
          * @param event
          */
-        private delayEmitEvent(event);
+        private delayDispatchEvent(event);
         /**
          * @private
          *
@@ -8585,7 +8585,7 @@ declare module eui {
      * the old one because it appears in the same location.
      * However, the old child container still exists; it is just invisible.
      *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Emitted when the ICollection has been updated in some way.
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ICollection has been updated in some way.
      *
      * @version Egret 2.4
      * @version Swan 1.0
@@ -9500,7 +9500,7 @@ declare module eui {
      * @language en_US
      * Note: The skin name values in the skin theme are used as default values,which can not be changed while running.
      * You can change the skin of a component with the skinName property.
-     * @event egret.Event.COMPLETE Emit when EXML used in this theme is loaded and parsed.
+     * @event egret.Event.COMPLETE Dispatch when EXML used in this theme is loaded and parsed.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -9625,7 +9625,7 @@ declare module eui {
     /**
      * @language en_US
      * The eui.CollectionEvent class represents an event that is
-     * emitted when the associated collection changes.
+     * dispatched when the associated collection changes.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -9642,7 +9642,7 @@ declare module eui {
     class CollectionEvent extends egret.Event {
         /**
          * @language en_US
-         * Emitted when a collection has changed.
+         * Dispatched when a collection has changed.
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -9810,10 +9810,10 @@ declare module eui {
         protected clean(): void;
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param kind Indicates the kind of event that occured.
          * The parameter value can be one of the values in the CollectionEventKind
@@ -9858,7 +9858,7 @@ declare module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        static emitCollectionEvent(target: egret.IEventDispatcher, eventType: string, kind?: string, location?: number, oldLocation?: number, items?: any[], oldItems?: any[]): boolean;
+        static dispatchCollectionEvent(target: egret.IEventDispatcher, eventType: string, kind?: string, location?: number, oldLocation?: number, items?: any[], oldItems?: any[]): boolean;
     }
 }
 declare module eui {
@@ -9982,7 +9982,7 @@ declare module eui {
 declare module eui {
     /**
      * @language en_US
-     * Represents events that are emitted when a item has been touched.
+     * Represents events that are dispatched when a item has been touched.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -10067,10 +10067,10 @@ declare module eui {
         protected clean(): void;
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param itemRenderer The item renderer in the list of the associated item.
          *
@@ -10090,7 +10090,7 @@ declare module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        static emitItemTapEvent(target: egret.IEventDispatcher, eventType: string, itemRenderer?: IItemRenderer): boolean;
+        static dispatchItemTapEvent(target: egret.IEventDispatcher, eventType: string, itemRenderer?: IItemRenderer): boolean;
     }
 }
 declare module eui {
@@ -10117,7 +10117,7 @@ declare module eui {
     class PropertyEvent extends egret.Event {
         /**
          * @language en_US
-         * Emit when a property changed.
+         * Dispatch when a property changed.
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -10176,10 +10176,10 @@ declare module eui {
         property: string;
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param property Name of the property that changed.
          *
@@ -10199,7 +10199,7 @@ declare module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        static emitPropertyEvent(target: egret.IEventDispatcher, eventType: string, property?: string): boolean;
+        static dispatchPropertyEvent(target: egret.IEventDispatcher, eventType: string, property?: string): boolean;
     }
 }
 declare module eui {
@@ -10346,10 +10346,10 @@ declare module eui {
         static MOVE: string;
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          *
          * @version Egret 2.4
@@ -10367,7 +10367,7 @@ declare module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        static emitUIEvent(target: egret.IEventDispatcher, eventType: string): boolean;
+        static dispatchUIEvent(target: egret.IEventDispatcher, eventType: string): boolean;
     }
 }
 declare module eui.sys {

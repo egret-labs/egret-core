@@ -1786,7 +1786,7 @@ var egret;
              * @private
              */
             p.onBlobError = function (event) {
-                this.emitIOError(this.currentURL);
+                this.dispatchIOError(this.currentURL);
             };
             /**
              * @private
@@ -1829,9 +1829,9 @@ var egret;
                 if (!image) {
                     return;
                 }
-                this.emitIOError(image.src);
+                this.dispatchIOError(image.src);
             };
-            p.emitIOError = function (url) {
+            p.dispatchIOError = function (url) {
                 var self = this;
                 window.setTimeout(function () {
                     if (DEBUG && !self.hasEventListener(egret.IOErrorEvent.IO_ERROR)) {

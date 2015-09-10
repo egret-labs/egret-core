@@ -7,18 +7,18 @@ declare module egret {
     /**
      * @language en_US
      * Registers the runtime class information for a class.This method adds some strings which represent the class name or
-     * some interface names to the class definition. After the registration,you can use lark.is() method to do the type checking
+     * some interface names to the class definition. After the registration,you can use egret.is() method to do the type checking
      * for the instance of this class.<br/>
-     * Note:If you use the TypeScript programming language, the lark command line tool will automatically generate the registration code line.
+     * Note:If you use the TypeScript programming language, the egret command line tool will automatically generate the registration code line.
      * You don't need to manually call this method.
      *
-     * @example the following code shows how to register the runtime class information for the EventEmitter class and do the type checking:
+     * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
      * <pre>
-     *      lark.registerClass(lark.EventEmitter,"lark.EventEmitter",["lark.IEventEmitter"]);
-     *      var emitter = new lark.EventEmitter();
-     *      lark.log(lark.is(emitter, "lark.IEventEmitter"));  //true。
-     *      lark.log(lark.is(emitter, "lark.EventEmitter"));   //true。
-     *      lark.log(lark.is(emitter, "lark.Bitmap"));   //false。
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      var dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
      * </pre>
      * @param classDefinition the class definition to be registered.
      * @param className  a unique identification string of the specific class
@@ -29,17 +29,17 @@ declare module egret {
     /**
      * @language zh_CN
      * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
-     * 在运行时，这个类的实例将可以使用 lark.is() 方法传入一个字符串来判断实例类型。
-     * @example 以下代码演示了如何为EventEmitter类注册运行时类信息并判断类型：
+     * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个字符串来判断实例类型。
+     * @example 以下代码演示了如何为EventDispatcher类注册运行时类信息并判断类型：
      * <pre>
-     *      //为lark.EventEmitter类注册运行时类信息，由于它实现了IEventEmitter接口，这里应同时传入接口名对应的字符串。
-     *      lark.registerClass(lark.EventEmitter,"lark.EventEmitter",["lark.IEventEmitter"]);
-     *      var emitter = new lark.EventEmitter();
-     *      lark.log(lark.is(emitter, "lark.IEventEmitter"));  //true。
-     *      lark.log(lark.is(emitter, "lark.EventEmitter"));   //true。
-     *      lark.log(lark.is(emitter, "lark.Bitmap"));   //false。
+     *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      var dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
      * </pre>
-     * 注意：若您使用 TypeScript 来编写程序，lark 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
+     * 注意：若您使用 TypeScript 来编写程序，egret 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
      *
      * @param classDefinition 要注册的类定义。
      * @param className 要注册的类名。
@@ -132,14 +132,14 @@ declare module egret {
      * the IEventDispatcher interface and is the base class for the DisplayObject class. The EventDispatcher class allows
      * any object on the display list to be an event target and as such, to use the methods of the IEventDispatcher interface.
      * Event targets are an important part of the Egret event model. The event target serves as the focal point for how events
-     * flow through the display list hierarchy. When an event such as a touch tap, Egret emits an event object into the
+     * flow through the display list hierarchy. When an event such as a touch tap, Egret dispatches an event object into the
      * event flow from the root of the display list. The event object then makes its way through the display list until it
      * reaches the event target, at which point it begins its return trip through the display list. This round-trip journey
      * to the event target is conceptually divided into three phases: <br/>
      * the capture phase comprises the journey from the root to the last node before the event target's node, the target
      * phase comprises only the event target node, and the bubbling phase comprises any subsequent nodes encountered on
      * the return trip to the root of the display list. In general, the easiest way for a user-defined class to gain event
-     * emitting capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending
+     * dispatching capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending
      * another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member, and write simple
      * hooks to route calls into the aggregated EventDispatcher.
      * @see egret.IEventDispatcher
@@ -165,7 +165,7 @@ declare module egret {
         /**
          * @language en_US
          * create an instance of the EventDispatcher class.
-         * @param target The target object for events emitted to the EventDispatcher object. This parameter is used when
+         * @param target The target object for events dispatched to the EventDispatcher object. This parameter is used when
          * the EventDispatcher instance is aggregated by a class that implements IEventDispatcher; it is necessary so that the
          * containing object can be the target for events. Do not use this parameter in simple cases in which a class extends EventDispatcher.
          * @version Egret 2.0
@@ -254,7 +254,7 @@ declare module egret.sys {
         /**
          * @private
          */
-        emitOnce: boolean;
+        dispatchOnce: boolean;
     }
 }
 declare module egret {
@@ -1399,17 +1399,17 @@ declare module egret {
      * instance, but rather all DisplayObject instances, including those that are not on the display list. This means that you
      * can add a listener to any DisplayObject instance to listen for broadcast events.
      *
-     * @event egret.Event.ADDED Emitted when a display object is added to the display list.
-     * @event egret.Event.ADDED_TO_STAGE Emitted when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
-     * @event egret.Event.REMOVED Emitted when a display object is about to be removed from the display list.
-     * @event egret.Event.REMOVED_FROM_STAGE Emitted when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
-     * @event egret.Event.ENTER_FRAME [broadcast event] Emitted when the playhead is entering a new frame.
-     * @event egret.Event.RENDER [broadcast event] Emitted when the display list is about to be updated and rendered.
-     * @event egret.TouchEvent.TOUCH_MOVE Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
-     * @event egret.TouchEvent.TOUCH_BEGIN Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_END Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_TAP Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.Event.ADDED Dispatched when a display object is added to the display list.
+     * @event egret.Event.ADDED_TO_STAGE Dispatched when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
+     * @event egret.Event.REMOVED Dispatched when a display object is about to be removed from the display list.
+     * @event egret.Event.REMOVED_FROM_STAGE Dispatched when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
+     * @event egret.Event.ENTER_FRAME [broadcast event] Dispatched when the playhead is entering a new frame.
+     * @event egret.Event.RENDER [broadcast event] Dispatched when the display list is about to be updated and rendered.
+     * @event egret.TouchEvent.TOUCH_MOVE Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
+     * @event egret.TouchEvent.TOUCH_BEGIN Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_END Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_TAP Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
@@ -2207,13 +2207,13 @@ declare module egret {
         /**
          * @language en_US
          * The BitmapData object being referenced.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 BitmapData 对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         bitmapData: BitmapData | Texture;
@@ -4162,13 +4162,13 @@ declare module egret {
         /**
          * @language en_US
          * The BitmapData object being referenced.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 BitmapData 对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         bitmapData: BitmapData;
@@ -4520,7 +4520,7 @@ declare module egret {
      * it through the stage property of a DisplayObject instance.<br/>
      * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
      * properties and methods. Many of these properties and methods are inapplicable to Stage objects.
-     * @event egret.Event.RESIZE Emitted when the stageWidth or stageHeight property of the Stage object is changed.
+     * @event egret.Event.RESIZE Dispatched when the stageWidth or stageHeight property of the Stage object is changed.
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample egret/display/Stage.ts
@@ -4758,7 +4758,7 @@ declare module egret {
     class Event extends HashObject {
         /**
          * @language en_US
-         * Emitted when a display object is added to the on stage display list, either directly or through the addition
+         * Dispatched when a display object is added to the on stage display list, either directly or through the addition
          * of a sub tree in which the display object is contained.
          * @version Egret 2.0
          * @platform Web,Native
@@ -4772,7 +4772,7 @@ declare module egret {
         static ADDED_TO_STAGE: string;
         /**
          * @language en_US
-         * Emitted when a display object is about to be removed from the display list, either directly or through the removal
+         * Dispatched when a display object is about to be removed from the display list, either directly or through the removal
          * of a sub tree in which the display object is contained.
          * @version Egret 2.0
          * @platform Web,Native
@@ -4786,7 +4786,7 @@ declare module egret {
         static REMOVED_FROM_STAGE: string;
         /**
          * @language en_US
-         * Emitted when a display object is added to the display list.
+         * Dispatched when a display object is added to the display list.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4799,7 +4799,7 @@ declare module egret {
         static ADDED: string;
         /**
          * @language en_US
-         * Emitted when a display object is about to be removed from the display list.
+         * Dispatched when a display object is about to be removed from the display list.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4812,7 +4812,7 @@ declare module egret {
         static REMOVED: string;
         /**
          * @language en_US
-         * [broadcast event] Emitted when the playhead is entering a new frame.
+         * [broadcast event] Dispatched when the playhead is entering a new frame.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4825,7 +4825,7 @@ declare module egret {
         static ENTER_FRAME: string;
         /**
          * @language en_US
-         * Emitted when the display list is about to be updated and rendered.
+         * Dispatched when the display list is about to be updated and rendered.
          * Note: Every time you want to receive a render event,you must call the stage.invalidate() method.
          * @version Egret 2.0
          * @platform Web,Native
@@ -4841,7 +4841,7 @@ declare module egret {
         static RENDER: string;
         /**
          * @language en_US
-         * Emitted when the size of stage or UIComponent is changed.
+         * Dispatched when the size of stage or UIComponent is changed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4854,7 +4854,7 @@ declare module egret {
         static RESIZE: string;
         /**
          * @language en_US
-         * Emitted when the value or selection of a property is chaned.
+         * Dispatched when the value or selection of a property is chaned.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4867,7 +4867,7 @@ declare module egret {
         static CHANGE: string;
         /**
          * @language en_US
-         * Emitted when the value or selection of a property is going to change.you can cancel this by calling the
+         * Dispatched when the value or selection of a property is going to change.you can cancel this by calling the
          * preventDefault() method.
          * @version Egret 2.0
          * @platform Web,Native
@@ -4881,7 +4881,7 @@ declare module egret {
         static CHANGING: string;
         /**
          * @language en_US
-         * Emitted when the net request is complete.
+         * Dispatched when the net request is complete.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4894,7 +4894,7 @@ declare module egret {
         static COMPLETE: string;
         /**
          * @language en_US
-         * Emitted when loop completed.
+         * Dispatched when loop completed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4907,7 +4907,7 @@ declare module egret {
         static LOOP_COMPLETE: string;
         /**
          * @language en_US
-         * Emitted when the TextInput instance gets focus.
+         * Dispatched when the TextInput instance gets focus.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4920,7 +4920,7 @@ declare module egret {
         static FOCUS_IN: string;
         /**
          * @language en_US
-         * Emitted when the TextInput instance loses focus.
+         * Dispatched when the TextInput instance loses focus.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -4933,7 +4933,7 @@ declare module egret {
         static FOCUS_OUT: string;
         /**
          * @language en_US
-         * Emitted when the playback is ended.
+         * Dispatched when the playback is ended.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -5435,78 +5435,78 @@ declare module egret {
      * @language en_US
      * The GeolocationEvent represents the position and altitude of the device on Earth,
      * and show errors occurred while getting the location of the device.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * GeolocationEvent 提供设备的地理位置信息和获取位置时发生的错误信息
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     class GeolocationEvent extends Event {
         /**
          * @language en_US
          * The acquisition of the location information failed because of app don't have permission.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 由于用户拒绝访问位置信息，获取位置信息失败
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static PERMISSION_DENIED: string;
         /**
          * @language en_US
          * The acquisition of the location failed because at least one internal source of position returned an internal error.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设备位置服务不可用或者超时等原因没有得到位置信息
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static UNAVAILABLE: string;
         /**
          * @language en_US
          * The position's longitude in decimal degrees.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 当前位置的经度信息
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         longitude: number;
         /**
          * @language en_US
          * The position's latitude in decimal degrees.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 当前位置的纬度信息
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         latitude: number;
         /**
          * @language en_US
          * The velocity of the device in meters per second. This value can be null.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 当前设备的速度 单位是 米/秒，这个值可能为 null
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         speed: number;
@@ -5517,14 +5517,14 @@ declare module egret {
          * true true north, and the direction is determined clockwise (which means that east
          * is 90 degrees and west is 270 degrees). If speed is 0, heading is NaN. If the
          * device is unable to provide heading information, this value is null.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示设备正在前进的方向，单位是度。heading 表示从正北开始顺时针旋转到当前方向的角度，
          * 比如正东是 90 度，正西是 270 度，如果 speed 是 0，heading 为 NaN。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         heading: number;
@@ -5532,39 +5532,39 @@ declare module egret {
          * @language en_US
          * The position's altitude in metres, relative to sea level.
          * This value can be null if the implementation cannot provide the data.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 该位置的海拔信息，如果设备没有实现这个属性时，这个值有可能为 null
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         altitude: number;
         /**
          * @language en_US
          * The accuracy of the latitude and longitude properties, expressed in meters.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 经纬度的准确性，单位是米
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         accuracy: number;
         /**
          * @language en_US
          * The accuracy of the altitude expressed in meters. This value can be null.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 该位置海拔信息的准确性，单位是米，这个值有可能为 null
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         altitudeAccuracy: number;
@@ -5574,7 +5574,7 @@ declare module egret {
          * @see egret.GeolocationEvent.PERMISSION_DENIED
          * @see egret.GeolocationEvent.UNAVAILABLE
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -5583,20 +5583,20 @@ declare module egret {
          * @see egret.GeolocationEvent.PERMISSION_DENIED
          * @see egret.GeolocationEvent.UNAVAILABLE
          *
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         errorType: string;
         /**
          * @language en_US
          * The error message occurred while get the location of the device.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取位置信息错误的错误信息
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         errorMessage: string;
@@ -5690,14 +5690,14 @@ declare module egret {
     /**
      * @language en_US
      * The IEventDispatcher interface defines methods for adding or removing event listeners, checks whether specific types
-     * of event listeners are registered, and emits events. Event targets are an important part of the Egret event model.
+     * of event listeners are registered, and dispatches events. Event targets are an important part of the Egret event model.
      * The event target serves as the focal point for how events flow through the display list hierarchy. When an event
-     * such as a touch tap occurs, an event object is emitted into the event flow from the root of the display list.
+     * such as a touch tap occurs, an event object is dispatched into the event flow from the root of the display list.
      * The event object makes a round-trip journey to the event target, which is conceptually divided into three phases: <br/>
      * the capture phase includes the journey from the root to the last node before the event target's node; the target
      * phase includes only the event target node; and the bubbling phase includes any subsequent nodes encountered on the
      * return trip to the root of the display list.In general, the easiest way for a user-defined class to gain event
-     * emitting capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already
+     * dispatching capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already
      * extending another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member,
      * and write simple hooks to route calls into the aggregated EventDispatcher.
      * @see egret.EventDispatcher
@@ -5875,8 +5875,8 @@ declare module egret {
         hasEventListener(type: string): boolean;
         /**
          * @language en_US
-         * Emits an event into the event flow. The event target is the EventDispatcher object upon which dispatchEvent() is called.
-         * @param event The event object emitted into the event flow.
+         * Dispatches an event into the event flow. The event target is the EventDispatcher object upon which dispatchEvent() is called.
+         * @param event The event object dispatched into the event flow.
          * @returns A value of true unless preventDefault() is called on the event, in which case it returns false.
          * @version Egret 2.0
          * @platform Web,Native
@@ -5894,7 +5894,7 @@ declare module egret {
          * @language en_US
          * Checks whether an event listener is registered with this EventDispatcher object or any of its ancestors for the
          * specified event type. This method returns true if an event listener is triggered during any phase of the event
-         * flow when an event of the specified type is emitted to this EventDispatcher object or any of its descendants.
+         * flow when an event of the specified type is dispatched to this EventDispatcher object or any of its descendants.
          * @param type The type of event.
          * @returns A value of true if a listener of the specified type will be triggered; false otherwise.
          * @see #hasEventListener()
@@ -5987,7 +5987,7 @@ declare module egret {
      * MotionEvent represents the device's movement
      * Acceleration and accelerationIncludingGravity to represents the device's acceleration
      * RotationRate to represents the device's rotation
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -5995,46 +5995,46 @@ declare module egret {
      * MotionEvent 类呈现设备运动的具体信息
      * Acceleration 和 accelerationIncludingGravity 呈现设备三个维度的加速度信息
      * RotationRate 呈现设备的旋转状态信息
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     class MotionEvent extends Event {
         /**
          * @language en_US
          * An object giving the acceleration of the device on the three axis X, Y and Z. Acceleration is expressed in m/s2.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * acceleration 表示设备在 X Y Z 轴方将的加速度信息，单位是  m/s2，不包含重力
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         acceleration: DeviceAcceleration;
         /**
          * @language en_US
          * An object giving the acceleration of the device on the three axis X, Y and Z with the effect of gravity. Acceleration is expressed in m/s2.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * acceleration 表示设备在 X Y Z 轴方将的加速度信息，单位是  m/s2，包含重力
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         accelerationIncludingGravity: DeviceAcceleration;
         /**
          * @language en_US
          * An object giving the rate of change of the device's orientation on the three orientation axis alpha, beta and gamma. Rotation rate is express in degrees per seconds.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * rotationRate 表示设备在 alpha、 beta 和 gamma 三个轴向的角速度信息，单位是 角度每秒
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         rotationRate: DeviceRotationRate;
@@ -6046,7 +6046,7 @@ declare module egret {
      * The OrientationEvent provides information from the physical orientation of the device.
      * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
      * Take care about this while using them.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -6054,7 +6054,7 @@ declare module egret {
      * OrientationEvent 提供设备的方向信息
      * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
      * 比如使用两次方向数据的变化而不是直接使用方向的值
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     class OrientationEvent extends Event {
@@ -6062,13 +6062,13 @@ declare module egret {
          * @language en_US
          * A number representing the motion of the device around the z axis,
          * express in degrees with values ranging from 0 to 360
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示设备绕 Z 轴的角度，单位是 角度 范围是 0 到 360
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         alpha: number;
@@ -6077,14 +6077,14 @@ declare module egret {
          * A number representing the motion of the device around the x axis,
          * express in degrees with values ranging from -180 to 180.
          * This represents a front to back motion of the device.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示设备绕 X 轴的角度，单位是 角度 范围是 -180 到 180.
          * 这个值表示设备从前向后的旋转状态
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         beta: number;
@@ -6093,14 +6093,14 @@ declare module egret {
          * A number representing the motion of the device around the y axis,
          * express in degrees with values ranging from -90 to 90.
          * This represents a left to right motion of the device.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示设备绕 Y 轴的角度，单位是 角度 范围是 -90 到 90.
          * 这个值表示设备从前向后的旋转状态
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         gamma: number;
@@ -6372,7 +6372,7 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
-     * A Timer object emits a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
+     * A Timer object dispatches a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
      * @see egret.Timer
      * @version Egret 2.0
      * @platform Web,Native
@@ -6389,7 +6389,7 @@ declare module egret {
     class TimerEvent extends Event {
         /**
          * @language en_US
-         * Emitted whenever a Timer object reaches an interval specified according to the Timer.delay property.
+         * Dispatched whenever a Timer object reaches an interval specified according to the Timer.delay property.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -6402,7 +6402,7 @@ declare module egret {
         static TIMER: string;
         /**
          * @language en_US
-         * Emitted whenever it has completed the number of requests set by Timer.repeatCount.
+         * Dispatched whenever it has completed the number of requests set by Timer.repeatCount.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -6494,7 +6494,7 @@ declare module egret {
          */
         /**
          * @language zh_CN
-         * 使用指定的EventEmitter对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 事件派发目标
          * @param type 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
          * @param bubbles 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
@@ -6852,7 +6852,7 @@ declare module egret {
     class TouchEvent extends Event {
         /**
          * @language en_US
-         * Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
+         * Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -6865,7 +6865,7 @@ declare module egret {
         static TOUCH_MOVE: string;
         /**
          * @language en_US
-         * Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+         * Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -6878,7 +6878,7 @@ declare module egret {
         static TOUCH_BEGIN: string;
         /**
          * @language en_US
-         * Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
+         * Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
          * or tablet with a touch screen).
          * @version Egret 2.0
          * @platform Web,Native
@@ -6892,7 +6892,7 @@ declare module egret {
         static TOUCH_END: string;
         /**
          * @language en_US
-         * Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact
+         * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
          * was initiated on a touch-enabled device.
          * @version Egret 2.0
          * @platform Web,Native
@@ -6906,7 +6906,7 @@ declare module egret {
         static TOUCH_TAP: string;
         /**
          * @language en_US
-         * Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact
+         * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
          * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
          * object on a mobile phone or tablet with a touch screen).
          * @version Egret 2.0
@@ -7074,7 +7074,7 @@ declare module egret {
          */
         /**
          * @language zh_CN
-         * 使用指定的EventEmitter对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 派发事件目标
          * @param type 事件的类型，可以作为 Event.type 访问。
          * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
@@ -7911,9 +7911,9 @@ declare module egret {
      * The Sound class lets you create a Sound object, load and play an external audio file into that object.
      * More detailed control of the sound is performed through the SoundChannel
      *
-     * @event egret.Event.COMPLETE Emit when the audio resource is loaded and ready to play
-     * @event egret.IOErrorEvent.IO_ERROR Emit when the audio resource is failed to load
-     * @version Lark 1.0
+     * @event egret.Event.COMPLETE Dispatch when the audio resource is loaded and ready to play
+     * @event egret.IOErrorEvent.IO_ERROR Dispatch when the audio resource is failed to load
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
      */
@@ -7924,7 +7924,7 @@ declare module egret {
      *
      * @event egret.Event.COMPLETE 音频加载完成时抛出
      * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
      */
@@ -7933,14 +7933,14 @@ declare module egret {
          * @language en_US
          * Initiates loading of an external audio file from the specified URL.
          * @param url Audio file URL
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 启动从指定 URL 加载外部音频文件的过程。
          * @param url 需要加载的音频文件URL
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         load(url: string): void;
@@ -7949,7 +7949,7 @@ declare module egret {
          * Generates a new SoundChannel object to play back the sound.
          * @param startTime The initial position in seconds at which playback should start, (default = 0)
          * @param loops Plays, the default value is 0. Greater than 0 to the number of plays, such as 1 to play 1, less than or equal to 0, to loop.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -7957,20 +7957,20 @@ declare module egret {
          * 生成一个新的 SoundChannel 对象来播放该声音。此方法返回 SoundChannel 对象，访问该对象可停止声音调整音量。
          * @param startTime 应开始播放的初始位置（以秒为单位），默认值是 0
          * @param loops 播放次数，默认值是 0，循环播放。 大于 0 为播放次数，如 1 为播放 1 次；小于等于 0，为循环播放。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         play(startTime?: number, loops?: number): SoundChannel;
         /**
          * @language en_US
          * Closes the stream, causing any download of data to cease
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 关闭该流，从而停止所有数据的下载。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         close(): void;
@@ -7998,14 +7998,14 @@ declare module egret {
          * @language en_US
          * Create Sound object, load an external audio file and play
          * @param url Audio file URL, Sound will start to load the media if url is not empty
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建 Sound 对象、将外部音频文件加载到该对象并播放该文件
          * @param url 需要加载的音频文件URL,如果指定了 url, Sound会立即开始加载指定的媒体文件
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         new (): Sound;
@@ -8046,8 +8046,8 @@ declare module egret {
      * The SoundChannel class contains a stop() method, properties for
      * set the volume of the channel
      *
-     * @event egret.Event.SOUND_COMPLETE Emit when a sound has finished playing
-     * @version Lark 1.0
+     * @event egret.Event.SOUND_COMPLETE Dispatch when a sound has finished playing
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
      */
@@ -8057,7 +8057,7 @@ declare module egret {
      * SoundChannel 类包含 stop() 方法、用于设置音量和监视播放进度的属性。
      *
      * @event egret.Event.SOUND_COMPLETE 音频播放完成时抛出
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
     */
@@ -8065,13 +8065,13 @@ declare module egret {
         /**
          * @language en_US
          * The volume, ranging from 0 (silent) to 1 (full volume).
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音量范围从 0（静音）至 1（最大音量）。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         volume: number;
@@ -8079,14 +8079,14 @@ declare module egret {
          * @language en_US
          *  When the sound is playing, the position property indicates
          * in seconds the current point that is being played in the sound file.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @readOnly
          */
         /**
          * @language zh_CN
          * 当播放声音时，position 属性表示声音文件中当前播放的位置（以秒为单位）
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @readOnly
          */
@@ -8094,13 +8094,13 @@ declare module egret {
         /**
          * @language en_US
          * Stops the sound playing in the channel.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 停止在该声道中播放声音。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         stop(): void;
@@ -8115,12 +8115,12 @@ declare module egret {
      *
      * @param url URL of the media to play, Video will start to load if the url is not empty
      *
-     * @event lark.Event.COMPLETE Emit when the video resource is loaded and ready to play
-     * @event lark.Event.ENDED Emit when the video playback ended
-     * @event lark.Event.IO_ERROR when the video is failed to load
-     * @version Lark 1.0
+     * @event egret.Event.COMPLETE Dispatch when the video resource is loaded and ready to play
+     * @event egret.Event.ENDED Dispatch when the video playback ended
+     * @event egret.Event.IO_ERROR when the video is failed to load
+     * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/lark/media/VideoExample.ts
+     * @includeExample examples/Samples/src/egret/media/VideoExample.ts
      */
     /**
      * @language zh_CN
@@ -8129,26 +8129,26 @@ declare module egret {
      *
      * @param url 要播放的视频的URL，如果url不为空，Video会立即加载这个视频
      *
-     * @event lark.Event.COMPLETE 视频加载完成时抛出
-     * @event lark.Event.ENDED 视频播放完成时抛出
-     * @event lark.Event.IO_ERROR 视频加载失败市触发
-     * @version Lark 1.0
+     * @event egret.Event.COMPLETE 视频加载完成时抛出
+     * @event egret.Event.ENDED 视频播放完成时抛出
+     * @event egret.Event.IO_ERROR 视频加载失败市触发
+     * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/lark/media/VideoExample.ts
+     * @includeExample examples/Samples/src/egret/media/VideoExample.ts
      */
     interface Video extends DisplayObject {
         /**
          * @language en_US
          * Initiates loading of an external video file from the specified URL.
          * @param url Audio file URL
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 启动从指定 URL 加载外部视频文件的过程。
          * @param url 需要加载的视频文件URL
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         load(url: string): void;
@@ -8158,7 +8158,7 @@ declare module egret {
          * @param startTime The initial position in seconds at which playback should start, (default = 0)
          * @param loop Defines should play the video again when the video is ended. (default = false)
          * @param fullscreen Defines should play the video in fullscreen mode. (default = false)
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -8167,72 +8167,72 @@ declare module egret {
          * @param startTime 应开始播放的初始位置（以秒为单位），默认值是视频上次结束的位置
          * @param loop 是否需要循环播放，默认值是 false
          * @param fullscreen 是否需要全屏播放，默认值是 false
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         play(startTime?: number, loop?: boolean): any;
         /**
          * @language en_US
          * Closes the stream, causing any download of data to cease
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 关闭该流，从而停止所有数据的下载。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         close(): void;
         /**
          * @language en_US
          * The URL of the video you want to play.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 想要播放的视频的URL
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         src: string;
         /**
          * @language en_US
          * The URL of an image you want to display before the video is loaded or video cannot been draw on the canvas on some mobile device.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 视频加载前，或者在不支持将 video 画在 canvas 的设备上，想要显示的视频截图地址。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         poster: string;
         /**
          * @language en_US
          * Should play the video in fullscreen mode (default = true).
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否全屏播放这个视频（默认值是 true）。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         fullscreen: boolean;
         /**
          * @language en_US
          * The volume, ranging from 0 (silent) to 1 (full volume).
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音量范围从 0（静音）至 1（最大音量）。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         volume: number;
@@ -8240,26 +8240,26 @@ declare module egret {
          * @language en_US
          * When the video is playing, the position property indicates
          * in seconds the current point that is being played in the video file.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 当播放视频时，position 属性表示视频文件中当前播放的位置（以秒为单位）
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         position: number;
         /**
          * @language en_US
          * Pause the video playing.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 暂停播放。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         pause(): void;
@@ -8268,20 +8268,20 @@ declare module egret {
          * Get bitmapData of the video file, you can use the video as bitmapData on the stage.
          * Note: On most mobile device, the video is playback in the full screen mode.
          * So you can just use the play() method instead of draw it on the Stage
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          *  获取视频的 bitmapData, 你可以将视频绘制到舞台上。
          * 注意： 在大多数移动设备中，视频是全屏播放的，所以你可以直接调用 play() 方法全屏播放视频，不用将它绘制在Stage中。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         bitmapData: BitmapData;
     }
     /**
-     * @copy lark.Video
+     * @copy egret.Video
      */
     var Video: {
         new (): Video;
@@ -8521,42 +8521,42 @@ declare module egret {
      * @language en_US
      * The HttpMethod class provides values that specify whether the HttpRequest object should use the POST method
      * or the GET method when sending data to a server.
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * HttpRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
      * HttpRequest 对象应使用 POST 方法还是 GET 方法。
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     class HttpMethod {
         /**
          * @language en_US
          * Specifies that the HttpRequest object is a GET.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示 HttpRequest 对象是一个 GET。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static GET: string;
         /**
          * @language en_US
          * Specifies that the HttpRequest object is a POST.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示 HttpRequest 对象是一个 POST。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static POST: string;
@@ -8569,14 +8569,14 @@ declare module egret {
      * XML, or other information to be used in a dynamic, data-driven application. A HttpRequest object downloads all
      * of the data from a URL before making it available to code in the applications. It sends out notifications about
      * the progress of the download, which you can monitor through the bytesLoaded and bytesTotal properties,
-     * as well as through emitted events.
-     * @event lark.Event.COMPLETE Emitted when the net request is complete.
-     * @event lark.Event.IO_ERROR Emitted when the net request is failed.
-     * @event lark.ProgressEvent.PROGRESS Emitted when data is received as the download operation progresses.
-     * @see lark.HttpMethod
-     * @see lark.HttpResponseType
-     * @includeExample examples/Samples/src/lark/net/HttpRequestExample.ts
-     * @version Lark 1.0
+     * as well as through dispatched events.
+     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
+     * @event egret.Event.IO_ERROR Dispatched when the net request is failed.
+     * @event egret.ProgressEvent.PROGRESS Dispatched when data is received as the download operation progresses.
+     * @see egret.HttpMethod
+     * @see egret.HttpResponseType
+     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -8584,13 +8584,13 @@ declare module egret {
      * HttpRequest 类以文本或二进制数据的形式从 URL 下载数据。
      * HttpRequest 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
      * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
-     * @event lark.Event.COMPLETE 加载完成
-     * @event lark.Event.IO_ERROR 加载失败
-     * @event lark.ProgressEvent.PROGRESS 加载进度，可通过event.bytesLoaded和event.bytesTotal统计进度信息。
-     * @see lark.HttpMethod
-     * @see lark.HttpResponseType
-     * @includeExample examples/Samples/src/lark/net/HttpRequestExample.ts
-     * @version Lark 1.0
+     * @event egret.Event.COMPLETE 加载完成
+     * @event egret.Event.IO_ERROR 加载失败
+     * @event egret.ProgressEvent.PROGRESS 加载进度，可通过event.bytesLoaded和event.bytesTotal统计进度信息。
+     * @see egret.HttpMethod
+     * @see egret.HttpResponseType
+     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @version Egret 2.4
      * @platform Web,Native
      */
     interface HttpRequest extends EventDispatcher {
@@ -8598,31 +8598,31 @@ declare module egret {
          * @language en_US
          * The data received from the load operation.  The format of the data depends on the setting of the responseType property.
          * @readOnly
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 本次请求返回的数据，数据类型根据 responseType 设置的值确定。
          * @readOnly
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         response: any;
         /**
          * @language en_US
          * Controls whether the downloaded data is received as text (HttpResponseType.TEXT) or raw binary data (HttpResponseType.ArrayBuffer)<br/>
-         * Note:If you attempt to set this property to an invalid value, Lark runtime set the value to HttpResponseType.TEXT.
-         * @default lark.HttpResponseType.TEXT
-         * @version Lark 1.0
+         * Note:If you attempt to set this property to an invalid value, Egret runtime set the value to HttpResponseType.TEXT.
+         * @default egret.HttpResponseType.TEXT
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置返回的数据格式为文本（HttpResponseType.TEXT）还是二进制数据（HttpResponseType.ArrayBuffer）<br/>
          * 注意：若尝试设置此属性为一个非法的值，运行时将使用HttpResponseType.TEXT。
-         * @default lark.HttpResponseType.TEXT
-         * @version Lark 1.0
+         * @default egret.HttpResponseType.TEXT
+         * @version Egret 2.4
          * @platform Web,Native
          */
         responseType: string;
@@ -8631,14 +8631,14 @@ declare module egret {
          * indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies
          * or authorization headers. (This never affects same-site requests.)
          * @default false
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表明在进行跨站(cross-site)的访问控制(Access-Control)请求时，是否使用认证信息(例如cookie或授权的header)。(这个标志不会影响同站的请求)
          * @default false
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         withCredentials: boolean;
@@ -8649,8 +8649,8 @@ declare module egret {
          * called) is the equivalent of calling abort().
          * @param url The URL to send the request to.
          * @param method The HTTP method to use, please use the const value in the HttpMethod class.
-         * @see lark.HttpMethod
-         * @version Lark 1.0
+         * @see egret.HttpMethod
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -8659,8 +8659,8 @@ declare module egret {
          * 注意: 若在已经发出请求的对象上调用此方法，相当于立即调用abort().
          * @param url 该请求所要访问的URL该请求所要访问的URL
          * @param method 请求所使用的HTTP方法， 请使用 HttpMethod 定义的枚举值.
-         * @see lark.HttpMethod
-         * @version Lark 1.0
+         * @see egret.HttpMethod
+         * @version Egret 2.4
          * @platform Web,Native
          */
         open(url: string, method?: string): void;
@@ -8668,40 +8668,40 @@ declare module egret {
          * @language en_US
          * Sends the request.
          * @param data the data to send.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 发送请求.
          * @param data 需要发送的数据
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         send(data?: any): void;
         /**
          * @language en_US
          * Aborts the request if it has already been sent.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 如果请求已经被发送,则立刻中止请求.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         abort(): void;
         /**
          * @language en_US
          * Returns all the response headers as a string, or null if no response has been received.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回所有响应头信息(响应头名和值), 如果响应头还没接受,则返回"".
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         getAllResponseHeaders(): string;
@@ -8710,7 +8710,7 @@ declare module egret {
          * Sets the value of an HTTP request header. You must call setRequestHeader() after open().
          * @param header The name of the header whose value is to be set.
          * @param value The value to set as the body of the header.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -8718,7 +8718,7 @@ declare module egret {
          * 给指定的HTTP请求头赋值.在这之前,您必须确认已经调用 open() 方法打开了一个url.
          * @param header 将要被赋值的请求头名称.
          * @param value 给指定的请求头赋的值.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         setRequestHeader(header: string, value: string): void;
@@ -8727,14 +8727,14 @@ declare module egret {
          * Returns the string containing the text of the specified header, or null if either the response has not yet been
          * received or the header doesn't exist in the response.
          * @param header The name of the header whose value is to be get.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回指定的响应头的值, 如果响应头还没被接受,或该响应头不存在,则返回"".
          * @param header 要返回的响应头名称
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         getResponseHeader(header: string): string;
@@ -8742,13 +8742,13 @@ declare module egret {
     /**
      * @language en_US
      * Creates a HttpRequest object.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 创建一个 HttpRequest 实例。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var HttpRequest: {
@@ -8759,41 +8759,41 @@ declare module egret {
     /**
      * @language en_US
      * The HttpResponseType class provides values that specify how downloaded data is received.
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     class HttpResponseType {
         /**
          * @language en_US
          * Specifies that downloaded data is received as text. This is the default value of HttpRequest.responseType
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回字符串。HttpRequest.responseType属性的默认值。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static TEXT: string;
         /**
          * @language en_US
          * Specifies that downloaded data is received as raw binary data.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回二进制的ArrayBuffer对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static ARRAY_BUFFER: string;
@@ -8804,36 +8804,36 @@ declare module egret {
      * @language en_US
      * The Loader class is used to load image (JPG, PNG, or GIF) files. Use the load() method to initiate loading.
      * The loaded image data is in the data property of ImageLoader.
-     * @event lark.Event.COMPLETE Emitted when the net request is complete.
-     * @event lark.Event.IO_ERROR Emitted when the net request is failed.
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
+     * @event egret.Event.IO_ERROR Dispatched when the net request is failed.
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/lark/net/ImageLoaderExample.ts
+     * @includeExample examples/Samples/src/egret/net/ImageLoaderExample.ts
      */
     /**
      * @language zh_CN
      * ImageLoader 类可用于加载图像（JPG、PNG 或 GIF）文件。使用 load() 方法来启动加载。被加载的图像对象数据将存储在 ImageLoader.data 属性上 。
-     * @event lark.Event.COMPLETE 加载完成
-     * @event lark.Event.IO_ERROR 加载失败
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @event egret.Event.COMPLETE 加载完成
+     * @event egret.Event.IO_ERROR 加载失败
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/lark/net/ImageLoaderExample.ts
+     * @includeExample examples/Samples/src/egret/net/ImageLoaderExample.ts
      */
     interface ImageLoader extends EventDispatcher {
         /**
          * @language en_US
          * The data received from the load operation.
          * @default null
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 使用 load() 方法加载成功的 BitmapData 图像数据。
          * @default null
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         data: BitmapData;
@@ -8842,14 +8842,14 @@ declare module egret {
          * Specifies whether or not cross-site Access-Control requests should be made when loading a image from foreign origins.<br/>
          * possible values are:"anonymous","use-credentials" or null.
          * @default null
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。<br/>
          * 可以设置为"anonymous","use-credentials"或null,设置为其他值将等同于"anonymous"。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         crossOrigin: string;
@@ -8859,7 +8859,7 @@ declare module egret {
          * Note: Calling this method for an already active request (one for which load() has already been
          * called) will abort the last load operation immediately.
          * @param url 要加载的图像文件的地址。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -8867,7 +8867,7 @@ declare module egret {
          * 启动一次图像加载。<br/>
          * 注意：若之前已经调用过加载请求，重新调用 load() 将终止先前的请求，并开始新的加载。
          * @param url 要加载的图像文件的地址。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         load(url: string): void;
@@ -8875,13 +8875,13 @@ declare module egret {
     /**
      * @language en_US
      * Creates a ImageLoader object
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 创建一个 ImageLoader 实例
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var ImageLoader: {
@@ -9491,13 +9491,13 @@ declare module egret {
     /**
      * @language en_US
      * The Geolocation able to obtain the position of the device.
-     * Geolocation will emit CHANGE event when the device's location is changed.
-     * It will emit IO_ERROR event if the location request is denied
+     * Geolocation will dispatch CHANGE event when the device's location is changed.
+     * It will dispatch IO_ERROR event if the location request is denied
      * or there is no location service on the device.
      *
      * @event egret.Event.CHANGE The device's location is changed
      * @event egret.Event.IO_ERROR Error occurred while getting the location
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
@@ -9509,7 +9509,7 @@ declare module egret {
      *
      * @event egret.Event.CHANGE 设备位置发生改变
      * @event egret.Event.IO_ERROR 获取设备位置时发生错误
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
@@ -9518,14 +9518,14 @@ declare module egret {
          * @language en_US
          * Start to monitor the device's location
          * @returns
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 开始监听设备位置信息
          * @returns
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         start(): void;
@@ -9533,14 +9533,14 @@ declare module egret {
          * @language en_US
          * Stop monitor the device's location
          * @returns
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 停止监听设备位置信息
          * @returns
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         stop(): void;
@@ -9561,12 +9561,12 @@ declare module egret {
     };
     /**
      * @language en_US
-     * The Motion class emits events based on activity detected by the device's motion sensor.
+     * The Motion class dispatches events based on activity detected by the device's motion sensor.
      * This data represents the device's movement along a 3-dimensional axis. When the device moves,
-     * the sensor detects this movement and emit the CHANGE event. @see egret.MotionEvent
+     * the sensor detects this movement and dispatch the CHANGE event. @see egret.MotionEvent
      *
      * @event egret.Event.CHANGE device is moved
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
      */
@@ -9577,7 +9577,7 @@ declare module egret {
      * Motion 类提供了 start 和 stop 方法，来启动和停止运动信息检查
      *
      * @event egret.Event.CHANGE 运动状态发生改变
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
      */
@@ -9585,26 +9585,26 @@ declare module egret {
         /**
          * @language en_US
          * Start to monitor device movement
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 开始监听设备运动状态
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         start(): void;
         /**
          * @language en_US
          * Stop monitor device movement
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 停止监听设备运动状态
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         stop(): void;
@@ -9613,52 +9613,52 @@ declare module egret {
      * @language en_US
      * A DeviceRotationRate object provides information about the rate at which
      * the device is rotating around all three axes.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * DeviceRotationRate 提供设备围绕三个轴旋转的角速度信息，单位是 角度/秒
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     interface DeviceRotationRate {
         /**
          * @language en_US
          * The amount of rotation around the Z axis, in degrees per second.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设备绕 Z 轴旋转的角速度信息，单位是 度/秒
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         alpha: number;
         /**
          * @language en_US
          * The amount of rotation around the X axis, in degrees per second.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设备绕 X 轴旋转的角速度信息，单位是 度/秒
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         beta: number;
         /**
          * @language en_US
          * The amount of rotation around the Y axis, in degrees per second.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设备绕 Y 轴旋转的角速度信息，单位是 度/秒
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         gamma: number;
@@ -9668,52 +9668,52 @@ declare module egret {
      * A DeviceAcceleration object provides information about the amount
      * of acceleration the device is experiencing along all three axes.
      * Acceleration is expressed in m/s2.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * DeviceAcceleration 提供设备在三个维度的加速度信息，加速度值的单位是 m/s2
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     interface DeviceAcceleration {
         /**
          * @language en_US
          * The amount of acceleration along the X axis
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * X 轴方向的加速度值
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         x: number;
         /**
          * @language en_US
          * The amount of acceleration along the Y axis
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * Y 轴方向的加速度值
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         y: number;
         /**
          * @language en_US
          * The amount of acceleration along the Z axis
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * Z 轴方向的加速度值
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         z: number;
@@ -9731,7 +9731,7 @@ declare module egret {
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
      *
      * @event egret.Event.CHANGE device's orientation is changed
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
      */
@@ -9739,7 +9739,7 @@ declare module egret {
      * @language zh_CN
      * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
      * @event egret.Event.CHANGE 设备方向改变时派发
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
      */
@@ -9747,26 +9747,26 @@ declare module egret {
         /**
          * @language en_US
          * Start to monitor the device's orientation
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 开始监听设备方向变化
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         start(): void;
         /**
          * @language en_US
          * Stop monitor the device's orientation
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 停止监听设备方向变化
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         stop(): void;
@@ -10236,33 +10236,23 @@ declare module egret {
         /**
          * @private
          */
-        private _textWidth;
+        private textWidth;
         /**
          * @private
          */
-        private _textHeight;
+        private textHeight;
         /**
          * @private
          */
-        private _textOffsetX;
+        private textOffsetX;
         /**
          * @private
          */
-        private _textOffsetY;
+        private textOffsetY;
         /**
          * @private
          */
-        private _textLines;
-        /**
-         * @private
-         */
-        $lineHeights: Array<number>;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        $getTextLines(): Array<string>;
+        private textLines;
     }
 }
 declare module egret {
@@ -11048,7 +11038,7 @@ declare module egret {
         /**
          * @private
          */
-        private _inputUtils;
+        private inputUtils;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -11067,12 +11057,6 @@ declare module egret {
          */
         type: string;
         /**
-         * @private
-         *
-         * @param value
-         */
-        _setType(value: string): void;
-        /**
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -11085,12 +11069,6 @@ declare module egret {
          * 作为文本字段中当前文本的字符串
          */
         text: string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setBaseText(value: string): boolean;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -11109,12 +11087,6 @@ declare module egret {
          */
         displayAsPassword: boolean;
         /**
-         * @private
-         *
-         * @param value
-         */
-        _setDisplayAsPassword(value: boolean): void;
-        /**
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -11131,12 +11103,6 @@ declare module egret {
          * @default 0x000000
          */
         strokeColor: number;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setStrokeColor(value: number): void;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -11155,12 +11121,6 @@ declare module egret {
          */
         stroke: number;
         /**
-         * @private
-         *
-         * @param value
-         */
-        _setStroke(value: number): void;
-        /**
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -11177,12 +11137,6 @@ declare module egret {
          * @default 0
          */
         maxChars: number;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setMaxChars(value: number): void;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -11255,12 +11209,6 @@ declare module egret {
          */
         multiline: boolean;
         /**
-         * @private
-         *
-         * @param value
-         */
-        _setMultiline(value: boolean): void;
-        /**
          * @language en_US
          * Indicates a user can enter into the text field character set. If you restrict property is null, you can enter any character. If you restrict property is an empty string, you can not enter any character. If you restrict property is a string of characters, you can enter only characters in the string in the text field. The string is scanned from left to right. You can use a hyphen (-) to specify a range. Only restricts user interaction; a script may put any text into the text field. <br/>
          * If the string of characters caret (^) at the beginning, all characters are initially accepted, then the string are excluded from receiving ^ character. If the string does not begin with a caret (^) to, any characters are initially accepted and then a string of characters included in the set of accepted characters. <br/>
@@ -11294,7 +11242,7 @@ declare module egret {
         /**
          * @private
          */
-        private _bgGraphics;
+        private bgGraphics;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -11381,7 +11329,7 @@ declare module egret {
         /**
          * @private
          */
-        private _isFlow;
+        private isFlow;
         /**
          * @version Egret 2.0
          * @platform Web,Native
@@ -11406,7 +11354,7 @@ declare module egret {
         /**
          * @private
          */
-        private _textArr;
+        private textArr;
         /**
          * @private
          *
@@ -11456,25 +11404,15 @@ declare module egret {
         /**
          * @private
          */
-        private _linesArr;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        _getLinesArr(): Array<egret.ILineElement>;
-        /**
-         * @private
-         */
-        _isTyping: boolean;
+        private linesArr;
         /**
          * @private
          * @param renderContext
          * @returns {Rectangle}
          */
         private drawText(renderContext);
-        private _addEvent();
-        private _removeEvent();
+        private addEvent();
+        private removeEvent();
         private onTapHandler(e);
     }
 }
@@ -11539,59 +11477,6 @@ declare module egret {
      * @platform Web,Native
      */
     class TextFieldUtils {
-        /**
-         * 获取第一个绘制的行数
-         * @param textfield 文本
-         * @returns {number} 行数，从0开始
-         * @private
-         */
-        static $getStartLine(textfield: egret.TextField): number;
-        /**
-         * 获取水平比例
-         * @param textfield 文本
-         * @returns {number} 水平比例
-         * @private
-         */
-        static $getHalign(textfield: egret.TextField): number;
-        /**
-         * @private
-         *
-         * @param textfield
-         * @returns
-         */
-        static $getTextHeight(textfield: egret.TextField): number;
-        /**
-         * 获取垂直比例
-         * @param textfield 文本
-         * @returns {number} 垂直比例
-         * @private
-         */
-        static $getValign(textfield: egret.TextField): number;
-        /**
-         * 根据x、y获取文本项
-         * @param textfield 文本
-         * @param x x坐标值
-         * @param y y坐标值
-         * @returns 文本单项
-         * @private
-         */
-        static $getTextElement(textfield: egret.TextField, x: number, y: number): ITextElement;
-        /**
-         * 获取文本点击块
-         * @param textfield 文本
-         * @param x x坐标值
-         * @param y y坐标值
-         * @returns 文本点击块
-         * @private
-         */
-        static $getHit(textfield: egret.TextField, x: number, y: number): IHitTextElement;
-        /**
-         * 获取当前显示多少行
-         * @param textfield 文本
-         * @returns {number} 显示的行数
-         * @private
-         */
-        static $getScrollNum(textfield: egret.TextField): number;
     }
 }
 declare module egret {

@@ -144,13 +144,13 @@ var RES;
         /**
          * @language en_US
          * Animation configuration file. Currently supports Egret MovieClip file format.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         ResourceItem.TYPE_ANIMATION = "animation";
@@ -2253,9 +2253,9 @@ var RES;
      * @language en_US
      * The synchronization method for obtaining the cache has been loaded with the success of the resource.
      * <br>The type of resource and the corresponding return value types are as follows:
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (lark.Bitmap|lark.Texture)[]
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript primary object
-     * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or lark.BitmapData interface。
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or egret.BitmapData interface。
      * <br>RES.ResourceItem.TYPE_JSON : Object
      * <br>RES.ResourceItem.TYPE_SHEET : Object
      * <br>  1. If the incoming parameter is the name of the entire SpriteSheet is returned is {image1: Texture, "image2": Texture}.
@@ -2274,9 +2274,9 @@ var RES;
      * @language zh_CN
      * 同步方式获取缓存的已经加载成功的资源。
      * <br>资源类型和对应的返回值类型关系如下：
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (lark.Bitmap|lark.Texture)[]
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript 原生对象
-     * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 lark.BitmapData 接口。
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 egret.BitmapData 接口。
      * <br>RES.ResourceItem.TYPE_JSON : Object
      * <br>RES.ResourceItem.TYPE_SHEET : Object
      * <br>  1. 如果传入的参数是整个 SpriteSheet 的名称返回的是 {"image1":Texture,"image2":Texture} 这样的格式。

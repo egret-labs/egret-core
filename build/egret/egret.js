@@ -133,18 +133,18 @@ var egret;
     /**
      * @language en_US
      * Registers the runtime class information for a class.This method adds some strings which represent the class name or
-     * some interface names to the class definition. After the registration,you can use lark.is() method to do the type checking
+     * some interface names to the class definition. After the registration,you can use egret.is() method to do the type checking
      * for the instance of this class.<br/>
-     * Note:If you use the TypeScript programming language, the lark command line tool will automatically generate the registration code line.
+     * Note:If you use the TypeScript programming language, the egret command line tool will automatically generate the registration code line.
      * You don't need to manually call this method.
      *
-     * @example the following code shows how to register the runtime class information for the EventEmitter class and do the type checking:
+     * @example the following code shows how to register the runtime class information for the EventDispatcher class and do the type checking:
      * <pre>
-     *      lark.registerClass(lark.EventEmitter,"lark.EventEmitter",["lark.IEventEmitter"]);
-     *      var emitter = new lark.EventEmitter();
-     *      lark.log(lark.is(emitter, "lark.IEventEmitter"));  //true。
-     *      lark.log(lark.is(emitter, "lark.EventEmitter"));   //true。
-     *      lark.log(lark.is(emitter, "lark.Bitmap"));   //false。
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      var dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
      * </pre>
      * @param classDefinition the class definition to be registered.
      * @param className  a unique identification string of the specific class
@@ -155,17 +155,17 @@ var egret;
     /**
      * @language zh_CN
      * 为一个类定义注册运行时类信息,用此方法往类定义上注册它自身以及所有接口对应的字符串。
-     * 在运行时，这个类的实例将可以使用 lark.is() 方法传入一个字符串来判断实例类型。
-     * @example 以下代码演示了如何为EventEmitter类注册运行时类信息并判断类型：
+     * 在运行时，这个类的实例将可以使用 egret.is() 方法传入一个字符串来判断实例类型。
+     * @example 以下代码演示了如何为EventDispatcher类注册运行时类信息并判断类型：
      * <pre>
-     *      //为lark.EventEmitter类注册运行时类信息，由于它实现了IEventEmitter接口，这里应同时传入接口名对应的字符串。
-     *      lark.registerClass(lark.EventEmitter,"lark.EventEmitter",["lark.IEventEmitter"]);
-     *      var emitter = new lark.EventEmitter();
-     *      lark.log(lark.is(emitter, "lark.IEventEmitter"));  //true。
-     *      lark.log(lark.is(emitter, "lark.EventEmitter"));   //true。
-     *      lark.log(lark.is(emitter, "lark.Bitmap"));   //false。
+     *      //为egret.EventDispatcher类注册运行时类信息，由于它实现了IEventDispatcher接口，这里应同时传入接口名对应的字符串。
+     *      egret.registerClass(egret.EventDispatcher,"egret.EventDispatcher",["egret.IEventDispatcher"]);
+     *      var dispatcher = new egret.EventDispatcher();
+     *      egret.log(egret.is(dispatcher, "egret.IEventDispatcher"));  //true。
+     *      egret.log(egret.is(dispatcher, "egret.EventDispatcher"));   //true。
+     *      egret.log(egret.is(dispatcher, "egret.Bitmap"));   //false。
      * </pre>
-     * 注意：若您使用 TypeScript 来编写程序，lark 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
+     * 注意：若您使用 TypeScript 来编写程序，egret 命令行会自动帮您生成类信息注册代码行到最终的 Javascript 文件中。因此您不需要手动调用此方法。
      *
      * @param classDefinition 要注册的类定义。
      * @param className 要注册的类名。
@@ -339,14 +339,14 @@ var egret;
      * the IEventDispatcher interface and is the base class for the DisplayObject class. The EventDispatcher class allows
      * any object on the display list to be an event target and as such, to use the methods of the IEventDispatcher interface.
      * Event targets are an important part of the Egret event model. The event target serves as the focal point for how events
-     * flow through the display list hierarchy. When an event such as a touch tap, Egret emits an event object into the
+     * flow through the display list hierarchy. When an event such as a touch tap, Egret dispatches an event object into the
      * event flow from the root of the display list. The event object then makes its way through the display list until it
      * reaches the event target, at which point it begins its return trip through the display list. This round-trip journey
      * to the event target is conceptually divided into three phases: <br/>
      * the capture phase comprises the journey from the root to the last node before the event target's node, the target
      * phase comprises only the event target node, and the bubbling phase comprises any subsequent nodes encountered on
      * the return trip to the root of the display list. In general, the easiest way for a user-defined class to gain event
-     * emitting capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending
+     * dispatching capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending
      * another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member, and write simple
      * hooks to route calls into the aggregated EventDispatcher.
      * @see egret.IEventDispatcher
@@ -373,7 +373,7 @@ var egret;
         /**
          * @language en_US
          * create an instance of the EventDispatcher class.
-         * @param target The target object for events emitted to the EventDispatcher object. This parameter is used when
+         * @param target The target object for events dispatched to the EventDispatcher object. This parameter is used when
          * the EventDispatcher instance is aggregated by a class that implements IEventDispatcher; it is necessary so that the
          * containing object can be the target for events. Do not use this parameter in simple cases in which a class extends EventDispatcher.
          * @version Egret 2.0
@@ -427,7 +427,7 @@ var egret;
         /**
          * @private
          */
-        p.$addListener = function (type, listener, thisObject, useCapture, priority, emitOnce) {
+        p.$addListener = function (type, listener, thisObject, useCapture, priority, dispatchOnce) {
             if (DEBUG && !listener) {
                 egret.$error(1003, "listener");
             }
@@ -440,9 +440,9 @@ var egret;
             else if (values[3 /* notifyLevel */] !== 0) {
                 eventMap[type] = list = list.concat();
             }
-            this.$insertEventBin(list, type, listener, thisObject, useCapture, priority, emitOnce);
+            this.$insertEventBin(list, type, listener, thisObject, useCapture, priority, dispatchOnce);
         };
-        p.$insertEventBin = function (list, type, listener, thisObject, useCapture, priority, emitOnce) {
+        p.$insertEventBin = function (list, type, listener, thisObject, useCapture, priority, dispatchOnce) {
             priority = +priority | 0;
             var insertIndex = -1;
             var length = list.length;
@@ -462,7 +462,7 @@ var egret;
                 priority: priority,
                 target: this,
                 useCapture: useCapture,
-                emitOnce: !!emitOnce
+                dispatchOnce: !!dispatchOnce
             };
             if (insertIndex !== -1) {
                 list.splice(insertIndex, 0, eventBin);
@@ -545,12 +545,12 @@ var egret;
                 return true;
             }
             var onceList = ONCE_EVENT_LIST;
-            //做个标记，防止外部修改原始数组导致遍历错误。这里不直接调用list.concat()因为emit()方法调用通常比on()等方法频繁。
+            //做个标记，防止外部修改原始数组导致遍历错误。这里不直接调用list.concat()因为dispatch()方法调用通常比on()等方法频繁。
             values[3 /* notifyLevel */]++;
             for (var i = 0; i < length; i++) {
                 var eventBin = list[i];
                 eventBin.listener.call(eventBin.thisObject, event);
-                if (eventBin.emitOnce) {
+                if (eventBin.dispatchOnce) {
                     onceList.push(eventBin);
                 }
                 if (event.$isPropagationImmediateStopped) {
@@ -1993,17 +1993,17 @@ var egret;
      * instance, but rather all DisplayObject instances, including those that are not on the display list. This means that you
      * can add a listener to any DisplayObject instance to listen for broadcast events.
      *
-     * @event egret.Event.ADDED Emitted when a display object is added to the display list.
-     * @event egret.Event.ADDED_TO_STAGE Emitted when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
-     * @event egret.Event.REMOVED Emitted when a display object is about to be removed from the display list.
-     * @event egret.Event.REMOVED_FROM_STAGE Emitted when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
-     * @event egret.Event.ENTER_FRAME [broadcast event] Emitted when the playhead is entering a new frame.
-     * @event egret.Event.RENDER [broadcast event] Emitted when the display list is about to be updated and rendered.
-     * @event egret.TouchEvent.TOUCH_MOVE Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
-     * @event egret.TouchEvent.TOUCH_BEGIN Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_END Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_TAP Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.Event.ADDED Dispatched when a display object is added to the display list.
+     * @event egret.Event.ADDED_TO_STAGE Dispatched when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
+     * @event egret.Event.REMOVED Dispatched when a display object is about to be removed from the display list.
+     * @event egret.Event.REMOVED_FROM_STAGE Dispatched when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
+     * @event egret.Event.ENTER_FRAME [broadcast event] Dispatched when the playhead is entering a new frame.
+     * @event egret.Event.RENDER [broadcast event] Dispatched when the display list is about to be updated and rendered.
+     * @event egret.TouchEvent.TOUCH_MOVE Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
+     * @event egret.TouchEvent.TOUCH_BEGIN Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_END Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_TAP Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
@@ -3664,8 +3664,8 @@ var egret;
         /**
          * @private
          */
-        p.$addListener = function (type, listener, thisObject, useCapture, priority, emitOnce) {
-            _super.prototype.$addListener.call(this, type, listener, thisObject, useCapture, priority, emitOnce);
+        p.$addListener = function (type, listener, thisObject, useCapture, priority, dispatchOnce) {
+            _super.prototype.$addListener.call(this, type, listener, thisObject, useCapture, priority, dispatchOnce);
             var isEnterFrame = (type == egret.Event.ENTER_FRAME);
             if (isEnterFrame || type == egret.Event.RENDER) {
                 var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
@@ -3702,7 +3702,7 @@ var egret;
             var list = this.$getPropagationList(this);
             var targetIndex = list.length * 0.5;
             event.$setTarget(this);
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             return !event.$isDefaultPrevented;
         };
         /**
@@ -3733,7 +3733,7 @@ var egret;
         /**
          * @private
          */
-        p.$emitPropagationEvent = function (event, list, targetIndex) {
+        p.$dispatchPropagationEvent = function (event, list, targetIndex) {
             var length = list.length;
             var captureIndex = targetIndex - 1;
             for (var i = 0; i < length; i++) {
@@ -4589,13 +4589,13 @@ var egret;
             /**
              * @language en_US
              * The BitmapData object being referenced.
-             * @version Lark 1.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 被引用的 BitmapData 对象。
-             * @version Lark 1.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ,function () {
@@ -7706,13 +7706,13 @@ var egret;
             /**
              * @language en_US
              * The BitmapData object being referenced.
-             * @version Lark 1.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 被引用的 BitmapData 对象。
-             * @version Lark 1.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ,function () {
@@ -8662,7 +8662,7 @@ var egret;
      * it through the stage property of a DisplayObject instance.<br/>
      * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
      * properties and methods. Many of these properties and methods are inapplicable to Stage objects.
-     * @event egret.Event.RESIZE Emitted when the stageWidth or stageHeight property of the Stage object is changed.
+     * @event egret.Event.RESIZE Dispatched when the stageWidth or stageHeight property of the Stage object is changed.
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample egret/display/Stage.ts
@@ -9451,7 +9451,7 @@ var egret;
         };
         /**
          * @language en_US
-         * Emitted when a display object is added to the on stage display list, either directly or through the addition
+         * Dispatched when a display object is added to the on stage display list, either directly or through the addition
          * of a sub tree in which the display object is contained.
          * @version Egret 2.0
          * @platform Web,Native
@@ -9465,7 +9465,7 @@ var egret;
         Event.ADDED_TO_STAGE = "addedToStage";
         /**
          * @language en_US
-         * Emitted when a display object is about to be removed from the display list, either directly or through the removal
+         * Dispatched when a display object is about to be removed from the display list, either directly or through the removal
          * of a sub tree in which the display object is contained.
          * @version Egret 2.0
          * @platform Web,Native
@@ -9479,7 +9479,7 @@ var egret;
         Event.REMOVED_FROM_STAGE = "removedFromStage";
         /**
          * @language en_US
-         * Emitted when a display object is added to the display list.
+         * Dispatched when a display object is added to the display list.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9492,7 +9492,7 @@ var egret;
         Event.ADDED = "added";
         /**
          * @language en_US
-         * Emitted when a display object is about to be removed from the display list.
+         * Dispatched when a display object is about to be removed from the display list.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9505,7 +9505,7 @@ var egret;
         Event.REMOVED = "removed";
         /**
          * @language en_US
-         * [broadcast event] Emitted when the playhead is entering a new frame.
+         * [broadcast event] Dispatched when the playhead is entering a new frame.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9518,7 +9518,7 @@ var egret;
         Event.ENTER_FRAME = "enterFrame";
         /**
          * @language en_US
-         * Emitted when the display list is about to be updated and rendered.
+         * Dispatched when the display list is about to be updated and rendered.
          * Note: Every time you want to receive a render event,you must call the stage.invalidate() method.
          * @version Egret 2.0
          * @platform Web,Native
@@ -9534,7 +9534,7 @@ var egret;
         Event.RENDER = "render";
         /**
          * @language en_US
-         * Emitted when the size of stage or UIComponent is changed.
+         * Dispatched when the size of stage or UIComponent is changed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9547,7 +9547,7 @@ var egret;
         Event.RESIZE = "resize";
         /**
          * @language en_US
-         * Emitted when the value or selection of a property is chaned.
+         * Dispatched when the value or selection of a property is chaned.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9560,7 +9560,7 @@ var egret;
         Event.CHANGE = "change";
         /**
          * @language en_US
-         * Emitted when the value or selection of a property is going to change.you can cancel this by calling the
+         * Dispatched when the value or selection of a property is going to change.you can cancel this by calling the
          * preventDefault() method.
          * @version Egret 2.0
          * @platform Web,Native
@@ -9574,7 +9574,7 @@ var egret;
         Event.CHANGING = "changing";
         /**
          * @language en_US
-         * Emitted when the net request is complete.
+         * Dispatched when the net request is complete.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9587,7 +9587,7 @@ var egret;
         Event.COMPLETE = "complete";
         /**
          * @language en_US
-         * Emitted when loop completed.
+         * Dispatched when loop completed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9600,7 +9600,7 @@ var egret;
         Event.LOOP_COMPLETE = "loopComplete";
         /**
          * @language en_US
-         * Emitted when the TextInput instance gets focus.
+         * Dispatched when the TextInput instance gets focus.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9613,7 +9613,7 @@ var egret;
         Event.FOCUS_IN = "focusIn";
         /**
          * @language en_US
-         * Emitted when the TextInput instance loses focus.
+         * Dispatched when the TextInput instance loses focus.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9626,7 +9626,7 @@ var egret;
         Event.FOCUS_OUT = "focusOut";
         /**
          * @language en_US
-         * Emitted when the playback is ended.
+         * Dispatched when the playback is ended.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -9849,13 +9849,13 @@ var egret;
      * @language en_US
      * The GeolocationEvent represents the position and altitude of the device on Earth,
      * and show errors occurred while getting the location of the device.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * GeolocationEvent 提供设备的地理位置信息和获取位置时发生的错误信息
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var GeolocationEvent = (function (_super) {
@@ -9867,26 +9867,26 @@ var egret;
         /**
          * @language en_US
          * The acquisition of the location information failed because of app don't have permission.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 由于用户拒绝访问位置信息，获取位置信息失败
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         GeolocationEvent.PERMISSION_DENIED = "permissionDenied";
         /**
          * @language en_US
          * The acquisition of the location failed because at least one internal source of position returned an internal error.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设备位置服务不可用或者超时等原因没有得到位置信息
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         GeolocationEvent.UNAVAILABLE = "unavailable";
@@ -10198,7 +10198,7 @@ var egret;
      * MotionEvent represents the device's movement
      * Acceleration and accelerationIncludingGravity to represents the device's acceleration
      * RotationRate to represents the device's rotation
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -10206,7 +10206,7 @@ var egret;
      * MotionEvent 类呈现设备运动的具体信息
      * Acceleration 和 accelerationIncludingGravity 呈现设备三个维度的加速度信息
      * RotationRate 呈现设备的旋转状态信息
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var MotionEvent = (function (_super) {
@@ -10255,7 +10255,7 @@ var egret;
      * The OrientationEvent provides information from the physical orientation of the device.
      * Note: Currently, Browsers on the iOS and Android does not handle the coordinates the same way.
      * Take care about this while using them.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -10263,7 +10263,7 @@ var egret;
      * OrientationEvent 提供设备的方向信息
      * 注意: 目前各个浏览器和操作系统处理方向的方式不完全相同，请根据使用场景做相应的校正，
      * 比如使用两次方向数据的变化而不是直接使用方向的值
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var OrientationEvent = (function (_super) {
@@ -10699,7 +10699,7 @@ var egret;
 (function (egret) {
     /**
      * @language en_US
-     * A Timer object emits a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
+     * A Timer object dispatches a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
      * @see egret.Timer
      * @version Egret 2.0
      * @platform Web,Native
@@ -10801,7 +10801,7 @@ var egret;
          */
         /**
          * @language zh_CN
-         * 使用指定的EventEmitter对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 事件派发目标
          * @param type 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
          * @param bubbles 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
@@ -10819,7 +10819,7 @@ var egret;
         };
         /**
          * @language en_US
-         * Emitted whenever a Timer object reaches an interval specified according to the Timer.delay property.
+         * Dispatched whenever a Timer object reaches an interval specified according to the Timer.delay property.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -10832,7 +10832,7 @@ var egret;
         TimerEvent.TIMER = "timer";
         /**
          * @language en_US
-         * Emitted whenever it has completed the number of requests set by Timer.repeatCount.
+         * Dispatched whenever it has completed the number of requests set by Timer.repeatCount.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -11461,7 +11461,7 @@ var egret;
          */
         /**
          * @language zh_CN
-         * 使用指定的EventEmitter对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 派发事件目标
          * @param type 事件的类型，可以作为 Event.type 访问。
          * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
@@ -11490,7 +11490,7 @@ var egret;
         };
         /**
          * @language en_US
-         * Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
+         * Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -11503,7 +11503,7 @@ var egret;
         TouchEvent.TOUCH_MOVE = "touchMove";
         /**
          * @language en_US
-         * Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+         * Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -11516,7 +11516,7 @@ var egret;
         TouchEvent.TOUCH_BEGIN = "touchBegin";
         /**
          * @language en_US
-         * Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
+         * Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone
          * or tablet with a touch screen).
          * @version Egret 2.0
          * @platform Web,Native
@@ -11530,7 +11530,7 @@ var egret;
         TouchEvent.TOUCH_END = "touchEnd";
         /**
          * @language en_US
-         * Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact
+         * Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact
          * was initiated on a touch-enabled device.
          * @version Egret 2.0
          * @platform Web,Native
@@ -11544,7 +11544,7 @@ var egret;
         TouchEvent.TOUCH_TAP = "touchTap";
         /**
          * @language en_US
-         * Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact
+         * Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact
          * was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display
          * object on a mobile phone or tablet with a touch screen).
          * @version Egret 2.0
@@ -13035,7 +13035,7 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @copy lark.Video
+     * @copy egret.Video
      */
     egret.Video;
 })(egret || (egret = {}));
@@ -13297,16 +13297,16 @@ var egret;
      * @language en_US
      * The HttpMethod class provides values that specify whether the HttpRequest object should use the POST method
      * or the GET method when sending data to a server.
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * HttpRequestMethod 类提供了一些值，这些值可指定在将数据发送到服务器时，
      * HttpRequest 对象应使用 POST 方法还是 GET 方法。
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var HttpMethod = (function () {
@@ -13316,26 +13316,26 @@ var egret;
         /**
          * @language en_US
          * Specifies that the HttpRequest object is a GET.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示 HttpRequest 对象是一个 GET。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         HttpMethod.GET = "GET";
         /**
          * @language en_US
          * Specifies that the HttpRequest object is a POST.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示 HttpRequest 对象是一个 POST。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         HttpMethod.POST = "POST";
@@ -13377,13 +13377,13 @@ var egret;
     /**
      * @language en_US
      * Creates a HttpRequest object.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 创建一个 HttpRequest 实例。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     egret.HttpRequest;
@@ -13421,15 +13421,15 @@ var egret;
     /**
      * @language en_US
      * The HttpResponseType class provides values that specify how downloaded data is received.
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
-     * @see lark.HttpRequest
-     * @version Lark 1.0
+     * @see egret.HttpRequest
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var HttpResponseType = (function () {
@@ -13439,26 +13439,26 @@ var egret;
         /**
          * @language en_US
          * Specifies that downloaded data is received as text. This is the default value of HttpRequest.responseType
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回字符串。HttpRequest.responseType属性的默认值。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         HttpResponseType.TEXT = "text";
         /**
          * @language en_US
          * Specifies that downloaded data is received as raw binary data.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回二进制的ArrayBuffer对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         HttpResponseType.ARRAY_BUFFER = "arraybuffer";
@@ -13500,13 +13500,13 @@ var egret;
     /**
      * @language en_US
      * Creates a ImageLoader object
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 创建一个 ImageLoader 实例
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     egret.ImageLoader;
@@ -15673,19 +15673,19 @@ var egret;
             /**
              * @private
              */
-            this._textWidth = 0;
+            this.textWidth = 0;
             /**
              * @private
              */
-            this._textHeight = 0;
+            this.textHeight = 0;
             /**
              * @private
              */
-            this._textOffsetX = 0;
+            this.textOffsetX = 0;
             /**
              * @private
              */
-            this._textOffsetY = 0;
+            this.textOffsetY = 0;
             /**
              * @private
              */
@@ -15931,7 +15931,7 @@ var egret;
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(this._textOffsetX, this._textOffsetY, this._textWidth - this._textOffsetX, this._textHeight - this._textOffsetY + (lines.length - 1) * this.$BitmapText[3 /* lineSpacing */]);
+                bounds.setTo(this.textOffsetX, this.textOffsetY, this.textWidth - this.textOffsetX, this.textHeight - this.textOffsetY + (lines.length - 1) * this.$BitmapText[3 /* lineSpacing */]);
             }
         };
         /**
@@ -15942,10 +15942,10 @@ var egret;
         p.$getTextLines = function () {
             var self = this;
             if (!this.$BitmapText[7 /* textLinesChanged */]) {
-                return self._textLines;
+                return self.textLines;
             }
             var textLines = [];
-            self._textLines = textLines;
+            self.textLines = textLines;
             this.$BitmapText[7 /* textLinesChanged */] = false;
             var lineHeights = [];
             self.$lineHeights = lineHeights;
@@ -16030,10 +16030,10 @@ var egret;
                 textHeight += lineHeight;
                 textWidth = Math.max(xPos, textWidth);
             }
-            self._textWidth = textWidth;
-            self._textHeight = textHeight;
-            self._textOffsetX = textStartX;
-            self._textOffsetY = textStartY;
+            self.textWidth = textWidth;
+            self.textHeight = textHeight;
+            self.textOffsetX = textStartX;
+            self.textOffsetY = textStartY;
             return textLines;
         };
         /**
@@ -16572,7 +16572,7 @@ var egret;
             if (!this._isFocus) {
                 this._isFocus = true;
                 if (!event["showing"]) {
-                    this._text._isTyping = true;
+                    this._text.$isTyping = true;
                 }
                 this._text.$invalidateContentBounds();
                 this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
@@ -16587,7 +16587,7 @@ var egret;
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
-                this._text._isTyping = false;
+                this._text.$isTyping = false;
                 this._text.$invalidateContentBounds();
                 //失去焦点后调用
                 this.stageText.$onBlur();
@@ -16654,7 +16654,7 @@ var egret;
          *
          */
         p.resetText = function () {
-            this._text._setBaseText(this.stageText.$getText());
+            this._text.$setBaseText(this.stageText.$getText());
         };
         /**
          * @private
@@ -16815,27 +16815,27 @@ var egret;
             /**
              * @private
              */
-            this._inputUtils = null;
+            this.inputUtils = null;
             /**
              * @private
              */
-            this._bgGraphics = null;
+            this.bgGraphics = null;
             /**
              * @private
              */
-            this._isFlow = false;
+            this.isFlow = false;
             /**
              * @private
              */
-            this._textArr = [];
+            this.textArr = [];
             /**
              * @private
              */
-            this._linesArr = [];
+            this.linesArr = [];
             /**
              * @private
              */
-            this._isTyping = false;
+            this.$isTyping = false;
             this.$renderRegion = new egret.sys.Region();
             this.$TextField = {
                 0: 30,
@@ -17242,7 +17242,7 @@ var egret;
              * @default egret.TextFieldType.DYNAMIC
              */
             ,function (value) {
-                this._setType(value);
+                this.$setType(value);
             }
         );
         /**
@@ -17250,7 +17250,7 @@ var egret;
          *
          * @param value
          */
-        p._setType = function (value) {
+        p.$setType = function (value) {
             if (this.$TextField[24 /* type */] != value) {
                 this.$TextField[24 /* type */] = value;
                 if (value == egret.TextFieldType.INPUT) {
@@ -17262,23 +17262,25 @@ var egret;
                     }
                     this.$setTouchEnabled(true);
                     //创建stageText
-                    if (this._inputUtils == null) {
-                        this._inputUtils = new egret.InputController();
+                    if (this.inputUtils == null) {
+                        this.inputUtils = new egret.InputController();
                     }
-                    this._inputUtils.init(this);
+                    this.inputUtils.init(this);
                     this.$invalidateTextField();
                     if (this.$stage) {
-                        this._inputUtils._addStageText();
+                        this.inputUtils._addStageText();
                     }
                 }
                 else {
-                    if (this._inputUtils) {
-                        this._inputUtils._removeStageText();
-                        this._inputUtils = null;
+                    if (this.inputUtils) {
+                        this.inputUtils._removeStageText();
+                        this.inputUtils = null;
                     }
                     this.$setTouchEnabled(false);
                 }
+                return true;
             }
+            return false;
         };
         d(p, "text"
             /**
@@ -17307,7 +17309,7 @@ var egret;
          */
         p.$getText = function () {
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
-                return this._inputUtils._getText();
+                return this.inputUtils._getText();
             }
             return this.$TextField[13 /* text */];
         };
@@ -17316,12 +17318,12 @@ var egret;
          *
          * @param value
          */
-        p._setBaseText = function (value) {
+        p.$setBaseText = function (value) {
             if (value == null) {
                 value = "";
             }
             value = value.toString();
-            this._isFlow = false;
+            this.isFlow = false;
             if (this.$TextField[13 /* text */] != value) {
                 this.$invalidateTextField();
                 this.$TextField[13 /* text */] = value;
@@ -17346,9 +17348,9 @@ var egret;
             if (value == null) {
                 value = "";
             }
-            var result = this._setBaseText(value);
-            if (this._inputUtils) {
-                this._inputUtils._setText(this.$TextField[13 /* text */]);
+            var result = this.$setBaseText(value);
+            if (this.inputUtils) {
+                this.inputUtils._setText(this.$TextField[13 /* text */]);
             }
             return result;
         };
@@ -17373,7 +17375,7 @@ var egret;
              * @default false
              */
             ,function (value) {
-                this._setDisplayAsPassword(value);
+                this.$setDisplayAsPassword(value);
             }
         );
         /**
@@ -17381,7 +17383,7 @@ var egret;
          *
          * @param value
          */
-        p._setDisplayAsPassword = function (value) {
+        p.$setDisplayAsPassword = function (value) {
             var self = this;
             if (this.$TextField[20 /* displayAsPassword */] != value) {
                 this.$TextField[20 /* displayAsPassword */] = value;
@@ -17394,7 +17396,9 @@ var egret;
                     text = this.$TextField[13 /* text */];
                 }
                 this.setMiddleStyle([{ text: text }]);
+                return true;
             }
+            return false;
         };
         d(p, "strokeColor"
             /**
@@ -17417,7 +17421,7 @@ var egret;
              * @default 0x000000
              */
             ,function (value) {
-                this._setStrokeColor(value);
+                this.$setStrokeColor(value);
             }
         );
         /**
@@ -17425,12 +17429,14 @@ var egret;
          *
          * @param value
          */
-        p._setStrokeColor = function (value) {
+        p.$setStrokeColor = function (value) {
             if (this.$TextField[25 /* strokeColor */] != value) {
                 this.$invalidateTextField();
                 this.$TextField[25 /* strokeColor */] = value;
                 this.$TextField[26 /* strokeColorString */] = egret.toColorString(value);
+                return true;
             }
+            return false;
         };
         d(p, "stroke"
             /**
@@ -17453,7 +17459,7 @@ var egret;
              * @default 0
              */
             ,function (value) {
-                this._setStroke(value);
+                this.$setStroke(value);
             }
         );
         /**
@@ -17461,11 +17467,13 @@ var egret;
          *
          * @param value
          */
-        p._setStroke = function (value) {
+        p.$setStroke = function (value) {
             if (this.$TextField[27 /* stroke */] != value) {
                 this.$invalidateTextField();
                 this.$TextField[27 /* stroke */] = value;
+                return true;
             }
+            return false;
         };
         d(p, "maxChars"
             /**
@@ -17488,7 +17496,7 @@ var egret;
              * @default 0
              */
             ,function (value) {
-                this._setMaxChars(value);
+                this.$setMaxChars(value);
             }
         );
         /**
@@ -17496,10 +17504,12 @@ var egret;
          *
          * @param value
          */
-        p._setMaxChars = function (value) {
+        p.$setMaxChars = function (value) {
             if (this.$TextField[21 /* maxChars */] != value) {
                 this.$TextField[21 /* maxChars */] = value;
+                return true;
             }
+            return false;
         };
         d(p, "scrollV"
             /**
@@ -17540,7 +17550,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                this._getLinesArr();
+                this.$getLinesArr();
                 return Math.max(this.$TextField[29 /* numLines */] - egret.TextFieldUtils.$getScrollNum(this) + 1, 1);
             }
         );
@@ -17622,7 +17632,7 @@ var egret;
              * @default false
              */
             ,function (value) {
-                this._setMultiline(value);
+                this.$setMultiline(value);
             }
         );
         /**
@@ -17630,9 +17640,10 @@ var egret;
          *
          * @param value
          */
-        p._setMultiline = function (value) {
+        p.$setMultiline = function (value) {
             this.$TextField[30 /* multiline */] = value;
             this.$invalidateTextField();
+            return true;
         };
         d(p, "restrict"
             ,function () {
@@ -17873,14 +17884,14 @@ var egret;
          */
         p.fillBackground = function () {
             var self = this;
-            var graphics = self._bgGraphics;
+            var graphics = self.bgGraphics;
             if (graphics) {
                 graphics.clear();
             }
             if (this.$TextField[33 /* background */] || this.$TextField[31 /* border */]) {
                 if (graphics == null) {
-                    graphics = self._bgGraphics = new egret.Graphics();
-                    this._bgGraphics.$renderContext.$targetDisplay = this;
+                    graphics = self.bgGraphics = new egret.Graphics();
+                    this.bgGraphics.$renderContext.$targetDisplay = this;
                 }
                 if (this.$TextField[33 /* background */]) {
                     graphics.beginFill(this.$TextField[34 /* backgroundColor */], 1);
@@ -17907,9 +17918,9 @@ var egret;
          */
         p.$onRemoveFromStage = function () {
             _super.prototype.$onRemoveFromStage.call(this);
-            this._removeEvent();
+            this.removeEvent();
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
-                this._inputUtils._removeStageText();
+                this.inputUtils._removeStageText();
             }
         };
         /**
@@ -17920,9 +17931,9 @@ var egret;
          */
         p.$onAddToStage = function (stage, nestLevel) {
             _super.prototype.$onAddToStage.call(this, stage, nestLevel);
-            this._addEvent();
+            this.addEvent();
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
-                this._inputUtils._addStageText();
+                this.inputUtils._addStageText();
             }
         };
         /**
@@ -17937,7 +17948,7 @@ var egret;
          */
         p.$measureContentBounds = function (bounds) {
             var self = this;
-            this._getLinesArr();
+            this.$getLinesArr();
             var w = !isNaN(this.$TextField[3 /* textFieldWidth */]) ? this.$TextField[3 /* textFieldWidth */] : this.$TextField[5 /* textWidth */];
             var h = !isNaN(this.$TextField[4 /* textFieldHeight */]) ? this.$TextField[4 /* textFieldHeight */] : egret.TextFieldUtils.$getTextHeight(self);
             if (self.border) {
@@ -17952,11 +17963,11 @@ var egret;
          * @param renderContext
          */
         p.$render = function (renderContext) {
-            if (this._bgGraphics)
-                this._bgGraphics.$render(renderContext);
+            if (this.bgGraphics)
+                this.bgGraphics.$render(renderContext);
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
-                this._inputUtils._updateProperties();
-                if (this._isTyping) {
+                this.inputUtils._updateProperties();
+                if (this.$isTyping) {
                     return;
                 }
             }
@@ -17971,7 +17982,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return this._textArr;
+                return this.textArr;
             }
             /**
              * @language en_US
@@ -17983,7 +17994,7 @@ var egret;
              * @see http://edn.egret.com/cn/index.php/article/index/id/146
              */
             ,function (textArr) {
-                this._isFlow = true;
+                this.isFlow = true;
                 var text = "";
                 if (textArr == null)
                     textArr = [];
@@ -17992,7 +18003,7 @@ var egret;
                     text += element.text;
                 }
                 if (this.$TextField[20 /* displayAsPassword */]) {
-                    this._setBaseText(text);
+                    this.$setBaseText(text);
                 }
                 else {
                     this.$TextField[13 /* text */] = text;
@@ -18031,7 +18042,7 @@ var egret;
          */
         p.setMiddleStyle = function (textArr) {
             this.$TextField[18 /* textLinesChanged */] = true;
-            this._textArr = textArr;
+            this.textArr = textArr;
             this.$invalidateTextField();
         };
         d(p, "textWidth"
@@ -18048,7 +18059,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                this._getLinesArr();
+                this.$getLinesArr();
                 return this.$TextField[5 /* textWidth */];
             }
         );
@@ -18066,7 +18077,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                this._getLinesArr();
+                this.$getLinesArr();
                 return egret.TextFieldUtils.$getTextHeight(this);
             }
         );
@@ -18088,12 +18099,12 @@ var egret;
         p.appendElement = function (element) {
             var text = this.$TextField[13 /* text */] + element.text;
             if (this.$TextField[20 /* displayAsPassword */]) {
-                this._setBaseText(text);
+                this.$setBaseText(text);
             }
             else {
                 this.$TextField[13 /* text */] = text;
-                this._textArr.push(element);
-                this.setMiddleStyle(this._textArr);
+                this.textArr.push(element);
+                this.setMiddleStyle(this.textArr);
             }
         };
         /**
@@ -18101,15 +18112,15 @@ var egret;
          *
          * @returns
          */
-        p._getLinesArr = function () {
+        p.$getLinesArr = function () {
             var self = this;
             if (!self.$TextField[18 /* textLinesChanged */]) {
-                return self._linesArr;
+                return self.linesArr;
             }
             self.$TextField[18 /* textLinesChanged */] = false;
-            var text2Arr = self._textArr;
+            var text2Arr = self.textArr;
             var renderContext = egret.sys.sharedRenderContext;
-            self._linesArr.length = 0;
+            self.linesArr.length = 0;
             this.$TextField[6 /* textHeight */] = 0;
             this.$TextField[5 /* textWidth */] = 0;
             var textFieldWidth = this.$TextField[3 /* textFieldWidth */];
@@ -18118,10 +18129,10 @@ var egret;
                 this.$TextField[29 /* numLines */] = 0;
                 return [{ width: 0, height: 0, charNum: 0, elements: [], hasNextLine: false }];
             }
-            if (!self._isFlow) {
+            if (!self.isFlow) {
                 setupFont(renderContext, self);
             }
-            var linesArr = self._linesArr;
+            var linesArr = self.linesArr;
             var lineW = 0;
             var lineCharNum = 0;
             var lineH = 0;
@@ -18153,7 +18164,7 @@ var egret;
                         }
                     }
                     else {
-                        if (self._isFlow) {
+                        if (self.isFlow) {
                             setupFont(renderContext, self, element.style);
                         }
                         var w = renderContext.measureText(textArr[j]).width;
@@ -18263,7 +18274,7 @@ var egret;
             var self = this;
             var values = this.$TextField;
             //先算出需要的数值
-            var lines = self._getLinesArr();
+            var lines = self.$getLinesArr();
             if (values[5 /* textWidth */] == 0) {
                 return;
             }
@@ -18319,11 +18330,11 @@ var egret;
             }
         };
         //增加点击事件
-        p._addEvent = function () {
+        p.addEvent = function () {
             this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
         };
         //释放点击事件
-        p._removeEvent = function () {
+        p.removeEvent = function () {
             this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTapHandler, this);
         };
         //处理富文本中有href的
@@ -18594,7 +18605,7 @@ var egret;
          * @private
          */
         TextFieldUtils.$getHalign = function (textfield) {
-            var lineArr = textfield._getLinesArr();
+            var lineArr = textfield.$getLinesArr();
             var halign = 0;
             if (textfield.$TextField[9 /* textAlign */] == egret.HorizontalAlign.CENTER) {
                 halign = 0.5;
@@ -18654,7 +18665,7 @@ var egret;
          */
         TextFieldUtils.$getTextElement = function (textfield, x, y) {
             var hitTextEle = TextFieldUtils.$getHit(textfield, x, y);
-            var lineArr = textfield._getLinesArr();
+            var lineArr = textfield.$getLinesArr();
             if (hitTextEle && lineArr[hitTextEle.lineIndex] && lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex]) {
                 return lineArr[hitTextEle.lineIndex].elements[hitTextEle.textElementIndex];
             }
@@ -18669,7 +18680,7 @@ var egret;
          * @private
          */
         TextFieldUtils.$getHit = function (textfield, x, y) {
-            var lineArr = textfield._getLinesArr();
+            var lineArr = textfield.$getLinesArr();
             if (textfield.$TextField[3 /* textFieldWidth */] == 0) {
                 return null;
             }
