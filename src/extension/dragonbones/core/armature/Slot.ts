@@ -123,6 +123,7 @@ module dragonBones {
 		//protected var _childArmature:Armature;
 		public _blendMode:string;
 		public _isColorChanged:boolean;
+		public _needUpdate:boolean;
 		public _timelineStateList:Array<SlotTimelineState>
 
 		public constructor(self:Slot){
@@ -221,12 +222,13 @@ module dragonBones {
 //动画
 		/** @private */
 		public _update():void{
-			if(this._parent._needUpdate <= 0){
+			if(this._parent._needUpdate <= 0 && !this._needUpdate){
 				return;
 			}
 
             this._updateGlobal();
             this._updateTransform();
+			this._needUpdate = false;
 		}
 
         public _calculateRelativeParentTransform():void
@@ -287,6 +289,7 @@ module dragonBones {
 					){
 						this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
 					}
+					this._needUpdate = true;
 				}
 				else if(!this._isShowDisplay){
 					this._isShowDisplay = true;
