@@ -38,7 +38,7 @@ module eui {
      * accessed and manipulated using the methods and properties of the <code>ICollection</code> interfaces.
      * ArrayCollection can notify the view to update item when data source changed.
      *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Emited when the ArrayCollection has been updated in some way.
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ArrayCollection has been updated in some way.
      *
      * @defaultProperty source
      * @version Egret 2.4

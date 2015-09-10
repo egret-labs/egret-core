@@ -37,8 +37,8 @@ module egret {
      * The Sound class lets you create a Sound object, load and play an external audio file into that object.
      * More detailed control of the sound is performed through the SoundChannel
      *
-     * @event egret.Event.COMPLETE Emit when the audio resource is loaded and ready to play
-     * @event egret.IOErrorEvent.IO_ERROR Emit when the audio resource is failed to load
+     * @event egret.Event.COMPLETE Dispatch when the audio resource is loaded and ready to play
+     * @event egret.IOErrorEvent.IO_ERROR Dispatch when the audio resource is failed to load
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts

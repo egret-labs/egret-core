@@ -40,7 +40,7 @@ module eui {
 	 * <p>You can get or set this state programmatically
 	 * by using the <code>selected</code> property.</p>
 	 *
-	 * @event egret.Event.CHANGE Emitted when the <code>selected</code> property
+	 * @event egret.Event.CHANGE Dispatched when the <code>selected</code> property
 	 * changes for the ToggleButton control.
 	 * This event is dispatched only when the
 	 * user interacts with the control by touching.

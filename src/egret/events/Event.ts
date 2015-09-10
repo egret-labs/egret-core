@@ -63,7 +63,7 @@ module egret {
     export class Event extends HashObject {
         /**
          * @language en_US
-         * Emitted when a display object is added to the on stage display list, either directly or through the addition
+         * Dispatched when a display object is added to the on stage display list, either directly or through the addition
          * of a sub tree in which the display object is contained.
          * @version Egret 2.0
          * @platform Web,Native
@@ -77,7 +77,7 @@ module egret {
         public static ADDED_TO_STAGE:string = "addedToStage";
         /**
          * @language en_US
-         * Emitted when a display object is about to be removed from the display list, either directly or through the removal
+         * Dispatched when a display object is about to be removed from the display list, either directly or through the removal
          * of a sub tree in which the display object is contained.
          * @version Egret 2.0
          * @platform Web,Native
@@ -91,7 +91,7 @@ module egret {
         public static REMOVED_FROM_STAGE:string = "removedFromStage";
         /**
          * @language en_US
-         * Emitted when a display object is added to the display list.
+         * Dispatched when a display object is added to the display list.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -104,7 +104,7 @@ module egret {
         public static ADDED:string = "added";
         /**
          * @language en_US
-         * Emitted when a display object is about to be removed from the display list.
+         * Dispatched when a display object is about to be removed from the display list.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -117,7 +117,7 @@ module egret {
         public static REMOVED:string = "removed";
         /**
          * @language en_US
-         * [broadcast event] Emitted when the playhead is entering a new frame.
+         * [broadcast event] Dispatched when the playhead is entering a new frame.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -130,7 +130,7 @@ module egret {
         public static ENTER_FRAME:string = "enterFrame";
         /**
          * @language en_US
-         * Emitted when the display list is about to be updated and rendered.
+         * Dispatched when the display list is about to be updated and rendered.
          * Note: Every time you want to receive a render event,you must call the stage.invalidate() method.
          * @version Egret 2.0
          * @platform Web,Native
@@ -146,7 +146,7 @@ module egret {
         public static RENDER:string = "render";
         /**
          * @language en_US
-         * Emitted when the size of stage or UIComponent is changed.
+         * Dispatched when the size of stage or UIComponent is changed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -160,7 +160,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the value or selection of a property is chaned.
+         * Dispatched when the value or selection of a property is chaned.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -174,7 +174,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the value or selection of a property is going to change.you can cancel this by calling the
+         * Dispatched when the value or selection of a property is going to change.you can cancel this by calling the
          * preventDefault() method.
          * @version Egret 2.0
          * @platform Web,Native
@@ -188,7 +188,7 @@ module egret {
         public static CHANGING:string = "changing";
         /**
          * @language en_US
-         * Emitted when the net request is complete.
+         * Dispatched when the net request is complete.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -202,7 +202,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when loop completed.
+         * Dispatched when loop completed.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -216,7 +216,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted when the TextInput instance gets focus.
+         * Dispatched when the TextInput instance gets focus.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -229,7 +229,7 @@ module egret {
         public static FOCUS_IN:string = "focusIn";
         /**
          * @language en_US
-         * Emitted when the TextInput instance loses focus.
+         * Dispatched when the TextInput instance loses focus.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -242,7 +242,7 @@ module egret {
         public static FOCUS_OUT:string = "focusOut";
         /**
          * @language en_US
-         * Emitted when the playback is ended.
+         * Dispatched when the playback is ended.
          * @version Egret 2.0
          * @platform Web,Native
          */

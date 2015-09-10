@@ -74,9 +74,9 @@ module eui {
      * @language en_US
      * The ListBase class is the base class for list component.
      * It can display items of list as vertical or horizontal such as SELECT of HTML.
-     * @event egret.Event.CHANGE Emitted after the selection has changed.
+     * @event egret.Event.CHANGE Dispatched after the selection has changed.
      * This event is dispatched when the user interacts with the control.
-     * @event egret.Event.CHANGING Emitted when the selection is going to change.
+     * @event egret.Event.CHANGING Dispatched when the selection is going to change.
      * Calling the <code>preventDefault()</code> method
      * on the event prevents the selection from changing.<p/>
      * This event is dispatched when the user interacts with the control.

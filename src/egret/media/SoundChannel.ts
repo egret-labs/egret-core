@@ -38,7 +38,7 @@ module egret {
      * The SoundChannel class contains a stop() method, properties for
      * set the volume of the channel
      *
-     * @event egret.Event.SOUND_COMPLETE Emit when a sound has finished playing
+     * @event egret.Event.SOUND_COMPLETE Dispatch when a sound has finished playing
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts

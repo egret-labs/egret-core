@@ -34,7 +34,7 @@ module egret {
      * it through the stage property of a DisplayObject instance.<br/>
      * The Stage class has several ancestor classes — Sprite, DisplayObject, and EventDispatcher — from which it inherits
      * properties and methods. Many of these properties and methods are inapplicable to Stage objects.
-     * @event egret.Event.RESIZE Emitted when the stageWidth or stageHeight property of the Stage object is changed.
+     * @event egret.Event.RESIZE Dispatched when the stageWidth or stageHeight property of the Stage object is changed.
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample egret/display/Stage.ts

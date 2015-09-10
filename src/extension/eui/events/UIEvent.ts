@@ -160,7 +160,7 @@ module eui {
 
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
          * @param target the target of event dispatcher.

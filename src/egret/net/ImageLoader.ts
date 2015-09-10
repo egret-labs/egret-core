@@ -33,8 +33,8 @@ module egret {
      * @language en_US
      * The Loader class is used to load image (JPG, PNG, or GIF) files. Use the load() method to initiate loading.
      * The loaded image data is in the data property of ImageLoader.
-     * @event egret.Event.COMPLETE Emitted when the net request is complete.
-     * @event egret.Event.IO_ERROR Emitted when the net request is failed.
+     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
+     * @event egret.Event.IO_ERROR Dispatched when the net request is failed.
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native

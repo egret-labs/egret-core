@@ -220,7 +220,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emits an event into the event flow. The event target is the EventDispatcher object upon which dispatchEvent() is called.
+         * Dispatches an event into the event flow. The event target is the EventDispatcher object upon which dispatchEvent() is called.
          * @param event The event object dispatched into the event flow.
          * @returns A value of true unless preventDefault() is called on the event, in which case it returns false.
          * @version Egret 2.0

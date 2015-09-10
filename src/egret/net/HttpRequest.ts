@@ -35,9 +35,9 @@ module egret {
      * of the data from a URL before making it available to code in the applications. It sends out notifications about
      * the progress of the download, which you can monitor through the bytesLoaded and bytesTotal properties,
      * as well as through dispatched events.
-     * @event egret.Event.COMPLETE Emitted when the net request is complete.
-     * @event egret.Event.IO_ERROR Emitted when the net request is failed.
-     * @event egret.ProgressEvent.PROGRESS Emitted when data is received as the download operation progresses.
+     * @event egret.Event.COMPLETE Dispatched when the net request is complete.
+     * @event egret.Event.IO_ERROR Dispatched when the net request is failed.
+     * @event egret.ProgressEvent.PROGRESS Dispatched when data is received as the download operation progresses.
      * @see egret.HttpMethod
      * @see egret.HttpResponseType
      * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts

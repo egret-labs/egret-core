@@ -71,8 +71,8 @@ module eui {
      * Rather than allow the child to extend past the boundaries of the parent container,
      * the Scroller specifies to clip the child to the boundaries and display scroll bars.</p>
      *
-     * @event eui.UIEvent.CHANGE_START Emitted when the scroll position is going to change
-     * @event eui.UIEvent.CHANGE_END Emitted when the scroll position changed complete
+     * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
+     * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -437,7 +437,7 @@ module eui {
          */
         private onTouchEndCapture(event:egret.TouchEvent):void {
             if (this.$Scroller[Keys.delayTouchEvent]) {
-                this.delayEmitEvent(event);
+                this.delayDispatchEvent(event);
             }
         }
 
@@ -461,7 +461,7 @@ module eui {
                 }
                 target = target.$parent;
             }
-            this.delayEmitEvent(event);
+            this.delayDispatchEvent(event);
             this.onTouchBegin(event);
         }
 
@@ -470,7 +470,7 @@ module eui {
          *
          * @param event
          */
-        private delayEmitEvent(event:egret.TouchEvent):void {
+        private delayDispatchEvent(event:egret.TouchEvent):void {
             var values = this.$Scroller;
             if (values[Keys.delayTouchEvent]) {
                 this.onDelayTouchEventTimer();

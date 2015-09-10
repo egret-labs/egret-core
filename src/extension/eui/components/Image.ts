@@ -43,7 +43,7 @@ module eui {
      * to show the data. you can also set the <code>source</code> property, Image will auto load
      * and show the url image or the bitmapData.
      *
-     * @event egret.Event.COMPLETE Emitted when the image loaded complete.
+     * @event egret.Event.COMPLETE Dispatched when the image loaded complete.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
