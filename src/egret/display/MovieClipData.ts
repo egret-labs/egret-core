@@ -57,7 +57,7 @@ module egret {
         /**
          * 帧事件列表
          */
-        public events:any[] = null;
+        public events:any[] = [];
         /**
          * 帧率
          */
