@@ -65,8 +65,8 @@ module RES {
      * 根据url返回实际加载url地址
      * @param call
      */
-    export function registerUrlConvert(call:(url:string)=>string):void {
-        instance.$registerVirtualCall(call);
+    export function registerUrlConvert(call:(url:string)=>string, thisObj:any):void {
+        instance.$registerVirtualCall(call, thisObj);
     }
 
     /**
@@ -76,7 +76,7 @@ module RES {
      */
     export function $getVirtualUrl(url:string):string {
         if (instance.$urlCall) {
-            return instance.$urlCall(url);
+            return instance.$urlCall.call(instance.$callObj, url);
         }
 
         return url;
@@ -498,8 +498,10 @@ module RES {
         }
 
         $urlCall:(url:string)=>string;
-        $registerVirtualCall(call:(url:string)=>string):void {
+        $callObj:any;
+        $registerVirtualCall(call:(url:string)=>string, thisObj:any):void {
             this.$urlCall = call;
+            this.$callObj = thisObj;
         }
 
         /**
