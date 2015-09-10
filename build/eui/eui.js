@@ -1951,13 +1951,14 @@ var eui;
                 value = +value;
                 var values = this.$UIComponent;
                 if (value < 0 || values[10 /* width */] === value && values[8 /* explicitWidth */] === value)
-                    return;
+                    return false;
                 values[8 /* explicitWidth */] = value;
                 if (isNaN(value))
                     this.invalidateSize();
                 this.invalidateProperties();
                 this.invalidateDisplayList();
                 this.invalidateParentLayout();
+                return true;
             };
             /**
              * @private
@@ -1984,13 +1985,14 @@ var eui;
                 value = +value;
                 var values = this.$UIComponent;
                 if (value < 0 || values[11 /* height */] === value && values[9 /* explicitHeight */] === value)
-                    return;
+                    return false;
                 values[9 /* explicitHeight */] = value;
                 if (isNaN(value))
                     this.invalidateSize();
                 this.invalidateProperties();
                 this.invalidateDisplayList();
                 this.invalidateParentLayout();
+                return true;
             };
             /**
              * @private
@@ -3035,10 +3037,11 @@ var eui;
             value = !!value;
             var values = this.$Component;
             if (values[3 /* enabled */]) {
-                _super.prototype.$setTouchChildren.call(this, value);
+                return _super.prototype.$setTouchChildren.call(this, value);
             }
             else {
                 values[6 /* explicitTouchChildren */] = value;
+                return true;
             }
         };
         /**
@@ -3050,10 +3053,11 @@ var eui;
             value = !!value;
             var values = this.$Component;
             if (values[3 /* enabled */]) {
-                _super.prototype.$setTouchEnabled.call(this, value);
+                return _super.prototype.$setTouchEnabled.call(this, value);
             }
             else {
                 values[7 /* explicitTouchEnabled */] = value;
+                return true;
             }
         };
         d(p, "enabled"
@@ -3098,7 +3102,7 @@ var eui;
         p.$setEnabled = function (value) {
             var values = this.$Component;
             if (value === values[3 /* enabled */]) {
-                return;
+                return false;
             }
             values[3 /* enabled */] = value;
             if (value) {
@@ -3110,6 +3114,7 @@ var eui;
                 this.$touchChildren = false;
             }
             this.invalidateState();
+            return true;
         };
         d(p, "currentState"
             //========================皮肤视图状态=====================start=======================
@@ -3840,10 +3845,11 @@ var eui;
         p.$setSelected = function (value) {
             value = !!value;
             if (value === this.$selected)
-                return;
+                return false;
             this.$selected = value;
             this.invalidateState();
             eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selected");
+            return true;
         };
         /**
          * @inheritDoc
@@ -4401,7 +4407,7 @@ var eui;
          */
         p.$setLayout = function (value) {
             if (this.$layout == value)
-                return;
+                return false;
             if (this.$layout) {
                 this.$layout.target = null;
             }
@@ -4411,6 +4417,7 @@ var eui;
             }
             this.invalidateSize();
             this.invalidateDisplayList();
+            return true;
         };
         d(p, "contentWidth"
             /**
@@ -5038,14 +5045,14 @@ var eui;
          */
         p.$setLayout = function (value) {
             if (value == this.$layout)
-                return;
+                return false;
             if (this.$layout) {
                 this.$layout.setTypicalSize(0, 0);
                 this.$layout.removeEventListener("useVirtualLayoutChanged", this.onUseVirtualLayoutChanged, this);
             }
             if (this.$layout && value && (this.$layout.$useVirtualLayout != value.$useVirtualLayout))
                 this.onUseVirtualLayoutChanged();
-            _super.prototype.$setLayout.call(this, value);
+            var result = _super.prototype.$setLayout.call(this, value);
             if (value) {
                 var rect = this.$DataGroup[9 /* typicalLayoutRect */];
                 if (rect) {
@@ -5054,6 +5061,7 @@ var eui;
                 value.useVirtualLayout = this.$DataGroup[0 /* useVirtualLayout */];
                 value.addEventListener("useVirtualLayoutChanged", this.onUseVirtualLayoutChanged, this);
             }
+            return result;
         };
         /**
          * @private
@@ -5220,7 +5228,7 @@ var eui;
          */
         p.$setDataProvider = function (value) {
             if (this.$dataProvider == value)
-                return;
+                return false;
             this.removeDataProviderListener();
             this.$dataProvider = value;
             this.$dataProviderChanged = true;
@@ -5228,6 +5236,7 @@ var eui;
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
+            return true;
         };
         /**
          * @private
@@ -5963,8 +5972,9 @@ var eui;
          * @param value
          */
         p.$setWidth = function (value) {
-            _super.prototype.$setWidth.call(this, value);
-            UIImpl.prototype.$setWidth.call(this, value);
+            var result1 = _super.prototype.$setWidth.call(this, value);
+            var result2 = UIImpl.prototype.$setWidth.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -5972,8 +5982,9 @@ var eui;
          * @param value
          */
         p.$setHeight = function (value) {
-            _super.prototype.$setHeight.call(this, value);
-            UIImpl.prototype.$setHeight.call(this, value);
+            var result1 = _super.prototype.$setHeight.call(this, value);
+            var result2 = UIImpl.prototype.$setHeight.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -5981,8 +5992,9 @@ var eui;
          * @param value
          */
         p.$setText = function (value) {
-            _super.prototype.$setText.call(this, value);
+            var result = _super.prototype.$setText.call(this, value);
             eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
+            return result;
         };
         /**
          * @copy eui.Component#createChildren()
@@ -6732,11 +6744,12 @@ var eui;
          */
         p.$setValue = function (newValue) {
             if (newValue === this.value)
-                return;
+                return false;
             var values = this.$Range;
             values[5 /* changedValue */] = newValue;
             values[6 /* valueChanged */] = true;
             this.invalidateProperties();
+            return true;
         };
         d(p, "snapInterval"
             /**
@@ -7962,8 +7975,9 @@ var eui;
         );
         //if egret
         p.$setFillMode = function (value) {
-            _super.prototype.$setFillMode.call(this, value);
+            var result = _super.prototype.$setFillMode.call(this, value);
             this.invalidateDisplayList();
+            return result;
         };
         d(p, "source"
             /**
@@ -7997,12 +8011,13 @@ var eui;
         );
         p.$setBitmapData = function (value) {
             if (value == this.$Bitmap[0 /* bitmapData */]) {
-                return;
+                return false;
             }
-            _super.prototype.$setBitmapData.call(this, value);
+            var result = _super.prototype.$setBitmapData.call(this, value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
+            return result;
         };
         /**
          * @private
@@ -8622,8 +8637,9 @@ var eui;
          * @param value
          */
         p.$setWidth = function (value) {
-            _super.prototype.$setWidth.call(this, value);
-            UIImpl.prototype.$setWidth.call(this, value);
+            var result1 = _super.prototype.$setWidth.call(this, value);
+            var result2 = UIImpl.prototype.$setWidth.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -8631,8 +8647,9 @@ var eui;
          * @param value
          */
         p.$setHeight = function (value) {
-            _super.prototype.$setHeight.call(this, value);
-            UIImpl.prototype.$setHeight.call(this, value);
+            var result1 = _super.prototype.$setHeight.call(this, value);
+            var result2 = UIImpl.prototype.$setHeight.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -8640,8 +8657,9 @@ var eui;
          * @param value
          */
         p.$setText = function (value) {
-            _super.prototype.$setText.call(this, value);
+            var result = _super.prototype.$setText.call(this, value);
             eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
+            return result;
         };
         /**
          * @copy eui.UIComponent#createChildren
@@ -10690,9 +10708,9 @@ var eui;
          */
         p.$setValue = function (newValue) {
             if (this.value === newValue)
-                return;
+                return false;
             var values = this.$Range;
-            _super.prototype.$setValue.call(this, newValue);
+            var result = _super.prototype.$setValue.call(this, newValue);
             if (this._slideDuration > 0 && this.$stage) {
                 this.validateProperties(); //最大值最小值发生改变时要立即应用，防止当前起始值不正确。
                 var animation = this.animation;
@@ -10703,7 +10721,7 @@ var eui;
                 }
                 this.slideToValue = this.nearestValidValue(newValue, values[7 /* snapInterval */]);
                 if (this.slideToValue === this.animationValue)
-                    return;
+                    return result;
                 var duration = this._slideDuration * (Math.abs(this.animationValue - this.slideToValue) / (values[0 /* maximum */] - values[2 /* minimum */]));
                 animation.duration = duration === Infinity ? 0 : duration;
                 animation.from = this.animationValue;
@@ -10713,6 +10731,7 @@ var eui;
             else {
                 this.animationValue = this.value;
             }
+            return result;
         };
         /**
          * @private
@@ -11040,8 +11059,9 @@ var eui;
          * @param value
          */
         p.$setSelected = function (value) {
-            _super.prototype.$setSelected.call(this, value);
+            var result = _super.prototype.$setSelected.call(this, value);
             this.invalidateDisplayList();
+            return result;
         };
         d(p, "value"
             /**
@@ -11506,7 +11526,7 @@ var eui;
          */
         p.$setSelection = function (value, fireChange) {
             if (this._selection == value)
-                return;
+                return false;
             if (!value) {
                 if (this._selection) {
                     this._selection.selected = false;
@@ -11525,6 +11545,7 @@ var eui;
                 }
             }
             eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
+            return true;
         };
         /**
          * @private
@@ -11992,7 +12013,7 @@ var eui;
             }
             event.stopPropagation();
             var touchEvent = egret.Event.create(egret.TouchEvent, event.$type, event.$bubbles, event.$cancelable);
-            touchEvent.$setTo(event.$stageX, event.$stageY, event.touchPointID);
+            touchEvent.$initTo(event.$stageX, event.$stageY, event.touchPointID);
             touchEvent.$target = event.$target;
             values[11 /* delayTouchEvent */] = touchEvent;
             if (!values[10 /* delayTouchTimer */]) {
@@ -12717,7 +12738,7 @@ var eui;
                 value.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onViewStackIndexChange, this);
                 this.addEventListener(egret.Event.CHANGE, this.onIndexChanged, this);
             }
-            _super.prototype.$setDataProvider.call(this, value);
+            return _super.prototype.$setDataProvider.call(this, value);
         };
         /**
          * @private
@@ -14771,7 +14792,7 @@ var eui;
          */
         function CollectionEvent(type, bubbles, cancelable, kind, location, oldLocation, items, oldItems) {
             _super.call(this, type, bubbles, cancelable);
-            this.$setTo(kind, location, oldLocation, items, oldItems);
+            this.$initTo(kind, location, oldLocation, items, oldItems);
         }
         var d = __define,c=CollectionEvent;p=c.prototype;
         /**
@@ -14783,7 +14804,7 @@ var eui;
          * @param items
          * @param oldItems
          */
-        p.$setTo = function (kind, location, oldLocation, items, oldItems) {
+        p.$initTo = function (kind, location, oldLocation, items, oldItems) {
             this.kind = kind;
             this.location = +location | 0;
             this.oldLocation = +oldLocation | 0;
@@ -14856,7 +14877,7 @@ var eui;
                 return true;
             }
             var event = egret.Event.create(CollectionEvent, eventType);
-            event.$setTo(kind, location, oldLocation, items, oldItems);
+            event.$initTo(kind, location, oldLocation, items, oldItems);
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;

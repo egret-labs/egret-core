@@ -291,7 +291,7 @@ var egret;
         return HashObject;
     })();
     egret.HashObject = HashObject;
-    egret.registerClass(HashObject,"egret.HashObject");
+    egret.registerClass(HashObject,"egret.HashObject",["egret.IHashObject"]);
     if (DEBUG) {
         egret.$markReadOnly(HashObject, "hashCode");
     }
@@ -2275,7 +2275,11 @@ var egret;
          * 设置父级显示对象
          */
         p.$setParent = function (parent) {
+            if (this.$parent == parent) {
+                return false;
+            }
             this.$parent = parent;
+            return true;
         };
         /**
          * @private
@@ -2371,7 +2375,7 @@ var egret;
             var values = this.$DisplayObject;
             var m = values[6 /* matrix */];
             if (m.equals(matrix)) {
-                return;
+                return false;
             }
             m.copyFrom(matrix);
             if (useProperties) {
@@ -2383,6 +2387,7 @@ var egret;
             }
             this.$removeFlags(8 /* InvalidMatrix */);
             this.invalidatePosition();
+            return true;
         };
         /**
          * @private
@@ -2660,7 +2665,7 @@ var egret;
             value = clampRotation(value);
             var values = this.$DisplayObject;
             if (value == values[4 /* rotation */]) {
-                return;
+                return false;
             }
             var delta = value - values[4 /* rotation */];
             var angle = delta / 180 * Math.PI;
@@ -2668,6 +2673,7 @@ var egret;
             values[3 /* skewY */] += angle;
             values[4 /* rotation */] = value;
             this.invalidateMatrix();
+            return true;
         };
         d(p, "skewX"
             /**
@@ -2695,10 +2701,11 @@ var egret;
             value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
             if (value == values[2 /* skewX */]) {
-                return;
+                return false;
             }
             values[2 /* skewX */] = value;
             this.invalidateMatrix();
+            return true;
         };
         d(p, "skewY"
             /**
@@ -2726,10 +2733,11 @@ var egret;
             value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
             if (value == values[3 /* skewY */]) {
-                return;
+                return false;
             }
             values[3 /* skewY */] = value;
             this.invalidateMatrix();
+            return true;
         };
         d(p, "width"
             /**
@@ -2776,7 +2784,7 @@ var egret;
             this.$DisplayObject[14 /* explicitWidth */] = isNaN(value) ? NaN : value;
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
             if (false) {
                 var values = this.$DisplayObject;
@@ -2785,13 +2793,14 @@ var egret;
                 var angle = values[4 /* rotation */] / 180 * Math.PI;
                 var baseWidth = originalBounds.$getBaseWidth(angle);
                 if (!baseWidth) {
-                    return;
+                    return false;
                 }
                 var baseHeight = originalBounds.$getBaseHeight(angle);
                 values[1 /* scaleY */] = bounds.height / baseHeight;
                 values[0 /* scaleX */] = value / baseWidth;
             }
             this.invalidateMatrix();
+            return true;
         };
         d(p, "height"
             /**
@@ -2838,7 +2847,7 @@ var egret;
             this.$DisplayObject[15 /* explicitHeight */] = isNaN(value) ? NaN : value;
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
             if (false) {
                 var values = this.$DisplayObject;
@@ -2847,13 +2856,14 @@ var egret;
                 var angle = values[4 /* rotation */] / 180 * Math.PI;
                 var baseHeight = originalBounds.$getBaseHeight(angle);
                 if (!baseHeight) {
-                    return;
+                    return false;
                 }
                 var baseWidth = originalBounds.$getBaseWidth(angle);
                 values[1 /* scaleY */] = value / baseHeight;
                 values[0 /* scaleX */] = bounds.width / baseWidth;
             }
             this.invalidateMatrix();
+            return true;
         };
         d(p, "measuredWidth"
             /**
@@ -2979,10 +2989,11 @@ var egret;
         p.$setVisible = function (value) {
             value = !!value;
             if (value == this.$visible) {
-                return;
+                return false;
             }
             this.$visible = value;
             this.$invalidateTransform();
+            return true;
         };
         d(p, "cacheAsBitmap"
             /**
@@ -3078,11 +3089,12 @@ var egret;
         p.$setAlpha = function (value) {
             value = egret.sys.getNumber(value);
             if (value == this.$alpha) {
-                return;
+                return false;
             }
             this.$alpha = value;
             this.$propagateFlagsDown(64 /* InvalidConcatenatedAlpha */);
             this.$invalidate(true);
+            return true;
         };
         /**
          * @private
@@ -3143,7 +3155,11 @@ var egret;
          * @private
          */
         p.$setTouchEnabled = function (value) {
+            if (this.$touchEnabled == value) {
+                return false;
+            }
             this.$touchEnabled = value;
+            return true;
         };
         d(p, "scrollRect"
             /**
@@ -3196,7 +3212,7 @@ var egret;
          */
         p.$setScrollRect = function (value) {
             if (!value && !this.$scrollRect) {
-                return;
+                return false;
             }
             if (value) {
                 if (!this.$scrollRect) {
@@ -3208,6 +3224,7 @@ var egret;
                 this.$scrollRect = null;
             }
             this.invalidatePosition();
+            return true;
         };
         d(p, "blendMode"
             /**
@@ -3304,7 +3321,7 @@ var egret;
         );
         p.$setMaskRect = function (value) {
             if (!value && !this.$maskRect) {
-                return;
+                return false;
             }
             if (value) {
                 if (!this.$maskRect) {
@@ -3316,6 +3333,7 @@ var egret;
                 this.$maskRect = null;
             }
             this.invalidatePosition();
+            return true;
         };
         /**
          * @language en_US
@@ -4601,7 +4619,7 @@ var egret;
         p.$setBitmapData = function (value) {
             var values = this.$Bitmap;
             if (value == values[0 /* bitmapData */]) {
-                return;
+                return false;
             }
             values[0 /* bitmapData */] = value;
             if (value) {
@@ -4625,6 +4643,7 @@ var egret;
                 }
             }
             this.$invalidateContentBounds();
+            return true;
         };
         /**
          * @private
@@ -4706,9 +4725,10 @@ var egret;
         );
         p.$setFillMode = function (value) {
             if (value == this.$fillMode) {
-                return;
+                return false;
             }
             this.$fillMode = value;
+            return true;
         };
         d(p, "smoothing"
             /**
@@ -4746,10 +4766,11 @@ var egret;
             //value = +value || 0;
             var values = this.$Bitmap;
             if (value < 0 || value == values[11 /* explicitBitmapWidth */]) {
-                return;
+                return false;
             }
             values[11 /* explicitBitmapWidth */] = value;
             this.$invalidateContentBounds();
+            return true;
         };
         /**
          * @private
@@ -4760,10 +4781,11 @@ var egret;
             //value = +value || 0;
             var values = this.$Bitmap;
             if (value < 0 || value == values[12 /* explicitBitmapHeight */]) {
-                return;
+                return false;
             }
             values[12 /* explicitBitmapHeight */] = value;
             this.$invalidateContentBounds();
+            return true;
         };
         /**
          * @private
@@ -5676,7 +5698,11 @@ var egret;
          * @private
          */
         p.$setTouchChildren = function (value) {
+            if (this.$touchChildren == value) {
+                return false;
+            }
             this.$touchChildren = value;
+            return true;
         };
         /**
          * @private
@@ -7702,7 +7728,7 @@ var egret;
             this._bitmapData = value;
             var w = value.width * egret.$TextureScaleFactor;
             var h = value.height * egret.$TextureScaleFactor;
-            this.$setData(0, 0, w, h, 0, 0, w, h, w, h);
+            this.$initData(0, 0, w, h, 0, 0, w, h, w, h);
         };
         /**
          * @private
@@ -7718,7 +7744,7 @@ var egret;
          * @param sourceWidth
          * @param sourceHeight
          */
-        p.$setData = function (bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, sourceWidth, sourceHeight) {
+        p.$initData = function (bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, sourceWidth, sourceHeight) {
             var scale = egret.$TextureScaleFactor;
             this._bitmapX = bitmapX / scale;
             this._bitmapY = bitmapY / scale;
@@ -8357,8 +8383,48 @@ var egret;
             }
         );
         p.$hitTest = function (stageX, stageY) {
-            var target = _super.prototype.$hitTest.call(this, stageX, stageY);
-            if (target == this) {
+            if (!this.$visible) {
+                return null;
+            }
+            var m = this.$getInvertedConcatenatedMatrix();
+            var localX = m.a * stageX + m.c * stageY + m.tx;
+            var localY = m.b * stageX + m.d * stageY + m.ty;
+            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            if (rect && !rect.contains(localX, localY)) {
+                return null;
+            }
+            if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+                return null;
+            }
+            var children = this.$children;
+            var found = false;
+            for (var i = children.length - 1; i >= 0; i--) {
+                var child = children[i];
+                if (child.$maskedObject) {
+                    continue;
+                }
+                var target = child.$hitTest(stageX, stageY);
+                if (target) {
+                    found = true;
+                    if (target.$touchEnabled) {
+                        break;
+                    }
+                    else {
+                        target = null;
+                    }
+                }
+            }
+            if (target) {
+                if (this.$touchChildren) {
+                    return target;
+                }
+                return this;
+            }
+            if (found) {
+                return this;
+            }
+            target = egret.DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
+            if (target) {
                 target = this.$graphics.$hitTest(stageX, stageY);
             }
             return target;
@@ -8534,7 +8600,7 @@ var egret;
             }
             var texture = new egret.Texture();
             texture._bitmapData = this.texture._bitmapData;
-            texture.$setData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.texture._sourceWidth, this.texture._sourceHeight);
+            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.texture._sourceWidth, this.texture._sourceHeight);
             this._textureMap[name] = texture;
             return texture;
         };
@@ -9133,6 +9199,7 @@ var egret;
         );
         p.$setTarget = function (target) {
             this.$target = target;
+            return true;
         };
         /**
          * @language en_US
@@ -10407,6 +10474,114 @@ var egret;
 (function (egret) {
     /**
      * @language en_US
+     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
+     */
+    /**
+     * @language zh_CN
+     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
+     */
+    var StageOrientationEvent = (function (_super) {
+        __extends(StageOrientationEvent, _super);
+        /**
+         * @language en_US
+         * Create a egret.IOErrorEvent objects
+         * @param type {string} Type of event, accessible as Event.type.
+         * @param bubbles {boolean} Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable {boolean} Determine whether the Event object can be canceled. The default value is false.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.IOErrorEvent 对象
+         * @param type {string} 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        function StageOrientationEvent(type, bubbles, cancelable) {
+            if (bubbles === void 0) { bubbles = false; }
+            if (cancelable === void 0) { cancelable = false; }
+            _super.call(this, type, bubbles, cancelable);
+        }
+        var d = __define,c=StageOrientationEvent;p=c.prototype;
+        /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        StageOrientationEvent.dispatchStageOrientationEvent = function (target, type) {
+            var event = egret.Event.create(StageOrientationEvent, type);
+            var result = target.dispatchEvent(event);
+            egret.Event.release(event);
+            return result;
+        };
+        /**
+         * @language en_US
+         * io error
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * io发生错误
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        StageOrientationEvent.ORIENTATION_CHANGE = "orientationChange";
+        return StageOrientationEvent;
+    })(egret.Event);
+    egret.StageOrientationEvent = StageOrientationEvent;
+    egret.registerClass(StageOrientationEvent,"egret.StageOrientationEvent");
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language en_US
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
      * @version Egret 2.0
      * @platform Web,Native
@@ -10636,7 +10811,7 @@ var egret;
          * @version Egret 2.0
          * @platform Web,Native
          */
-        TimerEvent.emitTimerEvent = function (target, type, bubbles, cancelable) {
+        TimerEvent.dispatchTimerEvent = function (target, type, bubbles, cancelable) {
             var event = egret.Event.create(TimerEvent, type, bubbles, cancelable);
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
@@ -11151,13 +11326,13 @@ var egret;
              * @platform Web,Native
              */
             this.touchDown = false;
-            this.$setTo(stageX, stageY, touchPointID);
+            this.$initTo(stageX, stageY, touchPointID);
         }
         var d = __define,c=TouchEvent;p=c.prototype;
         /**
          * @private
          */
-        p.$setTo = function (stageX, stageY, touchPointID) {
+        p.$initTo = function (stageX, stageY, touchPointID) {
             this.touchPointID = +touchPointID || 0;
             this.$stageX = +stageX || 0;
             this.$stageY = +stageY || 0;
@@ -11249,6 +11424,7 @@ var egret;
         p.$setTarget = function (target) {
             this.$target = target;
             this.targetChanged = !!target;
+            return true;
         };
         /**
          * @language en_US
@@ -11306,7 +11482,7 @@ var egret;
                 return true;
             }
             var event = egret.Event.create(TouchEvent, type, bubbles, cancelable);
-            event.$setTo(stageX, stageY, touchPointID);
+            event.$initTo(stageX, stageY, touchPointID);
             event.touchDown = touchDown;
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
@@ -14516,10 +14692,10 @@ var egret;
             p.$setFrameRate = function (value) {
                 value = +value || 0;
                 if (value <= 0) {
-                    return;
+                    return false;
                 }
                 if (this.$frameRate == value) {
-                    return;
+                    return false;
                 }
                 this.$frameRate = value;
                 if (value > 60) {
@@ -14527,6 +14703,7 @@ var egret;
                 }
                 //这里用60*1000来避免浮点数计算不准确的问题。
                 this.lastCount = this.frameInterval = Math.round(60000 / value);
+                return true;
             };
             /**
              * @private
@@ -14682,7 +14859,7 @@ var egret;
              * @private
              * 设置同时触摸数量
              */
-            p.$setMaxTouches = function () {
+            p.$initMaxTouches = function () {
                 this.maxTouches = this.stage.$maxTouches;
             };
             /**
@@ -15553,9 +15730,10 @@ var egret;
         p.$setText = function (value) {
             var values = this.$BitmapText;
             if (value == values[2 /* text */])
-                return;
+                return false;
             values[2 /* text */] = value;
             this.$invalidateContentBounds();
+            return true;
         };
         /**
          * @private
@@ -15571,10 +15749,11 @@ var egret;
             //value = +value || 0;
             var values = this.$BitmapText;
             if (value < 0 || value == values[0 /* textFieldWidth */]) {
-                return;
+                return false;
             }
             values[0 /* textFieldWidth */] = value;
             this.$invalidateContentBounds();
+            return true;
         };
         /**
          * @private
@@ -15597,10 +15776,11 @@ var egret;
             //value = +value || 0;
             var values = this.$BitmapText;
             if (value < 0 || value == values[1 /* textFieldHeight */]) {
-                return;
+                return false;
             }
             values[1 /* textFieldHeight */] = value;
             this.$invalidateContentBounds();
+            return true;
         };
         d(p, "font"
             /**
@@ -15627,11 +15807,12 @@ var egret;
         p.$setFont = function (value) {
             var values = this.$BitmapText;
             if (values[5 /* font */] == value) {
-                return;
+                return false;
             }
             values[5 /* font */] = value;
             this.$BitmapText[6 /* fontStringChanged */] = true;
             this.$invalidateContentBounds();
+            return true;
         };
         d(p, "lineSpacing"
             /**
@@ -15660,9 +15841,10 @@ var egret;
             value = +value || 0;
             var values = this.$BitmapText;
             if (values[3 /* lineSpacing */] == value)
-                return;
+                return false;
             values[3 /* lineSpacing */] = value;
             this.$invalidateContentBounds();
+            return true;
         };
         d(p, "letterSpacing"
             /**
@@ -15690,9 +15872,10 @@ var egret;
             value = +value || 0;
             var values = this.$BitmapText;
             if (values[4 /* letterSpacing */] == value)
-                return;
+                return false;
             values[4 /* letterSpacing */] = value;
             this.$invalidateContentBounds();
+            return true;
         };
         /**
          * @private
@@ -16704,10 +16887,11 @@ var egret;
             return this.$TextField[24 /* type */] == egret.TextFieldType.INPUT;
         };
         p.$setTouchEnabled = function (value) {
-            _super.prototype.$setTouchEnabled.call(this, value);
+            var result = _super.prototype.$setTouchEnabled.call(this, value);
             if (this.isInput()) {
                 this.$inputEnabled = true;
             }
+            return result;
         };
         d(p, "fontFamily"
             /**
@@ -16734,10 +16918,11 @@ var egret;
         p.$setFontFamily = function (value) {
             var values = this.$TextField;
             if (values[8 /* fontFamily */] == value) {
-                return;
+                return false;
             }
             values[8 /* fontFamily */] = value;
             this.invalidateFontString();
+            return true;
         };
         d(p, "size"
             /**
@@ -16765,10 +16950,11 @@ var egret;
             value = egret.sys.getNumber(value);
             var values = this.$TextField;
             if (values[0 /* fontSize */] == value) {
-                return;
+                return false;
             }
             values[0 /* fontSize */] = value;
             this.invalidateFontString();
+            return true;
         };
         d(p, "bold"
             ///**
@@ -16818,10 +17004,11 @@ var egret;
             value = !!value;
             var values = this.$TextField;
             if (value == values[15 /* bold */]) {
-                return;
+                return false;
             }
             values[15 /* bold */] = value;
             this.invalidateFontString();
+            return true;
         };
         d(p, "italic"
             /**
@@ -16849,10 +17036,11 @@ var egret;
             value = !!value;
             var values = this.$TextField;
             if (value == values[16 /* italic */]) {
-                return;
+                return false;
             }
             values[16 /* italic */] = value;
             this.invalidateFontString();
+            return true;
         };
         /**
          * @private
@@ -16899,10 +17087,11 @@ var egret;
         p.$setTextAlign = function (value) {
             var values = this.$TextField;
             if (values[9 /* textAlign */] == value) {
-                return;
+                return false;
             }
             values[9 /* textAlign */] = value;
             this.$invalidateTextField();
+            return true;
         };
         d(p, "verticalAlign"
             /**
@@ -16929,10 +17118,11 @@ var egret;
         p.$setVerticalAlign = function (value) {
             var values = this.$TextField;
             if (values[10 /* verticalAlign */] == value) {
-                return;
+                return false;
             }
             values[10 /* verticalAlign */] = value;
             this.$invalidateTextField();
+            return true;
         };
         d(p, "lineSpacing"
             /**
@@ -16960,9 +17150,10 @@ var egret;
             value = egret.sys.getNumber(value);
             var values = this.$TextField;
             if (values[1 /* lineSpacing */] == value)
-                return;
+                return false;
             values[1 /* lineSpacing */] = value;
             this.$invalidateTextField();
+            return true;
         };
         d(p, "textColor"
             /**
@@ -16990,11 +17181,12 @@ var egret;
             value = +value | 0;
             var values = this.$TextField;
             if (values[2 /* textColor */] == value) {
-                return;
+                return false;
             }
             values[2 /* textColor */] = value;
             values[11 /* textColorString */] = egret.toColorString(value);
             this.$invalidate();
+            return true;
         };
         d(p, "wordWrap"
             /**
@@ -17141,7 +17333,9 @@ var egret;
                     text = value;
                 }
                 this.setMiddleStyle([{ text: text }]);
+                return true;
             }
+            return false;
         };
         /**
          * @private
@@ -17152,10 +17346,11 @@ var egret;
             if (value == null) {
                 value = "";
             }
-            this._setBaseText(value);
+            var result = this._setBaseText(value);
             if (this._inputUtils) {
                 this._inputUtils._setText(this.$TextField[13 /* text */]);
             }
+            return result;
         };
         d(p, "displayAsPassword"
             /**
@@ -17383,6 +17578,7 @@ var egret;
          * @param endIndex
          */
         p.$setSelection = function (beginIndex, endIndex) {
+            return false;
         };
         /**
          * @private
@@ -17531,9 +17727,10 @@ var egret;
             values[3 /* textFieldWidth */] = isNaN(value) ? NaN : value;
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
             this.$invalidateTextField();
+            return true;
         };
         /**
          * @private
@@ -17545,9 +17742,10 @@ var egret;
             values[4 /* textFieldHeight */] = isNaN(value) ? NaN : value;
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
             this.$invalidateTextField();
+            return true;
         };
         /**
          * @private
@@ -20143,10 +20341,10 @@ var egret;
             this.lastCount += this.updateInterval;
             this._currentCount++;
             var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
-            egret.TimerEvent.emitTimerEvent(this, egret.TimerEvent.TIMER);
+            egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER);
             if (complete) {
                 this.stop();
-                egret.TimerEvent.emitTimerEvent(this, egret.TimerEvent.TIMER_COMPLETE);
+                egret.TimerEvent.dispatchTimerEvent(this, egret.TimerEvent.TIMER_COMPLETE);
             }
             return false;
         };

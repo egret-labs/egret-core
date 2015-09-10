@@ -33,27 +33,12 @@ declare module egret {
          */
         fetchVersion(): void;
         /**
-         *
-         * @param url
-         * @returns
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        checkIsNewVersion(url: string): boolean;
-        /**
-         *
-         * @param url
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        saveVersion(url: string): void;
-        /**
          * 获取所有有变化的文件
-         * @returns {Array<string>}
+         * @returns {Array<any>}
          * @version Egret 2.0
          * @platform Web,Native
          */
-        getChangeList(): Array<string>;
+        getChangeList(): Array<any>;
         /**
          *
          * @param url
@@ -89,13 +74,11 @@ declare module egret.native {
         constructor(stage: egret.Stage);
         fetchVersion(): void;
         private getList(callback, type, root?);
-        checkIsNewVersion(virtualUrl: string): boolean;
-        saveVersion(virtualUrl: string): void;
         /**
          * 获取所有有变化的文件
-         * @returns {Array<string>}
+         * @returns {Array<any>}
          */
-        getChangeList(): Array<string>;
+        getChangeList(): Array<any>;
         getVirtualUrl(url: string): string;
         private _iLoadingView;
         private loadAllChange();
@@ -111,13 +94,11 @@ declare module egret.web {
         constructor(stage: egret.Stage);
         private _versionInfo;
         fetchVersion(): void;
-        checkIsNewVersion(virtualUrl: string): boolean;
-        saveVersion(virtualUrl: string): void;
         /**
          * 获取所有有变化的文件
-         * @returns {Array<string>}
+         * @returns {Array<any>}
          */
-        getChangeList(): Array<string>;
+        getChangeList(): Array<any>;
         getVirtualUrl(url: string): string;
     }
 }

@@ -2322,10 +2322,11 @@ var egret;
          */
         p.$setWidth = function (value) {
             if (this.$getExplicitWidth() == value) {
-                return;
+                return false;
             }
-            _super.prototype.$setWidth.call(this, value);
+            var result = _super.prototype.$setWidth.call(this, value);
             this._updateContentPosition();
+            return result;
         };
         /**
          * @private
@@ -2333,9 +2334,10 @@ var egret;
          */
         p.$setHeight = function (value) {
             if (this.$getExplicitHeight() == value)
-                return;
-            _super.prototype.$setHeight.call(this, value);
+                return false;
+            var result = _super.prototype.$setHeight.call(this, value);
             this._updateContentPosition();
+            return true;
         };
         /**
          * @private

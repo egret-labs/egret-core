@@ -223,14 +223,9 @@ var egret;
                     egret_native.Game.listUpdate(root, promise);
                 }
             };
-            p.checkIsNewVersion = function (virtualUrl) {
-                return egret_native.isFileExists(virtualUrl);
-            };
-            p.saveVersion = function (virtualUrl) {
-            };
             /**
              * 获取所有有变化的文件
-             * @returns {Array<string>}
+             * @returns {Array<any>}
              */
             p.getChangeList = function () {
                 var temp = [];
@@ -426,14 +421,9 @@ var egret;
                 //    httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
                 //}
             };
-            p.checkIsNewVersion = function (virtualUrl) {
-                return false;
-            };
-            p.saveVersion = function (virtualUrl) {
-            };
             /**
              * 获取所有有变化的文件
-             * @returns {Array<string>}
+             * @returns {Array<any>}
              */
             p.getChangeList = function () {
                 return [];

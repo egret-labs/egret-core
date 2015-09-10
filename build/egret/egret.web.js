@@ -1448,16 +1448,16 @@ var egret;
              * 设置显示高度
              */
             p.$setHeight = function (value) {
-                _super.prototype.$setHeight.call(this, value);
                 this.heightSet = +value || 0;
+                return _super.prototype.$setHeight.call(this, value);
             };
             /**
              * @private
              * 设置显示宽度
              */
             p.$setWidth = function (value) {
-                _super.prototype.$setWidth.call(this, value);
                 this.widthSet = +value || 0;
+                return _super.prototype.$setWidth.call(this, value);
             };
             return WebVideo;
         })(egret.DisplayObject);
@@ -1954,6 +1954,7 @@ var egret;
              */
             p.$setTextField = function (textfield) {
                 this.$textfield = textfield;
+                return true;
             };
             /**
              * @private
@@ -2064,6 +2065,7 @@ var egret;
             p.$setText = function (value) {
                 this.textValue = value;
                 this.resetText();
+                return true;
             };
             /**
              * @private
@@ -2810,7 +2812,7 @@ var egret;
              * 更新同时触摸点的数量
              */
             p.$updateMaxTouches = function () {
-                this.touch.$setMaxTouches();
+                this.touch.$initMaxTouches();
             };
             return WebTouchHandler;
         })(egret.HashObject);
@@ -3369,6 +3371,16 @@ var egret;
         };
         egret.runEgret = runEgret;
         egret.updateAllScreens = updateAllScreens;
+        var resizeTimer = NaN;
+        function doResize() {
+            resizeTimer = NaN;
+            egret.updateAllScreens();
+        }
+        window.addEventListener("resize", function () {
+            if (isNaN(resizeTimer)) {
+                resizeTimer = window.setTimeout(doResize, 300);
+            }
+        });
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3619,6 +3631,7 @@ var egret;
             function WebPlayer(container) {
                 _super.call(this);
                 this.init(container);
+                this.initOrientation();
             }
             var d = __define,c=WebPlayer;p=c.prototype;
             p.init = function (container) {
@@ -3655,6 +3668,14 @@ var egret;
                 this.updateScreenSize();
                 this.updateMaxTouches();
                 player.start();
+            };
+            p.initOrientation = function () {
+                var self = this;
+                window.addEventListener("orientationchange", function () {
+                    window.setTimeout(function () {
+                        egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, egret.StageOrientationEvent.ORIENTATION_CHANGE);
+                    }, 100);
+                });
             };
             /**
              * 读取初始化参数

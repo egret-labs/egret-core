@@ -51,6 +51,34 @@ declare module egret {
 }
 declare module egret {
     /**
+     * @language en_US
+     * The HashObject class is the base class for all objects in the Egret framework.The HashObject
+     * class includes a hashCode property, which is a unique identification number of the instance.
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Egret顶级对象。框架内所有对象的基类，为对象实例提供唯一的hashCode值。
+     * @version Egret 2.0
+     * @platform Web,Native
+     */
+    interface IHashObject {
+        /**
+         * @language en_US
+         * a unique identification number assigned to this instance.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        hashCode: number;
+    }
+    /**
      * @private
      * 哈希计数
      */
@@ -68,7 +96,7 @@ declare module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    class HashObject {
+    class HashObject implements IHashObject {
         /**
          * @language en_US
          * Initializes a HashObject
@@ -6195,6 +6223,71 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
+     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
+     */
+    /**
+     * @language zh_CN
+     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * @version Egret 2.0
+     * @platform Web,Native
+     * @includeExample egret/events/IOErrorEvent.ts
+     */
+    class StageOrientationEvent extends Event {
+        /**
+         * @language en_US
+         * io error
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * io发生错误
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static ORIENTATION_CHANGE: string;
+        /**
+         * @language en_US
+         * Create a egret.IOErrorEvent objects
+         * @param type {string} Type of event, accessible as Event.type.
+         * @param bubbles {boolean} Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable {boolean} Determine whether the Event object can be canceled. The default value is false.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.IOErrorEvent 对象
+         * @param type {string} 事件的类型，可以作为 Event.type 访问。
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        constructor(type: string, bubbles?: boolean, cancelable?: boolean);
+        /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static dispatchStageOrientationEvent(target: IEventDispatcher, type: string): boolean;
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
      * When a user clicks a hyperlink rich text object dispatches TextEvent object. Text Event Type: TextEvent.LINK.
      * @version Egret 2.0
      * @platform Web,Native
@@ -6411,7 +6504,7 @@ declare module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        static emitTimerEvent(target: IEventDispatcher, type: string, bubbles?: boolean, cancelable?: boolean): boolean;
+        static dispatchTimerEvent(target: IEventDispatcher, type: string, bubbles?: boolean, cancelable?: boolean): boolean;
     }
 }
 declare module egret {
@@ -10997,7 +11090,7 @@ declare module egret {
          *
          * @param value
          */
-        _setBaseText(value: string): void;
+        _setBaseText(value: string): boolean;
         /**
          * @version Egret 2.0
          * @platform Web,Native

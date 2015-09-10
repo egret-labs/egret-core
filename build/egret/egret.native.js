@@ -566,7 +566,7 @@ var egret;
              */
             p.transform = function (a, b, c, d, tx, ty) {
                 this.$matrix.append(a, b, c, d, tx, ty);
-                this.$setTransformToNative();
+                this.setTransformToNative();
             };
             /**
              * @private
@@ -578,7 +578,7 @@ var egret;
              */
             p.translate = function (x, y) {
                 this.$matrix.translate(x, y);
-                this.$setTransformToNative();
+                this.setTransformToNative();
             };
             /**
              * @private
@@ -590,7 +590,7 @@ var egret;
              */
             p.scale = function (x, y) {
                 this.$matrix.scale(x, y);
-                this.$setTransformToNative();
+                this.setTransformToNative();
             };
             /**
              * @private
@@ -601,7 +601,7 @@ var egret;
              */
             p.rotate = function (angle) {
                 this.$matrix.rotate(angle);
-                this.$setTransformToNative();
+                this.setTransformToNative();
             };
             /**
              * @private
@@ -617,7 +617,7 @@ var egret;
                         for (var key in data) {
                             this[key] = data[key];
                         }
-                        this.$setTransformToNative();
+                        this.setTransformToNative();
                     }
                     //console.log("pop clip");
                     var index = this.$clipList.indexOf(this.$saveCount);
@@ -694,11 +694,11 @@ var egret;
              */
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.$matrix.setTo(a, b, c, d, tx, ty);
-                this.$setTransformToNative();
+                this.setTransformToNative();
             };
-            p.$setTransformToNative = function () {
+            p.setTransformToNative = function () {
                 var m = this.$matrix;
-                //console.log("$setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
+                //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
                 egret_native.Graphics.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             };
             /**
@@ -2667,7 +2667,7 @@ var egret;
              * 更新同时触摸点的数量
              */
             p.$updateMaxTouches = function () {
-                this.$touch.$setMaxTouches();
+                this.$touch.$initMaxTouches();
             };
             return NativeTouchHandler;
         })(egret.HashObject);
@@ -2861,6 +2861,7 @@ var egret;
          */
         p.$setText = function (value) {
             this.textValue = value;
+            return true;
         };
         /**
          * @private
@@ -2936,6 +2937,7 @@ var egret;
         };
         p.$setTextField = function (value) {
             this.$textfield = value;
+            return true;
         };
         return NativeStageText;
     })(egret.EventDispatcher);
