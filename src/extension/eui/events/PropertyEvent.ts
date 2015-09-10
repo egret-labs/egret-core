@@ -118,10 +118,10 @@ module eui {
 
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Emit an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param property Name of the property that changed.
          *
@@ -141,7 +141,7 @@ module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        public static emitPropertyEvent(target:egret.IEventDispatcher, eventType:string, property?:string):boolean {
+        public static dispatchPropertyEvent(target:egret.IEventDispatcher, eventType:string, property?:string):boolean {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }

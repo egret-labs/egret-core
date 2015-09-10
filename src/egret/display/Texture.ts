@@ -183,13 +183,13 @@ module egret {
         /**
          * @language en_US
          * The BitmapData object being referenced.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 BitmapData 对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get bitmapData():BitmapData {

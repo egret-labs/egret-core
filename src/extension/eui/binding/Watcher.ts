@@ -146,7 +146,7 @@ module eui {
                 data.set = function (value:any) {
                     if (this[property] != value) {
                         orgSet.call(this, value);
-                        PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                        PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
                     }
                 };
             }
@@ -161,7 +161,7 @@ module eui {
                 data.set = function (value:any) {
                     if (this[newProp] != value) {
                         this[newProp] = value;
-                        PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                        PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
                     }
                 };
             }

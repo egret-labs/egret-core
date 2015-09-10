@@ -34,14 +34,14 @@ module egret {
      * XML, or other information to be used in a dynamic, data-driven application. A HttpRequest object downloads all
      * of the data from a URL before making it available to code in the applications. It sends out notifications about
      * the progress of the download, which you can monitor through the bytesLoaded and bytesTotal properties,
-     * as well as through emitted events.
-     * @event lark.Event.COMPLETE Emitted when the net request is complete.
-     * @event lark.Event.IO_ERROR Emitted when the net request is failed.
-     * @event lark.ProgressEvent.PROGRESS Emitted when data is received as the download operation progresses.
-     * @see lark.HttpMethod
-     * @see lark.HttpResponseType
-     * @includeExample examples/Samples/src/lark/net/HttpRequestExample.ts
-     * @version Lark 1.0
+     * as well as through dispatched events.
+     * @event egret.Event.COMPLETE Emitted when the net request is complete.
+     * @event egret.Event.IO_ERROR Emitted when the net request is failed.
+     * @event egret.ProgressEvent.PROGRESS Emitted when data is received as the download operation progresses.
+     * @see egret.HttpMethod
+     * @see egret.HttpResponseType
+     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -49,13 +49,13 @@ module egret {
      * HttpRequest 类以文本或二进制数据的形式从 URL 下载数据。
      * HttpRequest 对象会先从 URL 中下载所有数据，然后才将数据用于应用程序中的代码。它会发出有关下载进度的通知，
      * 通过 bytesLoaded 和 bytesTotal 属性以及已调度的事件，可以监视下载进度。
-     * @event lark.Event.COMPLETE 加载完成
-     * @event lark.Event.IO_ERROR 加载失败
-     * @event lark.ProgressEvent.PROGRESS 加载进度，可通过event.bytesLoaded和event.bytesTotal统计进度信息。
-     * @see lark.HttpMethod
-     * @see lark.HttpResponseType
-     * @includeExample examples/Samples/src/lark/net/HttpRequestExample.ts
-     * @version Lark 1.0
+     * @event egret.Event.COMPLETE 加载完成
+     * @event egret.Event.IO_ERROR 加载失败
+     * @event egret.ProgressEvent.PROGRESS 加载进度，可通过event.bytesLoaded和event.bytesTotal统计进度信息。
+     * @see egret.HttpMethod
+     * @see egret.HttpResponseType
+     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export interface HttpRequest extends EventDispatcher {
@@ -63,31 +63,31 @@ module egret {
          * @language en_US
          * The data received from the load operation.  The format of the data depends on the setting of the responseType property.
          * @readOnly
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 本次请求返回的数据，数据类型根据 responseType 设置的值确定。
          * @readOnly
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         response: any;
         /**
          * @language en_US
          * Controls whether the downloaded data is received as text (HttpResponseType.TEXT) or raw binary data (HttpResponseType.ArrayBuffer)<br/>
-         * Note:If you attempt to set this property to an invalid value, Lark runtime set the value to HttpResponseType.TEXT.
-         * @default lark.HttpResponseType.TEXT
-         * @version Lark 1.0
+         * Note:If you attempt to set this property to an invalid value, Egret runtime set the value to HttpResponseType.TEXT.
+         * @default egret.HttpResponseType.TEXT
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置返回的数据格式为文本（HttpResponseType.TEXT）还是二进制数据（HttpResponseType.ArrayBuffer）<br/>
          * 注意：若尝试设置此属性为一个非法的值，运行时将使用HttpResponseType.TEXT。
-         * @default lark.HttpResponseType.TEXT
-         * @version Lark 1.0
+         * @default egret.HttpResponseType.TEXT
+         * @version Egret 2.4
          * @platform Web,Native
          */
         responseType: string;
@@ -96,14 +96,14 @@ module egret {
          * indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies
          * or authorization headers. (This never affects same-site requests.)
          * @default false
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表明在进行跨站(cross-site)的访问控制(Access-Control)请求时，是否使用认证信息(例如cookie或授权的header)。(这个标志不会影响同站的请求)
          * @default false
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         withCredentials: boolean;
@@ -114,8 +114,8 @@ module egret {
          * called) is the equivalent of calling abort().
          * @param url The URL to send the request to.
          * @param method The HTTP method to use, please use the const value in the HttpMethod class.
-         * @see lark.HttpMethod
-         * @version Lark 1.0
+         * @see egret.HttpMethod
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -124,8 +124,8 @@ module egret {
          * 注意: 若在已经发出请求的对象上调用此方法，相当于立即调用abort().
          * @param url 该请求所要访问的URL该请求所要访问的URL
          * @param method 请求所使用的HTTP方法， 请使用 HttpMethod 定义的枚举值.
-         * @see lark.HttpMethod
-         * @version Lark 1.0
+         * @see egret.HttpMethod
+         * @version Egret 2.4
          * @platform Web,Native
          */
         open(url:string, method?:string): void;
@@ -133,40 +133,40 @@ module egret {
          * @language en_US
          * Sends the request.
          * @param data the data to send.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 发送请求.
          * @param data 需要发送的数据
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         send(data?:any): void;
         /**
          * @language en_US
          * Aborts the request if it has already been sent.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 如果请求已经被发送,则立刻中止请求.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         abort(): void;
         /**
          * @language en_US
          * Returns all the response headers as a string, or null if no response has been received.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回所有响应头信息(响应头名和值), 如果响应头还没接受,则返回"".
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         getAllResponseHeaders(): string;
@@ -175,7 +175,7 @@ module egret {
          * Sets the value of an HTTP request header. You must call setRequestHeader() after open().
          * @param header The name of the header whose value is to be set.
          * @param value The value to set as the body of the header.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -183,7 +183,7 @@ module egret {
          * 给指定的HTTP请求头赋值.在这之前,您必须确认已经调用 open() 方法打开了一个url.
          * @param header 将要被赋值的请求头名称.
          * @param value 给指定的请求头赋的值.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         setRequestHeader(header:string, value:string): void;
@@ -192,14 +192,14 @@ module egret {
          * Returns the string containing the text of the specified header, or null if either the response has not yet been
          * received or the header doesn't exist in the response.
          * @param header The name of the header whose value is to be get.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回指定的响应头的值, 如果响应头还没被接受,或该响应头不存在,则返回"".
          * @param header 要返回的响应头名称
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         getResponseHeader(header:string): string;
@@ -209,13 +209,13 @@ module egret {
     /**
      * @language en_US
      * Creates a HttpRequest object.
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 创建一个 HttpRequest 实例。
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export var HttpRequest:{ new (): HttpRequest };

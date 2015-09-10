@@ -46,13 +46,13 @@ module RES {
 		/**
 		 * @language en_US
 		 * Animation configuration file. Currently supports Egret MovieClip file format.
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
-		 * @version Lark 1.0
+		 * @version Egret 2.4
 		 * @platform Web,Native
 		 */
 		public static TYPE_ANIMATION:string = "animation";

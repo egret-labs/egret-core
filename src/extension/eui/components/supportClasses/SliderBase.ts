@@ -225,7 +225,7 @@ module eui {
         /**
          * @language en_US
          * Specifies whether live dragging is enabled for the slider. If true, sets the value
-         * and values properties and emits the change event continuously as
+         * and values properties and dispatches the change event continuously as
          * the user moves the thumb.
          *
          * @default true
@@ -392,7 +392,7 @@ module eui {
 
             values[Keys.clickOffsetX] = clickOffset.x;
             values[Keys.clickOffsetY] = clickOffset.y;
-            UIEvent.emitUIEvent(this, UIEvent.CHANGE_START);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
         }
 
         /**
@@ -465,7 +465,7 @@ module eui {
             var stage:egret.Stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onStageTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
-            UIEvent.emitUIEvent(this, UIEvent.CHANGE_END);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
             var values = this.$SliderBase;
             if (!this.liveDragging && this.value != values[Keys.pendingValue]) {
                 this.setValue(values[Keys.pendingValue]);
@@ -513,7 +513,7 @@ module eui {
         private animationEndHandler(animation:sys.Animation):void {
             this.setValue(this.$SliderBase[Keys.slideToValue]);
             this.dispatchEventWith(egret.Event.CHANGE);
-            UIEvent.emitUIEvent(this, UIEvent.CHANGE_END);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
         }
 
         /**
@@ -524,7 +524,7 @@ module eui {
             this.$SliderBase[Keys.animation].stop();
             this.setValue(this.nearestValidValue(this.pendingValue, this.snapInterval));
             this.dispatchEventWith(egret.Event.CHANGE);
-            UIEvent.emitUIEvent(this, UIEvent.CHANGE_END);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
         }
 
         /**
@@ -574,7 +574,7 @@ module eui {
                         (Math.abs(values[Keys.pendingValue] - values[Keys.slideToValue]) / (rangeValues[sys.RangeKeys.maximum] - rangeValues[sys.RangeKeys.minimum]));
                     animation.from = values[Keys.pendingValue];
                     animation.to = values[Keys.slideToValue];
-                    UIEvent.emitUIEvent(this, UIEvent.CHANGE_START);
+                    UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
                     animation.play();
                 }
                 else {

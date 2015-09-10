@@ -514,7 +514,7 @@ module eui {
             }
             list.splice(0, startIndex + 1);
             targetIndex -= startIndex + 1;
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             egret.Event.release(event);
         }
 
@@ -629,7 +629,7 @@ module eui {
                     values[Keys.autoHideTimer].reset();
                 }
             }
-            UIEvent.emitUIEvent(this, UIEvent.CHANGE_START);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
             if (values[Keys.delayTouchEvent]) {
                 values[Keys.delayTouchEvent] = null;
                 values[Keys.delayTouchTimer].stop();
@@ -722,7 +722,7 @@ module eui {
                 values[Keys.autoHideTimer].start();
             }
 
-            UIEvent.emitUIEvent(this, UIEvent.CHANGE_END);
+            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
 
         }
 

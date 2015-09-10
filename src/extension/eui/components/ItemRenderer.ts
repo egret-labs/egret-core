@@ -104,7 +104,7 @@ module eui {
 
         public set data(value:any) {
             this._data = value;
-            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "data");
+            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "data");
             this.dataChanged();
         }
 

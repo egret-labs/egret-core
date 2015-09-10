@@ -39,7 +39,7 @@ module egret {
      *
      * @event egret.Event.COMPLETE Emit when the audio resource is loaded and ready to play
      * @event egret.IOErrorEvent.IO_ERROR Emit when the audio resource is failed to load
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
      */
@@ -50,7 +50,7 @@ module egret {
      *
      * @event egret.Event.COMPLETE 音频加载完成时抛出
      * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
      */
@@ -60,14 +60,14 @@ module egret {
          * @language en_US
          * Initiates loading of an external audio file from the specified URL.
          * @param url Audio file URL
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 启动从指定 URL 加载外部音频文件的过程。
          * @param url 需要加载的音频文件URL
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         load(url:string):void;
@@ -77,7 +77,7 @@ module egret {
          * Generates a new SoundChannel object to play back the sound.
          * @param startTime The initial position in seconds at which playback should start, (default = 0)
          * @param loops Plays, the default value is 0. Greater than 0 to the number of plays, such as 1 to play 1, less than or equal to 0, to loop.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -85,7 +85,7 @@ module egret {
          * 生成一个新的 SoundChannel 对象来播放该声音。此方法返回 SoundChannel 对象，访问该对象可停止声音调整音量。
          * @param startTime 应开始播放的初始位置（以秒为单位），默认值是 0
          * @param loops 播放次数，默认值是 0，循环播放。 大于 0 为播放次数，如 1 为播放 1 次；小于等于 0，为循环播放。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         play(startTime?:number, loops?:number):SoundChannel;
@@ -93,13 +93,13 @@ module egret {
         /**
          * @language en_US
          * Closes the stream, causing any download of data to cease
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 关闭该流，从而停止所有数据的下载。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         close():void;
@@ -131,14 +131,14 @@ module egret {
          * @language en_US
          * Create Sound object, load an external audio file and play
          * @param url Audio file URL, Sound will start to load the media if url is not empty
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建 Sound 对象、将外部音频文件加载到该对象并播放该文件
          * @param url 需要加载的音频文件URL,如果指定了 url, Sound会立即开始加载指定的媒体文件
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         new():Sound

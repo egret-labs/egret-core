@@ -550,7 +550,7 @@ module egret.gui {
             }
             list.splice(0, startIndex + 1);
             targetIndex -= startIndex + 1;
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             egret.Event.release(event);
         }
 

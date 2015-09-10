@@ -5,13 +5,13 @@ module egret {
     /**
      * @language en_US
      * The Geolocation able to obtain the position of the device.
-     * Geolocation will emit CHANGE event when the device's location is changed.
-     * It will emit IO_ERROR event if the location request is denied
+     * Geolocation will dispatch CHANGE event when the device's location is changed.
+     * It will dispatch IO_ERROR event if the location request is denied
      * or there is no location service on the device.
      *
      * @event egret.Event.CHANGE The device's location is changed
      * @event egret.Event.IO_ERROR Error occurred while getting the location
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
@@ -23,7 +23,7 @@ module egret {
      *
      * @event egret.Event.CHANGE 设备位置发生改变
      * @event egret.Event.IO_ERROR 获取设备位置时发生错误
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
@@ -32,14 +32,14 @@ module egret {
          * @language en_US
          * Start to monitor the device's location
          * @returns 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 开始监听设备位置信息
          * @returns 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         start(): void;
@@ -47,14 +47,14 @@ module egret {
          * @language en_US
          * Stop monitor the device's location
          * @returns 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 停止监听设备位置信息
          * @returns 
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         stop(): void;

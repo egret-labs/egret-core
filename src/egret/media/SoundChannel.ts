@@ -39,7 +39,7 @@ module egret {
      * set the volume of the channel
      *
      * @event egret.Event.SOUND_COMPLETE Emit when a sound has finished playing
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
      */
@@ -49,7 +49,7 @@ module egret {
      * SoundChannel 类包含 stop() 方法、用于设置音量和监视播放进度的属性。
      *
      * @event egret.Event.SOUND_COMPLETE 音频播放完成时抛出
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/media/SoundExample.ts
     */
@@ -58,13 +58,13 @@ module egret {
         /**
          * @language en_US
          * The volume, ranging from 0 (silent) to 1 (full volume).
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音量范围从 0（静音）至 1（最大音量）。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         volume: number;
@@ -73,14 +73,14 @@ module egret {
          * @language en_US
          *  When the sound is playing, the position property indicates
          * in seconds the current point that is being played in the sound file.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @readOnly
          */
         /**
          * @language zh_CN
          * 当播放声音时，position 属性表示声音文件中当前播放的位置（以秒为单位）
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @readOnly
          */
@@ -89,13 +89,13 @@ module egret {
         /**
          * @language en_US
          * Stops the sound playing in the channel.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 停止在该声道中播放声音。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         stop(): void;

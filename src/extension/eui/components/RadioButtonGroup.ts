@@ -285,7 +285,7 @@ module eui {
                     radioButton.label == value) {
                     this.changeSelection(i, false);
                     this._selectedValue = null;
-                    PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
+                    PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
                     break;
                 }
             }
@@ -404,7 +404,7 @@ module eui {
                     }
                 }
             }
-            PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
+            PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
             return true;
         }
 

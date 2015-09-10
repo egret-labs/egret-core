@@ -116,7 +116,7 @@ module eui {
         /**
          * @language en_US
          * The skin part that defines the appearance of the close button.
-         * When taped, the close button emits a <code>closing</code> event.
+         * When taped, the close button dispatches a <code>closing</code> event.
          *
          * @skinPart
          *
@@ -268,7 +268,7 @@ module eui {
          * @platform Web,Native
          */
         protected onCloseButtonClick(event:egret.TouchEvent):void {
-            if (UIEvent.emitUIEvent(this, UIEvent.CLOSING)) {
+            if (UIEvent.dispatchUIEvent(this, UIEvent.CLOSING)) {
                 this.close();
             }
         }

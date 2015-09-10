@@ -52,7 +52,7 @@ module eui.sys {
         /**
          * @private
          */
-        emitChangeAfterSelection,
+        dispatchChangeAfterSelection,
         /**
          * @private
          */
@@ -75,13 +75,13 @@ module eui {
      * The ListBase class is the base class for list component.
      * It can display items of list as vertical or horizontal such as SELECT of HTML.
      * @event egret.Event.CHANGE Emitted after the selection has changed.
-     * This event is emitted when the user interacts with the control.
+     * This event is dispatched when the user interacts with the control.
      * @event egret.Event.CHANGING Emitted when the selection is going to change.
      * Calling the <code>preventDefault()</code> method
      * on the event prevents the selection from changing.<p/>
-     * This event is emitted when the user interacts with the control.
+     * This event is dispatched when the user interacts with the control.
      *
-     * @event eui.ItemTapEvent.ITEM_TAP emitted when the user tap an item in the control.
+     * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
      *
      * @version Egret 2.4
      * @version Swan 1.0
@@ -121,7 +121,7 @@ module eui {
                 1: false,       //requireSelectionChanged
                 2: -2,          //proposedSelectedIndex
                 3: -1,          //selectedIndex
-                4: false,       //emitChangeAfterSelection
+                4: false,       //dispatchChangeAfterSelection
                 5: undefined,   //pendingSelectedItem
                 6: false,       //selectedIndexAdjusted
                 7: null,        //touchDownItemRenderer
@@ -217,9 +217,9 @@ module eui {
          * </ul><p/>
          *
          * When the user changes the <code>selectedIndex</code> property by interacting with the control,
-         * the control emits the <code>change</code> and <code>changing</code> events.
+         * the control dispatches the <code>change</code> and <code>changing</code> events.
          * When you change the value of the <code>selectedIndex</code> property programmatically,
-         * it does not emits the <code>change</code> and <code>changing</code> events.</p>
+         * it does not dispatches the <code>change</code> and <code>changing</code> events.</p>
          *
          * @default -1
          * @version Egret 2.4
@@ -274,7 +274,7 @@ module eui {
          * Used internally to specify whether the selectedIndex changed programmatically or due to
          * user interaction.
          * @param value the new index need to select.
-         * @param emitChangeEvent if true, the component will emit a "change" event if the
+         * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * value has changed.
          * @version Egret 2.4
          * @version Swan 1.0
@@ -284,19 +284,19 @@ module eui {
          * @language zh_CN
          * 由程序或者用户设置选中项。
          * @param value 索引值。
-         * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
+         * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected setSelectedIndex(value:number, emitChangeEvent?:boolean):void {
+        protected setSelectedIndex(value:number, dispatchChangeEvent?:boolean):void {
             if (value == this.selectedIndex) {
                 return;
             }
             var values = this.$ListBase;
-            if (emitChangeEvent)
-                values[sys.ListBaseKeys.emitChangeAfterSelection] =
-                    (values[sys.ListBaseKeys.emitChangeAfterSelection] || emitChangeEvent);
+            if (dispatchChangeEvent)
+                values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
+                    (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
             values[sys.ListBaseKeys.proposedSelectedIndex] = value;
             this.invalidateProperties();
         }
@@ -321,9 +321,9 @@ module eui {
          * </ul><p/>
          *
          * When the user changes the <code>selectedItem</code> property by interacting with the control,
-         * the control emits the <code>change</code> and <code>changing</code> events.
+         * the control dispatches the <code>change</code> and <code>changing</code> events.
          * When you change the value of the <code>selectedIndex</code> property programmatically,
-         * it does not emits the <code>change</code> and <code>changing</code> events.</p>
+         * it does not dispatches the <code>change</code> and <code>changing</code> events.</p>
          *
          * @default undefined
          * @version Egret 2.4
@@ -374,7 +374,7 @@ module eui {
          * Used internally to specify whether the selectedItem changed programmatically or due to
          * user interaction.
          * @param value the new item need to select.
-         * @param emitChangeEvent if true, the component will emit a "change" event if the
+         * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -383,19 +383,19 @@ module eui {
          * @language zh_CN
          * 由程序或用户设置选中项数据源。
          * @param value 要选中的项。
-         * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
+         * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected setSelectedItem(value:any, emitChangeEvent:boolean = false):void {
+        protected setSelectedItem(value:any, dispatchChangeEvent:boolean = false):void {
             if (this.selectedItem === value)
                 return;
 
             var values = this.$ListBase;
-            if (emitChangeEvent)
-                values[sys.ListBaseKeys.emitChangeAfterSelection] =
-                    (values[sys.ListBaseKeys.emitChangeAfterSelection] || emitChangeEvent);
+            if (dispatchChangeEvent)
+                values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
+                    (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
 
             values[sys.ListBaseKeys.pendingSelectedItem] = value;
             this.invalidateProperties();
@@ -459,7 +459,7 @@ module eui {
             if (values[sys.ListBaseKeys.selectedIndexAdjusted]) {
                 values[sys.ListBaseKeys.selectedIndexAdjusted] = false;
                 if (!changedSelection) {
-                    PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
+                    PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
                 }
             }
         }
@@ -521,11 +521,11 @@ module eui {
         /**
          * @language en_US
          * The selection validation and commitment workhorse method.
-         * Called to commit the pending selected index. This method emits
+         * Called to commit the pending selected index. This method dispatches
          * the "changing" event, and if the event is not cancelled,
-         * commits the selection change and then emits the "change"
+         * commits the selection change and then dispatches the "change"
          * event.
-         * @param emitChangedEvents if emit a "changed" event.
+         * @param dispatchChangedEvents if dispatch a "changed" event.
          * @return true if the selection was committed, or false if the selection
          * was cancelled.
          * @version Egret 2.4
@@ -536,13 +536,13 @@ module eui {
          * @language zh_CN
          * 提交选中项属性。该方法会派发一个“changing”事件，如果该事件没有被阻止，
          * 该方法将会提交选择项病根据参数派发“change”事件。
-         * @param emitChangedEvents 是否派发一个“changed”事件。
+         * @param dispatchChangedEvents 是否派发一个“changed”事件。
          * @return true 表示提交成功, false表示被取消
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected commitSelection(emitChangedEvents:boolean = true):boolean {
+        protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
             var dataProvider = this.$dataProvider;
             var values = this.$ListBase;
             var maxIndex = dataProvider ? dataProvider.length - 1 : -1;
@@ -555,17 +555,17 @@ module eui {
             if (values[sys.ListBaseKeys.requireSelection] && tmpProposedIndex == ListBase.NO_SELECTION &&
                 dataProvider && dataProvider.length > 0) {
                 values[sys.ListBaseKeys.proposedSelectedIndex] = ListBase.NO_PROPOSED_SELECTION;
-                values[sys.ListBaseKeys.emitChangeAfterSelection] = false;
+                values[sys.ListBaseKeys.dispatchChangeAfterSelection] = false;
                 return false;
             }
 
 
-            if (values[sys.ListBaseKeys.emitChangeAfterSelection]) {
+            if (values[sys.ListBaseKeys.dispatchChangeAfterSelection]) {
                 var result = this.dispatchEventWith(egret.Event.CHANGING, false, true);
                 if (!result) {
                     this.itemSelected(values[sys.ListBaseKeys.proposedSelectedIndex], false);
                     values[sys.ListBaseKeys.proposedSelectedIndex] = ListBase.NO_PROPOSED_SELECTION;
-                    values[sys.ListBaseKeys.emitChangeAfterSelection] = false;
+                    values[sys.ListBaseKeys.dispatchChangeAfterSelection] = false;
                     return false;
                 }
 
@@ -579,14 +579,14 @@ module eui {
             if (values[sys.ListBaseKeys.selectedIndex] != ListBase.NO_SELECTION)
                 this.itemSelected(values[sys.ListBaseKeys.selectedIndex], true);
 
-            //子类若需要自身抛出Change事件，而不是在此处抛出，可以设置emitChangedEvents为false
-            if (emitChangedEvents) {
-                if (values[sys.ListBaseKeys.emitChangeAfterSelection]) {
+            //子类若需要自身抛出Change事件，而不是在此处抛出，可以设置dispatchChangedEvents为false
+            if (dispatchChangedEvents) {
+                if (values[sys.ListBaseKeys.dispatchChangeAfterSelection]) {
                     this.dispatchEventWith(egret.Event.CHANGE);
-                    values[sys.ListBaseKeys.emitChangeAfterSelection] = false;
+                    values[sys.ListBaseKeys.dispatchChangeAfterSelection] = false;
                 }
-                PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
-                PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedItem");
+                PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
+                PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedItem");
             }
 
             return true;
@@ -596,9 +596,9 @@ module eui {
          * @language en_US
          * Adjusts the selected index to account for items being added to or
          * removed from this component.
-         * It does not emit a <code>change</code> event because the change did not
+         * It does not dispatch a <code>change</code> event because the change did not
          * occur as a direct result of user-interaction.  Moreover,
-         * it does not emit a <code>changing</code> event
+         * it does not dispatch a <code>changing</code> event
          * or allow the cancellation of the selection.
          * It also does not call the <code>itemSelected()</code> method,
          * since the same item is selected;
@@ -826,7 +826,7 @@ module eui {
 
         /**
          * @language en_US
-         * Handles <code>egret.TouchEvent.TOUCH_END</code> events and emit <code>ItemTapEvent.ITEM_TAP</code> event.
+         * Handles <code>egret.TouchEvent.TOUCH_END</code> events and dispatch <code>ItemTapEvent.ITEM_TAP</code> event.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
          * @version Swan 1.0
@@ -846,7 +846,7 @@ module eui {
             if (itemRenderer != touchDownItemRenderer)
                 return;
             this.setSelectedIndex(itemRenderer.itemIndex, true);
-            ItemTapEvent.emitItemTapEvent(this, ItemTapEvent.ITEM_TAP, itemRenderer);
+            ItemTapEvent.dispatchItemTapEvent(this, ItemTapEvent.ITEM_TAP, itemRenderer);
         }
 
         /**

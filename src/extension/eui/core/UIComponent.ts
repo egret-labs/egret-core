@@ -918,7 +918,7 @@ module eui.sys {
                 this.dispatchEventWith(egret.Event.RESIZE);
             }
             if (values[UIKeys.oldX] != this.$getX() || values[UIKeys.oldY] != this.$getY()) {
-                UIEvent.emitUIEvent(this, UIEvent.MOVE);
+                UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
             }
         }
 
@@ -975,7 +975,7 @@ module eui.sys {
                 values[sys.UIKeys.initialized] = true;
                 this.createChildren();
                 this.childrenCreated();
-                UIEvent.emitUIEvent(this, UIEvent.CREATION_COMPLETE);
+                UIEvent.dispatchUIEvent(this, UIEvent.CREATION_COMPLETE);
             }
         }
 
@@ -1630,7 +1630,7 @@ module eui.sys {
             }
             var changed:boolean = this.$super.$setX.call(this, x);
             if (this.$super.$setY.call(this, y) || changed) {
-                UIEvent.emitUIEvent(this, UIEvent.MOVE);
+                UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
             }
         }
 

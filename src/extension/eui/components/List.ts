@@ -192,7 +192,7 @@ module eui {
          * user interaction.
          *
          * @param value An array of numbers representing the indices of the selected
-         * @param emitChangeEvent whether emitted a change event.
+         * @param dispatchChangeEvent whether dispatched a change event.
          *
          * @version Egret 2.4
          * @version Swan 1.0
@@ -203,17 +203,17 @@ module eui {
          * 设置多个选中项。
          *
          * @param value 选中项索引的数组
-         * @param emitChangeEvent 是否派发changed事件
+         * @param dispatchChangeEvent 是否派发changed事件
          *
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected setSelectedIndices(value:number[], emitChangeEvent?:boolean):void {
+        protected setSelectedIndices(value:number[], dispatchChangeEvent?:boolean):void {
             var values = this.$ListBase;
-            if (emitChangeEvent)
-                values[sys.ListBaseKeys.emitChangeAfterSelection] =
-                    (values[sys.ListBaseKeys.emitChangeAfterSelection] || emitChangeEvent);
+            if (dispatchChangeEvent)
+                values[sys.ListBaseKeys.dispatchChangeAfterSelection] =
+                    (values[sys.ListBaseKeys.dispatchChangeAfterSelection] || dispatchChangeEvent);
 
             if (value)
                 this._proposedSelectedIndices = value;
@@ -243,7 +243,7 @@ module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        protected commitSelection(emitChangedEvents:boolean = true):boolean {
+        protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
             var values = this.$ListBase;
             var oldSelectedIndex = values[sys.ListBaseKeys.selectedIndex];
             if (this._proposedSelectedIndices) {
@@ -286,13 +286,13 @@ module eui {
                 this.commitMultipleSelection();
             }
 
-            if (emitChangedEvents && retVal) {
-                if (values[sys.ListBaseKeys.emitChangeAfterSelection]) {
+            if (dispatchChangedEvents && retVal) {
+                if (values[sys.ListBaseKeys.dispatchChangeAfterSelection]) {
                     this.dispatchEventWith(egret.Event.CHANGE)
-                    values[sys.ListBaseKeys.emitChangeAfterSelection] = false;
+                    values[sys.ListBaseKeys.dispatchChangeAfterSelection] = false;
                 }
-                PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
-                PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedItem");
+                PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
+                PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedItem");
             }
 
             return retVal;
@@ -448,7 +448,7 @@ module eui {
                 if (itemRenderer != touchDownItemRenderer)
                     return;
                 this.setSelectedIndices(this.calculateSelectedIndices(itemRenderer.itemIndex), true);
-                ItemTapEvent.emitItemTapEvent(this, ItemTapEvent.ITEM_TAP, itemRenderer);
+                ItemTapEvent.dispatchItemTapEvent(this, ItemTapEvent.ITEM_TAP, itemRenderer);
             }
             else {
                 super.onRendererTouchEnd(event);

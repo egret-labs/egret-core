@@ -32,14 +32,14 @@ module egret {
     /**
      * @language en_US
      * The IEventDispatcher interface defines methods for adding or removing event listeners, checks whether specific types
-     * of event listeners are registered, and emits events. Event targets are an important part of the Egret event model.
+     * of event listeners are registered, and dispatches events. Event targets are an important part of the Egret event model.
      * The event target serves as the focal point for how events flow through the display list hierarchy. When an event 
-     * such as a touch tap occurs, an event object is emitted into the event flow from the root of the display list.
+     * such as a touch tap occurs, an event object is dispatched into the event flow from the root of the display list.
      * The event object makes a round-trip journey to the event target, which is conceptually divided into three phases: <br/>
      * the capture phase includes the journey from the root to the last node before the event target's node; the target 
      * phase includes only the event target node; and the bubbling phase includes any subsequent nodes encountered on the
      * return trip to the root of the display list.In general, the easiest way for a user-defined class to gain event 
-     * emitting capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already
+     * dispatching capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already
      * extending another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member,
      * and write simple hooks to route calls into the aggregated EventDispatcher.
      * @see egret.EventDispatcher
@@ -221,7 +221,7 @@ module egret {
         /**
          * @language en_US
          * Emits an event into the event flow. The event target is the EventDispatcher object upon which dispatchEvent() is called.
-         * @param event The event object emitted into the event flow.
+         * @param event The event object dispatched into the event flow.
          * @returns A value of true unless preventDefault() is called on the event, in which case it returns false.
          * @version Egret 2.0
          * @platform Web,Native
@@ -240,7 +240,7 @@ module egret {
          * @language en_US
          * Checks whether an event listener is registered with this EventDispatcher object or any of its ancestors for the
          * specified event type. This method returns true if an event listener is triggered during any phase of the event
-         * flow when an event of the specified type is emitted to this EventDispatcher object or any of its descendants.
+         * flow when an event of the specified type is dispatched to this EventDispatcher object or any of its descendants.
          * @param type The type of event.
          * @returns A value of true if a listener of the specified type will be triggered; false otherwise.
          * @see #hasEventListener()

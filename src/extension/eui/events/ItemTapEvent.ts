@@ -31,7 +31,7 @@ module eui {
 
     /**
      * @language en_US
-     * Represents events that are emitted when a item has been touched.
+     * Represents events that are dispatched when a item has been touched.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -124,10 +124,10 @@ module eui {
 
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Emit an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param itemRenderer The item renderer in the list of the associated item.
          *
@@ -147,7 +147,7 @@ module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        public static emitItemTapEvent(target:egret.IEventDispatcher, eventType:string, itemRenderer?:IItemRenderer):boolean {
+        public static dispatchItemTapEvent(target:egret.IEventDispatcher, eventType:string, itemRenderer?:IItemRenderer):boolean {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }

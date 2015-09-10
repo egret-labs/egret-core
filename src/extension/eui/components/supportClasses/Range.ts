@@ -494,7 +494,7 @@ module eui {
                 values[sys.RangeKeys.value] = value;
             values[sys.RangeKeys.valueChanged] = false;
             this.invalidateDisplayList();
-            PropertyEvent.emitPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"value");
+            PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"value");
         }
 
         /**

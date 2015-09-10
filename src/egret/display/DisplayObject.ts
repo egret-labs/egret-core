@@ -1951,8 +1951,8 @@ module egret {
         /**
          * @private
          */
-        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
-            super.$addListener(type, listener, thisObject, useCapture, priority, emitOnce);
+        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):void {
+            super.$addListener(type, listener, thisObject, useCapture, priority, dispatchOnce);
             var isEnterFrame = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
@@ -1992,7 +1992,7 @@ module egret {
             var list = this.$getPropagationList(this);
             var targetIndex = list.length * 0.5;
             event.$setTarget(this);
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             return !event.$isDefaultPrevented;
         }
 
@@ -2025,7 +2025,7 @@ module egret {
         /**
          * @private
          */
-        $emitPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
+        $dispatchPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
             var length = list.length;
             var captureIndex = targetIndex - 1;
             for (var i = 0; i < length; i++) {
