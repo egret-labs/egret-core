@@ -371,32 +371,32 @@ module egret {
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(this._textOffsetX, this._textOffsetY, this._textWidth - this._textOffsetX,
-                    this._textHeight - this._textOffsetY + (lines.length - 1) * this.$BitmapText[Keys.lineSpacing]);
+                bounds.setTo(this.textOffsetX, this.textOffsetY, this.textWidth - this.textOffsetX,
+                    this.textHeight - this.textOffsetY + (lines.length - 1) * this.$BitmapText[Keys.lineSpacing]);
             }
         }
 
         /**
          * @private
          */
-        private _textWidth:number = 0;
+        private textWidth:number = 0;
         /**
          * @private
          */
-        private _textHeight:number = 0;
+        private textHeight:number = 0;
         /**
          * @private
          */
-        private _textOffsetX:number = 0;
+        private textOffsetX:number = 0;
         /**
          * @private
          */
-        private _textOffsetY:number = 0;
+        private textOffsetY:number = 0;
 
         /**
          * @private
          */
-        private _textLines:Array<string>;
+        private textLines:Array<string>;
         /**
          * @private
          */
@@ -410,10 +410,10 @@ module egret {
         $getTextLines():Array<string> {
             var self = this;
             if (!this.$BitmapText[Keys.textLinesChanged]) {
-                return self._textLines;
+                return self.textLines;
             }
             var textLines:Array<string> = [];
-            self._textLines = textLines;
+            self.textLines = textLines;
             this.$BitmapText[Keys.textLinesChanged] = false;
             var lineHeights:Array<number> = [];
             self.$lineHeights = lineHeights;
@@ -499,10 +499,10 @@ module egret {
                 textHeight += lineHeight;
                 textWidth = Math.max(xPos, textWidth);
             }
-            self._textWidth = textWidth;
-            self._textHeight = textHeight;
-            self._textOffsetX = textStartX;
-            self._textOffsetY = textStartY;
+            self.textWidth = textWidth;
+            self.textHeight = textHeight;
+            self.textOffsetX = textStartX;
+            self.textOffsetY = textStartY;
             return textLines;
         }
     }
