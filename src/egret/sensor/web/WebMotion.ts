@@ -5,22 +5,17 @@ module egret.web {
     /**
      * @private
      */
-    export class WebMotion extends EventDispatcher implements Motion {
+    export class WebMotion extends EventDispatcher {
+
 
         /**
-         * @private
-         * 
+         * @inheritDoc
+         * @version Egret 2.0
+         * @platform Web,Native
          */
-        start() {
-            window.addEventListener("devicemotion", this.onChange);
-        }
-
-        /**
-         * @private
-         * 
-         */
-        stop() {
-            window.removeEventListener("devicemotion", this.onChange);
+        public static get isSupport(): boolean {
+            var geolocation = 'DeviceMotionEvent' in window;
+            return geolocation;
         }
 
         /**
@@ -47,6 +42,32 @@ module egret.web {
             event.accelerationIncludingGravity = accelerationIncludingGravity;
             event.rotationRate = rotation;
             this.dispatchEvent(event);
+        }
+
+
+        /**
+         * @inheritDoc
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void {
+            if (type == Event.CHANGE && !this.hasEventListener(Event.CHANGE)) {
+                window.addEventListener("devicemotion", this.onChange);
+            }
+            super.addEventListener(type, listener, thisObject, useCapture, priority);
+        }
+
+
+        /**
+         * @inheritDoc
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {
+            super.removeEventListener(type, listener, thisObject, useCapture);
+            if (type == Event.CHANGE && !this.hasEventListener(Event.CHANGE)) {
+                window.removeEventListener("devicemotion", this.onChange);
+            }
         }
     }
     egret.Motion = egret.web.WebMotion;

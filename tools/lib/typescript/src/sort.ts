@@ -542,7 +542,7 @@ module ts {
         }
 
         logCircular(file: string, other: string) {
-            console.log("Warning:Found circular dependency:" + [file].join("=>"));
+            //console.log("Warning:Found circular dependency:" + file);
         }
     }
 }

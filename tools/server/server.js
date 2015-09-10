@@ -8,7 +8,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 global.TotalJS = { Controller: {} };
 var events = require('events');
 var utils = require('../lib/utils');
-var file = require('../lib/FileUtil');
 var Default = require('./controllers/default');
 global.lark = global.lark || {};
 function startServer(options, startupUrl) {
@@ -22,8 +21,6 @@ function startServer(options, startupUrl) {
         console: new ServerConsole(),
         IPs: getLocalIPAddress()
     };
-    var manifestContent = file.read(file.joinPath(options.larkRoot, 'manifest.json'));
-    egret.manifest = JSON.parse(manifestContent);
     var serverTmp = '~' + options.getTmpDir() + 'server/';
     framework.config['directory-temp'] = serverTmp;
     framework.config['directory-public'] = serverTmp;

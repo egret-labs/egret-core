@@ -80,10 +80,10 @@ exports.exit = exit;
 function _getEnv() {
     return process.env;
 }
-function getLarkRoot() {
+function getEgretRoot() {
     var path = require("path");
     var obj = _getEnv();
-    var larkRoot = _getEnv().LARK_PATH;
+    var larkRoot = _getEnv().EGRET_PATH;
     if (!larkRoot) {
         var globalpath = module['paths'].concat();
         var existsFlag = false;
@@ -107,7 +107,7 @@ function getLarkRoot() {
     }
     return file.escapePath(file.joinPath(larkRoot, '/'));
 }
-exports.getLarkRoot = getLarkRoot;
+exports.getEgretRoot = getEgretRoot;
 function open(target, appName, callback) {
     var opener;
     if (typeof (appName) === 'function') {

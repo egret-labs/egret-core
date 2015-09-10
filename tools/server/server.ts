@@ -27,9 +27,6 @@ export function startServer(options: egret.ToolArgs, startupUrl?:string) {
         IPs: getLocalIPAddress()
     };
 
-    var manifestContent = file.read(file.joinPath(options.larkRoot, 'manifest.json'));
-    egret.manifest = JSON.parse(manifestContent);
-
     var serverTmp = '~' + options.getTmpDir() + 'server/';
 
     framework.config['directory-temp'] = serverTmp;

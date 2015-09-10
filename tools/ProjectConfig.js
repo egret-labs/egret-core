@@ -111,7 +111,7 @@ var ProjectConfig = (function () {
         var moduleJsonPath;
         var modulePath = this.getModulePath(moduleName);
         if (modulePath == null) {
-            moduleJsonPath = file.joinPath(egret.args.larkRoot, "tools/lib/manifest", moduleName + ".json");
+            moduleJsonPath = file.joinPath(egret.root, "tools/lib/manifest", moduleName + ".json");
         }
         else {
             moduleJsonPath = file.joinPath(this.getProjectRoot(), modulePath, moduleName + ".json");
@@ -141,7 +141,7 @@ var ProjectConfig = (function () {
     ProjectConfig.prototype.getModulePrefixPath = function (moduleName) {
         var modulePath = this.getModulePath(moduleName);
         if (modulePath == null) {
-            return file.joinPath(egret.args.larkRoot);
+            return file.joinPath(egret.root);
         }
         else {
             return file.joinPath(this.getProjectRoot(), modulePath);

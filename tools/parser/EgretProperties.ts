@@ -5,7 +5,7 @@ import crypto = require('crypto');
 import file = require('../lib/FileUtil');
 
 class EgretProperties implements egret.EgretPropertiesClass {
-    properties: Object;
+    properties: Object = {};
     modulesConfig: Object = {};
 
     init(projectRoot: string) {
@@ -127,7 +127,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
         var moduleJsonPath;
         var modulePath = this.getModulePath(moduleName);
         if (modulePath == null) {
-            moduleJsonPath = file.joinPath(egret.args.larkRoot, "tools/lib/manifest", moduleName + ".json");
+            moduleJsonPath = file.joinPath(egret.root, "tools/lib/manifest", moduleName + ".json");
         }
         else {
             moduleJsonPath = file.joinPath(egret.args.projectDir, modulePath, moduleName + ".json");
@@ -163,7 +163,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
     getModulePrefixPath(moduleName) {
         var modulePath = this.getModulePath(moduleName);
         if (modulePath == null) {
-            return file.joinPath(egret.args.larkRoot);
+            return file.joinPath(egret.root);
         }
         else {
             return file.joinPath(this.getProjectRoot(), modulePath);

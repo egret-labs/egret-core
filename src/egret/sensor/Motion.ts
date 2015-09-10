@@ -1,12 +1,8 @@
 ﻿
 
 module egret {
-
-    /**
-     * @copy egret.Motion
-     */
-    export var Motion: { new (): Motion };
-
+    
+    
     /**
      * @language en_US
      * The Motion class emits events based on activity detected by the device's motion sensor.
@@ -29,33 +25,22 @@ module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
      */
-    export interface Motion extends EventDispatcher {
+    export declare class Motion extends EventDispatcher {
+        
         /**
          * @language en_US
-         * Start to monitor device movement
-         * @version Lark 1.0
+         * Specifies whether the system supports the motion Sensor
+         * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 开始监听设备运动状态
-         * @version Lark 1.0
+         * 指示系统是否支持运动传感器
+         * @version Egret 2.0
          * @platform Web,Native
          */
-        start(): void;
-        /**
-         * @language en_US
-         * Stop monitor device movement
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止监听设备运动状态
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        stop(): void;
+        public static isSupport: boolean;
+
     }
 
     /**

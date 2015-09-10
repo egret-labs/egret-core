@@ -5,7 +5,18 @@ module egret.web {
     /**
      * @private
      */
-    export class WebGeolocation extends EventDispatcher implements Geolocation {
+    export class WebGeolocation extends EventDispatcher {
+
+        /**
+         * @inheritDoc
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public static get isSupport(): boolean {
+            var geolocation = 'geolocation' in navigator;
+            return geolocation;
+        }
+
         /**
          * @private
          */
@@ -17,7 +28,7 @@ module egret.web {
         /**
          * @private
          */
-        constructor(option?: PositionOptions) {
+        constructor() {
             super();
             this.geolocation = navigator.geolocation;
         }
@@ -26,7 +37,7 @@ module egret.web {
          * @private
          * 
          */
-        public start() {
+        private start() {
             var geo = this.geolocation;
             if (geo)
                 this.watchId = geo.watchPosition(this.onUpdate, this.onError);
@@ -43,7 +54,7 @@ module egret.web {
          * @private
          * 
          */
-        public stop() {
+        private stop() {
             var geo = this.geolocation;
             geo.clearWatch(this.watchId);
         }
@@ -78,6 +89,31 @@ module egret.web {
             event.errorMessage = error.message;
             this.dispatchEvent(event);
         };
+
+        /**
+         * @inheritDoc
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void {
+            if (type == Event.CHANGE && !this.hasEventListener(Event.CHANGE)) {
+                this.start();
+            }
+            super.addEventListener(type, listener, thisObject, useCapture, priority);
+        }
+
+
+        /**
+         * @inheritDoc
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {
+            super.removeEventListener(type, listener, thisObject, useCapture);
+            if (type == Event.CHANGE && !this.hasEventListener(Event.CHANGE)) {
+                this.stop();
+            }
+        }
     }
     egret.Geolocation = egret.web.WebGeolocation;
 }

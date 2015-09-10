@@ -27,42 +27,20 @@ module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
-    export interface Geolocation extends EventDispatcher {
+    export declare class Geolocation extends EventDispatcher {
+
         /**
          * @language en_US
-         * Start to monitor the device's location
-         * @returns 
-         * @version Lark 1.0
+         * Specifies whether the system supports the geolocation services
+         * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 开始监听设备位置信息
-         * @returns 
-         * @version Lark 1.0
+         * 指示系统是否支持地理位置服务
+         * @version Egret 2.0
          * @platform Web,Native
          */
-        start(): void;
-        /**
-         * @language en_US
-         * Stop monitor the device's location
-         * @returns 
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止监听设备位置信息
-         * @returns 
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        stop(): void;
+        public static isSupport: boolean;
     }
-
-    /**
-     * @copy egret.Geolocation
-     */
-    export var Geolocation: { new (): Geolocation };
-
 }

@@ -74,10 +74,10 @@ function _getEnv() {
 }
 
 
-export function getLarkRoot() {
+export function getEgretRoot() {
     var path = require("path");
     var obj = _getEnv();
-    var larkRoot = _getEnv().LARK_PATH;
+    var larkRoot = _getEnv().EGRET_PATH;
     if (!larkRoot) {
         var globalpath = module['paths'].concat();
         var existsFlag = false;

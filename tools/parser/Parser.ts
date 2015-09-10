@@ -102,6 +102,10 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'buildEngine',
         type: 'boolean',
         shortName: "e"
+    }, {
+        name: 'egretVersion',
+        type: 'string',
+        shortName: "ev"
     }
 ];
 
@@ -123,7 +127,7 @@ export function parseCommandLine(commandLine: string[]) {
     var options = new CompileOptions();
     var filenames: string[] = [];
     var errors: string[] = [];
-    options.larkRoot = utils.getLarkRoot();
+    egret.root = utils.getEgretRoot();
     parseStrings(commandLine);
     return options;
 
@@ -208,10 +212,8 @@ export function parseCommandLine(commandLine: string[]) {
             var absPath = file.joinPath(process.cwd(), options.projectDir);
             if(file.isDirectory(absPath)){
                 options.projectDir = absPath;
-                process.chdir(absPath);
             }
             else if(file.isDirectory(options.projectDir)){
-                process.chdir(options.projectDir);
             }
         }
         options.projectDir = file.joinPath(options.projectDir, "/");
@@ -219,12 +221,14 @@ export function parseCommandLine(commandLine: string[]) {
         properties.init(options.projectDir);
         options.properties = properties;
 
-        var manifestPath = file.joinPath(options.larkRoot, (options["manifest"]||"")+ "manifest.json");
-        var content = file.read(manifestPath);
-        var manifest: egret.Manifest = egret.manifest;
+        var packagePath = file.joinPath(egret.root, "package.json");
+
+        var content = file.read(packagePath);
+        var manifest: any;
         try { manifest = JSON.parse(content) }
         catch (e) { utils.exit(10009) }
-        egret.manifest = manifest;
+        egret.manifest = manifest["egret"];
+        egret.version = manifest["version"];
     }
 
 }
@@ -235,7 +239,6 @@ export function parseJSON(json: egret.ToolArgs): egret.ToolArgs {
     var options = new CompileOptions();
     var filenames: string[] = [];
     var errors: string[] = [];
-    options.larkRoot = json.larkRoot || utils.getLarkRoot();
     options.projectDir = json.projectDir || process.cwd();
     options.command = json.command;
     options.autoCompile = json.autoCompile;

@@ -58,10 +58,6 @@ class CompileOptions implements egret.ToolArgs {
         this._outDir = value;
     }
 
-    get manifestPath(): string {
-        return FileUtil.joinPath(this.projectDir, "manifest.json");
-    }
-
     get templateDir(): string {
         return FileUtil.joinPath(this.projectDir, "template/");
     }
@@ -99,7 +95,8 @@ class CompileOptions implements egret.ToolArgs {
         return url;
     }
 
-    larkRoot: string;
+    
+    egretVersion: string;
     publish: boolean;
     sourceMap: boolean;
     removeComments: boolean;

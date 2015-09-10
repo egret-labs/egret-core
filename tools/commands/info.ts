@@ -3,8 +3,8 @@
 
 class info implements egret.Command {
     execute(): number {
-        console.log("当前Egret版本：" + egret.manifest.version);
-        console.log('Egret安装路径：' + egret.args.larkRoot);
+        console.log("当前Egret版本：" + egret.version);
+        console.log('Egret安装路径：' + egret.root);
         return 0;
     }
 }

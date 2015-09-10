@@ -14,9 +14,9 @@ var CopyFiles = (function () {
     };
     CopyFiles.copyLark = function () {
         var options = egret.args;
-        var moduleBin = FileUtil.joinPath(options.larkRoot, "build");
+        var moduleBin = FileUtil.joinPath(egret.root, "build");
         var targetFile = FileUtil.joinPath(options.srcDir, '/libs/');
-        if (options.projectDir.toLowerCase() != options.larkRoot.toLowerCase())
+        if (options.projectDir.toLowerCase() != egret.root.toLowerCase())
             FileUtil.copy(moduleBin, targetFile);
         return 0;
     };

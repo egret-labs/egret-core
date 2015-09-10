@@ -35,13 +35,22 @@ require('./locales/zh_CN');
 require('./globals');
 var Parser = require("./parser/Parser");
 var earlyParams = require("./parser/ParseEarlyVersionParams");
+var version = require("./parser/Version");
 var utils = require('./lib/utils');
 function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
-    earlyParams.parse(options, args);
     egret.args = options;
-    var exitcode = entry.executeOption(options);
-    entry.exit(exitcode);
+    var versionCheck = version.check();
+    // 如果项目版本跟引擎版本不一致，或手动指定了引擎版本
+    // 而且用户安装了需要的引擎，那么使用需要的版本执行命令
+    if ((!versionCheck.projectVersionMatch || !versionCheck.toolVersionMatch) && versionCheck.hasTargetEngine) {
+        version.execute(versionCheck.targetEngineRoot);
+    }
+    else {
+        earlyParams.parse(options, args);
+        var exitcode = entry.executeOption(options);
+        entry.exit(exitcode);
+    }
 }
 exports.executeCommandLine = executeCommandLine;
 var Entry = (function () {

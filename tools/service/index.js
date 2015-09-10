@@ -104,7 +104,7 @@ function getProject(path) {
 function startBackgroundService() {
     serviceCreated = true;
     var options = egret.args;
-    var nodePath = process.execPath, service = file.joinPath(options.larkRoot, 'tools/bin/egret');
+    var nodePath = process.execPath, service = file.joinPath(egret.root, 'tools/bin/egret');
     var startupParams = ['--expose-gc', service, 'service'];
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,

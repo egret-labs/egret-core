@@ -163,79 +163,12 @@ module egret {
         public static get runtimeType():string {
             return Capabilities.$runtimeType;
         }
-
-        /**
-         * @private
-         */
-        static $hasGeolocation: boolean;
-
-        /**
-         * @language en_US
-         * Specifies whether the system supports the geolocation services
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指示系统是否支持地理位置服务
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static get hasGeolocation(): boolean {
-            return Capabilities.$hasGeolocation;
-        }
-
-
-        /**
-         * @private
-         */
-        static $hasOrientation: boolean;
-
-        /**
-         * @language en_US
-         * Specifies whether the system supports detecting the device orientation.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指示系统是否支持检测设备方向
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static get hasOrientation(): boolean {
-            return Capabilities.$hasOrientation;
-        }
-
-
-        /**
-         * @private
-         */
-        static $hasMotion: boolean;
-
-        /**
-         * @language en_US
-         * Specifies whether the system supports the motion Sensor
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指示系统是否支持运动传感器
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        public static get hasMotion(): boolean {
-            return Capabilities.$hasMotion;
-        }
+        
     }
 
     if(DEBUG){
         egret.$markReadOnly(Capabilities,"language", false);
         egret.$markReadOnly(Capabilities,"isMobile", false);
-        egret.$markReadOnly(Capabilities,"hasOrientation", false);
-        egret.$markReadOnly(Capabilities,"hasMotion", false);
-        egret.$markReadOnly(Capabilities,"hasGeolocation", false);
         egret.$markReadOnly(Capabilities,"os", false);
     }
 

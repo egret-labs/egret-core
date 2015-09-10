@@ -14,7 +14,7 @@ class ParseConfigCommand implements egret.Command {
 
     public execute(callback?:(exitCode:number)=>void):number {
         this.htmlTxt = file.read(file.joinPath(egret.args.projectDir, "index.html"));
-        this.requireTxt = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "native_require.js"));
+        this.requireTxt = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "native_require.js"));
 
         this.read("data-entry-class", "entryClassName", true, '"Main"');
         this.read("data-frame-rate", "frameRate", false, "60");

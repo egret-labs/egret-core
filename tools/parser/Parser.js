@@ -96,6 +96,10 @@ exports.optionDeclarations = [
         name: 'buildEngine',
         type: 'boolean',
         shortName: "e"
+    }, {
+        name: 'egretVersion',
+        type: 'string',
+        shortName: "ev"
     }
 ];
 var shortOptionNames = {};
@@ -111,7 +115,7 @@ function parseCommandLine(commandLine) {
     var options = new CompileOptions();
     var filenames = [];
     var errors = [];
-    options.larkRoot = utils.getLarkRoot();
+    egret.root = utils.getEgretRoot();
     parseStrings(commandLine);
     return options;
     function parseStrings(args) {
@@ -179,25 +183,24 @@ function parseCommandLine(commandLine) {
             var absPath = file.joinPath(process.cwd(), options.projectDir);
             if (file.isDirectory(absPath)) {
                 options.projectDir = absPath;
-                process.chdir(absPath);
             }
             else if (file.isDirectory(options.projectDir)) {
-                process.chdir(options.projectDir);
             }
         }
         options.projectDir = file.joinPath(options.projectDir, "/");
         properties.init(options.projectDir);
         options.properties = properties;
-        var manifestPath = file.joinPath(options.larkRoot, (options["manifest"] || "") + "manifest.json");
-        var content = file.read(manifestPath);
-        var manifest = egret.manifest;
+        var packagePath = file.joinPath(egret.root, "package.json");
+        var content = file.read(packagePath);
+        var manifest;
         try {
             manifest = JSON.parse(content);
         }
         catch (e) {
             utils.exit(10009);
         }
-        egret.manifest = manifest;
+        egret.manifest = manifest["egret"];
+        egret.version = manifest["version"];
     }
 }
 exports.parseCommandLine = parseCommandLine;
@@ -205,7 +208,6 @@ function parseJSON(json) {
     var options = new CompileOptions();
     var filenames = [];
     var errors = [];
-    options.larkRoot = json.larkRoot || utils.getLarkRoot();
     options.projectDir = json.projectDir || process.cwd();
     options.command = json.command;
     options.autoCompile = json.autoCompile;

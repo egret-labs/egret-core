@@ -55,7 +55,7 @@ class Project {
     buildWholeProject() {
         console.log('buildWholeProject');
         this.shutdown(11);
-        var larkPath = FileUtil.joinPath(utils.getLarkRoot(), 'tools/bin/egret');
+        var larkPath = FileUtil.joinPath(utils.getEgretRoot(), 'tools/bin/egret');
 
         var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'compileservice', (this.option.sourceMap?"-sourcemap":"")], {
             detached: true,

@@ -51,14 +51,15 @@ declare module egret {
         projectDir: string;
         getTmpDir(): string;
         srcDir: string;
-        manifestPath: string;
         larkPropertiesFile: string;
         debugDir: string;
         releaseDir: string;
         templateDir: string;
         out: string;
         outDir: string;
-        larkRoot?: string;
+        egretRoot?: string;
+        /** 用户命令行指定的引擎版本 */
+        egretVersion?: string;
         port: number;
         host: string;
         websocketUrl: string;
@@ -227,6 +228,9 @@ declare module egret {
     }
 
     export var args: ToolArgs;
+    /** 当前引擎版本 */
+    export var version: string;
+    export var root: string;
 
     module server {
         export var options: ToolArgs;
@@ -242,7 +246,6 @@ declare module egret {
 
     export var manifest: egret.Manifest;
     export interface Manifest {
-        version: string;
         registerClass:string;
         modules: EgretModule[];
         platforms: TargetPlatform[];

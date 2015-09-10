@@ -72,13 +72,6 @@ var CompileOptions = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CompileOptions.prototype, "manifestPath", {
-        get: function () {
-            return FileUtil.joinPath(this.projectDir, "manifest.json");
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(CompileOptions.prototype, "templateDir", {
         get: function () {
             return FileUtil.joinPath(this.projectDir, "template/");

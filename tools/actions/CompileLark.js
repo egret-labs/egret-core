@@ -48,7 +48,7 @@ var CompileLark = (function () {
         var name = m.name;
         var fileName = name;
         var options = egret.args;
-        var larkRoot = egret.args.larkRoot;
+        var larkRoot = egret.root;
         if (platform.name != ANY) {
             fileName += "." + platform.name;
         }
@@ -102,7 +102,7 @@ var CompileLark = (function () {
     CompileLark.prototype.getModuleOutputPath = function (m, filePath, outFile) {
         if (filePath === void 0) { filePath = ""; }
         if (outFile === void 0) { outFile = "build/"; }
-        var path = FileUtil.joinPath(egret.args.larkRoot, outFile);
+        var path = FileUtil.joinPath(egret.root, outFile);
         if (m)
             path += m + '/';
         path += filePath;
@@ -153,12 +153,12 @@ function testConfig(value, array) {
 function listModuleFiles(m) {
     var tsFiles = [];
     if (m.noOtherTs !== true)
-        tsFiles = FileUtil.search(FileUtil.joinPath(egret.args.larkRoot, m.root), "ts");
+        tsFiles = FileUtil.search(FileUtil.joinPath(egret.root, m.root), "ts");
     var specFiles = {};
     m.files.forEach(function (f, i) {
         var fileName = typeof (f) == 'string' ? f : f.path;
         fileName = FileUtil.joinPath(m.root, fileName);
-        fileName = FileUtil.joinPath(egret.args.larkRoot, fileName);
+        fileName = FileUtil.joinPath(egret.root, fileName);
         if (f['path'])
             f['path'] = fileName;
         else
@@ -174,7 +174,7 @@ function delSwanTemp(m) {
     if (m.name != "eui" || !m.sourceRoot) {
         return;
     }
-    var pathBefore = FileUtil.joinPath(egret.args.larkRoot, m.root);
+    var pathBefore = FileUtil.joinPath(egret.root, m.root);
     FileUtil.remove(pathBefore);
 }
 function preduceSwanModule(m) {
@@ -200,11 +200,11 @@ function preduceSwanModule(m) {
     ];
     var tsFiles = [];
     if (m.noOtherTs !== true)
-        tsFiles = FileUtil.search(FileUtil.joinPath(egret.args.larkRoot, m.sourceRoot), "ts");
-    var pathBefore = FileUtil.joinPath(egret.args.larkRoot, m.sourceRoot);
+        tsFiles = FileUtil.search(FileUtil.joinPath(egret.root, m.sourceRoot), "ts");
+    var pathBefore = FileUtil.joinPath(egret.root, m.sourceRoot);
     for (var i = 0; i < tsFiles.length; i++) {
         var content = FileUtil.read(tsFiles[i]);
-        var saveFile = FileUtil.joinPath(egret.args.larkRoot, m.root);
+        var saveFile = FileUtil.joinPath(egret.root, m.root);
         var currenFile = tsFiles[i];
         var resultFile = currenFile.slice(pathBefore.length, currenFile.length);
         saveFile += resultFile;

@@ -48,7 +48,7 @@ function copyOutputToNative(platform?: string) {
 
 function copyNativeTemplate() {
     var nativeTemplateFolder = "../NativeTemplates";
-    var nativeTemplateFullPath = FileUtil.joinPath(egret.args.larkRoot, nativeTemplateFolder);
+    var nativeTemplateFullPath = FileUtil.joinPath(egret.root, nativeTemplateFolder);
     if (!FileUtil.exists(nativeTemplateFullPath)) {
         console.log(utils.tr(10019));
         process.exit(10019);

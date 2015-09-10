@@ -60,35 +60,13 @@ module egret.web {
                     capabilities.$os = "Mac OS";
                 }
             }
-
-            var h5 = WebCapability.checkHtml5Support();
-            capabilities.$hasGeolocation = h5.geo;
-            capabilities.$hasMotion = h5.m;
-            capabilities.$hasOrientation = h5.ortt;
+            
             var language = (navigator.language || navigator.browserLanguage).toLowerCase();
             var strings = language.split("-");
             if (strings.length > 1) {
                 strings[1] = strings[1].toUpperCase();
             }
             capabilities.$language = strings.join("-");
-        }
-
-        /**
-         * @private
-         * 
-         */
-        private static checkHtml5Support() {
-
-            var webaudio = ('webkitAudioContext' in window) || ('AudioContext' in window);
-
-            var geolocation = 'geolocation' in navigator;
-            var orientation = 'DeviceOrientationEvent' in window;
-            var motion = 'DeviceMotionEvent' in window;
-            return {
-                geo: geolocation,
-                ortt: orientation,
-                m: motion
-            };
         }
     }
     WebCapability.detect();

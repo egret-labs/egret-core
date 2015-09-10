@@ -21,8 +21,8 @@ class Create implements egret.Command {
 
         projectAction.normalize(proj);
 
-        var emptyTemplate = FileUtil.joinPath(options.larkRoot, TemplatesRoot + "empty");
-        var template = FileUtil.joinPath(options.larkRoot, TemplatesRoot + proj.type);
+        var emptyTemplate = FileUtil.joinPath(egret.root, TemplatesRoot + "empty");
+        var template = FileUtil.joinPath(egret.root, TemplatesRoot + proj.type);
 
         FileUtil.copy(emptyTemplate, options.projectDir);
         FileUtil.copy(template, options.projectDir);
@@ -80,7 +80,7 @@ function updateEgretProperties(modules: egret.EgretModule[]) {
     var propFile = FileUtil.joinPath(egret.args.projectDir, "egretProperties.json");
     var jsonString = FileUtil.read(propFile);
     var props: egret.EgretProperties = JSON.parse(jsonString);
-    props.egret_version = egret.manifest.version;
+    props.egret_version = egret.version;
     props.modules = modules.map(m=> ({ name: m.name }));
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }

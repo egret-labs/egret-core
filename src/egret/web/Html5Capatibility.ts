@@ -206,14 +206,6 @@ module egret.web {
          *
          */
         private static checkHtml5Support() {
-            var geolocation = 'geolocation' in navigator;
-            var orientation = 'DeviceOrientationEvent' in window;
-            var motion = 'DeviceMotionEvent' in window;
-
-            egret.Capabilities.$hasGeolocation = geolocation;
-            egret.Capabilities.$hasMotion = motion;
-            egret.Capabilities.$hasOrientation = orientation;
-
             var language = (navigator.language || navigator.browserLanguage).toLowerCase();
             var strings = language.split("-");
             if (strings.length > 1) {

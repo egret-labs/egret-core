@@ -48,7 +48,7 @@ class EXMLConfig{
      * 构造函数
      */
     public constructor() {
-        var exmlPath: string = egret.args.larkRoot + "/tools/lib/exml/";
+        var exmlPath: string = egret.root + "/tools/lib/exml/";
         exmlPath = exmlPath.split("\\").join("/");
         var str:string = file.read(exmlPath+"egret-manifest.xml");
         var manifest:any = xml.parse(str);

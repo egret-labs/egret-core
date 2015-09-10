@@ -2,6 +2,5 @@
 var exmlGUI = require("./exml.gui");
 var exmlEUI = require("./exml.eui");
 var hasSwan = egret.args.properties.hasEUI();
-console.log("hasSwan:" + hasSwan);
 var exmlHandlers = hasSwan ? exmlEUI : exmlGUI;
 module.exports = exmlHandlers;

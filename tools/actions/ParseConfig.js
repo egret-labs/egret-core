@@ -11,7 +11,7 @@ var ParseConfigCommand = (function () {
     }
     ParseConfigCommand.prototype.execute = function (callback) {
         this.htmlTxt = file.read(file.joinPath(egret.args.projectDir, "index.html"));
-        this.requireTxt = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "native_require.js"));
+        this.requireTxt = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "native_require.js"));
         this.read("data-entry-class", "entryClassName", true, '"Main"');
         this.read("data-frame-rate", "frameRate", false, "60");
         this.read("data-scale-mode", "scaleMode", true, '"showAll"');

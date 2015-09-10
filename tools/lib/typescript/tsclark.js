@@ -21184,7 +21184,7 @@ var ts;
             });
         };
         FileNode.prototype.logCircular = function (file, other) {
-            console.log("Warning:Found circular dependency:" + [file].join("=>"));
+            //console.log("Warning:Found circular dependency:" file);
         };
         return FileNode;
     })();
