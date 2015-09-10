@@ -161,6 +161,10 @@ var eui;
     /**
      * @private
      */
+    var listeners = "__listeners__";
+    /**
+     * @private
+     */
     var bindables = "__bindables__";
     /**
      * @private
@@ -183,6 +187,15 @@ var eui;
             return getPropertyDescriptor(prototype, property);
         }
         return null;
+    }
+    function notifyListener(host, property) {
+        var list = host[listeners];
+        var length = list.length;
+        for (var i = 0; i < length; i += 2) {
+            var listener = list[i];
+            var target = list[i + 1];
+            listener.call(target, property);
+        }
     }
     /**
      * @language en_US
@@ -292,13 +305,22 @@ var eui;
             if (list && list.indexOf(property) != -1) {
                 return true;
             }
+            var isEventDispatcher = egret.is(host, "egret.IEventDispatcher");
+            if (!isEventDispatcher) {
+                host[listeners] = [];
+            }
             var data = getPropertyDescriptor(host, property);
             if (data && data.set && data.get) {
                 var orgSet = data.set;
                 data.set = function (value) {
                     if (this[property] != value) {
                         orgSet.call(this, value);
-                        eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        if (isEventDispatcher) {
+                            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        }
+                        else {
+                            notifyListener(this, property);
+                        }
                     }
                 };
             }
@@ -313,7 +335,12 @@ var eui;
                 data.set = function (value) {
                     if (this[newProp] != value) {
                         this[newProp] = value;
-                        eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        if (isEventDispatcher) {
+                            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        }
+                        else {
+                            notifyListener(this, property);
+                        }
                     }
                 };
             }
@@ -412,13 +439,28 @@ var eui;
          * @platform Web,Native
          */
         p.reset = function (newHost) {
-            if (egret.is(this.host, "egret.IEventDispatcher")) {
-                this.host.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this);
+            var oldHost = this.host;
+            if (oldHost) {
+                if (egret.is(oldHost, "egret.IEventDispatcher")) {
+                    oldHost.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this);
+                }
+                else {
+                    var list = oldHost[listeners];
+                    var index = list.indexOf(this);
+                    list.splice(index - 1, 2);
+                }
             }
             this.host = newHost;
-            if (egret.is(newHost, "egret.IEventDispatcher")) {
+            if (newHost) {
                 Watcher.checkBindable(newHost, this.property);
-                newHost.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this, false, 100);
+                if (egret.is(newHost, "egret.IEventDispatcher")) {
+                    newHost.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this, false, 100);
+                }
+                else {
+                    var list = newHost[listeners];
+                    list.push(this.onPropertyChange);
+                    list.push(this);
+                }
             }
             if (this.next)
                 this.next.reset(this.getHostPropertyValue());
@@ -433,11 +475,15 @@ var eui;
         };
         /**
          * @private
-         *
-         * @param event
          */
         p.wrapHandler = function (event) {
-            if (event.property == this.property && !this.isExecuting) {
+            this.onPropertyChange(event.property);
+        };
+        /**
+         * @private
+         */
+        p.onPropertyChange = function (property) {
+            if (property == this.property && !this.isExecuting) {
                 try {
                     this.isExecuting = true;
                     if (this.next)

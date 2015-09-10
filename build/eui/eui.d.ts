@@ -258,10 +258,12 @@ declare module eui {
         private getHostPropertyValue();
         /**
          * @private
-         *
-         * @param event
          */
         private wrapHandler(event);
+        /**
+         * @private
+         */
+        private onPropertyChange(property);
     }
 }
 declare module eui {
