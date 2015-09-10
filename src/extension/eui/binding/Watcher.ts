@@ -32,6 +32,10 @@ module eui {
     /**
      * @private
      */
+    var listeners = "__listeners__";
+    /**
+     * @private
+     */
     var bindables = "__bindables__";
     /**
      * @private
@@ -40,10 +44,10 @@ module eui {
 
     /**
      * @private
-     * 
-     * @param host 
-     * @param property 
-     * @returns 
+     *
+     * @param host
+     * @param property
+     * @returns
      */
     function getPropertyDescriptor(host:any, property:string):any {
         var data = Object.getOwnPropertyDescriptor(host, property);
@@ -55,6 +59,16 @@ module eui {
             return getPropertyDescriptor(prototype, property);
         }
         return null;
+    }
+
+    function notifyListener(host:any, property:string):void {
+        var list:any[] = host[listeners];
+        var length = list.length;
+        for (var i = 0; i < length; i+=2) {
+            var listener:Function = list[i];
+            var target:any = list[i+1];
+            listener.call(target,property);
+        }
     }
 
     /**
@@ -140,13 +154,22 @@ module eui {
             if (list && list.indexOf(property) != -1) {
                 return true;
             }
+            var isEventDispatcher = egret.is(host, "egret.IEventDispatcher");
+            if(!isEventDispatcher){
+                host[listeners] = [];
+            }
             var data:PropertyDescriptor = getPropertyDescriptor(host, property);
             if (data && data.set && data.get) {
                 var orgSet = data.set;
                 data.set = function (value:any) {
                     if (this[property] != value) {
                         orgSet.call(this, value);
-                        PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                        if(isEventDispatcher){
+                            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                        }
+                        else{
+                            notifyListener(this,property);
+                        }
                     }
                 };
             }
@@ -154,14 +177,19 @@ module eui {
                 bindableCount++;
                 var newProp = "_" + bindableCount + property;
                 host[newProp] = data ? data.value : null;
-                data = {enumerable: true, configurable: true};
+                data = <any>{enumerable: true, configurable: true};
                 data.get = function ():any {
                     return this[newProp];
                 };
                 data.set = function (value:any) {
                     if (this[newProp] != value) {
                         this[newProp] = value;
-                        PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                        if(isEventDispatcher){
+                            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, property);
+                        }
+                        else{
+                            notifyListener(this,property);
+                        }
                     }
                 };
             }
@@ -292,11 +320,11 @@ module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        public setHandler(handler:(value:any)=>void,thisObject:any):void {
+        public setHandler(handler:(value:any)=>void, thisObject:any):void {
             this.handler = handler;
             this.thisObject = thisObject;
-            if (this.next){
-                this.next.setHandler(handler,thisObject);
+            if (this.next) {
+                this.next.setHandler(handler, thisObject);
             }
 
         }
@@ -318,16 +346,32 @@ module eui {
          * @platform Web,Native
          */
         public reset(newHost:egret.IEventDispatcher):void {
-            if (egret.is(this.host,"egret.IEventDispatcher")) {
-                this.host.removeEventListener(PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this);
+            var oldHost = this.host;
+            if(oldHost){
+                if (egret.is(oldHost, "egret.IEventDispatcher")) {
+                    oldHost.removeEventListener(PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this);
+                }
+                else {
+                    var list:any[] = oldHost[listeners];
+                    var index = list.indexOf(this);
+                    list.splice(index-1,2);
+                }
             }
 
             this.host = newHost;
 
-            if (egret.is(newHost,"egret.IEventDispatcher")) {
-                Watcher.checkBindable(newHost, this.property)
-                newHost.addEventListener(PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this, false, 100);
+            if(newHost){
+                Watcher.checkBindable(newHost, this.property);
+                if (egret.is(newHost, "egret.IEventDispatcher")) {
+                    newHost.addEventListener(PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this, false, 100);
+                }
+                else{
+                    var list:any[] = newHost[listeners];
+                    list.push(this.onPropertyChange);
+                    list.push(this);
+                }
             }
+
 
             if (this.next)
                 this.next.reset(this.getHostPropertyValue());
@@ -336,8 +380,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         private getHostPropertyValue():any {
             return this.host ? this.host[this.property] : null;
@@ -345,16 +389,21 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param event 
          */
         private wrapHandler(event:PropertyEvent):void {
-            if (event.property == this.property && !this.isExecuting) {
+            this.onPropertyChange(event.property);
+        }
+
+        /**
+         * @private
+         */
+        private onPropertyChange(property:string):void{
+            if (property == this.property && !this.isExecuting) {
                 try {
                     this.isExecuting = true;
                     if (this.next)
                         this.next.reset(this.getHostPropertyValue());
-                    this.handler.call(this.thisObject,this.getValue());
+                    this.handler.call(this.thisObject, this.getValue());
                 }
                 finally {
                     this.isExecuting = false;
