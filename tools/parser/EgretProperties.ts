@@ -239,6 +239,22 @@ class EgretProperties implements egret.EgretPropertiesClass {
         }
         return "resource";
     }
+
+    getPublishType(runtime:string):number {
+        if (globals.hasKeys(this.properties, ["publish", runtime])) {
+            return this.properties["publish"][runtime];
+        }
+
+        return 0;
+    }
+
+    getResources():Array<string> {
+        if (globals.hasKeys(this.properties, ["publish", "resource"])) {
+            return this.properties["publish"]["resource"];
+        }
+
+        return ["resource"];
+    }
 }
 
 var config: EgretProperties = config || new EgretProperties();

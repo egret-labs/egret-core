@@ -326,7 +326,7 @@ export function getDirectoryAllListing(path:string):string[] {
  * @param dir 要搜索的文件夹
  * @param extension 要搜索的文件扩展名,不包含点字符，例如："png"。不设置表示获取所有类型文件。
  */
-export function search(dir:string, extension:string):string[] {
+export function search(dir:string, extension?:string):string[] {
     var list = [];
     try {
         var stat = FS.statSync(dir);

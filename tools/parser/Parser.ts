@@ -8,7 +8,6 @@ import properties = require("./EgretProperties");
 
 
 
-
 export var optionDeclarations: egret.CommandLineOption[] = [
     {
         name: "action",
@@ -187,6 +186,10 @@ export function parseCommandLine(commandLine: string[]) {
         if (commands.length > 0) {
             options.command = commands[0];
             if (file.isDirectory(commands[1]) || options.command=="create") {
+                options.projectDir = commands[1];
+                commands.splice(1, 1);
+            }
+            else if (file.isDirectory(commands[1]) || options.command=="create_app") {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
