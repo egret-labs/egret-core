@@ -33,7 +33,7 @@ module eui {
     /**
      * @language en_US
      * The eui.CollectionEvent class represents an event that is
-     * emitted when the associated collection changes.
+     * dispatched when the associated collection changes.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -50,7 +50,7 @@ module eui {
     export class CollectionEvent extends egret.Event {
         /**
          * @language en_US
-         * Emitted when a collection has changed.
+         * Dispatched when a collection has changed.
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -121,7 +121,7 @@ module eui {
                            kind?:string, location?:number, oldLocation?:number,
                            items?:any[], oldItems?:any[]) {
             super(type, bubbles, cancelable);
-            this.$setTo(kind, location, oldLocation, items, oldItems);
+            this.$initTo(kind, location, oldLocation, items, oldItems);
         }
 
         /**
@@ -133,7 +133,7 @@ module eui {
          * @param items 
          * @param oldItems 
          */
-        $setTo(kind?:string, location?:number, oldLocation?:number, items?:any[], oldItems?:any[]):void {
+        $initTo(kind?:string, location?:number, oldLocation?:number, items?:any[], oldItems?:any[]):void {
             this.kind = kind;
             this.location = +location | 0;
             this.oldLocation = +oldLocation | 0;
@@ -247,10 +247,10 @@ module eui {
 
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param kind Indicates the kind of event that occured.
          * The parameter value can be one of the values in the CollectionEventKind
@@ -295,13 +295,13 @@ module eui {
          * @version Swan 1.0
          * @platform Web,Native
          */
-        public static emitCollectionEvent(target:egret.IEventDispatcher, eventType:string, kind?:string, location?:number,
+        public static dispatchCollectionEvent(target:egret.IEventDispatcher, eventType:string, kind?:string, location?:number,
                                           oldLocation?:number, items?:any[], oldItems?:any[]):boolean {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
             var event = egret.Event.create(CollectionEvent, eventType);
-            event.$setTo(kind, location, oldLocation, items, oldItems);
+            event.$initTo(kind, location, oldLocation, items, oldItems);
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;

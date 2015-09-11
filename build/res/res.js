@@ -176,7 +176,7 @@ var RES;
             }
             var request = this.getRequest();
             this.resItemDic[request.hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
-            request.open(resItem.url);
+            request.open(RES.$getVirtualUrl(resItem.url));
             request.send();
         };
         /**
@@ -398,7 +398,7 @@ var RES;
                 config = data.res[list[i].res];
                 var texture = new egret.Texture();
                 texture._bitmapData = bitmapData;
-                texture.$setData(config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH, bitmapData.width, bitmapData.height);
+                texture.$initData(config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH, bitmapData.width, bitmapData.height);
             }
             return animationFrames;
         };
@@ -413,7 +413,7 @@ var RES;
         p.loadImage = function (url, data) {
             var loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
-            loader.load(url);
+            loader.load(RES.$getVirtualUrl(url));
         };
         p.getImageLoader = function () {
             var loader = this.recyclerIamge.pop();
@@ -584,7 +584,7 @@ var RES;
                 var config = frames[subkey];
                 var subTexture = new egret.Texture();
                 subTexture._bitmapData = texture._bitmapData;
-                subTexture.$setData(config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH, texture._sourceWidth, texture._sourceHeight);
+                subTexture.$initData(config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH, texture._sourceWidth, texture._sourceHeight);
                 spriteSheet[subkey] = subTexture;
                 if (config["scale9grid"]) {
                     var str = config["scale9grid"];
@@ -621,7 +621,7 @@ var RES;
         p.loadImage = function (url, data) {
             var loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
-            loader.load(url);
+            loader.load(RES.$getVirtualUrl(url));
         };
         p.getImageLoader = function () {
             var loader = this.recyclerIamge.pop();
@@ -803,7 +803,7 @@ var RES;
             }
             var loader = this.getLoader();
             this.resItemDic[loader.$hashCode] = { item: resItem, func: compFunc, thisObject: thisObject };
-            loader.load(resItem.url);
+            loader.load(RES.$getVirtualUrl(resItem.url));
         };
         /**
          * 获取一个Loader对象
@@ -1006,7 +1006,7 @@ var RES;
             sound.addEventListener(egret.Event.COMPLETE, this.onLoadFinish, this);
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
             this.resItemDic[sound.$hashCode] = { item: resItem, func: callBack, thisObject: thisObject };
-            sound.load(resItem.url);
+            sound.load(RES.$getVirtualUrl(resItem.url));
         };
         /**
          * 一项加载结束
@@ -1549,13 +1549,13 @@ var RES;
         /**
          * @language en_US
          * Animation configuration file. Currently supports Egret MovieClip file format.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         ResourceItem.TYPE_ANIMATION = "animation";
@@ -2228,6 +2228,18 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/// <reference path="core/ResourceItem.ts" />
+/// <reference path="core/ResourceConfig.ts" />
+/// <reference path="core/ResourceLoader.ts" />
+/// <reference path="events/ResourceEvent.ts" />
+/// <reference path="analyzer/BinAnalyzer.ts" />
+/// <reference path="analyzer/ImageAnalyzer.ts" />
+/// <reference path="analyzer/TextAnalyzer.ts" />
+/// <reference path="analyzer/JsonAnalyzer.ts" />
+/// <reference path="analyzer/SheetAnalyzer.ts" />
+/// <reference path="analyzer/FontAnalyzer.ts" />
+/// <reference path="analyzer/SoundAnalyzer.ts" />
+/// <reference path="analyzer/XMLAnalyzer.ts" />
 var RES;
 (function (RES) {
     /**
@@ -2246,10 +2258,30 @@ var RES;
      * @version Egret 2.0
      * @platform Web,Native
      */
-    function registerAnalzer(type, analyzerClass) {
-        instance.registerAnalzer(type, analyzerClass);
+    function registerAnalyzer(type, analyzerClass) {
+        instance.registerAnalyzer(type, analyzerClass);
     }
-    RES.registerAnalzer = registerAnalzer;
+    RES.registerAnalyzer = registerAnalyzer;
+    /**
+     * 根据url返回实际加载url地址
+     * @param call
+     */
+    function registerUrlConvert(call, thisObj) {
+        instance.$registerVirtualCall(call, thisObj);
+    }
+    RES.registerUrlConvert = registerUrlConvert;
+    /**
+     * @private
+     * @param url
+     * @returns {string}
+     */
+    function $getVirtualUrl(url) {
+        if (instance.$urlCall) {
+            return instance.$urlCall.call(instance.$callObj, url);
+        }
+        return url;
+    }
+    RES.$getVirtualUrl = $getVirtualUrl;
     /**
      * @language en_US
      * Load configuration file and parse.
@@ -2423,9 +2455,9 @@ var RES;
      * @language en_US
      * The synchronization method for obtaining the cache has been loaded with the success of the resource.
      * <br>The type of resource and the corresponding return value types are as follows:
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (lark.Bitmap|lark.Texture)[]
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript primary object
-     * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or lark.BitmapData interface。
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or egret.BitmapData interface。
      * <br>RES.ResourceItem.TYPE_JSON : Object
      * <br>RES.ResourceItem.TYPE_SHEET : Object
      * <br>  1. If the incoming parameter is the name of the entire SpriteSheet is returned is {image1: Texture, "image2": Texture}.
@@ -2444,9 +2476,9 @@ var RES;
      * @language zh_CN
      * 同步方式获取缓存的已经加载成功的资源。
      * <br>资源类型和对应的返回值类型关系如下：
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (lark.Bitmap|lark.Texture)[]
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript 原生对象
-     * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 lark.BitmapData 接口。
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 egret.BitmapData 接口。
      * <br>RES.ResourceItem.TYPE_JSON : Object
      * <br>RES.ResourceItem.TYPE_SHEET : Object
      * <br>  1. 如果传入的参数是整个 SpriteSheet 的名称返回的是 {"image1":Texture,"image2":Texture} 这样的格式。
@@ -2698,12 +2730,16 @@ var RES;
             }
             return analyzer;
         };
+        p.$registerVirtualCall = function (call, thisObj) {
+            this.$urlCall = call;
+            this.$callObj = thisObj;
+        };
         /**
          * 注册一个自定义文件类型解析器
          * @param type 文件类型字符串，例如：bin,text,image,json等。
          * @param analyzerClass 自定义解析器的类定义
          */
-        p.registerAnalzer = function (type, analyzerClass) {
+        p.registerAnalyzer = function (type, analyzerClass) {
             this.analyzerClassMap[type] = analyzerClass;
         };
         /**

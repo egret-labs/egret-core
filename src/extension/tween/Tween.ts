@@ -260,7 +260,7 @@ module egret {
          * @param delta 
          * @param paused 
          */
-        private static tick(timeStamp:number, paused = false):void {
+        private static tick(timeStamp:number, paused = false):boolean {
             var delta = timeStamp - Tween._lastTime;
             Tween._lastTime = timeStamp;
 
@@ -272,6 +272,8 @@ module egret {
                 }
                 tween.tick(tween._useTicks ? 1 : delta);
             }
+
+            return false;
         }
 
         private static _lastTime:number = 0;
@@ -593,7 +595,7 @@ module egret {
         private _appendQueueProps(o):any {
             var arr, oldValue, i, l, injectProps;
             for (var n in o) {
-                if (egret.isUndefined(this._initQueueProps[n])) {
+                if (egret.sys.isUndefined(this._initQueueProps[n])) {
                     oldValue = this._target[n];
                     //设置plugins
                     if (arr = Tween._plugins[n]) {

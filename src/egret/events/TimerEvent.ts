@@ -32,7 +32,7 @@ module egret {
 
     /**
      * @language en_US
-     * A Timer object emits a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
+     * A Timer object dispatches a TimerEvent objects whenever the Timer object reaches the interval specified by the Timer.delay property.
      * @see egret.Timer
      * @version Egret 2.0
      * @platform Web,Native
@@ -50,7 +50,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted whenever a Timer object reaches an interval specified according to the Timer.delay property.
+         * Dispatched whenever a Timer object reaches an interval specified according to the Timer.delay property.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -64,7 +64,7 @@ module egret {
 
         /**
          * @language en_US
-         * Emitted whenever it has completed the number of requests set by Timer.repeatCount.
+         * Dispatched whenever it has completed the number of requests set by Timer.repeatCount.
          * @version Egret 2.0
          * @platform Web,Native
          */
@@ -163,7 +163,7 @@ module egret {
          */
         /**
          * @language zh_CN
-         * 使用指定的EventEmitter对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+         * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 事件派发目标
          * @param type 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
          * @param bubbles 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
@@ -173,7 +173,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public static emitTimerEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean):boolean {
+        public static dispatchTimerEvent(target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean):boolean {
             var event = Event.create(TimerEvent, type, bubbles, cancelable);
             var result = target.dispatchEvent(event);
             Event.release(event);

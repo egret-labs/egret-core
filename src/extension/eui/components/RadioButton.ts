@@ -225,9 +225,11 @@ module eui {
          * 
          * @param value 
          */
-        $setSelected(value:boolean) {
-            super.$setSelected(value);
+        $setSelected(value:boolean):boolean{
+            var result:boolean = super.$setSelected(value);
             this.invalidateDisplayList();
+
+            return result;
         }
 
 
@@ -267,7 +269,7 @@ module eui {
             this._value = value;
 
             if (this.$selected && this.group){
-                PropertyEvent.emitPropertyEvent(this.group,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
+                PropertyEvent.dispatchPropertyEvent(this.group,PropertyEvent.PROPERTY_CHANGE,"selectedValue");
             }
         }
 

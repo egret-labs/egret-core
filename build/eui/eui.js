@@ -161,6 +161,10 @@ var eui;
     /**
      * @private
      */
+    var listeners = "__listeners__";
+    /**
+     * @private
+     */
     var bindables = "__bindables__";
     /**
      * @private
@@ -183,6 +187,15 @@ var eui;
             return getPropertyDescriptor(prototype, property);
         }
         return null;
+    }
+    function notifyListener(host, property) {
+        var list = host[listeners];
+        var length = list.length;
+        for (var i = 0; i < length; i += 2) {
+            var listener = list[i];
+            var target = list[i + 1];
+            listener.call(target, property);
+        }
     }
     /**
      * @language en_US
@@ -292,13 +305,22 @@ var eui;
             if (list && list.indexOf(property) != -1) {
                 return true;
             }
+            var isEventDispatcher = egret.is(host, "egret.IEventDispatcher");
+            if (!isEventDispatcher) {
+                host[listeners] = [];
+            }
             var data = getPropertyDescriptor(host, property);
             if (data && data.set && data.get) {
                 var orgSet = data.set;
                 data.set = function (value) {
                     if (this[property] != value) {
                         orgSet.call(this, value);
-                        eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        if (isEventDispatcher) {
+                            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        }
+                        else {
+                            notifyListener(this, property);
+                        }
                     }
                 };
             }
@@ -313,7 +335,12 @@ var eui;
                 data.set = function (value) {
                     if (this[newProp] != value) {
                         this[newProp] = value;
-                        eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        if (isEventDispatcher) {
+                            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, property);
+                        }
+                        else {
+                            notifyListener(this, property);
+                        }
                     }
                 };
             }
@@ -412,13 +439,28 @@ var eui;
          * @platform Web,Native
          */
         p.reset = function (newHost) {
-            if (egret.is(this.host, "egret.IEventDispatcher")) {
-                this.host.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this);
+            var oldHost = this.host;
+            if (oldHost) {
+                if (egret.is(oldHost, "egret.IEventDispatcher")) {
+                    oldHost.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this);
+                }
+                else {
+                    var list = oldHost[listeners];
+                    var index = list.indexOf(this);
+                    list.splice(index - 1, 2);
+                }
             }
             this.host = newHost;
-            if (egret.is(newHost, "egret.IEventDispatcher")) {
+            if (newHost) {
                 Watcher.checkBindable(newHost, this.property);
-                newHost.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this, false, 100);
+                if (egret.is(newHost, "egret.IEventDispatcher")) {
+                    newHost.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.wrapHandler, this, false, 100);
+                }
+                else {
+                    var list = newHost[listeners];
+                    list.push(this.onPropertyChange);
+                    list.push(this);
+                }
             }
             if (this.next)
                 this.next.reset(this.getHostPropertyValue());
@@ -433,11 +475,15 @@ var eui;
         };
         /**
          * @private
-         *
-         * @param event
          */
         p.wrapHandler = function (event) {
-            if (event.property == this.property && !this.isExecuting) {
+            this.onPropertyChange(event.property);
+        };
+        /**
+         * @private
+         */
+        p.onPropertyChange = function (property) {
+            if (property == this.property && !this.isExecuting) {
                 try {
                     this.isExecuting = true;
                     if (this.next)
@@ -701,7 +747,7 @@ var eui;
      * accessed and manipulated using the methods and properties of the <code>ICollection</code> interfaces.
      * ArrayCollection can notify the view to update item when data source changed.
      *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Emited when the ArrayCollection has been updated in some way.
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ArrayCollection has been updated in some way.
      *
      * @defaultProperty source
      * @version Egret 2.4
@@ -777,7 +823,7 @@ var eui;
                 if (!value)
                     value = [];
                 this._source = value;
-                this.emitCoEvent(eui.CollectionEventKind.RESET);
+                this.dispatchCoEvent(eui.CollectionEventKind.RESET);
             }
         );
         /**
@@ -799,7 +845,7 @@ var eui;
          * @platform Web,Native
          */
         p.refresh = function () {
-            this.emitCoEvent(eui.CollectionEventKind.REFRESH);
+            this.dispatchCoEvent(eui.CollectionEventKind.REFRESH);
         };
         d(p, "length"
             //--------------------------------------------------------------------------
@@ -837,7 +883,7 @@ var eui;
          */
         p.addItem = function (item) {
             this._source.push(item);
-            this.emitCoEvent(eui.CollectionEventKind.ADD, this._source.length - 1, -1, [item]);
+            this.dispatchCoEvent(eui.CollectionEventKind.ADD, this._source.length - 1, -1, [item]);
         };
         /**
          * @language en_US
@@ -867,7 +913,7 @@ var eui;
                 DEBUG && egret.$error(1007);
             }
             this._source.splice(index, 0, item);
-            this.emitCoEvent(eui.CollectionEventKind.ADD, index, -1, [item]);
+            this.dispatchCoEvent(eui.CollectionEventKind.ADD, index, -1, [item]);
         };
         /**
          * @inheritDoc
@@ -914,7 +960,7 @@ var eui;
         p.itemUpdated = function (item) {
             var index = this.getItemIndex(item);
             if (index != -1) {
-                this.emitCoEvent(eui.CollectionEventKind.UPDATE, index, -1, [item]);
+                this.dispatchCoEvent(eui.CollectionEventKind.UPDATE, index, -1, [item]);
             }
         };
         /**
@@ -934,7 +980,7 @@ var eui;
         p.removeAll = function () {
             var items = this._source.concat();
             this._source.length = 0;
-            this.emitCoEvent(eui.CollectionEventKind.REMOVE, 0, -1, items);
+            this.dispatchCoEvent(eui.CollectionEventKind.REMOVE, 0, -1, items);
         };
         /**
          * @language en_US
@@ -961,7 +1007,7 @@ var eui;
                 return;
             }
             var item = this._source.splice(index, 1)[0];
-            this.emitCoEvent(eui.CollectionEventKind.REMOVE, index, -1, [item]);
+            this.dispatchCoEvent(eui.CollectionEventKind.REMOVE, index, -1, [item]);
             return item;
         };
         /**
@@ -990,7 +1036,7 @@ var eui;
                 return;
             }
             var oldItem = this._source.splice(index, 1, item)[0];
-            this.emitCoEvent(eui.CollectionEventKind.REPLACE, index, -1, [item], [oldItem]);
+            this.dispatchCoEvent(eui.CollectionEventKind.REPLACE, index, -1, [item], [oldItem]);
             return oldItem;
         };
         /**
@@ -1029,8 +1075,8 @@ var eui;
          * @private
          * 抛出事件
          */
-        p.emitCoEvent = function (kind, location, oldLocation, items, oldItems) {
-            eui.CollectionEvent.emitCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, kind, location, oldLocation, items, oldItems);
+        p.dispatchCoEvent = function (kind, location, oldLocation, items, oldItems) {
+            eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, kind, location, oldLocation, items, oldItems);
         };
         return ArrayCollection;
     })(egret.EventDispatcher);
@@ -1714,7 +1760,7 @@ var eui;
                     this.dispatchEventWith(egret.Event.RESIZE);
                 }
                 if (values[20 /* oldX */] != this.$getX() || values[21 /* oldY */] != this.$getY()) {
-                    eui.UIEvent.emitUIEvent(this, eui.UIEvent.MOVE);
+                    eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.MOVE);
                 }
             };
             /**
@@ -1761,7 +1807,7 @@ var eui;
                     values[29 /* initialized */] = true;
                     this.createChildren();
                     this.childrenCreated();
-                    eui.UIEvent.emitUIEvent(this, eui.UIEvent.CREATION_COMPLETE);
+                    eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CREATION_COMPLETE);
                 }
             };
             /**
@@ -1951,13 +1997,14 @@ var eui;
                 value = +value;
                 var values = this.$UIComponent;
                 if (value < 0 || values[10 /* width */] === value && values[8 /* explicitWidth */] === value)
-                    return;
+                    return false;
                 values[8 /* explicitWidth */] = value;
                 if (isNaN(value))
                     this.invalidateSize();
                 this.invalidateProperties();
                 this.invalidateDisplayList();
                 this.invalidateParentLayout();
+                return true;
             };
             /**
              * @private
@@ -1984,13 +2031,14 @@ var eui;
                 value = +value;
                 var values = this.$UIComponent;
                 if (value < 0 || values[11 /* height */] === value && values[9 /* explicitHeight */] === value)
-                    return;
+                    return false;
                 values[9 /* explicitHeight */] = value;
                 if (isNaN(value))
                     this.invalidateSize();
                 this.invalidateProperties();
                 this.invalidateDisplayList();
                 this.invalidateParentLayout();
+                return true;
             };
             /**
              * @private
@@ -2379,7 +2427,7 @@ var eui;
                 }
                 var changed = this.$super.$setX.call(this, x);
                 if (this.$super.$setY.call(this, y) || changed) {
-                    eui.UIEvent.emitUIEvent(this, eui.UIEvent.MOVE);
+                    eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.MOVE);
                 }
             };
             /**
@@ -2692,7 +2740,7 @@ var eui;
      * @language en_US
      *
      * @copy eui.UIComponents
-     * @event egret.Event.COMPLETE Emit when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
+     * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
      * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
@@ -3035,10 +3083,11 @@ var eui;
             value = !!value;
             var values = this.$Component;
             if (values[3 /* enabled */]) {
-                _super.prototype.$setTouchChildren.call(this, value);
+                return _super.prototype.$setTouchChildren.call(this, value);
             }
             else {
                 values[6 /* explicitTouchChildren */] = value;
+                return true;
             }
         };
         /**
@@ -3050,10 +3099,11 @@ var eui;
             value = !!value;
             var values = this.$Component;
             if (values[3 /* enabled */]) {
-                _super.prototype.$setTouchEnabled.call(this, value);
+                return _super.prototype.$setTouchEnabled.call(this, value);
             }
             else {
                 values[7 /* explicitTouchEnabled */] = value;
+                return true;
             }
         };
         d(p, "enabled"
@@ -3098,7 +3148,7 @@ var eui;
         p.$setEnabled = function (value) {
             var values = this.$Component;
             if (value === values[3 /* enabled */]) {
-                return;
+                return false;
             }
             values[3 /* enabled */] = value;
             if (value) {
@@ -3110,6 +3160,7 @@ var eui;
                 this.$touchChildren = false;
             }
             this.invalidateState();
+            return true;
         };
         d(p, "currentState"
             //========================皮肤视图状态=====================start=======================
@@ -3756,9 +3807,9 @@ var eui;
      * <p>You can get or set this state programmatically
      * by using the <code>selected</code> property.</p>
      *
-     * @event egret.Event.CHANGE Emitted when the <code>selected</code> property
+     * @event egret.Event.CHANGE Dispatched when the <code>selected</code> property
      * changes for the ToggleButton control.
-     * This event is emitted only when the
+     * This event is dispatched only when the
      * user interacts with the control by touching.
      *
      * @state up Button up state
@@ -3840,10 +3891,11 @@ var eui;
         p.$setSelected = function (value) {
             value = !!value;
             if (value === this.$selected)
-                return;
+                return false;
             this.$selected = value;
             this.invalidateState();
-            eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selected");
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selected");
+            return true;
         };
         /**
          * @inheritDoc
@@ -4401,7 +4453,7 @@ var eui;
          */
         p.$setLayout = function (value) {
             if (this.$layout == value)
-                return;
+                return false;
             if (this.$layout) {
                 this.$layout.target = null;
             }
@@ -4411,6 +4463,7 @@ var eui;
             }
             this.invalidateSize();
             this.invalidateDisplayList();
+            return true;
         };
         d(p, "contentWidth"
             /**
@@ -4475,10 +4528,10 @@ var eui;
             values[0 /* contentWidth */] = width;
             values[1 /* contentHeight */] = height;
             if (wChange) {
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "contentWidth");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "contentWidth");
             }
             if (hChange) {
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "contentHeight");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "contentHeight");
             }
         };
         d(p, "scrollEnabled"
@@ -4521,7 +4574,7 @@ var eui;
                 if (this.updateScrollRect() && this.$layout) {
                     this.$layout.scrollPositionChanged();
                 }
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "scrollH");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "scrollH");
             }
         );
         d(p, "scrollV"
@@ -4544,7 +4597,7 @@ var eui;
                 if (this.updateScrollRect() && this.$layout) {
                     this.$layout.scrollPositionChanged();
                 }
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "scrollV");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "scrollV");
             }
         );
         /**
@@ -5038,14 +5091,14 @@ var eui;
          */
         p.$setLayout = function (value) {
             if (value == this.$layout)
-                return;
+                return false;
             if (this.$layout) {
                 this.$layout.setTypicalSize(0, 0);
                 this.$layout.removeEventListener("useVirtualLayoutChanged", this.onUseVirtualLayoutChanged, this);
             }
             if (this.$layout && value && (this.$layout.$useVirtualLayout != value.$useVirtualLayout))
                 this.onUseVirtualLayoutChanged();
-            _super.prototype.$setLayout.call(this, value);
+            var result = _super.prototype.$setLayout.call(this, value);
             if (value) {
                 var rect = this.$DataGroup[9 /* typicalLayoutRect */];
                 if (rect) {
@@ -5054,6 +5107,7 @@ var eui;
                 value.useVirtualLayout = this.$DataGroup[0 /* useVirtualLayout */];
                 value.addEventListener("useVirtualLayoutChanged", this.onUseVirtualLayoutChanged, this);
             }
+            return result;
         };
         /**
          * @private
@@ -5220,7 +5274,7 @@ var eui;
          */
         p.$setDataProvider = function (value) {
             if (this.$dataProvider == value)
-                return;
+                return false;
             this.removeDataProviderListener();
             this.$dataProvider = value;
             this.$dataProviderChanged = true;
@@ -5228,6 +5282,7 @@ var eui;
             this.invalidateProperties();
             this.invalidateSize();
             this.invalidateDisplayList();
+            return true;
         };
         /**
          * @private
@@ -5963,8 +6018,9 @@ var eui;
          * @param value
          */
         p.$setWidth = function (value) {
-            _super.prototype.$setWidth.call(this, value);
-            UIImpl.prototype.$setWidth.call(this, value);
+            var result1 = _super.prototype.$setWidth.call(this, value);
+            var result2 = UIImpl.prototype.$setWidth.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -5972,8 +6028,9 @@ var eui;
          * @param value
          */
         p.$setHeight = function (value) {
-            _super.prototype.$setHeight.call(this, value);
-            UIImpl.prototype.$setHeight.call(this, value);
+            var result1 = _super.prototype.$setHeight.call(this, value);
+            var result2 = UIImpl.prototype.$setHeight.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -5981,8 +6038,9 @@ var eui;
          * @param value
          */
         p.$setText = function (value) {
-            _super.prototype.$setText.call(this, value);
-            eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
+            var result = _super.prototype.$setText.call(this, value);
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
+            return result;
         };
         /**
          * @copy eui.Component#createChildren()
@@ -6732,11 +6790,12 @@ var eui;
          */
         p.$setValue = function (newValue) {
             if (newValue === this.value)
-                return;
+                return false;
             var values = this.$Range;
             values[5 /* changedValue */] = newValue;
             values[6 /* valueChanged */] = true;
             this.invalidateProperties();
+            return true;
         };
         d(p, "snapInterval"
             /**
@@ -6950,7 +7009,7 @@ var eui;
                 values[4 /* value */] = value;
             values[6 /* valueChanged */] = false;
             this.invalidateDisplayList();
-            eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "value");
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "value");
         };
         /**
          * @language en_US
@@ -7199,7 +7258,7 @@ var eui;
             /**
              * @language en_US
              * Specifies whether live dragging is enabled for the slider. If true, sets the value
-             * and values properties and emits the change event continuously as
+             * and values properties and dispatches the change event continuously as
              * the user moves the thumb.
              *
              * @default true
@@ -7353,7 +7412,7 @@ var eui;
             var clickOffset = this.thumb.globalToLocal(event.stageX, event.stageY, egret.$TempPoint);
             values[0 /* clickOffsetX */] = clickOffset.x;
             values[1 /* clickOffsetY */] = clickOffset.y;
-            eui.UIEvent.emitUIEvent(this, eui.UIEvent.CHANGE_START);
+            eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_START);
         };
         /**
          * @private
@@ -7423,7 +7482,7 @@ var eui;
             var stage = event.$currentTarget;
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onStageTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
-            eui.UIEvent.emitUIEvent(this, eui.UIEvent.CHANGE_END);
+            eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_END);
             var values = this.$SliderBase;
             if (!this.liveDragging && this.value != values[7 /* pendingValue */]) {
                 this.setValue(values[7 /* pendingValue */]);
@@ -7465,7 +7524,7 @@ var eui;
         p.animationEndHandler = function (animation) {
             this.setValue(this.$SliderBase[8 /* slideToValue */]);
             this.dispatchEventWith(egret.Event.CHANGE);
-            eui.UIEvent.emitUIEvent(this, eui.UIEvent.CHANGE_END);
+            eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_END);
         };
         /**
          * @private
@@ -7475,7 +7534,7 @@ var eui;
             this.$SliderBase[5 /* animation */].stop();
             this.setValue(this.nearestValidValue(this.pendingValue, this.snapInterval));
             this.dispatchEventWith(egret.Event.CHANGE);
-            eui.UIEvent.emitUIEvent(this, eui.UIEvent.CHANGE_END);
+            eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_END);
         };
         /**
          * @language en_US
@@ -7521,7 +7580,7 @@ var eui;
                     animation.duration = values[6 /* slideDuration */] * (Math.abs(values[7 /* pendingValue */] - values[8 /* slideToValue */]) / (rangeValues[0 /* maximum */] - rangeValues[2 /* minimum */]));
                     animation.from = values[7 /* pendingValue */];
                     animation.to = values[8 /* slideToValue */];
-                    eui.UIEvent.emitUIEvent(this, eui.UIEvent.CHANGE_START);
+                    eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_START);
                     animation.play();
                 }
                 else {
@@ -7832,7 +7891,7 @@ var eui;
      * to show the data. you can also set the <code>source</code> property, Image will auto load
      * and show the url image or the bitmapData.
      *
-     * @event egret.Event.COMPLETE Emitted when the image loaded complete.
+     * @event egret.Event.COMPLETE Dispatched when the image loaded complete.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -7962,8 +8021,9 @@ var eui;
         );
         //if egret
         p.$setFillMode = function (value) {
-            _super.prototype.$setFillMode.call(this, value);
+            var result = _super.prototype.$setFillMode.call(this, value);
             this.invalidateDisplayList();
+            return result;
         };
         d(p, "source"
             /**
@@ -7997,12 +8057,13 @@ var eui;
         );
         p.$setBitmapData = function (value) {
             if (value == this.$Bitmap[0 /* bitmapData */]) {
-                return;
+                return false;
             }
-            _super.prototype.$setBitmapData.call(this, value);
+            var result = _super.prototype.$setBitmapData.call(this, value);
             this.sourceChanged = false;
             this.invalidateSize();
             this.invalidateDisplayList();
+            return result;
         };
         /**
          * @private
@@ -8397,7 +8458,7 @@ var eui;
             }
             ,function (value) {
                 this._data = value;
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "data");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "data");
                 this.dataChanged();
             }
         );
@@ -8622,8 +8683,9 @@ var eui;
          * @param value
          */
         p.$setWidth = function (value) {
-            _super.prototype.$setWidth.call(this, value);
-            UIImpl.prototype.$setWidth.call(this, value);
+            var result1 = _super.prototype.$setWidth.call(this, value);
+            var result2 = UIImpl.prototype.$setWidth.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -8631,8 +8693,9 @@ var eui;
          * @param value
          */
         p.$setHeight = function (value) {
-            _super.prototype.$setHeight.call(this, value);
-            UIImpl.prototype.$setHeight.call(this, value);
+            var result1 = _super.prototype.$setHeight.call(this, value);
+            var result2 = UIImpl.prototype.$setHeight.call(this, value);
+            return result1 && result2;
         };
         /**
          * @private
@@ -8640,8 +8703,9 @@ var eui;
          * @param value
          */
         p.$setText = function (value) {
-            _super.prototype.$setText.call(this, value);
-            eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
+            var result = _super.prototype.$setText.call(this, value);
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
+            return result;
         };
         /**
          * @copy eui.UIComponent#createChildren
@@ -8878,14 +8942,14 @@ var eui;
      * @language en_US
      * The ListBase class is the base class for list component.
      * It can display items of list as vertical or horizontal such as SELECT of HTML.
-     * @event egret.Event.CHANGE Emitted after the selection has changed.
-     * This event is emitted when the user interacts with the control.
-     * @event egret.Event.CHANGING Emitted when the selection is going to change.
+     * @event egret.Event.CHANGE Dispatched after the selection has changed.
+     * This event is dispatched when the user interacts with the control.
+     * @event egret.Event.CHANGING Dispatched when the selection is going to change.
      * Calling the <code>preventDefault()</code> method
      * on the event prevents the selection from changing.<p/>
-     * This event is emitted when the user interacts with the control.
+     * This event is dispatched when the user interacts with the control.
      *
-     * @event eui.ItemTapEvent.ITEM_TAP emitted when the user tap an item in the control.
+     * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
      *
      * @version Egret 2.4
      * @version Swan 1.0
@@ -8986,9 +9050,9 @@ var eui;
              * </ul><p/>
              *
              * When the user changes the <code>selectedIndex</code> property by interacting with the control,
-             * the control emits the <code>change</code> and <code>changing</code> events.
+             * the control dispatches the <code>change</code> and <code>changing</code> events.
              * When you change the value of the <code>selectedIndex</code> property programmatically,
-             * it does not emits the <code>change</code> and <code>changing</code> events.</p>
+             * it does not dispatches the <code>change</code> and <code>changing</code> events.</p>
              *
              * @default -1
              * @version Egret 2.4
@@ -9041,7 +9105,7 @@ var eui;
          * Used internally to specify whether the selectedIndex changed programmatically or due to
          * user interaction.
          * @param value the new index need to select.
-         * @param emitChangeEvent if true, the component will emit a "change" event if the
+         * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * value has changed.
          * @version Egret 2.4
          * @version Swan 1.0
@@ -9051,18 +9115,18 @@ var eui;
          * @language zh_CN
          * 由程序或者用户设置选中项。
          * @param value 索引值。
-         * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
+         * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        p.setSelectedIndex = function (value, emitChangeEvent) {
+        p.setSelectedIndex = function (value, dispatchChangeEvent) {
             if (value == this.selectedIndex) {
                 return;
             }
             var values = this.$ListBase;
-            if (emitChangeEvent)
-                values[4 /* emitChangeAfterSelection */] = (values[4 /* emitChangeAfterSelection */] || emitChangeEvent);
+            if (dispatchChangeEvent)
+                values[4 /* dispatchChangeAfterSelection */] = (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
             values[2 /* proposedSelectedIndex */] = value;
             this.invalidateProperties();
         };
@@ -9086,9 +9150,9 @@ var eui;
              * </ul><p/>
              *
              * When the user changes the <code>selectedItem</code> property by interacting with the control,
-             * the control emits the <code>change</code> and <code>changing</code> events.
+             * the control dispatches the <code>change</code> and <code>changing</code> events.
              * When you change the value of the <code>selectedIndex</code> property programmatically,
-             * it does not emits the <code>change</code> and <code>changing</code> events.</p>
+             * it does not dispatches the <code>change</code> and <code>changing</code> events.</p>
              *
              * @default undefined
              * @version Egret 2.4
@@ -9136,7 +9200,7 @@ var eui;
          * Used internally to specify whether the selectedItem changed programmatically or due to
          * user interaction.
          * @param value the new item need to select.
-         * @param emitChangeEvent if true, the component will emit a "change" event if the
+         * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -9145,18 +9209,18 @@ var eui;
          * @language zh_CN
          * 由程序或用户设置选中项数据源。
          * @param value 要选中的项。
-         * @param emitChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
+         * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        p.setSelectedItem = function (value, emitChangeEvent) {
-            if (emitChangeEvent === void 0) { emitChangeEvent = false; }
+        p.setSelectedItem = function (value, dispatchChangeEvent) {
+            if (dispatchChangeEvent === void 0) { dispatchChangeEvent = false; }
             if (this.selectedItem === value)
                 return;
             var values = this.$ListBase;
-            if (emitChangeEvent)
-                values[4 /* emitChangeAfterSelection */] = (values[4 /* emitChangeAfterSelection */] || emitChangeEvent);
+            if (dispatchChangeEvent)
+                values[4 /* dispatchChangeAfterSelection */] = (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
             values[5 /* pendingSelectedItem */] = value;
             this.invalidateProperties();
         };
@@ -9207,7 +9271,7 @@ var eui;
             if (values[6 /* selectedIndexAdjusted */]) {
                 values[6 /* selectedIndexAdjusted */] = false;
                 if (!changedSelection) {
-                    eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
+                    eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
                 }
             }
         };
@@ -9265,11 +9329,11 @@ var eui;
         /**
          * @language en_US
          * The selection validation and commitment workhorse method.
-         * Called to commit the pending selected index. This method emits
+         * Called to commit the pending selected index. This method dispatches
          * the "changing" event, and if the event is not cancelled,
-         * commits the selection change and then emits the "change"
+         * commits the selection change and then dispatches the "change"
          * event.
-         * @param emitChangedEvents if emit a "changed" event.
+         * @param dispatchChangedEvents if dispatch a "changed" event.
          * @return true if the selection was committed, or false if the selection
          * was cancelled.
          * @version Egret 2.4
@@ -9280,14 +9344,14 @@ var eui;
          * @language zh_CN
          * 提交选中项属性。该方法会派发一个“changing”事件，如果该事件没有被阻止，
          * 该方法将会提交选择项病根据参数派发“change”事件。
-         * @param emitChangedEvents 是否派发一个“changed”事件。
+         * @param dispatchChangedEvents 是否派发一个“changed”事件。
          * @return true 表示提交成功, false表示被取消
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        p.commitSelection = function (emitChangedEvents) {
-            if (emitChangedEvents === void 0) { emitChangedEvents = true; }
+        p.commitSelection = function (dispatchChangedEvents) {
+            if (dispatchChangedEvents === void 0) { dispatchChangedEvents = true; }
             var dataProvider = this.$dataProvider;
             var values = this.$ListBase;
             var maxIndex = dataProvider ? dataProvider.length - 1 : -1;
@@ -9299,15 +9363,15 @@ var eui;
                 tmpProposedIndex = maxIndex;
             if (values[0 /* requireSelection */] && tmpProposedIndex == ListBase.NO_SELECTION && dataProvider && dataProvider.length > 0) {
                 values[2 /* proposedSelectedIndex */] = ListBase.NO_PROPOSED_SELECTION;
-                values[4 /* emitChangeAfterSelection */] = false;
+                values[4 /* dispatchChangeAfterSelection */] = false;
                 return false;
             }
-            if (values[4 /* emitChangeAfterSelection */]) {
+            if (values[4 /* dispatchChangeAfterSelection */]) {
                 var result = this.dispatchEventWith(egret.Event.CHANGING, false, true);
                 if (!result) {
                     this.itemSelected(values[2 /* proposedSelectedIndex */], false);
                     values[2 /* proposedSelectedIndex */] = ListBase.NO_PROPOSED_SELECTION;
-                    values[4 /* emitChangeAfterSelection */] = false;
+                    values[4 /* dispatchChangeAfterSelection */] = false;
                     return false;
                 }
             }
@@ -9317,14 +9381,14 @@ var eui;
                 this.itemSelected(oldSelectedIndex, false);
             if (values[3 /* selectedIndex */] != ListBase.NO_SELECTION)
                 this.itemSelected(values[3 /* selectedIndex */], true);
-            //子类若需要自身抛出Change事件，而不是在此处抛出，可以设置emitChangedEvents为false
-            if (emitChangedEvents) {
-                if (values[4 /* emitChangeAfterSelection */]) {
+            //子类若需要自身抛出Change事件，而不是在此处抛出，可以设置dispatchChangedEvents为false
+            if (dispatchChangedEvents) {
+                if (values[4 /* dispatchChangeAfterSelection */]) {
                     this.dispatchEventWith(egret.Event.CHANGE);
-                    values[4 /* emitChangeAfterSelection */] = false;
+                    values[4 /* dispatchChangeAfterSelection */] = false;
                 }
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedItem");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedItem");
             }
             return true;
         };
@@ -9332,9 +9396,9 @@ var eui;
          * @language en_US
          * Adjusts the selected index to account for items being added to or
          * removed from this component.
-         * It does not emit a <code>change</code> event because the change did not
+         * It does not dispatch a <code>change</code> event because the change did not
          * occur as a direct result of user-interaction.  Moreover,
-         * it does not emit a <code>changing</code> event
+         * it does not dispatch a <code>changing</code> event
          * or allow the cancellation of the selection.
          * It also does not call the <code>itemSelected()</code> method,
          * since the same item is selected;
@@ -9553,7 +9617,7 @@ var eui;
         };
         /**
          * @language en_US
-         * Handles <code>egret.TouchEvent.TOUCH_END</code> events and emit <code>ItemTapEvent.ITEM_TAP</code> event.
+         * Handles <code>egret.TouchEvent.TOUCH_END</code> events and dispatch <code>ItemTapEvent.ITEM_TAP</code> event.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
          * @version Swan 1.0
@@ -9573,7 +9637,7 @@ var eui;
             if (itemRenderer != touchDownItemRenderer)
                 return;
             this.setSelectedIndex(itemRenderer.itemIndex, true);
-            eui.ItemTapEvent.emitItemTapEvent(this, eui.ItemTapEvent.ITEM_TAP, itemRenderer);
+            eui.ItemTapEvent.dispatchItemTapEvent(this, eui.ItemTapEvent.ITEM_TAP, itemRenderer);
         };
         /**
          * @private
@@ -9816,7 +9880,7 @@ var eui;
          * user interaction.
          *
          * @param value An array of numbers representing the indices of the selected
-         * @param emitChangeEvent whether emitted a change event.
+         * @param dispatchChangeEvent whether dispatched a change event.
          *
          * @version Egret 2.4
          * @version Swan 1.0
@@ -9827,16 +9891,16 @@ var eui;
          * 设置多个选中项。
          *
          * @param value 选中项索引的数组
-         * @param emitChangeEvent 是否派发changed事件
+         * @param dispatchChangeEvent 是否派发changed事件
          *
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
          */
-        p.setSelectedIndices = function (value, emitChangeEvent) {
+        p.setSelectedIndices = function (value, dispatchChangeEvent) {
             var values = this.$ListBase;
-            if (emitChangeEvent)
-                values[4 /* emitChangeAfterSelection */] = (values[4 /* emitChangeAfterSelection */] || emitChangeEvent);
+            if (dispatchChangeEvent)
+                values[4 /* dispatchChangeAfterSelection */] = (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
             if (value)
                 this._proposedSelectedIndices = value;
             else
@@ -9863,8 +9927,8 @@ var eui;
          * @version Swan 1.0
          * @platform Web,Native
          */
-        p.commitSelection = function (emitChangedEvents) {
-            if (emitChangedEvents === void 0) { emitChangedEvents = true; }
+        p.commitSelection = function (dispatchChangedEvents) {
+            if (dispatchChangedEvents === void 0) { dispatchChangedEvents = true; }
             var values = this.$ListBase;
             var oldSelectedIndex = values[3 /* selectedIndex */];
             if (this._proposedSelectedIndices) {
@@ -9901,13 +9965,13 @@ var eui;
                     this.itemSelected(oldSelectedIndex, true);
                 this.commitMultipleSelection();
             }
-            if (emitChangedEvents && retVal) {
-                if (values[4 /* emitChangeAfterSelection */]) {
+            if (dispatchChangedEvents && retVal) {
+                if (values[4 /* dispatchChangeAfterSelection */]) {
                     this.dispatchEventWith(egret.Event.CHANGE);
-                    values[4 /* emitChangeAfterSelection */] = false;
+                    values[4 /* dispatchChangeAfterSelection */] = false;
                 }
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
-                eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedItem");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedItem");
             }
             return retVal;
         };
@@ -10044,7 +10108,7 @@ var eui;
                 if (itemRenderer != touchDownItemRenderer)
                     return;
                 this.setSelectedIndices(this.calculateSelectedIndices(itemRenderer.itemIndex), true);
-                eui.ItemTapEvent.emitItemTapEvent(this, eui.ItemTapEvent.ITEM_TAP, itemRenderer);
+                eui.ItemTapEvent.dispatchItemTapEvent(this, eui.ItemTapEvent.ITEM_TAP, itemRenderer);
             }
             else {
                 _super.prototype.onRendererTouchEnd.call(this, event);
@@ -10090,7 +10154,7 @@ var eui;
      * The Panel class defines a container that includes a title bar,
      * a closeButton, a moveArea, and a content area for its children.
      *
-     * @event eui.UIEvent.CLOSING Emitted when the close button is taped
+     * @event eui.UIEvent.CLOSING Dispatched when the close button is taped
      * you can use <code>event.preventDefault()</code> to prevent close.
      *
      * @defaultProperty elementsContent
@@ -10135,7 +10199,7 @@ var eui;
             /**
              * @language en_US
              * The skin part that defines the appearance of the close button.
-             * When taped, the close button emits a <code>closing</code> event.
+             * When taped, the close button dispatches a <code>closing</code> event.
              *
              * @skinPart
              *
@@ -10310,7 +10374,7 @@ var eui;
         };
         /**
          * @language en_US
-         * Emites the "closing" event when the closeButton is clicked.
+         * Dispatch the "closing" event when the closeButton is clicked.
          *
          * @version Egret 2.4
          * @version Swan 1.0
@@ -10325,7 +10389,7 @@ var eui;
          * @platform Web,Native
          */
         p.onCloseButtonClick = function (event) {
-            if (eui.UIEvent.emitUIEvent(this, eui.UIEvent.CLOSING)) {
+            if (eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CLOSING)) {
                 this.close();
             }
         };
@@ -10690,9 +10754,9 @@ var eui;
          */
         p.$setValue = function (newValue) {
             if (this.value === newValue)
-                return;
+                return false;
             var values = this.$Range;
-            _super.prototype.$setValue.call(this, newValue);
+            var result = _super.prototype.$setValue.call(this, newValue);
             if (this._slideDuration > 0 && this.$stage) {
                 this.validateProperties(); //最大值最小值发生改变时要立即应用，防止当前起始值不正确。
                 var animation = this.animation;
@@ -10703,7 +10767,7 @@ var eui;
                 }
                 this.slideToValue = this.nearestValidValue(newValue, values[7 /* snapInterval */]);
                 if (this.slideToValue === this.animationValue)
-                    return;
+                    return result;
                 var duration = this._slideDuration * (Math.abs(this.animationValue - this.slideToValue) / (values[0 /* maximum */] - values[2 /* minimum */]));
                 animation.duration = duration === Infinity ? 0 : duration;
                 animation.from = this.animationValue;
@@ -10713,6 +10777,7 @@ var eui;
             else {
                 this.animationValue = this.value;
             }
+            return result;
         };
         /**
          * @private
@@ -11040,8 +11105,9 @@ var eui;
          * @param value
          */
         p.$setSelected = function (value) {
-            _super.prototype.$setSelected.call(this, value);
+            var result = _super.prototype.$setSelected.call(this, value);
             this.invalidateDisplayList();
+            return result;
         };
         d(p, "value"
             /**
@@ -11073,7 +11139,7 @@ var eui;
                     return;
                 this._value = value;
                 if (this.$selected && this.group) {
-                    eui.PropertyEvent.emitPropertyEvent(this.group, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
+                    eui.PropertyEvent.dispatchPropertyEvent(this.group, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
                 }
             }
         );
@@ -11199,7 +11265,7 @@ var eui;
      * that act as a single mutually exclusive component; therefore,
      * a user can select only one RadioButton component at a time.
      *
-     * @event egret.Event.CHANGE Emitted when the value of the selected RadioButton component in
+     * @event egret.Event.CHANGE Dispatched when the value of the selected RadioButton component in
      * this group changes.
      *
      * @version Egret 2.4
@@ -11413,7 +11479,7 @@ var eui;
                     if (radioButton.value == value || radioButton.label == value) {
                         this.changeSelection(i, false);
                         this._selectedValue = null;
-                        eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
+                        eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
                         break;
                     }
                 }
@@ -11506,7 +11572,7 @@ var eui;
          */
         p.$setSelection = function (value, fireChange) {
             if (this._selection == value)
-                return;
+                return false;
             if (!value) {
                 if (this._selection) {
                     this._selection.selected = false;
@@ -11524,7 +11590,8 @@ var eui;
                     }
                 }
             }
-            eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
+            return true;
         };
         /**
          * @private
@@ -11623,8 +11690,8 @@ var eui;
      * Rather than allow the child to extend past the boundaries of the parent container,
      * the Scroller specifies to clip the child to the boundaries and display scroll bars.</p>
      *
-     * @event eui.UIEvent.CHANGE_START Emitted when the scroll position is going to change
-     * @event eui.UIEvent.CHANGE_END Emitted when the scroll position changed complete
+     * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
+     * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -11809,7 +11876,7 @@ var eui;
             }
             ,function (value) {
                 var values = this.$Scroller;
-                if (value[0 /* scrollPolicyV */] == value) {
+                if (values[0 /* scrollPolicyV */] == value) {
                     return;
                 }
                 values[0 /* scrollPolicyV */] = value;
@@ -11955,7 +12022,7 @@ var eui;
          */
         p.onTouchEndCapture = function (event) {
             if (this.$Scroller[11 /* delayTouchEvent */]) {
-                this.delayEmitEvent(event);
+                this.delayDispatchEvent(event);
             }
         };
         /**
@@ -11977,7 +12044,7 @@ var eui;
                 }
                 target = target.$parent;
             }
-            this.delayEmitEvent(event);
+            this.delayDispatchEvent(event);
             this.onTouchBegin(event);
         };
         /**
@@ -11985,14 +12052,14 @@ var eui;
          *
          * @param event
          */
-        p.delayEmitEvent = function (event) {
+        p.delayDispatchEvent = function (event) {
             var values = this.$Scroller;
             if (values[11 /* delayTouchEvent */]) {
                 this.onDelayTouchEventTimer();
             }
             event.stopPropagation();
             var touchEvent = egret.Event.create(egret.TouchEvent, event.$type, event.$bubbles, event.$cancelable);
-            touchEvent.$setTo(event.$stageX, event.$stageY, event.touchPointID);
+            touchEvent.$initTo(event.$stageX, event.$stageY, event.touchPointID);
             touchEvent.$target = event.$target;
             values[11 /* delayTouchEvent */] = touchEvent;
             if (!values[10 /* delayTouchTimer */]) {
@@ -12028,7 +12095,7 @@ var eui;
             }
             list.splice(0, startIndex + 1);
             targetIndex -= startIndex + 1;
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             egret.Event.release(event);
         };
         /**
@@ -12134,7 +12201,7 @@ var eui;
                     values[2 /* autoHideTimer */].reset();
                 }
             }
-            eui.UIEvent.emitUIEvent(this, eui.UIEvent.CHANGE_START);
+            eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_START);
             if (values[11 /* delayTouchEvent */]) {
                 values[11 /* delayTouchEvent */] = null;
                 values[10 /* delayTouchTimer */].stop();
@@ -12218,7 +12285,7 @@ var eui;
                 values[2 /* autoHideTimer */].reset();
                 values[2 /* autoHideTimer */].start();
             }
-            eui.UIEvent.emitUIEvent(this, eui.UIEvent.CHANGE_END);
+            eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_END);
         };
         /**
          * @private
@@ -13191,7 +13258,7 @@ var eui;
                 value.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onViewStackIndexChange, this);
                 this.addEventListener(egret.Event.CHANGE, this.onIndexChanged, this);
             }
-            _super.prototype.$setDataProvider.call(this, value);
+            return _super.prototype.$setDataProvider.call(this, value);
         };
         /**
          * @private
@@ -13414,7 +13481,7 @@ var eui;
      * the old one because it appears in the same location.
      * However, the old child container still exists; it is just invisible.
      *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Emitted when the ICollection has been updated in some way.
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ICollection has been updated in some way.
      *
      * @version Egret 2.4
      * @version Swan 1.0
@@ -13567,7 +13634,7 @@ var eui;
             }
             this.proposedSelectedIndex = value;
             this.invalidateProperties();
-            eui.PropertyEvent.emitPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
         };
         /**
          * @private
@@ -13584,7 +13651,7 @@ var eui;
             else if (index <= this.selectedIndex && this.$stage) {
                 this.setSelectedIndex(selectedIndex + 1);
             }
-            eui.CollectionEvent.emitCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.ADD, index, -1, [child.name]);
+            eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.ADD, index, -1, [child.name]);
         };
         /**
          * @private
@@ -13610,7 +13677,7 @@ var eui;
             else if (index < selectedIndex) {
                 this.setSelectedIndex(selectedIndex - 1);
             }
-            eui.CollectionEvent.emitCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.REMOVE, index, -1, [child.name]);
+            eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.REMOVE, index, -1, [child.name]);
         };
         /**
          * @inheritDoc
@@ -14446,7 +14513,7 @@ var eui;
      * @language en_US
      * Note: The skin name values in the skin theme are used as default values,which can not be changed while running.
      * You can change the skin of a component with the skinName property.
-     * @event egret.Event.COMPLETE Emit when EXML used in this theme is loaded and parsed.
+     * @event egret.Event.COMPLETE Dispatch when EXML used in this theme is loaded and parsed.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -14700,7 +14767,7 @@ var eui;
     /**
      * @language en_US
      * The eui.CollectionEvent class represents an event that is
-     * emitted when the associated collection changes.
+     * dispatched when the associated collection changes.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -14771,7 +14838,7 @@ var eui;
          */
         function CollectionEvent(type, bubbles, cancelable, kind, location, oldLocation, items, oldItems) {
             _super.call(this, type, bubbles, cancelable);
-            this.$setTo(kind, location, oldLocation, items, oldItems);
+            this.$initTo(kind, location, oldLocation, items, oldItems);
         }
         var d = __define,c=CollectionEvent;p=c.prototype;
         /**
@@ -14783,7 +14850,7 @@ var eui;
          * @param items
          * @param oldItems
          */
-        p.$setTo = function (kind, location, oldLocation, items, oldItems) {
+        p.$initTo = function (kind, location, oldLocation, items, oldItems) {
             this.kind = kind;
             this.location = +location | 0;
             this.oldLocation = +oldLocation | 0;
@@ -14803,10 +14870,10 @@ var eui;
         };
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param kind Indicates the kind of event that occured.
          * The parameter value can be one of the values in the CollectionEventKind
@@ -14851,19 +14918,19 @@ var eui;
          * @version Swan 1.0
          * @platform Web,Native
          */
-        CollectionEvent.emitCollectionEvent = function (target, eventType, kind, location, oldLocation, items, oldItems) {
+        CollectionEvent.dispatchCollectionEvent = function (target, eventType, kind, location, oldLocation, items, oldItems) {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
             var event = egret.Event.create(CollectionEvent, eventType);
-            event.$setTo(kind, location, oldLocation, items, oldItems);
+            event.$initTo(kind, location, oldLocation, items, oldItems);
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;
         };
         /**
          * @language en_US
-         * Emitted when a collection has changed.
+         * Dispatched when a collection has changed.
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -15066,7 +15133,7 @@ var eui;
 (function (eui) {
     /**
      * @language en_US
-     * Represents events that are emitted when a item has been touched.
+     * Represents events that are dispatched when a item has been touched.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native
@@ -15144,10 +15211,10 @@ var eui;
         };
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param itemRenderer The item renderer in the list of the associated item.
          *
@@ -15167,7 +15234,7 @@ var eui;
          * @version Swan 1.0
          * @platform Web,Native
          */
-        ItemTapEvent.emitItemTapEvent = function (target, eventType, itemRenderer) {
+        ItemTapEvent.dispatchItemTapEvent = function (target, eventType, itemRenderer) {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
@@ -15286,10 +15353,10 @@ var eui;
         var d = __define,c=PropertyEvent;p=c.prototype;
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          * @param property Name of the property that changed.
          *
@@ -15309,7 +15376,7 @@ var eui;
          * @version Swan 1.0
          * @platform Web,Native
          */
-        PropertyEvent.emitPropertyEvent = function (target, eventType, property) {
+        PropertyEvent.dispatchPropertyEvent = function (target, eventType, property) {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }
@@ -15321,7 +15388,7 @@ var eui;
         };
         /**
          * @language en_US
-         * Emit when a property changed.
+         * Dispatch when a property changed.
          * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web,Native
@@ -15445,10 +15512,10 @@ var eui;
         var d = __define,c=UIEvent;p=c.prototype;
         /**
          * @language en_US
-         * Emit an event with specified EventDispatcher. The emitted event will be cached in the object pool,
+         * Dispatch an event with specified EventDispatcher. The dispatched event will be cached in the object pool,
          * for the next cycle of reuse.
          *
-         * @param target the target of event emitter.
+         * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
          *
          * @version Egret 2.4
@@ -15466,7 +15533,7 @@ var eui;
          * @version Swan 1.0
          * @platform Web,Native
          */
-        UIEvent.emitUIEvent = function (target, eventType) {
+        UIEvent.dispatchUIEvent = function (target, eventType) {
             if (!target.hasEventListener(eventType)) {
                 return true;
             }

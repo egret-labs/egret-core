@@ -105,7 +105,7 @@ module egret.sys {
         /**
          * @private
          */
-        $startTick(callBack:Function, thisObject:any):void {
+        $startTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
             var index = this.getTickIndex(callBack, thisObject);
             if (index != -1) {
                 return;
@@ -118,7 +118,7 @@ module egret.sys {
         /**
          * @private
          */
-        $stopTick(callBack:Function, thisObject:any):void {
+        $stopTick(callBack:(timeStamp:number)=>boolean, thisObject:any):void {
             var index = this.getTickIndex(callBack, thisObject);
             if (index == -1) {
                 return;
@@ -167,13 +167,13 @@ module egret.sys {
          * @private
          * 设置全局帧率
          */
-        $setFrameRate(value:number):void {
+        $setFrameRate(value:number):boolean {
             value = +value || 0;
             if (value <= 0) {
-                return;
+                return false;
             }
             if (this.$frameRate == value) {
-                return;
+                return false;
             }
             this.$frameRate = value;
             if (value > 60) {
@@ -181,6 +181,7 @@ module egret.sys {
             }
             //这里用60*1000来避免浮点数计算不准确的问题。
             this.lastCount = this.frameInterval = Math.round(60000 / value);
+            return true;
         }
 
         /**
@@ -200,7 +201,7 @@ module egret.sys {
             var timeStamp = egret.getTimer();
 
             for (var i = 0; i < length; i++) {
-                if (!callBackList[i].call(thisObjectList[i], timeStamp)) {
+                if (callBackList[i].call(thisObjectList[i], timeStamp)) {
                     requestRenderingFlag = true;
                 }
             }

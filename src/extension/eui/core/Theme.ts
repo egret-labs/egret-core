@@ -44,7 +44,7 @@ module eui {
      * @language en_US
      * Note: The skin name values in the skin theme are used as default values,which can not be changed while running.
      * You can change the skin of a component with the skinName property.
-     * @event egret.Event.COMPLETE Emit when EXML used in this theme is loaded and parsed.
+     * @event egret.Event.COMPLETE Dispatch when EXML used in this theme is loaded and parsed.
      * @version Egret 2.4
      * @version Swan 1.0
      * @platform Web,Native

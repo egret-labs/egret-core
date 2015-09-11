@@ -1520,8 +1520,8 @@ var egret;
             );
             p.$setWidth = function (value) {
                 if (this._UIC_Props_._uiWidth == value && this.$getExplicitWidth() == value)
-                    return;
-                _super.prototype.$setWidth.call(this, value);
+                    return false;
+                var result = _super.prototype.$setWidth.call(this, value);
                 if (isNaN(value))
                     this.invalidateSize();
                 else
@@ -1529,6 +1529,7 @@ var egret;
                 this.invalidateProperties();
                 this.invalidateDisplayList();
                 this.invalidateParentSizeAndDisplayList();
+                return result;
             };
             d(p, "height"
                 /**
@@ -1547,8 +1548,8 @@ var egret;
             );
             p.$setHeight = function (value) {
                 if (this._UIC_Props_._uiHeight == value && this.$getExplicitHeight() == value)
-                    return;
-                _super.prototype.$setHeight.call(this, value);
+                    return false;
+                var result = _super.prototype.$setHeight.call(this, value);
                 if (isNaN(value))
                     this.invalidateSize();
                 else
@@ -1556,6 +1557,7 @@ var egret;
                 this.invalidateProperties();
                 this.invalidateDisplayList();
                 this.invalidateParentSizeAndDisplayList();
+                return result;
             };
             p.$setScaleX = function (value) {
                 if (_super.prototype.$setScaleX.call(this, value)) {
@@ -2543,13 +2545,14 @@ var egret;
             );
             p.$setEnabled = function (value) {
                 if (this._UIC_Props_._enabled == value)
-                    return;
+                    return false;
                 this._UIC_Props_._enabled = value;
                 if (this._autoMouseEnabled) {
                     this.touchChildren = value ? this.explicitMouseChildren : false;
                     this.touchEnabled = value ? this.explicitMouseEnabled : false;
                 }
                 this.invalidateSkinState();
+                return true;
             };
             /**
              * 返回组件当前的皮肤状态名称,子类覆盖此方法定义各种状态名
@@ -6672,7 +6675,7 @@ var egret;
                 /**
                  * 对象池字典
                  */
-                this.recyclerDic = [];
+                this.recyclerDic = {};
                 /**
                  * 项呈示器改变
                  */
@@ -7091,7 +7094,7 @@ var egret;
                 var rendererFactory = this.rendererToClassMap[renderer.hashCode];
                 var hashCode = rendererFactory.hashCode;
                 if (!this.recyclerDic[hashCode]) {
-                    this.recyclerDic[hashCode] = new egret.Recycler();
+                    this.recyclerDic[hashCode] = [];
                 }
                 this.recyclerDic[hashCode].push(renderer);
             };
@@ -13828,6 +13831,1800 @@ var egret;
 (function (egret) {
     var gui;
     (function (gui) {
+        var setTimeoutCache = {};
+        var setTimeoutIndex = 0;
+        var setTimeoutCount = 0;
+        var lastTime = 0;
+        /**
+         * @private
+         */
+        function $addTimer(listener, thisObject, delay) {
+            var args = [];
+            for (var _i = 3; _i < arguments.length; _i++) {
+                args[_i - 3] = arguments[_i];
+            }
+            var data = { listener: listener, thisObject: thisObject, delay: delay, params: args };
+            setTimeoutCount++;
+            if (setTimeoutCount == 1 && egret.sys.$ticker) {
+                lastTime = egret.getTimer();
+                egret.sys.$ticker.$startTick(timeoutUpdate, null);
+            }
+            setTimeoutIndex++;
+            setTimeoutCache[setTimeoutIndex] = data;
+            return setTimeoutIndex;
+        }
+        gui.$addTimer = $addTimer;
+        /**
+         * @private
+         */
+        function $clearTimer(key) {
+            if (setTimeoutCache[key]) {
+                setTimeoutCount--;
+                delete setTimeoutCache[key];
+                if (setTimeoutCount == 0 && egret.sys.$ticker) {
+                    egret.sys.$ticker.$stopTick(timeoutUpdate, null);
+                }
+            }
+        }
+        gui.$clearTimer = $clearTimer;
+        /**
+         * @private
+         *
+         * @param dt
+         */
+        function timeoutUpdate(timeStamp) {
+            var dt = timeStamp - lastTime;
+            lastTime = timeStamp;
+            for (var key in setTimeoutCache) {
+                var data = setTimeoutCache[key];
+                data.delay -= dt;
+                if (data.delay <= 0) {
+                    data.listener.apply(data.thisObject, data.params);
+                    egret.clearTimeout(key);
+                }
+            }
+            return false;
+        }
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @private
+         */
+        var ScrollerEase = (function () {
+            /**
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            function ScrollerEase() {
+                egret.$error(1014);
+            }
+            var d = __define,c=ScrollerEase;p=c.prototype;
+            /**
+             *
+             * @param amount
+             * @returns
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ScrollerEase.get = function (amount) {
+                if (amount < -1) {
+                    amount = -1;
+                }
+                if (amount > 1) {
+                    amount = 1;
+                }
+                return function (t) {
+                    if (amount == 0) {
+                        return t;
+                    }
+                    if (amount < 0) {
+                        return t * (t * -amount + 1 + amount);
+                    }
+                    return t * ((2 - t) * amount + (1 - amount));
+                };
+            };
+            /**
+             *
+             * @param pow
+             * @returns
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ScrollerEase.getPowOut = function (pow) {
+                return function (t) {
+                    return 1 - Math.pow(1 - t, pow);
+                };
+            };
+            /**
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ScrollerEase.quintOut = ScrollerEase.getPowOut(5);
+            /**
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ScrollerEase.quartOut = ScrollerEase.getPowOut(4);
+            return ScrollerEase;
+        })();
+        gui.ScrollerEase = ScrollerEase;
+        egret.registerClass(ScrollerEase,"egret.gui.ScrollerEase");
+        /**
+         * @private
+         */
+        var ScrollerTween = (function (_super) {
+            __extends(ScrollerTween, _super);
+            /**
+             * 创建一个 egret.ScrollerTween 对象
+             * @private
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            function ScrollerTween(target, props, pluginData) {
+                _super.call(this);
+                /**
+                 * @private
+                 */
+                this._target = null;
+                /**
+                 * @private
+                 */
+                this._useTicks = false;
+                /**
+                 * @private
+                 */
+                this.ignoreGlobalPause = false;
+                /**
+                 * @private
+                 */
+                this.loop = false;
+                /**
+                 * @private
+                 */
+                this.pluginData = null;
+                /**
+                 * @private
+                 */
+                this._steps = null;
+                /**
+                 * @private
+                 */
+                this._actions = null;
+                /**
+                 * @private
+                 */
+                this.paused = false;
+                /**
+                 * @private
+                 */
+                this.duration = 0;
+                /**
+                 * @private
+                 */
+                this._prevPos = -1;
+                /**
+                 * @private
+                 */
+                this.position = null;
+                /**
+                 * @private
+                 */
+                this._prevPosition = 0;
+                /**
+                 * @private
+                 */
+                this._stepPosition = 0;
+                /**
+                 * @private
+                 */
+                this.passive = false;
+                this.initialize(target, props, pluginData);
+            }
+            var d = __define,c=ScrollerTween;p=c.prototype;
+            /**
+             * @language en_US
+             * Activate an object and add a ScrollerTween animation to the object
+             * @param target {any} The object to be activated
+             * @param props {any} Parameters, support loop onChange onChangeObj
+             * @param pluginData {any} Write realized
+             * @param override {boolean} Whether to remove the object before adding a tween, the default value false
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 激活一个对象，对其添加 ScrollerTween 动画
+             * @param target {any} 要激活 ScrollerTween 的对象
+             * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
+             * @param pluginData {any} 暂未实现
+             * @param override {boolean} 是否移除对象之前添加的tween，默认值false
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ScrollerTween.get = function (target, props, pluginData, override) {
+                if (props === void 0) { props = null; }
+                if (pluginData === void 0) { pluginData = null; }
+                if (override === void 0) { override = false; }
+                if (override) {
+                    ScrollerTween.removeTweens(target);
+                }
+                return new ScrollerTween(target, props, pluginData);
+            };
+            /**
+             * @language en_US
+             * Delete all ScrollerTween animations from an object
+             * @param target The object whose ScrollerTween to be deleted
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 删除一个对象上的全部 ScrollerTween 动画
+             * @param target  需要移除 ScrollerTween 的对象
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            ScrollerTween.removeTweens = function (target) {
+                if (!target.tween_count) {
+                    return;
+                }
+                var tweens = ScrollerTween._tweens;
+                for (var i = tweens.length - 1; i >= 0; i--) {
+                    if (tweens[i]._target == target) {
+                        tweens[i].paused = true;
+                        tweens.splice(i, 1);
+                    }
+                }
+                target.tween_count = 0;
+            };
+            /**
+             * @private
+             *
+             * @param delta
+             * @param paused
+             */
+            ScrollerTween.tick = function (timeStamp, paused) {
+                if (paused === void 0) { paused = false; }
+                var delta = timeStamp - ScrollerTween._lastTime;
+                ScrollerTween._lastTime = timeStamp;
+                var tweens = ScrollerTween._tweens.concat();
+                for (var i = tweens.length - 1; i >= 0; i--) {
+                    var tween = tweens[i];
+                    if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
+                        continue;
+                    }
+                    tween.tick(tween._useTicks ? 1 : delta);
+                }
+                return false;
+            };
+            /**
+             * @private
+             *
+             * @param tween
+             * @param value
+             */
+            ScrollerTween._register = function (tween, value) {
+                var target = tween._target;
+                var tweens = ScrollerTween._tweens;
+                if (value) {
+                    if (target) {
+                        target.tween_count = target.tween_count > 0 ? target.tween_count + 1 : 1;
+                    }
+                    tweens.push(tween);
+                    if (!ScrollerTween._inited) {
+                        ScrollerTween._lastTime = egret.getTimer();
+                        egret.sys.$ticker.$startTick(ScrollerTween.tick, null);
+                        ScrollerTween._inited = true;
+                    }
+                }
+                else {
+                    if (target) {
+                        target.tween_count--;
+                    }
+                    var i = tweens.length;
+                    while (i--) {
+                        if (tweens[i] == tween) {
+                            tweens.splice(i, 1);
+                            return;
+                        }
+                    }
+                }
+            };
+            /**
+             * @private
+             *
+             * @param target
+             * @param props
+             * @param pluginData
+             */
+            p.initialize = function (target, props, pluginData) {
+                this._target = target;
+                if (props) {
+                    this._useTicks = props.useTicks;
+                    this.ignoreGlobalPause = props.ignoreGlobalPause;
+                    this.loop = props.loop;
+                    props.onChange && this.addEventListener("change", props.onChange, props.onChangeObj);
+                    if (props.override) {
+                        ScrollerTween.removeTweens(target);
+                    }
+                }
+                this.pluginData = pluginData || {};
+                this._curQueueProps = {};
+                this._initQueueProps = {};
+                this._steps = [];
+                this._actions = [];
+                if (props && props.paused) {
+                    this.paused = true;
+                }
+                else {
+                    ScrollerTween._register(this, true);
+                }
+                if (props && props.position != null) {
+                    this.setPosition(props.position);
+                }
+            };
+            /**
+             * @private
+             *
+             * @param value
+             * @param actionsMode
+             * @returns
+             */
+            p.setPosition = function (value) {
+                if (value < 0) {
+                    value = 0;
+                }
+                //正常化位置
+                var t = value;
+                var end = false;
+                if (t >= this.duration) {
+                    if (this.loop) {
+                        t = t % this.duration;
+                    }
+                    else {
+                        t = this.duration;
+                        end = true;
+                    }
+                }
+                if (t == this._prevPos) {
+                    return end;
+                }
+                this.position = this._prevPos = t;
+                this._prevPosition = value;
+                if (this._target) {
+                    if (end) {
+                        //结束
+                        this._updateTargetProps(null, 1);
+                    }
+                    else if (this._steps.length > 0) {
+                        for (var i = 0, l = this._steps.length; i < l; i++) {
+                            if (this._steps[i].t > t) {
+                                break;
+                            }
+                        }
+                        var step = this._steps[i - 1];
+                        this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
+                    }
+                }
+                if (end) {
+                    this.setPaused(true);
+                }
+                this.dispatchEventWith("change");
+                return end;
+            };
+            /**
+             * @private
+             *
+             * @param startPos
+             * @param endPos
+             * @param includeStart
+             */
+            p._runActions = function (startPos, endPos, includeStart) {
+                if (includeStart === void 0) { includeStart = false; }
+                var sPos = startPos;
+                var ePos = endPos;
+                var i = -1;
+                var j = this._actions.length;
+                var k = 1;
+                if (startPos > endPos) {
+                    //把所有的倒置
+                    sPos = endPos;
+                    ePos = startPos;
+                    i = j;
+                    j = k = -1;
+                }
+                while ((i += k) != j) {
+                    var action = this._actions[i];
+                    var pos = action.t;
+                    if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
+                        action.f.apply(action.o, action.p);
+                    }
+                }
+            };
+            /**
+             * @private
+             *
+             * @param step
+             * @param ratio
+             */
+            p._updateTargetProps = function (step, ratio) {
+                var p0, p1, v, v0, v1, arr;
+                if (!step && ratio == 1) {
+                    this.passive = false;
+                    p0 = p1 = this._curQueueProps;
+                }
+                else {
+                    this.passive = !!step.v;
+                    //不更新props.
+                    if (this.passive) {
+                        return;
+                    }
+                    //使用ease
+                    if (step.e) {
+                        ratio = step.e(ratio, 0, 1, 1);
+                    }
+                    p0 = step.p0;
+                    p1 = step.p1;
+                }
+                for (var n in this._initQueueProps) {
+                    if ((v0 = p0[n]) == null) {
+                        p0[n] = v0 = this._initQueueProps[n];
+                    }
+                    if ((v1 = p1[n]) == null) {
+                        p1[n] = v1 = v0;
+                    }
+                    if (v0 == v1 || ratio == 0 || ratio == 1 || (typeof (v0) != "number")) {
+                        v = ratio == 1 ? v1 : v0;
+                    }
+                    else {
+                        v = v0 + (v1 - v0) * ratio;
+                    }
+                    var ignore = false;
+                    if (arr = ScrollerTween._plugins[n]) {
+                        for (var i = 0, l = arr.length; i < l; i++) {
+                            var v2 = arr[i].tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
+                            if (v2 == ScrollerTween.IGNORE) {
+                                ignore = true;
+                            }
+                            else {
+                                v = v2;
+                            }
+                        }
+                    }
+                    if (!ignore) {
+                        this._target[n] = v;
+                    }
+                }
+            };
+            /**
+             * @language en_US
+             * Whether setting is paused
+             * @param value {boolean} Whether to pause
+             * @returns ScrollerTween object itself
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置是否暂停
+             * @param value {boolean} 是否暂停
+             * @returns Tween对象本身
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.setPaused = function (value) {
+                this.paused = value;
+                ScrollerTween._register(this, !value);
+                return this;
+            };
+            /**
+             * @private
+             *
+             * @param props
+             * @returns
+             */
+            p._cloneProps = function (props) {
+                var o = {};
+                for (var n in props) {
+                    o[n] = props[n];
+                }
+                return o;
+            };
+            /**
+             * @private
+             *
+             * @param o
+             * @returns
+             */
+            p._addStep = function (o) {
+                if (o.d > 0) {
+                    this._steps.push(o);
+                    o.t = this.duration;
+                    this.duration += o.d;
+                }
+                return this;
+            };
+            /**
+             * @private
+             *
+             * @param o
+             * @returns
+             */
+            p._appendQueueProps = function (o) {
+                var arr, oldValue, i, l, injectProps;
+                for (var n in o) {
+                    if (egret.sys.isUndefined(this._initQueueProps[n])) {
+                        oldValue = this._target[n];
+                        //设置plugins
+                        if (arr = ScrollerTween._plugins[n]) {
+                            for (i = 0, l = arr.length; i < l; i++) {
+                                oldValue = arr[i].init(this, n, oldValue);
+                            }
+                        }
+                        this._initQueueProps[n] = this._curQueueProps[n] = (oldValue === undefined) ? null : oldValue;
+                    }
+                    else {
+                        oldValue = this._curQueueProps[n];
+                    }
+                }
+                for (var n in o) {
+                    oldValue = this._curQueueProps[n];
+                    if (arr = ScrollerTween._plugins[n]) {
+                        injectProps = injectProps || {};
+                        for (i = 0, l = arr.length; i < l; i++) {
+                            if (arr[i].step) {
+                                arr[i].step(this, n, oldValue, o[n], injectProps);
+                            }
+                        }
+                    }
+                    this._curQueueProps[n] = o[n];
+                }
+                if (injectProps) {
+                    this._appendQueueProps(injectProps);
+                }
+                return this._curQueueProps;
+            };
+            /**
+             * @private
+             *
+             * @param o
+             * @returns
+             */
+            p._addAction = function (o) {
+                o.t = this.duration;
+                this._actions.push(o);
+                return this;
+            };
+            /**
+             * @language en_US
+             * Modify the property of the specified display object to a specified value
+             * @param props {Object} Property set of an object
+             * @param duration {number} Duration
+             * @param ease {egret.ScrollerEase} Easing algorithm
+             * @returns {egret.ScrollerTween} ScrollerTween object itself
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 将指定显示对象的属性修改为指定值
+             * @param props {Object} 对象的属性集合
+             * @param duration {number} 持续时间
+             * @param ease {egret.ScrollerEase} 缓动算法
+             * @returns {egret.ScrollerTween} Tween对象本身
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.to = function (props, duration, ease) {
+                if (ease === void 0) { ease = undefined; }
+                if (isNaN(duration) || duration < 0) {
+                    duration = 0;
+                }
+                return this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
+            };
+            /**
+             * @language en_US
+             * Execute callback function
+             * @param callback {Function} Callback method
+             * @param thisObj {any} this action scope of the callback method
+             * @param params {Array<any>} Parameter of the callback method
+             * @returns {egret.ScrollerTween} ScrollerTween object itself
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 执行回调函数
+             * @param callback {Function} 回调方法
+             * @param thisObj {any} 回调方法this作用域
+             * @param params {Array<any>} 回调方法参数
+             * @returns {egret.ScrollerTween} Tween对象本身
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.call = function (callback, thisObj, params) {
+                if (thisObj === void 0) { thisObj = undefined; }
+                if (params === void 0) { params = undefined; }
+                return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
+            };
+            /**
+             * @method egret.ScrollerTween#tick
+             * @param delta {number}
+             * @private
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.tick = function (delta) {
+                if (this.paused) {
+                    return;
+                }
+                this.setPosition(this._prevPosition + delta);
+            };
+            /**
+             * @private
+             */
+            ScrollerTween._tweens = [];
+            /**
+             * @private
+             */
+            ScrollerTween.IGNORE = {};
+            /**
+             * @private
+             */
+            ScrollerTween._plugins = {};
+            /**
+             * @private
+             */
+            ScrollerTween._inited = false;
+            ScrollerTween._lastTime = 0;
+            return ScrollerTween;
+        })(egret.EventDispatcher);
+        gui.ScrollerTween = ScrollerTween;
+        egret.registerClass(ScrollerTween,"egret.gui.ScrollerTween");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @private
+         */
+        var ScrollerView = (function (_super) {
+            __extends(ScrollerView, _super);
+            /**
+             * @language en_US
+             * Create a egret.ScrollerView objects
+             * @param content {egret.DisplayObject} You need to scroll object
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 创建一个 egret.ScrollerView 对象
+             * @param content {egret.DisplayObject} 需要滚动的对象
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            function ScrollerView(content) {
+                if (content === void 0) { content = null; }
+                _super.call(this);
+                /**
+                 * @language en_US
+                 * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                this.scrollBeginThreshold = 10;
+                /**
+                 * @language en_US
+                 * Scrolling speed, the speed is required and the default speed ratio.
+                 * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 滚动速度，这个值为需要的速度与默认速度的比值。
+                 * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                this.scrollSpeed = 1;
+                /**
+                 * @private
+                 */
+                this._content = null;
+                /**
+                 * @private
+                 */
+                this.delayTouchBeginEvent = null;
+                /**
+                 * @private
+                 */
+                this.touchBeginTimer = null;
+                this.touchEnabled = true;
+                this._ScrV_Props_ = new gui.ScrollerViewProperties();
+                if (content) {
+                    this.setContent(content);
+                }
+            }
+            var d = __define,c=ScrollerView;p=c.prototype;
+            d(p, "bounces"
+                /**
+                 * @language en_US
+                 * Whether to enable rebound, rebound When enabled, ScrollerView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
+                 * @default true
+                 * @version Egret 2.0
+                 */
+                /**
+                 * @language zh_CN
+                 * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+                 * @default true
+                 * @version Egret 2.0
+                 */
+                ,function () {
+                    return this._ScrV_Props_._bounces;
+                }
+                ,function (value) {
+                    this._ScrV_Props_._bounces = !!value;
+                }
+            );
+            /**
+             * @language en_US
+             * Set to scroll object
+             * @param content {egret.DisplayObject} You need to scroll object
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置需要滚动的对象
+             * @param content {egret.DisplayObject} 需要滚动的对象
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.setContent = function (content) {
+                if (this._content === content)
+                    return;
+                this.removeContent();
+                if (content) {
+                    this._content = content;
+                    _super.prototype.addChild.call(this, content);
+                    this._addEvents();
+                }
+            };
+            /**
+             * @language en_US
+             * Remove rolling objects
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 移除滚动的对象
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.removeContent = function () {
+                if (this._content) {
+                    this._removeEvents();
+                    _super.prototype.removeChildAt.call(this, 0);
+                }
+                this._content = null;
+            };
+            d(p, "verticalScrollPolicy"
+                /**
+                 * @language en_US
+                 * Vertical scroll bar display policy, on / off / auto.
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 垂直滚动条显示策略，on/off/auto。
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._verticalScrollPolicy;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._verticalScrollPolicy)
+                        return;
+                    this._ScrV_Props_._verticalScrollPolicy = value;
+                }
+            );
+            d(p, "horizontalScrollPolicy"
+                /**
+                 * @language en_US
+                 * The horizontal scroll bar display policy, on / off / auto.
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 水平滚动条显示策略，on/off/auto。
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._horizontalScrollPolicy;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._horizontalScrollPolicy)
+                        return;
+                    this._ScrV_Props_._horizontalScrollPolicy = value;
+                }
+            );
+            d(p, "scrollLeft"
+                /**
+                 * @language en_US
+                 * Gets or sets the horizontal scroll position
+                 * @returns {number}
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 获取或设置水平滚动位置,
+                 * @returns {number}
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._scrollLeft;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._scrollLeft)
+                        return;
+                    this._ScrV_Props_._scrollLeft = value;
+                    this._validatePosition(false, true);
+                    this._updateContentPosition();
+                }
+            );
+            d(p, "scrollTop"
+                /**
+                 * @language en_US
+                 * Gets or sets the vertical scroll position
+                 * @returns {number}
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 获取或设置垂直滚动位置,
+                 * @returns {number}
+                 * @version Egret 2.0
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._scrollTop;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._scrollTop)
+                        return;
+                    this._ScrV_Props_._scrollTop = value;
+                    this._validatePosition(true, false);
+                    this._updateContentPosition();
+                }
+            );
+            /**
+             * @language en_US
+             * Set scroll position
+             * @param top {number} The vertical scroll position
+             * @param left {number} The horizontal scroll position
+             * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置滚动位置
+             * @param top {number} 垂直滚动位置
+             * @param left {number} 水平滚动位置
+             * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.setScrollPosition = function (top, left, isOffset) {
+                if (isOffset === void 0) { isOffset = false; }
+                if (isOffset && top == 0 && left == 0)
+                    return;
+                if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left)
+                    return;
+                var oldTop = this._ScrV_Props_._scrollTop, oldLeft = this._ScrV_Props_._scrollLeft;
+                if (isOffset) {
+                    var maxLeft = this.getMaxScrollLeft();
+                    var maxTop = this.getMaxScrollTop();
+                    if (oldTop <= 0 || oldTop >= maxTop) {
+                        top = top / 2;
+                    }
+                    if (oldLeft <= 0 || oldLeft >= maxLeft) {
+                        left = left / 2;
+                    }
+                    var newTop = oldTop + top;
+                    var newLeft = oldLeft + left;
+                    //判断是否回弹
+                    var bounces = this._ScrV_Props_._bounces;
+                    if (!bounces) {
+                        if (newTop <= 0 || newTop >= maxTop)
+                            newTop = Math.max(0, Math.min(newTop, maxTop));
+                        if (newLeft <= 0 || newLeft >= maxLeft)
+                            newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                    }
+                    this._ScrV_Props_._scrollTop = newTop;
+                    this._ScrV_Props_._scrollLeft = newLeft;
+                }
+                else {
+                    this._ScrV_Props_._scrollTop = top;
+                    this._ScrV_Props_._scrollLeft = left;
+                }
+                this._validatePosition(true, true);
+                this._updateContentPosition();
+            };
+            /**
+             * @private
+             *
+             * @param top
+             * @param left
+             */
+            p._validatePosition = function (top, left) {
+                if (top === void 0) { top = false; }
+                if (left === void 0) { left = false; }
+                if (top) {
+                    var height = this.height;
+                    var contentHeight = this._getContentHeight();
+                    this._ScrV_Props_._scrollTop = Math.max(this._ScrV_Props_._scrollTop, (0 - height) / 2);
+                    this._ScrV_Props_._scrollTop = Math.min(this._ScrV_Props_._scrollTop, contentHeight > height ? (contentHeight - height / 2) : height / 2);
+                }
+                if (left) {
+                    var width = this.width;
+                    var contentWidth = this._getContentWidth();
+                    this._ScrV_Props_._scrollLeft = Math.max(this._ScrV_Props_._scrollLeft, (0 - width) / 2);
+                    this._ScrV_Props_._scrollLeft = Math.min(this._ScrV_Props_._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : width / 2);
+                }
+            };
+            /**
+             * @private
+             * @inheritDoc
+             */
+            p.$setWidth = function (value) {
+                if (this.$getExplicitWidth() == value) {
+                    return false;
+                }
+                var result = _super.prototype.$setWidth.call(this, value);
+                this._updateContentPosition();
+                return result;
+            };
+            /**
+             * @private
+             * @inheritDoc
+             */
+            p.$setHeight = function (value) {
+                if (this.$getExplicitHeight() == value)
+                    return false;
+                var result = _super.prototype.$setHeight.call(this, value);
+                this._updateContentPosition();
+                return result;
+            };
+            /**
+             * @private
+             *
+             */
+            p._updateContentPosition = function () {
+                var height = this.height;
+                var width = this.width;
+                //这里将坐标取整，避免有些浏览器精度低产生“黑线”问题
+                this.scrollRect = new egret.Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
+                this.dispatchEvent(new egret.Event(egret.Event.CHANGE));
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._checkScrollPolicy = function () {
+                var hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
+                var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
+                this._ScrV_Props_._hCanScroll = hCanScroll;
+                var vpolicy = this._ScrV_Props_._verticalScrollPolicy;
+                var vCanScroll = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
+                this._ScrV_Props_._vCanScroll = vCanScroll;
+                return hCanScroll || vCanScroll;
+            };
+            /**
+             * @private
+             *
+             * @param policy
+             * @param contentLength
+             * @param viewLength
+             * @returns
+             */
+            p.__checkScrollPolicy = function (policy, contentLength, viewLength) {
+                if (policy == "on")
+                    return true;
+                if (policy == "off")
+                    return false;
+                return contentLength > viewLength;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._addEvents = function () {
+                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
+                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
+                this.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._removeEvents = function () {
+                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
+                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
+                this.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+            };
+            /**
+             * @private
+             *
+             * @param e
+             */
+            p._onTouchBegin = function (e) {
+                if (e.$isDefaultPrevented) {
+                    return;
+                }
+                var canScroll = this._checkScrollPolicy();
+                if (!canScroll) {
+                    return;
+                }
+                this._ScrV_Props_._touchStartPosition.x = e.stageX;
+                this._ScrV_Props_._touchStartPosition.y = e.stageY;
+                if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
+                    this._onScrollFinished();
+                }
+                this._tempStage = this.stage;
+                this._tempStage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+                this._tempStage.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
+                this._tempStage.addEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+                this.addEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
+                this._logTouchEvent(e);
+                e.preventDefault();
+            };
+            /**
+             * @private
+             *
+             * @param event
+             */
+            p._onTouchBeginCapture = function (event) {
+                var canScroll = this._checkScrollPolicy();
+                if (!canScroll) {
+                    return;
+                }
+                var target = event.target;
+                while (target != this) {
+                    if ("_checkScrollPolicy" in target) {
+                        canScroll = target._checkScrollPolicy();
+                        if (canScroll) {
+                            return;
+                        }
+                    }
+                    target = target.parent;
+                }
+                event.stopPropagation();
+                var evt = this.cloneTouchEvent(event);
+                this.delayTouchBeginEvent = evt;
+                if (!this.touchBeginTimer) {
+                    this.touchBeginTimer = new egret.Timer(100, 1);
+                    this.touchBeginTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this._onTouchBeginTimer, this);
+                }
+                this.touchBeginTimer.start();
+                this._onTouchBegin(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onTouchEndCapture = function (event) {
+                if (!this.delayTouchBeginEvent) {
+                    return;
+                }
+                this._onTouchBeginTimer();
+            };
+            /**
+             * @private
+             *
+             */
+            p._onTouchBeginTimer = function () {
+                this.touchBeginTimer.stop();
+                var event = this.delayTouchBeginEvent;
+                this.delayTouchBeginEvent = null;
+                //Dispatch event only if the scroll view is still on the stage
+                if (this.stage)
+                    this.dispatchPropagationEvent(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p.dispatchPropagationEvent = function (event) {
+                var target = event.$target;
+                var list = this.$getPropagationList(target);
+                var length = list.length;
+                var targetIndex = list.length * 0.5;
+                var startIndex = -1;
+                for (var i = 0; i < length; i++) {
+                    if (list[i] === this._content) {
+                        startIndex = i;
+                        break;
+                    }
+                }
+                list.splice(0, startIndex + 1);
+                targetIndex -= startIndex + 1;
+                this.$dispatchPropagationEvent(event, list, targetIndex);
+                egret.Event.release(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onTouchMove = function (event) {
+                if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY)
+                    return;
+                if (!this._ScrV_Props_._scrollStarted) {
+                    var x = event.stageX - this._ScrV_Props_._touchStartPosition.x, y = event.stageY - this._ScrV_Props_._touchStartPosition.y;
+                    var distance = Math.sqrt(x * x + y * y);
+                    if (distance < this.scrollBeginThreshold) {
+                        this._logTouchEvent(event);
+                        return;
+                    }
+                }
+                this._ScrV_Props_._scrollStarted = true;
+                if (this.delayTouchBeginEvent) {
+                    this.delayTouchBeginEvent = null;
+                    this.touchBeginTimer.stop();
+                }
+                this.touchChildren = false;
+                var offset = this._getPointChange(event);
+                this.setScrollPosition(offset.y, offset.x, true);
+                this._calcVelocitys(event);
+                this._logTouchEvent(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onTouchEnd = function (event) {
+                this.touchChildren = true;
+                this._ScrV_Props_._scrollStarted = false;
+                this._tempStage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+                this._tempStage.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
+                this._tempStage.removeEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+                this.removeEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
+                this._moveAfterTouchEnd();
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onEnterFrame = function (event) {
+                var time = egret.getTimer();
+                if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
+                    this._calcVelocitys(this._ScrV_Props_._lastTouchEvent);
+                }
+            };
+            /**
+             * @private
+             *
+             * @param e
+             * @returns
+             */
+            p._logTouchEvent = function (e) {
+                this._ScrV_Props_._lastTouchPosition.x = e.stageX;
+                this._ScrV_Props_._lastTouchPosition.y = e.stageY;
+                this._ScrV_Props_._lastTouchEvent = this.cloneTouchEvent(e);
+                this._ScrV_Props_._lastTouchTime = egret.getTimer();
+            };
+            /**
+             * @private
+             *
+             * @param e
+             * @returns
+             */
+            p._getPointChange = function (e) {
+                return {
+                    x: this._ScrV_Props_._hCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.x - e.stageX),
+                    y: this._ScrV_Props_._vCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.y - e.stageY)
+                };
+            };
+            /**
+             * @private
+             *
+             * @param e
+             * @returns
+             */
+            p._calcVelocitys = function (e) {
+                var time = egret.getTimer();
+                if (this._ScrV_Props_._lastTouchTime == 0) {
+                    this._ScrV_Props_._lastTouchTime = time;
+                    return;
+                }
+                var change = this._getPointChange(e);
+                var timeoffset = time - this._ScrV_Props_._lastTouchTime;
+                change.x /= timeoffset;
+                change.y /= timeoffset;
+                this._ScrV_Props_._velocitys.push(change);
+                if (this._ScrV_Props_._velocitys.length > 5)
+                    this._ScrV_Props_._velocitys.shift();
+                this._ScrV_Props_._lastTouchPosition.x = e.stageX;
+                this._ScrV_Props_._lastTouchPosition.y = e.stageY;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._getContentWidth = function () {
+                return this._content.$getExplicitWidth() || this._content.width;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._getContentHeight = function () {
+                return this._content.$getExplicitHeight() || this._content.height;
+            };
+            /**
+             * @language en_US
+             * The left side of the maximum distance
+             * @returns The left side of the maximum distance
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 距离左侧的最大值
+             * @returns 距离左侧最大值
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.getMaxScrollLeft = function () {
+                var max = this._getContentWidth() - this.width;
+                return Math.max(0, max);
+            };
+            /**
+             * @language en_US
+             * Above the maximum distance
+             * @returns Above the maximum distance
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 距离上方最大值
+             * @returns 距离上方最大值
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.getMaxScrollTop = function () {
+                var max = this._getContentHeight() - this.height;
+                return Math.max(0, max);
+            };
+            /**
+             * @private
+             *
+             */
+            p._moveAfterTouchEnd = function () {
+                if (this._ScrV_Props_._velocitys.length == 0)
+                    return;
+                var sum = { x: 0, y: 0 }, totalW = 0;
+                for (var i = 0; i < this._ScrV_Props_._velocitys.length; i++) {
+                    var v = this._ScrV_Props_._velocitys[i];
+                    var w = ScrollerView.weight[i];
+                    sum.x += v.x * w;
+                    sum.y += v.y * w;
+                    totalW += w;
+                }
+                this._ScrV_Props_._velocitys.length = 0;
+                if (this.scrollSpeed <= 0)
+                    this.scrollSpeed = 1;
+                var x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
+                var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
+                var maxLeft = this.getMaxScrollLeft();
+                var maxTop = this.getMaxScrollTop();
+                var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
+                    position: this._ScrV_Props_._scrollLeft,
+                    duration: 1
+                };
+                var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
+                    position: this._ScrV_Props_._scrollTop,
+                    duration: 1
+                };
+                this.setScrollLeft(datax.position, datax.duration);
+                this.setScrollTop(datay.position, datay.duration);
+            };
+            /**
+             * @private
+             *
+             * @param tw
+             */
+            p.onTweenFinished = function (tw) {
+                if (tw == this._ScrV_Props_._vScrollTween)
+                    this._ScrV_Props_._isVTweenPlaying = false;
+                if (tw == this._ScrV_Props_._hScrollTween)
+                    this._ScrV_Props_._isHTweenPlaying = false;
+                if (this._ScrV_Props_._isHTweenPlaying == false && this._ScrV_Props_._isVTweenPlaying == false) {
+                    this._onScrollFinished();
+                }
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._onScrollStarted = function () {
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._onScrollFinished = function () {
+                gui.ScrollerTween.removeTweens(this);
+                this._ScrV_Props_._hScrollTween = null;
+                this._ScrV_Props_._vScrollTween = null;
+                this._ScrV_Props_._isHTweenPlaying = false;
+                this._ScrV_Props_._isVTweenPlaying = false;
+                this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+            };
+            /**
+             * @language en_US
+             * Set the scroll position above the distance
+             * @param scrollTop Position above distance
+             * @param duration Easing of time, in milliseconds
+             * @returns Get tween vertical scrolling
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置滚动距离上方的位置
+             * @param scrollTop 距离上方的位置
+             * @param duration 缓动时间，毫秒单位
+             * @returns 获取垂直滚动的tween
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.setScrollTop = function (scrollTop, duration) {
+                if (duration === void 0) { duration = 0; }
+                var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
+                if (duration == 0) {
+                    this.scrollTop = finalPosition;
+                    return;
+                }
+                if (this._ScrV_Props_._bounces == false)
+                    scrollTop = finalPosition;
+                var vtween = gui.ScrollerTween.get(this).to({ scrollTop: scrollTop }, duration, gui.ScrollerEase.quartOut);
+                if (finalPosition != scrollTop) {
+                    vtween.to({ scrollTop: finalPosition }, 300, gui.ScrollerEase.quintOut);
+                }
+                this._ScrV_Props_._isVTweenPlaying = true;
+                this._ScrV_Props_._vScrollTween = vtween;
+                vtween.call(this.onTweenFinished, this, [vtween]);
+                if (!this._ScrV_Props_._isHTweenPlaying)
+                    this._onScrollStarted();
+            };
+            /**
+             * @language en_US
+             * Set the scroll position from the left side
+             * @param scrollLeft From the position on the left side
+             * @param duration Get tween vertical scrolling
+             * @returns Gets the horizontal scroll tween
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置滚动距离左侧的位置
+             * @param scrollLeft 距离左侧的位置
+             * @param duration 缓动时间，毫秒单位
+             * @returns 获取水平滚动的tween
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.setScrollLeft = function (scrollLeft, duration) {
+                if (duration === void 0) { duration = 0; }
+                var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
+                if (duration == 0) {
+                    this.scrollLeft = finalPosition;
+                    return;
+                }
+                if (this._ScrV_Props_._bounces == false)
+                    scrollLeft = finalPosition;
+                var htween = gui.ScrollerTween.get(this).to({ scrollLeft: scrollLeft }, duration, gui.ScrollerEase.quartOut);
+                if (finalPosition != scrollLeft) {
+                    htween.to({ scrollLeft: finalPosition }, 300, gui.ScrollerEase.quintOut);
+                }
+                this._ScrV_Props_._isHTweenPlaying = true;
+                this._ScrV_Props_._hScrollTween = htween;
+                htween.call(this.onTweenFinished, this, [htween]);
+                if (!this._ScrV_Props_._isVTweenPlaying)
+                    this._onScrollStarted();
+            };
+            /**
+             * @private
+             *
+             * @param pixelsPerMS
+             * @param curPos
+             * @param maxPos
+             * @returns
+             */
+            p.getAnimationDatas = function (pixelsPerMS, curPos, maxPos) {
+                var absPixelsPerMS = Math.abs(pixelsPerMS);
+                var extraFricition = 0.95;
+                var duration = 0;
+                var friction = 0.998;
+                var minVelocity = 0.02;
+                var posTo = curPos + pixelsPerMS * 500;
+                if (posTo < 0 || posTo > maxPos) {
+                    posTo = curPos;
+                    while (Math.abs(pixelsPerMS) != Infinity && Math.abs(pixelsPerMS) > minVelocity) {
+                        posTo += pixelsPerMS;
+                        if (posTo < 0 || posTo > maxPos) {
+                            pixelsPerMS *= friction * extraFricition;
+                        }
+                        else {
+                            pixelsPerMS *= friction;
+                        }
+                        duration++;
+                    }
+                }
+                else {
+                    duration = -Math.log(minVelocity / absPixelsPerMS) * 500;
+                }
+                var result = {
+                    position: Math.min(maxPos + 50, Math.max(posTo, -50)),
+                    duration: duration
+                };
+                return result;
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p.cloneTouchEvent = function (event) {
+                var evt = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
+                evt.touchPointID = event.touchPointID;
+                evt.$stageX = event.stageX;
+                evt.$stageY = event.stageY;
+                //evt.ctrlKey = event.ctrlKey;
+                //evt.altKey = event.altKey;
+                //evt.shiftKey = event.shiftKey;
+                evt.touchDown = event.touchDown;
+                evt.$isDefaultPrevented = false;
+                evt.$target = event.target;
+                return evt;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p.throwNotSupportedError = function () {
+                egret.$error(1023);
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @returns {DisplayObject}
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.addChild = function (child) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @param index {number}
+             * @returns {DisplayObject}
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.addChildAt = function (child, index) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @returns {DisplayObject}
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.removeChild = function (child) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param index {number}
+             * @returns {DisplayObject}
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.removeChildAt = function (index) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @param index {number}
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.setChildIndex = function (child, index) {
+                this.throwNotSupportedError();
+            };
+            /**
+             * @deprecated
+             * @param child1 {DisplayObject}
+             * @param child2 {DisplayObject}
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.swapChildren = function (child1, child2) {
+                this.throwNotSupportedError();
+            };
+            /**
+             * @deprecated
+             * @param index1 {number}
+             * @param index2 {number}
+             * @version Egret 2.0
+             * @platform Web,Native
+             */
+            p.swapChildrenAt = function (index1, index2) {
+                this.throwNotSupportedError();
+            };
+            /**
+             * @private
+             */
+            ScrollerView.weight = [1, 1.33, 1.66, 2, 2.33];
+            return ScrollerView;
+        })(egret.DisplayObjectContainer);
+        gui.ScrollerView = ScrollerView;
+        egret.registerClass(ScrollerView,"egret.gui.ScrollerView");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @private
+         */
+        var ScrollerViewProperties = (function () {
+            function ScrollerViewProperties() {
+                /**
+                 * @private
+                 */
+                this._verticalScrollPolicy = "auto";
+                /**
+                 * @private
+                 */
+                this._horizontalScrollPolicy = "auto";
+                /**
+                 * @private
+                 */
+                this._scrollLeft = 0;
+                /**
+                 * @private
+                 */
+                this._scrollTop = 0;
+                /**
+                 * @private
+                 */
+                this._hCanScroll = false;
+                /**
+                 * @private
+                 */
+                this._vCanScroll = false;
+                /**
+                 * @private
+                 */
+                this._lastTouchPosition = new egret.Point(0, 0);
+                /**
+                 * @private
+                 */
+                this._touchStartPosition = new egret.Point(0, 0);
+                /**
+                 * @private
+                 */
+                this._scrollStarted = false;
+                /**
+                 * @private
+                 */
+                this._lastTouchTime = 0;
+                /**
+                 * @private
+                 */
+                this._lastTouchEvent = null;
+                /**
+                 * @private
+                 */
+                this._velocitys = [];
+                /**
+                 * @private
+                 */
+                this._isHTweenPlaying = false;
+                /**
+                 * @private
+                 */
+                this._isVTweenPlaying = false;
+                /**
+                 * @private
+                 */
+                this._hScrollTween = null;
+                /**
+                 * @private
+                 */
+                this._vScrollTween = null;
+                /**
+                 * @private
+                 */
+                this._bounces = true;
+            }
+            var d = __define,c=ScrollerViewProperties;p=c.prototype;
+            return ScrollerViewProperties;
+        })();
+        gui.ScrollerViewProperties = ScrollerViewProperties;
+        egret.registerClass(ScrollerViewProperties,"egret.gui.ScrollerViewProperties");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
         /**
          * @class egret.gui.Scroller
          * @classdesc
@@ -13851,7 +15648,7 @@ var egret;
                  * [SkinPart]垂直滚动条
                  */
                 this.verticalScrollBar = null;
-                egret.ScrollView.call(this);
+                gui.ScrollerView.call(this);
                 this._Scr_Props_ = new egret.gui.ScrollerProperties();
             }
             var d = __define,c=Scroller;p=c.prototype;
@@ -13888,11 +15685,11 @@ var egret;
                 return this._content.contentHeight;
             };
             p._onScrollStarted = function () {
-                egret.ScrollView.prototype._onScrollStarted.call(this);
+                gui.ScrollerView.prototype._onScrollStarted.call(this);
                 gui.UIEvent.dispatchUIEvent(this, gui.UIEvent.CHANGE_START);
             };
             p._onScrollFinished = function () {
-                egret.ScrollView.prototype._onScrollFinished.call(this);
+                gui.ScrollerView.prototype._onScrollFinished.call(this);
                 gui.UIEvent.dispatchUIEvent(this, gui.UIEvent.CHANGE_END);
             };
             /**
@@ -14122,9 +15919,9 @@ var egret;
                 if (!this.horizontalScrollBar && !this.verticalScrollBar)
                     return;
                 if (this._Scr_Props_._autoHideTimer != NaN) {
-                    egret.clearTimeout(this._Scr_Props_._autoHideTimer);
+                    egret.gui.$clearTimer(this._Scr_Props_._autoHideTimer);
                 }
-                this._Scr_Props_._autoHideTimer = egret.setTimeout(this.hideOrShow.bind(this, false), this, this._Scr_Props_._autoHideDelay);
+                this._Scr_Props_._autoHideTimer = egret.gui.$addTimer(this.hideOrShow.bind(this, false), this, this._Scr_Props_._autoHideDelay);
             };
             p.hideOrShow = function (show) {
                 var _this = this;
@@ -14447,14 +16244,14 @@ var egret;
         })(gui.SkinnableComponent);
         gui.Scroller = Scroller;
         egret.registerClass(Scroller,"egret.gui.Scroller",["egret.gui.IVisualElementContainer","egret.gui.IVisualElement","egret.gui.ILayoutElement","egret.IEventDispatcher","egret.gui.IContainer"]);
-        for (var p in egret.ScrollView.prototype) {
+        for (var p in gui.ScrollerView.prototype) {
             //跳过Scroller，SkinnableComponent，UIComponent 重写的方法
-            if (egret.ScrollView.prototype.hasOwnProperty(p) && !Scroller.prototype.hasOwnProperty(p) && !gui.SkinnableComponent.prototype.hasOwnProperty(p) && !gui.UIComponent.prototype.hasOwnProperty(p)) {
-                var desc = Object.getOwnPropertyDescriptor(egret.ScrollView.prototype, p);
+            if (gui.ScrollerView.prototype.hasOwnProperty(p) && !Scroller.prototype.hasOwnProperty(p) && !gui.SkinnableComponent.prototype.hasOwnProperty(p) && !gui.UIComponent.prototype.hasOwnProperty(p)) {
+                var desc = Object.getOwnPropertyDescriptor(gui.ScrollerView.prototype, p);
                 if (desc && (desc.get || desc.set))
                     Object.defineProperty(Scroller.prototype, p, desc);
                 else
-                    Scroller.prototype[p] = egret.ScrollView.prototype[p];
+                    Scroller.prototype[p] = gui.ScrollerView.prototype[p];
             }
         }
     })(gui = egret.gui || (egret.gui = {}));
@@ -29555,9 +31352,7 @@ var egret;
          * @class egret.gui.PopUpManager
          * @classdesc
          * 窗口弹出管理器<p/>
-         * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
-         * 并在项目初始化前调用Injector.mapClass("egret.gui.IPopUpManager",YourPopUpManager)，
-         * 注入自定义的弹出框管理器类。
+         * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口
          */
         var PopUpManager = (function () {
             /**

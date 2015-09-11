@@ -59,7 +59,9 @@ module RES {
             }
             var request:egret.HttpRequest = this.getRequest();
             this.resItemDic[request.hashCode] = {item: resItem, func: compFunc, thisObject: thisObject};
-            request.open(resItem.url);
+
+
+            request.open($getVirtualUrl(resItem.url));
             request.send();
         }
 

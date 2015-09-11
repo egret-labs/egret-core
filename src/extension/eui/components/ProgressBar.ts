@@ -273,11 +273,11 @@ module eui {
          * 
          * @param newValue 
          */
-        $setValue(newValue:number) {
+        $setValue(newValue:number):boolean {
             if (this.value === newValue)
-                return;
+                return false;
             var values = this.$Range;
-            super.$setValue(newValue);
+            var result:boolean = super.$setValue(newValue);
             if (this._slideDuration > 0 && this.$stage) {
                 this.validateProperties();//最大值最小值发生改变时要立即应用，防止当前起始值不正确。
                 var animation = this.animation;
@@ -288,7 +288,7 @@ module eui {
                 }
                 this.slideToValue = this.nearestValidValue(newValue, values[sys.RangeKeys.snapInterval]);
                 if (this.slideToValue === this.animationValue)
-                    return;
+                    return result;
                 var duration = this._slideDuration *
                     (Math.abs(this.animationValue - this.slideToValue) / (values[sys.RangeKeys.maximum] - values[sys.RangeKeys.minimum]));
                 animation.duration = duration === Infinity ? 0 : duration;
@@ -299,6 +299,7 @@ module eui {
             else {
                 this.animationValue = this.value;
             }
+            return result;
         }
 
         /**

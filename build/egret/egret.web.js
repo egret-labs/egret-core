@@ -1448,16 +1448,16 @@ var egret;
              * 设置显示高度
              */
             p.$setHeight = function (value) {
-                _super.prototype.$setHeight.call(this, value);
                 this.heightSet = +value || 0;
+                return _super.prototype.$setHeight.call(this, value);
             };
             /**
              * @private
              * 设置显示宽度
              */
             p.$setWidth = function (value) {
-                _super.prototype.$setWidth.call(this, value);
                 this.widthSet = +value || 0;
+                return _super.prototype.$setWidth.call(this, value);
             };
             return WebVideo;
         })(egret.DisplayObject);
@@ -1786,7 +1786,7 @@ var egret;
              * @private
              */
             p.onBlobError = function (event) {
-                this.emitIOError(this.currentURL);
+                this.dispatchIOError(this.currentURL);
             };
             /**
              * @private
@@ -1829,9 +1829,9 @@ var egret;
                 if (!image) {
                     return;
                 }
-                this.emitIOError(image.src);
+                this.dispatchIOError(image.src);
             };
-            p.emitIOError = function (url) {
+            p.dispatchIOError = function (url) {
                 var self = this;
                 window.setTimeout(function () {
                     if (DEBUG && !self.hasEventListener(egret.IOErrorEvent.IO_ERROR)) {
@@ -1954,6 +1954,7 @@ var egret;
              */
             p.$setTextField = function (textfield) {
                 this.$textfield = textfield;
+                return true;
             };
             /**
              * @private
@@ -2064,6 +2065,7 @@ var egret;
             p.$setText = function (value) {
                 this.textValue = value;
                 this.resetText();
+                return true;
             };
             /**
              * @private
@@ -2102,7 +2104,7 @@ var egret;
             p.setAreaHeight = function () {
                 var textfield = this.$textfield;
                 if (textfield.multiline) {
-                    var textheight = egret.TextFieldUtils._getTextHeight(textfield);
+                    var textheight = egret.TextFieldUtils.$getTextHeight(textfield);
                     if (textfield.height < textheight) {
                         this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
                         this.setElementStyle("padding", "0px");
@@ -2110,7 +2112,7 @@ var egret;
                     else {
                         this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
                         var rap = (textfield.height - textheight) * this._gscaleY;
-                        var valign = egret.TextFieldUtils._getValign(textfield);
+                        var valign = egret.TextFieldUtils.$getValign(textfield);
                         var top = rap * valign;
                         var bottom = rap - top;
                         this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
@@ -2189,7 +2191,7 @@ var egret;
                         else {
                             this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
                             var rap = (textfield.height - textfield.size) * this._gscaleY;
-                            var valign = egret.TextFieldUtils._getValign(textfield);
+                            var valign = egret.TextFieldUtils.$getValign(textfield);
                             var top = rap * valign;
                             var bottom = rap - top;
                             this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
@@ -2543,7 +2545,9 @@ var egret;
                 if (!surface) {
                     return;
                 }
-                surface.width = surface.height = 1;
+                if (!isQQBrowser) {
+                    surface.width = surface.height = 1;
+                }
                 surfacePool.push(surface);
             };
             /**
@@ -2578,7 +2582,7 @@ var egret;
                     }
                     drawImage.apply(context, arguments);
                 };
-                if (egret.isUndefined(context["imageSmoothingEnabled"])) {
+                if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                     var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                     for (var i = keys.length - 1; i >= 0; i--) {
                         var key = keys[i];
@@ -2808,7 +2812,7 @@ var egret;
              * 更新同时触摸点的数量
              */
             p.$updateMaxTouches = function () {
-                this.touch.$setMaxTouches();
+                this.touch.$initMaxTouches();
             };
             return WebTouchHandler;
         })(egret.HashObject);
@@ -3340,8 +3344,37 @@ var egret;
         };
         CanvasRenderingContext2D.prototype["end"] = function () {
         };
+        var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
+        CanvasRenderingContext2D.prototype.fill = function () {
+            var style = this.fillStyle;
+            if (!(typeof style == "string")) {
+                var matrix = style["matrix"];
+                if (matrix) {
+                    this.save();
+                    this.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+                    originCanvas2DFill.call(this);
+                    this.restore();
+                }
+                else {
+                    originCanvas2DFill.call(this);
+                }
+            }
+            else {
+                originCanvas2DFill.call(this);
+            }
+        };
         egret.runEgret = runEgret;
         egret.updateAllScreens = updateAllScreens;
+        var resizeTimer = NaN;
+        function doResize() {
+            resizeTimer = NaN;
+            egret.updateAllScreens();
+        }
+        window.addEventListener("resize", function () {
+            if (isNaN(resizeTimer)) {
+                resizeTimer = window.setTimeout(doResize, 300);
+            }
+        });
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3573,6 +3606,7 @@ var egret;
             function WebPlayer(container) {
                 _super.call(this);
                 this.init(container);
+                this.initOrientation();
             }
             var d = __define,c=WebPlayer;p=c.prototype;
             p.init = function (container) {
@@ -3609,6 +3643,14 @@ var egret;
                 this.updateScreenSize();
                 this.updateMaxTouches();
                 player.start();
+            };
+            p.initOrientation = function () {
+                var self = this;
+                window.addEventListener("orientationchange", function () {
+                    window.setTimeout(function () {
+                        egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, egret.StageOrientationEvent.ORIENTATION_CHANGE);
+                    }, 100);
+                });
             };
             /**
              * 读取初始化参数
@@ -4021,7 +4063,7 @@ var egret;
             d(WebDeviceOrientation, "isSupport"
                 /**
                  * @inheritDoc
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -4031,7 +4073,7 @@ var egret;
             );
             /**
              * @inheritDoc
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.addEventListener = function (type, listener, thisObject, useCapture, priority) {
@@ -4042,7 +4084,7 @@ var egret;
             };
             /**
              * @inheritDoc
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.removeEventListener = function (type, listener, thisObject, useCapture) {

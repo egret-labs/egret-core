@@ -27,6 +27,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/// <reference path="core/ResourceItem.ts" />
+/// <reference path="core/ResourceConfig.ts" />
+/// <reference path="core/ResourceLoader.ts" />
+/// <reference path="events/ResourceEvent.ts" />
+/// <reference path="analyzer/BinAnalyzer.ts" />
+/// <reference path="analyzer/ImageAnalyzer.ts" />
+/// <reference path="analyzer/TextAnalyzer.ts" />
+/// <reference path="analyzer/JsonAnalyzer.ts" />
+/// <reference path="analyzer/SheetAnalyzer.ts" />
+/// <reference path="analyzer/FontAnalyzer.ts" />
+/// <reference path="analyzer/SoundAnalyzer.ts" />
+/// <reference path="analyzer/XMLAnalyzer.ts" />
 
 module RES {
     /**
@@ -45,8 +57,29 @@ module RES {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export function registerAnalzer(type:string, analyzerClass:any) {
-        instance.registerAnalzer(type, analyzerClass);
+    export function registerAnalyzer(type:string, analyzerClass:any) {
+        instance.registerAnalyzer(type, analyzerClass);
+    }
+
+    /**
+     * 根据url返回实际加载url地址
+     * @param call
+     */
+    export function registerUrlConvert(call:(url:string)=>string, thisObj:any):void {
+        instance.$registerVirtualCall(call, thisObj);
+    }
+
+    /**
+     * @private
+     * @param url
+     * @returns {string}
+     */
+    export function $getVirtualUrl(url:string):string {
+        if (instance.$urlCall) {
+            return instance.$urlCall.call(instance.$callObj, url);
+        }
+
+        return url;
     }
 
     /**
@@ -210,9 +243,9 @@ module RES {
      * @language en_US
      * The synchronization method for obtaining the cache has been loaded with the success of the resource.
      * <br>The type of resource and the corresponding return value types are as follows:
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (lark.Bitmap|lark.Texture)[]
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript primary object
-     * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or lark.BitmapData interface。
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or egret.BitmapData interface。
      * <br>RES.ResourceItem.TYPE_JSON : Object
      * <br>RES.ResourceItem.TYPE_SHEET : Object
      * <br>  1. If the incoming parameter is the name of the entire SpriteSheet is returned is {image1: Texture, "image2": Texture}.
@@ -231,9 +264,9 @@ module RES {
      * @language zh_CN
      * 同步方式获取缓存的已经加载成功的资源。
      * <br>资源类型和对应的返回值类型关系如下：
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (lark.Bitmap|lark.Texture)[]
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript 原生对象
-     * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 lark.BitmapData 接口。
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 egret.BitmapData 接口。
      * <br>RES.ResourceItem.TYPE_JSON : Object
      * <br>RES.ResourceItem.TYPE_SHEET : Object
      * <br>  1. 如果传入的参数是整个 SpriteSheet 的名称返回的是 {"image1":Texture,"image2":Texture} 这样的格式。
@@ -464,12 +497,19 @@ module RES {
             return analyzer;
         }
 
+        $urlCall:(url:string)=>string;
+        $callObj:any;
+        $registerVirtualCall(call:(url:string)=>string, thisObj:any):void {
+            this.$urlCall = call;
+            this.$callObj = thisObj;
+        }
+
         /**
          * 注册一个自定义文件类型解析器
          * @param type 文件类型字符串，例如：bin,text,image,json等。
          * @param analyzerClass 自定义解析器的类定义
          */
-        public registerAnalzer(type:string, analyzerClass:any):void {
+        public registerAnalyzer(type:string, analyzerClass:any):void {
             this.analyzerClassMap[type] = analyzerClass;
         }
 

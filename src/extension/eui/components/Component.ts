@@ -54,7 +54,7 @@ module eui {
      * @language en_US
      *
      * @copy eui.UIComponents
-     * @event egret.Event.COMPLETE Emit when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
+     * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
      * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
@@ -402,14 +402,15 @@ module eui {
          * 
          * @param value 
          */
-        $setTouchChildren(value:boolean) {
+        $setTouchChildren(value:boolean):boolean {
             value = !!value;
             var values = this.$Component;
             if (values[sys.ComponentKeys.enabled]) {
-                super.$setTouchChildren(value);
+                return super.$setTouchChildren(value);
             }
             else {
                 values[sys.ComponentKeys.explicitTouchChildren] = value;
+                return true;
             }
         }
 
@@ -418,14 +419,15 @@ module eui {
          * 
          * @param value 
          */
-        $setTouchEnabled(value:boolean) {
+        $setTouchEnabled(value:boolean):boolean {
             value = !!value;
             var values = this.$Component;
             if (values[sys.ComponentKeys.enabled]) {
-                super.$setTouchEnabled(value);
+                return super.$setTouchEnabled(value);
             }
             else {
                 values[sys.ComponentKeys.explicitTouchEnabled] = value;
+                return true;
             }
         }
 
@@ -468,11 +470,11 @@ module eui {
          * 
          * @param value 
          */
-        $setEnabled(value:boolean):void {
+        $setEnabled(value:boolean):boolean {
 
             var values = this.$Component;
             if (value === values[sys.ComponentKeys.enabled]) {
-                return;
+                return false;
             }
             values[sys.ComponentKeys.enabled] = value;
             if (value) {
@@ -484,6 +486,8 @@ module eui {
                 this.$touchChildren = false;
             }
             this.invalidateState();
+
+            return true;
         }
 
         //========================皮肤视图状态=====================start=======================

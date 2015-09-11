@@ -6,8 +6,8 @@
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
-import config = require('../ProjectConfig');
-
+//import config = require('../ProjectConfig');
+var config = egret.args.properties;
 class CopyFilesCommand implements egret.Command {
     outputPath:string;
     ignorePathList:Array<any>;

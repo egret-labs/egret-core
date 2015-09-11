@@ -114,9 +114,10 @@ module eui {
          *
          * @param value
          */
-        $setWidth(value:number):void {
-            super.$setWidth(value);
-            UIImpl.prototype.$setWidth.call(this, value);
+        $setWidth(value:number):boolean {
+            var result1:boolean = super.$setWidth(value);
+            var result2:boolean = UIImpl.prototype.$setWidth.call(this, value);
+            return result1 && result2;
         }
 
         /**
@@ -124,9 +125,10 @@ module eui {
          *
          * @param value
          */
-        $setHeight(value:number):void {
-            super.$setHeight(value);
-            UIImpl.prototype.$setHeight.call(this, value);
+        $setHeight(value:number):boolean {
+            var result1:boolean = super.$setHeight(value);
+            var result2:boolean = UIImpl.prototype.$setHeight.call(this, value);
+            return result1 && result2;
         }
 
         /**
@@ -134,9 +136,10 @@ module eui {
          *
          * @param value
          */
-        $setText(value:string):void {
-            super.$setText(value);
-            PropertyEvent.emitPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
+        $setText(value:string):boolean {
+            var result:boolean = super.$setText(value);
+            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
+            return result;
         }
 
         /**

@@ -5234,6 +5234,874 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
+}
+declare module egret.gui {
+    /**
+     * @private
+     */
+    class ScrollerEase {
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        constructor();
+        /**
+         *
+         * @param amount
+         * @returns
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static get(amount: any): Function;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static quintOut: Function;
+        /**
+         *
+         * @param pow
+         * @returns
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static getPowOut(pow: any): Function;
+        /**
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static quartOut: Function;
+    }
+    /**
+     * @private
+     */
+    class ScrollerTween extends EventDispatcher {
+        /**
+         * @private
+         */
+        private static _tweens;
+        /**
+         * @private
+         */
+        private static IGNORE;
+        /**
+         * @private
+         */
+        private static _plugins;
+        /**
+         * @private
+         */
+        private static _inited;
+        /**
+         * @private
+         */
+        private _target;
+        /**
+         * @private
+         */
+        private _useTicks;
+        /**
+         * @private
+         */
+        private ignoreGlobalPause;
+        /**
+         * @private
+         */
+        private loop;
+        /**
+         * @private
+         */
+        private pluginData;
+        /**
+         * @private
+         */
+        private _curQueueProps;
+        /**
+         * @private
+         */
+        private _initQueueProps;
+        /**
+         * @private
+         */
+        private _steps;
+        /**
+         * @private
+         */
+        private _actions;
+        /**
+         * @private
+         */
+        private paused;
+        /**
+         * @private
+         */
+        private duration;
+        /**
+         * @private
+         */
+        private _prevPos;
+        /**
+         * @private
+         */
+        private position;
+        /**
+         * @private
+         */
+        private _prevPosition;
+        /**
+         * @private
+         */
+        private _stepPosition;
+        /**
+         * @private
+         */
+        private passive;
+        /**
+         * @language en_US
+         * Activate an object and add a ScrollerTween animation to the object
+         * @param target {any} The object to be activated
+         * @param props {any} Parameters, support loop onChange onChangeObj
+         * @param pluginData {any} Write realized
+         * @param override {boolean} Whether to remove the object before adding a tween, the default value false
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 激活一个对象，对其添加 ScrollerTween 动画
+         * @param target {any} 要激活 ScrollerTween 的对象
+         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
+         * @param pluginData {any} 暂未实现
+         * @param override {boolean} 是否移除对象之前添加的tween，默认值false
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static get(target: any, props?: any, pluginData?: any, override?: boolean): ScrollerTween;
+        /**
+         * @language en_US
+         * Delete all ScrollerTween animations from an object
+         * @param target The object whose ScrollerTween to be deleted
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 删除一个对象上的全部 ScrollerTween 动画
+         * @param target  需要移除 ScrollerTween 的对象
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static removeTweens(target: any): void;
+        /**
+         * @private
+         *
+         * @param delta
+         * @param paused
+         */
+        private static tick(timeStamp, paused?);
+        private static _lastTime;
+        /**
+         * @private
+         *
+         * @param tween
+         * @param value
+         */
+        private static _register(tween, value);
+        /**
+         * 创建一个 egret.ScrollerTween 对象
+         * @private
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        constructor(target: any, props: any, pluginData: any);
+        /**
+         * @private
+         *
+         * @param target
+         * @param props
+         * @param pluginData
+         */
+        private initialize(target, props, pluginData);
+        /**
+         * @private
+         *
+         * @param value
+         * @param actionsMode
+         * @returns
+         */
+        private setPosition(value);
+        /**
+         * @private
+         *
+         * @param startPos
+         * @param endPos
+         * @param includeStart
+         */
+        private _runActions(startPos, endPos, includeStart?);
+        /**
+         * @private
+         *
+         * @param step
+         * @param ratio
+         */
+        private _updateTargetProps(step, ratio);
+        /**
+         * @language en_US
+         * Whether setting is paused
+         * @param value {boolean} Whether to pause
+         * @returns ScrollerTween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置是否暂停
+         * @param value {boolean} 是否暂停
+         * @returns Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        setPaused(value: boolean): ScrollerTween;
+        /**
+         * @private
+         *
+         * @param props
+         * @returns
+         */
+        private _cloneProps(props);
+        /**
+         * @private
+         *
+         * @param o
+         * @returns
+         */
+        private _addStep(o);
+        /**
+         * @private
+         *
+         * @param o
+         * @returns
+         */
+        private _appendQueueProps(o);
+        /**
+         * @private
+         *
+         * @param o
+         * @returns
+         */
+        private _addAction(o);
+        /**
+         * @language en_US
+         * Modify the property of the specified display object to a specified value
+         * @param props {Object} Property set of an object
+         * @param duration {number} Duration
+         * @param ease {egret.ScrollerEase} Easing algorithm
+         * @returns {egret.ScrollerTween} ScrollerTween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将指定显示对象的属性修改为指定值
+         * @param props {Object} 对象的属性集合
+         * @param duration {number} 持续时间
+         * @param ease {egret.ScrollerEase} 缓动算法
+         * @returns {egret.ScrollerTween} Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        to(props: any, duration?: number, ease?: Function): ScrollerTween;
+        /**
+         * @language en_US
+         * Execute callback function
+         * @param callback {Function} Callback method
+         * @param thisObj {any} this action scope of the callback method
+         * @param params {Array<any>} Parameter of the callback method
+         * @returns {egret.ScrollerTween} ScrollerTween object itself
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 执行回调函数
+         * @param callback {Function} 回调方法
+         * @param thisObj {any} 回调方法this作用域
+         * @param params {Array<any>} 回调方法参数
+         * @returns {egret.ScrollerTween} Tween对象本身
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        call(callback: Function, thisObj?: any, params?: Array<any>): ScrollerTween;
+        /**
+         * @method egret.ScrollerTween#tick
+         * @param delta {number}
+         * @private
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        tick(delta: number): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @private
+     */
+    class ScrollerView extends DisplayObjectContainer {
+        /**
+         * @private
+         */
+        _ScrV_Props_: ScrollerViewProperties;
+        /**
+         * @language en_US
+         * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        scrollBeginThreshold: number;
+        /**
+         * @language en_US
+         * Scrolling speed, the speed is required and the default speed ratio.
+         * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 滚动速度，这个值为需要的速度与默认速度的比值。
+         * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        scrollSpeed: number;
+        /**
+         * @language en_US
+         * Whether to enable rebound, rebound When enabled, ScrollerView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
+         * @default true
+         * @version Egret 2.0
+         */
+        /**
+         * @language zh_CN
+         * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+         * @default true
+         * @version Egret 2.0
+         */
+        bounces: boolean;
+        /**
+         * @language en_US
+         * Create a egret.ScrollerView objects
+         * @param content {egret.DisplayObject} You need to scroll object
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.ScrollerView 对象
+         * @param content {egret.DisplayObject} 需要滚动的对象
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        constructor(content?: DisplayObject);
+        /**
+         * @private
+         */
+        _content: DisplayObject;
+        /**
+         * @language en_US
+         * Set to scroll object
+         * @param content {egret.DisplayObject} You need to scroll object
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置需要滚动的对象
+         * @param content {egret.DisplayObject} 需要滚动的对象
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        setContent(content: DisplayObject): void;
+        /**
+         * @language en_US
+         * Remove rolling objects
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 移除滚动的对象
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        removeContent(): void;
+        /**
+         * @language en_US
+         * Vertical scroll bar display policy, on / off / auto.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 垂直滚动条显示策略，on/off/auto。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        verticalScrollPolicy: string;
+        /**
+         * @language en_US
+         * The horizontal scroll bar display policy, on / off / auto.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 水平滚动条显示策略，on/off/auto。
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        horizontalScrollPolicy: string;
+        /**
+         * @language en_US
+         * Gets or sets the horizontal scroll position
+         * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 获取或设置水平滚动位置,
+         * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        scrollLeft: number;
+        /**
+         * @language en_US
+         * Gets or sets the vertical scroll position
+         * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 获取或设置垂直滚动位置,
+         * @returns {number}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        scrollTop: number;
+        /**
+         * @language en_US
+         * Set scroll position
+         * @param top {number} The vertical scroll position
+         * @param left {number} The horizontal scroll position
+         * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置滚动位置
+         * @param top {number} 垂直滚动位置
+         * @param left {number} 水平滚动位置
+         * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        setScrollPosition(top: number, left: number, isOffset?: boolean): void;
+        /**
+         * @private
+         *
+         * @param top
+         * @param left
+         */
+        private _validatePosition(top?, left?);
+        /**
+         * @private
+         *
+         */
+        _updateContentPosition(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _checkScrollPolicy(): boolean;
+        /**
+         * @private
+         *
+         * @param policy
+         * @param contentLength
+         * @param viewLength
+         * @returns
+         */
+        private __checkScrollPolicy(policy, contentLength, viewLength);
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _addEvents(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _removeEvents(): void;
+        private _tempStage;
+        /**
+         * @private
+         *
+         * @param e
+         */
+        _onTouchBegin(e: TouchEvent): void;
+        /**
+         * @private
+         */
+        private delayTouchBeginEvent;
+        /**
+         * @private
+         */
+        private touchBeginTimer;
+        /**
+         * @private
+         *
+         * @param event
+         */
+        _onTouchBeginCapture(event: TouchEvent): void;
+        /**
+         * @private
+         *
+         * @param event
+         * @returns
+         */
+        private _onTouchEndCapture(event);
+        /**
+         * @private
+         *
+         */
+        private _onTouchBeginTimer();
+        /**
+         * @private
+         *
+         * @param event
+         * @returns
+         */
+        private dispatchPropagationEvent(event);
+        /**
+         * @private
+         *
+         * @param event
+         * @returns
+         */
+        _onTouchMove(event: TouchEvent): void;
+        /**
+         * @private
+         *
+         * @param event
+         * @returns
+         */
+        _onTouchEnd(event: TouchEvent): void;
+        /**
+         * @private
+         *
+         * @param event
+         * @returns
+         */
+        _onEnterFrame(event: Event): void;
+        /**
+         * @private
+         *
+         * @param e
+         * @returns
+         */
+        private _logTouchEvent(e);
+        /**
+         * @private
+         *
+         * @param e
+         * @returns
+         */
+        private _getPointChange(e);
+        /**
+         * @private
+         *
+         * @param e
+         * @returns
+         */
+        private _calcVelocitys(e);
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _getContentWidth(): number;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _getContentHeight(): number;
+        /**
+         * @language en_US
+         * The left side of the maximum distance
+         * @returns The left side of the maximum distance
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 距离左侧的最大值
+         * @returns 距离左侧最大值
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        getMaxScrollLeft(): number;
+        /**
+         * @language en_US
+         * Above the maximum distance
+         * @returns Above the maximum distance
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 距离上方最大值
+         * @returns 距离上方最大值
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        getMaxScrollTop(): number;
+        /**
+         * @private
+         */
+        private static weight;
+        /**
+         * @private
+         *
+         */
+        private _moveAfterTouchEnd();
+        /**
+         * @private
+         *
+         * @param tw
+         */
+        private onTweenFinished(tw);
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _onScrollStarted(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _onScrollFinished(): void;
+        /**
+         * @language en_US
+         * Set the scroll position above the distance
+         * @param scrollTop Position above distance
+         * @param duration Easing of time, in milliseconds
+         * @returns Get tween vertical scrolling
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置滚动距离上方的位置
+         * @param scrollTop 距离上方的位置
+         * @param duration 缓动时间，毫秒单位
+         * @returns 获取垂直滚动的tween
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        setScrollTop(scrollTop: number, duration?: number): void;
+        /**
+         * @language en_US
+         * Set the scroll position from the left side
+         * @param scrollLeft From the position on the left side
+         * @param duration Get tween vertical scrolling
+         * @returns Gets the horizontal scroll tween
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置滚动距离左侧的位置
+         * @param scrollLeft 距离左侧的位置
+         * @param duration 缓动时间，毫秒单位
+         * @returns 获取水平滚动的tween
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        setScrollLeft(scrollLeft: number, duration?: number): void;
+        /**
+         * @private
+         *
+         * @param pixelsPerMS
+         * @param curPos
+         * @param maxPos
+         * @returns
+         */
+        private getAnimationDatas(pixelsPerMS, curPos, maxPos);
+        /**
+         * @private
+         *
+         * @param event
+         * @returns
+         */
+        private cloneTouchEvent(event);
+        /**
+         * @private
+         *
+         * @returns
+         */
+        private throwNotSupportedError();
+        /**
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        addChild(child: DisplayObject): DisplayObject;
+        /**
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
+         * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        addChildAt(child: DisplayObject, index: number): DisplayObject;
+        /**
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        removeChild(child: DisplayObject): DisplayObject;
+        /**
+         * @deprecated
+         * @param index {number}
+         * @returns {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        removeChildAt(index: number): DisplayObject;
+        /**
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        setChildIndex(child: DisplayObject, index: number): void;
+        /**
+         * @deprecated
+         * @param child1 {DisplayObject}
+         * @param child2 {DisplayObject}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        swapChildren(child1: DisplayObject, child2: DisplayObject): void;
+        /**
+         * @deprecated
+         * @param index1 {number}
+         * @param index2 {number}
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        swapChildrenAt(index1: number, index2: number): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @private
+     */
+    class ScrollerViewProperties {
+        /**
+         * @private
+         */
+        _verticalScrollPolicy: string;
+        /**
+         * @private
+         */
+        _horizontalScrollPolicy: string;
+        /**
+         * @private
+         */
+        _scrollLeft: number;
+        /**
+         * @private
+         */
+        _scrollTop: number;
+        /**
+         * @private
+         */
+        _hCanScroll: boolean;
+        /**
+         * @private
+         */
+        _vCanScroll: boolean;
+        /**
+         * @private
+         */
+        _lastTouchPosition: egret.Point;
+        /**
+         * @private
+         */
+        _touchStartPosition: egret.Point;
+        /**
+         * @private
+         */
+        _scrollStarted: boolean;
+        /**
+         * @private
+         */
+        _lastTouchTime: number;
+        /**
+         * @private
+         */
+        _lastTouchEvent: TouchEvent;
+        /**
+         * @private
+         */
+        _velocitys: Array<{
+            x: number;
+            y: number;
+        }>;
+        /**
+         * @private
+         */
+        _isHTweenPlaying: boolean;
+        /**
+         * @private
+         */
+        _isVTweenPlaying: boolean;
+        /**
+         * @private
+         */
+        _hScrollTween: ScrollerTween;
+        /**
+         * @private
+         */
+        _vScrollTween: ScrollerTween;
+        /**
+         * @private
+         */
+        _bounces: boolean;
+    }
+}
+declare module egret.gui {
     /**
      * @class egret.gui.Scroller
      * @classdesc
@@ -6681,7 +7549,6 @@ declare module egret.gui {
      * @classdesc
      * 素材适配器接口。
      * 若项目需要自定义UIAsset.source的解析规则，需要实现这个接口，
-     * 然后调用Injector.mapClass("egret.gui.IAssetAdapter",YourAssetAdapter)注入到框架即可。
      */
     interface IAssetAdapter {
         /**
@@ -7126,7 +7993,6 @@ declare module egret.gui {
      * @classdesc
      * 皮肤适配器接口。
      * 若项目需要自定义可设置外观组件的skinName属性的解析规则，需要实现这个接口，
-     * 然后调用Injector.mapClass("egret.gui.ISkinAdapter",YourSkinAdapter)注入到框架即可。
      */
     interface ISkinAdapter {
         /**
@@ -11274,10 +12140,7 @@ declare module egret.gui {
      * @class egret.gui.IPopUpManager
      * @interface
      * @classdesc
-     * 窗口弹出管理器接口。若项目需要自定义弹出框管理器，请实现此接口，
-     * 并在项目初始化前调用Injector.mapClass("egret.gui.IPopUpManager",YourPopUpManager)，
-     * 注入自定义的弹出框管理器类。
-     * @extends egret.IEventDispatcher
+     * 窗口弹出管理器接口。若项目需要自定义弹出框管理器，请实现此接口
      */
     interface IPopUpManager extends IEventDispatcher {
         /**
@@ -11328,9 +12191,7 @@ declare module egret.gui {
      * @class egret.gui.PopUpManager
      * @classdesc
      * 窗口弹出管理器<p/>
-     * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
-     * 并在项目初始化前调用Injector.mapClass("egret.gui.IPopUpManager",YourPopUpManager)，
-     * 注入自定义的弹出框管理器类。
+     * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口
      */
     class PopUpManager {
         /**

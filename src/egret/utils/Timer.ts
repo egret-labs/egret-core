@@ -242,15 +242,15 @@ module egret {
         $update(timeStamp:number):boolean {
             this.lastCount -= 1000;
             if(this.lastCount>0){
-                return true;
+                return false;
             }
             this.lastCount += this.updateInterval;
             this._currentCount++;
             var complete = (this.repeatCount > 0 && this._currentCount >= this.repeatCount);
-            TimerEvent.emitTimerEvent(this,TimerEvent.TIMER);
+            TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER);
             if (complete) {
                 this.stop();
-                TimerEvent.emitTimerEvent(this,TimerEvent.TIMER_COMPLETE);
+                TimerEvent.dispatchTimerEvent(this,TimerEvent.TIMER_COMPLETE);
             }
             return false;
         }

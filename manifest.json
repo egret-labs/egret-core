@@ -196,11 +196,19 @@
       "description": "Egret Game Extension",
       "files": [
         {
-          "path": "native/NativeNetContext.ts",
+          "path": "net/native/NativeNetContext.ts",
           "platform": "native"
         },
         {
-          "path": "web/HTML5NetContext.ts",
+          "path": "net/web/HTML5NetContext.ts",
+          "platform": "web"
+        },
+        {
+          "path": "utils/native/NativeLogger.ts",
+          "platform": "native"
+        },
+        {
+          "path": "utils/web/WebLogger.ts",
           "platform": "web"
         }],
       "root": "src/extension/game",
@@ -211,14 +219,14 @@
       "description": "Egret UI Framework",
       "files": [ ],
       "root": "src/extension/gui",
-      "dependencies": [ "egret","game" ]
+      "dependencies": [ "egret" ]
     },
     {
       "name": "res",
       "description": "Egret Resource Loader",
       "files": [ ],
       "root": "src/extension/resource",
-      "dependencies": [ "egret","game" ]
+      "dependencies": [ "egret" ]
     },
     {
       "name": "eui",
@@ -232,6 +240,21 @@
       "description": "Egret Tween",
       "files": [ ],
       "root": "src/extension/tween",
+      "dependencies": [ "egret" ]
+    },
+    {
+      "name": "version",
+      "description": "Egret Version Controller",
+      "files": [
+        {
+          "path": "native/NativeVersionController.ts",
+          "platform": "native"
+        },
+        {
+          "path": "web/Html5VersionController.ts",
+          "platform": "web"
+        }],
+      "root": "src/extension/version",
       "dependencies": [ "egret" ]
     }
   ],

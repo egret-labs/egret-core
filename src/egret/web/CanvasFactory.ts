@@ -76,7 +76,10 @@ module egret.web {
             if (!surface) {
                 return;
             }
-            surface.width = surface.height = 1;
+            if (!isQQBrowser) {
+                surface.width = surface.height = 1;
+            }
+
             surfacePool.push(surface);
         }
 
@@ -116,7 +119,7 @@ module egret.web {
                 drawImage.apply(context, arguments);
             };
 
-            if (egret.isUndefined(context["imageSmoothingEnabled"])) {
+            if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                 for (var i = keys.length - 1; i >= 0; i--) {
                     var key = keys[i];

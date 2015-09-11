@@ -141,12 +141,14 @@ module egret {
         /**
          * @private
          */
-        $setText(value:string):void{
+        $setText(value:string):boolean{
             var values = this.$BitmapText;
             if (value == values[Keys.text])
-                return;
+                return false;
             values[Keys.text] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -160,14 +162,16 @@ module egret {
         /**
          * @private
          */
-        $setWidth(value:number) {
+        $setWidth(value:number):boolean {
             //value = +value || 0;
             var values = this.$BitmapText;
             if (value < 0 || value == values[Keys.textFieldWidth]) {
-                return;
+                return false;
             }
             values[Keys.textFieldWidth] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -189,14 +193,16 @@ module egret {
         /**
          * @private
          */
-        $setHeight(value:number) {
+        $setHeight(value:number):boolean {
             //value = +value || 0;
             var values = this.$BitmapText;
             if (value < 0 || value == values[Keys.textFieldHeight]) {
-                return;
+                return false;
             }
             values[Keys.textFieldHeight] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -221,15 +227,17 @@ module egret {
             this.$setFont(value);
         }
 
-        $setFont(value:BitmapFont):void {
+        $setFont(value:BitmapFont):boolean {
             var values = this.$BitmapText;
             if (values[Keys.font] == value) {
-                return;
+                return false;
             }
             values[Keys.font] = value;
 
             this.$BitmapText[Keys.fontStringChanged] = true;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -252,12 +260,18 @@ module egret {
         }
 
         public set lineSpacing(value:number) {
-            //value = +value || 0;
+            this.$setLineSpacing(value);
+        }
+
+        $setLineSpacing(value:number):boolean {
+            value = +value || 0;
             var values = this.$BitmapText;
             if (values[Keys.lineSpacing] == value)
-                return;
+                return false;
             values[Keys.lineSpacing] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -279,12 +293,18 @@ module egret {
         }
 
         public set letterSpacing(value:number) {
-            //value = +value || 0;
+            this.$setLetterSpacing(value);
+        }
+
+        $setLetterSpacing(value:number):boolean {
+            value = +value || 0;
             var values = this.$BitmapText;
             if (values[Keys.letterSpacing] == value)
-                return;
+                return false;
             values[Keys.letterSpacing] = value;
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -298,7 +318,7 @@ module egret {
          */
         $render(context:egret.sys.RenderContext):void {
             var self = this;
-            var textLines:Array<string> = self._getTextLines();
+            var textLines:Array<string> = self.$getTextLines();
             var length:number = textLines.length;
             if (length == 0) {
                 return;
@@ -309,7 +329,7 @@ module egret {
             var yPos:number = 0;
             var hasSetHeight:boolean = !isNaN(self.$BitmapText[Keys.textFieldHeight]);
             var textFieldHeight:number = self.$BitmapText[Keys.textFieldHeight];
-            var lineHeights:Array<number> = self._lineHeights;
+            var lineHeights:Array<number> = self.$lineHeights;
             for (var i:number = 0; i < length; i++) {
                 var lineHeight:number = lineHeights[i];
                 if (hasSetHeight && i > 0 && yPos + lineHeight > textFieldHeight) {
@@ -346,57 +366,57 @@ module egret {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            var lines:Array<string> = this._getTextLines();
+            var lines:Array<string> = this.$getTextLines();
             if (lines.length == 0) {
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(this._textOffsetX, this._textOffsetY, this._textWidth - this._textOffsetX,
-                    this._textHeight - this._textOffsetY + (lines.length - 1) * this.$BitmapText[Keys.lineSpacing]);
+                bounds.setTo(this.textOffsetX, this.textOffsetY, this.textWidth - this.textOffsetX,
+                    this.textHeight - this.textOffsetY + (lines.length - 1) * this.$BitmapText[Keys.lineSpacing]);
             }
         }
 
         /**
          * @private
          */
-        private _textWidth:number = 0;
+        private textWidth:number = 0;
         /**
          * @private
          */
-        private _textHeight:number = 0;
+        private textHeight:number = 0;
         /**
          * @private
          */
-        private _textOffsetX:number = 0;
+        private textOffsetX:number = 0;
         /**
          * @private
          */
-        private _textOffsetY:number = 0;
+        private textOffsetY:number = 0;
 
         /**
          * @private
          */
-        private _textLines:Array<string>;
+        private textLines:Array<string>;
         /**
          * @private
          */
-        public _lineHeights:Array<number> = [];
+        public $lineHeights:Array<number> = [];
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
-        public _getTextLines():Array<string> {
+        $getTextLines():Array<string> {
             var self = this;
             if (!this.$BitmapText[Keys.textLinesChanged]) {
-                return self._textLines;
+                return self.textLines;
             }
             var textLines:Array<string> = [];
-            self._textLines = textLines;
+            self.textLines = textLines;
             this.$BitmapText[Keys.textLinesChanged] = false;
             var lineHeights:Array<number> = [];
-            self._lineHeights = lineHeights;
+            self.$lineHeights = lineHeights;
             if (!self.$BitmapText[Keys.text] || !self.$BitmapText[Keys.font]) {
                 return textLines;
             }
@@ -479,10 +499,10 @@ module egret {
                 textHeight += lineHeight;
                 textWidth = Math.max(xPos, textWidth);
             }
-            self._textWidth = textWidth;
-            self._textHeight = textHeight;
-            self._textOffsetX = textStartX;
-            self._textOffsetY = textStartY;
+            self.textWidth = textWidth;
+            self.textHeight = textHeight;
+            self.textOffsetX = textStartX;
+            self.textOffsetY = textStartY;
             return textLines;
         }
     }

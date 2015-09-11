@@ -72,6 +72,10 @@ module egret {
          * 
          */
         public _addStageText():void {
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = true;
+            }
+
             this.stageText.$addToStage();
 
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
@@ -87,6 +91,10 @@ module egret {
          * 
          */
         public _removeStageText():void {
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = false;
+            }
+
             this.stageText.$removeFromStage();
 
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
@@ -125,7 +133,7 @@ module egret {
             if (!this._isFocus) {
                 this._isFocus = true;
                 if (!event["showing"]) {
-                    this._text._isTyping = true;
+                    this._text.$isTyping = true;
                 }
                 this._text.$invalidateContentBounds();
 
@@ -142,7 +150,7 @@ module egret {
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
-                this._text._isTyping = false;
+                this._text.$isTyping = false;
                 this._text.$invalidateContentBounds();
 
                 //失去焦点后调用
@@ -220,7 +228,7 @@ module egret {
          * 
          */
         private resetText():void {
-            this._text._setBaseText(this.stageText.$getText());
+            this._text.$setBaseText(this.stageText.$getText());
         }
 
         /**
@@ -235,7 +243,7 @@ module egret {
          * @private
          * 
          */
-        private _updateTransform():void {//
+        private updateInput():void {//
             if (!this._text.$visible && this.stageText) {
                 this._hideInput();
             }
@@ -249,7 +257,7 @@ module egret {
             if (this._isFocus) {
                 //整体修改
                 this.stageText.$resetStageText();
-                this._updateTransform();
+                this.updateInput();
                 return;
             }
 
@@ -276,7 +284,7 @@ module egret {
             //整体修改
             this.stageText.$resetStageText();
 
-            this._updateTransform();
+            this.updateInput();
         }
     }
 }

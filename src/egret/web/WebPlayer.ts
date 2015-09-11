@@ -36,6 +36,7 @@ module egret.web {
         public constructor(container:HTMLDivElement) {
             super();
             this.init(container);
+            this.initOrientation();
         }
 
         private init(container:HTMLDivElement):void {
@@ -77,6 +78,15 @@ module egret.web {
             this.updateScreenSize();
             this.updateMaxTouches();
             player.start();
+        }
+
+        private initOrientation():void {
+            var self = this;
+            window.addEventListener("orientationchange", function () {
+                window.setTimeout(function () {
+                    egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, StageOrientationEvent.ORIENTATION_CHANGE);
+                }, 100);
+            });
         }
 
         /**

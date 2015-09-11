@@ -162,17 +162,17 @@ module egret {
      * instance, but rather all DisplayObject instances, including those that are not on the display list. This means that you
      * can add a listener to any DisplayObject instance to listen for broadcast events.
      *
-     * @event egret.Event.ADDED Emitted when a display object is added to the display list.
-     * @event egret.Event.ADDED_TO_STAGE Emitted when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
-     * @event egret.Event.REMOVED Emitted when a display object is about to be removed from the display list.
-     * @event egret.Event.REMOVED_FROM_STAGE Emitted when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
-     * @event egret.Event.ENTER_FRAME [broadcast event] Emitted when the playhead is entering a new frame.
-     * @event egret.Event.RENDER [broadcast event] Emitted when the display list is about to be updated and rendered.
-     * @event egret.TouchEvent.TOUCH_MOVE Emitted when the user touches the device, and is continuously dispatched until the point of contact is removed.
-     * @event egret.TouchEvent.TOUCH_BEGIN Emitted when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_END Emitted when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_TAP Emitted when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
-     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Emitted when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.Event.ADDED Dispatched when a display object is added to the display list.
+     * @event egret.Event.ADDED_TO_STAGE Dispatched when a display object is added to the on stage display list, either directly or through the addition of a sub tree in which the display object is contained.
+     * @event egret.Event.REMOVED Dispatched when a display object is about to be removed from the display list.
+     * @event egret.Event.REMOVED_FROM_STAGE Dispatched when a display object is about to be removed from the display list, either directly or through the removal of a sub tree in which the display object is contained.
+     * @event egret.Event.ENTER_FRAME [broadcast event] Dispatched when the playhead is entering a new frame.
+     * @event egret.Event.RENDER [broadcast event] Dispatched when the display list is about to be updated and rendered.
+     * @event egret.TouchEvent.TOUCH_MOVE Dispatched when the user touches the device, and is continuously dispatched until the point of contact is removed.
+     * @event egret.TouchEvent.TOUCH_BEGIN Dispatched when the user first contacts a touch-enabled device (such as touches a finger to a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_END Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_TAP Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
+     * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
      * @version Egret 2.0
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
@@ -396,8 +396,12 @@ module egret {
          * @private
          * 设置父级显示对象
          */
-        $setParent(parent:DisplayObjectContainer):void {
+        $setParent(parent:DisplayObjectContainer):boolean {
+            if (this.$parent == parent) {
+                return false;
+            }
             this.$parent = parent;
+            return true;
         }
 
         /**
@@ -502,11 +506,11 @@ module egret {
          * @private
          * 设置矩阵
          */
-        $setMatrix(matrix:Matrix, useProperties:boolean = true):void {
+        $setMatrix(matrix:Matrix, useProperties:boolean = true):boolean {
             var values = this.$DisplayObject;
             var m = values[Keys.matrix];
             if (m.equals(matrix)) {
-                return;
+                return false;
             }
 
             m.copyFrom(matrix);
@@ -519,6 +523,8 @@ module egret {
             }
             this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
             this.invalidatePosition();
+
+            return true;
         }
 
 
@@ -612,7 +618,7 @@ module egret {
          * 设置x坐标
          */
         $setX(value:number):boolean {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             var m = this.$DisplayObject[Keys.matrix];
             if (value == m.tx) {
                 return false;
@@ -664,7 +670,7 @@ module egret {
          * 设置y坐标
          */
         $setY(value:number):boolean {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             var m = this.$DisplayObject[Keys.matrix];
             if (value == m.ty) {
                 return false;
@@ -714,7 +720,7 @@ module egret {
          * 设置水平缩放值
          */
         $setScaleX(value:number):boolean {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             var values = this.$DisplayObject;
             if (value == values[Keys.scaleX]) {
                 return false;
@@ -763,7 +769,7 @@ module egret {
          * 设置垂直缩放值
          */
         $setScaleY(value:number):boolean {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             if (value == this.$DisplayObject[Keys.scaleY]) {
                 return false;
             }
@@ -808,12 +814,12 @@ module egret {
             this.$setRotation(value);
         }
 
-        $setRotation(value:number):void {
-            value = egret.getNumber(value);
+        $setRotation(value:number):boolean {
+            value = egret.sys.getNumber(value);
             value = clampRotation(value);
             var values = this.$DisplayObject;
             if (value == values[Keys.rotation]) {
-                return;
+                return false;
             }
             var delta = value - values[Keys.rotation];
             var angle = delta / 180 * Math.PI;
@@ -821,6 +827,8 @@ module egret {
             values[Keys.skewY] += angle;
             values[Keys.rotation] = value;
             this.invalidateMatrix();
+
+            return true;
         }
 
         /**
@@ -843,18 +851,20 @@ module egret {
          *
          * @param value
          */
-        $setSkewX(value:number):void {
-            value = egret.getNumber(value);
+        $setSkewX(value:number):boolean {
+            value = egret.sys.getNumber(value);
 
             value = clampRotation(value);
             value = value / 180 * Math.PI;
 
             var values = this.$DisplayObject;
             if (value == values[Keys.skewX]) {
-                return;
+                return false;
             }
             values[Keys.skewX] = value;
             this.invalidateMatrix();
+
+            return true;
         }
 
         /**
@@ -877,19 +887,20 @@ module egret {
          *
          * @param value
          */
-        $setSkewY(value:number):void {
-            value = egret.getNumber(value);
+        $setSkewY(value:number):boolean {
+            value = egret.sys.getNumber(value);
 
             value = clampRotation(value);
             value = value / 180 * Math.PI;
 
             var values = this.$DisplayObject;
             if (value == values[Keys.skewY]) {
-                return;
+                return false;
             }
             values[Keys.skewY] = value;
             this.invalidateMatrix();
 
+            return true;
         }
 
         /**
@@ -936,12 +947,12 @@ module egret {
          * @private
          * 设置显示宽度
          */
-        $setWidth(value:number):void {
+        $setWidth(value:number):boolean {
             this.$DisplayObject[Keys.explicitWidth] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
 
             if (false) {
@@ -951,13 +962,15 @@ module egret {
                 var angle = values[Keys.rotation] / 180 * Math.PI;
                 var baseWidth = originalBounds.$getBaseWidth(angle);
                 if (!baseWidth) {
-                    return;
+                    return false;
                 }
                 var baseHeight = originalBounds.$getBaseHeight(angle);
                 values[Keys.scaleY] = bounds.height / baseHeight;
                 values[Keys.scaleX] = value / baseWidth;
             }
             this.invalidateMatrix();
+
+            return true;
         }
 
         /**
@@ -1004,12 +1017,12 @@ module egret {
          * @private
          * 设置显示高度
          */
-        $setHeight(value:number):void {
+        $setHeight(value:number):boolean {
             this.$DisplayObject[Keys.explicitHeight] = isNaN(value) ? NaN : value;
 
             value = +value;
             if (value < 0) {
-                return;
+                return false;
             }
 
             if (false) {
@@ -1019,13 +1032,15 @@ module egret {
                 var angle = values[Keys.rotation] / 180 * Math.PI;
                 var baseHeight = originalBounds.$getBaseHeight(angle);
                 if (!baseHeight) {
-                    return;
+                    return false;
                 }
                 var baseWidth = originalBounds.$getBaseWidth(angle);
                 values[Keys.scaleY] = value / baseHeight;
                 values[Keys.scaleX] = bounds.width / baseWidth;
             }
             this.invalidateMatrix();
+
+            return true;
         }
 
 
@@ -1080,7 +1095,7 @@ module egret {
          * @returns
          */
         $setAnchorOffsetX(value:number):boolean {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             if (value == this.$DisplayObject[Keys.anchorOffsetX]) {
                 return false;
             }
@@ -1118,7 +1133,7 @@ module egret {
          * @returns
          */
         $setAnchorOffsetY(value:number):boolean {
-            value = egret.getNumber(value);
+            value = egret.sys.getNumber(value);
             if (value == this.$DisplayObject[Keys.anchorOffsetY]) {
                 return false;
             }
@@ -1152,12 +1167,18 @@ module egret {
         }
 
         public set visible(value:boolean) {
+            this.$setVisible(value);
+        }
+
+        $setVisible(value:boolean):boolean {
             value = !!value;
             if (value == this.$visible) {
-                return;
+                return false;
             }
             this.$visible = value;
             this.$invalidateTransform();
+
+            return true;
         }
 
         /**
@@ -1264,14 +1285,16 @@ module egret {
          *
          * @param value
          */
-        $setAlpha(value:number):void {
-            value = egret.getNumber(value);
+        $setAlpha(value:number):boolean {
+            value = egret.sys.getNumber(value);
             if (value == this.$alpha) {
-                return;
+                return false;
             }
             this.$alpha = value;
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedAlpha);
             this.$invalidate(true);
+
+            return true;
         }
 
         /**
@@ -1335,8 +1358,12 @@ module egret {
         /**
          * @private
          */
-        $setTouchEnabled(value:boolean):void {
+        $setTouchEnabled(value:boolean):boolean {
+            if (this.$touchEnabled == value) {
+                return false;
+            }
             this.$touchEnabled = value;
+            return true;
         }
 
         /**
@@ -1393,9 +1420,9 @@ module egret {
          *
          * @param value
          */
-        $setScrollRect(value:Rectangle):void {
+        $setScrollRect(value:Rectangle):boolean {
             if (!value && !this.$scrollRect) {
-                return;
+                return false;
             }
             if (value) {
                 if (!this.$scrollRect) {
@@ -1407,6 +1434,8 @@ module egret {
                 this.$scrollRect = null;
             }
             this.invalidatePosition();
+
+            return true;
         }
 
         /**
@@ -1525,9 +1554,9 @@ module egret {
             this.$invalidateTransform();
         }
 
-        $setMaskRect(value:Rectangle):void {
+        $setMaskRect(value:Rectangle):boolean {
             if (!value && !this.$maskRect) {
-                return;
+                return false;
             }
             if (value) {
                 if (!this.$maskRect) {
@@ -1539,6 +1568,8 @@ module egret {
                 this.$maskRect = null;
             }
             this.invalidatePosition();
+
+            return true;
         }
 
         /**
@@ -1641,7 +1672,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public globalToLocal(stageX:number, stageY:number, resultPoint?:Point):Point {
+        public globalToLocal(stageX:number = 0, stageY:number = 0, resultPoint?:Point):Point {
             var m = this.$getInvertedConcatenatedMatrix();
             return m.transformPoint(stageX, stageY, resultPoint);
         }
@@ -1667,7 +1698,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public localToGlobal(localX:number, localY:number, resultPoint?:Point):Point {
+        public localToGlobal(localX:number = 0, localY:number = 0, resultPoint?:Point):Point {
             var m = this.$getConcatenatedMatrix();
             return m.transformPoint(localX, localY, resultPoint);
         }
@@ -1920,8 +1951,8 @@ module egret {
         /**
          * @private
          */
-        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, emitOnce?:boolean):void {
-            super.$addListener(type, listener, thisObject, useCapture, priority, emitOnce);
+        $addListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number, dispatchOnce?:boolean):void {
+            super.$addListener(type, listener, thisObject, useCapture, priority, dispatchOnce);
             var isEnterFrame = (type == Event.ENTER_FRAME);
             if (isEnterFrame || type == Event.RENDER) {
                 var list = isEnterFrame ? DisplayObject.$enterFrameCallBackList : DisplayObject.$renderCallBackList;
@@ -1961,7 +1992,7 @@ module egret {
             var list = this.$getPropagationList(this);
             var targetIndex = list.length * 0.5;
             event.$setTarget(this);
-            this.$emitPropagationEvent(event, list, targetIndex);
+            this.$dispatchPropagationEvent(event, list, targetIndex);
             return !event.$isDefaultPrevented;
         }
 
@@ -1994,7 +2025,7 @@ module egret {
         /**
          * @private
          */
-        $emitPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
+        $dispatchPropagationEvent(event:Event, list:DisplayObject[], targetIndex:number):void {
             var length = list.length;
             var captureIndex = targetIndex - 1;
             for (var i = 0; i < length; i++) {

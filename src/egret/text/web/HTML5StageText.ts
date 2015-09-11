@@ -56,8 +56,10 @@ module egret.web {
          * 
          * @param textfield 
          */
-        $setTextField(textfield:egret.TextField):void {
+        $setTextField(textfield:egret.TextField):boolean {
             this.$textfield = textfield;
+
+            return true;
         }
 
         /**
@@ -220,10 +222,12 @@ module egret.web {
          * 
          * @param value 
          */
-        $setText(value:string):void {
+        $setText(value:string):boolean {
             this.textValue = value;
 
             this.resetText();
+
+            return true;
         }
 
         /**
@@ -269,7 +273,7 @@ module egret.web {
         private setAreaHeight() {
             var textfield:egret.TextField = this.$textfield;
             if (textfield.multiline) {
-                var textheight = TextFieldUtils._getTextHeight(textfield);
+                var textheight = TextFieldUtils.$getTextHeight(textfield);
                 if (textfield.height < textheight) {
                     this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
 
@@ -279,7 +283,7 @@ module egret.web {
                     this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
 
                     var rap = (textfield.height - textheight) * this._gscaleY;
-                    var valign:number = TextFieldUtils._getValign(textfield);
+                    var valign:number = TextFieldUtils.$getValign(textfield);
                     var top = rap * valign;
                     var bottom = rap - top;
                     this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
@@ -376,7 +380,7 @@ module egret.web {
                         this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
 
                         var rap = (textfield.height - textfield.size) * this._gscaleY;
-                        var valign:number = TextFieldUtils._getValign(textfield);
+                        var valign:number = TextFieldUtils.$getValign(textfield);
                         var top = rap * valign;
                         var bottom = rap - top;
                         this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");

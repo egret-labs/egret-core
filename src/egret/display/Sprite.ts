@@ -85,10 +85,54 @@ module egret {
         }
 
         $hitTest(stageX:number, stageY:number):DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
-            if (target == this) {
+            if (!this.$visible) {
+                return null;
+            }
+            var m = this.$getInvertedConcatenatedMatrix();
+            var localX = m.a * stageX + m.c * stageY + m.tx;
+            var localY = m.b * stageX + m.d * stageY + m.ty;
+
+            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            if (rect && !rect.contains(localX, localY)) {
+                return null;
+            }
+
+            if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+                return null;
+            }
+            var children = this.$children;
+            var found = false;
+            for (var i = children.length - 1; i >= 0; i--) {
+                var child = children[i];
+                if (child.$maskedObject) {
+                    continue;
+                }
+                var target = child.$hitTest(stageX, stageY);
+                if (target) {
+                    found = true;
+                    if(target.$touchEnabled){
+                        break;
+                    }
+                    else{
+                        target = null;
+                    }
+                }
+            }
+            if (target) {
+                if (this.$touchChildren) {
+                    return target;
+                }
+                return this;
+            }
+            if (found) {
+                return this;
+            }
+
+            target =  DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
+            if (target) {
                 target = this.$graphics.$hitTest(stageX, stageY);
             }
+
             return target;
         }
 

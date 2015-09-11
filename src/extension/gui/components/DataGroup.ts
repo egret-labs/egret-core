@@ -211,7 +211,7 @@ module egret.gui {
 		private createOneRenderer(rendererFactory:IFactory):IItemRenderer{
 			var renderer:IItemRenderer;
             var hashCode:number = rendererFactory.hashCode;
-            var recycler:Recycler = this.recyclerDic[hashCode];
+            var recycler:Array<IItemRenderer> = this.recyclerDic[hashCode];
 			if(recycler){
                 renderer = recycler.pop();
 				if(recycler.length==0)
@@ -473,7 +473,7 @@ module egret.gui {
 		/**
 		 * 对象池字典
 		 */
-		private recyclerDic:Array<any> = [];
+		private recyclerDic:Object = {};
 		/**
 		 * 回收一个ItemRenderer实例
 		 */
@@ -485,7 +485,7 @@ module egret.gui {
 			var rendererFactory:IFactory = this.rendererToClassMap[renderer.hashCode];
             var hashCode:number = rendererFactory.hashCode;
 			if(!this.recyclerDic[hashCode]){
-				this.recyclerDic[hashCode] = new Recycler();
+				this.recyclerDic[hashCode] = [];
 			}
 			this.recyclerDic[hashCode].push(renderer);
 		}

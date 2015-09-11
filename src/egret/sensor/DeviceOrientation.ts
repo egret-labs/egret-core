@@ -7,7 +7,7 @@ module egret {
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
      *
      * @event egret.Event.CHANGE device's orientation is changed
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
      */
@@ -15,7 +15,7 @@ module egret {
      * @language zh_CN
      * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
      * @event egret.Event.CHANGE 设备方向改变时派发
-     * @version Lark 1.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
      */

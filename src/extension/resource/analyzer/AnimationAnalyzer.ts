@@ -149,7 +149,7 @@ module RES {
                 config = data.res[list[i].res];
                 var texture = new egret.Texture();
                 texture._bitmapData = bitmapData;
-                texture.$setData(config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH, bitmapData.width, bitmapData.height);
+                texture.$initData(config.x, config.y, config.w, config.h, list[i].x, list[i].y, list[i].sourceW, list[i].sourceH, bitmapData.width, bitmapData.height);
             }
             return animationFrames;
         }
@@ -171,7 +171,7 @@ module RES {
         private loadImage(url:string, data:any):void {
             var loader = this.getImageLoader();
             this.resItemDic[loader.hashCode] = data;
-            loader.load(url);
+            loader.load($getVirtualUrl(url));
         }
 
         private getImageLoader():egret.ImageLoader {

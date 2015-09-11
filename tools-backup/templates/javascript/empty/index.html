@@ -42,19 +42,6 @@
 
 <script>
     egret.runEgret();
-
-    //处理屏幕大小改变
-    //implement for screen size change
-    var resizeTimer = null;
-    var doResize = function () {
-        egret.updateAllScreens();
-        resizeTimer = null;
-    };
-    window.onresize = function () {
-        if (resizeTimer == null) {
-            resizeTimer = setTimeout(doResize, 300);
-        }
-    };
 </script>
 </body>
 </html>

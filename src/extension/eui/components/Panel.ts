@@ -35,7 +35,7 @@ module eui {
      * The Panel class defines a container that includes a title bar,
      * a closeButton, a moveArea, and a content area for its children.
      *
-     * @event eui.UIEvent.CLOSING Emitted when the close button is taped
+     * @event eui.UIEvent.CLOSING Dispatched when the close button is taped
      * you can use <code>event.preventDefault()</code> to prevent close.
      *
      * @defaultProperty elementsContent
@@ -116,7 +116,7 @@ module eui {
         /**
          * @language en_US
          * The skin part that defines the appearance of the close button.
-         * When taped, the close button emits a <code>closing</code> event.
+         * When taped, the close button dispatches a <code>closing</code> event.
          *
          * @skinPart
          *
@@ -253,7 +253,7 @@ module eui {
 
         /**
          * @language en_US
-         * Emites the "closing" event when the closeButton is clicked.
+         * Dispatch the "closing" event when the closeButton is clicked.
          *
          * @version Egret 2.4
          * @version Swan 1.0
@@ -268,7 +268,7 @@ module eui {
          * @platform Web,Native
          */
         protected onCloseButtonClick(event:egret.TouchEvent):void {
-            if (UIEvent.emitUIEvent(this, UIEvent.CLOSING)) {
+            if (UIEvent.dispatchUIEvent(this, UIEvent.CLOSING)) {
                 this.close();
             }
         }

@@ -88,8 +88,8 @@ module egret {
 
 
     locale_strings[0] = "执行成功";
-    locale_strings[1] = "请先设置环境变量 {color_green}EGRET_PATH{color_normal}。您可以访问 {color_underline}https://github.com/egret-team/egret/wiki/Setting-environment-variables{color_normal} 获取更多细节";
-    locale_strings[2] = "TypeScript编译器尚未安装，请执行 {color_green}npm install -g typescript{color_normal} 进行安装";
+    //locale_strings[1] = "请先设置环境变量 {color_green}EGRET_PATH{color_normal}。您可以访问 {color_underline}https://github.com/egret-team/egret/wiki/Setting-environment-variables{color_normal} 获取更多细节";
+    //locale_strings[2] = "TypeScript编译器尚未安装，请执行 {color_green}npm install -g typescript{color_normal} 进行安装";
     locale_strings[3] = "耗时：{0}秒";
     locale_strings[4] = "脚本执行失败";
     locale_strings[5] = "请确定执行路径";

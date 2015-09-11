@@ -219,11 +219,19 @@
         "description": "Egret Game Extension",
         "files": [
           {
-            "path": "native/NativeNetContext.ts",
+            "path": "net/native/NativeNetContext.ts",
             "platform": "native"
           },
           {
-            "path": "web/HTML5NetContext.ts",
+            "path": "net/web/HTML5NetContext.ts",
+            "platform": "web"
+          },
+          {
+            "path": "utils/native/NativeLogger.ts",
+            "platform": "native"
+          },
+          {
+            "path": "utils/web/WebLogger.ts",
             "platform": "web"
           }
         ],

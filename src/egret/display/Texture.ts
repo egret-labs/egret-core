@@ -183,13 +183,13 @@ module egret {
         /**
          * @language en_US
          * The BitmapData object being referenced.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 BitmapData 对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get bitmapData():BitmapData {
@@ -206,7 +206,7 @@ module egret {
 
             var w = value.width * $TextureScaleFactor;
             var h = value.height * $TextureScaleFactor;
-            this.$setData(0, 0, w, h, 0, 0, w, h, w, h);
+            this.$initData(0, 0, w, h, 0, 0, w, h, w, h);
         }
 
         /**
@@ -223,7 +223,7 @@ module egret {
          * @param sourceWidth
          * @param sourceHeight
          */
-        public $setData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
+        public $initData(bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
                         textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number):void {
             var scale = $TextureScaleFactor;
             this._bitmapX = bitmapX / scale;

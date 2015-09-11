@@ -160,13 +160,13 @@ module egret {
         /**
          * @language en_US
          * The BitmapData object being referenced.
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 被引用的 BitmapData 对象。
-         * @version Lark 1.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get bitmapData():BitmapData|Texture {
@@ -188,10 +188,10 @@ module egret {
         /**
          * @private
          */
-        $setBitmapData(value:BitmapData|Texture):void {
+        $setBitmapData(value:BitmapData|Texture):boolean {
             var values = this.$Bitmap;
             if (value == values[sys.BitmapKeys.bitmapData]) {
-                return;
+                return false;
             }
             values[sys.BitmapKeys.bitmapData] = value;
             if (value) {
@@ -219,6 +219,7 @@ module egret {
             }
 
             this.$invalidateContentBounds();
+            return true;
         }
 
         /**
@@ -310,11 +311,13 @@ module egret {
             this.$setFillMode(value);
         }
 
-        $setFillMode(value:string):void {
+        $setFillMode(value:string):boolean {
             if (value == this.$fillMode) {
-                return;
+                return false;
             }
             this.$fillMode = value;
+
+            return true;
         }
 
         /**
@@ -353,15 +356,17 @@ module egret {
          *
          * @param value
          */
-        $setWidth(value:number):void {
+        $setWidth(value:number):boolean {
             //value = +value || 0;
             var values = this.$Bitmap;
             if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapWidth]) {
-                return;
+                return false;
             }
             values[sys.BitmapKeys.explicitBitmapWidth] = value;
 
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**
@@ -369,15 +374,17 @@ module egret {
          *
          * @param value
          */
-        $setHeight(value:number):void {
+        $setHeight(value:number):boolean {
             //value = +value || 0;
             var values = this.$Bitmap;
             if (value < 0 || value == values[sys.BitmapKeys.explicitBitmapHeight]) {
-                return;
+                return false;
             }
             values[sys.BitmapKeys.explicitBitmapHeight] = value;
 
             this.$invalidateContentBounds();
+
+            return true;
         }
 
         /**

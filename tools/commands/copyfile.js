@@ -5,7 +5,8 @@
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
 var file = require('../lib/FileUtil');
-var config = require('../ProjectConfig');
+//import config = require('../ProjectConfig');
+var config = egret.args.properties;
 var CopyFilesCommand = (function () {
     function CopyFilesCommand() {
     }

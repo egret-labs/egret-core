@@ -566,10 +566,10 @@ module egret.gui {
         }
 
 
-        public $setWidth(value:number):void {
+        $setWidth(value:number):boolean {
             if (this._UIC_Props_._uiWidth == value && this.$getExplicitWidth() == value)
-                return;
-            super.$setWidth(value);
+                return false;
+            var result:boolean = super.$setWidth(value);
             if (isNaN(value))
                 this.invalidateSize();
             else
@@ -577,6 +577,8 @@ module egret.gui {
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentSizeAndDisplayList();
+
+            return result;
         }
 
         /**
@@ -595,10 +597,10 @@ module egret.gui {
             this.$setHeight(value);
         }
 
-        public $setHeight(value:number):void {
+        $setHeight(value:number):boolean {
             if (this._UIC_Props_._uiHeight == value && this.$getExplicitHeight() == value)
-                return;
-            super.$setHeight(value);
+                return false;
+            var result:boolean = super.$setHeight(value);
             if (isNaN(value))
                 this.invalidateSize();
             else
@@ -606,6 +608,8 @@ module egret.gui {
             this.invalidateProperties();
             this.invalidateDisplayList();
             this.invalidateParentSizeAndDisplayList();
+
+            return result;
         }
 
         /**

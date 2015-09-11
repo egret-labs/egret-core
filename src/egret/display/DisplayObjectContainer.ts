@@ -210,7 +210,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        public getChildIndex(child:DisplayObject):number {
+        public getChildIndex(child:egret.DisplayObject):number {
             return this.$children.indexOf(child);
         }
 
@@ -507,8 +507,12 @@ module egret {
         /**
          * @private
          */
-        $setTouchChildren(value:boolean):void {
+        $setTouchChildren(value:boolean):boolean {
+            if (this.$touchChildren == value) {
+                return false;
+            }
             this.$touchChildren = value;
+            return true;
         }
 
         /**
