@@ -21,6 +21,8 @@ var Create = (function () {
         FileUtil.copy(template, options.projectDir);
         CopyFiles.copyLark();
         compileTemplate(proj);
+
+        options.outDir = FileUtil.joinPath("..", options.outDir);
         var compileProject = new CompileProject();
         var result = compileProject.compileProject(options);
         CopyFiles.copyProjectFiles();

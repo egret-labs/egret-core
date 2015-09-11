@@ -24,7 +24,8 @@ var ParseConfigCommand = (function () {
         this.read("data-log-filter", "logFilter", true, '""');
         this.read("texture-scale-factor", "textureScaleFactor", false, "1");
         this.read("data-multi-fingered", "maxTouches", false, "2");
-        file.save(file.joinPath(egret.args.projectDir, "launcher", "native_require.js"), this.requireTxt);
+
+        //file.save(file.joinPath(egret.args.projectDir, "launcher", "native_require.js"), this.requireTxt);
         return 0;
     };
     ParseConfigCommand.prototype.read = function (name, replaceName, isString, defaultValue) {
