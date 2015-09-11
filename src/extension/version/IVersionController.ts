@@ -47,7 +47,7 @@ module egret {
          * @version Egret 2.0
          * @platform Web,Native
          */
-        getChangeList():Array<any>;
+        getChangeList():Array<{url:string; size:number}>;
 
         /**
          * 
@@ -71,5 +71,5 @@ module egret {
      * @version Egret 2.0
      * @platform Web,Native
      */
-    export var VersionController:{new(stage:egret.Stage):VersionController};
+    export var VersionController:{new():VersionController};
 }

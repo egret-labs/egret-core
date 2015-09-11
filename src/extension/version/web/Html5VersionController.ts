@@ -34,7 +34,7 @@ module egret.web {
      */
     export class Html5VersionController extends egret.EventDispatcher implements VersionController {
 
-        constructor(stage:egret.Stage) {
+        constructor() {
             super();
         }
 
@@ -43,45 +43,48 @@ module egret.web {
         public fetchVersion():void {
             var self = this;
 
-            //var virtualUrl:string = "all.manifest";
-            //
-            //var httpLoader:egret.HttpRequest = new egret.HttpRequest();
-            //httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
-            //httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
-            //
-            //httpLoader.open(virtualUrl, "get");
-            //httpLoader.send();
-            //
-            //function onError(event:egret.IOErrorEvent) {
-            //    removeListeners();
-            //    self.dispatchEvent(event);
-            //}
-            //
-            //function onLoadComplete() {
-            //    removeListeners();
-            //
-            //    self._versionInfo = JSON.parse(httpLoader.response);
-            //
-            //    window.setTimeout(function () {
+            var virtualUrl:string = "all.manifest";
+
+            var httpLoader:egret.HttpRequest = new egret.HttpRequest();
+            httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
+            httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+
+            httpLoader.open(virtualUrl, "get");
+            httpLoader.send();
+
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                self.dispatchEvent(event);
+            }
+
+            function onLoadComplete() {
+                removeListeners();
+
+                self._versionInfo = JSON.parse(httpLoader.response);
+
+                window.setTimeout(function () {
                     self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-            //    }, 0);
-            //}
-            //
-            //function removeListeners():void {
-            //    httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
-            //    httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
-            //}
+                }, 0);
+            }
+
+            function removeListeners():void {
+                httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            }
         }
 
         /**
          * 获取所有有变化的文件
          * @returns {Array<any>}
          */
-        public getChangeList():Array<any> {
+        public getChangeList():Array<{url:string; size:number}> {
             return [];
         }
 
         public getVirtualUrl(url:string):string {
+            if (DEBUG) {
+                return url;
+            }
             if (this._versionInfo && this._versionInfo[url]) {
                 return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
             }
