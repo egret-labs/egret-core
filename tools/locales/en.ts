@@ -61,3 +61,7 @@ locale_strings[12002] = "Please set the default screen size";
 locale_strings[12003] = "Please select the Scale Mode";
 locale_strings[12004] = "Please select modules";
 locale_strings[12005] = "Please select the platform";
+
+locale_strings[1705] = "upgrade files damaged,please check engine files and rerun";
+locale_strings[1706] = "total {0} API conflicts,please edit your project then rerun command command";
+//info

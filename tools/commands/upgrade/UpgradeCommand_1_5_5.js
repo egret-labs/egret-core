@@ -11,7 +11,7 @@ var UpgradeCommand_1_5_5 = (function () {
         var projectDir = egret.args.projectDir;
         //更新egretProperties.json， 将res变成一个单独的模块
         try {
-            var modify = require("./upgrade/ModifyProperties");
+            var modify = require("../upgrade/ModifyProperties");
             var properties = modify.getProperties();
             var hasRes = false;
             for (var key in properties.modules) {

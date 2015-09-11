@@ -17,7 +17,7 @@ class UpgradeCommand_1_5_0 implements egret.Command {
 
         //更新egretProperties.json
         try {
-            var modify = require("./upgrade/ModifyProperties");
+            var modify = require("../upgrade/ModifyProperties");
             var properties = modify.getProperties();
             if (properties.native && properties.native.support_path && properties.native.support_path.length > 0) {
                 for (var i = 0; i < properties.native.support_path.length; i++) {
@@ -46,11 +46,11 @@ class UpgradeCommand_1_5_0 implements egret.Command {
 
 
         //生成egret_loader.js样板
-        var fileContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "runtime_loader.js"));
+        var fileContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "runtime_loader.js"));
         file.save(file.joinPath(projectDir, "launcher", "runtime_loader.js"), fileContent);
-        var fileContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "native_loader.js"));
+        var fileContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "native_loader.js"));
         file.save(file.joinPath(projectDir, "launcher", "native_loader.js"), fileContent);
-        var fileContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "native_require.js"));
+        var fileContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "native_require.js"));
         file.save(file.joinPath(projectDir, "launcher", "native_require.js"), fileContent);
 
         var open = globals.getOpen();

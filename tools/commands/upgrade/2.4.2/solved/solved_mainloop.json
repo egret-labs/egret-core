@@ -1,0 +1,248 @@
+[
+  {
+    "desc":"class DisplayObject{ _onRemoveFromStage(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _onAddToStage(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ getDirty(): boolean; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setParentSizeDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setSizeDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _clearDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _clearSizeDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _updateTransform(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _calculateWorldTransform(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setCacheDirty(dirty?: boolean): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solved":true
+  },
+
+  {
+    "desc":"class DisplayObject{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _measureSize(resultRect: Rectangle): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _updateTransform(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solved":true
+  },
+  {
+    "desc":"class InputController{ _updateTransform(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Stage{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setSizeDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setTextDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+
+  {
+    "desc":"class Graphics{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _onAddToStage(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _onRemoveFromStage(): void; }",
+    "solved":true
+  },
+
+  {
+    "desc":"class DisplayObjectContainer{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+
+  {
+    "desc":"class BitmapText{ _setSizeDirty(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Shape{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Shape{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Shape{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solution-url":"",
+    "solved":true
+  },
+  {
+    "desc":"class Ticker{ run(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Ticker{ setTimeout(listener: Function, thisObject: any, delay: number, ...parameters: any[]): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _onRemoveFromStage(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _onAddToStage(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _updateBaseTransform(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _updateTransform(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw.html",
+    "solved":true
+  },
+  {
+    "desc":"class Stage{ _updateTransform(): void; }",
+    "solution-url":"draw.html",
+    "solved":true
+  }
+]

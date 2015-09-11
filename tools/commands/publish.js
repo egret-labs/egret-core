@@ -32,3 +32,5 @@ var Publish = (function () {
     return Publish;
 })();
 module.exports = Publish;
+
+//# sourceMappingURL=../commands/publish.js.map

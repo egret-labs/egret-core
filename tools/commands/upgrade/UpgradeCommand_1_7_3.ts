@@ -15,7 +15,7 @@ class UpgradeCommand_1_7_3 implements egret.Command {
         var projectDir = egret.args.projectDir;
         //更新egretProperties.json， 将版本控制变成一个单独的模块，并且将新的版本控制作为默认模块
         try {
-            var modify = require("./upgrade/ModifyProperties");
+            var modify = require("../upgrade/ModifyProperties");
             var properties = modify.getProperties();
 
             var hasRes = false;

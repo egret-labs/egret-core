@@ -26,6 +26,8 @@ var Logger = {
 export class TsServiceProxy {
 	private tss: TSS.LanguageService;
 	private host: Host;
+	private exceptDir:string;
+
 	constructor(settings: TSS.CompilerOptions) {
 		this.host = new Host();
 		this.tss = TSS.createLanguageService(this.host, TSS.createDocumentRegistry());
@@ -77,12 +79,16 @@ export class TsServiceProxy {
 		//初始化扩展库
 		this.initExtLibs(_path);
 		//初始化项目内的所有ts代码
-		this.readDir(path.join(_path,"libs"), this.scriptAdded_handler, this);
+		this.readDir(path.join(_path,"libs_old"), this.scriptAdded_handler, this);
 		this.readDir(path.join(_path,"src"), this.scriptAdded_handler, this);
 	}
 
 	public setDefaultLibFileName(fileName:string):void{
 		this.host.setDefaultLibFileName(fileName);
+	}
+
+	public setExceptDir(dir:string):void{
+		this.exceptDir = dir;
 	}
 
 	private extLibs: Array<string> = new Array<string>();
@@ -160,6 +166,7 @@ export class TsServiceProxy {
 	 */
 	private readDir(dir: string, onComplete: Function = null, target: Object = null): void {
 		Logger.log("读取目录:", dir);
+		if(dir == this.exceptDir)return;
 		var items: string[];
 		try {
 			items = fs.readdirSync(dir);
@@ -336,6 +343,7 @@ export class TsServiceProxy {
 	public getAllReferenceAccordingDeclarationPosition(filePath: string,position: number,callBack: ()=>void):void{
 		var res = this.getReferences(filePath,position);
 		if(res){
+			Logger.log('找到:'+res.length+'处引用');
 			res.forEach(resItem=>{
 				if(resItem.fileName.indexOf('src')!=-1 &&
 				resItem.fileName.indexOf('.d.ts') == -1){

@@ -10,3 +10,5 @@ var Service = (function () {
     return Service;
 })();
 module.exports = Service;
+
+//# sourceMappingURL=../commands/service.js.map

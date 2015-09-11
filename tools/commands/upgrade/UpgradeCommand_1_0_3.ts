@@ -19,7 +19,7 @@ class UpgradeCommand_1_0_3 implements egret.Command {
 
     private fixSingleTypeScriptFile(item) {
 
-        var code_util = require("../../../lib/core/code_util.js");
+        var code_util = require("../../lib/core/code_util.js");
 
         var content = file.read(item);
         for (var key in this.gui_refactor_1_0_3) {

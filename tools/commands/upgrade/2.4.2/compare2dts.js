@@ -154,7 +154,8 @@
 				parseMap[mark] = {lineFrom:currentLineNum,lines:[]};
 			}else
 			if(lineStr.indexOf('{') !== -1){
-				braceStack.push(IGNORE_PARSE);
+				state = IGNORE_PARSE;
+				braceStack.push(state);
 			}
 			else
 			//回括及处理
@@ -210,7 +211,7 @@
 			//解析class和interface并将行作为索引
 			if ((lineStr.indexOf('class ') !== -1 ||
 				lineStr.indexOf('interface ') !== -1 ||
-				lineStr.indexOf('enum ')) && lineStr.indexOf('{') !== -1) {
+				lineStr.indexOf('enum ') !== -1 ) && lineStr.indexOf('{') !== -1) {
 				state = CLASS_INTERFACE_ENUM_PARSE;
 				braceStack.push(state);
 				//空格切分单词
@@ -230,7 +231,8 @@
 				//预定义数据格式（当前开始行号）
 				//parseMap[mark] = {lineFrom:currentLineNum,lines:[]};
 			} else if (lineStr.indexOf('{') !== -1) {
-				braceStack.push(IGNORE_PARSE);
+				state = IGNORE_PARSE;
+				braceStack.push(state);
 			}
 			else
 			//回括及处理
@@ -290,6 +292,9 @@
 						//输出不匹配原因
 						//console.log('///ClassOrInterfaceOrEnum_Not_Found');
 					}
+				}else{
+					//忽略的解析行
+					//console.log('ignore:'+lineStr);
 				}
 			}
 		}
@@ -480,9 +485,17 @@
 		}
 		var comparingFilePath = arguments[i];
 		var comparedFilePath = arguments[i+1];
-		var solvedJsonFile = arguments[i+2];//过滤已经处理的json
-		if(solvedJsonFile && !solvedJson){
-			solvedJson = formatJsonConfig(JSON.parse(file.read(solvedJsonFile)));
+		//配置JSON配置文件
+		var solvedJsonFile = arguments[i+2];//过滤已经处理的json的配置文件[对象或文件名]
+		if(solvedJsonFile){
+			if(typeof solvedJsonFile == 'string'){
+				if(!solvedJsonFile){
+					solvedJson = formatJsonConfig(JSON.parse(file.read(solvedJsonFile)));
+				}
+			}else
+			if(typeof solvedJsonFile == 'object'){
+				solvedJson = solvedJsonFile;
+			}
 		}
 		startParse(comparedFilePath,comparingFilePath);
 	}
@@ -514,6 +527,9 @@
 	 * @param item
 	 */
 	function formatItem(item){
+		if(!item.desc){
+			return;
+		}
 		var body;
 		var name;
 		var category_name;
@@ -559,11 +575,11 @@
 		}
 		if(category_type){
 			if('category-type' in item && item['category-type'] != category_type){
-				//加入冲突列表
-				if(!item.conflict){
-					item.conflict = [];
-				}
-				item.conflict.push(item);
+				//解析冲突 以手写输入值为准
+				//if(!item.conflict){
+				//	item.conflict = [];
+				//}
+				//item.conflict.push(item);
 			}else{
 				item['category-type'] = category_type;
 			}
@@ -618,11 +634,11 @@
 		//step 6 冲突检测
 		if(name){
 			if('name' in item && item['name'] != name){
-				//加入冲突列表
-				if(!item.conflict){
-					item.conflict = [];
-				}
-				item.conflict.push(item);
+				//解析冲突 以手写值为准
+				//if(!item.conflict){
+				//	item.conflict = [];
+				//}
+				//item.conflict.push(item);
 			}else{
 				item['name'] = name;
 			}
@@ -631,6 +647,9 @@
 		}
 
 		//step 7 添加solved标记
+		if(item['solution-url'] == ''){
+			delete item['solution-url'];
+		}
 		if('solution-url' in item && !('solved' in item)){
 			item.solved = true;
 		}
@@ -674,26 +693,27 @@
 		return solvedJson;
 	}
 
-	function optmizeJsonConfig(jsonPath){
-		if(!solvedJson){
-
-		}
-	}
-
 	function compareAndGenJSON(comparingFilePath,comparedFilePath,solvedJsonFile,genJsonFile){
 		isConsoleEnabled = false;
-		var need
 		var writeFilePath;
+		//支持多文件输入
+		if(solvedJsonFile && typeof solvedJsonFile == 'object'){
+			if(!genJsonFile)return;
+			writeFilePath = genJsonFile;
+			outputLst = solvedJsonFile;
+		}else
+		//额外生成的jsonFile路径
 		if(genJsonFile){
 			writeFilePath = genJsonFile;
 		}else
-		if(solvedJsonFile){
+		//没有输出的文件路径则复用输入的路径
+		if(solvedJsonFile) {
 			//写回
 			writeFilePath = solvedJsonFile;
 			//输出对象指向solvedJson
 			solvedJson = formatJsonConfig(JSON.parse(file.read(solvedJsonFile)));
 			outputLst = solvedJson;
-		}
+		}else return;
 
 		compareEndCallBack = function(){
 			formatJsonConfig(outputLst);
@@ -704,12 +724,29 @@
 	}
 
 	function loadAndFormatJSON(jsonFilePath){
-		return formatJsonConfig(JSON.parse(file.read(jsonFilePath)));
+		return loadMultiAndFormatJSON.apply(this,file.getDirectoryAllListing(jsonFilePath));
+	}
+
+	function loadMultiAndFormatJSON(){
+		var solvedJson = [];
+		if(arguments.length>1){
+			for(var i=0;i<arguments.length;i++){
+				var filePath = arguments[i];
+				var mergeItem = JSON.parse(file.read(filePath));
+				mergeItem.forEach(function(item){
+						//以文件名区分来源
+						item.source = filePath.substr(filePath.lastIndexOf('/')+1);
+						solvedJson.push(item);
+					});
+			}
+		}
+		return formatJsonConfig(solvedJson);
 	}
 
 	module.exports.compare = compare;
 	module.exports.compare_gen = compareAndGenJSON;
 	module.exports.load_format = loadAndFormatJSON;
+	module.exports.load_multi_format = loadMultiAndFormatJSON;
 })();
 
 //if(process.argv.length>3){

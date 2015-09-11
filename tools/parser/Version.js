@@ -43,3 +43,5 @@ function execute(root) {
     require(root + "tools/bin/egret");
 }
 exports.execute = execute;
+
+//# sourceMappingURL=../parser/Version.js.map

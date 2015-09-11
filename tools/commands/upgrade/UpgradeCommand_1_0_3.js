@@ -134,7 +134,7 @@ var UpgradeCommand_1_0_3 = (function () {
         list.forEach(this.fixSingleTypeScriptFile.bind(this));
     };
     UpgradeCommand_1_0_3.prototype.fixSingleTypeScriptFile = function (item) {
-        var code_util = require("../../../lib/core/code_util.js");
+        var code_util = require("../../lib/core/code_util.js");
         var content = file.read(item);
         for (var key in this.gui_refactor_1_0_3) {
             var value = this.gui_refactor_1_0_3[key];

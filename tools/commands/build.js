@@ -44,3 +44,5 @@ function defaultBuildCallback(code) {
     utils.exit(code);
 }
 module.exports = Build;
+
+//# sourceMappingURL=../commands/build.js.map

@@ -10,3 +10,5 @@ var DesignService = (function () {
     return DesignService;
 })();
 module.exports = DesignService;
+
+//# sourceMappingURL=../commands/DesignService.js.map

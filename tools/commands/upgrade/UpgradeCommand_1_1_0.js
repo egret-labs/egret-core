@@ -56,11 +56,11 @@ var UpgradeCommand_1_1_0 = (function () {
         //保存副本
         file.save(file.joinPath(projectDir, "launcher", "copy_egret_loader.js"), loaderContent);
         //生成egret_loader.js样板
-        var fileContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "egret_loader.js"));
+        var fileContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "egret_loader.js"));
         file.save(file.joinPath(projectDir, "launcher", "egret_loader.js"), fileContent);
         if (!file.exists(file.joinPath(projectDir, "launcher", "egret_require.js"))) {
             //生成require。js文件夹
-            var reqContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "egret_require.js"));
+            var reqContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "egret_require.js"));
             file.save(file.joinPath(projectDir, "launcher", "egret_require.js"), reqContent);
         }
         var open = globals.getOpen();
