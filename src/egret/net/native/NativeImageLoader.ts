@@ -86,6 +86,7 @@ module egret.native {
             var self = this;
             var promise = new egret.PromiseObject();
             promise.onSuccessFunc = function (bitmapData) {
+                bitmapData["avaliable"] = true;
                 self.data = toBitmapData(bitmapData);
 
                 self.dispatchEventWith(Event.COMPLETE);
