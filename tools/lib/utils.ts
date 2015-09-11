@@ -36,6 +36,32 @@ import UglifyJS = require("./uglify-js/uglifyjs");
 import net = require('net');
 
 
+//第三方调用时，可能不支持颜色显示，可通过添加 -nocoloroutput 移除颜色信息
+var ColorOutputReplacements = {
+    "{color_green}": "\033[1;32;1m",
+    "{color_red}": "\033[0;31m",
+    "{color_normal}": "\033[0m",
+    "{color_gray}": "\033[0;37m",
+    "{color_underline}": "\033[4;36;1m"
+};
+
+var NoColorOutputReplacements = {
+    "{color_green}": "",
+    "{color_red}": "",
+    "{color_normal}": "",
+    "{color_gray}": "",
+    "{color_underline}": "",
+    "\n": "\\n",
+    "\r": ""
+};
+function formatStdoutString(message) {
+    var replacements = ColorOutputReplacements;
+    for (var raw in replacements) {
+        message = message.split(raw).join(replacements[raw]);
+    }
+    return message;
+}
+
 global["$locale_strings"] = global["$locale_strings"] || {};
 var $locale_strings = global["$locale_strings"];
 /**
@@ -49,6 +75,7 @@ export function tr(code: number, ...args): string {
     if (!text) {
         return "{" + code + "}";
     }
+    console.log(text)
     text = format.apply(this, [text].concat(args));
     return text;
 }
@@ -58,6 +85,9 @@ export function format(text: string, ...args): string {
     for (var i = 0; i < length; i++) {
         text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]);
     }
+
+    text = formatStdoutString(text);
+
     return text;
 }
 
