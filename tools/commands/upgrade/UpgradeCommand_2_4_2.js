@@ -144,9 +144,10 @@ var UpgradeCommand_2_4_2 = (function () {
     function UpgradeCommand_2_4_2() {
     }
     UpgradeCommand_2_4_2.prototype.execute = function () {
-        this.upgradeTo_2_4_2(this.createAndCopyProjectFile(egret.args.projectDir));
-        //this.upgradeTo_2_4_2(egret.args.projectDir);
-        return 0;
+        console.log("升级失败");
+        //var new_project_path =  this.createAndCopyProjectFile(egret.args.projectDir);
+        //this.upgradeTo_2_4_2(new_project_path);
+        return 1;
     };
     UpgradeCommand_2_4_2.prototype.createAndCopyProjectFile = function (projectPath) {
         projectPath = projectPath.substr(0, projectPath.lastIndexOf('/'));

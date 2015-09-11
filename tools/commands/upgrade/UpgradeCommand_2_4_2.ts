@@ -145,10 +145,13 @@ class UpgradeCommand_2_4_2 implements egret.Command {
 
     private static tsp:TSP.TsServiceProxy;
     execute():number {
-        this.upgradeTo_2_4_2(
-            this.createAndCopyProjectFile(egret.args.projectDir));
-        //this.upgradeTo_2_4_2(egret.args.projectDir);
-        return 0;
+
+
+        console.log ("暂不支持 升级至 Egret 2.4.3 版本，请您创建新项目体验 egret 2.4.3");
+
+        //var new_project_path =  this.createAndCopyProjectFile(egret.args.projectDir);
+        //this.upgradeTo_2_4_2(new_project_path);
+        return 1;
     }
 
     private createAndCopyProjectFile(projectPath:string):string{

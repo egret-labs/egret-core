@@ -58,10 +58,13 @@ var UpgradeCommand = (function () {
             var result = globals.compressVersion(version, v);
             if (result < 0) {
                 globals.log(1704, v);
+                var upgradeCommandError = 0;
                 if (command) {
-                    command.execute();
+                    upgradeCommandError = command.execute();
                 }
-                modify.save(v);
+                if (!upgradeCommandError) {
+                    modify.save(v);
+                }
             }
         }
         globals.exit(1702);
