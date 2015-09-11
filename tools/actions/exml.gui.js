@@ -3,7 +3,9 @@ var file = require('../lib/FileUtil');
 var exmlc = require('../lib/exml/exmlc');
 function beforeBuild() {
     var exmlDtsPath = getExmlDtsPath();
-    file.save(exmlDtsPath, "");
+    if (file.exists(exmlDtsPath)) {
+        file.save(exmlDtsPath, "");
+    }
 }
 exports.beforeBuild = beforeBuild;
 function beforeBuildChanges(exmlsChanged) {
@@ -70,6 +72,8 @@ function generateExmlDTS() {
     var projectPath = egret.args.projectDir;
     var sourceList = file.search(srcPath, "exml");
     var length = sourceList.length;
+    if (length == 0)
+        return;
     var dts = "";
     for (var i = 0; i < length; i++) {
         var p = sourceList[i];
