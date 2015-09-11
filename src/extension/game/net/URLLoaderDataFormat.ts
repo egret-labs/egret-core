@@ -33,7 +33,7 @@ module egret {
      * @language en_US
 	 * The URLLoaderDataFormat class provides values that specify how downloaded data is received.
      * @see http://docs.egret-labs.org/post/manual/net/netformat.html Read different data format
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
 	 * @includeExample egret/net/URLLoaderDataFormat.ts
 	 */
@@ -41,7 +41,7 @@ module egret {
      * @language zh_CN
 	 * URLLoaderDataFormat 类提供了一些用于指定如何接收已下载数据的值。
      * @see http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
 	 * @includeExample egret/net/URLLoaderDataFormat.ts
 	 */
@@ -50,13 +50,13 @@ module egret {
 		/**
          * @language en_US
          * Specify that downloaded data is received as raw binary data.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 指定以原始二进制数据形式接收下载的数据。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public static BINARY:string = "binary";
@@ -64,13 +64,13 @@ module egret {
 		/**
          * @language en_US
          * Specify that downloaded data is received as text.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 指定以文本形式接收已下载的数据。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public static TEXT:string = "text";
@@ -78,13 +78,13 @@ module egret {
 		/**
          * @language en_US
          * Specify that downloaded data is received as URL-encoded variables.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 指定以 URL 编码变量形式接收下载的数据。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public static VARIABLES:string = "variables";
@@ -92,13 +92,13 @@ module egret {
 		/**
          * @language en_US
          * Specify that downloaded data is received as bitmap texture.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 指定以位图纹理形式接收已下载的数据。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public static TEXTURE:string = "texture";
@@ -106,13 +106,13 @@ module egret {
         /**
          * @language en_US
          * Specify that downloaded data is received as sound.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指定以声音形式接收已下载的数据。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static SOUND:string = "sound";

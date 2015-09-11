@@ -37,13 +37,13 @@ module egret.web {
         /**
          * @language en_US
          * Background music
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 背景音乐
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static MUSIC:string = "music";
@@ -51,13 +51,13 @@ module egret.web {
         /**
          * @language en_US
          * EFFECT
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音效
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static EFFECT:string = "effect";

@@ -32,14 +32,14 @@ module egret {
     /**
      * @language en_US
      * The EventPhase class provides values for the eventPhase property of the Event class.
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventPhase.ts
      */
     /**
      * @language zh_CN
      * EventPhase 可为 Event 类的 eventPhase 属性提供值。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventPhase.ts
      */
@@ -48,39 +48,39 @@ module egret {
         /**
          * @language en_US
          * The capturing phase, which is the first phase of the event flow.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 捕获阶段。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         CAPTURING_PHASE = 1,
         /**
          * @language en_US
          * The target phase, which is the second phase of the event flow.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 目标阶段，是事件流的第二个阶段。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         AT_TARGET = 2,
         /**
          * @language en_US
          * The bubbling phase, which is the third phase of the event flow.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 冒泡阶段。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         BUBBLING_PHASE = 3

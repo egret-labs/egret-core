@@ -9,7 +9,7 @@ module egret.web {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static get isSupport(): boolean {
@@ -92,7 +92,7 @@ module egret.web {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void {
@@ -105,7 +105,7 @@ module egret.web {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {

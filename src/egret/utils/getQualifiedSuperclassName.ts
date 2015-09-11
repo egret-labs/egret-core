@@ -38,7 +38,7 @@ module egret {
      * <pre>
      *  egret.getQualifiedSuperclassName(egret.Bitmap) //return "egret.DisplayObject"
      * </pre>
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getQualifiedSuperclassName.ts
      */
@@ -51,7 +51,7 @@ module egret {
      * <pre>
      *  egret.getQualifiedSuperclassName(egret.Sprite) //返回 "egret.DisplayObject"
      * </pre>
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getQualifiedSuperclassName.ts
      */

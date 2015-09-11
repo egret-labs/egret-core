@@ -31,7 +31,7 @@ module egret {
 
 
     /**
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class NumberUtils {
@@ -40,7 +40,7 @@ module egret {
          * 
          * @param value 
          * @returns 
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static isNumber(value:any):boolean {
@@ -52,7 +52,7 @@ module egret {
          * Obtain the approximate sin value of the corresponding angle value
          * @param value {number} Angle value
          * @returns {number} sin value
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -60,7 +60,7 @@ module egret {
          * 得到对应角度值的sin近似值
          * @param value {number} 角度值
          * @returns {number} sin值
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static sin(value:number):number {
@@ -101,7 +101,7 @@ module egret {
          * Obtain the approximate cos value of the corresponding angle value
          * @param value {number} Angle value
          * @returns {number} cos value
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -109,7 +109,7 @@ module egret {
          * 得到对应角度值的cos近似值
          * @param value {number} 角度值
          * @returns {number} cos值
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static cos(value:number):number {

@@ -60,7 +60,7 @@ module egret {
      * another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member, and write simple
      * hooks to route calls into the aggregated EventDispatcher.
      * @see egret.IEventDispatcher
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventDispatcher.ts
      */
@@ -74,7 +74,7 @@ module egret {
      * 通常，使用户定义的类能够调度事件的最简单方法是扩展 EventDispatcher。如果无法扩展（即，如果该类已经扩展了另一个类），则可以实现
      * IEventDispatcher 接口，创建 EventDispatcher 成员，并编写一些简单的映射，将调用连接到聚合的 EventDispatcher 中。
      * @see egret.IEventDispatcher
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/EventDispatcher.ts
      */
@@ -86,7 +86,7 @@ module egret {
          * @param target The target object for events dispatched to the EventDispatcher object. This parameter is used when
          * the EventDispatcher instance is aggregated by a class that implements IEventDispatcher; it is necessary so that the
          * containing object can be the target for events. Do not use this parameter in simple cases in which a class extends EventDispatcher.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -94,7 +94,7 @@ module egret {
          * 创建一个 EventDispatcher 类的实例
          * @param target 此 EventDispatcher 所抛出事件对象的 target 指向。此参数主要用于一个实现了 IEventDispatcher 接口的自定义类，
          * 以便抛出的事件对象的 target 属性可以指向自定义类自身。请勿在直接继承 EventDispatcher 的情况下使用此参数。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor(target:IEventDispatcher = null) {
@@ -125,7 +125,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void {
@@ -134,7 +134,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public once(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void {
@@ -189,7 +189,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
@@ -226,7 +226,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public hasEventListener(type:string):boolean {
@@ -236,7 +236,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public willTrigger(type:string):boolean {
@@ -246,7 +246,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public dispatchEvent(event:Event):boolean {
@@ -292,7 +292,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public dispatchEventWith(type:string, bubbles?:boolean, data?:any):boolean {

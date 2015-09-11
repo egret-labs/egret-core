@@ -60,7 +60,7 @@ module egret {
      * without incurring the memory overhead of a texture object for each display object instance.
      *
      * @see egret.Texture
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Bitmap.ts
      */
@@ -74,7 +74,7 @@ module egret {
      * 而不会因为每个显示对象实例使用一个 texture 对象而产生额外内存开销。
      *
      * @see egret.Texture
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Bitmap.ts
      */
@@ -84,14 +84,14 @@ module egret {
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData object.
          * @param bitmapData The BitmapData object being referenced.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
          * @param bitmapData 被引用的 BitmapData 实例
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor(bitmapData?:BitmapData|Texture) {
@@ -250,7 +250,7 @@ module egret {
          * Notice: This property is valid only when <code>fillMode</code>
          * is <code>BitmapFillMode.SCALE</code>.
          *
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -258,7 +258,7 @@ module egret {
          * 矩形区域，它定义素材对象的九个缩放区域。
          * 注意:此属性仅在<code>fillMode</code>为<code>BitmapFillMode.SCALE</code>时有效。
          *
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get scale9Grid():egret.Rectangle {
@@ -286,7 +286,7 @@ module egret {
          *
          * @default <code>BitmapFillMode.SCALE</code>
          *
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web
          */
@@ -299,7 +299,7 @@ module egret {
          *
          * @default <code>BitmapFillMode.SCALE</code>
          *
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @version Swan 1.0
          * @platform Web
          */
@@ -328,14 +328,14 @@ module egret {
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
          * @default true。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
          * @default true。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web
          */
         public get smoothing():boolean {
@@ -446,7 +446,7 @@ module egret {
          * Note:If the image is loaded from cross origin,that we can't access to the pixel data,so it might cause
          * the pixelHitTest property invalid.
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -454,7 +454,7 @@ module egret {
          * 是否开启精确像素碰撞。设置为true显示对象本身的透明区域将能够被穿透。<br/>
          * 注意：若图片资源是以跨域方式从外部服务器加载的，将无法访问图片的像素数据，而导致此属性失效。
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get pixelHitTest():boolean {

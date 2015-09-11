@@ -30,7 +30,7 @@
 module egret {
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class PromiseObject {
@@ -40,38 +40,38 @@ module egret {
         private static promiseObjectList = [];
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public onSuccessFunc:Function = null;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public onSuccessThisObject:any = null;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public onErrorFunc:Function = null;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public onErrorThisObject:any = null;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public downloadingSizeFunc:Function = null;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public downloadingSizeThisObject:any = null;
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor() {
@@ -80,7 +80,7 @@ module egret {
 
         /**
          * 
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static create() {

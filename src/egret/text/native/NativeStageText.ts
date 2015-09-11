@@ -34,7 +34,7 @@ module egret {
      * @classdesc
      * @implements egret.StageText
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class NativeStageText extends EventDispatcher implements StageText {
@@ -45,7 +45,7 @@ module egret {
         private textValue:string = "";
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor() {

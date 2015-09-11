@@ -38,7 +38,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
      * @event egret.Event.COMPLETE Dispatched when the net request is complete.
      * @event egret.IOErrorEvent.IO_ERROR io error. 
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/URLLoader.ts
 	 */
@@ -50,7 +50,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
      * @event egret.Event.COMPLETE 加载完成后调度。 
      * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。 
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/URLLoader.ts
 	 */
@@ -61,7 +61,7 @@ module egret {
          * Create an egret.URLLoader object
 		 * @param request {URLRequest} A URLRequest object specifies the URL to be downloaded.
          * If this parameter is omitted, no load operation begins. If a parameter is specified, the load operation begins immediately
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
@@ -69,7 +69,7 @@ module egret {
          * 创建 egret.URLLoader 对象
 		 * @param request {URLRequest} 一个 URLRequest 对象，指定要下载的 URL。
          * 如果省略该参数，则不开始加载操作。如果已指定参数，则立即开始加载操作
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public constructor(request:URLRequest=null) {
@@ -88,7 +88,7 @@ module egret {
          * If the value of the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
          * The default value is URLLoaderDataFormat.TEXT.
          * @default egret.URLLoaderDataFormat.TEXT
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         /**
@@ -99,7 +99,7 @@ module egret {
          * 如果 dataFormat 属性的值是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
          * 如果 dataFormat 属性的值是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
          * @default egret.URLLoaderDataFormat.TEXT
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public dataFormat:string = URLLoaderDataFormat.TEXT;
@@ -111,7 +111,7 @@ module egret {
          * If the dataFormat property is URLLoaderDataFormat.BINARY, the received data is a ByteArray object containing the raw binary data.
          * If the dataFormat property is URLLoaderDataFormat.TEXTURE, the received data is a Texture object containing the bitmap data.
          * If the dataFormat property is URLLoaderDataFormat.VARIABLES, the received data is a URLVariables object containing the URL-encoded variables.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
@@ -121,7 +121,7 @@ module egret {
          * 如果 dataFormat 属性是 URLLoaderDataFormat.BINARY，则所接收的数据是一个包含原始二进制数据的 ByteArray 对象。
          * 如果 dataFormat 属性是 URLLoaderDataFormat.TEXTURE，则所接收的数据是一个包含位图数据的Texture对象。
          * 如果 dataFormat 属性是 URLLoaderDataFormat.VARIABLES，则所接收的数据是一个包含 URL 编码变量的 URLVariables 对象。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public data:any = null;
@@ -136,7 +136,7 @@ module egret {
          * Send and load data from the specified URL. The data can be received as text, raw binary data, or URL-encoded variables, depending on the value you set for the dataFormat property.
          * Note that the default value of the dataFormat property is text. If you want to send data to the specified URL, you can set the data property in the URLRequest object.
          * @param request {URLRequest}  A URLRequest object specifies the URL to be downloaded.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
 		/**
@@ -144,7 +144,7 @@ module egret {
          * 从指定的 URL 发送和加载数据。可以以文本、原始二进制数据或 URL 编码变量格式接收数据，这取决于为 dataFormat 属性所设置的值。
          * 请注意 dataFormat 属性的默认值为文本。如果想将数据发送至指定的 URL，则可以在 URLRequest 对象中设置 data 属性。
 		 * @param request {URLRequest}  一个 URLRequest 对象，指定要下载的 URL。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public load(request:URLRequest):void {

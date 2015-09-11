@@ -34,7 +34,7 @@ module egret {
      * @language en_US
      * The URLRequest class captures all of the information in a single HTTP request.
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/URLRequest.ts
      */
@@ -42,7 +42,7 @@ module egret {
      * @language zh_CN
      * URLRequest 类可捕获单个 HTTP 请求中的所有信息。
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/URLRequest.ts
      */
@@ -52,14 +52,14 @@ module egret {
          * @language en_US
          * Create an egret.URLRequest object
          * @param url {string} Addresses for URL requests
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.URLRequest 对象
          * @param url {string} 进行网络请求的地址
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor(url:string = null) {
@@ -76,7 +76,7 @@ module egret {
          * If the object is a URLVariables object and the method is POST, then the variables are encoded using x-www-form-urlencoded format and the resulting string is used as POST data.
          * If the object is a URLVariables object and the method is GET, the URLVariables object will define variables to be sent with the URLRequest object.
          * Otherwise, the object is converted into a string, and the string is used as the POST or GET data.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -90,7 +90,7 @@ module egret {
          * 如果该对象是 URLVariables 对象，并且该方法是 POST，则使用 x-www-form-urlencoded 格式对变量进行编码，并且生成的字符串会用作 POST 数据。
          * 如果该对象是 URLVariables 对象，并且该方法是 GET，则 URLVariables 对象将定义要随 URLRequest 对象一起发送的变量。
          * 否则，该对象会转换为字符串，并且该字符串会用作 POST 或 GET 数据。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public data:any = null;
@@ -98,13 +98,13 @@ module egret {
         /**
          * @language en_US
          * Request method, valid values are URLRequestMethod.GET or URLRequestMethod.POST.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 请求方式，有效值为URLRequestMethod.GET 或 URLRequestMethod.POST。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public method:string = URLRequestMethod.GET;
@@ -112,13 +112,13 @@ module egret {
         /**
          * @language en_US
          * The requested URL.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 所请求的 URL。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public url:string = "";
@@ -128,7 +128,7 @@ module egret {
          * The array of HTTP request headers to be appended to the HTTP request. The array is composed of URLRequestHeader objects.
          * Each object in the array must be a URLRequestHeader object that contains a name string and a value string.
          * Because of browser compatibility, this property has not been achieved in html5
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -136,7 +136,7 @@ module egret {
          * 要追加到 HTTP 请求的 HTTP 请求标头的数组。该数组由 URLRequestHeader 对象组成。
          * 数组中的每一对象必须是包含一个名称字符串和一个值字符串的 URLRequestHeader 对象。
          * 由于浏览器兼容性原因，该属性在 html5 中并未实现
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public requestHeaders:Array<URLRequestHeader> = [];

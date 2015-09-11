@@ -38,7 +38,7 @@ module egret {
      * The Texture class encapsulates the details implemented on the underlayer. Developers just need to focus on interfaces
      * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html The use of texture packs
      * @see http://docs.egret-labs.org/post/manual/loader/getres.html Several ways of access to resources
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
      */
@@ -50,7 +50,7 @@ module egret {
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      * @see http://docs.egret-labs.org/post/manual/bitmap/textures.html 纹理集的使用
      * @see http://docs.egret-labs.org/post/manual/loader/getres.html 获取资源的几种方式
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/Texture.ts
      */
@@ -59,13 +59,13 @@ module egret {
         /**
          * @language en_US
          * Create an egret.Texture object
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.Texture 对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor() {
@@ -113,13 +113,13 @@ module egret {
         /**
          * @language en_US
          * Texture width
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 纹理宽度
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get textureWidth():number {
@@ -139,13 +139,13 @@ module egret {
         /**
          * @language en_US
          * Texture height
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 纹理高度
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get textureHeight():number {
@@ -246,7 +246,7 @@ module egret {
          * @param x {number} The x coordinate of a pixel point
          * @param y {number} The y coordinate of a pixel point
          * @returns {number} Color value of a specified pixel point
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -255,7 +255,7 @@ module egret {
          * @param x {number} 像素点的X轴坐标
          * @param y {number} 像素点的Y轴坐标
          * @returns {number} 指定像素点的颜色值
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web
          */
         public getPixel32(x:number, y:number):number[] {
@@ -310,13 +310,13 @@ module egret {
         /**
          * @language en_US
          * dispose texture
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 释放纹理
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public dispose():void {

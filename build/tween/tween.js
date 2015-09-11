@@ -34,19 +34,19 @@ var egret;
      * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
      * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween and Ease
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
      * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var Ease = (function () {
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         function Ease() {
@@ -57,7 +57,7 @@ var egret;
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.get = function (amount) {
@@ -81,7 +81,7 @@ var egret;
          *
          * @param pow
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getPowIn = function (pow) {
@@ -93,7 +93,7 @@ var egret;
          *
          * @param pow
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getPowOut = function (pow) {
@@ -105,7 +105,7 @@ var egret;
          *
          * @param pow
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getPowInOut = function (pow) {
@@ -119,7 +119,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.sineIn = function (t) {
@@ -129,7 +129,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.sineOut = function (t) {
@@ -139,7 +139,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.sineInOut = function (t) {
@@ -149,7 +149,7 @@ var egret;
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getBackIn = function (amount) {
@@ -161,7 +161,7 @@ var egret;
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getBackOut = function (amount) {
@@ -173,7 +173,7 @@ var egret;
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getBackInOut = function (amount) {
@@ -188,7 +188,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.circIn = function (t) {
@@ -198,7 +198,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.circOut = function (t) {
@@ -208,7 +208,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.circInOut = function (t) {
@@ -221,7 +221,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.bounceIn = function (t) {
@@ -231,7 +231,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.bounceOut = function (t) {
@@ -252,7 +252,7 @@ var egret;
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.bounceInOut = function (t) {
@@ -265,7 +265,7 @@ var egret;
          * @param amplitude
          * @param period
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getElasticIn = function (amplitude, period) {
@@ -282,7 +282,7 @@ var egret;
          * @param amplitude
          * @param period
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getElasticOut = function (amplitude, period) {
@@ -299,7 +299,7 @@ var egret;
          * @param amplitude
          * @param period
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.getElasticInOut = function (amplitude, period) {
@@ -312,92 +312,92 @@ var egret;
             };
         };
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quadIn = Ease.getPowIn(2);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quadOut = Ease.getPowOut(2);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quadInOut = Ease.getPowInOut(2);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.cubicIn = Ease.getPowIn(3);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.cubicOut = Ease.getPowOut(3);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.cubicInOut = Ease.getPowInOut(3);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quartIn = Ease.getPowIn(4);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quartOut = Ease.getPowOut(4);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quartInOut = Ease.getPowInOut(4);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quintIn = Ease.getPowIn(5);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quintOut = Ease.getPowOut(5);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quintInOut = Ease.getPowInOut(5);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.backIn = Ease.getBackIn(1.7);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.backOut = Ease.getBackOut(1.7);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.backInOut = Ease.getBackInOut(1.7);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.elasticIn = Ease.getElasticIn(1, 0.3);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.elasticOut = Ease.getElasticOut(1, 0.3);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
@@ -446,7 +446,7 @@ var egret;
      * @language en_US
      * Tween is the animation easing class of Egret
      * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/Tween.ts
      */
@@ -454,7 +454,7 @@ var egret;
      * @language zh_CN
      * Tween是Egret的动画缓动类
      * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween ease animation
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/Tween.ts
      */
@@ -463,7 +463,7 @@ var egret;
         /**
          * 创建一个 egret.Tween 对象
          * @private
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         function Tween(target, props, pluginData) {
@@ -534,7 +534,7 @@ var egret;
          * @param props {any} Parameters, support loop onChange onChangeObj
          * @param pluginData {any} Write realized
          * @param override {boolean} Whether to remove the object before adding a tween, the default value false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -544,7 +544,7 @@ var egret;
          * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
          * @param pluginData {any} 暂未实现
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Tween.get = function (target, props, pluginData, override) {
@@ -560,14 +560,14 @@ var egret;
          * @language en_US
          * Delete all Tween animations from an object
          * @param target The object whose Tween to be deleted
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 删除一个对象上的全部 Tween 动画
          * @param target  需要移除 Tween 的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Tween.removeTweens = function (target) {
@@ -587,14 +587,14 @@ var egret;
          * @language en_US
          * Pause all Tween animations of a certain object
          * @param target The object whose Tween to be paused
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 暂停某个对象的所有 Tween
          * @param target 要暂停 Tween 的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Tween.pauseTweens = function (target) {
@@ -612,14 +612,14 @@ var egret;
          * @language en_US
          * Resume playing all easing of a certain object
          * @param target The object whose Tween to be resumed
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 继续播放某个对象的所有缓动
          * @param target 要继续播放 Tween 的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Tween.resumeTweens = function (target) {
@@ -689,13 +689,13 @@ var egret;
         /**
          * @language en_US
          * Delete all Tween
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 删除所有 Tween
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         Tween.removeAllTweens = function () {
@@ -895,7 +895,7 @@ var egret;
          * Whether setting is paused
          * @param value {boolean} Whether to pause
          * @returns Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -903,7 +903,7 @@ var egret;
          * 设置是否暂停
          * @param value {boolean} 是否暂停
          * @returns Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.setPaused = function (value) {
@@ -1006,7 +1006,7 @@ var egret;
          * @param duration {number} Waiting time, in milliseconds
          * @param passive {boolean} Whether properties are updated during the waiting time
          * @returns Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1015,7 +1015,7 @@ var egret;
          * @param duration {number} 要等待的时间，以毫秒为单位
          * @param passive {boolean} 等待期间属性是否会更新
          * @returns Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.wait = function (duration, passive) {
@@ -1032,7 +1032,7 @@ var egret;
          * @param duration {number} Duration
          * @param ease {egret.Ease} Easing algorithm
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1042,7 +1042,7 @@ var egret;
          * @param duration {number} 持续时间
          * @param ease {egret.Ease} 缓动算法
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.to = function (props, duration, ease) {
@@ -1059,7 +1059,7 @@ var egret;
          * @param thisObj {any} this action scope of the callback method
          * @param params {Array<any>} Parameter of the callback method
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1069,7 +1069,7 @@ var egret;
          * @param thisObj {any} 回调方法this作用域
          * @param params {Array<any>} 回调方法参数
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.call = function (callback, thisObj, params) {
@@ -1082,7 +1082,7 @@ var egret;
          * @param props
          * @param target
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.set = function (props, target) {
@@ -1094,7 +1094,7 @@ var egret;
          * Execute
          * @param tween {egret.Tween} The Tween object to be operated. Default: this
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1102,7 +1102,7 @@ var egret;
          * 执行
          * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.play = function (tween) {
@@ -1116,7 +1116,7 @@ var egret;
          * Pause
          * @param tween {egret.Tween} The Tween object to be operated. Default: this
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1124,7 +1124,7 @@ var egret;
          * 暂停
          * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.pause = function (tween) {
@@ -1137,7 +1137,7 @@ var egret;
          * @method egret.Tween#tick
          * @param delta {number}
          * @private
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.tick = function (delta) {

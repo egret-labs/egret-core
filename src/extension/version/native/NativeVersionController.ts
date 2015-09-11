@@ -39,10 +39,8 @@ module egret.native {
 
         private _localFileArr:Array<string> = [];
 
-        private _stage:egret.Stage;
-        constructor(stage:egret.Stage) {
+        constructor() {
             super();
-            this._stage = stage;
         }
 
         public fetchVersion():void {
@@ -68,12 +66,7 @@ module egret.native {
                 count++;
 
                 if (count == 2) {
-                    if (egret_native.nativeType == "native") {//native 需要使用
-                        self.loadAllChange();
-                    }
-                    else {
-                        self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-                    }
+                    self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
                 }
             };
             self.getList(loadOver, "assets", "resource");
@@ -84,10 +77,10 @@ module egret.native {
             var promise = PromiseObject.create();
             promise.onSuccessFunc = function(paths) {
                 callback(paths);
-            }
+            };
             promise.onErrorFunc = function() {
                 console.error("list files error");
-            }
+            };
             if (type == "assets") {
                 egret_native.Game.listResource(root, promise);
             }
@@ -100,7 +93,7 @@ module egret.native {
          * 获取所有有变化的文件
          * @returns {Array<any>}
          */
-        public getChangeList():Array<any> {
+        public getChangeList():Array<{url:string; size:number}> {
             var temp:Array<any> = [];
 
             var localFileArr = this._localFileArr;
@@ -114,90 +107,14 @@ module egret.native {
         }
 
         public getVirtualUrl(url:string):string {
+            if (DEBUG) {
+                return url;
+            }
             if (this._versionInfo && this._versionInfo[url]) {
                 return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
             }
             else {
                 return url;
-            }
-        }
-
-        private _iLoadingView:egret.ILoadingView;
-
-        private loadAllChange():void {
-            var self = this;
-            if (self._iLoadingView == null) {
-                self._iLoadingView = new egret.DefaultLoadingView();
-            }
-
-            self._stage.addChild(<egret.DisplayObject><any>(self._iLoadingView));
-
-            var list = this.getChangeList();
-            var errorList = [];
-            var errorCount = 0;
-
-            var self = this;
-            var loader = new egret["NativeResourceLoader"]();
-            loader.addEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
-            loader.addEventListener(egret.Event.COMPLETE, loadComplete, self);
-            loader.addEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
-
-            var loadBytes = 0;
-            var totalBytes = 0;
-            for (var key in list) {
-                totalBytes += list[key]["size"];
-            }
-
-            loadNext();
-            function loadNext() {
-                if (list.length > 0) {
-                    loader.load(list[0]["url"], list[0]["size"]);
-                }
-                else if (errorCount > 3) {
-                    //结束，加载出错
-                    //End with loading error
-                    loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
-                    loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
-                    loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
-
-                    self._iLoadingView.loadError();
-
-                    egret.IOErrorEvent.dispatchIOErrorEvent(self);
-                }
-                else if (errorList.length > 0) {
-                    list = errorList;
-                    errorList = [];
-                    errorCount++;
-
-                    loadComplete();
-                }
-                else {
-                    //结束，加载成功
-                    //End with loading successfully
-                    loader.removeEventListener(egret.IOErrorEvent.IO_ERROR, loadError, self);
-                    loader.removeEventListener(egret.Event.COMPLETE, loadComplete, self);
-                    loader.removeEventListener(egret.ProgressEvent.PROGRESS, loadProgress, self);
-
-                    self._stage.removeChild(<egret.DisplayObject><any>(self._iLoadingView));
-
-                    self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-                }
-            }
-
-            function loadComplete() {
-                loadBytes += parseInt(list[0]["size"]);
-                list.shift();
-                loadNext();
-            }
-
-            function loadProgress(e) {
-                self._iLoadingView.setProgress(loadBytes + e.bytesLoaded, totalBytes);
-            }
-
-            function loadError() {
-                errorList.push(list[0]);
-                list.shift();
-                loadComplete();
             }
         }
 
@@ -214,26 +131,8 @@ module egret.native {
                 if (content != null) {
                     return JSON.parse(content);
                 }
-
-                return null;
             }
-            else {
-                return this.getLocalDataByOld(filePath);
-            }
-        }
-
-        //todo 旧方式
-        private getLocalDataByOld(filePath):Object {
-            var data:Object = null;
-            if (egret_native.isRecordExists(filePath)) {
-                var str:string = egret_native.loadRecord(filePath);
-                data = JSON.parse(str);
-            }
-            else if (egret_native.isFileExists(filePath)) {
-                var str:string = egret_native.readFileSync(filePath);
-                data = JSON.parse(str);
-            }
-            return data;
+            return null;
         }
     }
 

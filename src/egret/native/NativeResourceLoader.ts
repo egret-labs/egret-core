@@ -29,7 +29,7 @@
 module egret {
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class NativeResourceLoader extends egret.EventDispatcher{
@@ -51,7 +51,7 @@ module egret {
          * 
          * @param path 
          * @param bytesTotal 
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public load(path:string, bytesTotal:number):void {
