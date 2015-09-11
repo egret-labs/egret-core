@@ -141,12 +141,12 @@ var AutoLogger = {
     }
 }
 
-class UpgradeCommand_2_4_2 implements egret.Command {
+class UpgradeCommand_2_4_3 implements egret.Command {
 
     private static tsp:TSP.TsServiceProxy;
     execute():number {
 
-        globals.log(1710);
+        globals.exit(1710);
         //var new_project_path =  this.createAndCopyProjectFile(egret.args.projectDir);
         //this.upgradeTo_2_4_2(new_project_path);
         return 1;
@@ -343,4 +343,4 @@ class UpgradeCommand_2_4_2 implements egret.Command {
     }
 }
 
-export = UpgradeCommand_2_4_2;
+export = UpgradeCommand_2_4_3;

@@ -140,16 +140,16 @@ var AutoLogger = {
         this.isShow = true;
     }
 };
-var UpgradeCommand_2_4_2 = (function () {
-    function UpgradeCommand_2_4_2() {
+var UpgradeCommand_2_4_3 = (function () {
+    function UpgradeCommand_2_4_3() {
     }
-    UpgradeCommand_2_4_2.prototype.execute = function () {
-        globals.log(1710);
+    UpgradeCommand_2_4_3.prototype.execute = function () {
+        globals.exit(1710);
         //var new_project_path =  this.createAndCopyProjectFile(egret.args.projectDir);
         //this.upgradeTo_2_4_2(new_project_path);
         return 1;
     };
-    UpgradeCommand_2_4_2.prototype.createAndCopyProjectFile = function (projectPath) {
+    UpgradeCommand_2_4_3.prototype.createAndCopyProjectFile = function (projectPath) {
         projectPath = projectPath.substr(0, projectPath.lastIndexOf('/'));
         var adding_suffix = '_bak';
         var newPath = null;
@@ -239,11 +239,11 @@ var UpgradeCommand_2_4_2 = (function () {
         }
         return newPath;
     };
-    UpgradeCommand_2_4_2.prototype.loadSolutionMapObj = function () {
+    UpgradeCommand_2_4_3.prototype.loadSolutionMapObj = function () {
         var solutionPath = file.joinPath(egret.root, '/tools/commends/upgrade/2.4.2', 'solution_urls.json');
         return JSON.parse(file.read(solutionPath));
     };
-    UpgradeCommand_2_4_2.prototype.upgradeTo_2_4_2 = function (projectPath) {
+    UpgradeCommand_2_4_3.prototype.upgradeTo_2_4_2 = function (projectPath) {
         //var open = globals.getOpen();
         //open("https://github.com/egret-labs/egret-core/tree/v2.4.2/docs/cn/2.4.2_ReleaseNotes.md");
         var _this = this;
@@ -302,7 +302,7 @@ var UpgradeCommand_2_4_2 = (function () {
             globals.exit(1705);
         }
     };
-    UpgradeCommand_2_4_2.prototype.replaceFileStr = function (filePath, mtch_rplc_str_arry) {
+    UpgradeCommand_2_4_3.prototype.replaceFileStr = function (filePath, mtch_rplc_str_arry) {
         var contentTxt = file.read(filePath);
         if (contentTxt) {
             while (mtch_rplc_str_arry.length > 1) {
@@ -314,8 +314,8 @@ var UpgradeCommand_2_4_2 = (function () {
             file.save(filePath, contentTxt);
         }
     };
-    return UpgradeCommand_2_4_2;
+    return UpgradeCommand_2_4_3;
 })();
-module.exports = UpgradeCommand_2_4_2;
+module.exports = UpgradeCommand_2_4_3;
 
-//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_2_4_2.js.map
+//# sourceMappingURL=../../commands/upgrade/UpgradeCommand_2_4_3.js.map

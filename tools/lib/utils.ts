@@ -75,7 +75,6 @@ export function tr(code: number, ...args): string {
     if (!text) {
         return "{" + code + "}";
     }
-    console.log(text)
     text = format.apply(this, [text].concat(args));
     return text;
 }
