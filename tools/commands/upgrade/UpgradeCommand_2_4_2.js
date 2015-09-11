@@ -144,9 +144,9 @@ var UpgradeCommand_2_4_2 = (function () {
     function UpgradeCommand_2_4_2() {
     }
     UpgradeCommand_2_4_2.prototype.execute = function () {
-        //console.log("暂不支持 升级至 Egret 2.4.3 版本，请您创建新项目体验 egret 2.4.3");
-        var new_project_path =  this.createAndCopyProjectFile(egret.args.projectDir);
-        this.upgradeTo_2_4_2(new_project_path);
+        globals.log(1710);
+        //var new_project_path =  this.createAndCopyProjectFile(egret.args.projectDir);
+        //this.upgradeTo_2_4_2(new_project_path);
         return 1;
     };
     UpgradeCommand_2_4_2.prototype.createAndCopyProjectFile = function (projectPath) {
@@ -187,14 +187,44 @@ var UpgradeCommand_2_4_2 = (function () {
                     globals.log2(1707, resourceOld, resourceNew);
                     file.copy(resourceOld, resourceNew);
                 }
-                //step 4.配置入口文件
-                //将旧版配置文件的 document_class 属性 配置到template目录下的index.html文件
+                //step 4.将旧配置注入新配置 和 template/index.html文件
                 var oldProperties = require('./ModifyProperties').getProperties();
+                var newPropertyPath = file.joinPath(newPath, "egretProperties.json");
+                var newProperties = JSON.parse(file.read(newPropertyPath));
+                var rplc_parram = [];
+                //step 4.1 将引用库的配置加入到index.html中
+                if (oldProperties.modules) {
+                    var replaced = '<script src="libs/res/res.js" src-release="libs/res/res.min.js"></script>';
+                    var added = replaced;
+                    var isNeedReplace = false;
+                    oldProperties.modules.forEach(function (item) {
+                        if (item.name == 'gui') {
+                            isNeedReplace = true;
+                            added += '\n\n\t<script src="libs/gui/gui.js" src-release="libs/gui/gui.min.js"></script>';
+                            newProperties.modules.push({ "name": item.name });
+                        }
+                        else if (item.name == 'dragonbones') {
+                            isNeedReplace = true;
+                            added += '\n\n\t<script src="libs/dragonbones/dragonbones.js" src-release="libs/dragonbones/dragonbones.min.js"></script>';
+                            newProperties.modules.push({ "name": item.name });
+                        }
+                    });
+                    if (isNeedReplace) {
+                        rplc_parram.push(replaced);
+                        rplc_parram.push(added);
+                        //保存新配置文件
+                        var newPropertiesBody = JSON.stringify(newProperties, null, "\t");
+                        file.save(newPropertyPath, newPropertiesBody);
+                    }
+                }
+                //step 4.2 将旧版配置文件的 document_class 属性 配置到template目录下的index.html文件
                 var enter_class_name = null;
                 if ((enter_class_name = oldProperties['document_class']) && enter_class_name != 'Main') {
                     globals.log2(1710);
-                    this.replaceFileStr(file.joinPath(newPath, 'template/index.html'), 'data-entry-class=\"Main\"', 'data-entry-class=\"' + enter_class_name + '\"');
+                    rplc_parram.push('data-entry-class=\"Main\"');
+                    rplc_parram.push('data-entry-class=\"' + enter_class_name + '\"');
                 }
+                this.replaceFileStr(file.joinPath(newPath, 'template/index.html'), rplc_parram);
                 //step 5.拷贝旧的库文件用于比较
                 var libOld = file.joinPath(egret.args.projectDir, '/libs');
                 var libOld_temp = file.joinPath(newPath, 'src/libs_old/');
@@ -208,6 +238,10 @@ var UpgradeCommand_2_4_2 = (function () {
             newPath = projectPath;
         }
         return newPath;
+    };
+    UpgradeCommand_2_4_2.prototype.loadSolutionMapObj = function () {
+        var solutionPath = file.joinPath(egret.root, '/tools/commends/upgrade/2.4.2', 'solution_urls.json');
+        return JSON.parse(file.read(solutionPath));
     };
     UpgradeCommand_2_4_2.prototype.upgradeTo_2_4_2 = function (projectPath) {
         //var open = globals.getOpen();
@@ -268,10 +302,16 @@ var UpgradeCommand_2_4_2 = (function () {
             globals.exit(1705);
         }
     };
-    UpgradeCommand_2_4_2.prototype.replaceFileStr = function (filePath, matchingStr, replaceStr) {
+    UpgradeCommand_2_4_2.prototype.replaceFileStr = function (filePath, mtch_rplc_str_arry) {
         var contentTxt = file.read(filePath);
         if (contentTxt) {
-            file.save(filePath, contentTxt.replace(matchingStr, replaceStr));
+            while (mtch_rplc_str_arry.length > 1) {
+                var matchingStr = mtch_rplc_str_arry[0];
+                var replaceStr = mtch_rplc_str_arry[1];
+                contentTxt = contentTxt.replace(matchingStr, replaceStr);
+                mtch_rplc_str_arry = mtch_rplc_str_arry.slice(2);
+            }
+            file.save(filePath, contentTxt);
         }
     };
     return UpgradeCommand_2_4_2;
