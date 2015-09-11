@@ -21,7 +21,7 @@ var UpgradeCommand_1_0_4 = (function () {
         var txt = file.read(releasePath);
         txt = txt.replace("\"bin-debug/lib/\"", "\"libs/core/\"");
         file.save(releasePath, txt);
-        var modify = require("./upgrade/ModifyProperties");
+        var modify = require("../upgrade/ModifyProperties");
         var projectConfig = modify.getProperties();
         projectConfig.modules = [
             {

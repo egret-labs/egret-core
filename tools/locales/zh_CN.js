@@ -154,6 +154,12 @@ var egret;
     locale_strings[1702] = "项目升级后，请执行一次 egret build {your_project} {color_green}-e{color_normal} 编译引擎，\n命令中请不要加上大括号{}";
     locale_strings[1703] = "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n";
     locale_strings[1704] = "正在更新到{0}";
+    locale_strings[1705] = "升级配置文件损坏,请检查引擎后重试";
+    locale_strings[1706] = "共计{0}处 API冲突,请用户修改代码后重新运行升级命令";
+    locale_strings[1707] = "正在从{0},拷贝到{1} ..";
+    locale_strings[1708] = "正在替换资源引用路径..";
+    locale_strings[1709] = "无法找到资源引用路径,resource文件夹已由顶层目录移至src目录中,请检查并手动修改引用路径";
+    locale_strings[1710] = "替换入口配置 ..";
     //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";

@@ -14,7 +14,7 @@ var UpgradeCommand_1_5_0 = (function () {
         var projectDir = egret.args.projectDir;
         //更新egretProperties.json
         try {
-            var modify = require("./upgrade/ModifyProperties");
+            var modify = require("../upgrade/ModifyProperties");
             var properties = modify.getProperties();
             if (properties.native && properties.native.support_path && properties.native.support_path.length > 0) {
                 for (var i = 0; i < properties.native.support_path.length; i++) {

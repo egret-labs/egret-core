@@ -60,3 +60,8 @@ var CopyFilesCommand = (function () {
     return CopyFilesCommand;
 })();
 module.exports = CopyFilesCommand;
+<<<<<<< Updated upstream
+=======
+
+//# sourceMappingURL=../commands/copyfile.js.map
+>>>>>>> Stashed changes
