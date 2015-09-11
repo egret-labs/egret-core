@@ -10,7 +10,7 @@ import CHILD_EXEC = require('child_process');
 var TSS = require("./2.4.2/typescriptServices");
 var DTS = require('./2.4.2/compare2dts.js');
 var AutoLogger = {
-    _dir:string = '',
+    _dir:'',
     _total:0,
     _isAPIadd : false,
     _api:null,

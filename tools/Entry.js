@@ -42,15 +42,15 @@ function executeCommandLine(args) {
     egret.args = options;
     var versionCheck = version.check();
     var shouldUseOtherVersion = false;
-    // 如果项手动指定了引擎版本,那么使用需要的版本执行命令
+    // �������ֶ�ָ���������汾,��ôʹ����Ҫ�İ汾ִ������
     if (versionCheck.requestOtherVersion) {
         shouldUseOtherVersion = true;
     }
-    // 如果项目版本跟引擎版本不一致，那么使用需要的版本执行命令
+    // ������Ŀ�汾�������汾��һ�£���ôʹ����Ҫ�İ汾ִ������
     if (versionCheck.projectUsingOtherVersion && options.command != "upgrade") {
         shouldUseOtherVersion = true;
     }
-    //如果用户没有安装需要的引擎，使用当前版本执行
+    //�����û�û�а�װ��Ҫ�����棬ʹ�õ�ǰ�汾ִ��
     if (versionCheck.hasTargetEngine == false) {
         shouldUseOtherVersion = false;
     }
@@ -87,3 +87,5 @@ var Entry = (function () {
     return Entry;
 })();
 var entry = new Entry();
+
+//# sourceMappingURL=Entry.js.map

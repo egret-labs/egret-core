@@ -4,6 +4,7 @@ var TSS = require("./typescriptServices.js");
 import fs = require("fs");
 //import Logger = require("./utils/Logger");
 import path = require('path');
+import file = require('../../../lib/FileUtil');
 
 var Logger = {
 	log:function(){
@@ -79,8 +80,8 @@ export class TsServiceProxy {
 		//初始化扩展库
 		this.initExtLibs(_path);
 		//初始化项目内的所有ts代码
-		this.readDir(path.join(_path,"libs_old"), this.scriptAdded_handler, this);
-		this.readDir(path.join(_path,"src"), this.scriptAdded_handler, this);
+		this.readDir(file.joinPath(_path,"libs_old"), this.scriptAdded_handler, this);
+		this.readDir(file.joinPath(_path,"src"), this.scriptAdded_handler, this);
 	}
 
 	public setDefaultLibFileName(fileName:string):void{
