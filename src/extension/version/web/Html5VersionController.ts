@@ -49,7 +49,7 @@ module egret.web {
             httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
             httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
 
-            httpLoader.open(virtualUrl, "get");
+            httpLoader.open(virtualUrl + "?r=" + Date.now(), "get");
             httpLoader.send();
 
             function onError(event:egret.IOErrorEvent) {
