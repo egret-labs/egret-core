@@ -4604,6 +4604,31 @@ declare module egret {
         scaleMode: string;
         /**
          * @language en_US
+         * Horizontal and vertical screen display screen, can only be set under the current Native in the configuration file. A egret.OrientationMode class that specifies which display mode to use. The following are valid values:<br/>
+         * <ul>
+         * <li>egret.OrientationMode.AUTO -- Always follow the direction of application display screen, always guaranteed by the look down.</li>
+         * <li>egret.OrientationMode.PORTRAIT -- Applications remain portrait mode, namely horizontal screen look, the screen from left to right.</li>
+         * <li>egret.OrientationMode.LANDSCAPE -- Applications remain horizontal screen mode, namely vertical screen, the screen from right to left.</li>
+         * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- Applications remain horizontal screen mode, namely vertical screen, the screen from left to right.</li>
+         * </ul>
+         * @platform Web
+         * @version 2.4
+         */
+        /**
+         * @language zh_CN
+         * 屏幕横竖屏显示方式，目前 Native 下只能在配置文件里设置。一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：<br/>
+         * <ul>
+         * <li>egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。</li>
+         * <li>egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。</li>
+         * <li>egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。</li>
+         * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。</li>
+         * </ul>
+         * @platform Web
+         * @version 2.4
+         */
+        orientation: string;
+        /**
+         * @language en_US
          * Draw texture zoom ratio
          * @default 1
          */
@@ -8791,7 +8816,7 @@ declare module egret.sys {
         displayHeight: number;
     }
 }
-declare module egret.sys {
+declare module egret {
     /**
      * @private
      * OrientationMode 类为舞台初始旋转模式提供值。
@@ -9311,6 +9336,40 @@ declare module egret.sys {
 declare module egret {
     /**
      * @language en_US
+     * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
+     *
+     * @event egret.Event.CHANGE device's orientation is changed
+     * @version Lark 1.0
+     * @platform Web,Native
+     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
+     */
+    /**
+     * @language zh_CN
+     * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
+     * @event egret.Event.CHANGE 设备方向改变时派发
+     * @version Lark 1.0
+     * @platform Web,Native
+     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
+     */
+    class DeviceOrientation {
+        /**
+         * @language en_US
+         * Specifies whether the system supports detecting the device orientation.
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 指示系统是否支持检测设备方向
+         * @version Egret 2.0
+         * @platform Web,Native
+         */
+        static isSupport: boolean;
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
      * The Geolocation able to obtain the position of the device.
      * Geolocation will emit CHANGE event when the device's location is changed.
      * It will emit IO_ERROR event if the location request is denied
@@ -9334,52 +9393,23 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
-    interface Geolocation extends EventDispatcher {
+    class Geolocation extends EventDispatcher {
         /**
          * @language en_US
-         * Start to monitor the device's location
-         * @returns
-         * @version Lark 1.0
+         * Specifies whether the system supports the geolocation services
+         * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 开始监听设备位置信息
-         * @returns
-         * @version Lark 1.0
+         * 指示系统是否支持地理位置服务
+         * @version Egret 2.0
          * @platform Web,Native
          */
-        start(): void;
-        /**
-         * @language en_US
-         * Stop monitor the device's location
-         * @returns
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止监听设备位置信息
-         * @returns
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        stop(): void;
+        static isSupport: boolean;
     }
-    /**
-     * @copy egret.Geolocation
-     */
-    var Geolocation: {
-        new (): Geolocation;
-    };
 }
 declare module egret {
-    /**
-     * @copy egret.Motion
-     */
-    var Motion: {
-        new (): Motion;
-    };
     /**
      * @language en_US
      * The Motion class emits events based on activity detected by the device's motion sensor.
@@ -9402,33 +9432,20 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
      */
-    interface Motion extends EventDispatcher {
+    class Motion extends EventDispatcher {
         /**
          * @language en_US
-         * Start to monitor device movement
-         * @version Lark 1.0
+         * Specifies whether the system supports the motion Sensor
+         * @version Egret 2.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 开始监听设备运动状态
-         * @version Lark 1.0
+         * 指示系统是否支持运动传感器
+         * @version Egret 2.0
          * @platform Web,Native
          */
-        start(): void;
-        /**
-         * @language en_US
-         * Stop monitor device movement
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止监听设备运动状态
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        stop(): void;
+        static isSupport: boolean;
     }
     /**
      * @language en_US
@@ -9541,140 +9558,6 @@ declare module egret {
     }
 }
 declare module egret {
-    /**
-     * @copy egret.Orientation
-     */
-    var Orientation: {
-        new (): Orientation;
-    };
-    /**
-     * @language en_US
-     * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
-     *
-     * @event egret.Event.CHANGE device's orientation is changed
-     * @version Lark 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
-     */
-    /**
-     * @language zh_CN
-     * Orientation 监听设备方向的变化，当方向变化时派发 CHANGE 事件
-     * @event egret.Event.CHANGE 设备方向改变时派发
-     * @version Lark 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
-     */
-    interface Orientation extends EventDispatcher {
-        /**
-         * @language en_US
-         * Start to monitor the device's orientation
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 开始监听设备方向变化
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        start(): void;
-        /**
-         * @language en_US
-         * Stop monitor the device's orientation
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止监听设备方向变化
-         * @version Lark 1.0
-         * @platform Web,Native
-         */
-        stop(): void;
-    }
-}
-interface BrowerGeolocation extends Geolocation {
-}
-declare module egret.web {
-    /**
-     * @private
-     */
-    class WebGeolocation extends EventDispatcher implements Geolocation {
-        /**
-         * @private
-         */
-        private geolocation;
-        /**
-         * @private
-         */
-        private watchId;
-        /**
-         * @private
-         */
-        constructor(option?: PositionOptions);
-        /**
-         * @private
-         *
-         */
-        start(): void;
-        /**
-         * @private
-         *
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        private onUpdate;
-        /**
-         * @private
-         */
-        private onError;
-    }
-}
-declare module egret.web {
-    /**
-     * @private
-     */
-    class WebMotion extends EventDispatcher implements Motion {
-        /**
-         * @private
-         *
-         */
-        start(): void;
-        /**
-         * @private
-         *
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        protected onChange: (e: DeviceMotionEvent) => void;
-    }
-}
-declare module egret.web {
-    /**
-     * @private
-     */
-    class WebOrientation extends EventDispatcher implements Orientation {
-        /**
-         * @private
-         *
-         */
-        start(): void;
-        /**
-         * @private
-         *
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        protected onChange: (e: DeviceOrientationEvent) => void;
-    }
-}
-declare module egret {
     class RuntimeType {
         static WEB: string;
         static NATIVE: string;
@@ -9777,45 +9660,6 @@ declare module egret {
          * @platform Web,Native
          */
         static runtimeType: string;
-        /**
-         * @language en_US
-         * Specifies whether the system supports the geolocation services
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指示系统是否支持地理位置服务
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static hasGeolocation: boolean;
-        /**
-         * @language en_US
-         * Specifies whether the system supports detecting the device orientation.
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指示系统是否支持检测设备方向
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static hasOrientation: boolean;
-        /**
-         * @language en_US
-         * Specifies whether the system supports the motion Sensor
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 指示系统是否支持运动传感器
-         * @version Egret 2.0
-         * @platform Web,Native
-         */
-        static hasMotion: boolean;
     }
 }
 declare var testDeviceType: () => boolean;

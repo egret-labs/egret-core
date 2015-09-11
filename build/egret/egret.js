@@ -8534,6 +8534,7 @@ var egret;
              */
             this.implMap = {};
             this.$scaleMode = egret.StageScaleMode.SHOW_ALL;
+            this.$orientation = egret.OrientationMode.AUTO;
             this.$maxTouches = 99;
             this.$stage = this;
             this.$nestLevel = 1;
@@ -8690,6 +8691,42 @@ var egret;
                     return;
                 }
                 this.$scaleMode = value;
+                this.$screen.updateScreenSize();
+            }
+        );
+        d(p, "orientation"
+            /**
+             * @language en_US
+             * Horizontal and vertical screen display screen, can only be set under the current Native in the configuration file. A egret.OrientationMode class that specifies which display mode to use. The following are valid values:<br/>
+             * <ul>
+             * <li>egret.OrientationMode.AUTO -- Always follow the direction of application display screen, always guaranteed by the look down.</li>
+             * <li>egret.OrientationMode.PORTRAIT -- Applications remain portrait mode, namely horizontal screen look, the screen from left to right.</li>
+             * <li>egret.OrientationMode.LANDSCAPE -- Applications remain horizontal screen mode, namely vertical screen, the screen from right to left.</li>
+             * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- Applications remain horizontal screen mode, namely vertical screen, the screen from left to right.</li>
+             * </ul>
+             * @platform Web
+             * @version 2.4
+             */
+            /**
+             * @language zh_CN
+             * 屏幕横竖屏显示方式，目前 Native 下只能在配置文件里设置。一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：<br/>
+             * <ul>
+             * <li>egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。</li>
+             * <li>egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。</li>
+             * <li>egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。</li>
+             * <li>egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。</li>
+             * </ul>
+             * @platform Web
+             * @version 2.4
+             */
+            ,function () {
+                return this.$orientation;
+            }
+            ,function (value) {
+                if (this.$orientation == value) {
+                    return;
+                }
+                this.$orientation = value;
                 this.$screen.updateScreenSize();
             }
         );
@@ -13283,41 +13320,38 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    var sys;
-    (function (sys) {
+    /**
+     * @private
+     * OrientationMode 类为舞台初始旋转模式提供值。
+     */
+    var OrientationMode = (function () {
+        function OrientationMode() {
+        }
+        var d = __define,c=OrientationMode;p=c.prototype;
         /**
          * @private
-         * OrientationMode 类为舞台初始旋转模式提供值。
+         * 适配屏幕
          */
-        var OrientationMode = (function () {
-            function OrientationMode() {
-            }
-            var d = __define,c=OrientationMode;p=c.prototype;
-            /**
-             * @private
-             * 适配屏幕
-             */
-            OrientationMode.AUTO = "auto";
-            /**
-             * @private
-             * 默认竖屏
-             */
-            OrientationMode.PORTRAIT = "portrait";
-            /**
-             * @private
-             * 默认横屏，舞台顺时针旋转90度
-             */
-            OrientationMode.LANDSCAPE = "landscape";
-            /**
-             * @private
-             * 默认横屏，舞台逆时针旋转90度
-             */
-            OrientationMode.LANDSCAPE_FLIPPED = "landscapeFlipped";
-            return OrientationMode;
-        })();
-        sys.OrientationMode = OrientationMode;
-        egret.registerClass(OrientationMode,"egret.sys.OrientationMode");
-    })(sys = egret.sys || (egret.sys = {}));
+        OrientationMode.AUTO = "auto";
+        /**
+         * @private
+         * 默认竖屏
+         */
+        OrientationMode.PORTRAIT = "portrait";
+        /**
+         * @private
+         * 默认横屏，舞台顺时针旋转90度
+         */
+        OrientationMode.LANDSCAPE = "landscape";
+        /**
+         * @private
+         * 默认横屏，舞台逆时针旋转90度
+         */
+        OrientationMode.LANDSCAPE_FLIPPED = "landscapeFlipped";
+        return OrientationMode;
+    })();
+    egret.OrientationMode = OrientationMode;
+    egret.registerClass(OrientationMode,"egret.OrientationMode");
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14566,206 +14600,13 @@ var egret;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
-    /**
-     * @copy egret.Geolocation
-     */
-    egret.Geolocation;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
-    /**
-     * @copy egret.Motion
-     */
-    egret.Motion;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
-    /**
-     * @copy egret.Orientation
-     */
-    egret.Orientation = null;
 })(egret || (egret = {}));
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebGeolocation = (function (_super) {
-            __extends(WebGeolocation, _super);
-            /**
-             * @private
-             */
-            function WebGeolocation(option) {
-                var _this = this;
-                _super.call(this);
-                /**
-                 * @private
-                 */
-                this.onUpdate = function (position) {
-                    var event = new egret.GeolocationEvent(egret.Event.CHANGE);
-                    var coords = position.coords;
-                    event.altitude = coords.altitude;
-                    event.heading = coords.heading;
-                    event.accuracy = coords.accuracy;
-                    event.latitude = coords.latitude;
-                    event.longitude = coords.longitude;
-                    event.speed = coords.speed;
-                    event.altitudeAccuracy = coords.altitudeAccuracy;
-                    _this.dispatchEvent(event);
-                };
-                /**
-                 * @private
-                 */
-                this.onError = function (error) {
-                    var errorType = egret.GeolocationEvent.UNAVAILABLE;
-                    if (error.code == error.PERMISSION_DENIED)
-                        errorType = egret.GeolocationEvent.PERMISSION_DENIED;
-                    var event = new egret.GeolocationEvent(egret.IOErrorEvent.IO_ERROR);
-                    event.errorType = errorType;
-                    event.errorMessage = error.message;
-                    _this.dispatchEvent(event);
-                };
-                this.geolocation = navigator.geolocation;
-            }
-            var d = __define,c=WebGeolocation;p=c.prototype;
-            /**
-             * @private
-             *
-             */
-            p.start = function () {
-                var geo = this.geolocation;
-                if (geo)
-                    this.watchId = geo.watchPosition(this.onUpdate, this.onError);
-                else
-                    this.onError({
-                        code: 2,
-                        message: egret.sys.tr(3004),
-                        PERMISSION_DENIED: 1,
-                        POSITION_UNAVAILABLE: 2
-                    });
-            };
-            /**
-             * @private
-             *
-             */
-            p.stop = function () {
-                var geo = this.geolocation;
-                geo.clearWatch(this.watchId);
-            };
-            return WebGeolocation;
-        })(egret.EventDispatcher);
-        web.WebGeolocation = WebGeolocation;
-        egret.registerClass(WebGeolocation,"egret.web.WebGeolocation",["egret.Geolocation"]);
-        egret.Geolocation = egret.web.WebGeolocation;
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebMotion = (function (_super) {
-            __extends(WebMotion, _super);
-            function WebMotion() {
-                var _this = this;
-                _super.apply(this, arguments);
-                /**
-                 * @private
-                 */
-                this.onChange = function (e) {
-                    var event = new egret.MotionEvent(egret.Event.CHANGE);
-                    var acceleration = {
-                        x: e.acceleration.x,
-                        y: e.acceleration.y,
-                        z: e.acceleration.z
-                    };
-                    var accelerationIncludingGravity = {
-                        x: e.accelerationIncludingGravity.x,
-                        y: e.accelerationIncludingGravity.y,
-                        z: e.accelerationIncludingGravity.z
-                    };
-                    var rotation = {
-                        alpha: e.rotationRate.alpha,
-                        beta: e.rotationRate.beta,
-                        gamma: e.rotationRate.gamma
-                    };
-                    event.acceleration = acceleration;
-                    event.accelerationIncludingGravity = accelerationIncludingGravity;
-                    event.rotationRate = rotation;
-                    _this.dispatchEvent(event);
-                };
-            }
-            var d = __define,c=WebMotion;p=c.prototype;
-            /**
-             * @private
-             *
-             */
-            p.start = function () {
-                window.addEventListener("devicemotion", this.onChange);
-            };
-            /**
-             * @private
-             *
-             */
-            p.stop = function () {
-                window.removeEventListener("devicemotion", this.onChange);
-            };
-            return WebMotion;
-        })(egret.EventDispatcher);
-        web.WebMotion = WebMotion;
-        egret.registerClass(WebMotion,"egret.web.WebMotion",["egret.Motion"]);
-        egret.Motion = egret.web.WebMotion;
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var WebOrientation = (function (_super) {
-            __extends(WebOrientation, _super);
-            function WebOrientation() {
-                var _this = this;
-                _super.apply(this, arguments);
-                /**
-                 * @private
-                 */
-                this.onChange = function (e) {
-                    var event = new egret.OrientationEvent(egret.Event.CHANGE);
-                    event.beta = e.beta;
-                    event.gamma = e.gamma;
-                    event.alpha = e.alpha;
-                    _this.dispatchEvent(event);
-                };
-            }
-            var d = __define,c=WebOrientation;p=c.prototype;
-            /**
-             * @private
-             *
-             */
-            p.start = function () {
-                window.addEventListener("deviceorientation", this.onChange);
-            };
-            /**
-             * @private
-             *
-             */
-            p.stop = function () {
-                window.removeEventListener("deviceorientation", this.onChange);
-            };
-            return WebOrientation;
-        })(egret.EventDispatcher);
-        web.WebOrientation = WebOrientation;
-        egret.registerClass(WebOrientation,"egret.web.WebOrientation",["egret.Orientation"]);
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-egret.Orientation = egret.web.WebOrientation;
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -14923,57 +14764,6 @@ var egret;
                 return Capabilities.$runtimeType;
             }
         );
-        d(Capabilities, "hasGeolocation"
-            /**
-             * @language en_US
-             * Specifies whether the system supports the geolocation services
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 指示系统是否支持地理位置服务
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return Capabilities.$hasGeolocation;
-            }
-        );
-        d(Capabilities, "hasOrientation"
-            /**
-             * @language en_US
-             * Specifies whether the system supports detecting the device orientation.
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 指示系统是否支持检测设备方向
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return Capabilities.$hasOrientation;
-            }
-        );
-        d(Capabilities, "hasMotion"
-            /**
-             * @language en_US
-             * Specifies whether the system supports the motion Sensor
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 指示系统是否支持运动传感器
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return Capabilities.$hasMotion;
-            }
-        );
         /**
          * @private
          */
@@ -14993,9 +14783,6 @@ var egret;
     if (DEBUG) {
         egret.$markReadOnly(Capabilities, "language", false);
         egret.$markReadOnly(Capabilities, "isMobile", false);
-        egret.$markReadOnly(Capabilities, "hasOrientation", false);
-        egret.$markReadOnly(Capabilities, "hasMotion", false);
-        egret.$markReadOnly(Capabilities, "hasGeolocation", false);
         egret.$markReadOnly(Capabilities, "os", false);
     }
 })(egret || (egret = {}));
