@@ -47,7 +47,6 @@ class ZipCommand implements egret.Command {
             proj = projs[0];
         }
         var list = proj.nativeScripts;
-        console.log(list)
         for (var key in list) {
             FileUtil.copy(FileUtil.joinPath(releasePath, list[key]), FileUtil.joinPath(releasePath, "ziptemp", list[key]));
             this.useList.push(FileUtil.joinPath(releasePath, list[key]));
