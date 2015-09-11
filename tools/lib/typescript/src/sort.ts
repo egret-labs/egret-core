@@ -85,7 +85,6 @@ module ts {
             fileNodesList = [];
             fileNameToNodeMap = {};
             fileToReferenceMap = {};
-
             var files = prog.getSourceFiles().concat();
             var libdts = files.shift();
             orderedFileList = files.map(f=> f.filename);
@@ -131,7 +130,8 @@ module ts {
                 if (classtype.baseTypes && classtype.baseTypes.length) {
                     forEach(classtype.baseTypes,(t: InterfaceType) => this.classNameToBaseClass(fullName, t));
                 }
-                this.constructorToClassName(file, <ClassDeclaration>symbol.valueDeclaration,0);
+                this.constructorToClassName(file, <ClassDeclaration>symbol.valueDeclaration, 0);
+                this.addStaticDepend(file, <ClassDeclaration>symbol.valueDeclaration, 0);
             }
             
 
@@ -287,8 +287,41 @@ module ts {
             }
         }
 
-        private addStaticDepend(staticMemberName: string, className: string) {
+        private addStaticDepend(file: SourceFile, classNode: ClassDeclaration, nest: number) {
+            if (!classNode || !classNode.symbol)
+                return;
+            var className = checker.getFullyQualifiedName(classNode.symbol);
+            var nodesToCheck: Node[] = [];
+            forEachChild(classNode, node=> {
+                if (node.kind == SyntaxKind.Property && node.modifiers && (node.modifiers.flags & NodeFlags.Static) && (<PropertyDeclaration>node).initializer) {
+                    //if (node.name && node.name.text == "typeNight") {
+                    //    console.log((<PropertyDeclaration>node).initializer.kind);
+                    //}
+                    switch ((<PropertyDeclaration>node).initializer.kind) {
+                            case SyntaxKind.PropertyAccessExpression:
+                            case SyntaxKind.CallExpression:
+                            case SyntaxKind.NewExpression:
+                                var nodeToGet = (<CallExpression>((<PropertyDeclaration>node).initializer)).expression;
+                                if (!nodeToGet)
+                                    return;
+                                try {
+                                    var staticMemberType = checker.checkAndMarkExpression(nodeToGet);
+                                    if (staticMemberType.symbol == undefined || (staticMemberType.symbol.flags & SymbolFlags.Interface))
+                                        return;
+                                    var fullName = checker.getFullyQualifiedName(staticMemberType.symbol);
+                                }
+                                catch (e) {
+                                    return;
+                                }
+                                var bases = classNameToBaseClassMap[className] || [];
+                                if (bases.indexOf(fullName) < 0)
+                                    bases.push(fullName);
+                                classNameToBaseClassMap[className] = bases;
+                            default:
+                        }
 
+                }
+            });
         }
 
         private classNameToBaseClass(className, baseType:InterfaceType) {

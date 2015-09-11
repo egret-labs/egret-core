@@ -20903,6 +20903,7 @@ var ts;
                     ts.forEach(classtype.baseTypes, function (t) { return _this.classNameToBaseClass(fullName, t); });
                 }
                 this.constructorToClassName(file, symbol.valueDeclaration, 0);
+                this.addStaticDepend(file, symbol.valueDeclaration, 0);
             }
         };
         SortHelper.prototype.symbolTabelToFileMap = function (file, symbolTable) {
@@ -20979,7 +20980,40 @@ var ts;
                 staticToClassNameMap[fullName] = initializerClass;
             }
         };
-        SortHelper.prototype.addStaticDepend = function (staticMemberName, className) {
+        SortHelper.prototype.addStaticDepend = function (file, classNode, nest) {
+            if (!classNode || !classNode.symbol)
+                return;
+            var className = checker.getFullyQualifiedName(classNode.symbol);
+            var nodesToCheck = [];
+            ts.forEachChild(classNode, function (node) {
+                if (node.kind == 124 /* Property */ && node.modifiers && (node.modifiers.flags & 128 /* Static */) && node.initializer) {
+                    //if (node.name && node.name.text == "typeNight") {
+                    //    console.log((<PropertyDeclaration>node).initializer.kind);
+                    //}
+                    switch (node.initializer.kind) {
+                        case 143 /* PropertyAccessExpression */:
+                        case 145 /* CallExpression */:
+                        case 146 /* NewExpression */:
+                            var nodeToGet = (node.initializer).expression;
+                            if (!nodeToGet)
+                                return;
+                            try {
+                                var staticMemberType = checker.checkAndMarkExpression(nodeToGet);
+                                if (staticMemberType.symbol == undefined || (staticMemberType.symbol.flags & 64 /* Interface */))
+                                    return;
+                                var fullName = checker.getFullyQualifiedName(staticMemberType.symbol);
+                            }
+                            catch (e) {
+                                return;
+                            }
+                            var bases = classNameToBaseClassMap[className] || [];
+                            if (bases.indexOf(fullName) < 0)
+                                bases.push(fullName);
+                            classNameToBaseClassMap[className] = bases;
+                        default:
+                    }
+                }
+            });
         };
         SortHelper.prototype.classNameToBaseClass = function (className, baseType) {
             var fullName = checker.getFullyQualifiedName(baseType.symbol);
@@ -21184,7 +21218,7 @@ var ts;
             });
         };
         FileNode.prototype.logCircular = function (file, other) {
-            //console.log("Warning:Found circular dependency:" file);
+            //console.log("Warning:Found circular dependency:" + file);
         };
         return FileNode;
     })();
