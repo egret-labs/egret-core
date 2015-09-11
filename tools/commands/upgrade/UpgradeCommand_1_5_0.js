@@ -38,11 +38,11 @@ var UpgradeCommand_1_5_0 = (function () {
         //保存副本
         file.save(file.joinPath(projectDir, "launcher", "copy_native_loader.js"), loaderContent);
         //生成egret_loader.js样板
-        var fileContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "runtime_loader.js"));
+        var fileContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "runtime_loader.js"));
         file.save(file.joinPath(projectDir, "launcher", "runtime_loader.js"), fileContent);
-        var fileContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "native_loader.js"));
+        var fileContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "native_loader.js"));
         file.save(file.joinPath(projectDir, "launcher", "native_loader.js"), fileContent);
-        var fileContent = file.read(file.joinPath(egret.args.larkRoot, "tools", "templates", "empty", "launcher", "native_require.js"));
+        var fileContent = file.read(file.joinPath(egret.root, "tools", "templates", "empty", "launcher", "native_require.js"));
         file.save(file.joinPath(projectDir, "launcher", "native_require.js"), fileContent);
         var open = globals.getOpen();
         open("https://github.com/egret-labs/egret-core/blob/master/docs/1.5.0_ReleaseNotes.md");

@@ -42,3 +42,5 @@ var egret;
      */
     egret.XML;
 })(egret || (egret = {}));
+
+//# sourceMappingURL=../../lib/xml/XML.js.map

@@ -41,8 +41,8 @@ function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
     var versionCheck = version.check();
-    // 如果项目版本跟引擎版本不一致，或手动指定了引擎版本
-    // 而且用户安装了需要的引擎，那么使用需要的版本执行命令
+    // ������Ŀ�汾�������汾��һ�£����ֶ�ָ���������汾
+    // �����û���װ����Ҫ�����棬��ôʹ����Ҫ�İ汾ִ������
     if ((!versionCheck.projectVersionMatch || !versionCheck.toolVersionMatch) && versionCheck.hasTargetEngine) {
         version.execute(versionCheck.targetEngineRoot);
     }
@@ -76,3 +76,5 @@ var Entry = (function () {
     return Entry;
 })();
 var entry = new Entry();
+
+//# sourceMappingURL=Entry.js.map

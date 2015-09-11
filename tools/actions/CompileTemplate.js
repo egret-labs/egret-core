@@ -71,3 +71,5 @@ function replaceReleaseScript(html) {
     }
 }
 module.exports = CompileTemplate;
+
+//# sourceMappingURL=../actions/CompileTemplate.js.map

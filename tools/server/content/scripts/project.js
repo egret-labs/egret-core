@@ -122,3 +122,5 @@ function showLoading() {
         complete: showLoading
     });
 }
+
+//# sourceMappingURL=../../../server/content/scripts/project.js.map

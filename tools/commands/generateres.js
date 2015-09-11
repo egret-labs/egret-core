@@ -50,3 +50,5 @@ function isResource(fileName) {
     return ext in resourceExtensions;
 }
 module.exports = GenerateResource;
+
+//# sourceMappingURL=../commands/generateres.js.map

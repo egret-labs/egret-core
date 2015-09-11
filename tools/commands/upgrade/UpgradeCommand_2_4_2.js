@@ -155,7 +155,7 @@ var UpgradeCommand_2_4_2 = (function () {
             //file.copy(projectPath,newPath);
             //step 1.拷贝新项目
             globals.log2(1707, projectPath, newPath);
-            var egretPath = egret.args.larkRoot;
+            var egretPath = egret.root;
             var cp = CHILD_EXEC.execSync('node ' + file.joinPath(egretPath, '/tools/bin/egret') + ' create ' + newPath, {
                 encoding: 'utf8',
                 timeout: 0,
@@ -206,7 +206,7 @@ var UpgradeCommand_2_4_2 = (function () {
         //open("https://github.com/egret-labs/egret-core/tree/v2.4.2/docs/cn/2.4.2_ReleaseNotes.md");
         var _this = this;
         //var projectPath = this.createAndCopyProjectFile();
-        var egretRoot = egret.args.larkRoot;
+        var egretRoot = egret.root;
         var libPath = file.joinPath(projectPath, '/src/libs_old'); //用旧的api检测
         //var libPath = file.joinPath(projectPath,'/libs');//
         var configPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.2/solved');

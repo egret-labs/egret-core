@@ -45,3 +45,5 @@ function srcFolderOutputFilter(file) {
     return true;
 }
 module.exports = CopyFiles;
+
+//# sourceMappingURL=../actions/CopyFiles.js.map

@@ -10,3 +10,5 @@ var info = (function () {
     return info;
 })();
 module.exports = info;
+
+//# sourceMappingURL=../commands/info.js.map
