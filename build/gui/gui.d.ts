@@ -5234,1089 +5234,6 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
-    /**
-     * @class egret.gui.Scroller
-     * @classdesc
-     * 滚动条组件
-     * @extends egret.gui.UIComponent
-     * @implements egret.gui.IVisualElementContainer
-     */
-    class Scroller extends SkinnableComponent implements IVisualElementContainer {
-        _Scr_Props_: ScrollerProperties;
-        /**
-         * 构造函数
-         * @method egret.gui.Scroller#constructor
-         */
-        constructor();
-        /**
-         * 是否启用回弹，当启用回弹后，Scroller中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
-         * 默认值是 true
-         */
-        bounces: boolean;
-        setContent(content: IViewport): void;
-        _updateContentPosition(): void;
-        getMaxScrollLeft(): number;
-        getMaxScrollTop(): number;
-        _getContentWidth(): number;
-        _getContentHeight(): number;
-        _onScrollStarted(): void;
-        _onScrollFinished(): void;
-        /**
-         * [SkinPart]水平滚动条
-         */
-        horizontalScrollBar: HScrollBar;
-        /**
-         * [SkinPart]垂直滚动条
-         */
-        verticalScrollBar: VScrollBar;
-        /**
-         * 计算组件的默认大小和（可选）默认最小大小
-         * @method egret.gui.Scroller#measure
-         */
-        measure(): void;
-        /**
-         * 绘制对象和/或设置其子项的大小和位置
-         * @param unscaledWidth {number}
-         * @param unscaledHeight {number}
-         */
-        updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
-        /**
-         * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
-         * @member egret.gui.Scroller#verticalScrollPolicy
-         */
-        verticalScrollPolicy: string;
-        /**
-         * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
-         * @member egret.gui.Scroller#horizontalScrollPolicy
-         */
-        horizontalScrollPolicy: string;
-        /**
-         * 要滚动的视域组件。
-         * @member egret.gui.Scroller#viewport
-         */
-        viewport: IViewport;
-        /**
-         * 安装并初始化视域组件
-         */
-        private installViewport();
-        /**
-         * 卸载视域组件
-         */
-        private uninstallViewport();
-        /**
-         *
-         * @param e
-         * @private
-         */
-        private _viewportChangedHandler(e);
-        /**
-         *
-         * @param e
-         * @private
-         */
-        private _scrollerChangedHandler(e);
-        /**
-         *
-         * @param pos
-         */
-        private setViewportVScrollPosition(pos);
-        private setViewportHScrollPosition(pos);
-        /**
-         * 缓动到水平滚动位置
-         * @method egret.gui.Scroller#throwHorizontally
-         * @param hspTo {number}
-         * @param duration {number}
-         */
-        throwHorizontally(hspTo: number, duration?: number): void;
-        /**
-         * 缓动到垂直滚动位置
-         * @method egret.gui.Scroller#throwVertically
-         * @param vspTo {number}
-         * @param duration {number}
-         */
-        throwVertically(vspTo: number, duration?: number): void;
-        /**
-         * 是否自动隐藏滚动条
-         * @member egret.gui.Scroller#autoHideScrollBars
-         */
-        autoHideScrollBars: boolean;
-        /**
-         * 自动隐藏滚动条延时时间(毫秒)，当autoHideScrollBars为true时有效
-         * @member egret.gui.Scroller#autoHideDelay
-         */
-        autoHideDelay: number;
-        private setAutoHideTimer();
-        private hideOrShow(show);
-        /**
-         * @member egret.gui.Scroller#numElements
-         */
-        numElements: number;
-        /**
-         * 抛出索引越界异常
-         */
-        private throwRangeError(index);
-        /**
-         * 如果存在视域，且传入的索引为 0，则返回该视域
-         * @param index {number}
-         * @returns {IVisualElement}
-         */
-        getElementAt(index: number): IVisualElement;
-        /**
-         * 如果传入的元素是视域，则返回 0
-         * @param element {IVisualElement}
-         * @returns {number}
-         */
-        getElementIndex(element: IVisualElement): number;
-        /**
-         * 确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身
-         * @param element {IVisualElement}
-         * @returns {boolean}
-         */
-        containsElement(element: IVisualElement): boolean;
-        private throwNotSupportedError();
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param element {IVisualElement}
-         * @returns {IVisualElement}
-         */
-        addElement(element: IVisualElement): IVisualElement;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param element {IVisualElement}
-         * @param index {number}
-         * @returns {IVisualElement}
-         */
-        addElementAt(element: IVisualElement, index: number): IVisualElement;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param element {IVisualElement}
-         * @returns {IVisualElement}
-         */
-        removeElement(element: IVisualElement): IVisualElement;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param index {number}
-         * @returns {IVisualElement}
-         */
-        removeElementAt(index: number): IVisualElement;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         */
-        removeAllElements(): void;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param element {IVisualElement}
-         * @param index {number}
-         */
-        setElementIndex(element: IVisualElement, index: number): void;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param element1 {IVisualElement}
-         * @param element2 {IVisualElement}
-         */
-        swapElements(element1: IVisualElement, element2: IVisualElement): void;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
-         */
-        swapElementsAt(index1: number, index2: number): void;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
-         */
-        addChild(child: DisplayObject): DisplayObject;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @returns {DisplayObject}
-         */
-        addChildAt(child: DisplayObject, index: number): DisplayObject;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
-         */
-        removeChild(child: DisplayObject): DisplayObject;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param index {number}
-         * @returns {DisplayObject}
-         */
-        removeChildAt(index: number): DisplayObject;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         */
-        setChildIndex(child: DisplayObject, index: number): void;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param child1 {DisplayObject}
-         * @param child2 {DisplayObject}
-         */
-        swapChildren(child1: DisplayObject, child2: DisplayObject): void;
-        /**
-         * Scroller 不支持该操作
-         * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
-         */
-        swapChildrenAt(index1: number, index2: number): void;
-        /**
-         *
-         * @private
-         */
-        _checkHbar(): void;
-        /**
-         *
-         * @private
-         */
-        _checkVbar(): void;
-        /**
-         * 创建容器的子元素
-         */
-        createChildren(): void;
-        /**
-         * 若皮肤是ISkin,则调用此方法附加皮肤中的公共部件
-         * @param partName {string}
-         * @param instance {any}
-         */
-        partAdded(partName: string, instance: any): void;
-        /**
-         * 若皮肤是ISkin，则调用此方法卸载皮肤之前注入的公共部件
-         * @method egret.gui.Scroller#partRemoved
-         * @param partName {string}
-         * @param instance {any}
-         */
-        partRemoved(partName: string, instance: any): void;
-        _uninstallHorizontalScrollBar(): void;
-        _uninstallVerticalScrollBar(): void;
-        private hBarChanged(e);
-        private vBarChanged(e);
-    }
-}
-declare module egret.gui {
-    /**
-     * @private
-     */
-    class ScrollerProperties {
-        _viewport: IViewport;
-        _autoHideScrollBars: boolean;
-        _autoHideTimer: number;
-        _autoHideDelay: number;
-        _autoHideShowAnimat: Animation;
-        _animatTargetIsShow: boolean;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Spacer
-     * @classdesc
-     * 占位组件,一个布局辅助类。
-     * 自身完全不可见，但可以在父级容器的布局中分配空间，通常用于垂直和水平布局中，推挤其他组件。
-     * @extends egret.gui.UIComponent
-     */
-    class Spacer extends UIComponent {
-        /**
-         * 构造函数
-         * @method egret.gui.Spacer#constructor
-         */
-        constructor();
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.TabBar
-     * @classdesc
-     * 选项卡组件
-     * @extends egret.gui.ListBase
-     */
-    class TabBar extends List {
-        /**
-         * 构造函数
-         * @method egret.gui.TabBar#constructor
-         */
-        constructor();
-        /**
-         * 创建容器的子元素
-         */
-        createChildren(): void;
-        /**
-         * requireSelection改变标志
-         */
-        private requireSelectionChanged_tabBar;
-        /**
-         * @method egret.gui.TabBar#requireSelection
-         * @param value {boolean}
-         */
-        requireSelection: boolean;
-        /**
-         * @inheritDoc
-         */
-        _setDataProvider(value: ICollection): void;
-        /**
-         * 鼠标点击的选中项改变
-         */
-        private onIndexChanged(event);
-        /**
-         * ViewStack选中项发生改变
-         */
-        private onViewStackIndexChange(event);
-        /**
-         * 处理对组件设置的属性
-         */
-        commitProperties(): void;
-        dataGroup_rendererAddHandler(event: RendererExistenceEvent): void;
-        /**
-         * 鼠标在项呈示器上弹起，抛出ItemClick事件。
-         */
-        _item_touchEndHandler(event: TouchEvent): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.TabBarButton
-     * @classdesc
-     * 选项卡组件的按钮条目
-     * @extends egret.gui.ToggleButtonBase
-     * @implements egret.gui.IItemRenderer
-     */
-    class TabBarButton extends ToggleButtonBase implements IItemRenderer {
-        constructor();
-        private _allowDeselection;
-        /**
-         * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
-         * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
-         * @member egret.gui.TabBarButton#allowDeselection
-         */
-        allowDeselection: boolean;
-        private _data;
-        /**
-         * @member egret.gui.TabBarButton#data
-         */
-        data: any;
-        private _itemIndex;
-        /**
-         * @member egret.gui.TabBarButton#itemIndex
-         */
-        itemIndex: number;
-        /**
-         * @inheritDoc
-         */
-        _setLabel(value: string): void;
-        buttonReleased(): void;
-    }
-}
-declare module egret.gui {
-    class SkinnableTextBase extends SkinnableComponent {
-        /**
-         * 构造函数
-         */
-        constructor();
-        _focusEnabled: boolean;
-        /**
-         * 是否能够自动获得焦点的标志
-         */
-        focusEnabled: boolean;
-        private isFocus;
-        /**
-         * 焦点移入
-         */
-        private focusInHandler(event);
-        /**
-         * 焦点移出
-         */
-        private focusOutHandler(event);
-        /**
-         * [SkinPart]实体文本输入组件
-         */
-        textDisplay: IEditableText;
-        /**
-         * textDisplay改变时传递的参数
-         */
-        private textDisplayProperties;
-        /**
-         * [SkinPart]当text属性为空字符串时要显示的文本。
-         */
-        promptDisplay: IDisplayText;
-        private _prompt;
-        /**
-         * 当text属性为空字符串时要显示的文本内容。 <p/>
-         * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
-         * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
-         * 对于文本控件，如果用户输入文本，但随后又将其删除，则控件失去焦点后，提示文本将重新显示。
-         * 您还可以通过编程方式将文本控件的 text 属性设置为空字符串使提示文本重新显示。
-         */
-        prompt: string;
-        /**
-         * @inheritDoc
-         */
-        /**
-         * @inheritDoc
-         */
-        maxWidth: number;
-        /**
-         * 文本颜色。
-         */
-        textColor: number;
-        /**
-         * 指定文本字段是否是密码文本字段。如果此属性的值为 true，则文本字段被视为密码文本字段，并使用星号而不是实际字符来隐藏输入的字符。
-         * 如果为 false，则不会将文本字段视为密码文本字段。启用密码模式时，“剪切”和“复制”命令及其对应的键盘快捷键将不起作用。
-         * 此安全机制可防止不良用户使用快捷键在无人看管的计算机上破译密码。
-         */
-        displayAsPassword: boolean;
-        /**
-         * 文本是否可编辑的标志。
-         */
-        editable: boolean;
-        /**
-         * 文本字段中最多可包含的字符数（即用户输入的字符数）。脚本可以插入比 maxChars 允许的字符数更多的文本；
-         * maxChars 属性仅表示用户可以输入多少文本。如果此属性的值为 0，则用户可以输入无限数量的文本。
-         */
-        maxChars: number;
-        /**
-         * 表示用户可输入到文本字段中的字符集。如果 restrict 属性的值为 null，则可以输入任何字符。
-         * 如果 restrict 属性的值为空字符串，则不能输入任何字符。如果 restrict 属性的值为一串字符，
-         * 则只能在文本字段中输入该字符串中的字符。从左向右扫描该字符串。可以使用连字符 (-) 指定一个范围。
-         * 只限制用户交互；脚本可将任何文本放入文本字段中。此属性不与属性检查器中的“嵌入字体”选项同步。<p/>
-         * 如果字符串以尖号 (ˆ) 开头，则先接受所有字符，然后从接受字符集中排除字符串中 ˆ 之后的字符。
-         * 如果字符串不以尖号 (ˆ) 开头，则最初不接受任何字符，然后将字符串中的字符包括在接受字符集中。
-         */
-        restrict: string;
-        /**
-         * 一个布尔值，表示文本字段是否可选。值 true 表示文本可选。selectable 属性控制文本字段是否可选，
-         * 而不控制文本字段是否可编辑。动态文本字段即使不可编辑，它也可能是可选的。如果动态文本字段是不可选的，
-         * 则用户不能选择其中的文本。 <p/>
-         * 如果 selectable 设置为 false，则文本字段中的文本不响应来自鼠标或键盘的选择命令，
-         * 并且不能使用“复制”命令复制文本。如果 selectable 设置为 true，则可以使用鼠标或键盘选择文本字段中的文本，
-         * 并且可以使用“复制”命令复制文本。即使文本字段是动态文本字段而不是输入文本字段，您也可以用这种方式选择文本。
-         */
-        selectable: boolean;
-        /**
-         * 当前所选内容中第一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，
-         * 第二个字符的索引值是 1，依此类推。如果未选定任何文本，此属性为 caretIndex 的值
-         */
-        selectionBeginIndex: number;
-        /**
-         * 当前所选内容中最后一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，第二个字符的索引值是 1，
-         * 依此类推。如果未选定任何文本，此属性为 caretIndex 的值。
-         */
-        selectionEndIndex: number;
-        /**
-         * 插入点（尖号）位置的索引。如果没有显示任何插入点，则在将焦点恢复到字段时，
-         * 值将为插入点所在的位置（通常为插入点上次所在的位置，如果字段不曾具有焦点，则为 0）。
-         */
-        caretIndex: number;
-        /**
-         * 将第一个字符和最后一个字符的索引值（使用 beginIndex 和 endIndex 参数指定）指定的文本设置为所选内容。
-         * 如果两个参数值相同，则此方法会设置插入点，就如同设置 caretIndex 属性一样。
-         */
-        setSelection(beginIndex: number, endIndex?: number): void;
-        /**
-         * 选中所有文本。
-         */
-        selectAll(): void;
-        /**
-         * 此文本组件所显示的文本。
-         */
-        text: string;
-        _getText(): any;
-        _setText(value: string): void;
-        _getWidthInChars(): number;
-        _setWidthInChars(value: number): void;
-        _getHeightInLines(): number;
-        _setHeightInLines(value: number): void;
-        /**
-         * 返回要应用到外观的状态的名称
-         * @inheritDoc
-         */
-        getCurrentSkinState(): string;
-        /**
-         * 添加外观部件时调用
-         * @inheritDoc
-         */
-        partAdded(partName: string, instance: any): void;
-        /**
-         * 正删除外观部件的实例时调用
-         * @inheritDoc
-         */
-        partRemoved(partName: string, instance: any): void;
-        /**
-         * 设置此组件的焦点
-         * @inheritDoc
-         */
-        setFocus(): void;
-        /**
-         * 当皮肤不为ISkinPartHost时，创建TextDisplay显示对象
-         */
-        _createTextDisplay(): void;
-        /**
-         * @inheritDoc
-         */
-        _removeSkinParts(): void;
-        /**
-         * textDisplay附加
-         */
-        private textDisplayAdded();
-        /**
-         * textDisplay移除
-         */
-        private textDisplayRemoved();
-        /**
-         * textDisplay文字改变事件
-         */
-        private textDisplay_changeHandler(event);
-        /**
-         * textDisplay文字即将改变事件
-         */
-        private textDisplay_changingHandler(event);
-    }
-}
-declare module egret.gui {
-    class TextArea extends SkinnableTextBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 控件的默认宽度（使用字号：size为单位测量）。 若同时设置了maxChars属性，将会根据两者测量结果的最小值作为测量宽度。
-         */
-        widthInChars: number;
-        /**
-         * 控件的默认高度（以行为单位测量）。
-         */
-        heightInLines: number;
-        /**
-         * 水平滚动条策略改变标志
-         */
-        private horizontalScrollPolicyChanged;
-        private _horizontalScrollPolicy;
-        /**
-         * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
-         */
-        horizontalScrollPolicy: string;
-        /**
-         * 垂直滚动条策略改变标志
-         */
-        private verticalScrollPolicyChanged;
-        private _verticalScrollPolicy;
-        /**
-         * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
-         */
-        verticalScrollPolicy: string;
-        /**
-         * [SkinPart]实体滚动条组件
-         */
-        scroller: Scroller;
-        _setText(value: string): void;
-        /**
-         * 处理对组件设置的属性
-         * @inheritDoc
-         */
-        commitProperties(): void;
-        /**
-         * 添加外观部件时调用
-         * @inheritDoc
-         */
-        partAdded(partName: string, instance: any): void;
-        /**
-         * 创建外观部件的引用
-         * @inheritDoc
-         */
-        createSkinParts(): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * TextInput 是一个文本输入控件，供用户输入和编辑单行统一格式文本
-     * @classic
-     */
-    class TextInput extends SkinnableTextBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 控件的默认宽度（使用字号：size为单位测量）。 若同时设置了maxChars属性，将会根据两者测量结果的最小值作为测量宽度。
-         */
-        widthInChars: number;
-        _setText(value: string): void;
-        /**
-         * 添加外观部件时调用
-         * @inheritDoc
-         */
-        partAdded(partName: string, instance: any): void;
-        /**
-         *  创建外观部件的引用
-         * @inheritDoc
-         */
-        createSkinParts(): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.ToggleButton
-     * @classdesc
-     * 切换按钮
-     * @extends egret.gui.ToggleButtonBase
-     */
-    class ToggleButton extends ToggleButtonBase {
-        /**
-         * 构造函数
-         * @method egret.gui.ToggleButton#constructor
-         */
-        constructor();
-        /**
-         * [SkinPart]按钮上的文本标签
-         * @member egret.gui.ButtonBase#labelDisplay
-         */
-        iconDisplay: UIAsset;
-        private _icon;
-        /**
-         * 要在按钮上显示的图标
-         * @member egret.gui.ButtonBase#icon
-         */
-        icon: any;
-        _getIcon(): any;
-        _setIcon(value: any): void;
-        /**
-         * [覆盖] 添加外观部件时调用
-         * @param partName {string}
-         * @param instance {any}
-         */
-        partAdded(partName: string, instance: any): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.ToggleSwitch
-     * @classdesc
-     * 开关按钮
-     * @extends egret.gui.ToggleButtonBase
-     */
-    class ToggleSwitch extends ToggleButtonBase {
-        /**
-         * 构造函数
-         * @method egret.gui.ToggleSwitch#constructor
-         */
-        constructor();
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Tree
-     * @classdesc
-     * 树状列表组件
-     * @extends egret.gui.List
-     */
-    class Tree extends List {
-        /**
-         * 构造函数
-         * @method egret.gui.Tree#constructor
-         */
-        constructor();
-        static defaultTreeRendererFactory: ClassFactory;
-        /**
-         * 创建该容器的子元素对象
-         * @method egret.gui.Tree#createChildren
-         */
-        createChildren(): void;
-        /**
-         * 更新项呈示器，以备使用或重用
-         * @method egret.gui.Tree#updateRenderer
-         * @param renderer {IItemRenderer}
-         * @param itemIndex {number}
-         * @param data {any}
-         * @returns {IItemRenderer}
-         */
-        updateRenderer(renderer: IItemRenderer, itemIndex: number, data: any): IItemRenderer;
-        /**
-         * 根据数据项返回项呈示器中图标的skinName属性值
-         * @method egret.gui.Tree#itemToIcon
-         * @param data {any}
-         * @returns {any}
-         */
-        itemToIcon(data: any): any;
-        /**
-         * @method egret.gui.Tree#dataGroup_rendererAddHandler
-         * @param event {RendererExistenceEvent}
-         */
-        dataGroup_rendererAddHandler(event: RendererExistenceEvent): void;
-        /**
-         * 节点即将打开
-         */
-        private onItemOpening(event);
-        /**
-         * @method egret.gui.Tree#dataGroup_rendererRemoveHandler
-         * @param event {RendererExistenceEvent}
-         */
-        dataGroup_rendererRemoveHandler(event: RendererExistenceEvent): void;
-        /**
-         * 图标字段或函数改变标志
-         */
-        private iconFieldOrFunctionChanged;
-        private _iconField;
-        /**
-         * 数据项中用来确定图标skinName属性值的字段名称。另请参考UIAsset.skinName。
-         * 若设置了iconFunction，则设置此属性无效。
-         * @member egret.gui.Tree#iconField
-         */
-        iconField: string;
-        private _iconFunction;
-        /**
-         * 用户提供的函数，在每个数据项目上运行以确定其图标的skinName值。另请参考UIAsset.skinName。
-         * 示例：iconFunction(item:Object):Object
-         * @member egret.gui.Tree#iconFunction
-         */
-        iconFunction: Function;
-        /**
-         * 打开或关闭一个节点,注意，此操作不会抛出open或close事件。
-         * @method egret.gui.Tree#expandItem
-         * @param item {any} 要打开或关闭的节点
-         * @param open {boolean} true表示打开节点，反之关闭。
-         */
-        expandItem(item: any, open?: boolean): void;
-        /**
-         * 指定的节点是否打开
-         * @method egret.gui.Tree#isItemOpen
-         * @param item {any}
-         * @returns {boolean}
-         */
-        isItemOpen(item: any): boolean;
-        /**
-         * @method egret.gui.Tree#dataProvider_collectionChangeHandler
-         * @param event {CollectionEvent}
-         */
-        dataProvider_collectionChangeHandler(event: CollectionEvent): void;
-        /**
-         * 处理对组件设置的属性
-         * @method egret.gui.Tree#commitProperties
-         */
-        commitProperties(): void;
-        /**
-         * 更新指定索引项的图标
-         */
-        private updateRendererIconProperty(itemIndex);
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.UIAsset
-     * @classdesc
-     * 素材和非GUI显示对象包装器。<p/>
-     * @extends egret.gui.UIComponent
-     * @implements egret.gui.ISkinnableClient
-     */
-    class UIAsset extends UIComponent {
-        /**
-         * @method egret.gui.UIAsset#constructor
-         * @param source {any} 素材标识符
-         */
-        constructor(source?: any, autoScale?: boolean);
-        /**
-         * 矩形区域，它定义素材对象的九个缩放区域。
-         * 注意:此属性仅在source的解析结果为Texture并且fileMode为BitmapFillMode.SCALE时有效。
-         * @member {egret.Texture} egret.gui.UIAsset#scale9Grid
-         */
-        scale9Grid: Rectangle;
-        /**
-         * 确定位图填充尺寸的方式。默认值：BitmapFillMode.SCALE。
-         * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域。
-         * 设置为 BitmapFillMode.SCALE时，位图将拉伸以填充区域。
-         * 注意:此属性仅在source的解析结果为Texture时有效
-         * @member {egret.Texture} egret.gui.UIAsset#fillMode
-         */
-        fillMode: string;
-        private sourceChanged;
-        _source: any;
-        /**
-         * 素材标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
-         * 适配器根据此属性值解析获取对应的显示对象，并赋值给content属性。
-         * @member egret.gui.UIAsset#source
-         */
-        source: any;
-        _content: any;
-        _contentIsTexture: boolean;
-        /**
-         * 解析source得到的对象，通常为显示对象或Texture。
-         * @member egret.gui.UIAsset#content
-         */
-        content: any;
-        private createChildrenCalled;
-        /**
-         * 创建该容器的子元素对象
-         */
-        createChildren(): void;
-        /**
-         * 皮肤解析适配器
-         */
-        private static assetAdapter;
-        private contentReused;
-        /**
-         * 解析source
-         */
-        private parseSource();
-        /**
-         * 获取资源适配器
-         */
-        private getAdapter();
-        /**
-         * 皮肤发生改变
-         */
-        private contentChanged(content, source);
-        /**
-         * 计算组件的默认大小和（可选）默认最小大小
-         */
-        measure(): void;
-        /**
-         * 是自动否缩放content对象，以符合UIAsset的尺寸。默认值true。
-         */
-        autoScale: boolean;
-        /**
-         * 绘制对象和/或设置其子项的大小和位置
-         * @param unscaledWidth {number}
-         * @param unscaledHeight {number}
-         */
-        updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
-        /**
-         * 此方法不支持
-         * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
-         */
-        addChild(child: DisplayObject): DisplayObject;
-        /**
-         * 此方法不支持
-         * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @returns {DisplayObject}
-         */
-        addChildAt(child: DisplayObject, index: number): DisplayObject;
-        /**
-         * 此方法不支持
-         * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
-         */
-        removeChild(child: DisplayObject): DisplayObject;
-        /**
-         * 此方法不支持
-         * @deprecated
-         * @param index {number}
-         * @returns {DisplayObject}
-         */
-        removeChildAt(index: number): DisplayObject;
-        /**
-         * 此方法不支持
-         * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         */
-        setChildIndex(child: DisplayObject, index: number): void;
-        /**
-         * 此方法不支持
-         * @deprecated
-         * @param child1 {DisplayObject}
-         * @param child2 {DisplayObject}
-         */
-        swapChildren(child1: DisplayObject, child2: DisplayObject): void;
-        /**
-         * 此方法不支持
-         * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
-         */
-        swapChildrenAt(index1: number, index2: number): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.VSlider
-     * @classdesc
-     * 垂直滑块控件
-     * @extends egret.gui.SliderBase
-     */
-    class VSlider extends SliderBase {
-        /**
-         * 构造函数
-         * @method egret.gui.VSlider#constructor
-         */
-        constructor();
-        /**
-         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
-         * @param x {number}
-         * @param y {number}
-         * @returns {number}
-         */
-        pointToValue(x: number, y: number): number;
-        /**
-         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
-         */
-        updateSkinDisplayList(): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @classic
-     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
-     */
-    class VScrollBar extends VSlider {
-        constructor();
-        private _thumbLengthRatio;
-        /**
-         *
-         * @param height
-         * @param contentHeight
-         * @private
-         */
-        _setViewportMetric(height: number, contentHeight: number): void;
-        /**
-         * @deprecated
-         */
-        trackAlpha: number;
-        /**
-         * @deprecated
-         */
-        thumbAlpha: number;
-        setPosition(value: number): void;
-        getPosition(): number;
-        _setValue(value: number): void;
-        setValue(value: number): void;
-        _animationUpdateHandler(animation: Animation): void;
-        /**
-         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
-         * @param x {number}
-         * @param y {number}
-         * @returns {number}
-         */
-        pointToValue(x: number, y: number): number;
-        /**
-         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
-         */
-        updateSkinDisplayList(): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.ViewStack
-     * @classdesc
-     * 层级堆叠容器,一次只显示一个子对象。
-     * @extends egret.gui.Group
-     * @implements egret.gui.IViewStack
-     * @implements egret.gui.ICollection
-     */
-    class ViewStack extends Group implements IViewStack, ICollection {
-        /**
-         * 构造函数
-         * @method egret.gui.ViewStack#constructor
-         */
-        constructor();
-        /**
-         * 此容器的布局对象为只读,默认限制为BasicLayout。
-         * @member egret.gui.ViewStack#layout
-         */
-        layout: LayoutBase;
-        private _createAllChildren;
-        /**
-         * 是否立即初始化化所有子项。false表示当子项第一次被显示时再初始化它。默认值false。
-         * @member egret.gui.ViewStack#createAllChildren
-         */
-        createAllChildren: boolean;
-        private _selectedChild;
-        /**
-         * 当前选中的子项
-         * @member egret.gui.ViewStack#selectedChild
-         */
-        selectedChild: IVisualElement;
-        /**
-         * 未设置缓存选中项的值
-         */
-        private static NO_PROPOSED_SELECTION;
-        /**
-         * 在属性提交前缓存选中项索引
-         */
-        private proposedSelectedIndex;
-        _selectedIndex: number;
-        /**
-         * 当前选中子项的索引
-         * @member egret.gui.ViewStack#selectedIndex
-         */
-        selectedIndex: number;
-        private notifyTabBar;
-        /**
-         * 设置选中项索引
-         * @method egret.gui.ViewStack#_setSelectedIndex
-         * @param value {number}
-         * @param notifyListeners {boolean}
-         */
-        _setSelectedIndex(value: number, notifyListeners?: boolean): void;
-        /**
-         * 添加一个显示元素到容器
-         * @param element {IVisualElement}
-         * @param index {number}
-         * @param notifyListeners {boolean}
-         */
-        _elementAdded(element: IVisualElement, index: number, notifyListeners?: boolean): void;
-        /**
-         * 从容器移除一个显示元素
-         * @param element {IVisualElement}
-         * @param index {number}
-         * @param notifyListeners {boolean}
-         */
-        _elementRemoved(element: IVisualElement, index: number, notifyListeners?: boolean): void;
-        /**
-         * 子项显示列表顺序发生改变。
-         */
-        private childOrderingChanged;
-        /**
-         * 处理对组件设置的属性
-         */
-        commitProperties(): void;
-        /**
-         *
-         * @param newIndex
-         */
-        private commitSelection(newIndex);
-        /**
-         * 子项数量
-         * @member egret.gui.ViewStack#length
-         */
-        length: number;
-        /**
-         * @param index {number}
-         * @returns {any}
-         */
-        getItemAt(index: number): any;
-        /**
-         * @param item {any}
-         * @returns {number}
-         */
-        getItemIndex(item: any): number;
-        /**
-         * 抛出事件
-         */
-        private dispatchCoEvent(kind?, location?, oldLocation?, items?, oldItems?);
-    }
-}
-declare module egret.gui {
 }
 declare module egret.gui {
     /**
@@ -7186,6 +6103,314 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.Scroller
+     * @classdesc
+     * 滚动条组件
+     * @extends egret.gui.UIComponent
+     * @implements egret.gui.IVisualElementContainer
+     */
+    class Scroller extends SkinnableComponent implements IVisualElementContainer {
+        _Scr_Props_: ScrollerProperties;
+        /**
+         * 构造函数
+         * @method egret.gui.Scroller#constructor
+         */
+        constructor();
+        /**
+         * 是否启用回弹，当启用回弹后，Scroller中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+         * 默认值是 true
+         */
+        bounces: boolean;
+        setContent(content: IViewport): void;
+        _updateContentPosition(): void;
+        getMaxScrollLeft(): number;
+        getMaxScrollTop(): number;
+        _getContentWidth(): number;
+        _getContentHeight(): number;
+        _onScrollStarted(): void;
+        _onScrollFinished(): void;
+        /**
+         * [SkinPart]水平滚动条
+         */
+        horizontalScrollBar: HScrollBar;
+        /**
+         * [SkinPart]垂直滚动条
+         */
+        verticalScrollBar: VScrollBar;
+        /**
+         * 计算组件的默认大小和（可选）默认最小大小
+         * @method egret.gui.Scroller#measure
+         */
+        measure(): void;
+        /**
+         * 绘制对象和/或设置其子项的大小和位置
+         * @param unscaledWidth {number}
+         * @param unscaledHeight {number}
+         */
+        updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+        /**
+         * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
+         * @member egret.gui.Scroller#verticalScrollPolicy
+         */
+        verticalScrollPolicy: string;
+        /**
+         * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
+         * @member egret.gui.Scroller#horizontalScrollPolicy
+         */
+        horizontalScrollPolicy: string;
+        /**
+         * 要滚动的视域组件。
+         * @member egret.gui.Scroller#viewport
+         */
+        viewport: IViewport;
+        /**
+         * 安装并初始化视域组件
+         */
+        private installViewport();
+        /**
+         * 卸载视域组件
+         */
+        private uninstallViewport();
+        /**
+         *
+         * @param e
+         * @private
+         */
+        private _viewportChangedHandler(e);
+        /**
+         *
+         * @param e
+         * @private
+         */
+        private _scrollerChangedHandler(e);
+        /**
+         *
+         * @param pos
+         */
+        private setViewportVScrollPosition(pos);
+        private setViewportHScrollPosition(pos);
+        /**
+         * 缓动到水平滚动位置
+         * @method egret.gui.Scroller#throwHorizontally
+         * @param hspTo {number}
+         * @param duration {number}
+         */
+        throwHorizontally(hspTo: number, duration?: number): void;
+        /**
+         * 缓动到垂直滚动位置
+         * @method egret.gui.Scroller#throwVertically
+         * @param vspTo {number}
+         * @param duration {number}
+         */
+        throwVertically(vspTo: number, duration?: number): void;
+        /**
+         * 是否自动隐藏滚动条
+         * @member egret.gui.Scroller#autoHideScrollBars
+         */
+        autoHideScrollBars: boolean;
+        /**
+         * 自动隐藏滚动条延时时间(毫秒)，当autoHideScrollBars为true时有效
+         * @member egret.gui.Scroller#autoHideDelay
+         */
+        autoHideDelay: number;
+        private setAutoHideTimer();
+        private hideOrShow(show);
+        /**
+         * @member egret.gui.Scroller#numElements
+         */
+        numElements: number;
+        /**
+         * 抛出索引越界异常
+         */
+        private throwRangeError(index);
+        /**
+         * 如果存在视域，且传入的索引为 0，则返回该视域
+         * @param index {number}
+         * @returns {IVisualElement}
+         */
+        getElementAt(index: number): IVisualElement;
+        /**
+         * 如果传入的元素是视域，则返回 0
+         * @param element {IVisualElement}
+         * @returns {number}
+         */
+        getElementIndex(element: IVisualElement): number;
+        /**
+         * 确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身
+         * @param element {IVisualElement}
+         * @returns {boolean}
+         */
+        containsElement(element: IVisualElement): boolean;
+        private throwNotSupportedError();
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param element {IVisualElement}
+         * @returns {IVisualElement}
+         */
+        addElement(element: IVisualElement): IVisualElement;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param element {IVisualElement}
+         * @param index {number}
+         * @returns {IVisualElement}
+         */
+        addElementAt(element: IVisualElement, index: number): IVisualElement;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param element {IVisualElement}
+         * @returns {IVisualElement}
+         */
+        removeElement(element: IVisualElement): IVisualElement;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param index {number}
+         * @returns {IVisualElement}
+         */
+        removeElementAt(index: number): IVisualElement;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         */
+        removeAllElements(): void;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param element {IVisualElement}
+         * @param index {number}
+         */
+        setElementIndex(element: IVisualElement, index: number): void;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param element1 {IVisualElement}
+         * @param element2 {IVisualElement}
+         */
+        swapElements(element1: IVisualElement, element2: IVisualElement): void;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param index1 {number}
+         * @param index2 {number}
+         */
+        swapElementsAt(index1: number, index2: number): void;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
+         */
+        addChild(child: DisplayObject): DisplayObject;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
+         * @returns {DisplayObject}
+         */
+        addChildAt(child: DisplayObject, index: number): DisplayObject;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
+         */
+        removeChild(child: DisplayObject): DisplayObject;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param index {number}
+         * @returns {DisplayObject}
+         */
+        removeChildAt(index: number): DisplayObject;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
+         */
+        setChildIndex(child: DisplayObject, index: number): void;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param child1 {DisplayObject}
+         * @param child2 {DisplayObject}
+         */
+        swapChildren(child1: DisplayObject, child2: DisplayObject): void;
+        /**
+         * Scroller 不支持该操作
+         * @deprecated
+         * @param index1 {number}
+         * @param index2 {number}
+         */
+        swapChildrenAt(index1: number, index2: number): void;
+        /**
+         *
+         * @private
+         */
+        _checkHbar(): void;
+        /**
+         *
+         * @private
+         */
+        _checkVbar(): void;
+        /**
+         * 创建容器的子元素
+         */
+        createChildren(): void;
+        /**
+         * 若皮肤是ISkin,则调用此方法附加皮肤中的公共部件
+         * @param partName {string}
+         * @param instance {any}
+         */
+        partAdded(partName: string, instance: any): void;
+        /**
+         * 若皮肤是ISkin，则调用此方法卸载皮肤之前注入的公共部件
+         * @method egret.gui.Scroller#partRemoved
+         * @param partName {string}
+         * @param instance {any}
+         */
+        partRemoved(partName: string, instance: any): void;
+        _uninstallHorizontalScrollBar(): void;
+        _uninstallVerticalScrollBar(): void;
+        private hBarChanged(e);
+        private vBarChanged(e);
+    }
+}
+declare module egret.gui {
+    /**
+     * @private
+     */
+    class ScrollerProperties {
+        _viewport: IViewport;
+        _autoHideScrollBars: boolean;
+        _autoHideTimer: number;
+        _autoHideDelay: number;
+        _autoHideShowAnimat: Animation;
+        _animatTargetIsShow: boolean;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Spacer
+     * @classdesc
+     * 占位组件,一个布局辅助类。
+     * 自身完全不可见，但可以在父级容器的布局中分配空间，通常用于垂直和水平布局中，推挤其他组件。
+     * @extends egret.gui.UIComponent
+     */
+    class Spacer extends UIComponent {
+        /**
+         * 构造函数
+         * @method egret.gui.Spacer#constructor
+         */
+        constructor();
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.DefaultAssetAdapter
      * @classdesc
      * 默认的IAssetAdapter接口实现
@@ -7421,6 +6646,171 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
+    class SkinnableTextBase extends SkinnableComponent {
+        /**
+         * 构造函数
+         */
+        constructor();
+        _focusEnabled: boolean;
+        /**
+         * 是否能够自动获得焦点的标志
+         */
+        focusEnabled: boolean;
+        private isFocus;
+        /**
+         * 焦点移入
+         */
+        private focusInHandler(event);
+        /**
+         * 焦点移出
+         */
+        private focusOutHandler(event);
+        /**
+         * [SkinPart]实体文本输入组件
+         */
+        textDisplay: IEditableText;
+        /**
+         * textDisplay改变时传递的参数
+         */
+        private textDisplayProperties;
+        /**
+         * [SkinPart]当text属性为空字符串时要显示的文本。
+         */
+        promptDisplay: IDisplayText;
+        private _prompt;
+        /**
+         * 当text属性为空字符串时要显示的文本内容。 <p/>
+         * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
+         * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
+         * 对于文本控件，如果用户输入文本，但随后又将其删除，则控件失去焦点后，提示文本将重新显示。
+         * 您还可以通过编程方式将文本控件的 text 属性设置为空字符串使提示文本重新显示。
+         */
+        prompt: string;
+        /**
+         * @inheritDoc
+         */
+        /**
+         * @inheritDoc
+         */
+        maxWidth: number;
+        /**
+         * 文本颜色。
+         */
+        textColor: number;
+        /**
+         * 指定文本字段是否是密码文本字段。如果此属性的值为 true，则文本字段被视为密码文本字段，并使用星号而不是实际字符来隐藏输入的字符。
+         * 如果为 false，则不会将文本字段视为密码文本字段。启用密码模式时，“剪切”和“复制”命令及其对应的键盘快捷键将不起作用。
+         * 此安全机制可防止不良用户使用快捷键在无人看管的计算机上破译密码。
+         */
+        displayAsPassword: boolean;
+        /**
+         * 文本是否可编辑的标志。
+         */
+        editable: boolean;
+        /**
+         * 文本字段中最多可包含的字符数（即用户输入的字符数）。脚本可以插入比 maxChars 允许的字符数更多的文本；
+         * maxChars 属性仅表示用户可以输入多少文本。如果此属性的值为 0，则用户可以输入无限数量的文本。
+         */
+        maxChars: number;
+        /**
+         * 表示用户可输入到文本字段中的字符集。如果 restrict 属性的值为 null，则可以输入任何字符。
+         * 如果 restrict 属性的值为空字符串，则不能输入任何字符。如果 restrict 属性的值为一串字符，
+         * 则只能在文本字段中输入该字符串中的字符。从左向右扫描该字符串。可以使用连字符 (-) 指定一个范围。
+         * 只限制用户交互；脚本可将任何文本放入文本字段中。此属性不与属性检查器中的“嵌入字体”选项同步。<p/>
+         * 如果字符串以尖号 (ˆ) 开头，则先接受所有字符，然后从接受字符集中排除字符串中 ˆ 之后的字符。
+         * 如果字符串不以尖号 (ˆ) 开头，则最初不接受任何字符，然后将字符串中的字符包括在接受字符集中。
+         */
+        restrict: string;
+        /**
+         * 一个布尔值，表示文本字段是否可选。值 true 表示文本可选。selectable 属性控制文本字段是否可选，
+         * 而不控制文本字段是否可编辑。动态文本字段即使不可编辑，它也可能是可选的。如果动态文本字段是不可选的，
+         * 则用户不能选择其中的文本。 <p/>
+         * 如果 selectable 设置为 false，则文本字段中的文本不响应来自鼠标或键盘的选择命令，
+         * 并且不能使用“复制”命令复制文本。如果 selectable 设置为 true，则可以使用鼠标或键盘选择文本字段中的文本，
+         * 并且可以使用“复制”命令复制文本。即使文本字段是动态文本字段而不是输入文本字段，您也可以用这种方式选择文本。
+         */
+        selectable: boolean;
+        /**
+         * 当前所选内容中第一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，
+         * 第二个字符的索引值是 1，依此类推。如果未选定任何文本，此属性为 caretIndex 的值
+         */
+        selectionBeginIndex: number;
+        /**
+         * 当前所选内容中最后一个字符从零开始的字符索引值。例如，第一个字符的索引值是 0，第二个字符的索引值是 1，
+         * 依此类推。如果未选定任何文本，此属性为 caretIndex 的值。
+         */
+        selectionEndIndex: number;
+        /**
+         * 插入点（尖号）位置的索引。如果没有显示任何插入点，则在将焦点恢复到字段时，
+         * 值将为插入点所在的位置（通常为插入点上次所在的位置，如果字段不曾具有焦点，则为 0）。
+         */
+        caretIndex: number;
+        /**
+         * 将第一个字符和最后一个字符的索引值（使用 beginIndex 和 endIndex 参数指定）指定的文本设置为所选内容。
+         * 如果两个参数值相同，则此方法会设置插入点，就如同设置 caretIndex 属性一样。
+         */
+        setSelection(beginIndex: number, endIndex?: number): void;
+        /**
+         * 选中所有文本。
+         */
+        selectAll(): void;
+        /**
+         * 此文本组件所显示的文本。
+         */
+        text: string;
+        _getText(): any;
+        _setText(value: string): void;
+        _getWidthInChars(): number;
+        _setWidthInChars(value: number): void;
+        _getHeightInLines(): number;
+        _setHeightInLines(value: number): void;
+        /**
+         * 返回要应用到外观的状态的名称
+         * @inheritDoc
+         */
+        getCurrentSkinState(): string;
+        /**
+         * 添加外观部件时调用
+         * @inheritDoc
+         */
+        partAdded(partName: string, instance: any): void;
+        /**
+         * 正删除外观部件的实例时调用
+         * @inheritDoc
+         */
+        partRemoved(partName: string, instance: any): void;
+        /**
+         * 设置此组件的焦点
+         * @inheritDoc
+         */
+        setFocus(): void;
+        /**
+         * 当皮肤不为ISkinPartHost时，创建TextDisplay显示对象
+         */
+        _createTextDisplay(): void;
+        /**
+         * @inheritDoc
+         */
+        _removeSkinParts(): void;
+        /**
+         * textDisplay附加
+         */
+        private textDisplayAdded();
+        /**
+         * textDisplay移除
+         */
+        private textDisplayRemoved();
+        /**
+         * textDisplay文字改变事件
+         */
+        private textDisplay_changeHandler(event);
+        /**
+         * textDisplay文字即将改变事件
+         */
+        private textDisplay_changingHandler(event);
+    }
+}
+declare module egret.gui {
     class Theme {
         /**
          * 构造函数
@@ -7540,6 +6930,616 @@ declare module egret.gui {
          * @param event {TouchEvent}
          */
         disclosureButton_mouseDownHandler(event: TouchEvent): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.TabBar
+     * @classdesc
+     * 选项卡组件
+     * @extends egret.gui.ListBase
+     */
+    class TabBar extends List {
+        /**
+         * 构造函数
+         * @method egret.gui.TabBar#constructor
+         */
+        constructor();
+        /**
+         * 创建容器的子元素
+         */
+        createChildren(): void;
+        /**
+         * requireSelection改变标志
+         */
+        private requireSelectionChanged_tabBar;
+        /**
+         * @method egret.gui.TabBar#requireSelection
+         * @param value {boolean}
+         */
+        requireSelection: boolean;
+        /**
+         * @inheritDoc
+         */
+        _setDataProvider(value: ICollection): void;
+        /**
+         * 鼠标点击的选中项改变
+         */
+        private onIndexChanged(event);
+        /**
+         * ViewStack选中项发生改变
+         */
+        private onViewStackIndexChange(event);
+        /**
+         * 处理对组件设置的属性
+         */
+        commitProperties(): void;
+        dataGroup_rendererAddHandler(event: RendererExistenceEvent): void;
+        /**
+         * 鼠标在项呈示器上弹起，抛出ItemClick事件。
+         */
+        _item_touchEndHandler(event: TouchEvent): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.TabBarButton
+     * @classdesc
+     * 选项卡组件的按钮条目
+     * @extends egret.gui.ToggleButtonBase
+     * @implements egret.gui.IItemRenderer
+     */
+    class TabBarButton extends ToggleButtonBase implements IItemRenderer {
+        constructor();
+        private _allowDeselection;
+        /**
+         * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
+         * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
+         * @member egret.gui.TabBarButton#allowDeselection
+         */
+        allowDeselection: boolean;
+        private _data;
+        /**
+         * @member egret.gui.TabBarButton#data
+         */
+        data: any;
+        private _itemIndex;
+        /**
+         * @member egret.gui.TabBarButton#itemIndex
+         */
+        itemIndex: number;
+        /**
+         * @inheritDoc
+         */
+        _setLabel(value: string): void;
+        buttonReleased(): void;
+    }
+}
+declare module egret.gui {
+    class TextArea extends SkinnableTextBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 控件的默认宽度（使用字号：size为单位测量）。 若同时设置了maxChars属性，将会根据两者测量结果的最小值作为测量宽度。
+         */
+        widthInChars: number;
+        /**
+         * 控件的默认高度（以行为单位测量）。
+         */
+        heightInLines: number;
+        /**
+         * 水平滚动条策略改变标志
+         */
+        private horizontalScrollPolicyChanged;
+        private _horizontalScrollPolicy;
+        /**
+         * 水平滚动条显示策略，参见ScrollPolicy类定义的常量。
+         */
+        horizontalScrollPolicy: string;
+        /**
+         * 垂直滚动条策略改变标志
+         */
+        private verticalScrollPolicyChanged;
+        private _verticalScrollPolicy;
+        /**
+         * 垂直滚动条显示策略，参见ScrollPolicy类定义的常量。
+         */
+        verticalScrollPolicy: string;
+        /**
+         * [SkinPart]实体滚动条组件
+         */
+        scroller: Scroller;
+        _setText(value: string): void;
+        /**
+         * 处理对组件设置的属性
+         * @inheritDoc
+         */
+        commitProperties(): void;
+        /**
+         * 添加外观部件时调用
+         * @inheritDoc
+         */
+        partAdded(partName: string, instance: any): void;
+        /**
+         * 创建外观部件的引用
+         * @inheritDoc
+         */
+        createSkinParts(): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * TextInput 是一个文本输入控件，供用户输入和编辑单行统一格式文本
+     * @classic
+     */
+    class TextInput extends SkinnableTextBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 控件的默认宽度（使用字号：size为单位测量）。 若同时设置了maxChars属性，将会根据两者测量结果的最小值作为测量宽度。
+         */
+        widthInChars: number;
+        _setText(value: string): void;
+        /**
+         * 添加外观部件时调用
+         * @inheritDoc
+         */
+        partAdded(partName: string, instance: any): void;
+        /**
+         *  创建外观部件的引用
+         * @inheritDoc
+         */
+        createSkinParts(): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.ToggleButton
+     * @classdesc
+     * 切换按钮
+     * @extends egret.gui.ToggleButtonBase
+     */
+    class ToggleButton extends ToggleButtonBase {
+        /**
+         * 构造函数
+         * @method egret.gui.ToggleButton#constructor
+         */
+        constructor();
+        /**
+         * [SkinPart]按钮上的文本标签
+         * @member egret.gui.ButtonBase#labelDisplay
+         */
+        iconDisplay: UIAsset;
+        private _icon;
+        /**
+         * 要在按钮上显示的图标
+         * @member egret.gui.ButtonBase#icon
+         */
+        icon: any;
+        _getIcon(): any;
+        _setIcon(value: any): void;
+        /**
+         * [覆盖] 添加外观部件时调用
+         * @param partName {string}
+         * @param instance {any}
+         */
+        partAdded(partName: string, instance: any): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.ToggleSwitch
+     * @classdesc
+     * 开关按钮
+     * @extends egret.gui.ToggleButtonBase
+     */
+    class ToggleSwitch extends ToggleButtonBase {
+        /**
+         * 构造函数
+         * @method egret.gui.ToggleSwitch#constructor
+         */
+        constructor();
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Tree
+     * @classdesc
+     * 树状列表组件
+     * @extends egret.gui.List
+     */
+    class Tree extends List {
+        /**
+         * 构造函数
+         * @method egret.gui.Tree#constructor
+         */
+        constructor();
+        static defaultTreeRendererFactory: ClassFactory;
+        /**
+         * 创建该容器的子元素对象
+         * @method egret.gui.Tree#createChildren
+         */
+        createChildren(): void;
+        /**
+         * 更新项呈示器，以备使用或重用
+         * @method egret.gui.Tree#updateRenderer
+         * @param renderer {IItemRenderer}
+         * @param itemIndex {number}
+         * @param data {any}
+         * @returns {IItemRenderer}
+         */
+        updateRenderer(renderer: IItemRenderer, itemIndex: number, data: any): IItemRenderer;
+        /**
+         * 根据数据项返回项呈示器中图标的skinName属性值
+         * @method egret.gui.Tree#itemToIcon
+         * @param data {any}
+         * @returns {any}
+         */
+        itemToIcon(data: any): any;
+        /**
+         * @method egret.gui.Tree#dataGroup_rendererAddHandler
+         * @param event {RendererExistenceEvent}
+         */
+        dataGroup_rendererAddHandler(event: RendererExistenceEvent): void;
+        /**
+         * 节点即将打开
+         */
+        private onItemOpening(event);
+        /**
+         * @method egret.gui.Tree#dataGroup_rendererRemoveHandler
+         * @param event {RendererExistenceEvent}
+         */
+        dataGroup_rendererRemoveHandler(event: RendererExistenceEvent): void;
+        /**
+         * 图标字段或函数改变标志
+         */
+        private iconFieldOrFunctionChanged;
+        private _iconField;
+        /**
+         * 数据项中用来确定图标skinName属性值的字段名称。另请参考UIAsset.skinName。
+         * 若设置了iconFunction，则设置此属性无效。
+         * @member egret.gui.Tree#iconField
+         */
+        iconField: string;
+        private _iconFunction;
+        /**
+         * 用户提供的函数，在每个数据项目上运行以确定其图标的skinName值。另请参考UIAsset.skinName。
+         * 示例：iconFunction(item:Object):Object
+         * @member egret.gui.Tree#iconFunction
+         */
+        iconFunction: Function;
+        /**
+         * 打开或关闭一个节点,注意，此操作不会抛出open或close事件。
+         * @method egret.gui.Tree#expandItem
+         * @param item {any} 要打开或关闭的节点
+         * @param open {boolean} true表示打开节点，反之关闭。
+         */
+        expandItem(item: any, open?: boolean): void;
+        /**
+         * 指定的节点是否打开
+         * @method egret.gui.Tree#isItemOpen
+         * @param item {any}
+         * @returns {boolean}
+         */
+        isItemOpen(item: any): boolean;
+        /**
+         * @method egret.gui.Tree#dataProvider_collectionChangeHandler
+         * @param event {CollectionEvent}
+         */
+        dataProvider_collectionChangeHandler(event: CollectionEvent): void;
+        /**
+         * 处理对组件设置的属性
+         * @method egret.gui.Tree#commitProperties
+         */
+        commitProperties(): void;
+        /**
+         * 更新指定索引项的图标
+         */
+        private updateRendererIconProperty(itemIndex);
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.UIAsset
+     * @classdesc
+     * 素材和非GUI显示对象包装器。<p/>
+     * @extends egret.gui.UIComponent
+     * @implements egret.gui.ISkinnableClient
+     */
+    class UIAsset extends UIComponent {
+        /**
+         * @method egret.gui.UIAsset#constructor
+         * @param source {any} 素材标识符
+         */
+        constructor(source?: any, autoScale?: boolean);
+        /**
+         * 矩形区域，它定义素材对象的九个缩放区域。
+         * 注意:此属性仅在source的解析结果为Texture并且fileMode为BitmapFillMode.SCALE时有效。
+         * @member {egret.Texture} egret.gui.UIAsset#scale9Grid
+         */
+        scale9Grid: Rectangle;
+        /**
+         * 确定位图填充尺寸的方式。默认值：BitmapFillMode.SCALE。
+         * 设置为 BitmapFillMode.REPEAT时，位图将重复以填充区域。
+         * 设置为 BitmapFillMode.SCALE时，位图将拉伸以填充区域。
+         * 注意:此属性仅在source的解析结果为Texture时有效
+         * @member {egret.Texture} egret.gui.UIAsset#fillMode
+         */
+        fillMode: string;
+        private sourceChanged;
+        _source: any;
+        /**
+         * 素材标识符。可以为Class,String,或DisplayObject实例等任意类型，具体规则由项目注入的素材适配器决定，
+         * 适配器根据此属性值解析获取对应的显示对象，并赋值给content属性。
+         * @member egret.gui.UIAsset#source
+         */
+        source: any;
+        _content: any;
+        _contentIsTexture: boolean;
+        /**
+         * 解析source得到的对象，通常为显示对象或Texture。
+         * @member egret.gui.UIAsset#content
+         */
+        content: any;
+        private createChildrenCalled;
+        /**
+         * 创建该容器的子元素对象
+         */
+        createChildren(): void;
+        /**
+         * 皮肤解析适配器
+         */
+        private static assetAdapter;
+        private contentReused;
+        /**
+         * 解析source
+         */
+        private parseSource();
+        /**
+         * 获取资源适配器
+         */
+        private getAdapter();
+        /**
+         * 皮肤发生改变
+         */
+        private contentChanged(content, source);
+        /**
+         * 计算组件的默认大小和（可选）默认最小大小
+         */
+        measure(): void;
+        /**
+         * 是自动否缩放content对象，以符合UIAsset的尺寸。默认值true。
+         */
+        autoScale: boolean;
+        /**
+         * 绘制对象和/或设置其子项的大小和位置
+         * @param unscaledWidth {number}
+         * @param unscaledHeight {number}
+         */
+        updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+        /**
+         * 此方法不支持
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
+         */
+        addChild(child: DisplayObject): DisplayObject;
+        /**
+         * 此方法不支持
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
+         * @returns {DisplayObject}
+         */
+        addChildAt(child: DisplayObject, index: number): DisplayObject;
+        /**
+         * 此方法不支持
+         * @deprecated
+         * @param child {DisplayObject}
+         * @returns {DisplayObject}
+         */
+        removeChild(child: DisplayObject): DisplayObject;
+        /**
+         * 此方法不支持
+         * @deprecated
+         * @param index {number}
+         * @returns {DisplayObject}
+         */
+        removeChildAt(index: number): DisplayObject;
+        /**
+         * 此方法不支持
+         * @deprecated
+         * @param child {DisplayObject}
+         * @param index {number}
+         */
+        setChildIndex(child: DisplayObject, index: number): void;
+        /**
+         * 此方法不支持
+         * @deprecated
+         * @param child1 {DisplayObject}
+         * @param child2 {DisplayObject}
+         */
+        swapChildren(child1: DisplayObject, child2: DisplayObject): void;
+        /**
+         * 此方法不支持
+         * @deprecated
+         * @param index1 {number}
+         * @param index2 {number}
+         */
+        swapChildrenAt(index1: number, index2: number): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.ViewStack
+     * @classdesc
+     * 层级堆叠容器,一次只显示一个子对象。
+     * @extends egret.gui.Group
+     * @implements egret.gui.IViewStack
+     * @implements egret.gui.ICollection
+     */
+    class ViewStack extends Group implements IViewStack, ICollection {
+        /**
+         * 构造函数
+         * @method egret.gui.ViewStack#constructor
+         */
+        constructor();
+        /**
+         * 此容器的布局对象为只读,默认限制为BasicLayout。
+         * @member egret.gui.ViewStack#layout
+         */
+        layout: LayoutBase;
+        private _createAllChildren;
+        /**
+         * 是否立即初始化化所有子项。false表示当子项第一次被显示时再初始化它。默认值false。
+         * @member egret.gui.ViewStack#createAllChildren
+         */
+        createAllChildren: boolean;
+        private _selectedChild;
+        /**
+         * 当前选中的子项
+         * @member egret.gui.ViewStack#selectedChild
+         */
+        selectedChild: IVisualElement;
+        /**
+         * 未设置缓存选中项的值
+         */
+        private static NO_PROPOSED_SELECTION;
+        /**
+         * 在属性提交前缓存选中项索引
+         */
+        private proposedSelectedIndex;
+        _selectedIndex: number;
+        /**
+         * 当前选中子项的索引
+         * @member egret.gui.ViewStack#selectedIndex
+         */
+        selectedIndex: number;
+        private notifyTabBar;
+        /**
+         * 设置选中项索引
+         * @method egret.gui.ViewStack#_setSelectedIndex
+         * @param value {number}
+         * @param notifyListeners {boolean}
+         */
+        _setSelectedIndex(value: number, notifyListeners?: boolean): void;
+        /**
+         * 添加一个显示元素到容器
+         * @param element {IVisualElement}
+         * @param index {number}
+         * @param notifyListeners {boolean}
+         */
+        _elementAdded(element: IVisualElement, index: number, notifyListeners?: boolean): void;
+        /**
+         * 从容器移除一个显示元素
+         * @param element {IVisualElement}
+         * @param index {number}
+         * @param notifyListeners {boolean}
+         */
+        _elementRemoved(element: IVisualElement, index: number, notifyListeners?: boolean): void;
+        /**
+         * 子项显示列表顺序发生改变。
+         */
+        private childOrderingChanged;
+        /**
+         * 处理对组件设置的属性
+         */
+        commitProperties(): void;
+        /**
+         *
+         * @param newIndex
+         */
+        private commitSelection(newIndex);
+        /**
+         * 子项数量
+         * @member egret.gui.ViewStack#length
+         */
+        length: number;
+        /**
+         * @param index {number}
+         * @returns {any}
+         */
+        getItemAt(index: number): any;
+        /**
+         * @param item {any}
+         * @returns {number}
+         */
+        getItemIndex(item: any): number;
+        /**
+         * 抛出事件
+         */
+        private dispatchCoEvent(kind?, location?, oldLocation?, items?, oldItems?);
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.VSlider
+     * @classdesc
+     * 垂直滑块控件
+     * @extends egret.gui.SliderBase
+     */
+    class VSlider extends SliderBase {
+        /**
+         * 构造函数
+         * @method egret.gui.VSlider#constructor
+         */
+        constructor();
+        /**
+         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
+         * @param x {number}
+         * @param y {number}
+         * @returns {number}
+         */
+        pointToValue(x: number, y: number): number;
+        /**
+         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         */
+        updateSkinDisplayList(): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @classic
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
+     */
+    class VScrollBar extends VSlider {
+        constructor();
+        private _thumbLengthRatio;
+        /**
+         *
+         * @param height
+         * @param contentHeight
+         * @private
+         */
+        _setViewportMetric(height: number, contentHeight: number): void;
+        /**
+         * @deprecated
+         */
+        trackAlpha: number;
+        /**
+         * @deprecated
+         */
+        thumbAlpha: number;
+        setPosition(value: number): void;
+        getPosition(): number;
+        _setValue(value: number): void;
+        setValue(value: number): void;
+        _animationUpdateHandler(animation: Animation): void;
+        /**
+         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
+         * @param x {number}
+         * @param y {number}
+         * @returns {number}
+         */
+        pointToValue(x: number, y: number): number;
+        /**
+         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         */
+        updateSkinDisplayList(): void;
     }
 }
 declare module egret.gui {
@@ -8160,26 +8160,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.IViewStack
-     * @interface
-     * @classdesc
-     * 层级堆叠容器接口
-     */
-    interface IViewStack {
-        /**
-         * 当前可见子元素的索引。索引从0开始。
-         * @member egret.gui.IViewStack#selectedIndex
-         */
-        selectedIndex: number;
-        /**
-         * 当前可见的子元素。
-         * @member egret.gui.IViewStack#selectedChild
-         */
-        selectedChild: IVisualElement;
-    }
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.IViewport
      * @interface
      * @classdesc
@@ -8218,6 +8198,26 @@ declare module egret.gui {
          * @member egret.gui.IViewport#clipAndEnableScrolling
          */
         clipAndEnableScrolling: boolean;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.IViewStack
+     * @interface
+     * @classdesc
+     * 层级堆叠容器接口
+     */
+    interface IViewStack {
+        /**
+         * 当前可见子元素的索引。索引从0开始。
+         * @member egret.gui.IViewStack#selectedIndex
+         */
+        selectedIndex: number;
+        /**
+         * 当前可见的子元素。
+         * @member egret.gui.IViewStack#selectedChild
+         */
+        selectedChild: IVisualElement;
     }
 }
 declare module egret.gui {
@@ -8972,531 +8972,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.CompositeEffect
-     * @classdesc
-     * 复合效果的基类
-     * @extends egret.gui.Effect
-     */
-    class CompositeEffect extends Effect {
-        /**
-         * @method egret.gui.CompositeEffect#constructor
-         */
-        constructor(target?: any);
-        private childTargets;
-        private _children;
-        /**
-         * 子效果的数组。
-         * @member egret.gui.CompositeEffect#children
-         */
-        children: Array<Effect>;
-        /**
-         * 返回此效果的总持续时间。
-         * @member egret.gui.CompositeEffect#compositeDuration
-         */
-        compositeDuration: number;
-        createInstance(target?: any): IEffectInstance;
-        createInstances(targets?: Array<any>): Array<any>;
-        _initInstance(instance: IEffectInstance): void;
-        /**
-         * 将新的子效果添加到此复合效果。
-         * @method egret.gui.CompositeEffect#addChild
-         */
-        addChild(childEffect: Effect): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.EffectInstance
-     * @classdesc
-     * 定义所有效果实例的基类
-     * @extends egret.EventDispatcher
-     */
-    class EffectInstance extends EventDispatcher implements IEffectInstance {
-        /**
-         * @method egret.gui.EffectInstance#constructor
-         */
-        constructor(target: any);
-        /**
-         * startDelay和repeatDelay的计时器
-         */
-        _delayTimer: Timer;
-        /**
-         * delayTimer开始的时间
-         */
-        private delayStartTime;
-        /**
-         * 暂停时delayTimer经过的时间
-         */
-        private delayElapsedTime;
-        /**
-         * 是否显式设置了持续时间
-         */
-        durationExplicitlySet: boolean;
-        /**
-         * 实例对应效果的复杂效果的实例，如果不是复杂效果则为null
-         */
-        parentCompositeEffectInstance: EffectInstance;
-        /**
-         * 已播放实例的次数。
-         */
-        _playCount: number;
-        /**
-         * 调用end()方法结束时，防止效果重复的的标志
-         */
-        _stopRepeat: boolean;
-        /**
-         * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
-         */
-        _actualDuration: number;
-        private _duration;
-        /**
-         * 效果的持续时间（以毫秒为单位）。
-         * @member egret.gui.EffectInstance#duration
-         */
-        duration: number;
-        private _effect;
-        /**
-         * 创建此 IEffectInstance 对象的 IEffect 对象。
-         * @member egret.gui.EffectInstance#effect
-         */
-        effect: IEffect;
-        /**
-         * 效果的当前时间位置。
-         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
-         * @member egret.gui.EffectInstance#playheadTime
-         */
-        playheadTime: number;
-        _setPlayheadTime(value: number): void;
-        private _playReversed;
-        /**
-         * 指定效果是否在反向播放，在播放之前设置此属性
-         * @member egret.gui.EffectInstance#playReversed
-         */
-        playReversed: boolean;
-        _setPlayReversed(value: boolean): void;
-        private _repeatCount;
-        /**
-         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
-         * @member egret.gui.EffectInstance#repeatCount
-         */
-        repeatCount: number;
-        private _repeatDelay;
-        /**
-         * 重复播放效果前需要等待的时间（以毫秒为单位）。
-         * @member egret.gui.EffectInstance#repeatDelay
-         */
-        repeatDelay: number;
-        private _startDelay;
-        /**
-         * 开始播放效果前需要等待的时间（以毫秒为单位）。
-         * 此值可以是任何大于或等于 0 的整数。
-         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
-         * @member egret.gui.EffectInstance#startDelay
-         */
-        startDelay: number;
-        private _target;
-        /**
-         * 要应用此效果的对象。
-         * @member egret.gui.EffectInstance#target
-         */
-        target: any;
-        /**
-         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
-         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
-         * @method egret.gui.EffectInstance#startEffect
-         */
-        startEffect(): void;
-        /**
-         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
-         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
-         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
-         * @method egret.gui.EffectInstance#play
-         */
-        play(): void;
-        /**
-         * 暂停效果，直到调用 resume() 方法。
-         * @method egret.gui.EffectInstance#pause
-         */
-        pause(): void;
-        /**
-         * 停止播放效果，使目标保持当前状态。
-         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         * @method egret.gui.EffectInstance#stop
-         */
-        stop(): void;
-        /**
-         * 在效果由 pause() 方法暂停后继续播放效果。
-         * @method egret.gui.EffectInstance#resume
-         */
-        resume(): void;
-        /**
-         * 从效果的当前位置开始反向播放效果。
-         * @method egret.gui.EffectInstance#reverse
-         */
-        reverse(): void;
-        /**
-         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
-         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         * @method egret.gui.EffectInstance#end
-         */
-        end(): void;
-        /**
-         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
-         * @method egret.gui.EffectInstance#finishEffect
-         */
-        finishEffect(): void;
-        /**
-         * 每次完成重复效果的迭代播放后调用。
-         * @method egret.gui.EffectInstance#finishRepeat
-         */
-        finishRepeat(): void;
-        _playWithNoDuration(): void;
-        private delayTimerHandler(event);
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Fade
-     * @classdesc
-     * 淡入淡出效果
-     * @extends egret.gui.Animate
-     */
-    class Fade extends Animate {
-        /**
-         * @method egret.gui.Fade#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 效果开始的透明度
-         * @member egret.gui.Fade#alphaFrom
-         */
-        alphaFrom: number;
-        /**
-         * 效果结束的透明度
-         * @member egret.gui.Fade#alphaTo
-         */
-        alphaTo: number;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    interface IEffect extends IEventDispatcher {
-        /**
-         * 效果的持续时间（以毫秒为单位）。
-         */
-        duration: number;
-        /**
-         * 一个只读标志，如果当前正在播放效果的任一实例，则为 true；否则，则为 false。
-         */
-        isPlaying: boolean;
-        /**
-         * 在效果的第一个目标之后，其他效果目标的附加延迟（以毫秒为单位）。此值将添加到 startDelay 属性的值中。
-         */
-        perElementOffset: number;
-        /**
-         * 要应用此效果的对象。当效果触发器触发某个效果时，会自动将 target 属性设置为触发该效果的对象。
-         */
-        target: any;
-        /**
-         * 一个对象 Array，这些对象都是效果的目标。播放效果时，会对各个目标并行执行效果。
-         * 设置 target 属性将替换此 Array 中的所有对象。
-         * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
-         */
-        targets: Array<any>;
-        /**
-         * 效果的当前时间位置。此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
-         */
-        playheadTime: number;
-        /**
-         * 获取一个目标对象 Array，并对每个目标调用 createInstance() 方法。
-         *  @param targets 要使用此效果设置动画的对象的数组。
-         *  @return 效果的效果实例对象的数组，一个目标一个数组。
-         */
-        createInstances(targets?: Array<any>): Array<any>;
-        /**
-         * 创建一个效果实例并对其进行初始化。在播放效果实例前，使用此方法（而非 play() 方法）处理效果实例属性。
-         *  <p>所创建的效果实例的类型由 instanceClass 属性指定。然后，使用 _initInstance() 方法初始化此实例。
-         * 如果该实例是 EffectManager 在效果触发器触发此效果时创建的，
-         * 则还需要调用 EffectInstance.initEffect() 方法进一步初始化此效果。</p>
-         *  <p>调用 createInstance() 方法不会播放效果。对返回的效果实例调用 startEffect() 方法。</p>
-         *  <p>Effect.play() 方法将自动调用此函数。 </p>
-         *  @param target 要使用此效果为其设置动画的对象。
-         *  @return 效果的效果实例对象。
-         */
-        createInstance(target?: any): IEffectInstance;
-        /**
-         * 删除实例中的事件侦听器，然后从实例列表中删除该实例。
-         */
-        deleteInstance(instance: IEffectInstance): void;
-        /**
-         * 开始播放效果。通常在调用 play() 方法之前先调用 end() 方法，以确保在开始播放新效果前已结束先前效果的所有实例。
-         * @param targets 播放此效果的目标对象的数组。如果已指定此参数，则不会使用效果的 targets 属性。
-         * @param playReversedFromEnd 如果为 true，则向后播放效果。
-         * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
-         */
-        play(targets?: Array<any>, playReversedFromEnd?: boolean): Array<any>;
-        /**
-         * 暂停效果，直到调用 resume() 方法。
-         */
-        pause(): void;
-        /**
-         * 停止播放效果，使效果目标保持当前状态。
-         * 与调用 pause() 方法不同，无法先调用 stop() 方法再调用 resume() 方法。
-         * 不过，您可以调用 play() 方法重新播放效果。
-         */
-        stop(): void;
-        /**
-         * 在效果由 pause() 方法暂停后继续播放效果。
-         */
-        resume(): void;
-        /**
-         * 逆序播放效果；如果当前正在播放效果，则从该效果的当前位置开始逆序播放。
-         */
-        reverse(): void;
-        /**
-         * 中断当前正在播放的效果，立即跳转到该效果的末尾。调用此方法将调用 EffectInstance.end() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         * <p>如果将效果实例作为参数传递，则会中断此实例。
-         * 如果没有传入参数，则该效果当前生成的所有效果实例都将中断。</p>
-         */
-        end(effectInstance?: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    interface IEffectInstance {
-        /**
-         * 效果的持续时间（以毫秒为单位）。
-         */
-        duration: number;
-        /**
-         * 创建此 IEffectInstance 对象的 IEffect 对象。
-         */
-        effect: IEffect;
-        /**
-         * 效果的当前时间位置。
-         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
-         */
-        playheadTime: number;
-        /**
-         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
-         */
-        repeatCount: number;
-        /**
-         * 重复播放效果前需要等待的时间（以毫秒为单位）。
-         */
-        repeatDelay: number;
-        /**
-         * 开始播放效果前需要等待的时间（以毫秒为单位）。
-         * 此值可以是任何大于或等于 0 的整数。
-         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
-         */
-        startDelay: number;
-        /**
-         * 要应用此效果的对象。
-         */
-        target: any;
-        /**
-         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
-         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
-         */
-        startEffect(): void;
-        /**
-         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
-         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
-         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
-         */
-        play(): void;
-        /**
-         * 暂停效果，直到调用 resume() 方法。
-         */
-        pause(): void;
-        /**
-         * 停止播放效果，使目标保持当前状态。
-         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         */
-        stop(): void;
-        /**
-         * 在效果由 pause() 方法暂停后继续播放效果。
-         */
-        resume(): void;
-        /**
-         * 从效果的当前位置开始反向播放效果。
-         */
-        reverse(): void;
-        /**
-         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
-         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         */
-        end(): void;
-        /**
-         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
-         */
-        finishEffect(): void;
-        /**
-         * 每次完成重复效果的迭代播放后调用。
-         */
-        finishRepeat(): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Move
-     * @classdesc
-     * Move 效果按 x 和 y 方向移动目标对象。
-     * @extends egret.gui.AnimateTransform
-     */
-    class Move extends AnimateTransform {
-        /**
-         * @method egret.gui.Move#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 按其修改目标的 y 位置的像素数目。此值可以为负值
-         * @member egret.gui.Move#yBy
-         */
-        yBy: number;
-        /**
-         * 目标的初始 y 位置
-         * @member egret.gui.Move#yFrom
-         */
-        yFrom: number;
-        /**
-         * 目标的最终 y 位置
-         * @member egret.gui.Move#yTo
-         */
-        yTo: number;
-        /**
-         * 按其修改目标的 x 位置的像素数目
-         * @member egret.gui.Move#xBy
-         */
-        xBy: number;
-        /**
-         * 目标的初始 x 位置
-         * @member egret.gui.Move#xFrom
-         */
-        xFrom: number;
-        /**
-         * 目标的最终 x 位置
-         * @member egret.gui.Move#xTo
-         */
-        xTo: number;
-        createInstance(target?: any): IEffectInstance;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Parallel
-     * @classdesc
-     * Parallel 效果同时播放多个子效果。
-     * @extends egret.gui.CompositeEffect
-     */
-    class Parallel extends CompositeEffect {
-        /**
-         * @method egret.gui.Parallel#constructor
-         */
-        constructor(target?: any);
-        compositeDuration: number;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Rotate
-     * @classdesc
-     * Rotate 效果围绕转换中心旋转目标对象。
-     * @extends egret.gui.AnimateTransform
-     */
-    class Rotate extends AnimateTransform {
-        /**
-         * @method egret.gui.Rotate#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 目标对象的起始旋转角度
-         * @member egret.gui.Rotate#angleFrom
-         */
-        angleFrom: number;
-        /**
-         * 目标对象的结束旋转角度
-         * @member egret.gui.Rotate#angleTo
-         */
-        angleTo: number;
-        /**
-         * 旋转目标对象的度数
-         * @member egret.gui.Rotate#angleBy
-         */
-        angleBy: number;
-        createInstance(target?: any): IEffectInstance;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Scale
-     * @classdesc
-     * Scale 效果围绕转换中心在 x 和 y 方向上缩放目标对象
-     * @extends egret.gui.AnimateTransform
-     */
-    class Scale extends AnimateTransform {
-        /**
-         * @method egret.gui.Scale#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 在 y 方向上的起始比例因子。
-         * @member egret.gui.Scale#scaleYFrom
-         */
-        scaleYFrom: number;
-        /**
-         * 在 y 方向上的结束比例因子。
-         * @member egret.gui.Scale#scaleYTo
-         */
-        scaleYTo: number;
-        /**
-         * 在 y 方向上按其缩放对象的因子。
-         * @member egret.gui.Scale#scaleYBy
-         */
-        scaleYBy: number;
-        /**
-         * 在 x 方向上的起始比例因子。
-         * @member egret.gui.Scale#scaleXFrom
-         */
-        scaleXFrom: number;
-        /**
-         * 在 x 方向上的结束比例因子。
-         * @member egret.gui.Scale#scaleXTo
-         */
-        scaleXTo: number;
-        /**
-         * 在 x 方向上按其缩放对象的因子。
-         * @member egret.gui.Scale#scaleXBy
-         */
-        scaleXBy: number;
-        createInstance(target?: any): IEffectInstance;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Sequence
-     * @classdesc
-     * Sequence 效果以子效果的添加顺序依次播放多个子效果。
-     * @extends egret.gui.CompositeEffect
-     */
-    class Sequence extends CompositeEffect {
-        /**
-         * @method egret.gui.Sequence#constructor
-         */
-        constructor(target?: any);
-        compositeDuration: number;
-    }
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.EaseInOutBase
      * @classdesc
      * EaseInOutBase 类是提供缓动功能的基类。
@@ -9908,6 +9383,40 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.CompositeEffect
+     * @classdesc
+     * 复合效果的基类
+     * @extends egret.gui.Effect
+     */
+    class CompositeEffect extends Effect {
+        /**
+         * @method egret.gui.CompositeEffect#constructor
+         */
+        constructor(target?: any);
+        private childTargets;
+        private _children;
+        /**
+         * 子效果的数组。
+         * @member egret.gui.CompositeEffect#children
+         */
+        children: Array<Effect>;
+        /**
+         * 返回此效果的总持续时间。
+         * @member egret.gui.CompositeEffect#compositeDuration
+         */
+        compositeDuration: number;
+        createInstance(target?: any): IEffectInstance;
+        createInstances(targets?: Array<any>): Array<any>;
+        _initInstance(instance: IEffectInstance): void;
+        /**
+         * 将新的子效果添加到此复合效果。
+         * @method egret.gui.CompositeEffect#addChild
+         */
+        addChild(childEffect: Effect): void;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.Bounce
      * @classdesc
      * Bounce 类实现缓动功能，该功能模拟目标对象上的重力牵引和回弹目标对象。
@@ -9974,6 +9483,158 @@ declare module egret.gui {
          * @inheritDoc
          */
         _easeOut(fraction: number): number;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.EffectInstance
+     * @classdesc
+     * 定义所有效果实例的基类
+     * @extends egret.EventDispatcher
+     */
+    class EffectInstance extends EventDispatcher implements IEffectInstance {
+        /**
+         * @method egret.gui.EffectInstance#constructor
+         */
+        constructor(target: any);
+        /**
+         * startDelay和repeatDelay的计时器
+         */
+        _delayTimer: Timer;
+        /**
+         * delayTimer开始的时间
+         */
+        private delayStartTime;
+        /**
+         * 暂停时delayTimer经过的时间
+         */
+        private delayElapsedTime;
+        /**
+         * 是否显式设置了持续时间
+         */
+        durationExplicitlySet: boolean;
+        /**
+         * 实例对应效果的复杂效果的实例，如果不是复杂效果则为null
+         */
+        parentCompositeEffectInstance: EffectInstance;
+        /**
+         * 已播放实例的次数。
+         */
+        _playCount: number;
+        /**
+         * 调用end()方法结束时，防止效果重复的的标志
+         */
+        _stopRepeat: boolean;
+        /**
+         * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
+         */
+        _actualDuration: number;
+        private _duration;
+        /**
+         * 效果的持续时间（以毫秒为单位）。
+         * @member egret.gui.EffectInstance#duration
+         */
+        duration: number;
+        private _effect;
+        /**
+         * 创建此 IEffectInstance 对象的 IEffect 对象。
+         * @member egret.gui.EffectInstance#effect
+         */
+        effect: IEffect;
+        /**
+         * 效果的当前时间位置。
+         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
+         * @member egret.gui.EffectInstance#playheadTime
+         */
+        playheadTime: number;
+        _setPlayheadTime(value: number): void;
+        private _playReversed;
+        /**
+         * 指定效果是否在反向播放，在播放之前设置此属性
+         * @member egret.gui.EffectInstance#playReversed
+         */
+        playReversed: boolean;
+        _setPlayReversed(value: boolean): void;
+        private _repeatCount;
+        /**
+         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
+         * @member egret.gui.EffectInstance#repeatCount
+         */
+        repeatCount: number;
+        private _repeatDelay;
+        /**
+         * 重复播放效果前需要等待的时间（以毫秒为单位）。
+         * @member egret.gui.EffectInstance#repeatDelay
+         */
+        repeatDelay: number;
+        private _startDelay;
+        /**
+         * 开始播放效果前需要等待的时间（以毫秒为单位）。
+         * 此值可以是任何大于或等于 0 的整数。
+         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
+         * @member egret.gui.EffectInstance#startDelay
+         */
+        startDelay: number;
+        private _target;
+        /**
+         * 要应用此效果的对象。
+         * @member egret.gui.EffectInstance#target
+         */
+        target: any;
+        /**
+         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
+         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
+         * @method egret.gui.EffectInstance#startEffect
+         */
+        startEffect(): void;
+        /**
+         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
+         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
+         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
+         * @method egret.gui.EffectInstance#play
+         */
+        play(): void;
+        /**
+         * 暂停效果，直到调用 resume() 方法。
+         * @method egret.gui.EffectInstance#pause
+         */
+        pause(): void;
+        /**
+         * 停止播放效果，使目标保持当前状态。
+         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         * @method egret.gui.EffectInstance#stop
+         */
+        stop(): void;
+        /**
+         * 在效果由 pause() 方法暂停后继续播放效果。
+         * @method egret.gui.EffectInstance#resume
+         */
+        resume(): void;
+        /**
+         * 从效果的当前位置开始反向播放效果。
+         * @method egret.gui.EffectInstance#reverse
+         */
+        reverse(): void;
+        /**
+         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
+         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         * @method egret.gui.EffectInstance#end
+         */
+        end(): void;
+        /**
+         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
+         * @method egret.gui.EffectInstance#finishEffect
+         */
+        finishEffect(): void;
+        /**
+         * 每次完成重复效果的迭代播放后调用。
+         * @method egret.gui.EffectInstance#finishRepeat
+         */
+        finishRepeat(): void;
+        _playWithNoDuration(): void;
+        private delayTimerHandler(event);
     }
 }
 declare module egret.gui {
@@ -10417,6 +10078,192 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
+    /**
+     * @class egret.gui.Fade
+     * @classdesc
+     * 淡入淡出效果
+     * @extends egret.gui.Animate
+     */
+    class Fade extends Animate {
+        /**
+         * @method egret.gui.Fade#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 效果开始的透明度
+         * @member egret.gui.Fade#alphaFrom
+         */
+        alphaFrom: number;
+        /**
+         * 效果结束的透明度
+         * @member egret.gui.Fade#alphaTo
+         */
+        alphaTo: number;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    interface IEffect extends IEventDispatcher {
+        /**
+         * 效果的持续时间（以毫秒为单位）。
+         */
+        duration: number;
+        /**
+         * 一个只读标志，如果当前正在播放效果的任一实例，则为 true；否则，则为 false。
+         */
+        isPlaying: boolean;
+        /**
+         * 在效果的第一个目标之后，其他效果目标的附加延迟（以毫秒为单位）。此值将添加到 startDelay 属性的值中。
+         */
+        perElementOffset: number;
+        /**
+         * 要应用此效果的对象。当效果触发器触发某个效果时，会自动将 target 属性设置为触发该效果的对象。
+         */
+        target: any;
+        /**
+         * 一个对象 Array，这些对象都是效果的目标。播放效果时，会对各个目标并行执行效果。
+         * 设置 target 属性将替换此 Array 中的所有对象。
+         * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
+         */
+        targets: Array<any>;
+        /**
+         * 效果的当前时间位置。此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
+         */
+        playheadTime: number;
+        /**
+         * 获取一个目标对象 Array，并对每个目标调用 createInstance() 方法。
+         *  @param targets 要使用此效果设置动画的对象的数组。
+         *  @return 效果的效果实例对象的数组，一个目标一个数组。
+         */
+        createInstances(targets?: Array<any>): Array<any>;
+        /**
+         * 创建一个效果实例并对其进行初始化。在播放效果实例前，使用此方法（而非 play() 方法）处理效果实例属性。
+         *  <p>所创建的效果实例的类型由 instanceClass 属性指定。然后，使用 _initInstance() 方法初始化此实例。
+         * 如果该实例是 EffectManager 在效果触发器触发此效果时创建的，
+         * 则还需要调用 EffectInstance.initEffect() 方法进一步初始化此效果。</p>
+         *  <p>调用 createInstance() 方法不会播放效果。对返回的效果实例调用 startEffect() 方法。</p>
+         *  <p>Effect.play() 方法将自动调用此函数。 </p>
+         *  @param target 要使用此效果为其设置动画的对象。
+         *  @return 效果的效果实例对象。
+         */
+        createInstance(target?: any): IEffectInstance;
+        /**
+         * 删除实例中的事件侦听器，然后从实例列表中删除该实例。
+         */
+        deleteInstance(instance: IEffectInstance): void;
+        /**
+         * 开始播放效果。通常在调用 play() 方法之前先调用 end() 方法，以确保在开始播放新效果前已结束先前效果的所有实例。
+         * @param targets 播放此效果的目标对象的数组。如果已指定此参数，则不会使用效果的 targets 属性。
+         * @param playReversedFromEnd 如果为 true，则向后播放效果。
+         * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
+         */
+        play(targets?: Array<any>, playReversedFromEnd?: boolean): Array<any>;
+        /**
+         * 暂停效果，直到调用 resume() 方法。
+         */
+        pause(): void;
+        /**
+         * 停止播放效果，使效果目标保持当前状态。
+         * 与调用 pause() 方法不同，无法先调用 stop() 方法再调用 resume() 方法。
+         * 不过，您可以调用 play() 方法重新播放效果。
+         */
+        stop(): void;
+        /**
+         * 在效果由 pause() 方法暂停后继续播放效果。
+         */
+        resume(): void;
+        /**
+         * 逆序播放效果；如果当前正在播放效果，则从该效果的当前位置开始逆序播放。
+         */
+        reverse(): void;
+        /**
+         * 中断当前正在播放的效果，立即跳转到该效果的末尾。调用此方法将调用 EffectInstance.end() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         * <p>如果将效果实例作为参数传递，则会中断此实例。
+         * 如果没有传入参数，则该效果当前生成的所有效果实例都将中断。</p>
+         */
+        end(effectInstance?: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    interface IEffectInstance {
+        /**
+         * 效果的持续时间（以毫秒为单位）。
+         */
+        duration: number;
+        /**
+         * 创建此 IEffectInstance 对象的 IEffect 对象。
+         */
+        effect: IEffect;
+        /**
+         * 效果的当前时间位置。
+         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
+         */
+        playheadTime: number;
+        /**
+         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
+         */
+        repeatCount: number;
+        /**
+         * 重复播放效果前需要等待的时间（以毫秒为单位）。
+         */
+        repeatDelay: number;
+        /**
+         * 开始播放效果前需要等待的时间（以毫秒为单位）。
+         * 此值可以是任何大于或等于 0 的整数。
+         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
+         */
+        startDelay: number;
+        /**
+         * 要应用此效果的对象。
+         */
+        target: any;
+        /**
+         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
+         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
+         */
+        startEffect(): void;
+        /**
+         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
+         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
+         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
+         */
+        play(): void;
+        /**
+         * 暂停效果，直到调用 resume() 方法。
+         */
+        pause(): void;
+        /**
+         * 停止播放效果，使目标保持当前状态。
+         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         */
+        stop(): void;
+        /**
+         * 在效果由 pause() 方法暂停后继续播放效果。
+         */
+        resume(): void;
+        /**
+         * 从效果的当前位置开始反向播放效果。
+         */
+        reverse(): void;
+        /**
+         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
+         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         */
+        end(): void;
+        /**
+         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
+         */
+        finishEffect(): void;
+        /**
+         * 每次完成重复效果的迭代播放后调用。
+         */
+        finishRepeat(): void;
+    }
+}
+declare module egret.gui {
     interface IInterpolator {
         /**
          * 如果有在 0.0 和 1.0 之间的某个动画的已过去部分，以及要插补的开始值和结束值，则返回内插值。
@@ -10459,6 +10306,159 @@ declare module egret.gui {
         interpolate(fraction: number, startValue: any, endValue: any): any;
         increment(baseValue: any, incrementValue: any): any;
         decrement(baseValue: any, decrementValue: any): any;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Move
+     * @classdesc
+     * Move 效果按 x 和 y 方向移动目标对象。
+     * @extends egret.gui.AnimateTransform
+     */
+    class Move extends AnimateTransform {
+        /**
+         * @method egret.gui.Move#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 按其修改目标的 y 位置的像素数目。此值可以为负值
+         * @member egret.gui.Move#yBy
+         */
+        yBy: number;
+        /**
+         * 目标的初始 y 位置
+         * @member egret.gui.Move#yFrom
+         */
+        yFrom: number;
+        /**
+         * 目标的最终 y 位置
+         * @member egret.gui.Move#yTo
+         */
+        yTo: number;
+        /**
+         * 按其修改目标的 x 位置的像素数目
+         * @member egret.gui.Move#xBy
+         */
+        xBy: number;
+        /**
+         * 目标的初始 x 位置
+         * @member egret.gui.Move#xFrom
+         */
+        xFrom: number;
+        /**
+         * 目标的最终 x 位置
+         * @member egret.gui.Move#xTo
+         */
+        xTo: number;
+        createInstance(target?: any): IEffectInstance;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Parallel
+     * @classdesc
+     * Parallel 效果同时播放多个子效果。
+     * @extends egret.gui.CompositeEffect
+     */
+    class Parallel extends CompositeEffect {
+        /**
+         * @method egret.gui.Parallel#constructor
+         */
+        constructor(target?: any);
+        compositeDuration: number;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Rotate
+     * @classdesc
+     * Rotate 效果围绕转换中心旋转目标对象。
+     * @extends egret.gui.AnimateTransform
+     */
+    class Rotate extends AnimateTransform {
+        /**
+         * @method egret.gui.Rotate#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 目标对象的起始旋转角度
+         * @member egret.gui.Rotate#angleFrom
+         */
+        angleFrom: number;
+        /**
+         * 目标对象的结束旋转角度
+         * @member egret.gui.Rotate#angleTo
+         */
+        angleTo: number;
+        /**
+         * 旋转目标对象的度数
+         * @member egret.gui.Rotate#angleBy
+         */
+        angleBy: number;
+        createInstance(target?: any): IEffectInstance;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Scale
+     * @classdesc
+     * Scale 效果围绕转换中心在 x 和 y 方向上缩放目标对象
+     * @extends egret.gui.AnimateTransform
+     */
+    class Scale extends AnimateTransform {
+        /**
+         * @method egret.gui.Scale#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 在 y 方向上的起始比例因子。
+         * @member egret.gui.Scale#scaleYFrom
+         */
+        scaleYFrom: number;
+        /**
+         * 在 y 方向上的结束比例因子。
+         * @member egret.gui.Scale#scaleYTo
+         */
+        scaleYTo: number;
+        /**
+         * 在 y 方向上按其缩放对象的因子。
+         * @member egret.gui.Scale#scaleYBy
+         */
+        scaleYBy: number;
+        /**
+         * 在 x 方向上的起始比例因子。
+         * @member egret.gui.Scale#scaleXFrom
+         */
+        scaleXFrom: number;
+        /**
+         * 在 x 方向上的结束比例因子。
+         * @member egret.gui.Scale#scaleXTo
+         */
+        scaleXTo: number;
+        /**
+         * 在 x 方向上按其缩放对象的因子。
+         * @member egret.gui.Scale#scaleXBy
+         */
+        scaleXBy: number;
+        createInstance(target?: any): IEffectInstance;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Sequence
+     * @classdesc
+     * Sequence 效果以子效果的添加顺序依次播放多个子效果。
+     * @extends egret.gui.CompositeEffect
+     */
+    class Sequence extends CompositeEffect {
+        /**
+         * @method egret.gui.Sequence#constructor
+         */
+        constructor(target?: any);
+        compositeDuration: number;
     }
 }
 declare module egret.gui {
@@ -12053,6 +12053,90 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.PopUpManagerImpl
+     * @classdesc
+     * 窗口弹出管理器实现类
+     * @extends egret.EventDispatcher
+     * @implements egret.gui.IPopUpManager
+     */
+    class PopUpManagerImpl extends EventDispatcher implements IPopUpManager {
+        /**
+         * 构造函数
+         * @method egret.gui.PopUpManagerImpl#constructor
+         */
+        constructor();
+        private _popUpList;
+        /**
+         * 已经弹出的窗口列表
+         * @member egret.gui.PopUpManagerImpl#popUpList
+         */
+        popUpList: Array<any>;
+        /**
+         * 模态窗口列表
+         */
+        private popUpDataList;
+        /**
+         * 根据popUp获取对应的popUpData
+         */
+        private findPopUpData(popUp);
+        private static REMOVE_FROM_UISTAGE;
+        /**
+         * 弹出一个窗口。<br/>
+         * @method egret.gui.PopUpManagerImpl#addPopUp
+         * @param popUp {IVisualElement} 要弹出的窗口
+         * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
+         * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
+         */
+        addPopUp(popUp: IVisualElement, modal?: boolean, center?: boolean): void;
+        /**
+         * 从舞台移除
+         */
+        private onRemoved(event);
+        private _modalColor;
+        /**
+         * 模态遮罩的填充颜色
+         * @member egret.gui.PopUpManagerImpl#modalColor
+         */
+        modalColor: number;
+        private _modalAlpha;
+        /**
+         * 模态遮罩的透明度
+         * @member egret.gui.PopUpManagerImpl#modalAlpha
+         */
+        modalAlpha: number;
+        private invalidateModalFlag;
+        /**
+         * 标记一个UIStage的模态层失效
+         */
+        private invalidateModal();
+        private validateModal(event);
+        private modalMask;
+        /**
+         * 更新窗口模态效果
+         */
+        private updateModal(uiStage);
+        /**
+         * 移除由addPopUp()方法弹出的窗口。
+         * @method egret.gui.PopUpManagerImpl#removePopUp
+         * @param popUp {IVisualElement} 要移除的窗口
+         */
+        removePopUp(popUp: IVisualElement): void;
+        /**
+         * 将指定窗口居中显示
+         * @method egret.gui.PopUpManagerImpl#centerPopUp
+         * @param popUp {IVisualElement} 要居中显示的窗口
+         */
+        centerPopUp(popUp: IVisualElement): void;
+        /**
+         * 将指定窗口的层级调至最前
+         * @method egret.gui.PopUpManagerImpl#bringToFront
+         * @param popUp {IVisualElement} 要最前显示的窗口
+         */
+        bringToFront(popUp: IVisualElement): void;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.IPopUpManager
      * @interface
      * @classdesc
@@ -12184,90 +12268,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.PopUpManagerImpl
-     * @classdesc
-     * 窗口弹出管理器实现类
-     * @extends egret.EventDispatcher
-     * @implements egret.gui.IPopUpManager
-     */
-    class PopUpManagerImpl extends EventDispatcher implements IPopUpManager {
-        /**
-         * 构造函数
-         * @method egret.gui.PopUpManagerImpl#constructor
-         */
-        constructor();
-        private _popUpList;
-        /**
-         * 已经弹出的窗口列表
-         * @member egret.gui.PopUpManagerImpl#popUpList
-         */
-        popUpList: Array<any>;
-        /**
-         * 模态窗口列表
-         */
-        private popUpDataList;
-        /**
-         * 根据popUp获取对应的popUpData
-         */
-        private findPopUpData(popUp);
-        private static REMOVE_FROM_UISTAGE;
-        /**
-         * 弹出一个窗口。<br/>
-         * @method egret.gui.PopUpManagerImpl#addPopUp
-         * @param popUp {IVisualElement} 要弹出的窗口
-         * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
-         * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
-         */
-        addPopUp(popUp: IVisualElement, modal?: boolean, center?: boolean): void;
-        /**
-         * 从舞台移除
-         */
-        private onRemoved(event);
-        private _modalColor;
-        /**
-         * 模态遮罩的填充颜色
-         * @member egret.gui.PopUpManagerImpl#modalColor
-         */
-        modalColor: number;
-        private _modalAlpha;
-        /**
-         * 模态遮罩的透明度
-         * @member egret.gui.PopUpManagerImpl#modalAlpha
-         */
-        modalAlpha: number;
-        private invalidateModalFlag;
-        /**
-         * 标记一个UIStage的模态层失效
-         */
-        private invalidateModal();
-        private validateModal(event);
-        private modalMask;
-        /**
-         * 更新窗口模态效果
-         */
-        private updateModal(uiStage);
-        /**
-         * 移除由addPopUp()方法弹出的窗口。
-         * @method egret.gui.PopUpManagerImpl#removePopUp
-         * @param popUp {IVisualElement} 要移除的窗口
-         */
-        removePopUp(popUp: IVisualElement): void;
-        /**
-         * 将指定窗口居中显示
-         * @method egret.gui.PopUpManagerImpl#centerPopUp
-         * @param popUp {IVisualElement} 要居中显示的窗口
-         */
-        centerPopUp(popUp: IVisualElement): void;
-        /**
-         * 将指定窗口的层级调至最前
-         * @method egret.gui.PopUpManagerImpl#bringToFront
-         * @param popUp {IVisualElement} 要最前显示的窗口
-         */
-        bringToFront(popUp: IVisualElement): void;
-    }
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.OverrideBase
      * @classdesc
      * OverrideBase 类是视图状态所用的 override 类的基类。
@@ -12359,6 +12359,21 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
+    class InterruptionBehavior {
+        /**
+         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前结束另一个过渡。
+         * 通过对过渡中的所有效果调用 end() 方法来结束过渡。end() 方法导致所有效果到达结束状态。
+         */
+        static END: string;
+        /**
+         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前停止正在进行的其它过渡。
+         * 通过对过渡中的所有效果调用 stop() 方法来停止过渡。
+         */
+        static STOP: string;
+        constructor();
+    }
+}
+declare module egret.gui {
     /**
      * @class egret.gui.IOverride
      * @interface
@@ -12384,21 +12399,6 @@ declare module egret.gui {
          * @param parent {IContainer}
          */
         remove(parent: IContainer): void;
-    }
-}
-declare module egret.gui {
-    class InterruptionBehavior {
-        /**
-         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前结束另一个过渡。
-         * 通过对过渡中的所有效果调用 end() 方法来结束过渡。end() 方法导致所有效果到达结束状态。
-         */
-        static END: string;
-        /**
-         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前停止正在进行的其它过渡。
-         * 通过对过渡中的所有效果调用 stop() 方法来停止过渡。
-         */
-        static STOP: string;
-        constructor();
     }
 }
 declare module egret.gui {
@@ -12648,6 +12648,15 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
+     * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
+     * @param value {string} 以字符串形式表示Rectangle构造函数的四个参数:x，y，width，height。例如："7,7,46,46"。
+     * @returns {string} 字符串对应的Rectangle实例。
+     */
+    function getScale9Grid(value: string): Rectangle;
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.LayoutUtil
      * @classdesc
      * 布局工具类
@@ -12661,15 +12670,6 @@ declare module egret.gui {
          */
         static adjustRelativeByXY(element: IVisualElement, parent?: DisplayObjectContainer): void;
     }
-}
-declare module egret.gui {
-    /**
-     * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
-     * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
-     * @param value {string} 以字符串形式表示Rectangle构造函数的四个参数:x，y，width，height。例如："7,7,46,46"。
-     * @returns {string} 字符串对应的Rectangle实例。
-     */
-    function getScale9Grid(value: string): Rectangle;
 }
 declare module egret.gui {
     /**
