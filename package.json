@@ -269,6 +269,13 @@
         "files": [ ],
         "root": "src/extension/tween",
         "dependencies": [ "egret" ]
+      },
+      {
+        "name": "dragonbones",
+        "description": "dragonbones",
+        "files": [ ],
+        "root": "src/extension/dragonbones",
+        "dependencies": [ "egret" ]
       }
     ],
     "platforms": [
