@@ -164,6 +164,10 @@ function parseCommandLine(commandLine) {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
+            else if (file.isDirectory(commands[1]) || options.command == "create_app") {
+                options.projectDir = commands[1];
+                commands.splice(1, 1);
+            }
             switch (options.command) {
                 case "build":
                 case "run":
@@ -222,3 +226,5 @@ function parseJSON(json) {
     return options;
 }
 exports.parseJSON = parseJSON;
+
+//# sourceMappingURL=../parser/Parser.js.map

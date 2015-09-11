@@ -95,11 +95,12 @@ function parse(xmlString) {
         return object;
     }
 }
+exports.parse = parse;
 ;
 function toString() {
     return this.text;
 }
 ;
-module.exports = { parse: parse };
+//export = { parse: parse };
 
 //# sourceMappingURL=../../lib/xml/index.js.map

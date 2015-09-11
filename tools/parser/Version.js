@@ -53,3 +53,5 @@ function getEgretPath(version) {
     }
     return path;
 }
+
+//# sourceMappingURL=../parser/Version.js.map
