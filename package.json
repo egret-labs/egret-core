@@ -15,7 +15,7 @@
     "modules": [
       {
         "name": "egret",
-        "description": "Egret ���Ŀ�",
+        "description": "Egret 核心库",
         "files": [
           {
             "path": "../Defines.debug.ts",
@@ -285,76 +285,76 @@
     "templates": [
       {
         "name": "empty",
-        "displayName": "�� Egret ��Ŀ",
+        "displayName": "空 Egret 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "����һ������Ŀ,������ Egret ���ģ������",
+        "description": "创建一个空项目,仅添加 Egret 相关模块引用",
         "modules": [ "egret" ]
       },
       {
         "name": "game",
-        "displayName": "Egret ��Ϸ��Ŀ",
+        "displayName": "Egret 游戏项目",
         "language": "TypeScript",
         "tag": "game,TypeScript",
-        "description": "����һ��Egret ��Ϸ��Ŀ",
+        "description": "创建一个Egret 游戏项目",
         "modules": [ "egret", "game", "tween", "res" ]
       },
       {
         "name": "eui",
-        "description": "ʹ�� eui ��չ�ⴴ���ѺõĽ�������",
+        "description": "使用 eui 扩展库创建友好的交互界面",
         "modules": [ "egret", "eui", "res" ]
       },
       {
         "name": "gui",
-        "displayName": "Egret GUI ��Ŀ",
+        "displayName": "Egret GUI 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "����һ��Egret GUI ��Ŀ",
+        "description": "创建一个Egret GUI 项目",
         "modules": [ "egret", "game", "res", "gui" ]
       }
     ],
     "scaleModes": [
       {
         "name": "noScale",
-        "description": "������Ӧ�ó������ݡ���ʹ�ڸ��Ĳ������ӿڴ�Сʱ������Ȼ���ֲ��䡣����������ӿڱ�����С������ܽ���һЩ���С��ڴ�ģʽ�£���̨�ߴ磨Stage.stageWidth,Stage.stageHeight��ʼ�ո��������ӿڴ�С����һ�¡�"
+        "description": "不缩放应用程序内容。即使在更改播放器视口大小时，它仍然保持不变。如果播放器视口比内容小，则可能进行一些裁切。在此模式下，舞台尺寸（Stage.stageWidth,Stage.stageHeight）始终跟播放器视口大小保持一致。"
       },
       {
         "name": "showAll",
-        "description": "����ԭʼ���߱�����Ӧ�ó������ݣ����ź�Ӧ�ó������ݵĽϿ����������������ӿڣ���һ�������������ܻ᲻���������кڱߡ��ڴ�ģʽ�£���̨�ߴ�(Stage.stageWidth,Stage.stageHeight)ʼ�յ��ڳ�ʼ��ʱ�ⲿ�����Ӧ�ó������ݳߴ硣"
+        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较宽方向填满播放器视口，另一个方向的两侧可能会不够宽而留有黑边。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。"
       },
       {
         "name": "noBorder",
-        "description": "����ԭʼ���߱�����Ӧ�ó������ݣ����ź�Ӧ�ó������ݵĽ�խ���������������ӿڣ���һ�������������ܻᳬ���������ӿڶ������С��ڴ�ģʽ�£���̨�ߴ�(Stage.stageWidth,Stage.stageHeight)ʼ�յ��ڳ�ʼ��ʱ�ⲿ�����Ӧ�ó������ݳߴ硣"
+        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较窄方向填满播放器视口，另一个方向的两侧可能会超出播放器视口而被裁切。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。"
       },
       {
         "name": "exactFit",
-        "description": "������ԭʼ���߱�����Ӧ�ó������ݣ����ź�Ӧ�ó����������������������ӿڡ��ڴ�ģʽ�£���̨�ߴ�(Stage.stageWidth,Stage.stageHeight)ʼ�յ��ڳ�ʼ��ʱ�ⲿ�����Ӧ�ó������ݳߴ硣"
+        "description": "不保持原始宽高比缩放应用程序内容，缩放后应用程序内容正好填满播放器视口。在此模式下，舞台尺寸(Stage.stageWidth,Stage.stageHeight)始终等于初始化时外部传入的应用程序内容尺寸。"
       },
       {
         "name": "fixedWidth",
-        "description": "����ԭʼ���߱�����Ӧ�ó������ݣ����ź�Ӧ�ó���������ˮƽ�ʹ�ֱ���������������ӿڣ���ֻ����Ӧ�ó������ݵ�ԭʼ���Ȳ��䣬�߶ȿ��ܻ�ı䡣�ڴ�ģʽ�£���̨����(Stage.stageWidth)ʼ�յ��ڳ�ʼ��ʱ�ⲿ�����Ӧ�ó������ݿ��ȡ���̨�߶�(Stage.stageHeight)�ɵ�ǰ�����ű����벥�����ӿڸ߶Ⱦ�����"
+        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始宽度不变，高度可能会改变。在此模式下，舞台宽度(Stage.stageWidth)始终等于初始化时外部传入的应用程序内容宽度。舞台高度(Stage.stageHeight)由当前的缩放比例与播放器视口高度决定。"
       },
       {
         "name": "fixedHeight",
-        "description": "����ԭʼ���߱�����Ӧ�ó������ݣ����ź�Ӧ�ó���������ˮƽ�ʹ�ֱ���������������ӿڣ���ֻ����Ӧ�ó������ݵ�ԭʼ�߶Ȳ��䣬���ȿ��ܻ�ı䡣�ڴ�ģʽ�£���̨�߶�(Stage.stageHeight)ʼ�յ��ڳ�ʼ��ʱ�ⲿ�����Ӧ�ó������ݸ߶ȡ���̨����(Stage.stageWidth)�ɵ�ǰ�����ű����벥�����ӿڿ��Ⱦ�����"
+        "description": "保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，但只保持应用程序内容的原始高度不变，宽度可能会改变。在此模式下，舞台高度(Stage.stageHeight)始终等于初始化时外部传入的应用程序内容高度。舞台宽度(Stage.stageWidth)由当前的缩放比例与播放器视口宽度决定。"
       }
     ],
     "orientationModes": [
       {
         "name": "auto",
-        "description": "��ǿ����תӦ�ó���Ӧ�ó������豸��ת����ת"
+        "description": "不强制旋转应用程序。应用程序随设备旋转而旋转"
       },
       {
         "name": "portrait",
-        "description": "ǿ����תӦ�ó���������״̬����ģʽ�£�����Ļ���ȴ�����Ļ�߶�ʱ�����Զ���Ӧ�ó�����ʱ����ת90�㡣"
+        "description": "强制旋转应用程序至竖屏状态。此模式下，当屏幕宽度大于屏幕高度时，会自动将应用程序逆时针旋转90°。"
       },
       {
         "name": "landscape",
-        "description": "ǿ����תӦ�ó���������״̬����ģʽ�£�����Ļ�߶ȴ�����Ļ����ʱ�����Զ���Ӧ�ó���˳ʱ����ת90�㡣"
+        "description": "强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序顺时针旋转90°。"
       },
       {
         "name": "landscapeFlipped",
-        "description": "ǿ����תӦ�ó���������״̬����ģʽ�£�����Ļ�߶ȴ�����Ļ����ʱ�����Զ���Ӧ�ó�����ʱ����ת90�㡣"
+        "description": "强制旋转应用程序至横屏状态。此模式下，当屏幕高度大于屏幕宽度时，会自动将应用程序逆时针旋转90°。"
       }
     ]
   }

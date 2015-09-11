@@ -1,9 +1,8 @@
-﻿/// <reference path="../lib/types.d.ts" />
+/// <reference path="../lib/types.d.ts" />
 
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 
-var ENGINES_ROOT_PARAM = "--engines-root:"
 
 export interface VersionCheckResult {
     /** 当前项目使用了其他版本的引擎 */
@@ -44,23 +43,14 @@ export function check(): VersionCheckResult {
         return result;
     }
 
-    
-    var enginesRootParams = process.argv.filter(a=> a.indexOf(ENGINES_ROOT_PARAM) >= 0);
-    //当前引擎并不是使用一键安装包安装
-    if (enginesRootParams.length == 0) {
-        return result;
-    }
-
-    var enginesRoot = enginesRootParams[0].substr(ENGINES_ROOT_PARAM.length);
-    enginesRoot = file.escapePath(enginesRoot);
-    var targetEngineBin = `${enginesRoot}/node_modules/egret/${requestVersion}/tools/bin/egret`;
+    var targetEnginePath = getEgretPath(requestVersion);
     
     //不存在指定的引擎
-    if (!file.exists(targetEngineBin)) {
+    if (!file.exists(targetEnginePath)) {
         return result;
     }
     result.hasTargetEngine = true;
-    result.targetEngineRoot = `${enginesRoot}/node_modules/egret/${requestVersion}/`;
+    result.targetEngineRoot = targetEnginePath;
     return result;
 }
 
@@ -69,5 +59,25 @@ export function execute(root: string) {
     if (process.env.EGRET_PATH) {
         process.env.EGRET_PATH = root;
     }
-    require(root +"tools/bin/egret");
+    require(root + "tools/bin/egret");
+}
+
+function getEgretPath(version:string): string {
+    var path:string;
+    
+    switch (process.platform) {
+        case 'darwin':
+            var user = process.env.NAME || process.env.LOGNAME;
+            if(!user)
+                return null;
+            path = `/Users/${user}/Library/Application Support/Egret/engine/${version}/`;
+            break;
+        case 'win32':
+            var appdata = process.env.AppData||`${process.env.USERPROFILE}/AppData/Roaming/`;
+            path = file.escapePath(`${appdata}/Egret/engine/${version}/`);
+            break;
+        default:
+            ;
+    }
+    return path;
 }

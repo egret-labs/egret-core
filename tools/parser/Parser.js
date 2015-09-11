@@ -178,8 +178,6 @@ function parseCommandLine(commandLine) {
         if (options.projectDir == null)
             options.projectDir = process.cwd();
         else {
-            if (!file.exists(options.projectDir))
-                file.createDirectory(options.projectDir);
             var absPath = file.joinPath(process.cwd(), options.projectDir);
             if (file.isDirectory(absPath)) {
                 options.projectDir = absPath;
@@ -224,5 +222,3 @@ function parseJSON(json) {
     return options;
 }
 exports.parseJSON = parseJSON;
-
-//# sourceMappingURL=../parser/Parser.js.map
