@@ -35,7 +35,7 @@ module egret {
      * @method egret.getOption
      * @param key {string} Parameters key
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -45,7 +45,7 @@ module egret {
      * @method egret.getOption
      * @param key {string} 参数key
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export var getOption:(key:string)=>string;

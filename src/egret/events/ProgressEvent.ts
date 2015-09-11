@@ -31,14 +31,14 @@ module egret {
      * @language en_US
      * When a load operation has begun or a socket has received data, ProgressEvent object is dispatched.
      * There are two types of progress events: ProgressEvent.PROGRESS and ProgressEvent.SOCKET_DATA.
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 当加载操作已开始或套接字已接收到数据时，将调度 ProgressEvent 对象。
      * 有两种类型的进程事件：ProgressEvent.PROGRESS 和 ProgressEvent.SOCKET_DATA。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class ProgressEvent extends egret.Event {
@@ -46,13 +46,13 @@ module egret {
         /**
          * @language en_US
          * Changes in the loading progress
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 加载进度发生变化
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static PROGRESS:string = "progress";
@@ -60,13 +60,13 @@ module egret {
         /**
          * @language en_US
          * Get the data
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取到数据
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static SOCKET_DATA:string = "socketData";
@@ -74,13 +74,13 @@ module egret {
         /**
          * @language en_US
          * Number of items or bytes when the listener processes the event。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在侦听器处理事件时加载的项数或字节数。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public bytesLoaded:number = 0;
@@ -88,13 +88,13 @@ module egret {
         /**
          * @language en_US
          * If the loading process succeeds, the total number or the total number of bytes that will be loaded term.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 如果加载过程成功，将加载的总项数或总字节数。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public bytesTotal:number = 0;
@@ -107,7 +107,7 @@ module egret {
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @param bytesLoaded {number} Number of items or bytes loaded
          * @param bytesTotal {number} The total number of items or bytes loaded
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -118,7 +118,7 @@ module egret {
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          * @param bytesLoaded {number} 加载的项数或字节数
          * @param bytesTotal {number} 加载的总项数或总字节数
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false, bytesLoaded:number = 0, bytesTotal:number = 0) {
@@ -135,7 +135,7 @@ module egret {
          * @param type  The type of the event, accessible as Event.type.
          * @param bytesLoaded {number} Number of items or bytes loaded
          * @param bytesTotal {number} The total number of items or bytes loaded
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -145,7 +145,7 @@ module egret {
          * @param type {string} 事件类型
          * @param bytesLoaded {number} 加载的项数或字节数
          * @param bytesTotal {number} 加载的总项数或总字节数
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static dispatchProgressEvent(target:IEventDispatcher, type:string, bytesLoaded:number = 0, bytesTotal:number = 0):boolean {

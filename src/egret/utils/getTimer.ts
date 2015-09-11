@@ -39,7 +39,7 @@ module egret {
      * @language en_US
      * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
      * @returns The number of milliseconds since the Egret framework was initialized
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getTimer.ts
      */
@@ -47,7 +47,7 @@ module egret {
      * @language zh_CN
      * 用于计算相对时间。此方法返回自启动 Egret 框架以来经过的毫秒数。
      * @returns 启动 Egret 框架以来经过的毫秒数。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getTimer.ts
      */

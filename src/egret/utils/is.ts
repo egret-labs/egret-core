@@ -43,7 +43,7 @@ module egret {
      *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
      * </pre>
      * @see egret.registerClass()
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -60,7 +60,7 @@ module egret {
      *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
      * </pre>
      * @see egret.registerClass()
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function is(instance:any, typeName:string):boolean {

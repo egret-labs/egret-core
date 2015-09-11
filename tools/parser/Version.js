@@ -31,6 +31,7 @@ function check() {
 }
 exports.check = check;
 function execute(root) {
+    //覆盖 EGRET_PATH 环境变量，兼容老版本引擎
     if (process.env.EGRET_PATH) {
         process.env.EGRET_PATH = root;
     }

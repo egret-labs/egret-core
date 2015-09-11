@@ -43,7 +43,7 @@ module egret {
      * extending another class), you can instead implement the IEventDispatcher interface, create an EventDispatcher member,
      * and write simple hooks to route calls into the aggregated EventDispatcher.
      * @see egret.EventDispatcher
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/IEventDispatcher.ts
      */
@@ -56,7 +56,7 @@ module egret {
      * 通常，使用户定义的类能够调度事件的最简单方法是扩展 EventDispatcher。如果无法扩展（即，如果该类已经扩展了另一个类），
      * 则可以实现 IEventDispatcher 接口，创建 EventDispatcher 成员，并编写一些简单的挂钩，将调用连接到聚合的 EventDispatcher 中。
      * @see egret.EventDispatcher
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/events/IEventDispatcher.ts
      */
@@ -95,7 +95,7 @@ module egret {
          * The default priority is
          * @see #once()
          * @see #removeEventListener()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -121,7 +121,7 @@ module egret {
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
          * @see #once()
          * @see #removeEventListener()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         addEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
@@ -145,7 +145,7 @@ module egret {
          * The default priority is
          * @see #on()
          * @see #removeEventListener()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -162,7 +162,7 @@ module egret {
          * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
          * @see #on()
          * @see #removeEventListener()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         once(type:string, listener:Function, thisObject:any, useCapture?:boolean, priority?:number):void;
@@ -176,7 +176,7 @@ module egret {
          * @param useCapture Specifies whether the listener was registered for the capture phase or the bubbling phases.
          * If the listener was registered for both the capture phase and the bubbling phases, two calls to removeEventListener()
          * are required to remove both: one call with useCapture set to true, and another call with useCapture set to false.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -187,7 +187,7 @@ module egret {
          * @param thisObject 侦听函数绑定的this对象
          * @param useCapture 指出是为捕获阶段还是为冒泡阶段注册了侦听器。如果为捕获阶段以及冒泡阶段注册了侦听器，则需要对
          * removeEventListener() 进行两次调用才能将这两个侦听器删除：一次调用将 useCapture 设置为 true，另一次调用将 useCapture 设置为 false。。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void;
@@ -202,7 +202,7 @@ module egret {
          * @param type The type of event.
          * @returns A value of true if a listener of the specified type is registered; false otherwise.
          * @see #willTrigger()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -213,7 +213,7 @@ module egret {
          * @param type 事件的类型。
          * @returns 如果指定类型的侦听器已注册，则值为 true；否则，值为 false。
          * @see #willTrigger()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         hasEventListener(type:string):boolean;
@@ -223,7 +223,7 @@ module egret {
          * Dispatches an event into the event flow. The event target is the EventDispatcher object upon which dispatchEvent() is called.
          * @param event The event object dispatched into the event flow.
          * @returns A value of true unless preventDefault() is called on the event, in which case it returns false.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -231,7 +231,7 @@ module egret {
          * 将事件分派到事件流中。事件目标是对其调用 dispatchEvent() 方法的 EventDispatcher 对象。
          * @param event 调度到事件流中的 Event 对象。
          * @returns 如果成功调度了事件，则值为 true。值 false 表示失败或对事件调用了 preventDefault()。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         dispatchEvent(event:Event):boolean;
@@ -244,7 +244,7 @@ module egret {
          * @param type The type of event.
          * @returns A value of true if a listener of the specified type will be triggered; false otherwise.
          * @see #hasEventListener()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -256,7 +256,7 @@ module egret {
          * @param type 事件类型
          * @returns 是否注册过监听器，如果注册过返回true，反之返回false
          * @see #hasEventListener()
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         willTrigger(type:string):boolean;

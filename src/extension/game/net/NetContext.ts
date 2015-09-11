@@ -32,7 +32,7 @@ module egret {
 
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export interface NetContext extends HashObject {
@@ -40,7 +40,7 @@ module egret {
         /**
          * 
          * @param loader 
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         proceed(loader:URLLoader):void;
@@ -48,7 +48,7 @@ module egret {
 
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export var NetContext:{

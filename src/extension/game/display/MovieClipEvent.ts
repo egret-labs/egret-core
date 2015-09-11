@@ -33,13 +33,13 @@ module egret {
     /**
      * @language en_US
      * When the movieClip's current frame have a frameLabel, dispatches MovieClipEvent object. FrameLabel Event type: MovieClipEvent.FRAME_LABEL
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
   	/**
      * @language zh_CN
      * 当动画的当前帧有事件，将调度 MovieClipEvent 对象。帧事件类型 MovieClipEvent.FRAME_LABEL.
-  	 * @version Egret 2.0
+  	 * @version Egret 2.4
      * @platform Web,Native
   	 */
     export class MovieClipEvent extends Event {
@@ -51,7 +51,7 @@ module egret {
          * @param bubbles Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
          * @param cancelable Determine whether the Event object can be canceled. The default value is false.
          * @param frameLabel When the current frame have a frameLabel, the event listeners can access this information through the frameLabel property.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -61,7 +61,7 @@ module egret {
          * @param bubbles 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          * @param frameLabel 动画上的帧事件。事件侦听器可以通过 frameLabel 属性访问此信息。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor(type: string, bubbles: boolean = false, cancelable: boolean = false, frameLabel: string = null) {
@@ -72,13 +72,13 @@ module egret {
         /**
          * @language en_US
          * Dispatched whenever the current frame have a frameLabel.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 动画的当前帧上有事件时调度
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static FRAME_LABEL: string = "frame_label";
@@ -86,13 +86,13 @@ module egret {
         /**
          * @language en_US
          * In MovieClipEvent.FRAME_LABEL event, event corresponding string.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在 MovieClipEvent.FRAME_LABEL 事件中，event对应的字符串。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public frameLabel: string = null;
@@ -103,7 +103,7 @@ module egret {
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
          * @param text  MovieClipEvent object frameLabel
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -112,7 +112,7 @@ module egret {
          * @param target 派发事件目标
          * @param type  事件类型
          * @param text  MovieClipEvent 对象的 frameLabel 赋值
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static dispatchMovieClipEvent(target: IEventDispatcher, type: string, frameLabel: string = null): boolean {

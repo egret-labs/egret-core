@@ -30,13 +30,13 @@
 module egret {
     /**
      * @deprecated
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class Ticker extends EventDispatcher {
         /**
          * @deprecated
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor() {
@@ -85,7 +85,7 @@ module egret {
          * @param listener {Function} 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
          * @param thisObject {any} 帧回调函数的this对象
          * @param priority {number} 事件优先级，开发者请勿传递 Number.NEGATIVE_INFINITY 和 Number.POSITIVE_INFINITY
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @deprecated
          */
@@ -98,7 +98,7 @@ module egret {
          * @method egret.Ticker#unregister
          * @param listener {Function} 事件侦听函数
          * @param thisObject {any} 侦听函数的this对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @deprecated
          */
@@ -150,7 +150,7 @@ module egret {
         /**
          * @method egret.Ticker.getInstance
          * @returns {Ticker}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @deprecated
          */

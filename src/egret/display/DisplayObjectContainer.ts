@@ -31,14 +31,14 @@ module egret {
     /**
      * @language en_US
      * The DisplayObjectContainer class is a basic display list building block: a display list node that can contain children.
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/DisplayObjectContainer.ts
      */
     /**
      * @language zh_CN
      * DisplayObjectContainer 类是基本显示列表构造块：一个可包含子项的显示列表节点。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/DisplayObjectContainer.ts
      */
@@ -56,13 +56,13 @@ module egret {
         /**
          * @language en_US
          * Creates a new DisplayObjectContainer instance.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 实例化一个容器
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor() {
@@ -86,7 +86,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get numChildren():number {
@@ -95,7 +95,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public addChild(child:DisplayObject):DisplayObject {
@@ -110,7 +110,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
@@ -176,7 +176,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public contains(child:DisplayObject):boolean {
@@ -191,7 +191,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getChildAt(index:number):DisplayObject {
@@ -207,7 +207,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getChildIndex(child:egret.DisplayObject):number {
@@ -216,7 +216,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getChildByName(name:string):DisplayObject {
@@ -234,7 +234,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeChild(child:DisplayObject):DisplayObject {
@@ -250,7 +250,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeChildAt(index:number):DisplayObject {
@@ -298,7 +298,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public setChildIndex(child:DisplayObject, index:number):void {
@@ -332,7 +332,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public swapChildrenAt(index1:number, index2:number):void {
@@ -349,7 +349,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void {
@@ -391,7 +391,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeChildren():void {
@@ -484,7 +484,7 @@ module egret {
         $touchChildren:boolean = true;
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get touchChildren():boolean {

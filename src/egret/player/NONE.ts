@@ -32,7 +32,7 @@ module egret.sys {
      * 
      * @param value 
      * @returns 
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function isUndefined(value:any):boolean {
@@ -43,7 +43,7 @@ module egret.sys {
      * 
      * @param value 
      * @returns 
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function getNumber(value:number):number {

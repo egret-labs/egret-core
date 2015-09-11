@@ -37,13 +37,13 @@ module egret {
     /**
      * @language en_US
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * Capabilities 类提供一些属性，这些属性描述了承载应用程序的系统和运行时。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class Capabilities {
@@ -65,7 +65,7 @@ module egret {
          * <li>Japanese      ja</li>
          * <li>Korean        ko</li>
          * </ul>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -80,7 +80,7 @@ module egret {
          * <li>日语      ja</li>
          * <li>韩语      ko</li>
          * </ul>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static get language():string{
@@ -95,13 +95,13 @@ module egret {
         /**
          * @language en_US
          * Specifies whether the system is running in a mobile device.(such as a mobile phone or tablet)
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示程序内容是否运行在移动设备中（例如移动电话或平板电脑）。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static get isMobile():boolean{
@@ -124,7 +124,7 @@ module egret {
          * <li>Mac Desktop       "Mac OS"</li>
          * <li>Unknown OS        "Unknown"</li>
          * </ul>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -138,7 +138,7 @@ module egret {
          * <li>苹果桌面操作系统     "Mac OS"</li>
          * <li>未知操作系统        "Unknown"</li>
          * </ul>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static get os():string{
@@ -157,7 +157,7 @@ module egret {
          * <li>运行在Web上     egret.RuntimeType.WEB</li>
          * <li>运行在Native上     egret.RuntimeType.NATIVE</li>
          * </ul>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static get runtimeType():string {

@@ -34,14 +34,14 @@ module egret {
      * @language en_US
      * When a network request returns an HTTP status code, the application dispatches HTTPStatusEvent objects.
      * Before error or completion events will always send HTTPStatusEvent object. HTTPStatusEvent object does not necessarily indicate an error condition; it simply reflects the HTTP status code provided by the network stack (if any).
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 在网络请求返回 HTTP 状态代码时，应用程序将调度 HTTPStatusEvent 对象。
      * 在错误或完成事件之前，将始终发送 HTTPStatusEvent 对象。HTTPStatusEvent 对象不一定表示错误条件；它仅反映网络堆栈提供的 HTTP 状态代码（如果有的话）。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class HTTPStatusEvent extends Event {
@@ -49,13 +49,13 @@ module egret {
         /**
          * @language en_US
          * HTTPStatusEvent.HTTP_STATUS constant defines the value of the type property httpStatus event object.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * HTTPStatusEvent.HTTP_STATUS 常量定义 httpStatus 事件对象的 type 属性值。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static HTTP_STATUS:string = "httpStatus";
@@ -66,7 +66,7 @@ module egret {
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
          * @param cancelable Determines whether the Event object can be canceled. The default values is false.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -75,7 +75,7 @@ module egret {
          * @param type  事件的类型，可以作为 Event.type 访问。
          * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
          * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor(type:string, bubbles:boolean = false, cancelable:boolean = false) {
@@ -89,13 +89,13 @@ module egret {
         /**
          * @language en_US
          * he server returns the HTTP status code.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 由服务器返回的 HTTP 状态代码。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get status():number {
@@ -107,7 +107,7 @@ module egret {
          * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
          * @param target {egret.IEventDispatcher} Distribute event target
          * @param status {number} The server returns the HTTP status code
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -115,7 +115,7 @@ module egret {
          * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target {egret.IEventDispatcher} 派发事件目标
          * @param status {number} 由服务器返回的 HTTP 状态代码
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static dispatchHTTPStatusEvent(target:IEventDispatcher, status:number):boolean {

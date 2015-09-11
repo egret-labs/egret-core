@@ -13831,1800 +13831,6 @@ var egret;
 (function (egret) {
     var gui;
     (function (gui) {
-        var setTimeoutCache = {};
-        var setTimeoutIndex = 0;
-        var setTimeoutCount = 0;
-        var lastTime = 0;
-        /**
-         * @private
-         */
-        function $addTimer(listener, thisObject, delay) {
-            var args = [];
-            for (var _i = 3; _i < arguments.length; _i++) {
-                args[_i - 3] = arguments[_i];
-            }
-            var data = { listener: listener, thisObject: thisObject, delay: delay, params: args };
-            setTimeoutCount++;
-            if (setTimeoutCount == 1 && egret.sys.$ticker) {
-                lastTime = egret.getTimer();
-                egret.sys.$ticker.$startTick(timeoutUpdate, null);
-            }
-            setTimeoutIndex++;
-            setTimeoutCache[setTimeoutIndex] = data;
-            return setTimeoutIndex;
-        }
-        gui.$addTimer = $addTimer;
-        /**
-         * @private
-         */
-        function $clearTimer(key) {
-            if (setTimeoutCache[key]) {
-                setTimeoutCount--;
-                delete setTimeoutCache[key];
-                if (setTimeoutCount == 0 && egret.sys.$ticker) {
-                    egret.sys.$ticker.$stopTick(timeoutUpdate, null);
-                }
-            }
-        }
-        gui.$clearTimer = $clearTimer;
-        /**
-         * @private
-         *
-         * @param dt
-         */
-        function timeoutUpdate(timeStamp) {
-            var dt = timeStamp - lastTime;
-            lastTime = timeStamp;
-            for (var key in setTimeoutCache) {
-                var data = setTimeoutCache[key];
-                data.delay -= dt;
-                if (data.delay <= 0) {
-                    data.listener.apply(data.thisObject, data.params);
-                    egret.clearTimeout(key);
-                }
-            }
-            return false;
-        }
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @private
-         */
-        var ScrollerEase = (function () {
-            /**
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            function ScrollerEase() {
-                egret.$error(1014);
-            }
-            var d = __define,c=ScrollerEase;p=c.prototype;
-            /**
-             *
-             * @param amount
-             * @returns
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ScrollerEase.get = function (amount) {
-                if (amount < -1) {
-                    amount = -1;
-                }
-                if (amount > 1) {
-                    amount = 1;
-                }
-                return function (t) {
-                    if (amount == 0) {
-                        return t;
-                    }
-                    if (amount < 0) {
-                        return t * (t * -amount + 1 + amount);
-                    }
-                    return t * ((2 - t) * amount + (1 - amount));
-                };
-            };
-            /**
-             *
-             * @param pow
-             * @returns
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ScrollerEase.getPowOut = function (pow) {
-                return function (t) {
-                    return 1 - Math.pow(1 - t, pow);
-                };
-            };
-            /**
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ScrollerEase.quintOut = ScrollerEase.getPowOut(5);
-            /**
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ScrollerEase.quartOut = ScrollerEase.getPowOut(4);
-            return ScrollerEase;
-        })();
-        gui.ScrollerEase = ScrollerEase;
-        egret.registerClass(ScrollerEase,"egret.gui.ScrollerEase");
-        /**
-         * @private
-         */
-        var ScrollerTween = (function (_super) {
-            __extends(ScrollerTween, _super);
-            /**
-             * 创建一个 egret.ScrollerTween 对象
-             * @private
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            function ScrollerTween(target, props, pluginData) {
-                _super.call(this);
-                /**
-                 * @private
-                 */
-                this._target = null;
-                /**
-                 * @private
-                 */
-                this._useTicks = false;
-                /**
-                 * @private
-                 */
-                this.ignoreGlobalPause = false;
-                /**
-                 * @private
-                 */
-                this.loop = false;
-                /**
-                 * @private
-                 */
-                this.pluginData = null;
-                /**
-                 * @private
-                 */
-                this._steps = null;
-                /**
-                 * @private
-                 */
-                this._actions = null;
-                /**
-                 * @private
-                 */
-                this.paused = false;
-                /**
-                 * @private
-                 */
-                this.duration = 0;
-                /**
-                 * @private
-                 */
-                this._prevPos = -1;
-                /**
-                 * @private
-                 */
-                this.position = null;
-                /**
-                 * @private
-                 */
-                this._prevPosition = 0;
-                /**
-                 * @private
-                 */
-                this._stepPosition = 0;
-                /**
-                 * @private
-                 */
-                this.passive = false;
-                this.initialize(target, props, pluginData);
-            }
-            var d = __define,c=ScrollerTween;p=c.prototype;
-            /**
-             * @language en_US
-             * Activate an object and add a ScrollerTween animation to the object
-             * @param target {any} The object to be activated
-             * @param props {any} Parameters, support loop onChange onChangeObj
-             * @param pluginData {any} Write realized
-             * @param override {boolean} Whether to remove the object before adding a tween, the default value false
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 激活一个对象，对其添加 ScrollerTween 动画
-             * @param target {any} 要激活 ScrollerTween 的对象
-             * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
-             * @param pluginData {any} 暂未实现
-             * @param override {boolean} 是否移除对象之前添加的tween，默认值false
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ScrollerTween.get = function (target, props, pluginData, override) {
-                if (props === void 0) { props = null; }
-                if (pluginData === void 0) { pluginData = null; }
-                if (override === void 0) { override = false; }
-                if (override) {
-                    ScrollerTween.removeTweens(target);
-                }
-                return new ScrollerTween(target, props, pluginData);
-            };
-            /**
-             * @language en_US
-             * Delete all ScrollerTween animations from an object
-             * @param target The object whose ScrollerTween to be deleted
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 删除一个对象上的全部 ScrollerTween 动画
-             * @param target  需要移除 ScrollerTween 的对象
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            ScrollerTween.removeTweens = function (target) {
-                if (!target.tween_count) {
-                    return;
-                }
-                var tweens = ScrollerTween._tweens;
-                for (var i = tweens.length - 1; i >= 0; i--) {
-                    if (tweens[i]._target == target) {
-                        tweens[i].paused = true;
-                        tweens.splice(i, 1);
-                    }
-                }
-                target.tween_count = 0;
-            };
-            /**
-             * @private
-             *
-             * @param delta
-             * @param paused
-             */
-            ScrollerTween.tick = function (timeStamp, paused) {
-                if (paused === void 0) { paused = false; }
-                var delta = timeStamp - ScrollerTween._lastTime;
-                ScrollerTween._lastTime = timeStamp;
-                var tweens = ScrollerTween._tweens.concat();
-                for (var i = tweens.length - 1; i >= 0; i--) {
-                    var tween = tweens[i];
-                    if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
-                        continue;
-                    }
-                    tween.tick(tween._useTicks ? 1 : delta);
-                }
-                return false;
-            };
-            /**
-             * @private
-             *
-             * @param tween
-             * @param value
-             */
-            ScrollerTween._register = function (tween, value) {
-                var target = tween._target;
-                var tweens = ScrollerTween._tweens;
-                if (value) {
-                    if (target) {
-                        target.tween_count = target.tween_count > 0 ? target.tween_count + 1 : 1;
-                    }
-                    tweens.push(tween);
-                    if (!ScrollerTween._inited) {
-                        ScrollerTween._lastTime = egret.getTimer();
-                        egret.sys.$ticker.$startTick(ScrollerTween.tick, null);
-                        ScrollerTween._inited = true;
-                    }
-                }
-                else {
-                    if (target) {
-                        target.tween_count--;
-                    }
-                    var i = tweens.length;
-                    while (i--) {
-                        if (tweens[i] == tween) {
-                            tweens.splice(i, 1);
-                            return;
-                        }
-                    }
-                }
-            };
-            /**
-             * @private
-             *
-             * @param target
-             * @param props
-             * @param pluginData
-             */
-            p.initialize = function (target, props, pluginData) {
-                this._target = target;
-                if (props) {
-                    this._useTicks = props.useTicks;
-                    this.ignoreGlobalPause = props.ignoreGlobalPause;
-                    this.loop = props.loop;
-                    props.onChange && this.addEventListener("change", props.onChange, props.onChangeObj);
-                    if (props.override) {
-                        ScrollerTween.removeTweens(target);
-                    }
-                }
-                this.pluginData = pluginData || {};
-                this._curQueueProps = {};
-                this._initQueueProps = {};
-                this._steps = [];
-                this._actions = [];
-                if (props && props.paused) {
-                    this.paused = true;
-                }
-                else {
-                    ScrollerTween._register(this, true);
-                }
-                if (props && props.position != null) {
-                    this.setPosition(props.position);
-                }
-            };
-            /**
-             * @private
-             *
-             * @param value
-             * @param actionsMode
-             * @returns
-             */
-            p.setPosition = function (value) {
-                if (value < 0) {
-                    value = 0;
-                }
-                //正常化位置
-                var t = value;
-                var end = false;
-                if (t >= this.duration) {
-                    if (this.loop) {
-                        t = t % this.duration;
-                    }
-                    else {
-                        t = this.duration;
-                        end = true;
-                    }
-                }
-                if (t == this._prevPos) {
-                    return end;
-                }
-                this.position = this._prevPos = t;
-                this._prevPosition = value;
-                if (this._target) {
-                    if (end) {
-                        //结束
-                        this._updateTargetProps(null, 1);
-                    }
-                    else if (this._steps.length > 0) {
-                        for (var i = 0, l = this._steps.length; i < l; i++) {
-                            if (this._steps[i].t > t) {
-                                break;
-                            }
-                        }
-                        var step = this._steps[i - 1];
-                        this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
-                    }
-                }
-                if (end) {
-                    this.setPaused(true);
-                }
-                this.dispatchEventWith("change");
-                return end;
-            };
-            /**
-             * @private
-             *
-             * @param startPos
-             * @param endPos
-             * @param includeStart
-             */
-            p._runActions = function (startPos, endPos, includeStart) {
-                if (includeStart === void 0) { includeStart = false; }
-                var sPos = startPos;
-                var ePos = endPos;
-                var i = -1;
-                var j = this._actions.length;
-                var k = 1;
-                if (startPos > endPos) {
-                    //把所有的倒置
-                    sPos = endPos;
-                    ePos = startPos;
-                    i = j;
-                    j = k = -1;
-                }
-                while ((i += k) != j) {
-                    var action = this._actions[i];
-                    var pos = action.t;
-                    if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
-                        action.f.apply(action.o, action.p);
-                    }
-                }
-            };
-            /**
-             * @private
-             *
-             * @param step
-             * @param ratio
-             */
-            p._updateTargetProps = function (step, ratio) {
-                var p0, p1, v, v0, v1, arr;
-                if (!step && ratio == 1) {
-                    this.passive = false;
-                    p0 = p1 = this._curQueueProps;
-                }
-                else {
-                    this.passive = !!step.v;
-                    //不更新props.
-                    if (this.passive) {
-                        return;
-                    }
-                    //使用ease
-                    if (step.e) {
-                        ratio = step.e(ratio, 0, 1, 1);
-                    }
-                    p0 = step.p0;
-                    p1 = step.p1;
-                }
-                for (var n in this._initQueueProps) {
-                    if ((v0 = p0[n]) == null) {
-                        p0[n] = v0 = this._initQueueProps[n];
-                    }
-                    if ((v1 = p1[n]) == null) {
-                        p1[n] = v1 = v0;
-                    }
-                    if (v0 == v1 || ratio == 0 || ratio == 1 || (typeof (v0) != "number")) {
-                        v = ratio == 1 ? v1 : v0;
-                    }
-                    else {
-                        v = v0 + (v1 - v0) * ratio;
-                    }
-                    var ignore = false;
-                    if (arr = ScrollerTween._plugins[n]) {
-                        for (var i = 0, l = arr.length; i < l; i++) {
-                            var v2 = arr[i].tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
-                            if (v2 == ScrollerTween.IGNORE) {
-                                ignore = true;
-                            }
-                            else {
-                                v = v2;
-                            }
-                        }
-                    }
-                    if (!ignore) {
-                        this._target[n] = v;
-                    }
-                }
-            };
-            /**
-             * @language en_US
-             * Whether setting is paused
-             * @param value {boolean} Whether to pause
-             * @returns ScrollerTween object itself
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 设置是否暂停
-             * @param value {boolean} 是否暂停
-             * @returns Tween对象本身
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.setPaused = function (value) {
-                this.paused = value;
-                ScrollerTween._register(this, !value);
-                return this;
-            };
-            /**
-             * @private
-             *
-             * @param props
-             * @returns
-             */
-            p._cloneProps = function (props) {
-                var o = {};
-                for (var n in props) {
-                    o[n] = props[n];
-                }
-                return o;
-            };
-            /**
-             * @private
-             *
-             * @param o
-             * @returns
-             */
-            p._addStep = function (o) {
-                if (o.d > 0) {
-                    this._steps.push(o);
-                    o.t = this.duration;
-                    this.duration += o.d;
-                }
-                return this;
-            };
-            /**
-             * @private
-             *
-             * @param o
-             * @returns
-             */
-            p._appendQueueProps = function (o) {
-                var arr, oldValue, i, l, injectProps;
-                for (var n in o) {
-                    if (egret.sys.isUndefined(this._initQueueProps[n])) {
-                        oldValue = this._target[n];
-                        //设置plugins
-                        if (arr = ScrollerTween._plugins[n]) {
-                            for (i = 0, l = arr.length; i < l; i++) {
-                                oldValue = arr[i].init(this, n, oldValue);
-                            }
-                        }
-                        this._initQueueProps[n] = this._curQueueProps[n] = (oldValue === undefined) ? null : oldValue;
-                    }
-                    else {
-                        oldValue = this._curQueueProps[n];
-                    }
-                }
-                for (var n in o) {
-                    oldValue = this._curQueueProps[n];
-                    if (arr = ScrollerTween._plugins[n]) {
-                        injectProps = injectProps || {};
-                        for (i = 0, l = arr.length; i < l; i++) {
-                            if (arr[i].step) {
-                                arr[i].step(this, n, oldValue, o[n], injectProps);
-                            }
-                        }
-                    }
-                    this._curQueueProps[n] = o[n];
-                }
-                if (injectProps) {
-                    this._appendQueueProps(injectProps);
-                }
-                return this._curQueueProps;
-            };
-            /**
-             * @private
-             *
-             * @param o
-             * @returns
-             */
-            p._addAction = function (o) {
-                o.t = this.duration;
-                this._actions.push(o);
-                return this;
-            };
-            /**
-             * @language en_US
-             * Modify the property of the specified display object to a specified value
-             * @param props {Object} Property set of an object
-             * @param duration {number} Duration
-             * @param ease {egret.ScrollerEase} Easing algorithm
-             * @returns {egret.ScrollerTween} ScrollerTween object itself
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 将指定显示对象的属性修改为指定值
-             * @param props {Object} 对象的属性集合
-             * @param duration {number} 持续时间
-             * @param ease {egret.ScrollerEase} 缓动算法
-             * @returns {egret.ScrollerTween} Tween对象本身
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.to = function (props, duration, ease) {
-                if (ease === void 0) { ease = undefined; }
-                if (isNaN(duration) || duration < 0) {
-                    duration = 0;
-                }
-                return this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
-            };
-            /**
-             * @language en_US
-             * Execute callback function
-             * @param callback {Function} Callback method
-             * @param thisObj {any} this action scope of the callback method
-             * @param params {Array<any>} Parameter of the callback method
-             * @returns {egret.ScrollerTween} ScrollerTween object itself
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 执行回调函数
-             * @param callback {Function} 回调方法
-             * @param thisObj {any} 回调方法this作用域
-             * @param params {Array<any>} 回调方法参数
-             * @returns {egret.ScrollerTween} Tween对象本身
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.call = function (callback, thisObj, params) {
-                if (thisObj === void 0) { thisObj = undefined; }
-                if (params === void 0) { params = undefined; }
-                return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
-            };
-            /**
-             * @method egret.ScrollerTween#tick
-             * @param delta {number}
-             * @private
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.tick = function (delta) {
-                if (this.paused) {
-                    return;
-                }
-                this.setPosition(this._prevPosition + delta);
-            };
-            /**
-             * @private
-             */
-            ScrollerTween._tweens = [];
-            /**
-             * @private
-             */
-            ScrollerTween.IGNORE = {};
-            /**
-             * @private
-             */
-            ScrollerTween._plugins = {};
-            /**
-             * @private
-             */
-            ScrollerTween._inited = false;
-            ScrollerTween._lastTime = 0;
-            return ScrollerTween;
-        })(egret.EventDispatcher);
-        gui.ScrollerTween = ScrollerTween;
-        egret.registerClass(ScrollerTween,"egret.gui.ScrollerTween");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @private
-         */
-        var ScrollerView = (function (_super) {
-            __extends(ScrollerView, _super);
-            /**
-             * @language en_US
-             * Create a egret.ScrollerView objects
-             * @param content {egret.DisplayObject} You need to scroll object
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 创建一个 egret.ScrollerView 对象
-             * @param content {egret.DisplayObject} 需要滚动的对象
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            function ScrollerView(content) {
-                if (content === void 0) { content = null; }
-                _super.call(this);
-                /**
-                 * @language en_US
-                 * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                /**
-                 * @language zh_CN
-                 * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                this.scrollBeginThreshold = 10;
-                /**
-                 * @language en_US
-                 * Scrolling speed, the speed is required and the default speed ratio.
-                 * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                /**
-                 * @language zh_CN
-                 * 滚动速度，这个值为需要的速度与默认速度的比值。
-                 * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                this.scrollSpeed = 1;
-                /**
-                 * @private
-                 */
-                this._content = null;
-                /**
-                 * @private
-                 */
-                this.delayTouchBeginEvent = null;
-                /**
-                 * @private
-                 */
-                this.touchBeginTimer = null;
-                this.touchEnabled = true;
-                this._ScrV_Props_ = new gui.ScrollerViewProperties();
-                if (content) {
-                    this.setContent(content);
-                }
-            }
-            var d = __define,c=ScrollerView;p=c.prototype;
-            d(p, "bounces"
-                /**
-                 * @language en_US
-                 * Whether to enable rebound, rebound When enabled, ScrollerView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
-                 * @default true
-                 * @version Egret 2.0
-                 */
-                /**
-                 * @language zh_CN
-                 * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
-                 * @default true
-                 * @version Egret 2.0
-                 */
-                ,function () {
-                    return this._ScrV_Props_._bounces;
-                }
-                ,function (value) {
-                    this._ScrV_Props_._bounces = !!value;
-                }
-            );
-            /**
-             * @language en_US
-             * Set to scroll object
-             * @param content {egret.DisplayObject} You need to scroll object
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 设置需要滚动的对象
-             * @param content {egret.DisplayObject} 需要滚动的对象
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.setContent = function (content) {
-                if (this._content === content)
-                    return;
-                this.removeContent();
-                if (content) {
-                    this._content = content;
-                    _super.prototype.addChild.call(this, content);
-                    this._addEvents();
-                }
-            };
-            /**
-             * @language en_US
-             * Remove rolling objects
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 移除滚动的对象
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.removeContent = function () {
-                if (this._content) {
-                    this._removeEvents();
-                    _super.prototype.removeChildAt.call(this, 0);
-                }
-                this._content = null;
-            };
-            d(p, "verticalScrollPolicy"
-                /**
-                 * @language en_US
-                 * Vertical scroll bar display policy, on / off / auto.
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                /**
-                 * @language zh_CN
-                 * 垂直滚动条显示策略，on/off/auto。
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                ,function () {
-                    return this._ScrV_Props_._verticalScrollPolicy;
-                }
-                ,function (value) {
-                    if (value == this._ScrV_Props_._verticalScrollPolicy)
-                        return;
-                    this._ScrV_Props_._verticalScrollPolicy = value;
-                }
-            );
-            d(p, "horizontalScrollPolicy"
-                /**
-                 * @language en_US
-                 * The horizontal scroll bar display policy, on / off / auto.
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                /**
-                 * @language zh_CN
-                 * 水平滚动条显示策略，on/off/auto。
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                ,function () {
-                    return this._ScrV_Props_._horizontalScrollPolicy;
-                }
-                ,function (value) {
-                    if (value == this._ScrV_Props_._horizontalScrollPolicy)
-                        return;
-                    this._ScrV_Props_._horizontalScrollPolicy = value;
-                }
-            );
-            d(p, "scrollLeft"
-                /**
-                 * @language en_US
-                 * Gets or sets the horizontal scroll position
-                 * @returns {number}
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                /**
-                 * @language zh_CN
-                 * 获取或设置水平滚动位置,
-                 * @returns {number}
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                ,function () {
-                    return this._ScrV_Props_._scrollLeft;
-                }
-                ,function (value) {
-                    if (value == this._ScrV_Props_._scrollLeft)
-                        return;
-                    this._ScrV_Props_._scrollLeft = value;
-                    this._validatePosition(false, true);
-                    this._updateContentPosition();
-                }
-            );
-            d(p, "scrollTop"
-                /**
-                 * @language en_US
-                 * Gets or sets the vertical scroll position
-                 * @returns {number}
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                /**
-                 * @language zh_CN
-                 * 获取或设置垂直滚动位置,
-                 * @returns {number}
-                 * @version Egret 2.0
-                 * @platform Web,Native
-                 */
-                ,function () {
-                    return this._ScrV_Props_._scrollTop;
-                }
-                ,function (value) {
-                    if (value == this._ScrV_Props_._scrollTop)
-                        return;
-                    this._ScrV_Props_._scrollTop = value;
-                    this._validatePosition(true, false);
-                    this._updateContentPosition();
-                }
-            );
-            /**
-             * @language en_US
-             * Set scroll position
-             * @param top {number} The vertical scroll position
-             * @param left {number} The horizontal scroll position
-             * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 设置滚动位置
-             * @param top {number} 垂直滚动位置
-             * @param left {number} 水平滚动位置
-             * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.setScrollPosition = function (top, left, isOffset) {
-                if (isOffset === void 0) { isOffset = false; }
-                if (isOffset && top == 0 && left == 0)
-                    return;
-                if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left)
-                    return;
-                var oldTop = this._ScrV_Props_._scrollTop, oldLeft = this._ScrV_Props_._scrollLeft;
-                if (isOffset) {
-                    var maxLeft = this.getMaxScrollLeft();
-                    var maxTop = this.getMaxScrollTop();
-                    if (oldTop <= 0 || oldTop >= maxTop) {
-                        top = top / 2;
-                    }
-                    if (oldLeft <= 0 || oldLeft >= maxLeft) {
-                        left = left / 2;
-                    }
-                    var newTop = oldTop + top;
-                    var newLeft = oldLeft + left;
-                    //判断是否回弹
-                    var bounces = this._ScrV_Props_._bounces;
-                    if (!bounces) {
-                        if (newTop <= 0 || newTop >= maxTop)
-                            newTop = Math.max(0, Math.min(newTop, maxTop));
-                        if (newLeft <= 0 || newLeft >= maxLeft)
-                            newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-                    }
-                    this._ScrV_Props_._scrollTop = newTop;
-                    this._ScrV_Props_._scrollLeft = newLeft;
-                }
-                else {
-                    this._ScrV_Props_._scrollTop = top;
-                    this._ScrV_Props_._scrollLeft = left;
-                }
-                this._validatePosition(true, true);
-                this._updateContentPosition();
-            };
-            /**
-             * @private
-             *
-             * @param top
-             * @param left
-             */
-            p._validatePosition = function (top, left) {
-                if (top === void 0) { top = false; }
-                if (left === void 0) { left = false; }
-                if (top) {
-                    var height = this.height;
-                    var contentHeight = this._getContentHeight();
-                    this._ScrV_Props_._scrollTop = Math.max(this._ScrV_Props_._scrollTop, (0 - height) / 2);
-                    this._ScrV_Props_._scrollTop = Math.min(this._ScrV_Props_._scrollTop, contentHeight > height ? (contentHeight - height / 2) : height / 2);
-                }
-                if (left) {
-                    var width = this.width;
-                    var contentWidth = this._getContentWidth();
-                    this._ScrV_Props_._scrollLeft = Math.max(this._ScrV_Props_._scrollLeft, (0 - width) / 2);
-                    this._ScrV_Props_._scrollLeft = Math.min(this._ScrV_Props_._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : width / 2);
-                }
-            };
-            /**
-             * @private
-             * @inheritDoc
-             */
-            p.$setWidth = function (value) {
-                if (this.$getExplicitWidth() == value) {
-                    return false;
-                }
-                var result = _super.prototype.$setWidth.call(this, value);
-                this._updateContentPosition();
-                return result;
-            };
-            /**
-             * @private
-             * @inheritDoc
-             */
-            p.$setHeight = function (value) {
-                if (this.$getExplicitHeight() == value)
-                    return false;
-                var result = _super.prototype.$setHeight.call(this, value);
-                this._updateContentPosition();
-                return result;
-            };
-            /**
-             * @private
-             *
-             */
-            p._updateContentPosition = function () {
-                var height = this.height;
-                var width = this.width;
-                //这里将坐标取整，避免有些浏览器精度低产生“黑线”问题
-                this.scrollRect = new egret.Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
-                this.dispatchEvent(new egret.Event(egret.Event.CHANGE));
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p._checkScrollPolicy = function () {
-                var hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
-                var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
-                this._ScrV_Props_._hCanScroll = hCanScroll;
-                var vpolicy = this._ScrV_Props_._verticalScrollPolicy;
-                var vCanScroll = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
-                this._ScrV_Props_._vCanScroll = vCanScroll;
-                return hCanScroll || vCanScroll;
-            };
-            /**
-             * @private
-             *
-             * @param policy
-             * @param contentLength
-             * @param viewLength
-             * @returns
-             */
-            p.__checkScrollPolicy = function (policy, contentLength, viewLength) {
-                if (policy == "on")
-                    return true;
-                if (policy == "off")
-                    return false;
-                return contentLength > viewLength;
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p._addEvents = function () {
-                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
-                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
-                this.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p._removeEvents = function () {
-                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
-                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
-                this.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
-            };
-            /**
-             * @private
-             *
-             * @param e
-             */
-            p._onTouchBegin = function (e) {
-                if (e.$isDefaultPrevented) {
-                    return;
-                }
-                var canScroll = this._checkScrollPolicy();
-                if (!canScroll) {
-                    return;
-                }
-                this._ScrV_Props_._touchStartPosition.x = e.stageX;
-                this._ScrV_Props_._touchStartPosition.y = e.stageY;
-                if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
-                    this._onScrollFinished();
-                }
-                this._tempStage = this.stage;
-                this._tempStage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-                this._tempStage.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
-                this._tempStage.addEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
-                this.addEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
-                this._logTouchEvent(e);
-                e.preventDefault();
-            };
-            /**
-             * @private
-             *
-             * @param event
-             */
-            p._onTouchBeginCapture = function (event) {
-                var canScroll = this._checkScrollPolicy();
-                if (!canScroll) {
-                    return;
-                }
-                var target = event.target;
-                while (target != this) {
-                    if ("_checkScrollPolicy" in target) {
-                        canScroll = target._checkScrollPolicy();
-                        if (canScroll) {
-                            return;
-                        }
-                    }
-                    target = target.parent;
-                }
-                event.stopPropagation();
-                var evt = this.cloneTouchEvent(event);
-                this.delayTouchBeginEvent = evt;
-                if (!this.touchBeginTimer) {
-                    this.touchBeginTimer = new egret.Timer(100, 1);
-                    this.touchBeginTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this._onTouchBeginTimer, this);
-                }
-                this.touchBeginTimer.start();
-                this._onTouchBegin(event);
-            };
-            /**
-             * @private
-             *
-             * @param event
-             * @returns
-             */
-            p._onTouchEndCapture = function (event) {
-                if (!this.delayTouchBeginEvent) {
-                    return;
-                }
-                this._onTouchBeginTimer();
-            };
-            /**
-             * @private
-             *
-             */
-            p._onTouchBeginTimer = function () {
-                this.touchBeginTimer.stop();
-                var event = this.delayTouchBeginEvent;
-                this.delayTouchBeginEvent = null;
-                //Dispatch event only if the scroll view is still on the stage
-                if (this.stage)
-                    this.dispatchPropagationEvent(event);
-            };
-            /**
-             * @private
-             *
-             * @param event
-             * @returns
-             */
-            p.dispatchPropagationEvent = function (event) {
-                var target = event.$target;
-                var list = this.$getPropagationList(target);
-                var length = list.length;
-                var targetIndex = list.length * 0.5;
-                var startIndex = -1;
-                for (var i = 0; i < length; i++) {
-                    if (list[i] === this._content) {
-                        startIndex = i;
-                        break;
-                    }
-                }
-                list.splice(0, startIndex + 1);
-                targetIndex -= startIndex + 1;
-                this.$dispatchPropagationEvent(event, list, targetIndex);
-                egret.Event.release(event);
-            };
-            /**
-             * @private
-             *
-             * @param event
-             * @returns
-             */
-            p._onTouchMove = function (event) {
-                if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY)
-                    return;
-                if (!this._ScrV_Props_._scrollStarted) {
-                    var x = event.stageX - this._ScrV_Props_._touchStartPosition.x, y = event.stageY - this._ScrV_Props_._touchStartPosition.y;
-                    var distance = Math.sqrt(x * x + y * y);
-                    if (distance < this.scrollBeginThreshold) {
-                        this._logTouchEvent(event);
-                        return;
-                    }
-                }
-                this._ScrV_Props_._scrollStarted = true;
-                if (this.delayTouchBeginEvent) {
-                    this.delayTouchBeginEvent = null;
-                    this.touchBeginTimer.stop();
-                }
-                this.touchChildren = false;
-                var offset = this._getPointChange(event);
-                this.setScrollPosition(offset.y, offset.x, true);
-                this._calcVelocitys(event);
-                this._logTouchEvent(event);
-            };
-            /**
-             * @private
-             *
-             * @param event
-             * @returns
-             */
-            p._onTouchEnd = function (event) {
-                this.touchChildren = true;
-                this._ScrV_Props_._scrollStarted = false;
-                this._tempStage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
-                this._tempStage.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
-                this._tempStage.removeEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
-                this.removeEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
-                this._moveAfterTouchEnd();
-            };
-            /**
-             * @private
-             *
-             * @param event
-             * @returns
-             */
-            p._onEnterFrame = function (event) {
-                var time = egret.getTimer();
-                if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
-                    this._calcVelocitys(this._ScrV_Props_._lastTouchEvent);
-                }
-            };
-            /**
-             * @private
-             *
-             * @param e
-             * @returns
-             */
-            p._logTouchEvent = function (e) {
-                this._ScrV_Props_._lastTouchPosition.x = e.stageX;
-                this._ScrV_Props_._lastTouchPosition.y = e.stageY;
-                this._ScrV_Props_._lastTouchEvent = this.cloneTouchEvent(e);
-                this._ScrV_Props_._lastTouchTime = egret.getTimer();
-            };
-            /**
-             * @private
-             *
-             * @param e
-             * @returns
-             */
-            p._getPointChange = function (e) {
-                return {
-                    x: this._ScrV_Props_._hCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.x - e.stageX),
-                    y: this._ScrV_Props_._vCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.y - e.stageY)
-                };
-            };
-            /**
-             * @private
-             *
-             * @param e
-             * @returns
-             */
-            p._calcVelocitys = function (e) {
-                var time = egret.getTimer();
-                if (this._ScrV_Props_._lastTouchTime == 0) {
-                    this._ScrV_Props_._lastTouchTime = time;
-                    return;
-                }
-                var change = this._getPointChange(e);
-                var timeoffset = time - this._ScrV_Props_._lastTouchTime;
-                change.x /= timeoffset;
-                change.y /= timeoffset;
-                this._ScrV_Props_._velocitys.push(change);
-                if (this._ScrV_Props_._velocitys.length > 5)
-                    this._ScrV_Props_._velocitys.shift();
-                this._ScrV_Props_._lastTouchPosition.x = e.stageX;
-                this._ScrV_Props_._lastTouchPosition.y = e.stageY;
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p._getContentWidth = function () {
-                return this._content.$getExplicitWidth() || this._content.width;
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p._getContentHeight = function () {
-                return this._content.$getExplicitHeight() || this._content.height;
-            };
-            /**
-             * @language en_US
-             * The left side of the maximum distance
-             * @returns The left side of the maximum distance
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 距离左侧的最大值
-             * @returns 距离左侧最大值
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.getMaxScrollLeft = function () {
-                var max = this._getContentWidth() - this.width;
-                return Math.max(0, max);
-            };
-            /**
-             * @language en_US
-             * Above the maximum distance
-             * @returns Above the maximum distance
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 距离上方最大值
-             * @returns 距离上方最大值
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.getMaxScrollTop = function () {
-                var max = this._getContentHeight() - this.height;
-                return Math.max(0, max);
-            };
-            /**
-             * @private
-             *
-             */
-            p._moveAfterTouchEnd = function () {
-                if (this._ScrV_Props_._velocitys.length == 0)
-                    return;
-                var sum = { x: 0, y: 0 }, totalW = 0;
-                for (var i = 0; i < this._ScrV_Props_._velocitys.length; i++) {
-                    var v = this._ScrV_Props_._velocitys[i];
-                    var w = ScrollerView.weight[i];
-                    sum.x += v.x * w;
-                    sum.y += v.y * w;
-                    totalW += w;
-                }
-                this._ScrV_Props_._velocitys.length = 0;
-                if (this.scrollSpeed <= 0)
-                    this.scrollSpeed = 1;
-                var x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
-                var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
-                var maxLeft = this.getMaxScrollLeft();
-                var maxTop = this.getMaxScrollTop();
-                var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
-                    position: this._ScrV_Props_._scrollLeft,
-                    duration: 1
-                };
-                var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
-                    position: this._ScrV_Props_._scrollTop,
-                    duration: 1
-                };
-                this.setScrollLeft(datax.position, datax.duration);
-                this.setScrollTop(datay.position, datay.duration);
-            };
-            /**
-             * @private
-             *
-             * @param tw
-             */
-            p.onTweenFinished = function (tw) {
-                if (tw == this._ScrV_Props_._vScrollTween)
-                    this._ScrV_Props_._isVTweenPlaying = false;
-                if (tw == this._ScrV_Props_._hScrollTween)
-                    this._ScrV_Props_._isHTweenPlaying = false;
-                if (this._ScrV_Props_._isHTweenPlaying == false && this._ScrV_Props_._isVTweenPlaying == false) {
-                    this._onScrollFinished();
-                }
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p._onScrollStarted = function () {
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p._onScrollFinished = function () {
-                gui.ScrollerTween.removeTweens(this);
-                this._ScrV_Props_._hScrollTween = null;
-                this._ScrV_Props_._vScrollTween = null;
-                this._ScrV_Props_._isHTweenPlaying = false;
-                this._ScrV_Props_._isVTweenPlaying = false;
-                this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
-            };
-            /**
-             * @language en_US
-             * Set the scroll position above the distance
-             * @param scrollTop Position above distance
-             * @param duration Easing of time, in milliseconds
-             * @returns Get tween vertical scrolling
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 设置滚动距离上方的位置
-             * @param scrollTop 距离上方的位置
-             * @param duration 缓动时间，毫秒单位
-             * @returns 获取垂直滚动的tween
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.setScrollTop = function (scrollTop, duration) {
-                if (duration === void 0) { duration = 0; }
-                var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
-                if (duration == 0) {
-                    this.scrollTop = finalPosition;
-                    return;
-                }
-                if (this._ScrV_Props_._bounces == false)
-                    scrollTop = finalPosition;
-                var vtween = gui.ScrollerTween.get(this).to({ scrollTop: scrollTop }, duration, gui.ScrollerEase.quartOut);
-                if (finalPosition != scrollTop) {
-                    vtween.to({ scrollTop: finalPosition }, 300, gui.ScrollerEase.quintOut);
-                }
-                this._ScrV_Props_._isVTweenPlaying = true;
-                this._ScrV_Props_._vScrollTween = vtween;
-                vtween.call(this.onTweenFinished, this, [vtween]);
-                if (!this._ScrV_Props_._isHTweenPlaying)
-                    this._onScrollStarted();
-            };
-            /**
-             * @language en_US
-             * Set the scroll position from the left side
-             * @param scrollLeft From the position on the left side
-             * @param duration Get tween vertical scrolling
-             * @returns Gets the horizontal scroll tween
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 设置滚动距离左侧的位置
-             * @param scrollLeft 距离左侧的位置
-             * @param duration 缓动时间，毫秒单位
-             * @returns 获取水平滚动的tween
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.setScrollLeft = function (scrollLeft, duration) {
-                if (duration === void 0) { duration = 0; }
-                var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
-                if (duration == 0) {
-                    this.scrollLeft = finalPosition;
-                    return;
-                }
-                if (this._ScrV_Props_._bounces == false)
-                    scrollLeft = finalPosition;
-                var htween = gui.ScrollerTween.get(this).to({ scrollLeft: scrollLeft }, duration, gui.ScrollerEase.quartOut);
-                if (finalPosition != scrollLeft) {
-                    htween.to({ scrollLeft: finalPosition }, 300, gui.ScrollerEase.quintOut);
-                }
-                this._ScrV_Props_._isHTweenPlaying = true;
-                this._ScrV_Props_._hScrollTween = htween;
-                htween.call(this.onTweenFinished, this, [htween]);
-                if (!this._ScrV_Props_._isVTweenPlaying)
-                    this._onScrollStarted();
-            };
-            /**
-             * @private
-             *
-             * @param pixelsPerMS
-             * @param curPos
-             * @param maxPos
-             * @returns
-             */
-            p.getAnimationDatas = function (pixelsPerMS, curPos, maxPos) {
-                var absPixelsPerMS = Math.abs(pixelsPerMS);
-                var extraFricition = 0.95;
-                var duration = 0;
-                var friction = 0.998;
-                var minVelocity = 0.02;
-                var posTo = curPos + pixelsPerMS * 500;
-                if (posTo < 0 || posTo > maxPos) {
-                    posTo = curPos;
-                    while (Math.abs(pixelsPerMS) != Infinity && Math.abs(pixelsPerMS) > minVelocity) {
-                        posTo += pixelsPerMS;
-                        if (posTo < 0 || posTo > maxPos) {
-                            pixelsPerMS *= friction * extraFricition;
-                        }
-                        else {
-                            pixelsPerMS *= friction;
-                        }
-                        duration++;
-                    }
-                }
-                else {
-                    duration = -Math.log(minVelocity / absPixelsPerMS) * 500;
-                }
-                var result = {
-                    position: Math.min(maxPos + 50, Math.max(posTo, -50)),
-                    duration: duration
-                };
-                return result;
-            };
-            /**
-             * @private
-             *
-             * @param event
-             * @returns
-             */
-            p.cloneTouchEvent = function (event) {
-                var evt = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
-                evt.touchPointID = event.touchPointID;
-                evt.$stageX = event.stageX;
-                evt.$stageY = event.stageY;
-                //evt.ctrlKey = event.ctrlKey;
-                //evt.altKey = event.altKey;
-                //evt.shiftKey = event.shiftKey;
-                evt.touchDown = event.touchDown;
-                evt.$isDefaultPrevented = false;
-                evt.$target = event.target;
-                return evt;
-            };
-            /**
-             * @private
-             *
-             * @returns
-             */
-            p.throwNotSupportedError = function () {
-                egret.$error(1023);
-            };
-            /**
-             * @deprecated
-             * @param child {DisplayObject}
-             * @returns {DisplayObject}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.addChild = function (child) {
-                this.throwNotSupportedError();
-                return null;
-            };
-            /**
-             * @deprecated
-             * @param child {DisplayObject}
-             * @param index {number}
-             * @returns {DisplayObject}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.addChildAt = function (child, index) {
-                this.throwNotSupportedError();
-                return null;
-            };
-            /**
-             * @deprecated
-             * @param child {DisplayObject}
-             * @returns {DisplayObject}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.removeChild = function (child) {
-                this.throwNotSupportedError();
-                return null;
-            };
-            /**
-             * @deprecated
-             * @param index {number}
-             * @returns {DisplayObject}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.removeChildAt = function (index) {
-                this.throwNotSupportedError();
-                return null;
-            };
-            /**
-             * @deprecated
-             * @param child {DisplayObject}
-             * @param index {number}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.setChildIndex = function (child, index) {
-                this.throwNotSupportedError();
-            };
-            /**
-             * @deprecated
-             * @param child1 {DisplayObject}
-             * @param child2 {DisplayObject}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.swapChildren = function (child1, child2) {
-                this.throwNotSupportedError();
-            };
-            /**
-             * @deprecated
-             * @param index1 {number}
-             * @param index2 {number}
-             * @version Egret 2.0
-             * @platform Web,Native
-             */
-            p.swapChildrenAt = function (index1, index2) {
-                this.throwNotSupportedError();
-            };
-            /**
-             * @private
-             */
-            ScrollerView.weight = [1, 1.33, 1.66, 2, 2.33];
-            return ScrollerView;
-        })(egret.DisplayObjectContainer);
-        gui.ScrollerView = ScrollerView;
-        egret.registerClass(ScrollerView,"egret.gui.ScrollerView");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @private
-         */
-        var ScrollerViewProperties = (function () {
-            function ScrollerViewProperties() {
-                /**
-                 * @private
-                 */
-                this._verticalScrollPolicy = "auto";
-                /**
-                 * @private
-                 */
-                this._horizontalScrollPolicy = "auto";
-                /**
-                 * @private
-                 */
-                this._scrollLeft = 0;
-                /**
-                 * @private
-                 */
-                this._scrollTop = 0;
-                /**
-                 * @private
-                 */
-                this._hCanScroll = false;
-                /**
-                 * @private
-                 */
-                this._vCanScroll = false;
-                /**
-                 * @private
-                 */
-                this._lastTouchPosition = new egret.Point(0, 0);
-                /**
-                 * @private
-                 */
-                this._touchStartPosition = new egret.Point(0, 0);
-                /**
-                 * @private
-                 */
-                this._scrollStarted = false;
-                /**
-                 * @private
-                 */
-                this._lastTouchTime = 0;
-                /**
-                 * @private
-                 */
-                this._lastTouchEvent = null;
-                /**
-                 * @private
-                 */
-                this._velocitys = [];
-                /**
-                 * @private
-                 */
-                this._isHTweenPlaying = false;
-                /**
-                 * @private
-                 */
-                this._isVTweenPlaying = false;
-                /**
-                 * @private
-                 */
-                this._hScrollTween = null;
-                /**
-                 * @private
-                 */
-                this._vScrollTween = null;
-                /**
-                 * @private
-                 */
-                this._bounces = true;
-            }
-            var d = __define,c=ScrollerViewProperties;p=c.prototype;
-            return ScrollerViewProperties;
-        })();
-        gui.ScrollerViewProperties = ScrollerViewProperties;
-        egret.registerClass(ScrollerViewProperties,"egret.gui.ScrollerViewProperties");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
         /**
          * @class egret.gui.Scroller
          * @classdesc
@@ -16395,525 +14601,122 @@ var egret;
     var gui;
     (function (gui) {
         /**
-         * @class egret.gui.DefaultAssetAdapter
+         * @class egret.gui.TabBar
          * @classdesc
-         * 默认的IAssetAdapter接口实现
-         * @implements egret.gui.IAssetAdapter
+         * 选项卡组件
+         * @extends egret.gui.ListBase
          */
-        var DefaultAssetAdapter = (function () {
+        var TabBar = (function (_super) {
+            __extends(TabBar, _super);
             /**
              * 构造函数
-             * @method egret.gui.DefaultSkinAdapter#constructor
+             * @method egret.gui.TabBar#constructor
              */
-            function DefaultAssetAdapter() {
-            }
-            var d = __define,c=DefaultAssetAdapter;p=c.prototype;
-            /**
-             * 解析素材
-             * @method egret.gui.DefaultAssetAdapter#getAsset
-             * @param source {any} 待解析的新素材标识符
-             * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
-             * 回调参数content接受两种类型：DisplayObject或Texture。
-             * @param thisObject {any} compFunc的this引用
-             * @param oldContent any 旧的内容对象,传入值有可能为null。
-             * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
-             */
-            p.getAsset = function (source, compFunc, thisObject, oldContent) {
-                var content = source;
-                if (source.prototype) {
-                    content = new source();
-                }
-                if (content instanceof egret.DisplayObject || content instanceof egret.Texture) {
-                    compFunc.call(thisObject, content, source);
-                }
-                else if (typeof (source) == "string") {
-                    var url = source;
-                    var loader = new egret.ImageLoader();
-                    loader.addEventListener(egret.Event.COMPLETE, function (event) {
-                        content = new egret.Texture();
-                        content._setBitmapData(loader.data);
-                        compFunc.call(thisObject, content, source);
-                    }, this);
-                    loader.load(url);
-                }
-                else {
-                    compFunc.call(thisObject, content, source);
-                }
-            };
-            return DefaultAssetAdapter;
-        })();
-        gui.DefaultAssetAdapter = DefaultAssetAdapter;
-        egret.registerClass(DefaultAssetAdapter,"egret.gui.DefaultAssetAdapter",["egret.gui.IAssetAdapter"]);
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.DefaultSkinAdapter
-         * @classdesc
-         * 默认的ISkinAdapter接口实现
-         * @implements egret.gui.ISkinAdapter
-         */
-        var DefaultSkinAdapter = (function () {
-            /**
-             * 构造函数
-             * @method egret.gui.DefaultSkinAdapter#constructor
-             */
-            function DefaultSkinAdapter() {
-            }
-            var d = __define,c=DefaultSkinAdapter;p=c.prototype;
-            /**
-             * 获取皮肤显示对象
-             * @method egret.gui.ISkinAdapter#getSkin
-             * @param skinName {any} 待解析的皮肤标识符
-             * @param hostComponentKey {string} 主机组件标识符
-             * @returns {any} 皮肤对象实例
-             */
-            p.getSkin = function (skinName, hostComponentKey) {
-                if (!skinName)
-                    return null;
-                if (skinName.prototype) {
-                    return new skinName();
-                }
-                else if (typeof (skinName) == "string") {
-                    var clazz = egret.getDefinitionByName(skinName);
-                    if (clazz) {
-                        return new clazz();
-                    }
-                    else {
-                        return null;
-                    }
-                }
-                else {
-                    return skinName;
-                }
-            };
-            return DefaultSkinAdapter;
-        })();
-        gui.DefaultSkinAdapter = DefaultSkinAdapter;
-        egret.registerClass(DefaultSkinAdapter,"egret.gui.DefaultSkinAdapter",["egret.gui.ISkinAdapter"]);
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.DropDownController
-         * @classdesc
-         * 用于处理因用户交互而打开和关闭下拉列表的操作的控制器
-         * @extends egret.EventDispatcher
-         */
-        var DropDownController = (function (_super) {
-            __extends(DropDownController, _super);
-            /**
-             * 构造函数
-             * @method egret.gui.DropDownController#constructor
-             */
-            function DropDownController() {
+            function TabBar() {
                 _super.call(this);
                 /**
-                 * 鼠标按下标志
+                 * requireSelection改变标志
                  */
-                this.mouseIsDown = false;
-                this._openButton = null;
-                this._dropDown = null;
-                this._isOpen = false;
-                this._closeOnResize = true;
-                this._rollOverOpenDelay = NaN;
-                this.rollOverOpenDelayTimer = null;
+                this.requireSelectionChanged_tabBar = false;
+                this.requireSelection = true;
             }
-            var d = __define,c=DropDownController;p=c.prototype;
-            d(p, "openButton"
-                /**
-                 * 下拉按钮实例
-                 * @member egret.gui.DropDownController#openButton
-                 */
+            var d = __define,c=TabBar;p=c.prototype;
+            /**
+             * 创建容器的子元素
+             */
+            p.createChildren = function () {
+                gui.ListBase.prototype.createChildren.call(this);
+            };
+            d(p, "requireSelection"
                 ,function () {
-                    return this._openButton;
+                    return this._requireSelection;
                 }
+                /**
+                 * @method egret.gui.TabBar#requireSelection
+                 * @param value {boolean}
+                 */
                 ,function (value) {
-                    if (this._openButton === value)
+                    if (value == this._requireSelection)
                         return;
-                    this.removeOpenTriggers();
-                    this._openButton = value;
-                    this.addOpenTriggers();
-                }
-            );
-            d(p, "dropDown"
-                /**
-                 * 下拉区域显示对象
-                 * @member egret.gui.DropDownController#dropDown
-                 */
-                ,function () {
-                    return this._dropDown;
-                }
-                ,function (value) {
-                    if (this._dropDown === value)
-                        return;
-                    this._dropDown = value;
-                }
-            );
-            d(p, "isOpen"
-                /**
-                 * 下拉列表已经打开的标志
-                 * @member egret.gui.DropDownController#isOpen
-                 */
-                ,function () {
-                    return this._isOpen;
-                }
-            );
-            d(p, "closeOnResize"
-                /**
-                 * 如果为 true，则在调整舞台大小时会关闭下拉列表。
-                 * @member egret.gui.DropDownController#closeOnResize
-                 */
-                ,function () {
-                    return this._closeOnResize;
-                }
-                ,function (value) {
-                    if (this._closeOnResize == value)
-                        return;
-                    if (this.isOpen)
-                        this.removeCloseOnResizeTrigger();
-                    this._closeOnResize = value;
-                    this.addCloseOnResizeTrigger();
-                }
-            );
-            d(p, "rollOverOpenDelay"
-                /**
-                 * 指定滑过锚点按钮时打开下拉列表要等待的延迟（以毫秒为单位）。
-                 * 如果设置为 NaN，则下拉列表会在单击时打开，而不是在滑过时打开。默认值NaN
-                 * @member egret.gui.DropDownController#rollOverOpenDelay
-                 */
-                ,function () {
-                    return this._rollOverOpenDelay;
-                }
-                ,function (value) {
-                    if (this._rollOverOpenDelay == value)
-                        return;
-                    this.removeOpenTriggers();
-                    this._rollOverOpenDelay = value;
-                    this.addOpenTriggers();
+                    _super.prototype._setRequireSelection.call(this, value);
+                    this.requireSelectionChanged_tabBar = true;
+                    this.invalidateProperties();
                 }
             );
             /**
-             * 添加触发下拉列表打开的事件监听
+             * @inheritDoc
              */
-            p.addOpenTriggers = function () {
-                if (this.openButton) {
-                    if (isNaN(this.rollOverOpenDelay))
-                        this.openButton.addEventListener(gui.UIEvent.BUTTON_DOWN, this._openButton_buttonDownHandler, this);
-                    else
-                        this.openButton.addEventListener(egret.TouchEvent.TOUCH_ROLL_OVER, this._openButton_rollOverHandler, this);
+            p._setDataProvider = function (value) {
+                if (this.dataProvider instanceof gui.ViewStack) {
+                    this.dataProvider.removeEventListener("IndexChanged", this.onViewStackIndexChange, this);
+                    this.removeEventListener(gui.IndexChangeEvent.CHANGE, this.onIndexChanged, this);
                 }
-            };
-            /**
-             * 移除触发下拉列表打开的事件监听
-             */
-            p.removeOpenTriggers = function () {
-                if (this.openButton) {
-                    if (isNaN(this.rollOverOpenDelay))
-                        this.openButton.removeEventListener(gui.UIEvent.BUTTON_DOWN, this._openButton_buttonDownHandler, this);
-                    else
-                        this.openButton.removeEventListener(egret.TouchEvent.TOUCH_ROLL_OVER, this._openButton_rollOverHandler, this);
+                if (value instanceof gui.ViewStack) {
+                    value.addEventListener("IndexChanged", this.onViewStackIndexChange, this);
+                    this.addEventListener(gui.IndexChangeEvent.CHANGE, this.onIndexChanged, this);
                 }
+                _super.prototype._setDataProvider.call(this, value);
             };
             /**
-             * 添加触发下拉列表关闭的事件监听
+             * 鼠标点击的选中项改变
              */
-            p.addCloseTriggers = function () {
-                if (gui.UIGlobals.stage) {
-                    if (isNaN(this.rollOverOpenDelay)) {
-                        gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stage_mouseDownHandler, this);
-                        gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler_noRollOverOpenDelay, this);
-                    }
-                    else {
-                        gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.stage_mouseMoveHandler, this);
-                    }
-                    this.addCloseOnResizeTrigger();
-                }
+            p.onIndexChanged = function (event) {
+                (this.dataProvider)._setSelectedIndex(event.newIndex, false);
             };
             /**
-             * 移除触发下拉列表关闭的事件监听
+             * ViewStack选中项发生改变
              */
-            p.removeCloseTriggers = function () {
-                if (gui.UIGlobals.stage) {
-                    if (isNaN(this.rollOverOpenDelay)) {
-                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stage_mouseDownHandler, this);
-                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler_noRollOverOpenDelay, this);
-                    }
-                    else {
-                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.stage_mouseMoveHandler, this);
-                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler, this);
-                        gui.UIGlobals.stage.removeEventListener(egret.Event.LEAVE_STAGE, this.stage_mouseUpHandler, this);
-                    }
-                    this.removeCloseOnResizeTrigger();
-                }
+            p.onViewStackIndexChange = function (event) {
+                this._setSelectedIndex((this.dataProvider).selectedIndex, false);
             };
             /**
-             * 添加舞台尺寸改变的事件监听
+             * 处理对组件设置的属性
              */
-            p.addCloseOnResizeTrigger = function () {
-                if (this.closeOnResize)
-                    gui.UIGlobals.stage.addEventListener(egret.Event.RESIZE, this.stage_resizeHandler, this);
-            };
-            /**
-             * 移除舞台尺寸改变的事件监听
-             */
-            p.removeCloseOnResizeTrigger = function () {
-                if (this.closeOnResize)
-                    gui.UIGlobals.stage.removeEventListener(egret.Event.RESIZE, this.stage_resizeHandler, this);
-            };
-            /**
-             * 检查鼠标是否在DropDown或者openButton区域内。
-             */
-            p.isTargetOverDropDownOrOpenButton = function (target) {
-                if (target) {
-                    if (this.openButton && this.openButton.contains(target))
-                        return true;
-                    if (this.hitAreaAdditions != null) {
-                        for (var i = 0; i < this.hitAreaAdditions.length; i++) {
-                            if (this.hitAreaAdditions[i] == target || ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains(target)))
-                                return true;
-                        }
-                    }
-                    if (this.dropDown instanceof egret.DisplayObjectContainer) {
-                        if ((this.dropDown).contains(target))
-                            return true;
-                    }
-                    else {
-                        if (target == this.dropDown)
-                            return true;
+            p.commitProperties = function () {
+                _super.prototype.commitProperties.call(this);
+                if (this.requireSelectionChanged_tabBar && this.dataGroup) {
+                    this.requireSelectionChanged_tabBar = false;
+                    var n = this.dataGroup.numElements;
+                    for (var i = 0; i < n; i++) {
+                        var renderer = (this.dataGroup.getElementAt(i));
+                        if (renderer)
+                            renderer.allowDeselection = !this.requireSelection;
                     }
                 }
-                return false;
             };
-            /**
-             * 打开下拉列表
-             * @method egret.gui.DropDownController#openDropDown
-             */
-            p.openDropDown = function () {
-                this.openDropDownHelper();
-            };
-            /**
-             * 执行打开下拉列表
-             */
-            p.openDropDownHelper = function () {
-                if (!this.isOpen) {
-                    this.addCloseTriggers();
-                    this._isOpen = true;
-                    if (this.openButton)
-                        this.openButton._setKeepDown(true);
-                    gui.UIEvent.dispatchUIEvent(this, gui.UIEvent.OPEN);
-                }
-            };
-            /**
-             * 关闭下拉列表
-             * @method egret.gui.DropDownController#closeDropDown
-             * @param commit {boolean}
-             */
-            p.closeDropDown = function (commit) {
-                if (this.isOpen) {
-                    this._isOpen = false;
-                    if (this.openButton)
-                        this.openButton._setKeepDown(false);
-                    var dde = new gui.UIEvent(gui.UIEvent.CLOSE, false, true);
-                    if (!commit)
-                        dde.preventDefault();
-                    this.dispatchEvent(dde);
-                    this.removeCloseTriggers();
-                }
-            };
-            /**
-             * openButton上按下鼠标事件
-             * @method egret.gui.DropDownController#_openButton_buttonDownHandler
-             * @param event {Event}
-             */
-            p._openButton_buttonDownHandler = function (event) {
-                if (this.isOpen)
-                    this.closeDropDown(true);
-                else {
-                    this.mouseIsDown = true;
-                    this.openDropDownHelper();
-                }
-            };
-            /**
-             * openButton上鼠标经过事件
-             * @method egret.gui.DropDownController#_openButton_rollOverHandler
-             * @param event {TouchEvent}
-             */
-            p._openButton_rollOverHandler = function (event) {
-                if (this.rollOverOpenDelay == 0)
-                    this.openDropDownHelper();
-                else {
-                    this.openButton.addEventListener(egret.TouchEvent.TOUCH_ROLL_OUT, this.openButton_rollOutHandler, this);
-                    this.rollOverOpenDelayTimer = new egret.Timer(this.rollOverOpenDelay, 1);
-                    this.rollOverOpenDelayTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.rollOverDelay_timerCompleteHandler, this);
-                    this.rollOverOpenDelayTimer.start();
-                }
-            };
-            /**
-             * openButton上鼠标移出事件
-             */
-            p.openButton_rollOutHandler = function (event) {
-                if (this.rollOverOpenDelayTimer && this.rollOverOpenDelayTimer.running) {
-                    this.rollOverOpenDelayTimer.stop();
-                    this.rollOverOpenDelayTimer = null;
-                }
-                this.openButton.removeEventListener(egret.TouchEvent.TOUCH_ROLL_OUT, this.openButton_rollOutHandler, this);
-            };
-            /**
-             * 到达鼠标移入等待延迟打开的时间。
-             */
-            p.rollOverDelay_timerCompleteHandler = function (event) {
-                this.openButton.removeEventListener(egret.TouchEvent.TOUCH_ROLL_OUT, this.openButton_rollOutHandler, this);
-                this.rollOverOpenDelayTimer = null;
-                this.openDropDownHelper();
-            };
-            /**
-             * 舞台上鼠标按下事件
-             * @method egret.gui.DropDownController#stage_mouseDownHandler
-             * @param event {Event}
-             */
-            p.stage_mouseDownHandler = function (event) {
-                if (this.mouseIsDown) {
-                    this.mouseIsDown = false;
+            p.dataGroup_rendererAddHandler = function (event) {
+                _super.prototype.dataGroup_rendererAddHandler.call(this, event);
+                if (event.renderer == null)
                     return;
-                }
-                if (!this.dropDown || (this.dropDown && (event.target == this.dropDown || (this.dropDown instanceof egret.DisplayObjectContainer && !(this.dropDown).contains((event.target)))))) {
-                    var target = (event.target);
-                    if (this.openButton && target && this.openButton.contains(target))
-                        return;
-                    if (this.hitAreaAdditions != null) {
-                        for (var i = 0; i < this.hitAreaAdditions.length; i++) {
-                            if (this.hitAreaAdditions[i] == event.target || ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains((event.target))))
-                                return;
-                        }
-                    }
-                    this.closeDropDown(true);
-                }
+                if (event.renderer instanceof gui.TabBarButton)
+                    event.renderer.allowDeselection = !this.requireSelection;
             };
             /**
-             * 舞台上鼠标移动事件
-             * @method egret.gui.DropDownController#stage_mouseMoveHandler
-             * @param event {Event}
+             * 鼠标在项呈示器上弹起，抛出ItemClick事件。
              */
-            p.stage_mouseMoveHandler = function (event) {
-                var target = (event.target);
-                var containedTarget = this.isTargetOverDropDownOrOpenButton(target);
-                if (containedTarget)
+            p._item_touchEndHandler = function (event) {
+                var itemRenderer = (event.currentTarget);
+                if (itemRenderer != this._mouseDownItemRenderer)
                     return;
-                if (event instanceof egret.TouchEvent && event.touchDown) {
-                    gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler, this);
-                    gui.UIGlobals.stage.addEventListener(egret.Event.LEAVE_STAGE, this.stage_mouseUpHandler, this);
-                    return;
+                var newIndex;
+                if (itemRenderer)
+                    newIndex = itemRenderer.itemIndex;
+                else
+                    newIndex = this.dataGroup.getElementIndex((event.currentTarget));
+                if (newIndex == this.selectedIndex) {
+                    if (!this.requireSelection)
+                        this._setSelectedIndex(gui.ListBase.NO_SELECTION, true);
                 }
-                this.closeDropDown(true);
-            };
-            /**
-             * 舞台上鼠标弹起事件
-             * @method egret.gui.DropDownController#stage_mouseUpHandler_noRollOverOpenDelay
-             * @param event {Event}
-             */
-            p.stage_mouseUpHandler_noRollOverOpenDelay = function (event) {
-                if (this.mouseIsDown) {
-                    this.mouseIsDown = false;
+                else
+                    this._setSelectedIndex(newIndex, true);
+                if (!this._captureItemRenderer)
                     return;
-                }
+                this._dispatchListEvent(event, gui.ListEvent.ITEM_CLICK, itemRenderer);
             };
-            /**
-             * 舞台上鼠标弹起事件
-             * @method egret.gui.DropDownController#stage_mouseUpHandler
-             * @param event {Event}
-             */
-            p.stage_mouseUpHandler = function (event) {
-                var target = (event.target);
-                var containedTarget = this.isTargetOverDropDownOrOpenButton(target);
-                if (containedTarget) {
-                    gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler, this);
-                    gui.UIGlobals.stage.removeEventListener(egret.Event.LEAVE_STAGE, this.stage_mouseUpHandler, this);
-                    return;
-                }
-                this.closeDropDown(true);
-            };
-            /**
-             * 舞台尺寸改变事件
-             * @method egret.gui.DropDownController#stage_resizeHandler
-             * @param event {Event}
-             */
-            p.stage_resizeHandler = function (event) {
-                this.closeDropDown(true);
-            };
-            /**
-             * 舞台上鼠标滚轮事件
-             */
-            p.stage_mouseWheelHandler = function (event) {
-                if (this.dropDown && !((this.dropDown).contains((event.target)) && event.isDefaultPrevented()))
-                    this.closeDropDown(false);
-            };
-            return DropDownController;
-        })(egret.EventDispatcher);
-        gui.DropDownController = DropDownController;
-        egret.registerClass(DropDownController,"egret.gui.DropDownController");
+            return TabBar;
+        })(gui.List);
+        gui.TabBar = TabBar;
+        egret.registerClass(TabBar,"egret.gui.TabBar");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -16949,155 +14752,76 @@ var egret;
     var gui;
     (function (gui) {
         /**
-         * @class egret.gui.SkinBasicLayout
+         * @class egret.gui.TabBarButton
          * @classdesc
-         * 皮肤简单布局类。
-         * @extends egret.HashObject
+         * 选项卡组件的按钮条目
+         * @extends egret.gui.ToggleButtonBase
+         * @implements egret.gui.IItemRenderer
          */
-        var SkinBasicLayout = (function (_super) {
-            __extends(SkinBasicLayout, _super);
-            /**
-             * 构造函数
-             * @method egret.gui.SkinBasicLayout#constructor
-             */
-            function SkinBasicLayout() {
+        var TabBarButton = (function (_super) {
+            __extends(TabBarButton, _super);
+            function TabBarButton() {
                 _super.call(this);
-                this._target = null;
+                this._allowDeselection = true;
+                this._data = null;
+                this._itemIndex = NaN;
             }
-            var d = __define,c=SkinBasicLayout;p=c.prototype;
-            d(p, "target"
+            var d = __define,c=TabBarButton;p=c.prototype;
+            d(p, "allowDeselection"
                 /**
-                 * 目标布局对象
-                 * @member egret.gui.SkinBasicLayout#target
+                 * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
+                 * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
+                 * @member egret.gui.TabBarButton#allowDeselection
                  */
                 ,function () {
-                    return this._target;
+                    return this._allowDeselection;
                 }
                 ,function (value) {
-                    this._target = value;
+                    this._allowDeselection = value;
+                }
+            );
+            d(p, "data"
+                /**
+                 * @member egret.gui.TabBarButton#data
+                 */
+                ,function () {
+                    return this._data;
+                }
+                ,function (value) {
+                    this._data = value;
+                    this.dispatchEventWith("dataChange");
+                }
+            );
+            d(p, "itemIndex"
+                /**
+                 * @member egret.gui.TabBarButton#itemIndex
+                 */
+                ,function () {
+                    return this._itemIndex;
+                }
+                ,function (value) {
+                    this._itemIndex = value;
                 }
             );
             /**
-             * 测量组件尺寸大小
-             * @method egret.gui.SkinBasicLayout#measure
+             * @inheritDoc
              */
-            p.measure = function () {
-                if (this.target == null)
-                    return;
-                var measureW = 0;
-                var measureH = 0;
-                var target = this._target;
-                var count = target.numElements;
-                for (var i = 0; i < count; i++) {
-                    var layoutElement = target.getElementAt(i);
-                    if (!layoutElement || !layoutElement.includeInLayout)
-                        continue;
-                    var hCenter = layoutElement.horizontalCenter;
-                    var vCenter = layoutElement.verticalCenter;
-                    var left = layoutElement.left;
-                    var right = layoutElement.right;
-                    var top = layoutElement.top;
-                    var bottom = layoutElement.bottom;
-                    var extX;
-                    var extY;
-                    if (!isNaN(left) && !isNaN(right)) {
-                        extX = left + right;
-                    }
-                    else if (!isNaN(hCenter)) {
-                        extX = Math.abs(hCenter) * 2;
-                    }
-                    else if (!isNaN(left) || !isNaN(right)) {
-                        extX = isNaN(left) ? 0 : left;
-                        extX += isNaN(right) ? 0 : right;
-                    }
-                    else {
-                        extX = layoutElement.preferredX;
-                    }
-                    if (!isNaN(top) && !isNaN(bottom)) {
-                        extY = top + bottom;
-                    }
-                    else if (!isNaN(vCenter)) {
-                        extY = Math.abs(vCenter) * 2;
-                    }
-                    else if (!isNaN(top) || !isNaN(bottom)) {
-                        extY = isNaN(top) ? 0 : top;
-                        extY += isNaN(bottom) ? 0 : bottom;
-                    }
-                    else {
-                        extY = layoutElement.preferredY;
-                    }
-                    var preferredWidth = layoutElement.preferredWidth;
-                    var preferredHeight = layoutElement.preferredHeight;
-                    measureW = Math.ceil(Math.max(measureW, extX + preferredWidth));
-                    measureH = Math.ceil(Math.max(measureH, extY + preferredHeight));
-                }
-                this.target.measuredWidth = measureW;
-                this.target.measuredHeight = measureH;
-            };
-            /**
-             * 更新显示列表
-             * @method egret.gui.SkinBasicLayout#updateDisplayList
-             * @param unscaledWidth {number}
-             * @param unscaledHeight {number}
-             */
-            p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
-                if (this.target == null)
-                    return;
-                var count = this.target.numElements;
-                for (var i = 0; i < count; i++) {
-                    var layoutElement = this.target.getElementAt(i);
-                    if (layoutElement == null || !layoutElement.includeInLayout)
-                        continue;
-                    var hCenter = layoutElement.horizontalCenter;
-                    var vCenter = layoutElement.verticalCenter;
-                    var left = layoutElement.left;
-                    var right = layoutElement.right;
-                    var top = layoutElement.top;
-                    var bottom = layoutElement.bottom;
-                    var percentWidth = layoutElement.percentWidth;
-                    var percentHeight = layoutElement.percentHeight;
-                    var childWidth = NaN;
-                    var childHeight = NaN;
-                    if (!isNaN(left) && !isNaN(right)) {
-                        childWidth = unscaledWidth - right - left;
-                    }
-                    else if (!isNaN(percentWidth)) {
-                        childWidth = Math.round(unscaledWidth * Math.min(percentWidth * 0.01, 1));
-                    }
-                    if (!isNaN(top) && !isNaN(bottom)) {
-                        childHeight = unscaledHeight - bottom - top;
-                    }
-                    else if (!isNaN(percentHeight)) {
-                        childHeight = Math.round(unscaledHeight * Math.min(percentHeight * 0.01, 1));
-                    }
-                    layoutElement.setLayoutBoundsSize(childWidth, childHeight);
-                    var elementWidth = layoutElement.layoutBoundsWidth;
-                    var elementHeight = layoutElement.layoutBoundsHeight;
-                    var childX = NaN;
-                    var childY = NaN;
-                    if (!isNaN(hCenter))
-                        childX = Math.round((unscaledWidth - elementWidth) / 2 + hCenter);
-                    else if (!isNaN(left))
-                        childX = left;
-                    else if (!isNaN(right))
-                        childX = unscaledWidth - elementWidth - right;
-                    else
-                        childX = layoutElement.layoutBoundsX;
-                    if (!isNaN(vCenter))
-                        childY = Math.round((unscaledHeight - elementHeight) / 2 + vCenter);
-                    else if (!isNaN(top))
-                        childY = top;
-                    else if (!isNaN(bottom))
-                        childY = unscaledHeight - elementHeight - bottom;
-                    else
-                        childY = layoutElement.layoutBoundsY;
-                    layoutElement.setLayoutBoundsPosition(childX, childY);
+            p._setLabel = function (value) {
+                if (value != this._getLabel()) {
+                    _super.prototype._setLabel.call(this, value);
+                    if (this.labelDisplay)
+                        this.labelDisplay.text = this._getLabel();
                 }
             };
-            return SkinBasicLayout;
-        })(egret.HashObject);
-        gui.SkinBasicLayout = SkinBasicLayout;
-        egret.registerClass(SkinBasicLayout,"egret.gui.SkinBasicLayout");
+            p.buttonReleased = function () {
+                if (this.selected && !this.allowDeselection)
+                    return;
+                _super.prototype.buttonReleased.call(this);
+            };
+            return TabBarButton;
+        })(gui.ToggleButtonBase);
+        gui.TabBarButton = TabBarButton;
+        egret.registerClass(TabBarButton,"egret.gui.TabBarButton",["egret.gui.IItemRenderer","egret.gui.ILayoutElement","egret.IEventDispatcher"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -17695,624 +15419,6 @@ var egret;
         })(gui.SkinnableComponent);
         gui.SkinnableTextBase = SkinnableTextBase;
         egret.registerClass(SkinnableTextBase,"egret.gui.SkinnableTextBase");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        var Theme = (function () {
-            /**
-             * 构造函数
-             * @method egret.gui.PopUpManager#constructor
-             */
-            function Theme(configURL) {
-                this.skinMap = {};
-                this.delyList = [];
-                this.loadConfig(configURL);
-            }
-            var d = __define,c=Theme;p=c.prototype;
-            Theme.load = function (configURL) {
-                if (this.initialized) {
-                    return;
-                }
-                this.initialized = true;
-                gui.SkinnableComponent._defaultTheme = new Theme(configURL);
-            };
-            p.loadConfig = function (configURL) {
-                this._configURL = configURL;
-                var loader = new egret.HttpRequest();
-                loader.addEventListener(egret.Event.COMPLETE, this.onLoadComplete, this);
-                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadError, this);
-                loader.responseType = egret.HttpResponseType.TEXT;
-                loader.open(configURL);
-                loader.send();
-            };
-            p.onLoadComplete = function (event) {
-                var loader = (event.target);
-                try {
-                    var str = loader.response;
-                    var data = JSON.parse(str);
-                    this.skinMap = data.skins;
-                }
-                catch (e) {
-                    egret.$warn(1017, this._configURL, loader.response);
-                }
-                this.handleDelyList();
-            };
-            p.onLoadError = function (event) {
-                var loader = (event.target);
-                egret.$warn(3000, this._configURL);
-                this.handleDelyList();
-            };
-            p.handleDelyList = function () {
-                if (!this.skinMap) {
-                    this.skinMap = {};
-                    this.delyList = [];
-                    return;
-                }
-                var list = this.delyList;
-                this.delyList = [];
-                var length = list.length;
-                for (var i = 0; i < length; i++) {
-                    var client = list[i];
-                    if (!client._skin) {
-                        var skin = this.getDefaultSkin(client);
-                        client._setSkin(skin);
-                    }
-                }
-            };
-            p.getDefaultSkin = function (client) {
-                var skinMap = this.skinMap;
-                if (!skinMap) {
-                    if (this.delyList.indexOf(client) == -1) {
-                        this.delyList.push(client);
-                    }
-                    return null;
-                }
-                var skinName;
-                var hostKey = client.hostComponentKey;
-                if (hostKey) {
-                    skinName = skinMap[hostKey];
-                }
-                else {
-                    var superClass = client;
-                    while (superClass) {
-                        hostKey = egret.getQualifiedClassName(superClass);
-                        skinName = skinMap[hostKey];
-                        if (skinName) {
-                            break;
-                        }
-                        superClass = egret.getDefinitionByName(egret.getQualifiedSuperclassName(superClass));
-                    }
-                }
-                if (!skinName) {
-                    return null;
-                }
-                var skinClass = egret.getDefinitionByName(skinName);
-                if (!skinClass) {
-                    egret.$warn(3001, skinName);
-                    return null;
-                }
-                return new skinClass();
-            };
-            Theme.initialized = false;
-            return Theme;
-        })();
-        gui.Theme = Theme;
-        egret.registerClass(Theme,"egret.gui.Theme");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.TreeItemRenderer
-         * @classdesc
-         * Tree组件的项呈示器基类
-         * @extends egret.gui.ItemRenderer
-         * @implements egret.gui.ITreeItemRenderer
-         */
-        var TreeItemRenderer = (function (_super) {
-            __extends(TreeItemRenderer, _super);
-            /**
-             * 构造函数
-             * @method egret.gui.TreeItemRenderer#constructor
-             */
-            function TreeItemRenderer() {
-                _super.call(this);
-                /**
-                 * [SkinPart]图标显示对象
-                 * @member egret.gui.TreeItemRenderer#iconDisplay
-                 */
-                this.iconDisplay = null;
-                /**
-                 * [SkinPart]子节点开启按钮
-                 * @member egret.gui.TreeItemRenderer#disclosureButton
-                 */
-                this.disclosureButton = null;
-                /**
-                 * [SkinPart]用于调整缩进值的容器对象。
-                 * @member egret.gui.TreeItemRenderer#contentGroup
-                 */
-                this.contentGroup = null;
-                /**
-                 *
-                 * @type {number}
-                 * @private
-                 */
-                this._indentation = 17;
-                /**
-                 *
-                 * @type {null}
-                 * @private
-                 */
-                this._iconSkinName = null;
-                /**
-                 *
-                 * @type {number}
-                 * @private
-                 */
-                this._depth = 0;
-                /**
-                 *
-                 * @type {boolean}
-                 * @private
-                 */
-                this._hasChildren = false;
-                /**
-                 *
-                 * @type {boolean}
-                 * @private
-                 */
-                this._isOpen = false;
-                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onItemMouseDown, this, false, 1000);
-            }
-            var d = __define,c=TreeItemRenderer;p=c.prototype;
-            p.onItemMouseDown = function (event) {
-                if (event.target == this.disclosureButton) {
-                    event.stopImmediatePropagation();
-                }
-            };
-            d(p, "indentation"
-                /**
-                 * 子节点相对父节点的缩进值，以像素为单位。默认17。
-                 * @member egret.gui.TreeItemRenderer#indentation
-                 */
-                ,function () {
-                    return this._indentation;
-                }
-                ,function (value) {
-                    this._indentation = value;
-                }
-            );
-            d(p, "iconSkinName"
-                /**
-                 * @member egret.gui.TreeItemRenderer#iconSkinName
-                 */
-                ,function () {
-                    return this._iconSkinName;
-                }
-                ,function (value) {
-                    if (this._iconSkinName == value)
-                        return;
-                    this._iconSkinName = value;
-                    if (this.iconDisplay) {
-                        this.iconDisplay.source = this._iconSkinName;
-                    }
-                }
-            );
-            d(p, "depth"
-                /**
-                 * @member egret.gui.TreeItemRenderer#depth
-                 */
-                ,function () {
-                    return this._depth;
-                }
-                ,function (value) {
-                    if (value == this._depth)
-                        return;
-                    this._depth = value;
-                    if (this.contentGroup) {
-                        this.contentGroup.x = this._depth * this._indentation;
-                    }
-                }
-            );
-            d(p, "hasChildren"
-                /**
-                 * @member egret.gui.TreeItemRenderer#hasChildren
-                 */
-                ,function () {
-                    return this._hasChildren;
-                }
-                ,function (value) {
-                    if (this._hasChildren == value)
-                        return;
-                    this._hasChildren = value;
-                    if (this.disclosureButton) {
-                        this.disclosureButton.visible = this._hasChildren;
-                    }
-                }
-            );
-            d(p, "opened"
-                /**
-                 * @member egret.gui.TreeItemRenderer#opened
-                 */
-                ,function () {
-                    return this._isOpen;
-                }
-                ,function (value) {
-                    if (this._isOpen == value)
-                        return;
-                    this._isOpen = value;
-                    if (this.disclosureButton) {
-                        this.disclosureButton.selected = this._isOpen;
-                    }
-                }
-            );
-            /**
-             * 添加外观部件时调用
-             * @method egret.gui.TreeItemRenderer#partAdded
-             * @param partName {string}
-             * @param instance {any}
-             */
-            p.partAdded = function (partName, instance) {
-                _super.prototype.partAdded.call(this, partName, instance);
-                if (instance == this.iconDisplay) {
-                    this.iconDisplay.source = this._iconSkinName;
-                }
-                else if (instance == this.disclosureButton) {
-                    this.disclosureButton.visible = this._hasChildren;
-                    this.disclosureButton.selected = this._isOpen;
-                    this.disclosureButton._autoSelected = false;
-                    this.disclosureButton.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.disclosureButton_mouseDownHandler, this);
-                }
-                else if (instance == this.contentGroup) {
-                    this.contentGroup.x = this._depth * this._indentation;
-                }
-            };
-            /**
-             * 删除外观部件的实例时调用
-             * @method egret.gui.TreeItemRenderer#partRemoved
-             * @param partName {string}
-             * @param instance {any}
-             */
-            p.partRemoved = function (partName, instance) {
-                _super.prototype.partRemoved.call(this, partName, instance);
-                if (instance == this.iconDisplay) {
-                    this.iconDisplay.source = null;
-                }
-                else if (instance == this.disclosureButton) {
-                    this.disclosureButton.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.disclosureButton_mouseDownHandler, this);
-                    this.disclosureButton._autoSelected = true;
-                    this.disclosureButton.visible = true;
-                }
-            };
-            /**
-             * 鼠标在disclosureButton上按下
-             * @method egret.gui.TreeItemRenderer#disclosureButton_mouseDownHandler
-             * @param event {TouchEvent}
-             */
-            p.disclosureButton_mouseDownHandler = function (event) {
-                gui.TreeEvent.dispatchTreeEvent(this, gui.TreeEvent.ITEM_OPENING, this.itemIndex, this.data, this, !this._isOpen, false, true);
-            };
-            return TreeItemRenderer;
-        })(gui.ItemRenderer);
-        gui.TreeItemRenderer = TreeItemRenderer;
-        egret.registerClass(TreeItemRenderer,"egret.gui.TreeItemRenderer",["egret.gui.ITreeItemRenderer","egret.gui.IItemRenderer","egret.gui.ILayoutElement","egret.IEventDispatcher"]);
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.TabBar
-         * @classdesc
-         * 选项卡组件
-         * @extends egret.gui.ListBase
-         */
-        var TabBar = (function (_super) {
-            __extends(TabBar, _super);
-            /**
-             * 构造函数
-             * @method egret.gui.TabBar#constructor
-             */
-            function TabBar() {
-                _super.call(this);
-                /**
-                 * requireSelection改变标志
-                 */
-                this.requireSelectionChanged_tabBar = false;
-                this.requireSelection = true;
-            }
-            var d = __define,c=TabBar;p=c.prototype;
-            /**
-             * 创建容器的子元素
-             */
-            p.createChildren = function () {
-                gui.ListBase.prototype.createChildren.call(this);
-            };
-            d(p, "requireSelection"
-                ,function () {
-                    return this._requireSelection;
-                }
-                /**
-                 * @method egret.gui.TabBar#requireSelection
-                 * @param value {boolean}
-                 */
-                ,function (value) {
-                    if (value == this._requireSelection)
-                        return;
-                    _super.prototype._setRequireSelection.call(this, value);
-                    this.requireSelectionChanged_tabBar = true;
-                    this.invalidateProperties();
-                }
-            );
-            /**
-             * @inheritDoc
-             */
-            p._setDataProvider = function (value) {
-                if (this.dataProvider instanceof gui.ViewStack) {
-                    this.dataProvider.removeEventListener("IndexChanged", this.onViewStackIndexChange, this);
-                    this.removeEventListener(gui.IndexChangeEvent.CHANGE, this.onIndexChanged, this);
-                }
-                if (value instanceof gui.ViewStack) {
-                    value.addEventListener("IndexChanged", this.onViewStackIndexChange, this);
-                    this.addEventListener(gui.IndexChangeEvent.CHANGE, this.onIndexChanged, this);
-                }
-                _super.prototype._setDataProvider.call(this, value);
-            };
-            /**
-             * 鼠标点击的选中项改变
-             */
-            p.onIndexChanged = function (event) {
-                (this.dataProvider)._setSelectedIndex(event.newIndex, false);
-            };
-            /**
-             * ViewStack选中项发生改变
-             */
-            p.onViewStackIndexChange = function (event) {
-                this._setSelectedIndex((this.dataProvider).selectedIndex, false);
-            };
-            /**
-             * 处理对组件设置的属性
-             */
-            p.commitProperties = function () {
-                _super.prototype.commitProperties.call(this);
-                if (this.requireSelectionChanged_tabBar && this.dataGroup) {
-                    this.requireSelectionChanged_tabBar = false;
-                    var n = this.dataGroup.numElements;
-                    for (var i = 0; i < n; i++) {
-                        var renderer = (this.dataGroup.getElementAt(i));
-                        if (renderer)
-                            renderer.allowDeselection = !this.requireSelection;
-                    }
-                }
-            };
-            p.dataGroup_rendererAddHandler = function (event) {
-                _super.prototype.dataGroup_rendererAddHandler.call(this, event);
-                if (event.renderer == null)
-                    return;
-                if (event.renderer instanceof gui.TabBarButton)
-                    event.renderer.allowDeselection = !this.requireSelection;
-            };
-            /**
-             * 鼠标在项呈示器上弹起，抛出ItemClick事件。
-             */
-            p._item_touchEndHandler = function (event) {
-                var itemRenderer = (event.currentTarget);
-                if (itemRenderer != this._mouseDownItemRenderer)
-                    return;
-                var newIndex;
-                if (itemRenderer)
-                    newIndex = itemRenderer.itemIndex;
-                else
-                    newIndex = this.dataGroup.getElementIndex((event.currentTarget));
-                if (newIndex == this.selectedIndex) {
-                    if (!this.requireSelection)
-                        this._setSelectedIndex(gui.ListBase.NO_SELECTION, true);
-                }
-                else
-                    this._setSelectedIndex(newIndex, true);
-                if (!this._captureItemRenderer)
-                    return;
-                this._dispatchListEvent(event, gui.ListEvent.ITEM_CLICK, itemRenderer);
-            };
-            return TabBar;
-        })(gui.List);
-        gui.TabBar = TabBar;
-        egret.registerClass(TabBar,"egret.gui.TabBar");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.TabBarButton
-         * @classdesc
-         * 选项卡组件的按钮条目
-         * @extends egret.gui.ToggleButtonBase
-         * @implements egret.gui.IItemRenderer
-         */
-        var TabBarButton = (function (_super) {
-            __extends(TabBarButton, _super);
-            function TabBarButton() {
-                _super.call(this);
-                this._allowDeselection = true;
-                this._data = null;
-                this._itemIndex = NaN;
-            }
-            var d = __define,c=TabBarButton;p=c.prototype;
-            d(p, "allowDeselection"
-                /**
-                 * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
-                 * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
-                 * @member egret.gui.TabBarButton#allowDeselection
-                 */
-                ,function () {
-                    return this._allowDeselection;
-                }
-                ,function (value) {
-                    this._allowDeselection = value;
-                }
-            );
-            d(p, "data"
-                /**
-                 * @member egret.gui.TabBarButton#data
-                 */
-                ,function () {
-                    return this._data;
-                }
-                ,function (value) {
-                    this._data = value;
-                    this.dispatchEventWith("dataChange");
-                }
-            );
-            d(p, "itemIndex"
-                /**
-                 * @member egret.gui.TabBarButton#itemIndex
-                 */
-                ,function () {
-                    return this._itemIndex;
-                }
-                ,function (value) {
-                    this._itemIndex = value;
-                }
-            );
-            /**
-             * @inheritDoc
-             */
-            p._setLabel = function (value) {
-                if (value != this._getLabel()) {
-                    _super.prototype._setLabel.call(this, value);
-                    if (this.labelDisplay)
-                        this.labelDisplay.text = this._getLabel();
-                }
-            };
-            p.buttonReleased = function () {
-                if (this.selected && !this.allowDeselection)
-                    return;
-                _super.prototype.buttonReleased.call(this);
-            };
-            return TabBarButton;
-        })(gui.ToggleButtonBase);
-        gui.TabBarButton = TabBarButton;
-        egret.registerClass(TabBarButton,"egret.gui.TabBarButton",["egret.gui.IItemRenderer","egret.gui.ILayoutElement","egret.IEventDispatcher"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -19362,6 +16468,227 @@ var egret;
     var gui;
     (function (gui) {
         /**
+         * @class egret.gui.VSlider
+         * @classdesc
+         * 垂直滑块控件
+         * @extends egret.gui.SliderBase
+         */
+        var VSlider = (function (_super) {
+            __extends(VSlider, _super);
+            /**
+             * 构造函数
+             * @method egret.gui.VSlider#constructor
+             */
+            function VSlider() {
+                _super.call(this);
+            }
+            var d = __define,c=VSlider;p=c.prototype;
+            /**
+             * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
+             * @param x {number}
+             * @param y {number}
+             * @returns {number}
+             */
+            p.pointToValue = function (x, y) {
+                if (!this.thumb || !this.track)
+                    return 0;
+                var range = this.maximum - this.minimum;
+                var thumbRange = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
+                return this.minimum + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0);
+            };
+            /**
+             * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+             */
+            p.updateSkinDisplayList = function () {
+                if (!this.thumb || !this.track)
+                    return;
+                var thumbHeight = this.thumb.layoutBoundsHeight;
+                var thumbRange = this.track.layoutBoundsHeight - thumbHeight;
+                var range = this.maximum - this.minimum;
+                var thumbPosTrackY = (range > 0) ? thumbRange - (((this.pendingValue - this.minimum) / range) * thumbRange) : 0;
+                var thumbPos = this.track.localToGlobal(0, thumbPosTrackY);
+                var thumbPosX = thumbPos.x;
+                var thumbPosY = thumbPos.y;
+                var thumbPosParentY = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
+                this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
+                if (this.showTrackHighlight && this.trackHighlight && this.trackHighlight.$parent) {
+                    var trackHighlightY = this.trackHighlight.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
+                    this.trackHighlight.y = Math.round(trackHighlightY + thumbHeight);
+                    this.trackHighlight.height = Math.round(thumbRange - trackHighlightY);
+                }
+            };
+            return VSlider;
+        })(gui.SliderBase);
+        gui.VSlider = VSlider;
+        egret.registerClass(VSlider,"egret.gui.VSlider");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @classic
+         * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
+         */
+        var VScrollBar = (function (_super) {
+            __extends(VScrollBar, _super);
+            function VScrollBar() {
+                _super.call(this);
+                this._thumbLengthRatio = 1;
+            }
+            var d = __define,c=VScrollBar;p=c.prototype;
+            /**
+             *
+             * @param height
+             * @param contentHeight
+             * @private
+             */
+            p._setViewportMetric = function (height, contentHeight) {
+                var max = Math.max(0, contentHeight - height);
+                this._thumbLengthRatio = contentHeight <= height ? 1 : height / contentHeight;
+                this._setMaximun(max);
+                this._setMinimun(0);
+            };
+            d(p, "trackAlpha"
+                ,function () {
+                    return 1;
+                }
+                /**
+                 * @deprecated
+                 */
+                ,function (value) {
+                    egret.$warn(1016, "VScrollBar.trackAlpha");
+                }
+            );
+            d(p, "thumbAlpha"
+                ,function () {
+                    return 1;
+                }
+                /**
+                 * @deprecated
+                 */
+                ,function (value) {
+                    egret.$warn(1016, "VScrollBar.thumbAlpha");
+                }
+            );
+            p.setPosition = function (value) {
+                this._setValue(value);
+            };
+            p.getPosition = function () {
+                return this._getValue();
+            };
+            p._setValue = function (value) {
+                value = Math.max(0, value);
+                _super.prototype._setValue.call(this, value);
+            };
+            p.setValue = function (value) {
+                _super.prototype.setValue.call(this, value);
+            };
+            p._animationUpdateHandler = function (animation) {
+                this.pendingValue = animation.currentValue["value"];
+                this.value = animation.currentValue["value"];
+                this.dispatchEventWith(egret.Event.CHANGE);
+            };
+            /**
+             * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
+             * @param x {number}
+             * @param y {number}
+             * @returns {number}
+             */
+            p.pointToValue = function (x, y) {
+                if (!this.thumb || !this.track)
+                    return 0;
+                var range = this.maximum - this.minimum;
+                var thumbRange = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
+                return this.minimum + ((thumbRange != 0) ? (y / thumbRange) * range : 0);
+            };
+            /**
+             * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+             */
+            p.updateSkinDisplayList = function () {
+                if (!this.thumb || !this.track)
+                    return;
+                var thumbHeight = this.track.layoutBoundsHeight * this._thumbLengthRatio;
+                var oldThumbHeight = this.thumb.layoutBoundsHeight;
+                var thumbRange = this.track.layoutBoundsHeight - thumbHeight;
+                var range = this.maximum - this.minimum;
+                var thumbPosTrackY = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
+                var thumbPos = this.track.localToGlobal(0, thumbPosTrackY);
+                var thumbPosX = thumbPos.x;
+                var thumbPosY = thumbPos.y;
+                var thumbPosParentY = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
+                this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
+                if (thumbHeight != oldThumbHeight)
+                    this.thumb.setLayoutBoundsSize(this.thumb.layoutBoundsWidth, thumbHeight);
+            };
+            return VScrollBar;
+        })(gui.VSlider);
+        gui.VScrollBar = VScrollBar;
+        egret.registerClass(VScrollBar,"egret.gui.VScrollBar");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
          * @class egret.gui.ViewStack
          * @classdesc
          * 层级堆叠容器,一次只显示一个子对象。
@@ -19671,60 +16998,60 @@ var egret;
 (function (egret) {
     var gui;
     (function (gui) {
+        var setTimeoutCache = {};
+        var setTimeoutIndex = 0;
+        var setTimeoutCount = 0;
+        var lastTime = 0;
         /**
-         * @class egret.gui.VSlider
-         * @classdesc
-         * 垂直滑块控件
-         * @extends egret.gui.SliderBase
+         * @private
          */
-        var VSlider = (function (_super) {
-            __extends(VSlider, _super);
-            /**
-             * 构造函数
-             * @method egret.gui.VSlider#constructor
-             */
-            function VSlider() {
-                _super.call(this);
+        function $addTimer(listener, thisObject, delay) {
+            var args = [];
+            for (var _i = 3; _i < arguments.length; _i++) {
+                args[_i - 3] = arguments[_i];
             }
-            var d = __define,c=VSlider;p=c.prototype;
-            /**
-             * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
-             * @param x {number}
-             * @param y {number}
-             * @returns {number}
-             */
-            p.pointToValue = function (x, y) {
-                if (!this.thumb || !this.track)
-                    return 0;
-                var range = this.maximum - this.minimum;
-                var thumbRange = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
-                return this.minimum + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0);
-            };
-            /**
-             * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
-             */
-            p.updateSkinDisplayList = function () {
-                if (!this.thumb || !this.track)
-                    return;
-                var thumbHeight = this.thumb.layoutBoundsHeight;
-                var thumbRange = this.track.layoutBoundsHeight - thumbHeight;
-                var range = this.maximum - this.minimum;
-                var thumbPosTrackY = (range > 0) ? thumbRange - (((this.pendingValue - this.minimum) / range) * thumbRange) : 0;
-                var thumbPos = this.track.localToGlobal(0, thumbPosTrackY);
-                var thumbPosX = thumbPos.x;
-                var thumbPosY = thumbPos.y;
-                var thumbPosParentY = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
-                this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
-                if (this.showTrackHighlight && this.trackHighlight && this.trackHighlight.$parent) {
-                    var trackHighlightY = this.trackHighlight.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
-                    this.trackHighlight.y = Math.round(trackHighlightY + thumbHeight);
-                    this.trackHighlight.height = Math.round(thumbRange - trackHighlightY);
+            var data = { listener: listener, thisObject: thisObject, delay: delay, params: args };
+            setTimeoutCount++;
+            if (setTimeoutCount == 1 && egret.sys.$ticker) {
+                lastTime = egret.getTimer();
+                egret.sys.$ticker.$startTick(timeoutUpdate, null);
+            }
+            setTimeoutIndex++;
+            setTimeoutCache[setTimeoutIndex] = data;
+            return setTimeoutIndex;
+        }
+        gui.$addTimer = $addTimer;
+        /**
+         * @private
+         */
+        function $clearTimer(key) {
+            if (setTimeoutCache[key]) {
+                setTimeoutCount--;
+                delete setTimeoutCache[key];
+                if (setTimeoutCount == 0 && egret.sys.$ticker) {
+                    egret.sys.$ticker.$stopTick(timeoutUpdate, null);
                 }
-            };
-            return VSlider;
-        })(gui.SliderBase);
-        gui.VSlider = VSlider;
-        egret.registerClass(VSlider,"egret.gui.VSlider");
+            }
+        }
+        gui.$clearTimer = $clearTimer;
+        /**
+         * @private
+         *
+         * @param dt
+         */
+        function timeoutUpdate(timeStamp) {
+            var dt = timeStamp - lastTime;
+            lastTime = timeStamp;
+            for (var key in setTimeoutCache) {
+                var data = setTimeoutCache[key];
+                data.delay -= dt;
+                if (data.delay <= 0) {
+                    data.listener.apply(data.thisObject, data.params);
+                    egret.clearTimeout(key);
+                }
+            }
+            return false;
+        }
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -19760,104 +17087,2777 @@ var egret;
     var gui;
     (function (gui) {
         /**
-         * @classic
-         * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
+         * @private
          */
-        var VScrollBar = (function (_super) {
-            __extends(VScrollBar, _super);
-            function VScrollBar() {
-                _super.call(this);
-                this._thumbLengthRatio = 1;
+        var ScrollerEase = (function () {
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            function ScrollerEase() {
+                egret.$error(1014);
             }
-            var d = __define,c=VScrollBar;p=c.prototype;
+            var d = __define,c=ScrollerEase;p=c.prototype;
             /**
              *
-             * @param height
-             * @param contentHeight
+             * @param amount
+             * @returns
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ScrollerEase.get = function (amount) {
+                if (amount < -1) {
+                    amount = -1;
+                }
+                if (amount > 1) {
+                    amount = 1;
+                }
+                return function (t) {
+                    if (amount == 0) {
+                        return t;
+                    }
+                    if (amount < 0) {
+                        return t * (t * -amount + 1 + amount);
+                    }
+                    return t * ((2 - t) * amount + (1 - amount));
+                };
+            };
+            /**
+             *
+             * @param pow
+             * @returns
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ScrollerEase.getPowOut = function (pow) {
+                return function (t) {
+                    return 1 - Math.pow(1 - t, pow);
+                };
+            };
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ScrollerEase.quintOut = ScrollerEase.getPowOut(5);
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ScrollerEase.quartOut = ScrollerEase.getPowOut(4);
+            return ScrollerEase;
+        })();
+        gui.ScrollerEase = ScrollerEase;
+        egret.registerClass(ScrollerEase,"egret.gui.ScrollerEase");
+        /**
+         * @private
+         */
+        var ScrollerTween = (function (_super) {
+            __extends(ScrollerTween, _super);
+            /**
+             * 创建一个 egret.ScrollerTween 对象
+             * @private
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            function ScrollerTween(target, props, pluginData) {
+                _super.call(this);
+                /**
+                 * @private
+                 */
+                this._target = null;
+                /**
+                 * @private
+                 */
+                this._useTicks = false;
+                /**
+                 * @private
+                 */
+                this.ignoreGlobalPause = false;
+                /**
+                 * @private
+                 */
+                this.loop = false;
+                /**
+                 * @private
+                 */
+                this.pluginData = null;
+                /**
+                 * @private
+                 */
+                this._steps = null;
+                /**
+                 * @private
+                 */
+                this._actions = null;
+                /**
+                 * @private
+                 */
+                this.paused = false;
+                /**
+                 * @private
+                 */
+                this.duration = 0;
+                /**
+                 * @private
+                 */
+                this._prevPos = -1;
+                /**
+                 * @private
+                 */
+                this.position = null;
+                /**
+                 * @private
+                 */
+                this._prevPosition = 0;
+                /**
+                 * @private
+                 */
+                this._stepPosition = 0;
+                /**
+                 * @private
+                 */
+                this.passive = false;
+                this.initialize(target, props, pluginData);
+            }
+            var d = __define,c=ScrollerTween;p=c.prototype;
+            /**
+             * @language en_US
+             * Activate an object and add a ScrollerTween animation to the object
+             * @param target {any} The object to be activated
+             * @param props {any} Parameters, support loop onChange onChangeObj
+             * @param pluginData {any} Write realized
+             * @param override {boolean} Whether to remove the object before adding a tween, the default value false
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 激活一个对象，对其添加 ScrollerTween 动画
+             * @param target {any} 要激活 ScrollerTween 的对象
+             * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
+             * @param pluginData {any} 暂未实现
+             * @param override {boolean} 是否移除对象之前添加的tween，默认值false
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ScrollerTween.get = function (target, props, pluginData, override) {
+                if (props === void 0) { props = null; }
+                if (pluginData === void 0) { pluginData = null; }
+                if (override === void 0) { override = false; }
+                if (override) {
+                    ScrollerTween.removeTweens(target);
+                }
+                return new ScrollerTween(target, props, pluginData);
+            };
+            /**
+             * @language en_US
+             * Delete all ScrollerTween animations from an object
+             * @param target The object whose ScrollerTween to be deleted
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 删除一个对象上的全部 ScrollerTween 动画
+             * @param target  需要移除 ScrollerTween 的对象
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ScrollerTween.removeTweens = function (target) {
+                if (!target.tween_count) {
+                    return;
+                }
+                var tweens = ScrollerTween._tweens;
+                for (var i = tweens.length - 1; i >= 0; i--) {
+                    if (tweens[i]._target == target) {
+                        tweens[i].paused = true;
+                        tweens.splice(i, 1);
+                    }
+                }
+                target.tween_count = 0;
+            };
+            /**
+             * @private
+             *
+             * @param delta
+             * @param paused
+             */
+            ScrollerTween.tick = function (timeStamp, paused) {
+                if (paused === void 0) { paused = false; }
+                var delta = timeStamp - ScrollerTween._lastTime;
+                ScrollerTween._lastTime = timeStamp;
+                var tweens = ScrollerTween._tweens.concat();
+                for (var i = tweens.length - 1; i >= 0; i--) {
+                    var tween = tweens[i];
+                    if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
+                        continue;
+                    }
+                    tween.tick(tween._useTicks ? 1 : delta);
+                }
+                return false;
+            };
+            /**
+             * @private
+             *
+             * @param tween
+             * @param value
+             */
+            ScrollerTween._register = function (tween, value) {
+                var target = tween._target;
+                var tweens = ScrollerTween._tweens;
+                if (value) {
+                    if (target) {
+                        target.tween_count = target.tween_count > 0 ? target.tween_count + 1 : 1;
+                    }
+                    tweens.push(tween);
+                    if (!ScrollerTween._inited) {
+                        ScrollerTween._lastTime = egret.getTimer();
+                        egret.sys.$ticker.$startTick(ScrollerTween.tick, null);
+                        ScrollerTween._inited = true;
+                    }
+                }
+                else {
+                    if (target) {
+                        target.tween_count--;
+                    }
+                    var i = tweens.length;
+                    while (i--) {
+                        if (tweens[i] == tween) {
+                            tweens.splice(i, 1);
+                            return;
+                        }
+                    }
+                }
+            };
+            /**
+             * @private
+             *
+             * @param target
+             * @param props
+             * @param pluginData
+             */
+            p.initialize = function (target, props, pluginData) {
+                this._target = target;
+                if (props) {
+                    this._useTicks = props.useTicks;
+                    this.ignoreGlobalPause = props.ignoreGlobalPause;
+                    this.loop = props.loop;
+                    props.onChange && this.addEventListener("change", props.onChange, props.onChangeObj);
+                    if (props.override) {
+                        ScrollerTween.removeTweens(target);
+                    }
+                }
+                this.pluginData = pluginData || {};
+                this._curQueueProps = {};
+                this._initQueueProps = {};
+                this._steps = [];
+                this._actions = [];
+                if (props && props.paused) {
+                    this.paused = true;
+                }
+                else {
+                    ScrollerTween._register(this, true);
+                }
+                if (props && props.position != null) {
+                    this.setPosition(props.position);
+                }
+            };
+            /**
+             * @private
+             *
+             * @param value
+             * @param actionsMode
+             * @returns
+             */
+            p.setPosition = function (value) {
+                if (value < 0) {
+                    value = 0;
+                }
+                //正常化位置
+                var t = value;
+                var end = false;
+                if (t >= this.duration) {
+                    if (this.loop) {
+                        t = t % this.duration;
+                    }
+                    else {
+                        t = this.duration;
+                        end = true;
+                    }
+                }
+                if (t == this._prevPos) {
+                    return end;
+                }
+                this.position = this._prevPos = t;
+                this._prevPosition = value;
+                if (this._target) {
+                    if (end) {
+                        //结束
+                        this._updateTargetProps(null, 1);
+                    }
+                    else if (this._steps.length > 0) {
+                        for (var i = 0, l = this._steps.length; i < l; i++) {
+                            if (this._steps[i].t > t) {
+                                break;
+                            }
+                        }
+                        var step = this._steps[i - 1];
+                        this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
+                    }
+                }
+                if (end) {
+                    this.setPaused(true);
+                }
+                this.dispatchEventWith("change");
+                return end;
+            };
+            /**
+             * @private
+             *
+             * @param startPos
+             * @param endPos
+             * @param includeStart
+             */
+            p._runActions = function (startPos, endPos, includeStart) {
+                if (includeStart === void 0) { includeStart = false; }
+                var sPos = startPos;
+                var ePos = endPos;
+                var i = -1;
+                var j = this._actions.length;
+                var k = 1;
+                if (startPos > endPos) {
+                    //把所有的倒置
+                    sPos = endPos;
+                    ePos = startPos;
+                    i = j;
+                    j = k = -1;
+                }
+                while ((i += k) != j) {
+                    var action = this._actions[i];
+                    var pos = action.t;
+                    if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
+                        action.f.apply(action.o, action.p);
+                    }
+                }
+            };
+            /**
+             * @private
+             *
+             * @param step
+             * @param ratio
+             */
+            p._updateTargetProps = function (step, ratio) {
+                var p0, p1, v, v0, v1, arr;
+                if (!step && ratio == 1) {
+                    this.passive = false;
+                    p0 = p1 = this._curQueueProps;
+                }
+                else {
+                    this.passive = !!step.v;
+                    //不更新props.
+                    if (this.passive) {
+                        return;
+                    }
+                    //使用ease
+                    if (step.e) {
+                        ratio = step.e(ratio, 0, 1, 1);
+                    }
+                    p0 = step.p0;
+                    p1 = step.p1;
+                }
+                for (var n in this._initQueueProps) {
+                    if ((v0 = p0[n]) == null) {
+                        p0[n] = v0 = this._initQueueProps[n];
+                    }
+                    if ((v1 = p1[n]) == null) {
+                        p1[n] = v1 = v0;
+                    }
+                    if (v0 == v1 || ratio == 0 || ratio == 1 || (typeof (v0) != "number")) {
+                        v = ratio == 1 ? v1 : v0;
+                    }
+                    else {
+                        v = v0 + (v1 - v0) * ratio;
+                    }
+                    var ignore = false;
+                    if (arr = ScrollerTween._plugins[n]) {
+                        for (var i = 0, l = arr.length; i < l; i++) {
+                            var v2 = arr[i].tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
+                            if (v2 == ScrollerTween.IGNORE) {
+                                ignore = true;
+                            }
+                            else {
+                                v = v2;
+                            }
+                        }
+                    }
+                    if (!ignore) {
+                        this._target[n] = v;
+                    }
+                }
+            };
+            /**
+             * @language en_US
+             * Whether setting is paused
+             * @param value {boolean} Whether to pause
+             * @returns ScrollerTween object itself
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置是否暂停
+             * @param value {boolean} 是否暂停
+             * @returns Tween对象本身
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.setPaused = function (value) {
+                this.paused = value;
+                ScrollerTween._register(this, !value);
+                return this;
+            };
+            /**
+             * @private
+             *
+             * @param props
+             * @returns
+             */
+            p._cloneProps = function (props) {
+                var o = {};
+                for (var n in props) {
+                    o[n] = props[n];
+                }
+                return o;
+            };
+            /**
+             * @private
+             *
+             * @param o
+             * @returns
+             */
+            p._addStep = function (o) {
+                if (o.d > 0) {
+                    this._steps.push(o);
+                    o.t = this.duration;
+                    this.duration += o.d;
+                }
+                return this;
+            };
+            /**
+             * @private
+             *
+             * @param o
+             * @returns
+             */
+            p._appendQueueProps = function (o) {
+                var arr, oldValue, i, l, injectProps;
+                for (var n in o) {
+                    if (egret.sys.isUndefined(this._initQueueProps[n])) {
+                        oldValue = this._target[n];
+                        //设置plugins
+                        if (arr = ScrollerTween._plugins[n]) {
+                            for (i = 0, l = arr.length; i < l; i++) {
+                                oldValue = arr[i].init(this, n, oldValue);
+                            }
+                        }
+                        this._initQueueProps[n] = this._curQueueProps[n] = (oldValue === undefined) ? null : oldValue;
+                    }
+                    else {
+                        oldValue = this._curQueueProps[n];
+                    }
+                }
+                for (var n in o) {
+                    oldValue = this._curQueueProps[n];
+                    if (arr = ScrollerTween._plugins[n]) {
+                        injectProps = injectProps || {};
+                        for (i = 0, l = arr.length; i < l; i++) {
+                            if (arr[i].step) {
+                                arr[i].step(this, n, oldValue, o[n], injectProps);
+                            }
+                        }
+                    }
+                    this._curQueueProps[n] = o[n];
+                }
+                if (injectProps) {
+                    this._appendQueueProps(injectProps);
+                }
+                return this._curQueueProps;
+            };
+            /**
+             * @private
+             *
+             * @param o
+             * @returns
+             */
+            p._addAction = function (o) {
+                o.t = this.duration;
+                this._actions.push(o);
+                return this;
+            };
+            /**
+             * @language en_US
+             * Modify the property of the specified display object to a specified value
+             * @param props {Object} Property set of an object
+             * @param duration {number} Duration
+             * @param ease {egret.ScrollerEase} Easing algorithm
+             * @returns {egret.ScrollerTween} ScrollerTween object itself
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 将指定显示对象的属性修改为指定值
+             * @param props {Object} 对象的属性集合
+             * @param duration {number} 持续时间
+             * @param ease {egret.ScrollerEase} 缓动算法
+             * @returns {egret.ScrollerTween} Tween对象本身
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.to = function (props, duration, ease) {
+                if (ease === void 0) { ease = undefined; }
+                if (isNaN(duration) || duration < 0) {
+                    duration = 0;
+                }
+                return this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
+            };
+            /**
+             * @language en_US
+             * Execute callback function
+             * @param callback {Function} Callback method
+             * @param thisObj {any} this action scope of the callback method
+             * @param params {Array<any>} Parameter of the callback method
+             * @returns {egret.ScrollerTween} ScrollerTween object itself
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 执行回调函数
+             * @param callback {Function} 回调方法
+             * @param thisObj {any} 回调方法this作用域
+             * @param params {Array<any>} 回调方法参数
+             * @returns {egret.ScrollerTween} Tween对象本身
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.call = function (callback, thisObj, params) {
+                if (thisObj === void 0) { thisObj = undefined; }
+                if (params === void 0) { params = undefined; }
+                return this._addAction({ f: callback, p: params ? params : [], o: thisObj ? thisObj : this._target });
+            };
+            /**
+             * @method egret.ScrollerTween#tick
+             * @param delta {number}
+             * @private
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.tick = function (delta) {
+                if (this.paused) {
+                    return;
+                }
+                this.setPosition(this._prevPosition + delta);
+            };
+            /**
              * @private
              */
-            p._setViewportMetric = function (height, contentHeight) {
-                var max = Math.max(0, contentHeight - height);
-                this._thumbLengthRatio = contentHeight <= height ? 1 : height / contentHeight;
-                this._setMaximun(max);
-                this._setMinimun(0);
-            };
-            d(p, "trackAlpha"
-                ,function () {
-                    return 1;
-                }
+            ScrollerTween._tweens = [];
+            /**
+             * @private
+             */
+            ScrollerTween.IGNORE = {};
+            /**
+             * @private
+             */
+            ScrollerTween._plugins = {};
+            /**
+             * @private
+             */
+            ScrollerTween._inited = false;
+            ScrollerTween._lastTime = 0;
+            return ScrollerTween;
+        })(egret.EventDispatcher);
+        gui.ScrollerTween = ScrollerTween;
+        egret.registerClass(ScrollerTween,"egret.gui.ScrollerTween");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @private
+         */
+        var ScrollerView = (function (_super) {
+            __extends(ScrollerView, _super);
+            /**
+             * @language en_US
+             * Create a egret.ScrollerView objects
+             * @param content {egret.DisplayObject} You need to scroll object
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 创建一个 egret.ScrollerView 对象
+             * @param content {egret.DisplayObject} 需要滚动的对象
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            function ScrollerView(content) {
+                if (content === void 0) { content = null; }
+                _super.call(this);
                 /**
-                 * @deprecated
+                 * @language en_US
+                 * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
+                 * @version Egret 2.4
+                 * @platform Web,Native
                  */
+                /**
+                 * @language zh_CN
+                 * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                this.scrollBeginThreshold = 10;
+                /**
+                 * @language en_US
+                 * Scrolling speed, the speed is required and the default speed ratio.
+                 * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 滚动速度，这个值为需要的速度与默认速度的比值。
+                 * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                this.scrollSpeed = 1;
+                /**
+                 * @private
+                 */
+                this._content = null;
+                /**
+                 * @private
+                 */
+                this.delayTouchBeginEvent = null;
+                /**
+                 * @private
+                 */
+                this.touchBeginTimer = null;
+                this.touchEnabled = true;
+                this._ScrV_Props_ = new gui.ScrollerViewProperties();
+                if (content) {
+                    this.setContent(content);
+                }
+            }
+            var d = __define,c=ScrollerView;p=c.prototype;
+            d(p, "bounces"
+                /**
+                 * @language en_US
+                 * Whether to enable rebound, rebound When enabled, ScrollerView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
+                 * @default true
+                 * @version Egret 2.4
+                 */
+                /**
+                 * @language zh_CN
+                 * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+                 * @default true
+                 * @version Egret 2.4
+                 */
+                ,function () {
+                    return this._ScrV_Props_._bounces;
+                }
                 ,function (value) {
-                    egret.$warn(1016, "VScrollBar.trackAlpha");
+                    this._ScrV_Props_._bounces = !!value;
                 }
             );
-            d(p, "thumbAlpha"
-                ,function () {
-                    return 1;
-                }
-                /**
-                 * @deprecated
-                 */
-                ,function (value) {
-                    egret.$warn(1016, "VScrollBar.thumbAlpha");
-                }
-            );
-            p.setPosition = function (value) {
-                this._setValue(value);
-            };
-            p.getPosition = function () {
-                return this._getValue();
-            };
-            p._setValue = function (value) {
-                value = Math.max(0, value);
-                _super.prototype._setValue.call(this, value);
-            };
-            p.setValue = function (value) {
-                _super.prototype.setValue.call(this, value);
-            };
-            p._animationUpdateHandler = function (animation) {
-                this.pendingValue = animation.currentValue["value"];
-                this.value = animation.currentValue["value"];
-                this.dispatchEventWith(egret.Event.CHANGE);
-            };
             /**
-             * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
-             * @param x {number}
-             * @param y {number}
-             * @returns {number}
+             * @language en_US
+             * Set to scroll object
+             * @param content {egret.DisplayObject} You need to scroll object
+             * @version Egret 2.4
+             * @platform Web,Native
              */
-            p.pointToValue = function (x, y) {
-                if (!this.thumb || !this.track)
-                    return 0;
-                var range = this.maximum - this.minimum;
-                var thumbRange = this.track.layoutBoundsHeight - this.thumb.layoutBoundsHeight;
-                return this.minimum + ((thumbRange != 0) ? (y / thumbRange) * range : 0);
-            };
             /**
-             * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+             * @language zh_CN
+             * 设置需要滚动的对象
+             * @param content {egret.DisplayObject} 需要滚动的对象
+             * @version Egret 2.4
+             * @platform Web,Native
              */
-            p.updateSkinDisplayList = function () {
-                if (!this.thumb || !this.track)
+            p.setContent = function (content) {
+                if (this._content === content)
                     return;
-                var thumbHeight = this.track.layoutBoundsHeight * this._thumbLengthRatio;
-                var oldThumbHeight = this.thumb.layoutBoundsHeight;
-                var thumbRange = this.track.layoutBoundsHeight - thumbHeight;
-                var range = this.maximum - this.minimum;
-                var thumbPosTrackY = (range > 0) ? ((this.pendingValue - this.minimum) / range) * thumbRange : 0;
-                var thumbPos = this.track.localToGlobal(0, thumbPosTrackY);
-                var thumbPosX = thumbPos.x;
-                var thumbPosY = thumbPos.y;
-                var thumbPosParentY = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
-                this.thumb.setLayoutBoundsPosition(this.thumb.layoutBoundsX, Math.round(thumbPosParentY));
-                if (thumbHeight != oldThumbHeight)
-                    this.thumb.setLayoutBoundsSize(this.thumb.layoutBoundsWidth, thumbHeight);
+                this.removeContent();
+                if (content) {
+                    this._content = content;
+                    _super.prototype.addChild.call(this, content);
+                    this._addEvents();
+                }
             };
-            return VScrollBar;
-        })(gui.VSlider);
-        gui.VScrollBar = VScrollBar;
-        egret.registerClass(VScrollBar,"egret.gui.VScrollBar");
+            /**
+             * @language en_US
+             * Remove rolling objects
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 移除滚动的对象
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.removeContent = function () {
+                if (this._content) {
+                    this._removeEvents();
+                    _super.prototype.removeChildAt.call(this, 0);
+                }
+                this._content = null;
+            };
+            d(p, "verticalScrollPolicy"
+                /**
+                 * @language en_US
+                 * Vertical scroll bar display policy, on / off / auto.
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 垂直滚动条显示策略，on/off/auto。
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._verticalScrollPolicy;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._verticalScrollPolicy)
+                        return;
+                    this._ScrV_Props_._verticalScrollPolicy = value;
+                }
+            );
+            d(p, "horizontalScrollPolicy"
+                /**
+                 * @language en_US
+                 * The horizontal scroll bar display policy, on / off / auto.
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 水平滚动条显示策略，on/off/auto。
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._horizontalScrollPolicy;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._horizontalScrollPolicy)
+                        return;
+                    this._ScrV_Props_._horizontalScrollPolicy = value;
+                }
+            );
+            d(p, "scrollLeft"
+                /**
+                 * @language en_US
+                 * Gets or sets the horizontal scroll position
+                 * @returns {number}
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 获取或设置水平滚动位置,
+                 * @returns {number}
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._scrollLeft;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._scrollLeft)
+                        return;
+                    this._ScrV_Props_._scrollLeft = value;
+                    this._validatePosition(false, true);
+                    this._updateContentPosition();
+                }
+            );
+            d(p, "scrollTop"
+                /**
+                 * @language en_US
+                 * Gets or sets the vertical scroll position
+                 * @returns {number}
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                /**
+                 * @language zh_CN
+                 * 获取或设置垂直滚动位置,
+                 * @returns {number}
+                 * @version Egret 2.4
+                 * @platform Web,Native
+                 */
+                ,function () {
+                    return this._ScrV_Props_._scrollTop;
+                }
+                ,function (value) {
+                    if (value == this._ScrV_Props_._scrollTop)
+                        return;
+                    this._ScrV_Props_._scrollTop = value;
+                    this._validatePosition(true, false);
+                    this._updateContentPosition();
+                }
+            );
+            /**
+             * @language en_US
+             * Set scroll position
+             * @param top {number} The vertical scroll position
+             * @param left {number} The horizontal scroll position
+             * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置滚动位置
+             * @param top {number} 垂直滚动位置
+             * @param left {number} 水平滚动位置
+             * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.setScrollPosition = function (top, left, isOffset) {
+                if (isOffset === void 0) { isOffset = false; }
+                if (isOffset && top == 0 && left == 0)
+                    return;
+                if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left)
+                    return;
+                var oldTop = this._ScrV_Props_._scrollTop, oldLeft = this._ScrV_Props_._scrollLeft;
+                if (isOffset) {
+                    var maxLeft = this.getMaxScrollLeft();
+                    var maxTop = this.getMaxScrollTop();
+                    if (oldTop <= 0 || oldTop >= maxTop) {
+                        top = top / 2;
+                    }
+                    if (oldLeft <= 0 || oldLeft >= maxLeft) {
+                        left = left / 2;
+                    }
+                    var newTop = oldTop + top;
+                    var newLeft = oldLeft + left;
+                    //判断是否回弹
+                    var bounces = this._ScrV_Props_._bounces;
+                    if (!bounces) {
+                        if (newTop <= 0 || newTop >= maxTop)
+                            newTop = Math.max(0, Math.min(newTop, maxTop));
+                        if (newLeft <= 0 || newLeft >= maxLeft)
+                            newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                    }
+                    this._ScrV_Props_._scrollTop = newTop;
+                    this._ScrV_Props_._scrollLeft = newLeft;
+                }
+                else {
+                    this._ScrV_Props_._scrollTop = top;
+                    this._ScrV_Props_._scrollLeft = left;
+                }
+                this._validatePosition(true, true);
+                this._updateContentPosition();
+            };
+            /**
+             * @private
+             *
+             * @param top
+             * @param left
+             */
+            p._validatePosition = function (top, left) {
+                if (top === void 0) { top = false; }
+                if (left === void 0) { left = false; }
+                if (top) {
+                    var height = this.height;
+                    var contentHeight = this._getContentHeight();
+                    this._ScrV_Props_._scrollTop = Math.max(this._ScrV_Props_._scrollTop, (0 - height) / 2);
+                    this._ScrV_Props_._scrollTop = Math.min(this._ScrV_Props_._scrollTop, contentHeight > height ? (contentHeight - height / 2) : height / 2);
+                }
+                if (left) {
+                    var width = this.width;
+                    var contentWidth = this._getContentWidth();
+                    this._ScrV_Props_._scrollLeft = Math.max(this._ScrV_Props_._scrollLeft, (0 - width) / 2);
+                    this._ScrV_Props_._scrollLeft = Math.min(this._ScrV_Props_._scrollLeft, contentWidth > width ? (contentWidth - width / 2) : width / 2);
+                }
+            };
+            /**
+             * @private
+             * @inheritDoc
+             */
+            p.$setWidth = function (value) {
+                if (this.$getExplicitWidth() == value) {
+                    return false;
+                }
+                var result = _super.prototype.$setWidth.call(this, value);
+                this._updateContentPosition();
+                return result;
+            };
+            /**
+             * @private
+             * @inheritDoc
+             */
+            p.$setHeight = function (value) {
+                if (this.$getExplicitHeight() == value)
+                    return false;
+                var result = _super.prototype.$setHeight.call(this, value);
+                this._updateContentPosition();
+                return result;
+            };
+            /**
+             * @private
+             *
+             */
+            p._updateContentPosition = function () {
+                var height = this.height;
+                var width = this.width;
+                //这里将坐标取整，避免有些浏览器精度低产生“黑线”问题
+                this.scrollRect = new egret.Rectangle(Math.round(this._ScrV_Props_._scrollLeft), Math.round(this._ScrV_Props_._scrollTop), width, height);
+                this.dispatchEvent(new egret.Event(egret.Event.CHANGE));
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._checkScrollPolicy = function () {
+                var hpolicy = this._ScrV_Props_._horizontalScrollPolicy;
+                var hCanScroll = this.__checkScrollPolicy(hpolicy, this._getContentWidth(), this.width);
+                this._ScrV_Props_._hCanScroll = hCanScroll;
+                var vpolicy = this._ScrV_Props_._verticalScrollPolicy;
+                var vCanScroll = this.__checkScrollPolicy(vpolicy, this._getContentHeight(), this.height);
+                this._ScrV_Props_._vCanScroll = vCanScroll;
+                return hCanScroll || vCanScroll;
+            };
+            /**
+             * @private
+             *
+             * @param policy
+             * @param contentLength
+             * @param viewLength
+             * @returns
+             */
+            p.__checkScrollPolicy = function (policy, contentLength, viewLength) {
+                if (policy == "on")
+                    return true;
+                if (policy == "off")
+                    return false;
+                return contentLength > viewLength;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._addEvents = function () {
+                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
+                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
+                this.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._removeEvents = function () {
+                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBegin, this);
+                this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this._onTouchBeginCapture, this, true);
+                this.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEndCapture, this, true);
+            };
+            /**
+             * @private
+             *
+             * @param e
+             */
+            p._onTouchBegin = function (e) {
+                if (e.$isDefaultPrevented) {
+                    return;
+                }
+                var canScroll = this._checkScrollPolicy();
+                if (!canScroll) {
+                    return;
+                }
+                this._ScrV_Props_._touchStartPosition.x = e.stageX;
+                this._ScrV_Props_._touchStartPosition.y = e.stageY;
+                if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
+                    this._onScrollFinished();
+                }
+                this._tempStage = this.stage;
+                this._tempStage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+                this._tempStage.addEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
+                this._tempStage.addEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+                this.addEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
+                this._logTouchEvent(e);
+                e.preventDefault();
+            };
+            /**
+             * @private
+             *
+             * @param event
+             */
+            p._onTouchBeginCapture = function (event) {
+                var canScroll = this._checkScrollPolicy();
+                if (!canScroll) {
+                    return;
+                }
+                var target = event.target;
+                while (target != this) {
+                    if ("_checkScrollPolicy" in target) {
+                        canScroll = target._checkScrollPolicy();
+                        if (canScroll) {
+                            return;
+                        }
+                    }
+                    target = target.parent;
+                }
+                event.stopPropagation();
+                var evt = this.cloneTouchEvent(event);
+                this.delayTouchBeginEvent = evt;
+                if (!this.touchBeginTimer) {
+                    this.touchBeginTimer = new egret.Timer(100, 1);
+                    this.touchBeginTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this._onTouchBeginTimer, this);
+                }
+                this.touchBeginTimer.start();
+                this._onTouchBegin(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onTouchEndCapture = function (event) {
+                if (!this.delayTouchBeginEvent) {
+                    return;
+                }
+                this._onTouchBeginTimer();
+            };
+            /**
+             * @private
+             *
+             */
+            p._onTouchBeginTimer = function () {
+                this.touchBeginTimer.stop();
+                var event = this.delayTouchBeginEvent;
+                this.delayTouchBeginEvent = null;
+                //Dispatch event only if the scroll view is still on the stage
+                if (this.stage)
+                    this.dispatchPropagationEvent(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p.dispatchPropagationEvent = function (event) {
+                var target = event.$target;
+                var list = this.$getPropagationList(target);
+                var length = list.length;
+                var targetIndex = list.length * 0.5;
+                var startIndex = -1;
+                for (var i = 0; i < length; i++) {
+                    if (list[i] === this._content) {
+                        startIndex = i;
+                        break;
+                    }
+                }
+                list.splice(0, startIndex + 1);
+                targetIndex -= startIndex + 1;
+                this.$dispatchPropagationEvent(event, list, targetIndex);
+                egret.Event.release(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onTouchMove = function (event) {
+                if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY)
+                    return;
+                if (!this._ScrV_Props_._scrollStarted) {
+                    var x = event.stageX - this._ScrV_Props_._touchStartPosition.x, y = event.stageY - this._ScrV_Props_._touchStartPosition.y;
+                    var distance = Math.sqrt(x * x + y * y);
+                    if (distance < this.scrollBeginThreshold) {
+                        this._logTouchEvent(event);
+                        return;
+                    }
+                }
+                this._ScrV_Props_._scrollStarted = true;
+                if (this.delayTouchBeginEvent) {
+                    this.delayTouchBeginEvent = null;
+                    this.touchBeginTimer.stop();
+                }
+                this.touchChildren = false;
+                var offset = this._getPointChange(event);
+                this.setScrollPosition(offset.y, offset.x, true);
+                this._calcVelocitys(event);
+                this._logTouchEvent(event);
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onTouchEnd = function (event) {
+                this.touchChildren = true;
+                this._ScrV_Props_._scrollStarted = false;
+                this._tempStage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
+                this._tempStage.removeEventListener(egret.TouchEvent.TOUCH_END, this._onTouchEnd, this);
+                this._tempStage.removeEventListener(egret.TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
+                this.removeEventListener(egret.Event.ENTER_FRAME, this._onEnterFrame, this);
+                this._moveAfterTouchEnd();
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p._onEnterFrame = function (event) {
+                var time = egret.getTimer();
+                if (time - this._ScrV_Props_._lastTouchTime > 100 && time - this._ScrV_Props_._lastTouchTime < 300) {
+                    this._calcVelocitys(this._ScrV_Props_._lastTouchEvent);
+                }
+            };
+            /**
+             * @private
+             *
+             * @param e
+             * @returns
+             */
+            p._logTouchEvent = function (e) {
+                this._ScrV_Props_._lastTouchPosition.x = e.stageX;
+                this._ScrV_Props_._lastTouchPosition.y = e.stageY;
+                this._ScrV_Props_._lastTouchEvent = this.cloneTouchEvent(e);
+                this._ScrV_Props_._lastTouchTime = egret.getTimer();
+            };
+            /**
+             * @private
+             *
+             * @param e
+             * @returns
+             */
+            p._getPointChange = function (e) {
+                return {
+                    x: this._ScrV_Props_._hCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.x - e.stageX),
+                    y: this._ScrV_Props_._vCanScroll === false ? 0 : (this._ScrV_Props_._lastTouchPosition.y - e.stageY)
+                };
+            };
+            /**
+             * @private
+             *
+             * @param e
+             * @returns
+             */
+            p._calcVelocitys = function (e) {
+                var time = egret.getTimer();
+                if (this._ScrV_Props_._lastTouchTime == 0) {
+                    this._ScrV_Props_._lastTouchTime = time;
+                    return;
+                }
+                var change = this._getPointChange(e);
+                var timeoffset = time - this._ScrV_Props_._lastTouchTime;
+                change.x /= timeoffset;
+                change.y /= timeoffset;
+                this._ScrV_Props_._velocitys.push(change);
+                if (this._ScrV_Props_._velocitys.length > 5)
+                    this._ScrV_Props_._velocitys.shift();
+                this._ScrV_Props_._lastTouchPosition.x = e.stageX;
+                this._ScrV_Props_._lastTouchPosition.y = e.stageY;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._getContentWidth = function () {
+                return this._content.$getExplicitWidth() || this._content.width;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._getContentHeight = function () {
+                return this._content.$getExplicitHeight() || this._content.height;
+            };
+            /**
+             * @language en_US
+             * The left side of the maximum distance
+             * @returns The left side of the maximum distance
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 距离左侧的最大值
+             * @returns 距离左侧最大值
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.getMaxScrollLeft = function () {
+                var max = this._getContentWidth() - this.width;
+                return Math.max(0, max);
+            };
+            /**
+             * @language en_US
+             * Above the maximum distance
+             * @returns Above the maximum distance
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 距离上方最大值
+             * @returns 距离上方最大值
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.getMaxScrollTop = function () {
+                var max = this._getContentHeight() - this.height;
+                return Math.max(0, max);
+            };
+            /**
+             * @private
+             *
+             */
+            p._moveAfterTouchEnd = function () {
+                if (this._ScrV_Props_._velocitys.length == 0)
+                    return;
+                var sum = { x: 0, y: 0 }, totalW = 0;
+                for (var i = 0; i < this._ScrV_Props_._velocitys.length; i++) {
+                    var v = this._ScrV_Props_._velocitys[i];
+                    var w = ScrollerView.weight[i];
+                    sum.x += v.x * w;
+                    sum.y += v.y * w;
+                    totalW += w;
+                }
+                this._ScrV_Props_._velocitys.length = 0;
+                if (this.scrollSpeed <= 0)
+                    this.scrollSpeed = 1;
+                var x = sum.x / totalW * this.scrollSpeed, y = sum.y / totalW * this.scrollSpeed;
+                var pixelsPerMSX = Math.abs(x), pixelsPerMSY = Math.abs(y);
+                var maxLeft = this.getMaxScrollLeft();
+                var maxTop = this.getMaxScrollTop();
+                var datax = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
+                    position: this._ScrV_Props_._scrollLeft,
+                    duration: 1
+                };
+                var datay = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
+                    position: this._ScrV_Props_._scrollTop,
+                    duration: 1
+                };
+                this.setScrollLeft(datax.position, datax.duration);
+                this.setScrollTop(datay.position, datay.duration);
+            };
+            /**
+             * @private
+             *
+             * @param tw
+             */
+            p.onTweenFinished = function (tw) {
+                if (tw == this._ScrV_Props_._vScrollTween)
+                    this._ScrV_Props_._isVTweenPlaying = false;
+                if (tw == this._ScrV_Props_._hScrollTween)
+                    this._ScrV_Props_._isHTweenPlaying = false;
+                if (this._ScrV_Props_._isHTweenPlaying == false && this._ScrV_Props_._isVTweenPlaying == false) {
+                    this._onScrollFinished();
+                }
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._onScrollStarted = function () {
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p._onScrollFinished = function () {
+                gui.ScrollerTween.removeTweens(this);
+                this._ScrV_Props_._hScrollTween = null;
+                this._ScrV_Props_._vScrollTween = null;
+                this._ScrV_Props_._isHTweenPlaying = false;
+                this._ScrV_Props_._isVTweenPlaying = false;
+                this.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+            };
+            /**
+             * @language en_US
+             * Set the scroll position above the distance
+             * @param scrollTop Position above distance
+             * @param duration Easing of time, in milliseconds
+             * @returns Get tween vertical scrolling
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置滚动距离上方的位置
+             * @param scrollTop 距离上方的位置
+             * @param duration 缓动时间，毫秒单位
+             * @returns 获取垂直滚动的tween
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.setScrollTop = function (scrollTop, duration) {
+                if (duration === void 0) { duration = 0; }
+                var finalPosition = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
+                if (duration == 0) {
+                    this.scrollTop = finalPosition;
+                    return;
+                }
+                if (this._ScrV_Props_._bounces == false)
+                    scrollTop = finalPosition;
+                var vtween = gui.ScrollerTween.get(this).to({ scrollTop: scrollTop }, duration, gui.ScrollerEase.quartOut);
+                if (finalPosition != scrollTop) {
+                    vtween.to({ scrollTop: finalPosition }, 300, gui.ScrollerEase.quintOut);
+                }
+                this._ScrV_Props_._isVTweenPlaying = true;
+                this._ScrV_Props_._vScrollTween = vtween;
+                vtween.call(this.onTweenFinished, this, [vtween]);
+                if (!this._ScrV_Props_._isHTweenPlaying)
+                    this._onScrollStarted();
+            };
+            /**
+             * @language en_US
+             * Set the scroll position from the left side
+             * @param scrollLeft From the position on the left side
+             * @param duration Get tween vertical scrolling
+             * @returns Gets the horizontal scroll tween
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 设置滚动距离左侧的位置
+             * @param scrollLeft 距离左侧的位置
+             * @param duration 缓动时间，毫秒单位
+             * @returns 获取水平滚动的tween
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.setScrollLeft = function (scrollLeft, duration) {
+                if (duration === void 0) { duration = 0; }
+                var finalPosition = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
+                if (duration == 0) {
+                    this.scrollLeft = finalPosition;
+                    return;
+                }
+                if (this._ScrV_Props_._bounces == false)
+                    scrollLeft = finalPosition;
+                var htween = gui.ScrollerTween.get(this).to({ scrollLeft: scrollLeft }, duration, gui.ScrollerEase.quartOut);
+                if (finalPosition != scrollLeft) {
+                    htween.to({ scrollLeft: finalPosition }, 300, gui.ScrollerEase.quintOut);
+                }
+                this._ScrV_Props_._isHTweenPlaying = true;
+                this._ScrV_Props_._hScrollTween = htween;
+                htween.call(this.onTweenFinished, this, [htween]);
+                if (!this._ScrV_Props_._isVTweenPlaying)
+                    this._onScrollStarted();
+            };
+            /**
+             * @private
+             *
+             * @param pixelsPerMS
+             * @param curPos
+             * @param maxPos
+             * @returns
+             */
+            p.getAnimationDatas = function (pixelsPerMS, curPos, maxPos) {
+                var absPixelsPerMS = Math.abs(pixelsPerMS);
+                var extraFricition = 0.95;
+                var duration = 0;
+                var friction = 0.998;
+                var minVelocity = 0.02;
+                var posTo = curPos + pixelsPerMS * 500;
+                if (posTo < 0 || posTo > maxPos) {
+                    posTo = curPos;
+                    while (Math.abs(pixelsPerMS) != Infinity && Math.abs(pixelsPerMS) > minVelocity) {
+                        posTo += pixelsPerMS;
+                        if (posTo < 0 || posTo > maxPos) {
+                            pixelsPerMS *= friction * extraFricition;
+                        }
+                        else {
+                            pixelsPerMS *= friction;
+                        }
+                        duration++;
+                    }
+                }
+                else {
+                    duration = -Math.log(minVelocity / absPixelsPerMS) * 500;
+                }
+                var result = {
+                    position: Math.min(maxPos + 50, Math.max(posTo, -50)),
+                    duration: duration
+                };
+                return result;
+            };
+            /**
+             * @private
+             *
+             * @param event
+             * @returns
+             */
+            p.cloneTouchEvent = function (event) {
+                var evt = new egret.TouchEvent(event.type, event.bubbles, event.cancelable);
+                evt.touchPointID = event.touchPointID;
+                evt.$stageX = event.stageX;
+                evt.$stageY = event.stageY;
+                //evt.ctrlKey = event.ctrlKey;
+                //evt.altKey = event.altKey;
+                //evt.shiftKey = event.shiftKey;
+                evt.touchDown = event.touchDown;
+                evt.$isDefaultPrevented = false;
+                evt.$target = event.target;
+                return evt;
+            };
+            /**
+             * @private
+             *
+             * @returns
+             */
+            p.throwNotSupportedError = function () {
+                egret.$error(1023);
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @returns {DisplayObject}
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.addChild = function (child) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @param index {number}
+             * @returns {DisplayObject}
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.addChildAt = function (child, index) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @returns {DisplayObject}
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.removeChild = function (child) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param index {number}
+             * @returns {DisplayObject}
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.removeChildAt = function (index) {
+                this.throwNotSupportedError();
+                return null;
+            };
+            /**
+             * @deprecated
+             * @param child {DisplayObject}
+             * @param index {number}
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.setChildIndex = function (child, index) {
+                this.throwNotSupportedError();
+            };
+            /**
+             * @deprecated
+             * @param child1 {DisplayObject}
+             * @param child2 {DisplayObject}
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.swapChildren = function (child1, child2) {
+                this.throwNotSupportedError();
+            };
+            /**
+             * @deprecated
+             * @param index1 {number}
+             * @param index2 {number}
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            p.swapChildrenAt = function (index1, index2) {
+                this.throwNotSupportedError();
+            };
+            /**
+             * @private
+             */
+            ScrollerView.weight = [1, 1.33, 1.66, 2, 2.33];
+            return ScrollerView;
+        })(egret.DisplayObjectContainer);
+        gui.ScrollerView = ScrollerView;
+        egret.registerClass(ScrollerView,"egret.gui.ScrollerView");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @private
+         */
+        var ScrollerViewProperties = (function () {
+            function ScrollerViewProperties() {
+                /**
+                 * @private
+                 */
+                this._verticalScrollPolicy = "auto";
+                /**
+                 * @private
+                 */
+                this._horizontalScrollPolicy = "auto";
+                /**
+                 * @private
+                 */
+                this._scrollLeft = 0;
+                /**
+                 * @private
+                 */
+                this._scrollTop = 0;
+                /**
+                 * @private
+                 */
+                this._hCanScroll = false;
+                /**
+                 * @private
+                 */
+                this._vCanScroll = false;
+                /**
+                 * @private
+                 */
+                this._lastTouchPosition = new egret.Point(0, 0);
+                /**
+                 * @private
+                 */
+                this._touchStartPosition = new egret.Point(0, 0);
+                /**
+                 * @private
+                 */
+                this._scrollStarted = false;
+                /**
+                 * @private
+                 */
+                this._lastTouchTime = 0;
+                /**
+                 * @private
+                 */
+                this._lastTouchEvent = null;
+                /**
+                 * @private
+                 */
+                this._velocitys = [];
+                /**
+                 * @private
+                 */
+                this._isHTweenPlaying = false;
+                /**
+                 * @private
+                 */
+                this._isVTweenPlaying = false;
+                /**
+                 * @private
+                 */
+                this._hScrollTween = null;
+                /**
+                 * @private
+                 */
+                this._vScrollTween = null;
+                /**
+                 * @private
+                 */
+                this._bounces = true;
+            }
+            var d = __define,c=ScrollerViewProperties;p=c.prototype;
+            return ScrollerViewProperties;
+        })();
+        gui.ScrollerViewProperties = ScrollerViewProperties;
+        egret.registerClass(ScrollerViewProperties,"egret.gui.ScrollerViewProperties");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.DefaultAssetAdapter
+         * @classdesc
+         * 默认的IAssetAdapter接口实现
+         * @implements egret.gui.IAssetAdapter
+         */
+        var DefaultAssetAdapter = (function () {
+            /**
+             * 构造函数
+             * @method egret.gui.DefaultSkinAdapter#constructor
+             */
+            function DefaultAssetAdapter() {
+            }
+            var d = __define,c=DefaultAssetAdapter;p=c.prototype;
+            /**
+             * 解析素材
+             * @method egret.gui.DefaultAssetAdapter#getAsset
+             * @param source {any} 待解析的新素材标识符
+             * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
+             * 回调参数content接受两种类型：DisplayObject或Texture。
+             * @param thisObject {any} compFunc的this引用
+             * @param oldContent any 旧的内容对象,传入值有可能为null。
+             * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
+             */
+            p.getAsset = function (source, compFunc, thisObject, oldContent) {
+                var content = source;
+                if (source.prototype) {
+                    content = new source();
+                }
+                if (content instanceof egret.DisplayObject || content instanceof egret.Texture) {
+                    compFunc.call(thisObject, content, source);
+                }
+                else if (typeof (source) == "string") {
+                    var url = source;
+                    var loader = new egret.ImageLoader();
+                    loader.addEventListener(egret.Event.COMPLETE, function (event) {
+                        content = new egret.Texture();
+                        content._setBitmapData(loader.data);
+                        compFunc.call(thisObject, content, source);
+                    }, this);
+                    loader.load(url);
+                }
+                else {
+                    compFunc.call(thisObject, content, source);
+                }
+            };
+            return DefaultAssetAdapter;
+        })();
+        gui.DefaultAssetAdapter = DefaultAssetAdapter;
+        egret.registerClass(DefaultAssetAdapter,"egret.gui.DefaultAssetAdapter",["egret.gui.IAssetAdapter"]);
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.DefaultSkinAdapter
+         * @classdesc
+         * 默认的ISkinAdapter接口实现
+         * @implements egret.gui.ISkinAdapter
+         */
+        var DefaultSkinAdapter = (function () {
+            /**
+             * 构造函数
+             * @method egret.gui.DefaultSkinAdapter#constructor
+             */
+            function DefaultSkinAdapter() {
+            }
+            var d = __define,c=DefaultSkinAdapter;p=c.prototype;
+            /**
+             * 获取皮肤显示对象
+             * @method egret.gui.ISkinAdapter#getSkin
+             * @param skinName {any} 待解析的皮肤标识符
+             * @param hostComponentKey {string} 主机组件标识符
+             * @returns {any} 皮肤对象实例
+             */
+            p.getSkin = function (skinName, hostComponentKey) {
+                if (!skinName)
+                    return null;
+                if (skinName.prototype) {
+                    return new skinName();
+                }
+                else if (typeof (skinName) == "string") {
+                    var clazz = egret.getDefinitionByName(skinName);
+                    if (clazz) {
+                        return new clazz();
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                else {
+                    return skinName;
+                }
+            };
+            return DefaultSkinAdapter;
+        })();
+        gui.DefaultSkinAdapter = DefaultSkinAdapter;
+        egret.registerClass(DefaultSkinAdapter,"egret.gui.DefaultSkinAdapter",["egret.gui.ISkinAdapter"]);
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.DropDownController
+         * @classdesc
+         * 用于处理因用户交互而打开和关闭下拉列表的操作的控制器
+         * @extends egret.EventDispatcher
+         */
+        var DropDownController = (function (_super) {
+            __extends(DropDownController, _super);
+            /**
+             * 构造函数
+             * @method egret.gui.DropDownController#constructor
+             */
+            function DropDownController() {
+                _super.call(this);
+                /**
+                 * 鼠标按下标志
+                 */
+                this.mouseIsDown = false;
+                this._openButton = null;
+                this._dropDown = null;
+                this._isOpen = false;
+                this._closeOnResize = true;
+                this._rollOverOpenDelay = NaN;
+                this.rollOverOpenDelayTimer = null;
+            }
+            var d = __define,c=DropDownController;p=c.prototype;
+            d(p, "openButton"
+                /**
+                 * 下拉按钮实例
+                 * @member egret.gui.DropDownController#openButton
+                 */
+                ,function () {
+                    return this._openButton;
+                }
+                ,function (value) {
+                    if (this._openButton === value)
+                        return;
+                    this.removeOpenTriggers();
+                    this._openButton = value;
+                    this.addOpenTriggers();
+                }
+            );
+            d(p, "dropDown"
+                /**
+                 * 下拉区域显示对象
+                 * @member egret.gui.DropDownController#dropDown
+                 */
+                ,function () {
+                    return this._dropDown;
+                }
+                ,function (value) {
+                    if (this._dropDown === value)
+                        return;
+                    this._dropDown = value;
+                }
+            );
+            d(p, "isOpen"
+                /**
+                 * 下拉列表已经打开的标志
+                 * @member egret.gui.DropDownController#isOpen
+                 */
+                ,function () {
+                    return this._isOpen;
+                }
+            );
+            d(p, "closeOnResize"
+                /**
+                 * 如果为 true，则在调整舞台大小时会关闭下拉列表。
+                 * @member egret.gui.DropDownController#closeOnResize
+                 */
+                ,function () {
+                    return this._closeOnResize;
+                }
+                ,function (value) {
+                    if (this._closeOnResize == value)
+                        return;
+                    if (this.isOpen)
+                        this.removeCloseOnResizeTrigger();
+                    this._closeOnResize = value;
+                    this.addCloseOnResizeTrigger();
+                }
+            );
+            d(p, "rollOverOpenDelay"
+                /**
+                 * 指定滑过锚点按钮时打开下拉列表要等待的延迟（以毫秒为单位）。
+                 * 如果设置为 NaN，则下拉列表会在单击时打开，而不是在滑过时打开。默认值NaN
+                 * @member egret.gui.DropDownController#rollOverOpenDelay
+                 */
+                ,function () {
+                    return this._rollOverOpenDelay;
+                }
+                ,function (value) {
+                    if (this._rollOverOpenDelay == value)
+                        return;
+                    this.removeOpenTriggers();
+                    this._rollOverOpenDelay = value;
+                    this.addOpenTriggers();
+                }
+            );
+            /**
+             * 添加触发下拉列表打开的事件监听
+             */
+            p.addOpenTriggers = function () {
+                if (this.openButton) {
+                    if (isNaN(this.rollOverOpenDelay))
+                        this.openButton.addEventListener(gui.UIEvent.BUTTON_DOWN, this._openButton_buttonDownHandler, this);
+                    else
+                        this.openButton.addEventListener(egret.TouchEvent.TOUCH_ROLL_OVER, this._openButton_rollOverHandler, this);
+                }
+            };
+            /**
+             * 移除触发下拉列表打开的事件监听
+             */
+            p.removeOpenTriggers = function () {
+                if (this.openButton) {
+                    if (isNaN(this.rollOverOpenDelay))
+                        this.openButton.removeEventListener(gui.UIEvent.BUTTON_DOWN, this._openButton_buttonDownHandler, this);
+                    else
+                        this.openButton.removeEventListener(egret.TouchEvent.TOUCH_ROLL_OVER, this._openButton_rollOverHandler, this);
+                }
+            };
+            /**
+             * 添加触发下拉列表关闭的事件监听
+             */
+            p.addCloseTriggers = function () {
+                if (gui.UIGlobals.stage) {
+                    if (isNaN(this.rollOverOpenDelay)) {
+                        gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stage_mouseDownHandler, this);
+                        gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler_noRollOverOpenDelay, this);
+                    }
+                    else {
+                        gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.stage_mouseMoveHandler, this);
+                    }
+                    this.addCloseOnResizeTrigger();
+                }
+            };
+            /**
+             * 移除触发下拉列表关闭的事件监听
+             */
+            p.removeCloseTriggers = function () {
+                if (gui.UIGlobals.stage) {
+                    if (isNaN(this.rollOverOpenDelay)) {
+                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.stage_mouseDownHandler, this);
+                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler_noRollOverOpenDelay, this);
+                    }
+                    else {
+                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.stage_mouseMoveHandler, this);
+                        gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler, this);
+                        gui.UIGlobals.stage.removeEventListener(egret.Event.LEAVE_STAGE, this.stage_mouseUpHandler, this);
+                    }
+                    this.removeCloseOnResizeTrigger();
+                }
+            };
+            /**
+             * 添加舞台尺寸改变的事件监听
+             */
+            p.addCloseOnResizeTrigger = function () {
+                if (this.closeOnResize)
+                    gui.UIGlobals.stage.addEventListener(egret.Event.RESIZE, this.stage_resizeHandler, this);
+            };
+            /**
+             * 移除舞台尺寸改变的事件监听
+             */
+            p.removeCloseOnResizeTrigger = function () {
+                if (this.closeOnResize)
+                    gui.UIGlobals.stage.removeEventListener(egret.Event.RESIZE, this.stage_resizeHandler, this);
+            };
+            /**
+             * 检查鼠标是否在DropDown或者openButton区域内。
+             */
+            p.isTargetOverDropDownOrOpenButton = function (target) {
+                if (target) {
+                    if (this.openButton && this.openButton.contains(target))
+                        return true;
+                    if (this.hitAreaAdditions != null) {
+                        for (var i = 0; i < this.hitAreaAdditions.length; i++) {
+                            if (this.hitAreaAdditions[i] == target || ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains(target)))
+                                return true;
+                        }
+                    }
+                    if (this.dropDown instanceof egret.DisplayObjectContainer) {
+                        if ((this.dropDown).contains(target))
+                            return true;
+                    }
+                    else {
+                        if (target == this.dropDown)
+                            return true;
+                    }
+                }
+                return false;
+            };
+            /**
+             * 打开下拉列表
+             * @method egret.gui.DropDownController#openDropDown
+             */
+            p.openDropDown = function () {
+                this.openDropDownHelper();
+            };
+            /**
+             * 执行打开下拉列表
+             */
+            p.openDropDownHelper = function () {
+                if (!this.isOpen) {
+                    this.addCloseTriggers();
+                    this._isOpen = true;
+                    if (this.openButton)
+                        this.openButton._setKeepDown(true);
+                    gui.UIEvent.dispatchUIEvent(this, gui.UIEvent.OPEN);
+                }
+            };
+            /**
+             * 关闭下拉列表
+             * @method egret.gui.DropDownController#closeDropDown
+             * @param commit {boolean}
+             */
+            p.closeDropDown = function (commit) {
+                if (this.isOpen) {
+                    this._isOpen = false;
+                    if (this.openButton)
+                        this.openButton._setKeepDown(false);
+                    var dde = new gui.UIEvent(gui.UIEvent.CLOSE, false, true);
+                    if (!commit)
+                        dde.preventDefault();
+                    this.dispatchEvent(dde);
+                    this.removeCloseTriggers();
+                }
+            };
+            /**
+             * openButton上按下鼠标事件
+             * @method egret.gui.DropDownController#_openButton_buttonDownHandler
+             * @param event {Event}
+             */
+            p._openButton_buttonDownHandler = function (event) {
+                if (this.isOpen)
+                    this.closeDropDown(true);
+                else {
+                    this.mouseIsDown = true;
+                    this.openDropDownHelper();
+                }
+            };
+            /**
+             * openButton上鼠标经过事件
+             * @method egret.gui.DropDownController#_openButton_rollOverHandler
+             * @param event {TouchEvent}
+             */
+            p._openButton_rollOverHandler = function (event) {
+                if (this.rollOverOpenDelay == 0)
+                    this.openDropDownHelper();
+                else {
+                    this.openButton.addEventListener(egret.TouchEvent.TOUCH_ROLL_OUT, this.openButton_rollOutHandler, this);
+                    this.rollOverOpenDelayTimer = new egret.Timer(this.rollOverOpenDelay, 1);
+                    this.rollOverOpenDelayTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.rollOverDelay_timerCompleteHandler, this);
+                    this.rollOverOpenDelayTimer.start();
+                }
+            };
+            /**
+             * openButton上鼠标移出事件
+             */
+            p.openButton_rollOutHandler = function (event) {
+                if (this.rollOverOpenDelayTimer && this.rollOverOpenDelayTimer.running) {
+                    this.rollOverOpenDelayTimer.stop();
+                    this.rollOverOpenDelayTimer = null;
+                }
+                this.openButton.removeEventListener(egret.TouchEvent.TOUCH_ROLL_OUT, this.openButton_rollOutHandler, this);
+            };
+            /**
+             * 到达鼠标移入等待延迟打开的时间。
+             */
+            p.rollOverDelay_timerCompleteHandler = function (event) {
+                this.openButton.removeEventListener(egret.TouchEvent.TOUCH_ROLL_OUT, this.openButton_rollOutHandler, this);
+                this.rollOverOpenDelayTimer = null;
+                this.openDropDownHelper();
+            };
+            /**
+             * 舞台上鼠标按下事件
+             * @method egret.gui.DropDownController#stage_mouseDownHandler
+             * @param event {Event}
+             */
+            p.stage_mouseDownHandler = function (event) {
+                if (this.mouseIsDown) {
+                    this.mouseIsDown = false;
+                    return;
+                }
+                if (!this.dropDown || (this.dropDown && (event.target == this.dropDown || (this.dropDown instanceof egret.DisplayObjectContainer && !(this.dropDown).contains((event.target)))))) {
+                    var target = (event.target);
+                    if (this.openButton && target && this.openButton.contains(target))
+                        return;
+                    if (this.hitAreaAdditions != null) {
+                        for (var i = 0; i < this.hitAreaAdditions.length; i++) {
+                            if (this.hitAreaAdditions[i] == event.target || ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains((event.target))))
+                                return;
+                        }
+                    }
+                    this.closeDropDown(true);
+                }
+            };
+            /**
+             * 舞台上鼠标移动事件
+             * @method egret.gui.DropDownController#stage_mouseMoveHandler
+             * @param event {Event}
+             */
+            p.stage_mouseMoveHandler = function (event) {
+                var target = (event.target);
+                var containedTarget = this.isTargetOverDropDownOrOpenButton(target);
+                if (containedTarget)
+                    return;
+                if (event instanceof egret.TouchEvent && event.touchDown) {
+                    gui.UIGlobals.stage.addEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler, this);
+                    gui.UIGlobals.stage.addEventListener(egret.Event.LEAVE_STAGE, this.stage_mouseUpHandler, this);
+                    return;
+                }
+                this.closeDropDown(true);
+            };
+            /**
+             * 舞台上鼠标弹起事件
+             * @method egret.gui.DropDownController#stage_mouseUpHandler_noRollOverOpenDelay
+             * @param event {Event}
+             */
+            p.stage_mouseUpHandler_noRollOverOpenDelay = function (event) {
+                if (this.mouseIsDown) {
+                    this.mouseIsDown = false;
+                    return;
+                }
+            };
+            /**
+             * 舞台上鼠标弹起事件
+             * @method egret.gui.DropDownController#stage_mouseUpHandler
+             * @param event {Event}
+             */
+            p.stage_mouseUpHandler = function (event) {
+                var target = (event.target);
+                var containedTarget = this.isTargetOverDropDownOrOpenButton(target);
+                if (containedTarget) {
+                    gui.UIGlobals.stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_mouseUpHandler, this);
+                    gui.UIGlobals.stage.removeEventListener(egret.Event.LEAVE_STAGE, this.stage_mouseUpHandler, this);
+                    return;
+                }
+                this.closeDropDown(true);
+            };
+            /**
+             * 舞台尺寸改变事件
+             * @method egret.gui.DropDownController#stage_resizeHandler
+             * @param event {Event}
+             */
+            p.stage_resizeHandler = function (event) {
+                this.closeDropDown(true);
+            };
+            /**
+             * 舞台上鼠标滚轮事件
+             */
+            p.stage_mouseWheelHandler = function (event) {
+                if (this.dropDown && !((this.dropDown).contains((event.target)) && event.isDefaultPrevented()))
+                    this.closeDropDown(false);
+            };
+            return DropDownController;
+        })(egret.EventDispatcher);
+        gui.DropDownController = DropDownController;
+        egret.registerClass(DropDownController,"egret.gui.DropDownController");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.SkinBasicLayout
+         * @classdesc
+         * 皮肤简单布局类。
+         * @extends egret.HashObject
+         */
+        var SkinBasicLayout = (function (_super) {
+            __extends(SkinBasicLayout, _super);
+            /**
+             * 构造函数
+             * @method egret.gui.SkinBasicLayout#constructor
+             */
+            function SkinBasicLayout() {
+                _super.call(this);
+                this._target = null;
+            }
+            var d = __define,c=SkinBasicLayout;p=c.prototype;
+            d(p, "target"
+                /**
+                 * 目标布局对象
+                 * @member egret.gui.SkinBasicLayout#target
+                 */
+                ,function () {
+                    return this._target;
+                }
+                ,function (value) {
+                    this._target = value;
+                }
+            );
+            /**
+             * 测量组件尺寸大小
+             * @method egret.gui.SkinBasicLayout#measure
+             */
+            p.measure = function () {
+                if (this.target == null)
+                    return;
+                var measureW = 0;
+                var measureH = 0;
+                var target = this._target;
+                var count = target.numElements;
+                for (var i = 0; i < count; i++) {
+                    var layoutElement = target.getElementAt(i);
+                    if (!layoutElement || !layoutElement.includeInLayout)
+                        continue;
+                    var hCenter = layoutElement.horizontalCenter;
+                    var vCenter = layoutElement.verticalCenter;
+                    var left = layoutElement.left;
+                    var right = layoutElement.right;
+                    var top = layoutElement.top;
+                    var bottom = layoutElement.bottom;
+                    var extX;
+                    var extY;
+                    if (!isNaN(left) && !isNaN(right)) {
+                        extX = left + right;
+                    }
+                    else if (!isNaN(hCenter)) {
+                        extX = Math.abs(hCenter) * 2;
+                    }
+                    else if (!isNaN(left) || !isNaN(right)) {
+                        extX = isNaN(left) ? 0 : left;
+                        extX += isNaN(right) ? 0 : right;
+                    }
+                    else {
+                        extX = layoutElement.preferredX;
+                    }
+                    if (!isNaN(top) && !isNaN(bottom)) {
+                        extY = top + bottom;
+                    }
+                    else if (!isNaN(vCenter)) {
+                        extY = Math.abs(vCenter) * 2;
+                    }
+                    else if (!isNaN(top) || !isNaN(bottom)) {
+                        extY = isNaN(top) ? 0 : top;
+                        extY += isNaN(bottom) ? 0 : bottom;
+                    }
+                    else {
+                        extY = layoutElement.preferredY;
+                    }
+                    var preferredWidth = layoutElement.preferredWidth;
+                    var preferredHeight = layoutElement.preferredHeight;
+                    measureW = Math.ceil(Math.max(measureW, extX + preferredWidth));
+                    measureH = Math.ceil(Math.max(measureH, extY + preferredHeight));
+                }
+                this.target.measuredWidth = measureW;
+                this.target.measuredHeight = measureH;
+            };
+            /**
+             * 更新显示列表
+             * @method egret.gui.SkinBasicLayout#updateDisplayList
+             * @param unscaledWidth {number}
+             * @param unscaledHeight {number}
+             */
+            p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
+                if (this.target == null)
+                    return;
+                var count = this.target.numElements;
+                for (var i = 0; i < count; i++) {
+                    var layoutElement = this.target.getElementAt(i);
+                    if (layoutElement == null || !layoutElement.includeInLayout)
+                        continue;
+                    var hCenter = layoutElement.horizontalCenter;
+                    var vCenter = layoutElement.verticalCenter;
+                    var left = layoutElement.left;
+                    var right = layoutElement.right;
+                    var top = layoutElement.top;
+                    var bottom = layoutElement.bottom;
+                    var percentWidth = layoutElement.percentWidth;
+                    var percentHeight = layoutElement.percentHeight;
+                    var childWidth = NaN;
+                    var childHeight = NaN;
+                    if (!isNaN(left) && !isNaN(right)) {
+                        childWidth = unscaledWidth - right - left;
+                    }
+                    else if (!isNaN(percentWidth)) {
+                        childWidth = Math.round(unscaledWidth * Math.min(percentWidth * 0.01, 1));
+                    }
+                    if (!isNaN(top) && !isNaN(bottom)) {
+                        childHeight = unscaledHeight - bottom - top;
+                    }
+                    else if (!isNaN(percentHeight)) {
+                        childHeight = Math.round(unscaledHeight * Math.min(percentHeight * 0.01, 1));
+                    }
+                    layoutElement.setLayoutBoundsSize(childWidth, childHeight);
+                    var elementWidth = layoutElement.layoutBoundsWidth;
+                    var elementHeight = layoutElement.layoutBoundsHeight;
+                    var childX = NaN;
+                    var childY = NaN;
+                    if (!isNaN(hCenter))
+                        childX = Math.round((unscaledWidth - elementWidth) / 2 + hCenter);
+                    else if (!isNaN(left))
+                        childX = left;
+                    else if (!isNaN(right))
+                        childX = unscaledWidth - elementWidth - right;
+                    else
+                        childX = layoutElement.layoutBoundsX;
+                    if (!isNaN(vCenter))
+                        childY = Math.round((unscaledHeight - elementHeight) / 2 + vCenter);
+                    else if (!isNaN(top))
+                        childY = top;
+                    else if (!isNaN(bottom))
+                        childY = unscaledHeight - elementHeight - bottom;
+                    else
+                        childY = layoutElement.layoutBoundsY;
+                    layoutElement.setLayoutBoundsPosition(childX, childY);
+                }
+            };
+            return SkinBasicLayout;
+        })(egret.HashObject);
+        gui.SkinBasicLayout = SkinBasicLayout;
+        egret.registerClass(SkinBasicLayout,"egret.gui.SkinBasicLayout");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        var Theme = (function () {
+            /**
+             * 构造函数
+             * @method egret.gui.PopUpManager#constructor
+             */
+            function Theme(configURL) {
+                this.skinMap = {};
+                this.delyList = [];
+                this.loadConfig(configURL);
+            }
+            var d = __define,c=Theme;p=c.prototype;
+            Theme.load = function (configURL) {
+                if (this.initialized) {
+                    return;
+                }
+                this.initialized = true;
+                gui.SkinnableComponent._defaultTheme = new Theme(configURL);
+            };
+            p.loadConfig = function (configURL) {
+                this._configURL = configURL;
+                var loader = new egret.HttpRequest();
+                loader.addEventListener(egret.Event.COMPLETE, this.onLoadComplete, this);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadError, this);
+                loader.responseType = egret.HttpResponseType.TEXT;
+                loader.open(configURL);
+                loader.send();
+            };
+            p.onLoadComplete = function (event) {
+                var loader = (event.target);
+                try {
+                    var str = loader.response;
+                    var data = JSON.parse(str);
+                    this.skinMap = data.skins;
+                }
+                catch (e) {
+                    egret.$warn(1017, this._configURL, loader.response);
+                }
+                this.handleDelyList();
+            };
+            p.onLoadError = function (event) {
+                var loader = (event.target);
+                egret.$warn(3000, this._configURL);
+                this.handleDelyList();
+            };
+            p.handleDelyList = function () {
+                if (!this.skinMap) {
+                    this.skinMap = {};
+                    this.delyList = [];
+                    return;
+                }
+                var list = this.delyList;
+                this.delyList = [];
+                var length = list.length;
+                for (var i = 0; i < length; i++) {
+                    var client = list[i];
+                    if (!client._skin) {
+                        var skin = this.getDefaultSkin(client);
+                        client._setSkin(skin);
+                    }
+                }
+            };
+            p.getDefaultSkin = function (client) {
+                var skinMap = this.skinMap;
+                if (!skinMap) {
+                    if (this.delyList.indexOf(client) == -1) {
+                        this.delyList.push(client);
+                    }
+                    return null;
+                }
+                var skinName;
+                var hostKey = client.hostComponentKey;
+                if (hostKey) {
+                    skinName = skinMap[hostKey];
+                }
+                else {
+                    var superClass = client;
+                    while (superClass) {
+                        hostKey = egret.getQualifiedClassName(superClass);
+                        skinName = skinMap[hostKey];
+                        if (skinName) {
+                            break;
+                        }
+                        superClass = egret.getDefinitionByName(egret.getQualifiedSuperclassName(superClass));
+                    }
+                }
+                if (!skinName) {
+                    return null;
+                }
+                var skinClass = egret.getDefinitionByName(skinName);
+                if (!skinClass) {
+                    egret.$warn(3001, skinName);
+                    return null;
+                }
+                return new skinClass();
+            };
+            Theme.initialized = false;
+            return Theme;
+        })();
+        gui.Theme = Theme;
+        egret.registerClass(Theme,"egret.gui.Theme");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.TreeItemRenderer
+         * @classdesc
+         * Tree组件的项呈示器基类
+         * @extends egret.gui.ItemRenderer
+         * @implements egret.gui.ITreeItemRenderer
+         */
+        var TreeItemRenderer = (function (_super) {
+            __extends(TreeItemRenderer, _super);
+            /**
+             * 构造函数
+             * @method egret.gui.TreeItemRenderer#constructor
+             */
+            function TreeItemRenderer() {
+                _super.call(this);
+                /**
+                 * [SkinPart]图标显示对象
+                 * @member egret.gui.TreeItemRenderer#iconDisplay
+                 */
+                this.iconDisplay = null;
+                /**
+                 * [SkinPart]子节点开启按钮
+                 * @member egret.gui.TreeItemRenderer#disclosureButton
+                 */
+                this.disclosureButton = null;
+                /**
+                 * [SkinPart]用于调整缩进值的容器对象。
+                 * @member egret.gui.TreeItemRenderer#contentGroup
+                 */
+                this.contentGroup = null;
+                /**
+                 *
+                 * @type {number}
+                 * @private
+                 */
+                this._indentation = 17;
+                /**
+                 *
+                 * @type {null}
+                 * @private
+                 */
+                this._iconSkinName = null;
+                /**
+                 *
+                 * @type {number}
+                 * @private
+                 */
+                this._depth = 0;
+                /**
+                 *
+                 * @type {boolean}
+                 * @private
+                 */
+                this._hasChildren = false;
+                /**
+                 *
+                 * @type {boolean}
+                 * @private
+                 */
+                this._isOpen = false;
+                this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onItemMouseDown, this, false, 1000);
+            }
+            var d = __define,c=TreeItemRenderer;p=c.prototype;
+            p.onItemMouseDown = function (event) {
+                if (event.target == this.disclosureButton) {
+                    event.stopImmediatePropagation();
+                }
+            };
+            d(p, "indentation"
+                /**
+                 * 子节点相对父节点的缩进值，以像素为单位。默认17。
+                 * @member egret.gui.TreeItemRenderer#indentation
+                 */
+                ,function () {
+                    return this._indentation;
+                }
+                ,function (value) {
+                    this._indentation = value;
+                }
+            );
+            d(p, "iconSkinName"
+                /**
+                 * @member egret.gui.TreeItemRenderer#iconSkinName
+                 */
+                ,function () {
+                    return this._iconSkinName;
+                }
+                ,function (value) {
+                    if (this._iconSkinName == value)
+                        return;
+                    this._iconSkinName = value;
+                    if (this.iconDisplay) {
+                        this.iconDisplay.source = this._iconSkinName;
+                    }
+                }
+            );
+            d(p, "depth"
+                /**
+                 * @member egret.gui.TreeItemRenderer#depth
+                 */
+                ,function () {
+                    return this._depth;
+                }
+                ,function (value) {
+                    if (value == this._depth)
+                        return;
+                    this._depth = value;
+                    if (this.contentGroup) {
+                        this.contentGroup.x = this._depth * this._indentation;
+                    }
+                }
+            );
+            d(p, "hasChildren"
+                /**
+                 * @member egret.gui.TreeItemRenderer#hasChildren
+                 */
+                ,function () {
+                    return this._hasChildren;
+                }
+                ,function (value) {
+                    if (this._hasChildren == value)
+                        return;
+                    this._hasChildren = value;
+                    if (this.disclosureButton) {
+                        this.disclosureButton.visible = this._hasChildren;
+                    }
+                }
+            );
+            d(p, "opened"
+                /**
+                 * @member egret.gui.TreeItemRenderer#opened
+                 */
+                ,function () {
+                    return this._isOpen;
+                }
+                ,function (value) {
+                    if (this._isOpen == value)
+                        return;
+                    this._isOpen = value;
+                    if (this.disclosureButton) {
+                        this.disclosureButton.selected = this._isOpen;
+                    }
+                }
+            );
+            /**
+             * 添加外观部件时调用
+             * @method egret.gui.TreeItemRenderer#partAdded
+             * @param partName {string}
+             * @param instance {any}
+             */
+            p.partAdded = function (partName, instance) {
+                _super.prototype.partAdded.call(this, partName, instance);
+                if (instance == this.iconDisplay) {
+                    this.iconDisplay.source = this._iconSkinName;
+                }
+                else if (instance == this.disclosureButton) {
+                    this.disclosureButton.visible = this._hasChildren;
+                    this.disclosureButton.selected = this._isOpen;
+                    this.disclosureButton._autoSelected = false;
+                    this.disclosureButton.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.disclosureButton_mouseDownHandler, this);
+                }
+                else if (instance == this.contentGroup) {
+                    this.contentGroup.x = this._depth * this._indentation;
+                }
+            };
+            /**
+             * 删除外观部件的实例时调用
+             * @method egret.gui.TreeItemRenderer#partRemoved
+             * @param partName {string}
+             * @param instance {any}
+             */
+            p.partRemoved = function (partName, instance) {
+                _super.prototype.partRemoved.call(this, partName, instance);
+                if (instance == this.iconDisplay) {
+                    this.iconDisplay.source = null;
+                }
+                else if (instance == this.disclosureButton) {
+                    this.disclosureButton.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.disclosureButton_mouseDownHandler, this);
+                    this.disclosureButton._autoSelected = true;
+                    this.disclosureButton.visible = true;
+                }
+            };
+            /**
+             * 鼠标在disclosureButton上按下
+             * @method egret.gui.TreeItemRenderer#disclosureButton_mouseDownHandler
+             * @param event {TouchEvent}
+             */
+            p.disclosureButton_mouseDownHandler = function (event) {
+                gui.TreeEvent.dispatchTreeEvent(this, gui.TreeEvent.ITEM_OPENING, this.itemIndex, this.data, this, !this._isOpen, false, true);
+            };
+            return TreeItemRenderer;
+        })(gui.ItemRenderer);
+        gui.TreeItemRenderer = TreeItemRenderer;
+        egret.registerClass(TreeItemRenderer,"egret.gui.TreeItemRenderer",["egret.gui.ITreeItemRenderer","egret.gui.IItemRenderer","egret.gui.ILayoutElement","egret.IEventDispatcher"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -22183,6 +22183,931 @@ var egret;
     var gui;
     (function (gui) {
         /**
+         * @class egret.gui.CompositeEffect
+         * @classdesc
+         * 复合效果的基类
+         * @extends egret.gui.Effect
+         */
+        var CompositeEffect = (function (_super) {
+            __extends(CompositeEffect, _super);
+            /**
+             * @method egret.gui.CompositeEffect#constructor
+             */
+            function CompositeEffect(target) {
+                if (target === void 0) { target = null; }
+                _super.call(this, target);
+                this._children = [];
+                this.instanceClass = gui.CompositeEffectInstance;
+            }
+            var d = __define,c=CompositeEffect;p=c.prototype;
+            d(p, "children"
+                /**
+                 * 子效果的数组。
+                 * @member egret.gui.CompositeEffect#children
+                 */
+                ,function () {
+                    return this._children;
+                }
+                ,function (value) {
+                    var i = 0;
+                    if (this._children)
+                        for (i = 0; i < this._children.length; ++i)
+                            if (this._children[i])
+                                this._children[i]._parentCompositeEffect = null;
+                    this._children = value;
+                    if (this._children)
+                        for (i = 0; i < this._children.length; ++i)
+                            if (this._children[i])
+                                this._children[i]._parentCompositeEffect = this;
+                }
+            );
+            d(p, "compositeDuration"
+                /**
+                 * 返回此效果的总持续时间。
+                 * @member egret.gui.CompositeEffect#compositeDuration
+                 */
+                ,function () {
+                    return this.duration;
+                }
+            );
+            p.createInstance = function (target) {
+                if (target === void 0) { target = null; }
+                if (!this.childTargets)
+                    this.childTargets = [target];
+                var newInstance = _super.prototype.createInstance.call(this, target);
+                this.childTargets = null;
+                return newInstance;
+            };
+            p.createInstances = function (targets) {
+                if (targets === void 0) { targets = null; }
+                if (!targets)
+                    targets = this.targets;
+                this.childTargets = targets;
+                var newInstance = this.createInstance();
+                this.childTargets = null;
+                return newInstance ? [newInstance] : [];
+            };
+            p._initInstance = function (instance) {
+                _super.prototype._initInstance.call(this, instance);
+                var compInst = instance;
+                var targets = this.childTargets;
+                if (!(targets instanceof Array))
+                    targets = [targets];
+                if (this.children) {
+                    var n = this.children.length;
+                    for (var i = 0; i < n; i++) {
+                        var childEffect = this.children[i];
+                        if (childEffect.targets.length == 0) {
+                            compInst.addChildSet(this.children[i].createInstances(targets));
+                        }
+                        else {
+                            compInst.addChildSet(this.children[i].createInstances(childEffect.targets));
+                        }
+                    }
+                }
+            };
+            /**
+             * 将新的子效果添加到此复合效果。
+             * @method egret.gui.CompositeEffect#addChild
+             */
+            p.addChild = function (childEffect) {
+                this.children.push(childEffect);
+                childEffect._parentCompositeEffect = this;
+            };
+            return CompositeEffect;
+        })(gui.Effect);
+        gui.CompositeEffect = CompositeEffect;
+        egret.registerClass(CompositeEffect,"egret.gui.CompositeEffect");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.EffectInstance
+         * @classdesc
+         * 定义所有效果实例的基类
+         * @extends egret.EventDispatcher
+         */
+        var EffectInstance = (function (_super) {
+            __extends(EffectInstance, _super);
+            /**
+             * @method egret.gui.EffectInstance#constructor
+             */
+            function EffectInstance(target) {
+                _super.call(this);
+                /**
+                 * delayTimer开始的时间
+                 */
+                this.delayStartTime = 0;
+                /**
+                 * 暂停时delayTimer经过的时间
+                 */
+                this.delayElapsedTime = 0;
+                /**
+                 * 是否显式设置了持续时间
+                 */
+                this.durationExplicitlySet = false;
+                /**
+                 * 已播放实例的次数。
+                 */
+                this._playCount = 0;
+                /**
+                 * 调用end()方法结束时，防止效果重复的的标志
+                 */
+                this._stopRepeat = false;
+                this._duration = 500;
+                this._repeatCount = 0;
+                this._repeatDelay = 0;
+                this._startDelay = 0;
+                this.target = target;
+            }
+            var d = __define,c=EffectInstance;p=c.prototype;
+            d(p, "_actualDuration"
+                /**
+                 * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
+                 */
+                ,function () {
+                    var value = NaN;
+                    if (this.repeatCount > 0) {
+                        value = this.duration * this.repeatCount + (this.repeatDelay * (this.repeatCount - 1)) + this.startDelay;
+                    }
+                    return value;
+                }
+            );
+            d(p, "duration"
+                /**
+                 * 效果的持续时间（以毫秒为单位）。
+                 * @member egret.gui.EffectInstance#duration
+                 */
+                ,function () {
+                    if (!this.durationExplicitlySet && this.parentCompositeEffectInstance) {
+                        return this.parentCompositeEffectInstance.duration;
+                    }
+                    else {
+                        return this._duration;
+                    }
+                }
+                ,function (value) {
+                    this.durationExplicitlySet = true;
+                    this._duration = value;
+                }
+            );
+            d(p, "effect"
+                /**
+                 * 创建此 IEffectInstance 对象的 IEffect 对象。
+                 * @member egret.gui.EffectInstance#effect
+                 */
+                ,function () {
+                    return this._effect;
+                }
+                ,function (value) {
+                    this._effect = value;
+                }
+            );
+            d(p, "playheadTime"
+                /**
+                 * 效果的当前时间位置。
+                 * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
+                 * @member egret.gui.EffectInstance#playheadTime
+                 */
+                ,function () {
+                    return Math.max(this._playCount - 1, 0) * (this.duration + this.repeatDelay) + (this.playReversed ? 0 : this.startDelay);
+                }
+                ,function (value) {
+                    this._setPlayheadTime(value);
+                }
+            );
+            p._setPlayheadTime = function (value) {
+                if (this._delayTimer && this._delayTimer.running) {
+                    this._delayTimer.reset();
+                    if (value < this.startDelay) {
+                        this._delayTimer = new egret.Timer(this.startDelay - value, 1);
+                        this.delayStartTime = egret.getTimer();
+                        this._delayTimer.addEventListener(egret.TimerEvent.TIMER, this.delayTimerHandler, this);
+                        this._delayTimer.start();
+                    }
+                    else {
+                        this._playCount = 0;
+                        this.play();
+                    }
+                }
+            };
+            d(p, "playReversed"
+                /**
+                 * 指定效果是否在反向播放，在播放之前设置此属性
+                 * @member egret.gui.EffectInstance#playReversed
+                 */
+                ,function () {
+                    return this._playReversed;
+                }
+                ,function (value) {
+                    this._setPlayReversed(value);
+                }
+            );
+            p._setPlayReversed = function (value) {
+                this._playReversed = value;
+            };
+            d(p, "repeatCount"
+                /**
+                 * 效果的重复次数。可能的值为任何大于等于 0 的整数。
+                 * @member egret.gui.EffectInstance#repeatCount
+                 */
+                ,function () {
+                    return this._repeatCount;
+                }
+                ,function (value) {
+                    this._repeatCount = value;
+                }
+            );
+            d(p, "repeatDelay"
+                /**
+                 * 重复播放效果前需要等待的时间（以毫秒为单位）。
+                 * @member egret.gui.EffectInstance#repeatDelay
+                 */
+                ,function () {
+                    return this._repeatDelay;
+                }
+                ,function (value) {
+                    this._repeatDelay = value;
+                }
+            );
+            d(p, "startDelay"
+                /**
+                 * 开始播放效果前需要等待的时间（以毫秒为单位）。
+                 * 此值可以是任何大于或等于 0 的整数。
+                 * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
+                 * @member egret.gui.EffectInstance#startDelay
+                 */
+                ,function () {
+                    return this._startDelay;
+                }
+                ,function (value) {
+                    this._startDelay = value;
+                }
+            );
+            d(p, "target"
+                /**
+                 * 要应用此效果的对象。
+                 * @member egret.gui.EffectInstance#target
+                 */
+                ,function () {
+                    return this._target;
+                }
+                ,function (value) {
+                    this._target = value;
+                }
+            );
+            /**
+             * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
+             * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
+             * @method egret.gui.EffectInstance#startEffect
+             */
+            p.startEffect = function () {
+                if (this.startDelay > 0 && !this.playReversed) {
+                    this._delayTimer = new egret.Timer(this.startDelay, 1);
+                    this.delayStartTime = egret.getTimer();
+                    this._delayTimer.addEventListener(egret.TimerEvent.TIMER, this.delayTimerHandler, this);
+                    this._delayTimer.start();
+                }
+                else {
+                    this.play();
+                }
+            };
+            /**
+             * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
+             * <p>在 EffectInstance 的子类中，必须覆盖此方法。
+             * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
+             * @method egret.gui.EffectInstance#play
+             */
+            p.play = function () {
+                this._playCount++;
+                this.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_START, false, false, this));
+                if (this.target && "dispatchEvent" in this.target) {
+                    this.target.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_START, false, false, this));
+                }
+            };
+            /**
+             * 暂停效果，直到调用 resume() 方法。
+             * @method egret.gui.EffectInstance#pause
+             */
+            p.pause = function () {
+                if (this._delayTimer && this._delayTimer.running && !isNaN(this.delayStartTime)) {
+                    this._delayTimer.stop();
+                    this.delayElapsedTime = egret.getTimer() - this.delayStartTime;
+                }
+            };
+            /**
+             * 停止播放效果，使目标保持当前状态。
+             * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+             * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+             * @method egret.gui.EffectInstance#stop
+             */
+            p.stop = function () {
+                if (this._delayTimer)
+                    this._delayTimer.reset();
+                this._stopRepeat = true;
+                this.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_STOP, false, false, this));
+                if (this.target && ("dispatchEvent" in this.target))
+                    this.target.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_STOP, false, false, this));
+                this.finishEffect();
+            };
+            /**
+             * 在效果由 pause() 方法暂停后继续播放效果。
+             * @method egret.gui.EffectInstance#resume
+             */
+            p.resume = function () {
+                if (this._delayTimer && !this._delayTimer.running && !isNaN(this.delayElapsedTime)) {
+                    this._delayTimer.delay = !this.playReversed ? this._delayTimer.delay - this.delayElapsedTime : this.delayElapsedTime;
+                    this.delayStartTime = egret.getTimer();
+                    this._delayTimer.start();
+                }
+            };
+            /**
+             * 从效果的当前位置开始反向播放效果。
+             * @method egret.gui.EffectInstance#reverse
+             */
+            p.reverse = function () {
+                if (this.repeatCount > 0)
+                    this._playCount = this.repeatCount - this._playCount + 1;
+            };
+            /**
+             * 中断当前播放的效果实例，立即跳转到效果的结束位置。
+             * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+             * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+             * @method egret.gui.EffectInstance#end
+             */
+            p.end = function () {
+                if (this._delayTimer)
+                    this._delayTimer.reset();
+                this._stopRepeat = true;
+                this.finishEffect();
+            };
+            /**
+             * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
+             * @method egret.gui.EffectInstance#finishEffect
+             */
+            p.finishEffect = function () {
+                this._playCount = 0;
+                this.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_END, false, false, this));
+                if (this.target && ("dispatchEvent" in this.target)) {
+                    this.target.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_END, false, false, this));
+                }
+            };
+            /**
+             * 每次完成重复效果的迭代播放后调用。
+             * @method egret.gui.EffectInstance#finishRepeat
+             */
+            p.finishRepeat = function () {
+                if (!this._stopRepeat && this._playCount != 0 && (this._playCount < this.repeatCount || this.repeatCount == 0)) {
+                    if (this.repeatDelay > 0) {
+                        this._delayTimer = new egret.Timer(this.repeatDelay, 1);
+                        this.delayStartTime = egret.getTimer();
+                        this._delayTimer.addEventListener(egret.TimerEvent.TIMER, this.delayTimerHandler, this);
+                        this._delayTimer.start();
+                    }
+                    else {
+                        this.play();
+                    }
+                }
+                else {
+                    this.finishEffect();
+                }
+            };
+            p._playWithNoDuration = function () {
+                this.duration = 0;
+                this.repeatCount = 1;
+                this.repeatDelay = 0;
+                this.startDelay = 0;
+                this.startEffect();
+            };
+            p.delayTimerHandler = function (event) {
+                this._delayTimer.reset();
+                this.delayStartTime = NaN;
+                this.delayElapsedTime = NaN;
+                this.play();
+            };
+            return EffectInstance;
+        })(egret.EventDispatcher);
+        gui.EffectInstance = EffectInstance;
+        egret.registerClass(EffectInstance,"egret.gui.EffectInstance",["egret.gui.IEffectInstance"]);
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.Fade
+         * @classdesc
+         * 淡入淡出效果
+         * @extends egret.gui.Animate
+         */
+        var Fade = (function (_super) {
+            __extends(Fade, _super);
+            /**
+             * @method egret.gui.Fade#constructor
+             */
+            function Fade(target) {
+                if (target === void 0) { target = null; }
+                _super.call(this, target);
+                this.instanceClass = gui.FadeInstance;
+            }
+            var d = __define,c=Fade;p=c.prototype;
+            p._initInstance = function (instance) {
+                _super.prototype._initInstance.call(this, instance);
+                var fadeInstance = instance;
+                fadeInstance.alphaFrom = this.alphaFrom;
+                fadeInstance.alphaTo = this.alphaTo;
+            };
+            return Fade;
+        })(gui.Animate);
+        gui.Fade = Fade;
+        egret.registerClass(Fade,"egret.gui.Fade");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.Move
+         * @classdesc
+         * Move 效果按 x 和 y 方向移动目标对象。
+         * @extends egret.gui.AnimateTransform
+         */
+        var Move = (function (_super) {
+            __extends(Move, _super);
+            /**
+             * @method egret.gui.Move#constructor
+             */
+            function Move(target) {
+                if (target === void 0) { target = null; }
+                _super.call(this, target);
+                this.instanceClass = gui.AnimateTransformInstance;
+            }
+            var d = __define,c=Move;p=c.prototype;
+            p.createInstance = function (target) {
+                if (target === void 0) { target = null; }
+                this.motionPaths = new Array();
+                return _super.prototype.createInstance.call(this, target);
+            };
+            p._initInstance = function (instance) {
+                this._addMotionPath("translationX", this.xFrom, this.xTo, this.xBy);
+                this._addMotionPath("translationY", this.yFrom, this.yTo, this.yBy);
+                _super.prototype._initInstance.call(this, instance);
+            };
+            return Move;
+        })(gui.AnimateTransform);
+        gui.Move = Move;
+        egret.registerClass(Move,"egret.gui.Move");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.Parallel
+         * @classdesc
+         * Parallel 效果同时播放多个子效果。
+         * @extends egret.gui.CompositeEffect
+         */
+        var Parallel = (function (_super) {
+            __extends(Parallel, _super);
+            /**
+             * @method egret.gui.Parallel#constructor
+             */
+            function Parallel(target) {
+                if (target === void 0) { target = null; }
+                _super.call(this, target);
+                this.instanceClass = gui.ParallelInstance;
+            }
+            var d = __define,c=Parallel;p=c.prototype;
+            d(p, "compositeDuration"
+                ,function () {
+                    var parallelDuration = 0;
+                    for (var i = 0; i < this.children.length; ++i) {
+                        var childDuration;
+                        var child = (this.children[i]);
+                        if (child instanceof gui.CompositeEffect)
+                            childDuration = child.compositeDuration;
+                        else
+                            childDuration = child.duration;
+                        childDuration = childDuration * child.repeatCount + (child.repeatDelay * (child.repeatCount - 1)) + child.startDelay;
+                        parallelDuration = Math.max(parallelDuration, childDuration);
+                    }
+                    return parallelDuration;
+                }
+            );
+            return Parallel;
+        })(gui.CompositeEffect);
+        gui.Parallel = Parallel;
+        egret.registerClass(Parallel,"egret.gui.Parallel");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.Rotate
+         * @classdesc
+         * Rotate 效果围绕转换中心旋转目标对象。
+         * @extends egret.gui.AnimateTransform
+         */
+        var Rotate = (function (_super) {
+            __extends(Rotate, _super);
+            /**
+             * @method egret.gui.Rotate#constructor
+             */
+            function Rotate(target) {
+                if (target === void 0) { target = null; }
+                _super.call(this, target);
+                this.instanceClass = gui.AnimateTransformInstance;
+            }
+            var d = __define,c=Rotate;p=c.prototype;
+            p.createInstance = function (target) {
+                if (target === void 0) { target = null; }
+                this.motionPaths = new Array();
+                return _super.prototype.createInstance.call(this, target);
+            };
+            p._initInstance = function (instance) {
+                this._addMotionPath("rotation", this.angleFrom, this.angleTo, this.angleBy);
+                _super.prototype._initInstance.call(this, instance);
+            };
+            return Rotate;
+        })(gui.AnimateTransform);
+        gui.Rotate = Rotate;
+        egret.registerClass(Rotate,"egret.gui.Rotate");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.Scale
+         * @classdesc
+         * Scale 效果围绕转换中心在 x 和 y 方向上缩放目标对象
+         * @extends egret.gui.AnimateTransform
+         */
+        var Scale = (function (_super) {
+            __extends(Scale, _super);
+            /**
+             * @method egret.gui.Scale#constructor
+             */
+            function Scale(target) {
+                if (target === void 0) { target = null; }
+                _super.call(this, target);
+                this.instanceClass = gui.AnimateTransformInstance;
+            }
+            var d = __define,c=Scale;p=c.prototype;
+            p.createInstance = function (target) {
+                if (target === void 0) { target = null; }
+                this.motionPaths = new Array();
+                return _super.prototype.createInstance.call(this, target);
+            };
+            p._initInstance = function (instance) {
+                this._addMotionPath("scaleX", this.scaleXFrom, this.scaleXTo, this.scaleXBy);
+                this._addMotionPath("scaleY", this.scaleYFrom, this.scaleYTo, this.scaleYBy);
+                _super.prototype._initInstance.call(this, instance);
+            };
+            return Scale;
+        })(gui.AnimateTransform);
+        gui.Scale = Scale;
+        egret.registerClass(Scale,"egret.gui.Scale");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.Sequence
+         * @classdesc
+         * Sequence 效果以子效果的添加顺序依次播放多个子效果。
+         * @extends egret.gui.CompositeEffect
+         */
+        var Sequence = (function (_super) {
+            __extends(Sequence, _super);
+            /**
+             * @method egret.gui.Sequence#constructor
+             */
+            function Sequence(target) {
+                if (target === void 0) { target = null; }
+                _super.call(this, target);
+                this.instanceClass = gui.SequenceInstance;
+            }
+            var d = __define,c=Sequence;p=c.prototype;
+            d(p, "compositeDuration"
+                ,function () {
+                    var sequenceDuration = 0;
+                    for (var i = 0; i < this.children.length; ++i) {
+                        var childDuration;
+                        var child = (this.children[i]);
+                        if (child instanceof gui.CompositeEffect)
+                            childDuration = child.compositeDuration;
+                        else
+                            childDuration = child.duration;
+                        childDuration = childDuration * child.repeatCount + (child.repeatDelay * (child.repeatCount - 1)) + child.startDelay;
+                        sequenceDuration += childDuration;
+                    }
+                    return sequenceDuration;
+                }
+            );
+            return Sequence;
+        })(gui.CompositeEffect);
+        gui.Sequence = Sequence;
+        egret.registerClass(Sequence,"egret.gui.Sequence");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
          * @class egret.gui.EaseInOutBase
          * @classdesc
          * EaseInOutBase 类是提供缓动功能的基类。
@@ -23340,136 +24265,6 @@ var egret;
     var gui;
     (function (gui) {
         /**
-         * @class egret.gui.CompositeEffect
-         * @classdesc
-         * 复合效果的基类
-         * @extends egret.gui.Effect
-         */
-        var CompositeEffect = (function (_super) {
-            __extends(CompositeEffect, _super);
-            /**
-             * @method egret.gui.CompositeEffect#constructor
-             */
-            function CompositeEffect(target) {
-                if (target === void 0) { target = null; }
-                _super.call(this, target);
-                this._children = [];
-                this.instanceClass = gui.CompositeEffectInstance;
-            }
-            var d = __define,c=CompositeEffect;p=c.prototype;
-            d(p, "children"
-                /**
-                 * 子效果的数组。
-                 * @member egret.gui.CompositeEffect#children
-                 */
-                ,function () {
-                    return this._children;
-                }
-                ,function (value) {
-                    var i = 0;
-                    if (this._children)
-                        for (i = 0; i < this._children.length; ++i)
-                            if (this._children[i])
-                                this._children[i]._parentCompositeEffect = null;
-                    this._children = value;
-                    if (this._children)
-                        for (i = 0; i < this._children.length; ++i)
-                            if (this._children[i])
-                                this._children[i]._parentCompositeEffect = this;
-                }
-            );
-            d(p, "compositeDuration"
-                /**
-                 * 返回此效果的总持续时间。
-                 * @member egret.gui.CompositeEffect#compositeDuration
-                 */
-                ,function () {
-                    return this.duration;
-                }
-            );
-            p.createInstance = function (target) {
-                if (target === void 0) { target = null; }
-                if (!this.childTargets)
-                    this.childTargets = [target];
-                var newInstance = _super.prototype.createInstance.call(this, target);
-                this.childTargets = null;
-                return newInstance;
-            };
-            p.createInstances = function (targets) {
-                if (targets === void 0) { targets = null; }
-                if (!targets)
-                    targets = this.targets;
-                this.childTargets = targets;
-                var newInstance = this.createInstance();
-                this.childTargets = null;
-                return newInstance ? [newInstance] : [];
-            };
-            p._initInstance = function (instance) {
-                _super.prototype._initInstance.call(this, instance);
-                var compInst = instance;
-                var targets = this.childTargets;
-                if (!(targets instanceof Array))
-                    targets = [targets];
-                if (this.children) {
-                    var n = this.children.length;
-                    for (var i = 0; i < n; i++) {
-                        var childEffect = this.children[i];
-                        if (childEffect.targets.length == 0) {
-                            compInst.addChildSet(this.children[i].createInstances(targets));
-                        }
-                        else {
-                            compInst.addChildSet(this.children[i].createInstances(childEffect.targets));
-                        }
-                    }
-                }
-            };
-            /**
-             * 将新的子效果添加到此复合效果。
-             * @method egret.gui.CompositeEffect#addChild
-             */
-            p.addChild = function (childEffect) {
-                this.children.push(childEffect);
-                childEffect._parentCompositeEffect = this;
-            };
-            return CompositeEffect;
-        })(gui.Effect);
-        gui.CompositeEffect = CompositeEffect;
-        egret.registerClass(CompositeEffect,"egret.gui.CompositeEffect");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
          * @class egret.gui.Bounce
          * @classdesc
          * Bounce 类实现缓动功能，该功能模拟目标对象上的重力牵引和回弹目标对象。
@@ -23681,348 +24476,6 @@ var egret;
         })(gui.EaseInOutBase);
         gui.Power = Power;
         egret.registerClass(Power,"egret.gui.Power");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.EffectInstance
-         * @classdesc
-         * 定义所有效果实例的基类
-         * @extends egret.EventDispatcher
-         */
-        var EffectInstance = (function (_super) {
-            __extends(EffectInstance, _super);
-            /**
-             * @method egret.gui.EffectInstance#constructor
-             */
-            function EffectInstance(target) {
-                _super.call(this);
-                /**
-                 * delayTimer开始的时间
-                 */
-                this.delayStartTime = 0;
-                /**
-                 * 暂停时delayTimer经过的时间
-                 */
-                this.delayElapsedTime = 0;
-                /**
-                 * 是否显式设置了持续时间
-                 */
-                this.durationExplicitlySet = false;
-                /**
-                 * 已播放实例的次数。
-                 */
-                this._playCount = 0;
-                /**
-                 * 调用end()方法结束时，防止效果重复的的标志
-                 */
-                this._stopRepeat = false;
-                this._duration = 500;
-                this._repeatCount = 0;
-                this._repeatDelay = 0;
-                this._startDelay = 0;
-                this.target = target;
-            }
-            var d = __define,c=EffectInstance;p=c.prototype;
-            d(p, "_actualDuration"
-                /**
-                 * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
-                 */
-                ,function () {
-                    var value = NaN;
-                    if (this.repeatCount > 0) {
-                        value = this.duration * this.repeatCount + (this.repeatDelay * (this.repeatCount - 1)) + this.startDelay;
-                    }
-                    return value;
-                }
-            );
-            d(p, "duration"
-                /**
-                 * 效果的持续时间（以毫秒为单位）。
-                 * @member egret.gui.EffectInstance#duration
-                 */
-                ,function () {
-                    if (!this.durationExplicitlySet && this.parentCompositeEffectInstance) {
-                        return this.parentCompositeEffectInstance.duration;
-                    }
-                    else {
-                        return this._duration;
-                    }
-                }
-                ,function (value) {
-                    this.durationExplicitlySet = true;
-                    this._duration = value;
-                }
-            );
-            d(p, "effect"
-                /**
-                 * 创建此 IEffectInstance 对象的 IEffect 对象。
-                 * @member egret.gui.EffectInstance#effect
-                 */
-                ,function () {
-                    return this._effect;
-                }
-                ,function (value) {
-                    this._effect = value;
-                }
-            );
-            d(p, "playheadTime"
-                /**
-                 * 效果的当前时间位置。
-                 * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
-                 * @member egret.gui.EffectInstance#playheadTime
-                 */
-                ,function () {
-                    return Math.max(this._playCount - 1, 0) * (this.duration + this.repeatDelay) + (this.playReversed ? 0 : this.startDelay);
-                }
-                ,function (value) {
-                    this._setPlayheadTime(value);
-                }
-            );
-            p._setPlayheadTime = function (value) {
-                if (this._delayTimer && this._delayTimer.running) {
-                    this._delayTimer.reset();
-                    if (value < this.startDelay) {
-                        this._delayTimer = new egret.Timer(this.startDelay - value, 1);
-                        this.delayStartTime = egret.getTimer();
-                        this._delayTimer.addEventListener(egret.TimerEvent.TIMER, this.delayTimerHandler, this);
-                        this._delayTimer.start();
-                    }
-                    else {
-                        this._playCount = 0;
-                        this.play();
-                    }
-                }
-            };
-            d(p, "playReversed"
-                /**
-                 * 指定效果是否在反向播放，在播放之前设置此属性
-                 * @member egret.gui.EffectInstance#playReversed
-                 */
-                ,function () {
-                    return this._playReversed;
-                }
-                ,function (value) {
-                    this._setPlayReversed(value);
-                }
-            );
-            p._setPlayReversed = function (value) {
-                this._playReversed = value;
-            };
-            d(p, "repeatCount"
-                /**
-                 * 效果的重复次数。可能的值为任何大于等于 0 的整数。
-                 * @member egret.gui.EffectInstance#repeatCount
-                 */
-                ,function () {
-                    return this._repeatCount;
-                }
-                ,function (value) {
-                    this._repeatCount = value;
-                }
-            );
-            d(p, "repeatDelay"
-                /**
-                 * 重复播放效果前需要等待的时间（以毫秒为单位）。
-                 * @member egret.gui.EffectInstance#repeatDelay
-                 */
-                ,function () {
-                    return this._repeatDelay;
-                }
-                ,function (value) {
-                    this._repeatDelay = value;
-                }
-            );
-            d(p, "startDelay"
-                /**
-                 * 开始播放效果前需要等待的时间（以毫秒为单位）。
-                 * 此值可以是任何大于或等于 0 的整数。
-                 * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
-                 * @member egret.gui.EffectInstance#startDelay
-                 */
-                ,function () {
-                    return this._startDelay;
-                }
-                ,function (value) {
-                    this._startDelay = value;
-                }
-            );
-            d(p, "target"
-                /**
-                 * 要应用此效果的对象。
-                 * @member egret.gui.EffectInstance#target
-                 */
-                ,function () {
-                    return this._target;
-                }
-                ,function (value) {
-                    this._target = value;
-                }
-            );
-            /**
-             * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
-             * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
-             * @method egret.gui.EffectInstance#startEffect
-             */
-            p.startEffect = function () {
-                if (this.startDelay > 0 && !this.playReversed) {
-                    this._delayTimer = new egret.Timer(this.startDelay, 1);
-                    this.delayStartTime = egret.getTimer();
-                    this._delayTimer.addEventListener(egret.TimerEvent.TIMER, this.delayTimerHandler, this);
-                    this._delayTimer.start();
-                }
-                else {
-                    this.play();
-                }
-            };
-            /**
-             * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
-             * <p>在 EffectInstance 的子类中，必须覆盖此方法。
-             * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
-             * @method egret.gui.EffectInstance#play
-             */
-            p.play = function () {
-                this._playCount++;
-                this.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_START, false, false, this));
-                if (this.target && "dispatchEvent" in this.target) {
-                    this.target.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_START, false, false, this));
-                }
-            };
-            /**
-             * 暂停效果，直到调用 resume() 方法。
-             * @method egret.gui.EffectInstance#pause
-             */
-            p.pause = function () {
-                if (this._delayTimer && this._delayTimer.running && !isNaN(this.delayStartTime)) {
-                    this._delayTimer.stop();
-                    this.delayElapsedTime = egret.getTimer() - this.delayStartTime;
-                }
-            };
-            /**
-             * 停止播放效果，使目标保持当前状态。
-             * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-             * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-             * @method egret.gui.EffectInstance#stop
-             */
-            p.stop = function () {
-                if (this._delayTimer)
-                    this._delayTimer.reset();
-                this._stopRepeat = true;
-                this.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_STOP, false, false, this));
-                if (this.target && ("dispatchEvent" in this.target))
-                    this.target.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_STOP, false, false, this));
-                this.finishEffect();
-            };
-            /**
-             * 在效果由 pause() 方法暂停后继续播放效果。
-             * @method egret.gui.EffectInstance#resume
-             */
-            p.resume = function () {
-                if (this._delayTimer && !this._delayTimer.running && !isNaN(this.delayElapsedTime)) {
-                    this._delayTimer.delay = !this.playReversed ? this._delayTimer.delay - this.delayElapsedTime : this.delayElapsedTime;
-                    this.delayStartTime = egret.getTimer();
-                    this._delayTimer.start();
-                }
-            };
-            /**
-             * 从效果的当前位置开始反向播放效果。
-             * @method egret.gui.EffectInstance#reverse
-             */
-            p.reverse = function () {
-                if (this.repeatCount > 0)
-                    this._playCount = this.repeatCount - this._playCount + 1;
-            };
-            /**
-             * 中断当前播放的效果实例，立即跳转到效果的结束位置。
-             * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-             * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-             * @method egret.gui.EffectInstance#end
-             */
-            p.end = function () {
-                if (this._delayTimer)
-                    this._delayTimer.reset();
-                this._stopRepeat = true;
-                this.finishEffect();
-            };
-            /**
-             * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
-             * @method egret.gui.EffectInstance#finishEffect
-             */
-            p.finishEffect = function () {
-                this._playCount = 0;
-                this.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_END, false, false, this));
-                if (this.target && ("dispatchEvent" in this.target)) {
-                    this.target.dispatchEvent(new gui.EffectEvent(gui.EffectEvent.EFFECT_END, false, false, this));
-                }
-            };
-            /**
-             * 每次完成重复效果的迭代播放后调用。
-             * @method egret.gui.EffectInstance#finishRepeat
-             */
-            p.finishRepeat = function () {
-                if (!this._stopRepeat && this._playCount != 0 && (this._playCount < this.repeatCount || this.repeatCount == 0)) {
-                    if (this.repeatDelay > 0) {
-                        this._delayTimer = new egret.Timer(this.repeatDelay, 1);
-                        this.delayStartTime = egret.getTimer();
-                        this._delayTimer.addEventListener(egret.TimerEvent.TIMER, this.delayTimerHandler, this);
-                        this._delayTimer.start();
-                    }
-                    else {
-                        this.play();
-                    }
-                }
-                else {
-                    this.finishEffect();
-                }
-            };
-            p._playWithNoDuration = function () {
-                this.duration = 0;
-                this.repeatCount = 1;
-                this.repeatDelay = 0;
-                this.startDelay = 0;
-                this.startEffect();
-            };
-            p.delayTimerHandler = function (event) {
-                this._delayTimer.reset();
-                this.delayStartTime = NaN;
-                this.delayElapsedTime = NaN;
-                this.play();
-            };
-            return EffectInstance;
-        })(egret.EventDispatcher);
-        gui.EffectInstance = EffectInstance;
-        egret.registerClass(EffectInstance,"egret.gui.EffectInstance",["egret.gui.IEffectInstance"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -25721,123 +26174,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.Fade
-         * @classdesc
-         * 淡入淡出效果
-         * @extends egret.gui.Animate
-         */
-        var Fade = (function (_super) {
-            __extends(Fade, _super);
-            /**
-             * @method egret.gui.Fade#constructor
-             */
-            function Fade(target) {
-                if (target === void 0) { target = null; }
-                _super.call(this, target);
-                this.instanceClass = gui.FadeInstance;
-            }
-            var d = __define,c=Fade;p=c.prototype;
-            p._initInstance = function (instance) {
-                _super.prototype._initInstance.call(this, instance);
-                var fadeInstance = instance;
-                fadeInstance.alphaFrom = this.alphaFrom;
-                fadeInstance.alphaTo = this.alphaTo;
-            };
-            return Fade;
-        })(gui.Animate);
-        gui.Fade = Fade;
-        egret.registerClass(Fade,"egret.gui.Fade");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -25905,342 +26241,6 @@ var egret;
         })();
         gui.NumberInterpolator = NumberInterpolator;
         egret.registerClass(NumberInterpolator,"egret.gui.NumberInterpolator",["egret.gui.IInterpolator"]);
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.Move
-         * @classdesc
-         * Move 效果按 x 和 y 方向移动目标对象。
-         * @extends egret.gui.AnimateTransform
-         */
-        var Move = (function (_super) {
-            __extends(Move, _super);
-            /**
-             * @method egret.gui.Move#constructor
-             */
-            function Move(target) {
-                if (target === void 0) { target = null; }
-                _super.call(this, target);
-                this.instanceClass = gui.AnimateTransformInstance;
-            }
-            var d = __define,c=Move;p=c.prototype;
-            p.createInstance = function (target) {
-                if (target === void 0) { target = null; }
-                this.motionPaths = new Array();
-                return _super.prototype.createInstance.call(this, target);
-            };
-            p._initInstance = function (instance) {
-                this._addMotionPath("translationX", this.xFrom, this.xTo, this.xBy);
-                this._addMotionPath("translationY", this.yFrom, this.yTo, this.yBy);
-                _super.prototype._initInstance.call(this, instance);
-            };
-            return Move;
-        })(gui.AnimateTransform);
-        gui.Move = Move;
-        egret.registerClass(Move,"egret.gui.Move");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.Parallel
-         * @classdesc
-         * Parallel 效果同时播放多个子效果。
-         * @extends egret.gui.CompositeEffect
-         */
-        var Parallel = (function (_super) {
-            __extends(Parallel, _super);
-            /**
-             * @method egret.gui.Parallel#constructor
-             */
-            function Parallel(target) {
-                if (target === void 0) { target = null; }
-                _super.call(this, target);
-                this.instanceClass = gui.ParallelInstance;
-            }
-            var d = __define,c=Parallel;p=c.prototype;
-            d(p, "compositeDuration"
-                ,function () {
-                    var parallelDuration = 0;
-                    for (var i = 0; i < this.children.length; ++i) {
-                        var childDuration;
-                        var child = (this.children[i]);
-                        if (child instanceof gui.CompositeEffect)
-                            childDuration = child.compositeDuration;
-                        else
-                            childDuration = child.duration;
-                        childDuration = childDuration * child.repeatCount + (child.repeatDelay * (child.repeatCount - 1)) + child.startDelay;
-                        parallelDuration = Math.max(parallelDuration, childDuration);
-                    }
-                    return parallelDuration;
-                }
-            );
-            return Parallel;
-        })(gui.CompositeEffect);
-        gui.Parallel = Parallel;
-        egret.registerClass(Parallel,"egret.gui.Parallel");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.Rotate
-         * @classdesc
-         * Rotate 效果围绕转换中心旋转目标对象。
-         * @extends egret.gui.AnimateTransform
-         */
-        var Rotate = (function (_super) {
-            __extends(Rotate, _super);
-            /**
-             * @method egret.gui.Rotate#constructor
-             */
-            function Rotate(target) {
-                if (target === void 0) { target = null; }
-                _super.call(this, target);
-                this.instanceClass = gui.AnimateTransformInstance;
-            }
-            var d = __define,c=Rotate;p=c.prototype;
-            p.createInstance = function (target) {
-                if (target === void 0) { target = null; }
-                this.motionPaths = new Array();
-                return _super.prototype.createInstance.call(this, target);
-            };
-            p._initInstance = function (instance) {
-                this._addMotionPath("rotation", this.angleFrom, this.angleTo, this.angleBy);
-                _super.prototype._initInstance.call(this, instance);
-            };
-            return Rotate;
-        })(gui.AnimateTransform);
-        gui.Rotate = Rotate;
-        egret.registerClass(Rotate,"egret.gui.Rotate");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.Scale
-         * @classdesc
-         * Scale 效果围绕转换中心在 x 和 y 方向上缩放目标对象
-         * @extends egret.gui.AnimateTransform
-         */
-        var Scale = (function (_super) {
-            __extends(Scale, _super);
-            /**
-             * @method egret.gui.Scale#constructor
-             */
-            function Scale(target) {
-                if (target === void 0) { target = null; }
-                _super.call(this, target);
-                this.instanceClass = gui.AnimateTransformInstance;
-            }
-            var d = __define,c=Scale;p=c.prototype;
-            p.createInstance = function (target) {
-                if (target === void 0) { target = null; }
-                this.motionPaths = new Array();
-                return _super.prototype.createInstance.call(this, target);
-            };
-            p._initInstance = function (instance) {
-                this._addMotionPath("scaleX", this.scaleXFrom, this.scaleXTo, this.scaleXBy);
-                this._addMotionPath("scaleY", this.scaleYFrom, this.scaleYTo, this.scaleYBy);
-                _super.prototype._initInstance.call(this, instance);
-            };
-            return Scale;
-        })(gui.AnimateTransform);
-        gui.Scale = Scale;
-        egret.registerClass(Scale,"egret.gui.Scale");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.Sequence
-         * @classdesc
-         * Sequence 效果以子效果的添加顺序依次播放多个子效果。
-         * @extends egret.gui.CompositeEffect
-         */
-        var Sequence = (function (_super) {
-            __extends(Sequence, _super);
-            /**
-             * @method egret.gui.Sequence#constructor
-             */
-            function Sequence(target) {
-                if (target === void 0) { target = null; }
-                _super.call(this, target);
-                this.instanceClass = gui.SequenceInstance;
-            }
-            var d = __define,c=Sequence;p=c.prototype;
-            d(p, "compositeDuration"
-                ,function () {
-                    var sequenceDuration = 0;
-                    for (var i = 0; i < this.children.length; ++i) {
-                        var childDuration;
-                        var child = (this.children[i]);
-                        if (child instanceof gui.CompositeEffect)
-                            childDuration = child.compositeDuration;
-                        else
-                            childDuration = child.duration;
-                        childDuration = childDuration * child.repeatCount + (child.repeatDelay * (child.repeatCount - 1)) + child.startDelay;
-                        sequenceDuration += childDuration;
-                    }
-                    return sequenceDuration;
-                }
-            );
-            return Sequence;
-        })(gui.CompositeEffect);
-        gui.Sequence = Sequence;
-        egret.registerClass(Sequence,"egret.gui.Sequence");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -31029,6 +31029,193 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.PopUpManager
+         * @classdesc
+         * 窗口弹出管理器<p/>
+         * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口
+         */
+        var PopUpManager = (function () {
+            /**
+             * 构造函数
+             * @method egret.gui.PopUpManager#constructor
+             */
+            function PopUpManager() {
+            }
+            var d = __define,c=PopUpManager;p=c.prototype;
+            /**
+             * 获取单例
+             */
+            PopUpManager.getImpl = function () {
+                if (!PopUpManager._impl) {
+                    PopUpManager._impl = new gui.PopUpManagerImpl();
+                }
+                return PopUpManager._impl;
+            };
+            d(PopUpManager, "modalColor"
+                /**
+                 * 模态遮罩的填充颜色
+                 * @member egret.gui.PopUpManager#modalColor
+                 */
+                ,function () {
+                    return PopUpManager.getImpl().modalColor;
+                }
+                ,function (value) {
+                    PopUpManager.getImpl().modalColor = value;
+                }
+            );
+            d(PopUpManager, "modalAlpha"
+                /**
+                 * 模态遮罩的透明度
+                 * @member egret.gui.PopUpManager#modalAlpha
+                 */
+                ,function () {
+                    return PopUpManager.getImpl().modalAlpha;
+                }
+                ,function (value) {
+                    PopUpManager.getImpl().modalAlpha = value;
+                }
+            );
+            /**
+             * 弹出一个窗口。<br/>
+             * @method egret.gui.PopUpManager.addPopUp
+             * @param popUp {IVisualElement} 要弹出的窗口
+             * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
+             * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
+             */
+            PopUpManager.addPopUp = function (popUp, modal, center) {
+                if (modal === void 0) { modal = false; }
+                if (center === void 0) { center = true; }
+                PopUpManager.getImpl().addPopUp(popUp, modal, center);
+                gui.PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(), gui.PopUpEvent.ADD_POPUP, popUp, modal);
+            };
+            /**
+             * 移除由addPopUp()方法弹出的窗口。
+             * @method egret.gui.PopUpManager.removePopUp
+             * @param popUp {IVisualElement} 要移除的窗口
+             */
+            PopUpManager.removePopUp = function (popUp) {
+                PopUpManager.getImpl().removePopUp(popUp);
+                gui.PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(), gui.PopUpEvent.REMOVE_POPUP, popUp);
+            };
+            /**
+             * 将指定窗口居中显示
+             * @method egret.gui.PopUpManager.centerPopUp
+             * @param popUp {IVisualElement} 要居中显示的窗口
+             */
+            PopUpManager.centerPopUp = function (popUp) {
+                PopUpManager.getImpl().centerPopUp(popUp);
+            };
+            /**
+             * 将指定窗口的层级调至最前
+             * @method egret.gui.PopUpManager.bringToFront
+             * @param popUp {IVisualElement} 要最前显示的窗口
+             */
+            PopUpManager.bringToFront = function (popUp) {
+                PopUpManager.getImpl().bringToFront(popUp);
+                gui.PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(), gui.PopUpEvent.BRING_TO_FRONT, popUp);
+            };
+            d(PopUpManager, "popUpList"
+                /**
+                 * 已经弹出的窗口列表
+                 * @member egret.gui.PopUpManager.popUpList
+                 */
+                ,function () {
+                    return PopUpManager.getImpl().popUpList;
+                }
+            );
+            /**
+             * 添加事件监听,参考PopUpEvent定义的常量。
+             * @method egret.gui.PopUpManager.addEventListener
+             * @param type {string}
+             * @param listener {Function}
+             * @param thisObject {any}
+             * @param useCapture {boolean}
+             * @param priority {number}
+             */
+            PopUpManager.addEventListener = function (type, listener, thisObject, useCapture, priority) {
+                if (useCapture === void 0) { useCapture = false; }
+                if (priority === void 0) { priority = 0; }
+                PopUpManager.getImpl().addEventListener(type, listener, thisObject, useCapture, priority);
+            };
+            /**
+             * 移除事件监听,参考PopUpEvent定义的常量。
+             * @method egret.gui.PopUpManager.removeEventListener
+             * @param type {string}
+             * @param listener {Function}
+             * @param thisObject {any}
+             * @param useCapture {boolean}
+             */
+            PopUpManager.removeEventListener = function (type, listener, thisObject, useCapture) {
+                if (useCapture === void 0) { useCapture = false; }
+                PopUpManager.getImpl().removeEventListener(type, listener, thisObject, useCapture);
+            };
+            return PopUpManager;
+        })();
+        gui.PopUpManager = PopUpManager;
+        egret.registerClass(PopUpManager,"egret.gui.PopUpManager");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     var gui;
@@ -31316,193 +31503,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.PopUpManager
-         * @classdesc
-         * 窗口弹出管理器<p/>
-         * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口
-         */
-        var PopUpManager = (function () {
-            /**
-             * 构造函数
-             * @method egret.gui.PopUpManager#constructor
-             */
-            function PopUpManager() {
-            }
-            var d = __define,c=PopUpManager;p=c.prototype;
-            /**
-             * 获取单例
-             */
-            PopUpManager.getImpl = function () {
-                if (!PopUpManager._impl) {
-                    PopUpManager._impl = new gui.PopUpManagerImpl();
-                }
-                return PopUpManager._impl;
-            };
-            d(PopUpManager, "modalColor"
-                /**
-                 * 模态遮罩的填充颜色
-                 * @member egret.gui.PopUpManager#modalColor
-                 */
-                ,function () {
-                    return PopUpManager.getImpl().modalColor;
-                }
-                ,function (value) {
-                    PopUpManager.getImpl().modalColor = value;
-                }
-            );
-            d(PopUpManager, "modalAlpha"
-                /**
-                 * 模态遮罩的透明度
-                 * @member egret.gui.PopUpManager#modalAlpha
-                 */
-                ,function () {
-                    return PopUpManager.getImpl().modalAlpha;
-                }
-                ,function (value) {
-                    PopUpManager.getImpl().modalAlpha = value;
-                }
-            );
-            /**
-             * 弹出一个窗口。<br/>
-             * @method egret.gui.PopUpManager.addPopUp
-             * @param popUp {IVisualElement} 要弹出的窗口
-             * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
-             * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
-             */
-            PopUpManager.addPopUp = function (popUp, modal, center) {
-                if (modal === void 0) { modal = false; }
-                if (center === void 0) { center = true; }
-                PopUpManager.getImpl().addPopUp(popUp, modal, center);
-                gui.PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(), gui.PopUpEvent.ADD_POPUP, popUp, modal);
-            };
-            /**
-             * 移除由addPopUp()方法弹出的窗口。
-             * @method egret.gui.PopUpManager.removePopUp
-             * @param popUp {IVisualElement} 要移除的窗口
-             */
-            PopUpManager.removePopUp = function (popUp) {
-                PopUpManager.getImpl().removePopUp(popUp);
-                gui.PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(), gui.PopUpEvent.REMOVE_POPUP, popUp);
-            };
-            /**
-             * 将指定窗口居中显示
-             * @method egret.gui.PopUpManager.centerPopUp
-             * @param popUp {IVisualElement} 要居中显示的窗口
-             */
-            PopUpManager.centerPopUp = function (popUp) {
-                PopUpManager.getImpl().centerPopUp(popUp);
-            };
-            /**
-             * 将指定窗口的层级调至最前
-             * @method egret.gui.PopUpManager.bringToFront
-             * @param popUp {IVisualElement} 要最前显示的窗口
-             */
-            PopUpManager.bringToFront = function (popUp) {
-                PopUpManager.getImpl().bringToFront(popUp);
-                gui.PopUpEvent.dispatchPopUpEvent(PopUpManager.getImpl(), gui.PopUpEvent.BRING_TO_FRONT, popUp);
-            };
-            d(PopUpManager, "popUpList"
-                /**
-                 * 已经弹出的窗口列表
-                 * @member egret.gui.PopUpManager.popUpList
-                 */
-                ,function () {
-                    return PopUpManager.getImpl().popUpList;
-                }
-            );
-            /**
-             * 添加事件监听,参考PopUpEvent定义的常量。
-             * @method egret.gui.PopUpManager.addEventListener
-             * @param type {string}
-             * @param listener {Function}
-             * @param thisObject {any}
-             * @param useCapture {boolean}
-             * @param priority {number}
-             */
-            PopUpManager.addEventListener = function (type, listener, thisObject, useCapture, priority) {
-                if (useCapture === void 0) { useCapture = false; }
-                if (priority === void 0) { priority = 0; }
-                PopUpManager.getImpl().addEventListener(type, listener, thisObject, useCapture, priority);
-            };
-            /**
-             * 移除事件监听,参考PopUpEvent定义的常量。
-             * @method egret.gui.PopUpManager.removeEventListener
-             * @param type {string}
-             * @param listener {Function}
-             * @param thisObject {any}
-             * @param useCapture {boolean}
-             */
-            PopUpManager.removeEventListener = function (type, listener, thisObject, useCapture) {
-                if (useCapture === void 0) { useCapture = false; }
-                PopUpManager.getImpl().removeEventListener(type, listener, thisObject, useCapture);
-            };
-            return PopUpManager;
-        })();
-        gui.PopUpManager = PopUpManager;
-        egret.registerClass(PopUpManager,"egret.gui.PopUpManager");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     var gui;
@@ -31708,30 +31708,6 @@ var egret;
         egret.registerClass(AddItems,"egret.gui.AddItems");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        var InterruptionBehavior = (function () {
-            function InterruptionBehavior() {
-            }
-            var d = __define,c=InterruptionBehavior;p=c.prototype;
-            /**
-             * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前结束另一个过渡。
-             * 通过对过渡中的所有效果调用 end() 方法来结束过渡。end() 方法导致所有效果到达结束状态。
-             */
-            InterruptionBehavior.END = "end";
-            /**
-             * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前停止正在进行的其它过渡。
-             * 通过对过渡中的所有效果调用 stop() 方法来停止过渡。
-             */
-            InterruptionBehavior.STOP = "stop";
-            return InterruptionBehavior;
-        })();
-        gui.InterruptionBehavior = InterruptionBehavior;
-        egret.registerClass(InterruptionBehavior,"egret.gui.InterruptionBehavior");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -31760,6 +31736,30 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        var InterruptionBehavior = (function () {
+            function InterruptionBehavior() {
+            }
+            var d = __define,c=InterruptionBehavior;p=c.prototype;
+            /**
+             * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前结束另一个过渡。
+             * 通过对过渡中的所有效果调用 end() 方法来结束过渡。end() 方法导致所有效果到达结束状态。
+             */
+            InterruptionBehavior.END = "end";
+            /**
+             * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前停止正在进行的其它过渡。
+             * 通过对过渡中的所有效果调用 stop() 方法来停止过渡。
+             */
+            InterruptionBehavior.STOP = "stop";
+            return InterruptionBehavior;
+        })();
+        gui.InterruptionBehavior = InterruptionBehavior;
+        egret.registerClass(InterruptionBehavior,"egret.gui.InterruptionBehavior");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -32160,14 +32160,14 @@ var egret;
         /**
          * @language en_US
          * Injector
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @private
          */
         /**
          * @language zh_CN
          * 注入器
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @private
          */
@@ -32204,7 +32204,7 @@ var egret;
              * @param clazz {any} Class definition or fully qualified name of the class
              * @param named {string} Optional. If this value is set when calling mapClass () mapping, the same character string needs to be import ed in order to obtain the corresponding singleton
              * @returns {any} Get a singleton mapped by the specified class
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -32213,7 +32213,7 @@ var egret;
              * @param clazz {any} 类定义或类的完全限定名
              * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
              * @returns {any} 获取指定类映射的单例
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.getInstance = function (clazz, named) {
@@ -32238,60 +32238,6 @@ var egret;
          * Resource单例
          */
         var instance = new Adapter();
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        var rectangleCache = {};
-        /**
-         * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
-         * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
-         * @param value {string} 以字符串形式表示Rectangle构造函数的四个参数:x，y，width，height。例如："7,7,46,46"。
-         * @returns {string} 字符串对应的Rectangle实例。
-         */
-        function getScale9Grid(value) {
-            if (rectangleCache[value]) {
-                return rectangleCache[value];
-            }
-            if (!value) {
-                return null;
-            }
-            var arr = value.split(",");
-            var rect = new egret.Rectangle(parseInt(arr[0]), parseInt(arr[1]), parseInt(arr[2]), parseInt(arr[3]));
-            rectangleCache[value] = rect;
-            return rect;
-        }
-        gui.getScale9Grid = getScale9Grid;
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -32378,6 +32324,60 @@ var egret;
         })();
         gui.LayoutUtil = LayoutUtil;
         egret.registerClass(LayoutUtil,"egret.gui.LayoutUtil");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        var rectangleCache = {};
+        /**
+         * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
+         * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
+         * @param value {string} 以字符串形式表示Rectangle构造函数的四个参数:x，y，width，height。例如："7,7,46,46"。
+         * @returns {string} 字符串对应的Rectangle实例。
+         */
+        function getScale9Grid(value) {
+            if (rectangleCache[value]) {
+                return rectangleCache[value];
+            }
+            if (!value) {
+                return null;
+            }
+            var arr = value.split(",");
+            var rect = new egret.Rectangle(parseInt(arr[0]), parseInt(arr[1]), parseInt(arr[2]), parseInt(arr[3]));
+            rectangleCache[value] = rect;
+            return rect;
+        }
+        gui.getScale9Grid = getScale9Grid;
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

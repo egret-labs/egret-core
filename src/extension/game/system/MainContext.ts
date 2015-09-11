@@ -35,13 +35,13 @@ module egret {
      * MainContext是游戏的核心跨平台接口，组合了多个功能Context，并是游戏启动的主入口
      * @extends egret.EventDispatcher
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class MainContext extends EventDispatcher {
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor() {
@@ -51,7 +51,7 @@ module egret {
         /**
          * 渲染Context
          * @member egret.MainContext#rendererContext
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         //public rendererContext:RendererContext = null;
@@ -59,7 +59,7 @@ module egret {
         /**
          * 触摸Context
          * @member egret.MainContext#touchContext
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         //public touchContext:TouchContext = null;
@@ -67,7 +67,7 @@ module egret {
         /**
          * 网络Context
          * @member egret.MainContext#netContext
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         //public netContext:NetContext = null;
@@ -75,7 +75,7 @@ module egret {
         /**
          * 设备divice
          * @member egret.MainContext#deviceContext
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         //public deviceContext:DeviceContext = null;
@@ -83,7 +83,7 @@ module egret {
         /**
          * 舞台
          * @member egret.MainContext#stage
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get stage():Stage {
@@ -91,34 +91,34 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static deviceType:string = null;
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static DEVICE_PC:string = "web";
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static DEVICE_MOBILE:string = "native";
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static runtimeType:string;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static RUNTIME_HTML5:string = "runtimeHtml5";
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static RUNTIME_NATIVE:string = "runtimeNative";
@@ -128,7 +128,7 @@ module egret {
         /**
          * 游戏启动，开启主循环，参考Flash的滑动跑道模型
          * @method egret.MainContext#run
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public run() {
@@ -142,7 +142,7 @@ module egret {
         /**
          * @method egret.Ticker.getInstance
          * @returns {Ticker}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static get instance():egret.MainContext {

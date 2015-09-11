@@ -71,14 +71,14 @@ module egret {
     /**
      * @language en_US
      * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/BitmapText.ts
      */
     /**
      * @language zh_CN
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/BitmapText.ts
      */
@@ -87,13 +87,13 @@ module egret {
         /**
          * @language en_US
          * Create an egret.BitmapText object
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.BitmapText 对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor() {
@@ -121,13 +121,13 @@ module egret {
         /**
          * @language en_US
          * A string to display in the text field.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要显示的文本内容
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get text():string {
@@ -209,14 +209,14 @@ module egret {
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
          * @default "sans-serif"
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要使用的字体的名称或用逗号分隔的字体名称列表。
          * @default "sans-serif"
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get font():BitmapFont {
@@ -245,14 +245,14 @@ module egret {
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个整数，表示行与行之间的垂直间距量
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get lineSpacing():number {
@@ -278,14 +278,14 @@ module egret {
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个整数，表示行与行之间的垂直间距量
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get letterSpacing():number {
@@ -308,7 +308,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static EMPTY_FACTOR:number = 0.33;

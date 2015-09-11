@@ -3,19 +3,19 @@ declare module egret {
      * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
      * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween and Ease
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
      * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     class Ease {
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor();
@@ -23,7 +23,7 @@ declare module egret {
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static get(amount: any): Function;
@@ -31,7 +31,7 @@ declare module egret {
          *
          * @param pow
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getPowIn(pow: any): Function;
@@ -39,7 +39,7 @@ declare module egret {
          *
          * @param pow
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getPowOut(pow: any): Function;
@@ -47,67 +47,67 @@ declare module egret {
          *
          * @param pow
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getPowInOut(pow: any): Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quadIn: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quadOut: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quadInOut: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static cubicIn: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static cubicOut: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static cubicInOut: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quartIn: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quartOut: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quartInOut: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quintIn: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quintOut: Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static quintInOut: Function;
@@ -115,7 +115,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static sineIn(t: any): number;
@@ -123,7 +123,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static sineOut(t: any): number;
@@ -131,7 +131,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static sineInOut(t: any): number;
@@ -139,12 +139,12 @@ declare module egret {
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getBackIn(amount: any): Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static backIn: Function;
@@ -152,12 +152,12 @@ declare module egret {
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getBackOut(amount: any): Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static backOut: Function;
@@ -165,12 +165,12 @@ declare module egret {
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getBackInOut(amount: any): Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static backInOut: Function;
@@ -178,7 +178,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static circIn(t: any): number;
@@ -186,7 +186,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static circOut(t: any): number;
@@ -194,7 +194,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static circInOut(t: any): number;
@@ -202,7 +202,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static bounceIn(t: any): number;
@@ -210,7 +210,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static bounceOut(t: any): number;
@@ -218,7 +218,7 @@ declare module egret {
          *
          * @param t
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static bounceInOut(t: any): number;
@@ -227,12 +227,12 @@ declare module egret {
          * @param amplitude
          * @param period
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getElasticIn(amplitude: any, period: any): Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static elasticIn: Function;
@@ -241,12 +241,12 @@ declare module egret {
          * @param amplitude
          * @param period
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getElasticOut(amplitude: any, period: any): Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static elasticOut: Function;
@@ -255,12 +255,12 @@ declare module egret {
          * @param amplitude
          * @param period
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static getElasticInOut(amplitude: any, period: any): Function;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static elasticInOut: Function;
@@ -271,7 +271,7 @@ declare module egret {
      * @language en_US
      * Tween is the animation easing class of Egret
      * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween缓动动画
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/Tween.ts
      */
@@ -279,7 +279,7 @@ declare module egret {
      * @language zh_CN
      * Tween是Egret的动画缓动类
      * @see http://docs.egret-labs.org/post/manual/anim/tween.html Tween ease animation
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/Tween.ts
      */
@@ -389,7 +389,7 @@ declare module egret {
          * @param props {any} Parameters, support loop onChange onChangeObj
          * @param pluginData {any} Write realized
          * @param override {boolean} Whether to remove the object before adding a tween, the default value false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -399,7 +399,7 @@ declare module egret {
          * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
          * @param pluginData {any} 暂未实现
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static get(target: any, props?: any, pluginData?: any, override?: boolean): Tween;
@@ -407,14 +407,14 @@ declare module egret {
          * @language en_US
          * Delete all Tween animations from an object
          * @param target The object whose Tween to be deleted
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 删除一个对象上的全部 Tween 动画
          * @param target  需要移除 Tween 的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static removeTweens(target: any): void;
@@ -422,14 +422,14 @@ declare module egret {
          * @language en_US
          * Pause all Tween animations of a certain object
          * @param target The object whose Tween to be paused
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 暂停某个对象的所有 Tween
          * @param target 要暂停 Tween 的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static pauseTweens(target: any): void;
@@ -437,14 +437,14 @@ declare module egret {
          * @language en_US
          * Resume playing all easing of a certain object
          * @param target The object whose Tween to be resumed
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 继续播放某个对象的所有缓动
          * @param target 要继续播放 Tween 的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static resumeTweens(target: any): void;
@@ -466,20 +466,20 @@ declare module egret {
         /**
          * @language en_US
          * Delete all Tween
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 删除所有 Tween
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         static removeAllTweens(): void;
         /**
          * 创建一个 egret.Tween 对象
          * @private
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(target: any, props: any, pluginData: any);
@@ -519,7 +519,7 @@ declare module egret {
          * Whether setting is paused
          * @param value {boolean} Whether to pause
          * @returns Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -527,7 +527,7 @@ declare module egret {
          * 设置是否暂停
          * @param value {boolean} 是否暂停
          * @returns Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         setPaused(value: boolean): Tween;
@@ -572,7 +572,7 @@ declare module egret {
          * @param duration {number} Waiting time, in milliseconds
          * @param passive {boolean} Whether properties are updated during the waiting time
          * @returns Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -581,7 +581,7 @@ declare module egret {
          * @param duration {number} 要等待的时间，以毫秒为单位
          * @param passive {boolean} 等待期间属性是否会更新
          * @returns Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         wait(duration: number, passive?: boolean): Tween;
@@ -592,7 +592,7 @@ declare module egret {
          * @param duration {number} Duration
          * @param ease {egret.Ease} Easing algorithm
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -602,7 +602,7 @@ declare module egret {
          * @param duration {number} 持续时间
          * @param ease {egret.Ease} 缓动算法
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         to(props: any, duration?: number, ease?: Function): Tween;
@@ -613,7 +613,7 @@ declare module egret {
          * @param thisObj {any} this action scope of the callback method
          * @param params {Array<any>} Parameter of the callback method
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -623,7 +623,7 @@ declare module egret {
          * @param thisObj {any} 回调方法this作用域
          * @param params {Array<any>} 回调方法参数
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         call(callback: Function, thisObj?: any, params?: Array<any>): Tween;
@@ -632,7 +632,7 @@ declare module egret {
          * @param props
          * @param target
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         set(props: any, target?: any): Tween;
@@ -641,7 +641,7 @@ declare module egret {
          * Execute
          * @param tween {egret.Tween} The Tween object to be operated. Default: this
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -649,7 +649,7 @@ declare module egret {
          * 执行
          * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         play(tween?: Tween): Tween;
@@ -658,7 +658,7 @@ declare module egret {
          * Pause
          * @param tween {egret.Tween} The Tween object to be operated. Default: this
          * @returns {egret.Tween} Tween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -666,7 +666,7 @@ declare module egret {
          * 暂停
          * @param tween {egret.Tween} 需要操作的 Tween 对象，默认this
          * @returns {egret.Tween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         pause(tween?: Tween): Tween;
@@ -674,7 +674,7 @@ declare module egret {
          * @method egret.Tween#tick
          * @param delta {number}
          * @private
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         tick(delta: number): void;

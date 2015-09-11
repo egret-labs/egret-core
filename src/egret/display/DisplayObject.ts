@@ -173,7 +173,7 @@ module egret {
      * @event egret.TouchEvent.TOUCH_END Dispatched when the user removes contact with a touch-enabled device (such as lifts a finger off a mobile phone or tablet with a touch screen).
      * @event egret.TouchEvent.TOUCH_TAP Dispatched when the user lifts the point of contact over the same DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
      * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE Dispatched when the user lifts the point of contact over the different DisplayObject instance on which the contact was initiated on a touch-enabled device (such as presses and releases a finger from a single point over a display object on a mobile phone or tablet with a touch screen).
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
      */
@@ -198,7 +198,7 @@ module egret {
      * @event egret.TouchEvent.TOUCH_END 当用户移除与启用触摸的设备的接触时（例如，将手指从配有触摸屏的移动电话或平板电脑上抬起）调度。
      * @event egret.TouchEvent.TOUCH_TAP 当用户在启用触摸设备上的已启动接触的同一 DisplayObject 实例上抬起接触点时（例如，在配有触摸屏的移动电话或平板电脑的显示对象上的某一点处按下并释放手指）调度。
      * @event egret.TouchEvent.TOUCH_RELEASE_OUTSIDE 当用户在启用触摸设备上的已启动接触的不同 DisplayObject 实例上抬起接触点时（例如，在配有触摸屏的移动电话或平板电脑的显示对象上的某一点处按下并释放手指）调度。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/DisplayObject.ts
      */
@@ -207,13 +207,13 @@ module egret {
         /**
          * @language en_US
          * Initializes a DisplayObject object
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个显示对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor() {
@@ -351,14 +351,14 @@ module egret {
          * @language en_US
          * Indicates the instance name of the DisplayObject. The object can be identified in the child list of its parent
          * display object container by calling the getChildByName() method of the display object container.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示 DisplayObject 的实例名称。
          * 通过调用父显示对象容器的 getChildByName() 方法，可以在父显示对象容器的子列表中标识该对象。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get name():string {
@@ -378,14 +378,14 @@ module egret {
          * @language en_US
          * Indicates the DisplayObjectContainer object that contains this display object. Use the parent property to specify
          * a relative path to display objects that are above the current display object in the display list hierarchy.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示包含此显示对象的 DisplayObjectContainer 对象。
          * 使用 parent 属性可以指定高于显示列表层次结构中当前显示对象的显示对象的相对路径。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get parent():DisplayObjectContainer {
@@ -439,7 +439,7 @@ module egret {
          * The Stage of the display object. you can create and load multiple display objects into the display list, and
          * the stage property of each display object refers to the same Stage object.<br/>
          * If a display object is not added to the display list, its stage property is set to null.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -447,7 +447,7 @@ module egret {
          * 显示对象的舞台。
          * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指相同的 Stage 对象。<br/>
          * 如果显示对象未添加到显示列表，则其 stage 属性会设置为 null。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get stage():Stage {
@@ -465,7 +465,7 @@ module egret {
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -478,7 +478,7 @@ module egret {
          *     myMatrix.tx += 10;
          *     myDisplayObject.matrix = myMatrix;
          * </pre>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get matrix():Matrix {
@@ -585,7 +585,7 @@ module egret {
          * rotated 90° counterclockwise, the DisplayObjectContainer's children inherit a coordinate system that is
          * rotated 90° counterclockwise. The object's coordinates refer to the registration point position.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -594,7 +594,7 @@ module egret {
          * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。
          * 因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get x():number {
@@ -637,7 +637,7 @@ module egret {
          * 90° counterclockwise, the DisplayObjectContainer's children inherit a coordinate system that is rotated 90°
          * counterclockwise. The object's coordinates refer to the registration point position.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -646,7 +646,7 @@ module egret {
          * 如果该对象位于具有变形的 DisplayObjectContainer 内，则它也位于包含 DisplayObjectContainer 的本地坐标系中。
          * 因此，对于逆时针旋转 90 度的 DisplayObjectContainer，该 DisplayObjectContainer 的子级将继承逆时针旋转 90 度的坐标系。
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get y():number {
@@ -687,7 +687,7 @@ module egret {
          * The default 1.0 equals 100% scale.Scaling the local coordinate system changes the x and y property values, which are
          * defined in whole pixels.
          * @default 1
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -695,7 +695,7 @@ module egret {
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。<br/>
          * 1.0 等于 100% 缩放。缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
          * @default 1
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get scaleX():number {
@@ -736,7 +736,7 @@ module egret {
          * 1.0 is 100% scale.Scaling the local coordinate system changes the x and y property values, which are defined
          * in whole pixels.
          * @default 1
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -744,7 +744,7 @@ module egret {
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。1.0 是 100% 缩放。
          * 缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
          * @default 1
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get scaleY():number {
@@ -785,7 +785,7 @@ module egret {
          * this range are added to or subtracted from 360 to obtain a value within the range. For example, the statement
          * myDisplayObject.rotation = 450 is the same as myDisplayObject.rotation = 90.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -794,7 +794,7 @@ module egret {
          * 从 0 到 180 的值表示顺时针方向旋转；从 0 到 -180 的值表示逆时针方向旋转。对于此范围之外的值，可以通过加上或
          * 减去 360 获得该范围内的值。例如，myDisplayObject.rotation = 450语句与 myDisplayObject.rotation = 90 是相同的。
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get rotation():number {
@@ -835,7 +835,7 @@ module egret {
          * 表示DisplayObject的x方向斜切
          * @member {number} egret.DisplayObject#skewX
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get skewX():number {
@@ -871,7 +871,7 @@ module egret {
          * 表示DisplayObject的y方向斜切
          * @member {number} egret.DisplayObject#skewY
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get skewY():number {
@@ -907,13 +907,13 @@ module egret {
          * @language en_US
          * Indicates the width of the display object, in pixels. The width is calculated based on the bounds of the content
          * of the display object. When you set the width property, the scaleX property is adjusted accordingly.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示显示对象的宽度，以像素为单位。宽度是根据显示对象内容的范围来计算的。如果您设置了 width 属性，则 scaleX 属性会相应调整.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get width():number {
@@ -977,13 +977,13 @@ module egret {
          * @language en_US
          * Indicates the height of the display object, in pixels. The height is calculated based on the bounds of the
          * content of the display object. When you set the height property, the scaleY property is adjusted accordingly.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示显示对象的高度，以像素为单位。高度是根据显示对象内容的范围来计算的。如果您设置了 height 属性，则 scaleY 属性会相应调整。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get height():number {
@@ -1048,7 +1048,7 @@ module egret {
          * 测量宽度
          * @returns {number}
          * @member {egret.Rectangle} egret.DisplayObject#measuredWidth
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get measuredWidth():number {
@@ -1059,7 +1059,7 @@ module egret {
          * 测量高度
          * @returns {number}
          * @member {egret.Rectangle} egret.DisplayObject#measuredWidth
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get measuredHeight():number {
@@ -1070,14 +1070,14 @@ module egret {
          * @language en_US
          * X represents the object of which is the anchor.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示从对象绝对锚点X。
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get anchorOffsetX():number {
@@ -1108,14 +1108,14 @@ module egret {
          * @language en_US
          * Y represents the object of which is the anchor.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示从对象绝对锚点Y。
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get anchorOffsetY():number {
@@ -1152,14 +1152,14 @@ module egret {
          * Whether or not the display object is visible. Display objects that are not visible are disabled. For example,
          * if visible=false for an DisplayObject instance, it cannot receive touch or other user input.
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 显示对象是否可见。不可见的显示对象将被禁用。例如，如果实例的 visible 为 false，则无法接受触摸或用户交互操作。
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get visible():boolean {
@@ -1196,7 +1196,7 @@ module egret {
          * property is best used with display objects that have mostly static content and that do not scale and rotate frequently.<br/>
          * Note: The display object will not create the bitmap caching when the memory exceeds the upper limit,even if you set it to true.
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1206,7 +1206,7 @@ module egret {
          * 具体取决于显示对象内容的复杂性。最好将 cacheAsBitmap 属性与主要具有静态内容且不频繁缩放或旋转的显示对象一起使用。<br/>
          * 注意：在内存超过上限的情况下，即使将 cacheAsBitmap 属性设置为 true，显示对象也不使用位图缓存。
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get cacheAsBitmap():boolean {
@@ -1261,7 +1261,7 @@ module egret {
          * Indicates the alpha transparency value of the object specified. Valid values are 0 (fully transparent) to 1 (fully opaque).
          * The default value is 1. Display objects with alpha set to 0 are active, even though they are invisible.
          * @default 1
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1269,7 +1269,7 @@ module egret {
          * 表示指定对象的 Alpha 透明度值。
          * 有效值为 0（完全透明）到 1（完全不透明）。alpha 设置为 0 的显示对象是可触摸的，即使它们不可见。
          * @default 1
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get alpha():number {
@@ -1325,7 +1325,7 @@ module egret {
          * an object on the display list, use DisplayObjectContainer.touchChildren.
          * @see egret.DisplayObjectContainer#touchChildren
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1335,7 +1335,7 @@ module egret {
          * 何子级都不会受到影响。要更改显示列表上对象的所有子级的 touchEnabled 行为，请使用 DisplayObjectContainer.touchChildren。
          * @see egret.DisplayObjectContainer#touchChildren
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get touchEnabled():boolean {
@@ -1388,7 +1388,7 @@ module egret {
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;
          * </pre>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1404,7 +1404,7 @@ module egret {
          *     myRectangle.x += 10;
          *     myDisplayObject.scrollRect = myRectangle;//设置完scrollRect的x、y、width、height值之后，一定要对myDisplayObject重新赋值scrollRect，不然会出问题。
          * </pre>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get scrollRect():Rectangle {
@@ -1450,7 +1450,7 @@ module egret {
          * If you attempt to set this property to an invalid value, Egret runtime set the value to BlendMode.NORMAL.
          * @default egret.BlendMode.NORMAL
          * @see egret.BlendMode
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1459,7 +1459,7 @@ module egret {
          * 如果尝试将此属性设置为无效值，则运行时会将此值设置为 BlendMode.NORMAL。
          * @default egret.BlendMode.NORMAL
          * @see egret.BlendMode
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get blendMode():string {
@@ -1499,7 +1499,7 @@ module egret {
          * able to drag a mask Sprite object , it must be on the display list.<br/>
          * Note: A single mask object cannot be used to mask more than one calling display object. When the mask is assigned
          * to a second display object, it is removed as the mask of the first object, and that object's mask property becomes null.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1517,7 +1517,7 @@ module egret {
          *     myMask.x += 10;
          *     myDisplayObject.mask = myMask;//设置完 mask 的x、y、width、height值之后，一定要对myDisplayObject重新赋值 mask，不然会出问题。
          * </pre>
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get mask():DisplayObject|Rectangle {
@@ -1579,7 +1579,7 @@ module egret {
          * @param resultRect A reusable instance of Rectangle for saving the results. Passing this parameter can reduce the number of reallocate objects
          *, which allows you to get better code execution performance..
          * @returns The rectangle that defines the area of the display object relative to the targetCoordinateSpace object's coordinate system.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1588,7 +1588,7 @@ module egret {
          * @param targetCoordinateSpace 定义要使用的坐标系的显示对象。
          * @param resultRect 一个用于存储结果的可复用Rectangle实例，传入此参数能够减少内部创建对象的次数，从而获得更高的运行性能。
          * @returns 定义与 targetCoordinateSpace 对象坐标系统相关的显示对象面积的矩形。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getTransformedBounds(targetCoordinateSpace:DisplayObject, resultRect?:Rectangle):Rectangle {
@@ -1602,7 +1602,7 @@ module egret {
          * @param resultRect {Rectangle} Optional. It is used to import Rectangle object for saving results, preventing duplicate object creation.
          * @param calculateAnchor {boolean} Optional. It is used to determine whether to calculate anchor point.
          * @returns {Rectangle}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1611,7 +1611,7 @@ module egret {
          * @param resultRect {Rectangle} 可选参数，传入用于保存结果的Rectangle对象，避免重复创建对象。
          * @param calculateAnchor {boolean} 可选参数，是否会计算锚点。
          * @returns {Rectangle}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getBounds(resultRect?:Rectangle, calculateAnchor:boolean = true):egret.Rectangle {
@@ -1659,7 +1659,7 @@ module egret {
          * @param resultPoint A reusable instance of Point for saving the results. Passing this parameter can reduce the
          * number of reallocate objects, which allows you to get better code execution performance.
          * @returns A Point object with coordinates relative to the display object.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1669,7 +1669,7 @@ module egret {
          * @param stageY 舞台坐标y
          * @param resultPoint 一个用于存储结果的可复用 Point 实例，传入此参数能够减少内部创建对象的次数，从而获得更高的运行性能。
          * @returns 具有相对于显示对象的坐标的 Point 对象。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public globalToLocal(stageX:number = 0, stageY:number = 0, resultPoint?:Point):Point {
@@ -1685,7 +1685,7 @@ module egret {
          * @param resultPoint A reusable instance of Point for saving the results. Passing this parameter can reduce the
          * number of reallocate objects, which allows you to get better code execution performance.
          * @returns  A Point object with coordinates relative to the Stage.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1695,7 +1695,7 @@ module egret {
          * @param localY 本地坐标 y
          * @param resultPoint 一个用于存储结果的可复用 Point 实例，传入此参数能够减少内部创建对象的次数，从而获得更高的运行性能。
          * @returns 一个具有相对于舞台坐标的 Point 对象。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public localToGlobal(localX:number = 0, localY:number = 0, resultPoint?:Point):Point {
@@ -1921,7 +1921,7 @@ module egret {
          * @param y {number}  y coordinate of the object to be tested.
          * @param shapeFlag {boolean} Whether to check the actual pixel of object (true) or check that of border (false).
          * @returns {boolean} If display object overlaps or crosses with the specified point, it is true; otherwise, it is false.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -1932,7 +1932,7 @@ module egret {
          * @param y {number}  要测试的此对象的 y 坐标。
          * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
@@ -1964,7 +1964,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeEventListener(type:string, listener:Function, thisObject:any, useCapture?:boolean):void {
@@ -1981,7 +1981,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public dispatchEvent(event:Event):boolean {
@@ -2046,7 +2046,7 @@ module egret {
 
         /**
          * @inheritDoc
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public willTrigger(type:string):boolean {

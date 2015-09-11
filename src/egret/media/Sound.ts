@@ -108,14 +108,14 @@ module egret {
          * @language en_US
          * Type, default is egret.Sound.EFFECT.
          * In the native and runtime environment, while only play a background music, sound length so as not to be too long.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 类型，默认为 egret.Sound.EFFECT。
          * 在 native 和 runtime 环境下，背景音乐同时只能播放一个，音效长度尽量不要太长。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
          type:string;
@@ -146,13 +146,13 @@ module egret {
         /**
          * @language en_US
          * Background music
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 背景音乐
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
          MUSIC:string;
@@ -160,13 +160,13 @@ module egret {
         /**
          * @language en_US
          * EFFECT
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 音效
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
          EFFECT:string;

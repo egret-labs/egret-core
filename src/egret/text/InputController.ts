@@ -29,7 +29,7 @@
 module egret {
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class InputController extends HashObject {
@@ -48,7 +48,7 @@ module egret {
          */
         private _isFocus:boolean = false;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public constructor() {
@@ -58,7 +58,7 @@ module egret {
         /**
          * 
          * @param text 
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public init(text:TextField):void {

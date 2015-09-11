@@ -284,26 +284,26 @@ var egret;
             /**
              * @language en_US
              * Background music
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 背景音乐
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             HtmlSound.MUSIC = "music";
             /**
              * @language en_US
              * EFFECT
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 音效
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             HtmlSound.EFFECT = "effect";
@@ -556,26 +556,26 @@ var egret;
             /**
              * @language en_US
              * Background music
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 背景音乐
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             QQSound.MUSIC = "music";
             /**
              * @language en_US
              * EFFECT
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 音效
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             QQSound.EFFECT = "effect";
@@ -897,26 +897,26 @@ var egret;
             /**
              * @language en_US
              * Background music
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 背景音乐
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             WebAudioSound.MUSIC = "music";
             /**
              * @language en_US
              * EFFECT
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 音效
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             WebAudioSound.EFFECT = "effect";
@@ -4148,7 +4148,7 @@ var egret;
             d(WebGeolocation, "isSupport"
                 /**
                  * @inheritDoc
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -4182,7 +4182,7 @@ var egret;
             };
             /**
              * @inheritDoc
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.addEventListener = function (type, listener, thisObject, useCapture, priority) {
@@ -4193,7 +4193,7 @@ var egret;
             };
             /**
              * @inheritDoc
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.removeEventListener = function (type, listener, thisObject, useCapture) {
@@ -4251,7 +4251,7 @@ var egret;
             d(WebMotion, "isSupport"
                 /**
                  * @inheritDoc
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -4261,7 +4261,7 @@ var egret;
             );
             /**
              * @inheritDoc
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.addEventListener = function (type, listener, thisObject, useCapture, priority) {
@@ -4272,7 +4272,7 @@ var egret;
             };
             /**
              * @inheritDoc
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.removeEventListener = function (type, listener, thisObject, useCapture) {

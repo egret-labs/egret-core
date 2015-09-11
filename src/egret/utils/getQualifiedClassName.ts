@@ -39,7 +39,7 @@ module egret {
      * <pre>
      *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
      * </pre>
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getQualifiedClassName.ts
      */
@@ -53,7 +53,7 @@ module egret {
      * <pre>
      *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
      * </pre>
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/getQualifiedClassName.ts
      */

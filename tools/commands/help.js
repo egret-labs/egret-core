@@ -4,7 +4,7 @@ var Help = (function () {
     function Help() {
     }
     Help.prototype.execute = function () {
-        utils.open("https://github.com/egret-labs/Lark/blob/master/docs/cmd-tools.md");
+        utils.open("http://edn.egret.com/cn/index.php/article/index/id/301");
         return DontExitCode;
     };
     return Help;

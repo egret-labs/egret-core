@@ -37,7 +37,7 @@ module egret {
      * @event egret.Event.CLOSE Dispatched when the server closes the connection.
      * @event egret.ProgressEvent Dispatched when an IO error causes a send or load operation to fail.
      * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
      */
@@ -51,7 +51,7 @@ module egret {
      * @event egret.Event.CLOSE 在服务器关闭连接时调度。
      * @event egret.ProgressEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
      * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/socket/WebSocket.ts
      */
@@ -59,26 +59,26 @@ module egret {
         /**
          * @language en_US
          * Send and receive data in character string format
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 以字符串格式发送和接收数据
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static TYPE_STRING:string = "webSocketTypeString";
         /**
          * @language en_US
          * Send and receive data in binary format
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 以二进制格式发送和接收数据
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static TYPE_BINARY:string = "webSocketTypeBinary";
@@ -106,14 +106,14 @@ module egret {
          * @language en_US
          * Create an egret.WebSocket object
          * This parameter is reserved for later versions. The connection address and port number are imported in the connect function
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.WebSocket 对象
          * 参数为预留参数，现版本暂不处理，连接地址和端口号在 connect 函数中传入
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(host:string = "", port:number = 0) {
@@ -131,7 +131,7 @@ module egret {
          * Connect the socket to the specified host and port number
          * @param host Name or IP address of the host to be connected
          * @param port Port number to be connected
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -139,7 +139,7 @@ module egret {
          * 将套接字连接到指定的主机和端口
          * @param host 要连接到的主机的名称或 IP 地址
          * @param port 要连接到的端口号
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public connect(host:string, port:number):void {
@@ -157,13 +157,13 @@ module egret {
         /**
          * @language en_US
          * Closesocket
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 关闭套接字
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public close():void {
@@ -214,13 +214,13 @@ module egret {
         /**
          * @language en_US
          * Refresh all data accumulated in the output buffer area of the socket
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 对套接字输出缓冲区中积累的所有数据进行刷新
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public flush():void {
@@ -249,14 +249,14 @@ module egret {
          * @language en_US
          * Write data in character string in the socket
          * @param message The character string to be written in the socket
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 将字符串数据写入套接字
          * @param message 要写入套接字的字符串
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public writeUTF(message:string):void {
@@ -285,14 +285,14 @@ module egret {
          * @language en_US
          * Read a UTF-8 character string from the socket
          * @returns {string}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 从套接字读取一个 UTF-8 字符串
          * @returns {string}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public readUTF():string {
@@ -330,7 +330,7 @@ module egret {
          * @param bytes The ByteArray object where data is read from
          * @param offset Zero-based offset in the ByteArray object. From here start performing data writing
          * @param length Number of bytes to be written Default value 0 indicates data is written in the entire buffer area from the value specified by the offset parameter
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -341,7 +341,7 @@ module egret {
          * @param bytes 要从中读取数据的 ByteArray 对象
          * @param offset ByteArray 对象中从零开始的偏移量，应由此开始执行数据写入
          * @param length 要写入的字节数。默认值 0 导致从 offset 参数指定的值开始写入整个缓冲区
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public writeBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
@@ -364,7 +364,7 @@ module egret {
          * @param bytes The ByteArray object that data is read into
          * @param offset The offset for data reading starts from this byte array
          * @param length Byte number to be read Default value 0 indicates reading all available data
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -373,7 +373,7 @@ module egret {
          * @param bytes 要将数据读入的 ByteArray 对象
          * @param offset 数据读取的偏移量应从该字节数组中开始
          * @param length 要读取的字节数。默认值 0 导致读取所有可用的数据
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public readBytes(bytes:ByteArray, offset:number = 0, length:number = 0):void {
@@ -389,13 +389,13 @@ module egret {
         /**
          * @language en_US
          * Indicates whether the Socket object is connected currently
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 表示此 Socket 对象目前是否已连接
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get connected():boolean {
@@ -410,13 +410,13 @@ module egret {
         /**
          * @language en_US
          * Format for sending and receiving data. The default setting is the character string format
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 发送和接收数据的格式，默认是字符串格式
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get type():string {

@@ -43,13 +43,13 @@ module egret.gui {
         /**
          * @language en_US
          * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public scrollBeginThreshold:number = 10;
@@ -59,14 +59,14 @@ module egret.gui {
          * @language en_US
          * Scrolling speed, the speed is required and the default speed ratio.
          * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 滚动速度，这个值为需要的速度与默认速度的比值。
          * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public scrollSpeed:number = 1;
@@ -76,13 +76,13 @@ module egret.gui {
          * @language en_US
          * Whether to enable rebound, rebound When enabled, ScrollerView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          */
         /**
          * @language zh_CN
          * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          */
         public get bounces(): boolean {
             return this._ScrV_Props_._bounces;
@@ -96,14 +96,14 @@ module egret.gui {
          * @language en_US
          * Create a egret.ScrollerView objects
          * @param content {egret.DisplayObject} You need to scroll object
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.ScrollerView 对象
          * @param content {egret.DisplayObject} 需要滚动的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(content:DisplayObject = null) {
@@ -124,14 +124,14 @@ module egret.gui {
          * @language en_US
          * Set to scroll object
          * @param content {egret.DisplayObject} You need to scroll object
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置需要滚动的对象
          * @param content {egret.DisplayObject} 需要滚动的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public setContent(content:DisplayObject):void {
@@ -148,13 +148,13 @@ module egret.gui {
         /**
          * @language en_US
          * Remove rolling objects
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 移除滚动的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeContent():void {
@@ -168,13 +168,13 @@ module egret.gui {
         /**
          * @language en_US
          * Vertical scroll bar display policy, on / off / auto.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 垂直滚动条显示策略，on/off/auto。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get verticalScrollPolicy():string {
@@ -191,13 +191,13 @@ module egret.gui {
         /**
          * @language en_US
          * The horizontal scroll bar display policy, on / off / auto.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 水平滚动条显示策略，on/off/auto。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get horizontalScrollPolicy():string {
@@ -214,14 +214,14 @@ module egret.gui {
          * @language en_US
          * Gets or sets the horizontal scroll position
          * @returns {number}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取或设置水平滚动位置,
          * @returns {number}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get scrollLeft():number {
@@ -240,14 +240,14 @@ module egret.gui {
          * @language en_US
          * Gets or sets the vertical scroll position
          * @returns {number}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取或设置垂直滚动位置,
          * @returns {number}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get scrollTop():number {
@@ -268,7 +268,7 @@ module egret.gui {
          * @param top {number} The vertical scroll position
          * @param left {number} The horizontal scroll position
          * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -277,7 +277,7 @@ module egret.gui {
          * @param top {number} 垂直滚动位置
          * @param left {number} 水平滚动位置
          * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public setScrollPosition(top:number, left:number, isOffset:boolean = false):void {
@@ -686,14 +686,14 @@ module egret.gui {
          * @language en_US
          * The left side of the maximum distance
          * @returns The left side of the maximum distance
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 距离左侧的最大值
          * @returns 距离左侧最大值
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getMaxScrollLeft():number {
@@ -705,14 +705,14 @@ module egret.gui {
          * @language en_US
          * Above the maximum distance
          * @returns Above the maximum distance
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 距离上方最大值
          * @returns 距离上方最大值
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getMaxScrollTop():number {
@@ -804,7 +804,7 @@ module egret.gui {
          * @param scrollTop Position above distance
          * @param duration Easing of time, in milliseconds
          * @returns Get tween vertical scrolling
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -813,7 +813,7 @@ module egret.gui {
          * @param scrollTop 距离上方的位置
          * @param duration 缓动时间，毫秒单位
          * @returns 获取垂直滚动的tween
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public setScrollTop(scrollTop:number, duration:number = 0):void {
@@ -841,7 +841,7 @@ module egret.gui {
          * @param scrollLeft From the position on the left side
          * @param duration Get tween vertical scrolling
          * @returns Gets the horizontal scroll tween
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -850,7 +850,7 @@ module egret.gui {
          * @param scrollLeft 距离左侧的位置
          * @param duration 缓动时间，毫秒单位
          * @returns 获取水平滚动的tween
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public setScrollLeft(scrollLeft:number, duration:number = 0):void {
@@ -944,7 +944,7 @@ module egret.gui {
          * @deprecated
          * @param child {DisplayObject}
          * @returns {DisplayObject}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public addChild(child:DisplayObject):DisplayObject {
@@ -957,7 +957,7 @@ module egret.gui {
          * @param child {DisplayObject}
          * @param index {number}
          * @returns {DisplayObject}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public addChildAt(child:DisplayObject, index:number):DisplayObject {
@@ -969,7 +969,7 @@ module egret.gui {
          * @deprecated
          * @param child {DisplayObject}
          * @returns {DisplayObject}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeChild(child:DisplayObject):DisplayObject {
@@ -981,7 +981,7 @@ module egret.gui {
          * @deprecated
          * @param index {number}
          * @returns {DisplayObject}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public removeChildAt(index:number):DisplayObject {
@@ -993,7 +993,7 @@ module egret.gui {
          * @deprecated
          * @param child {DisplayObject}
          * @param index {number}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public setChildIndex(child:DisplayObject, index:number):void {
@@ -1004,7 +1004,7 @@ module egret.gui {
          * @deprecated
          * @param child1 {DisplayObject}
          * @param child2 {DisplayObject}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public swapChildren(child1:DisplayObject, child2:DisplayObject):void {
@@ -1015,7 +1015,7 @@ module egret.gui {
          * @deprecated
          * @param index1 {number}
          * @param index2 {number}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public swapChildrenAt(index1:number, index2:number):void {
