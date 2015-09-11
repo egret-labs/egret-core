@@ -1,5 +1,5 @@
 var game_file_list = [
-    {{~it.scripts :value:index}}
+    {{~it.nativeScripts :value:index}}
     {{? index != 0}},{{?}}"{{=value}}"
     {{~}}
 ];
