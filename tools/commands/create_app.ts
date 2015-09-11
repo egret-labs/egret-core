@@ -82,7 +82,7 @@ class CreateAppCommand implements egret.Command {
         //    opts: {}
         //});
 
-        config.init();
+        config.init(arg_h5_path);
 
         //修改native项目配置
         new ParseConfigCommand().execute();
