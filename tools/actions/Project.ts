@@ -42,7 +42,7 @@ export function parseProjectInfo(html: string): egret.ILarkProject[] {
     return projects;
 
     function visitDom(el: htmlparser.Element) {
-        if (el.attribs && el.attribs['class'] == "lark-player") {
+        if (el.attribs && el.attribs['class'] == "egret-player") {
             containers.push(el);
         }
         if (el.type == "script" && el.attribs) {

@@ -6,9 +6,16 @@ import file = require('../lib/FileUtil');
 var ENGINES_ROOT_PARAM = "--engines-root:"
 
 export interface VersionCheckResult {
+    /** 当前项目的引擎是否跟当前的引擎版本一致 */
     projectVersionMatch: boolean;
+    
+    /** 用户通过命令行参数指定的引擎是否跟当前的引擎版本一致 */
     toolVersionMatch: boolean;
+    
+    /** 是否已经安装了需要的引擎 */
     hasTargetEngine: boolean;
+    
+    /** 需要引擎的根目录 */
     targetEngineRoot: string;
 }
 
@@ -48,6 +55,7 @@ export function check(): VersionCheckResult {
 }
 
 export function execute(root: string) {
+    //覆盖 EGRET_PATH 环境变量，兼容老版本引擎
     if (process.env.EGRET_PATH) {
         process.env.EGRET_PATH = root;
     }
