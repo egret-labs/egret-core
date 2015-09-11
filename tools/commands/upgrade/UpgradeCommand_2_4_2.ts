@@ -10,6 +10,7 @@ import CHILD_EXEC = require('child_process');
 var TSS = require("./2.4.2/typescriptServices");
 var DTS = require('./2.4.2/compare2dts.js');
 var AutoLogger = {
+    _dir:string = '',
     _total:0,
     _isAPIadd : false,
     _api:null,
@@ -19,7 +20,8 @@ var AutoLogger = {
         isShow:true
     },
     _categoryQuickLST:{},
-    init:function(){
+    init:function(ignorePath:string){
+        this._dir = ignorePath;
         this._total = 0;
     },
     close:function(){
@@ -98,6 +100,8 @@ var AutoLogger = {
         }
         if(!this._logContent.references[fileName]){
             this._logContent.references[fileName] = {};
+        }
+        if(!this._logContent.references[fileName][this._api]){
             this._logContent.references[fileName][this._api] = [];
         }
         this._logContent.references[fileName][this._api].push(lineNum);
@@ -111,10 +115,11 @@ var AutoLogger = {
             //step2
             var fileRefLine;
             for(var file_path in this._logContent.references){
-                fileRefLine = file_path +' ';
+                fileRefLine = file.getRelativePath(this._dir,file_path) +' ';
                 for(var api in this._logContent.references[file_path]){
                     this._logContent.references[file_path][api].forEach(lineNum=>{
-                        fileRefLine +=lineNum+', '
+                        //行号需要＋1
+                        fileRefLine +=(lineNum + 1)+', ';
                         this._total ++;
 
                     });
@@ -125,6 +130,7 @@ var AutoLogger = {
                     console.log(fileRefLine);
                 }
             }
+            console.log('\n');
         }
         //清空_logContent对象
         this._logContent.title = null;
@@ -159,6 +165,7 @@ class UpgradeCommand_2_4_2 implements egret.Command {
             //step 1.拷贝新项目
             globals.log2(1707,projectPath,newPath);
             var egretPath = egret.root;
+            //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
             var cp = CHILD_EXEC.execSync('node '+file.joinPath(egretPath,'/tools/bin/egret')+' create '+newPath,{
                 encoding: 'utf8',
                 timeout: 0,
@@ -231,6 +238,8 @@ class UpgradeCommand_2_4_2 implements egret.Command {
 
         //var projectPath = this.createAndCopyProjectFile();
         var egretRoot = egret.root;
+        //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
+
         var libPath = file.joinPath(projectPath,'/src/libs_old');//用旧的api检测
         //var libPath = file.joinPath(projectPath,'/libs');//
         var configPath = file.joinPath(egretRoot,'tools/commands/upgrade/2.4.2/solved');
@@ -249,7 +258,7 @@ class UpgradeCommand_2_4_2 implements egret.Command {
             this.tsp.initProject(projectPath);
             this.tsp.initLibs([libPath]);
 
-            AutoLogger.init();
+            AutoLogger.init(projectPath);
             searchLST.forEach(item =>{
                 var searchName = item['name'];
                 var fatherName = item['category-name'];
