@@ -41,9 +41,20 @@ function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
     var versionCheck = version.check();
-    // ������Ŀ�汾�������汾��һ�£����ֶ�ָ���������汾
-    // �����û���װ����Ҫ�����棬��ôʹ����Ҫ�İ汾ִ������
-    if ((!versionCheck.projectVersionMatch || !versionCheck.toolVersionMatch) && versionCheck.hasTargetEngine) {
+    var shouldUseOtherVersion = false;
+    // �������ֶ�ָ���������汾,��ôʹ����Ҫ�İ汾ִ������
+    if (versionCheck.requestOtherVersion) {
+        shouldUseOtherVersion = true;
+    }
+    // ������Ŀ�汾�������汾��һ�£���ôʹ����Ҫ�İ汾ִ������
+    if (versionCheck.projectUsingOtherVersion && options.command != "upgrade") {
+        shouldUseOtherVersion = true;
+    }
+    //�����û�û�а�װ��Ҫ�����棬ʹ�õ�ǰ�汾ִ��
+    if (versionCheck.hasTargetEngine == false) {
+        shouldUseOtherVersion = false;
+    }
+    if (shouldUseOtherVersion) {
         version.execute(versionCheck.targetEngineRoot);
     }
     else {

@@ -9,7 +9,9 @@ import exmlc = require('../lib/exml/exmlc');
 export function beforeBuild() {
 
     var exmlDtsPath = getExmlDtsPath();
-    file.save(exmlDtsPath, "");
+    if (file.exists(exmlDtsPath)) {
+        file.save(exmlDtsPath, "");
+    }
 }
 export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
 
@@ -93,6 +95,8 @@ function generateExmlDTS(): string {
     var sourceList = file.search(srcPath, "exml");
 
     var length = sourceList.length;
+    if (length == 0)
+        return;
     var dts = "";
     for (var i = 0; i < length; i++) {
         var p = sourceList[i];
