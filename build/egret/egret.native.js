@@ -148,26 +148,26 @@ var egret;
             /**
              * @language en_US
              * Background music
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 背景音乐
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             NativeSound.MUSIC = "music";
             /**
              * @language en_US
              * EFFECT
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 音效
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             NativeSound.EFFECT = "effect";
@@ -220,7 +220,7 @@ var egret;
             "destination-in": [0, 770]
         };
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @private
          */
@@ -247,7 +247,7 @@ var egret;
                 /**
                  * @private
                  * 设置新图像如何绘制到已有的图像上的规制
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -265,7 +265,7 @@ var egret;
                 /**
                  * @private
                  * 设置接下来绘图填充的整体透明度
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -281,7 +281,7 @@ var egret;
                  * @private
                  * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
                  * @default 1
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -298,7 +298,7 @@ var egret;
                  * @private
                  * 设置要在图形边线填充的颜色或样式
                  * @default "#000000"
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -322,7 +322,7 @@ var egret;
                  * @private
                  * 设置要在图形内部填充的颜色或样式
                  * @default "#000000"
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -372,7 +372,7 @@ var egret;
                 /**
                  * @private
                  * 当前的字体样式
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -401,7 +401,7 @@ var egret;
              * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
              * @param endAngle 圆弧的重点， 单位以弧度表示。
              * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.arc = function (x, y, radius, startAngle, endAngle, anticlockwise) {
@@ -414,7 +414,7 @@ var egret;
              * @param cpy 控制点的 y 轴坐标。
              * @param x 终点的 x 轴坐标。
              * @param y 终点的 y 轴坐标。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.quadraticCurveTo = function (cpx, cpy, x, y) {
@@ -425,7 +425,7 @@ var egret;
              * 使用直线连接子路径的终点到x，y坐标。
              * @param x 直线终点的 x 轴坐标。
              * @param y 直线终点的 y 轴坐标。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.lineTo = function (x, y) {
@@ -437,7 +437,7 @@ var egret;
              * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
              * "nonzero": 非零环绕规则， 默认的规则。
              * "evenodd": 奇偶环绕规则。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.fill = function (fillRule) {
@@ -446,7 +446,7 @@ var egret;
             /**
              * @private
              * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.closePath = function () {
@@ -459,7 +459,7 @@ var egret;
              * @param y 矩形起点的 y 轴坐标。
              * @param width 矩形的宽度。
              * @param height 矩形的高度。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.rect = function (x, y, w, h) {
@@ -471,7 +471,7 @@ var egret;
              * 将一个新的子路径的起始点移动到(x，y)坐标
              * @param x 点的 x 轴
              * @param y 点的 y 轴
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.moveTo = function (x, y) {
@@ -484,7 +484,7 @@ var egret;
              * @param y 矩形起始点的 y 轴坐标。
              * @param width 矩形的宽度。
              * @param height 矩形的高度。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.fillRect = function (x, y, w, h) {
@@ -500,7 +500,7 @@ var egret;
              * @param cp2y 第二个控制点的 y 轴坐标。
              * @param x 结束点的 x 轴坐标。
              * @param y 结束点的 y 轴坐标。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.bezierCurveTo = function (cp1x, cp1y, cp2x, cp2y, x, y) {
@@ -509,7 +509,7 @@ var egret;
             /**
              * @private
              * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.stroke = function () {
@@ -522,7 +522,7 @@ var egret;
              * @param y 矩形起点的 y 轴坐标。
              * @param width 矩形的宽度。
              * @param height 矩形的高度。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.strokeRect = function (x, y, w, h) {
@@ -532,7 +532,7 @@ var egret;
             /**
              * @private
              * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.beginPath = function () {
@@ -546,7 +546,7 @@ var egret;
              * @param x2 第二个控制点的 x 轴坐标。
              * @param y2 第二个控制点的 y 轴坐标。
              * @param radius 圆弧的半径。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.arcTo = function (x1, y1, x2, y2, radius) {
@@ -561,7 +561,7 @@ var egret;
              * @param d 垂直缩放。
              * @param tx 水平移动。
              * @param ty 垂直移动。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.transform = function (a, b, c, d, tx, ty) {
@@ -573,7 +573,7 @@ var egret;
              * 通过在网格中移动 surface 和 surface 原点 x 水平方向、原点 y 垂直方向，添加平移变换
              * @param x 水平移动。
              * @param y 垂直移动。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.translate = function (x, y) {
@@ -585,7 +585,7 @@ var egret;
              * 根据 x 水平方向和 y 垂直方向，为 surface 单位添加缩放变换。
              * @param x 水平方向的缩放因子。
              * @param y 垂直方向的缩放因子。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.scale = function (x, y) {
@@ -596,7 +596,7 @@ var egret;
              * @private
              * 在变换矩阵中增加旋转，角度变量表示一个顺时针旋转角度并且用弧度表示。
              * @param angle 顺时针旋转的弧度。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.rotate = function (angle) {
@@ -606,7 +606,7 @@ var egret;
             /**
              * @private
              * 恢复到最近的绘制样式状态，此状态是通过 save() 保存到”状态栈“中最新的元素。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.restore = function () {
@@ -634,7 +634,7 @@ var egret;
             /**
              * @private
              * 使用栈保存当前的绘画样式状态，你可以使用 restore() 恢复任何改变。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.save = function () {
@@ -655,7 +655,7 @@ var egret;
             /**
              * @private
              * 从当前路径创建一个剪切路径。在 clip() 调用之后，绘制的所有信息只会出现在剪切路径内部。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.clip = function (fillRule) {
@@ -673,7 +673,7 @@ var egret;
              * @param y 矩形起点的 y 轴坐标。
              * @param width 矩形的宽度。
              * @param height 矩形的高度。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.clearRect = function (x, y, width, height) {
@@ -689,7 +689,7 @@ var egret;
              * @param d 垂直缩放。
              * @param tx 水平移动。
              * @param ty 垂直移动。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.setTransform = function (a, b, c, d, tx, ty) {
@@ -708,7 +708,7 @@ var egret;
              * @param y0 起点的 y 轴坐标。
              * @param x1 终点的 x 轴坐标。
              * @param y1 终点的 y 轴坐标。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.createLinearGradient = function (x0, y0, x1, y1) {
@@ -723,7 +723,7 @@ var egret;
              * @param x1 结束圆形的 x 轴坐标。
              * @param y1 结束圆形的 y 轴坐标。
              * @param r1 结束圆形的半径。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.createRadialGradient = function (x0, y0, r0, x1, y1, r1) {
@@ -732,7 +732,7 @@ var egret;
             /**
              * @private
              * 在(x,y)位置绘制（填充）文本。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.fillText = function (text, x, y, maxWidth) {
@@ -748,7 +748,7 @@ var egret;
             /**
              * @private
              * 测量指定文本宽度，返回 TextMetrics 对象。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.measureText = function (text) {
@@ -760,7 +760,7 @@ var egret;
              * @private
              * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
              * 确保 imageSmoothingEnabled 已被重置为正常的值，否则有可能沿用上个显示对象绘制过程留下的值。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.drawImage = function (image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight) {
@@ -811,7 +811,7 @@ var egret;
              * @param bitmapData 做为重复图像源的 BitmapData 对象。
              * @param repetition 指定如何重复图像。
              * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.createPattern = function (image, repetition) {
@@ -820,7 +820,7 @@ var egret;
             /**
              * @private
              * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.getImageData = function (sx, sy, sw, sh) {
@@ -2506,7 +2506,7 @@ var egret;
 (function (egret) {
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var NativeResourceLoader = (function (_super) {
@@ -2531,7 +2531,7 @@ var egret;
          *
          * @param path
          * @param bytesTotal
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         p.load = function (path, bytesTotal) {
@@ -2821,13 +2821,13 @@ var egret;
      * @classdesc
      * @implements egret.StageText
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     var NativeStageText = (function (_super) {
         __extends(NativeStageText, _super);
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         function NativeStageText() {

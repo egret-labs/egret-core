@@ -17091,7 +17091,7 @@ var egret;
          */
         var ScrollerEase = (function () {
             /**
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             function ScrollerEase() {
@@ -17102,7 +17102,7 @@ var egret;
              *
              * @param amount
              * @returns
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ScrollerEase.get = function (amount) {
@@ -17126,7 +17126,7 @@ var egret;
              *
              * @param pow
              * @returns
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ScrollerEase.getPowOut = function (pow) {
@@ -17135,12 +17135,12 @@ var egret;
                 };
             };
             /**
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ScrollerEase.quintOut = ScrollerEase.getPowOut(5);
             /**
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ScrollerEase.quartOut = ScrollerEase.getPowOut(4);
@@ -17156,7 +17156,7 @@ var egret;
             /**
              * 创建一个 egret.ScrollerTween 对象
              * @private
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             function ScrollerTween(target, props, pluginData) {
@@ -17227,7 +17227,7 @@ var egret;
              * @param props {any} Parameters, support loop onChange onChangeObj
              * @param pluginData {any} Write realized
              * @param override {boolean} Whether to remove the object before adding a tween, the default value false
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -17237,7 +17237,7 @@ var egret;
              * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
              * @param pluginData {any} 暂未实现
              * @param override {boolean} 是否移除对象之前添加的tween，默认值false
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ScrollerTween.get = function (target, props, pluginData, override) {
@@ -17253,14 +17253,14 @@ var egret;
              * @language en_US
              * Delete all ScrollerTween animations from an object
              * @param target The object whose ScrollerTween to be deleted
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 删除一个对象上的全部 ScrollerTween 动画
              * @param target  需要移除 ScrollerTween 的对象
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             ScrollerTween.removeTweens = function (target) {
@@ -17500,7 +17500,7 @@ var egret;
              * Whether setting is paused
              * @param value {boolean} Whether to pause
              * @returns ScrollerTween object itself
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -17508,7 +17508,7 @@ var egret;
              * 设置是否暂停
              * @param value {boolean} 是否暂停
              * @returns Tween对象本身
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.setPaused = function (value) {
@@ -17601,7 +17601,7 @@ var egret;
              * @param duration {number} Duration
              * @param ease {egret.ScrollerEase} Easing algorithm
              * @returns {egret.ScrollerTween} ScrollerTween object itself
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -17611,7 +17611,7 @@ var egret;
              * @param duration {number} 持续时间
              * @param ease {egret.ScrollerEase} 缓动算法
              * @returns {egret.ScrollerTween} Tween对象本身
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.to = function (props, duration, ease) {
@@ -17628,7 +17628,7 @@ var egret;
              * @param thisObj {any} this action scope of the callback method
              * @param params {Array<any>} Parameter of the callback method
              * @returns {egret.ScrollerTween} ScrollerTween object itself
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -17638,7 +17638,7 @@ var egret;
              * @param thisObj {any} 回调方法this作用域
              * @param params {Array<any>} 回调方法参数
              * @returns {egret.ScrollerTween} Tween对象本身
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.call = function (callback, thisObj, params) {
@@ -17650,7 +17650,7 @@ var egret;
              * @method egret.ScrollerTween#tick
              * @param delta {number}
              * @private
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.tick = function (delta) {
@@ -17723,14 +17723,14 @@ var egret;
              * @language en_US
              * Create a egret.ScrollerView objects
              * @param content {egret.DisplayObject} You need to scroll object
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 创建一个 egret.ScrollerView 对象
              * @param content {egret.DisplayObject} 需要滚动的对象
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             function ScrollerView(content) {
@@ -17739,13 +17739,13 @@ var egret;
                 /**
                  * @language en_US
                  * Start rolling threshold when the touch point from the initial touch point at a distance exceeding this value will trigger roll
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 /**
                  * @language zh_CN
                  * 开始滚动的阈值，当触摸点偏离初始触摸点的距离超过这个值时才会触发滚动
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 this.scrollBeginThreshold = 10;
@@ -17753,14 +17753,14 @@ var egret;
                  * @language en_US
                  * Scrolling speed, the speed is required and the default speed ratio.
                  * The range of scrollSpeed> 0 assigned to 2:00, the speed is 2 times the default speed
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 /**
                  * @language zh_CN
                  * 滚动速度，这个值为需要的速度与默认速度的比值。
                  * 取值范围为 scrollSpeed > 0 赋值为 2 时，速度是默认速度的 2 倍
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 this.scrollSpeed = 1;
@@ -17788,13 +17788,13 @@ var egret;
                  * @language en_US
                  * Whether to enable rebound, rebound When enabled, ScrollerView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
                  * @default true
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  */
                 /**
                  * @language zh_CN
                  * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
                  * @default true
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  */
                 ,function () {
                     return this._ScrV_Props_._bounces;
@@ -17807,14 +17807,14 @@ var egret;
              * @language en_US
              * Set to scroll object
              * @param content {egret.DisplayObject} You need to scroll object
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 设置需要滚动的对象
              * @param content {egret.DisplayObject} 需要滚动的对象
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.setContent = function (content) {
@@ -17830,13 +17830,13 @@ var egret;
             /**
              * @language en_US
              * Remove rolling objects
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 移除滚动的对象
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.removeContent = function () {
@@ -17850,13 +17850,13 @@ var egret;
                 /**
                  * @language en_US
                  * Vertical scroll bar display policy, on / off / auto.
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 /**
                  * @language zh_CN
                  * 垂直滚动条显示策略，on/off/auto。
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -17872,13 +17872,13 @@ var egret;
                 /**
                  * @language en_US
                  * The horizontal scroll bar display policy, on / off / auto.
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 /**
                  * @language zh_CN
                  * 水平滚动条显示策略，on/off/auto。
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -17895,14 +17895,14 @@ var egret;
                  * @language en_US
                  * Gets or sets the horizontal scroll position
                  * @returns {number}
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 /**
                  * @language zh_CN
                  * 获取或设置水平滚动位置,
                  * @returns {number}
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -17921,14 +17921,14 @@ var egret;
                  * @language en_US
                  * Gets or sets the vertical scroll position
                  * @returns {number}
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 /**
                  * @language zh_CN
                  * 获取或设置垂直滚动位置,
                  * @returns {number}
-                 * @version Egret 2.0
+                 * @version Egret 2.4
                  * @platform Web,Native
                  */
                 ,function () {
@@ -17948,7 +17948,7 @@ var egret;
              * @param top {number} The vertical scroll position
              * @param left {number} The horizontal scroll position
              * @param isOffset {boolean} Optional parameter, the default is false, whether it is the amount of scrolling increase as top = 1 on behalf of one pixel scroll up
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -17957,7 +17957,7 @@ var egret;
              * @param top {number} 垂直滚动位置
              * @param left {number} 水平滚动位置
              * @param isOffset {boolean} 可选参数，默认是false，是否是滚动增加量，如 top=1 代表往上滚动1像素
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.setScrollPosition = function (top, left, isOffset) {
@@ -18325,14 +18325,14 @@ var egret;
              * @language en_US
              * The left side of the maximum distance
              * @returns The left side of the maximum distance
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 距离左侧的最大值
              * @returns 距离左侧最大值
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.getMaxScrollLeft = function () {
@@ -18343,14 +18343,14 @@ var egret;
              * @language en_US
              * Above the maximum distance
              * @returns Above the maximum distance
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 距离上方最大值
              * @returns 距离上方最大值
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.getMaxScrollTop = function () {
@@ -18430,7 +18430,7 @@ var egret;
              * @param scrollTop Position above distance
              * @param duration Easing of time, in milliseconds
              * @returns Get tween vertical scrolling
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -18439,7 +18439,7 @@ var egret;
              * @param scrollTop 距离上方的位置
              * @param duration 缓动时间，毫秒单位
              * @returns 获取垂直滚动的tween
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.setScrollTop = function (scrollTop, duration) {
@@ -18467,7 +18467,7 @@ var egret;
              * @param scrollLeft From the position on the left side
              * @param duration Get tween vertical scrolling
              * @returns Gets the horizontal scroll tween
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -18476,7 +18476,7 @@ var egret;
              * @param scrollLeft 距离左侧的位置
              * @param duration 缓动时间，毫秒单位
              * @returns 获取水平滚动的tween
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.setScrollLeft = function (scrollLeft, duration) {
@@ -18566,7 +18566,7 @@ var egret;
              * @deprecated
              * @param child {DisplayObject}
              * @returns {DisplayObject}
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.addChild = function (child) {
@@ -18578,7 +18578,7 @@ var egret;
              * @param child {DisplayObject}
              * @param index {number}
              * @returns {DisplayObject}
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.addChildAt = function (child, index) {
@@ -18589,7 +18589,7 @@ var egret;
              * @deprecated
              * @param child {DisplayObject}
              * @returns {DisplayObject}
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.removeChild = function (child) {
@@ -18600,7 +18600,7 @@ var egret;
              * @deprecated
              * @param index {number}
              * @returns {DisplayObject}
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.removeChildAt = function (index) {
@@ -18611,7 +18611,7 @@ var egret;
              * @deprecated
              * @param child {DisplayObject}
              * @param index {number}
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.setChildIndex = function (child, index) {
@@ -18621,7 +18621,7 @@ var egret;
              * @deprecated
              * @param child1 {DisplayObject}
              * @param child2 {DisplayObject}
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.swapChildren = function (child1, child2) {
@@ -18631,7 +18631,7 @@ var egret;
              * @deprecated
              * @param index1 {number}
              * @param index2 {number}
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.swapChildrenAt = function (index1, index2) {
@@ -32160,14 +32160,14 @@ var egret;
         /**
          * @language en_US
          * Injector
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @private
          */
         /**
          * @language zh_CN
          * 注入器
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          * @private
          */
@@ -32204,7 +32204,7 @@ var egret;
              * @param clazz {any} Class definition or fully qualified name of the class
              * @param named {string} Optional. If this value is set when calling mapClass () mapping, the same character string needs to be import ed in order to obtain the corresponding singleton
              * @returns {any} Get a singleton mapped by the specified class
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             /**
@@ -32213,7 +32213,7 @@ var egret;
              * @param clazz {any} 类定义或类的完全限定名
              * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
              * @returns {any} 获取指定类映射的单例
-             * @version Egret 2.0
+             * @version Egret 2.4
              * @platform Web,Native
              */
             p.getInstance = function (clazz, named) {
