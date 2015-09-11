@@ -1,4 +1,4 @@
-﻿/// <reference path="../lib/types.d.ts" />
+/// <reference path="../lib/types.d.ts" />
 
 import os = require('os');
 import crypto = require('crypto');

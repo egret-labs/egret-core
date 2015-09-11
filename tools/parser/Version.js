@@ -1,6 +1,5 @@
 /// <reference path="../lib/types.d.ts" />
 var file = require('../lib/FileUtil');
-var ENGINES_ROOT_PARAM = "--engines-root:";
 function check() {
     var result = {
         projectUsingOtherVersion: true,
@@ -18,20 +17,13 @@ function check() {
     if (!result.requestOtherVersion && !result.projectUsingOtherVersion) {
         return result;
     }
-    var enginesRootParams = process.argv.filter(function (a) { return a.indexOf(ENGINES_ROOT_PARAM) >= 0; });
-    //当前引擎并不是使用一键安装包安装
-    if (enginesRootParams.length == 0) {
-        return result;
-    }
-    var enginesRoot = enginesRootParams[0].substr(ENGINES_ROOT_PARAM.length);
-    enginesRoot = file.escapePath(enginesRoot);
-    var targetEngineBin = enginesRoot + "/node_modules/egret/" + requestVersion + "/tools/bin/egret";
+    var targetEnginePath = getEgretPath(requestVersion);
     //不存在指定的引擎
-    if (!file.exists(targetEngineBin)) {
+    if (!file.exists(targetEnginePath)) {
         return result;
     }
     result.hasTargetEngine = true;
-    result.targetEngineRoot = enginesRoot + "/node_modules/egret/" + requestVersion + "/";
+    result.targetEngineRoot = targetEnginePath;
     return result;
 }
 exports.check = check;
@@ -43,5 +35,21 @@ function execute(root) {
     require(root + "tools/bin/egret");
 }
 exports.execute = execute;
-
-//# sourceMappingURL=../parser/Version.js.map
+function getEgretPath(version) {
+    var path;
+    switch (process.platform) {
+        case 'darwin':
+            var user = process.env.NAME || process.env.LOGNAME;
+            if (!user)
+                return null;
+            path = "/Users/" + user + "/Library/Application Support/Egret/engine/" + version + "/";
+            break;
+        case 'win32':
+            var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
+            path = file.escapePath(appdata + "/Egret/engine/" + version + "/");
+            break;
+        default:
+            ;
+    }
+    return path;
+}
