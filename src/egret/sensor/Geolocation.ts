@@ -32,13 +32,13 @@ module egret {
         /**
          * @language en_US
          * Specifies whether the system supports the geolocation services
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指示系统是否支持地理位置服务
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static isSupport: boolean;

@@ -31,7 +31,7 @@
 module egret {
 
     /**
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @private
      */
@@ -49,7 +49,7 @@ module egret {
          */
         private _end:number /*int*/;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(name:string, frame:number /*int*/, end?:number /*int*/) {
@@ -62,13 +62,13 @@ module egret {
         /**
          * @language en_US
          * Frame number
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 标签名
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get name():string {
@@ -78,13 +78,13 @@ module egret {
         /**
          * @language en_US
          * Frame serial number of the label
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 标签所在帧序号
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get frame():number /*int*/ {
@@ -93,13 +93,13 @@ module egret {
         /**
          * @language en_US
          * Frame serial number, the end of the label
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 标签对应的结束帧序号
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get end(): number /*int*/ {
@@ -109,13 +109,13 @@ module egret {
         /**
          * @language en_US
          * Duplicate the current frame label object
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 复制当前帧标签对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public clone() {

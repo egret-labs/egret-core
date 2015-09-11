@@ -30,7 +30,7 @@
 
 module egret {
     /**
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export interface StageText extends EventDispatcher {
@@ -94,7 +94,7 @@ module egret {
     }
 
     /**
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export var StageText:{new():StageText};

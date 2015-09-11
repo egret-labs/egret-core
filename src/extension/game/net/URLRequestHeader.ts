@@ -33,7 +33,7 @@ module egret {
      * @language en_US
      * A URLRequestHeader object encapsulates a single HTTP request header and consists of a name/value pair.  URLRequestHeader objects are used in the requestHeaders property of the URLRequest class.
      * Note: Because of browser compatibility, this property has not been achieved in html5
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/URLRequestHeader.ts
      */
@@ -41,7 +41,7 @@ module egret {
      * @language zh_CN
      * URLRequestHeader 对象封装了一个 HTTP 请求标头并由一个名称/值对组成。URLRequestHeader 对象在 URLRequest 类的 requestHeaders 属性中使用。
      * 注意：由于浏览器兼容性原因，在 html5 中并未实现
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/net/URLRequestHeader.ts
      */
@@ -50,13 +50,13 @@ module egret {
         /**
          * @language en_US
          * HTTP request header name, such as Content-Type
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * HTTP 请求标头名称，如 Content-Type
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public name:string = "";
@@ -64,13 +64,13 @@ module egret {
         /**
          * @language en_US
          * The values associated with the name property (such as text/plain).
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 与 name 属性相关联的值，如 text/plain
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public value:string = "";
@@ -78,13 +78,13 @@ module egret {
         /**
          * @language en_US
          * Create an egret.URLRequestHeader object
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 egret.URLRequestHeader 对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(name:string, value:string) {

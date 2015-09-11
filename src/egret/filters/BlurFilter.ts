@@ -29,12 +29,12 @@
 module egret {
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class BlurFilter extends Filter {
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(public blurX:number, public blurY:number) {

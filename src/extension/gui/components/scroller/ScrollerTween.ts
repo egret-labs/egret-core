@@ -35,7 +35,7 @@ module egret.gui {
      */
     export class ScrollerEase {
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor() {
@@ -46,7 +46,7 @@ module egret.gui {
          *
          * @param amount
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static get(amount):Function {
@@ -67,7 +67,7 @@ module egret.gui {
             }
         }
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static quintOut = ScrollerEase.getPowOut(5);
@@ -76,7 +76,7 @@ module egret.gui {
          *
          * @param pow
          * @returns
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static getPowOut(pow):Function {
@@ -86,7 +86,7 @@ module egret.gui {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static quartOut = ScrollerEase.getPowOut(4);
@@ -187,7 +187,7 @@ module egret.gui {
          * @param props {any} Parameters, support loop onChange onChangeObj
          * @param pluginData {any} Write realized
          * @param override {boolean} Whether to remove the object before adding a tween, the default value false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
@@ -197,7 +197,7 @@ module egret.gui {
          * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
          * @param pluginData {any} 暂未实现
          * @param override {boolean} 是否移除对象之前添加的tween，默认值false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public static get(target:any, props:any = null, pluginData:any = null, override:boolean = false):ScrollerTween {
@@ -211,14 +211,14 @@ module egret.gui {
          * @language en_US
          * Delete all ScrollerTween animations from an object
 		 * @param target The object whose ScrollerTween to be deleted
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
          * 删除一个对象上的全部 ScrollerTween 动画
 		 * @param target  需要移除 ScrollerTween 的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public static removeTweens(target:any):void {
@@ -293,7 +293,7 @@ module egret.gui {
         /**
          * 创建一个 egret.ScrollerTween 对象
          * @private
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(target:any, props:any, pluginData:any) {
@@ -483,7 +483,7 @@ module egret.gui {
          * Whether setting is paused
 		 * @param value {boolean} Whether to pause
 		 * @returns ScrollerTween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
@@ -491,7 +491,7 @@ module egret.gui {
          * 设置是否暂停
 		 * @param value {boolean} 是否暂停
 		 * @returns Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public setPaused(value:boolean):ScrollerTween {
@@ -589,7 +589,7 @@ module egret.gui {
 		 * @param duration {number} Duration
 		 * @param ease {egret.ScrollerEase} Easing algorithm
 		 * @returns {egret.ScrollerTween} ScrollerTween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
@@ -599,7 +599,7 @@ module egret.gui {
 		 * @param duration {number} 持续时间
 		 * @param ease {egret.ScrollerEase} 缓动算法
 		 * @returns {egret.ScrollerTween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public to(props, duration?:number, ease:Function = undefined):ScrollerTween {
@@ -616,7 +616,7 @@ module egret.gui {
 		 * @param thisObj {any} this action scope of the callback method
 		 * @param params {Array<any>} Parameter of the callback method
 		 * @returns {egret.ScrollerTween} ScrollerTween object itself
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
@@ -626,7 +626,7 @@ module egret.gui {
 		 * @param thisObj {any} 回调方法this作用域
 		 * @param params {Array<any>} 回调方法参数
 		 * @returns {egret.ScrollerTween} Tween对象本身
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public call(callback:Function, thisObj:any = undefined, params:Array<any> = undefined):ScrollerTween {
@@ -637,7 +637,7 @@ module egret.gui {
 		 * @method egret.ScrollerTween#tick
 		 * @param delta {number}
          * @private
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
 		 */
         public tick(delta:number):void {

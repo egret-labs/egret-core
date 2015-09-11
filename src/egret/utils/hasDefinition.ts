@@ -37,7 +37,7 @@ module egret {
 	  * @returns {boolean} Whether the public definition exists
       * @example
       * egret.hasDefinition("egret.DisplayObject") //return true
-      * @version Egret 2.0
+      * @version Egret 2.4
       * @platform Web,Native
       * @includeExample egret/utils/hasDefinition.ts
       */
@@ -48,7 +48,7 @@ module egret {
 	  * @returns {boolean} 公共定义是否存在
       * @example
       * egret.hasDefinition("egret.DisplayObject") //返回 true
-      * @version Egret 2.0
+      * @version Egret 2.4
       * @platform Web,Native
       * @includeExample egret/utils/hasDefinition.ts
       */

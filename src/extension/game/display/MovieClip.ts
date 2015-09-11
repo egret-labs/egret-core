@@ -35,7 +35,7 @@ module egret {
      * @event egret.Event.COMPLETE 动画播放完成。
      * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
      * @see http://edn.egret.com/cn/index.php/article/index/id/151 MovieClip序列帧动画
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/display/MovieClip.ts
      */
@@ -56,7 +56,7 @@ module egret {
          */
         $totalFrames:number = 0;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public frameLabels:any[] = null;
@@ -69,7 +69,7 @@ module egret {
          */
         $frameLabelEnd:number = 0;
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public frameEvents:any[] = null;
@@ -117,7 +117,7 @@ module egret {
         /**
          * 创建新的 MovieClip 实例。创建 MovieClip 之后，调用舞台上的显示对象容器的addElement方法。
          * @param movieClipData {movieClipData} 被引用的 movieClipData 对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(movieClipData?:MovieClipData) {
@@ -325,7 +325,7 @@ module egret {
         /**
          * 继续播放当前动画
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数(MovieClip初始播放次数设置为1)，
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public play(playTimes:number = 0):void {
@@ -338,7 +338,7 @@ module egret {
 
         /**
          * 暂停播放动画
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public stop():void {
@@ -348,7 +348,7 @@ module egret {
 
         /**
          * 将播放头移到前一帧并停止
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public prevFrame():void {
@@ -357,7 +357,7 @@ module egret {
 
         /**
          * 跳到后一帧并停止
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public nextFrame():void {
@@ -368,7 +368,7 @@ module egret {
          * 将播放头移到指定帧并播放
          * @param frame {any} 指定帧的帧号或帧标签
          * @param playTimes {number} 播放次数。 参数为整数，可选参数，>=1：设定播放次数，<0：循环播放，默认值 0：不改变播放次数，
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public gotoAndPlay(frame:any, playTimes:number = 0):void {
@@ -388,7 +388,7 @@ module egret {
         /**
          * 将播放头移到指定帧并停止
          * @param frame {any} 指定帧的帧号或帧标签
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public gotoAndStop(frame:any):void {
@@ -553,7 +553,7 @@ module egret {
         //Properties
         /**
          * MovieClip 实例中帧的总数
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get totalFrames():number {
@@ -562,7 +562,7 @@ module egret {
 
         /**
          * MovieClip 实例当前播放的帧的序号
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get currentFrame():number {
@@ -571,7 +571,7 @@ module egret {
 
         /**
          * MovieClip 实例当前播放的帧的标签。如果当前帧没有标签，则 currentFrameLabel返回null。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get currentFrameLabel():string {
@@ -581,7 +581,7 @@ module egret {
 
         /**
          * 当前播放的帧对应的标签，如果当前帧没有标签，则currentLabel返回包含标签的先前帧的标签。如果当前帧和先前帧都不包含标签，currentLabel返回null。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get currentLabel():string {
@@ -591,7 +591,7 @@ module egret {
 
         /**
          * MovieClip 实例的帧频
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get frameRate():number {
@@ -608,7 +608,7 @@ module egret {
 
         /**
          * MovieClip 实例当前是否正在播放
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get isPlaying():boolean {
@@ -623,7 +623,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get movieClipData():MovieClipData {

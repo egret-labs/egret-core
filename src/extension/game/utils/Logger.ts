@@ -31,43 +31,43 @@ module egret {
     /**
      * @language en_US
      * Logger is an entrance for the log processing module of the engine
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * Logger是引擎的日志处理模块入口
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class Logger {
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static ALL:string = "all";
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static DEBUG:string = "debug";
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static INFO:string = "info";
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static WARN:string = "warn";
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static ERROR:string = "error";
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static OFF:string = "off";
@@ -85,7 +85,7 @@ module egret {
          * <Li> Logger.OFF - all closed. </ li>
          * </ Ul>
          *param LogType from this level to start printing.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -101,7 +101,7 @@ module egret {
          * <li>Logger.OFF -- 全部关闭。</li>
          * </ul>
          * @param logType 从这个等级开始打印。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static set logLevel(logType:string) {

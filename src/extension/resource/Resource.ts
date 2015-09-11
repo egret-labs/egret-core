@@ -46,7 +46,7 @@ module RES {
      * Conduct mapping injection with class definition as the value.
      * @param type Injection type.
      * @param analyzerClass Injection type classes need to be resolved.
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
@@ -54,7 +54,7 @@ module RES {
      * 以类定义为值进行映射注入。
      * @param type 注入的类型。
      * @param analyzerClass 注入类型需要解析的类。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export function registerAnalyzer(type:string, analyzerClass:any) {

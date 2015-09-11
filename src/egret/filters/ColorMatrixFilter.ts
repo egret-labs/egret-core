@@ -29,7 +29,7 @@
 module egret {
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class ColorMatrixFilter extends Filter {
@@ -43,7 +43,7 @@ module egret {
         private matrix2:Array<number> = [];
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(matrix:Array<number> = null) {
@@ -53,7 +53,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get matrix():Array<number> {

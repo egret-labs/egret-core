@@ -196,7 +196,7 @@ module egret {
      * @event egret.Event.CHANGE Dispatched when entering text user input。
      * @event egret.FocusEvent.FOCUS_IN Dispatched after the focus to enter text.
      * @event egret.FocusEvent.FOCUS_OUT Enter the text loses focus after dispatch.
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/TextField.ts
      */
@@ -209,20 +209,20 @@ module egret {
      * @event egret.Event.CHANGE 输入文本有用户输入时调度。
      * @event egret.FocusEvent.FOCUS_IN 聚焦输入文本后调度。
      * @event egret.FocusEvent.FOCUS_OUT 输入文本失去焦点后调度。
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/text/TextField.ts
      */
     export class TextField extends DisplayObject {
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static default_fontFamily:string = "Arial";
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor() {
@@ -298,14 +298,14 @@ module egret {
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
          * @default "sans-serif"
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要使用的字体的名称或用逗号分隔的字体名称列表。
          * @default "sans-serif"
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get fontFamily():string {
@@ -331,14 +331,14 @@ module egret {
          * @language en_US
          * The size in pixels of text
          * @default 30
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的字号大小。
          * @default 30
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get size():number {
@@ -364,7 +364,7 @@ module egret {
 
         ///**
         // * @private
-        // * @version Egret 2.0
+        // * @version Egret 2.4
         // * @platform Web,Native
         // */
         //public get fontSize():number {
@@ -389,14 +389,14 @@ module egret {
          * @language en_US
          * Specifies whether the text is boldface.
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否显示为粗体。
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get bold():boolean {
@@ -423,14 +423,14 @@ module egret {
          * @language en_US
          * Determines whether the text is italic font.
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否显示为斜体。
          * @default false
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get italic():boolean {
@@ -479,14 +479,14 @@ module egret {
          * @language en_US
          * Horizontal alignment of text.
          * @default：egret.HorizontalAlign.LEFT
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本的水平对齐方式。
          * @default：egret.HorizontalAlign.LEFT
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get textAlign():string {
@@ -512,14 +512,14 @@ module egret {
          * @language en_US
          * Vertical alignment of text.
          * @default：egret.VerticalAlign.TOP
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文字的垂直对齐方式。
          * @default：egret.VerticalAlign.TOP
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get verticalAlign():string {
@@ -545,14 +545,14 @@ module egret {
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 一个整数，表示行与行之间的垂直间距量
          * @default 0
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get lineSpacing():number {
@@ -579,14 +579,14 @@ module egret {
          * @language en_US
          * Color of the text.
          * @default 0x000000
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本颜色
          * @default 0x000000
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get textColor():number {
@@ -615,7 +615,7 @@ module egret {
          * A Boolean value that indicates whether the text field has word wrap. If the value of wordWrap is true, the text
          * field has word wrap; if the value is false, the text field does not have word wrap.
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -623,7 +623,7 @@ module egret {
          * 一个布尔值，表示文本字段是否自动换行。如果 wordWrap 的值为 true，则该文本字段自动换行；
          * 如果值为 false，则该文本字段不自动换行,如果同时显式设置过宽度，超出宽度的部分将被截断。
          * @default true
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get wordWrap():boolean {
@@ -708,7 +708,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get type():string {
@@ -716,7 +716,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get text():string {
@@ -793,7 +793,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get displayAsPassword():boolean {
@@ -843,7 +843,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get strokeColor():number {
@@ -885,7 +885,7 @@ module egret {
 
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get stroke():number {
@@ -924,7 +924,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get maxChars():number {
@@ -981,7 +981,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get scrollV():number {
@@ -991,13 +991,13 @@ module egret {
         /**
          * @language en_US
          * The maximum value of scrollV
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * scrollV 的最大值
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get maxScrollV():number {
@@ -1006,7 +1006,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get selectionBeginIndex():number {
@@ -1014,7 +1014,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get selectionEndIndex():number {
@@ -1022,7 +1022,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get caretIndex():number {
@@ -1051,13 +1051,13 @@ module egret {
         /**
          * @language en_US
          * Number of lines of text.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 文本行数。
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get numLines():number {
@@ -1261,7 +1261,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get border():boolean {
@@ -1286,7 +1286,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get borderColor():number {
@@ -1313,7 +1313,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get background():boolean {
@@ -1338,7 +1338,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get backgroundColor():number {
@@ -1373,7 +1373,7 @@ module egret {
 
         /**
          * @private
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public setFocus() {
@@ -1491,7 +1491,7 @@ module egret {
         }
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get textFlow():Array<egret.ITextElement> {
@@ -1541,13 +1541,13 @@ module egret {
         /**
          * @language en_US
          * Get the text measured width
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取文本测量宽度
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get textWidth():number {
@@ -1557,13 +1557,13 @@ module egret {
         /**
          * @language en_US
          * Get Text measuring height
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 获取文本测量高度
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public get textHeight():number {
@@ -1574,7 +1574,7 @@ module egret {
         /**
          * @private
          * @param text
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public appendText(text:string):void {
@@ -1584,7 +1584,7 @@ module egret {
         /**
          * @private
          * @param element
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public appendElement(element:egret.ITextElement):void {

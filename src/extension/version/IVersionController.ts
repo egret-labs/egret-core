@@ -30,13 +30,13 @@
 module egret {
     /**
      * @private
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export interface IVersionController extends egret.IEventDispatcher {
         /**
          * 
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         fetchVersion():void;
@@ -44,7 +44,7 @@ module egret {
         /**
          * 获取所有有变化的文件
          * @returns {Array<any>}
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         getChangeList():Array<{url:string; size:number}>;
@@ -53,14 +53,14 @@ module egret {
          * 
          * @param url 
          * @returns 
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         getVirtualUrl(url:string):string;
     }
 
     /**
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export interface VersionController extends IVersionController {
@@ -68,7 +68,7 @@ module egret {
     }
 
     /**
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export var VersionController:{new():VersionController};

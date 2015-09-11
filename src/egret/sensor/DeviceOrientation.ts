@@ -24,13 +24,13 @@ module egret {
         /**
          * @language en_US
          * Specifies whether the system supports detecting the device orientation.
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指示系统是否支持检测设备方向
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public static isSupport: boolean;

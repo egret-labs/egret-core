@@ -32,20 +32,20 @@ module egret {
      * @language en_US
      * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      */
     export class HtmlTextParser{
 
         /**
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         constructor () {
@@ -87,7 +87,7 @@ module egret {
          * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
          * @param htmltext {string} Text in html
          * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -95,7 +95,7 @@ module egret {
          * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
          * @param htmltext {string} html文本
          * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public parser(htmltext:string):Array<egret.ITextElement> {

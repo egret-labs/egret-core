@@ -61,14 +61,14 @@ module egret.gui {
     /**
      * @language en_US
      * Injector
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @private
      */
     /**
      * @language zh_CN
      * 注入器
-     * @version Egret 2.0
+     * @version Egret 2.4
      * @platform Web,Native
      * @private
      */
@@ -106,7 +106,7 @@ module egret.gui {
          * @param clazz {any} Class definition or fully qualified name of the class
          * @param named {string} Optional. If this value is set when calling mapClass () mapping, the same character string needs to be import ed in order to obtain the corresponding singleton
          * @returns {any} Get a singleton mapped by the specified class
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         /**
@@ -115,7 +115,7 @@ module egret.gui {
          * @param clazz {any} 类定义或类的完全限定名
          * @param named {string} 可选参数，若在调用mapClass()映射时设置了这个值，则要传入同样的字符串才能获取对应的单例
          * @returns {any} 获取指定类映射的单例
-         * @version Egret 2.0
+         * @version Egret 2.4
          * @platform Web,Native
          */
         public getInstance(clazz:any, named:string = ""):any {
