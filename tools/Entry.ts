@@ -50,15 +50,15 @@ export function executeCommandLine(args: string[]): void {
     var versionCheck = version.check();
     var shouldUseOtherVersion = false;
 
-    // Èç¹ûÏîÊÖ¶¯Ö¸¶¨ÁËÒıÇæ°æ±¾,ÄÇÃ´Ê¹ÓÃĞèÒªµÄ°æ±¾Ö´ĞĞÃüÁî
+    // å¦‚æœé¡¹æ‰‹åŠ¨æŒ‡å®šäº†å¼•æ“ç‰ˆæœ¬,é‚£ä¹ˆä½¿ç”¨éœ€è¦çš„ç‰ˆæœ¬æ‰§è¡Œå‘½ä»¤
     if (versionCheck.requestOtherVersion) {
         shouldUseOtherVersion = true;
     }
-    // Èç¹ûÏîÄ¿°æ±¾¸úÒıÇæ°æ±¾²»Ò»ÖÂ£¬ÄÇÃ´Ê¹ÓÃĞèÒªµÄ°æ±¾Ö´ĞĞÃüÁî
+    // å¦‚æœé¡¹ç›®ç‰ˆæœ¬è·Ÿå¼•æ“ç‰ˆæœ¬ä¸ä¸€è‡´ï¼Œé‚£ä¹ˆä½¿ç”¨éœ€è¦çš„ç‰ˆæœ¬æ‰§è¡Œå‘½ä»¤
     if (versionCheck.projectUsingOtherVersion && options.command != "upgrade") {
         shouldUseOtherVersion = true;
     }
-    //Èç¹ûÓÃ»§Ã»ÓĞ°²×°ĞèÒªµÄÒıÇæ£¬Ê¹ÓÃµ±Ç°°æ±¾Ö´ĞĞ
+    //å¦‚æœç”¨æˆ·æ²¡æœ‰å®‰è£…éœ€è¦çš„å¼•æ“ï¼Œä½¿ç”¨å½“å‰ç‰ˆæœ¬æ‰§è¡Œ
     if (versionCheck.hasTargetEngine == false) {
         shouldUseOtherVersion = false;
     }

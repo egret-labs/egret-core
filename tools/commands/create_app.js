@@ -64,7 +64,7 @@ var CreateAppCommand = (function () {
         //    args: "",
         //    opts: {}
         //});
-        config.init();
+        config.init(arg_h5_path);
         //修改native项目配置
         new ParseConfigCommand().execute();
         //修改文件

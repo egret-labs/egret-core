@@ -87,6 +87,10 @@
           "platform": "native"
         },
         {
+          "path": "net/native/NativeHttpRequest.ts",
+          "platform": "native"
+        },
+        {
           "path": "net/native/NativeImageLoader.ts",
           "platform": "native"
         },

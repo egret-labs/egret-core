@@ -159,15 +159,7 @@ var egret;
     locale_strings[1707] = "正在从{0},拷贝到{1} ..";
     locale_strings[1708] = "正在替换资源引用路径..";
     locale_strings[1709] = "无法找到资源引用路径,resource文件夹已由顶层目录移至src目录中,请检查并手动修改引用路径";
-    locale_strings[1710] = "{color_red}暂不支持 升级至 Egret 2.4.3 版本，请您创建新项目体验 egret 2.4.3{color_normal}" +
-        "\n1.版本变化说明          http://edn.egret.com/cn/index.php/article/index/id/550" +
-        "\n2.缩放模式和旋转模式说明  http://edn.egret.com/cn/index.php/article/index/id/554" +
-        "\n3.扩展资源加载模块文件解析器  http://edn.egret.com/cn/index.php/article/index/id/552" +
-        '\n4.扩展资源加载url地址  http://edn.egret.com/cn/index.php/article/index/id/558' +
-        '\n5.版本控制  http://edn.egret.com/cn/index.php/article/index/id/559' +
-        '\n6.Egret 2.4版本声音说明 http://edn.egret.com/cn/index.php/article/index/id/562' +
-        '\n7.主题和皮肤适配 http://edn.egret.com/cn/index.php/article/index/id/560' +
-        '\nEgret 新特性体验群 481169576';
+    locale_strings[1710] = "替换入口配置 ..";
     //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";
