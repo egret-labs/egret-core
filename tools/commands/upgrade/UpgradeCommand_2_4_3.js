@@ -260,7 +260,7 @@ var UpgradeCommand_2_4_3 = (function () {
             var settings = {
                 mapSourceFiles: true,
                 sourceMap: true,
-                target: TSS.ScriptTarget.ES5
+                target: 1 /* ES5 */
             };
             this.tsp = new TSP.TsServiceProxy(settings);
             this.tsp.setExceptDir(file.joinPath(projectPath, 'src/libs'));

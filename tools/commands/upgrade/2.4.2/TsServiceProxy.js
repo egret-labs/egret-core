@@ -5,7 +5,7 @@ var fs = require("fs");
 var path = require('path');
 var file = require('../../../lib/FileUtil');
 var Logger = {
-    log: function () {
+    log: function (a, b, c, d, e) {
         //var consoleLog = arguments[0];
         //if(arguments[1]){
         //	if(arguments[1] instanceof Array){
@@ -730,14 +730,14 @@ var Host = (function () {
         return "";
     };
     Host.prototype.getDefaultLibFilename = function () {
-        return defaultLibFileName;
+        return Host.defaultLibFileName;
     };
     Host.prototype.log = function (msg) {
         // Logger.log(msg);
         Logger.log(msg);
     };
-    Host.prototype.setDefaultLibFileName = function (fileName) { defaultLibFileName = fileName; };
-    Host.prototype.getDefaultLibFileName = function () { return defaultLibFileName; };
+    Host.prototype.setDefaultLibFileName = function (fileName) { Host.defaultLibFileName = fileName; };
+    Host.prototype.getDefaultLibFileName = function () { return Host.defaultLibFileName; };
     Host.defaultLibFileName = 'default';
     return Host;
 })();

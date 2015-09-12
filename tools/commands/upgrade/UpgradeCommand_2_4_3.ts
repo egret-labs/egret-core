@@ -7,7 +7,7 @@ import fs = require("fs");
 import file = require('../../lib/FileUtil');
 import CHILD_EXEC = require('child_process');
 
-var TSS = require("./2.4.2/typescriptServices");
+import TSS = require("./2.4.2/typescriptServices");
 var DTS = require('./2.4.2/compare2dts.js');
 var AutoLogger = {
     _dir:'',
@@ -143,7 +143,7 @@ var AutoLogger = {
 
 class UpgradeCommand_2_4_3 implements egret.Command {
 
-    private static tsp:TSP.TsServiceProxy;
+    private tsp:TSP.TsServiceProxy;
     execute():number {
 
         globals.exit(1710);

@@ -7,7 +7,7 @@ import path = require('path');
 import file = require('../../../lib/FileUtil');
 
 var Logger = {
-	log:function(){
+	log:function(a?,b?,c?,d?,e?){
 		//var consoleLog = arguments[0];
 		//if(arguments[1]){
 		//	if(arguments[1] instanceof Array){
@@ -328,7 +328,7 @@ export class TsServiceProxy {
 	 * @param searchValue 字符串
 	 */
 	public getDeclarationPosition(searchContainer: string,searchValue: string) {
-		var declarations :ts.Node = this.tss.getNavigateToItems(searchValue);
+		var declarations :TSS.NavigateToItem[] = this.tss.getNavigateToItems(searchValue);
 		var targetDeclaration:any;
 		var res:number[] = [];
 		for(var i = 0;i<declarations.length;i++){
@@ -341,7 +341,7 @@ export class TsServiceProxy {
 		return null;
 	}
 
-	public getAllReferenceAccordingDeclarationPosition(filePath: string,position: number,callBack: ()=>void):void{
+	public getAllReferenceAccordingDeclarationPosition(filePath: string,position: number,callBack: (filename:string,line:number)=>void):void{
 		var res = this.getReferences(filePath,position);
 		if(res){
 			Logger.log('找到:'+res.length+'处引用');
@@ -784,15 +784,15 @@ class Host implements TSS.LanguageServiceHost {
 		return ""
 	}
 	public getDefaultLibFilename(): string {
-		return defaultLibFileName;
+		return Host.defaultLibFileName;
 	}
 
 	log(msg) {
 		// Logger.log(msg);
 		Logger.log(msg);
 	}
-	public setDefaultLibFileName(fileName: string):void { defaultLibFileName = fileName;}
-	getDefaultLibFileName(): string { return defaultLibFileName; }
+	public setDefaultLibFileName(fileName: string):void { Host.defaultLibFileName = fileName;}
+	getDefaultLibFileName(): string { return Host.defaultLibFileName; }
 }
 
 
