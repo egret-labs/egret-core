@@ -12,7 +12,7 @@ gulp.task('build-tools', function () {
         .pipe(sourcemaps.init())
         .pipe(ts({
             target:"ES5",
-            module:"commonjs",
+            module:"commonjs"
         }));
     return tsResult.js.pipe(sourcemaps.write(".")).pipe(gulp.dest('tools'));
 });

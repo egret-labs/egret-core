@@ -1,6 +1,6 @@
 ﻿///<reference path="typescriptServices.d.ts" />
 
-var TSS = require("./typescriptServices.js");
+import TSS = require("./typescriptServices");
 import fs = require("fs");
 //import Logger = require("./utils/Logger");
 import path = require('path');
