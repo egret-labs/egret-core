@@ -200,6 +200,7 @@ declare module egret {
         logFilter?: string;
         maxTouches?: number;
         textureScaleFactor?: number;
+        [others: string]: any;
     }
 
     export interface CommandLineOption {
@@ -216,6 +217,7 @@ declare module egret {
         path?: string;
         version?: string;
         option: ToolArgs;
+        [others: string]: any;
     }
 
     export interface TaskResult {
@@ -240,6 +242,7 @@ declare module egret {
         export var options: ToolArgs;
         export interface ViewModel {
             options: ToolArgs;
+            [other:string]:any;
         }
         export var console: {
             on(event: string, listener: Function): any;
