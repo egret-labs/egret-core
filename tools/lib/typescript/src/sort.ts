@@ -377,7 +377,7 @@ module ts {
                 if (supers) {
                     supers.forEach(superClass=> {
                         var dependFile = classNameToFileMap[superClass];
-                        if (dependFile && dependFile['map'] || dependFile == fileName || dependFile[fileName])
+                        if (!dependFile || dependFile && dependFile['map'] || dependFile == fileName || dependFile[fileName])
                             return;
                         var dependNode = this.getFileNode(<string>dependFile);
                         fileNode.addSuper(dependNode);
@@ -401,7 +401,7 @@ module ts {
                 if(functionCallDepens){
                     functionCallDepens.forEach(depend=> {
                         var dependFile = classNameToFileMap[depend];
-                        if (dependFile && dependFile['map'] ||dependFile == file || typeof(dependFile)!='string')
+                        if (!dependFile || dependFile && dependFile['map'] ||dependFile == file || typeof(dependFile)!='string')
                             return;
                         var dependNode = this.getFileNode(<string>dependFile);
                         fileNode.addCall(dependNode);
