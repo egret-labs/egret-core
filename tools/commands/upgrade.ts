@@ -7,7 +7,7 @@
 
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
-var async = require('../lib/async/async');
+import async = require('../lib/async/async');
 //import config = require('../lib/ProjectConfig');
 //import globals = require("../Globals");
 
