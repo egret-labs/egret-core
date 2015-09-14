@@ -8,7 +8,12 @@
 /// <reference path="emitter.ts"/>
 /// <reference path="commandLineParser.ts"/>
 /// <reference path="sort.ts" />
-/// <reference path="../../types.d.ts" />
+
+declare module egret {
+    export type ToolArgs = any;
+    export type FileChanges = any;
+}
+declare var module: any;
 
 module ts {
     var version = "1.4.0.0";
