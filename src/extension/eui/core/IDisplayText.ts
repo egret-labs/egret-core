@@ -35,14 +35,14 @@ module eui {
      * The IDisplayText interface defines the properties
      * for simple text display.。
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * IDisplayText 接口定义简单文本显示的属性.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export interface IDisplayText
@@ -52,7 +52,7 @@ module eui {
          * The text displayed by this text component.
          * @readOnly
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -60,7 +60,7 @@ module eui {
          * 此文本组件所显示的文本。
          * @readOnly
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         text:string;

@@ -287,7 +287,7 @@ module egret {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web
          */
         /**
@@ -300,7 +300,7 @@ module egret {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web
          */
         public get fillMode():string {

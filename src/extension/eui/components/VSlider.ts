@@ -38,7 +38,7 @@ module eui {
      * the end points of the slider, corresponding to the slider's minimum and maximum values.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
      */
@@ -48,7 +48,7 @@ module eui {
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
      */
@@ -58,7 +58,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -66,7 +66,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -77,7 +77,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected pointToValue(x:number, y:number):number {
@@ -108,7 +108,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public updateSkinDisplayList():void {

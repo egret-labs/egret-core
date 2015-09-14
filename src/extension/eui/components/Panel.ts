@@ -40,7 +40,7 @@ module eui {
      *
      * @defaultProperty elementsContent
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
      */
@@ -53,7 +53,7 @@ module eui {
      *
      * @defaultProperty elementsContent
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
      */
@@ -64,7 +64,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -72,7 +72,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -94,14 +94,14 @@ module eui {
          * [write-only] This property is Usually invoked in resolving an EXML for adding multiple children quickly.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * [只写] 此属性通常在 EXML 的解析器中调用，便于快速添加多个子项。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public set elementsContent(value:egret.DisplayObject[]) {
@@ -121,7 +121,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -131,7 +131,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public closeButton:Button = null;
@@ -141,7 +141,7 @@ module eui {
          * The area where the user must drag to move the window.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -151,7 +151,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public moveArea:egret.DisplayObject = null;
@@ -164,7 +164,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -174,7 +174,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public titleDisplay:IDisplayText = null;
@@ -191,7 +191,7 @@ module eui {
          * @default ""
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -201,7 +201,7 @@ module eui {
          * @default ""
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get title():string {
@@ -218,7 +218,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partAdded(partName:string, instance:any):void {
@@ -238,7 +238,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partRemoved(partName:string, instance:any):void {
@@ -256,7 +256,7 @@ module eui {
          * Dispatch the "closing" event when the closeButton is clicked.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -264,7 +264,7 @@ module eui {
          * 当 closeButton 被点击时派发 “closing” 事件
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onCloseButtonClick(event:egret.TouchEvent):void {
@@ -278,7 +278,7 @@ module eui {
          * Close the panel and remove from the parent container.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -286,7 +286,7 @@ module eui {
          * 关闭面板，从父级容器移除自身。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public close():void {
@@ -311,7 +311,7 @@ module eui {
          * Called when the user starts dragging a Panel.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -319,7 +319,7 @@ module eui {
          * 在可移动区域按下
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onTouchBegin(event:egret.TouchEvent):void {
@@ -335,7 +335,7 @@ module eui {
          * Called when the user drags a Panel.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -343,7 +343,7 @@ module eui {
          * 触摸拖拽时的移动事件
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onTouchMove(event:egret.TouchEvent):void {
@@ -356,7 +356,7 @@ module eui {
          * Called when the user releases the Panel.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -364,7 +364,7 @@ module eui {
          * 在舞台上弹起事件
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onTouchEnd(event:egret.TouchEvent):void {

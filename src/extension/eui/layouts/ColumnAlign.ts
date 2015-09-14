@@ -35,7 +35,7 @@ module eui {
 	 * <code>columnAlign</code> property of the TileLayout class.
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
 	 */
@@ -44,7 +44,7 @@ module eui {
 	 * ColumnAlign 类为 TileLayout 类的 <code>columnAlign</code> 属性定义可能的值。
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
 	 */
@@ -54,7 +54,7 @@ module eui {
 		 * Do not justify the rows.
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -62,7 +62,7 @@ module eui {
 		 * 不将行两端对齐。
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static LEFT:string = "left";
@@ -72,7 +72,7 @@ module eui {
 		 * Justify the rows by increasing the vertical gap.
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -80,7 +80,7 @@ module eui {
 		 * 通过增大水平间隙将行两端对齐。
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static JUSTIFY_USING_GAP:string = "justifyUsingGap";
@@ -90,7 +90,7 @@ module eui {
 		 * Justify the rows by increasing the row height.
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -98,7 +98,7 @@ module eui {
 		 * 通过增大行高度将行两端对齐。
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static JUSTIFY_USING_WIDTH:string = "justifyUsingWidth";

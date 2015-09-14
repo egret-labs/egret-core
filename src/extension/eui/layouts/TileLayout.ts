@@ -41,7 +41,7 @@ module eui {
      * as well as element alignment within the cells.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
      */
@@ -51,7 +51,7 @@ module eui {
      * TileLayout 类使用许多属性来控制列和行的方向、计数、大小、间隙和两端对齐以及单元格内的元素对齐。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
      */
@@ -61,14 +61,14 @@ module eui {
          * @language en_US
          * Constructor.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -92,7 +92,7 @@ module eui {
          * @default 6
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -102,7 +102,7 @@ module eui {
          * @default 6
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get horizontalGap():number {
@@ -137,7 +137,7 @@ module eui {
          * @default 6
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -147,7 +147,7 @@ module eui {
          * @default 6
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get verticalGap():number {
@@ -175,7 +175,7 @@ module eui {
          * @default -1
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -185,7 +185,7 @@ module eui {
          * @default -1
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get columnCount():number {
@@ -209,7 +209,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -222,7 +222,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get requestedColumnCount():number {
@@ -248,7 +248,7 @@ module eui {
          * The row count.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -256,7 +256,7 @@ module eui {
          *  行计数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get rowCount():number {
@@ -280,7 +280,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -293,7 +293,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get requestedRowCount():number {
@@ -329,7 +329,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -340,7 +340,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get columnWidth():number {
@@ -375,7 +375,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -386,7 +386,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get rowHeight():number {
@@ -411,7 +411,7 @@ module eui {
          * @copy eui.LinearLayoutBase#paddingLeft
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingLeft():number {
@@ -435,7 +435,7 @@ module eui {
          * @copy eui.LinearLayoutBase#paddingRight
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingRight():number {
@@ -459,7 +459,7 @@ module eui {
          * @copy eui.LinearLayoutBase#paddingTop
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingTop():number {
@@ -482,7 +482,7 @@ module eui {
          * @copy eui.LinearLayoutBase#paddingBottom
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingBottom():number {
@@ -512,7 +512,7 @@ module eui {
          * @default <code>JustifyAlign.JUSTIFY</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -524,7 +524,7 @@ module eui {
          * @default <code>JustifyAlign.JUSTIFY</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get horizontalAlign():string {
@@ -554,7 +554,7 @@ module eui {
          * @default <code>eui.JustifyAlign.JUSTIFY</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -567,7 +567,7 @@ module eui {
          * @default <code>eui.JustifyAlign.JUSTIFY</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get verticalAlign():string {
@@ -615,7 +615,7 @@ module eui {
          * @default ColumnAlign.LEFT
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -637,7 +637,7 @@ module eui {
          * @default ColumnAlign.LEFT
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get columnAlign():string {
@@ -683,7 +683,7 @@ module eui {
          * @default RowAlign.TOP
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -705,7 +705,7 @@ module eui {
          * @default RowAlign.TOP
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get rowAlign():string {
@@ -732,7 +732,7 @@ module eui {
          * @default TileOrientation.ROWS
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -742,7 +742,7 @@ module eui {
          * @default TileOrientation.ROWS
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get orientation():string {
@@ -773,7 +773,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public measure():void {
@@ -967,7 +967,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public clearVirtualLayoutCache():void {
@@ -996,7 +996,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public scrollPositionChanged():void {
@@ -1083,7 +1083,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public updateDisplayList(width:number, height:number):void {

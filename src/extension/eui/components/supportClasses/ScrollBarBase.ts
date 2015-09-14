@@ -41,7 +41,7 @@ module eui {
      * @see eui.IViewport
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -53,7 +53,7 @@ module eui {
      * @see eui.IViewport
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class ScrollBarBase extends Component {
@@ -61,14 +61,14 @@ module eui {
          * @language en_US
          * Constructor.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个ScrollBarBase实例。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -80,7 +80,7 @@ module eui {
          * [SkinPart] Thumb display object.
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -88,7 +88,7 @@ module eui {
          * [SkinPart]滑块显示对象。
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public thumb:eui.UIComponent = null;
@@ -118,7 +118,7 @@ module eui {
          * @see eui.HScrollBar
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -138,7 +138,7 @@ module eui {
          * @see eui.HScrollBar
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get viewport():IViewport {
@@ -178,7 +178,7 @@ module eui {
          * Properties of viewport changed.
          * @param event 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -186,7 +186,7 @@ module eui {
          * 视区属性发生改变。
          * @param event 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onPropertyChanged(event:eui.PropertyEvent):void{

@@ -38,7 +38,7 @@ module eui {
      * @state upAndSelected Up state when the button is selected
      * @state downAndSelected Down state when the button is selected
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
      */
@@ -51,7 +51,7 @@ module eui {
      * @state upAndSelected 选择时的弹起状态
      * @state downAndSelected 选择时的按下状态
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
      */
@@ -62,7 +62,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -70,7 +70,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -87,7 +87,7 @@ module eui {
          * The data to render or edit.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -95,7 +95,7 @@ module eui {
          * 要呈示或编辑的数据。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get data():any {
@@ -113,7 +113,7 @@ module eui {
          * Update the view when the <code>data</code> property changes.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -121,7 +121,7 @@ module eui {
          * 当数据改变时，更新视图。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected dataChanged():void {
@@ -138,7 +138,7 @@ module eui {
          * can show itself as selected.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -146,7 +146,7 @@ module eui {
          * 如果项呈示器可以将其自身显示为已选中，则为 true。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selected():boolean {
@@ -166,7 +166,7 @@ module eui {
          * of the host component of the item renderer.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -174,7 +174,7 @@ module eui {
          * 项呈示器的数据提供程序中的项目索引。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public itemIndex:number = -1;
@@ -190,7 +190,7 @@ module eui {
          * Handles <code>TouchEvent.TOUCH_BEGIN</code> events
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -198,7 +198,7 @@ module eui {
          * 触碰开始时触发事件
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onTouchBegin(event:egret.TouchEvent):void {
@@ -223,7 +223,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected getCurrentState():string {

@@ -48,7 +48,7 @@ module EXML {
      * @param text the text of a EXML file.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -59,7 +59,7 @@ module EXML {
      * @param text 要解析的 EXML 文件内容。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export function parse(text:string):{new():any} {
@@ -81,7 +81,7 @@ module EXML {
      * @param useCache use cached EXML
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -95,7 +95,7 @@ module EXML {
      * @param useCache 使用缓存的EXML
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export function load(url:string, callBack?:(clazz:any, url:string) => void, thisObject?:any, useCache = false):void {

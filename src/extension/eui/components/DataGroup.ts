@@ -60,7 +60,7 @@ module eui {
      * @defaultProperty dataProvider
      * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -72,7 +72,7 @@ module eui {
      * @defaultProperty dataProvider
      * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class DataGroup extends Group {
@@ -82,7 +82,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -90,7 +90,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -118,7 +118,7 @@ module eui {
          * @copy eui.LayoutBase#useVirtualLayout
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get useVirtualLayout():boolean {
@@ -182,7 +182,7 @@ module eui {
          * @inheritDoc
          * 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void {
@@ -204,7 +204,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getElementAt(index:number):egret.DisplayObject {
@@ -259,7 +259,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateSize():void {
@@ -320,7 +320,7 @@ module eui {
          * @see eui.ArrayCollection
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -331,7 +331,7 @@ module eui {
          * @see eui.ArrayCollection
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get dataProvider():ICollection {
@@ -378,7 +378,7 @@ module eui {
          * @param event 事件<code>eui.CollectionEvent</code>的对象。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -388,7 +388,7 @@ module eui {
          * @param event 事件<code>eui.CollectionEvent</code>的对象。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onCollectionChange(event:CollectionEvent):void {
@@ -459,7 +459,7 @@ module eui {
          * @param index The index where the dataProvider item was added.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -472,7 +472,7 @@ module eui {
          * @param index 被添加到的索引。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected itemAdded(item:any, index:number):void {
@@ -506,7 +506,7 @@ module eui {
          * @param index The index of the item that is being removed.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -519,7 +519,7 @@ module eui {
          * @param index 被移除的索引。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected itemRemoved(item:any, index:number):void {
@@ -599,7 +599,7 @@ module eui {
          * takes precedence over this property.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -608,7 +608,7 @@ module eui {
          * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get itemRenderer():any {
@@ -636,7 +636,7 @@ module eui {
          * takes precedence over the <code>itemRenderer</code> property.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -644,7 +644,7 @@ module eui {
          * 为某个特定数据项返回一个项呈示器类定义的函数。
          * rendererClass获取顺序：itemRendererFunction > itemRenderer > 默认ItemRenerer。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get itemRendererFunction():(item:any)=>any {
@@ -688,7 +688,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected createChildren():void {
@@ -706,7 +706,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -748,7 +748,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected measure():void {
@@ -763,7 +763,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -934,7 +934,7 @@ module eui {
          * @param data The data object this item renderer is representing.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -948,7 +948,7 @@ module eui {
          * @param data 此项呈示器正在表示的数据对象。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer {
@@ -964,7 +964,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get numElements():number {
@@ -986,7 +986,7 @@ module eui {
          * @param item The item that was added, the value of dataProvider[index].
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -1000,7 +1000,7 @@ module eui {
          * @param item 项呈示器对应的数据
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected rendererAdded(renderer:IItemRenderer, index:number, item:any):void {
@@ -1018,7 +1018,7 @@ module eui {
          * @param item The item that is being removed.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -1031,7 +1031,7 @@ module eui {
          * @param item 项呈示器对应的数据
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected rendererRemoved(renderer:IItemRenderer, index:number, item:any):void {

@@ -42,7 +42,7 @@ module eui {
      *
      * @defaultProperty source
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
      */
@@ -55,7 +55,7 @@ module eui {
      *
      * @defaultProperty source
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
      */
@@ -66,7 +66,7 @@ module eui {
          * Creates a new ArrayCollection using the specified source array.
          * If no array is specified an empty array will be used.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -74,7 +74,7 @@ module eui {
          * 构造函数。<p/>
          * 用指定的原始数组创建一个 ArrayCollection 实例。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(source?:any[]) {
@@ -97,7 +97,7 @@ module eui {
          * The ArrayCollection object does not represent any changes that you make
          * directly to the source array. Always use the ICollection methods to view the collection.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -106,7 +106,7 @@ module eui {
          * 通常情况下请不要直接调用Array的方法操作数据源，否则对应的视图无法收到数据改变的通知。通常都是通过ICollection的接口方法来查看数据。
          * 若对数据源进行了修改，请手动调用refresh()方法刷新数据。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get source():any[] {
@@ -127,7 +127,7 @@ module eui {
          * so you must call the <code>refresh()</code>
          * method to update the view after changing the source data.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -135,7 +135,7 @@ module eui {
          * 在对数据源进行排序或过滤操作后可以手动调用此方法刷新所有数据,以更新视图。
          * ArrayCollection 不会自动检原始数据进行了改变,所以你必须调用<code>refresh()</code>方法去更新显示。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public refresh():void {
@@ -152,7 +152,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get length():number {
@@ -165,7 +165,7 @@ module eui {
          * Equivalent to <code>addItemAt(item, length)</code>.
          * @param item The item to add.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -173,7 +173,7 @@ module eui {
          * 向列表末尾添加指定项目。等效于 <code>addItemAt(item, length)</code>。
          * @param item 要被添加的项。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public addItem(item:any):void {
@@ -190,7 +190,7 @@ module eui {
          * @param item The item to place at the index.
          * @param index The index at which to place the item.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -201,7 +201,7 @@ module eui {
          * @param item 要添加的项
          * @param index 要添加的指定索引位置
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public addItemAt(item:any, index:number):void {
@@ -216,7 +216,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getItemAt(index:number):any {
@@ -227,7 +227,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getItemIndex(item:any):number {
@@ -245,7 +245,7 @@ module eui {
          * Notifies the view that an item has been updated.
          * @param item The item within the view that was updated.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -253,7 +253,7 @@ module eui {
          * 通知视图，某个项目的属性已更新。
          * @param item 视图中需要被更新的项。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public itemUpdated(item:any):void {
@@ -267,14 +267,14 @@ module eui {
          * @language en_US
          * Removes all items from the list.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 删除列表中的所有项目。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public removeAll():void {
@@ -290,7 +290,7 @@ module eui {
          * @param index The index from which to remove the item.
          * @return The item that was removed.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -299,7 +299,7 @@ module eui {
          * @param index 要被移除的项的索引。
          * @return 被移除的项。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public removeItemAt(index:number):any {
@@ -319,7 +319,7 @@ module eui {
          * @param index The index at which to place the item.
          * @return The item that was replaced, or <code>null</code> if none.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -329,7 +329,7 @@ module eui {
          * @param index 要被替换的项的索引位置。
          * @return 被替换的项目，如果没有该项则返回<code>null</code> 。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public replaceItemAt(item:any, index:number):any {
@@ -347,7 +347,7 @@ module eui {
          * Replaces all items with a new source data, this method can not reset the scroller position of view.
          * @param newSource new source data.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -355,7 +355,7 @@ module eui {
          * 用新数据源替换原始数据源，此方法与直接设置source不同，它不会导致目标视图重置滚动位置。
          * @param newSource 新数据。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public replaceAll(newSource:any[]):void {

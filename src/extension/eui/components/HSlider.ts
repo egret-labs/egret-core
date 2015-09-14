@@ -39,7 +39,7 @@ module eui {
      *
      * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -49,7 +49,7 @@ module eui {
      *
      * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class HSlider extends SliderBase {
@@ -59,7 +59,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -67,7 +67,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -78,7 +78,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected pointToValue(x:number, y:number):number {
@@ -107,7 +107,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateSkinDisplayList():void {

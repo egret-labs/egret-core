@@ -35,7 +35,7 @@ module eui {
      * Layout class.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
      */
@@ -44,7 +44,7 @@ module eui {
      * JustifyAlign 定义布局类中 horizontalAlign 与 verticalAlign 属性需要的两端对齐常量值。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
      */
@@ -56,7 +56,7 @@ module eui {
          * container.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -64,7 +64,7 @@ module eui {
          * 相对于容器对齐子代。这会将所有子代的大小统一调整为与容器相同的尺寸。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static JUSTIFY:string = "justify";
@@ -78,7 +78,7 @@ module eui {
          * all the children will be sized to the width/height of the container.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -87,7 +87,7 @@ module eui {
          * 容器的内容宽度/高度是最大子代的大小。如果所有子代都小于容器的宽度/高度，则会将所有子代的大小调整为容器的宽度/高度。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static CONTENT_JUSTIFY:string = "contentJustify";

@@ -35,7 +35,7 @@ module eui {
 	 * <code>verticalCanScroll</code> properties of the Scroller classes.
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
 	 */
@@ -45,7 +45,7 @@ module eui {
 	 * Scroller 类的 <code>horizontalCanScroll</code> 和 <code>verticalCanScroll</code> 属性的值。
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
 	 */
@@ -54,14 +54,14 @@ module eui {
 		 * @language en_US
 		 * Show the scrollbar if the children exceed the owner's dimension.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 如果子项超出父级的尺寸，则允许滚动，反之不允许滚动。
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static AUTO:string = "auto";
@@ -70,14 +70,14 @@ module eui {
 		 * @language en_US
 		 * Never show the scrollbar.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 从不允许滚动。
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static OFF:string = "off";
@@ -86,14 +86,14 @@ module eui {
 		 * @language en_US
 		 * Always show the scrollbar.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 总是允许滚动。
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static ON:string = "on";

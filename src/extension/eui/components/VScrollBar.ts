@@ -40,7 +40,7 @@ module eui {
      * provide scrolling functionality.</p>
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
      */
@@ -50,7 +50,7 @@ module eui {
      * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
      */
@@ -60,7 +60,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -101,7 +101,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onPropertyChanged(event:eui.PropertyEvent):void {

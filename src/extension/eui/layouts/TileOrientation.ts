@@ -35,7 +35,7 @@ module eui {
      * <code>orientation</code> property of the TileLayout class.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
      */
@@ -44,7 +44,7 @@ module eui {
      * TileOrientation 类为 TileLayout 类的 <code>orientation</code> 属性定义可能的值。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
      */
@@ -54,7 +54,7 @@ module eui {
          * Arranges elements row by row.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -62,7 +62,7 @@ module eui {
          * 逐行排列元素。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static ROWS:string = "rows";
@@ -72,7 +72,7 @@ module eui {
          * Arranges elements column by column.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -80,7 +80,7 @@ module eui {
          * 逐列排列元素。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static COLUMNS:string = "columns";

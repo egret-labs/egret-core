@@ -68,7 +68,7 @@ module eui {
      *      </e:Scroller>
      * </pre>
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -99,7 +99,7 @@ module eui {
      * </e:Scroller>
      * </pre>
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export function registerProperty(classDefinition:any,property:string,type:string,asDefault?:boolean):void{

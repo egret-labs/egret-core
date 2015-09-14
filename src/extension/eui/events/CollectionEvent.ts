@@ -35,7 +35,7 @@ module eui {
      * The eui.CollectionEvent class represents an event that is
      * dispatched when the associated collection changes.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
      */
@@ -43,7 +43,7 @@ module eui {
      * @language zh_CN
      * 集合类型数据改变事件
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
      */
@@ -52,14 +52,14 @@ module eui {
          * @language en_US
          * Dispatched when a collection has changed.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 集合类数据发生改变
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static COLLECTION_CHANGE:string = "collectionChange";
@@ -93,7 +93,7 @@ module eui {
          * a list of items before replaced.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -114,7 +114,7 @@ module eui {
          * @param oldItems 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean,
@@ -147,14 +147,14 @@ module eui {
          * The parameter value can be one of the values in the CollectionEventKind
          * class, or <code>null</code>, which indicates that the kind is unknown.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 指示发生的事件类型。此属性值可以是 CollectionEventKind 类中的一个值，也可以是 null，用于指示类型未知。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public kind:string;
@@ -163,14 +163,14 @@ module eui {
          * Array of objects with information about the items.
          * affected by the event.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 受事件影响的项目的列表。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public items:any[];
@@ -179,14 +179,14 @@ module eui {
          * When the <code>kine</code> is <code>CollectionEventKind.REPLACE</code> the value represents
          * a list of items before replaced.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public oldItems:any[];
@@ -201,7 +201,7 @@ module eui {
          * in the <code>items property</code> can be found
          * within the target collection.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -211,7 +211,7 @@ module eui {
          * CollectionEventKind.UPDATE
          * 则此属性为 items 属性中指定的项目集合中零号元素的的索引。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public location:number;
@@ -221,14 +221,14 @@ module eui {
          * the old location within the target collection
          * of the item(s) specified in the <code>items</code> property.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此属性为 items 属性中指定的项目在目标集合中原来位置的从零开始的索引。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public oldLocation:number;
@@ -237,7 +237,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected clean():void{
@@ -272,7 +272,7 @@ module eui {
          * a list of items before replaced.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -292,7 +292,7 @@ module eui {
          * @param oldItems 仅当kind的值为CollectionEventKind.REPLACE时，表示替换前的项目列表。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static dispatchCollectionEvent(target:egret.IEventDispatcher, eventType:string, kind?:string, location?:number,

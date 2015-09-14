@@ -41,7 +41,7 @@ module eui {
      * size of the <code>target</code>.</p>
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -53,7 +53,7 @@ module eui {
      * （计算 <code>target</code> 的默认大小）。</p>
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class LayoutBase extends egret.EventDispatcher {
@@ -62,14 +62,14 @@ module eui {
          * @language en_US
          * Constructor.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -87,7 +87,7 @@ module eui {
          * by this layout.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -95,7 +95,7 @@ module eui {
          * 此布局将测量其元素、调整其元素的大小并定位其元素的 Group 容器。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get target():Group {
@@ -127,7 +127,7 @@ module eui {
          * @default false
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -139,7 +139,7 @@ module eui {
          * @default false
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get useVirtualLayout():boolean {
@@ -177,7 +177,7 @@ module eui {
          * @param height the width of element
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -188,7 +188,7 @@ module eui {
          * @param height 元素的高
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setTypicalSize(width:number, height:number):void {
@@ -209,7 +209,7 @@ module eui {
          * <code>horizontalScrollPosition</code> properties change.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -218,7 +218,7 @@ module eui {
          * 属性更改时调用。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public scrollPositionChanged():void {
@@ -231,7 +231,7 @@ module eui {
          * to clear cached layout information when the target changes.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -240,7 +240,7 @@ module eui {
          * 则当布局目标改变时，布局目标可以使用此方法来清除已缓存布局信息。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public clearVirtualLayoutCache():void {
@@ -257,7 +257,7 @@ module eui {
          * @param index The index of the element that was added.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -268,7 +268,7 @@ module eui {
          * @param index 发生改变的子项索引
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public elementAdded(index:number):void {
@@ -285,7 +285,7 @@ module eui {
          * @param index The index of the element that was added.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -297,7 +297,7 @@ module eui {
          * @param index 发生改变的子项索引
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public elementRemoved(index:number):void {
@@ -310,7 +310,7 @@ module eui {
          * @return The indices of the visible element.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -320,7 +320,7 @@ module eui {
          * @return 可见的元素的索引。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getElementIndicesInView():number[]{
@@ -332,7 +332,7 @@ module eui {
          * Measures the target's default size based on its content.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -340,7 +340,7 @@ module eui {
          * 基于目标的内容测量其默认大小
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public measure():void {
@@ -357,7 +357,7 @@ module eui {
          * in the target's coordinates.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -368,7 +368,7 @@ module eui {
          * @param unscaledHeight 指定组件在目标坐标中的高度（以像素为单位）。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public updateDisplayList(width:number, height:number):void {

@@ -34,7 +34,7 @@ module eui {
      * The Binding class defines utility methods for performing data binding.
      * You can use the methods defined in this class to configure data bindings.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
      */
@@ -42,7 +42,7 @@ module eui {
      * @language zh_CN
      * 绑定工具类，用于执行数据绑定用的方法集。您可以使用此类中定义的方法来配置数据绑定。
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
      */
@@ -60,7 +60,7 @@ module eui {
          * @returns A ChangeWatcher instance, if at least one property name has been specified
          * to the <code>chain</code> argument; null otherwise.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -73,7 +73,7 @@ module eui {
          * @param prop 本次绑定要更新的目标属性名称。
          * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static bindProperty(host:any, chain:string[], target:any, prop:string):Watcher {
@@ -99,7 +99,7 @@ module eui {
          * @param thisObject <code>this</code> object of binding method
          * @returns A ChangeWatcher instance, if at least one property name has been  specified to the <code>chain</code> argument; null otherwise.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -111,7 +111,7 @@ module eui {
          * @param thisObject handler 方法绑定的this对象
          * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static bindHandler(host:any, chain:string[], handler:(value:any)=>void, thisObject:any):Watcher {

@@ -46,7 +46,7 @@ module eui {
      * You can change the skin of a component with the skinName property.
      * @event egret.Event.COMPLETE Dispatch when EXML used in this theme is loaded and parsed.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
      */
@@ -55,7 +55,7 @@ module eui {
      * 皮肤主题。注意：皮肤主题是一次性设置的默认值,并不能运行时切换所有组件默认皮肤。切换单个皮肤您可以自行对Component.skinName赋值来修改。
      * @event egret.Event.COMPLETE 当主题关联的EXML加载解析完成时派发
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
      */
@@ -70,7 +70,7 @@ module eui {
          * If null, you need to register with stage.registerImplementation("eui.Theme",theme)
          * manually.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -81,7 +81,7 @@ module eui {
          * @param stage 当前舞台引用。传入此参数，主题会自动注册自身到舞台上。
          * 若传入null，需要在外部手动调用 stage.registerImplementation("eui.Theme",theme) 来完成主题的注册。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(configURL:string, stage:egret.Stage) {
@@ -201,7 +201,7 @@ module eui {
          * <li>4. Repeat step 3 until find the skin name or the parent is <code>eui.Component</code>.</li>
          * @param client the component need to get the default skin.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -213,7 +213,7 @@ module eui {
          * <li>4.不断重复3直到查询到皮肤名或父类为swan.Component时停止。</li>
          * @param client 要获取默认皮肤的组件。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getSkinName(client:Component):string {
@@ -255,7 +255,7 @@ module eui {
          * @param hostComponentKey the name of host component, such as "eui.Button".
          * @param skinName the name of skin, such as "app.MyButtonSkin".
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -264,7 +264,7 @@ module eui {
          * @param hostComponentKey 主机组件名称，例如：“eui.Button”。
          * @param skinName 皮肤名称 例如："app.MyButtonSkin"。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public mapSkin(hostComponentKey:string, skinName:string):void {

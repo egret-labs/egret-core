@@ -39,7 +39,7 @@ module eui {
      * </pre>
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -52,7 +52,7 @@ module eui {
      *      Stage.registerImplementation("eui.IAssetAdapter",assetAdapter)
      * </pre>
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export interface IAssetAdapter{
@@ -63,7 +63,7 @@ module eui {
          * @param callBack called when complete resolving. Example：callBack(content:any,source:string):void;
          * @param thisObject <code>this</code> object of callback.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -73,7 +73,7 @@ module eui {
          * @param callBack 解析完成回调函数，示例：callBack(content:any,source:string):void;。
          * @param thisObject callBack的this引用。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         getAsset(source: string, callBack: (content: any, source: string) => void, thisObject: any): void;

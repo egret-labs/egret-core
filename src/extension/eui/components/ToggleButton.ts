@@ -52,7 +52,7 @@ module eui {
 	 * @state downAndSelected Down state when the button is selected
 	 * @state disabledAndSelected Disabled state when the button is selected
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
 	 */
@@ -72,7 +72,7 @@ module eui {
 	 * @state downAndSelected 按钮选择时的按下状态
 	 * @state disabledAndSelected 按钮选择时的禁用状态
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
 	 */
@@ -88,7 +88,7 @@ module eui {
 		 * and <code>false</code> if it is in the up state.
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -96,7 +96,7 @@ module eui {
 		 * 按钮处于按下状态时为 <code>true</code>，而按钮处于弹起状态时为 <code>false</code>。
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public get selected():boolean{
@@ -126,7 +126,7 @@ module eui {
 		 * @inheritDoc
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		protected getCurrentState():string{
@@ -153,7 +153,7 @@ module eui {
 		 * @inheritDoc
 		 *
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		protected buttonReleased():void{

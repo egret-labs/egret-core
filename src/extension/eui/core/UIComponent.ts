@@ -46,7 +46,7 @@ module eui {
      * property processing, measuring, layout, and drawing.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
 
@@ -61,7 +61,7 @@ module eui {
      * @event eui.UIEvent.CREATION_COMPLETE 当UI组件第一次被添加到舞台并完成初始化后调度
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
 
@@ -120,7 +120,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -131,7 +131,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         includeInLayout:boolean;
@@ -143,7 +143,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -153,7 +153,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         left:number;
@@ -166,7 +166,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -176,7 +176,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         right:number;
@@ -189,7 +189,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -199,7 +199,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         top:number;
@@ -212,7 +212,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -222,7 +222,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         bottom:number;
@@ -235,7 +235,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -245,7 +245,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         horizontalCenter:number;
@@ -258,7 +258,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -268,7 +268,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         verticalCenter:number;
@@ -283,7 +283,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -293,7 +293,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         percentWidth:number;
@@ -308,7 +308,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -318,7 +318,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         percentHeight:number;
@@ -328,14 +328,14 @@ module eui {
          * Number that specifies the explicit width of the component,
          * in pixels, in the component's coordinates.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 外部显式指定的宽度。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         explicitWidth:number;
@@ -346,7 +346,7 @@ module eui {
          * in pixels, in the component's coordinates.
          * @readOnly
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -354,7 +354,7 @@ module eui {
          * 外部显式指定的高度。
          * @readOnly
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         explicitHeight:number;
@@ -367,7 +367,7 @@ module eui {
          * the component's implementation.
          * @readOnly
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -375,7 +375,7 @@ module eui {
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          * @readOnly
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         minWidth:number;
@@ -386,14 +386,14 @@ module eui {
          * component's coordinates, in pixels. The default value of this property is
          * set by the component developer.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 组件的最大高度。同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         maxWidth:number;
@@ -405,14 +405,14 @@ module eui {
          * component's coordinates, in pixels. The default value depends on
          * the component's implementation.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 组件的最小高度,此属性设置为大于maxHeight的值时无效。同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         minHeight:number;
@@ -424,14 +424,14 @@ module eui {
          * component's coordinates, in pixels. The default value of this property is
          * set by the component developer.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 组件的最大高度,同时影响测量和自动布局的尺寸。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         maxHeight:number;
@@ -442,7 +442,7 @@ module eui {
          * @param width measured width
          * @param height measured height
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -451,7 +451,7 @@ module eui {
          * @param width 测量宽度
          * @param height 测量高度
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         setMeasuredSize(width:number, height:number):void;
@@ -476,7 +476,7 @@ module eui {
          * calls the appropriate invalidation method.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -490,7 +490,7 @@ module eui {
          *
          * 很少调用 Invalidation 方法。通常，在组件上设置属性会自动调用合适的 invalidation 方法。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         invalidateProperties():void;
@@ -502,7 +502,7 @@ module eui {
          * In general, subclassers should
          * override the <code>commitProperties()</code> method and not this method.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -510,7 +510,7 @@ module eui {
          * 由布局逻辑用于通过调用 commitProperties() 方法来验证组件的属性。
          * 通常，子类应覆盖 commitProperties() 方法，而不是覆盖此方法。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         validateProperties():void;
@@ -535,7 +535,7 @@ module eui {
          * calls the appropriate invalidation method.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -550,7 +550,7 @@ module eui {
          * 很少调用 Invalidation 方法。通常，在组件上设置属性会自动调用合适的 invalidation 方法。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         invalidateSize():void;
@@ -561,7 +561,7 @@ module eui {
          * @param recursive If <code>true</code>, call this method
          *  on the objects children.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -569,7 +569,7 @@ module eui {
          * 验证组件的尺寸。
          * @param recursive 如果为 true，则调用对象子项的此方法。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         validateSize(recursive?:boolean):void;
@@ -594,7 +594,7 @@ module eui {
          * calls the appropriate invalidation method.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -609,7 +609,7 @@ module eui {
          * 很少调用 Invalidation 方法。通常，在组件上设置属性会自动调用合适的 invalidation 方法。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         invalidateDisplayList():void;
@@ -619,14 +619,14 @@ module eui {
          * Validates the position and size of children and draws other
          * visuals.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 验证子项的位置和大小，并绘制其他可视内容。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         validateDisplayList():void;
@@ -645,7 +645,7 @@ module eui {
          * multiple times if the script sets the <code>width</code> property more than once.
          * This method lets you manually override this behavior.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -658,7 +658,7 @@ module eui {
          * 如果脚本多次设置了 width 属性，则延迟处理可防止进行多次处理。此方法允许您手动覆盖此行为。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         validateNow():void;
@@ -678,7 +678,7 @@ module eui {
          * @param layoutHeight The element's layout height.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -694,7 +694,7 @@ module eui {
          * @param layoutHeight 元素的布局高度。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void;
@@ -710,7 +710,7 @@ module eui {
          * @param y The y-coordinate of the top-left corner of the bounding box.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -724,7 +724,7 @@ module eui {
          * @param y 边框左上角的 Y 坐标。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         setLayoutBoundsPosition(x:number, y:number):void;
@@ -739,7 +739,7 @@ module eui {
          * @param bounds the instance of <code>egret.Rectangle</code> can set result.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -751,7 +751,7 @@ module eui {
          * @param bounds 可以放置结果的<code>egret.Rectangle</code>实例。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         getLayoutBounds(bounds:egret.Rectangle):void;
@@ -766,7 +766,7 @@ module eui {
          * @param bounds the instance of <code>egret.Rectangle</code> can set result.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -778,7 +778,7 @@ module eui {
          * @param bounds 可以放置结果的<code>egret.Rectangle</code>实例。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         getPreferredBounds(bounds:egret.Rectangle):void;

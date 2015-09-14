@@ -38,7 +38,7 @@ module eui {
      * @language en_US
      * Default instance of interface <code>IAssetAdapter</code>.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
@@ -46,7 +46,7 @@ module eui {
      * @language zh_CN
      * 默认的IAssetAdapter接口实现。
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
@@ -60,7 +60,7 @@ module eui {
          * example：callBack(content:any,source:string):void;
          * @param thisObject <code>this</code> object of callback method
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -70,7 +70,7 @@ module eui {
          * @param callBack 解析完成回调函数，示例：callBack(content:any,source:string):void;
          * @param thisObject callBack的 this 引用
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getAsset(source:string, callBack:(data:any, source:string) => void, thisObject:any):void {

@@ -84,7 +84,7 @@ module eui {
      * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -97,7 +97,7 @@ module eui {
      * @event eui.ItemTapEvent.ITEM_TAP 项呈示器单击事件。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class ListBase extends DataGroup {
@@ -105,13 +105,13 @@ module eui {
         /**
          * @language en_US
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -136,14 +136,14 @@ module eui {
          * @language en_US
          * Static constant representing the value "no selection".
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 未选中任何项时的索引值
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static NO_SELECTION:number = -1;
@@ -152,14 +152,14 @@ module eui {
          * @language en_US
          * Static constant representing no proposed selection.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 未设置缓存选中项的值
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static NO_PROPOSED_SELECTION:number = -2;
@@ -170,7 +170,7 @@ module eui {
          * If the value is <code>true</code>, the <code>selectedIndex</code> property
          * is always set to a value between 0 and (<code>dataProvider.length</code> - 1).
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -178,7 +178,7 @@ module eui {
          * 如果为 true，则控件中必须含有选中的数据项目。
          * 如果该值为 true，则始终将 selectedIndex 属性设置为 0 和 (dataProvider.length - 1) 之间的一个值。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get requireSelection():boolean {
@@ -223,7 +223,7 @@ module eui {
          *
          * @default -1
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -245,7 +245,7 @@ module eui {
          *
          * @default -1
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selectedIndex():number {
@@ -277,7 +277,7 @@ module eui {
          * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * value has changed.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -286,7 +286,7 @@ module eui {
          * @param value 索引值。
          * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected setSelectedIndex(value:number, dispatchChangeEvent?:boolean):void {
@@ -327,7 +327,7 @@ module eui {
          *
          * @default undefined
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -350,7 +350,7 @@ module eui {
          *
          * @default undefined
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selectedItem():any {
@@ -376,7 +376,7 @@ module eui {
          * @param value the new item need to select.
          * @param dispatchChangeEvent if true, the component will dispatch a "change" event if the
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -385,7 +385,7 @@ module eui {
          * @param value 要选中的项。
          * @param dispatchChangeEvent 当索引值发生改变，且该参数为true的时候，组件派发出一个“change”事件。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected setSelectedItem(value:any, dispatchChangeEvent:boolean = false):void {
@@ -405,14 +405,14 @@ module eui {
          * @language en_US
          * Processes the properties set on the component.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 处理对组件设置的属性
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -468,14 +468,14 @@ module eui {
          * @language en_US
          * Updates an item renderer for use or reuse.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 更新项呈示器，以备使用或重用
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public updateRenderer(renderer:IItemRenderer, itemIndex:number, data:any):IItemRenderer {
@@ -491,7 +491,7 @@ module eui {
          * @param selected <code>true</code> if the item is selected,
          * and <code>false</code> if it is deselected.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -500,7 +500,7 @@ module eui {
          * @param index 已选中的项目索引。
          * @param selected <code>true</code>为选中，<code>false</code>取消选中
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected itemSelected(index:number, selected:boolean):void {
@@ -529,7 +529,7 @@ module eui {
          * @return true if the selection was committed, or false if the selection
          * was cancelled.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -539,7 +539,7 @@ module eui {
          * @param dispatchChangedEvents 是否派发一个“changed”事件。
          * @return true 表示提交成功, false表示被取消
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
@@ -606,7 +606,7 @@ module eui {
          * @param add <code>true</code> if an item was added to the component,
          *  and <code>false</code> if an item was removed.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -615,7 +615,7 @@ module eui {
          * @param newIndex 新索引。
          * @param add 如果已将项目添加到组件，则为<code>true</code>；如果已删除项目，则为<code>false</code>。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected adjustSelection(newIndex:number, add:boolean = false):void {
@@ -635,7 +635,7 @@ module eui {
          * @param item The item being added.
          * @param index The index of the item being added.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -644,7 +644,7 @@ module eui {
          * @param item 被添加的项。
          * @param index 被添加的项的索引。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected itemAdded(item:any, index:number):void {
@@ -667,7 +667,7 @@ module eui {
          * @param item The item being removed.
          * @param index The index of the item being removed.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -676,7 +676,7 @@ module eui {
          * @param item 被移除的项。
          * @param index 被移除的项的索引。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected itemRemoved(item:any, index:number):void {
@@ -708,7 +708,7 @@ module eui {
          * Event Listener of source data changed.
          * @param The <code>egret.CollectionEvent</code> object.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -716,7 +716,7 @@ module eui {
          * 数据源改变事件处理。
          * @param event 事件 <code>egret.CollectionEvent</code> 的对象。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onCollectionChange(event:CollectionEvent):void {
@@ -735,14 +735,14 @@ module eui {
          * @language en_US
          * Default response to dataProvider refresh events: clear the selection and caret.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 数据源刷新
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected dataProviderRefreshed():void {
@@ -756,7 +756,7 @@ module eui {
          * @param index the index of renderer
          * @param item the data of renderer
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -766,7 +766,7 @@ module eui {
          * @param index 项呈示器的索引
          * @param item 项呈示器对应的数据
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected rendererAdded(renderer:IItemRenderer, index:number, item:any):void {
@@ -781,7 +781,7 @@ module eui {
          * @param index the index of renderer.
          * @param item the data of renderer.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -791,7 +791,7 @@ module eui {
          * @param index 项呈示器的索引
          * @param item 项呈示器对应的数据
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected rendererRemoved(renderer:IItemRenderer, index:number, item:any):void {
@@ -805,7 +805,7 @@ module eui {
          * item renderers. This method handles <code>egret.TouchEvent.TOUCH_END</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -814,7 +814,7 @@ module eui {
          * 事件的侦听。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onRendererTouchBegin(event:egret.TouchEvent):void {
@@ -829,7 +829,7 @@ module eui {
          * Handles <code>egret.TouchEvent.TOUCH_END</code> events and dispatch <code>ItemTapEvent.ITEM_TAP</code> event.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -837,7 +837,7 @@ module eui {
          * 触摸在项呈示器上结束，抛出<code>ItemTapEvent.ITEM_TAP</code>事件。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onRendererTouchEnd(event:egret.TouchEvent):void {

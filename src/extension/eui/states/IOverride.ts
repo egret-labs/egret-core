@@ -37,14 +37,14 @@ module eui {
 	 * property array must implement this interface.
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 */
 	/**
 	 * @language zh_CN
 	 * IOverride 接口定义视图状态的覆盖操作。State 类 overrides 属性数组中的所有条目均必须实现此接口。
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 */
 	export interface IOverride{
@@ -59,7 +59,7 @@ module eui {
 		 * @param host A component that contains view states.
 		 * @param parent The parent that a sub element be added.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -70,7 +70,7 @@ module eui {
 		 * @param host 含有视图状态的组件。
 		 * @param parent 子项添加到的父级容器。
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		apply(host:any,parent:egret.DisplayObjectContainer):void;
@@ -84,7 +84,7 @@ module eui {
 		 * @param host A component that contains view states.
 		 * @param parent The parent that a sub element be added.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -93,7 +93,7 @@ module eui {
 		 * @param host 含有视图状态的组件。
 		 * @param parent 子项添加到的父级容器。
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		remove(host:any,parent:egret.DisplayObjectContainer):void;
