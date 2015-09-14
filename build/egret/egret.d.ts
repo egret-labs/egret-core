@@ -9817,6 +9817,7 @@ declare module egret {
     }
 }
 declare module egret.sys {
+    var $TempStage: egret.Stage;
     /**
      * @private
      * Egret播放器
@@ -10307,7 +10308,6 @@ declare module egret.sys {
      * 心跳计时器单例
      */
     var $ticker: SystemTicker;
-    var $TempStage: egret.Stage;
 }
 declare module egret.sys {
     /**

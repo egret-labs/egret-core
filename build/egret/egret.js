@@ -13728,6 +13728,7 @@ var egret;
 (function (egret) {
     var sys;
     (function (sys) {
+        sys.$TempStage;
         /**
          * @private
          * Egret播放器
@@ -13781,6 +13782,7 @@ var egret;
                 if (this.isPlaying || !this.stage) {
                     return;
                 }
+                sys.$TempStage = sys.$TempStage || this.stage;
                 this.isPlaying = true;
                 if (!this.root) {
                     this.initialize();
@@ -14618,7 +14620,6 @@ var egret;
                 if (this.playerList.indexOf(player) != -1) {
                     return;
                 }
-                sys.$TempStage = player.stage;
                 if (DEBUG) {
                     egret_stages.push(player.stage);
                 }
@@ -14789,7 +14790,6 @@ var egret;
          * 心跳计时器单例
          */
         sys.$ticker = new sys.SystemTicker();
-        sys.$TempStage;
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 if (DEBUG) {

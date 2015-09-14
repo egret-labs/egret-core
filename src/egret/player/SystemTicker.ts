@@ -68,8 +68,6 @@ module egret.sys {
                 return;
             }
 
-            $TempStage = player.stage;
-
             if (DEBUG) {
                 egret_stages.push(player.stage);
             }
@@ -276,7 +274,6 @@ module egret.sys {
      */
     export var $ticker:SystemTicker = new sys.SystemTicker();
 
-    export var $TempStage:egret.Stage;
 }
 
 if (DEBUG) {
