@@ -4,6 +4,7 @@ import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import config = require('../lib/ProjectConfig');
 import globals = require("../Globals");
+import async = require("../lib/async/async.d.ts");
 
 class UpgradeCommand implements egret.Command {
     execute():number {
@@ -21,24 +22,37 @@ class UpgradeCommand implements egret.Command {
             version = "1.0.0";
         }
         var modify = require("./upgrade/ModifyProperties");
-        for (var i = 0; i < this.upgradeConfigArr.length; i++) {
-            var info = this.upgradeConfigArr[i];
+
+
+        async.eachSeries(this.upgradeConfigArr,function(info,callback){
+
+            function itemCallback(callback){
+                modify.save(v);
+                callback();
+            }
+
             var v = info["v"];
             var command = new info["command"]();
-
             var result = globals.compressVersion(version, v);
             if (result < 0) {
                 globals.log(1704, v);
-
-                if (command) {
-                    command.execute();
+                //command.useAsync;
+                if (!command) {
+                    callback();
                 }
-
-                modify.save(v);
+                if (command.useAsync){
+                    command.execute(itemCallback);
+                }
+                else{
+                    command.execute();
+                    itemCallback(callback);
+                }
             }
-        }
 
-        globals.exit(1702);
+
+        },function(){
+            globals.exit(1702);
+        });
     }
 
     private upgradeConfigArr = [
