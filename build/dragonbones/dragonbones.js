@@ -2522,6 +2522,146 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
+     *
+     *
+     * @example
+       <pre>
+        private exampleEvent():void
+        {
+            //获取动画数据
+            var skeletonData = RES.getRes("skeleton");
+            //获取纹理集数据
+            var textureData = RES.getRes("textureConfig");
+            //获取纹理集图片
+            var texture = RES.getRes("texture");
+
+            //创建一个工厂，用来创建Armature
+            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+            //把动画数据添加到工厂里
+            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+            //把纹理集数据和图片添加到工厂里
+            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+
+            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+            var armatureName:string = skeletonData.armature[0].name;
+            //从工厂里创建出Armature
+            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
+            //获取装载Armature的容器
+            var armatureDisplay = armature.display;
+            armatureDisplay.x = 200;
+            armatureDisplay.y = 400;
+            //把它添加到舞台上
+            this.addChild(armatureDisplay);
+
+            //监听事件时间轴上的事件
+            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
+            //监听骨骼时间轴上的事件
+            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
+            //监听动画完成事件
+            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
+            //监听动画开始事件
+            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
+            //监听循环动画，播放完一遍的事件
+            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
+            //监听声音事件
+            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
+            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
+
+            //取得这个Armature动画列表中的第一个动画的名字
+            var curAnimationName = armature.animation.animationList[0];
+            //播放一遍动画
+            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
+
+            //把Armature添加到心跳时钟里
+            dragonBones.WorldClock.clock.add(armature);
+            //心跳时钟开启
+            egret.Ticker.getInstance().register(function (advancedTime) {
+                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+            }, this);
+        }
+        private onFrameEvent(evt: dragonBones.FrameEvent):void
+        {
+            //打印出事件的类型，和事件的帧标签
+            console.log(evt.type, evt.frameLabel);
+        }
+
+        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
+        {
+            switch(evt.type)
+            {
+                case dragonBones.AnimationEvent.START:
+                     break;
+                case dragonBones.AnimationEvent.LOOP_COMPLETE:
+                     break;
+                case dragonBones.AnimationEvent.COMPLETE:
+                     //动画完成后销毁这个armature
+                     this.removeChild(evt.armature.display);
+                     dragonBones.WorldClock.clock.remove(evt.armature);
+                     evt.armature.dispose();
+                     break;
+            }
+        }
+
+        private onSoundEvent(evt: dragonBones.SoundEvent):void
+        {
+            //播放声音
+            var flySound:egret.Sound = RES.getRes(evt.sound);
+            console.log("soundEvent",evt.sound);
+        }
+
+       </pre>
+     */
+    var SoundEventManager = (function (_super) {
+        __extends(SoundEventManager, _super);
+        function SoundEventManager() {
+            _super.call(this);
+            if (SoundEventManager._instance) {
+                throw new Error("Singleton already constructed!");
+            }
+        }
+        var d = __define,c=SoundEventManager;p=c.prototype;
+        SoundEventManager.getInstance = function () {
+            if (!SoundEventManager._instance) {
+                SoundEventManager._instance = new SoundEventManager();
+            }
+            return SoundEventManager._instance;
+        };
+        return SoundEventManager;
+    })(dragonBones.EventDispatcher);
+    dragonBones.SoundEventManager = SoundEventManager;
+    egret.registerClass(SoundEventManager,"dragonBones.SoundEventManager");
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
      * @class dragonBones.Armature
      * @classdesc
      * Armature 是 DragonBones 骨骼动画系统的核心。他包含需要加到场景的显示对象，所有的骨骼逻辑和动画系统
@@ -2995,6 +3135,252 @@ var dragonBones;
     })(dragonBones.EventDispatcher);
     dragonBones.Armature = Armature;
     egret.registerClass(Armature,"dragonBones.Armature",["dragonBones.IAnimatable"]);
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.Matrix
+     * @classdesc
+     * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix 对象应用于 Transform 对象的 matrix 属性，然后应用该 Transform 对象作为显示对象的 transform 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
+     * 这些转换类型统称为仿射转换。仿射转换在转换时保持线条笔直，因此平行线保持平行。
+     * 转换矩阵对象为具有如下内容的 3 x 3 的矩阵：
+     *  a  c  tx
+     *  b  d  ty
+     *  u  v  w
+     * 在传统的转换矩阵中，u、v 和 w 属性具有其他功能。Matrix 类只能在二维空间中操作，因此始终假定属性值 u 和 v 为 0.0，属性值 w 为 1.0。矩阵的有效值如下：
+     *  a  c  tx
+     *  b  d  ty
+     *  0  0  1
+     * 您可以获取和设置 Matrix 对象的全部六个其他属性的值：a、b、c、d、tx 和 ty。
+     * Matrix 类支持四种主要类型的转换：平移、缩放、旋转和倾斜。您可以使用特定的方法来设置这些转换的其中三个，如下表中所述：
+     * 转换	              矩阵值                      说明
+     * 平移（置换）	                            将图像 tx 像素向右移动，将 ty 像素向下移动。
+     *                   1  0  tx
+     *                   0  1  ty
+     *                   0  0  1
+     * 缩放                                     将每个像素的位置乘以 x 轴的 sx 和 y 轴的 sy，从而调整图像的大小。
+     *                   Sx  0  0
+     *                   0  Sy  0
+     *                   0  0   1
+     * 旋转                                     将图像旋转一个以弧度为单位的角度 q。
+     *                   cos(q)  -sin(q)  0
+     *                   sin(q)  cos(q)   0
+     *                   0         0      1
+     * 倾斜或剪切                               以平行于 x 轴或 y 轴的方向逐渐滑动图像。Matrix 对象的 b 属性表示斜角沿 y 轴的正切；Matrix 对象的 c 属性表示斜角沿 x 轴的正切。
+     *                  0        tan(skewX) 0
+     *                  tan(skewY)  0       0
+     *                   0          0       1
+     * 每个转换函数都将更改当前矩阵的属性，所以您可以有效地合并多个转换。为此，请先调用多个转换函数，再将矩阵应用于其显示对象目标（通过使用该显示对象的 transform 属性）。
+     */
+    var Matrix = (function () {
+        /**
+         *构造函数，实例化一个Matrix，默认为是一个单位矩阵
+         */
+        function Matrix() {
+            this.a = 1;
+            this.b = 0;
+            this.c = 0;
+            this.d = 1;
+            this.tx = 0;
+            this.ty = 0;
+        }
+        var d = __define,c=Matrix;p=c.prototype;
+        /**
+         *执行原始矩阵的逆转换。逆矩阵和单位矩阵相乘会得到的单位矩阵
+         */
+        p.invert = function () {
+            var a1 = this.a;
+            var b1 = this.b;
+            var c1 = this.c;
+            var d1 = this.d;
+            var tx1 = this.tx;
+            var n = a1 * d1 - b1 * c1;
+            this.a = d1 / n;
+            this.b = -b1 / n;
+            this.c = -c1 / n;
+            this.d = a1 / n;
+            this.tx = (c1 * this.ty - d1 * tx1) / n;
+            this.ty = -(a1 * this.ty - b1 * tx1) / n;
+        };
+        /**
+         *将某个矩阵与当前矩阵相乘，从而将这两个矩阵的几何效果有效地结合在一起。
+         * 右乘，其几何意义是将两次几何变换变成一次
+         * @param m
+         */
+        p.concat = function (m) {
+            var ma = m.a;
+            var mb = m.b;
+            var mc = m.c;
+            var md = m.d;
+            var tx1 = this.tx;
+            var ty1 = this.ty;
+            if (ma != 1 || mb != 0 || mc != 0 || md != 1) {
+                var a1 = this.a;
+                var b1 = this.b;
+                var c1 = this.c;
+                var d1 = this.d;
+                this.a = a1 * ma + b1 * mc;
+                this.b = a1 * mb + b1 * md;
+                this.c = c1 * ma + d1 * mc;
+                this.d = c1 * mb + d1 * md;
+            }
+            this.tx = tx1 * ma + ty1 * mc + m.tx;
+            this.ty = tx1 * mb + ty1 * md + m.ty;
+        };
+        p.copyFrom = function (m) {
+            this.tx = m.tx;
+            this.ty = m.ty;
+            this.a = m.a;
+            this.b = m.b;
+            this.c = m.c;
+            this.d = m.d;
+        };
+        return Matrix;
+    })();
+    dragonBones.Matrix = Matrix;
+    egret.registerClass(Matrix,"dragonBones.Matrix");
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.DBTransform
+     * @classdesc
+     * Dragonbones中使用的transform
+     * 可以表示位移，旋转，缩放三种属性
+     */
+    var DBTransform = (function () {
+        /**
+         * 创建一个 DBTransform 实例.
+         */
+        function DBTransform() {
+            this.x = 0;
+            this.y = 0;
+            this.skewX = 0;
+            this.skewY = 0;
+            this.scaleX = 1;
+            this.scaleY = 1;
+        }
+        var d = __define,c=DBTransform;p=c.prototype;
+        d(p, "rotation"
+            /**
+             * 旋转，用弧度表示
+             * @member {number} dragonBones.DBTransform#rotation
+             */
+            ,function () {
+                return this.skewX;
+            }
+            ,function (value) {
+                this.skewX = this.skewY = value;
+            }
+        );
+        /**
+         * 拷贝传入的transfrom实例的所有属性
+         * @param node
+         */
+        p.copy = function (transform) {
+            this.x = transform.x;
+            this.y = transform.y;
+            this.skewX = transform.skewX;
+            this.skewY = transform.skewY;
+            this.scaleX = transform.scaleX;
+            this.scaleY = transform.scaleY;
+        };
+        /**
+         * transform加法
+         * @param node
+         */
+        p.add = function (transform) {
+            this.x += transform.x;
+            this.y += transform.y;
+            this.skewX += transform.skewX;
+            this.skewY += transform.skewY;
+            this.scaleX *= transform.scaleX;
+            this.scaleY *= transform.scaleY;
+        };
+        /**
+         * transform减法
+         * @param node
+         */
+        p.minus = function (transform) {
+            this.x -= transform.x;
+            this.y -= transform.y;
+            this.skewX -= transform.skewX;
+            this.skewY -= transform.skewY;
+            this.scaleX /= transform.scaleX;
+            this.scaleY /= transform.scaleY;
+        };
+        p.normalizeRotation = function () {
+            this.skewX = dragonBones.TransformUtil.normalizeRotation(this.skewX);
+            this.skewY = dragonBones.TransformUtil.normalizeRotation(this.skewY);
+        };
+        /**
+         * 把DBTransform的所有属性转成用String类型表示
+         * @return 一个字符串包含有DBTransform的所有属性
+         */
+        p.toString = function () {
+            var string = "x:" + this.x + " y:" + this.y + " skewX:" + this.skewX + " skewY:" + this.skewY + " scaleX:" + this.scaleX + " scaleY:" + this.scaleY;
+            return string;
+        };
+        return DBTransform;
+    })();
+    dragonBones.DBTransform = DBTransform;
+    egret.registerClass(DBTransform,"dragonBones.DBTransform");
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -5865,146 +6251,6 @@ var dragonBones;
     })(dragonBones.Event);
     dragonBones.SoundEvent = SoundEvent;
     egret.registerClass(SoundEvent,"dragonBones.SoundEvent");
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     *
-     *
-     * @example
-       <pre>
-        private exampleEvent():void
-        {
-            //获取动画数据
-            var skeletonData = RES.getRes("skeleton");
-            //获取纹理集数据
-            var textureData = RES.getRes("textureConfig");
-            //获取纹理集图片
-            var texture = RES.getRes("texture");
-
-            //创建一个工厂，用来创建Armature
-            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-            //把动画数据添加到工厂里
-            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-            //把纹理集数据和图片添加到工厂里
-            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-            var armatureName:string = skeletonData.armature[0].name;
-            //从工厂里创建出Armature
-            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-            //获取装载Armature的容器
-            var armatureDisplay = armature.display;
-            armatureDisplay.x = 200;
-            armatureDisplay.y = 400;
-            //把它添加到舞台上
-            this.addChild(armatureDisplay);
-
-            //监听事件时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
-            //监听骨骼时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
-            //监听动画完成事件
-            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
-            //监听动画开始事件
-            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
-            //监听循环动画，播放完一遍的事件
-            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
-            //监听声音事件
-            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
-            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
-
-            //取得这个Armature动画列表中的第一个动画的名字
-            var curAnimationName = armature.animation.animationList[0];
-            //播放一遍动画
-            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
-
-            //把Armature添加到心跳时钟里
-            dragonBones.WorldClock.clock.add(armature);
-            //心跳时钟开启
-            egret.Ticker.getInstance().register(function (advancedTime) {
-                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-            }, this);
-        }
-        private onFrameEvent(evt: dragonBones.FrameEvent):void
-        {
-            //打印出事件的类型，和事件的帧标签
-            console.log(evt.type, evt.frameLabel);
-        }
-
-        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
-        {
-            switch(evt.type)
-            {
-                case dragonBones.AnimationEvent.START:
-                     break;
-                case dragonBones.AnimationEvent.LOOP_COMPLETE:
-                     break;
-                case dragonBones.AnimationEvent.COMPLETE:
-                     //动画完成后销毁这个armature
-                     this.removeChild(evt.armature.display);
-                     dragonBones.WorldClock.clock.remove(evt.armature);
-                     evt.armature.dispose();
-                     break;
-            }
-        }
-
-        private onSoundEvent(evt: dragonBones.SoundEvent):void
-        {
-            //播放声音
-            var flySound:egret.Sound = RES.getRes(evt.sound);
-            console.log("soundEvent",evt.sound);
-        }
-
-       </pre>
-     */
-    var SoundEventManager = (function (_super) {
-        __extends(SoundEventManager, _super);
-        function SoundEventManager() {
-            _super.call(this);
-            if (SoundEventManager._instance) {
-                throw new Error("Singleton already constructed!");
-            }
-        }
-        var d = __define,c=SoundEventManager;p=c.prototype;
-        SoundEventManager.getInstance = function () {
-            if (!SoundEventManager._instance) {
-                SoundEventManager._instance = new SoundEventManager();
-            }
-            return SoundEventManager._instance;
-        };
-        return SoundEventManager;
-    })(dragonBones.EventDispatcher);
-    dragonBones.SoundEventManager = SoundEventManager;
-    egret.registerClass(SoundEventManager,"dragonBones.SoundEventManager");
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -9351,138 +9597,6 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @class dragonBones.Matrix
-     * @classdesc
-     * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix 对象应用于 Transform 对象的 matrix 属性，然后应用该 Transform 对象作为显示对象的 transform 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
-     * 这些转换类型统称为仿射转换。仿射转换在转换时保持线条笔直，因此平行线保持平行。
-     * 转换矩阵对象为具有如下内容的 3 x 3 的矩阵：
-     *  a  c  tx
-     *  b  d  ty
-     *  u  v  w
-     * 在传统的转换矩阵中，u、v 和 w 属性具有其他功能。Matrix 类只能在二维空间中操作，因此始终假定属性值 u 和 v 为 0.0，属性值 w 为 1.0。矩阵的有效值如下：
-     *  a  c  tx
-     *  b  d  ty
-     *  0  0  1
-     * 您可以获取和设置 Matrix 对象的全部六个其他属性的值：a、b、c、d、tx 和 ty。
-     * Matrix 类支持四种主要类型的转换：平移、缩放、旋转和倾斜。您可以使用特定的方法来设置这些转换的其中三个，如下表中所述：
-     * 转换	              矩阵值                      说明
-     * 平移（置换）	                            将图像 tx 像素向右移动，将 ty 像素向下移动。
-     *                   1  0  tx
-     *                   0  1  ty
-     *                   0  0  1
-     * 缩放                                     将每个像素的位置乘以 x 轴的 sx 和 y 轴的 sy，从而调整图像的大小。
-     *                   Sx  0  0
-     *                   0  Sy  0
-     *                   0  0   1
-     * 旋转                                     将图像旋转一个以弧度为单位的角度 q。
-     *                   cos(q)  -sin(q)  0
-     *                   sin(q)  cos(q)   0
-     *                   0         0      1
-     * 倾斜或剪切                               以平行于 x 轴或 y 轴的方向逐渐滑动图像。Matrix 对象的 b 属性表示斜角沿 y 轴的正切；Matrix 对象的 c 属性表示斜角沿 x 轴的正切。
-     *                  0        tan(skewX) 0
-     *                  tan(skewY)  0       0
-     *                   0          0       1
-     * 每个转换函数都将更改当前矩阵的属性，所以您可以有效地合并多个转换。为此，请先调用多个转换函数，再将矩阵应用于其显示对象目标（通过使用该显示对象的 transform 属性）。
-     */
-    var Matrix = (function () {
-        /**
-         *构造函数，实例化一个Matrix，默认为是一个单位矩阵
-         */
-        function Matrix() {
-            this.a = 1;
-            this.b = 0;
-            this.c = 0;
-            this.d = 1;
-            this.tx = 0;
-            this.ty = 0;
-        }
-        var d = __define,c=Matrix;p=c.prototype;
-        /**
-         *执行原始矩阵的逆转换。逆矩阵和单位矩阵相乘会得到的单位矩阵
-         */
-        p.invert = function () {
-            var a1 = this.a;
-            var b1 = this.b;
-            var c1 = this.c;
-            var d1 = this.d;
-            var tx1 = this.tx;
-            var n = a1 * d1 - b1 * c1;
-            this.a = d1 / n;
-            this.b = -b1 / n;
-            this.c = -c1 / n;
-            this.d = a1 / n;
-            this.tx = (c1 * this.ty - d1 * tx1) / n;
-            this.ty = -(a1 * this.ty - b1 * tx1) / n;
-        };
-        /**
-         *将某个矩阵与当前矩阵相乘，从而将这两个矩阵的几何效果有效地结合在一起。
-         * 右乘，其几何意义是将两次几何变换变成一次
-         * @param m
-         */
-        p.concat = function (m) {
-            var ma = m.a;
-            var mb = m.b;
-            var mc = m.c;
-            var md = m.d;
-            var tx1 = this.tx;
-            var ty1 = this.ty;
-            if (ma != 1 || mb != 0 || mc != 0 || md != 1) {
-                var a1 = this.a;
-                var b1 = this.b;
-                var c1 = this.c;
-                var d1 = this.d;
-                this.a = a1 * ma + b1 * mc;
-                this.b = a1 * mb + b1 * md;
-                this.c = c1 * ma + d1 * mc;
-                this.d = c1 * mb + d1 * md;
-            }
-            this.tx = tx1 * ma + ty1 * mc + m.tx;
-            this.ty = tx1 * mb + ty1 * md + m.ty;
-        };
-        p.copyFrom = function (m) {
-            this.tx = m.tx;
-            this.ty = m.ty;
-            this.a = m.a;
-            this.b = m.b;
-            this.c = m.c;
-            this.d = m.d;
-        };
-        return Matrix;
-    })();
-    dragonBones.Matrix = Matrix;
-    egret.registerClass(Matrix,"dragonBones.Matrix");
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
      * @class dragonBones.Point
      * @classdesc
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
@@ -10301,120 +10415,6 @@ var dragonBones;
     })();
     dragonBones.CurveData = CurveData;
     egret.registerClass(CurveData,"dragonBones.CurveData");
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.DBTransform
-     * @classdesc
-     * Dragonbones中使用的transform
-     * 可以表示位移，旋转，缩放三种属性
-     */
-    var DBTransform = (function () {
-        /**
-         * 创建一个 DBTransform 实例.
-         */
-        function DBTransform() {
-            this.x = 0;
-            this.y = 0;
-            this.skewX = 0;
-            this.skewY = 0;
-            this.scaleX = 1;
-            this.scaleY = 1;
-        }
-        var d = __define,c=DBTransform;p=c.prototype;
-        d(p, "rotation"
-            /**
-             * 旋转，用弧度表示
-             * @member {number} dragonBones.DBTransform#rotation
-             */
-            ,function () {
-                return this.skewX;
-            }
-            ,function (value) {
-                this.skewX = this.skewY = value;
-            }
-        );
-        /**
-         * 拷贝传入的transfrom实例的所有属性
-         * @param node
-         */
-        p.copy = function (transform) {
-            this.x = transform.x;
-            this.y = transform.y;
-            this.skewX = transform.skewX;
-            this.skewY = transform.skewY;
-            this.scaleX = transform.scaleX;
-            this.scaleY = transform.scaleY;
-        };
-        /**
-         * transform加法
-         * @param node
-         */
-        p.add = function (transform) {
-            this.x += transform.x;
-            this.y += transform.y;
-            this.skewX += transform.skewX;
-            this.skewY += transform.skewY;
-            this.scaleX *= transform.scaleX;
-            this.scaleY *= transform.scaleY;
-        };
-        /**
-         * transform减法
-         * @param node
-         */
-        p.minus = function (transform) {
-            this.x -= transform.x;
-            this.y -= transform.y;
-            this.skewX -= transform.skewX;
-            this.skewY -= transform.skewY;
-            this.scaleX /= transform.scaleX;
-            this.scaleY /= transform.scaleY;
-        };
-        p.normalizeRotation = function () {
-            this.skewX = dragonBones.TransformUtil.normalizeRotation(this.skewX);
-            this.skewY = dragonBones.TransformUtil.normalizeRotation(this.skewY);
-        };
-        /**
-         * 把DBTransform的所有属性转成用String类型表示
-         * @return 一个字符串包含有DBTransform的所有属性
-         */
-        p.toString = function () {
-            var string = "x:" + this.x + " y:" + this.y + " skewX:" + this.skewX + " skewY:" + this.skewY + " scaleX:" + this.scaleX + " scaleY:" + this.scaleY;
-            return string;
-        };
-        return DBTransform;
-    })();
-    dragonBones.DBTransform = DBTransform;
-    egret.registerClass(DBTransform,"dragonBones.DBTransform");
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

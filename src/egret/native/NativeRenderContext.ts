@@ -42,6 +42,9 @@ module egret.native {
 
         private $matrix:Matrix = new Matrix();
 
+        public $nativeContext:any = egret_native.Graphics;
+        public $nativeGraphicsContext:any = egret_native.rastergl;
+
         /**
          * @private
          * 与绘图上线文关联的画布实例
@@ -65,7 +68,7 @@ module egret.native {
             this.$globalCompositeOperation = value;
             var arr = blendModesForGL[value];
             if (arr) {
-                egret_native.Graphics.setBlendArg(arr[0], arr[1]);
+                this.$nativeContext.setBlendArg(arr[0], arr[1]);
             }
         }
 
@@ -83,7 +86,7 @@ module egret.native {
 
         public set globalAlpha(value:number) {
             this.$globalAlpha = value;
-            egret_native.Graphics.setGlobalAlpha(value);
+            this.$nativeContext.setGlobalAlpha(value);
         }
 
         /**
@@ -137,7 +140,7 @@ module egret.native {
         public set lineWidth(value:number) {
             //console.log("set lineWidth" + value);
             this.$lineWidth = value;
-            egret_native.rastergl.lineWidth = value;
+            this.$nativeGraphicsContext.lineWidth = value;
         }
 
         private $strokeStyle:any = "#000000";
@@ -163,7 +166,7 @@ module egret.native {
             //console.log("strokeStyle::" + value);
             this.$strokeStyle = value;
             egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
-            egret_native.rastergl.strokeStyle = value;
+            this.$nativeGraphicsContext.strokeStyle = value;
         }
 
         private $fillStyle:any = "#000000";
@@ -189,7 +192,7 @@ module egret.native {
             //console.log("fillStyle::" + value);
             this.$fillStyle = value;
             egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
-            egret_native.rastergl.fillStyle = value;
+            this.$nativeGraphicsContext.fillStyle = value;
         }
 
         private $fillColorStr(s:string):string {
@@ -302,7 +305,7 @@ module egret.native {
          * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            egret_native.rastergl.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            this.$nativeGraphicsContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
         }
 
         /**
@@ -316,7 +319,7 @@ module egret.native {
          * @platform Web,Native
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
-            egret_native.rastergl.quadraticCurveTo(cpx, cpy, x, y);
+            this.$nativeGraphicsContext.quadraticCurveTo(cpx, cpy, x, y);
         }
 
         /**
@@ -328,7 +331,7 @@ module egret.native {
          * @platform Web,Native
          */
         public lineTo(x:number, y:number):void {
-            egret_native.rastergl.lineTo(x, y);
+            this.$nativeGraphicsContext.lineTo(x, y);
         }
 
         /**
@@ -341,7 +344,7 @@ module egret.native {
          * @platform Web,Native
          */
         public fill(fillRule?:string):void {
-            egret_native.rastergl.fill(fillRule);
+            this.$nativeGraphicsContext.fill(fillRule);
         }
 
         /**
@@ -351,7 +354,7 @@ module egret.native {
          * @platform Web,Native
          */
         public closePath():void {
-            egret_native.rastergl.closePath();
+            this.$nativeGraphicsContext.closePath();
         }
 
         /**
@@ -365,7 +368,7 @@ module egret.native {
          * @platform Web,Native
          */
         public rect(x:number, y:number, w:number, h:number):void {
-            egret_native.rastergl.rect(x, y, w, h);
+            this.$nativeGraphicsContext.rect(x, y, w, h);
             this.$clipRect.setTo(x, y, w, h);
         }
 
@@ -378,7 +381,7 @@ module egret.native {
          * @platform Web,Native
          */
         public moveTo(x:number, y:number):void {
-            egret_native.rastergl.moveTo(x, y);
+            this.$nativeGraphicsContext.moveTo(x, y);
         }
 
         /**
@@ -392,7 +395,7 @@ module egret.native {
          * @platform Web,Native
          */
         public fillRect(x:number, y:number, w:number, h:number):void {
-            egret_native.rastergl.fillRect(x, y, w, h);
+            this.$nativeGraphicsContext.fillRect(x, y, w, h);
         }
 
         /**
@@ -409,7 +412,7 @@ module egret.native {
          * @platform Web,Native
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
-            egret_native.rastergl.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            this.$nativeGraphicsContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
         }
 
         /**
@@ -419,7 +422,7 @@ module egret.native {
          * @platform Web,Native
          */
         public stroke():void {
-            egret_native.rastergl.stroke();
+            this.$nativeGraphicsContext.stroke();
         }
 
         /**
@@ -434,7 +437,7 @@ module egret.native {
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
             //console.log("strokeRect");
-            egret_native.rastergl.strokeRect(x, y, w, h);
+            this.$nativeGraphicsContext.strokeRect(x, y, w, h);
         }
 
         /**
@@ -444,7 +447,7 @@ module egret.native {
          * @platform Web,Native
          */
         public beginPath():void {
-            egret_native.rastergl.beginPath();
+            this.$nativeGraphicsContext.beginPath();
         }
 
         /**
@@ -459,7 +462,7 @@ module egret.native {
          * @platform Web,Native
          */
         public arcTo(x1:number, y1:number, x2:number, y2:number, radius:number):void {
-            egret_native.rastergl.arcTo(x1, y1, x2, y2, radius);
+            this.$nativeGraphicsContext.arcTo(x1, y1, x2, y2, radius);
         }
 
         /**
@@ -539,7 +542,7 @@ module egret.native {
                     var length:number = this.$clipList.length;
                     this.$clipList.splice(index, length - index);
                     for (; index < length; index++) {
-                        egret_native.Graphics.popClip();
+                        this.$nativeContext.popClip();
                     }
                 }
                 this.$saveCount--;
@@ -583,7 +586,7 @@ module egret.native {
         public clip(fillRule?:string):void {
             if (this.$clipRect.width > 0 && this.$clipRect.height > 0) {
                 //console.log("push clip" + this.$clipRect.x);
-                egret_native.Graphics.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
                 this.$clipRect.setEmpty();
                 this.$clipList.push(this.$saveCount);
             }
@@ -601,7 +604,7 @@ module egret.native {
          */
         public clearRect(x:number, y:number, width:number, height:number):void {
             //console.log("clearScreen");
-            egret_native.Graphics.clearScreen(1, 0, 0);
+            this.$nativeContext.clearRect(x, y, width, height);
         }
 
         /**
@@ -624,7 +627,7 @@ module egret.native {
         private setTransformToNative():void {
             var m = this.$matrix;
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
-            egret_native.Graphics.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
 
         /**
@@ -638,7 +641,7 @@ module egret.native {
          * @platform Web,Native
          */
         public createLinearGradient(x0:number, y0:number, x1:number, y1:number):GraphicsGradient {
-            return egret_native.rastergl.createLinearGradient(x0, y0, x1, y1);
+            return this.$nativeGraphicsContext.createLinearGradient(x0, y0, x1, y1);
         }
 
         /**
@@ -654,7 +657,7 @@ module egret.native {
          * @platform Web,Native
          */
         public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):GraphicsGradient {
-            return egret_native.rastergl.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            return this.$nativeGraphicsContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
         }
 
         /**
@@ -705,7 +708,7 @@ module egret.native {
             else {
                 bitmapData = image;
             }
-            if (!bitmapData || !bitmapData["avaliable"]) {
+            if (!bitmapData) {
                 return;
             }
             if(arguments.length == 3) {
@@ -737,7 +740,7 @@ module egret.native {
                 }
             }
             //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
-            egret_native.Graphics.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+            this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
         }
 
         /**

@@ -107,7 +107,6 @@ module egret.native {
                     this.$nativeRenderTexture.dispose();
                 }
                 this.$nativeRenderTexture = new egret_native.RenderTexture(this.$width, this.$height);
-                this.$nativeRenderTexture["avaliable"] = true;
                 this.$widthReadySet = false;
                 this.$heightReadySet = false;
             }
