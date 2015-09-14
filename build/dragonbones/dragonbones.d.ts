@@ -721,6 +721,103 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
+     *
+     *
+     * @example
+       <pre>
+        private exampleEvent():void
+        {
+            //获取动画数据
+            var skeletonData = RES.getRes("skeleton");
+            //获取纹理集数据
+            var textureData = RES.getRes("textureConfig");
+            //获取纹理集图片
+            var texture = RES.getRes("texture");
+
+            //创建一个工厂，用来创建Armature
+            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+            //把动画数据添加到工厂里
+            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+            //把纹理集数据和图片添加到工厂里
+            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+
+            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+            var armatureName:string = skeletonData.armature[0].name;
+            //从工厂里创建出Armature
+            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
+            //获取装载Armature的容器
+            var armatureDisplay = armature.display;
+            armatureDisplay.x = 200;
+            armatureDisplay.y = 400;
+            //把它添加到舞台上
+            this.addChild(armatureDisplay);
+
+            //监听事件时间轴上的事件
+            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
+            //监听骨骼时间轴上的事件
+            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
+            //监听动画完成事件
+            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
+            //监听动画开始事件
+            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
+            //监听循环动画，播放完一遍的事件
+            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
+            //监听声音事件
+            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
+            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
+
+            //取得这个Armature动画列表中的第一个动画的名字
+            var curAnimationName = armature.animation.animationList[0];
+            //播放一遍动画
+            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
+
+            //把Armature添加到心跳时钟里
+            dragonBones.WorldClock.clock.add(armature);
+            //心跳时钟开启
+            egret.Ticker.getInstance().register(function (advancedTime) {
+                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+            }, this);
+        }
+        private onFrameEvent(evt: dragonBones.FrameEvent):void
+        {
+            //打印出事件的类型，和事件的帧标签
+            console.log(evt.type, evt.frameLabel);
+        }
+
+        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
+        {
+            switch(evt.type)
+            {
+                case dragonBones.AnimationEvent.START:
+                     break;
+                case dragonBones.AnimationEvent.LOOP_COMPLETE:
+                     break;
+                case dragonBones.AnimationEvent.COMPLETE:
+                     //动画完成后销毁这个armature
+                     this.removeChild(evt.armature.display);
+                     dragonBones.WorldClock.clock.remove(evt.armature);
+                     evt.armature.dispose();
+                     break;
+            }
+        }
+
+        private onSoundEvent(evt: dragonBones.SoundEvent):void
+        {
+            //播放声音
+            var flySound:egret.Sound = RES.getRes(evt.sound);
+            console.log("soundEvent",evt.sound);
+        }
+
+       </pre>
+     */
+    class SoundEventManager extends EventDispatcher {
+        private static _instance;
+        static getInstance(): SoundEventManager;
+        constructor();
+    }
+}
+declare module dragonBones {
+    /**
      * @class dragonBones.Armature
      * @classdesc
      * Armature 是 DragonBones 骨骼动画系统的核心。他包含需要加到场景的显示对象，所有的骨骼逻辑和动画系统
@@ -932,6 +1029,159 @@ declare module dragonBones {
          * @returns {any} Animation实例
          */
         getAnimation(): any;
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.Matrix
+     * @classdesc
+     * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix 对象应用于 Transform 对象的 matrix 属性，然后应用该 Transform 对象作为显示对象的 transform 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
+     * 这些转换类型统称为仿射转换。仿射转换在转换时保持线条笔直，因此平行线保持平行。
+     * 转换矩阵对象为具有如下内容的 3 x 3 的矩阵：
+     *  a  c  tx
+     *  b  d  ty
+     *  u  v  w
+     * 在传统的转换矩阵中，u、v 和 w 属性具有其他功能。Matrix 类只能在二维空间中操作，因此始终假定属性值 u 和 v 为 0.0，属性值 w 为 1.0。矩阵的有效值如下：
+     *  a  c  tx
+     *  b  d  ty
+     *  0  0  1
+     * 您可以获取和设置 Matrix 对象的全部六个其他属性的值：a、b、c、d、tx 和 ty。
+     * Matrix 类支持四种主要类型的转换：平移、缩放、旋转和倾斜。您可以使用特定的方法来设置这些转换的其中三个，如下表中所述：
+     * 转换	              矩阵值                      说明
+     * 平移（置换）	                            将图像 tx 像素向右移动，将 ty 像素向下移动。
+     *                   1  0  tx
+     *                   0  1  ty
+     *                   0  0  1
+     * 缩放                                     将每个像素的位置乘以 x 轴的 sx 和 y 轴的 sy，从而调整图像的大小。
+     *                   Sx  0  0
+     *                   0  Sy  0
+     *                   0  0   1
+     * 旋转                                     将图像旋转一个以弧度为单位的角度 q。
+     *                   cos(q)  -sin(q)  0
+     *                   sin(q)  cos(q)   0
+     *                   0         0      1
+     * 倾斜或剪切                               以平行于 x 轴或 y 轴的方向逐渐滑动图像。Matrix 对象的 b 属性表示斜角沿 y 轴的正切；Matrix 对象的 c 属性表示斜角沿 x 轴的正切。
+     *                  0        tan(skewX) 0
+     *                  tan(skewY)  0       0
+     *                   0          0       1
+     * 每个转换函数都将更改当前矩阵的属性，所以您可以有效地合并多个转换。为此，请先调用多个转换函数，再将矩阵应用于其显示对象目标（通过使用该显示对象的 transform 属性）。
+     */
+    class Matrix {
+        /**
+         * 缩放或旋转图像时影响像素沿 x 轴定位的值。
+         * @member {number} dragonBones.Matrix#a
+         */
+        a: number;
+        /**
+         * 旋转或倾斜图像时影响像素沿 y 轴定位的值。
+         * @member {number} dragonBones.Matrix#b
+         */
+        b: number;
+        /**
+         *旋转或倾斜图像时影响像素沿 x 轴定位的值。
+         * @member {number} dragonBones.Matrix#c
+         */
+        c: number;
+        /**
+         *缩放或旋转图像时影响像素沿 y 轴定位的值。
+         * @member {number} dragonBones.Matrix#d
+         */
+        d: number;
+        /**
+         *沿 x 轴平移每个点的距离。
+         * @member {number} dragonBones.Matrix#tx
+         */
+        tx: number;
+        /**
+         *沿 y 轴平移每个点的距离。
+         * @member {number} dragonBones.Matrix#ty
+         */
+        ty: number;
+        /**
+         *构造函数，实例化一个Matrix，默认为是一个单位矩阵
+         */
+        constructor();
+        /**
+         *执行原始矩阵的逆转换。逆矩阵和单位矩阵相乘会得到的单位矩阵
+         */
+        invert(): void;
+        /**
+         *将某个矩阵与当前矩阵相乘，从而将这两个矩阵的几何效果有效地结合在一起。
+         * 右乘，其几何意义是将两次几何变换变成一次
+         * @param m
+         */
+        concat(m: Matrix): void;
+        copyFrom(m: Matrix): void;
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.DBTransform
+     * @classdesc
+     * Dragonbones中使用的transform
+     * 可以表示位移，旋转，缩放三种属性
+     */
+    class DBTransform {
+        /**
+         * x坐标值
+         * @member {number} dragonBones.DBTransform#x
+         */
+        x: number;
+        /**
+         * y坐标值
+         * @member {number} dragonBones.DBTransform#y
+         */
+        y: number;
+        /**
+         * x方向的斜切，一般和skewY一起变化，可以表示旋转
+         * @member {number} dragonBones.DBTransform#skewX
+         */
+        skewX: number;
+        /**
+         * y方向的斜切，一般和skewX一起变化，可以表示旋转
+         * @member {number} dragonBones.DBTransform#skewY
+         */
+        skewY: number;
+        /**
+         * x方向的缩放
+         * @member {number} dragonBones.DBTransform#scaleX
+         */
+        scaleX: number;
+        /**
+         * y方向的缩放
+         * @member {number} dragonBones.DBTransform#scaleY
+         */
+        scaleY: number;
+        /**
+         * 旋转，用弧度表示
+         * @member {number} dragonBones.DBTransform#rotation
+         */
+        rotation: number;
+        /**
+         * 创建一个 DBTransform 实例.
+         */
+        constructor();
+        /**
+         * 拷贝传入的transfrom实例的所有属性
+         * @param node
+         */
+        copy(transform: DBTransform): void;
+        /**
+         * transform加法
+         * @param node
+         */
+        add(transform: DBTransform): void;
+        /**
+         * transform减法
+         * @param node
+         */
+        minus(transform: DBTransform): void;
+        normalizeRotation(): void;
+        /**
+         * 把DBTransform的所有属性转成用String类型表示
+         * @return 一个字符串包含有DBTransform的所有属性
+         */
+        toString(): string;
     }
 }
 declare module dragonBones {
@@ -2369,103 +2619,6 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
-     *
-     *
-     * @example
-       <pre>
-        private exampleEvent():void
-        {
-            //获取动画数据
-            var skeletonData = RES.getRes("skeleton");
-            //获取纹理集数据
-            var textureData = RES.getRes("textureConfig");
-            //获取纹理集图片
-            var texture = RES.getRes("texture");
-
-            //创建一个工厂，用来创建Armature
-            var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-            //把动画数据添加到工厂里
-            factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-            //把纹理集数据和图片添加到工厂里
-            factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-
-            //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-            var armatureName:string = skeletonData.armature[0].name;
-            //从工厂里创建出Armature
-            var armature:dragonBones.Armature = factory.buildArmature(armatureName);
-            //获取装载Armature的容器
-            var armatureDisplay = armature.display;
-            armatureDisplay.x = 200;
-            armatureDisplay.y = 400;
-            //把它添加到舞台上
-            this.addChild(armatureDisplay);
-
-            //监听事件时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT, this.onFrameEvent,this);
-            //监听骨骼时间轴上的事件
-            armature.addEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT, this.onFrameEvent,this);
-            //监听动画完成事件
-            armature.addEventListener(dragonBones.AnimationEvent.COMPLETE, this.onAnimationEvent,this);
-            //监听动画开始事件
-            armature.addEventListener(dragonBones.AnimationEvent.START, this.onAnimationEvent,this);
-            //监听循环动画，播放完一遍的事件
-            armature.addEventListener(dragonBones.AnimationEvent.LOOP_COMPLETE, this.onAnimationEvent,this);
-            //监听声音事件
-            var soundManager:dragonBones.SoundEventManager = dragonBones.SoundEventManager.getInstance();
-            soundManager.addEventListener(dragonBones.SoundEvent.SOUND, this.onSoundEvent,this);
-
-            //取得这个Armature动画列表中的第一个动画的名字
-            var curAnimationName = armature.animation.animationList[0];
-            //播放一遍动画
-            armature.animation.gotoAndPlay(curAnimationName,0,-1,1);
-
-            //把Armature添加到心跳时钟里
-            dragonBones.WorldClock.clock.add(armature);
-            //心跳时钟开启
-            egret.Ticker.getInstance().register(function (advancedTime) {
-                dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-            }, this);
-        }
-        private onFrameEvent(evt: dragonBones.FrameEvent):void
-        {
-            //打印出事件的类型，和事件的帧标签
-            console.log(evt.type, evt.frameLabel);
-        }
-
-        private onAnimationEvent(evt: dragonBones.AnimationEvent):void
-        {
-            switch(evt.type)
-            {
-                case dragonBones.AnimationEvent.START:
-                     break;
-                case dragonBones.AnimationEvent.LOOP_COMPLETE:
-                     break;
-                case dragonBones.AnimationEvent.COMPLETE:
-                     //动画完成后销毁这个armature
-                     this.removeChild(evt.armature.display);
-                     dragonBones.WorldClock.clock.remove(evt.armature);
-                     evt.armature.dispose();
-                     break;
-            }
-        }
-
-        private onSoundEvent(evt: dragonBones.SoundEvent):void
-        {
-            //播放声音
-            var flySound:egret.Sound = RES.getRes(evt.sound);
-            console.log("soundEvent",evt.sound);
-        }
-
-       </pre>
-     */
-    class SoundEventManager extends EventDispatcher {
-        private static _instance;
-        static getInstance(): SoundEventManager;
-        constructor();
-    }
-}
-declare module dragonBones {
-    /**
      * @class dragonBones.BaseFactory
      * @classdesc
      * 工厂的基类
@@ -3575,89 +3728,6 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
-     * @class dragonBones.Matrix
-     * @classdesc
-     * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix 对象应用于 Transform 对象的 matrix 属性，然后应用该 Transform 对象作为显示对象的 transform 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
-     * 这些转换类型统称为仿射转换。仿射转换在转换时保持线条笔直，因此平行线保持平行。
-     * 转换矩阵对象为具有如下内容的 3 x 3 的矩阵：
-     *  a  c  tx
-     *  b  d  ty
-     *  u  v  w
-     * 在传统的转换矩阵中，u、v 和 w 属性具有其他功能。Matrix 类只能在二维空间中操作，因此始终假定属性值 u 和 v 为 0.0，属性值 w 为 1.0。矩阵的有效值如下：
-     *  a  c  tx
-     *  b  d  ty
-     *  0  0  1
-     * 您可以获取和设置 Matrix 对象的全部六个其他属性的值：a、b、c、d、tx 和 ty。
-     * Matrix 类支持四种主要类型的转换：平移、缩放、旋转和倾斜。您可以使用特定的方法来设置这些转换的其中三个，如下表中所述：
-     * 转换	              矩阵值                      说明
-     * 平移（置换）	                            将图像 tx 像素向右移动，将 ty 像素向下移动。
-     *                   1  0  tx
-     *                   0  1  ty
-     *                   0  0  1
-     * 缩放                                     将每个像素的位置乘以 x 轴的 sx 和 y 轴的 sy，从而调整图像的大小。
-     *                   Sx  0  0
-     *                   0  Sy  0
-     *                   0  0   1
-     * 旋转                                     将图像旋转一个以弧度为单位的角度 q。
-     *                   cos(q)  -sin(q)  0
-     *                   sin(q)  cos(q)   0
-     *                   0         0      1
-     * 倾斜或剪切                               以平行于 x 轴或 y 轴的方向逐渐滑动图像。Matrix 对象的 b 属性表示斜角沿 y 轴的正切；Matrix 对象的 c 属性表示斜角沿 x 轴的正切。
-     *                  0        tan(skewX) 0
-     *                  tan(skewY)  0       0
-     *                   0          0       1
-     * 每个转换函数都将更改当前矩阵的属性，所以您可以有效地合并多个转换。为此，请先调用多个转换函数，再将矩阵应用于其显示对象目标（通过使用该显示对象的 transform 属性）。
-     */
-    class Matrix {
-        /**
-         * 缩放或旋转图像时影响像素沿 x 轴定位的值。
-         * @member {number} dragonBones.Matrix#a
-         */
-        a: number;
-        /**
-         * 旋转或倾斜图像时影响像素沿 y 轴定位的值。
-         * @member {number} dragonBones.Matrix#b
-         */
-        b: number;
-        /**
-         *旋转或倾斜图像时影响像素沿 x 轴定位的值。
-         * @member {number} dragonBones.Matrix#c
-         */
-        c: number;
-        /**
-         *缩放或旋转图像时影响像素沿 y 轴定位的值。
-         * @member {number} dragonBones.Matrix#d
-         */
-        d: number;
-        /**
-         *沿 x 轴平移每个点的距离。
-         * @member {number} dragonBones.Matrix#tx
-         */
-        tx: number;
-        /**
-         *沿 y 轴平移每个点的距离。
-         * @member {number} dragonBones.Matrix#ty
-         */
-        ty: number;
-        /**
-         *构造函数，实例化一个Matrix，默认为是一个单位矩阵
-         */
-        constructor();
-        /**
-         *执行原始矩阵的逆转换。逆矩阵和单位矩阵相乘会得到的单位矩阵
-         */
-        invert(): void;
-        /**
-         *将某个矩阵与当前矩阵相乘，从而将这两个矩阵的几何效果有效地结合在一起。
-         * 右乘，其几何意义是将两次几何变换变成一次
-         * @param m
-         */
-        concat(m: Matrix): void;
-        copyFrom(m: Matrix): void;
-    }
-}
-declare module dragonBones {
-    /**
      * @class dragonBones.Point
      * @classdesc
      * Point 对象表示二维坐标系统中的某个位置，其中 x 表示水平轴，y 表示垂直轴。
@@ -4042,76 +4112,6 @@ declare module dragonBones {
         isCurve(): boolean;
         point1: Point;
         point2: Point;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.DBTransform
-     * @classdesc
-     * Dragonbones中使用的transform
-     * 可以表示位移，旋转，缩放三种属性
-     */
-    class DBTransform {
-        /**
-         * x坐标值
-         * @member {number} dragonBones.DBTransform#x
-         */
-        x: number;
-        /**
-         * y坐标值
-         * @member {number} dragonBones.DBTransform#y
-         */
-        y: number;
-        /**
-         * x方向的斜切，一般和skewY一起变化，可以表示旋转
-         * @member {number} dragonBones.DBTransform#skewX
-         */
-        skewX: number;
-        /**
-         * y方向的斜切，一般和skewX一起变化，可以表示旋转
-         * @member {number} dragonBones.DBTransform#skewY
-         */
-        skewY: number;
-        /**
-         * x方向的缩放
-         * @member {number} dragonBones.DBTransform#scaleX
-         */
-        scaleX: number;
-        /**
-         * y方向的缩放
-         * @member {number} dragonBones.DBTransform#scaleY
-         */
-        scaleY: number;
-        /**
-         * 旋转，用弧度表示
-         * @member {number} dragonBones.DBTransform#rotation
-         */
-        rotation: number;
-        /**
-         * 创建一个 DBTransform 实例.
-         */
-        constructor();
-        /**
-         * 拷贝传入的transfrom实例的所有属性
-         * @param node
-         */
-        copy(transform: DBTransform): void;
-        /**
-         * transform加法
-         * @param node
-         */
-        add(transform: DBTransform): void;
-        /**
-         * transform减法
-         * @param node
-         */
-        minus(transform: DBTransform): void;
-        normalizeRotation(): void;
-        /**
-         * 把DBTransform的所有属性转成用String类型表示
-         * @return 一个字符串包含有DBTransform的所有属性
-         */
-        toString(): string;
     }
 }
 declare module dragonBones {
