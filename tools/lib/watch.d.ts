@@ -6,6 +6,7 @@ export interface WatchOption {
     ignoreDirectoryPattern?: RegExp;
     ignoreDotFiles?: boolean;
     ignoreUnreadableDir?: boolean;
+    [other:string]:any;
 }
 
 export interface Monitor extends events.EventEmitter {

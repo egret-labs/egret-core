@@ -204,6 +204,18 @@ var EgretProperties = (function () {
         }
         return "resource";
     };
+    EgretProperties.prototype.getPublishType = function (runtime) {
+        if (globals.hasKeys(this.properties, ["publish", runtime])) {
+            return this.properties["publish"][runtime];
+        }
+        return 0;
+    };
+    EgretProperties.prototype.getResources = function () {
+        if (globals.hasKeys(this.properties, ["publish", "resource"])) {
+            return this.properties["publish"]["resource"];
+        }
+        return ["resource"];
+    };
     return EgretProperties;
 })();
 var config = config || new EgretProperties();

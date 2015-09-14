@@ -19,7 +19,7 @@
 import sax = require("./sax");
 var saxparser = sax.parser(true);
 
-function parse(xmlString): egret.XML {
+export function parse(xmlString): egret.XML {
     var object:sax.Tag = null;
     var namespaces = {};
     var hasError = false;
@@ -104,4 +104,4 @@ function toString() {
     return this.text;
 };
 
-export = { parse: parse };
+//export = { parse: parse };

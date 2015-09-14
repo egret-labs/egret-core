@@ -98,6 +98,10 @@
             "platform": "native"
           },
           {
+            "path": "net/native/NativeHttpRequest.ts",
+            "platform": "native"
+          },
+          {
             "path": "net/native/NativeImageLoader.ts",
             "platform": "native"
           },
@@ -264,6 +268,13 @@
         "description": "Egret Tween",
         "files": [ ],
         "root": "src/extension/tween",
+        "dependencies": [ "egret" ]
+      },
+      {
+        "name": "dragonbones",
+        "description": "dragonbones",
+        "files": [ ],
+        "root": "src/extension/dragonbones",
         "dependencies": [ "egret" ]
       }
     ],

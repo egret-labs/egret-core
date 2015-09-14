@@ -23,6 +23,7 @@ export function normalize(project: egret.ILarkProject) {
     project.showFPS = project.showFPS || false;
     project.fpsStyles = project.fpsStyles || "";
     project.scripts = project.scripts || [];
+    project.nativeScripts = project.nativeScripts || [];
     project.resolutionMode = project.resolutionMode || "retina";
 }
 
@@ -35,6 +36,7 @@ export function parseProjectInfo(html: string): egret.ILarkProject[] {
     var containers: htmlparser.Element[] = [];
     var projects: egret.ILarkProject[] = [];
     var scripts: string[] = [];
+    var nativeScripts: string[] = [];
     var parser = new htmlparser.Parser(handler);
     parser.parseComplete(html);
     handler.dom.forEach(d=> visitDom(d));
@@ -46,6 +48,7 @@ export function parseProjectInfo(html: string): egret.ILarkProject[] {
             containers.push(el);
         }
         if (el.type == "script" && el.attribs) {
+            nativeScripts.push(el.attribs['src'].replace(".web.", ".native."));
             scripts.push(el.attribs['src']);
         }
         if (el.children) {
@@ -71,6 +74,7 @@ export function parseProjectInfo(html: string): egret.ILarkProject[] {
             project.textureScaleFactor = s.attribs['texture-scale-factor'];
             project.maxTouches = s.attribs['data-multi-fingered'];
             project.scripts = scripts;
+            project.nativeScripts = nativeScripts;
             projects.push(project);
         });
     }

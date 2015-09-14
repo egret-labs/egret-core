@@ -42,15 +42,15 @@ function executeCommandLine(args) {
     egret.args = options;
     var versionCheck = version.check();
     var shouldUseOtherVersion = false;
-    // �������ֶ�ָ���������汾,��ôʹ����Ҫ�İ汾ִ������
+    // 如果项手动指定了引擎版本,那么使用需要的版本执行命令
     if (versionCheck.requestOtherVersion) {
         shouldUseOtherVersion = true;
     }
-    // ������Ŀ�汾�������汾��һ�£���ôʹ����Ҫ�İ汾ִ������
+    // 如果项目版本跟引擎版本不一致，那么使用需要的版本执行命令
     if (versionCheck.projectUsingOtherVersion && options.command != "upgrade") {
         shouldUseOtherVersion = true;
     }
-    //�����û�û�а�װ��Ҫ�����棬ʹ�õ�ǰ�汾ִ��
+    //如果用户没有安装需要的引擎，使用当前版本执行
     if (versionCheck.hasTargetEngine == false) {
         shouldUseOtherVersion = false;
     }

@@ -4,6 +4,9 @@
 import utils = require('../lib/utils');
 import FileUtil = require('../lib/FileUtil');
 import childProcess = require("child_process");
+import CompileTemplate = require('../actions/CompileTemplate');
+import CopyFilesCommand = require("../commands/copyfile");
+import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
 class NativeProject {
     public static copyNativeTemplate = copyNativeTemplate;
@@ -11,6 +14,46 @@ class NativeProject {
 
     public static build(platform?: string) {
         console.log("----native build-----")
+
+        CompileTemplate.compileNativeRequire(egret.args);
+
+        //拷贝项目到native工程中
+        var cpFiles = new CopyFilesCommand();
+
+        var config = egret.args.properties;
+        var nativePath;
+        if (nativePath = egret.args.properties.getNativePath("android")) {
+            var url1 = FileUtil.joinPath(nativePath, "proj.android");
+            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
+            FileUtil.remove(url2);
+
+            cpFiles.outputPath = url2;
+            cpFiles.ignorePathList = config.getIgnorePath();
+            cpFiles.execute();
+
+
+            //修改java文件
+            var entrance = new ChangeEntranceCMD();
+            entrance.initCommand(url1, "android");
+            entrance.execute();
+        }
+
+        if (nativePath = egret.args.properties.getNativePath("ios")) {
+            var url1 = FileUtil.joinPath(nativePath, "proj.ios");
+            url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
+            FileUtil.remove(url2);
+
+            cpFiles.outputPath = url2;
+            cpFiles.ignorePathList = config.getIgnorePath();
+            cpFiles.execute();
+
+            //修改java文件
+            var entrance = new ChangeEntranceCMD();
+            entrance.initCommand(url1, "ios");
+            entrance.execute();
+        }
+
+        return;
         copyOutputToNative(platform);
         var platformFolders = getPlatformFolders(platform);
         console.log(platformFolders)

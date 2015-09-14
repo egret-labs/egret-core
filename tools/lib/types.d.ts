@@ -106,6 +106,7 @@ declare module egret {
     export interface EgretPropertiesClass {
         properties: Object;
         modulesConfig: Object;
+        init(projectRoot: string);
 
         /**
          * 是否有swan
@@ -169,6 +170,9 @@ declare module egret {
         getModuleReferenceInfo()
 
         getResourceName()
+
+        getPublishType(runtime:string):number;
+        getResources():Array<string>;
     }
 
     export interface ILarkProject {
@@ -187,6 +191,7 @@ declare module egret {
         entryClass?: string;
         moduleScripts?: string[];
         scripts?: string[];
+        nativeScripts?: string[];
         resolutionMode?: string;
         showFPS?: boolean;
         showPaintRect?: boolean;
@@ -195,6 +200,7 @@ declare module egret {
         logFilter?: string;
         maxTouches?: number;
         textureScaleFactor?: number;
+        [others: string]: any;
     }
 
     export interface CommandLineOption {
@@ -211,6 +217,7 @@ declare module egret {
         path?: string;
         version?: string;
         option: ToolArgs;
+        [others: string]: any;
     }
 
     export interface TaskResult {
@@ -235,6 +242,7 @@ declare module egret {
         export var options: ToolArgs;
         export interface ViewModel {
             options: ToolArgs;
+            [other:string]:any;
         }
         export var console: {
             on(event: string, listener: Function): any;

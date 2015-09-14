@@ -24,19 +24,8 @@ class CopyFilesCommand implements egret.Command {
         //1、清除文件夹
         file.remove(url);
 
-
-        //2、拷贝文件
-        //launcher
-        file.copy(file.joinPath(projectPath, "launcher/runtime_loader.js"), file.joinPath(url, "launcher/runtime_loader.js"));
-        file.copy(file.joinPath(projectPath, "launcher/native_loader.js"), file.joinPath(url, "launcher/native_loader.js"));
-        file.copy(file.joinPath(projectPath, "launcher/native_require.js"), file.joinPath(url, "launcher/native_require.js"));
-
         //js
-        file.copy(file.joinPath(projectPath, "bin-debug/src"), file.joinPath(url, "bin-debug/src"));
-        file.copy(file.joinPath(projectPath, "bin-debug/lib/egret_file_list_native.js"), file.joinPath(url, "bin-debug/lib/egret_file_list.js"));
-
-        //libs
-        file.copy(file.joinPath(projectPath, "libs"), file.joinPath(url, "libs"));
+        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(url));
 
         //resource
         if (file.exists(file.joinPath(projectPath, config.getResourceName()))) {

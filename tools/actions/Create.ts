@@ -29,6 +29,7 @@ class Create implements egret.Command {
 
         CopyFiles.copyLark();
 
+        options.outDir = FileUtil.joinPath("..", options.outDir);
         compileTemplate(proj);
         var compileProject = new CompileProject();
         var result = compileProject.compileProject(options);

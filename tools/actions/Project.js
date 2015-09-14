@@ -18,6 +18,7 @@ function normalize(project) {
     project.showFPS = project.showFPS || false;
     project.fpsStyles = project.fpsStyles || "";
     project.scripts = project.scripts || [];
+    project.nativeScripts = project.nativeScripts || [];
     project.resolutionMode = project.resolutionMode || "retina";
 }
 exports.normalize = normalize;
@@ -29,6 +30,7 @@ function parseProjectInfo(html) {
     var containers = [];
     var projects = [];
     var scripts = [];
+    var nativeScripts = [];
     var parser = new htmlparser.Parser(handler);
     parser.parseComplete(html);
     handler.dom.forEach(function (d) { return visitDom(d); });
@@ -39,6 +41,7 @@ function parseProjectInfo(html) {
             containers.push(el);
         }
         if (el.type == "script" && el.attribs) {
+            nativeScripts.push(el.attribs['src'].replace(".web.", ".native."));
             scripts.push(el.attribs['src']);
         }
         if (el.children) {
@@ -63,6 +66,7 @@ function parseProjectInfo(html) {
             project.textureScaleFactor = s.attribs['texture-scale-factor'];
             project.maxTouches = s.attribs['data-multi-fingered'];
             project.scripts = scripts;
+            project.nativeScripts = nativeScripts;
             projects.push(project);
         });
     }
