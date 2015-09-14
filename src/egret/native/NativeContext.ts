@@ -42,8 +42,11 @@ declare module egret_native {
     function callRender():void;
 
     function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+
     function onTouchesMove(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+
     function onTouchesEnd(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
+
     function onTouchesCancel(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
 
     /**
@@ -235,8 +238,11 @@ declare module egret_native {
         begin();
 
         end();
+
         dispose();
+
         toDataURL(type);
+
         saveToFile(type:string, filePath:string);
     }
 
@@ -292,5 +298,28 @@ declare module egret_native {
         function listResource(root, promise);
 
         function listUpdate(root, promise);
+    }
+
+    class RenderContext {
+        clearScreen(r:number, g:number, b:number):void;
+
+        drawImage(texture:any, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight):void;
+
+        setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void;
+
+        setGlobalAlpha(alpha:number):void;
+
+        pushClip(x:number, y:number, w:number, h:number):void;
+
+        popClip():void;
+    }
+
+    class Canvas {
+        constructor(width:number, height:number);
+
+        width:number;
+        height:number;
+
+        getContext(type:string):RenderContext;
     }
 }
