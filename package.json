@@ -276,6 +276,13 @@
         "files": [ ],
         "root": "src/extension/dragonbones",
         "dependencies": [ "egret" ]
+      },
+      {
+        "name": "socket",
+        "description": "Web Socket",
+        "files": [ ],
+        "root": "src/extension/socket",
+        "dependencies": [ "egret" ]
       }
     ],
     "platforms": [

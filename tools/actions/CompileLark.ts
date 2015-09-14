@@ -121,7 +121,7 @@ class CompileLark {
     }
 
     private hideInternalMethods() {
-
+return;
         var tempDts:string[] = [];
         global.ignoreDollar = true;
         this.dtsFiles.forEach(d=> {

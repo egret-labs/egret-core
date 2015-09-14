@@ -110,6 +110,7 @@ var CompileLark = (function () {
     };
     CompileLark.prototype.hideInternalMethods = function () {
         var _this = this;
+        return;
         var tempDts = [];
         global.ignoreDollar = true;
         this.dtsFiles.forEach(function (d) {
