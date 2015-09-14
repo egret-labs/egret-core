@@ -415,13 +415,14 @@ module egret {
 
         public _onTouchEnd(event: TouchEvent): void {
             this.touchChildren = true;
+            var scrollStartedOld = this._ScrV_Props_._scrollStarted;
             this._ScrV_Props_._scrollStarted = false;
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
             egret.MainContext.instance.stage.removeEventListener(TouchEvent.LEAVE_STAGE, this._onTouchEnd, this);
             this.removeEventListener(Event.ENTER_FRAME, this._onEnterFrame, this);
             
-            this._moveAfterTouchEnd();
+            scrollStartedOld && this._moveAfterTouchEnd();
         }
 
 
