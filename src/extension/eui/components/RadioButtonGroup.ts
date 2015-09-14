@@ -74,7 +74,7 @@ module eui {
      * this group changes.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
      */
@@ -85,7 +85,7 @@ module eui {
      * @event egret.Event.CHANGE 此组中所选 RadioButton 组件的值更改时分派。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
      */
@@ -96,7 +96,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -104,7 +104,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -137,7 +137,7 @@ module eui {
          * @see eui.RadioButtonGroup#numRadioButtons
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -152,7 +152,7 @@ module eui {
          * @see eui.RadioButtonGroup#numRadioButtons
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getRadioButtonAt(index:number):RadioButton {
@@ -174,7 +174,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -185,7 +185,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get enabled():boolean {
@@ -210,7 +210,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -220,7 +220,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get numRadioButtons():number {
@@ -245,7 +245,7 @@ module eui {
          * @default null
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -260,7 +260,7 @@ module eui {
          * @default null
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selectedValue():any {
@@ -304,7 +304,7 @@ module eui {
          * @default null
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -314,7 +314,7 @@ module eui {
          * @default null
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selection():RadioButton {

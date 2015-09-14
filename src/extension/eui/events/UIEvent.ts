@@ -35,7 +35,7 @@ module eui {
      * The UIEvent class represents the event object passed to
      * the event listener for many UI events.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
      */
@@ -43,7 +43,7 @@ module eui {
      * @language zh_CN
      * UI事件
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
      */
@@ -60,7 +60,7 @@ module eui {
          * associated with the event can be prevented.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -72,7 +72,7 @@ module eui {
          * @param cancelable 指定是否可以防止与事件相关联的行为。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean){
@@ -83,14 +83,14 @@ module eui {
          * @language en_US
          * creation complete of component.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 组件创建完成
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static CREATION_COMPLETE:string = "creationComplete";
@@ -98,14 +98,14 @@ module eui {
          * @language en_US
          * the ending of change.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 改变结束
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static CHANGE_END:string = "changeEnd";
@@ -114,14 +114,14 @@ module eui {
          * @language en_US
          * The beginning of change.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 改变开始
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static CHANGE_START:string = "changeStart";
@@ -130,14 +130,14 @@ module eui {
          * @language en_US
          * Before close the panel.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 即将关闭面板事件
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static CLOSING:string = "closing";
@@ -146,14 +146,14 @@ module eui {
          * @language en_US
          * The coordinates of the UI components changed in it's parent.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * UI组件在父级容器中的坐标发生改变事件
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static MOVE:string = "move";
@@ -167,7 +167,7 @@ module eui {
          * @param eventType The event type; indicates the action that triggered the event.
          * 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -178,7 +178,7 @@ module eui {
          * @param eventType 事件类型；指示触发事件的动作。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static dispatchUIEvent(target:egret.IEventDispatcher, eventType:string):boolean {

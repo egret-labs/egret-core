@@ -40,7 +40,7 @@ module eui {
 	 * to <code>true</code> for checked, and to <code>false</code> for unchecked.
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
 	 */
@@ -50,7 +50,7 @@ module eui {
 	 * 用户单击 CheckBox 组件或其关联文本时，CheckBox 组件会将其 selected 属性设置为 true（表示选中）或 false（表示取消选中）。
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
 	 */
@@ -59,14 +59,14 @@ module eui {
 		 * @language en_US
 		 * Constructor.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 创建一个CheckBox
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public constructor(){

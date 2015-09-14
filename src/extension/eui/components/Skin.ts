@@ -48,7 +48,7 @@ module eui {
      *
      * @defaultProperty elementsContent
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
      */
@@ -69,7 +69,7 @@ module eui {
      *
      * @defaultProperty elementsContent
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
      */
@@ -79,14 +79,14 @@ module eui {
          * @language en_US
          * The list of skin parts name
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 皮肤部件名称列表
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public skinParts:string[];
@@ -99,7 +99,7 @@ module eui {
          * @default 100000
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -109,7 +109,7 @@ module eui {
          * @default 100000
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxWidth:number = 100000;
@@ -121,7 +121,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -131,7 +131,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minWidth:number = 0;
@@ -143,7 +143,7 @@ module eui {
          * @default 100000
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -153,7 +153,7 @@ module eui {
          * @default 100000
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxHeight:number = 100000;
@@ -165,7 +165,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -175,7 +175,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minHeight:number = 0;
@@ -186,7 +186,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -196,7 +196,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public width:number = NaN;
@@ -208,7 +208,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -218,7 +218,7 @@ module eui {
          * @default NaN
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public height:number = NaN;
@@ -241,14 +241,14 @@ module eui {
          * @language en_US
          * The host component which the skin will be attached.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此皮肤附加到的主机组件
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get hostComponent():Component {
@@ -296,14 +296,14 @@ module eui {
          * @language en_US
          * The list of state for host component.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 为此组件定义的视图状态。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public states:State[];
@@ -313,14 +313,14 @@ module eui {
          * The current state of host component.
          * Set to <code>""</code> or <code>null</code> to reset the component back to its base state.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 组件的当前视图状态。将其设置为 "" 或 null 可将组件重置回其基本状态。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public currentState:string;
@@ -330,7 +330,7 @@ module eui {
          * Check if contains the specifies state name.
          * @param stateName the state name need to be checked
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -338,7 +338,7 @@ module eui {
          * 返回是否含有指定名称的视图状态
          * @param stateName 要检查的视图状态名称
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public hasState:(stateName:string)=>boolean;

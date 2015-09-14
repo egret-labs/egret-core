@@ -41,7 +41,7 @@ module eui {
      *
      * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -51,7 +51,7 @@ module eui {
      *
      * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class HScrollBar extends ScrollBarBase {
@@ -60,7 +60,7 @@ module eui {
          * @inheritDoc
          * 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -100,7 +100,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onPropertyChanged(event:eui.PropertyEvent):void {

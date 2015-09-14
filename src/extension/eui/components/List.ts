@@ -36,7 +36,7 @@ module eui {
      * on the value of the <code>allowMultipleSelection</code> property.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
      */
@@ -45,7 +45,7 @@ module eui {
      * List 控件可显示垂直或水平的项目列表。用户可以根据 <code>allowMultipleSelection</code> 属性的值从列表中选择一个或多个项目。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
      */
@@ -61,7 +61,7 @@ module eui {
          * @default false
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -72,7 +72,7 @@ module eui {
          * @default false
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public allowMultipleSelection:boolean = false;
@@ -95,7 +95,7 @@ module eui {
          * @default []
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -105,7 +105,7 @@ module eui {
          * @default []
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selectedIndices():number[] {
@@ -122,7 +122,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selectedIndex():number {
@@ -143,7 +143,7 @@ module eui {
          * An Array representing the currently selected data items.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -151,7 +151,7 @@ module eui {
          * 表示当前选定数据项的列表
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get selectedItems():any[] {
@@ -195,7 +195,7 @@ module eui {
          * @param dispatchChangeEvent whether dispatched a change event.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -206,7 +206,7 @@ module eui {
          * @param dispatchChangeEvent 是否派发changed事件
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected setSelectedIndices(value:number[], dispatchChangeEvent?:boolean):void {
@@ -226,7 +226,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -240,7 +240,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitSelection(dispatchChangedEvents:boolean = true):boolean {
@@ -313,7 +313,7 @@ module eui {
          * selection properties and view accordingly.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -321,7 +321,7 @@ module eui {
          * 从给定的选择区间中找出新增或者移除的项，并更新属性。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitMultipleSelection():void {
@@ -386,7 +386,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public dataProviderRefreshed():void {
@@ -438,7 +438,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onRendererTouchEnd(event:egret.TouchEvent):void {

@@ -33,7 +33,7 @@ module eui {
      * @language en_US
      * Represents events that are dispatched when a item has been touched.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
      */
@@ -41,7 +41,7 @@ module eui {
      * @language zh_CN
      * 列表项触碰事件
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
      */
@@ -50,14 +50,14 @@ module eui {
          * @language en_US
          * The type of the event object for an <code>itemTap</code> event.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * <code>itemTap</code> 事件的对象类型。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static ITEM_TAP:string = "itemTap";
@@ -66,14 +66,14 @@ module eui {
          * @language en_US
          * The item in the data provider of the associated item.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 触发触摸事件的项呈示器数据源项。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public item:any = null;
@@ -82,14 +82,14 @@ module eui {
          * @language en_US
          * The item renderer in the list of the associated item.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 触发触摸事件的项呈示器。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public itemRenderer:IItemRenderer = null;
@@ -98,14 +98,14 @@ module eui {
          * @language en_US
          * The index of the associated navigation item.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 触发触摸事件的项索引
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public itemIndex:number = -1;
@@ -114,7 +114,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected clean():void{
@@ -132,7 +132,7 @@ module eui {
          * @param itemRenderer The item renderer in the list of the associated item.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -144,7 +144,7 @@ module eui {
          * @param itemRenderer 触发触摸事件的项呈示器。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static dispatchItemTapEvent(target:egret.IEventDispatcher, eventType:string, itemRenderer?:IItemRenderer):boolean {

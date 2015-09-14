@@ -37,7 +37,7 @@ module eui {
      * You use this class in the <code>overrides</code> property of the State class.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
 
@@ -46,7 +46,7 @@ module eui {
      * SetProperty 类指定只在父视图状态期间有效的属性值。可以在 State 类的 overrides 属性中使用该类。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class SetProperty implements IOverride {
@@ -60,7 +60,7 @@ module eui {
          * @param value The value of the property in the view state.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -72,7 +72,7 @@ module eui {
          * @param value 视图状态中的属性值。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(target:string, name:string, value:any) {
@@ -89,7 +89,7 @@ module eui {
          * the property value directly.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -98,7 +98,7 @@ module eui {
          * 这个属性必须设置，在 SetProperty 构造函数中设置或通过直接设置该属性值设置。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public name:string;
@@ -110,7 +110,7 @@ module eui {
          * immediate parent of the State object.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -118,7 +118,7 @@ module eui {
          * 包含要更改的属性的对象。如果属性值为 null，则 Swan 将使用 State 对象的直接父级。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public target:string;
@@ -130,7 +130,7 @@ module eui {
          * @default undefined
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -140,7 +140,7 @@ module eui {
          * @default undefined
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public value:any;
@@ -155,7 +155,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public apply(host:Skin, parent:egret.DisplayObjectContainer):void {
@@ -170,7 +170,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public remove(host:Skin, parent:egret.DisplayObjectContainer):void {

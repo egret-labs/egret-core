@@ -34,7 +34,7 @@ module eui {
 	 * Defines values for setting the <code>direction</code> property
 	 * of the <code>ProgressBar</code> class.
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
 	 */
@@ -42,7 +42,7 @@ module eui {
 	 * @language zh_CN
 	 * 定义进度条等控件增长方向的常量
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
 	 */
@@ -51,14 +51,14 @@ module eui {
 		 * @language en_US
 		 * Specifies left-to-right direction.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 水平从左到右增长
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static LTR:string = "ltr";
@@ -66,14 +66,14 @@ module eui {
 		 * @language en_US
 		 * Specifies right-to-left direction.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 水平从右到左增长
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static RTL:string = "rtl";
@@ -81,14 +81,14 @@ module eui {
 		 * @language en_US
 		 * Specifies top-to-bottom direction.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 竖直从上到下增长
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static TTB:string = "ttb";
@@ -96,14 +96,14 @@ module eui {
 		 * @language en_US
 		 * Specifies bottom-to-top direction.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 竖直从下到上增长
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		public static BTT:string = "btt";

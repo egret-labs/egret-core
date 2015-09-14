@@ -58,7 +58,7 @@ module eui {
      * @see eui.VSlider
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -71,7 +71,7 @@ module eui {
      * @see eui.VSlider
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class SliderBase extends Range {
@@ -79,14 +79,14 @@ module eui {
          * @language en_US
          * Constructor
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 SliderBase 实例
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -117,7 +117,7 @@ module eui {
          * [SkinPart] Highlight of track.
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -125,7 +125,7 @@ module eui {
          * [SkinPart] 轨道高亮显示对象。
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public trackHighlight:egret.DisplayObject = null;
@@ -134,7 +134,7 @@ module eui {
          * [SkinPart] Thumb display object.
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -142,7 +142,7 @@ module eui {
          * [SkinPart]滑块显示对象。
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public thumb:eui.UIComponent = null;
@@ -152,7 +152,7 @@ module eui {
          * [SkinPart] Track display object.
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -160,7 +160,7 @@ module eui {
          * [SkinPart]轨道显示对象。
          * @skinPart
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public track:eui.UIComponent = null;
@@ -172,7 +172,7 @@ module eui {
          * @default 300
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -182,7 +182,7 @@ module eui {
          * @default 300
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get slideDuration():number {
@@ -203,7 +203,7 @@ module eui {
          * @return A value between the minimum and maximum, inclusive.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -215,7 +215,7 @@ module eui {
          * @return 介于最小值和最大值（包括两者）之间的一个值。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected pointToValue(x:number, y:number):number {
@@ -231,7 +231,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -241,7 +241,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get liveDragging():boolean {
@@ -263,7 +263,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -275,7 +275,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get pendingValue():number {
@@ -295,7 +295,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected setValue(value:number):void {
@@ -308,7 +308,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partAdded(partName:string, instance:any):void {
@@ -334,7 +334,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partRemoved(partName:string, instance:any):void {
@@ -366,7 +366,7 @@ module eui {
          * @param The <code>egret.TouchEvent</code> object.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -376,7 +376,7 @@ module eui {
          * @param event 事件 <code>egret.TouchEvent</code> 的对象.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onThumbTouchBegin(event:egret.TouchEvent):void {
@@ -418,7 +418,7 @@ module eui {
          * Capture touch-move events anywhere on or off the stage.
          * @param newValue new value
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -426,7 +426,7 @@ module eui {
          * 监听舞台的触碰移动事件。
          * @param newValue 新的值
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateWhenTouchMove(newValue:number):void {
@@ -448,7 +448,7 @@ module eui {
          * @param The <code>egret.Event</code> object.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -458,7 +458,7 @@ module eui {
          * @param event 事件 <code>egret.Event</code> 的对象。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onStageTouchEnd(event:egret.Event):void {
@@ -535,7 +535,7 @@ module eui {
          * commit the value.
          * @param The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -545,7 +545,7 @@ module eui {
          * @param event 事件 <code>egret.TouchEvent</code> 的对象.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected onTrackTouchBegin(event:egret.TouchEvent):void {

@@ -37,7 +37,7 @@ module eui {
      * @see eui.Image#fillMode
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
      */
@@ -49,7 +49,7 @@ module eui {
      * @see eui.Image#fillMode
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
      */
@@ -59,14 +59,14 @@ module eui {
          * @language en_US
          * The bitmap ends at the edge of the region.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 在区域的边缘处截断不显示位图。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static CLIP:string = "clip";
@@ -74,14 +74,14 @@ module eui {
          * @language en_US
          * The bitmap is repeated to fill the region.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 重复位图以填充区域。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static REPEAT:string = "repeat";
@@ -89,14 +89,14 @@ module eui {
          * @language en_US
          * The bitmap fill stretches to fill the region.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 拉伸位图以填充区域。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static SCALE: string = "scale";

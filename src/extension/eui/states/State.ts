@@ -39,7 +39,7 @@ module eui {
      * additional information.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -49,7 +49,7 @@ module eui {
      * 例如，产品缩略图可以有两个视图状态，包含最少信息的基本视图状态和包含附加信息的丰富视图状态。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class State extends egret.HashObject {
@@ -65,7 +65,7 @@ module eui {
          * state is entered, and removed in reverse order when the state is exited.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -77,7 +77,7 @@ module eui {
          * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(name:string, overrides:IOverride[]) {
@@ -93,7 +93,7 @@ module eui {
          * This property must be set.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -101,7 +101,7 @@ module eui {
          * 视图状态的名称。给定组件的状态名称必须唯一。必须设置此属性。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public name:string;
@@ -113,7 +113,7 @@ module eui {
          * state is entered, and removed in reverse order when the state is exited.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -121,7 +121,7 @@ module eui {
          * 该视图状态的覆盖，表现为实现 IOverride 接口的对象的数组。
          * 这些覆盖在进入状态时按顺序应用，在退出状态时按相反的顺序删除。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public overrides:IOverride[];
@@ -129,14 +129,14 @@ module eui {
          * @language en_US
          * The state groups that this view state belongs to as an array of String.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此视图状态作为 string 数组所属的状态组。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public stateGroups:string[];
@@ -145,14 +145,14 @@ module eui {
          * @language en_US
          * Initialize this state and all of its overrides.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 初始化视图状态
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public initialize(host:any, stage:egret.Stage):void {

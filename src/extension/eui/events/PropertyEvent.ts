@@ -37,7 +37,7 @@ module eui {
      * an object has changed, and provides information about the change.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
      */
@@ -46,7 +46,7 @@ module eui {
      * 对象的一个属性发生更改时传递到事件侦听器的事件。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
      */
@@ -55,14 +55,14 @@ module eui {
          * @language en_US
          * Dispatch when a property changed.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 属性改变。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static PROPERTY_CHANGE:string = "propertyChange";
@@ -79,7 +79,7 @@ module eui {
          * @param property Name of the property that changed.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -92,7 +92,7 @@ module eui {
          * @param property 发生改变的属性名称。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(type:string, bubbles?:boolean, cancelable?:boolean, property?:string) {
@@ -104,14 +104,14 @@ module eui {
          * @language en_US
          * Name of the property that changed.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 发生改变的属性名称。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public property:string;
@@ -126,7 +126,7 @@ module eui {
          * @param property Name of the property that changed.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -138,7 +138,7 @@ module eui {
          * @param property 发生改变的属性名称。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static dispatchPropertyEvent(target:egret.IEventDispatcher, eventType:string, property?:string):boolean {

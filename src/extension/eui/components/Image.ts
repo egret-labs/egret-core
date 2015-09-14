@@ -45,7 +45,7 @@ module eui {
      *
      * @event egret.Event.COMPLETE Dispatched when the image loaded complete.
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
      */
@@ -57,7 +57,7 @@ module eui {
      *
      * @event egret.Event.COMPLETE 当图片加载完成后调度
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
      */
@@ -71,7 +71,7 @@ module eui {
          * a string or an instance of <code>egret.Texture</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -81,7 +81,7 @@ module eui {
          * @param source 用于位图填充的源。可以是一个字符串或者 <code>egret.Texture</code> 对象
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(source?:string|egret.Texture) {
@@ -99,7 +99,7 @@ module eui {
          * is <code>BitmapFillMode.SCALE</code>.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -108,7 +108,7 @@ module eui {
          * 注意:此属性仅在<code>fillMode</code>为<code>BitmapFillMode.SCALE</code>时有效。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get scale9Grid():egret.Rectangle {
@@ -134,7 +134,7 @@ module eui {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -147,7 +147,7 @@ module eui {
          * @default <code>BitmapFillMode.SCALE</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get fillMode():string {
@@ -185,7 +185,7 @@ module eui {
          * a string or an instance of <code>egret.Texture</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -193,7 +193,7 @@ module eui {
          * 用于位图填充的源。可以是一个字符串或者 <code>egret.Texture</code> 对象
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get source():string|egret.Texture {
@@ -322,7 +322,7 @@ module eui {
          * @copy eui.UIComponent#createChildren
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected createChildren():void {
@@ -333,7 +333,7 @@ module eui {
          * @copy eui.UIComponent#childrenCreated
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected childrenCreated():void {
@@ -344,7 +344,7 @@ module eui {
          * @copy eui.UIComponent#commitProperties
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -358,7 +358,7 @@ module eui {
          * @copy eui.UIComponent#measure
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected measure():void {
@@ -375,7 +375,7 @@ module eui {
          * @copy eui.UIComponent#updateDisplayList
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -386,7 +386,7 @@ module eui {
          * @copy eui.UIComponent#invalidateParentLayout
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected invalidateParentLayout():void {
@@ -406,7 +406,7 @@ module eui {
          * @copy eui.UIComponent#includeInLayout
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public includeInLayout:boolean;
@@ -414,7 +414,7 @@ module eui {
          * @copy eui.UIComponent#left
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public left:number;
@@ -423,7 +423,7 @@ module eui {
          * @copy eui.UIComponent#right
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public right:number;
@@ -432,7 +432,7 @@ module eui {
          * @copy eui.UIComponent#top
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public top:number;
@@ -441,7 +441,7 @@ module eui {
          * @copy eui.UIComponent#bottom
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public bottom:number;
@@ -450,7 +450,7 @@ module eui {
          * @copy eui.UIComponent#horizontalCenter
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public horizontalCenter:number;
@@ -459,7 +459,7 @@ module eui {
          * @copy eui.UIComponent#verticalCenter
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public verticalCenter:number;
@@ -468,7 +468,7 @@ module eui {
          * @copy eui.UIComponent#percentWidth
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public percentWidth:number;
@@ -477,7 +477,7 @@ module eui {
          * @copy eui.UIComponent#percentHeight
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public percentHeight:number;
@@ -486,7 +486,7 @@ module eui {
          * @copy eui.UIComponent#explicitWidth
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public explicitWidth:number;
@@ -495,7 +495,7 @@ module eui {
          * @copy eui.UIComponent#explicitHeight
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public explicitHeight:number;
@@ -505,7 +505,7 @@ module eui {
          * @copy eui.UIComponent#minWidth
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minWidth:number;
@@ -513,7 +513,7 @@ module eui {
          * @copy eui.UIComponent#maxWidth
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxWidth:number;
@@ -522,7 +522,7 @@ module eui {
          * @copy eui.UIComponent#minHeight
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minHeight:number;
@@ -530,7 +530,7 @@ module eui {
          * @copy eui.UIComponent#maxHeight
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxHeight:number;
@@ -540,7 +540,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setMeasuredSize(width:number, height:number):void {
@@ -550,7 +550,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateProperties():void {
@@ -560,7 +560,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateProperties():void {
@@ -570,7 +570,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateSize():void {
@@ -580,7 +580,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateSize(recursive?:boolean):void {
@@ -590,7 +590,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateDisplayList():void {
@@ -600,7 +600,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateDisplayList():void {
@@ -610,7 +610,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateNow():void {
@@ -620,7 +620,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
@@ -630,7 +630,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setLayoutBoundsPosition(x:number, y:number):void {
@@ -640,7 +640,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getLayoutBounds(bounds:egret.Rectangle):void {
@@ -650,7 +650,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getPreferredBounds(bounds:egret.Rectangle):void {

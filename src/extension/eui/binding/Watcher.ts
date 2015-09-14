@@ -77,7 +77,7 @@ module eui {
      * These methods let you define an event handler that is executed whenever a bindable property is updated.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
      */
@@ -86,7 +86,7 @@ module eui {
      * Watcher 类能够监视可绑定属性的改变，您可以定义一个事件处理函数作为 Watcher 的回调方法，在每次可绑定属性的值改变时都执行此函数。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
      */
@@ -109,7 +109,7 @@ module eui {
          * @returns he ChangeWatcher instance, if at least one property name has been specified to
          * the <code>chain</code> argument; null otherwise.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -124,7 +124,7 @@ module eui {
          * @param thisObject handler 方法绑定的this对象
          * @returns 如果已为 chain 参数至少指定了一个属性名称，则返回 Watcher 实例；否则返回 null。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static watch(host:any, chain:string[], handler:(value:any)=>void, thisObject:any):Watcher {
@@ -206,14 +206,14 @@ module eui {
          * Not for public use. This method is called only from the <code>watch()</code> method.
          * See the <code>watch()</code> method for parameter usage.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 构造函数，非公开。只能从 watch() 方法中调用此方法。有关参数用法，请参阅 watch() 方法。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor(property:string, handler:(value:any)=>void, thisObject:any, next?:Watcher) {
@@ -257,14 +257,14 @@ module eui {
          * @language en_US
          * Detaches this Watcher instance, and its handler function, from the current host.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 从当前宿主中断开此 Watcher 实例及其处理函数。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public unwatch():void {
@@ -283,7 +283,7 @@ module eui {
          * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
          * </pre>
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -294,7 +294,7 @@ module eui {
          * watch(obj, ["a","b","c"], ...).getValue() === obj.a.b.c
          * </pre>
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getValue():any {
@@ -309,7 +309,7 @@ module eui {
          * Sets the handler function.s
          * @param handler The handler function. This argument must not be null.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -317,7 +317,7 @@ module eui {
          * 设置处理函数。
          * @param handler 处理函数，此参数必须为非空。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setHandler(handler:(value:any)=>void, thisObject:any):void {
@@ -334,7 +334,7 @@ module eui {
          * Resets this ChangeWatcher instance to use a new host object.
          * You can call this method to reuse a watcher instance on a different host.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -342,7 +342,7 @@ module eui {
          * 重置此 Watcher 实例使用新的宿主对象。
          * 您可以通过该方法实现一个Watcher实例用于不同的宿主。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public reset(newHost:egret.IEventDispatcher):void {

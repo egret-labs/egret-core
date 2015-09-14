@@ -34,7 +34,7 @@ module eui {
      * <code>HorizontalLayout</code> and <code>VerticalLayout</code>.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -42,7 +42,7 @@ module eui {
      * 线性布局基类，通常作为 <code>HorizontalLayout</code> 和 <code>VerticalLayout</code> 的父类。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class LinearLayoutBase extends LayoutBase {
@@ -61,7 +61,7 @@ module eui {
          * @default "left"
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -73,7 +73,7 @@ module eui {
          * @default "left"
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get horizontalAlign():string {
@@ -102,7 +102,7 @@ module eui {
          * @default "top"
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -114,7 +114,7 @@ module eui {
          * @default "top"
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get verticalAlign():string {
@@ -141,7 +141,7 @@ module eui {
          * @default 6
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -151,7 +151,7 @@ module eui {
          * @default 6
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get gap():number {
@@ -179,7 +179,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -189,7 +189,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingLeft():number {
@@ -218,7 +218,7 @@ module eui {
          *  @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -228,7 +228,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingRight():number {
@@ -257,7 +257,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -267,7 +267,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingTop():number {
@@ -296,7 +296,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -306,7 +306,7 @@ module eui {
          * @default 0
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get paddingBottom():number {
@@ -329,7 +329,7 @@ module eui {
          * and <code>updateDisplayList</code> methods get called.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -338,7 +338,7 @@ module eui {
          * <code>measure()</code>和<code>updateDisplayList</code>方法
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected invalidateTargetLayout():void {
@@ -353,7 +353,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public measure():void {
@@ -372,7 +372,7 @@ module eui {
          * Compute exact values for measuredWidth and measuredHeight.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -380,7 +380,7 @@ module eui {
          * 计算目标容器 measuredWidth 和 measuredHeight 的精确值
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected measureReal():void {
@@ -391,7 +391,7 @@ module eui {
          * @language en_US
          * Compute potentially approximate values for measuredWidth and measuredHeight.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -399,7 +399,7 @@ module eui {
          * 计算目标容器 measuredWidth 和 measuredHeight 的近似值
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected measureVirtual():void {
@@ -410,7 +410,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public updateDisplayList(width:number, height:number):void {
@@ -438,7 +438,7 @@ module eui {
          * An Array of the virtual layout elements size cache.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -446,7 +446,7 @@ module eui {
          * 虚拟布局使用的尺寸缓存。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected elementSizeTable:number[] = [];
@@ -456,7 +456,7 @@ module eui {
          * Gets the starting position of the specified index element
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -464,7 +464,7 @@ module eui {
          * 获取指定索引元素的起始位置
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected getStartPosition(index:number):number {
@@ -476,7 +476,7 @@ module eui {
          * Gets the size of the specified index element
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -484,7 +484,7 @@ module eui {
          * 获取指定索引元素的尺寸
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected getElementSize(index:number):number {
@@ -496,7 +496,7 @@ module eui {
          * Gets the sum of the size of cached elements
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -504,7 +504,7 @@ module eui {
          * 获取缓存的子对象尺寸总和
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected getElementTotalSize():number {
@@ -516,7 +516,7 @@ module eui {
          * 
          * @param index 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public elementRemoved(index:number):void {
@@ -530,7 +530,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public clearVirtualLayoutCache():void {
@@ -546,7 +546,7 @@ module eui {
          * The binary search to find the specified index position of the display object
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -554,7 +554,7 @@ module eui {
          * 折半查找法寻找指定位置的显示对象索引
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected findIndexAt(x:number, i0:number, i1:number):number {
@@ -576,7 +576,7 @@ module eui {
          * The first element index in the view of the virtual layout
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -584,7 +584,7 @@ module eui {
          * 虚拟布局使用的当前视图中的第一个元素索引
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected startIndex:number = -1;
@@ -593,7 +593,7 @@ module eui {
          * The last element index in the view of the virtual layout
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -601,7 +601,7 @@ module eui {
          * 虚拟布局使用的当前视图中的最后一个元素的索引
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected endIndex:number = -1;
@@ -610,7 +610,7 @@ module eui {
          * A Flag of the first element and the end element has been calculated.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -618,7 +618,7 @@ module eui {
          * 视图的第一个和最后一个元素的索引值已经计算好的标志
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected indexInViewCalculated:boolean = false;
@@ -627,7 +627,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public scrollPositionChanged():void {
@@ -650,7 +650,7 @@ module eui {
          * @return has the index changed
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -660,7 +660,7 @@ module eui {
          * @return 索引是否已改变
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected getIndexInView():boolean {
@@ -673,7 +673,7 @@ module eui {
          *
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -681,7 +681,7 @@ module eui {
          * 子元素最大的尺寸
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected maxElementSize:number = 0;
@@ -691,7 +691,7 @@ module eui {
          * Update the layout of the virtualized elements
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -699,7 +699,7 @@ module eui {
          * 更新虚拟布局的显示列表
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayListVirtual(width:number, height:number):void {
@@ -712,7 +712,7 @@ module eui {
          * Update the layout of the reality elements
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -720,7 +720,7 @@ module eui {
          * 更新真实布局的显示列表
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayListReal(width:number, height:number):void {
@@ -732,7 +732,7 @@ module eui {
          * Allocate blank area for each variable size element.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -740,7 +740,7 @@ module eui {
          * 为每个可变尺寸的子项分配空白区域。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected flexChildrenProportionally(spaceForChildren:number, spaceToDistribute:number,

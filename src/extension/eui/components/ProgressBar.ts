@@ -35,7 +35,7 @@ module eui {
      * The ProgressBar control provides a visual representation of the progress of a task over time.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
      */
@@ -44,7 +44,7 @@ module eui {
      * ProgressBar 控件为随时间而变的任务进度提供了形象化的表示。
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
      */
@@ -55,7 +55,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -63,7 +63,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -78,7 +78,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -88,7 +88,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public thumb:eui.UIComponent = null;
@@ -99,7 +99,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -109,7 +109,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public labelDisplay:Label = null;
@@ -124,7 +124,7 @@ module eui {
          * <code>labelFunction(value:Number,maximum:Number):String;</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -133,7 +133,7 @@ module eui {
          * <code>labelFunction(value:Number,maximum:Number):String;</code>
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get labelFunction():(value:number, maximum:number)=>string {
@@ -157,7 +157,7 @@ module eui {
          * @return a converted text
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -170,7 +170,7 @@ module eui {
          * @return 转换后的文本
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected valueToLabel(value:number, maximum:number):string {
@@ -193,7 +193,7 @@ module eui {
          * @default 500
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -203,7 +203,7 @@ module eui {
          * @default 500
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get slideDuration():number {
@@ -233,7 +233,7 @@ module eui {
          * @default Direction.LTR
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -243,7 +243,7 @@ module eui {
          * @default Direction.LTR
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get direction():string {
@@ -323,7 +323,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partAdded(partName:string, instance:any):void {
@@ -337,7 +337,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partRemoved(partName:string, instance:any):void {
@@ -359,7 +359,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateSkinDisplayList():void {

@@ -42,7 +42,7 @@ module eui {
      * within a set of mutually exclusive choices.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
      */
@@ -51,7 +51,7 @@ module eui {
      * RadioButton 组件使用户可在一组互相排斥的选择中做出一种选择
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
      */
@@ -62,7 +62,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -70,7 +70,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -95,7 +95,7 @@ module eui {
          * RadioButtonGroup is enabled and the RadioButton itself is enabled.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -103,7 +103,7 @@ module eui {
          * 如果 RadioButtonGroup 启用且 RadioButton 本身也启用，则 RadioButton 组件启用。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get enabled():boolean {
@@ -131,7 +131,7 @@ module eui {
          * @see eui.RadioButton#groupName
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -142,7 +142,7 @@ module eui {
          * @see eui.RadioButton#groupName
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get group():RadioButtonGroup {
@@ -189,7 +189,7 @@ module eui {
          * @see eui.RadioButton#group
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -201,7 +201,7 @@ module eui {
          * @see eui.RadioButton#group
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get groupName():string {
@@ -245,7 +245,7 @@ module eui {
          * @default null
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -255,7 +255,7 @@ module eui {
          * @default null
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get value():any {
@@ -277,7 +277,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -293,7 +293,7 @@ module eui {
          * @inheritDoc
          * 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -310,7 +310,7 @@ module eui {
          * @inheritDoc
          * 
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected buttonReleased():void {

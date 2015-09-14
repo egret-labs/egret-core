@@ -43,7 +43,7 @@ module eui {
 	 * @see eui.Scroller
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 */
 	/**
@@ -57,7 +57,7 @@ module eui {
 	 * @see eui.Scroller
 	 *
 	 * @version Egret 2.4
-	 * @version Swan 1.0
+	 * @version eui 1.0
 	 * @platform Web,Native
 	 */
 	export interface IViewport extends UIComponent{
@@ -75,7 +75,7 @@ module eui {
 		 *
 		 * @readOnly
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -89,7 +89,7 @@ module eui {
 		 *
 		 * @readOnly
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		contentWidth:number;
@@ -108,7 +108,7 @@ module eui {
 		 *
 		 * @readOnly
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -121,7 +121,7 @@ module eui {
 		 *
 		 * @readOnly
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		contentHeight:number;
@@ -131,14 +131,14 @@ module eui {
 		 * The x coordinate of the origin of the viewport in the component's coordinate system,
 		 * where the default value is (0,0) corresponding to the upper-left corner of the component.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 可视区域水平方向起始点。
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		scrollH:number;
@@ -148,14 +148,14 @@ module eui {
 		 * The y coordinate of the origin of the viewport in the component's coordinate system,
 		 * where the default value is (0,0) corresponding to the upper-left corner of the component.
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
 		 * @language zh_CN
 		 * 可视区域竖直方向起始点。
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		scrollV:number;
@@ -168,7 +168,7 @@ module eui {
 		 *
 		 * @default false
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		/**
@@ -178,7 +178,7 @@ module eui {
 		 *
 		 * @default false
 		 * @version Egret 2.4
-		 * @version Swan 1.0
+		 * @version eui 1.0
 		 * @platform Web,Native
 		 */
 		scrollEnabled:boolean;

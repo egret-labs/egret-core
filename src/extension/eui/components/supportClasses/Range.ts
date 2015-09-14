@@ -65,7 +65,7 @@ module eui {
      * <code>snapInterval</code>.
      *
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
      */
@@ -79,7 +79,7 @@ module eui {
      *
      * 如果<code>snapInterval</code>属性的值不是0，那么<code>value</code>的值也会被<code>snapInterval</code>所约束。
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
      */
@@ -88,14 +88,14 @@ module eui {
          * @language en_US
          * Constructor.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个 Range 实例。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -131,7 +131,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -145,7 +145,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get maximum():number {
@@ -175,7 +175,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -189,7 +189,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get minimum():number {
@@ -222,7 +222,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -237,7 +237,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get value():number {
@@ -284,7 +284,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -300,7 +300,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get snapInterval():number {
@@ -330,14 +330,14 @@ module eui {
          * @language en_US
          * Processes the properties set on the component.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 处理对组件设置的属性
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -403,7 +403,7 @@ module eui {
          * @return The valid value that's closest to the input.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -429,7 +429,7 @@ module eui {
          * @return 最近接输入值的有效值。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected nearestValidValue(value:number, interval:number):number {
@@ -467,7 +467,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -480,7 +480,7 @@ module eui {
          * @see #nearestValidValue()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected setValue(value:number):void {
@@ -501,14 +501,14 @@ module eui {
          * @language en_US
          * Draws the object and/or sizes and positions its children.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 绘制对象和/或设置其子项的大小和位置
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(w:number, h:number):void {
@@ -522,7 +522,7 @@ module eui {
          * Subclasses override this method to update skin parts display based on <code>minimum</code>, <code>maximum</code>
          * and <code>value</code> properties.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -530,7 +530,7 @@ module eui {
          * 更新皮肤部件（通常为滑块）的大小和可见性。<p/>
          * 子类覆盖此方法以基于 minimum、maximum 和 value 属性更新滑块的大小、位置和可见性。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateSkinDisplayList():void {

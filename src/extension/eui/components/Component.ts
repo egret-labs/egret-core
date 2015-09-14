@@ -58,7 +58,7 @@ module eui {
      *
      * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -69,7 +69,7 @@ module eui {
      *
      * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class Component extends egret.DisplayObjectContainer implements UIComponent {
@@ -78,7 +78,7 @@ module eui {
          *
          * @language en_US
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -86,7 +86,7 @@ module eui {
          *
          * @language zh_CN
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -117,7 +117,7 @@ module eui {
          * @default null
          * @see eui.Theme#getSkinName()
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -127,7 +127,7 @@ module eui {
          * @default null
          * @see eui.Theme#getSkinName()
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get hostComponentKey():string {
@@ -143,14 +143,14 @@ module eui {
          * Identifier of skin. Valid values: class definition of skin,
          * class name of skin, instance of skin, EXML or external EXML file path.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 皮肤标识符。有效值可为：皮肤类定义,皮肤类名,皮肤实例,EXML文件内容,或外部EXML文件路径，
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get skinName():any {
@@ -222,14 +222,14 @@ module eui {
          * @language en_US
          * The instance of the skin class for this component instance.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 皮肤对象实例。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get skin():Skin {
@@ -240,14 +240,14 @@ module eui {
          * @language en_US
          * Setter for the skin instance.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置皮肤实例
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected setSkin(skin:Skin):void {
@@ -311,7 +311,7 @@ module eui {
          * @param partName name of a skin part
          * @param instance instance of a skin part
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -321,7 +321,7 @@ module eui {
          * @param partName 皮肤部件名称
          * @param instance 皮肤部件实例
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setSkinPart(partName:string, instance:any):void {
@@ -346,7 +346,7 @@ module eui {
          * @param partName name of a skin part to add.
          * @param instance instance of a skin part to add.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -359,7 +359,7 @@ module eui {
          * @param partName 要附加的皮肤部件名称。
          * @param instance 要附加的皮肤部件实例。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partAdded(partName:string, instance:any):void {
@@ -377,7 +377,7 @@ module eui {
          * @param partName name of a skin part to remove.
          * @param instance instance of a skin part to remove.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -390,7 +390,7 @@ module eui {
          * @param partName 要卸载的皮肤部件名称
          * @param instance 要卸载的皮肤部件实例
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partRemoved(partName:string, instance:any):void {
@@ -440,7 +440,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -453,7 +453,7 @@ module eui {
          * @default true
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get enabled():boolean {
@@ -499,7 +499,7 @@ module eui {
          *
          * Set to <code>""</code> or <code>null</code> to reset the component back to its base state.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -509,7 +509,7 @@ module eui {
          *
          * 将其设置为 "" 或 null 可将取消组件外部显式设置的视图状态名称，从而采用内部 getCurrentState() 方法返回的状态。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get currentState():string {
@@ -532,14 +532,14 @@ module eui {
          * Marks the component so that the new state of the skin is set during a later screen update.
          * A subclass of SkinnableComponent must override <code>getCurrentState()</code> to return a value.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 标记组件当前的视图状态失效，调用此方法后，子类应该覆盖 <code>getCurrentState()</code> 方法来返回当前的视图状态名称。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateState():void {
@@ -556,14 +556,14 @@ module eui {
          * Returns the name of the state to be applied to the skin.<p/>
          * A subclass of SkinnableComponent must override this method to return a value.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 返回组件当前的皮肤状态名称,子类覆盖此方法定义各种状态名
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected getCurrentState():string {
@@ -586,7 +586,7 @@ module eui {
          * when creating a subclass of Component. This method will be called once it be added to stage.
          * You must invoke <code>super.createChildren()</code> to complete initialization of the parent class
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -594,7 +594,7 @@ module eui {
          * 子类覆盖此方法可以执行一些初始化子项操作。此方法仅在组件第一次添加到舞台时回调一次。
          * 请务必调用super.createChildren()以完成父类组件的初始化
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected createChildren():void {
@@ -617,14 +617,14 @@ module eui {
          * This is an advanced method that you might override
          * when creating a subclass of Component.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建子对象后执行任何最终处理。此方法在创建 Component 的子类时覆盖。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected childrenCreated():void {
@@ -636,14 +636,14 @@ module eui {
          * Processes the properties set on the component.
          * You can override this method when creating a subclass of Component.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 提交属性，子类在调用完invalidateProperties()方法后，应覆盖此方法以应用属性
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -661,14 +661,14 @@ module eui {
          * @language en_US
          * Calculates the default size.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 测量组件尺寸
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected measure():void {
@@ -707,14 +707,14 @@ module eui {
          * @language en_US
          * Draws the object and/or sizes and positions its children.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 更新显示列表
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -726,14 +726,14 @@ module eui {
          * Method to invalidate parent size and display list if
          * this object affects its layout (includeInLayout is true).
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此对象影响其布局时（includeInLayout 为 true），使父代大小和显示列表失效的方法。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected invalidateParentLayout():void {
@@ -753,7 +753,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public includeInLayout:boolean;
@@ -761,7 +761,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public left:number;
@@ -770,7 +770,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public right:number;
@@ -779,7 +779,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public top:number;
@@ -788,7 +788,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public bottom:number;
@@ -797,7 +797,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public horizontalCenter:number;
@@ -806,7 +806,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public verticalCenter:number;
@@ -815,7 +815,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public percentWidth:number;
@@ -824,7 +824,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public percentHeight:number;
@@ -833,7 +833,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public explicitWidth:number;
@@ -842,7 +842,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public explicitHeight:number;
@@ -851,7 +851,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minWidth:number;
@@ -860,7 +860,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxWidth:number;
@@ -869,7 +869,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minHeight:number;
@@ -878,7 +878,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxHeight:number;
@@ -887,7 +887,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setMeasuredSize(width:number, height:number):void {
@@ -897,7 +897,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateProperties():void {
@@ -907,7 +907,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateProperties():void {
@@ -917,7 +917,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateSize():void {
@@ -927,7 +927,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateSize(recursive?:boolean):void {
@@ -937,7 +937,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateDisplayList():void {
@@ -947,7 +947,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateDisplayList():void {
@@ -957,7 +957,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateNow():void {
@@ -967,7 +967,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
@@ -977,7 +977,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setLayoutBoundsPosition(x:number, y:number):void {
@@ -987,7 +987,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getLayoutBounds(bounds:egret.Rectangle):void {
@@ -997,7 +997,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getPreferredBounds(bounds:egret.Rectangle):void {

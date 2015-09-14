@@ -76,7 +76,7 @@ module eui {
      *
      * @defaultProperty viewport
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
      */
@@ -99,7 +99,7 @@ module eui {
      *
      * @defaultProperty viewport
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
      */
@@ -113,7 +113,7 @@ module eui {
          * @default 5
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -123,7 +123,7 @@ module eui {
          * @default 5
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public static scrollThreshold:number = 5;
@@ -133,7 +133,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -141,7 +141,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -170,14 +170,14 @@ module eui {
          * @language en_US
          * Adjust the speed to get out of the slide end.
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 调节滑动结束时滚出的速度。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public set throwSpeed(val:number) {
@@ -218,7 +218,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -228,7 +228,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public horizontalScrollBar:eui.HScrollBar = null;
@@ -239,7 +239,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -249,7 +249,7 @@ module eui {
          * @skinPart
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public verticalScrollBar:eui.VScrollBar = null;
@@ -265,7 +265,7 @@ module eui {
          * @default ScrollPolicy.AUTO
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -278,7 +278,7 @@ module eui {
          * @default ScrollPolicy.AUTO
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get scrollPolicyV():string {
@@ -305,7 +305,7 @@ module eui {
          * @default ScrollPolicy.AUTO
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -318,7 +318,7 @@ module eui {
          * @default ScrollPolicy.AUTO
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get scrollPolicyH():string {
@@ -339,7 +339,7 @@ module eui {
          * The viewport component to be scrolled.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -347,7 +347,7 @@ module eui {
          * 要滚动的视域组件。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get viewport():IViewport {
@@ -419,7 +419,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected setSkin(skin:Skin):void {
@@ -746,7 +746,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -764,7 +764,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected partAdded(partName:string, instance:any):void {

@@ -53,7 +53,7 @@ module eui {
      * @defaultProperty elementsContent
      * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     /**
@@ -64,7 +64,7 @@ module eui {
      * @defaultProperty elementsContent
      * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
      * @version Egret 2.4
-     * @version Swan 1.0
+     * @version eui 1.0
      * @platform Web,Native
      */
     export class Group extends egret.DisplayObjectContainer implements IViewport {
@@ -74,7 +74,7 @@ module eui {
          * Constructor.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -82,7 +82,7 @@ module eui {
          * 构造函数。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public constructor() {
@@ -106,14 +106,14 @@ module eui {
          * This property is Usually invoked in resolving an EXML for adding multiple children quickly.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 此属性通常在 EXML 的解析器中调用，便于快速添加多个子项。
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public set elementsContent(value:egret.DisplayObject[]) {
@@ -139,7 +139,7 @@ module eui {
          * @default eui.BasicLayout
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -149,7 +149,7 @@ module eui {
          * s@default eui.BasicLayout
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get layout():LayoutBase {
@@ -186,7 +186,7 @@ module eui {
         /**
          * @copy eui.IViewport#contentWidth
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get contentWidth():number {
@@ -196,7 +196,7 @@ module eui {
         /**
          * @copy eui.IViewport#contentHeight
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get contentHeight():number {
@@ -216,7 +216,7 @@ module eui {
          * @param height The new value of <code>contentHeight</code>.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -229,7 +229,7 @@ module eui {
          * @param height <code>contentHeight</code> 的新值。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setContentSize(width:number, height:number):void {
@@ -254,7 +254,7 @@ module eui {
          * @copy eui.IViewport#scrollEnabled
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get scrollEnabled():boolean {
@@ -274,7 +274,7 @@ module eui {
          * @copy eui.IViewport#scrollH
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get scrollH():number {
@@ -297,7 +297,7 @@ module eui {
          * @copy eui.IViewport#scrollV
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get scrollV():number {
@@ -341,7 +341,7 @@ module eui {
          * The number of layout element in this container.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -349,7 +349,7 @@ module eui {
          * 布局元素子项的数量。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get numElements():number {
@@ -361,7 +361,7 @@ module eui {
          * Returns the layout element at the specified index.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -369,7 +369,7 @@ module eui {
          * 获取一个布局元素子项。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getElementAt(index:number):egret.DisplayObject {
@@ -386,7 +386,7 @@ module eui {
          * @param endIndex the end index of sub visual elements（include）
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -398,7 +398,7 @@ module eui {
          * @param endIndex 可视元素结束索引（包括）
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setVirtualElementIndicesInView(startIndex:number, endIndex:number):void {
@@ -412,7 +412,7 @@ module eui {
          * touch events such as begin.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -420,7 +420,7 @@ module eui {
          * 触摸组件的背景透明区域是否可以穿透。设置为true表示可以穿透，反之透明区域也会响应触摸事件。默认 false。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public get touchThrough():boolean{
@@ -467,7 +467,7 @@ module eui {
          * The list of state for this component.
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         /**
@@ -475,7 +475,7 @@ module eui {
          * 为此组件定义的视图状态。
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public states:State[];
@@ -484,7 +484,7 @@ module eui {
          * @copy eui.Component#currentState
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public currentState:string;
@@ -493,7 +493,7 @@ module eui {
          * @copy eui.Skin#hasState()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public hasState:(stateName:string)=>boolean;
@@ -512,7 +512,7 @@ module eui {
          * @copy eui.Component#invalidateState()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateState():void {
@@ -528,7 +528,7 @@ module eui {
          * @copy eui.Component#getCurrentState()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected getCurrentState():string {
@@ -547,7 +547,7 @@ module eui {
          * @copy eui.Component#createChildren()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected createChildren():void {
@@ -561,7 +561,7 @@ module eui {
          * @copy eui.Component#childrenCreated()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected childrenCreated():void {
@@ -572,7 +572,7 @@ module eui {
          * @copy eui.Component#commitProperties()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected commitProperties():void {
@@ -591,7 +591,7 @@ module eui {
          * @copy eui.Component#measure()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected measure():void {
@@ -606,7 +606,7 @@ module eui {
          * @copy eui.Component#updateDisplayList()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
@@ -621,7 +621,7 @@ module eui {
          * @copy eui.Component#invalidateParentLayout()
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         protected invalidateParentLayout():void {
@@ -641,7 +641,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public includeInLayout:boolean;
@@ -650,7 +650,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public left:number;
@@ -659,7 +659,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public right:number;
@@ -668,7 +668,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public top:number;
@@ -677,7 +677,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public bottom:number;
@@ -686,7 +686,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public horizontalCenter:number;
@@ -695,7 +695,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public verticalCenter:number;
@@ -704,7 +704,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public percentWidth:number;
@@ -713,7 +713,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public percentHeight:number;
@@ -722,7 +722,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public explicitWidth:number;
@@ -731,7 +731,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public explicitHeight:number;
@@ -741,7 +741,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minWidth:number;
@@ -750,7 +750,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxWidth:number;
@@ -759,7 +759,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public minHeight:number;
@@ -768,7 +768,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public maxHeight:number;
@@ -777,7 +777,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setMeasuredSize(width:number, height:number):void {
@@ -787,7 +787,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateProperties():void {
@@ -797,7 +797,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateProperties():void {
@@ -807,7 +807,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateSize():void {
@@ -817,7 +817,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateSize(recursive?:boolean):void {
@@ -827,7 +827,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public invalidateDisplayList():void {
@@ -837,7 +837,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateDisplayList():void {
@@ -847,7 +847,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public validateNow():void {
@@ -857,7 +857,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
@@ -867,7 +867,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public setLayoutBoundsPosition(x:number, y:number):void {
@@ -877,7 +877,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getLayoutBounds(bounds:egret.Rectangle):void {
@@ -887,7 +887,7 @@ module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
-         * @version Swan 1.0
+         * @version eui 1.0
          * @platform Web,Native
          */
         public getPreferredBounds(bounds:egret.Rectangle):void {
