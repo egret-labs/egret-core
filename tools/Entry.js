@@ -72,6 +72,7 @@ var Entry = (function () {
     function Entry() {
     }
     Entry.prototype.executeOption = function (options) {
+        var self = this;
         options.command = options.command || "info";
         try {
             var command = require("./commands/" + options.command);
@@ -80,8 +81,16 @@ var Entry = (function () {
             console.log(utils.tr(10002, options.command));
             return 10002;
         }
-        var exitCode = new command().execute();
-        return exitCode;
+        //添加异步命令的支持 异步命令不会在return后强制退出 默认返回DontExitCode
+        var commandInstance = new command();
+        if (commandInstance.isAsync) {
+            commandInstance.execute();
+            return DontExitCode;
+        }
+        else {
+            var exitCode = commandInstance.execute();
+            return exitCode;
+        }
     };
     Entry.prototype.exit = function (exitCode) {
         if (DontExitCode == exitCode)

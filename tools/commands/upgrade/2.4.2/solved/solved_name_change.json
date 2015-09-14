@@ -68,6 +68,14 @@
     "solved":true
   },
   {
+    "desc":"class BitmapText{ _lineHeights: Array<number>; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _getTextLines(): Array<string>; }",
+    "solved":true
+  },
+  {
     "desc":"class TextField{ _inputEnabled: boolean; }",
     "solved":true
   },
@@ -130,188 +138,183 @@
 
   {
     "desc":"class ColorMatrixFilter{ _matrix: Array<number>; }",
-    "solution-url":"",
     "solved":true
   },
 
   {
     "desc":"class GlowFilter{ _red: number; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class GlowFilter{ _green: number; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class GlowFilter{ _blue: number; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"var __START_TIME: number;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"var __callLaterFunctionList: Array<any>;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"var __callLaterThisList: Array<any>;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"var __callLaterArgsList: Array<any>;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"var __callAsyncFunctionList: Array<any>;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"var __callAsyncThisList: Array<any>;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"var __callAsyncArgsList: Array<any>;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"function __callAsync(method: Function, thisObject: any, ...args: any[]): void;",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class ScrollView{ _setWidth(value: number): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class ScrollView{ _setHeight(value: number): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClip{ _movieClipData: MovieClipData; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClip{ _eventPool: string[]; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClip{ _currentFrameNum: number; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClip{ _init(): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClip{ _reset(): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipData{ _mcData: any; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipData{ _init(mcData: any, textureData: any, spriteSheet: SpriteSheet): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipData{ _isDataValid(): boolean; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipData{ _isTextureValid(): boolean; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipData{ _fillMCData(mcData: any): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipDataFactory{ _mcDataSet: any; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipDataFactory{ _spriteSheet: SpriteSheet; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class MovieClipDataFactory{ _mcDataCache: any; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _type: string; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _bubbles: boolean; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _eventPhase: number; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _currentTarget: any; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _target: any; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _isDefaultPrevented: boolean; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _isPropagationStopped: boolean; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Event{ _isPropagationImmediateStopped: boolean; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class TouchEvent{ _stageX: number; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class TouchEvent{ _stageY: number; }",
-    "solution-url":"",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getStartLine(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getHalign(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getTextHeight(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getValign(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getTextElement(textfield: egret.TextField, x: number, y: number): ITextElement; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getHit(textfield: egret.TextField, x: number, y: number): IHitTextElement; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getScrollNum(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setBaseText(value: string): void; }",
     "solved":true
   }
 ]

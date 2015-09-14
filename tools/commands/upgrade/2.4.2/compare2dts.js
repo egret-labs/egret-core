@@ -15,6 +15,10 @@
 			var mark = arguments[1];
 			var lineStr = arguments[2];
 
+			if(OUTPUT_TYPE_API == output_type){
+				return _consoleOut_raw(mark,lineStr);
+			}
+
 			if(OUTPUT_TYPE_SIMPLE == output_type){
 				lineStr = mark?mark+'{ '+lineStr+' }':lineStr;
 				if(isConsoleIgnored(formatItem({desc:lineStr}))){
@@ -39,6 +43,10 @@
 			var lineNum = arguments[0];
 			var mark = arguments[1];
 			var lineStr = arguments[2];
+
+			if(OUTPUT_TYPE_API == output_type){
+				return _consoleOut_raw(mark,lineStr);
+			}
 
 			if(OUTPUT_TYPE_SIMPLE == output_type){
 				lineStr = mark?mark+'{ '+lineStr+' }':lineStr;
@@ -97,7 +105,9 @@
 
 	var OUTPUT_TYPE_FULL = 1;
 	var OUTPUT_TYPE_SIMPLE = 2;
-	var output_type = OUTPUT_TYPE_FULL;//1,默认;2,精简
+	var OUTPUT_TYPE_API = 3;//API 模式 不带*号 用于扫描
+
+	var output_type = OUTPUT_TYPE_FULL;//1,默认;2,精简;3,API
 
 	var isConsoleEnabled = true;//控制台输出开关
 
@@ -330,6 +340,9 @@
 		}else
 		if(OUTPUT_TYPE_SIMPLE == output_type){
 			cacheConsole.pushAutoClear(lineNum,mark,lineStr);
+		}else
+		if(OUTPUT_TYPE_API == output_type){
+			_consoleOut_raw(mark,lineStr);
 		}
 	}
 	//极简输出
@@ -337,6 +350,20 @@
 		if(isConsoleEnabled){
 			console.log(name +' '+ count);
 		}
+	}
+
+	//只为生成json文件的输出 原始api集 不经过过滤
+	function _consoleOut_raw(mark,lineStr){
+		var solvedKeyPattern;
+		if(mark){
+			solvedKeyPattern = mark + '{ ' + lineStr + ' }';
+		}else{
+			solvedKeyPattern = lineStr;
+		}
+		if(isConsoleEnabled){
+			console.log(solvedKeyPattern);
+		}
+		outputLst.push({desc:solvedKeyPattern});
 	}
 
 	//全部输出
@@ -477,6 +504,10 @@
 		var i = 0;
 		if(arguments[0] == '-simple'){
 			output_type = OUTPUT_TYPE_SIMPLE;
+			i = 1;
+		}else
+		if(arguments[0] == '-raw'){
+			output_type = OUTPUT_TYPE_API;
 			i = 1;
 		}
 
@@ -662,8 +693,7 @@
 		//	solvedJson = JSON.parse(file.read(jsonPath));
 		//}
 		//添加快表
-		//快表的目的是快速搜索相同项 且 快速定位＊项
-
+		//快表的目的是确保唯一
 		if(!solvedJson.quickLST){
 			solvedJson.quickLST = {};
 		}
@@ -671,31 +701,58 @@
 			if(item.desc){
 				if(item.desc in solvedJson.quickLST){
 					mergeItem(item,solvedJson.quickLST[item.desc]);
+					formatItem(solvedJson.quickLST[item.desc]);
 				}else{
-					solvedJson.quickLST[item.desc] = item;
-				}
-				formatItem(item);
-			}
-		});
-		solvedJson.forEach(function(item){
-			//对未解决项再次查找快表
-			if(!item.solved){
-				for(var p in solvedJson.quickLST){
-					if(solvedJson.quickLST[p].name != '*'){
-						delete solvedJson.quickLST[p];
-					}else
-					if(solvedJson.quickLST[p]['category-name'] == item['category-name']){
-						item.solved = solvedJson.quickLST[p].solved;
+					formatItem(item);
+					if(item.name == '*'){
+						solvedJson.quickLST[item['category-name']] = item;
+					}else{
+						solvedJson.quickLST[item.desc] = item;
 					}
 				}
 			}
 		});
+		//清空数据
+		solvedJson.length = 0;
+
+		//对未解决项再次查找快表 重组单项
+		for(var p in solvedJson.quickLST){
+			var item = solvedJson.quickLST[p];
+			//对单项查找快表
+			if(item.name != '*' ){
+				if(item.solved != true &&
+					item['category-name'] in solvedJson.quickLST){
+					item.solved = solvedJson.quickLST[item['category-name']].solved;
+				}
+				solvedJson.push(item);
+				delete solvedJson.quickLST[p];
+			}else{
+				//把＊号放在最上面
+				solvedJson.unshift(item);
+			}
+		}
+		//solvedJson.forEach(function(item){
+		//	//对未解决项再次查找快表
+		//	if(!item.solved){
+		//		for(var p in solvedJson.quickLST){
+		//			if(solvedJson.quickLST[p].name != '*'){
+		//				delete solvedJson.quickLST[p];
+		//			}else
+		//			if(solvedJson.quickLST[p]['category-name'] == item['category-name']){
+		//				item.solved = solvedJson.quickLST[p].solved;
+		//			}
+		//		}
+		//	}
+		//});
 		return solvedJson;
 	}
 
-	function compareAndGenJSON(comparingFilePath,comparedFilePath,solvedJsonFile,genJsonFile){
-		isConsoleEnabled = false;
+	function compareAndGenJSON(comparingFilePath,comparedFilePath,solvedJsonFile,genJsonFile,isRaw){
+		isConsoleEnabled = true;
 		var writeFilePath;
+		if(isRaw){
+			output_type = OUTPUT_TYPE_API;
+		}
 		//支持多文件输入
 		if(solvedJsonFile && typeof solvedJsonFile == 'object'){
 			if(!genJsonFile)return;
@@ -716,7 +773,9 @@
 		}else return;
 
 		compareEndCallBack = function(){
-			formatJsonConfig(outputLst);
+			if(!isRaw){
+				formatJsonConfig(outputLst);
+			}
 			file.save(writeFilePath,JSON.stringify(outputLst,null,4));
 		}
 		compare(comparingFilePath,comparedFilePath,solvedJsonFile);
@@ -735,7 +794,10 @@
 				var mergeItem = JSON.parse(file.read(filePath));
 				mergeItem.forEach(function(item){
 						//以文件名区分来源
-						item.source = filePath.substr(filePath.lastIndexOf('/')+1);
+						var source = filePath.substr(filePath.lastIndexOf('/')+1);
+						if(source.indexOf('solved') != -1){
+							item.source = source;
+						}
 						solvedJson.push(item);
 					});
 			}

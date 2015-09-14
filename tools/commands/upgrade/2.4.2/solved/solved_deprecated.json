@@ -1,7 +1,6 @@
 [
   {
     "desc":"class DisplayObject{ _DO_Props_: DisplayObjectProperties; }",
-    "solution-url":"http://www.baidu.com/1.html",
     "solved":true
   },
   {
@@ -10,14 +9,6 @@
   },
   {
     "desc":"class TextFieldProperties{ * }",
-    "solved":true
-  },
-  {
-    "desc":"class NetContext{ * }",
-    "solved":true
-  },
-  {
-    "desc":"class TouchContext{ * }",
     "solved":true
   },
   {
@@ -155,62 +146,34 @@
   },
   {
     "desc":"class Logger{ static fatal(actionCode: string, value?: Object): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Logger{ static info(actionCode: string, value?: Object): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Logger{ static warning(actionCode: string, value?: Object): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class RenderCommand{ * }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class RenderFilter{ * }",
-    "solution-url":"",
-    "solved":true
-  },
-  {
-    "desc":"interface RenderContext{ * }",
-    "solution-url":"draw.html",
-    "solved":true
-  },
-  {
-    "desc":"class RendererContext{ * }",
-    "solution-url":"draw.html",
-    "solved":true
-  },
-  {
-    "desc":"class DeviceContext{ * }",
-    "solution-url":"draw.html",
-    "solved":true
-  },
-  {
-    "desc":"class MainContext{ * }",
-    "solution-url":"draw.html",
     "solved":true
   },
   {
     "desc":"interface RenderData{ * }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class SAXParser{ * }",
-    "solution-url":"",
     "solved":true
   },
   {
     "desc":"class Injector{ * }",
-    "solution-url":"",
     "solved":true
   },
   {
@@ -246,24 +209,11 @@
     "solved":true
   },
   {
-    "desc":"class Texture{ _textureWidth: number; }",
-    "solved":true
-  },
-  {
-    "desc":"class Texture{ _textureHeight: number; }",
-    "solved":true
-  },
-  {
     "desc":"class Texture{ _clone(): Texture; }",
     "solved":true
   },
   {
     "desc":"class Texture{ _disposeForCanvas(): void; }",
-    "solved":true
-  },
-  {
-    "desc":"class Texture{ static crossOrigin: string; }",
-    "solution-url":"crossOrigin.md",
     "solved":true
   },
   {
@@ -284,10 +234,6 @@
   },
   {
     "desc":"class Texture{ _drawForCanvas(context: CanvasRenderingContext2D, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }",
-    "solved":true
-  },
-  {
-    "desc":"class RenderTexture{ * }",
     "solved":true
   },
   {
@@ -316,11 +262,6 @@
     "solved":true
   },
   {
-    "desc":"class BitmapText{ * }",
-    "solved":true
-  },
-
-  {
     "desc":"class Graphics{ _beginDraw(renderContext: RendererContext): void; }",
     "solved":true
   },
@@ -346,7 +287,6 @@
   },
   {
     "desc":"class ScrollView{ _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void; }",
-    "solution-url":"",
     "solved":true
   },
   {
@@ -391,7 +331,22 @@
   },
   {
     "desc":"class BlendMode{ static ERASE_REVERSE: string; }",
-    "solution-url":"",
+    "solved":true
+  },
+  {
+    "desc":"class InputController{ _updateTransform(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _textureWidth: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _textureHeight: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class RenderTexture{ * }",
     "solved":true
   }
 ]

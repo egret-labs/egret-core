@@ -12,6 +12,7 @@ import TSS = require("./2.4.2/typescriptServices");
 var DTS = require('./2.4.2/compare2dts.js');
 
 var AutoLogger = {
+    _solutionMap:{},
     _dir:'',
     _total:0,
     _isAPIadd : false,
@@ -25,6 +26,8 @@ var AutoLogger = {
     init:function(ignorePath:string):void{
         this._dir = ignorePath;
         this._total = 0;
+        var solutionPath = file.joinPath(egret.root,'/tools/commands/upgrade/2.4.2','solution_urls.json');
+        this._solutionMap = JSON.parse(file.read(solutionPath));
     },
     close:function():void{
         this.clear();
@@ -42,7 +45,7 @@ var AutoLogger = {
         //有url确定title
         this._api = item['category-name']+'.'+item['name'];
         if(item['solution-url']){
-            titleStr = 'API '+this._api +' 变更,解决方案请查看 '+item['solution-url'];
+            titleStr = 'API '+this._api +' 变更,解决方案请查看 '+this._filterUrl(item['solution-url']);
             this._isAPIadd = false;
         }else
         //无解决方案去查快表是否有解决方案
@@ -51,9 +54,8 @@ var AutoLogger = {
             //快表有url
             if(father_item['solution-url']) {
                 titleStr = 'API ' +
-                    item['category-name'] + '.*' + ' 变更,解决方案请查看 ' + father_item['solution-url'];
+                    item['category-name'] + '.*' + ' 变更,解决方案请查看 ' + this._filterUrl(father_item['solution-url']);
                 this._isAPIadd = true;
-
             }else{
             //快表无url查看快表的source属性
                 if('solved_name_change.json' == father_item['source']){
@@ -140,6 +142,12 @@ var AutoLogger = {
         delete this._api;
         this._isAPIadd = false;
         this.isShow = true;
+    },
+    _filterUrl:function(key){
+        if(key in this._solutionMap){
+            return this._solutionMap[key];
+        }else
+            return key;
     }
 }
 
@@ -207,11 +215,6 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             //跳过配置新项目
             this.apiTest(projectPath);
         }
-    }
-
-    private loadSolutionMapObj(){
-        var solutionPath = file.joinPath(egret.root,'/tools/commends/upgrade/2.4.2','solution_urls.json');
-        return JSON.parse(file.read(solutionPath));
     }
 
     /**
@@ -319,17 +322,24 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             this.tsp.setDefaultLibFileName(file.joinPath(libPath, 'core','core.d'));
             this.tsp.initProject(projectPath);
             this.tsp.initLibs([libPath]);
-
+            //初始化
             AutoLogger.init(projectPath);
+            if('quickLST' in searchLST){
+                for(var p in searchLST.quickLST){
+                    var item = searchLST.quickLST[p];
+                    AutoLogger.acceptCategory(item);
+                }
+            }
             searchLST.forEach(item =>{
                 var searchName = item['name'];
                 var fatherName = item['category-name'];
-                if(searchName == 'anchorX' && fatherName == 'DisplayObject' ||
-                    searchName == 'addEventListener' && fatherName == 'DisplayObject' ||
-                    searchName == '_setHeight' && fatherName == 'ScrollView'){
-                    var a;
-                }
+                //if(searchName == 'anchorX' && fatherName == 'DisplayObject' ||
+                //    searchName == 'addEventListener' && fatherName == 'DisplayObject' ||
+                //    searchName == '_setHeight' && fatherName == 'ScrollView'){
+                //    var a;
+                //}
                 var pkg;
+                //过滤＊
                 if(searchName == '*'){
                     AutoLogger.acceptCategory(item);
                 }else{

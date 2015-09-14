@@ -335,6 +335,7 @@ var TsServiceProxy = (function () {
                     resItem.fileName.indexOf('.d.ts') == -1) {
                     var pos = _this.getLineAndCharacterOfPosition(_this.tss.getSourceFile(resItem.fileName), resItem.textSpan.start);
                     callBack(resItem.fileName, pos.line);
+                    Logger.log('位置 ' + resItem.fileName + ' 行' + pos.line + " API作废");
                 }
             });
         }
