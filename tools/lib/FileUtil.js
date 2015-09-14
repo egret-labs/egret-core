@@ -258,7 +258,7 @@ function getFileName(path) {
         return path.substring(startIndex + 1, endIndex);
     }
     endIndex = path.lastIndexOf(".");
-    if (endIndex == -1)
+    if (endIndex == -1 || isDirectory(path))
         endIndex = path.length;
     return path.substring(startIndex + 1, endIndex);
 }
@@ -436,5 +436,3 @@ function relative(from, to) {
     return path;
 }
 exports.relative = relative;
-
-//# sourceMappingURL=../lib/FileUtil.js.map

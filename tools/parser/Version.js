@@ -17,7 +17,7 @@ function check() {
     if (!result.requestOtherVersion && !result.projectUsingOtherVersion) {
         return result;
     }
-    var targetEnginePath = getEgretPath(requestVersion);
+    var targetEnginePath = getEnginesRootPath() + requestVersion;
     //不存在指定的引擎
     if (!file.exists(targetEnginePath)) {
         return result;
@@ -32,26 +32,54 @@ function execute(root) {
     if (process.env.EGRET_PATH) {
         process.env.EGRET_PATH = root;
     }
-    require(root + "tools/bin/egret");
+    require(getBin(root));
 }
 exports.execute = execute;
-function getEgretPath(version) {
+function getEnginesRootPath() {
     var path;
     switch (process.platform) {
         case 'darwin':
             var user = process.env.NAME || process.env.LOGNAME;
             if (!user)
                 return null;
-            path = "/Users/" + user + "/Library/Application Support/Egret/engine/" + version + "/";
+            path = "/Users/" + user + "/Library/Application Support/Egret/engine/";
             break;
         case 'win32':
             var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
-            path = file.escapePath(appdata + "/Egret/engine/" + version + "/");
+            path = file.escapePath(appdata + "/Egret/engine/");
             break;
         default:
             ;
     }
-    return path;
+    if (file.exists(path))
+        return path;
+    return null;
 }
-
-//# sourceMappingURL=../parser/Version.js.map
+function getBin(versionRoot) {
+    return file.joinPath(versionRoot, "tools/bin/egret");
+}
+function getEngineVersions() {
+    var root = getEnginesRootPath();
+    var versions = [];
+    versions.push({
+        version: egret.version,
+        root: egret.root
+    });
+    if (!root)
+        return versions;
+    var versionRoots = file.getDirectoryListing(root);
+    versionRoots && versionRoots.forEach(function (versionRoot) {
+        versionRoot = file.escapePath(versionRoot);
+        var bin = getBin(versionRoot);
+        var exist = file.exists(bin);
+        if (exist) {
+            var version = file.getFileName(versionRoot);
+            versions.push({
+                root: versionRoot,
+                version: version
+            });
+        }
+    });
+    return versions;
+}
+exports.getEngineVersions = getEngineVersions;

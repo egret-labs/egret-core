@@ -264,7 +264,7 @@ export function getFileName(path:string):string {
         return path.substring(startIndex + 1, endIndex);
     }
     endIndex = path.lastIndexOf(".");
-    if (endIndex == -1)
+    if (endIndex == -1 || isDirectory(path))
         endIndex = path.length;
     return path.substring(startIndex + 1, endIndex);
 }

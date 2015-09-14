@@ -42,12 +42,16 @@ function executeCommandLine(args) {
     egret.args = options;
     var versionCheck = version.check();
     var shouldUseOtherVersion = false;
+    var commandsUseCurrentVersion = {
+        "upgrade": true,
+        "versions": true
+    };
     // 如果项手动指定了引擎版本,那么使用需要的版本执行命令
     if (versionCheck.requestOtherVersion) {
         shouldUseOtherVersion = true;
     }
     // 如果项目版本跟引擎版本不一致，那么使用需要的版本执行命令
-    if (versionCheck.projectUsingOtherVersion && options.command != "upgrade") {
+    if (versionCheck.projectUsingOtherVersion && !(options.command in commandsUseCurrentVersion)) {
         shouldUseOtherVersion = true;
     }
     //如果用户没有安装需要的引擎，使用当前版本执行
@@ -87,5 +91,3 @@ var Entry = (function () {
     return Entry;
 })();
 var entry = new Entry();
-
-//# sourceMappingURL=Entry.js.map

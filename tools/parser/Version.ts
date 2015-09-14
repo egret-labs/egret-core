@@ -21,6 +21,11 @@ export interface VersionCheckResult {
     targetEngineVersion: string;
 }
 
+export interface EngineVersion {
+    version: string;
+    root: string;
+}
+
 export function check(): VersionCheckResult {
 
     var result: VersionCheckResult = {
@@ -43,7 +48,7 @@ export function check(): VersionCheckResult {
         return result;
     }
 
-    var targetEnginePath = getEgretPath(requestVersion);
+    var targetEnginePath = getEnginesRootPath() + requestVersion;
     
     //不存在指定的引擎
     if (!file.exists(targetEnginePath)) {
@@ -59,10 +64,10 @@ export function execute(root: string) {
     if (process.env.EGRET_PATH) {
         process.env.EGRET_PATH = root;
     }
-    require(root + "tools/bin/egret");
+    require(getBin(root));
 }
 
-function getEgretPath(version:string): string {
+function getEnginesRootPath(): string {
     var path:string;
     
     switch (process.platform) {
@@ -70,14 +75,48 @@ function getEgretPath(version:string): string {
             var user = process.env.NAME || process.env.LOGNAME;
             if(!user)
                 return null;
-            path = `/Users/${user}/Library/Application Support/Egret/engine/${version}/`;
+            path = `/Users/${user}/Library/Application Support/Egret/engine/`;
             break;
         case 'win32':
             var appdata = process.env.AppData||`${process.env.USERPROFILE}/AppData/Roaming/`;
-            path = file.escapePath(`${appdata}/Egret/engine/${version}/`);
+            path = file.escapePath(`${appdata}/Egret/engine/`);
             break;
         default:
             ;
     }
-    return path;
+    if (file.exists(path))
+        return path;
+    return null;
+}
+
+function getBin(versionRoot: string) {
+    return file.joinPath(versionRoot , "tools/bin/egret");
+}
+
+export function getEngineVersions(): EngineVersion[] {
+    var root = getEnginesRootPath();
+    var versions: EngineVersion[] = []
+    versions.push({
+        version: egret.version,
+        root: egret.root
+    });
+
+    if (!root)
+        return versions;
+
+    var versionRoots = file.getDirectoryListing(root);
+    versionRoots && versionRoots.forEach(versionRoot=> {
+        versionRoot = file.escapePath(versionRoot);
+        var bin = getBin(versionRoot);
+        var exist = file.exists(bin);
+
+        if (exist) {
+            var version = file.getFileName(versionRoot);
+            versions.push({
+                root: versionRoot,
+                version: version
+            })
+        }
+    });
+    return versions;
 }
