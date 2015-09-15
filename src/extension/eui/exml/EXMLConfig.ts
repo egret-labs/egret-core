@@ -31,7 +31,7 @@ module eui.sys {
 
     /**
      * @private
-     * Swan 命名空间
+     * EUI 命名空间
      */
     export var NS_S:string = "http://ns.egret.com/eui";
     /**
