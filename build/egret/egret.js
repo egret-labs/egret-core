@@ -7994,7 +7994,6 @@ var egret;
             if (drawCalls == 0) {
                 return false;
             }
-            context.surface["avaliable"] = true;
             this._setBitmapData(context.surface);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;

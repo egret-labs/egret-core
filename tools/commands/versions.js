@@ -13,3 +13,5 @@ var versions = (function () {
     return versions;
 })();
 module.exports = versions;
+
+//# sourceMappingURL=../commands/versions.js.map

@@ -127,5 +127,21 @@
   {
     "desc":"class ScrollViewProperties{ _vScrollTween: Tween; }",
     "solved":true
+  },
+  {
+    "desc":"class Event{ static dispatchEvent(target: IEventDispatcher, type: string, bubbles?: boolean, data?: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextEvent{ static dispatchTextEvent(target: IEventDispatcher, type: string, text: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class FrameLabel{ constructor(name: string, frame: number); }",
+    "solved":true
+  },
+  {
+    "desc":"class HTTPStatusEvent{ static dispatchHTTPStatusEvent(target: IEventDispatcher, status: number): void; }",
+    "solved":true
   }
 ]

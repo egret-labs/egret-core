@@ -9256,6 +9256,20 @@ declare module egret_native {
         function listResource(root: any, promise: any): any;
         function listUpdate(root: any, promise: any): any;
     }
+    class RenderContext {
+        clearScreen(r: number, g: number, b: number): void;
+        drawImage(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any): void;
+        setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
+        setGlobalAlpha(alpha: number): void;
+        pushClip(x: number, y: number, w: number, h: number): void;
+        popClip(): void;
+    }
+    class Canvas {
+        constructor(width: number, height: number);
+        width: number;
+        height: number;
+        getContext(type: string): RenderContext;
+    }
 }
 declare module egret {
     /**

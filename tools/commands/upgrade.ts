@@ -2,13 +2,23 @@
  * Created by yanjiaqi on 15/9/7.
  */
 /// <reference path="../lib/types.d.ts" />
+/// <reference path="../lib/async/async.d.ts" />
+
 
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
+import async = require('../lib/async/async');
 //import config = require('../lib/ProjectConfig');
 //import globals = require("../Globals");
 
 class UpgradeCommand implements egret.Command {
+
+    isAsync:boolean;
+    constructor(){
+        //升级命令是一个异步命令 内含异步控制流程
+        this.isAsync = true;
+    }
+
     execute():number {
         this.run();
         return 0;
@@ -24,25 +34,65 @@ class UpgradeCommand implements egret.Command {
             version = "1.0.0";
         }
         var modify = require("./upgrade/ModifyProperties");
-        for (var i = 0; i < this.upgradeConfigArr.length; i++) {
-            var info = this.upgradeConfigArr[i];
+        async.eachSeries(this.upgradeConfigArr,function(info,callback){
+
+            function handleCallBack(err?:string){
+                if(!err){
+                    modify.save(v);
+                }
+                callback({name:"",message:err});
+            }
+
             var v = info["v"];
             var command = new info["command"]();
 
             var result = globals.compressVersion(version, v);
+
             if (result < 0) {
                 globals.log(1704, v);
-                var upgradeCommandError = 0;
-                if (command) {
-                    upgradeCommandError = command.execute();
+                if(!command){
+                    callback();
+                }else
+                if(command.isAsync){
+                    command.execute(handleCallBack);
+                }else{
+                    var upgradeCommandError = command.execute();
+                    if(upgradeCommandError != 0){
+                        handleCallBack('升级中断');
+                    }else{
+                        handleCallBack();
+                    }
                 }
-                if (!upgradeCommandError){
-                    modify.save(v);
-                }
+            }else{
+                callback();
             }
-        }
+        },function(error){
+            if(error){
+                globals.exit(1705);
+            }else{
+                globals.exit(1702);
+            }
+        });
 
-        globals.exit(1702);
+        //for (var i = 0; i < this.upgradeConfigArr.length; i++) {
+        //    var info = this.upgradeConfigArr[i];
+        //    var v = info["v"];
+        //    var command = new info["command"]();
+        //
+        //    var result = globals.compressVersion(version, v);
+        //    if (result < 0) {
+        //        globals.log(1704, v);
+        //        var upgradeCommandError = 0;
+        //        if (command) {
+        //            upgradeCommandError = command.execute();
+        //        }
+        //        if (!upgradeCommandError){
+        //            modify.save(v);
+        //        }
+        //    }
+        //}
+        //
+        //globals.exit(1702);
     }
 
     private upgradeConfigArr = [

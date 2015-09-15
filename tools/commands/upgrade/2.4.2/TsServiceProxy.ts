@@ -348,10 +348,9 @@ export class TsServiceProxy {
 			res.forEach(resItem=>{
 				if(resItem.fileName.indexOf('src')!=-1 &&
 				resItem.fileName.indexOf('.d.ts') == -1){
-
 					var pos = this.getLineAndCharacterOfPosition(this.tss.getSourceFile(resItem.fileName),resItem.textSpan.start);
 					callBack(resItem.fileName,pos.line);
-					//Logger.log('位置 '+ resItem.fileName +' 行'+ pos.line + ': ' + api + " API作废" );
+					Logger.log('位置 '+ resItem.fileName +' 行'+ pos.line + " API作废" );
 				}
 			});
 		}

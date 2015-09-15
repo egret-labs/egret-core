@@ -187,7 +187,6 @@ var egret;
                     removeListeners();
                     var bitmapData = imageLoader.data;
                     //bitmapData.setAttribute("bitmapSrc", virtualUrl);
-                    bitmapData["avaliable"] = true;
                     var texture = new egret.Texture();
                     texture._setBitmapData(bitmapData);
                     loader.data = texture;
