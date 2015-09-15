@@ -32,7 +32,7 @@ module eui {
     /**
      * @language en_US
      * Register a property for a class definition in running,
-     * so that the Swan can get type of property accurate when parsing a EXML.
+     * so that the EUI can get type of property accurate when parsing a EXML.
      * This need not be called directly in most of time. Only when you have a custom UI
      * component need to be described in EXML, you may invoke this method explicitly.
      *
@@ -41,7 +41,7 @@ module eui {
      * for he custom property then the EXML parser can get the correct property type in running.
      *
      * If you can not set the correct initial value (such as <code>null</code>), the EXML parser will treat this property as
-     * <code>string</code>. If there is no inital value, Swan will throw an error. But you can invoked this method to register
+     * <code>string</code>. If there is no inital value, EUI will throw an error. But you can invoked this method to register
      * a property in this case.
      *
      *

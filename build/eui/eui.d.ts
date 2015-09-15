@@ -270,7 +270,7 @@ declare module eui {
     /**
      * @language en_US
      * Register a property for a class definition in running,
-     * so that the Swan can get type of property accurate when parsing a EXML.
+     * so that the EUI can get type of property accurate when parsing a EXML.
      * This need not be called directly in most of time. Only when you have a custom UI
      * component need to be described in EXML, you may invoke this method explicitly.
      *
@@ -279,7 +279,7 @@ declare module eui {
      * for he custom property then the EXML parser can get the correct property type in running.
      *
      * If you can not set the correct initial value (such as <code>null</code>), the EXML parser will treat this property as
-     * <code>string</code>. If there is no inital value, Swan will throw an error. But you can invoked this method to register
+     * <code>string</code>. If there is no inital value, EUI will throw an error. But you can invoked this method to register
      * a property in this case.
      *
      *
@@ -1392,7 +1392,7 @@ declare module eui {
          * This is the size that the element uses to draw on screen.<p/>
          *
          * If the <code>width</code> and/or <code>height</code> parameters are left unspecified (NaN),
-         * Swan sets the element's layout size to its preferred width and/or preferred height.<p/>
+         * EUI sets the element's layout size to its preferred width and/or preferred height.<p/>
          *
          * Note that calls to the <code>setLayoutBoundSize()</code> method can affect the layout position, so
          * call <code>setLayoutBoundPosition()</code> after calling <code>setLayoutBoundSize()</code>.<p/>
@@ -1408,7 +1408,7 @@ declare module eui {
          * @language zh_CN
          * 设置元素的布局大小。这是元素在屏幕上进行绘制时所用的大小。<p/>
          *
-         * 如果 width 和/或 height 参数尚未指定 (NaN))，则 Swan 会将该元素的布局大小设置为首选宽度和/或首选高度。<p/>
+         * 如果 width 和/或 height 参数尚未指定 (NaN))，则 EUI 会将该元素的布局大小设置为首选宽度和/或首选高度。<p/>
          *
          * 请注意，调用 setLayoutBoundSize() 方法会影响布局位置，因此请在调用 setLayoutBoundSize()
          * 之后再调用 setLayoutBoundPosition()。
@@ -1542,7 +1542,7 @@ declare module eui.sys {
     }
     /**
      * @private
-     * Swan 显示对象基类模板。仅作为 UIComponent 的默认实现，为egret.sys.implemenetUIComponenet()方法提供代码模板。
+     * EUI 显示对象基类模板。仅作为 UIComponent 的默认实现，为egret.sys.implemenetUIComponenet()方法提供代码模板。
      * 注意：在此类里不允许直接使用super关键字访问父类方法。一律使用this.$super属性访问。
      */
     class UIComponentImpl extends egret.DisplayObject implements eui.UIComponent {
@@ -2018,7 +2018,7 @@ declare module eui {
          * @language en_US
          * Called when a skin part is added.
          * You do not call this method directly.
-         * Swan calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
+         * EUI calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
          *
          * Override this function to attach behavior to the part, such as add event listener or
          * assign property values cached.
@@ -2032,7 +2032,7 @@ declare module eui {
          * @language zh_CN
          * 添加皮肤部件时调用。
          * 您无需直接调用此方法。
-         * Swan 会在调用 setSkinPart()方法时自动调用此方法。<p/>
+         * EUI 会在调用 setSkinPart()方法时自动调用此方法。<p/>
          *
          * 子类覆盖此方法，以在皮肤部件第一次附加时对其执行一些初始化操作，例如添加事件监听，赋值缓存的属性值等。
          * @param partName 要附加的皮肤部件名称。
@@ -2046,7 +2046,7 @@ declare module eui {
          * @language en_US
          * Called when an instance of a skin part is being removed.
          * You do not call this method directly.
-         * Swan calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
+         * EUI calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
          *
          * Override this function to clean behavior of the part, such as remove event listener or
          * disconnect the cache reference
@@ -2060,7 +2060,7 @@ declare module eui {
          * @language zh_CN
          * 正删除外观部件的实例时调用。
          * 您无需直接调用此方法。
-         * Swan 会在调用 setSkinPart()方法时自动调用此方法。<p/>
+         * EUI 会在调用 setSkinPart()方法时自动调用此方法。<p/>
          *
          * 子类覆盖此方法，以在皮肤部件从逻辑组件卸载时对其执行一些清理操作，例如移除事件监听，断开缓存的引用等。
          * @param partName 要卸载的皮肤部件名称
@@ -2117,7 +2117,7 @@ declare module eui {
         /**
          * @language en_US
          * The current view state of the component. When you use this property to set a component's state,
-         * Swan will explicit update state of skin and ignore the return of <code>getCurrentState()</code>.
+         * EUI will explicit update state of skin and ignore the return of <code>getCurrentState()</code>.
          *
          * Set to <code>""</code> or <code>null</code> to reset the component back to its base state.
          * @version Egret 2.4
@@ -9972,7 +9972,7 @@ declare module eui {
          * <li>1.使用client的hostComponentKey作为键查询默认皮肤名。</li>
          * <li>2.使用client的类名作为键查询默认皮肤名。</li>
          * <li>3.使用client的父类名作为键查询默认皮肤名。</li>
-         * <li>4.不断重复3直到查询到皮肤名或父类为swan.Component时停止。</li>
+         * <li>4.不断重复3直到查询到皮肤名或父类为eui.Component时停止。</li>
          * @param client 要获取默认皮肤的组件。
          * @version Egret 2.4
          * @version eui 1.0
@@ -11372,7 +11372,7 @@ declare module eui.sys {
 declare module eui.sys {
     /**
      * @private
-     * Swan 命名空间
+     * EUI 命名空间
      */
     var NS_S: string;
     /**
@@ -13735,7 +13735,7 @@ declare module eui {
          * Constructor.
          *
          * @param target The object whose property is being set.
-         * By default, Swan uses the immediate parent of the State object.
+         * By default, EUI uses the immediate parent of the State object.
          * @param name The property to set.
          * @param value The value of the property in the view state.
          *
@@ -13747,7 +13747,7 @@ declare module eui {
          * @language zh_CN
          * 创建一个SetProperty实例。
          *
-         * @param target 要设置其属性的对象。默认情况下，Swan 使用 State 对象的直接父级。
+         * @param target 要设置其属性的对象。默认情况下，EUI 使用 State 对象的直接父级。
          * @param name 要设置的属性。
          * @param value 视图状态中的属性值。
          *
@@ -13780,7 +13780,7 @@ declare module eui {
         /**
          * @language en_US
          * The object containing the property to be changed.
-         * If the property value is <code>null</code>, Swan uses the
+         * If the property value is <code>null</code>, EUI uses the
          * immediate parent of the State object.
          *
          * @version Egret 2.4
@@ -13789,7 +13789,7 @@ declare module eui {
          */
         /**
          * @language zh_CN
-         * 包含要更改的属性的对象。如果属性值为 null，则 Swan 将使用 State 对象的直接父级。
+         * 包含要更改的属性的对象。如果属性值为 null，则 EUI 将使用 State 对象的直接父级。
          *
          * @version Egret 2.4
          * @version eui 1.0
