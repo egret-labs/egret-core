@@ -14942,12 +14942,24 @@ var egret;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
+    /**
+     * @copy egret.Orientation
+     */
+    egret.DeviceOrientation = null;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
+    /**
+     * @copy egret.Geolocation
+     */
+    egret.Geolocation;
 })(egret || (egret = {}));
 var egret;
 (function (egret) {
+    /**
+     * @copy egret.Motion
+     */
+    egret.Motion;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

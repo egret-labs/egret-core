@@ -10389,6 +10389,12 @@ declare module egret.sys {
 }
 declare module egret {
     /**
+     * @copy egret.Orientation
+     */
+    var DeviceOrientation: {
+        new (): DeviceOrientation;
+    };
+    /**
      * @language en_US
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
      *
@@ -10405,28 +10411,41 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
      */
-    class DeviceOrientation {
+    interface DeviceOrientation extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports detecting the device orientation.
+         * Start to monitor the device's orientation
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持检测设备方向
+         * 开始监听设备方向变化
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static isSupport: boolean;
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor the device's orientation
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备方向变化
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
 }
 declare module egret {
     /**
      * @language en_US
      * The Geolocation able to obtain the position of the device.
-     * Geolocation will dispatch CHANGE event when the device's location is changed.
-     * It will dispatch IO_ERROR event if the location request is denied
+     * Geolocation will emit CHANGE event when the device's location is changed.
+     * It will emit IO_ERROR event if the location request is denied
      * or there is no location service on the device.
      *
      * @event egret.Event.CHANGE The device's location is changed
@@ -10447,28 +10466,57 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
-    class Geolocation extends EventDispatcher {
+    interface Geolocation extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports the geolocation services
+         * Start to monitor the device's location
+         * @returns
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持地理位置服务
+         * 开始监听设备位置信息
+         * @returns
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static isSupport: boolean;
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor the device's location
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备位置信息
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
+    /**
+     * @copy egret.Geolocation
+     */
+    var Geolocation: {
+        new (): Geolocation;
+    };
 }
 declare module egret {
     /**
+     * @copy egret.Motion
+     */
+    var Motion: {
+        new (): Motion;
+    };
+    /**
      * @language en_US
-     * The Motion class dispatches events based on activity detected by the device's motion sensor.
+     * The Motion class emits events based on activity detected by the device's motion sensor.
      * This data represents the device's movement along a 3-dimensional axis. When the device moves,
-     * the sensor detects this movement and dispatch the CHANGE event. @see egret.MotionEvent
+     * the sensor detects this movement and emit the CHANGE event. @see egret.MotionEvent
      *
      * @event egret.Event.CHANGE device is moved
      * @version Egret 2.4
@@ -10486,20 +10534,33 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
      */
-    class Motion extends EventDispatcher {
+    interface Motion extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports the motion Sensor
+         * Start to monitor device movement
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持运动传感器
+         * 开始监听设备运动状态
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static isSupport: boolean;
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor device movement
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备运动状态
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
     /**
      * @language en_US

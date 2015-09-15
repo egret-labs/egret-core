@@ -3,17 +3,22 @@ module egret.web {
     /**
      * @private
      */
-    export class WebDeviceOrientation extends EventDispatcher {
+    export class WebDeviceOrientation extends EventDispatcher implements DeviceOrientation {
 
-        
         /**
-         * @inheritDoc
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @private
+         * 
          */
-        public static get isSupport(): boolean {
-            var hasOrientation = 'DeviceOrientationEvent' in window;
-            return hasOrientation;
+        start() {
+            window.addEventListener("deviceorientation", this.onChange);
+        }
+
+        /**
+         * @private
+         * 
+         */
+        stop() {
+            window.removeEventListener("deviceorientation", this.onChange);
         }
 
         /**
@@ -25,30 +30,6 @@ module egret.web {
             event.gamma = e.gamma;
             event.alpha = e.alpha;
             this.dispatchEvent(event);
-        }
-        /**
-         * @inheritDoc
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void {
-            if (type == Event.CHANGE && !this.hasEventListener(Event.CHANGE)) {
-                window.addEventListener("deviceorientation", this.onChange);
-            }
-            super.addEventListener(type, listener, thisObject, useCapture, priority);
-        }
-
-
-        /**
-         * @inheritDoc
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public removeEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean): void {
-            super.removeEventListener(type, listener, thisObject, useCapture);
-            if (type == Event.CHANGE && !this.hasEventListener(Event.CHANGE)) {
-                window.removeEventListener("deviceorientation", this.onChange);
-            }
         }
     }
 }
