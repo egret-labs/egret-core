@@ -325,23 +325,29 @@ var TsServiceProxy = (function () {
         }
         return null;
     };
-    TsServiceProxy.prototype.getAllReferenceAccordingDeclarationPosition = function (filePath, position, callBack) {
+    TsServiceProxy.prototype.getAllReferenceAccordingDeclarationPosition = function (filePath, position, containerName, callBack) {
         var _this = this;
         var res = this.getReferences(filePath, position);
         if (res) {
             Logger.log('找到:' + res.length + '处引用');
             res.forEach(function (resItem) {
-                if (resItem.fileName.indexOf('src') != -1 &&
-                    resItem.fileName.indexOf('.d.ts') == -1) {
+                //对找到的引用进行验证
+                var definitions = _this.getDefinitionAtPosition(resItem.fileName, resItem.textSpan.start);
+                //有定义且定义是对应的Container
+                if (definitions[0] && definitions[0].containerName.indexOf(containerName) != -1 &&
+                    //只来自于用户的ts文件
+                    resItem.fileName.indexOf('src') != -1 && resItem.fileName.indexOf('.d.ts') == -1) {
                     var pos = _this.getLineAndCharacterOfPosition(_this.tss.getSourceFile(resItem.fileName), resItem.textSpan.start);
                     callBack(resItem.fileName, pos.line);
-                    Logger.log('位置 ' + resItem.fileName + ' 行' + pos.line + " API作废");
                 }
             });
         }
     };
     TsServiceProxy.prototype.getLineAndCharacterOfPosition = function (sourceFile, position) {
         return TSS.getLineAndCharacterOfPosition(sourceFile, position);
+    };
+    TsServiceProxy.prototype.getDefinitionAtPosition = function (fileName, position) {
+        return this.tss.getDefinitionAtPosition(fileName, position);
     };
     /**
 * 获取指定位置的高亮内容

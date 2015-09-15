@@ -331,6 +331,9 @@ var UpgradeCommand_2_4_3 = (function () {
                 //    searchName == '_setHeight' && fatherName == 'ScrollView'){
                 //    var a;
                 //}
+                if (searchName == 'addEventListener') {
+                    var a;
+                }
                 var pkg;
                 //过滤＊
                 if (searchName == '*') {
@@ -338,9 +341,11 @@ var UpgradeCommand_2_4_3 = (function () {
                 }
                 else {
                     AutoLogger.logTitle(item);
+                    //console.log(item.name+'.'+item['category-name']);
                     if (pkg = _this.tsp.getDeclarationPosition(fatherName, searchName)) {
-                        _this.tsp.getAllReferenceAccordingDeclarationPosition(pkg.path, pkg.position, function (filePath, line) {
+                        _this.tsp.getAllReferenceAccordingDeclarationPosition(pkg.path, pkg.position, fatherName, function (filePath, line) {
                             AutoLogger.logRef(filePath, line);
+                            //console.log(filePath,line);
                         });
                     }
                 }
