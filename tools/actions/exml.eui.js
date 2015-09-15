@@ -13,14 +13,18 @@ function build() {
 }
 exports.build = build;
 function buildChanges(exmls) {
+    var state = {
+        exitCode: 0,
+        messages: []
+    };
     if (!exmls || exmls.length == 0)
-        return;
+        return state;
     exmls.forEach(function (exml) {
         var pathToSrc = exml.substring(egret.args.srcDir.length);
         var target = file.joinPath(egret.args.outDir, pathToSrc);
         file.copy(exml, target);
     });
-    return { exitCode: 0, messages: [] };
+    return state;
 }
 exports.buildChanges = buildChanges;
 function afterBuild() {
