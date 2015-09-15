@@ -74,8 +74,8 @@ module egret {
 
         /**
          * @language en_US
-         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF
-         *
+         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
+         * This feature is only in DEBUG mode to take effect. <br/>
          * <Ul>
          * <Li> Logger.ALL - all levels of log can be printed out. </ li>
          * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
@@ -90,8 +90,8 @@ module egret {
          */
         /**
          * @language zh_CN
-         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF
-         *
+         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
+         * 此功能只在 DEBUG 模式下才生效。<br/>
          * <ul>
          * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
          * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
@@ -105,7 +105,6 @@ module egret {
          * @platform Web,Native
          */
         public static set logLevel(logType:string) {
-            throw new Error();
         }
     }
 }
