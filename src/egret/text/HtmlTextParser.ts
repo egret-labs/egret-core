@@ -154,7 +154,7 @@ module egret {
             var info:any = {};
 
             var header = [];
-            if (str.charAt(0) == "i" || str.charAt(0) == "b")  {
+            if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u")  {
                 this.addProperty(info, str, "true");
             }
             else if (header = str.match(/^(font|a)\s/)){
@@ -196,7 +196,7 @@ module egret {
          * @returns 
          */
         private getHeadReg():RegExp {
-            return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|size|fontfamily|href|target)(\s)*=/;
+            return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|u|size|fontfamily|href|target)(\s)*=/;
         }
 
         /**
@@ -224,6 +224,9 @@ module egret {
                 case "b" :
                 case "bold" :
                     info.bold = value == "true";
+                    break;
+                case "u" :
+                    info.underline = value == "true";
                     break;
                 case "i" :
                 case "italic" :

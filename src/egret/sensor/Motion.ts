@@ -2,12 +2,16 @@
 
 module egret {
 
+    /**
+     * @copy egret.Motion
+     */
+    export var Motion: { new (): Motion };
 
     /**
      * @language en_US
-     * The Motion class dispatches events based on activity detected by the device's motion sensor.
+     * The Motion class emits events based on activity detected by the device's motion sensor.
      * This data represents the device's movement along a 3-dimensional axis. When the device moves,
-     * the sensor detects this movement and dispatch the CHANGE event. @see egret.MotionEvent
+     * the sensor detects this movement and emit the CHANGE event. @see egret.MotionEvent
      *
      * @event egret.Event.CHANGE device is moved
      * @version Egret 2.4
@@ -25,22 +29,33 @@ module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
      */
-    export declare class Motion extends EventDispatcher {
-        
+    export interface Motion extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports the motion Sensor
+         * Start to monitor device movement
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持运动传感器
+         * 开始监听设备运动状态
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static isSupport: boolean;
-
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor device movement
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备运动状态
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
 
     /**

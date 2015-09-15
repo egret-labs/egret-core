@@ -1793,6 +1793,7 @@ module egret {
          */
         $isTyping:boolean = false;
 
+        private drawTempArray:Array<any> = [];
         /**
          * @private
          * @param renderContext
@@ -1822,7 +1823,6 @@ module egret {
             drawY = Math.round(drawY);
             var halign:number = TextFieldUtils.$getHalign(self);
 
-            var underLines:Array<any> = [];
             var drawX:number = 0;
             for (var i:number = startLine, numLinesLength:number = values[sys.TextKeys.numLines]; i < numLinesLength; i++) {
                 var line:egret.ILineElement = lines[i];
@@ -1844,8 +1844,8 @@ module egret {
 
                     drawText(renderContext, self, element.text, drawX, drawY + (h - size) / 2, element.width, element.style);
 
-                    if (element.style.href) {
-                        underLines.push({"x" : drawX, "y": drawY + (h) / 2, "w" : element.width, "c":element.style.textColor});
+                    if (element.style.underline) {
+                        this.drawTempArray.push({"x" : drawX, "y": drawY + (h) / 2, "w" : element.width, "c":element.style.textColor});
                     }
 
                     drawX += element.width;
@@ -1853,23 +1853,34 @@ module egret {
                 drawY += h / 2 + values[sys.TextKeys.lineSpacing];
             }
 
-            if (underLines.length > 0) {
+            //渲染下划线
+            if (this.drawTempArray.length > 0) {
                 renderContext.save();
-                renderContext.lineWidth = 1;
-                renderContext.beginPath();//清理之前的缓存的路径
+                renderContext.lineWidth = 2;//必须是2，1的时候显示的线条颜色不对，会偏暗
 
-                for (var i1:number = 0; i1 < underLines.length; i1++) {
-                    var underInfo:Object = underLines[i1];
-                    renderContext.strokeStyle = toColorString(underInfo["c"]) || values[sys.TextKeys.textColorString];
-                    renderContext.rect(underInfo["x"], underInfo["y"], underInfo["w"], 1);
+                for (var i1:number = 0; i1 < this.drawTempArray.length; i1++) {
+                    var underInfo:Object = this.drawTempArray[i1];
+
+                    var textColor:string;
+                    if (underInfo["c"] != null) {
+                        textColor = toColorString(underInfo["c"]);
+                    }
+                    else {
+                        textColor = values[sys.TextKeys.textColorString];
+                    }
+
+                    renderContext.beginPath();//清理之前的缓存的路径
+
+                    renderContext.strokeStyle = textColor;
+                    renderContext.moveTo(underInfo["x"], underInfo["y"]);
+                    renderContext.lineTo(underInfo["x"] + underInfo["w"], underInfo["y"]);
+
+                    renderContext.closePath();
+                    renderContext.stroke();
                 }
-
-                renderContext.closePath();
-                renderContext.stroke();
                 renderContext.restore();
-
+                this.drawTempArray.length = 0;
             }
-
         }
 
         //增加点击事件

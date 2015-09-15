@@ -4060,43 +4060,24 @@ var egret;
                 };
             }
             var d = __define,c=WebDeviceOrientation;p=c.prototype;
-            d(WebDeviceOrientation, "isSupport"
-                /**
-                 * @inheritDoc
-                 * @version Egret 2.4
-                 * @platform Web,Native
-                 */
-                ,function () {
-                    var hasOrientation = 'DeviceOrientationEvent' in window;
-                    return hasOrientation;
-                }
-            );
             /**
-             * @inheritDoc
-             * @version Egret 2.4
-             * @platform Web,Native
+             * @private
+             *
              */
-            p.addEventListener = function (type, listener, thisObject, useCapture, priority) {
-                if (type == egret.Event.CHANGE && !this.hasEventListener(egret.Event.CHANGE)) {
-                    window.addEventListener("deviceorientation", this.onChange);
-                }
-                _super.prototype.addEventListener.call(this, type, listener, thisObject, useCapture, priority);
+            p.start = function () {
+                window.addEventListener("deviceorientation", this.onChange);
             };
             /**
-             * @inheritDoc
-             * @version Egret 2.4
-             * @platform Web,Native
+             * @private
+             *
              */
-            p.removeEventListener = function (type, listener, thisObject, useCapture) {
-                _super.prototype.removeEventListener.call(this, type, listener, thisObject, useCapture);
-                if (type == egret.Event.CHANGE && !this.hasEventListener(egret.Event.CHANGE)) {
-                    window.removeEventListener("deviceorientation", this.onChange);
-                }
+            p.stop = function () {
+                window.removeEventListener("deviceorientation", this.onChange);
             };
             return WebDeviceOrientation;
         })(egret.EventDispatcher);
         web.WebDeviceOrientation = WebDeviceOrientation;
-        egret.registerClass(WebDeviceOrientation,"egret.web.WebDeviceOrientation");
+        egret.registerClass(WebDeviceOrientation,"egret.web.WebDeviceOrientation",["egret.DeviceOrientation"]);
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 egret.DeviceOrientation = egret.web.WebDeviceOrientation;
@@ -4112,7 +4093,7 @@ var egret;
             /**
              * @private
              */
-            function WebGeolocation() {
+            function WebGeolocation(option) {
                 var _this = this;
                 _super.call(this);
                 /**
@@ -4145,17 +4126,6 @@ var egret;
                 this.geolocation = navigator.geolocation;
             }
             var d = __define,c=WebGeolocation;p=c.prototype;
-            d(WebGeolocation, "isSupport"
-                /**
-                 * @inheritDoc
-                 * @version Egret 2.4
-                 * @platform Web,Native
-                 */
-                ,function () {
-                    var geolocation = 'geolocation' in navigator;
-                    return geolocation;
-                }
-            );
             /**
              * @private
              *
@@ -4180,32 +4150,10 @@ var egret;
                 var geo = this.geolocation;
                 geo.clearWatch(this.watchId);
             };
-            /**
-             * @inheritDoc
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            p.addEventListener = function (type, listener, thisObject, useCapture, priority) {
-                if (type == egret.Event.CHANGE && !this.hasEventListener(egret.Event.CHANGE)) {
-                    this.start();
-                }
-                _super.prototype.addEventListener.call(this, type, listener, thisObject, useCapture, priority);
-            };
-            /**
-             * @inheritDoc
-             * @version Egret 2.4
-             * @platform Web,Native
-             */
-            p.removeEventListener = function (type, listener, thisObject, useCapture) {
-                _super.prototype.removeEventListener.call(this, type, listener, thisObject, useCapture);
-                if (type == egret.Event.CHANGE && !this.hasEventListener(egret.Event.CHANGE)) {
-                    this.stop();
-                }
-            };
             return WebGeolocation;
         })(egret.EventDispatcher);
         web.WebGeolocation = WebGeolocation;
-        egret.registerClass(WebGeolocation,"egret.web.WebGeolocation");
+        egret.registerClass(WebGeolocation,"egret.web.WebGeolocation",["egret.Geolocation"]);
         egret.Geolocation = egret.web.WebGeolocation;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
@@ -4248,43 +4196,24 @@ var egret;
                 };
             }
             var d = __define,c=WebMotion;p=c.prototype;
-            d(WebMotion, "isSupport"
-                /**
-                 * @inheritDoc
-                 * @version Egret 2.4
-                 * @platform Web,Native
-                 */
-                ,function () {
-                    var geolocation = 'DeviceMotionEvent' in window;
-                    return geolocation;
-                }
-            );
             /**
-             * @inheritDoc
-             * @version Egret 2.4
-             * @platform Web,Native
+             * @private
+             *
              */
-            p.addEventListener = function (type, listener, thisObject, useCapture, priority) {
-                if (type == egret.Event.CHANGE && !this.hasEventListener(egret.Event.CHANGE)) {
-                    window.addEventListener("devicemotion", this.onChange);
-                }
-                _super.prototype.addEventListener.call(this, type, listener, thisObject, useCapture, priority);
+            p.start = function () {
+                window.addEventListener("devicemotion", this.onChange);
             };
             /**
-             * @inheritDoc
-             * @version Egret 2.4
-             * @platform Web,Native
+             * @private
+             *
              */
-            p.removeEventListener = function (type, listener, thisObject, useCapture) {
-                _super.prototype.removeEventListener.call(this, type, listener, thisObject, useCapture);
-                if (type == egret.Event.CHANGE && !this.hasEventListener(egret.Event.CHANGE)) {
-                    window.removeEventListener("devicemotion", this.onChange);
-                }
+            p.stop = function () {
+                window.removeEventListener("devicemotion", this.onChange);
             };
             return WebMotion;
         })(egret.EventDispatcher);
         web.WebMotion = WebMotion;
-        egret.registerClass(WebMotion,"egret.web.WebMotion");
+        egret.registerClass(WebMotion,"egret.web.WebMotion",["egret.Motion"]);
         egret.Motion = egret.web.WebMotion;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));

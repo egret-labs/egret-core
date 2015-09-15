@@ -12,6 +12,10 @@ var Compiler = (function () {
         var realCWD = process.cwd();
         var cwd = file.escapePath(args.projectDir);
         files = files.map(function (f) { return f.replace(cwd, ""); });
+        if (out)
+            out = file.getRelativePath(cwd, out);
+        if (outDir)
+            outDir = file.getRelativePath(cwd, outDir);
         process.chdir(cwd);
         var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
         args.declaration = defTemp;

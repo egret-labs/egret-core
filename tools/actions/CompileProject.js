@@ -13,12 +13,13 @@ var CompileProject = (function () {
         else {
             var compiler = new Compiler();
             var tsList = FileUtil.search(option.srcDir, "ts");
-            compileResult = compiler.compile({
+            var compileOptions = {
                 args: option,
                 files: tsList,
                 out: option.out,
                 outDir: option.outDir
-            });
+            };
+            compileResult = compiler.compile(compileOptions);
             this.recompile = compileResult.compileWithChanges;
         }
         var fileResult = GetJavaScriptFileNames(compileResult.files, /^src\//);
