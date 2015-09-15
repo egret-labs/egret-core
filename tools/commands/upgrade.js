@@ -75,7 +75,7 @@ var UpgradeCommand = (function () {
                 }
                 else {
                     var upgradeCommandError = command.execute();
-                    if (!upgradeCommandError) {
+                    if (upgradeCommandError != 0) {
                         handleCallBack('升级中断');
                     }
                     else {
@@ -86,8 +86,13 @@ var UpgradeCommand = (function () {
             else {
                 callback();
             }
-        }, function () {
-            globals.exit(1702);
+        }, function (error) {
+            if (error) {
+                globals.exit(1705);
+            }
+            else {
+                globals.exit(1702);
+            }
         });
         //for (var i = 0; i < this.upgradeConfigArr.length; i++) {
         //    var info = this.upgradeConfigArr[i];

@@ -57,7 +57,7 @@ class UpgradeCommand implements egret.Command {
                     command.execute(handleCallBack);
                 }else{
                     var upgradeCommandError = command.execute();
-                    if(!upgradeCommandError){
+                    if(upgradeCommandError != 0){
                         handleCallBack('升级中断');
                     }else{
                         handleCallBack();
@@ -66,8 +66,12 @@ class UpgradeCommand implements egret.Command {
             }else{
                 callback();
             }
-        },function(){
-            globals.exit(1702);
+        },function(error){
+            if(error){
+                globals.exit(1705);
+            }else{
+                globals.exit(1702);
+            }
         });
 
         //for (var i = 0; i < this.upgradeConfigArr.length; i++) {
