@@ -127,11 +127,11 @@ var AutoLogger = {
                     });
                     fileRefLine = fileRefLine.slice(0, fileRefLine.lastIndexOf(', ')) + '行处引用 ';
                     if (this._logContent.references[file_path][api].isAPIshow) {
-                        fileRefLine += api;
+                        fileRefLine += api + ' ;';
                     }
                     ;
-                    console.log(fileRefLine);
                 }
+                console.log(fileRefLine);
             }
             console.log('\n');
         }
