@@ -17,12 +17,13 @@ class CompileProject {
         else {
             var compiler = new Compiler();
             var tsList: string[] = FileUtil.search(option.srcDir, "ts");
-            compileResult = compiler.compile({
+            var compileOptions = {
                 args: option,
                 files: tsList,
                 out: option.out,
                 outDir: option.outDir
-            });
+            };
+            compileResult = compiler.compile(compileOptions);
             this.recompile = compileResult.compileWithChanges;
         }
         
