@@ -28,6 +28,9 @@ function buildChanges(exmls) {
         exitCode: 0,
         messages: []
     };
+    if (!exmls || exmls.length == 0) {
+        return state;
+    }
     exmls.forEach(function (exml) {
         var result = exmlc.compile(exml, egret.args.srcDir);
         if (result.exitCode != 0) {
