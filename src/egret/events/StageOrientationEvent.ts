@@ -32,29 +32,27 @@ module egret {
 
 	/**
      * @language en_US
-	 * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+	 * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/events/IOErrorEvent.ts
 	 */
 	/**
      * @language zh_CN
-	 * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+	 * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/events/IOErrorEvent.ts
 	 */
     export class StageOrientationEvent extends Event{
 
 		/**
          * @language en_US
-         * io error
+         * After screen rotation distribute events.
          * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
-         * io发生错误
+         * 屏幕旋转后派发的事件。
          * @version Egret 2.4
          * @platform Web,Native
 		 */
@@ -62,19 +60,19 @@ module egret {
 
 		/**
          * @language en_US
-         * Create a egret.IOErrorEvent objects
-         * @param type {string} Type of event, accessible as Event.type.
-         * @param bubbles {boolean} Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable {boolean} Determine whether the Event object can be canceled. The default value is false.
+         * Creating contains specific information related to the event and the stage direction of StageOrientationEvent object.
+         * @param type Event types:StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles It indicates whether the Event object participates in the bubbling stage of the event flow.
+         * @param cancelable It indicates whether the Event object can be canceled.
          * @version Egret 2.4
          * @platform Web,Native
 		 */
 		/**
          * @language zh_CN
-         * 创建一个 egret.IOErrorEvent 对象
-         * @param type {string} 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
+         * 创建包含与舞台方向事件相关的特定信息的 StageOrientationEvent 对象。
+         * @param type 事件的类型：StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles 表示 Event 对象是否参与事件流的冒泡阶段。
+         * @param cancelable 表示是否可以取消 Event 对象。
          * @version Egret 2.4
          * @platform Web,Native
 		 */
@@ -84,15 +82,17 @@ module egret {
 
         /**
          * @language en_US
-         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
-		 * @param target {egret.IEventDispatcher} Distribute event target
+         * 派发一个屏幕旋转的事件。
+		 * @param target {egret.IEventDispatcher} 派发事件目标
+		 * @param type {egret.IEventDispatcher} 派发事件类型
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-		 * @param target {egret.IEventDispatcher} 派发事件目标
+         * 派发一个屏幕旋转的事件。
+		 * @param target {egret.IEventDispatcher} Distribute event target
+		 * @param type {egret.IEventDispatcher} Distribute event type
          * @version Egret 2.4
          * @platform Web,Native
          */
