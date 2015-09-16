@@ -1189,7 +1189,20 @@ module egret {
          */
         $setWidth(value:number):boolean {
             var values = this.$TextField;
-            values[sys.TextKeys.textFieldWidth] = isNaN(value) ? NaN : value;
+            if (isNaN(value)) {
+                if (isNaN(values[sys.TextKeys.textFieldWidth])) {
+                    return false;
+                }
+
+                values[sys.TextKeys.textFieldWidth] = NaN;
+            }
+            else {
+                if (values[sys.TextKeys.textFieldWidth] == value) {
+                    return false;
+                }
+
+                values[sys.TextKeys.textFieldWidth] = value;
+            }
 
             value = +value;
             if (value < 0) {
@@ -1207,7 +1220,20 @@ module egret {
          */
         $setHeight(value:number):boolean {
             var values = this.$TextField;
-            values[sys.TextKeys.textFieldHeight] = isNaN(value) ? NaN : value;
+            if (isNaN(value)) {
+                if (isNaN(values[sys.TextKeys.textFieldHeight])) {
+                    return false;
+                }
+
+                values[sys.TextKeys.textFieldHeight] = NaN;
+            }
+            else {
+                if (values[sys.TextKeys.textFieldHeight] == value) {
+                    return false;
+                }
+
+                values[sys.TextKeys.textFieldHeight] = value;
+            }
 
             value = +value;
             if (value < 0) {

@@ -17503,7 +17503,18 @@ var egret;
          */
         p.$setWidth = function (value) {
             var values = this.$TextField;
-            values[3 /* textFieldWidth */] = isNaN(value) ? NaN : value;
+            if (isNaN(value)) {
+                if (isNaN(values[3 /* textFieldWidth */])) {
+                    return false;
+                }
+                values[3 /* textFieldWidth */] = NaN;
+            }
+            else {
+                if (values[3 /* textFieldWidth */] == value) {
+                    return false;
+                }
+                values[3 /* textFieldWidth */] = value;
+            }
             value = +value;
             if (value < 0) {
                 return false;
@@ -17518,7 +17529,18 @@ var egret;
          */
         p.$setHeight = function (value) {
             var values = this.$TextField;
-            values[4 /* textFieldHeight */] = isNaN(value) ? NaN : value;
+            if (isNaN(value)) {
+                if (isNaN(values[4 /* textFieldHeight */])) {
+                    return false;
+                }
+                values[4 /* textFieldHeight */] = NaN;
+            }
+            else {
+                if (values[4 /* textFieldHeight */] == value) {
+                    return false;
+                }
+                values[4 /* textFieldHeight */] = value;
+            }
             value = +value;
             if (value < 0) {
                 return false;
