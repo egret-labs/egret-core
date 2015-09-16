@@ -35,37 +35,13 @@ require('./locales/zh_CN');
 require('./globals');
 var Parser = require("./parser/Parser");
 var earlyParams = require("./parser/ParseEarlyVersionParams");
-var version = require("./parser/Version");
 var utils = require('./lib/utils');
 function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
-    var versionCheck = version.check();
-    var shouldUseOtherVersion = false;
-    var commandsUseCurrentVersion = {
-        "upgrade": true,
-        "versions": true
-    };
-    // 如果项手动指定了引擎版本,那么使用需要的版本执行命令
-    if (versionCheck.requestOtherVersion) {
-        shouldUseOtherVersion = true;
-    }
-    // 如果项目版本跟引擎版本不一致，那么使用需要的版本执行命令
-    if (versionCheck.projectUsingOtherVersion && !(options.command in commandsUseCurrentVersion)) {
-        shouldUseOtherVersion = true;
-    }
-    //如果用户没有安装需要的引擎，使用当前版本执行
-    if (versionCheck.hasTargetEngine == false) {
-        shouldUseOtherVersion = false;
-    }
-    if (shouldUseOtherVersion) {
-        version.execute(versionCheck.targetEngineRoot);
-    }
-    else {
-        earlyParams.parse(options, args);
-        var exitcode = entry.executeOption(options);
-        entry.exit(exitcode);
-    }
+    earlyParams.parse(options, args);
+    var exitcode = entry.executeOption(options);
+    entry.exit(exitcode);
 }
 exports.executeCommandLine = executeCommandLine;
 var Entry = (function () {
@@ -100,5 +76,3 @@ var Entry = (function () {
     return Entry;
 })();
 var entry = new Entry();
-
-//# sourceMappingURL=Entry.js.map
