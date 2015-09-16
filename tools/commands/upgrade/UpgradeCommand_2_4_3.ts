@@ -193,7 +193,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             globals.log2(1707,projectPath,newPath);
             var egretPath = egret.root;
             //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
-            CHILD_EXEC.exec('node '+file.joinPath(egretPath,'/tools/bin/egret')+' create '+newPath,{
+            //处理命令行中的空格(用“”抱起来作为一个单独的参数)
+            CHILD_EXEC.exec('node \"'+file.joinPath(egretPath,'/tools/bin/egret')+'\" create \"'+newPath+"\"",{
                 encoding: 'utf8',
                 timeout: 0,
                 maxBuffer: 200*1024,
@@ -202,7 +203,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                 env: process.env
             },function(error,stdout,stderror){
                 if(error){
-                    //无法创建新目录 直接返回
+                    //无法创建新目录输出错误日志 直接返回
+                    console.log(stderror);
                     self.asyncCallback({name:'消息',message:"无法创建新目录"});
                 }else{
                     console.log(stdout);
