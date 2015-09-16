@@ -669,7 +669,7 @@ module eui {
          * This is the size that the element uses to draw on screen.<p/>
          *
          * If the <code>width</code> and/or <code>height</code> parameters are left unspecified (NaN),
-         * Swan sets the element's layout size to its preferred width and/or preferred height.<p/>
+         * EUI sets the element's layout size to its preferred width and/or preferred height.<p/>
          *
          * Note that calls to the <code>setLayoutBoundSize()</code> method can affect the layout position, so
          * call <code>setLayoutBoundPosition()</code> after calling <code>setLayoutBoundSize()</code>.<p/>
@@ -685,7 +685,7 @@ module eui {
          * @language zh_CN
          * 设置元素的布局大小。这是元素在屏幕上进行绘制时所用的大小。<p/>
          *
-         * 如果 width 和/或 height 参数尚未指定 (NaN))，则 Swan 会将该元素的布局大小设置为首选宽度和/或首选高度。<p/>
+         * 如果 width 和/或 height 参数尚未指定 (NaN))，则 EUI 会将该元素的布局大小设置为首选宽度和/或首选高度。<p/>
          *
          * 请注意，调用 setLayoutBoundSize() 方法会影响布局位置，因此请在调用 setLayoutBoundSize()
          * 之后再调用 setLayoutBoundPosition()。
@@ -834,7 +834,7 @@ module eui.sys {
 
     /**
      * @private
-     * Swan 显示对象基类模板。仅作为 UIComponent 的默认实现，为egret.sys.implemenetUIComponenet()方法提供代码模板。
+     * EUI 显示对象基类模板。仅作为 UIComponent 的默认实现，为egret.sys.implemenetUIComponenet()方法提供代码模板。
      * 注意：在此类里不允许直接使用super关键字访问父类方法。一律使用this.$super属性访问。
      */
     export class UIComponentImpl extends egret.DisplayObject implements eui.UIComponent {

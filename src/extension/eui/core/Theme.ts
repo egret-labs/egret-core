@@ -210,7 +210,7 @@ module eui {
          * <li>1.使用client的hostComponentKey作为键查询默认皮肤名。</li>
          * <li>2.使用client的类名作为键查询默认皮肤名。</li>
          * <li>3.使用client的父类名作为键查询默认皮肤名。</li>
-         * <li>4.不断重复3直到查询到皮肤名或父类为swan.Component时停止。</li>
+         * <li>4.不断重复3直到查询到皮肤名或父类为eui.Component时停止。</li>
          * @param client 要获取默认皮肤的组件。
          * @version Egret 2.4
          * @version eui 1.0

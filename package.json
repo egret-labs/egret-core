@@ -212,6 +212,14 @@
           {
             "path": "sensor/web/WebMotion.ts",
             "platform": "web"
+          },
+          {
+            "path": "utils/native/NativeLogger.ts",
+            "platform": "native"
+          },
+          {
+            "path": "utils/web/WebLogger.ts",
+            "platform": "web"
           }
 
         ],
@@ -228,14 +236,6 @@
           },
           {
             "path": "net/web/HTML5NetContext.ts",
-            "platform": "web"
-          },
-          {
-            "path": "utils/native/NativeLogger.ts",
-            "platform": "native"
-          },
-          {
-            "path": "utils/web/WebLogger.ts",
             "platform": "web"
           }
         ],
@@ -282,6 +282,13 @@
         "description": "Web Socket",
         "files": [ ],
         "root": "src/extension/socket",
+        "dependencies": [ "egret" ]
+      },
+      {
+        "name": "version",
+        "description": "Version Controller",
+        "files": [ ],
+        "root": "src/extension/version",
         "dependencies": [ "egret" ]
       }
     ],

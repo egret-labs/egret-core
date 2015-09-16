@@ -533,7 +533,7 @@ var eui;
     /**
      * @language en_US
      * Register a property for a class definition in running,
-     * so that the Swan can get type of property accurate when parsing a EXML.
+     * so that the EUI can get type of property accurate when parsing a EXML.
      * This need not be called directly in most of time. Only when you have a custom UI
      * component need to be described in EXML, you may invoke this method explicitly.
      *
@@ -542,7 +542,7 @@ var eui;
      * for he custom property then the EXML parser can get the correct property type in running.
      *
      * If you can not set the correct initial value (such as <code>null</code>), the EXML parser will treat this property as
-     * <code>string</code>. If there is no inital value, Swan will throw an error. But you can invoked this method to register
+     * <code>string</code>. If there is no inital value, EUI will throw an error. But you can invoked this method to register
      * a property in this case.
      *
      *
@@ -1681,7 +1681,7 @@ var eui;
         var validator = new sys.Validator();
         /**
          * @private
-         * Swan 显示对象基类模板。仅作为 UIComponent 的默认实现，为egret.sys.implemenetUIComponenet()方法提供代码模板。
+         * EUI 显示对象基类模板。仅作为 UIComponent 的默认实现，为egret.sys.implemenetUIComponenet()方法提供代码模板。
          * 注意：在此类里不允许直接使用super关键字访问父类方法。一律使用this.$super属性访问。
          */
         var UIComponentImpl = (function (_super) {
@@ -3020,7 +3020,7 @@ var eui;
          * @language en_US
          * Called when a skin part is added.
          * You do not call this method directly.
-         * Swan calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
+         * EUI calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
          *
          * Override this function to attach behavior to the part, such as add event listener or
          * assign property values cached.
@@ -3034,7 +3034,7 @@ var eui;
          * @language zh_CN
          * 添加皮肤部件时调用。
          * 您无需直接调用此方法。
-         * Swan 会在调用 setSkinPart()方法时自动调用此方法。<p/>
+         * EUI 会在调用 setSkinPart()方法时自动调用此方法。<p/>
          *
          * 子类覆盖此方法，以在皮肤部件第一次附加时对其执行一些初始化操作，例如添加事件监听，赋值缓存的属性值等。
          * @param partName 要附加的皮肤部件名称。
@@ -3049,7 +3049,7 @@ var eui;
          * @language en_US
          * Called when an instance of a skin part is being removed.
          * You do not call this method directly.
-         * Swan calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
+         * EUI calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
          *
          * Override this function to clean behavior of the part, such as remove event listener or
          * disconnect the cache reference
@@ -3063,7 +3063,7 @@ var eui;
          * @language zh_CN
          * 正删除外观部件的实例时调用。
          * 您无需直接调用此方法。
-         * Swan 会在调用 setSkinPart()方法时自动调用此方法。<p/>
+         * EUI 会在调用 setSkinPart()方法时自动调用此方法。<p/>
          *
          * 子类覆盖此方法，以在皮肤部件从逻辑组件卸载时对其执行一些清理操作，例如移除事件监听，断开缓存的引用等。
          * @param partName 要卸载的皮肤部件名称
@@ -3167,7 +3167,7 @@ var eui;
             /**
              * @language en_US
              * The current view state of the component. When you use this property to set a component's state,
-             * Swan will explicit update state of skin and ignore the return of <code>getCurrentState()</code>.
+             * EUI will explicit update state of skin and ignore the return of <code>getCurrentState()</code>.
              *
              * Set to <code>""</code> or <code>null</code> to reset the component back to its base state.
              * @version Egret 2.4
@@ -14663,7 +14663,7 @@ var eui;
          * <li>1.使用client的hostComponentKey作为键查询默认皮肤名。</li>
          * <li>2.使用client的类名作为键查询默认皮肤名。</li>
          * <li>3.使用client的父类名作为键查询默认皮肤名。</li>
-         * <li>4.不断重复3直到查询到皮肤名或父类为swan.Component时停止。</li>
+         * <li>4.不断重复3直到查询到皮肤名或父类为eui.Component时停止。</li>
          * @param client 要获取默认皮肤的组件。
          * @version Egret 2.4
          * @version eui 1.0
@@ -17645,7 +17645,7 @@ var eui;
     (function (sys) {
         /**
          * @private
-         * Swan 命名空间
+         * EUI 命名空间
          */
         sys.NS_S = "http://ns.egret.com/eui";
         /**
@@ -17653,6 +17653,7 @@ var eui;
          * Wing命名空间
          */
         sys.NS_W = "http://ns.egret.com/wing";
+        var coreClasses = ["Point", "Matrix", "Rectangle"];
         var basicTypes = ["Array", "boolean", "string", "number"];
         var MODULE_NAME = "eui.";
         var hashCount = 0;
@@ -17737,8 +17738,13 @@ var eui;
              * @param ns 命名空间
              */
             p.getClassNameById = function (id, ns) {
-                if (id == "Object" && ns == sys.NS_S) {
-                    return id;
+                if (ns == sys.NS_S) {
+                    if (id == "Object") {
+                        return id;
+                    }
+                    if (coreClasses.indexOf(id) != -1) {
+                        return "egret." + id;
+                    }
                 }
                 var name = "";
                 if (basicTypes.indexOf(id) != -1) {
@@ -18166,7 +18172,7 @@ var eui;
     locale_strings[2102] = "EXML解析警告 {0}: 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "EXML解析警告 {0}: 节点上的同一个属性'{1}'被多次赋值\n{2}";
     locale_strings[2104] = "无法实例化组件：{0} ，请检查该组件构造函数参数是否为空。";
-    //Swan 报错与警告信息
+    //EUI 报错与警告信息
     locale_strings[2201] = "BasicLayout 不支持虚拟化。";
     locale_strings[2202] = "皮肤解析出错，属性 skinName 的值必须要能够解析为一个 eui.Skin 的实例。";
     locale_strings[2203] = "找不到指定的皮肤类 '{0}'。";
@@ -22451,7 +22457,7 @@ var eui;
          * Constructor.
          *
          * @param target The object whose property is being set.
-         * By default, Swan uses the immediate parent of the State object.
+         * By default, EUI uses the immediate parent of the State object.
          * @param name The property to set.
          * @param value The value of the property in the view state.
          *
@@ -22463,7 +22469,7 @@ var eui;
          * @language zh_CN
          * 创建一个SetProperty实例。
          *
-         * @param target 要设置其属性的对象。默认情况下，Swan 使用 State 对象的直接父级。
+         * @param target 要设置其属性的对象。默认情况下，EUI 使用 State 对象的直接父级。
          * @param name 要设置的属性。
          * @param value 视图状态中的属性值。
          *

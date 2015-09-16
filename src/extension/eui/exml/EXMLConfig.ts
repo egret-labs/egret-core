@@ -31,7 +31,7 @@ module eui.sys {
 
     /**
      * @private
-     * Swan 命名空间
+     * EUI 命名空间
      */
     export var NS_S:string = "http://ns.egret.com/eui";
     /**
@@ -39,7 +39,7 @@ module eui.sys {
      * Wing命名空间
      */
     export var NS_W:string = "http://ns.egret.com/wing";
-
+    var coreClasses:string[] = ["Point","Matrix","Rectangle"];
     var basicTypes:string[] = ["Array", "boolean", "string", "number"];
 
     var MODULE_NAME = "eui.";
@@ -131,9 +131,15 @@ module eui.sys {
          * @param ns 命名空间
          */
         public getClassNameById(id:string, ns:string):string {
-            if (id == "Object"&&ns==NS_S) {
-                return id;
+            if(ns==NS_S){
+                if (id == "Object") {
+                    return id;
+                }
+                if(coreClasses.indexOf(id)!=-1){
+                    return "egret."+id;
+                }
             }
+
             var name:string = "";
             if (basicTypes.indexOf(id) != -1) {
                 return id;

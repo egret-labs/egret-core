@@ -28,6 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 /// <reference path="../core/ClassFactory.ts" />
+/// <reference path="./supportClasses/TreeItemRenderer.ts" />
 
 module egret.gui {
 

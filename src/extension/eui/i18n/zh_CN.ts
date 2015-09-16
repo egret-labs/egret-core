@@ -61,7 +61,7 @@ module eui {
     locale_strings[2103] = "EXML解析警告 {0}: 节点上的同一个属性'{1}'被多次赋值\n{2}";
     locale_strings[2104] = "无法实例化组件：{0} ，请检查该组件构造函数参数是否为空。";
 
-    //Swan 报错与警告信息
+    //EUI 报错与警告信息
     locale_strings[2201] = "BasicLayout 不支持虚拟化。";
     locale_strings[2202] = "皮肤解析出错，属性 skinName 的值必须要能够解析为一个 eui.Skin 的实例。";
     locale_strings[2203] = "找不到指定的皮肤类 '{0}'。";

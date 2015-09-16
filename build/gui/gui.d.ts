@@ -6435,6 +6435,109 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.TreeItemRenderer
+     * @classdesc
+     * Tree组件的项呈示器基类
+     * @extends egret.gui.ItemRenderer
+     * @implements egret.gui.ITreeItemRenderer
+     */
+    class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer {
+        /**
+         * 构造函数
+         * @method egret.gui.TreeItemRenderer#constructor
+         */
+        constructor();
+        private onItemMouseDown(event);
+        /**
+         * [SkinPart]图标显示对象
+         * @member egret.gui.TreeItemRenderer#iconDisplay
+         */
+        iconDisplay: UIAsset;
+        /**
+         * [SkinPart]子节点开启按钮
+         * @member egret.gui.TreeItemRenderer#disclosureButton
+         */
+        disclosureButton: ToggleButtonBase;
+        /**
+         * [SkinPart]用于调整缩进值的容器对象。
+         * @member egret.gui.TreeItemRenderer#contentGroup
+         */
+        contentGroup: DisplayObject;
+        /**
+         *
+         * @type {number}
+         * @private
+         */
+        private _indentation;
+        /**
+         * 子节点相对父节点的缩进值，以像素为单位。默认17。
+         * @member egret.gui.TreeItemRenderer#indentation
+         */
+        indentation: number;
+        /**
+         *
+         * @type {null}
+         * @private
+         */
+        private _iconSkinName;
+        /**
+         * @member egret.gui.TreeItemRenderer#iconSkinName
+         */
+        iconSkinName: any;
+        /**
+         *
+         * @type {number}
+         * @private
+         */
+        private _depth;
+        /**
+         * @member egret.gui.TreeItemRenderer#depth
+         */
+        depth: number;
+        /**
+         *
+         * @type {boolean}
+         * @private
+         */
+        private _hasChildren;
+        /**
+         * @member egret.gui.TreeItemRenderer#hasChildren
+         */
+        hasChildren: boolean;
+        /**
+         *
+         * @type {boolean}
+         * @private
+         */
+        private _isOpen;
+        /**
+         * @member egret.gui.TreeItemRenderer#opened
+         */
+        opened: boolean;
+        /**
+         * 添加外观部件时调用
+         * @method egret.gui.TreeItemRenderer#partAdded
+         * @param partName {string}
+         * @param instance {any}
+         */
+        partAdded(partName: string, instance: any): void;
+        /**
+         * 删除外观部件的实例时调用
+         * @method egret.gui.TreeItemRenderer#partRemoved
+         * @param partName {string}
+         * @param instance {any}
+         */
+        partRemoved(partName: string, instance: any): void;
+        /**
+         * 鼠标在disclosureButton上按下
+         * @method egret.gui.TreeItemRenderer#disclosureButton_mouseDownHandler
+         * @param event {TouchEvent}
+         */
+        disclosureButton_mouseDownHandler(event: TouchEvent): void;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.Tree
      * @classdesc
      * 树状列表组件
@@ -7486,109 +7589,6 @@ declare module egret.gui {
         private delyList;
         private handleDelyList();
         getDefaultSkin(client: SkinnableComponent): any;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.TreeItemRenderer
-     * @classdesc
-     * Tree组件的项呈示器基类
-     * @extends egret.gui.ItemRenderer
-     * @implements egret.gui.ITreeItemRenderer
-     */
-    class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer {
-        /**
-         * 构造函数
-         * @method egret.gui.TreeItemRenderer#constructor
-         */
-        constructor();
-        private onItemMouseDown(event);
-        /**
-         * [SkinPart]图标显示对象
-         * @member egret.gui.TreeItemRenderer#iconDisplay
-         */
-        iconDisplay: UIAsset;
-        /**
-         * [SkinPart]子节点开启按钮
-         * @member egret.gui.TreeItemRenderer#disclosureButton
-         */
-        disclosureButton: ToggleButtonBase;
-        /**
-         * [SkinPart]用于调整缩进值的容器对象。
-         * @member egret.gui.TreeItemRenderer#contentGroup
-         */
-        contentGroup: DisplayObject;
-        /**
-         *
-         * @type {number}
-         * @private
-         */
-        private _indentation;
-        /**
-         * 子节点相对父节点的缩进值，以像素为单位。默认17。
-         * @member egret.gui.TreeItemRenderer#indentation
-         */
-        indentation: number;
-        /**
-         *
-         * @type {null}
-         * @private
-         */
-        private _iconSkinName;
-        /**
-         * @member egret.gui.TreeItemRenderer#iconSkinName
-         */
-        iconSkinName: any;
-        /**
-         *
-         * @type {number}
-         * @private
-         */
-        private _depth;
-        /**
-         * @member egret.gui.TreeItemRenderer#depth
-         */
-        depth: number;
-        /**
-         *
-         * @type {boolean}
-         * @private
-         */
-        private _hasChildren;
-        /**
-         * @member egret.gui.TreeItemRenderer#hasChildren
-         */
-        hasChildren: boolean;
-        /**
-         *
-         * @type {boolean}
-         * @private
-         */
-        private _isOpen;
-        /**
-         * @member egret.gui.TreeItemRenderer#opened
-         */
-        opened: boolean;
-        /**
-         * 添加外观部件时调用
-         * @method egret.gui.TreeItemRenderer#partAdded
-         * @param partName {string}
-         * @param instance {any}
-         */
-        partAdded(partName: string, instance: any): void;
-        /**
-         * 删除外观部件的实例时调用
-         * @method egret.gui.TreeItemRenderer#partRemoved
-         * @param partName {string}
-         * @param instance {any}
-         */
-        partRemoved(partName: string, instance: any): void;
-        /**
-         * 鼠标在disclosureButton上按下
-         * @method egret.gui.TreeItemRenderer#disclosureButton_mouseDownHandler
-         * @param event {TouchEvent}
-         */
-        disclosureButton_mouseDownHandler(event: TouchEvent): void;
     }
 }
 declare module egret.gui {

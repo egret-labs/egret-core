@@ -5,8 +5,8 @@ module egret {
     /**
      * @language en_US
      * The Geolocation able to obtain the position of the device.
-     * Geolocation will dispatch CHANGE event when the device's location is changed.
-     * It will dispatch IO_ERROR event if the location request is denied
+     * Geolocation will emit CHANGE event when the device's location is changed.
+     * It will emit IO_ERROR event if the location request is denied
      * or there is no location service on the device.
      *
      * @event egret.Event.CHANGE The device's location is changed
@@ -27,20 +27,42 @@ module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
-    export declare class Geolocation extends EventDispatcher {
-
+    export interface Geolocation extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports the geolocation services
+         * Start to monitor the device's location
+         * @returns 
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持地理位置服务
+         * 开始监听设备位置信息
+         * @returns 
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static isSupport: boolean;
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor the device's location
+         * @returns 
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备位置信息
+         * @returns 
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
+
+    /**
+     * @copy egret.Geolocation
+     */
+    export var Geolocation: { new (): Geolocation };
+
 }

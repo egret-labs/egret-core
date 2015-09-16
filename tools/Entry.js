@@ -35,39 +35,20 @@ require('./locales/zh_CN');
 require('./globals');
 var Parser = require("./parser/Parser");
 var earlyParams = require("./parser/ParseEarlyVersionParams");
-var version = require("./parser/Version");
 var utils = require('./lib/utils');
 function executeCommandLine(args) {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
-    var versionCheck = version.check();
-    var shouldUseOtherVersion = false;
-    // 如果项手动指定了引擎版本,那么使用需要的版本执行命令
-    if (versionCheck.requestOtherVersion) {
-        shouldUseOtherVersion = true;
-    }
-    // 如果项目版本跟引擎版本不一致，那么使用需要的版本执行命令
-    if (versionCheck.projectUsingOtherVersion && options.command != "upgrade") {
-        shouldUseOtherVersion = true;
-    }
-    //如果用户没有安装需要的引擎，使用当前版本执行
-    if (versionCheck.hasTargetEngine == false) {
-        shouldUseOtherVersion = false;
-    }
-    if (shouldUseOtherVersion) {
-        version.execute(versionCheck.targetEngineRoot);
-    }
-    else {
-        earlyParams.parse(options, args);
-        var exitcode = entry.executeOption(options);
-        entry.exit(exitcode);
-    }
+    earlyParams.parse(options, args);
+    var exitcode = entry.executeOption(options);
+    entry.exit(exitcode);
 }
 exports.executeCommandLine = executeCommandLine;
 var Entry = (function () {
     function Entry() {
     }
     Entry.prototype.executeOption = function (options) {
+        var self = this;
         options.command = options.command || "info";
         try {
             var command = require("./commands/" + options.command);
@@ -76,8 +57,16 @@ var Entry = (function () {
             console.log(utils.tr(10002, options.command));
             return 10002;
         }
-        var exitCode = new command().execute();
-        return exitCode;
+        //添加异步命令的支持 异步命令不会在return后强制退出 默认返回DontExitCode
+        var commandInstance = new command();
+        if (commandInstance.isAsync) {
+            commandInstance.execute();
+            return DontExitCode;
+        }
+        else {
+            var exitCode = commandInstance.execute();
+            return exitCode;
+        }
     };
     Entry.prototype.exit = function (exitCode) {
         if (DontExitCode == exitCode)

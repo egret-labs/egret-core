@@ -30,6 +30,9 @@
 /// <reference path="../display/Sprite.ts" />
 
 module egret.sys {
+
+    export var $TempStage:egret.Stage;
+
     /**
      * @private
      * Egret播放器
@@ -108,6 +111,9 @@ module egret.sys {
             if (this.isPlaying || !this.stage) {
                 return;
             }
+
+            $TempStage = $TempStage || this.stage;
+
             this.isPlaying = true;
             if (!this.root) {
                 this.initialize();
