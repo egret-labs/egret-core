@@ -154,16 +154,16 @@ export function open(target, appName?, callback?) {
             break;
         case 'win32':
             // if the first parameter to start is quoted, it uses that as the title
-            // so we pass a blank title so we can quote the file we are opening
-            if (appName) {
-                opener = 'start "" "' + escape(appName) + '"';
-            } else {
-                opener = 'start ""';
-            }
-            break;
-        default:
-            if (appName) {
-                opener = escape(appName);
+                // so we pass a blank title so we can quote the file we are opening
+                if (appName) {
+                    opener = 'start "" "' + escape(appName) + '"';
+                } else {
+                    opener = 'start ""';
+                }
+                break;
+            default:
+                if (appName) {
+                    opener = escape(appName);
             } else {
                 // use Portlands xdg-open everywhere else
                 opener = path.join(__dirname, '../vendor/xdg-open');

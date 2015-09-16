@@ -5,8 +5,10 @@ var TSP = require("./2.4.2/TsServiceProxy");
 var file = require('../../lib/FileUtil');
 var CHILD_EXEC = require('child_process');
 var TSS = require("./2.4.2/typescriptServices");
+var utils = require('../../lib/utils');
 var DTS = require('./2.4.2/compare2dts.js');
 var AutoLogger = {
+    _snapShot: '',
     _solutionMap: {},
     _dir: '',
     _total: 0,
@@ -23,6 +25,7 @@ var AutoLogger = {
         this._total = 0;
         var solutionPath = file.joinPath(egret.root, '/tools/commands/upgrade/2.4.2', 'solution_urls.json');
         this._solutionMap = JSON.parse(file.read(solutionPath));
+        this._snapShot = '';
     },
     close: function () {
         this.clear();
@@ -115,6 +118,7 @@ var AutoLogger = {
         if (this._logContent.title && this._logContent.references && this._logContent.isShow) {
             //step1
             console.log(this._logContent.title);
+            this._snapShot += '\n' + this._logContent.title;
             //step2
             var fileRefLine;
             for (var file_path in this._logContent.references) {
@@ -132,8 +136,10 @@ var AutoLogger = {
                     ;
                 }
                 console.log(fileRefLine);
+                this._snapShot += '\n' + fileRefLine;
             }
             console.log('\n');
+            this._snapShot += '\n';
         }
         //清空_logContent对象
         this._logContent.title = null;
@@ -274,13 +280,13 @@ var UpgradeCommand_2_4_3 = (function () {
             rplc_parram.push('data-entry-class=\"' + enter_class_name + '\"');
         }
         this.replaceFileStr(file.joinPath(newPath, 'template/index.html'), rplc_parram);
-        //step 4.拷贝旧的库文件用于比较
-        var libOld = file.joinPath(egret.args.projectDir, '/libs');
-        var libOld_temp = file.joinPath(newPath, '/libs_old/');
-        if (libOld.toLowerCase() != libOld_temp.toLowerCase()) {
-            globals.log2(1707, libOld, libOld_temp);
-            file.copy(libOld, libOld_temp);
-        }
+        //step 4.拷贝旧的库文件用于比较(引擎自带历史版本的核心库声明文件)
+        //var libOld = file.joinPath(egret.args.projectDir,'/libs');
+        //var libOld_temp = file.joinPath(newPath,'/libs_old/');
+        //if(libOld.toLowerCase() != libOld_temp.toLowerCase()){
+        //    globals.log2(1707,libOld,libOld_temp);
+        //    file.copy(libOld,libOld_temp);
+        //}
         //找到入口文件替换资源引用
         //    globals.log2(1708);
         //    var enter_class_path = file.joinPath(newPath,'/src/',enter_class_name+'.ts');
@@ -300,7 +306,7 @@ var UpgradeCommand_2_4_3 = (function () {
         //var projectPath = this.createAndCopyProjectFile();
         var egretRoot = egret.root;
         //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
-        var libPath = file.joinPath(projectPath, '/libs_old'); //用旧的api检测
+        var libPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.2/libs'); //用自带的旧api检测
         //var libPath = file.joinPath(projectPath,'/libs');//
         var configPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.2/solved');
         var searchLST = DTS.load_format(configPath);
@@ -353,6 +359,12 @@ var UpgradeCommand_2_4_3 = (function () {
                 }
             });
             AutoLogger.close();
+            //打开新创建的目录
+            utils.open(projectPath);
+            //写入log并打开log
+            var saveLogFilePath = file.joinPath(projectPath, 'LOG_' + new Date().format('yyyyMMddHHmmss').toLocaleString() + '_APITEST.txt');
+            var saveContent = AutoLogger._snapShot;
+            this.saveFileAndOpen(saveLogFilePath, saveContent);
             if (AutoLogger._total === 0) {
                 globals.exit(1702);
             }
@@ -378,6 +390,10 @@ var UpgradeCommand_2_4_3 = (function () {
             }
             file.save(filePath, contentTxt);
         }
+    };
+    UpgradeCommand_2_4_3.prototype.saveFileAndOpen = function (filePath, content) {
+        file.save(filePath, content);
+        utils.open(filePath);
     };
     return UpgradeCommand_2_4_3;
 })();
