@@ -339,7 +339,7 @@ module eui {
          * @language en_US
          * Called when a skin part is added.
          * You do not call this method directly.
-         * Swan calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
+         * EUI calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
          *
          * Override this function to attach behavior to the part, such as add event listener or
          * assign property values cached.
@@ -353,7 +353,7 @@ module eui {
          * @language zh_CN
          * 添加皮肤部件时调用。
          * 您无需直接调用此方法。
-         * Swan 会在调用 setSkinPart()方法时自动调用此方法。<p/>
+         * EUI 会在调用 setSkinPart()方法时自动调用此方法。<p/>
          *
          * 子类覆盖此方法，以在皮肤部件第一次附加时对其执行一些初始化操作，例如添加事件监听，赋值缓存的属性值等。
          * @param partName 要附加的皮肤部件名称。
@@ -370,7 +370,7 @@ module eui {
          * @language en_US
          * Called when an instance of a skin part is being removed.
          * You do not call this method directly.
-         * Swan calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
+         * EUI calls it automatically when it calls the <code>setSkinPart()</code> method.<p/>
          *
          * Override this function to clean behavior of the part, such as remove event listener or
          * disconnect the cache reference
@@ -384,7 +384,7 @@ module eui {
          * @language zh_CN
          * 正删除外观部件的实例时调用。
          * 您无需直接调用此方法。
-         * Swan 会在调用 setSkinPart()方法时自动调用此方法。<p/>
+         * EUI 会在调用 setSkinPart()方法时自动调用此方法。<p/>
          *
          * 子类覆盖此方法，以在皮肤部件从逻辑组件卸载时对其执行一些清理操作，例如移除事件监听，断开缓存的引用等。
          * @param partName 要卸载的皮肤部件名称
@@ -495,7 +495,7 @@ module eui {
         /**
          * @language en_US
          * The current view state of the component. When you use this property to set a component's state,
-         * Swan will explicit update state of skin and ignore the return of <code>getCurrentState()</code>.
+         * EUI will explicit update state of skin and ignore the return of <code>getCurrentState()</code>.
          *
          * Set to <code>""</code> or <code>null</code> to reset the component back to its base state.
          * @version Egret 2.4

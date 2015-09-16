@@ -7000,62 +7000,62 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
-     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/events/IOErrorEvent.ts
      */
     /**
      * @language zh_CN
-     * @classdesc IO流事件，当错误导致输入或输出操作失败时调度 IOErrorEvent 对象。
+     * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/events/IOErrorEvent.ts
      */
     class StageOrientationEvent extends Event {
         /**
          * @language en_US
-         * io error
+         * After screen rotation distribute events.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * io发生错误
+         * 屏幕旋转后派发的事件。
          * @version Egret 2.4
          * @platform Web,Native
          */
         static ORIENTATION_CHANGE: string;
         /**
          * @language en_US
-         * Create a egret.IOErrorEvent objects
-         * @param type {string} Type of event, accessible as Event.type.
-         * @param bubbles {boolean} Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param cancelable {boolean} Determine whether the Event object can be canceled. The default value is false.
+         * Creating contains specific information related to the event and the stage direction of StageOrientationEvent object.
+         * @param type Event types:StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles It indicates whether the Event object participates in the bubbling stage of the event flow.
+         * @param cancelable It indicates whether the Event object can be canceled.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 创建一个 egret.IOErrorEvent 对象
-         * @param type {string} 事件的类型，可以作为 Event.type 访问。
-         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
-         * @param cancelable {boolean} 确定是否可以取消 Event 对象。默认值为 false。
+         * 创建包含与舞台方向事件相关的特定信息的 StageOrientationEvent 对象。
+         * @param type 事件的类型：StageOrientationEvent.ORIENTATION_CHANGE
+         * @param bubbles 表示 Event 对象是否参与事件流的冒泡阶段。
+         * @param cancelable 表示是否可以取消 Event 对象。
          * @version Egret 2.4
          * @platform Web,Native
          */
         constructor(type: string, bubbles?: boolean, cancelable?: boolean);
         /**
          * @language en_US
-         * EventDispatcher object using the specified event object thrown Event. The objects will be thrown in the object cache pool for the next round robin.
-         * @param target {egret.IEventDispatcher} Distribute event target
+         * 派发一个屏幕旋转的事件。
+         * @param target {egret.IEventDispatcher} 派发事件目标
+         * @param type {egret.IEventDispatcher} 派发事件类型
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
-         * @param target {egret.IEventDispatcher} 派发事件目标
+         * 派发一个屏幕旋转的事件。
+         * @param target {egret.IEventDispatcher} Distribute event target
+         * @param type {egret.IEventDispatcher} Distribute event type
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -10389,6 +10389,12 @@ declare module egret.sys {
 }
 declare module egret {
     /**
+     * @copy egret.Orientation
+     */
+    var DeviceOrientation: {
+        new (): DeviceOrientation;
+    };
+    /**
      * @language en_US
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
      *
@@ -10405,28 +10411,41 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
      */
-    class DeviceOrientation {
+    interface DeviceOrientation extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports detecting the device orientation.
+         * Start to monitor the device's orientation
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持检测设备方向
+         * 开始监听设备方向变化
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static isSupport: boolean;
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor the device's orientation
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备方向变化
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
 }
 declare module egret {
     /**
      * @language en_US
      * The Geolocation able to obtain the position of the device.
-     * Geolocation will dispatch CHANGE event when the device's location is changed.
-     * It will dispatch IO_ERROR event if the location request is denied
+     * Geolocation will emit CHANGE event when the device's location is changed.
+     * It will emit IO_ERROR event if the location request is denied
      * or there is no location service on the device.
      *
      * @event egret.Event.CHANGE The device's location is changed
@@ -10447,28 +10466,57 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
      */
-    class Geolocation extends EventDispatcher {
+    interface Geolocation extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports the geolocation services
+         * Start to monitor the device's location
+         * @returns
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持地理位置服务
+         * 开始监听设备位置信息
+         * @returns
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static isSupport: boolean;
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor the device's location
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备位置信息
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
+    /**
+     * @copy egret.Geolocation
+     */
+    var Geolocation: {
+        new (): Geolocation;
+    };
 }
 declare module egret {
     /**
+     * @copy egret.Motion
+     */
+    var Motion: {
+        new (): Motion;
+    };
+    /**
      * @language en_US
-     * The Motion class dispatches events based on activity detected by the device's motion sensor.
+     * The Motion class emits events based on activity detected by the device's motion sensor.
      * This data represents the device's movement along a 3-dimensional axis. When the device moves,
-     * the sensor detects this movement and dispatch the CHANGE event. @see egret.MotionEvent
+     * the sensor detects this movement and emit the CHANGE event. @see egret.MotionEvent
      *
      * @event egret.Event.CHANGE device is moved
      * @version Egret 2.4
@@ -10486,20 +10534,33 @@ declare module egret {
      * @platform Web,Native
      * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
      */
-    class Motion extends EventDispatcher {
+    interface Motion extends EventDispatcher {
         /**
          * @language en_US
-         * Specifies whether the system supports the motion Sensor
+         * Start to monitor device movement
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指示系统是否支持运动传感器
+         * 开始监听设备运动状态
          * @version Egret 2.4
          * @platform Web,Native
          */
-        static isSupport: boolean;
+        start(): void;
+        /**
+         * @language en_US
+         * Stop monitor device movement
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止监听设备运动状态
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
     }
     /**
      * @language en_US
@@ -11285,6 +11346,11 @@ declare module egret {
          * @platform Web,Native
          */
         target?: string;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        underline?: boolean;
     }
     /**
      * @language en_US
@@ -12380,6 +12446,7 @@ declare module egret {
          * @private
          */
         $isTyping: boolean;
+        private drawTempArray;
         /**
          * @private
          * @param renderContext
@@ -13233,6 +13300,85 @@ declare module egret {
          * @param string
          */
         private stringToCodePoints(string);
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Logger is an entrance for the log processing module of the engine
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Logger是引擎的日志处理模块入口
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class Logger {
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static ALL: string;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static DEBUG: string;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static INFO: string;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static WARN: string;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static ERROR: string;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static OFF: string;
+        /**
+         * @language en_US
+         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
+         * This feature is only in DEBUG mode to take effect. <br/>
+         * <Ul>
+         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
+         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
+         * <Li> Logger.INFO - print info, log, warn, error. </ li>
+         * <Li> Logger.WARN - can print warn, error. </ li>
+         * <Li> Logger.ERROR - You can print error. </ li>
+         * <Li> Logger.OFF - all closed. </ li>
+         * </ Ul>
+         *param LogType from this level to start printing.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
+         * 此功能只在 DEBUG 模式下才生效。<br/>
+         * <ul>
+         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
+         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
+         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
+         * <li>Logger.WARN -- 可以打印warn、error。</li>
+         * <li>Logger.ERROR -- 可以打印error。</li>
+         * <li>Logger.OFF -- 全部关闭。</li>
+         * </ul>
+         * @param logType 从这个等级开始打印。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static logLevel: string;
     }
 }
 declare module egret {

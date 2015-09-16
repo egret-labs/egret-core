@@ -341,22 +341,31 @@ export class TsServiceProxy {
 		return null;
 	}
 
-	public getAllReferenceAccordingDeclarationPosition(filePath: string,position: number,callBack: (filename:string,line:number)=>void):void{
-		var res = this.getReferences(filePath,position);
+	public getAllReferenceAccordingDeclarationPosition(filePath: string,position: number,containerName: string,callBack: (filename:string,line:number)=>void):void{
+		var res:TSS.ReferenceEntry[] = this.getReferences(filePath,position);
 		if(res){
 			Logger.log('找到:'+res.length+'处引用');
 			res.forEach(resItem=>{
-				if(resItem.fileName.indexOf('src')!=-1 &&
-				resItem.fileName.indexOf('.d.ts') == -1){
+				//对找到的引用进行验证
+				var definitions = this.getDefinitionAtPosition(resItem.fileName,resItem.textSpan.start);
+				//有定义且定义是对应的Container
+				if(definitions[0] && definitions[0].containerName.indexOf(containerName) != -1 &&
+						//只来自于用户的ts文件
+					resItem.fileName.indexOf('src')!=-1 && resItem.fileName.indexOf('.d.ts') == -1){
+
 					var pos = this.getLineAndCharacterOfPosition(this.tss.getSourceFile(resItem.fileName),resItem.textSpan.start);
 					callBack(resItem.fileName,pos.line);
-					Logger.log('位置 '+ resItem.fileName +' 行'+ pos.line + " API作废" );
+					//Logger.log('位置 '+ resItem.fileName +' 行'+ pos.line + " API作废" );
 				}
 			});
 		}
 	}
 	public getLineAndCharacterOfPosition(sourceFile: TSS.SourceFile,position: number){
 		return TSS.getLineAndCharacterOfPosition(sourceFile,position);
+	}
+
+	public getDefinitionAtPosition(fileName: string,position:number):TSS.DefinitionInfo[]{
+		return this.tss.getDefinitionAtPosition(fileName,position);
 	}
 	/**
 * 获取指定位置的高亮内容

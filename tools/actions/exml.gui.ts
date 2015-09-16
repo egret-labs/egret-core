@@ -37,7 +37,11 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
         exitCode: 0,
         messages: []
     };
-    
+
+    if(!exmls ||exmls.length == 0){
+        return state;
+    }
+
     exmls.forEach(exml=> {
         var result = exmlc.compile(exml, egret.args.srcDir);
         if (result.exitCode != 0) {

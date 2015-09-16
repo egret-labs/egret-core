@@ -20,6 +20,7 @@ var Create = (function () {
         FileUtil.copy(emptyTemplate, options.projectDir);
         FileUtil.copy(template, options.projectDir);
         CopyFiles.copyLark();
+        //options.outDir = FileUtil.joinPath("..", options.outDir);
         compileTemplate(proj);
         var compileProject = new CompileProject();
         var result = compileProject.compileProject(options);
@@ -67,3 +68,5 @@ function updateEgretProperties(modules) {
     FileUtil.save(propFile, JSON.stringify(props, null, "  "));
 }
 module.exports = Create;
+
+//# sourceMappingURL=../actions/Create.js.map

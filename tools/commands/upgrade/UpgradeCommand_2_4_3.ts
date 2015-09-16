@@ -338,16 +338,21 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                 //    searchName == '_setHeight' && fatherName == 'ScrollView'){
                 //    var a;
                 //}
+                if(searchName == 'addEventListener'){
+                    var a;
+                }
                 var pkg;
                 //过滤＊
                 if(searchName == '*'){
                     AutoLogger.acceptCategory(item);
                 }else{
                     AutoLogger.logTitle(item);
+                    //console.log(item.name+'.'+item['category-name']);
                     if(pkg = this.tsp.getDeclarationPosition(fatherName,searchName)){
                         this.tsp.getAllReferenceAccordingDeclarationPosition(
-                            pkg.path,pkg.position,function(filePath,line){
+                            pkg.path,pkg.position,fatherName,function(filePath,line){
                                 AutoLogger.logRef(filePath,line);
+                                //console.log(filePath,line);
                             });
                     }
                 }

@@ -99,6 +99,11 @@ module egret {
          * @platform Web,Native
          */
         target?:string;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        underline?:boolean;
     }
 
     /**

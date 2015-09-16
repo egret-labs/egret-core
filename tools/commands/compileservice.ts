@@ -23,8 +23,12 @@ class AutoCompileCommand implements egret.Command {
             path: egret.args.projectDir,
             option: egret.args
         }, m=> this.onServiceMessage(m), false);
-        this._request.once('end', () => process.exit());
-        this._request.once('close', () => process.exit());
+        this._request.once(
+            'end',
+            () => process.exit());
+        this._request.once(
+            'close',
+            () => process.exit());
 
         setInterval(() => {
             this.sendCommand({

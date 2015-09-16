@@ -55,7 +55,7 @@ module eui {
          * Constructor.
          *
          * @param target The object whose property is being set.
-         * By default, Swan uses the immediate parent of the State object.
+         * By default, EUI uses the immediate parent of the State object.
          * @param name The property to set.
          * @param value The value of the property in the view state.
          *
@@ -67,7 +67,7 @@ module eui {
          * @language zh_CN
          * 创建一个SetProperty实例。
          *
-         * @param target 要设置其属性的对象。默认情况下，Swan 使用 State 对象的直接父级。
+         * @param target 要设置其属性的对象。默认情况下，EUI 使用 State 对象的直接父级。
          * @param name 要设置的属性。
          * @param value 视图状态中的属性值。
          *
@@ -106,7 +106,7 @@ module eui {
         /**
          * @language en_US
          * The object containing the property to be changed.
-         * If the property value is <code>null</code>, Swan uses the
+         * If the property value is <code>null</code>, EUI uses the
          * immediate parent of the State object.
          *
          * @version Egret 2.4
@@ -115,7 +115,7 @@ module eui {
          */
         /**
          * @language zh_CN
-         * 包含要更改的属性的对象。如果属性值为 null，则 Swan 将使用 State 对象的直接父级。
+         * 包含要更改的属性的对象。如果属性值为 null，则 EUI 将使用 State 对象的直接父级。
          *
          * @version Egret 2.4
          * @version eui 1.0
