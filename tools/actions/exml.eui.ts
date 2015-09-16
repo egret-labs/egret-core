@@ -13,10 +13,8 @@ export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
 }
 
 export function build(): egret.TaskResult {
-
     var exmls = file.search(egret.args.srcDir, 'exml');
     return buildChanges(exmls);
-
 }
 
 export function buildChanges(exmls: string[]): egret.TaskResult {

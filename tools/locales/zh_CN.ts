@@ -167,7 +167,7 @@ module egret {
     locale_strings[1703] = "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n";
     locale_strings[1704] = "正在更新到{0}";
     locale_strings[1705] = "升级配置文件损坏,请检查引擎后重试";
-    locale_strings[1706] = "共计{0}处 API冲突,请用户修改代码后重新运行升级命令";
+    locale_strings[1706] = "共计 {color_red}{0}{color_normal} 处API冲突,请用户解决所有冲突后运行build命令";
     locale_strings[1707] = "正在从{0},拷贝到{1} ..";
     locale_strings[1708] = "正在替换资源引用路径..";
     locale_strings[1709] = "无法找到资源引用路径,resource文件夹已由顶层目录移至src目录中,请检查并手动修改引用路径";
@@ -181,6 +181,7 @@ module egret {
                             '\n6.Egret 2.4版本声音说明 http://edn.egret.com/cn/index.php/article/index/id/562'+
                             '\n7.主题和皮肤适配 http://edn.egret.com/cn/index.php/article/index/id/560\n'+
                             '\n{color_green}Egret 新特性体验群 481169576{color_normal}\n';
+    locale_strings[1711] = "工程目录已变更,请使用新目录{color_red} '{0}' {color_normal}执行 {color_green} egret apitest {your-project}{color_normal}进行API检测"
 
 
     //info
