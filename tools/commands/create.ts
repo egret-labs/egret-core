@@ -11,8 +11,13 @@ class Create implements egret.Command {
 
     execute(): number {
         var option = egret.args;
-        if (!FileUtil.exists(option.projectDir))
+        if (FileUtil.exists(option.projectDir)) {
+            console.log(utils.tr(1002));
+            return 0;
+        }
+        else {
             FileUtil.createDirectory(option.projectDir);
+        }
         var project = option.getProject(true);
         //默认使用命令行创建
         project.type = project.type || "game";
