@@ -183,7 +183,7 @@ module egret {
                             '\n7.主题和皮肤适配 http://edn.egret.com/cn/index.php/article/index/id/560\n'+
                             '\n{color_green}Egret 新特性体验群 481169576{color_normal}\n';
     locale_strings[1711] =  "工程目录已变更,请使用新目录{color_red} '{0}' {color_normal}执行 {color_green} egret apitest {your-project}{color_normal}进行API检测"
-
+    locale_strings[1712] =  "检测结果已写入'{0}'";
 
     //info
     locale_strings[1801] = "当前Egret版本：{0}";

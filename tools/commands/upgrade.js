@@ -59,8 +59,11 @@ var UpgradeCommand = (function () {
             function handleCallBack(err) {
                 if (!err) {
                     modify.save(v);
+                    callback();
                 }
-                callback({ name: "", message: err });
+                else {
+                    callback({ name: "", message: err });
+                }
             }
             var v = info["v"];
             var command = new info["command"]();

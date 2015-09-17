@@ -133,7 +133,7 @@ function getEgretRoot() {
     return file.escapePath(file.joinPath(larkRoot, '/'));
 }
 exports.getEgretRoot = getEgretRoot;
-function open(target, appName, callback) {
+function open(target, appName, callback, options) {
     var opener;
     if (typeof (appName) === 'function') {
         callback = appName;
@@ -168,7 +168,7 @@ function open(target, appName, callback) {
             }
             break;
     }
-    return cp.exec(opener + ' "' + escape(target) + '"', null, callback);
+    return cp.exec(opener + ' "' + escape(target) + '"', options, callback);
 }
 exports.open = open;
 function endWith(text, match) {
