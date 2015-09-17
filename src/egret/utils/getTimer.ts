@@ -31,11 +31,6 @@
 module egret {
 
     /**
-     * @private
-     */
-    export var $START_TIME:number = 0;
-
-    /**
      * @language en_US
      * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
      * @returns The number of milliseconds since the Egret framework was initialized
@@ -52,6 +47,6 @@ module egret {
      * @includeExample egret/utils/getTimer.ts
      */
     export function getTimer():number {
-        return Date.now() - $START_TIME;
+        return Date.now() - sys.$START_TIME;
     }
 }
