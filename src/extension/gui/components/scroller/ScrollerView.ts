@@ -515,6 +515,13 @@ module egret.gui {
                 return;
             }
             this._onTouchBeginTimer();
+            event.stopPropagation();
+            var evt: TouchEvent = this.cloneTouchEvent(event);
+            egret.callLater(() => {
+                if (this.stage) {
+                    this.dispatchPropagationEvent(evt);
+                }
+            }, this);
         }
 
         /**
