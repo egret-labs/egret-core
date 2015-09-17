@@ -38,7 +38,7 @@ module egret {
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/net/ImageLoaderExample.ts
+     * @includeExample egret/net/ImageLoaderExample.ts
      */
     /**
      * @language zh_CN
@@ -48,7 +48,7 @@ module egret {
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/net/ImageLoaderExample.ts
+     * @includeExample egret/net/ImageLoaderExample.ts
      */
     export interface ImageLoader extends EventDispatcher {
         /**

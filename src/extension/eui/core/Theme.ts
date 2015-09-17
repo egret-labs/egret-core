@@ -48,7 +48,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     /**
      * @language zh_CN
@@ -57,7 +57,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     export class Theme extends egret.EventDispatcher {
 

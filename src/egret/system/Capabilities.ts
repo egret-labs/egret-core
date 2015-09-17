@@ -39,12 +39,14 @@ module egret {
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     /**
      * @language zh_CN
      * Capabilities 类提供一些属性，这些属性描述了承载应用程序的系统和运行时。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     export class Capabilities {
 

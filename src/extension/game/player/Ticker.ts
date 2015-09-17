@@ -28,10 +28,17 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
-    /**
-     * @deprecated
+     /**
+     * @language en_US
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/game/player/Ticker.ts
+     */
+    /**
+     * @language zh_CN
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/game/player/Ticker.ts
      */
     export class Ticker extends EventDispatcher {
         /**

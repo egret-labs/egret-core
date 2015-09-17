@@ -51,7 +51,7 @@ module eui {
      * The scroller component can adds a scrolling touch operation for the Group.
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -62,7 +62,7 @@ module eui {
      * (将 Group 实例赋值给 Scroller 组件的 viewport 属性)。Scroller 会为 Group 添加滚动的触摸操作功能，并显示垂直或水平的滚动条。
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native

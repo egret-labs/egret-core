@@ -37,7 +37,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     /**
      * @language zh_CN
@@ -45,7 +45,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     var Binding = (function () {
         function Binding() {
@@ -205,7 +205,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
+     * @includeExample extension/eui/binding/WatcherExample.ts
      */
     /**
      * @language zh_CN
@@ -214,7 +214,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
+     * @includeExample extension/eui/binding/WatcherExample.ts
      */
     var Watcher = (function () {
         /**
@@ -753,7 +753,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     /**
      * @language zh_CN
@@ -766,7 +766,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     var ArrayCollection = (function (_super) {
         __extends(ArrayCollection, _super);
@@ -2742,7 +2742,7 @@ var eui;
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -2753,7 +2753,7 @@ var eui;
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -3547,7 +3547,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ButtonExample.ts
+     * @includeExample extension/eui/components/ButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -3558,7 +3558,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ButtonExample.ts
+     * @includeExample extension/eui/components/ButtonExample.ts
      */
     var Button = (function (_super) {
         __extends(Button, _super);
@@ -3821,7 +3821,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -3841,7 +3841,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
      */
     var ToggleButton = (function (_super) {
         __extends(ToggleButton, _super);
@@ -3979,7 +3979,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
      */
     /**
      * @language zh_CN
@@ -3989,7 +3989,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
      */
     var CheckBox = (function (_super) {
         __extends(CheckBox, _super);
@@ -4335,7 +4335,7 @@ var eui;
      * The scroller component can adds a scrolling touch operation for the Group.
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4346,7 +4346,7 @@ var eui;
      * (将 Group 实例赋值给 Scroller 组件的 viewport 属性)。Scroller 会为 Group 添加滚动的触摸操作功能，并显示垂直或水平的滚动条。
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4996,7 +4996,7 @@ var eui;
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5008,7 +5008,7 @@ var eui;
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5963,7 +5963,7 @@ var eui;
      * @language en_US
      * Editable text for displaying,
      * scrolling, selecting, and editing text.
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5971,7 +5971,7 @@ var eui;
     /**
      * @language zh_CN
      * 可编辑文本，用于显示、滚动、选择和编辑文本。
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -6475,7 +6475,7 @@ var eui;
      * you usually combine it as part of another group of components to
      * provide scrolling functionality.</p>
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -6485,7 +6485,7 @@ var eui;
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
      * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -6604,7 +6604,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
+     * @includeExample extension/eui/components/supportClasses/RangeExample.ts
      */
     /**
      * @language zh_CN
@@ -6618,7 +6618,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
+     * @includeExample extension/eui/components/supportClasses/RangeExample.ts
      */
     var Range = (function (_super) {
         __extends(Range, _super);
@@ -7631,7 +7631,7 @@ var eui;
      * The current value of the slider is determined by the relative location of the thumb between
      * the end points of the slider, corresponding to the slider's minimum and maximum values.
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
+     * @includeExample  extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -7641,7 +7641,7 @@ var eui;
      * 使用 HSlider（水平滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
+     * @includeExample  extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -7766,7 +7766,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
     /**
      * @language zh_CN
@@ -7774,7 +7774,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
     var DefaultAssetAdapter = (function () {
         function DefaultAssetAdapter() {
@@ -7895,7 +7895,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
+     * @includeExample  extension/eui/components/ImageExample.ts
      */
     /**
      * @language zh_CN
@@ -7907,7 +7907,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
+     * @includeExample  extension/eui/components/ImageExample.ts
      */
     var Image = (function (_super) {
         __extends(Image, _super);
@@ -8367,7 +8367,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
+     * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
     /**
      * @language zh_CN
@@ -8380,7 +8380,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
+     * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
     var ItemRenderer = (function (_super) {
         __extends(ItemRenderer, _super);
@@ -8622,7 +8622,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     /**
      * @language zh_CN
@@ -8635,7 +8635,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     var Label = (function (_super) {
         __extends(Label, _super);
@@ -9724,7 +9724,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
+     * @includeExample  extension/eui/components/ListExample.ts
      */
     /**
      * @language zh_CN
@@ -9733,7 +9733,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
+     * @includeExample  extension/eui/components/ListExample.ts
      */
     var List = (function (_super) {
         __extends(List, _super);
@@ -10161,7 +10161,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     /**
      * @language zh_CN
@@ -10174,7 +10174,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     var Panel = (function (_super) {
         __extends(Panel, _super);
@@ -10521,7 +10521,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
+     * @includeExample  extension/eui/components/ProgressBarExample.ts
      */
     /**
      * @language zh_CN
@@ -10530,7 +10530,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
+     * @includeExample  extension/eui/components/ProgressBarExample.ts
      */
     var ProgressBar = (function (_super) {
         __extends(ProgressBar, _super);
@@ -10923,7 +10923,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -10932,7 +10932,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     var RadioButton = (function (_super) {
         __extends(RadioButton, _super);
@@ -11271,7 +11271,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     /**
      * @language zh_CN
@@ -11282,7 +11282,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     var RadioButtonGroup = (function (_super) {
         __extends(RadioButtonGroup, _super);
@@ -11697,7 +11697,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     /**
      * @language zh_CN
@@ -11720,7 +11720,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     var Scroller = (function (_super) {
         __extends(Scroller, _super);
@@ -12419,7 +12419,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     /**
      * @language zh_CN
@@ -12440,7 +12440,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     var Skin = (function (_super) {
         __extends(Skin, _super);
@@ -12651,919 +12651,6 @@ var eui;
     eui.sys.mixin(Skin, eui.sys.StateClient);
     eui.registerProperty(Skin, "elementsContent", "Array", true);
     eui.registerProperty(Skin, "states", "State[]");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * The TabBar class displays a set of identical tabs.
-     * One tab can be selected at a time, and the first tab is selected by default.
-     * <p>The set of tabs is defined by the <code>dataProvider</code> property.
-     * The appearance of each tab is defined by the <code>ItemRenderer</code> class.</p>
-     * <p>You can use the TabBar control to set the active child of a ViewStack container,
-     * as the following example shows:</p>
-     * <pre>
-     *       <s:TabBar dataProvider="{viewStack}"/>
-     *       <s:ViewStack id="viewStack">
-     *          <s:Group name="tab1"/>
-     *          <s:Group name="tab2"/>
-     *          <s:Group name="tab3"/>
-     *       </s:ViewStack>
-     * </pre>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/TabBarExample.ts
-     */
-    /**
-     * @language zh_CN
-     * TabBar 类显示一组相同的选项卡。一次可以选择一个选项卡，且默认情况下选择第一个选项卡。
-     * <p>该组选项卡由 <code>dataProvider</code> 属性定义。
-     * 每个选项卡的外观由 <code>ItemRenderer</code> 定义。</p>
-     * <p>可以使用 TabBar 控件设置 ViewStack 容器的活动子代，如下例所示：</p>
-     * <pre>
-     *       <s:TabBar dataProvider="{viewStack}"/>
-     *       <s:ViewStack id="viewStack">
-     *          <s:Group name="tab1"/>
-     *          <s:Group name="tab2"/>
-     *          <s:Group name="tab3"/>
-     *       </s:ViewStack>
-     * </pre>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/TabBarExample.ts
-     */
-    var TabBar = (function (_super) {
-        __extends(TabBar, _super);
-        /**
-         * @language en_US
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        function TabBar() {
-            _super.call(this);
-            /**
-             * @private
-             */
-            this.indexBeingUpdated = false;
-            this.requireSelection = true;
-            this.useVirtualLayout = false;
-        }
-        var d = __define,c=TabBar;p=c.prototype;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.createChildren = function () {
-            if (!this.$layout) {
-                var layout = new eui.HorizontalLayout();
-                layout.gap = 0;
-                layout.horizontalAlign = eui.JustifyAlign.JUSTIFY;
-                layout.verticalAlign = eui.JustifyAlign.CONTENT_JUSTIFY;
-                this.$setLayout(layout);
-            }
-            _super.prototype.createChildren.call(this);
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.$setDataProvider = function (value) {
-            var dp = this.$dataProvider;
-            if (dp && dp instanceof eui.ViewStack) {
-                dp.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onViewStackIndexChange, this);
-                this.removeEventListener(egret.Event.CHANGE, this.onIndexChanged, this);
-            }
-            if (value && value instanceof eui.ViewStack) {
-                value.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onViewStackIndexChange, this);
-                this.addEventListener(egret.Event.CHANGE, this.onIndexChanged, this);
-            }
-            return _super.prototype.$setDataProvider.call(this, value);
-        };
-        /**
-         * @private
-         * 触摸点击的选中项改变
-         */
-        p.onIndexChanged = function (event) {
-            this.indexBeingUpdated = true;
-            (this.$dataProvider).selectedIndex = this.selectedIndex;
-            this.indexBeingUpdated = false;
-        };
-        /**
-         * @private
-         * ViewStack选中项发生改变
-         */
-        p.onViewStackIndexChange = function (event) {
-            if (event.property == "selectedIndex" && !this.indexBeingUpdated) {
-                this.setSelectedIndex((this.$dataProvider).selectedIndex, false);
-            }
-        };
-        return TabBar;
-    })(eui.ListBase);
-    eui.TabBar = TabBar;
-    egret.registerClass(TabBar,"eui.TabBar");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * The ToggleSwitch control defines an on-off control.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleSwitchExample.ts
-     */
-    /**
-     * @language zh_CN
-     * ToggleSwitch 表示一个开关组件。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleSwitchExample.ts
-     */
-    var ToggleSwitch = (function (_super) {
-        __extends(ToggleSwitch, _super);
-        /**
-         * @language en_US
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        function ToggleSwitch() {
-            _super.call(this);
-        }
-        var d = __define,c=ToggleSwitch;p=c.prototype;
-        return ToggleSwitch;
-    })(eui.ToggleButton);
-    eui.ToggleSwitch = ToggleSwitch;
-    egret.registerClass(ToggleSwitch,"eui.ToggleSwitch");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * The UILayer class is the subclass of the Group class.It not only has the standard function of the Group class,but also
-     * can keep its size the same to the stage size (Stage.stageWidth,Stage.stageHeight).Its size will changes as the stage size changes.
-     * like any normal container class,you can create multiple instance of the UILayer class,but it is usually used as the root of the UI display list.
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * UILayer 是 Group 的子类，它除了具有容器的所有标准功能，还能够自动保持自身尺寸始终与舞台尺寸相同（Stage.stageWidth,Stage.stageHeight）。
-     * 当舞台尺寸发生改变时，它会跟随舞台尺寸改变。UILayer 跟普通容器一样，允许创建多个实例，但通常都将它作为UI显示列表的根节点使用。
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     */
-    var UILayer = (function (_super) {
-        __extends(UILayer, _super);
-        function UILayer() {
-            _super.call(this);
-            this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
-            this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveFromStage, this);
-        }
-        var d = __define,c=UILayer;p=c.prototype;
-        /**
-         * @private
-         * 添加到舞台
-         */
-        p.onAddToStage = function (event) {
-            this.$stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
-            this.onResize();
-        };
-        /**
-         * @private
-         * 从舞台移除
-         */
-        p.onRemoveFromStage = function (event) {
-            this.$stage.removeEventListener(egret.Event.RESIZE, this.onResize, this);
-        };
-        /**
-         * @private
-         * 舞台尺寸改变
-         */
-        p.onResize = function (event) {
-            var stage = this.$stage;
-            this.$setWidth(stage.$stageWidth);
-            this.$setHeight(stage.$stageHeight);
-        };
-        return UILayer;
-    })(eui.Group);
-    eui.UILayer = UILayer;
-    egret.registerClass(UILayer,"eui.UILayer");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * The VScrollBar (vertical scrollbar) control lets you control
-     * the portion of data that is displayed when there is too much data
-     * to fit vertically in a display area.
-     *
-     * <p>Although you can use the VScrollBar control as a stand-alone control,
-     * you usually combine it as part of another group of components to
-     * provide scrolling functionality.</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
-     */
-    /**
-     * @language zh_CN
-     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
-     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
-     */
-    var VScrollBar = (function (_super) {
-        __extends(VScrollBar, _super);
-        function VScrollBar() {
-            _super.apply(this, arguments);
-        }
-        var d = __define,c=VScrollBar;p=c.prototype;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
-            _super.prototype.updateDisplayList.call(this, unscaledWidth, unscaledHeight);
-            var thumb = this.thumb;
-            var viewport = this.$viewport;
-            if (!thumb || !viewport) {
-                return;
-            }
-            var bounds = egret.$TempRectangle;
-            thumb.getPreferredBounds(bounds);
-            var thumbHeight = bounds.height;
-            var thumbX = bounds.x;
-            var vsp = viewport.scrollV;
-            var contentHeight = viewport.contentHeight;
-            var height = viewport.height;
-            if (vsp <= 0) {
-                var scaleHeight = thumbHeight * (1 - (-vsp) / (height * 0.5));
-                scaleHeight = Math.max(5, Math.round(scaleHeight));
-                thumb.setLayoutBoundsSize(NaN, scaleHeight);
-                thumb.setLayoutBoundsPosition(thumbX, 0);
-            }
-            else if (vsp >= contentHeight - height) {
-                scaleHeight = thumbHeight * (1 - (vsp - contentHeight + height) / (height * 0.5));
-                scaleHeight = Math.max(5, Math.round(scaleHeight));
-                thumb.setLayoutBoundsSize(NaN, scaleHeight);
-                thumb.setLayoutBoundsPosition(thumbX, unscaledHeight - scaleHeight);
-            }
-            else {
-                var thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
-                thumb.setLayoutBoundsSize(NaN, NaN);
-                thumb.setLayoutBoundsPosition(thumbX, thumbY);
-            }
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.onPropertyChanged = function (event) {
-            switch (event.property) {
-                case "scrollV":
-                case "contentHeight":
-                    this.invalidateDisplayList();
-                    break;
-            }
-        };
-        return VScrollBar;
-    })(eui.ScrollBarBase);
-    eui.VScrollBar = VScrollBar;
-    egret.registerClass(VScrollBar,"eui.VScrollBar");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * The VSlider (vertical slider) control lets users select a value
-     * by moving a slider thumb between the end points of the slider track.
-     * The current value of the slider is determined by the relative location of the thumb between
-     * the end points of the slider, corresponding to the slider's minimum and maximum values.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
-     */
-    /**
-     * @language zh_CN
-     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
-     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
-     */
-    var VSlider = (function (_super) {
-        __extends(VSlider, _super);
-        /**
-         * @language en_US
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        function VSlider() {
-            _super.call(this);
-        }
-        var d = __define,c=VSlider;p=c.prototype;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.pointToValue = function (x, y) {
-            if (!this.thumb || !this.track)
-                return 0;
-            var values = this.$Range;
-            var range = values[0 /* maximum */] - values[2 /* minimum */];
-            var thumbRange = this.getThumbRange();
-            return values[2 /* minimum */] + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0);
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p.getThumbRange = function () {
-            var bounds = egret.$TempRectangle;
-            this.track.getLayoutBounds(bounds);
-            var thumbRange = bounds.height;
-            this.thumb.getLayoutBounds(bounds);
-            return thumbRange - bounds.height;
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.updateSkinDisplayList = function () {
-            if (!this.thumb || !this.track)
-                return;
-            var values = this.$Range;
-            var thumbRange = this.getThumbRange();
-            var range = values[0 /* maximum */] - values[2 /* minimum */];
-            var thumbPosTrackY = (range > 0) ? thumbRange - (((this.pendingValue - values[2 /* minimum */]) / range) * thumbRange) : 0;
-            var thumbPos = this.track.localToGlobal(0, thumbPosTrackY, egret.$TempPoint);
-            var thumbPosX = thumbPos.x;
-            var thumbPosY = thumbPos.y;
-            var thumbPosParentY = this.thumb.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
-            var bounds = egret.$TempRectangle;
-            var thumbHeight = bounds.height;
-            this.thumb.getLayoutBounds(bounds);
-            this.thumb.setLayoutBoundsPosition(bounds.x, Math.round(thumbPosParentY));
-            if (this.trackHighlight) {
-                var trackHighlightY = this.trackHighlight.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
-                this.trackHighlight.y = Math.round(trackHighlightY + thumbHeight);
-                this.trackHighlight.height = Math.round(thumbRange - trackHighlightY);
-            }
-        };
-        return VSlider;
-    })(eui.SliderBase);
-    eui.VSlider = VSlider;
-    egret.registerClass(VSlider,"eui.VSlider");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * An ViewStack navigator container consists of a collection of child
-     * containers stacked on top of each other, where only one child
-     * at a time is visible.
-     * When a different child container is selected, it seems to replace
-     * the old one because it appears in the same location.
-     * However, the old child container still exists; it is just invisible.
-     *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ICollection has been updated in some way.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ViewStackExample.ts
-     */
-    /**
-     * @language zh_CN
-     * ViewStack 导航器容器由一组彼此上下堆叠的子容器组成，其中一次只可以显示一个子容器。
-     * 选择另一个子容器后，它将显示在原来子容器的位置处，所以看起来好像此子容器替换了原来的子容器。
-     * 但是，原来的子容器仍然存在，只不过它现在处于不可见状态。
-     *
-     * @event eui.CollectionEvent.COLLECTION_CHANGE 以某种方式更新 ICollection 后分派。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ViewStackExample.ts
-     */
-    var ViewStack = (function (_super) {
-        __extends(ViewStack, _super);
-        /**
-         * @language en_US
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        function ViewStack() {
-            _super.call(this);
-            /**
-             * @private
-             */
-            this._selectedChild = null;
-            /**
-             * @private
-             * 在属性提交前缓存选中项索引
-             */
-            this.proposedSelectedIndex = eui.ListBase.NO_PROPOSED_SELECTION;
-            /**
-             * @private
-             */
-            this._selectedIndex = -1;
-        }
-        var d = __define,c=ViewStack;p=c.prototype;
-        d(p, "layout"
-            /**
-             * @language en_US
-             * The layout object for this container.
-             * This object is responsible for the measurement and layout of
-             * the visual elements in the container.
-             *
-             * @default eui.BasicLayout
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 此容器的 layout 对象。此对象负责容器中可视元素的测量和布局。
-             *
-             * @default eui.BasicLayout
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$layout;
-            }
-        );
-        d(p, "selectedChild"
-            /**
-             * @language en_US
-             * A reference to the currently visible child container.
-             * The default is a reference to the first child.
-             * If there are no children, this property is <code>null</code>.
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 对当前可见子容器的引用。默认设置为对第一个子容器的引用。如果没有子项，则此属性为 <code>null</code>。
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            ,function () {
-                var index = this.selectedIndex;
-                if (index >= 0 && index < this.numChildren)
-                    return this.getChildAt(index);
-                return null;
-            }
-            ,function (value) {
-                var index = this.getChildIndex(value);
-                if (index >= 0 && index < this.numChildren)
-                    this.setSelectedIndex(index);
-            }
-        );
-        d(p, "selectedIndex"
-            /**
-             * @language en_US
-             * The zero-based index of the currently visible child container.
-             * Child indexes are in the range 0, 1, 2, ..., n - 1,
-             * where <code>n</code> is the number of children.
-             * The default value is 0, corresponding to the first child.
-             * If there are no children, the value of this property is <code>-1</code>.
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 当前可见子容器的从零开始的索引。子索引的范围是 0、1、2、...、n - 1，其中 <code>n</code> 是子项的数目。
-             * 默认值是 0，对应于第一个子项。如果不存在子容器，则此属性的值为 -1。
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.proposedSelectedIndex != eui.ListBase.NO_PROPOSED_SELECTION ? this.proposedSelectedIndex : this._selectedIndex;
-            }
-            ,function (value) {
-                value = +value | 0;
-                this.setSelectedIndex(value);
-            }
-        );
-        /**
-         * @private
-         * 设置选中项索引
-         */
-        p.setSelectedIndex = function (value) {
-            if (value == this.selectedIndex) {
-                return;
-            }
-            this.proposedSelectedIndex = value;
-            this.invalidateProperties();
-            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
-        };
-        /**
-         * @private
-         * 一个子项被添加到容器内，此方法不仅在操作addChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
-         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
-         */
-        p.$childAdded = function (child, index) {
-            _super.prototype.$childAdded.call(this, child, index);
-            this.showOrHide(child, false);
-            var selectedIndex = this.selectedIndex;
-            if (selectedIndex == -1) {
-                this.setSelectedIndex(index);
-            }
-            else if (index <= this.selectedIndex && this.$stage) {
-                this.setSelectedIndex(selectedIndex + 1);
-            }
-            eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.ADD, index, -1, [child.name]);
-        };
-        /**
-         * @private
-         * 一个子项从容器内移除，此方法不仅在操作removeChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
-         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
-         */
-        p.$childRemoved = function (child, index) {
-            _super.prototype.$childRemoved.call(this, child, index);
-            this.showOrHide(child, true);
-            var selectedIndex = this.selectedIndex;
-            if (index == selectedIndex) {
-                if (this.numChildren > 0) {
-                    if (index == 0) {
-                        this.proposedSelectedIndex = 0;
-                        this.invalidateProperties();
-                    }
-                    else
-                        this.setSelectedIndex(0);
-                }
-                else
-                    this.setSelectedIndex(-1);
-            }
-            else if (index < selectedIndex) {
-                this.setSelectedIndex(selectedIndex - 1);
-            }
-            eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.REMOVE, index, -1, [child.name]);
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.commitProperties = function () {
-            _super.prototype.commitProperties.call(this);
-            if (this.proposedSelectedIndex != eui.ListBase.NO_PROPOSED_SELECTION) {
-                this.commitSelection(this.proposedSelectedIndex);
-                this.proposedSelectedIndex = eui.ListBase.NO_PROPOSED_SELECTION;
-            }
-        };
-        /**
-         * @private
-         *
-         * @param newIndex
-         */
-        p.commitSelection = function (newIndex) {
-            if (newIndex >= 0 && newIndex < this.numChildren) {
-                this._selectedIndex = newIndex;
-                if (this._selectedChild) {
-                    this.showOrHide(this._selectedChild, false);
-                }
-                this._selectedChild = this.getElementAt(this._selectedIndex);
-                this.showOrHide(this._selectedChild, true);
-            }
-            else {
-                this._selectedChild = null;
-                this._selectedIndex = -1;
-            }
-            this.invalidateSize();
-            this.invalidateDisplayList();
-        };
-        /**
-         * @private
-         *
-         * @param child
-         * @param visible
-         */
-        p.showOrHide = function (child, visible) {
-            if (egret.is(child, "eui.UIComponent")) {
-                child.includeInLayout = visible;
-            }
-            child.visible = visible;
-        };
-        d(p, "length"
-            /**
-             * @language en_US
-             * number of children
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            /**
-             * @language zh_CN
-             * 子项数量
-             *
-             * @version Egret 2.4
-             * @version eui 1.0
-             * @platform Web,Native
-             */
-            ,function () {
-                return this.$children.length;
-            }
-        );
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.getItemAt = function (index) {
-            var element = this.$children[index];
-            return element ? element.name : "";
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.getItemIndex = function (item) {
-            var list = this.$children;
-            var length = list.length;
-            for (var i = 0; i < length; i++) {
-                if (list[i].name == item) {
-                    return i;
-                }
-            }
-            return -1;
-        };
-        return ViewStack;
-    })(eui.Group);
-    eui.ViewStack = ViewStack;
-    egret.registerClass(ViewStack,"eui.ViewStack",["eui.ICollection","egret.IEventDispatcher"]);
-    eui.registerBindable(ViewStack.prototype, "selectedIndex");
-    if (DEBUG) {
-        egret.$markReadOnly(ViewStack, "length");
-        egret.$markReadOnly(ViewStack, "layout");
-    }
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14071,6 +13158,919 @@ var eui;
 (function (eui) {
     /**
      * @language en_US
+     * The TabBar class displays a set of identical tabs.
+     * One tab can be selected at a time, and the first tab is selected by default.
+     * <p>The set of tabs is defined by the <code>dataProvider</code> property.
+     * The appearance of each tab is defined by the <code>ItemRenderer</code> class.</p>
+     * <p>You can use the TabBar control to set the active child of a ViewStack container,
+     * as the following example shows:</p>
+     * <pre>
+     *       <s:TabBar dataProvider="{viewStack}"/>
+     *       <s:ViewStack id="viewStack">
+     *          <s:Group name="tab1"/>
+     *          <s:Group name="tab2"/>
+     *          <s:Group name="tab3"/>
+     *       </s:ViewStack>
+     * </pre>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TabBarExample.ts
+     */
+    /**
+     * @language zh_CN
+     * TabBar 类显示一组相同的选项卡。一次可以选择一个选项卡，且默认情况下选择第一个选项卡。
+     * <p>该组选项卡由 <code>dataProvider</code> 属性定义。
+     * 每个选项卡的外观由 <code>ItemRenderer</code> 定义。</p>
+     * <p>可以使用 TabBar 控件设置 ViewStack 容器的活动子代，如下例所示：</p>
+     * <pre>
+     *       <s:TabBar dataProvider="{viewStack}"/>
+     *       <s:ViewStack id="viewStack">
+     *          <s:Group name="tab1"/>
+     *          <s:Group name="tab2"/>
+     *          <s:Group name="tab3"/>
+     *       </s:ViewStack>
+     * </pre>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TabBarExample.ts
+     */
+    var TabBar = (function (_super) {
+        __extends(TabBar, _super);
+        /**
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        function TabBar() {
+            _super.call(this);
+            /**
+             * @private
+             */
+            this.indexBeingUpdated = false;
+            this.requireSelection = true;
+            this.useVirtualLayout = false;
+        }
+        var d = __define,c=TabBar;p=c.prototype;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.createChildren = function () {
+            if (!this.$layout) {
+                var layout = new eui.HorizontalLayout();
+                layout.gap = 0;
+                layout.horizontalAlign = eui.JustifyAlign.JUSTIFY;
+                layout.verticalAlign = eui.JustifyAlign.CONTENT_JUSTIFY;
+                this.$setLayout(layout);
+            }
+            _super.prototype.createChildren.call(this);
+        };
+        /**
+         * @private
+         *
+         * @param value
+         */
+        p.$setDataProvider = function (value) {
+            var dp = this.$dataProvider;
+            if (dp && dp instanceof eui.ViewStack) {
+                dp.removeEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onViewStackIndexChange, this);
+                this.removeEventListener(egret.Event.CHANGE, this.onIndexChanged, this);
+            }
+            if (value && value instanceof eui.ViewStack) {
+                value.addEventListener(eui.PropertyEvent.PROPERTY_CHANGE, this.onViewStackIndexChange, this);
+                this.addEventListener(egret.Event.CHANGE, this.onIndexChanged, this);
+            }
+            return _super.prototype.$setDataProvider.call(this, value);
+        };
+        /**
+         * @private
+         * 触摸点击的选中项改变
+         */
+        p.onIndexChanged = function (event) {
+            this.indexBeingUpdated = true;
+            (this.$dataProvider).selectedIndex = this.selectedIndex;
+            this.indexBeingUpdated = false;
+        };
+        /**
+         * @private
+         * ViewStack选中项发生改变
+         */
+        p.onViewStackIndexChange = function (event) {
+            if (event.property == "selectedIndex" && !this.indexBeingUpdated) {
+                this.setSelectedIndex((this.$dataProvider).selectedIndex, false);
+            }
+        };
+        return TabBar;
+    })(eui.ListBase);
+    eui.TabBar = TabBar;
+    egret.registerClass(TabBar,"eui.TabBar");
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    /**
+     * @language en_US
+     * The ToggleSwitch control defines an on-off control.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
+     */
+    /**
+     * @language zh_CN
+     * ToggleSwitch 表示一个开关组件。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
+     */
+    var ToggleSwitch = (function (_super) {
+        __extends(ToggleSwitch, _super);
+        /**
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        function ToggleSwitch() {
+            _super.call(this);
+        }
+        var d = __define,c=ToggleSwitch;p=c.prototype;
+        return ToggleSwitch;
+    })(eui.ToggleButton);
+    eui.ToggleSwitch = ToggleSwitch;
+    egret.registerClass(ToggleSwitch,"eui.ToggleSwitch");
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    /**
+     * @language en_US
+     * The UILayer class is the subclass of the Group class.It not only has the standard function of the Group class,but also
+     * can keep its size the same to the stage size (Stage.stageWidth,Stage.stageHeight).Its size will changes as the stage size changes.
+     * like any normal container class,you can create multiple instance of the UILayer class,but it is usually used as the root of the UI display list.
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * UILayer 是 Group 的子类，它除了具有容器的所有标准功能，还能够自动保持自身尺寸始终与舞台尺寸相同（Stage.stageWidth,Stage.stageHeight）。
+     * 当舞台尺寸发生改变时，它会跟随舞台尺寸改变。UILayer 跟普通容器一样，允许创建多个实例，但通常都将它作为UI显示列表的根节点使用。
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    var UILayer = (function (_super) {
+        __extends(UILayer, _super);
+        function UILayer() {
+            _super.call(this);
+            this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+            this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveFromStage, this);
+        }
+        var d = __define,c=UILayer;p=c.prototype;
+        /**
+         * @private
+         * 添加到舞台
+         */
+        p.onAddToStage = function (event) {
+            this.$stage.addEventListener(egret.Event.RESIZE, this.onResize, this);
+            this.onResize();
+        };
+        /**
+         * @private
+         * 从舞台移除
+         */
+        p.onRemoveFromStage = function (event) {
+            this.$stage.removeEventListener(egret.Event.RESIZE, this.onResize, this);
+        };
+        /**
+         * @private
+         * 舞台尺寸改变
+         */
+        p.onResize = function (event) {
+            var stage = this.$stage;
+            this.$setWidth(stage.$stageWidth);
+            this.$setHeight(stage.$stageHeight);
+        };
+        return UILayer;
+    })(eui.Group);
+    eui.UILayer = UILayer;
+    egret.registerClass(UILayer,"eui.UILayer");
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    /**
+     * @language en_US
+     * An ViewStack navigator container consists of a collection of child
+     * containers stacked on top of each other, where only one child
+     * at a time is visible.
+     * When a different child container is selected, it seems to replace
+     * the old one because it appears in the same location.
+     * However, the old child container still exists; it is just invisible.
+     *
+     * @event eui.CollectionEvent.COLLECTION_CHANGE Dispatched when the ICollection has been updated in some way.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ViewStackExample.ts
+     */
+    /**
+     * @language zh_CN
+     * ViewStack 导航器容器由一组彼此上下堆叠的子容器组成，其中一次只可以显示一个子容器。
+     * 选择另一个子容器后，它将显示在原来子容器的位置处，所以看起来好像此子容器替换了原来的子容器。
+     * 但是，原来的子容器仍然存在，只不过它现在处于不可见状态。
+     *
+     * @event eui.CollectionEvent.COLLECTION_CHANGE 以某种方式更新 ICollection 后分派。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/ViewStackExample.ts
+     */
+    var ViewStack = (function (_super) {
+        __extends(ViewStack, _super);
+        /**
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        function ViewStack() {
+            _super.call(this);
+            /**
+             * @private
+             */
+            this._selectedChild = null;
+            /**
+             * @private
+             * 在属性提交前缓存选中项索引
+             */
+            this.proposedSelectedIndex = eui.ListBase.NO_PROPOSED_SELECTION;
+            /**
+             * @private
+             */
+            this._selectedIndex = -1;
+        }
+        var d = __define,c=ViewStack;p=c.prototype;
+        d(p, "layout"
+            /**
+             * @language en_US
+             * The layout object for this container.
+             * This object is responsible for the measurement and layout of
+             * the visual elements in the container.
+             *
+             * @default eui.BasicLayout
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 此容器的 layout 对象。此对象负责容器中可视元素的测量和布局。
+             *
+             * @default eui.BasicLayout
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$layout;
+            }
+        );
+        d(p, "selectedChild"
+            /**
+             * @language en_US
+             * A reference to the currently visible child container.
+             * The default is a reference to the first child.
+             * If there are no children, this property is <code>null</code>.
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 对当前可见子容器的引用。默认设置为对第一个子容器的引用。如果没有子项，则此属性为 <code>null</code>。
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            ,function () {
+                var index = this.selectedIndex;
+                if (index >= 0 && index < this.numChildren)
+                    return this.getChildAt(index);
+                return null;
+            }
+            ,function (value) {
+                var index = this.getChildIndex(value);
+                if (index >= 0 && index < this.numChildren)
+                    this.setSelectedIndex(index);
+            }
+        );
+        d(p, "selectedIndex"
+            /**
+             * @language en_US
+             * The zero-based index of the currently visible child container.
+             * Child indexes are in the range 0, 1, 2, ..., n - 1,
+             * where <code>n</code> is the number of children.
+             * The default value is 0, corresponding to the first child.
+             * If there are no children, the value of this property is <code>-1</code>.
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 当前可见子容器的从零开始的索引。子索引的范围是 0、1、2、...、n - 1，其中 <code>n</code> 是子项的数目。
+             * 默认值是 0，对应于第一个子项。如果不存在子容器，则此属性的值为 -1。
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.proposedSelectedIndex != eui.ListBase.NO_PROPOSED_SELECTION ? this.proposedSelectedIndex : this._selectedIndex;
+            }
+            ,function (value) {
+                value = +value | 0;
+                this.setSelectedIndex(value);
+            }
+        );
+        /**
+         * @private
+         * 设置选中项索引
+         */
+        p.setSelectedIndex = function (value) {
+            if (value == this.selectedIndex) {
+                return;
+            }
+            this.proposedSelectedIndex = value;
+            this.invalidateProperties();
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
+        };
+        /**
+         * @private
+         * 一个子项被添加到容器内，此方法不仅在操作addChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
+         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
+         */
+        p.$childAdded = function (child, index) {
+            _super.prototype.$childAdded.call(this, child, index);
+            this.showOrHide(child, false);
+            var selectedIndex = this.selectedIndex;
+            if (selectedIndex == -1) {
+                this.setSelectedIndex(index);
+            }
+            else if (index <= this.selectedIndex && this.$stage) {
+                this.setSelectedIndex(selectedIndex + 1);
+            }
+            eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.ADD, index, -1, [child.name]);
+        };
+        /**
+         * @private
+         * 一个子项从容器内移除，此方法不仅在操作removeChild()时会被回调，在操作setChildIndex()或swapChildren时也会回调。
+         * 当子项索引发生改变时，会先触发$childRemoved()方法，然后触发$childAdded()方法。
+         */
+        p.$childRemoved = function (child, index) {
+            _super.prototype.$childRemoved.call(this, child, index);
+            this.showOrHide(child, true);
+            var selectedIndex = this.selectedIndex;
+            if (index == selectedIndex) {
+                if (this.numChildren > 0) {
+                    if (index == 0) {
+                        this.proposedSelectedIndex = 0;
+                        this.invalidateProperties();
+                    }
+                    else
+                        this.setSelectedIndex(0);
+                }
+                else
+                    this.setSelectedIndex(-1);
+            }
+            else if (index < selectedIndex) {
+                this.setSelectedIndex(selectedIndex - 1);
+            }
+            eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, eui.CollectionEventKind.REMOVE, index, -1, [child.name]);
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.commitProperties = function () {
+            _super.prototype.commitProperties.call(this);
+            if (this.proposedSelectedIndex != eui.ListBase.NO_PROPOSED_SELECTION) {
+                this.commitSelection(this.proposedSelectedIndex);
+                this.proposedSelectedIndex = eui.ListBase.NO_PROPOSED_SELECTION;
+            }
+        };
+        /**
+         * @private
+         *
+         * @param newIndex
+         */
+        p.commitSelection = function (newIndex) {
+            if (newIndex >= 0 && newIndex < this.numChildren) {
+                this._selectedIndex = newIndex;
+                if (this._selectedChild) {
+                    this.showOrHide(this._selectedChild, false);
+                }
+                this._selectedChild = this.getElementAt(this._selectedIndex);
+                this.showOrHide(this._selectedChild, true);
+            }
+            else {
+                this._selectedChild = null;
+                this._selectedIndex = -1;
+            }
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        };
+        /**
+         * @private
+         *
+         * @param child
+         * @param visible
+         */
+        p.showOrHide = function (child, visible) {
+            if (egret.is(child, "eui.UIComponent")) {
+                child.includeInLayout = visible;
+            }
+            child.visible = visible;
+        };
+        d(p, "length"
+            /**
+             * @language en_US
+             * number of children
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 子项数量
+             *
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$children.length;
+            }
+        );
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.getItemAt = function (index) {
+            var element = this.$children[index];
+            return element ? element.name : "";
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.getItemIndex = function (item) {
+            var list = this.$children;
+            var length = list.length;
+            for (var i = 0; i < length; i++) {
+                if (list[i].name == item) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+        return ViewStack;
+    })(eui.Group);
+    eui.ViewStack = ViewStack;
+    egret.registerClass(ViewStack,"eui.ViewStack",["eui.ICollection","egret.IEventDispatcher"]);
+    eui.registerBindable(ViewStack.prototype, "selectedIndex");
+    if (DEBUG) {
+        egret.$markReadOnly(ViewStack, "length");
+        egret.$markReadOnly(ViewStack, "layout");
+    }
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    /**
+     * @language en_US
+     * The VScrollBar (vertical scrollbar) control lets you control
+     * the portion of data that is displayed when there is too much data
+     * to fit vertically in a display area.
+     *
+     * <p>Although you can use the VScrollBar control as a stand-alone control,
+     * you usually combine it as part of another group of components to
+     * provide scrolling functionality.</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     */
+    /**
+     * @language zh_CN
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
+     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     */
+    var VScrollBar = (function (_super) {
+        __extends(VScrollBar, _super);
+        function VScrollBar() {
+            _super.apply(this, arguments);
+        }
+        var d = __define,c=VScrollBar;p=c.prototype;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
+            _super.prototype.updateDisplayList.call(this, unscaledWidth, unscaledHeight);
+            var thumb = this.thumb;
+            var viewport = this.$viewport;
+            if (!thumb || !viewport) {
+                return;
+            }
+            var bounds = egret.$TempRectangle;
+            thumb.getPreferredBounds(bounds);
+            var thumbHeight = bounds.height;
+            var thumbX = bounds.x;
+            var vsp = viewport.scrollV;
+            var contentHeight = viewport.contentHeight;
+            var height = viewport.height;
+            if (vsp <= 0) {
+                var scaleHeight = thumbHeight * (1 - (-vsp) / (height * 0.5));
+                scaleHeight = Math.max(5, Math.round(scaleHeight));
+                thumb.setLayoutBoundsSize(NaN, scaleHeight);
+                thumb.setLayoutBoundsPosition(thumbX, 0);
+            }
+            else if (vsp >= contentHeight - height) {
+                scaleHeight = thumbHeight * (1 - (vsp - contentHeight + height) / (height * 0.5));
+                scaleHeight = Math.max(5, Math.round(scaleHeight));
+                thumb.setLayoutBoundsSize(NaN, scaleHeight);
+                thumb.setLayoutBoundsPosition(thumbX, unscaledHeight - scaleHeight);
+            }
+            else {
+                var thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
+                thumb.setLayoutBoundsSize(NaN, NaN);
+                thumb.setLayoutBoundsPosition(thumbX, thumbY);
+            }
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.onPropertyChanged = function (event) {
+            switch (event.property) {
+                case "scrollV":
+                case "contentHeight":
+                    this.invalidateDisplayList();
+                    break;
+            }
+        };
+        return VScrollBar;
+    })(eui.ScrollBarBase);
+    eui.VScrollBar = VScrollBar;
+    egret.registerClass(VScrollBar,"eui.VScrollBar");
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    /**
+     * @language en_US
+     * The VSlider (vertical slider) control lets users select a value
+     * by moving a slider thumb between the end points of the slider track.
+     * The current value of the slider is determined by the relative location of the thumb between
+     * the end points of the slider, corresponding to the slider's minimum and maximum values.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
+     */
+    /**
+     * @language zh_CN
+     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
+     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
+     */
+    var VSlider = (function (_super) {
+        __extends(VSlider, _super);
+        /**
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        function VSlider() {
+            _super.call(this);
+        }
+        var d = __define,c=VSlider;p=c.prototype;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.pointToValue = function (x, y) {
+            if (!this.thumb || !this.track)
+                return 0;
+            var values = this.$Range;
+            var range = values[0 /* maximum */] - values[2 /* minimum */];
+            var thumbRange = this.getThumbRange();
+            return values[2 /* minimum */] + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0);
+        };
+        /**
+         * @private
+         *
+         * @returns
+         */
+        p.getThumbRange = function () {
+            var bounds = egret.$TempRectangle;
+            this.track.getLayoutBounds(bounds);
+            var thumbRange = bounds.height;
+            this.thumb.getLayoutBounds(bounds);
+            return thumbRange - bounds.height;
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.updateSkinDisplayList = function () {
+            if (!this.thumb || !this.track)
+                return;
+            var values = this.$Range;
+            var thumbRange = this.getThumbRange();
+            var range = values[0 /* maximum */] - values[2 /* minimum */];
+            var thumbPosTrackY = (range > 0) ? thumbRange - (((this.pendingValue - values[2 /* minimum */]) / range) * thumbRange) : 0;
+            var thumbPos = this.track.localToGlobal(0, thumbPosTrackY, egret.$TempPoint);
+            var thumbPosX = thumbPos.x;
+            var thumbPosY = thumbPos.y;
+            var thumbPosParentY = this.thumb.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
+            var bounds = egret.$TempRectangle;
+            var thumbHeight = bounds.height;
+            this.thumb.getLayoutBounds(bounds);
+            this.thumb.setLayoutBoundsPosition(bounds.x, Math.round(thumbPosParentY));
+            if (this.trackHighlight) {
+                var trackHighlightY = this.trackHighlight.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
+                this.trackHighlight.y = Math.round(trackHighlightY + thumbHeight);
+                this.trackHighlight.height = Math.round(thumbRange - trackHighlightY);
+            }
+        };
+        return VSlider;
+    })(eui.SliderBase);
+    eui.VSlider = VSlider;
+    egret.registerClass(VSlider,"eui.VSlider");
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    /**
+     * @language en_US
      * The BitmapFillMode class defines an enumeration of the resize modes that
      * determine how a Bitmap fills in the dimensions specified by the layout system.
      *
@@ -14079,7 +14079,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
      */
     /**
      * @language zh_CN
@@ -14091,7 +14091,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
      */
     var BitmapFillMode = (function () {
         function BitmapFillMode() {
@@ -14184,7 +14184,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
+     * @includeExample  extension/eui/core/DirectionExample.ts
      */
     /**
      * @language zh_CN
@@ -14192,7 +14192,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
+     * @includeExample  extension/eui/core/DirectionExample.ts
      */
     var Direction = (function () {
         function Direction() {
@@ -14413,7 +14413,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+     * @includeExample  extension/eui/core/ScrollPolicyExample.ts
      */
     /**
      * @language zh_CN
@@ -14423,7 +14423,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+     * @includeExample  extension/eui/core/ScrollPolicyExample.ts
      */
     var ScrollPolicy = (function () {
         function ScrollPolicy() {
@@ -14517,7 +14517,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     /**
      * @language zh_CN
@@ -14526,7 +14526,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     var Theme = (function (_super) {
         __extends(Theme, _super);
@@ -14771,7 +14771,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
+     * @includeExample  extension/eui/events/CollectionEventExample.ts
      */
     /**
      * @language zh_CN
@@ -14779,7 +14779,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
+     * @includeExample  extension/eui/events/CollectionEventExample.ts
      */
     var CollectionEvent = (function (_super) {
         __extends(CollectionEvent, _super);
@@ -15137,7 +15137,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     /**
      * @language zh_CN
@@ -15145,7 +15145,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     var ItemTapEvent = (function (_super) {
         __extends(ItemTapEvent, _super);
@@ -15305,7 +15305,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     /**
      * @language zh_CN
@@ -15314,7 +15314,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     var PropertyEvent = (function (_super) {
         __extends(PropertyEvent, _super);
@@ -15468,7 +15468,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     /**
      * @language zh_CN
@@ -15476,7 +15476,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     var UIEvent = (function (_super) {
         __extends(UIEvent, _super);
@@ -18585,7 +18585,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -18596,7 +18596,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     var BasicLayout = (function (_super) {
         __extends(BasicLayout, _super);
@@ -18836,7 +18836,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
+     * @includeExample  extension/eui/layout/ColumnAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -18845,7 +18845,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
+     * @includeExample  extension/eui/layout/ColumnAlignExample.ts
      */
     var ColumnAlign = (function () {
         function ColumnAlign() {
@@ -19750,7 +19750,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/HorizontalLayoutExample.ts
+     * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -19759,7 +19759,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/HorizontalLayoutExample.ts
+     * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
      */
     var HorizontalLayout = (function (_super) {
         __extends(HorizontalLayout, _super);
@@ -20272,7 +20272,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
+     * @includeExample  extension/eui/layout/JustifyAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -20281,7 +20281,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
+     * @includeExample  extension/eui/layout/JustifyAlignExample.ts
      */
     var JustifyAlign = (function () {
         function JustifyAlign() {
@@ -20371,7 +20371,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/RowAlignExample.ts
+     * @includeExample  extension/eui/layout/RowAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -20380,7 +20380,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/RowAlignExample.ts
+     * @includeExample  extension/eui/layout/RowAlignExample.ts
      */
     var RowAlign = (function () {
         function RowAlign() {
@@ -20484,7 +20484,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
+     * @includeExample  extension/eui/layout/TileLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -20494,7 +20494,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
+     * @includeExample  extension/eui/layout/TileLayoutExample.ts
      */
     var TileLayout = (function (_super) {
         __extends(TileLayout, _super);
@@ -21679,7 +21679,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
+     * @includeExample  extension/eui/layout/TileOrientationExample.ts
      */
     /**
      * @language zh_CN
@@ -21688,7 +21688,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
+     * @includeExample  extension/eui/layout/TileOrientationExample.ts
      */
     var TileOrientation = (function () {
         function TileOrientation() {
@@ -21773,7 +21773,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/VerticalLayoutExample.ts
+     * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -21782,7 +21782,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/VerticalLayoutExample.ts
+     * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
      */
     var VerticalLayout = (function (_super) {
         __extends(VerticalLayout, _super);

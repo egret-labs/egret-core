@@ -32,10 +32,16 @@ module egret {
     /**
      * @language en_US
      * StageScaleMode class provides values for the stage zoom mode.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     /**
      * @language zh_CN
      * StageScaleMode 类为舞台缩放模式提供值。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     export class StageScaleMode {
         /**

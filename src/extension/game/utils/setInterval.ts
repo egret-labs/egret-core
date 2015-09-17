@@ -15,7 +15,7 @@ module egret {
      * @returns {number} Return index which can be used for clearInterval
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/setInterval.ts
+     * @includeExample extension/game/utils/setInterval.ts
      */
     /**
      * @language zh_CN
@@ -27,7 +27,7 @@ module egret {
      * @returns {number} 返回索引，可以用于 clearInterval
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/setInterval.ts
+     * @includeExample extension/game/utils/setInterval.ts
      */
     export function setInterval(listener:Function, thisObject:any, delay:number, ...args):number {
         var data = {listener: listener, thisObject: thisObject, delay: delay, originDelay: delay, params: args};

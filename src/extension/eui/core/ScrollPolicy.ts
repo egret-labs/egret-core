@@ -37,7 +37,7 @@ module eui {
 	 * @version Egret 2.4
 	 * @version eui 1.0
 	 * @platform Web,Native
-	 * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+	 * @includeExample  extension/eui/core/ScrollPolicyExample.ts
 	 */
 	/**
 	 * @language zh_CN
@@ -47,7 +47,7 @@ module eui {
 	 * @version Egret 2.4
 	 * @version eui 1.0
 	 * @platform Web,Native
-	 * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+	 * @includeExample  extension/eui/core/ScrollPolicyExample.ts
 	 */
 	export class ScrollPolicy{
 		/**

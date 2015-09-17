@@ -34,12 +34,14 @@ module egret {
      * and show errors occurred while getting the location of the device.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     /**
      * @language zh_CN
      * GeolocationEvent 提供设备的地理位置信息和获取位置时发生的错误信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     export class GeolocationEvent extends Event {
 
