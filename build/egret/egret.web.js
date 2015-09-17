@@ -1512,6 +1512,7 @@ var egret;
                  * @private
                  */
                 this._url = "";
+                this._method = "";
             }
             var d = __define,c=WebHttpRequest;p=c.prototype;
             d(p, "response"
@@ -1581,6 +1582,7 @@ var egret;
             p.open = function (url, method) {
                 if (method === void 0) { method = "GET"; }
                 this._url = url;
+                this._method = method;
                 if (this._xhr) {
                     this._xhr.abort();
                     this._xhr = null;
@@ -1588,16 +1590,7 @@ var egret;
                 this._xhr = this.getXHR(); //new XMLHttpRequest();
                 this._xhr.onreadystatechange = this.onReadyStateChange.bind(this);
                 this._xhr.onprogress = this.updateProgress.bind(this);
-                if (this._responseType != null) {
-                    this._xhr.responseType = this.responseType;
-                }
-                if (this._withCredentials != null) {
-                    this._xhr.withCredentials = this._withCredentials;
-                }
-                if (this.header != null) {
-                    this._xhr.setRequestHeader(this.header, this.headerValue);
-                }
-                this._xhr.open(method, url, true);
+                this._xhr.open(this._method, this._url, true);
             };
             /**
              * @private
@@ -1605,6 +1598,15 @@ var egret;
              * @param data 需要发送的数据
              */
             p.send = function (data) {
+                if (this._responseType != null) {
+                    this._xhr.responseType = this._responseType;
+                }
+                if (this._withCredentials != null) {
+                    this._xhr.withCredentials = this._withCredentials;
+                }
+                if (this.header != null) {
+                    this._xhr.setRequestHeader(this.header, this.headerValue);
+                }
                 this._xhr.send(data);
             };
             /**

@@ -49,7 +49,7 @@ var Entry = (function () {
     }
     Entry.prototype.executeOption = function (options) {
         var self = this;
-        options.command = options.command || "info";
+        options.command = options.command || "help";
         try {
             var command = require("./commands/" + options.command);
         }

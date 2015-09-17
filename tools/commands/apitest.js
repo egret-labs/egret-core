@@ -5,8 +5,10 @@
 var TSP = require("./upgrade/2.4.2/TsServiceProxy");
 var file = require('../lib/FileUtil');
 var TSS = require("./upgrade/2.4.2/typescriptServices");
+var utils = require('../lib/utils');
 var DTS = require('./upgrade/2.4.2/compare2dts.js');
 var AutoLogger = {
+    _snapShot: '',
     _solutionMap: {},
     _dir: '',
     _total: 0,
@@ -23,6 +25,7 @@ var AutoLogger = {
         this._total = 0;
         var solutionPath = file.joinPath(egret.root, '/tools/commands/upgrade/2.4.2', 'solution_urls.json');
         this._solutionMap = JSON.parse(file.read(solutionPath));
+        this._snapShot = '';
     },
     close: function () {
         this.clear();
@@ -115,6 +118,7 @@ var AutoLogger = {
         if (this._logContent.title && this._logContent.references && this._logContent.isShow) {
             //step1
             console.log(this._logContent.title);
+            this._snapShot += '\n' + this._logContent.title;
             //step2
             var fileRefLine;
             for (var file_path in this._logContent.references) {
@@ -132,8 +136,10 @@ var AutoLogger = {
                     ;
                 }
                 console.log(fileRefLine);
+                this._snapShot += fileRefLine;
             }
             console.log('\n');
+            this._snapShot += '\n';
         }
         //清空_logContent对象
         this._logContent.title = null;
@@ -167,7 +173,7 @@ var APItestCommand = (function () {
         //var projectPath = this.createAndCopyProjectFile();
         var egretRoot = egret.root;
         //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
-        var libPath = file.joinPath(projectPath, '/libs_old'); //用旧的api检测
+        var libPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.2/libs'); //用自带的旧api检测
         //var libPath = file.joinPath(projectPath,'/libs');//
         var configPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.2/solved');
         var searchLST = DTS.load_format(configPath);
@@ -220,6 +226,10 @@ var APItestCommand = (function () {
                 }
             });
             AutoLogger.close();
+            //写入log并打开log
+            var saveLogFilePath = file.joinPath(projectPath, 'LOG_' + new Date().toLocaleString() + '_APITEST.txt');
+            var saveContent = AutoLogger._snapShot;
+            this.saveFileAndOpen(saveLogFilePath, saveContent);
             if (AutoLogger._total === 0) {
                 globals.exit(1702);
             }
@@ -230,6 +240,10 @@ var APItestCommand = (function () {
         else {
             globals.exit(1705);
         }
+    };
+    APItestCommand.prototype.saveFileAndOpen = function (filePath, content) {
+        file.save(filePath, content);
+        utils.open(filePath);
     };
     return APItestCommand;
 })();
