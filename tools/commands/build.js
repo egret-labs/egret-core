@@ -65,7 +65,6 @@ var Build = (function () {
                 if (file.indexOf(".d.ts") != -1) {
                 }
                 else if (file.indexOf(".ts") != -1) {
-                    console.log(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", module.root, file.replace(".ts", ".js")));
                     str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(".ts", ".js")));
                     str += "\n";
                 }
@@ -75,6 +74,9 @@ var Build = (function () {
                 }
             }
             FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"), str);
+            var minPath = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".min.js");
+            FileUtil.save(minPath, str);
+            utils.minify(minPath, minPath);
             FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp"));
         }
     };
