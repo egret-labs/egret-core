@@ -207,6 +207,8 @@ module egret {
             }
             else {
                 this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0);
+                this.$invalidateContentBounds();
+                return true;
             }
 
             if (this.$stage) {

@@ -104,6 +104,7 @@ module egret.web {
          * @private
          */
         private _url:string = "";
+        private _method:string = "";
 
         /**
          * @private
@@ -126,6 +127,7 @@ module egret.web {
          */
         public open(url:string, method:string = "GET"):void {
             this._url = url;
+            this._method = method;
             if (this._xhr) {
                 this._xhr.abort();
                 this._xhr = null;
@@ -133,16 +135,7 @@ module egret.web {
             this._xhr = this.getXHR();//new XMLHttpRequest();
             this._xhr.onreadystatechange = this.onReadyStateChange.bind(this);
             this._xhr.onprogress = this.updateProgress.bind(this);
-            if (this._responseType != null) {
-                this._xhr.responseType = this.responseType;
-            }
-            if (this._withCredentials != null) {
-                this._xhr.withCredentials = this._withCredentials;
-            }
-            if (this.header != null) {
-                this._xhr.setRequestHeader(this.header, this.headerValue);
-            }
-            this._xhr.open(method, url, true);
+            this._xhr.open(this._method, this._url, true);
         }
 
         /**
@@ -151,6 +144,15 @@ module egret.web {
          * @param data 需要发送的数据
          */
         public send(data?:any):void {
+            if (this._responseType != null) {
+                this._xhr.responseType = this._responseType;
+            }
+            if (this._withCredentials != null) {
+                this._xhr.withCredentials = this._withCredentials;
+            }
+            if (this.header != null) {
+                this._xhr.setRequestHeader(this.header, this.headerValue);
+            }
             this._xhr.send(data);
         }
 

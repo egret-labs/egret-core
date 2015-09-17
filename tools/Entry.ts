@@ -56,7 +56,7 @@ class Entry {
 
     executeOption(options: egret.ToolArgs) {
         var self = this;
-        options.command = options.command || "info";
+        options.command = options.command || "help";
         try {
             var command: { new (): egret.Command } = require("./commands/" + options.command);
         }
