@@ -371,7 +371,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             //打开新创建的目录
             utils.open(projectPath);
             //写入log并打开log
-            var saveLogFilePath = file.joinPath(projectPath,'LOG_'+new Date().format('yyyyMMddHHmmss').toLocaleString()+'_APITEST.txt');
+            var saveLogFilePath = file.joinPath(projectPath,'LOG_'+new Date().toLocaleString()+'_APITEST.txt');
             var saveContent = AutoLogger._snapShot;
             this.saveFileAndOpen(saveLogFilePath,saveContent);
 

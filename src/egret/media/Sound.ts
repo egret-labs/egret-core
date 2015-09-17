@@ -41,7 +41,7 @@ module egret {
      * @event egret.IOErrorEvent.IO_ERROR Dispatch when the audio resource is failed to load
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/SoundExample.ts
+     * @includeExample egret/media/SoundExample.ts
      */
     /**
      * @language zh_CN
@@ -52,7 +52,7 @@ module egret {
      * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/SoundExample.ts
+     * @includeExample egret/media/SoundExample.ts
      */
     export interface Sound extends EventDispatcher {
 

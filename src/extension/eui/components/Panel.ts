@@ -42,7 +42,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     /**
      * @language zh_CN
@@ -55,7 +55,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     export class Panel extends Component {
 

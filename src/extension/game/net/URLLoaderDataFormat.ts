@@ -35,7 +35,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/netformat.html Read different data format
      * @version Egret 2.4
      * @platform Web,Native
-	 * @includeExample egret/net/URLLoaderDataFormat.ts
+	 * @includeExample extension/game/net/URLLoaderDataFormat.ts
 	 */
 	/**
      * @language zh_CN
@@ -43,7 +43,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
      * @version Egret 2.4
      * @platform Web,Native
-	 * @includeExample egret/net/URLLoaderDataFormat.ts
+	 * @includeExample extension/game/net/URLLoaderDataFormat.ts
 	 */
     export class URLLoaderDataFormat {
 

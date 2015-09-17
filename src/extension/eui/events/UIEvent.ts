@@ -37,7 +37,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     /**
      * @language zh_CN
@@ -45,7 +45,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     export class UIEvent extends egret.Event{
 

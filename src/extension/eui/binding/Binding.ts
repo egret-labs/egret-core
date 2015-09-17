@@ -36,7 +36,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     /**
      * @language zh_CN
@@ -44,7 +44,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     export class Binding {
 

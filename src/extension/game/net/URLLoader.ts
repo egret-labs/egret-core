@@ -40,7 +40,7 @@ module egret {
      * @event egret.IOErrorEvent.IO_ERROR io error. 
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLLoader.ts
+     * @includeExample extension/game/net/URLLoader.ts
 	 */
 	/**
      * @language zh_CN
@@ -52,7 +52,7 @@ module egret {
      * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。 
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLLoader.ts
+     * @includeExample extension/game/net/URLLoader.ts
 	 */
     export class URLLoader extends EventDispatcher {
 

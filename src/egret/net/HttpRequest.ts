@@ -40,7 +40,7 @@ module egret {
      * @event egret.ProgressEvent.PROGRESS Dispatched when data is received as the download operation progresses.
      * @see egret.HttpMethod
      * @see egret.HttpResponseType
-     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @includeExample egret/net/HttpRequestExample.ts
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -54,7 +54,7 @@ module egret {
      * @event egret.ProgressEvent.PROGRESS 加载进度，可通过event.bytesLoaded和event.bytesTotal统计进度信息。
      * @see egret.HttpMethod
      * @see egret.HttpResponseType
-     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @includeExample egret/net/HttpRequestExample.ts
      * @version Egret 2.4
      * @platform Web,Native
      */

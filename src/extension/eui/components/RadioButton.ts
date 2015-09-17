@@ -44,7 +44,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -53,7 +53,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     export class RadioButton extends ToggleButton {
 
