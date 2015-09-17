@@ -1,5 +1,24 @@
 declare module dragonBones {
     /**
+     * @class dragonBones.DragonBones
+     * @classdesc
+     * DragonBones
+     */
+    class DragonBones {
+        /**
+         * DragonBones当前数据格式版本
+         */
+        static DATA_VERSION: string;
+        /**
+         *
+         */
+        static PARENT_COORDINATE_DATA_VERSION: string;
+        static VERSION: string;
+        constructor();
+    }
+}
+declare module dragonBones {
+    /**
      * @class dragonBones.Animation
      * @classdesc
      * Animation实例隶属于Armature,用于控制Armature的动画播放。
@@ -1944,20 +1963,6 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
-     * @class dragonBones.ICacheableArmature
-     * @classdesc
-     * ICacheableArmature 接口定义了可以使用缓存的Armature的接口。
-     * 目前只有FastArmature实现了该接口。
-     * @see dragonBones.FastArmature
-     * @see dragonBones.IArmature
-     */
-    interface ICacheableArmature extends IArmature {
-        enableCache: boolean;
-        enableEventDispatch: boolean;
-    }
-}
-declare module dragonBones {
-    /**
      * @class dragonBones.ICacheUser
      * @classdesc
      * ICacheUser 接口定义了可以使用帧缓存的接口。
@@ -1968,6 +1973,20 @@ declare module dragonBones {
     interface ICacheUser {
         name: string;
         frameCache: FrameCache;
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.ICacheableArmature
+     * @classdesc
+     * ICacheableArmature 接口定义了可以使用缓存的Armature的接口。
+     * 目前只有FastArmature实现了该接口。
+     * @see dragonBones.FastArmature
+     * @see dragonBones.IArmature
+     */
+    interface ICacheableArmature extends IArmature {
+        enableCache: boolean;
+        enableEventDispatch: boolean;
     }
 }
 declare module dragonBones {
@@ -2166,25 +2185,6 @@ declare module dragonBones {
         cacheGenerator: ISlotCacheGenerator;
         constructor();
         addFrame(): void;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.DragonBones
-     * @classdesc
-     * DragonBones
-     */
-    class DragonBones {
-        /**
-         * DragonBones当前数据格式版本
-         */
-        static DATA_VERSION: string;
-        /**
-         *
-         */
-        static PARENT_COORDINATE_DATA_VERSION: string;
-        static VERSION: string;
-        constructor();
     }
 }
 declare module dragonBones {
@@ -2836,430 +2836,6 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
-     * @class dragonBones.FastAnimation
-     * @classdesc
-     * FastAnimation实例隶属于FastArmature,用于控制FastArmature的动画播放。
-     * 和Animation相比，FastAnimation为了优化性能，不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
-     * @see dragonBones.FastBone
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.AnimationData.
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class FastAnimation {
-        /**
-         * 所有动画名称列表.
-         * @member {string[]} dragonBones.FastAnimation#animationList
-         */
-        animationList: Array<string>;
-        /**
-         * 当前正在运行的动画实例.
-         * @member {FastAnimationState} dragonBones.FastAnimation#animationState
-         */
-        animationState: FastAnimationState;
-        /**
-         * 动画缓存管理器.
-         * @member {AnimationCacheManager} dragonBones.FastAnimation#animationCacheManager
-         */
-        animationCacheManager: AnimationCacheManager;
-        private _armature;
-        private _animationDataList;
-        private _animationDataObj;
-        private _isPlaying;
-        private _timeScale;
-        /**
-         * 创建一个新的FastAnimation实例并赋给传入的FastArmature实例
-         * @param armature {FastArmature} 骨架实例
-         */
-        constructor(armature: FastArmature);
-        /**
-         * Qualifies all resources used by this Animation instance for garbage collection.
-         */
-        dispose(): void;
-        /**
-         * 开始播放指定名称的动画。
-         * 要播放的动画将经过指定时间的淡入过程，然后开始播放，同时之前播放的动画会经过相同时间的淡出过程。
-         * @param animationName {string} 指定播放动画的名称.
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @param playTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-         * @see dragonBones.FastAnimationState.
-         */
-        gotoAndPlay(animationName: string, fadeInTime?: number, duration?: number, playTimes?: number): FastAnimationState;
-        /**
-         * 播放指定名称的动画并停止于某个时间点
-         * @param animationName {string} 指定播放的动画名称.
-         * @param time {number} 动画停止的绝对时间
-         * @param normalizedTime {number} 动画停止的相对动画总时间的系数，这个参数和time参数是互斥的（例如 0.2：动画停止总时间的20%位置） 默认值：-1 意味着使用绝对时间。
-         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：0
-         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-         * @see dragonBones.FastAnimationState.
-         */
-        gotoAndStop(animationName: string, time: number, normalizedTime?: number, fadeInTime?: number, duration?: number): FastAnimationState;
-        /**
-         * 从当前位置继续播放动画
-         */
-        play(): void;
-        /**
-         * 暂停动画播放
-         */
-        stop(): void;
-        /** @private */
-        advanceTime(passedTime: number): void;
-        /**
-         * check if contains a AnimationData by name.
-         * @return Boolean.
-         * @see dragonBones.animation.AnimationData.
-         */
-        hasAnimation(animationName: string): boolean;
-        /**
-         * 时间缩放倍数
-         * @member {number} dragonBones.FastAnimation#timeScale
-         */
-        timeScale: number;
-        /**
-         * 包含的所有动画数据列表
-         * @member {AnimationData[]} dragonBones.FastAnimation#animationDataList
-         * @see dragonBones.AnimationData.
-         */
-        animationDataList: Array<AnimationData>;
-        /**
-         * Unrecommended API. Recommend use animationList.
-         */
-        movementList: Array<string>;
-        /**
-         * Unrecommended API. Recommend use lastAnimationName.
-         */
-        movementID: string;
-        /**
-         * 是否正在播放
-         * @member {boolean} dragonBones.FastAnimation#isPlaying
-         */
-        isPlaying(): boolean;
-        /**
-         * 是否播放完成.
-         * @member {boolean} dragonBones.FastAnimation#isComplete
-         */
-        isComplete: boolean;
-        /**
-         * 当前播放动画的实例.
-         * @member {FastAnimationState} dragonBones.FastAnimation#lastAnimationState
-         */
-        lastAnimationState: FastAnimationState;
-        /**
-         * 当前播放动画的名字.
-         * @member {string} dragonBones.FastAnimation#lastAnimationName
-         */
-        lastAnimationName: string;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastAnimationState
-     * @classdesc
-     * FastAnimationState 实例代表播放的动画， 可以对单个动画的播放进行最细致的调节。
-     * @see dragonBones.Animation
-     * @see dragonBones.AnimationData
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    class FastAnimationState implements IAnimationState {
-        animationCache: AnimationCache;
-        /**
-         * 是否自动补间。
-         * @member {boolean} dragonBones.AnimationState#autoTween
-         */
-        autoTween: boolean;
-        private _progress;
-        _armature: FastArmature;
-        private _boneTimelineStateList;
-        private _slotTimelineStateList;
-        animationData: AnimationData;
-        name: string;
-        private _time;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _currentPlayTimes;
-        private _totalTime;
-        private _currentTime;
-        private _lastTime;
-        private _isComplete;
-        private _isPlaying;
-        private _timeScale;
-        private _playTimes;
-        private _fading;
-        _fadeTotalTime: number;
-        constructor();
-        dispose(): void;
-        /**
-         * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
-         * @returns {FastAnimationState} 动画播放状态实例
-         */
-        play(): FastAnimationState;
-        /**
-         * 暂停当前动画的播放。
-         * @returns {AnimationState} 动画播放状态实例
-         */
-        stop(): FastAnimationState;
-        setCurrentTime(value: number): FastAnimationState;
-        _resetTimelineStateList(): void;
-        /** @private */
-        _fadeIn(aniData: AnimationData, playTimes: number, timeScale: number, fadeTotalTime: number): void;
-        /**
-         * @private
-         * Update timeline state based on mixing transforms and clip.
-         */
-        _updateTimelineStateList(): void;
-        /** @private */
-        _advanceTime(passedTime: number): void;
-        private advanceTimelinesTime(passedTime);
-        private updateTransformTimeline(progress);
-        private updateMainTimeline(isThisComplete);
-        private setTimeScale(value);
-        private setPlayTimes(value?);
-        /**
-         * 播放次数 (0:循环播放， >0:播放次数)
-         * @member {number} dragonBones.FastAnimationState#playTimes
-         */
-        playTimes: number;
-        /**
-         * 当前播放次数
-         * @member {number} dragonBones.FastAnimationState#currentPlayTimes
-         */
-        currentPlayTimes: number;
-        /**
-         * 是否播放完成
-         * @member {boolean} dragonBones.FastAnimationState#isComplete
-         */
-        isComplete: boolean;
-        /**
-         * 是否正在播放
-         * @member {boolean} dragonBones.FastAnimationState#isPlaying
-         */
-        isPlaying: boolean;
-        /**
-         * 动画总时长（单位：秒）
-         * @member {number} dragonBones.FastAnimationState#totalTime
-         */
-        totalTime: number;
-        /**
-         * 动画当前播放时间（单位：秒）
-         * @member {number} dragonBones.FastAnimationState#currentTime
-         */
-        currentTime: number;
-        /**
-         * 是否使用缓存
-         * @member {boolean} dragonBones.FastAnimationState#isUseCache
-         */
-        isUseCache(): boolean;
-        private hideBones();
-        /**
-         * 动画播放进度
-         * @member {number} dragonBones.FastAnimationState#progress
-         */
-        progress: number;
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastBoneTimelineState
-     * @classdesc
-     * FastBoneTimelineState 负责计算 Bone 的时间轴动画。
-     * FastBoneTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 FastBone生成一个 FastBoneTimelineState 实例.
-     * @see dragonBones.FastAnimation
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.FastBone
-     */
-    class FastBoneTimelineState {
-        private static _pool;
-        /** @private */
-        static borrowObject(): FastBoneTimelineState;
-        /** @private */
-        static returnObject(timeline: FastBoneTimelineState): void;
-        /** @private */
-        static clear(): void;
-        name: string;
-        private _totalTime;
-        private _currentTime;
-        private _lastTime;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _bone;
-        private _timelineData;
-        private _durationTransform;
-        private _tweenTransform;
-        private _tweenEasing;
-        private _tweenCurve;
-        private _updateMode;
-        private _transformToFadein;
-        /** @private */
-        _animationState: FastAnimationState;
-        /** @private */
-        _isComplete: boolean;
-        /** @private */
-        _transform: DBTransform;
-        constructor();
-        private clear();
-        /** @private */
-        fadeIn(bone: FastBone, animationState: FastAnimationState, timelineData: TransformTimeline): void;
-        /** @private */
-        updateFade(progress: number): void;
-        /** @private */
-        update(progress: number): void;
-        private updateSingleFrame();
-        private updateMultipleFrame(progress);
-        private updateToNextFrame(currentPlayTimes?);
-        private updateTween();
-    }
-}
-declare module dragonBones {
-    /**
-     * @class dragonBones.FastSlotTimelineState
-     * @classdesc
-     * FastSlotTimelineState 负责计算 Slot 的时间轴动画。
-     * FastSlotTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 Slot生成一个 FastSlotTimelineState 实例.
-     * @see dragonBones.FastAnimation
-     * @see dragonBones.FastAnimationState
-     * @see dragonBones.FastSlot
-     */
-    class FastSlotTimelineState {
-        private static HALF_PI;
-        private static DOUBLE_PI;
-        private static _pool;
-        /** @private */
-        static borrowObject(): FastSlotTimelineState;
-        /** @private */
-        static returnObject(timeline: FastSlotTimelineState): void;
-        /** @private */
-        static clear(): void;
-        name: string;
-        /** @private */
-        _weight: number;
-        /** @private */
-        _blendEnabled: boolean;
-        /** @private */
-        _isComplete: boolean;
-        /** @private */
-        _animationState: FastAnimationState;
-        private _totalTime;
-        private _currentTime;
-        private _currentFrameIndex;
-        private _currentFramePosition;
-        private _currentFrameDuration;
-        private _tweenEasing;
-        private _tweenCurve;
-        private _tweenColor;
-        private _colorChanged;
-        private _updateMode;
-        private _armature;
-        private _animation;
-        private _slot;
-        private _timelineData;
-        private _durationColor;
-        constructor();
-        private clear();
-        /** @private */
-        fadeIn(slot: FastSlot, animationState: FastAnimationState, timelineData: SlotTimeline): void;
-        /** @private */
-        updateFade(progress: number): void;
-        /** @private */
-        update(progress: number): void;
-        private updateMultipleFrame(progress);
-        private updateToNextFrame(currentPlayTimes?);
-        private updateTween();
-        private updateSingleFrame();
-    }
-}
-declare module dragonBones {
-    /**
      * @class dragonBones.FastArmature
      * @classdesc
      * FastArmature 是 DragonBones 高效率的骨骼动画系统。他能缓存动画数据，大大减少动画播放的计算
@@ -3724,6 +3300,430 @@ declare module dragonBones {
         /** @private */
         hideSlots(): void;
         _updateGlobal(): any;
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.FastAnimation
+     * @classdesc
+     * FastAnimation实例隶属于FastArmature,用于控制FastArmature的动画播放。
+     * 和Animation相比，FastAnimation为了优化性能，不支持动画融合，在开启缓存的情况下，不支持无极的平滑补间
+     * @see dragonBones.FastBone
+     * @see dragonBones.FastArmature
+     * @see dragonBones.FastAnimationState
+     * @see dragonBones.AnimationData.
+     *
+     * @example
+       <pre>
+        //获取动画数据
+        var skeletonData = RES.getRes("skeleton");
+        //获取纹理集数据
+        var textureData = RES.getRes("textureConfig");
+        //获取纹理集图片
+        var texture = RES.getRes("texture");
+      
+        //创建一个工厂，用来创建Armature
+        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        //把动画数据添加到工厂里
+        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+        //把纹理集数据和图片添加到工厂里
+        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+      
+        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+        var armatureName:string = skeletonData.armature[0].name;
+        //从工厂里创建出Armature
+        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
+        //获取装载Armature的容器
+        var armatureDisplay = armature.display;
+        //把它添加到舞台上
+        this.addChild(armatureDisplay);
+        
+        //以60fps的帧率开启动画缓存，缓存所有的动画数据
+        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
+      
+       //取得这个Armature动画列表中的第一个动画的名字
+        var curAnimationName = armature.animation.animationList[0];
+        //播放这个动画，gotoAndPlay各个参数说明
+        //第一个参数 animationName {string} 指定播放动画的名称.
+        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+      
+        //把Armature添加到心跳时钟里
+        dragonBones.WorldClock.clock.add(armature);
+        //心跳时钟开启
+        egret.Ticker.getInstance().register(function (advancedTime) {
+            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+        }, this);
+       </pre>
+     */
+    class FastAnimation {
+        /**
+         * 所有动画名称列表.
+         * @member {string[]} dragonBones.FastAnimation#animationList
+         */
+        animationList: Array<string>;
+        /**
+         * 当前正在运行的动画实例.
+         * @member {FastAnimationState} dragonBones.FastAnimation#animationState
+         */
+        animationState: FastAnimationState;
+        /**
+         * 动画缓存管理器.
+         * @member {AnimationCacheManager} dragonBones.FastAnimation#animationCacheManager
+         */
+        animationCacheManager: AnimationCacheManager;
+        private _armature;
+        private _animationDataList;
+        private _animationDataObj;
+        private _isPlaying;
+        private _timeScale;
+        /**
+         * 创建一个新的FastAnimation实例并赋给传入的FastArmature实例
+         * @param armature {FastArmature} 骨架实例
+         */
+        constructor(armature: FastArmature);
+        /**
+         * Qualifies all resources used by this Animation instance for garbage collection.
+         */
+        dispose(): void;
+        /**
+         * 开始播放指定名称的动画。
+         * 要播放的动画将经过指定时间的淡入过程，然后开始播放，同时之前播放的动画会经过相同时间的淡出过程。
+         * @param animationName {string} 指定播放动画的名称.
+         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+         * @param playTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+         * @see dragonBones.FastAnimationState.
+         */
+        gotoAndPlay(animationName: string, fadeInTime?: number, duration?: number, playTimes?: number): FastAnimationState;
+        /**
+         * 播放指定名称的动画并停止于某个时间点
+         * @param animationName {string} 指定播放的动画名称.
+         * @param time {number} 动画停止的绝对时间
+         * @param normalizedTime {number} 动画停止的相对动画总时间的系数，这个参数和time参数是互斥的（例如 0.2：动画停止总时间的20%位置） 默认值：-1 意味着使用绝对时间。
+         * @param fadeInTime {number} 动画淡入时间 (>= 0), 默认值：0
+         * @param duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+         * @see dragonBones.FastAnimationState.
+         */
+        gotoAndStop(animationName: string, time: number, normalizedTime?: number, fadeInTime?: number, duration?: number): FastAnimationState;
+        /**
+         * 从当前位置继续播放动画
+         */
+        play(): void;
+        /**
+         * 暂停动画播放
+         */
+        stop(): void;
+        /** @private */
+        advanceTime(passedTime: number): void;
+        /**
+         * check if contains a AnimationData by name.
+         * @return Boolean.
+         * @see dragonBones.animation.AnimationData.
+         */
+        hasAnimation(animationName: string): boolean;
+        /**
+         * 时间缩放倍数
+         * @member {number} dragonBones.FastAnimation#timeScale
+         */
+        timeScale: number;
+        /**
+         * 包含的所有动画数据列表
+         * @member {AnimationData[]} dragonBones.FastAnimation#animationDataList
+         * @see dragonBones.AnimationData.
+         */
+        animationDataList: Array<AnimationData>;
+        /**
+         * Unrecommended API. Recommend use animationList.
+         */
+        movementList: Array<string>;
+        /**
+         * Unrecommended API. Recommend use lastAnimationName.
+         */
+        movementID: string;
+        /**
+         * 是否正在播放
+         * @member {boolean} dragonBones.FastAnimation#isPlaying
+         */
+        isPlaying(): boolean;
+        /**
+         * 是否播放完成.
+         * @member {boolean} dragonBones.FastAnimation#isComplete
+         */
+        isComplete: boolean;
+        /**
+         * 当前播放动画的实例.
+         * @member {FastAnimationState} dragonBones.FastAnimation#lastAnimationState
+         */
+        lastAnimationState: FastAnimationState;
+        /**
+         * 当前播放动画的名字.
+         * @member {string} dragonBones.FastAnimation#lastAnimationName
+         */
+        lastAnimationName: string;
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.FastAnimationState
+     * @classdesc
+     * FastAnimationState 实例代表播放的动画， 可以对单个动画的播放进行最细致的调节。
+     * @see dragonBones.Animation
+     * @see dragonBones.AnimationData
+     * @example
+       <pre>
+        //获取动画数据
+        var skeletonData = RES.getRes("skeleton");
+        //获取纹理集数据
+        var textureData = RES.getRes("textureConfig");
+        //获取纹理集图片
+        var texture = RES.getRes("texture");
+      
+        //创建一个工厂，用来创建Armature
+        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        //把动画数据添加到工厂里
+        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+        //把纹理集数据和图片添加到工厂里
+        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+      
+        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+        var armatureName:string = skeletonData.armature[0].name;
+        //从工厂里创建出Armature
+        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
+        //获取装载Armature的容器
+        var armatureDisplay = armature.display;
+        //把它添加到舞台上
+        this.addChild(armatureDisplay);
+        
+        //以60fps的帧率开启动画缓存，缓存所有的动画数据
+        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
+      
+       //取得这个Armature动画列表中的第一个动画的名字
+        var curAnimationName = armature.animation.animationList[0];
+        //播放这个动画，gotoAndPlay各个参数说明
+        //第一个参数 animationName {string} 指定播放动画的名称.
+        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+      
+        //把Armature添加到心跳时钟里
+        dragonBones.WorldClock.clock.add(armature);
+        //心跳时钟开启
+        egret.Ticker.getInstance().register(function (advancedTime) {
+            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+        }, this);
+       </pre>
+     */
+    class FastAnimationState implements IAnimationState {
+        animationCache: AnimationCache;
+        /**
+         * 是否自动补间。
+         * @member {boolean} dragonBones.AnimationState#autoTween
+         */
+        autoTween: boolean;
+        private _progress;
+        _armature: FastArmature;
+        private _boneTimelineStateList;
+        private _slotTimelineStateList;
+        animationData: AnimationData;
+        name: string;
+        private _time;
+        private _currentFrameIndex;
+        private _currentFramePosition;
+        private _currentFrameDuration;
+        private _currentPlayTimes;
+        private _totalTime;
+        private _currentTime;
+        private _lastTime;
+        private _isComplete;
+        private _isPlaying;
+        private _timeScale;
+        private _playTimes;
+        private _fading;
+        _fadeTotalTime: number;
+        constructor();
+        dispose(): void;
+        /**
+         * 播放当前动画。如果动画已经播放完毕, 将不会继续播放.
+         * @returns {FastAnimationState} 动画播放状态实例
+         */
+        play(): FastAnimationState;
+        /**
+         * 暂停当前动画的播放。
+         * @returns {AnimationState} 动画播放状态实例
+         */
+        stop(): FastAnimationState;
+        setCurrentTime(value: number): FastAnimationState;
+        _resetTimelineStateList(): void;
+        /** @private */
+        _fadeIn(aniData: AnimationData, playTimes: number, timeScale: number, fadeTotalTime: number): void;
+        /**
+         * @private
+         * Update timeline state based on mixing transforms and clip.
+         */
+        _updateTimelineStateList(): void;
+        /** @private */
+        _advanceTime(passedTime: number): void;
+        private advanceTimelinesTime(passedTime);
+        private updateTransformTimeline(progress);
+        private updateMainTimeline(isThisComplete);
+        private setTimeScale(value);
+        private setPlayTimes(value?);
+        /**
+         * 播放次数 (0:循环播放， >0:播放次数)
+         * @member {number} dragonBones.FastAnimationState#playTimes
+         */
+        playTimes: number;
+        /**
+         * 当前播放次数
+         * @member {number} dragonBones.FastAnimationState#currentPlayTimes
+         */
+        currentPlayTimes: number;
+        /**
+         * 是否播放完成
+         * @member {boolean} dragonBones.FastAnimationState#isComplete
+         */
+        isComplete: boolean;
+        /**
+         * 是否正在播放
+         * @member {boolean} dragonBones.FastAnimationState#isPlaying
+         */
+        isPlaying: boolean;
+        /**
+         * 动画总时长（单位：秒）
+         * @member {number} dragonBones.FastAnimationState#totalTime
+         */
+        totalTime: number;
+        /**
+         * 动画当前播放时间（单位：秒）
+         * @member {number} dragonBones.FastAnimationState#currentTime
+         */
+        currentTime: number;
+        /**
+         * 是否使用缓存
+         * @member {boolean} dragonBones.FastAnimationState#isUseCache
+         */
+        isUseCache(): boolean;
+        private hideBones();
+        /**
+         * 动画播放进度
+         * @member {number} dragonBones.FastAnimationState#progress
+         */
+        progress: number;
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.FastBoneTimelineState
+     * @classdesc
+     * FastBoneTimelineState 负责计算 Bone 的时间轴动画。
+     * FastBoneTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 FastBone生成一个 FastBoneTimelineState 实例.
+     * @see dragonBones.FastAnimation
+     * @see dragonBones.FastAnimationState
+     * @see dragonBones.FastBone
+     */
+    class FastBoneTimelineState {
+        private static _pool;
+        /** @private */
+        static borrowObject(): FastBoneTimelineState;
+        /** @private */
+        static returnObject(timeline: FastBoneTimelineState): void;
+        /** @private */
+        static clear(): void;
+        name: string;
+        private _totalTime;
+        private _currentTime;
+        private _lastTime;
+        private _currentFrameIndex;
+        private _currentFramePosition;
+        private _currentFrameDuration;
+        private _bone;
+        private _timelineData;
+        private _durationTransform;
+        private _tweenTransform;
+        private _tweenEasing;
+        private _tweenCurve;
+        private _updateMode;
+        private _transformToFadein;
+        /** @private */
+        _animationState: FastAnimationState;
+        /** @private */
+        _isComplete: boolean;
+        /** @private */
+        _transform: DBTransform;
+        constructor();
+        private clear();
+        /** @private */
+        fadeIn(bone: FastBone, animationState: FastAnimationState, timelineData: TransformTimeline): void;
+        /** @private */
+        updateFade(progress: number): void;
+        /** @private */
+        update(progress: number): void;
+        private updateSingleFrame();
+        private updateMultipleFrame(progress);
+        private updateToNextFrame(currentPlayTimes?);
+        private updateTween();
+    }
+}
+declare module dragonBones {
+    /**
+     * @class dragonBones.FastSlotTimelineState
+     * @classdesc
+     * FastSlotTimelineState 负责计算 Slot 的时间轴动画。
+     * FastSlotTimelineState 实例隶属于 FastAnimationState. FastAnimationState在创建时会为每个包含动作的 Slot生成一个 FastSlotTimelineState 实例.
+     * @see dragonBones.FastAnimation
+     * @see dragonBones.FastAnimationState
+     * @see dragonBones.FastSlot
+     */
+    class FastSlotTimelineState {
+        private static HALF_PI;
+        private static DOUBLE_PI;
+        private static _pool;
+        /** @private */
+        static borrowObject(): FastSlotTimelineState;
+        /** @private */
+        static returnObject(timeline: FastSlotTimelineState): void;
+        /** @private */
+        static clear(): void;
+        name: string;
+        /** @private */
+        _weight: number;
+        /** @private */
+        _blendEnabled: boolean;
+        /** @private */
+        _isComplete: boolean;
+        /** @private */
+        _animationState: FastAnimationState;
+        private _totalTime;
+        private _currentTime;
+        private _currentFrameIndex;
+        private _currentFramePosition;
+        private _currentFrameDuration;
+        private _tweenEasing;
+        private _tweenCurve;
+        private _tweenColor;
+        private _colorChanged;
+        private _updateMode;
+        private _armature;
+        private _animation;
+        private _slot;
+        private _timelineData;
+        private _durationColor;
+        constructor();
+        private clear();
+        /** @private */
+        fadeIn(slot: FastSlot, animationState: FastAnimationState, timelineData: SlotTimeline): void;
+        /** @private */
+        updateFade(progress: number): void;
+        /** @private */
+        update(progress: number): void;
+        private updateMultipleFrame(progress);
+        private updateToNextFrame(currentPlayTimes?);
+        private updateTween();
+        private updateSingleFrame();
     }
 }
 declare module dragonBones {
