@@ -19,7 +19,6 @@ class Build implements egret.Command {
         var options = egret.args;
         var packageJson;
         if(packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
-            console.log("build lib");
             packageJson = JSON.parse(packageJson);
             this.buildLib(packageJson);
             return 0;
@@ -42,7 +41,7 @@ class Build implements egret.Command {
     private buildLib(packageJson):void {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
-
+        var outDir = "bin";
         var compiler = new Compiler;
         for(var i:number = 0 ; i < packageJson.modules.length ; i++) {
             var module = packageJson.modules[i];
@@ -58,12 +57,12 @@ class Build implements egret.Command {
                 def: false,
                 out: null,
                 files: libFiles.concat(files),
-                outDir: FileUtil.joinPath(options.projectDir, "build", module.name, "tmp")
+                outDir: FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp")
             });
             compiler.compile({
                 args: options,
                 def: true,
-                out: FileUtil.joinPath(options.projectDir, "build", module.name, module.name + ".js"),
+                out: FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"),
                 files: libFiles.concat(files),
                 outDir: null
             });
@@ -75,8 +74,8 @@ class Build implements egret.Command {
 
                 }
                 else if(file.indexOf(".ts") != -1) {
-                    console.log(FileUtil.joinPath(options.projectDir, "build", module.name, "tmp", module.root, file.replace(".ts", ".js")));
-                    str += FileUtil.read(FileUtil.joinPath(options.projectDir, "build", module.name, "tmp", file.replace(".ts", ".js")));
+                    console.log(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", module.root, file.replace(".ts", ".js")));
+                    str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(".ts", ".js")));
                     str += "\n";
                 }
                 else if(file.indexOf(".js") != -1) {
@@ -85,8 +84,8 @@ class Build implements egret.Command {
                 }
                 //todo exml
             }
-            FileUtil.save(FileUtil.joinPath(options.projectDir, "build", module.name, module.name + ".js"), str);
-            FileUtil.remove(FileUtil.joinPath(options.projectDir, "build", module.name, "tmp"));
+            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"), str);
+            FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp"));
         }
     }
 }

@@ -193,6 +193,10 @@ export function parseCommandLine(commandLine: string[]) {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
+            else if (file.isDirectory(commands[1]) || options.command=="create_lib") {
+                options.projectDir = commands[1];
+                commands.splice(1, 1);
+            }
             switch (options.command) {
                 case "build":
                 case "run":
