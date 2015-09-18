@@ -507,7 +507,8 @@ module egret {
          * 文本行数。
          * @member {number} egret.TextField#numLines
          */
-        public get numLines():number {
+        public get numLines(): number {
+            this._getLinesArr();
             return this._TF_Props_._numLines;
         }
 
