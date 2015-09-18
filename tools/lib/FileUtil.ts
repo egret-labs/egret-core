@@ -226,6 +226,12 @@ function rmdir(path) {
     }
 }
 
+export function rename(oldPath, newPath) {
+    if (isDirectory(oldPath)) {
+        FS.renameSync(oldPath, newPath);
+    }
+}
+
 /**
  * 返回指定文件的父级文件夹路径,返回字符串的结尾已包含分隔符。
  */
