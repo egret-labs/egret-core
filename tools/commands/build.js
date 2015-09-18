@@ -89,7 +89,9 @@ function onGotBuildCommandResult(cmd, callback) {
     if (cmd.exitCode > 10000) {
         console.log(utils.tr(cmd.exitCode));
     }
-    Native.build();
+    if (egret.args.runtime == "native") {
+        Native.build();
+    }
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(function () { return callback(0); }, 500);
     }
