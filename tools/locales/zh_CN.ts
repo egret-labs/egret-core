@@ -271,6 +271,7 @@ module helpModule {
         "publish": "发布项目，使用GoogleClosureCompiler压缩代码",
         "startserver": "启动HttpServer,并在默认浏览器中打开指定项目",
         "upgrade": "升级项目代码",
+        "apitest": "版本升级后检测api是否已经替换完成。限于2.4之前版本升级到2.4（及以上）版本的检测，需要在2.4（及以上）版本项目中输入",
         "info": "获得Egret信息"
     };
 

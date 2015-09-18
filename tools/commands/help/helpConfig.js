@@ -117,15 +117,7 @@ var helpModule1;
                 "prefix": "-",
                 "desc": help_dict.build1,
                 "optional": "true",
-                "config-paras": [
-                    {
-                        "placeholder": "clean",
-                        "optional": "true",
-                        "type": "string",
-                        "prefix": "-",
-                        "desc": help_dict.build2
-                    }
-                ]
+                "config-paras": []
             },
             {
                 "name": "runtime",
@@ -225,6 +217,18 @@ var helpModule1;
                 "config-paras": []
             }
         ]
+    };
+    helpModule1.apitest = {
+        "command": "apitest",
+        "desc": help_dict.create_lib1,
+        "parameters": [
+            {
+                "placeholder": "project_name",
+                "optional": "true",
+                "desc": help_dict.common_proj_name
+            }
+        ],
+        "configs": []
     };
 })(helpModule1 || (helpModule1 = {}));
 module.exports = helpModule1;
