@@ -35,7 +35,7 @@ declare module egret {
     export interface ToolArgs {
         command: string;
         action?: string;
-        params?: string[];
+        commands?: string[];
         platform?: string;
 
 

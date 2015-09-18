@@ -184,6 +184,7 @@ export function parseCommandLine(commandLine: string[]) {
         }
 
         if (commands.length > 0) {
+            options.commands = commands.concat();
             options.command = commands[0];
             if (file.isDirectory(commands[1]) || options.command=="create") {
                 options.projectDir = commands[1];
@@ -197,16 +198,8 @@ export function parseCommandLine(commandLine: string[]) {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
-            switch (options.command) {
-                case "build":
-                case "run":
-                case "emulate":
-                    options.platform = commands[1];
-                    break;
-                case "platform":
-                case "plugin":
-                    options.params = commands.slice(1);
-            }
+            
+            
         }
 
 
