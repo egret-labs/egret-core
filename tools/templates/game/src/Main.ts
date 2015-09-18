@@ -144,7 +144,6 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(textfield);
         textfield.alpha = 0;
         textfield.width = stageW;
-        textfield.height = stageH;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
         textfield.x = 0;
         textfield.y = stageH / 2 + 100;
