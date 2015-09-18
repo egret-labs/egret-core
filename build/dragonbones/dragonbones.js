@@ -31,6 +31,59 @@ var __define = this.__define || function (o, p, g, s) {
 var dragonBones;
 (function (dragonBones) {
     /**
+     * @class dragonBones.DragonBones
+     * @classdesc
+     * DragonBones
+     */
+    var DragonBones = (function () {
+        function DragonBones() {
+        }
+        var d = __define,c=DragonBones;p=c.prototype;
+        /**
+         * DragonBones当前数据格式版本
+         */
+        DragonBones.DATA_VERSION = "4.0";
+        /**
+         *
+         */
+        DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
+        DragonBones.VERSION = "4.1";
+        return DragonBones;
+    })();
+    dragonBones.DragonBones = DragonBones;
+    egret.registerClass(DragonBones,"dragonBones.DragonBones");
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
      * @class dragonBones.Animation
      * @classdesc
      * Animation实例隶属于Armature,用于控制Armature的动画播放。
@@ -5613,59 +5666,6 @@ var dragonBones;
 var dragonBones;
 (function (dragonBones) {
     /**
-     * @class dragonBones.DragonBones
-     * @classdesc
-     * DragonBones
-     */
-    var DragonBones = (function () {
-        function DragonBones() {
-        }
-        var d = __define,c=DragonBones;p=c.prototype;
-        /**
-         * DragonBones当前数据格式版本
-         */
-        DragonBones.DATA_VERSION = "4.0";
-        /**
-         *
-         */
-        DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.1";
-        return DragonBones;
-    })();
-    dragonBones.DragonBones = DragonBones;
-    egret.registerClass(DragonBones,"dragonBones.DragonBones");
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
      * @class dragonBones.Event
      * @classdesc
      * 事件
@@ -6875,6 +6875,1254 @@ var dragonBones;
     })();
     dragonBones.BuildArmatureDataPackage = BuildArmatureDataPackage;
     egret.registerClass(BuildArmatureDataPackage,"dragonBones.BuildArmatureDataPackage");
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastArmature
+     * @classdesc
+     * FastArmature 是 DragonBones 高效率的骨骼动画系统。他能缓存动画数据，大大减少动画播放的计算
+     * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
+     * @extends dragonBones.EventDispatcher
+     * @see dragonBones.ArmatureData
+     *
+     * @example
+       <pre>
+        //获取动画数据
+        var skeletonData = RES.getRes("skeleton");
+        //获取纹理集数据
+        var textureData = RES.getRes("textureConfig");
+        //获取纹理集图片
+        var texture = RES.getRes("texture");
+      
+        //创建一个工厂，用来创建Armature
+        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        //把动画数据添加到工厂里
+        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
+        //把纹理集数据和图片添加到工厂里
+        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+      
+        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
+        var armatureName:string = skeletonData.armature[0].name;
+        //从工厂里创建出Armature
+        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
+        //获取装载Armature的容器
+        var armatureDisplay = armature.display;
+        //把它添加到舞台上
+        this.addChild(armatureDisplay);
+        
+        //以60fps的帧率开启动画缓存，缓存所有的动画数据
+        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
+      
+       //取得这个Armature动画列表中的第一个动画的名字
+        var curAnimationName = armature.animation.animationList[0];
+        //播放这个动画，gotoAndPlay各个参数说明
+        //第一个参数 animationName {string} 指定播放动画的名称.
+        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
+        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
+        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
+        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
+      
+        //把Armature添加到心跳时钟里
+        dragonBones.WorldClock.clock.add(armature);
+        //心跳时钟开启
+        egret.Ticker.getInstance().register(function (advancedTime) {
+            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
+        }, this);
+       </pre>
+     */
+    var FastArmature = (function (_super) {
+        __extends(FastArmature, _super);
+        function FastArmature(display) {
+            _super.call(this);
+            /**
+             * 保证CacheManager是独占的前提下可以开启，开启后有助于性能提高
+             */
+            this.isCacheManagerExclusive = false;
+            this._enableEventDispatch = true;
+            this.useCache = true;
+            this._display = display;
+            this._animation = new dragonBones.FastAnimation(this);
+            this._slotsZOrderChanged = false;
+            this._armatureData = null;
+            this.boneList = [];
+            this._boneDic = {};
+            this.slotList = [];
+            this._slotDic = {};
+            this.slotHasChildArmatureList = [];
+            this._eventList = [];
+            this._delayDispose = false;
+            this._lockDispose = false;
+        }
+        var d = __define,c=FastArmature;p=c.prototype;
+        /**
+         * Cleans up any resources used by this instance.
+         */
+        p.dispose = function () {
+            this._delayDispose = true;
+            if (!this._animation || this._lockDispose) {
+                return;
+            }
+            this.userData = null;
+            this._animation.dispose();
+            var i = this.slotList.length;
+            while (i--) {
+                this.slotList[i].dispose();
+            }
+            i = this.boneList.length;
+            while (i--) {
+                this.boneList[i].dispose();
+            }
+            this.slotList.length = 0;
+            this.boneList.length = 0;
+            this._armatureData = null;
+            this._animation = null;
+            this.slotList = null;
+            this.boneList = null;
+            this._eventList = null;
+        };
+        /**
+         * Update the animation using this method typically in an ENTERFRAME Event or with a Timer.
+         * @param The amount of second to move the playhead ahead.
+         */
+        p.advanceTime = function (passedTime) {
+            this._lockDispose = true;
+            this._animation.advanceTime(passedTime);
+            var bone;
+            var slot;
+            var i = 0;
+            if (this._animation.animationState.isUseCache()) {
+                if (!this.useCache) {
+                    this.useCache = true;
+                }
+                i = this.slotList.length;
+                while (i--) {
+                    slot = this.slotList[i];
+                    slot.updateByCache();
+                }
+            }
+            else {
+                if (this.useCache) {
+                    this.useCache = false;
+                    i = this.slotList.length;
+                    while (i--) {
+                        slot = this.slotList[i];
+                        slot.switchTransformToBackup();
+                    }
+                }
+                i = this.boneList.length;
+                while (i--) {
+                    bone = this.boneList[i];
+                    bone.update();
+                }
+                i = this.slotList.length;
+                while (i--) {
+                    slot = this.slotList[i];
+                    slot._update();
+                }
+            }
+            i = this.slotHasChildArmatureList.length;
+            while (i--) {
+                slot = this.slotHasChildArmatureList[i];
+                var childArmature = slot.childArmature;
+                if (childArmature) {
+                    childArmature.advanceTime(passedTime);
+                }
+            }
+            if (this._slotsZOrderChanged) {
+                this.updateSlotsZOrder();
+            }
+            while (this._eventList.length > 0) {
+                this.dispatchEvent(this._eventList.shift());
+            }
+            this._lockDispose = false;
+            if (this._delayDispose) {
+                this.dispose();
+            }
+        };
+        /**
+         * 开启动画缓存
+         * @param  {number} 帧速率，每秒缓存多少次数据，越大越流畅,若值小于零会被设置为动画数据中的默认帧率
+         * @param  {Array<any>} 需要缓存的动画列表，如果为null，则全部动画都缓存
+         * @param  {boolean} 动画是否是循环动画，仅在3.0以下的数据格式使用，如果动画不是循环动画请设置为false，默认为true。
+         * @return {AnimationCacheManager}  返回缓存管理器，可以绑定到其他armature以减少内存
+         */
+        p.enableAnimationCache = function (frameRate, animationList, loop) {
+            if (animationList === void 0) { animationList = null; }
+            if (loop === void 0) { loop = true; }
+            var animationCacheManager = dragonBones.AnimationCacheManager.initWithArmatureData(this.armatureData, frameRate);
+            if (animationList) {
+                var length = animationList.length;
+                for (var i = 0; i < length; i++) {
+                    var animationName = animationList[i];
+                    animationCacheManager.initAnimationCache(animationName);
+                }
+            }
+            else {
+                animationCacheManager.initAllAnimationCache();
+            }
+            animationCacheManager.setCacheGeneratorArmature(this);
+            animationCacheManager.generateAllAnimationCache(loop);
+            animationCacheManager.bindCacheUserArmature(this);
+            this.enableCache = true;
+            return animationCacheManager;
+        };
+        /**
+         * 获取指定名称的 Bone
+         * @param boneName {string} Bone名称
+         * @returns {FastBone}
+         */
+        p.getBone = function (boneName) {
+            return this._boneDic[boneName];
+        };
+        /**
+         * 获取指定名称的 Slot
+         * @param slotName {string} Slot名称
+         * @returns {FastSlot}
+         */
+        p.getSlot = function (slotName) {
+            return this._slotDic[slotName];
+        };
+        /**
+         * 获取包含指定显示对象的 Bone
+         * @param display {any} 显示对象实例
+         * @returns {FastBone}
+         */
+        p.getBoneByDisplay = function (display) {
+            var slot = this.getSlotByDisplay(display);
+            return slot ? slot.parent : null;
+        };
+        /**
+         * 获取包含指定显示对象的 Slot
+         * @param displayObj {any} 显示对象实例
+         * @returns {FastSlot}
+         */
+        p.getSlotByDisplay = function (displayObj) {
+            if (displayObj) {
+                for (var i = 0, len = this.slotList.length; i < len; i++) {
+                    if (this.slotList[i].display == displayObj) {
+                        return this.slotList[i];
+                    }
+                }
+            }
+            return null;
+        };
+        /**
+         * 获取骨架包含的所有插槽
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {FastSlot[]}
+         */
+        p.getSlots = function (returnCopy) {
+            if (returnCopy === void 0) { returnCopy = true; }
+            return returnCopy ? this.slotList.concat() : this.slotList;
+        };
+        p._updateBonesByCache = function () {
+            var i = this.boneList.length;
+            var bone;
+            while (i--) {
+                bone = this.boneList[i];
+                bone.update();
+            }
+        };
+        /**
+         * 在骨架中为指定名称的 FastBone 添加一个子 FastBone.
+         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加骨骼
+         * @param bone {FastBone} FastBone 实例
+         * @param parentName {string} 父骨头名称 默认：null
+         */
+        p.addBone = function (bone, parentName) {
+            if (parentName === void 0) { parentName = null; }
+            var parentBone;
+            if (parentName) {
+                parentBone = this.getBone(parentName);
+                parentBone.boneList.push(bone);
+            }
+            bone.armature = this;
+            bone.setParent(parentBone);
+            this.boneList.unshift(bone);
+            this._boneDic[bone.name] = bone;
+        };
+        /**
+         * 为指定名称的 FastBone 添加一个子 FastSlot.
+         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加插槽
+         * @param slot {FastSlot} FastSlot 实例
+         * @param boneName {string}
+         * @see dragonBones.Bone
+         */
+        p.addSlot = function (slot, parentBoneName) {
+            var bone = this.getBone(parentBoneName);
+            if (bone) {
+                slot.armature = this;
+                slot.setParent(bone);
+                bone.slotList.push(slot);
+                slot._addDisplayToContainer(this.display);
+                this.slotList.push(slot);
+                this._slotDic[slot.name] = slot;
+                if (slot.hasChildArmature) {
+                    this.slotHasChildArmatureList.push(slot);
+                }
+            }
+            else {
+                throw new Error();
+            }
+        };
+        /**
+         * 按照显示层级为所有 Slot 排序
+         */
+        p.updateSlotsZOrder = function () {
+            this.slotList.sort(this.sortSlot);
+            var i = this.slotList.length;
+            while (i--) {
+                var slot = this.slotList[i];
+                if ((slot._frameCache && (slot._frameCache).displayIndex >= 0) || (!slot._frameCache && slot.displayIndex >= 0)) {
+                    slot._addDisplayToContainer(this._display);
+                }
+            }
+            this._slotsZOrderChanged = false;
+        };
+        p.sortBoneList = function () {
+            var i = this.boneList.length;
+            if (i == 0) {
+                return;
+            }
+            var helpArray = [];
+            while (i--) {
+                var level = 0;
+                var bone = this.boneList[i];
+                var boneParent = bone;
+                while (boneParent) {
+                    level++;
+                    boneParent = boneParent.parent;
+                }
+                helpArray[i] = [level, bone];
+            }
+            helpArray.sort(dragonBones.ArmatureData.sortBoneDataHelpArrayDescending);
+            i = helpArray.length;
+            while (i--) {
+                this.boneList[i] = helpArray[i][1];
+            }
+            helpArray.length = 0;
+        };
+        /** @private When AnimationState enter a key frame, call this func*/
+        p.arriveAtFrame = function (frame, animationState) {
+            if (frame.event && this.hasEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT)) {
+                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT);
+                frameEvent.animationState = animationState;
+                frameEvent.frameLabel = frame.event;
+                this._addEvent(frameEvent);
+            }
+            if (frame.action) {
+                this.animation.gotoAndPlay(frame.action);
+            }
+        };
+        p.invalidUpdate = function (boneName) {
+            if (boneName === void 0) { boneName = null; }
+            if (boneName) {
+                var bone = this.getBone(boneName);
+                if (bone) {
+                    bone.invalidUpdate();
+                }
+            }
+            else {
+                var i = this.boneList.length;
+                while (i--) {
+                    this.boneList[i].invalidUpdate();
+                }
+            }
+        };
+        p.resetAnimation = function () {
+            this.animation.animationState._resetTimelineStateList();
+            var length = this.boneList.length;
+            for (var i = 0; i < length; i++) {
+                var boneItem = this.boneList[i];
+                boneItem._timelineState = null;
+            }
+            this.animation.stop();
+        };
+        p.sortSlot = function (slot1, slot2) {
+            return slot1.zOrder < slot2.zOrder ? 1 : -1;
+        };
+        /**
+         * 获取FastAnimation实例
+         * @returns {any} FastAnimation实例
+         */
+        p.getAnimation = function () {
+            return this._animation;
+        };
+        d(p, "armatureData"
+            /**
+             * ArmatureData.
+             * @see dragonBones.objects.ArmatureData.
+             */
+            ,function () {
+                return this._armatureData;
+            }
+        );
+        d(p, "animation"
+            /**
+             * An Animation instance
+             * @see dragonBones.animation.Animation
+             */
+            ,function () {
+                return this._animation;
+            }
+        );
+        d(p, "display"
+            /**
+             * Armature's display object. It's instance type depends on render engine. For example "flash.display.DisplayObject" or "startling.display.DisplayObject"
+             */
+            ,function () {
+                return this._display;
+            }
+        );
+        d(p, "enableCache"
+            ,function () {
+                return this._enableCache;
+            }
+            ,function (value) {
+                this._enableCache = value;
+            }
+        );
+        d(p, "enableEventDispatch"
+            ,function () {
+                return this._enableEventDispatch;
+            }
+            ,function (value) {
+                this._enableEventDispatch = value;
+            }
+        );
+        p._addEvent = function (event) {
+            if (this._enableEventDispatch) {
+                this._eventList.push(event);
+            }
+        };
+        return FastArmature;
+    })(dragonBones.EventDispatcher);
+    dragonBones.FastArmature = FastArmature;
+    egret.registerClass(FastArmature,"dragonBones.FastArmature",["dragonBones.ICacheableArmature","dragonBones.IArmature","dragonBones.IAnimatable"]);
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastDBObject
+     * @classdesc
+     * FastDBObject 是 FastBone 和 FastSlot 的基类
+     * @see dragonBones.FastBone
+     * @see dragonBones.FastSlot
+     */
+    var FastDBObject = (function () {
+        function FastDBObject() {
+            this._globalTransformMatrix = new dragonBones.Matrix();
+            this._global = new dragonBones.DBTransform();
+            this._origin = new dragonBones.DBTransform();
+            this._visible = true;
+            this.armature = null;
+            this._parent = null;
+            this.userData = null;
+            this.inheritRotation = true;
+            this.inheritScale = true;
+            this.inheritTranslation = true;
+        }
+        var d = __define,c=FastDBObject;p=c.prototype;
+        /** @private */
+        p.updateByCache = function () {
+            this._global = this._frameCache.globalTransform;
+            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
+        };
+        /** @private */
+        p.switchTransformToBackup = function () {
+            if (!this._globalBackup) {
+                this._globalBackup = new dragonBones.DBTransform();
+                this._globalTransformMatrixBackup = new dragonBones.Matrix();
+            }
+            this._global = this._globalBackup;
+            this._globalTransformMatrix = this._globalTransformMatrixBackup;
+        };
+        /** @private */
+        p.setParent = function (value) {
+            this._parent = value;
+        };
+        /**
+         * Cleans up any resources used by this DBObject instance.
+         */
+        p.dispose = function () {
+            this.userData = null;
+            this._globalTransformMatrix = null;
+            this._global = null;
+            this._origin = null;
+            this.armature = null;
+            this._parent = null;
+        };
+        p._calculateParentTransform = function () {
+            if (this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale)) {
+                var parentGlobalTransform = this._parent._global;
+                var parentGlobalTransformMatrix = this._parent._globalTransformMatrix;
+                if (!this.inheritTranslation && (parentGlobalTransform.x != 0 || parentGlobalTransform.y != 0) || !this.inheritRotation && (parentGlobalTransform.skewX != 0 || parentGlobalTransform.skewY != 0) || !this.inheritScale && (parentGlobalTransform.scaleX != 1 || parentGlobalTransform.scaleY != 1)) {
+                    parentGlobalTransform = FastDBObject._tempParentGlobalTransform;
+                    parentGlobalTransform.copy(this._parent._global);
+                    if (!this.inheritTranslation) {
+                        parentGlobalTransform.x = 0;
+                        parentGlobalTransform.y = 0;
+                    }
+                    if (!this.inheritScale) {
+                        parentGlobalTransform.scaleX = 1;
+                        parentGlobalTransform.scaleY = 1;
+                    }
+                    if (!this.inheritRotation) {
+                        parentGlobalTransform.skewX = 0;
+                        parentGlobalTransform.skewY = 0;
+                    }
+                    parentGlobalTransformMatrix = dragonBones.DBObject._tempParentGlobalTransformMatrix;
+                    dragonBones.TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix);
+                }
+                FastDBObject.tempOutputObj.parentGlobalTransform = parentGlobalTransform;
+                FastDBObject.tempOutputObj.parentGlobalTransformMatrix = parentGlobalTransformMatrix;
+                return FastDBObject.tempOutputObj;
+            }
+            return null;
+        };
+        p._updateGlobal = function () {
+            this._calculateRelativeParentTransform();
+            var output = this._calculateParentTransform();
+            if (output != null) {
+                //计算父骨头绝对坐标
+                var parentMatrix = output.parentGlobalTransformMatrix;
+                var parentGlobalTransform = output.parentGlobalTransform;
+                //计算绝对坐标
+                var x = this._global.x;
+                var y = this._global.y;
+                this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
+                this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
+                if (this.inheritRotation) {
+                    this._global.skewX += parentGlobalTransform.skewX;
+                    this._global.skewY += parentGlobalTransform.skewY;
+                }
+                if (this.inheritScale) {
+                    this._global.scaleX *= parentGlobalTransform.scaleX;
+                    this._global.scaleY *= parentGlobalTransform.scaleY;
+                }
+            }
+            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
+            return output;
+        };
+        p._calculateRelativeParentTransform = function () {
+        };
+        d(p, "name"
+            ,function () {
+                return this._name;
+            }
+            ,function (value) {
+                this._name = value;
+            }
+        );
+        d(p, "global"
+            /**
+             * This DBObject instance global transform instance.
+             * @see dragonBones.objects.DBTransform
+             */
+            ,function () {
+                return this._global;
+            }
+        );
+        d(p, "globalTransformMatrix"
+            ,function () {
+                return this._globalTransformMatrix;
+            }
+        );
+        d(p, "origin"
+            /**
+             * This DBObject instance related to parent transform instance.
+             * @see dragonBones.objects.DBTransform
+             */
+            ,function () {
+                return this._origin;
+            }
+        );
+        d(p, "parent"
+            /**
+             * Indicates the Bone instance that directly contains this DBObject instance if any.
+             */
+            ,function () {
+                return this._parent;
+            }
+        );
+        d(p, "visible"
+            ,function () {
+                return this._visible;
+            }
+            ,function (value) {
+                this._visible = value;
+            }
+        );
+        d(p, "frameCache",undefined
+            ,function (cache) {
+                this._frameCache = cache;
+            }
+        );
+        FastDBObject._tempParentGlobalTransform = new dragonBones.DBTransform();
+        FastDBObject.tempOutputObj = {};
+        return FastDBObject;
+    })();
+    dragonBones.FastDBObject = FastDBObject;
+    egret.registerClass(FastDBObject,"dragonBones.FastDBObject");
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastBone
+     * @classdesc
+     * FastBone 实例代表 FastArmature 中的一个骨头。一个FastArmature实例可以由很多 FastBone组成。
+     * FastBone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
+     * 和Bone相比，FastBone不能动态添加子骨骼和子插槽
+     * @extends dragonBones.FastDBObject
+     * @see dragonBones.FastArmature
+     * @see dragonBones.FastSlot
+     * @see dragonBones.BoneData
+     */
+    var FastBone = (function (_super) {
+        __extends(FastBone, _super);
+        function FastBone() {
+            _super.call(this);
+            this.slotList = [];
+            this.boneList = [];
+            /** @private */
+            this._needUpdate = 0;
+            this._needUpdate = 2;
+        }
+        var d = __define,c=FastBone;p=c.prototype;
+        FastBone.initWithBoneData = function (boneData) {
+            var outputBone = new FastBone();
+            outputBone.name = boneData.name;
+            outputBone.inheritRotation = boneData.inheritRotation;
+            outputBone.inheritScale = boneData.inheritScale;
+            outputBone.origin.copy(boneData.transform);
+            return outputBone;
+        };
+        /**
+         * 获取当前骨头包含的所有 FastBone 实例
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {FastBone[]}
+         */
+        p.getBones = function (returnCopy) {
+            if (returnCopy === void 0) { returnCopy = true; }
+            return returnCopy ? this.boneList.concat() : this.boneList;
+        };
+        /**
+         * 获取当前骨头包含的所有 FastSlot 实例
+         * @param returnCopy {boolean} 是否返回拷贝。默认：true
+         * @returns {FastSlot[]}
+         */
+        p.getSlots = function (returnCopy) {
+            if (returnCopy === void 0) { returnCopy = true; }
+            return returnCopy ? this.slotList.concat() : this.slotList;
+        };
+        /**
+         * @inheritDoc
+         */
+        p.dispose = function () {
+            _super.prototype.dispose.call(this);
+            this._timelineState = null;
+        };
+        //动画
+        /**
+         * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
+         */
+        p.invalidUpdate = function () {
+            this._needUpdate = 2;
+        };
+        p._calculateRelativeParentTransform = function () {
+            this._global.copy(this._origin);
+            if (this._timelineState) {
+                this._global.add(this._timelineState._transform);
+            }
+        };
+        /** @private */
+        p.updateByCache = function () {
+            _super.prototype.updateByCache.call(this);
+            this._global = this._frameCache.globalTransform;
+            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
+        };
+        /** @private */
+        p.update = function (needUpdate) {
+            if (needUpdate === void 0) { needUpdate = false; }
+            this._needUpdate--;
+            if (needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)) {
+                this._needUpdate = 1;
+            }
+            else {
+                return;
+            }
+            //计算global
+            this._updateGlobal();
+        };
+        /** @private When bone timeline enter a key frame, call this func*/
+        p.arriveAtFrame = function (frame, animationState) {
+            var childSlot;
+            if (frame.event && this.armature.hasEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT)) {
+                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.BONE_FRAME_EVENT);
+                frameEvent.bone = this;
+                frameEvent.animationState = animationState;
+                frameEvent.frameLabel = frame.event;
+                this.armature._addEvent(frameEvent);
+            }
+        };
+        d(p, "childArmature"
+            /**
+             * 不推荐的API,建议使用 slot.childArmature 替代
+             */
+            ,function () {
+                var s = this.slot;
+                if (s) {
+                    return s.childArmature;
+                }
+                return null;
+            }
+        );
+        d(p, "display"
+            /**
+             * 不推荐的API,建议使用 slot.display 替代
+             */
+            ,function () {
+                var s = this.slot;
+                if (s) {
+                    return s.display;
+                }
+                return null;
+            }
+            ,function (value) {
+                var s = this.slot;
+                if (s) {
+                    s.display = value;
+                }
+            }
+        );
+        d(p, "visible",undefined
+            /** @private */
+            ,function (value) {
+                if (this._visible != value) {
+                    this._visible = value;
+                    for (var i = 0, len = this.armature.slotList.length; i < len; i++) {
+                        if (this.armature.slotList[i].parent == this) {
+                            this.armature.slotList[i]._updateDisplayVisible(this._visible);
+                        }
+                    }
+                }
+            }
+        );
+        d(p, "slot"
+            /**
+             * 返回当前 FastBone 实例包含的第一个 FastSlot 实例
+             * @member {FastSlot} dragonBones.FastBone#slot
+             */
+            ,function () {
+                return this.slotList.length > 0 ? this.slotList[0] : null;
+            }
+        );
+        return FastBone;
+    })(dragonBones.FastDBObject);
+    dragonBones.FastBone = FastBone;
+    egret.registerClass(FastBone,"dragonBones.FastBone");
+})(dragonBones || (dragonBones = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var dragonBones;
+(function (dragonBones) {
+    /**
+     * @class dragonBones.FastSlot
+     * @classdesc
+     * FastSlot 实例是骨头上的一个插槽，是显示图片的容器。
+     * 一个 FastBone 上可以有多个FastSlot，每个FastSlot中同一时间都会有一张图片用于显示，不同的FastSlot中的图片可以同时显示。
+     * 每个 FastSlot 中可以包含多张图片，同一个 FastSlot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
+     * @extends dragonBones.DBObject
+     * @see dragonBones.FastArmature
+     * @see dragonBones.FastBone
+     * @see dragonBones.SlotData
+     */
+    var FastSlot = (function (_super) {
+        __extends(FastSlot, _super);
+        function FastSlot(self) {
+            _super.call(this);
+            this._currentDisplayIndex = 0;
+            if (self != this) {
+                throw new Error("Abstract class can not be instantiated!");
+            }
+            this.hasChildArmature = false;
+            this._currentDisplayIndex = -1;
+            this._originZOrder = 0;
+            this._tweenZOrder = 0;
+            this._offsetZOrder = 0;
+            this._colorTransform = new dragonBones.ColorTransform();
+            this._isColorChanged = false;
+            this._displayDataList = null;
+            this._currentDisplay = null;
+            this.inheritRotation = true;
+            this.inheritScale = true;
+        }
+        var d = __define,c=FastSlot;p=c.prototype;
+        /**
+         * 通过传入 SlotData 初始化FastSlot
+         * @param slotData
+         */
+        p.initWithSlotData = function (slotData) {
+            this.name = slotData.name;
+            this.blendMode = slotData.blendMode;
+            this._originZOrder = slotData.zOrder;
+            this._displayDataList = slotData.displayDataList;
+        };
+        /**
+         * @inheritDoc
+         */
+        p.dispose = function () {
+            if (!this._displayList) {
+                return;
+            }
+            _super.prototype.dispose.call(this);
+            this._displayDataList = null;
+            this._displayList = null;
+            this._currentDisplay = null;
+        };
+        //动画
+        /** @private */
+        p.updateByCache = function () {
+            _super.prototype.updateByCache.call(this);
+            this._updateTransform();
+            //颜色
+            var cacheColor = (this._frameCache).colorTransform;
+            var cacheColorChanged = cacheColor != null;
+            if (this.colorChanged != cacheColorChanged || (this.colorChanged && cacheColorChanged && !dragonBones.ColorTransformUtil.isEqual(this._colorTransform, cacheColor))) {
+                cacheColor = cacheColor || dragonBones.ColorTransformUtil.originalColor;
+                this._updateDisplayColor(cacheColor.alphaOffset, cacheColor.redOffset, cacheColor.greenOffset, cacheColor.blueOffset, cacheColor.alphaMultiplier, cacheColor.redMultiplier, cacheColor.greenMultiplier, cacheColor.blueMultiplier, cacheColorChanged);
+            }
+            //displayIndex
+            this._changeDisplayIndex((this._frameCache).displayIndex);
+        };
+        /** @private */
+        p._update = function () {
+            if (this._parent._needUpdate <= 0) {
+                return;
+            }
+            this._updateGlobal();
+            this._updateTransform();
+        };
+        p._calculateRelativeParentTransform = function () {
+            this._global.copy(this._origin);
+        };
+        p.initDisplayList = function (newDisplayList) {
+            this._displayList = newDisplayList;
+        };
+        p.clearCurrentDisplay = function () {
+            if (this.hasChildArmature) {
+                var targetArmature = this.childArmature;
+                if (targetArmature) {
+                    targetArmature.resetAnimation();
+                }
+            }
+            var slotIndex = this._getDisplayIndex();
+            this._removeDisplayFromContainer();
+            return slotIndex;
+        };
+        /** @private */
+        p._changeDisplayIndex = function (displayIndex) {
+            if (displayIndex === void 0) { displayIndex = 0; }
+            if (this._currentDisplayIndex == displayIndex) {
+                return;
+            }
+            var slotIndex = -1;
+            if (this._currentDisplayIndex >= 0) {
+                slotIndex = this.clearCurrentDisplay();
+            }
+            this._currentDisplayIndex = displayIndex;
+            if (this._currentDisplayIndex >= 0) {
+                this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
+                this.initCurrentDisplay(slotIndex);
+            }
+        };
+        //currentDisplayIndex不变，改变内容，必须currentDisplayIndex >=0
+        p.changeSlotDisplay = function (value) {
+            var slotIndex = this.clearCurrentDisplay();
+            this._displayList[this._currentDisplayIndex] = value;
+            this.initCurrentDisplay(slotIndex);
+        };
+        p.initCurrentDisplay = function (slotIndex) {
+            if (slotIndex === void 0) { slotIndex = 0; }
+            var display = this._displayList[this._currentDisplayIndex];
+            if (display) {
+                if (display instanceof dragonBones.FastArmature) {
+                    this._currentDisplay = display.display;
+                }
+                else {
+                    this._currentDisplay = display;
+                }
+            }
+            else {
+                this._currentDisplay = null;
+            }
+            this._updateDisplay(this._currentDisplay);
+            if (this._currentDisplay) {
+                if (slotIndex != -1) {
+                    this._addDisplayToContainer(this.armature.display, slotIndex);
+                }
+                else {
+                    this.armature._slotsZOrderChanged = true;
+                    this._addDisplayToContainer(this.armature.display);
+                }
+                if (this._blendMode) {
+                    this._updateDisplayBlendMode(this._blendMode);
+                }
+                if (this._isColorChanged) {
+                    this._updateDisplayColor(this._colorTransform.alphaOffset, this._colorTransform.redOffset, this._colorTransform.greenOffset, this._colorTransform.blueOffset, this._colorTransform.alphaMultiplier, this._colorTransform.redMultiplier, this._colorTransform.greenMultiplier, this._colorTransform.blueMultiplier, true);
+                }
+                this._updateTransform();
+                if (display instanceof dragonBones.FastArmature) {
+                    var targetArmature = (display);
+                    if (this.armature && this.armature.animation.animationState && targetArmature.animation.hasAnimation(this.armature.animation.animationState.name)) {
+                        targetArmature.animation.gotoAndPlay(this.armature.animation.animationState.name);
+                    }
+                    else {
+                        targetArmature.animation.play();
+                    }
+                }
+            }
+        };
+        d(p, "visible",undefined
+            /** @private */
+            ,function (value) {
+                if (this._visible != value) {
+                    this._visible = value;
+                    this._updateDisplayVisible(this._visible);
+                }
+            }
+        );
+        d(p, "displayList"
+            /**
+             * 显示对象列表(包含 display 或者 子骨架)
+             * @member {any[]} dragonBones.FastSlot#displayList
+             */
+            ,function () {
+                return this._displayList;
+            }
+            ,function (value) {
+                //todo: 考虑子骨架变化的各种情况
+                if (!value) {
+                    throw new Error();
+                }
+                var newDisplay = value[this._currentDisplayIndex];
+                var displayChanged = this._currentDisplayIndex >= 0 && this._displayList[this._currentDisplayIndex] != newDisplay;
+                this._displayList = value;
+                if (displayChanged) {
+                    this.changeSlotDisplay(newDisplay);
+                }
+            }
+        );
+        d(p, "display"
+            /**
+             * 当前的显示对象(可能是 display 或者 子骨架)
+             * @member {any} dragonBones.FastSlot#display
+             */
+            ,function () {
+                return this._currentDisplay;
+            }
+            ,function (value) {
+                //todo: 考虑子骨架变化的各种情况
+                if (this._currentDisplayIndex < 0) {
+                    return;
+                }
+                if (this._displayList[this._currentDisplayIndex] == value) {
+                    return;
+                }
+                this.changeSlotDisplay(value);
+            }
+        );
+        d(p, "childArmature"
+            /**
+             * 当前的子骨架
+             * @member {FastArmature} dragonBones.Slot#childArmature
+             */
+            ,function () {
+                return (this._displayList[this._currentDisplayIndex] instanceof dragonBones.Armature || this._displayList[this._currentDisplayIndex] instanceof dragonBones.FastArmature) ? this._displayList[this._currentDisplayIndex] : null;
+            }
+            ,function (value) {
+                this.display = value;
+            }
+        );
+        d(p, "zOrder"
+            /**
+             * 显示顺序。(支持小数用于实现动态插入slot)
+             * @member {number} dragonBones.FastSlot#zOrder
+             */
+            ,function () {
+                return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
+            }
+            ,function (value) {
+                if (this.zOrder != value) {
+                    this._offsetZOrder = value - this._originZOrder - this._tweenZOrder;
+                    if (this.armature) {
+                        this.armature._slotsZOrderChanged = true;
+                    }
+                }
+            }
+        );
+        d(p, "blendMode"
+            /**
+             * 混合模式
+             * @member {string} dragonBones.FastSlot#blendMode
+             */
+            ,function () {
+                return this._blendMode;
+            }
+            ,function (value) {
+                if (this._blendMode != value) {
+                    this._blendMode = value;
+                    this._updateDisplayBlendMode(this._blendMode);
+                }
+            }
+        );
+        d(p, "colorTransform"
+            /**
+             * Indicates the Bone instance that directly contains this DBObject instance if any.
+             */
+            ,function () {
+                return this._colorTransform;
+            }
+        );
+        d(p, "displayIndex"
+            ,function () {
+                return this._currentDisplayIndex;
+            }
+        );
+        d(p, "colorChanged"
+            ,function () {
+                return this._isColorChanged;
+            }
+        );
+        //Abstract method
+        /**
+         * @private
+         */
+        p._updateDisplay = function (value) {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         */
+        p._getDisplayIndex = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * Adds the original display object to another display object.
+         * @param container
+         * @param index
+         */
+        p._addDisplayToContainer = function (container, index) {
+            if (index === void 0) { index = -1; }
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * remove the original display object from its parent.
+         */
+        p._removeDisplayFromContainer = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * Updates the transform of the slot.
+         */
+        p._updateTransform = function () {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         */
+        p._updateDisplayVisible = function (value) {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /**
+         * @private
+         * Updates the color of the display object.
+         * @param a
+         * @param r
+         * @param g
+         * @param b
+         * @param aM
+         * @param rM
+         * @param gM
+         * @param bM
+         */
+        p._updateDisplayColor = function (aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChanged) {
+            if (colorChanged === void 0) { colorChanged = false; }
+            this._colorTransform.alphaOffset = aOffset;
+            this._colorTransform.redOffset = rOffset;
+            this._colorTransform.greenOffset = gOffset;
+            this._colorTransform.blueOffset = bOffset;
+            this._colorTransform.alphaMultiplier = aMultiplier;
+            this._colorTransform.redMultiplier = rMultiplier;
+            this._colorTransform.greenMultiplier = gMultiplier;
+            this._colorTransform.blueMultiplier = bMultiplier;
+            this._isColorChanged = colorChanged;
+        };
+        /**
+         * @private
+         * Update the blend mode of the display object.
+         * @param value The blend mode to use.
+         */
+        p._updateDisplayBlendMode = function (value) {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        };
+        /** @private When slot timeline enter a key frame, call this func*/
+        p._arriveAtFrame = function (frame, animationState) {
+            var slotFrame = frame;
+            var displayIndex = slotFrame.displayIndex;
+            this._changeDisplayIndex(displayIndex);
+            this._updateDisplayVisible(slotFrame.visible);
+            if (displayIndex >= 0) {
+                if (!isNaN(slotFrame.zOrder) && slotFrame.zOrder != this._tweenZOrder) {
+                    this._tweenZOrder = slotFrame.zOrder;
+                    this.armature._slotsZOrderChanged = true;
+                }
+            }
+            //[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
+            //后续会扩展更多的action，目前只有gotoAndPlay的含义
+            if (frame.action) {
+                var targetArmature = this.childArmature;
+                if (targetArmature) {
+                    targetArmature.getAnimation().gotoAndPlay(frame.action);
+                }
+            }
+        };
+        /** @private */
+        p.hideSlots = function () {
+            this._changeDisplayIndex(-1);
+            this._removeDisplayFromContainer();
+            if (this._frameCache) {
+                this._frameCache.clear();
+            }
+        };
+        p._updateGlobal = function () {
+            this._calculateRelativeParentTransform();
+            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
+            var output = this._calculateParentTransform();
+            if (output) {
+                this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
+                dragonBones.TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
+            }
+            return output;
+        };
+        return FastSlot;
+    })(dragonBones.FastDBObject);
+    dragonBones.FastSlot = FastSlot;
+    egret.registerClass(FastSlot,"dragonBones.FastSlot",["dragonBones.ISlotCacheGenerator","dragonBones.ICacheUser"]);
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -8317,1254 +9565,6 @@ var dragonBones;
     })();
     dragonBones.FastSlotTimelineState = FastSlotTimelineState;
     egret.registerClass(FastSlotTimelineState,"dragonBones.FastSlotTimelineState");
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastArmature
-     * @classdesc
-     * FastArmature 是 DragonBones 高效率的骨骼动画系统。他能缓存动画数据，大大减少动画播放的计算
-     * 不支持动态添加Bone和Slot，换装请通过更换Slot的dispaly或子骨架childArmature来实现
-     * @extends dragonBones.EventDispatcher
-     * @see dragonBones.ArmatureData
-     *
-     * @example
-       <pre>
-        //获取动画数据
-        var skeletonData = RES.getRes("skeleton");
-        //获取纹理集数据
-        var textureData = RES.getRes("textureConfig");
-        //获取纹理集图片
-        var texture = RES.getRes("texture");
-      
-        //创建一个工厂，用来创建Armature
-        var factory:dragonBones.EgretFactory = new dragonBones.EgretFactory();
-        //把动画数据添加到工厂里
-        factory.addSkeletonData(dragonBones.DataParser.parseDragonBonesData(skeletonData));
-        //把纹理集数据和图片添加到工厂里
-        factory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
-      
-        //获取Armature的名字，dragonBones4.0的数据可以包含多个骨架，这里取第一个Armature
-        var armatureName:string = skeletonData.armature[0].name;
-        //从工厂里创建出Armature
-        var armature:dragonBones.FastArmature = factory.buildFastArmature(armatureName);
-        //获取装载Armature的容器
-        var armatureDisplay = armature.display;
-        //把它添加到舞台上
-        this.addChild(armatureDisplay);
-        
-        //以60fps的帧率开启动画缓存，缓存所有的动画数据
-        var animationCachManager:dragonBones.AnimationCacheManager = armature.enableAnimationCache(60);
-      
-       //取得这个Armature动画列表中的第一个动画的名字
-        var curAnimationName = armature.animation.animationList[0];
-        //播放这个动画，gotoAndPlay各个参数说明
-        //第一个参数 animationName {string} 指定播放动画的名称.
-        //第二个参数 fadeInTime {number} 动画淡入时间 (>= 0), 默认值：-1 意味着使用动画数据中的淡入时间.
-        //第三个参数 duration {number} 动画播放时间。默认值：-1 意味着使用动画数据中的播放时间.
-        //第四个参数 layTimes {number} 动画播放次数(0:循环播放, >=1:播放次数, NaN:使用动画数据中的播放时间), 默认值：NaN
-        armature.animation.gotoAndPlay(curAnimationName,0.3,-1,0);
-      
-        //把Armature添加到心跳时钟里
-        dragonBones.WorldClock.clock.add(armature);
-        //心跳时钟开启
-        egret.Ticker.getInstance().register(function (advancedTime) {
-            dragonBones.WorldClock.clock.advanceTime(advancedTime / 1000);
-        }, this);
-       </pre>
-     */
-    var FastArmature = (function (_super) {
-        __extends(FastArmature, _super);
-        function FastArmature(display) {
-            _super.call(this);
-            /**
-             * 保证CacheManager是独占的前提下可以开启，开启后有助于性能提高
-             */
-            this.isCacheManagerExclusive = false;
-            this._enableEventDispatch = true;
-            this.useCache = true;
-            this._display = display;
-            this._animation = new dragonBones.FastAnimation(this);
-            this._slotsZOrderChanged = false;
-            this._armatureData = null;
-            this.boneList = [];
-            this._boneDic = {};
-            this.slotList = [];
-            this._slotDic = {};
-            this.slotHasChildArmatureList = [];
-            this._eventList = [];
-            this._delayDispose = false;
-            this._lockDispose = false;
-        }
-        var d = __define,c=FastArmature;p=c.prototype;
-        /**
-         * Cleans up any resources used by this instance.
-         */
-        p.dispose = function () {
-            this._delayDispose = true;
-            if (!this._animation || this._lockDispose) {
-                return;
-            }
-            this.userData = null;
-            this._animation.dispose();
-            var i = this.slotList.length;
-            while (i--) {
-                this.slotList[i].dispose();
-            }
-            i = this.boneList.length;
-            while (i--) {
-                this.boneList[i].dispose();
-            }
-            this.slotList.length = 0;
-            this.boneList.length = 0;
-            this._armatureData = null;
-            this._animation = null;
-            this.slotList = null;
-            this.boneList = null;
-            this._eventList = null;
-        };
-        /**
-         * Update the animation using this method typically in an ENTERFRAME Event or with a Timer.
-         * @param The amount of second to move the playhead ahead.
-         */
-        p.advanceTime = function (passedTime) {
-            this._lockDispose = true;
-            this._animation.advanceTime(passedTime);
-            var bone;
-            var slot;
-            var i = 0;
-            if (this._animation.animationState.isUseCache()) {
-                if (!this.useCache) {
-                    this.useCache = true;
-                }
-                i = this.slotList.length;
-                while (i--) {
-                    slot = this.slotList[i];
-                    slot.updateByCache();
-                }
-            }
-            else {
-                if (this.useCache) {
-                    this.useCache = false;
-                    i = this.slotList.length;
-                    while (i--) {
-                        slot = this.slotList[i];
-                        slot.switchTransformToBackup();
-                    }
-                }
-                i = this.boneList.length;
-                while (i--) {
-                    bone = this.boneList[i];
-                    bone.update();
-                }
-                i = this.slotList.length;
-                while (i--) {
-                    slot = this.slotList[i];
-                    slot._update();
-                }
-            }
-            i = this.slotHasChildArmatureList.length;
-            while (i--) {
-                slot = this.slotHasChildArmatureList[i];
-                var childArmature = slot.childArmature;
-                if (childArmature) {
-                    childArmature.advanceTime(passedTime);
-                }
-            }
-            if (this._slotsZOrderChanged) {
-                this.updateSlotsZOrder();
-            }
-            while (this._eventList.length > 0) {
-                this.dispatchEvent(this._eventList.shift());
-            }
-            this._lockDispose = false;
-            if (this._delayDispose) {
-                this.dispose();
-            }
-        };
-        /**
-         * 开启动画缓存
-         * @param  {number} 帧速率，每秒缓存多少次数据，越大越流畅,若值小于零会被设置为动画数据中的默认帧率
-         * @param  {Array<any>} 需要缓存的动画列表，如果为null，则全部动画都缓存
-         * @param  {boolean} 动画是否是循环动画，仅在3.0以下的数据格式使用，如果动画不是循环动画请设置为false，默认为true。
-         * @return {AnimationCacheManager}  返回缓存管理器，可以绑定到其他armature以减少内存
-         */
-        p.enableAnimationCache = function (frameRate, animationList, loop) {
-            if (animationList === void 0) { animationList = null; }
-            if (loop === void 0) { loop = true; }
-            var animationCacheManager = dragonBones.AnimationCacheManager.initWithArmatureData(this.armatureData, frameRate);
-            if (animationList) {
-                var length = animationList.length;
-                for (var i = 0; i < length; i++) {
-                    var animationName = animationList[i];
-                    animationCacheManager.initAnimationCache(animationName);
-                }
-            }
-            else {
-                animationCacheManager.initAllAnimationCache();
-            }
-            animationCacheManager.setCacheGeneratorArmature(this);
-            animationCacheManager.generateAllAnimationCache(loop);
-            animationCacheManager.bindCacheUserArmature(this);
-            this.enableCache = true;
-            return animationCacheManager;
-        };
-        /**
-         * 获取指定名称的 Bone
-         * @param boneName {string} Bone名称
-         * @returns {FastBone}
-         */
-        p.getBone = function (boneName) {
-            return this._boneDic[boneName];
-        };
-        /**
-         * 获取指定名称的 Slot
-         * @param slotName {string} Slot名称
-         * @returns {FastSlot}
-         */
-        p.getSlot = function (slotName) {
-            return this._slotDic[slotName];
-        };
-        /**
-         * 获取包含指定显示对象的 Bone
-         * @param display {any} 显示对象实例
-         * @returns {FastBone}
-         */
-        p.getBoneByDisplay = function (display) {
-            var slot = this.getSlotByDisplay(display);
-            return slot ? slot.parent : null;
-        };
-        /**
-         * 获取包含指定显示对象的 Slot
-         * @param displayObj {any} 显示对象实例
-         * @returns {FastSlot}
-         */
-        p.getSlotByDisplay = function (displayObj) {
-            if (displayObj) {
-                for (var i = 0, len = this.slotList.length; i < len; i++) {
-                    if (this.slotList[i].display == displayObj) {
-                        return this.slotList[i];
-                    }
-                }
-            }
-            return null;
-        };
-        /**
-         * 获取骨架包含的所有插槽
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastSlot[]}
-         */
-        p.getSlots = function (returnCopy) {
-            if (returnCopy === void 0) { returnCopy = true; }
-            return returnCopy ? this.slotList.concat() : this.slotList;
-        };
-        p._updateBonesByCache = function () {
-            var i = this.boneList.length;
-            var bone;
-            while (i--) {
-                bone = this.boneList[i];
-                bone.update();
-            }
-        };
-        /**
-         * 在骨架中为指定名称的 FastBone 添加一个子 FastBone.
-         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加骨骼
-         * @param bone {FastBone} FastBone 实例
-         * @param parentName {string} 父骨头名称 默认：null
-         */
-        p.addBone = function (bone, parentName) {
-            if (parentName === void 0) { parentName = null; }
-            var parentBone;
-            if (parentName) {
-                parentBone = this.getBone(parentName);
-                parentBone.boneList.push(bone);
-            }
-            bone.armature = this;
-            bone.setParent(parentBone);
-            this.boneList.unshift(bone);
-            this._boneDic[bone.name] = bone;
-        };
-        /**
-         * 为指定名称的 FastBone 添加一个子 FastSlot.
-         * 和Armature不同,FastArmature的这个方法不能在运行时动态添加插槽
-         * @param slot {FastSlot} FastSlot 实例
-         * @param boneName {string}
-         * @see dragonBones.Bone
-         */
-        p.addSlot = function (slot, parentBoneName) {
-            var bone = this.getBone(parentBoneName);
-            if (bone) {
-                slot.armature = this;
-                slot.setParent(bone);
-                bone.slotList.push(slot);
-                slot._addDisplayToContainer(this.display);
-                this.slotList.push(slot);
-                this._slotDic[slot.name] = slot;
-                if (slot.hasChildArmature) {
-                    this.slotHasChildArmatureList.push(slot);
-                }
-            }
-            else {
-                throw new Error();
-            }
-        };
-        /**
-         * 按照显示层级为所有 Slot 排序
-         */
-        p.updateSlotsZOrder = function () {
-            this.slotList.sort(this.sortSlot);
-            var i = this.slotList.length;
-            while (i--) {
-                var slot = this.slotList[i];
-                if ((slot._frameCache && (slot._frameCache).displayIndex >= 0) || (!slot._frameCache && slot.displayIndex >= 0)) {
-                    slot._addDisplayToContainer(this._display);
-                }
-            }
-            this._slotsZOrderChanged = false;
-        };
-        p.sortBoneList = function () {
-            var i = this.boneList.length;
-            if (i == 0) {
-                return;
-            }
-            var helpArray = [];
-            while (i--) {
-                var level = 0;
-                var bone = this.boneList[i];
-                var boneParent = bone;
-                while (boneParent) {
-                    level++;
-                    boneParent = boneParent.parent;
-                }
-                helpArray[i] = [level, bone];
-            }
-            helpArray.sort(dragonBones.ArmatureData.sortBoneDataHelpArrayDescending);
-            i = helpArray.length;
-            while (i--) {
-                this.boneList[i] = helpArray[i][1];
-            }
-            helpArray.length = 0;
-        };
-        /** @private When AnimationState enter a key frame, call this func*/
-        p.arriveAtFrame = function (frame, animationState) {
-            if (frame.event && this.hasEventListener(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT)) {
-                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.ANIMATION_FRAME_EVENT);
-                frameEvent.animationState = animationState;
-                frameEvent.frameLabel = frame.event;
-                this._addEvent(frameEvent);
-            }
-            if (frame.action) {
-                this.animation.gotoAndPlay(frame.action);
-            }
-        };
-        p.invalidUpdate = function (boneName) {
-            if (boneName === void 0) { boneName = null; }
-            if (boneName) {
-                var bone = this.getBone(boneName);
-                if (bone) {
-                    bone.invalidUpdate();
-                }
-            }
-            else {
-                var i = this.boneList.length;
-                while (i--) {
-                    this.boneList[i].invalidUpdate();
-                }
-            }
-        };
-        p.resetAnimation = function () {
-            this.animation.animationState._resetTimelineStateList();
-            var length = this.boneList.length;
-            for (var i = 0; i < length; i++) {
-                var boneItem = this.boneList[i];
-                boneItem._timelineState = null;
-            }
-            this.animation.stop();
-        };
-        p.sortSlot = function (slot1, slot2) {
-            return slot1.zOrder < slot2.zOrder ? 1 : -1;
-        };
-        /**
-         * 获取FastAnimation实例
-         * @returns {any} FastAnimation实例
-         */
-        p.getAnimation = function () {
-            return this._animation;
-        };
-        d(p, "armatureData"
-            /**
-             * ArmatureData.
-             * @see dragonBones.objects.ArmatureData.
-             */
-            ,function () {
-                return this._armatureData;
-            }
-        );
-        d(p, "animation"
-            /**
-             * An Animation instance
-             * @see dragonBones.animation.Animation
-             */
-            ,function () {
-                return this._animation;
-            }
-        );
-        d(p, "display"
-            /**
-             * Armature's display object. It's instance type depends on render engine. For example "flash.display.DisplayObject" or "startling.display.DisplayObject"
-             */
-            ,function () {
-                return this._display;
-            }
-        );
-        d(p, "enableCache"
-            ,function () {
-                return this._enableCache;
-            }
-            ,function (value) {
-                this._enableCache = value;
-            }
-        );
-        d(p, "enableEventDispatch"
-            ,function () {
-                return this._enableEventDispatch;
-            }
-            ,function (value) {
-                this._enableEventDispatch = value;
-            }
-        );
-        p._addEvent = function (event) {
-            if (this._enableEventDispatch) {
-                this._eventList.push(event);
-            }
-        };
-        return FastArmature;
-    })(dragonBones.EventDispatcher);
-    dragonBones.FastArmature = FastArmature;
-    egret.registerClass(FastArmature,"dragonBones.FastArmature",["dragonBones.ICacheableArmature","dragonBones.IArmature","dragonBones.IAnimatable"]);
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastDBObject
-     * @classdesc
-     * FastDBObject 是 FastBone 和 FastSlot 的基类
-     * @see dragonBones.FastBone
-     * @see dragonBones.FastSlot
-     */
-    var FastDBObject = (function () {
-        function FastDBObject() {
-            this._globalTransformMatrix = new dragonBones.Matrix();
-            this._global = new dragonBones.DBTransform();
-            this._origin = new dragonBones.DBTransform();
-            this._visible = true;
-            this.armature = null;
-            this._parent = null;
-            this.userData = null;
-            this.inheritRotation = true;
-            this.inheritScale = true;
-            this.inheritTranslation = true;
-        }
-        var d = __define,c=FastDBObject;p=c.prototype;
-        /** @private */
-        p.updateByCache = function () {
-            this._global = this._frameCache.globalTransform;
-            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
-        };
-        /** @private */
-        p.switchTransformToBackup = function () {
-            if (!this._globalBackup) {
-                this._globalBackup = new dragonBones.DBTransform();
-                this._globalTransformMatrixBackup = new dragonBones.Matrix();
-            }
-            this._global = this._globalBackup;
-            this._globalTransformMatrix = this._globalTransformMatrixBackup;
-        };
-        /** @private */
-        p.setParent = function (value) {
-            this._parent = value;
-        };
-        /**
-         * Cleans up any resources used by this DBObject instance.
-         */
-        p.dispose = function () {
-            this.userData = null;
-            this._globalTransformMatrix = null;
-            this._global = null;
-            this._origin = null;
-            this.armature = null;
-            this._parent = null;
-        };
-        p._calculateParentTransform = function () {
-            if (this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale)) {
-                var parentGlobalTransform = this._parent._global;
-                var parentGlobalTransformMatrix = this._parent._globalTransformMatrix;
-                if (!this.inheritTranslation && (parentGlobalTransform.x != 0 || parentGlobalTransform.y != 0) || !this.inheritRotation && (parentGlobalTransform.skewX != 0 || parentGlobalTransform.skewY != 0) || !this.inheritScale && (parentGlobalTransform.scaleX != 1 || parentGlobalTransform.scaleY != 1)) {
-                    parentGlobalTransform = FastDBObject._tempParentGlobalTransform;
-                    parentGlobalTransform.copy(this._parent._global);
-                    if (!this.inheritTranslation) {
-                        parentGlobalTransform.x = 0;
-                        parentGlobalTransform.y = 0;
-                    }
-                    if (!this.inheritScale) {
-                        parentGlobalTransform.scaleX = 1;
-                        parentGlobalTransform.scaleY = 1;
-                    }
-                    if (!this.inheritRotation) {
-                        parentGlobalTransform.skewX = 0;
-                        parentGlobalTransform.skewY = 0;
-                    }
-                    parentGlobalTransformMatrix = dragonBones.DBObject._tempParentGlobalTransformMatrix;
-                    dragonBones.TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix);
-                }
-                FastDBObject.tempOutputObj.parentGlobalTransform = parentGlobalTransform;
-                FastDBObject.tempOutputObj.parentGlobalTransformMatrix = parentGlobalTransformMatrix;
-                return FastDBObject.tempOutputObj;
-            }
-            return null;
-        };
-        p._updateGlobal = function () {
-            this._calculateRelativeParentTransform();
-            var output = this._calculateParentTransform();
-            if (output != null) {
-                //计算父骨头绝对坐标
-                var parentMatrix = output.parentGlobalTransformMatrix;
-                var parentGlobalTransform = output.parentGlobalTransform;
-                //计算绝对坐标
-                var x = this._global.x;
-                var y = this._global.y;
-                this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
-                this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
-                if (this.inheritRotation) {
-                    this._global.skewX += parentGlobalTransform.skewX;
-                    this._global.skewY += parentGlobalTransform.skewY;
-                }
-                if (this.inheritScale) {
-                    this._global.scaleX *= parentGlobalTransform.scaleX;
-                    this._global.scaleY *= parentGlobalTransform.scaleY;
-                }
-            }
-            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
-            return output;
-        };
-        p._calculateRelativeParentTransform = function () {
-        };
-        d(p, "name"
-            ,function () {
-                return this._name;
-            }
-            ,function (value) {
-                this._name = value;
-            }
-        );
-        d(p, "global"
-            /**
-             * This DBObject instance global transform instance.
-             * @see dragonBones.objects.DBTransform
-             */
-            ,function () {
-                return this._global;
-            }
-        );
-        d(p, "globalTransformMatrix"
-            ,function () {
-                return this._globalTransformMatrix;
-            }
-        );
-        d(p, "origin"
-            /**
-             * This DBObject instance related to parent transform instance.
-             * @see dragonBones.objects.DBTransform
-             */
-            ,function () {
-                return this._origin;
-            }
-        );
-        d(p, "parent"
-            /**
-             * Indicates the Bone instance that directly contains this DBObject instance if any.
-             */
-            ,function () {
-                return this._parent;
-            }
-        );
-        d(p, "visible"
-            ,function () {
-                return this._visible;
-            }
-            ,function (value) {
-                this._visible = value;
-            }
-        );
-        d(p, "frameCache",undefined
-            ,function (cache) {
-                this._frameCache = cache;
-            }
-        );
-        FastDBObject._tempParentGlobalTransform = new dragonBones.DBTransform();
-        FastDBObject.tempOutputObj = {};
-        return FastDBObject;
-    })();
-    dragonBones.FastDBObject = FastDBObject;
-    egret.registerClass(FastDBObject,"dragonBones.FastDBObject");
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastBone
-     * @classdesc
-     * FastBone 实例代表 FastArmature 中的一个骨头。一个FastArmature实例可以由很多 FastBone组成。
-     * FastBone 在骨骼动画体系中是最重要的逻辑单元之一，负责动画中的平移旋转缩放的实现
-     * 和Bone相比，FastBone不能动态添加子骨骼和子插槽
-     * @extends dragonBones.FastDBObject
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastSlot
-     * @see dragonBones.BoneData
-     */
-    var FastBone = (function (_super) {
-        __extends(FastBone, _super);
-        function FastBone() {
-            _super.call(this);
-            this.slotList = [];
-            this.boneList = [];
-            /** @private */
-            this._needUpdate = 0;
-            this._needUpdate = 2;
-        }
-        var d = __define,c=FastBone;p=c.prototype;
-        FastBone.initWithBoneData = function (boneData) {
-            var outputBone = new FastBone();
-            outputBone.name = boneData.name;
-            outputBone.inheritRotation = boneData.inheritRotation;
-            outputBone.inheritScale = boneData.inheritScale;
-            outputBone.origin.copy(boneData.transform);
-            return outputBone;
-        };
-        /**
-         * 获取当前骨头包含的所有 FastBone 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastBone[]}
-         */
-        p.getBones = function (returnCopy) {
-            if (returnCopy === void 0) { returnCopy = true; }
-            return returnCopy ? this.boneList.concat() : this.boneList;
-        };
-        /**
-         * 获取当前骨头包含的所有 FastSlot 实例
-         * @param returnCopy {boolean} 是否返回拷贝。默认：true
-         * @returns {FastSlot[]}
-         */
-        p.getSlots = function (returnCopy) {
-            if (returnCopy === void 0) { returnCopy = true; }
-            return returnCopy ? this.slotList.concat() : this.slotList;
-        };
-        /**
-         * @inheritDoc
-         */
-        p.dispose = function () {
-            _super.prototype.dispose.call(this);
-            this._timelineState = null;
-        };
-        //动画
-        /**
-         * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
-         */
-        p.invalidUpdate = function () {
-            this._needUpdate = 2;
-        };
-        p._calculateRelativeParentTransform = function () {
-            this._global.copy(this._origin);
-            if (this._timelineState) {
-                this._global.add(this._timelineState._transform);
-            }
-        };
-        /** @private */
-        p.updateByCache = function () {
-            _super.prototype.updateByCache.call(this);
-            this._global = this._frameCache.globalTransform;
-            this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
-        };
-        /** @private */
-        p.update = function (needUpdate) {
-            if (needUpdate === void 0) { needUpdate = false; }
-            this._needUpdate--;
-            if (needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)) {
-                this._needUpdate = 1;
-            }
-            else {
-                return;
-            }
-            //计算global
-            this._updateGlobal();
-        };
-        /** @private When bone timeline enter a key frame, call this func*/
-        p.arriveAtFrame = function (frame, animationState) {
-            var childSlot;
-            if (frame.event && this.armature.hasEventListener(dragonBones.FrameEvent.BONE_FRAME_EVENT)) {
-                var frameEvent = new dragonBones.FrameEvent(dragonBones.FrameEvent.BONE_FRAME_EVENT);
-                frameEvent.bone = this;
-                frameEvent.animationState = animationState;
-                frameEvent.frameLabel = frame.event;
-                this.armature._addEvent(frameEvent);
-            }
-        };
-        d(p, "childArmature"
-            /**
-             * 不推荐的API,建议使用 slot.childArmature 替代
-             */
-            ,function () {
-                var s = this.slot;
-                if (s) {
-                    return s.childArmature;
-                }
-                return null;
-            }
-        );
-        d(p, "display"
-            /**
-             * 不推荐的API,建议使用 slot.display 替代
-             */
-            ,function () {
-                var s = this.slot;
-                if (s) {
-                    return s.display;
-                }
-                return null;
-            }
-            ,function (value) {
-                var s = this.slot;
-                if (s) {
-                    s.display = value;
-                }
-            }
-        );
-        d(p, "visible",undefined
-            /** @private */
-            ,function (value) {
-                if (this._visible != value) {
-                    this._visible = value;
-                    for (var i = 0, len = this.armature.slotList.length; i < len; i++) {
-                        if (this.armature.slotList[i].parent == this) {
-                            this.armature.slotList[i]._updateDisplayVisible(this._visible);
-                        }
-                    }
-                }
-            }
-        );
-        d(p, "slot"
-            /**
-             * 返回当前 FastBone 实例包含的第一个 FastSlot 实例
-             * @member {FastSlot} dragonBones.FastBone#slot
-             */
-            ,function () {
-                return this.slotList.length > 0 ? this.slotList[0] : null;
-            }
-        );
-        return FastBone;
-    })(dragonBones.FastDBObject);
-    dragonBones.FastBone = FastBone;
-    egret.registerClass(FastBone,"dragonBones.FastBone");
-})(dragonBones || (dragonBones = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var dragonBones;
-(function (dragonBones) {
-    /**
-     * @class dragonBones.FastSlot
-     * @classdesc
-     * FastSlot 实例是骨头上的一个插槽，是显示图片的容器。
-     * 一个 FastBone 上可以有多个FastSlot，每个FastSlot中同一时间都会有一张图片用于显示，不同的FastSlot中的图片可以同时显示。
-     * 每个 FastSlot 中可以包含多张图片，同一个 FastSlot 中的不同图片不能同时显示，但是可以在动画进行的过程中切换，用于实现帧动画。
-     * @extends dragonBones.DBObject
-     * @see dragonBones.FastArmature
-     * @see dragonBones.FastBone
-     * @see dragonBones.SlotData
-     */
-    var FastSlot = (function (_super) {
-        __extends(FastSlot, _super);
-        function FastSlot(self) {
-            _super.call(this);
-            this._currentDisplayIndex = 0;
-            if (self != this) {
-                throw new Error("Abstract class can not be instantiated!");
-            }
-            this.hasChildArmature = false;
-            this._currentDisplayIndex = -1;
-            this._originZOrder = 0;
-            this._tweenZOrder = 0;
-            this._offsetZOrder = 0;
-            this._colorTransform = new dragonBones.ColorTransform();
-            this._isColorChanged = false;
-            this._displayDataList = null;
-            this._currentDisplay = null;
-            this.inheritRotation = true;
-            this.inheritScale = true;
-        }
-        var d = __define,c=FastSlot;p=c.prototype;
-        /**
-         * 通过传入 SlotData 初始化FastSlot
-         * @param slotData
-         */
-        p.initWithSlotData = function (slotData) {
-            this.name = slotData.name;
-            this.blendMode = slotData.blendMode;
-            this._originZOrder = slotData.zOrder;
-            this._displayDataList = slotData.displayDataList;
-        };
-        /**
-         * @inheritDoc
-         */
-        p.dispose = function () {
-            if (!this._displayList) {
-                return;
-            }
-            _super.prototype.dispose.call(this);
-            this._displayDataList = null;
-            this._displayList = null;
-            this._currentDisplay = null;
-        };
-        //动画
-        /** @private */
-        p.updateByCache = function () {
-            _super.prototype.updateByCache.call(this);
-            this._updateTransform();
-            //颜色
-            var cacheColor = (this._frameCache).colorTransform;
-            var cacheColorChanged = cacheColor != null;
-            if (this.colorChanged != cacheColorChanged || (this.colorChanged && cacheColorChanged && !dragonBones.ColorTransformUtil.isEqual(this._colorTransform, cacheColor))) {
-                cacheColor = cacheColor || dragonBones.ColorTransformUtil.originalColor;
-                this._updateDisplayColor(cacheColor.alphaOffset, cacheColor.redOffset, cacheColor.greenOffset, cacheColor.blueOffset, cacheColor.alphaMultiplier, cacheColor.redMultiplier, cacheColor.greenMultiplier, cacheColor.blueMultiplier, cacheColorChanged);
-            }
-            //displayIndex
-            this._changeDisplayIndex((this._frameCache).displayIndex);
-        };
-        /** @private */
-        p._update = function () {
-            if (this._parent._needUpdate <= 0) {
-                return;
-            }
-            this._updateGlobal();
-            this._updateTransform();
-        };
-        p._calculateRelativeParentTransform = function () {
-            this._global.copy(this._origin);
-        };
-        p.initDisplayList = function (newDisplayList) {
-            this._displayList = newDisplayList;
-        };
-        p.clearCurrentDisplay = function () {
-            if (this.hasChildArmature) {
-                var targetArmature = this.childArmature;
-                if (targetArmature) {
-                    targetArmature.resetAnimation();
-                }
-            }
-            var slotIndex = this._getDisplayIndex();
-            this._removeDisplayFromContainer();
-            return slotIndex;
-        };
-        /** @private */
-        p._changeDisplayIndex = function (displayIndex) {
-            if (displayIndex === void 0) { displayIndex = 0; }
-            if (this._currentDisplayIndex == displayIndex) {
-                return;
-            }
-            var slotIndex = -1;
-            if (this._currentDisplayIndex >= 0) {
-                slotIndex = this.clearCurrentDisplay();
-            }
-            this._currentDisplayIndex = displayIndex;
-            if (this._currentDisplayIndex >= 0) {
-                this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
-                this.initCurrentDisplay(slotIndex);
-            }
-        };
-        //currentDisplayIndex不变，改变内容，必须currentDisplayIndex >=0
-        p.changeSlotDisplay = function (value) {
-            var slotIndex = this.clearCurrentDisplay();
-            this._displayList[this._currentDisplayIndex] = value;
-            this.initCurrentDisplay(slotIndex);
-        };
-        p.initCurrentDisplay = function (slotIndex) {
-            if (slotIndex === void 0) { slotIndex = 0; }
-            var display = this._displayList[this._currentDisplayIndex];
-            if (display) {
-                if (display instanceof dragonBones.FastArmature) {
-                    this._currentDisplay = display.display;
-                }
-                else {
-                    this._currentDisplay = display;
-                }
-            }
-            else {
-                this._currentDisplay = null;
-            }
-            this._updateDisplay(this._currentDisplay);
-            if (this._currentDisplay) {
-                if (slotIndex != -1) {
-                    this._addDisplayToContainer(this.armature.display, slotIndex);
-                }
-                else {
-                    this.armature._slotsZOrderChanged = true;
-                    this._addDisplayToContainer(this.armature.display);
-                }
-                if (this._blendMode) {
-                    this._updateDisplayBlendMode(this._blendMode);
-                }
-                if (this._isColorChanged) {
-                    this._updateDisplayColor(this._colorTransform.alphaOffset, this._colorTransform.redOffset, this._colorTransform.greenOffset, this._colorTransform.blueOffset, this._colorTransform.alphaMultiplier, this._colorTransform.redMultiplier, this._colorTransform.greenMultiplier, this._colorTransform.blueMultiplier, true);
-                }
-                this._updateTransform();
-                if (display instanceof dragonBones.FastArmature) {
-                    var targetArmature = (display);
-                    if (this.armature && this.armature.animation.animationState && targetArmature.animation.hasAnimation(this.armature.animation.animationState.name)) {
-                        targetArmature.animation.gotoAndPlay(this.armature.animation.animationState.name);
-                    }
-                    else {
-                        targetArmature.animation.play();
-                    }
-                }
-            }
-        };
-        d(p, "visible",undefined
-            /** @private */
-            ,function (value) {
-                if (this._visible != value) {
-                    this._visible = value;
-                    this._updateDisplayVisible(this._visible);
-                }
-            }
-        );
-        d(p, "displayList"
-            /**
-             * 显示对象列表(包含 display 或者 子骨架)
-             * @member {any[]} dragonBones.FastSlot#displayList
-             */
-            ,function () {
-                return this._displayList;
-            }
-            ,function (value) {
-                //todo: 考虑子骨架变化的各种情况
-                if (!value) {
-                    throw new Error();
-                }
-                var newDisplay = value[this._currentDisplayIndex];
-                var displayChanged = this._currentDisplayIndex >= 0 && this._displayList[this._currentDisplayIndex] != newDisplay;
-                this._displayList = value;
-                if (displayChanged) {
-                    this.changeSlotDisplay(newDisplay);
-                }
-            }
-        );
-        d(p, "display"
-            /**
-             * 当前的显示对象(可能是 display 或者 子骨架)
-             * @member {any} dragonBones.FastSlot#display
-             */
-            ,function () {
-                return this._currentDisplay;
-            }
-            ,function (value) {
-                //todo: 考虑子骨架变化的各种情况
-                if (this._currentDisplayIndex < 0) {
-                    return;
-                }
-                if (this._displayList[this._currentDisplayIndex] == value) {
-                    return;
-                }
-                this.changeSlotDisplay(value);
-            }
-        );
-        d(p, "childArmature"
-            /**
-             * 当前的子骨架
-             * @member {FastArmature} dragonBones.Slot#childArmature
-             */
-            ,function () {
-                return (this._displayList[this._currentDisplayIndex] instanceof dragonBones.Armature || this._displayList[this._currentDisplayIndex] instanceof dragonBones.FastArmature) ? this._displayList[this._currentDisplayIndex] : null;
-            }
-            ,function (value) {
-                this.display = value;
-            }
-        );
-        d(p, "zOrder"
-            /**
-             * 显示顺序。(支持小数用于实现动态插入slot)
-             * @member {number} dragonBones.FastSlot#zOrder
-             */
-            ,function () {
-                return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
-            }
-            ,function (value) {
-                if (this.zOrder != value) {
-                    this._offsetZOrder = value - this._originZOrder - this._tweenZOrder;
-                    if (this.armature) {
-                        this.armature._slotsZOrderChanged = true;
-                    }
-                }
-            }
-        );
-        d(p, "blendMode"
-            /**
-             * 混合模式
-             * @member {string} dragonBones.FastSlot#blendMode
-             */
-            ,function () {
-                return this._blendMode;
-            }
-            ,function (value) {
-                if (this._blendMode != value) {
-                    this._blendMode = value;
-                    this._updateDisplayBlendMode(this._blendMode);
-                }
-            }
-        );
-        d(p, "colorTransform"
-            /**
-             * Indicates the Bone instance that directly contains this DBObject instance if any.
-             */
-            ,function () {
-                return this._colorTransform;
-            }
-        );
-        d(p, "displayIndex"
-            ,function () {
-                return this._currentDisplayIndex;
-            }
-        );
-        d(p, "colorChanged"
-            ,function () {
-                return this._isColorChanged;
-            }
-        );
-        //Abstract method
-        /**
-         * @private
-         */
-        p._updateDisplay = function (value) {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         */
-        p._getDisplayIndex = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * Adds the original display object to another display object.
-         * @param container
-         * @param index
-         */
-        p._addDisplayToContainer = function (container, index) {
-            if (index === void 0) { index = -1; }
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * remove the original display object from its parent.
-         */
-        p._removeDisplayFromContainer = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * Updates the transform of the slot.
-         */
-        p._updateTransform = function () {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         */
-        p._updateDisplayVisible = function (value) {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /**
-         * @private
-         * Updates the color of the display object.
-         * @param a
-         * @param r
-         * @param g
-         * @param b
-         * @param aM
-         * @param rM
-         * @param gM
-         * @param bM
-         */
-        p._updateDisplayColor = function (aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChanged) {
-            if (colorChanged === void 0) { colorChanged = false; }
-            this._colorTransform.alphaOffset = aOffset;
-            this._colorTransform.redOffset = rOffset;
-            this._colorTransform.greenOffset = gOffset;
-            this._colorTransform.blueOffset = bOffset;
-            this._colorTransform.alphaMultiplier = aMultiplier;
-            this._colorTransform.redMultiplier = rMultiplier;
-            this._colorTransform.greenMultiplier = gMultiplier;
-            this._colorTransform.blueMultiplier = bMultiplier;
-            this._isColorChanged = colorChanged;
-        };
-        /**
-         * @private
-         * Update the blend mode of the display object.
-         * @param value The blend mode to use.
-         */
-        p._updateDisplayBlendMode = function (value) {
-            throw new Error("Abstract method needs to be implemented in subclass!");
-        };
-        /** @private When slot timeline enter a key frame, call this func*/
-        p._arriveAtFrame = function (frame, animationState) {
-            var slotFrame = frame;
-            var displayIndex = slotFrame.displayIndex;
-            this._changeDisplayIndex(displayIndex);
-            this._updateDisplayVisible(slotFrame.visible);
-            if (displayIndex >= 0) {
-                if (!isNaN(slotFrame.zOrder) && slotFrame.zOrder != this._tweenZOrder) {
-                    this._tweenZOrder = slotFrame.zOrder;
-                    this.armature._slotsZOrderChanged = true;
-                }
-            }
-            //[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
-            //后续会扩展更多的action，目前只有gotoAndPlay的含义
-            if (frame.action) {
-                var targetArmature = this.childArmature;
-                if (targetArmature) {
-                    targetArmature.getAnimation().gotoAndPlay(frame.action);
-                }
-            }
-        };
-        /** @private */
-        p.hideSlots = function () {
-            this._changeDisplayIndex(-1);
-            this._removeDisplayFromContainer();
-            if (this._frameCache) {
-                this._frameCache.clear();
-            }
-        };
-        p._updateGlobal = function () {
-            this._calculateRelativeParentTransform();
-            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
-            var output = this._calculateParentTransform();
-            if (output) {
-                this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
-                dragonBones.TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
-            }
-            return output;
-        };
-        return FastSlot;
-    })(dragonBones.FastDBObject);
-    dragonBones.FastSlot = FastSlot;
-    egret.registerClass(FastSlot,"dragonBones.FastSlot",["dragonBones.ISlotCacheGenerator","dragonBones.ICacheUser"]);
 })(dragonBones || (dragonBones = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

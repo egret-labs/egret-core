@@ -1,398 +1,5 @@
 declare module RES {
     /**
-     * @classic
-     * @private
-     */
-    class AnalyzerBase extends egret.HashObject {
-        constructor();
-        private resourceConfig;
-        /**
-         * 添加一个二级键名到配置列表。
-         * @method RES.ResourceConfig#addSubkey
-         * @param subkey {string} 要添加的二级键名
-         * @param name {string} 二级键名所属的资源name属性
-         */
-        addSubkey(subkey: string, name: string): void;
-        /**
-         * 加载一个资源文件
-         * @param resItem 加载项信息
-         * @param compFunc 加载完成回调函数,示例:compFunc(resItem:ResourceItem):void;
-         * @param thisObject 加载完成回调函数的this引用
-         */
-        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
-        /**
-         * 同步方式获取解析完成的数据
-         * @param name 对应配置文件里的name属性。
-         */
-        getRes(name: string): any;
-        /**
-         * 销毁某个资源文件的二进制数据,返回是否删除成功。
-         * @param name 配置文件中加载项的name属性
-         */
-        destroyRes(name: string): boolean;
-        /**
-         * 读取一个字符串里第一个点之前的内容。
-         * @param name {string} 要读取的字符串
-         */
-        static getStringPrefix(name: string): string;
-        /**
-         * 读取一个字符串里第一个点之后的内容。
-         * @param name {string} 要读取的字符串
-         */
-        static getStringTail(name: string): string;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class BinAnalyzer extends AnalyzerBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 字节流数据缓存字典
-         */
-        fileDic: any;
-        /**
-         * 加载项字典
-         */
-        resItemDic: Array<any>;
-        /**
-         * @inheritDoc
-         */
-        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
-        _dataFormat: string;
-        /**
-         * Loader对象池
-         */
-        protected recycler: egret.HttpRequest[];
-        /**
-         * 获取一个URLLoader对象
-         */
-        private getRequest();
-        /**
-         * 一项加载结束
-         */
-        onLoadFinish(event: egret.Event): void;
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        analyzeData(resItem: ResourceItem, data: any): void;
-        /**
-         * @inheritDoc
-         */
-        getRes(name: string): any;
-        /**
-         * @inheritDoc
-         */
-        hasRes(name: string): boolean;
-        /**
-         * @inheritDoc
-         */
-        destroyRes(name: string): boolean;
-        protected onResourceDestroy(resource: any): void;
-    }
-}
-declare module RES {
-    /**
-     * SpriteSheet解析器
-     * @private
-     */
-    class AnimationAnalyzer extends BinAnalyzer {
-        constructor();
-        /**
-         * 一项加载结束
-         */
-        onLoadFinish(event: egret.Event): void;
-        sheetMap: any;
-        /**
-         * 解析并缓存加载成功的配置文件
-         */
-        analyzeConfig(resItem: ResourceItem, data: string): string;
-        /**
-         * 解析并缓存加载成功的位图数据
-         */
-        analyzeBitmap(resItem: ResourceItem, data: egret.BitmapData): void;
-        /**
-         * 获取相对位置
-         */
-        getRelativePath(url: string, file: string): string;
-        private parseAnimation(bitmapData, data, name);
-        destroyRes(name: string): boolean;
-        /**
-         * ImageLoader对象池
-         */
-        private recyclerIamge;
-        private loadImage(url, data);
-        private getImageLoader();
-    }
-}
-declare module RES {
-    /**
-     * SpriteSheet解析器
-     * @private
-     */
-    class SheetAnalyzer extends BinAnalyzer {
-        constructor();
-        getRes(name: string): any;
-        /**
-         * 一项加载结束
-         */
-        onLoadFinish(event: egret.Event): void;
-        sheetMap: any;
-        private textureMap;
-        /**
-         * 解析并缓存加载成功的配置文件
-         */
-        analyzeConfig(resItem: ResourceItem, data: string): string;
-        /**
-         * 解析并缓存加载成功的位图数据
-         */
-        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
-        /**
-         * 获取相对位置
-         */
-        getRelativePath(url: string, file: string): string;
-        private parseSpriteSheet(texture, data, name);
-        destroyRes(name: string): boolean;
-        /**
-         * ImageLoader对象池
-         */
-        private recyclerIamge;
-        private loadImage(url, data);
-        private getImageLoader();
-        protected onResourceDestroy(texture: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class FontAnalyzer extends SheetAnalyzer {
-        constructor();
-        analyzeConfig(resItem: ResourceItem, data: string): string;
-        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
-        private getTexturePath(url, fntText);
-        protected onResourceDestroy(font: egret.BitmapFont): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class ImageAnalyzer extends AnalyzerBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 字节流数据缓存字典
-         */
-        protected fileDic: any;
-        /**
-         * 加载项字典
-         */
-        protected resItemDic: Array<any>;
-        /**
-         * @inheritDoc
-         */
-        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
-        /**
-         * Loader对象池
-         */
-        protected recycler: egret.ImageLoader[];
-        /**
-         * 获取一个Loader对象
-         */
-        private getLoader();
-        /**
-         * 一项加载结束
-         */
-        protected onLoadFinish(event: egret.Event): void;
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        protected analyzeData(resItem: ResourceItem, texture: egret.Texture): void;
-        /**
-         * @inheritDoc
-         */
-        getRes(name: string): any;
-        /**
-         * @inheritDoc
-         */
-        hasRes(name: string): boolean;
-        /**
-         * @inheritDoc
-         */
-        destroyRes(name: string): boolean;
-        protected onResourceDestroy(texture: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class JsonAnalyzer extends BinAnalyzer {
-        constructor();
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        analyzeData(resItem: ResourceItem, data: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class SoundAnalyzer extends AnalyzerBase {
-        /**
-         * 构造函数
-         */
-        constructor();
-        /**
-         * 字节流数据缓存字典
-         */
-        protected soundDic: any;
-        /**
-         * 加载项字典
-         */
-        protected resItemDic: Array<any>;
-        /**
-         * @inheritDoc
-         */
-        loadFile(resItem: ResourceItem, callBack: Function, thisObject: any): void;
-        /**
-         * 一项加载结束
-         */
-        protected onLoadFinish(event: egret.Event): void;
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        protected analyzeData(resItem: ResourceItem, data: egret.Sound): void;
-        /**
-         * @inheritDoc
-         */
-        getRes(name: string): any;
-        /**
-         * @inheritDoc
-         */
-        hasRes(name: string): boolean;
-        /**
-         * @inheritDoc
-         */
-        destroyRes(name: string): boolean;
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class TextAnalyzer extends BinAnalyzer {
-        constructor();
-    }
-}
-declare module RES {
-    /**
-     * @private
-     */
-    class XMLAnalyzer extends BinAnalyzer {
-        constructor();
-        /**
-         * 解析并缓存加载成功的数据
-         */
-        analyzeData(resItem: ResourceItem, data: any): void;
-    }
-}
-declare module RES {
-    /**
-     * @class RES.ResourceConfig
-     * @classdesc
-     * @private
-     */
-    class ResourceConfig {
-        constructor();
-        /**
-         * 根据组名获取组加载项列表
-         * @method RES.ResourceConfig#getGroupByName
-         * @param name {string} 组名
-         * @returns {Array<egret.ResourceItem>}
-         */
-        getGroupByName(name: string): Array<ResourceItem>;
-        /**
-         * 根据组名获取原始的组加载项列表
-         * @method RES.ResourceConfig#getRawGroupByName
-         * @param name {string} 组名
-         * @returns {Array<any>}
-         */
-        getRawGroupByName(name: string): Array<any>;
-        /**
-         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
-         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-         * @method RES.ResourceConfig#createGroup
-         * @param name {string} 要创建的加载资源组的组名
-         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
-         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
-         * @returns {boolean}
-         */
-        createGroup(name: string, keys: Array<string>, override?: boolean): boolean;
-        /**
-         * 一级键名字典
-         */
-        private keyMap;
-        /**
-         * 加载组字典
-         */
-        private groupDic;
-        /**
-         * 解析一个配置文件
-         * @method RES.ResourceConfig#parseConfig
-         * @param data {any} 配置文件数据
-         * @param folder {string} 加载项的路径前缀。
-         */
-        parseConfig(data: any, folder: string): void;
-        /**
-         * 添加一个二级键名到配置列表。
-         * @method RES.ResourceConfig#addSubkey
-         * @param subkey {string} 要添加的二级键名
-         * @param name {string} 二级键名所属的资源name属性
-         */
-        addSubkey(subkey: string, name: string): void;
-        /**
-         * 添加一个加载项数据到列表
-         */
-        private addItemToKeyMap(item);
-        /**
-         * 获取加载项的name属性
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        getName(key: string): string;
-        /**
-         * 获取加载项类型。
-         * @method RES.ResourceConfig#getType
-         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-         * @returns {string}
-         */
-        getType(key: string): string;
-        getRawResourceItem(key: string): any;
-        /**
-         * 获取加载项信息对象
-         * @method RES.ResourceConfig#getResourceItem
-         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
-         * @returns {egret.ResourceItem}
-         */
-        getResourceItem(key: string): ResourceItem;
-        /**
-         * 转换Object数据为ResourceItem对象
-         */
-        private parseResourceItem(data);
-    }
-}
-declare module RES {
-    /**
      * @language en_US
      * Resource term. One of the resources arrays in resource.json.
      * @version Egret 2.4
@@ -651,6 +258,92 @@ declare module RES {
          * @private
          */
         toString(): string;
+    }
+}
+declare module RES {
+    /**
+     * @class RES.ResourceConfig
+     * @classdesc
+     * @private
+     */
+    class ResourceConfig {
+        constructor();
+        /**
+         * 根据组名获取组加载项列表
+         * @method RES.ResourceConfig#getGroupByName
+         * @param name {string} 组名
+         * @returns {Array<egret.ResourceItem>}
+         */
+        getGroupByName(name: string): Array<ResourceItem>;
+        /**
+         * 根据组名获取原始的组加载项列表
+         * @method RES.ResourceConfig#getRawGroupByName
+         * @param name {string} 组名
+         * @returns {Array<any>}
+         */
+        getRawGroupByName(name: string): Array<any>;
+        /**
+         * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+         * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
+         * @method RES.ResourceConfig#createGroup
+         * @param name {string} 要创建的加载资源组的组名
+         * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
+         * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
+         * @returns {boolean}
+         */
+        createGroup(name: string, keys: Array<string>, override?: boolean): boolean;
+        /**
+         * 一级键名字典
+         */
+        private keyMap;
+        /**
+         * 加载组字典
+         */
+        private groupDic;
+        /**
+         * 解析一个配置文件
+         * @method RES.ResourceConfig#parseConfig
+         * @param data {any} 配置文件数据
+         * @param folder {string} 加载项的路径前缀。
+         */
+        parseConfig(data: any, folder: string): void;
+        /**
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
+         */
+        addSubkey(subkey: string, name: string): void;
+        /**
+         * 添加一个加载项数据到列表
+         */
+        private addItemToKeyMap(item);
+        /**
+         * 获取加载项的name属性
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        getName(key: string): string;
+        /**
+         * 获取加载项类型。
+         * @method RES.ResourceConfig#getType
+         * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
+         * @returns {string}
+         */
+        getType(key: string): string;
+        getRawResourceItem(key: string): any;
+        /**
+         * 获取加载项信息对象
+         * @method RES.ResourceConfig#getResourceItem
+         * @param key {string} 对应配置文件里的key属性或sbuKeys属性的一项。
+         * @returns {egret.ResourceItem}
+         */
+        getResourceItem(key: string): ResourceItem;
+        /**
+         * 转换Object数据为ResourceItem对象
+         */
+        private parseResourceItem(data);
     }
 }
 declare module RES {
@@ -937,9 +630,278 @@ declare module RES {
         static dispatchResourceEvent(target: egret.IEventDispatcher, type: string, groupName?: string, resItem?: ResourceItem, itemsLoaded?: number, itemsTotal?: number): boolean;
     }
 }
-declare module egret {
+declare module RES {
+    /**
+     * @classic
+     * @private
+     */
+    class AnalyzerBase extends egret.HashObject {
+        constructor();
+        private resourceConfig;
+        /**
+         * 添加一个二级键名到配置列表。
+         * @method RES.ResourceConfig#addSubkey
+         * @param subkey {string} 要添加的二级键名
+         * @param name {string} 二级键名所属的资源name属性
+         */
+        addSubkey(subkey: string, name: string): void;
+        /**
+         * 加载一个资源文件
+         * @param resItem 加载项信息
+         * @param compFunc 加载完成回调函数,示例:compFunc(resItem:ResourceItem):void;
+         * @param thisObject 加载完成回调函数的this引用
+         */
+        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
+        /**
+         * 同步方式获取解析完成的数据
+         * @param name 对应配置文件里的name属性。
+         */
+        getRes(name: string): any;
+        /**
+         * 销毁某个资源文件的二进制数据,返回是否删除成功。
+         * @param name 配置文件中加载项的name属性
+         */
+        destroyRes(name: string): boolean;
+        /**
+         * 读取一个字符串里第一个点之前的内容。
+         * @param name {string} 要读取的字符串
+         */
+        static getStringPrefix(name: string): string;
+        /**
+         * 读取一个字符串里第一个点之后的内容。
+         * @param name {string} 要读取的字符串
+         */
+        static getStringTail(name: string): string;
+    }
 }
-declare module egret {
+declare module RES {
+    /**
+     * @private
+     */
+    class BinAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        fileDic: any;
+        /**
+         * 加载项字典
+         */
+        resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
+        _dataFormat: string;
+        /**
+         * Loader对象池
+         */
+        protected recycler: egret.HttpRequest[];
+        /**
+         * 获取一个URLLoader对象
+         */
+        private getRequest();
+        /**
+         * 一项加载结束
+         */
+        onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        analyzeData(resItem: ResourceItem, data: any): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
+        protected onResourceDestroy(resource: any): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class ImageAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        protected fileDic: any;
+        /**
+         * 加载项字典
+         */
+        protected resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, compFunc: Function, thisObject: any): void;
+        /**
+         * Loader对象池
+         */
+        protected recycler: egret.ImageLoader[];
+        /**
+         * 获取一个Loader对象
+         */
+        private getLoader();
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        protected analyzeData(resItem: ResourceItem, texture: egret.Texture): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
+        protected onResourceDestroy(texture: any): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class TextAnalyzer extends BinAnalyzer {
+        constructor();
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class JsonAnalyzer extends BinAnalyzer {
+        constructor();
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        analyzeData(resItem: ResourceItem, data: any): void;
+    }
+}
+declare module RES {
+    /**
+     * SpriteSheet解析器
+     * @private
+     */
+    class SheetAnalyzer extends BinAnalyzer {
+        constructor();
+        getRes(name: string): any;
+        /**
+         * 一项加载结束
+         */
+        onLoadFinish(event: egret.Event): void;
+        sheetMap: any;
+        private textureMap;
+        /**
+         * 解析并缓存加载成功的配置文件
+         */
+        analyzeConfig(resItem: ResourceItem, data: string): string;
+        /**
+         * 解析并缓存加载成功的位图数据
+         */
+        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
+        /**
+         * 获取相对位置
+         */
+        getRelativePath(url: string, file: string): string;
+        private parseSpriteSheet(texture, data, name);
+        destroyRes(name: string): boolean;
+        /**
+         * ImageLoader对象池
+         */
+        private recyclerIamge;
+        private loadImage(url, data);
+        private getImageLoader();
+        protected onResourceDestroy(texture: any): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class FontAnalyzer extends SheetAnalyzer {
+        constructor();
+        analyzeConfig(resItem: ResourceItem, data: string): string;
+        analyzeBitmap(resItem: ResourceItem, texture: egret.Texture): void;
+        private getTexturePath(url, fntText);
+        protected onResourceDestroy(font: egret.BitmapFont): void;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class SoundAnalyzer extends AnalyzerBase {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 字节流数据缓存字典
+         */
+        protected soundDic: any;
+        /**
+         * 加载项字典
+         */
+        protected resItemDic: Array<any>;
+        /**
+         * @inheritDoc
+         */
+        loadFile(resItem: ResourceItem, callBack: Function, thisObject: any): void;
+        /**
+         * 一项加载结束
+         */
+        protected onLoadFinish(event: egret.Event): void;
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        protected analyzeData(resItem: ResourceItem, data: egret.Sound): void;
+        /**
+         * @inheritDoc
+         */
+        getRes(name: string): any;
+        /**
+         * @inheritDoc
+         */
+        hasRes(name: string): boolean;
+        /**
+         * @inheritDoc
+         */
+        destroyRes(name: string): boolean;
+    }
+}
+declare module RES {
+    /**
+     * @private
+     */
+    class XMLAnalyzer extends BinAnalyzer {
+        constructor();
+        /**
+         * 解析并缓存加载成功的数据
+         */
+        analyzeData(resItem: ResourceItem, data: any): void;
+    }
 }
 declare module RES {
     /**
@@ -1313,4 +1275,42 @@ declare module RES {
      * @platform Web,Native
      */
     function removeEventListener(type: string, listener: (event: egret.Event) => void, thisObject: any, useCapture?: boolean): void;
+}
+declare module RES {
+    /**
+     * SpriteSheet解析器
+     * @private
+     */
+    class AnimationAnalyzer extends BinAnalyzer {
+        constructor();
+        /**
+         * 一项加载结束
+         */
+        onLoadFinish(event: egret.Event): void;
+        sheetMap: any;
+        /**
+         * 解析并缓存加载成功的配置文件
+         */
+        analyzeConfig(resItem: ResourceItem, data: string): string;
+        /**
+         * 解析并缓存加载成功的位图数据
+         */
+        analyzeBitmap(resItem: ResourceItem, data: egret.BitmapData): void;
+        /**
+         * 获取相对位置
+         */
+        getRelativePath(url: string, file: string): string;
+        private parseAnimation(bitmapData, data, name);
+        destroyRes(name: string): boolean;
+        /**
+         * ImageLoader对象池
+         */
+        private recyclerIamge;
+        private loadImage(url, data);
+        private getImageLoader();
+    }
+}
+declare module egret {
+}
+declare module egret {
 }

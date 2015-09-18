@@ -5260,323 +5260,6 @@ declare module egret.gui {
     /**
      * @private
      */
-    function $addTimer(listener: Function, thisObject: any, delay: number, ...args: any[]): number;
-    /**
-     * @private
-     */
-    function $clearTimer(key: number): void;
-}
-declare module egret.gui {
-    /**
-     * @private
-     */
-    class ScrollerEase {
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         *
-         * @param amount
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static get(amount: any): Function;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static quintOut: Function;
-        /**
-         *
-         * @param pow
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static getPowOut(pow: any): Function;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static quartOut: Function;
-    }
-    /**
-     * @private
-     */
-    class ScrollerTween extends EventDispatcher {
-        /**
-         * @private
-         */
-        private static _tweens;
-        /**
-         * @private
-         */
-        private static IGNORE;
-        /**
-         * @private
-         */
-        private static _plugins;
-        /**
-         * @private
-         */
-        private static _inited;
-        /**
-         * @private
-         */
-        private _target;
-        /**
-         * @private
-         */
-        private _useTicks;
-        /**
-         * @private
-         */
-        private ignoreGlobalPause;
-        /**
-         * @private
-         */
-        private loop;
-        /**
-         * @private
-         */
-        private pluginData;
-        /**
-         * @private
-         */
-        private _curQueueProps;
-        /**
-         * @private
-         */
-        private _initQueueProps;
-        /**
-         * @private
-         */
-        private _steps;
-        /**
-         * @private
-         */
-        private _actions;
-        /**
-         * @private
-         */
-        private paused;
-        /**
-         * @private
-         */
-        private duration;
-        /**
-         * @private
-         */
-        private _prevPos;
-        /**
-         * @private
-         */
-        private position;
-        /**
-         * @private
-         */
-        private _prevPosition;
-        /**
-         * @private
-         */
-        private _stepPosition;
-        /**
-         * @private
-         */
-        private passive;
-        /**
-         * @language en_US
-         * Activate an object and add a ScrollerTween animation to the object
-         * @param target {any} The object to be activated
-         * @param props {any} Parameters, support loop onChange onChangeObj
-         * @param pluginData {any} Write realized
-         * @param override {boolean} Whether to remove the object before adding a tween, the default value false
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 激活一个对象，对其添加 ScrollerTween 动画
-         * @param target {any} 要激活 ScrollerTween 的对象
-         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
-         * @param pluginData {any} 暂未实现
-         * @param override {boolean} 是否移除对象之前添加的tween，默认值false
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static get(target: any, props?: any, pluginData?: any, override?: boolean): ScrollerTween;
-        /**
-         * @language en_US
-         * Delete all ScrollerTween animations from an object
-         * @param target The object whose ScrollerTween to be deleted
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 删除一个对象上的全部 ScrollerTween 动画
-         * @param target  需要移除 ScrollerTween 的对象
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static removeTweens(target: any): void;
-        /**
-         * @private
-         *
-         * @param delta
-         * @param paused
-         */
-        private static tick(timeStamp, paused?);
-        private static _lastTime;
-        /**
-         * @private
-         *
-         * @param tween
-         * @param value
-         */
-        private static _register(tween, value);
-        /**
-         * 创建一个 egret.ScrollerTween 对象
-         * @private
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor(target: any, props: any, pluginData: any);
-        /**
-         * @private
-         *
-         * @param target
-         * @param props
-         * @param pluginData
-         */
-        private initialize(target, props, pluginData);
-        /**
-         * @private
-         *
-         * @param value
-         * @param actionsMode
-         * @returns
-         */
-        private setPosition(value);
-        /**
-         * @private
-         *
-         * @param startPos
-         * @param endPos
-         * @param includeStart
-         */
-        private _runActions(startPos, endPos, includeStart?);
-        /**
-         * @private
-         *
-         * @param step
-         * @param ratio
-         */
-        private _updateTargetProps(step, ratio);
-        /**
-         * @language en_US
-         * Whether setting is paused
-         * @param value {boolean} Whether to pause
-         * @returns ScrollerTween object itself
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置是否暂停
-         * @param value {boolean} 是否暂停
-         * @returns Tween对象本身
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        setPaused(value: boolean): ScrollerTween;
-        /**
-         * @private
-         *
-         * @param props
-         * @returns
-         */
-        private _cloneProps(props);
-        /**
-         * @private
-         *
-         * @param o
-         * @returns
-         */
-        private _addStep(o);
-        /**
-         * @private
-         *
-         * @param o
-         * @returns
-         */
-        private _appendQueueProps(o);
-        /**
-         * @private
-         *
-         * @param o
-         * @returns
-         */
-        private _addAction(o);
-        /**
-         * @language en_US
-         * Modify the property of the specified display object to a specified value
-         * @param props {Object} Property set of an object
-         * @param duration {number} Duration
-         * @param ease {egret.ScrollerEase} Easing algorithm
-         * @returns {egret.ScrollerTween} ScrollerTween object itself
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将指定显示对象的属性修改为指定值
-         * @param props {Object} 对象的属性集合
-         * @param duration {number} 持续时间
-         * @param ease {egret.ScrollerEase} 缓动算法
-         * @returns {egret.ScrollerTween} Tween对象本身
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        to(props: any, duration?: number, ease?: Function): ScrollerTween;
-        /**
-         * @language en_US
-         * Execute callback function
-         * @param callback {Function} Callback method
-         * @param thisObj {any} this action scope of the callback method
-         * @param params {Array<any>} Parameter of the callback method
-         * @returns {egret.ScrollerTween} ScrollerTween object itself
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 执行回调函数
-         * @param callback {Function} 回调方法
-         * @param thisObj {any} 回调方法this作用域
-         * @param params {Array<any>} 回调方法参数
-         * @returns {egret.ScrollerTween} Tween对象本身
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        call(callback: Function, thisObj?: any, params?: Array<any>): ScrollerTween;
-        /**
-         * @method egret.ScrollerTween#tick
-         * @param delta {number}
-         * @private
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        tick(delta: number): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @private
-     */
     class ScrollerView extends DisplayObjectContainer {
         /**
          * @private
@@ -6066,84 +5749,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @private
-     */
-    class ScrollerViewProperties {
-        /**
-         * @private
-         */
-        _verticalScrollPolicy: string;
-        /**
-         * @private
-         */
-        _horizontalScrollPolicy: string;
-        /**
-         * @private
-         */
-        _scrollLeft: number;
-        /**
-         * @private
-         */
-        _scrollTop: number;
-        /**
-         * @private
-         */
-        _hCanScroll: boolean;
-        /**
-         * @private
-         */
-        _vCanScroll: boolean;
-        /**
-         * @private
-         */
-        _lastTouchPosition: egret.Point;
-        /**
-         * @private
-         */
-        _touchStartPosition: egret.Point;
-        /**
-         * @private
-         */
-        _scrollStarted: boolean;
-        /**
-         * @private
-         */
-        _lastTouchTime: number;
-        /**
-         * @private
-         */
-        _lastTouchEvent: TouchEvent;
-        /**
-         * @private
-         */
-        _velocitys: Array<{
-            x: number;
-            y: number;
-        }>;
-        /**
-         * @private
-         */
-        _isHTweenPlaying: boolean;
-        /**
-         * @private
-         */
-        _isVTweenPlaying: boolean;
-        /**
-         * @private
-         */
-        _hScrollTween: ScrollerTween;
-        /**
-         * @private
-         */
-        _vScrollTween: ScrollerTween;
-        /**
-         * @private
-         */
-        _bounces: boolean;
-    }
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.Scroller
      * @classdesc
      * 滚动条组件
@@ -6452,238 +6057,85 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.DefaultAssetAdapter
+     * @class egret.gui.TabBar
      * @classdesc
-     * 默认的IAssetAdapter接口实现
-     * @implements egret.gui.IAssetAdapter
+     * 选项卡组件
+     * @extends egret.gui.ListBase
      */
-    class DefaultAssetAdapter implements IAssetAdapter {
+    class TabBar extends List {
         /**
          * 构造函数
-         * @method egret.gui.DefaultSkinAdapter#constructor
+         * @method egret.gui.TabBar#constructor
          */
         constructor();
         /**
-         * 解析素材
-         * @method egret.gui.DefaultAssetAdapter#getAsset
-         * @param source {any} 待解析的新素材标识符
-         * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
-         * 回调参数content接受两种类型：DisplayObject或Texture。
-         * @param thisObject {any} compFunc的this引用
-         * @param oldContent any 旧的内容对象,传入值有可能为null。
-         * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
+         * 创建容器的子元素
          */
-        getAsset(source: any, compFunc: Function, thisObject: any, oldContent: any): void;
+        createChildren(): void;
+        /**
+         * requireSelection改变标志
+         */
+        private requireSelectionChanged_tabBar;
+        /**
+         * @method egret.gui.TabBar#requireSelection
+         * @param value {boolean}
+         */
+        requireSelection: boolean;
+        /**
+         * @inheritDoc
+         */
+        _setDataProvider(value: ICollection): void;
+        /**
+         * 鼠标点击的选中项改变
+         */
+        private onIndexChanged(event);
+        /**
+         * ViewStack选中项发生改变
+         */
+        private onViewStackIndexChange(event);
+        /**
+         * 处理对组件设置的属性
+         */
+        commitProperties(): void;
+        dataGroup_rendererAddHandler(event: RendererExistenceEvent): void;
+        /**
+         * 鼠标在项呈示器上弹起，抛出ItemClick事件。
+         */
+        _item_touchEndHandler(event: TouchEvent): void;
     }
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.DefaultSkinAdapter
+     * @class egret.gui.TabBarButton
      * @classdesc
-     * 默认的ISkinAdapter接口实现
-     * @implements egret.gui.ISkinAdapter
+     * 选项卡组件的按钮条目
+     * @extends egret.gui.ToggleButtonBase
+     * @implements egret.gui.IItemRenderer
      */
-    class DefaultSkinAdapter implements ISkinAdapter {
-        /**
-         * 构造函数
-         * @method egret.gui.DefaultSkinAdapter#constructor
-         */
+    class TabBarButton extends ToggleButtonBase implements IItemRenderer {
         constructor();
+        private _allowDeselection;
         /**
-         * 获取皮肤显示对象
-         * @method egret.gui.ISkinAdapter#getSkin
-         * @param skinName {any} 待解析的皮肤标识符
-         * @param hostComponentKey {string} 主机组件标识符
-         * @returns {any} 皮肤对象实例
+         * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
+         * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
+         * @member egret.gui.TabBarButton#allowDeselection
          */
-        getSkin(skinName: any, hostComponentKey: string): any;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.DropDownController
-     * @classdesc
-     * 用于处理因用户交互而打开和关闭下拉列表的操作的控制器
-     * @extends egret.EventDispatcher
-     */
-    class DropDownController extends EventDispatcher {
+        allowDeselection: boolean;
+        private _data;
         /**
-         * 构造函数
-         * @method egret.gui.DropDownController#constructor
+         * @member egret.gui.TabBarButton#data
          */
-        constructor();
+        data: any;
+        private _itemIndex;
         /**
-         * 鼠标按下标志
+         * @member egret.gui.TabBarButton#itemIndex
          */
-        private mouseIsDown;
-        private _openButton;
+        itemIndex: number;
         /**
-         * 下拉按钮实例
-         * @member egret.gui.DropDownController#openButton
+         * @inheritDoc
          */
-        openButton: ButtonBase;
-        /**
-         * 要考虑作为下拉列表的点击区域的一部分的显示对象列表。
-         * 在包含项列出的任何组件内进行鼠标单击不会自动关闭下拉列表。
-         * @member egret.gui.DropDownController#hitAreaAdditions
-         */
-        hitAreaAdditions: Array<DisplayObject>;
-        private _dropDown;
-        /**
-         * 下拉区域显示对象
-         * @member egret.gui.DropDownController#dropDown
-         */
-        dropDown: DisplayObject;
-        private _isOpen;
-        /**
-         * 下拉列表已经打开的标志
-         * @member egret.gui.DropDownController#isOpen
-         */
-        isOpen: boolean;
-        private _closeOnResize;
-        /**
-         * 如果为 true，则在调整舞台大小时会关闭下拉列表。
-         * @member egret.gui.DropDownController#closeOnResize
-         */
-        closeOnResize: boolean;
-        private _rollOverOpenDelay;
-        private rollOverOpenDelayTimer;
-        /**
-         * 指定滑过锚点按钮时打开下拉列表要等待的延迟（以毫秒为单位）。
-         * 如果设置为 NaN，则下拉列表会在单击时打开，而不是在滑过时打开。默认值NaN
-         * @member egret.gui.DropDownController#rollOverOpenDelay
-         */
-        rollOverOpenDelay: number;
-        /**
-         * 添加触发下拉列表打开的事件监听
-         */
-        private addOpenTriggers();
-        /**
-         * 移除触发下拉列表打开的事件监听
-         */
-        private removeOpenTriggers();
-        /**
-         * 添加触发下拉列表关闭的事件监听
-         */
-        private addCloseTriggers();
-        /**
-         * 移除触发下拉列表关闭的事件监听
-         */
-        private removeCloseTriggers();
-        /**
-         * 添加舞台尺寸改变的事件监听
-         */
-        private addCloseOnResizeTrigger();
-        /**
-         * 移除舞台尺寸改变的事件监听
-         */
-        private removeCloseOnResizeTrigger();
-        /**
-         * 检查鼠标是否在DropDown或者openButton区域内。
-         */
-        private isTargetOverDropDownOrOpenButton(target);
-        /**
-         * 打开下拉列表
-         * @method egret.gui.DropDownController#openDropDown
-         */
-        openDropDown(): void;
-        /**
-         * 执行打开下拉列表
-         */
-        private openDropDownHelper();
-        /**
-         * 关闭下拉列表
-         * @method egret.gui.DropDownController#closeDropDown
-         * @param commit {boolean}
-         */
-        closeDropDown(commit: boolean): void;
-        /**
-         * openButton上按下鼠标事件
-         * @method egret.gui.DropDownController#_openButton_buttonDownHandler
-         * @param event {Event}
-         */
-        _openButton_buttonDownHandler(event: Event): void;
-        /**
-         * openButton上鼠标经过事件
-         * @method egret.gui.DropDownController#_openButton_rollOverHandler
-         * @param event {TouchEvent}
-         */
-        _openButton_rollOverHandler(event: TouchEvent): void;
-        /**
-         * openButton上鼠标移出事件
-         */
-        private openButton_rollOutHandler(event);
-        /**
-         * 到达鼠标移入等待延迟打开的时间。
-         */
-        private rollOverDelay_timerCompleteHandler(event);
-        /**
-         * 舞台上鼠标按下事件
-         * @method egret.gui.DropDownController#stage_mouseDownHandler
-         * @param event {Event}
-         */
-        stage_mouseDownHandler(event: Event): void;
-        /**
-         * 舞台上鼠标移动事件
-         * @method egret.gui.DropDownController#stage_mouseMoveHandler
-         * @param event {Event}
-         */
-        stage_mouseMoveHandler(event: Event): void;
-        /**
-         * 舞台上鼠标弹起事件
-         * @method egret.gui.DropDownController#stage_mouseUpHandler_noRollOverOpenDelay
-         * @param event {Event}
-         */
-        stage_mouseUpHandler_noRollOverOpenDelay(event: Event): void;
-        /**
-         * 舞台上鼠标弹起事件
-         * @method egret.gui.DropDownController#stage_mouseUpHandler
-         * @param event {Event}
-         */
-        stage_mouseUpHandler(event: Event): void;
-        /**
-         * 舞台尺寸改变事件
-         * @method egret.gui.DropDownController#stage_resizeHandler
-         * @param event {Event}
-         */
-        stage_resizeHandler(event: Event): void;
-        /**
-         * 舞台上鼠标滚轮事件
-         */
-        private stage_mouseWheelHandler(event);
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.SkinBasicLayout
-     * @classdesc
-     * 皮肤简单布局类。
-     * @extends egret.HashObject
-     */
-    class SkinBasicLayout extends HashObject {
-        /**
-         * 构造函数
-         * @method egret.gui.SkinBasicLayout#constructor
-         */
-        constructor();
-        private _target;
-        /**
-         * 目标布局对象
-         * @member egret.gui.SkinBasicLayout#target
-         */
-        target: Skin;
-        /**
-         * 测量组件尺寸大小
-         * @method egret.gui.SkinBasicLayout#measure
-         */
-        measure(): void;
-        /**
-         * 更新显示列表
-         * @method egret.gui.SkinBasicLayout#updateDisplayList
-         * @param unscaledWidth {number}
-         * @param unscaledHeight {number}
-         */
-        updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+        _setLabel(value: string): void;
+        buttonReleased(): void;
     }
 }
 declare module egret.gui {
@@ -6852,211 +6304,6 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
-    class Theme {
-        /**
-         * 构造函数
-         * @method egret.gui.PopUpManager#constructor
-         */
-        constructor(configURL: string);
-        private static initialized;
-        static load(configURL: string): void;
-        private _configURL;
-        private loadConfig(configURL);
-        private onLoadComplete(event);
-        private onLoadError(event);
-        private skinMap;
-        private delyList;
-        private handleDelyList();
-        getDefaultSkin(client: SkinnableComponent): any;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.TreeItemRenderer
-     * @classdesc
-     * Tree组件的项呈示器基类
-     * @extends egret.gui.ItemRenderer
-     * @implements egret.gui.ITreeItemRenderer
-     */
-    class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer {
-        /**
-         * 构造函数
-         * @method egret.gui.TreeItemRenderer#constructor
-         */
-        constructor();
-        private onItemMouseDown(event);
-        /**
-         * [SkinPart]图标显示对象
-         * @member egret.gui.TreeItemRenderer#iconDisplay
-         */
-        iconDisplay: UIAsset;
-        /**
-         * [SkinPart]子节点开启按钮
-         * @member egret.gui.TreeItemRenderer#disclosureButton
-         */
-        disclosureButton: ToggleButtonBase;
-        /**
-         * [SkinPart]用于调整缩进值的容器对象。
-         * @member egret.gui.TreeItemRenderer#contentGroup
-         */
-        contentGroup: DisplayObject;
-        /**
-         *
-         * @type {number}
-         * @private
-         */
-        private _indentation;
-        /**
-         * 子节点相对父节点的缩进值，以像素为单位。默认17。
-         * @member egret.gui.TreeItemRenderer#indentation
-         */
-        indentation: number;
-        /**
-         *
-         * @type {null}
-         * @private
-         */
-        private _iconSkinName;
-        /**
-         * @member egret.gui.TreeItemRenderer#iconSkinName
-         */
-        iconSkinName: any;
-        /**
-         *
-         * @type {number}
-         * @private
-         */
-        private _depth;
-        /**
-         * @member egret.gui.TreeItemRenderer#depth
-         */
-        depth: number;
-        /**
-         *
-         * @type {boolean}
-         * @private
-         */
-        private _hasChildren;
-        /**
-         * @member egret.gui.TreeItemRenderer#hasChildren
-         */
-        hasChildren: boolean;
-        /**
-         *
-         * @type {boolean}
-         * @private
-         */
-        private _isOpen;
-        /**
-         * @member egret.gui.TreeItemRenderer#opened
-         */
-        opened: boolean;
-        /**
-         * 添加外观部件时调用
-         * @method egret.gui.TreeItemRenderer#partAdded
-         * @param partName {string}
-         * @param instance {any}
-         */
-        partAdded(partName: string, instance: any): void;
-        /**
-         * 删除外观部件的实例时调用
-         * @method egret.gui.TreeItemRenderer#partRemoved
-         * @param partName {string}
-         * @param instance {any}
-         */
-        partRemoved(partName: string, instance: any): void;
-        /**
-         * 鼠标在disclosureButton上按下
-         * @method egret.gui.TreeItemRenderer#disclosureButton_mouseDownHandler
-         * @param event {TouchEvent}
-         */
-        disclosureButton_mouseDownHandler(event: TouchEvent): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.TabBar
-     * @classdesc
-     * 选项卡组件
-     * @extends egret.gui.ListBase
-     */
-    class TabBar extends List {
-        /**
-         * 构造函数
-         * @method egret.gui.TabBar#constructor
-         */
-        constructor();
-        /**
-         * 创建容器的子元素
-         */
-        createChildren(): void;
-        /**
-         * requireSelection改变标志
-         */
-        private requireSelectionChanged_tabBar;
-        /**
-         * @method egret.gui.TabBar#requireSelection
-         * @param value {boolean}
-         */
-        requireSelection: boolean;
-        /**
-         * @inheritDoc
-         */
-        _setDataProvider(value: ICollection): void;
-        /**
-         * 鼠标点击的选中项改变
-         */
-        private onIndexChanged(event);
-        /**
-         * ViewStack选中项发生改变
-         */
-        private onViewStackIndexChange(event);
-        /**
-         * 处理对组件设置的属性
-         */
-        commitProperties(): void;
-        dataGroup_rendererAddHandler(event: RendererExistenceEvent): void;
-        /**
-         * 鼠标在项呈示器上弹起，抛出ItemClick事件。
-         */
-        _item_touchEndHandler(event: TouchEvent): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.TabBarButton
-     * @classdesc
-     * 选项卡组件的按钮条目
-     * @extends egret.gui.ToggleButtonBase
-     * @implements egret.gui.IItemRenderer
-     */
-    class TabBarButton extends ToggleButtonBase implements IItemRenderer {
-        constructor();
-        private _allowDeselection;
-        /**
-         * 如果为 true，用户单击当前选定的按钮时即会将其取消选择。
-         * 如果为 false，用户必须选择不同的按钮才可取消选择当前选定的按钮。
-         * @member egret.gui.TabBarButton#allowDeselection
-         */
-        allowDeselection: boolean;
-        private _data;
-        /**
-         * @member egret.gui.TabBarButton#data
-         */
-        data: any;
-        private _itemIndex;
-        /**
-         * @member egret.gui.TabBarButton#itemIndex
-         */
-        itemIndex: number;
-        /**
-         * @inheritDoc
-         */
-        _setLabel(value: string): void;
-        buttonReleased(): void;
-    }
-}
-declare module egret.gui {
     class TextArea extends SkinnableTextBase {
         /**
          * 构造函数
@@ -7184,6 +6431,109 @@ declare module egret.gui {
          * @method egret.gui.ToggleSwitch#constructor
          */
         constructor();
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.TreeItemRenderer
+     * @classdesc
+     * Tree组件的项呈示器基类
+     * @extends egret.gui.ItemRenderer
+     * @implements egret.gui.ITreeItemRenderer
+     */
+    class TreeItemRenderer extends ItemRenderer implements ITreeItemRenderer {
+        /**
+         * 构造函数
+         * @method egret.gui.TreeItemRenderer#constructor
+         */
+        constructor();
+        private onItemMouseDown(event);
+        /**
+         * [SkinPart]图标显示对象
+         * @member egret.gui.TreeItemRenderer#iconDisplay
+         */
+        iconDisplay: UIAsset;
+        /**
+         * [SkinPart]子节点开启按钮
+         * @member egret.gui.TreeItemRenderer#disclosureButton
+         */
+        disclosureButton: ToggleButtonBase;
+        /**
+         * [SkinPart]用于调整缩进值的容器对象。
+         * @member egret.gui.TreeItemRenderer#contentGroup
+         */
+        contentGroup: DisplayObject;
+        /**
+         *
+         * @type {number}
+         * @private
+         */
+        private _indentation;
+        /**
+         * 子节点相对父节点的缩进值，以像素为单位。默认17。
+         * @member egret.gui.TreeItemRenderer#indentation
+         */
+        indentation: number;
+        /**
+         *
+         * @type {null}
+         * @private
+         */
+        private _iconSkinName;
+        /**
+         * @member egret.gui.TreeItemRenderer#iconSkinName
+         */
+        iconSkinName: any;
+        /**
+         *
+         * @type {number}
+         * @private
+         */
+        private _depth;
+        /**
+         * @member egret.gui.TreeItemRenderer#depth
+         */
+        depth: number;
+        /**
+         *
+         * @type {boolean}
+         * @private
+         */
+        private _hasChildren;
+        /**
+         * @member egret.gui.TreeItemRenderer#hasChildren
+         */
+        hasChildren: boolean;
+        /**
+         *
+         * @type {boolean}
+         * @private
+         */
+        private _isOpen;
+        /**
+         * @member egret.gui.TreeItemRenderer#opened
+         */
+        opened: boolean;
+        /**
+         * 添加外观部件时调用
+         * @method egret.gui.TreeItemRenderer#partAdded
+         * @param partName {string}
+         * @param instance {any}
+         */
+        partAdded(partName: string, instance: any): void;
+        /**
+         * 删除外观部件的实例时调用
+         * @method egret.gui.TreeItemRenderer#partRemoved
+         * @param partName {string}
+         * @param instance {any}
+         */
+        partRemoved(partName: string, instance: any): void;
+        /**
+         * 鼠标在disclosureButton上按下
+         * @method egret.gui.TreeItemRenderer#disclosureButton_mouseDownHandler
+         * @param event {TouchEvent}
+         */
+        disclosureButton_mouseDownHandler(event: TouchEvent): void;
     }
 }
 declare module egret.gui {
@@ -7424,6 +6774,73 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.VSlider
+     * @classdesc
+     * 垂直滑块控件
+     * @extends egret.gui.SliderBase
+     */
+    class VSlider extends SliderBase {
+        /**
+         * 构造函数
+         * @method egret.gui.VSlider#constructor
+         */
+        constructor();
+        /**
+         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
+         * @param x {number}
+         * @param y {number}
+         * @returns {number}
+         */
+        pointToValue(x: number, y: number): number;
+        /**
+         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         */
+        updateSkinDisplayList(): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @classic
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
+     */
+    class VScrollBar extends VSlider {
+        constructor();
+        private _thumbLengthRatio;
+        /**
+         *
+         * @param height
+         * @param contentHeight
+         * @private
+         */
+        _setViewportMetric(height: number, contentHeight: number): void;
+        /**
+         * @deprecated
+         */
+        trackAlpha: number;
+        /**
+         * @deprecated
+         */
+        thumbAlpha: number;
+        setPosition(value: number): void;
+        getPosition(): number;
+        _setValue(value: number): void;
+        setValue(value: number): void;
+        _animationUpdateHandler(animation: Animation): void;
+        /**
+         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
+         * @param x {number}
+         * @param y {number}
+         * @returns {number}
+         */
+        pointToValue(x: number, y: number): number;
+        /**
+         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         */
+        updateSkinDisplayList(): void;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.ViewStack
      * @classdesc
      * 层级堆叠容器,一次只显示一个子对象。
@@ -7526,69 +6943,652 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.VSlider
-     * @classdesc
-     * 垂直滑块控件
-     * @extends egret.gui.SliderBase
+     * @private
      */
-    class VSlider extends SliderBase {
+    function $addTimer(listener: Function, thisObject: any, delay: number, ...args: any[]): number;
+    /**
+     * @private
+     */
+    function $clearTimer(key: number): void;
+}
+declare module egret.gui {
+    /**
+     * @private
+     */
+    class ScrollerEase {
         /**
-         * 构造函数
-         * @method egret.gui.VSlider#constructor
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         constructor();
         /**
-         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
-         * @param x {number}
-         * @param y {number}
-         * @returns {number}
+         *
+         * @param amount
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        pointToValue(x: number, y: number): number;
+        static get(amount: any): Function;
         /**
-         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        updateSkinDisplayList(): void;
+        static quintOut: Function;
+        /**
+         *
+         * @param pow
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static getPowOut(pow: any): Function;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static quartOut: Function;
+    }
+    /**
+     * @private
+     */
+    class ScrollerTween extends EventDispatcher {
+        /**
+         * @private
+         */
+        private static _tweens;
+        /**
+         * @private
+         */
+        private static IGNORE;
+        /**
+         * @private
+         */
+        private static _plugins;
+        /**
+         * @private
+         */
+        private static _inited;
+        /**
+         * @private
+         */
+        private _target;
+        /**
+         * @private
+         */
+        private _useTicks;
+        /**
+         * @private
+         */
+        private ignoreGlobalPause;
+        /**
+         * @private
+         */
+        private loop;
+        /**
+         * @private
+         */
+        private pluginData;
+        /**
+         * @private
+         */
+        private _curQueueProps;
+        /**
+         * @private
+         */
+        private _initQueueProps;
+        /**
+         * @private
+         */
+        private _steps;
+        /**
+         * @private
+         */
+        private _actions;
+        /**
+         * @private
+         */
+        private paused;
+        /**
+         * @private
+         */
+        private duration;
+        /**
+         * @private
+         */
+        private _prevPos;
+        /**
+         * @private
+         */
+        private position;
+        /**
+         * @private
+         */
+        private _prevPosition;
+        /**
+         * @private
+         */
+        private _stepPosition;
+        /**
+         * @private
+         */
+        private passive;
+        /**
+         * @language en_US
+         * Activate an object and add a ScrollerTween animation to the object
+         * @param target {any} The object to be activated
+         * @param props {any} Parameters, support loop onChange onChangeObj
+         * @param pluginData {any} Write realized
+         * @param override {boolean} Whether to remove the object before adding a tween, the default value false
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 激活一个对象，对其添加 ScrollerTween 动画
+         * @param target {any} 要激活 ScrollerTween 的对象
+         * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
+         * @param pluginData {any} 暂未实现
+         * @param override {boolean} 是否移除对象之前添加的tween，默认值false
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static get(target: any, props?: any, pluginData?: any, override?: boolean): ScrollerTween;
+        /**
+         * @language en_US
+         * Delete all ScrollerTween animations from an object
+         * @param target The object whose ScrollerTween to be deleted
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 删除一个对象上的全部 ScrollerTween 动画
+         * @param target  需要移除 ScrollerTween 的对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static removeTweens(target: any): void;
+        /**
+         * @private
+         *
+         * @param delta
+         * @param paused
+         */
+        private static tick(timeStamp, paused?);
+        private static _lastTime;
+        /**
+         * @private
+         *
+         * @param tween
+         * @param value
+         */
+        private static _register(tween, value);
+        /**
+         * 创建一个 egret.ScrollerTween 对象
+         * @private
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor(target: any, props: any, pluginData: any);
+        /**
+         * @private
+         *
+         * @param target
+         * @param props
+         * @param pluginData
+         */
+        private initialize(target, props, pluginData);
+        /**
+         * @private
+         *
+         * @param value
+         * @param actionsMode
+         * @returns
+         */
+        private setPosition(value);
+        /**
+         * @private
+         *
+         * @param startPos
+         * @param endPos
+         * @param includeStart
+         */
+        private _runActions(startPos, endPos, includeStart?);
+        /**
+         * @private
+         *
+         * @param step
+         * @param ratio
+         */
+        private _updateTargetProps(step, ratio);
+        /**
+         * @language en_US
+         * Whether setting is paused
+         * @param value {boolean} Whether to pause
+         * @returns ScrollerTween object itself
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置是否暂停
+         * @param value {boolean} 是否暂停
+         * @returns Tween对象本身
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        setPaused(value: boolean): ScrollerTween;
+        /**
+         * @private
+         *
+         * @param props
+         * @returns
+         */
+        private _cloneProps(props);
+        /**
+         * @private
+         *
+         * @param o
+         * @returns
+         */
+        private _addStep(o);
+        /**
+         * @private
+         *
+         * @param o
+         * @returns
+         */
+        private _appendQueueProps(o);
+        /**
+         * @private
+         *
+         * @param o
+         * @returns
+         */
+        private _addAction(o);
+        /**
+         * @language en_US
+         * Modify the property of the specified display object to a specified value
+         * @param props {Object} Property set of an object
+         * @param duration {number} Duration
+         * @param ease {egret.ScrollerEase} Easing algorithm
+         * @returns {egret.ScrollerTween} ScrollerTween object itself
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将指定显示对象的属性修改为指定值
+         * @param props {Object} 对象的属性集合
+         * @param duration {number} 持续时间
+         * @param ease {egret.ScrollerEase} 缓动算法
+         * @returns {egret.ScrollerTween} Tween对象本身
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        to(props: any, duration?: number, ease?: Function): ScrollerTween;
+        /**
+         * @language en_US
+         * Execute callback function
+         * @param callback {Function} Callback method
+         * @param thisObj {any} this action scope of the callback method
+         * @param params {Array<any>} Parameter of the callback method
+         * @returns {egret.ScrollerTween} ScrollerTween object itself
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 执行回调函数
+         * @param callback {Function} 回调方法
+         * @param thisObj {any} 回调方法this作用域
+         * @param params {Array<any>} 回调方法参数
+         * @returns {egret.ScrollerTween} Tween对象本身
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        call(callback: Function, thisObj?: any, params?: Array<any>): ScrollerTween;
+        /**
+         * @method egret.ScrollerTween#tick
+         * @param delta {number}
+         * @private
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        tick(delta: number): void;
     }
 }
 declare module egret.gui {
     /**
-     * @classic
-     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分
+     * @private
      */
-    class VScrollBar extends VSlider {
-        constructor();
-        private _thumbLengthRatio;
+    class ScrollerViewProperties {
         /**
-         *
-         * @param height
-         * @param contentHeight
          * @private
          */
-        _setViewportMetric(height: number, contentHeight: number): void;
+        _verticalScrollPolicy: string;
         /**
-         * @deprecated
+         * @private
          */
-        trackAlpha: number;
+        _horizontalScrollPolicy: string;
         /**
-         * @deprecated
+         * @private
          */
-        thumbAlpha: number;
-        setPosition(value: number): void;
-        getPosition(): number;
-        _setValue(value: number): void;
-        setValue(value: number): void;
-        _animationUpdateHandler(animation: Animation): void;
+        _scrollLeft: number;
         /**
-         * 将相对于轨道的 x,y 像素位置转换为介于最小值和最大值（包括两者）之间的一个值
-         * @param x {number}
-         * @param y {number}
-         * @returns {number}
+         * @private
          */
-        pointToValue(x: number, y: number): number;
+        _scrollTop: number;
         /**
-         * 设置外观部件（通常为滑块）的边界，这些外观部件的几何图形不是完全由外观的布局指定的
+         * @private
          */
-        updateSkinDisplayList(): void;
+        _hCanScroll: boolean;
+        /**
+         * @private
+         */
+        _vCanScroll: boolean;
+        /**
+         * @private
+         */
+        _lastTouchPosition: egret.Point;
+        /**
+         * @private
+         */
+        _touchStartPosition: egret.Point;
+        /**
+         * @private
+         */
+        _scrollStarted: boolean;
+        /**
+         * @private
+         */
+        _lastTouchTime: number;
+        /**
+         * @private
+         */
+        _lastTouchEvent: TouchEvent;
+        /**
+         * @private
+         */
+        _velocitys: Array<{
+            x: number;
+            y: number;
+        }>;
+        /**
+         * @private
+         */
+        _isHTweenPlaying: boolean;
+        /**
+         * @private
+         */
+        _isVTweenPlaying: boolean;
+        /**
+         * @private
+         */
+        _hScrollTween: ScrollerTween;
+        /**
+         * @private
+         */
+        _vScrollTween: ScrollerTween;
+        /**
+         * @private
+         */
+        _bounces: boolean;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.DefaultAssetAdapter
+     * @classdesc
+     * 默认的IAssetAdapter接口实现
+     * @implements egret.gui.IAssetAdapter
+     */
+    class DefaultAssetAdapter implements IAssetAdapter {
+        /**
+         * 构造函数
+         * @method egret.gui.DefaultSkinAdapter#constructor
+         */
+        constructor();
+        /**
+         * 解析素材
+         * @method egret.gui.DefaultAssetAdapter#getAsset
+         * @param source {any} 待解析的新素材标识符
+         * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
+         * 回调参数content接受两种类型：DisplayObject或Texture。
+         * @param thisObject {any} compFunc的this引用
+         * @param oldContent any 旧的内容对象,传入值有可能为null。
+         * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
+         */
+        getAsset(source: any, compFunc: Function, thisObject: any, oldContent: any): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.DefaultSkinAdapter
+     * @classdesc
+     * 默认的ISkinAdapter接口实现
+     * @implements egret.gui.ISkinAdapter
+     */
+    class DefaultSkinAdapter implements ISkinAdapter {
+        /**
+         * 构造函数
+         * @method egret.gui.DefaultSkinAdapter#constructor
+         */
+        constructor();
+        /**
+         * 获取皮肤显示对象
+         * @method egret.gui.ISkinAdapter#getSkin
+         * @param skinName {any} 待解析的皮肤标识符
+         * @param hostComponentKey {string} 主机组件标识符
+         * @returns {any} 皮肤对象实例
+         */
+        getSkin(skinName: any, hostComponentKey: string): any;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.DropDownController
+     * @classdesc
+     * 用于处理因用户交互而打开和关闭下拉列表的操作的控制器
+     * @extends egret.EventDispatcher
+     */
+    class DropDownController extends EventDispatcher {
+        /**
+         * 构造函数
+         * @method egret.gui.DropDownController#constructor
+         */
+        constructor();
+        /**
+         * 鼠标按下标志
+         */
+        private mouseIsDown;
+        private _openButton;
+        /**
+         * 下拉按钮实例
+         * @member egret.gui.DropDownController#openButton
+         */
+        openButton: ButtonBase;
+        /**
+         * 要考虑作为下拉列表的点击区域的一部分的显示对象列表。
+         * 在包含项列出的任何组件内进行鼠标单击不会自动关闭下拉列表。
+         * @member egret.gui.DropDownController#hitAreaAdditions
+         */
+        hitAreaAdditions: Array<DisplayObject>;
+        private _dropDown;
+        /**
+         * 下拉区域显示对象
+         * @member egret.gui.DropDownController#dropDown
+         */
+        dropDown: DisplayObject;
+        private _isOpen;
+        /**
+         * 下拉列表已经打开的标志
+         * @member egret.gui.DropDownController#isOpen
+         */
+        isOpen: boolean;
+        private _closeOnResize;
+        /**
+         * 如果为 true，则在调整舞台大小时会关闭下拉列表。
+         * @member egret.gui.DropDownController#closeOnResize
+         */
+        closeOnResize: boolean;
+        private _rollOverOpenDelay;
+        private rollOverOpenDelayTimer;
+        /**
+         * 指定滑过锚点按钮时打开下拉列表要等待的延迟（以毫秒为单位）。
+         * 如果设置为 NaN，则下拉列表会在单击时打开，而不是在滑过时打开。默认值NaN
+         * @member egret.gui.DropDownController#rollOverOpenDelay
+         */
+        rollOverOpenDelay: number;
+        /**
+         * 添加触发下拉列表打开的事件监听
+         */
+        private addOpenTriggers();
+        /**
+         * 移除触发下拉列表打开的事件监听
+         */
+        private removeOpenTriggers();
+        /**
+         * 添加触发下拉列表关闭的事件监听
+         */
+        private addCloseTriggers();
+        /**
+         * 移除触发下拉列表关闭的事件监听
+         */
+        private removeCloseTriggers();
+        /**
+         * 添加舞台尺寸改变的事件监听
+         */
+        private addCloseOnResizeTrigger();
+        /**
+         * 移除舞台尺寸改变的事件监听
+         */
+        private removeCloseOnResizeTrigger();
+        /**
+         * 检查鼠标是否在DropDown或者openButton区域内。
+         */
+        private isTargetOverDropDownOrOpenButton(target);
+        /**
+         * 打开下拉列表
+         * @method egret.gui.DropDownController#openDropDown
+         */
+        openDropDown(): void;
+        /**
+         * 执行打开下拉列表
+         */
+        private openDropDownHelper();
+        /**
+         * 关闭下拉列表
+         * @method egret.gui.DropDownController#closeDropDown
+         * @param commit {boolean}
+         */
+        closeDropDown(commit: boolean): void;
+        /**
+         * openButton上按下鼠标事件
+         * @method egret.gui.DropDownController#_openButton_buttonDownHandler
+         * @param event {Event}
+         */
+        _openButton_buttonDownHandler(event: Event): void;
+        /**
+         * openButton上鼠标经过事件
+         * @method egret.gui.DropDownController#_openButton_rollOverHandler
+         * @param event {TouchEvent}
+         */
+        _openButton_rollOverHandler(event: TouchEvent): void;
+        /**
+         * openButton上鼠标移出事件
+         */
+        private openButton_rollOutHandler(event);
+        /**
+         * 到达鼠标移入等待延迟打开的时间。
+         */
+        private rollOverDelay_timerCompleteHandler(event);
+        /**
+         * 舞台上鼠标按下事件
+         * @method egret.gui.DropDownController#stage_mouseDownHandler
+         * @param event {Event}
+         */
+        stage_mouseDownHandler(event: Event): void;
+        /**
+         * 舞台上鼠标移动事件
+         * @method egret.gui.DropDownController#stage_mouseMoveHandler
+         * @param event {Event}
+         */
+        stage_mouseMoveHandler(event: Event): void;
+        /**
+         * 舞台上鼠标弹起事件
+         * @method egret.gui.DropDownController#stage_mouseUpHandler_noRollOverOpenDelay
+         * @param event {Event}
+         */
+        stage_mouseUpHandler_noRollOverOpenDelay(event: Event): void;
+        /**
+         * 舞台上鼠标弹起事件
+         * @method egret.gui.DropDownController#stage_mouseUpHandler
+         * @param event {Event}
+         */
+        stage_mouseUpHandler(event: Event): void;
+        /**
+         * 舞台尺寸改变事件
+         * @method egret.gui.DropDownController#stage_resizeHandler
+         * @param event {Event}
+         */
+        stage_resizeHandler(event: Event): void;
+        /**
+         * 舞台上鼠标滚轮事件
+         */
+        private stage_mouseWheelHandler(event);
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.SkinBasicLayout
+     * @classdesc
+     * 皮肤简单布局类。
+     * @extends egret.HashObject
+     */
+    class SkinBasicLayout extends HashObject {
+        /**
+         * 构造函数
+         * @method egret.gui.SkinBasicLayout#constructor
+         */
+        constructor();
+        private _target;
+        /**
+         * 目标布局对象
+         * @member egret.gui.SkinBasicLayout#target
+         */
+        target: Skin;
+        /**
+         * 测量组件尺寸大小
+         * @method egret.gui.SkinBasicLayout#measure
+         */
+        measure(): void;
+        /**
+         * 更新显示列表
+         * @method egret.gui.SkinBasicLayout#updateDisplayList
+         * @param unscaledWidth {number}
+         * @param unscaledHeight {number}
+         */
+        updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+    }
+}
+declare module egret.gui {
+    class Theme {
+        /**
+         * 构造函数
+         * @method egret.gui.PopUpManager#constructor
+         */
+        constructor(configURL: string);
+        private static initialized;
+        static load(configURL: string): void;
+        private _configURL;
+        private loadConfig(configURL);
+        private onLoadComplete(event);
+        private onLoadError(event);
+        private skinMap;
+        private delyList;
+        private handleDelyList();
+        getDefaultSkin(client: SkinnableComponent): any;
     }
 }
 declare module egret.gui {
@@ -8209,6 +8209,26 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.IViewStack
+     * @interface
+     * @classdesc
+     * 层级堆叠容器接口
+     */
+    interface IViewStack {
+        /**
+         * 当前可见子元素的索引。索引从0开始。
+         * @member egret.gui.IViewStack#selectedIndex
+         */
+        selectedIndex: number;
+        /**
+         * 当前可见的子元素。
+         * @member egret.gui.IViewStack#selectedChild
+         */
+        selectedChild: IVisualElement;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.IViewport
      * @interface
      * @classdesc
@@ -8247,26 +8267,6 @@ declare module egret.gui {
          * @member egret.gui.IViewport#clipAndEnableScrolling
          */
         clipAndEnableScrolling: boolean;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.IViewStack
-     * @interface
-     * @classdesc
-     * 层级堆叠容器接口
-     */
-    interface IViewStack {
-        /**
-         * 当前可见子元素的索引。索引从0开始。
-         * @member egret.gui.IViewStack#selectedIndex
-         */
-        selectedIndex: number;
-        /**
-         * 当前可见的子元素。
-         * @member egret.gui.IViewStack#selectedChild
-         */
-        selectedChild: IVisualElement;
     }
 }
 declare module egret.gui {
@@ -9021,6 +9021,531 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.CompositeEffect
+     * @classdesc
+     * 复合效果的基类
+     * @extends egret.gui.Effect
+     */
+    class CompositeEffect extends Effect {
+        /**
+         * @method egret.gui.CompositeEffect#constructor
+         */
+        constructor(target?: any);
+        private childTargets;
+        private _children;
+        /**
+         * 子效果的数组。
+         * @member egret.gui.CompositeEffect#children
+         */
+        children: Array<Effect>;
+        /**
+         * 返回此效果的总持续时间。
+         * @member egret.gui.CompositeEffect#compositeDuration
+         */
+        compositeDuration: number;
+        createInstance(target?: any): IEffectInstance;
+        createInstances(targets?: Array<any>): Array<any>;
+        _initInstance(instance: IEffectInstance): void;
+        /**
+         * 将新的子效果添加到此复合效果。
+         * @method egret.gui.CompositeEffect#addChild
+         */
+        addChild(childEffect: Effect): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.EffectInstance
+     * @classdesc
+     * 定义所有效果实例的基类
+     * @extends egret.EventDispatcher
+     */
+    class EffectInstance extends EventDispatcher implements IEffectInstance {
+        /**
+         * @method egret.gui.EffectInstance#constructor
+         */
+        constructor(target: any);
+        /**
+         * startDelay和repeatDelay的计时器
+         */
+        _delayTimer: Timer;
+        /**
+         * delayTimer开始的时间
+         */
+        private delayStartTime;
+        /**
+         * 暂停时delayTimer经过的时间
+         */
+        private delayElapsedTime;
+        /**
+         * 是否显式设置了持续时间
+         */
+        durationExplicitlySet: boolean;
+        /**
+         * 实例对应效果的复杂效果的实例，如果不是复杂效果则为null
+         */
+        parentCompositeEffectInstance: EffectInstance;
+        /**
+         * 已播放实例的次数。
+         */
+        _playCount: number;
+        /**
+         * 调用end()方法结束时，防止效果重复的的标志
+         */
+        _stopRepeat: boolean;
+        /**
+         * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
+         */
+        _actualDuration: number;
+        private _duration;
+        /**
+         * 效果的持续时间（以毫秒为单位）。
+         * @member egret.gui.EffectInstance#duration
+         */
+        duration: number;
+        private _effect;
+        /**
+         * 创建此 IEffectInstance 对象的 IEffect 对象。
+         * @member egret.gui.EffectInstance#effect
+         */
+        effect: IEffect;
+        /**
+         * 效果的当前时间位置。
+         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
+         * @member egret.gui.EffectInstance#playheadTime
+         */
+        playheadTime: number;
+        _setPlayheadTime(value: number): void;
+        private _playReversed;
+        /**
+         * 指定效果是否在反向播放，在播放之前设置此属性
+         * @member egret.gui.EffectInstance#playReversed
+         */
+        playReversed: boolean;
+        _setPlayReversed(value: boolean): void;
+        private _repeatCount;
+        /**
+         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
+         * @member egret.gui.EffectInstance#repeatCount
+         */
+        repeatCount: number;
+        private _repeatDelay;
+        /**
+         * 重复播放效果前需要等待的时间（以毫秒为单位）。
+         * @member egret.gui.EffectInstance#repeatDelay
+         */
+        repeatDelay: number;
+        private _startDelay;
+        /**
+         * 开始播放效果前需要等待的时间（以毫秒为单位）。
+         * 此值可以是任何大于或等于 0 的整数。
+         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
+         * @member egret.gui.EffectInstance#startDelay
+         */
+        startDelay: number;
+        private _target;
+        /**
+         * 要应用此效果的对象。
+         * @member egret.gui.EffectInstance#target
+         */
+        target: any;
+        /**
+         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
+         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
+         * @method egret.gui.EffectInstance#startEffect
+         */
+        startEffect(): void;
+        /**
+         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
+         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
+         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
+         * @method egret.gui.EffectInstance#play
+         */
+        play(): void;
+        /**
+         * 暂停效果，直到调用 resume() 方法。
+         * @method egret.gui.EffectInstance#pause
+         */
+        pause(): void;
+        /**
+         * 停止播放效果，使目标保持当前状态。
+         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         * @method egret.gui.EffectInstance#stop
+         */
+        stop(): void;
+        /**
+         * 在效果由 pause() 方法暂停后继续播放效果。
+         * @method egret.gui.EffectInstance#resume
+         */
+        resume(): void;
+        /**
+         * 从效果的当前位置开始反向播放效果。
+         * @method egret.gui.EffectInstance#reverse
+         */
+        reverse(): void;
+        /**
+         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
+         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         * @method egret.gui.EffectInstance#end
+         */
+        end(): void;
+        /**
+         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
+         * @method egret.gui.EffectInstance#finishEffect
+         */
+        finishEffect(): void;
+        /**
+         * 每次完成重复效果的迭代播放后调用。
+         * @method egret.gui.EffectInstance#finishRepeat
+         */
+        finishRepeat(): void;
+        _playWithNoDuration(): void;
+        private delayTimerHandler(event);
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Fade
+     * @classdesc
+     * 淡入淡出效果
+     * @extends egret.gui.Animate
+     */
+    class Fade extends Animate {
+        /**
+         * @method egret.gui.Fade#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 效果开始的透明度
+         * @member egret.gui.Fade#alphaFrom
+         */
+        alphaFrom: number;
+        /**
+         * 效果结束的透明度
+         * @member egret.gui.Fade#alphaTo
+         */
+        alphaTo: number;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    interface IEffect extends IEventDispatcher {
+        /**
+         * 效果的持续时间（以毫秒为单位）。
+         */
+        duration: number;
+        /**
+         * 一个只读标志，如果当前正在播放效果的任一实例，则为 true；否则，则为 false。
+         */
+        isPlaying: boolean;
+        /**
+         * 在效果的第一个目标之后，其他效果目标的附加延迟（以毫秒为单位）。此值将添加到 startDelay 属性的值中。
+         */
+        perElementOffset: number;
+        /**
+         * 要应用此效果的对象。当效果触发器触发某个效果时，会自动将 target 属性设置为触发该效果的对象。
+         */
+        target: any;
+        /**
+         * 一个对象 Array，这些对象都是效果的目标。播放效果时，会对各个目标并行执行效果。
+         * 设置 target 属性将替换此 Array 中的所有对象。
+         * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
+         */
+        targets: Array<any>;
+        /**
+         * 效果的当前时间位置。此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
+         */
+        playheadTime: number;
+        /**
+         * 获取一个目标对象 Array，并对每个目标调用 createInstance() 方法。
+         *  @param targets 要使用此效果设置动画的对象的数组。
+         *  @return 效果的效果实例对象的数组，一个目标一个数组。
+         */
+        createInstances(targets?: Array<any>): Array<any>;
+        /**
+         * 创建一个效果实例并对其进行初始化。在播放效果实例前，使用此方法（而非 play() 方法）处理效果实例属性。
+         *  <p>所创建的效果实例的类型由 instanceClass 属性指定。然后，使用 _initInstance() 方法初始化此实例。
+         * 如果该实例是 EffectManager 在效果触发器触发此效果时创建的，
+         * 则还需要调用 EffectInstance.initEffect() 方法进一步初始化此效果。</p>
+         *  <p>调用 createInstance() 方法不会播放效果。对返回的效果实例调用 startEffect() 方法。</p>
+         *  <p>Effect.play() 方法将自动调用此函数。 </p>
+         *  @param target 要使用此效果为其设置动画的对象。
+         *  @return 效果的效果实例对象。
+         */
+        createInstance(target?: any): IEffectInstance;
+        /**
+         * 删除实例中的事件侦听器，然后从实例列表中删除该实例。
+         */
+        deleteInstance(instance: IEffectInstance): void;
+        /**
+         * 开始播放效果。通常在调用 play() 方法之前先调用 end() 方法，以确保在开始播放新效果前已结束先前效果的所有实例。
+         * @param targets 播放此效果的目标对象的数组。如果已指定此参数，则不会使用效果的 targets 属性。
+         * @param playReversedFromEnd 如果为 true，则向后播放效果。
+         * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
+         */
+        play(targets?: Array<any>, playReversedFromEnd?: boolean): Array<any>;
+        /**
+         * 暂停效果，直到调用 resume() 方法。
+         */
+        pause(): void;
+        /**
+         * 停止播放效果，使效果目标保持当前状态。
+         * 与调用 pause() 方法不同，无法先调用 stop() 方法再调用 resume() 方法。
+         * 不过，您可以调用 play() 方法重新播放效果。
+         */
+        stop(): void;
+        /**
+         * 在效果由 pause() 方法暂停后继续播放效果。
+         */
+        resume(): void;
+        /**
+         * 逆序播放效果；如果当前正在播放效果，则从该效果的当前位置开始逆序播放。
+         */
+        reverse(): void;
+        /**
+         * 中断当前正在播放的效果，立即跳转到该效果的末尾。调用此方法将调用 EffectInstance.end() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         * <p>如果将效果实例作为参数传递，则会中断此实例。
+         * 如果没有传入参数，则该效果当前生成的所有效果实例都将中断。</p>
+         */
+        end(effectInstance?: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    interface IEffectInstance {
+        /**
+         * 效果的持续时间（以毫秒为单位）。
+         */
+        duration: number;
+        /**
+         * 创建此 IEffectInstance 对象的 IEffect 对象。
+         */
+        effect: IEffect;
+        /**
+         * 效果的当前时间位置。
+         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
+         */
+        playheadTime: number;
+        /**
+         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
+         */
+        repeatCount: number;
+        /**
+         * 重复播放效果前需要等待的时间（以毫秒为单位）。
+         */
+        repeatDelay: number;
+        /**
+         * 开始播放效果前需要等待的时间（以毫秒为单位）。
+         * 此值可以是任何大于或等于 0 的整数。
+         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
+         */
+        startDelay: number;
+        /**
+         * 要应用此效果的对象。
+         */
+        target: any;
+        /**
+         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
+         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
+         */
+        startEffect(): void;
+        /**
+         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
+         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
+         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
+         */
+        play(): void;
+        /**
+         * 暂停效果，直到调用 resume() 方法。
+         */
+        pause(): void;
+        /**
+         * 停止播放效果，使目标保持当前状态。
+         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         */
+        stop(): void;
+        /**
+         * 在效果由 pause() 方法暂停后继续播放效果。
+         */
+        resume(): void;
+        /**
+         * 从效果的当前位置开始反向播放效果。
+         */
+        reverse(): void;
+        /**
+         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
+         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
+         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
+         */
+        end(): void;
+        /**
+         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
+         */
+        finishEffect(): void;
+        /**
+         * 每次完成重复效果的迭代播放后调用。
+         */
+        finishRepeat(): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Move
+     * @classdesc
+     * Move 效果按 x 和 y 方向移动目标对象。
+     * @extends egret.gui.AnimateTransform
+     */
+    class Move extends AnimateTransform {
+        /**
+         * @method egret.gui.Move#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 按其修改目标的 y 位置的像素数目。此值可以为负值
+         * @member egret.gui.Move#yBy
+         */
+        yBy: number;
+        /**
+         * 目标的初始 y 位置
+         * @member egret.gui.Move#yFrom
+         */
+        yFrom: number;
+        /**
+         * 目标的最终 y 位置
+         * @member egret.gui.Move#yTo
+         */
+        yTo: number;
+        /**
+         * 按其修改目标的 x 位置的像素数目
+         * @member egret.gui.Move#xBy
+         */
+        xBy: number;
+        /**
+         * 目标的初始 x 位置
+         * @member egret.gui.Move#xFrom
+         */
+        xFrom: number;
+        /**
+         * 目标的最终 x 位置
+         * @member egret.gui.Move#xTo
+         */
+        xTo: number;
+        createInstance(target?: any): IEffectInstance;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Parallel
+     * @classdesc
+     * Parallel 效果同时播放多个子效果。
+     * @extends egret.gui.CompositeEffect
+     */
+    class Parallel extends CompositeEffect {
+        /**
+         * @method egret.gui.Parallel#constructor
+         */
+        constructor(target?: any);
+        compositeDuration: number;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Rotate
+     * @classdesc
+     * Rotate 效果围绕转换中心旋转目标对象。
+     * @extends egret.gui.AnimateTransform
+     */
+    class Rotate extends AnimateTransform {
+        /**
+         * @method egret.gui.Rotate#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 目标对象的起始旋转角度
+         * @member egret.gui.Rotate#angleFrom
+         */
+        angleFrom: number;
+        /**
+         * 目标对象的结束旋转角度
+         * @member egret.gui.Rotate#angleTo
+         */
+        angleTo: number;
+        /**
+         * 旋转目标对象的度数
+         * @member egret.gui.Rotate#angleBy
+         */
+        angleBy: number;
+        createInstance(target?: any): IEffectInstance;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Scale
+     * @classdesc
+     * Scale 效果围绕转换中心在 x 和 y 方向上缩放目标对象
+     * @extends egret.gui.AnimateTransform
+     */
+    class Scale extends AnimateTransform {
+        /**
+         * @method egret.gui.Scale#constructor
+         */
+        constructor(target?: any);
+        /**
+         * 在 y 方向上的起始比例因子。
+         * @member egret.gui.Scale#scaleYFrom
+         */
+        scaleYFrom: number;
+        /**
+         * 在 y 方向上的结束比例因子。
+         * @member egret.gui.Scale#scaleYTo
+         */
+        scaleYTo: number;
+        /**
+         * 在 y 方向上按其缩放对象的因子。
+         * @member egret.gui.Scale#scaleYBy
+         */
+        scaleYBy: number;
+        /**
+         * 在 x 方向上的起始比例因子。
+         * @member egret.gui.Scale#scaleXFrom
+         */
+        scaleXFrom: number;
+        /**
+         * 在 x 方向上的结束比例因子。
+         * @member egret.gui.Scale#scaleXTo
+         */
+        scaleXTo: number;
+        /**
+         * 在 x 方向上按其缩放对象的因子。
+         * @member egret.gui.Scale#scaleXBy
+         */
+        scaleXBy: number;
+        createInstance(target?: any): IEffectInstance;
+        _initInstance(instance: IEffectInstance): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.Sequence
+     * @classdesc
+     * Sequence 效果以子效果的添加顺序依次播放多个子效果。
+     * @extends egret.gui.CompositeEffect
+     */
+    class Sequence extends CompositeEffect {
+        /**
+         * @method egret.gui.Sequence#constructor
+         */
+        constructor(target?: any);
+        compositeDuration: number;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.EaseInOutBase
      * @classdesc
      * EaseInOutBase 类是提供缓动功能的基类。
@@ -9432,40 +9957,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.CompositeEffect
-     * @classdesc
-     * 复合效果的基类
-     * @extends egret.gui.Effect
-     */
-    class CompositeEffect extends Effect {
-        /**
-         * @method egret.gui.CompositeEffect#constructor
-         */
-        constructor(target?: any);
-        private childTargets;
-        private _children;
-        /**
-         * 子效果的数组。
-         * @member egret.gui.CompositeEffect#children
-         */
-        children: Array<Effect>;
-        /**
-         * 返回此效果的总持续时间。
-         * @member egret.gui.CompositeEffect#compositeDuration
-         */
-        compositeDuration: number;
-        createInstance(target?: any): IEffectInstance;
-        createInstances(targets?: Array<any>): Array<any>;
-        _initInstance(instance: IEffectInstance): void;
-        /**
-         * 将新的子效果添加到此复合效果。
-         * @method egret.gui.CompositeEffect#addChild
-         */
-        addChild(childEffect: Effect): void;
-    }
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.Bounce
      * @classdesc
      * Bounce 类实现缓动功能，该功能模拟目标对象上的重力牵引和回弹目标对象。
@@ -9532,158 +10023,6 @@ declare module egret.gui {
          * @inheritDoc
          */
         _easeOut(fraction: number): number;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.EffectInstance
-     * @classdesc
-     * 定义所有效果实例的基类
-     * @extends egret.EventDispatcher
-     */
-    class EffectInstance extends EventDispatcher implements IEffectInstance {
-        /**
-         * @method egret.gui.EffectInstance#constructor
-         */
-        constructor(target: any);
-        /**
-         * startDelay和repeatDelay的计时器
-         */
-        _delayTimer: Timer;
-        /**
-         * delayTimer开始的时间
-         */
-        private delayStartTime;
-        /**
-         * 暂停时delayTimer经过的时间
-         */
-        private delayElapsedTime;
-        /**
-         * 是否显式设置了持续时间
-         */
-        durationExplicitlySet: boolean;
-        /**
-         * 实例对应效果的复杂效果的实例，如果不是复杂效果则为null
-         */
-        parentCompositeEffectInstance: EffectInstance;
-        /**
-         * 已播放实例的次数。
-         */
-        _playCount: number;
-        /**
-         * 调用end()方法结束时，防止效果重复的的标志
-         */
-        _stopRepeat: boolean;
-        /**
-         * 实际的持续时间包含startDelay，repeatDelay，repeatCount这些值
-         */
-        _actualDuration: number;
-        private _duration;
-        /**
-         * 效果的持续时间（以毫秒为单位）。
-         * @member egret.gui.EffectInstance#duration
-         */
-        duration: number;
-        private _effect;
-        /**
-         * 创建此 IEffectInstance 对象的 IEffect 对象。
-         * @member egret.gui.EffectInstance#effect
-         */
-        effect: IEffect;
-        /**
-         * 效果的当前时间位置。
-         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
-         * @member egret.gui.EffectInstance#playheadTime
-         */
-        playheadTime: number;
-        _setPlayheadTime(value: number): void;
-        private _playReversed;
-        /**
-         * 指定效果是否在反向播放，在播放之前设置此属性
-         * @member egret.gui.EffectInstance#playReversed
-         */
-        playReversed: boolean;
-        _setPlayReversed(value: boolean): void;
-        private _repeatCount;
-        /**
-         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
-         * @member egret.gui.EffectInstance#repeatCount
-         */
-        repeatCount: number;
-        private _repeatDelay;
-        /**
-         * 重复播放效果前需要等待的时间（以毫秒为单位）。
-         * @member egret.gui.EffectInstance#repeatDelay
-         */
-        repeatDelay: number;
-        private _startDelay;
-        /**
-         * 开始播放效果前需要等待的时间（以毫秒为单位）。
-         * 此值可以是任何大于或等于 0 的整数。
-         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
-         * @member egret.gui.EffectInstance#startDelay
-         */
-        startDelay: number;
-        private _target;
-        /**
-         * 要应用此效果的对象。
-         * @member egret.gui.EffectInstance#target
-         */
-        target: any;
-        /**
-         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
-         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
-         * @method egret.gui.EffectInstance#startEffect
-         */
-        startEffect(): void;
-        /**
-         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
-         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
-         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
-         * @method egret.gui.EffectInstance#play
-         */
-        play(): void;
-        /**
-         * 暂停效果，直到调用 resume() 方法。
-         * @method egret.gui.EffectInstance#pause
-         */
-        pause(): void;
-        /**
-         * 停止播放效果，使目标保持当前状态。
-         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         * @method egret.gui.EffectInstance#stop
-         */
-        stop(): void;
-        /**
-         * 在效果由 pause() 方法暂停后继续播放效果。
-         * @method egret.gui.EffectInstance#resume
-         */
-        resume(): void;
-        /**
-         * 从效果的当前位置开始反向播放效果。
-         * @method egret.gui.EffectInstance#reverse
-         */
-        reverse(): void;
-        /**
-         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
-         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         * @method egret.gui.EffectInstance#end
-         */
-        end(): void;
-        /**
-         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
-         * @method egret.gui.EffectInstance#finishEffect
-         */
-        finishEffect(): void;
-        /**
-         * 每次完成重复效果的迭代播放后调用。
-         * @method egret.gui.EffectInstance#finishRepeat
-         */
-        finishRepeat(): void;
-        _playWithNoDuration(): void;
-        private delayTimerHandler(event);
     }
 }
 declare module egret.gui {
@@ -10127,192 +10466,6 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
-    /**
-     * @class egret.gui.Fade
-     * @classdesc
-     * 淡入淡出效果
-     * @extends egret.gui.Animate
-     */
-    class Fade extends Animate {
-        /**
-         * @method egret.gui.Fade#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 效果开始的透明度
-         * @member egret.gui.Fade#alphaFrom
-         */
-        alphaFrom: number;
-        /**
-         * 效果结束的透明度
-         * @member egret.gui.Fade#alphaTo
-         */
-        alphaTo: number;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    interface IEffect extends IEventDispatcher {
-        /**
-         * 效果的持续时间（以毫秒为单位）。
-         */
-        duration: number;
-        /**
-         * 一个只读标志，如果当前正在播放效果的任一实例，则为 true；否则，则为 false。
-         */
-        isPlaying: boolean;
-        /**
-         * 在效果的第一个目标之后，其他效果目标的附加延迟（以毫秒为单位）。此值将添加到 startDelay 属性的值中。
-         */
-        perElementOffset: number;
-        /**
-         * 要应用此效果的对象。当效果触发器触发某个效果时，会自动将 target 属性设置为触发该效果的对象。
-         */
-        target: any;
-        /**
-         * 一个对象 Array，这些对象都是效果的目标。播放效果时，会对各个目标并行执行效果。
-         * 设置 target 属性将替换此 Array 中的所有对象。
-         * 设置 targets 属性后，target 属性将返回此 Array 中的第一个项目。
-         */
-        targets: Array<any>;
-        /**
-         * 效果的当前时间位置。此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
-         */
-        playheadTime: number;
-        /**
-         * 获取一个目标对象 Array，并对每个目标调用 createInstance() 方法。
-         *  @param targets 要使用此效果设置动画的对象的数组。
-         *  @return 效果的效果实例对象的数组，一个目标一个数组。
-         */
-        createInstances(targets?: Array<any>): Array<any>;
-        /**
-         * 创建一个效果实例并对其进行初始化。在播放效果实例前，使用此方法（而非 play() 方法）处理效果实例属性。
-         *  <p>所创建的效果实例的类型由 instanceClass 属性指定。然后，使用 _initInstance() 方法初始化此实例。
-         * 如果该实例是 EffectManager 在效果触发器触发此效果时创建的，
-         * 则还需要调用 EffectInstance.initEffect() 方法进一步初始化此效果。</p>
-         *  <p>调用 createInstance() 方法不会播放效果。对返回的效果实例调用 startEffect() 方法。</p>
-         *  <p>Effect.play() 方法将自动调用此函数。 </p>
-         *  @param target 要使用此效果为其设置动画的对象。
-         *  @return 效果的效果实例对象。
-         */
-        createInstance(target?: any): IEffectInstance;
-        /**
-         * 删除实例中的事件侦听器，然后从实例列表中删除该实例。
-         */
-        deleteInstance(instance: IEffectInstance): void;
-        /**
-         * 开始播放效果。通常在调用 play() 方法之前先调用 end() 方法，以确保在开始播放新效果前已结束先前效果的所有实例。
-         * @param targets 播放此效果的目标对象的数组。如果已指定此参数，则不会使用效果的 targets 属性。
-         * @param playReversedFromEnd 如果为 true，则向后播放效果。
-         * @return 效果的 EffectInstance 对象的数组，一个目标一个数组。
-         */
-        play(targets?: Array<any>, playReversedFromEnd?: boolean): Array<any>;
-        /**
-         * 暂停效果，直到调用 resume() 方法。
-         */
-        pause(): void;
-        /**
-         * 停止播放效果，使效果目标保持当前状态。
-         * 与调用 pause() 方法不同，无法先调用 stop() 方法再调用 resume() 方法。
-         * 不过，您可以调用 play() 方法重新播放效果。
-         */
-        stop(): void;
-        /**
-         * 在效果由 pause() 方法暂停后继续播放效果。
-         */
-        resume(): void;
-        /**
-         * 逆序播放效果；如果当前正在播放效果，则从该效果的当前位置开始逆序播放。
-         */
-        reverse(): void;
-        /**
-         * 中断当前正在播放的效果，立即跳转到该效果的末尾。调用此方法将调用 EffectInstance.end() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         * <p>如果将效果实例作为参数传递，则会中断此实例。
-         * 如果没有传入参数，则该效果当前生成的所有效果实例都将中断。</p>
-         */
-        end(effectInstance?: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    interface IEffectInstance {
-        /**
-         * 效果的持续时间（以毫秒为单位）。
-         */
-        duration: number;
-        /**
-         * 创建此 IEffectInstance 对象的 IEffect 对象。
-         */
-        effect: IEffect;
-        /**
-         * 效果的当前时间位置。
-         * 此属性的值介于 0 和总持续时间（包括该效果的 startDelay、repeatCount 和 repeatDelay）之间。
-         */
-        playheadTime: number;
-        /**
-         * 效果的重复次数。可能的值为任何大于等于 0 的整数。
-         */
-        repeatCount: number;
-        /**
-         * 重复播放效果前需要等待的时间（以毫秒为单位）。
-         */
-        repeatDelay: number;
-        /**
-         * 开始播放效果前需要等待的时间（以毫秒为单位）。
-         * 此值可以是任何大于或等于 0 的整数。
-         * 如果使用 repeatCount 属性重复播放效果，则只在首次播放该效果时应用 startDelay 属性。
-         */
-        startDelay: number;
-        /**
-         * 要应用此效果的对象。
-         */
-        target: any;
-        /**
-         * 经过 startDelay 所占用的这段时间后，在目标上播放效果实例。
-         * 由 Effect 类调用。在启动 EffectInstance 时，请使用此函数，而非 play() 方法。
-         */
-        startEffect(): void;
-        /**
-         * 在目标上播放效果实例。改为调用 startEffect() 方法，以在 EffectInstance 上开始播放效果。
-         * <p>在 EffectInstance 的子类中，必须覆盖此方法。
-         * 此覆盖必须调用 super.play() 方法，以便从目标中分派 effectStart 事件。</p>
-         */
-        play(): void;
-        /**
-         * 暂停效果，直到调用 resume() 方法。
-         */
-        pause(): void;
-        /**
-         * 停止播放效果，使目标保持当前状态。
-         * 您需要通过调用 Effect.stop() 方法来调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         */
-        stop(): void;
-        /**
-         * 在效果由 pause() 方法暂停后继续播放效果。
-         */
-        resume(): void;
-        /**
-         * 从效果的当前位置开始反向播放效果。
-         */
-        reverse(): void;
-        /**
-         * 中断当前播放的效果实例，立即跳转到效果的结束位置。
-         * 通过调用 Effect.end() 方法可调用此方法。在实现过程中，它会调用 finishEffect() 方法。
-         * <p>如果调用此方法来结束播放效果，效果实例将分派 effectEnd 事件。</p>
-         */
-        end(): void;
-        /**
-         * 在完成效果播放时由 end() 方法调用。此函数将为效果目标分派 endEffect 事件。
-         */
-        finishEffect(): void;
-        /**
-         * 每次完成重复效果的迭代播放后调用。
-         */
-        finishRepeat(): void;
-    }
-}
-declare module egret.gui {
     interface IInterpolator {
         /**
          * 如果有在 0.0 和 1.0 之间的某个动画的已过去部分，以及要插补的开始值和结束值，则返回内插值。
@@ -10355,159 +10508,6 @@ declare module egret.gui {
         interpolate(fraction: number, startValue: any, endValue: any): any;
         increment(baseValue: any, incrementValue: any): any;
         decrement(baseValue: any, decrementValue: any): any;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Move
-     * @classdesc
-     * Move 效果按 x 和 y 方向移动目标对象。
-     * @extends egret.gui.AnimateTransform
-     */
-    class Move extends AnimateTransform {
-        /**
-         * @method egret.gui.Move#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 按其修改目标的 y 位置的像素数目。此值可以为负值
-         * @member egret.gui.Move#yBy
-         */
-        yBy: number;
-        /**
-         * 目标的初始 y 位置
-         * @member egret.gui.Move#yFrom
-         */
-        yFrom: number;
-        /**
-         * 目标的最终 y 位置
-         * @member egret.gui.Move#yTo
-         */
-        yTo: number;
-        /**
-         * 按其修改目标的 x 位置的像素数目
-         * @member egret.gui.Move#xBy
-         */
-        xBy: number;
-        /**
-         * 目标的初始 x 位置
-         * @member egret.gui.Move#xFrom
-         */
-        xFrom: number;
-        /**
-         * 目标的最终 x 位置
-         * @member egret.gui.Move#xTo
-         */
-        xTo: number;
-        createInstance(target?: any): IEffectInstance;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Parallel
-     * @classdesc
-     * Parallel 效果同时播放多个子效果。
-     * @extends egret.gui.CompositeEffect
-     */
-    class Parallel extends CompositeEffect {
-        /**
-         * @method egret.gui.Parallel#constructor
-         */
-        constructor(target?: any);
-        compositeDuration: number;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Rotate
-     * @classdesc
-     * Rotate 效果围绕转换中心旋转目标对象。
-     * @extends egret.gui.AnimateTransform
-     */
-    class Rotate extends AnimateTransform {
-        /**
-         * @method egret.gui.Rotate#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 目标对象的起始旋转角度
-         * @member egret.gui.Rotate#angleFrom
-         */
-        angleFrom: number;
-        /**
-         * 目标对象的结束旋转角度
-         * @member egret.gui.Rotate#angleTo
-         */
-        angleTo: number;
-        /**
-         * 旋转目标对象的度数
-         * @member egret.gui.Rotate#angleBy
-         */
-        angleBy: number;
-        createInstance(target?: any): IEffectInstance;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Scale
-     * @classdesc
-     * Scale 效果围绕转换中心在 x 和 y 方向上缩放目标对象
-     * @extends egret.gui.AnimateTransform
-     */
-    class Scale extends AnimateTransform {
-        /**
-         * @method egret.gui.Scale#constructor
-         */
-        constructor(target?: any);
-        /**
-         * 在 y 方向上的起始比例因子。
-         * @member egret.gui.Scale#scaleYFrom
-         */
-        scaleYFrom: number;
-        /**
-         * 在 y 方向上的结束比例因子。
-         * @member egret.gui.Scale#scaleYTo
-         */
-        scaleYTo: number;
-        /**
-         * 在 y 方向上按其缩放对象的因子。
-         * @member egret.gui.Scale#scaleYBy
-         */
-        scaleYBy: number;
-        /**
-         * 在 x 方向上的起始比例因子。
-         * @member egret.gui.Scale#scaleXFrom
-         */
-        scaleXFrom: number;
-        /**
-         * 在 x 方向上的结束比例因子。
-         * @member egret.gui.Scale#scaleXTo
-         */
-        scaleXTo: number;
-        /**
-         * 在 x 方向上按其缩放对象的因子。
-         * @member egret.gui.Scale#scaleXBy
-         */
-        scaleXBy: number;
-        createInstance(target?: any): IEffectInstance;
-        _initInstance(instance: IEffectInstance): void;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.Sequence
-     * @classdesc
-     * Sequence 效果以子效果的添加顺序依次播放多个子效果。
-     * @extends egret.gui.CompositeEffect
-     */
-    class Sequence extends CompositeEffect {
-        /**
-         * @method egret.gui.Sequence#constructor
-         */
-        constructor(target?: any);
-        compositeDuration: number;
     }
 }
 declare module egret.gui {
@@ -12102,90 +12102,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.PopUpManagerImpl
-     * @classdesc
-     * 窗口弹出管理器实现类
-     * @extends egret.EventDispatcher
-     * @implements egret.gui.IPopUpManager
-     */
-    class PopUpManagerImpl extends EventDispatcher implements IPopUpManager {
-        /**
-         * 构造函数
-         * @method egret.gui.PopUpManagerImpl#constructor
-         */
-        constructor();
-        private _popUpList;
-        /**
-         * 已经弹出的窗口列表
-         * @member egret.gui.PopUpManagerImpl#popUpList
-         */
-        popUpList: Array<any>;
-        /**
-         * 模态窗口列表
-         */
-        private popUpDataList;
-        /**
-         * 根据popUp获取对应的popUpData
-         */
-        private findPopUpData(popUp);
-        private static REMOVE_FROM_UISTAGE;
-        /**
-         * 弹出一个窗口。<br/>
-         * @method egret.gui.PopUpManagerImpl#addPopUp
-         * @param popUp {IVisualElement} 要弹出的窗口
-         * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
-         * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
-         */
-        addPopUp(popUp: IVisualElement, modal?: boolean, center?: boolean): void;
-        /**
-         * 从舞台移除
-         */
-        private onRemoved(event);
-        private _modalColor;
-        /**
-         * 模态遮罩的填充颜色
-         * @member egret.gui.PopUpManagerImpl#modalColor
-         */
-        modalColor: number;
-        private _modalAlpha;
-        /**
-         * 模态遮罩的透明度
-         * @member egret.gui.PopUpManagerImpl#modalAlpha
-         */
-        modalAlpha: number;
-        private invalidateModalFlag;
-        /**
-         * 标记一个UIStage的模态层失效
-         */
-        private invalidateModal();
-        private validateModal(event);
-        private modalMask;
-        /**
-         * 更新窗口模态效果
-         */
-        private updateModal(uiStage);
-        /**
-         * 移除由addPopUp()方法弹出的窗口。
-         * @method egret.gui.PopUpManagerImpl#removePopUp
-         * @param popUp {IVisualElement} 要移除的窗口
-         */
-        removePopUp(popUp: IVisualElement): void;
-        /**
-         * 将指定窗口居中显示
-         * @method egret.gui.PopUpManagerImpl#centerPopUp
-         * @param popUp {IVisualElement} 要居中显示的窗口
-         */
-        centerPopUp(popUp: IVisualElement): void;
-        /**
-         * 将指定窗口的层级调至最前
-         * @method egret.gui.PopUpManagerImpl#bringToFront
-         * @param popUp {IVisualElement} 要最前显示的窗口
-         */
-        bringToFront(popUp: IVisualElement): void;
-    }
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.IPopUpManager
      * @interface
      * @classdesc
@@ -12317,6 +12233,90 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.PopUpManagerImpl
+     * @classdesc
+     * 窗口弹出管理器实现类
+     * @extends egret.EventDispatcher
+     * @implements egret.gui.IPopUpManager
+     */
+    class PopUpManagerImpl extends EventDispatcher implements IPopUpManager {
+        /**
+         * 构造函数
+         * @method egret.gui.PopUpManagerImpl#constructor
+         */
+        constructor();
+        private _popUpList;
+        /**
+         * 已经弹出的窗口列表
+         * @member egret.gui.PopUpManagerImpl#popUpList
+         */
+        popUpList: Array<any>;
+        /**
+         * 模态窗口列表
+         */
+        private popUpDataList;
+        /**
+         * 根据popUp获取对应的popUpData
+         */
+        private findPopUpData(popUp);
+        private static REMOVE_FROM_UISTAGE;
+        /**
+         * 弹出一个窗口。<br/>
+         * @method egret.gui.PopUpManagerImpl#addPopUp
+         * @param popUp {IVisualElement} 要弹出的窗口
+         * @param modal {boolean} 是否启用模态。即禁用弹出窗口所在层以下的鼠标事件。默认false。
+         * @param center {boolean} 是否居中窗口。等效于在外部调用centerPopUp()来居中。默认true。
+         */
+        addPopUp(popUp: IVisualElement, modal?: boolean, center?: boolean): void;
+        /**
+         * 从舞台移除
+         */
+        private onRemoved(event);
+        private _modalColor;
+        /**
+         * 模态遮罩的填充颜色
+         * @member egret.gui.PopUpManagerImpl#modalColor
+         */
+        modalColor: number;
+        private _modalAlpha;
+        /**
+         * 模态遮罩的透明度
+         * @member egret.gui.PopUpManagerImpl#modalAlpha
+         */
+        modalAlpha: number;
+        private invalidateModalFlag;
+        /**
+         * 标记一个UIStage的模态层失效
+         */
+        private invalidateModal();
+        private validateModal(event);
+        private modalMask;
+        /**
+         * 更新窗口模态效果
+         */
+        private updateModal(uiStage);
+        /**
+         * 移除由addPopUp()方法弹出的窗口。
+         * @method egret.gui.PopUpManagerImpl#removePopUp
+         * @param popUp {IVisualElement} 要移除的窗口
+         */
+        removePopUp(popUp: IVisualElement): void;
+        /**
+         * 将指定窗口居中显示
+         * @method egret.gui.PopUpManagerImpl#centerPopUp
+         * @param popUp {IVisualElement} 要居中显示的窗口
+         */
+        centerPopUp(popUp: IVisualElement): void;
+        /**
+         * 将指定窗口的层级调至最前
+         * @method egret.gui.PopUpManagerImpl#bringToFront
+         * @param popUp {IVisualElement} 要最前显示的窗口
+         */
+        bringToFront(popUp: IVisualElement): void;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.OverrideBase
      * @classdesc
      * OverrideBase 类是视图状态所用的 override 类的基类。
@@ -12408,21 +12408,6 @@ declare module egret.gui {
     }
 }
 declare module egret.gui {
-    class InterruptionBehavior {
-        /**
-         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前结束另一个过渡。
-         * 通过对过渡中的所有效果调用 end() 方法来结束过渡。end() 方法导致所有效果到达结束状态。
-         */
-        static END: string;
-        /**
-         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前停止正在进行的其它过渡。
-         * 通过对过渡中的所有效果调用 stop() 方法来停止过渡。
-         */
-        static STOP: string;
-        constructor();
-    }
-}
-declare module egret.gui {
     /**
      * @class egret.gui.IOverride
      * @interface
@@ -12448,6 +12433,21 @@ declare module egret.gui {
          * @param parent {IContainer}
          */
         remove(parent: IContainer): void;
+    }
+}
+declare module egret.gui {
+    class InterruptionBehavior {
+        /**
+         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前结束另一个过渡。
+         * 通过对过渡中的所有效果调用 end() 方法来结束过渡。end() 方法导致所有效果到达结束状态。
+         */
+        static END: string;
+        /**
+         * 指定一个过渡（可中断另一个正在运行的过渡）在开始之前停止正在进行的其它过渡。
+         * 通过对过渡中的所有效果调用 stop() 方法来停止过渡。
+         */
+        static STOP: string;
+        constructor();
     }
 }
 declare module egret.gui {
@@ -12703,15 +12703,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
-     * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
-     * @param value {string} 以字符串形式表示Rectangle构造函数的四个参数:x，y，width，height。例如："7,7,46,46"。
-     * @returns {string} 字符串对应的Rectangle实例。
-     */
-    function getScale9Grid(value: string): Rectangle;
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.LayoutUtil
      * @classdesc
      * 布局工具类
@@ -12725,6 +12716,15 @@ declare module egret.gui {
          */
         static adjustRelativeByXY(element: IVisualElement, parent?: DisplayObjectContainer): void;
     }
+}
+declare module egret.gui {
+    /**
+     * 返回字符串所对应的全局唯一Rectangle对象。此方法主要为了减少scale9Grid属性的实例个数。
+     * 参数的相同的九宫格数据使用此方法可以全局共享同一个Rectangle对象。
+     * @param value {string} 以字符串形式表示Rectangle构造函数的四个参数:x，y，width，height。例如："7,7,46,46"。
+     * @returns {string} 字符串对应的Rectangle实例。
+     */
+    function getScale9Grid(value: string): Rectangle;
 }
 declare module egret.gui {
     /**
