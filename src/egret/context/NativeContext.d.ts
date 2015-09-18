@@ -99,6 +99,14 @@ declare module egret_native {
         function unloadEffect(path:string):void;
 
         function stopEffect(effectId:number):void;
+
+        function setBackgroundMusicVolume(value);
+
+        function setEffectVolume(value);
+
+        function getBackgroundMusicVolume():number;
+
+        function getEffectVolume():number;
     }
 
     function download(url:string, savePath:string, promise:any):void;

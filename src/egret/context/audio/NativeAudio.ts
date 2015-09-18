@@ -170,12 +170,22 @@ module egret {
          * @returns number
          */
         public _getVolume():number {
-            //return this._audio.volume;
+            if (this._type == egret.Sound.MUSIC) {
+                egret_native.Audio.getBackgroundMusicVolume();
+            }
+            else if (this._type == egret.Sound.EFFECT) {
+                egret_native.Audio.getEffectVolume();
+            }
             return 1;
         }
 
         public _setVolume(value:number):void {
-            //this._audio.volume = Math.max(0, Math.min(value, 1));
+            if (this._type == egret.Sound.MUSIC) {
+                egret_native.Audio.setBackgroundMusicVolume(value);
+            }
+            else if (this._type == egret.Sound.EFFECT) {
+                egret_native.Audio.setEffectVolume(value)
+            }
         }
 
         public _setLoop(value:boolean):void {
