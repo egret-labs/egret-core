@@ -134,9 +134,7 @@ export function getEgretRoot() {
 }
 
 
-
-
-export function open(target, appName?, callback?) {
+export function open(target, appName?, callback?, options?) {
     var opener;
 
     if (typeof (appName) === 'function') {
@@ -171,7 +169,7 @@ export function open(target, appName?, callback?) {
             break;
     }
 
-    return cp.exec(opener + ' "' + escape(target) + '"',null, callback);
+    return cp.exec(opener + ' "' + escape(target) + '"',options, callback);
 }
 
 

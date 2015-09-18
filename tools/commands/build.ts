@@ -101,7 +101,10 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
         console.log(utils.tr(cmd.exitCode));
     }
 
-    Native.build();
+
+    if (egret.args.runtime == "native") {
+        Native.build();
+    }
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(() => callback(0), 500);
     }

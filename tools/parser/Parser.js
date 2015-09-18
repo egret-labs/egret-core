@@ -221,3 +221,5 @@ function parseJSON(json) {
     return options;
 }
 exports.parseJSON = parseJSON;
+
+//# sourceMappingURL=../parser/Parser.js.map
