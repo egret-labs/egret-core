@@ -391,16 +391,16 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                     }
                     //提示及退出
                     if(AutoLogger._total === 0){
-                        globals.log2(1702);
+                        globals.exit(1702);
                     }else{
                         globals.log2(1706,AutoLogger._total);
-                        globals.log2(1711,projectPath);
+                        globals.exit(1711,projectPath);
                     }
                     this.asyncCallback();
                 },200);
             });
         }else{
-            globals.log2(1705);
+            globals.exit(1705);
             this.asyncCallback();
         }
     }

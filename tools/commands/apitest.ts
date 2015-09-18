@@ -259,16 +259,16 @@ class APItestCommand implements egret.Command{
                 sumUpAndEndProcess();
             }
         }else{
-            globals.log2(1705);
+            globals.exit(1705);
         }
 
         //统计数据并退出
         function sumUpAndEndProcess(){
             //提示及退出
             if(AutoLogger._total === 0){
-                globals.log2(1702);
+                globals.exit(1702);
             }else{
-                globals.log2(1706,AutoLogger._total);
+                globals.exit(1706,AutoLogger._total);
             }
         }
     }
