@@ -123,7 +123,7 @@ module dragonBones {
          */
 		public advanceTime(passedTime:number = -1):void{
 			if(passedTime < 0){
-				passedTime = new Date().getTime() - this._time;
+				passedTime = new Date().getTime() * 0.001 - this._time;
 			}
 			passedTime *= this._timeScale;
 			

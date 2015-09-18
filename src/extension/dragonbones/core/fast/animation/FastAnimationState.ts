@@ -529,6 +529,16 @@ module dragonBones {
 					slot.hideSlots();
 				}
 			}
+			var slotTimelineName:string;
+            for(i = 0,length = this.animationData.hideSlotTimelineNameMap.length; i < length; i++)
+			{
+				slotTimelineName = this.animationData.hideSlotTimelineNameMap[i];
+				slot = this._armature.getSlot(slotTimelineName);
+				if (slot)
+				{
+					slot._resetToOrigin();
+				}
+			}
 		}
 
 		/**

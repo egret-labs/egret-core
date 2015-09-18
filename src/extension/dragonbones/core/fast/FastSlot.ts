@@ -49,7 +49,9 @@ module dragonBones {
 		public _tweenZOrder:number;
 		/** @private */
 		public _offsetZOrder:number;
-		
+		/** @private */
+		public _originDisplayIndex:number;
+
 		public _displayList:Array<any>;
 		public _currentDisplayIndex:number = 0;
 		public _colorTransform:ColorTransform;
@@ -89,6 +91,7 @@ module dragonBones {
 			this.blendMode = slotData.blendMode;
 			this._originZOrder = slotData.zOrder;
 			this._displayDataList = slotData.displayDataList;
+			this._originDisplayIndex = slotData.displayIndex;
 		}
 		
 		/**
@@ -493,5 +496,11 @@ module dragonBones {
             }
             return output;
         }
+
+        public _resetToOrigin():void
+		{
+			this._changeDisplayIndex(this._originDisplayIndex);
+			this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
+		}
 	}
 }
