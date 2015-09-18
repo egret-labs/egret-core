@@ -383,6 +383,7 @@ module egret {
             for (var i: number = 0; i < length; i++) {
                 var currentTarget: DisplayObject = list[i];
                 event._currentTarget = currentTarget;
+                event._target = this;
                 if (i < targetIndex)
                     event._eventPhase = 1;
                 else if (i == targetIndex)
