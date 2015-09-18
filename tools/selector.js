@@ -98,7 +98,7 @@ function exit(code) {
             2: "Can not find Egret Engine, please open Egret Launcher and press the \"Reset\" button."
         },
         zh: {
-            1: "找不到 Egret Engine {0}，请打开引擎面板并添加对应版本的引擎",
+            1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
             2: "找不到任何版本的引擎，请尝试打开引擎面板并点击“重置引擎”按钮"
         }
     };
@@ -204,7 +204,12 @@ function getDefaultEngineInfo() {
         var info = getLastEgretEngine();
         if (info && info.root) {
             version = info.version;
-            defaultRoot = info.root;
+            if (configData.egret[info.version]) {
+                defaultRoot = configData.egret[info.version].root;
+            }
+            else {
+                defaultRoot = info.root;
+            }
         }
     }
     if (!defaultRoot) {
@@ -301,6 +306,9 @@ function getEngineVersions() {
         var exist = file.exists(bin);
         if (exist) {
             var version = file.getFileName(versionRoot);
+            if (!/\/$/.test(versionRoot)) {
+                versionRoot += "/";
+            }
             var info = {
                 root: versionRoot,
                 version: version
@@ -311,19 +319,20 @@ function getEngineVersions() {
     });
     if (configData) {
         for (var v in configData.egret) {
+            var rootInConfig = file.escapePath(configData.egret[v].root);
+            var exist = file.exists(getBin(rootInConfig));
+            if (!exist)
+                continue;
             if (versions[v]) {
-                versions[v].root = file.escapePath(configData.egret[v].root);
+                versions[v].root = rootInConfig;
             }
             else {
                 var info = {
-                    root: configData.egret[v].root,
+                    root: rootInConfig,
                     version: v
                 };
-                if (info.root) {
-                    info.root = file.escapePath(info.root);
-                    versions.push(info);
-                    versions[info.version] = info;
-                }
+                versions.push(info);
+                versions[info.version] = info;
             }
         }
     }
