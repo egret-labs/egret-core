@@ -209,3 +209,54 @@ var egret;
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
 })(egret || (egret = {}));
+var helpModule;
+(function (helpModule) {
+    helpModule.help_dict = {
+        "lib_name": "第三方库名称，按照操作系统的命名规范命名",
+        "common_proj_name": "项目名称，按照操作系统的命名规范命名",
+        "common_app_name": "移动应用项目名称，按照操作系统的命名规范命名",
+        "form": "用法",
+        "desc": "描述",
+        "detail": "参数说明",
+        "info0": "当前Egret版本，以及安装路径",
+        "upgrade0": "跟随Egret引擎的升级，对项目进行升级",
+        "ss0": "启动Egret内置的服务器，并可立即在浏览器中运行项目",
+        "ss1": "指定端口号",
+        "ss2": "是否使用本机IP",
+        "ss3": "是否只运行服务器",
+        "create_manifest0": "在工程目录下生成manifest.json清单文件",
+        "create_manifest1": "生成所有文件的清单,若不指定则只生成文档类有引用到的类清单",
+        "create_app1": "app项目所对应h5项目的路径",
+        "create_app2": "模板路径",
+        "pub1": "发布项目，使用GoogleClosureCompiler压缩代码",
+        "pub3": "设置发布之后的版本号，可以不设置",
+        "pub4": "设置发布方式为 html5 或者是 native方式，默认值为html5",
+        "pub5": "设置发布后js文件是否需要压缩，通常用于原生打包同步过程",
+        "pub6": "设置发布zip文件的解压密码",
+        "create1": "创建新项目",
+        "create2": "要创建的项目类型 core或gui，默认值为core",
+        "create_lib1": "创建新第三方库",
+        "build0": "构建指定项目,编译指定项目的 TypeScript 文件",
+        "build1": "编译指定项目的同时编译引擎目录",
+        "build2": "清除libs以及bin-debug文件夹，只有在-e的前提下才会生效",
+        //,"build3":"只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块",
+        "build4": "编译EXML文件时保留生成的TS文件",
+        "build5": "如果有native工程，则会将文件拷贝到工程里",
+        //,"build6":"编译游戏时，根据game_file_list获取编译列表",
+        "build7": "显示执行过程"
+    };
+    helpModule.help_title = {
+        //titles,
+        "create": "创建新项目",
+        "create_lib": "创建新第三方库项目",
+        "create_app": "从h5游戏生成app",
+        "build": "构建指定项目,编译指定项目的 TypeScript 文件",
+        "publish": "发布项目，使用GoogleClosureCompiler压缩代码",
+        "startserver": "启动HttpServer,并在默认浏览器中打开指定项目",
+        "upgrade": "升级项目代码",
+        "info": "获得Egret信息"
+    };
+    global["helpModule"] = global["helpModule"] || helpModule;
+})(helpModule || (helpModule = {}));
+
+//# sourceMappingURL=../locales/zh_CN.js.map
