@@ -10,6 +10,7 @@ class Project {
     changes: egret.FileChanges;
     timer: NodeJS.Timer;
     buildProcess: cprocess.ChildProcess;
+    buildProcessOutputs: string[] = [];
     _buildPort: ServiceSocket;
     pendingRequest: ServiceSocket;
     option: egret.ToolArgs;
@@ -20,7 +21,14 @@ class Project {
         }
         this._buildPort = value;
         this._buildPort.on('message', msg => this.onBuildServiceMessage(msg));
-        setInterval(() => this._buildPort.send({}), 15000);
+        this._buildPort.on('close', msg => {
+            console.log("编译服务连接关闭:" + this.path);
+            if (this.buildProcess) {
+                this.buildProcess.kill('10020');
+            }
+            this._buildPort = null;
+        });
+        setInterval(() => this._buildPort && this._buildPort.send({}), 15000);
     }
 
     get buildPort() {
@@ -48,12 +56,13 @@ class Project {
     }
 
     build() {
+        this.buildProcessOutputs.length = 0;
         this.buildWithExistBuildService();
         this.changes = null;
     }
 
     buildWholeProject() {
-        console.log('buildWholeProject');
+        console.log('启动编译进程:' + this.path);
         this.shutdown(11);
         var larkPath = FileUtil.joinPath(utils.getEgretRoot(), 'tools/bin/egret');
 
@@ -62,17 +71,26 @@ class Project {
             cwd: this.path
         });
         build.on('exit', (code, signal) => this.onBuildServiceExit(code, signal));
+        build.stdout.setEncoding("utf-8");
+        build.stderr.setEncoding("utf-8");
+        var handleOutput = msg=> {
+            this.buildProcessOutputs.push(msg);
+            console.log(msg);
+        };
+        build.stderr.on("data", handleOutput);
+        build.stdout.on("data", handleOutput);
 
         this.buildProcess = build;
     }
 
     buildWithExistBuildService() {
-        if (!egret.args.debug && !this.buildProcess) {
+        if (!egret.args.debug && (!this.buildProcess || !this._buildPort)) {
             this.buildWholeProject();
             return;
         }
 
-        console.log("this.changes:", this.changes);
+        console.log("项目文件改变:");
+        console.log(this.changes);
 
         this.sendCommand({
             command: "build",
@@ -99,6 +117,7 @@ class Project {
                 this.buildProcess.removeAllListeners('exit');
                 this.buildProcess.kill();
                 this.buildProcess = null;
+                this._buildPort = null;
             }
         }
         else {
@@ -114,8 +133,16 @@ class Project {
     }
 
     private onBuildServiceExit(code: number, signal:string) {
-        console.log("Build service exit with", code, signal);
+        console.log("编译服务退出:", code, signal);
+        this.onBuildServiceMessage({
+            exitCode: 10020,
+            messages: this.buildProcessOutputs,
+            command: "buildResult",
+            path: this.path,
+            option: null
+        });
         this.buildProcess = null;
+        this._buildPort = null;
     }
 
     private showBuildWholeProject() {

@@ -159,10 +159,13 @@ function getEngineInfo(version) {
     version = version || DEFAULT_ENGINE;
     var defaultRoot = null;
     if (configData && configData.egret && configData.egret[version]) {
-        return {
-            version: version,
-            root: configData.egret[version].root
-        };
+        var root = configData.egret[version].root;
+        if (file.exists(getBin(root))) {
+            return {
+                version: version,
+                root: root
+            };
+        }
     }
     if (!defaultRoot) {
         var versionPath = getEnginesRootPath() + version;

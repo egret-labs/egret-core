@@ -183,10 +183,13 @@ function getProjectVersion(): string {
 function getEngineInfo(version: string): EngineVersion {
     version = version || DEFAULT_ENGINE;
     var defaultRoot: string = null;
-    if (configData && configData.egret&& configData.egret[version]) {
-        return {
-            version: version,
-            root: configData.egret[version].root
+    if (configData && configData.egret && configData.egret[version]) {
+        var root = configData.egret[version].root;
+        if (file.exists(getBin(root))) {
+            return {
+                version: version,
+                root: root
+            }
         }
     }
     if (!defaultRoot) {

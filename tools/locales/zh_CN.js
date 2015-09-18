@@ -49,6 +49,7 @@ var egret;
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"
         + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
     locale_strings[10019] = "没有找到打包 App 所需要的项目文件，这些文件没有包含在 Github 中，请前往 http://www.egret.com 下载 Egret 安装包，如果您已经安装 Egret 安装包，请联系我们的工作人员";
+    locale_strings[10020] = "编译服务异常退出";
     locale_strings[11001] = "{0}: error 找不到EXML文件";
     locale_strings[11002] = "{0}: error 不是有效的XML文件";
     locale_strings[11003] = "{0}: error 无法找到节点所对应的类定义\n{1}";
@@ -208,5 +209,3 @@ var egret;
     locale_strings[2102] = "{0}: warning 在属性节点上找不到任何子节点\n{1}";
     locale_strings[2103] = "{0}: warning 节点上的同一个属性'{1}'被多次赋值\n{2}";
 })(egret || (egret = {}));
-
-//# sourceMappingURL=../locales/zh_CN.js.map

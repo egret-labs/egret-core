@@ -3,6 +3,7 @@ var utils = require('../lib/utils');
 var FileUtil = require('../lib/FileUtil');
 var Project = (function () {
     function Project() {
+        this.buildProcessOutputs = [];
     }
     Object.defineProperty(Project.prototype, "buildPort", {
         get: function () {
@@ -15,7 +16,14 @@ var Project = (function () {
             }
             this._buildPort = value;
             this._buildPort.on('message', function (msg) { return _this.onBuildServiceMessage(msg); });
-            setInterval(function () { return _this._buildPort.send({}); }, 15000);
+            this._buildPort.on('close', function (msg) {
+                console.log("编译服务连接关闭:" + _this.path);
+                if (_this.buildProcess) {
+                    _this.buildProcess.kill('10020');
+                }
+                _this._buildPort = null;
+            });
+            setInterval(function () { return _this._buildPort && _this._buildPort.send({}); }, 15000);
         },
         enumerable: true,
         configurable: true
@@ -39,12 +47,13 @@ var Project = (function () {
         this.timer = setTimeout(function () { return _this.build(); }, 200);
     };
     Project.prototype.build = function () {
+        this.buildProcessOutputs.length = 0;
         this.buildWithExistBuildService();
         this.changes = null;
     };
     Project.prototype.buildWholeProject = function () {
         var _this = this;
-        console.log('buildWholeProject');
+        console.log('启动编译进程:' + this.path);
         this.shutdown(11);
         var larkPath = FileUtil.joinPath(utils.getEgretRoot(), 'tools/bin/egret');
         var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'compileservice', (this.option.sourceMap ? "-sourcemap" : "")], {
@@ -52,14 +61,23 @@ var Project = (function () {
             cwd: this.path
         });
         build.on('exit', function (code, signal) { return _this.onBuildServiceExit(code, signal); });
+        build.stdout.setEncoding("utf-8");
+        build.stderr.setEncoding("utf-8");
+        var handleOutput = function (msg) {
+            _this.buildProcessOutputs.push(msg);
+            console.log(msg);
+        };
+        build.stderr.on("data", handleOutput);
+        build.stdout.on("data", handleOutput);
         this.buildProcess = build;
     };
     Project.prototype.buildWithExistBuildService = function () {
-        if (!egret.args.debug && !this.buildProcess) {
+        if (!egret.args.debug && (!this.buildProcess || !this._buildPort)) {
             this.buildWholeProject();
             return;
         }
-        console.log("this.changes:", this.changes);
+        console.log("项目文件改变:");
+        console.log(this.changes);
         this.sendCommand({
             command: "build",
             changes: this.changes,
@@ -84,6 +102,7 @@ var Project = (function () {
                 this.buildProcess.removeAllListeners('exit');
                 this.buildProcess.kill();
                 this.buildProcess = null;
+                this._buildPort = null;
             }
         }
         else {
@@ -97,8 +116,16 @@ var Project = (function () {
         }
     };
     Project.prototype.onBuildServiceExit = function (code, signal) {
-        console.log("Build service exit with", code, signal);
+        console.log("编译服务退出:", code, signal);
+        this.onBuildServiceMessage({
+            exitCode: 10020,
+            messages: this.buildProcessOutputs,
+            command: "buildResult",
+            path: this.path,
+            option: null
+        });
         this.buildProcess = null;
+        this._buildPort = null;
     };
     Project.prototype.showBuildWholeProject = function () {
         return false;
@@ -112,5 +139,3 @@ var Project = (function () {
 })();
 module.exports = Project;
 /// <reference path="../lib/types.d.ts" />
-
-//# sourceMappingURL=../service/project.js.map

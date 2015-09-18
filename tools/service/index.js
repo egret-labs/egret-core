@@ -25,12 +25,16 @@ function run() {
         console.error("Service.run", e);
     }
     process.on('uncaughtException', function (e) {
+        console.log("未捕获的异常:", e);
+        if (e.code == 'EADDRINUSE') {
+            console.log("\u65E0\u6CD5\u542F\u52A8 service, \u8BF7\u68C0\u67E5\u7AEF\u53E3 " + exports.LARK_SERVICE_PORT + " \u662F\u5426\u88AB\u5360\u7528\u3002");
+        }
     });
     process.on('exit', shutdown);
 }
 exports.run = run;
 function handleCommands(task, res) {
-    console.log("Got task:", task);
+    console.log("得到任务:", task.command, task.path);
     //|| task.version && task.version != version
     if (task.command == 'shutdown') {
         res.send({});
@@ -60,8 +64,11 @@ function handleCommands(task, res) {
     }
     else if (task.command == 'status') {
         var heapTotal = task['status']['heapTotal'];
-        console.log(heapTotal);
-        if (heapTotal > 500 * 1024 * 1024) {
+        heapTotal = heapTotal / 1024 / 1024;
+        heapTotal = heapTotal | 0;
+        console.log("\u5185\u5B58\u5360\u7528: " + heapTotal + "M " + proj.path);
+        if (heapTotal > 500) {
+            console.log("内存占用过高,关闭进程:" + proj.path);
             proj.shutdown();
         }
     }
@@ -84,7 +91,7 @@ function execCommand(command, callback, startServer) {
         setTimeout(function () { return execCommand(command, callback); }, 200);
     });
     ss.send(command);
-    ss.on('message', function (cmd) { return callback && callback(cmd); });
+    ss.on('message', function (cmd) { return callback && callback(cmd, ss); });
     return ss;
 }
 exports.execCommand = execCommand;
@@ -119,7 +126,6 @@ function shutdown() {
         var project = projects[path];
         project.shutdown();
     }
-    console.log("shutdown method");
     process.exit(0);
 }
 function parseRequest(req) {
@@ -132,5 +138,3 @@ function getServiceURL(params) {
     return "http://127.0.0.1:" + exports.LARK_SERVICE_PORT + "/?q=" + encodeURIComponent(json);
 }
 /// <reference path="../lib/types.d.ts" />
-
-//# sourceMappingURL=../service/index.js.map

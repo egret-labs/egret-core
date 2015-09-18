@@ -39,7 +39,8 @@ var DirectoryState = (function () {
             }
         });
         this.lastStates = currentStates;
-        console.log("Directory.fileChanges:", fileChanges);
+        console.log("扫描到的文件变化列表:");
+        console.log(fileChanges);
         return fileChanges;
     };
     return DirectoryState;
@@ -70,5 +71,3 @@ function updateMTime(filePath, states) {
     }
     return states;
 }
-
-//# sourceMappingURL=../lib/DirectoryState.js.map
