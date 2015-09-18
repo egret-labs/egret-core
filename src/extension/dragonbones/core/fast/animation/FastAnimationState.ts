@@ -524,16 +524,16 @@ module dragonBones {
 			for(var i:number = 0;i < length;i++){
 				var timelineName:string = this.animationData.hideTimelineNameMap[i];
 				
-				var slot:FastSlot = this._armature.getSlot(timelineName);
-				if(slot){
-					slot.hideSlots();
+				var bone:FastBone = this._armature.getBone(timelineName);
+				if(bone){
+					bone._hideSlots();
 				}
 			}
 			var slotTimelineName:string;
             for(i = 0,length = this.animationData.hideSlotTimelineNameMap.length; i < length; i++)
 			{
 				slotTimelineName = this.animationData.hideSlotTimelineNameMap[i];
-				slot = this._armature.getSlot(slotTimelineName);
+				var slot:FastSlot = this._armature.getSlot(slotTimelineName);
 				if (slot)
 				{
 					slot._resetToOrigin();

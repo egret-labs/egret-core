@@ -129,6 +129,15 @@ module dragonBones {
 			this._updateGlobal();
 		}
 		
+		/** @private */
+		public _hideSlots():void{
+			var length:number = this.slotList.length;
+			for(var i:number = 0;i < length;i++){
+				var childSlot:FastSlot = this.slotList[i];
+				childSlot.hideSlots();
+			}
+		}
+
 		/** @private When bone timeline enter a key frame, call this func*/
 		public arriveAtFrame(frame:Frame, animationState:FastAnimationState):void{
 			var childSlot:FastSlot;
