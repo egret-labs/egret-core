@@ -3116,23 +3116,23 @@ var egret;
         d(p, "touchEnabled"
             /**
              * @language en_US
-             * Specifies whether this object receives touch or other user input. The default value is true, which means that
-             * by default any DisplayObject instance that is on the display list receives touch events. If touchEnabled is
+             * Specifies whether this object receives touch or other user input. The default value is false, which means that
+             * by default any DisplayObject instance that is on the display list cannot receive touch events. If touchEnabled is
              * set to false, the instance does not receive any touch events (or other user input events). Any children of
              * this instance on the display list are not affected. To change the touchEnabled behavior for all children of
              * an object on the display list, use DisplayObjectContainer.touchChildren.
              * @see egret.DisplayObjectContainer#touchChildren
-             * @default true
+             * @default false
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 指定此对象是否接收触摸或其他用户输入。默认值为 true，这表示默认情况下，显示列表上的任何 isplayObject 实例都会接收触摸事件或
+             * 指定此对象是否接收触摸或其他用户输入。默认值为 false，这表示默认情况下，显示列表上的任何 DisplayObject 实例都不会接收触摸事件或
              * 其他用户输入事件。如果将 touchEnabled 设置为 false，则实例将不接收任何触摸事件（或其他用户输入事件）。显示列表上的该实例的任
              * 何子级都不会受到影响。要更改显示列表上对象的所有子级的 touchEnabled 行为，请使用 DisplayObjectContainer.touchChildren。
              * @see egret.DisplayObjectContainer#touchChildren
-             * @default true
+             * @default false
              * @version Egret 2.4
              * @platform Web,Native
              */
@@ -17409,6 +17409,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
+                this.$getLinesArr();
                 return this.$TextField[29 /* numLines */];
             }
         );

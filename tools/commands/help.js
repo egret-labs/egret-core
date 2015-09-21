@@ -10,7 +10,7 @@ var Help = (function () {
     };
     Help.prototype.parse = function () {
         var self = this;
-        var helpName = egret.args.commands[1];
+        var helpName = egret.args.commands ? egret.args.commands[1] : null;
         if (helpName) {
             try {
                 var bParseConfig = true;

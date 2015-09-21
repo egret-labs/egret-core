@@ -1,8 +1,7 @@
 /// <reference path="../lib/types.d.ts" />
 var FileUtil = require('../lib/FileUtil');
 var fileExtensionToIgnore = {
-    "ts": true,
-    "exml": true
+    "ts": true
 };
 var CopyFiles = (function () {
     function CopyFiles() {
@@ -39,8 +38,17 @@ function copyDirectory(from, to, filter) {
     }
 }
 function srcFolderOutputFilter(file) {
+    var hasEUI = false;
+    if (FileUtil.exists(FileUtil.joinPath(egret.args.projectDir, "egretProperties.json"))) {
+        var properties = JSON.parse(FileUtil.read(FileUtil.joinPath(egret.args.projectDir, "egretProperties.json")));
+        for (var key in properties["modules"]) {
+            hasEUI = hasEUI || properties["modules"][key].name == "eui";
+        }
+    }
     var extension = FileUtil.getExtension(file);
     if (extension in fileExtensionToIgnore)
+        return false;
+    else if (extension == "exml" && !hasEUI)
         return false;
     return true;
 }

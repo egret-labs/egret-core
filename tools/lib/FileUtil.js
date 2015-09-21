@@ -199,6 +199,7 @@ function remove(path) {
         FS.lstatSync(path).isDirectory()
             ? rmdir(path)
             : FS.unlinkSync(path);
+        getDirectoryListing(path);
     }
     catch (e) {
     }
@@ -220,6 +221,12 @@ function rmdir(path) {
         FS.rmdirSync(path);
     }
 }
+function rename(oldPath, newPath) {
+    if (isDirectory(oldPath)) {
+        FS.renameSync(oldPath, newPath);
+    }
+}
+exports.rename = rename;
 /**
  * 返回指定文件的父级文件夹路径,返回字符串的结尾已包含分隔符。
  */
