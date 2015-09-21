@@ -147,6 +147,8 @@ module dragonBones {
 		
 		public _calculateRelativeParentTransform():void{
 			this._global.copy(this._origin);
+			this._global.x += this._parent._tweenPivot.x;
+			this._global.y += this._parent._tweenPivot.y;
 		}
 		
 		public initDisplayList(newDisplayList:Array<any>):void{

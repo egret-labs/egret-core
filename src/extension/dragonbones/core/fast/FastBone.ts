@@ -59,10 +59,12 @@ module dragonBones {
 		
 		/** @private */
 		public _needUpdate:number = 0;
+		public _tweenPivot:Point;
 		
 		public constructor(){
 			super();
 			this._needUpdate = 2;
+			this._tweenPivot = new Point();
 		}
 
 		/**
@@ -91,6 +93,7 @@ module dragonBones {
 		public dispose():void{
 			super.dispose();
 			this._timelineState = null;
+			this._tweenPivot = null;
 		}
 		
 	//动画
@@ -124,7 +127,7 @@ module dragonBones {
 			else{
 				return;
 			}
-			
+			this.blendingTimeline();
 			//计算global
 			this._updateGlobal();
 		}
@@ -135,6 +138,15 @@ module dragonBones {
 			for(var i:number = 0;i < length;i++){
 				var childSlot:FastSlot = this.slotList[i];
 				childSlot.hideSlots();
+			}
+		}
+
+		private blendingTimeline():void
+		{
+			if(this._timelineState)
+			{
+				this._tweenPivot.x = this._timelineState._pivot.x;
+				this._tweenPivot.y = this._timelineState._pivot.y;
 			}
 		}
 
