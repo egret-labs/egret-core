@@ -199,6 +199,9 @@ function remove(path) {
         FS.lstatSync(path).isDirectory()
             ? rmdir(path)
             : FS.unlinkSync(path);
+        if (isDirectory(path)) {
+            getDirectoryListing(path);
+        }
     }
     catch (e) {
     }

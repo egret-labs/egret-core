@@ -203,7 +203,11 @@ export function remove(path:string):void {
     try {
         FS.lstatSync(path).isDirectory()
             ? rmdir(path)
-            : FS.unlinkSync(path)
+            : FS.unlinkSync(path);
+
+        if (isDirectory(path)) {
+            getDirectoryListing(path);
+        }
     }
     catch (e) {
     }
