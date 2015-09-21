@@ -54,6 +54,7 @@ class Publish implements egret.Command {
                 if (nativePath = egret.args.properties.getNativePath("android")) {
                     var url1 = FileUtil.joinPath(nativePath, "proj.android");
                     var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
+
                     FileUtil.remove(url2);
 
                     FileUtil.createDirectory(url2);
@@ -68,6 +69,7 @@ class Publish implements egret.Command {
                 if (nativePath = egret.args.properties.getNativePath("ios")) {
                     var url1 = FileUtil.joinPath(nativePath, "proj.ios");
                     url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
+
                     FileUtil.remove(url2);
 
                     FileUtil.createDirectory(url2);

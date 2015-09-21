@@ -67,7 +67,7 @@ class ZipCommand implements egret.Command {
         var compilerPath = FileUtil.joinPath(egret.root, "tools/lib/zip/EGTZipTool_v1.0.2.jar");
         compilerPath = globals.addQuotes(compilerPath);
 
-        var cmd = globals.getGlobalJava() + ' -jar ' + compilerPath + ' zip ' + this.outputFile + ' ' + this.sourcePath + ' ' + this.password;
+        var cmd = globals.getGlobalJava() + ' -jar ' + compilerPath + ' zip ' + globals.addQuotes(this.outputFile) + ' ' + globals.addQuotes(this.sourcePath) + ' ' + this.password;
         var cp_exec1 = require('child_process').exec;
         var build = cp_exec1(cmd);
         build.stdout.on("data", function(data) {
