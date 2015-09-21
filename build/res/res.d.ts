@@ -825,7 +825,7 @@ declare module RES {
          * 获取相对位置
          */
         getRelativePath(url: string, file: string): string;
-        private parseSpriteSheet(texture, data, name);
+        protected parseSpriteSheet(texture: egret.Texture, data: any, name: string): egret.SpriteSheet;
         destroyRes(name: string): boolean;
         /**
          * ImageLoader对象池

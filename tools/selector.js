@@ -81,6 +81,7 @@ function entry() {
         handled = executeVersion(projectVersion);
         if (!handled) {
             exit(1, projectVersion);
+            return;
         }
     }
     if (!handled) {
@@ -126,6 +127,10 @@ function exit(code) {
             process.exit(code);
         });
     }
+    else {
+        tr();
+        process.exit(code);
+    }
 }
 function printVersions() {
     var versions = getEngineVersions();
@@ -143,6 +148,9 @@ function executeVersion(version, root) {
     }
     process.env["EGRET_PATH"] = root;
     var bin = getBin(root);
+    if (args.command != "info") {
+        console.log("----- Egret Engine " + version + " -----");
+    }
     require(bin);
     return true;
 }

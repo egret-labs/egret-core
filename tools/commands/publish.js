@@ -45,14 +45,14 @@ var Publish = (function () {
                 if (nativePath = egret.args.properties.getNativePath("android")) {
                     var url1 = FileUtil.joinPath(nativePath, "proj.android");
                     var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
-                    var tempurl2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game-temp");
-                    if (FileUtil.exists(tempurl2)) {
-                        FileUtil.remove(tempurl2);
+                    FileUtil.remove(url2);
+                    try {
+                        FileUtil.createDirectory(url2);
                     }
-                    FileUtil.rename(url2, tempurl2);
-                    FileUtil.createDirectory(url2);
+                    catch (e) {
+                        globals.exit(10021);
+                    }
                     FileUtil.copy(releasePath, url2);
-                    FileUtil.remove(tempurl2);
                     //修改java文件
                     var entrance = new ChangeEntranceCMD();
                     entrance.initCommand(url1, "android", versionFile);
@@ -61,14 +61,14 @@ var Publish = (function () {
                 if (nativePath = egret.args.properties.getNativePath("ios")) {
                     var url1 = FileUtil.joinPath(nativePath, "proj.ios");
                     url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
-                    var tempurl2 = FileUtil.joinPath(nativePath, "Resources", "egret-game-temp");
-                    if (FileUtil.exists(tempurl2)) {
-                        FileUtil.remove(tempurl2);
+                    FileUtil.remove(url2);
+                    try {
+                        FileUtil.createDirectory(url2);
                     }
-                    FileUtil.rename(url2, tempurl2);
-                    FileUtil.createDirectory(url2);
+                    catch (e) {
+                        globals.exit(10021);
+                    }
                     FileUtil.copy(releasePath, url2);
-                    FileUtil.remove(tempurl2);
                     //修改java文件
                     var entrance = new ChangeEntranceCMD();
                     entrance.initCommand(url1, "ios", versionFile);
