@@ -81,6 +81,7 @@ function entry() {
         handled = executeVersion(projectVersion);
         if (!handled) {
             exit(1, projectVersion);
+            return;
         }
     }
     if (!handled) {
@@ -125,6 +126,10 @@ function exit(code) {
             tr();
             process.exit(code);
         });
+    }
+    else {
+        tr();
+        process.exit(code);
     }
 }
 function printVersions() {
@@ -581,5 +586,4 @@ var locals;
     ;
 })(locals || (locals = {}));
 entry();
-
 //# sourceMappingURL=selector.js.map

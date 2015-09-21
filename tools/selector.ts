@@ -96,6 +96,7 @@ function entry() {
         handled = executeVersion(projectVersion);
         if (!handled) {
             exit(1, projectVersion);
+            return;
         }
     }
 
@@ -141,6 +142,10 @@ function exit(code: number, ...args:any[]) {
             tr();
             process.exit(code);
         });
+    }
+    else {
+        tr();
+        process.exit(code);
     }
 }
 
