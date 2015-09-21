@@ -1,5 +1,10 @@
 [
   {
+    "desc": "class Injector{ static mapClass(whenAskedFor: any, instantiateClass: any, named?: string): void; }",
+    "solution-url":"res_selfparse_md",
+    "solved":true
+  },
+  {
     "desc":"class DisplayObject{ _onRemoveFromStage(): void; }",
     "solution-url":"draw_md",
     "solved":true

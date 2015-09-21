@@ -660,6 +660,9 @@
 				}else{
 					name = body_arr[i];
 				}
+			}else{
+				//添加修饰符(有用)
+				item['decorate'] = body_arr[i];
 			}
 		}
 		//step 6 冲突检测

@@ -9,6 +9,9 @@ var utils = require('../lib/utils');
 var DTS = require('./upgrade/2.4.2/compare2dts.js');
 var AutoLogger = {
     _isConsoleOut: false,
+    _htmlTitle: '<!DOCTYPE html><html><head><title>API检测结果报告</title><meta charset="UTF-8"></head><body>',
+    _htmlBody: '',
+    _htmlEnd: '</body></html>',
     _snapShot: '',
     _solutionMap: {},
     _dir: '',
@@ -122,19 +125,25 @@ var AutoLogger = {
                 console.log(this._logContent.title);
             }
             this._snapShot += '\n' + this._logContent.title;
+            this._htmlBody += '<ul class="solution"><h3>' + this._logContent.title + '</h3>';
             //step2
             var fileRefLine;
+            var htmlRefLine;
             for (var file_path in this._logContent.references) {
                 fileRefLine = file.getRelativePath(this._dir, file_path) + ' ';
+                htmlRefLine = '<i>' + file.getRelativePath(this._dir, file_path) + '</i>';
                 for (var api in this._logContent.references[file_path]) {
                     this._logContent.references[file_path][api].forEach(function (lineNum) {
                         //行号需要＋1
                         fileRefLine += (lineNum + 1) + ', ';
+                        htmlRefLine += '<b>' + (lineNum + 1) + '</b>' + ', ';
                         _this._total++;
                     });
                     fileRefLine = fileRefLine.slice(0, fileRefLine.lastIndexOf(', ')) + '行处引用 ';
+                    htmlRefLine = htmlRefLine.slice(0, htmlRefLine.lastIndexOf(', ')) + '行处引用 ';
                     if (this._logContent.references[file_path][api].isAPIshow) {
                         fileRefLine += api + ' ;';
+                        htmlRefLine += api + ' ;';
                     }
                     ;
                 }
@@ -142,11 +151,13 @@ var AutoLogger = {
                     console.log(fileRefLine);
                 }
                 this._snapShot += '\n' + fileRefLine;
+                this._htmlBody += '<li>' + htmlRefLine + '</li>';
             }
             if (this._isConsoleOut) {
                 console.log('\n');
             }
             this._snapShot += '\n';
+            this._htmlBody += '</ul>';
         }
         //清空_logContent对象
         this._logContent.title = null;
@@ -157,7 +168,7 @@ var AutoLogger = {
     },
     _filterUrl: function (key) {
         if (key in this._solutionMap) {
-            return this._solutionMap[key];
+            return '<a herf="' + this._solutionMap[key] + '">' + this._solutionMap[key] + '</a>';
         }
         else
             return key;
@@ -225,7 +236,7 @@ var APItestCommand = (function () {
                     AutoLogger.logTitle(item);
                     //console.log(item.name+'.'+item['category-name']);
                     if (pkg = _this.tsp.getDeclarationPosition(fatherName, searchName)) {
-                        _this.tsp.getAllReferenceAccordingDeclarationPosition(pkg.path, pkg.position, fatherName, function (filePath, line) {
+                        _this.tsp.getAllReferenceAccordingDeclarationPosition(pkg.path, pkg.position, item['decorate'], fatherName, function (filePath, line) {
                             AutoLogger.logRef(filePath, line);
                             //console.log(filePath,line);
                         });
@@ -241,10 +252,14 @@ var APItestCommand = (function () {
                     }
                     //延时操作下一步
                     setTimeout(function () {
-                        //写入log并打开log
+                        //写入html并打开网址
+                        var saveContent = AutoLogger._htmlTitle +
+                            '<h1>' + projectPath + '<b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
+                            '<h2>共计 <b>' + AutoLogger._total + '</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
+                            AutoLogger._htmlBody + AutoLogger._htmlEnd;
                         var saveContent = AutoLogger._snapShot;
                         if (saveContent != '') {
-                            var saveLogFilePath = file.joinPath(projectPath, 'LOG_APITEST.txt');
+                            var saveLogFilePath = file.joinPath(projectPath, 'LOG_APITEST.html');
                             _this.saveFileAndOpen(saveLogFilePath, saveContent);
                             globals.log2(1712, saveLogFilePath);
                         }
@@ -266,7 +281,6 @@ var APItestCommand = (function () {
                 globals.exit(1702);
             }
             else {
-                globals.exit(1706, AutoLogger._total);
             }
         }
     };
