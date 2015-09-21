@@ -205,9 +205,7 @@ export function remove(path:string):void {
             ? rmdir(path)
             : FS.unlinkSync(path);
 
-        if (isDirectory(path)) {
-            getDirectoryListing(path);
-        }
+        getDirectoryListing(path);
     }
     catch (e) {
     }
