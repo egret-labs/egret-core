@@ -12,6 +12,7 @@ import utils = require('../lib/utils');
 var DTS = require('./upgrade/2.4.2/compare2dts.js');
 
 var AutoLogger = {
+    _isConsoleOut:false,
     _snapShot:'',
     _solutionMap:{},
     _dir:'',
@@ -117,7 +118,9 @@ var AutoLogger = {
         //过滤掉只有title的情况
         if(this._logContent.title && this._logContent.references && this._logContent.isShow){
             //step1
-            console.log(this._logContent.title);
+            if(this._isConsoleOut){
+                console.log(this._logContent.title);
+            }
             this._snapShot += '\n'+this._logContent.title;
             //step2
             var fileRefLine;
@@ -135,10 +138,14 @@ var AutoLogger = {
                         fileRefLine += api + ' ;';
                     };
                 }
-                console.log(fileRefLine);
-                this._snapShot += fileRefLine;
+                if(this._isConsoleOut){
+                    console.log(fileRefLine);
+                }
+                this._snapShot += '\n'+fileRefLine;
             }
-            console.log('\n');
+            if(this._isConsoleOut){
+                console.log('\n');
+            }
             this._snapShot += '\n';
         }
         //清空_logContent对象
@@ -230,17 +237,39 @@ class APItestCommand implements egret.Command{
             });
             AutoLogger.close();
 
-            //写入log并打开log
-            var saveLogFilePath = file.joinPath(projectPath,'LOG_'+new Date().toLocaleString()+'_APITEST.txt');
-            var saveContent = AutoLogger._snapShot;
-            this.saveFileAndOpen(saveLogFilePath,saveContent);
+            if(AutoLogger._snapShot != ''){
+                //打开项目目录(异步方法)
+                utils.open(projectPath,(err,stdout,stderr)=>{
+                    if(err){
+                        console.log(stderr);
+                    }
+                    //延时操作下一步
+                    setTimeout(()=>{
+                        //写入log并打开log
+                        var saveContent = AutoLogger._snapShot;
+                        if(saveContent != ''){
+                            var saveLogFilePath = file.joinPath(projectPath,'LOG_APITEST.txt');
+                            this.saveFileAndOpen(saveLogFilePath,saveContent);
+                            globals.log2(1712,saveLogFilePath);
+                        }
+                        sumUpAndEndProcess();
+                    },200);
+                });
+            }else{
+                sumUpAndEndProcess();
+            }
+        }else{
+            globals.exit(1705);
+        }
+
+        //统计数据并退出
+        function sumUpAndEndProcess(){
+            //提示及退出
             if(AutoLogger._total === 0){
                 globals.exit(1702);
             }else{
                 globals.exit(1706,AutoLogger._total);
             }
-        }else{
-            globals.exit(1705);
         }
     }
 

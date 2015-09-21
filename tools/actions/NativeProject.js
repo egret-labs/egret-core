@@ -18,10 +18,24 @@ var NativeProject = (function () {
         if (nativePath = egret.args.properties.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
-            FileUtil.remove(url2);
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            var tempurl2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game-temp");
+            if (FileUtil.exists(tempurl2)) {
+                FileUtil.remove(tempurl2);
+            }
+            try {
+                FileUtil.rename(url2, tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+                FileUtil.remove(tempurl2);
+            }
+            catch (e) {
+                FileUtil.remove(url2);
+                FileUtil.remove(tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
             //修改java文件
             var entrance = new ChangeEntranceCMD();
             entrance.initCommand(url1, "android");
@@ -30,10 +44,24 @@ var NativeProject = (function () {
         if (nativePath = egret.args.properties.getNativePath("ios")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
             url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
-            FileUtil.remove(url2);
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            var tempurl2 = FileUtil.joinPath(nativePath, "Resources", "egret-game-temp");
+            if (FileUtil.exists(tempurl2)) {
+                FileUtil.remove(tempurl2);
+            }
+            try {
+                FileUtil.rename(url2, tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+                FileUtil.remove(tempurl2);
+            }
+            catch (e) {
+                FileUtil.remove(url2);
+                FileUtil.remove(tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
             //修改java文件
             var entrance = new ChangeEntranceCMD();
             entrance.initCommand(url1, "ios");

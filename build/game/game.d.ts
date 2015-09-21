@@ -78,14 +78,21 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
+    * @language en_US
+    * @version Egret 2.4
+    * @platform Web,Native
+    * @includeExample extension/game/display/MovieClip.ts
+    */
+    /**
+     * @language zh_CN
+     * 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
      * @extends egret.DisplayObject
      * @event egret.Event.COMPLETE 动画播放完成。
      * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
      * @see http://edn.egret.com/cn/index.php/article/index/id/151 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/MovieClip.ts
+     * @includeExample extension/game/display/MovieClip.ts
      */
     class MovieClip extends DisplayObject {
         $bitmapData: Texture;
@@ -993,14 +1000,14 @@ declare module egret {
      * ScrollView auxiliary classes for slides, you will pass a display object constructor. It can display more than the range display object within the specified size range. And can easily drag in this range.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/ScrollView.ts
+     * @includeExample extension/game/display/ScrollView.ts
      */
     /**
      * @language zh_CN
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/ScrollView.ts
+     * @includeExample extension/game/display/ScrollView.ts
      */
     class ScrollView extends DisplayObjectContainer {
         /**
@@ -1576,7 +1583,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequest.ts
+     * @includeExample extension/game/net/URLRequest.ts
      */
     /**
      * @language zh_CN
@@ -1584,7 +1591,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequest.ts
+     * @includeExample extension/game/net/URLRequest.ts
      */
     class URLRequest extends HashObject {
         /**
@@ -1717,7 +1724,7 @@ declare module egret {
      * @event egret.IOErrorEvent.IO_ERROR io error.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLLoader.ts
+     * @includeExample extension/game/net/URLLoader.ts
      */
     /**
      * @language zh_CN
@@ -1729,7 +1736,7 @@ declare module egret {
      * @event egret.IOErrorEvent.IO_ERROR 加载错误后调度。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLLoader.ts
+     * @includeExample extension/game/net/URLLoader.ts
      */
     class URLLoader extends EventDispatcher {
         /**
@@ -1833,7 +1840,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/netformat.html Read different data format
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLLoaderDataFormat.ts
+     * @includeExample extension/game/net/URLLoaderDataFormat.ts
      */
     /**
      * @language zh_CN
@@ -1841,7 +1848,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/netformat.html 读取不同数据格式
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLLoaderDataFormat.ts
+     * @includeExample extension/game/net/URLLoaderDataFormat.ts
      */
     class URLLoaderDataFormat {
         /**
@@ -1918,7 +1925,7 @@ declare module egret {
      * Note: Because of browser compatibility, this property has not been achieved in html5
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequestHeader.ts
+     * @includeExample extension/game/net/URLRequestHeader.ts
      */
     /**
      * @language zh_CN
@@ -1926,7 +1933,7 @@ declare module egret {
      * 注意：由于浏览器兼容性原因，在 html5 中并未实现
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequestHeader.ts
+     * @includeExample extension/game/net/URLRequestHeader.ts
      */
     class URLRequestHeader {
         /**
@@ -1978,7 +1985,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequestMethod.ts
+     * @includeExample extension/game/net/URLRequestMethod.ts
      */
     /**
      * @language zh_CN
@@ -1987,7 +1994,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/postget.html POST与GET
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequestMethod.ts
+     * @includeExample extension/game/net/URLRequestMethod.ts
      */
     class URLRequestMethod {
         /**
@@ -2026,7 +2033,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/senddata.html Send the request with parameters
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLVariables.ts
+     * @includeExample extension/game/net/URLVariables.ts
      */
     /**
      * @language zh_CN
@@ -2035,7 +2042,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/post/manual/net/senddata.html 发送带参数的请求
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLVariables.ts
+     * @includeExample extension/game/net/URLVariables.ts
      */
     class URLVariables extends HashObject {
         /**
@@ -2112,9 +2119,16 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @deprecated
+    * @language en_US
+    * @version Egret 2.4
+    * @platform Web,Native
+    * @includeExample extension/game/player/Ticker.ts
+    */
+    /**
+     * @language zh_CN
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/game/player/Ticker.ts
      */
     class Ticker extends EventDispatcher {
         /**
@@ -2294,14 +2308,14 @@ declare module egret {
      * Tool class for object cache repeat use, which can be used to construct an object pool. Objects are automatically recycled after a certain duration.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/Recycler.ts
+     * @includeExample extension/game/utils/Recycler.ts
      */
     /**
      * @language zh_CN
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/Recycler.ts
+     * @includeExample extension/game/utils/Recycler.ts
      */
     class Recycler extends HashObject {
         /**
@@ -2416,7 +2430,7 @@ declare module egret {
      * @returns {number} Return index which can be used for clearInterval
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/setInterval.ts
+     * @includeExample extension/game/utils/setInterval.ts
      */
     /**
      * @language zh_CN
@@ -2428,7 +2442,7 @@ declare module egret {
      * @returns {number} 返回索引，可以用于 clearInterval
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/setInterval.ts
+     * @includeExample extension/game/utils/setInterval.ts
      */
     function setInterval(listener: Function, thisObject: any, delay: number, ...args: any[]): number;
     /**
@@ -2460,7 +2474,7 @@ declare module egret {
      * @returns {number} Return index which can be used for clearTimeout
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/setTimeout.ts
+     * @includeExample extension/game/utils/setTimeout.ts
      */
     /**
      * @language zh_CN
@@ -2472,7 +2486,7 @@ declare module egret {
      * @returns {number} 返回索引，可以用于 clearTimeout
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/setTimeout.ts
+     * @includeExample extension/game/utils/setTimeout.ts
      */
     function setTimeout(listener: Function, thisObject: any, delay: number, ...args: any[]): number;
     /**

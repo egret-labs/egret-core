@@ -127,7 +127,7 @@ class AutoCompileCommand implements egret.Command {
             }
             this.exitCode[1] = result.exitStatus;
             this.messages[1] = result.messages;
-            
+
         }
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
@@ -211,7 +211,6 @@ class AutoCompileCommand implements egret.Command {
     }
 
     private onServiceMessage(msg: egret.ServiceBuildCommand) {
-        console.log(msg);
         if (msg.command == 'build' && msg.option)
             egret.args = parser.parseJSON(msg.option);
         if (msg.command == 'build')

@@ -35,7 +35,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     /**
      * @language zh_CN
@@ -43,7 +43,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     export class ItemTapEvent extends egret.Event {
         /**

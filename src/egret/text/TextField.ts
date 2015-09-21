@@ -1060,7 +1060,8 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get numLines():number {
+        public get numLines(): number {
+            this.$getLinesArr();
             return this.$TextField[sys.TextKeys.numLines];
         }
 

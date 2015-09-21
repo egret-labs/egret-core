@@ -34,6 +34,7 @@ module egret {
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     /**
      * @language zh_CN
@@ -41,6 +42,7 @@ module egret {
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     export class HtmlTextParser{
 

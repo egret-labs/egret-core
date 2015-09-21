@@ -53,6 +53,7 @@ locale_strings[10018] = "Found circular dependency when try to sort the TypeScri
                       + "or using a subclass in immediately executing codes";
 locale_strings[10019] = "Cannot find the projects used to build native apps. These projects are not include on the Github."
                       + "Please visit http://www.egret.com to download the Egret Installer. If you have install Egret, please contact us.";
+locale_strings[10020] = "Compile service is exit unexpectedly";
 
 
 locale_strings[12000] = "Create Egret Project";

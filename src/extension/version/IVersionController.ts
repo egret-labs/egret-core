@@ -33,12 +33,14 @@ module egret {
      * Version control loading interface
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/version/VersionControl.ts
      */
     /**
      * @language zh_CN
      * 版本控制加载的接口
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/version/VersionControl.ts
      */
     export interface IVersionController extends egret.IEventDispatcher {
         /**
@@ -105,6 +107,7 @@ module egret {
      * @platform Web,Native
      * @event egret.Event.COMPLETE Version control loading is complete when thrown
      * @event egret.IOErrorEvent.IO_ERROR Version control failed to load when thrown
+     * @includeExample extension/version/VersionControl.ts
      */
     /**
      * @language zh_CN
@@ -113,6 +116,7 @@ module egret {
      * @platform Web,Native
      * @event egret.Event.COMPLETE 版本控制加载完成时抛出
      * @event egret.IOErrorEvent.IO_ERROR 版本控制加载失败时抛出
+     * @includeExample extension/version/VersionControl.ts
      */
     export interface VersionController extends IVersionController {
 

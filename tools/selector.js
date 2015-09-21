@@ -49,6 +49,7 @@ var Path = require("path");
 var DEFAULT_ENGINE = "defaultEngine";
 var args;
 var configData;
+var language;
 var commandsToSkip = {
     "upgrade": true,
     "help": true
@@ -66,20 +67,64 @@ function entry() {
     if (requestVersion) {
         handled = executeVersion(requestVersion);
         if (!handled) {
-            console.error("Can not find Egret Engine " + requestVersion);
+            exit(1, requestVersion);
         }
         return;
     }
     var defaultVersion = getDefaultEngineInfo();
     if (!defaultVersion.root) {
-        console.error("Can not find default Egret Engine");
+        exit(2, defaultVersion.version);
+        return;
     }
     var projectVersion = getProjectVersion();
     if (projectVersion && !(args.command in commandsToSkip)) {
         handled = executeVersion(projectVersion);
+        if (!handled) {
+            exit(1, projectVersion);
+        }
     }
     if (!handled) {
         executeVersion(defaultVersion.version, defaultVersion.root);
+    }
+}
+function exit(code) {
+    var args = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args[_i - 1] = arguments[_i];
+    }
+    var localsMessages = {
+        en: {
+            1: "Can not find Egret Engine {0}, please install it with Egret Launcher.",
+            2: "Can not find Egret Engine, please open Egret Launcher and press the \"Reset\" button."
+        },
+        zh: {
+            1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
+            2: "找不到任何版本的引擎，请尝试打开引擎面板并点击“重置引擎”按钮"
+        }
+    };
+    function tr() {
+        var messages = localsMessages[language] || localsMessages["en"];
+        var message = messages[code];
+        message = format(message, args);
+        console.error(message);
+    }
+    function format(text, args) {
+        var length = args.length;
+        for (var i = 0; i < length; i++) {
+            text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]);
+        }
+        return text;
+    }
+    if (!language) {
+        locals.getLanguage(function (err, local) {
+            var lang = local.split("_")[0];
+            if (lang != "zh" && lang != "en") {
+                lang = "en";
+            }
+            language = lang;
+            tr();
+            process.exit(code);
+        });
     }
 }
 function printVersions() {
@@ -106,7 +151,7 @@ function getProjectVersion() {
     if (file.exists(propsPath)) {
         var jsonText = file.read(propsPath);
         var props = JSON.parse(jsonText);
-        return props["version"];
+        return props["egret_version"];
     }
     return null;
 }
@@ -114,10 +159,13 @@ function getEngineInfo(version) {
     version = version || DEFAULT_ENGINE;
     var defaultRoot = null;
     if (configData && configData.egret && configData.egret[version]) {
-        return {
-            version: version,
-            root: configData.egret[version].root
-        };
+        var root = configData.egret[version].root;
+        if (file.exists(getBin(root))) {
+            return {
+                version: version,
+                root: root
+            };
+        }
     }
     if (!defaultRoot) {
         var versionPath = getEnginesRootPath() + version;
@@ -139,6 +187,7 @@ function getDefaultEngineInfo() {
     if (configData) {
         var defaultVersion = configData.egret[DEFAULT_ENGINE];
         if (defaultVersion) {
+            version = defaultVersion;
             var engineInfo = configData.egret[defaultVersion];
             if (engineInfo) {
                 defaultRoot = engineInfo.root;
@@ -154,16 +203,21 @@ function getDefaultEngineInfo() {
     if (!defaultRoot) {
         var info = getLastEgretEngine();
         if (info && info.root) {
-            defaultRoot = info.root;
+            version = info.version;
+            if (configData.egret[info.version]) {
+                defaultRoot = configData.egret[info.version].root;
+            }
+            else {
+                defaultRoot = info.root;
+            }
         }
     }
     if (!defaultRoot) {
-        console.log("Can not find Egret Engine");
-        process.exit(1);
+        exit(2);
     }
     return {
         version: version,
-        root: defaultRoot
+        root: file.escapePath(defaultRoot)
     };
 }
 function getBin(versionRoot) {
@@ -252,6 +306,9 @@ function getEngineVersions() {
         var exist = file.exists(bin);
         if (exist) {
             var version = file.getFileName(versionRoot);
+            if (!/\/$/.test(versionRoot)) {
+                versionRoot += "/";
+            }
             var info = {
                 root: versionRoot,
                 version: version
@@ -262,19 +319,20 @@ function getEngineVersions() {
     });
     if (configData) {
         for (var v in configData.egret) {
+            var rootInConfig = file.escapePath(configData.egret[v].root);
+            var exist = file.exists(getBin(rootInConfig));
+            if (!exist)
+                continue;
             if (versions[v]) {
-                versions[v].root = file.escapePath(configData.egret[v].root);
+                versions[v].root = rootInConfig;
             }
             else {
                 var info = {
-                    root: configData.egret[v].root,
+                    root: rootInConfig,
                     version: v
                 };
-                if (info.root) {
-                    info.root = file.escapePath(info.root);
-                    versions.push(info);
-                    versions[info.version] = info;
-                }
+                versions.push(info);
+                versions[info.version] = info;
             }
         }
     }
@@ -437,6 +495,88 @@ var file;
     }
     file.getFileName = getFileName;
 })(file || (file = {}));
+var locals;
+(function (locals) {
+    var childProcess = require('child_process');
+    var execFileSync = childProcess.execFileSync;
+    var defaultOpts = { spawn: true };
+    var cache;
+    var zhCodes = {
+        4: "zh_CHS",
+        31748: "zh_CHT",
+        2052: "zh_CN",
+        3076: "zh_HK",
+        5124: "zh_MO",
+        4100: "zh_SG",
+        1028: "zh_TW"
+    };
+    function fallback() {
+        cache = 'en_US';
+        return cache;
+    }
+    function getEnvLocale(env) {
+        env = env || process.env;
+        var ret = env.LC_ALL || env.LC_MESSAGES || env.LANG || env.LANGUAGE;
+        cache = getLocale(ret);
+        return ret;
+    }
+    function parseLocale(x) {
+        var env = x.split('\n').reduce(function (env, def) {
+            def = def.split('=');
+            env[def[0]] = def[1];
+            return env;
+        }, {});
+        return getEnvLocale(env);
+    }
+    function getLocale(str) {
+        return (str && str.replace(/[.:].*/, '')) || fallback();
+    }
+    function getLanguage(cb) {
+        var opts = defaultOpts;
+        if (cache || getEnvLocale() || opts.spawn === false) {
+            setImmediate(cb, null, cache);
+            return;
+        }
+        var getAppleLocale = function () {
+            childProcess.execFile('defaults', ['read', '-g', 'AppleLocale'], function (err, stdout) {
+                if (err) {
+                    fallback();
+                    return;
+                }
+                cache = stdout.trim() || fallback();
+                cb(null, cache);
+            });
+        };
+        if (process.platform === 'win32') {
+            childProcess.execFile('wmic', ['os', 'get', 'locale'], function (err, stdout) {
+                if (err) {
+                    fallback();
+                    return;
+                }
+                var lcidCode = parseInt(stdout.replace('Locale', ''), 16);
+                cache = zhCodes[lcidCode] || fallback();
+                cb(null, cache);
+            });
+        }
+        else {
+            childProcess.execFile('locale', function (err, stdout) {
+                if (err) {
+                    fallback();
+                    return;
+                }
+                var res = parseLocale(stdout);
+                if (!res && process.platform === 'darwin') {
+                    getAppleLocale();
+                    return;
+                }
+                cache = getLocale(res);
+                cb(null, cache);
+            });
+        }
+    }
+    locals.getLanguage = getLanguage;
+    ;
+})(locals || (locals = {}));
 entry();
 
 //# sourceMappingURL=selector.js.map

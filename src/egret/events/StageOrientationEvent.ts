@@ -35,12 +35,14 @@ module egret {
 	 * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
 	 */
 	/**
      * @language zh_CN
 	 * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
 	 */
     export class StageOrientationEvent extends Event{
 

@@ -30,6 +30,11 @@ module egret.sys {
 
     /**
      * @private
+     */
+    export var $START_TIME:number = 0;
+
+    /**
+     * @private
      * 是否要广播Event.RENDER事件的标志。
      */
     export var $invalidateRenderFlag:boolean = false;
@@ -51,7 +56,7 @@ module egret.sys {
             if (DEBUG && $ticker) {
                 $error(1008, "egret.sys.SystemTicker");
             }
-            egret.$START_TIME = Date.now();
+            $START_TIME = Date.now();
         }
 
         /**

@@ -35,6 +35,7 @@ module egret {
      * Take care about this while using them.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     /**
      * @language zh_CN
@@ -43,6 +44,7 @@ module egret {
      * 比如使用两次方向数据的变化而不是直接使用方向的值
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     export class OrientationEvent extends Event {
         /**

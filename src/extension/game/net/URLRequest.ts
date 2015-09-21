@@ -36,7 +36,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html Build communication request
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequest.ts
+     * @includeExample extension/game/net/URLRequest.ts
      */
     /**
      * @language zh_CN
@@ -44,7 +44,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/createconnect.html 构建通信请求
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLRequest.ts
+     * @includeExample extension/game/net/URLRequest.ts
      */
     export class URLRequest extends HashObject {
 

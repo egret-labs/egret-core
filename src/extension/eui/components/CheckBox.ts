@@ -42,7 +42,7 @@ module eui {
 	 * @version Egret 2.4
 	 * @version eui 1.0
 	 * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
 	 */
 	/**
 	 * @language zh_CN
@@ -52,7 +52,7 @@ module eui {
 	 * @version Egret 2.4
 	 * @version eui 1.0
 	 * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
 	 */
 	export class CheckBox extends ToggleButton{
 		/**

@@ -27,7 +27,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
+    /**
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/localStorage/localStorage.ts
+     */
 module egret.localStorage {
 
     /**

@@ -35,7 +35,7 @@ module eui {
      * @language en_US
      * Editable text for displaying,
      * scrolling, selecting, and editing text.
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -43,7 +43,7 @@ module eui {
     /**
      * @language zh_CN
      * 可编辑文本，用于显示、滚动、选择和编辑文本。
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native

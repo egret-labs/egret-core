@@ -40,7 +40,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -51,7 +51,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     export class BasicLayout extends LayoutBase {
 

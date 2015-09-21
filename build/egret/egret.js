@@ -9852,12 +9852,14 @@ var egret;
      * and show errors occurred while getting the location of the device.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     /**
      * @language zh_CN
      * GeolocationEvent 提供设备的地理位置信息和获取位置时发生的错误信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     var GeolocationEvent = (function (_super) {
         __extends(GeolocationEvent, _super);
@@ -10201,6 +10203,7 @@ var egret;
      * RotationRate to represents the device's rotation
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     /**
      * @language zh_CN
@@ -10209,6 +10212,7 @@ var egret;
      * RotationRate 呈现设备的旋转状态信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     var MotionEvent = (function (_super) {
         __extends(MotionEvent, _super);
@@ -10258,6 +10262,7 @@ var egret;
      * Take care about this while using them.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     /**
      * @language zh_CN
@@ -10266,6 +10271,7 @@ var egret;
      * 比如使用两次方向数据的变化而不是直接使用方向的值
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     var OrientationEvent = (function (_super) {
         __extends(OrientationEvent, _super);
@@ -10478,12 +10484,14 @@ var egret;
      * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      */
     /**
      * @language zh_CN
      * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      */
     var StageOrientationEvent = (function (_super) {
         __extends(StageOrientationEvent, _super);
@@ -12874,6 +12882,11 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @version Egret 2.4
+ * @platform Web,Native
+ * @includeExample egret/localStorage/localStorage.ts
+ */
 var egret;
 (function (egret) {
     var localStorage;
@@ -14379,10 +14392,16 @@ var egret;
     /**
      * @language en_US
      * StageScaleMode class provides values for the stage zoom mode.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     /**
      * @language zh_CN
      * StageScaleMode 类为舞台缩放模式提供值。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     var StageScaleMode = (function () {
         function StageScaleMode() {
@@ -14565,6 +14584,10 @@ var egret;
     (function (sys) {
         /**
          * @private
+         */
+        sys.$START_TIME = 0;
+        /**
+         * @private
          * 是否要广播Event.RENDER事件的标志。
          */
         sys.$invalidateRenderFlag = false;
@@ -14610,7 +14633,7 @@ var egret;
                 if (DEBUG && sys.$ticker) {
                     egret.$error(1008, "egret.sys.SystemTicker");
                 }
-                egret.$START_TIME = Date.now();
+                sys.$START_TIME = Date.now();
             }
             var d = __define,c=SystemTicker;p=c.prototype;
             /**
@@ -15008,12 +15031,14 @@ var egret;
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     /**
      * @language zh_CN
      * Capabilities 类提供一些属性，这些属性描述了承载应用程序的系统和运行时。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     var Capabilities = (function () {
         function Capabilities() {
@@ -15976,6 +16001,7 @@ var egret;
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     /**
      * @language zh_CN
@@ -15983,6 +16009,7 @@ var egret;
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     var HtmlTextParser = (function () {
         /**
@@ -20880,10 +20907,6 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @private
-     */
-    egret.$START_TIME = 0;
-    /**
      * @language en_US
      * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
      * @returns The number of milliseconds since the Egret framework was initialized
@@ -20900,7 +20923,7 @@ var egret;
      * @includeExample egret/utils/getTimer.ts
      */
     function getTimer() {
-        return Date.now() - egret.$START_TIME;
+        return Date.now() - egret.sys.$START_TIME;
     }
     egret.getTimer = getTimer;
 })(egret || (egret = {}));

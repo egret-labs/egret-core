@@ -2044,6 +2044,7 @@ var RES;
      * @param analyzerClass Injection type classes need to be resolved.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
      */
     /**
      * @language zh_CN
@@ -2052,6 +2053,7 @@ var RES;
      * @param analyzerClass 注入类型需要解析的类。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
      */
     function registerAnalyzer(type, analyzerClass) {
         instance.registerAnalyzer(type, analyzerClass);

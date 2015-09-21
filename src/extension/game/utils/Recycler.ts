@@ -34,14 +34,14 @@ module egret {
      * Tool class for object cache repeat use, which can be used to construct an object pool. Objects are automatically recycled after a certain duration.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/Recycler.ts
+     * @includeExample extension/game/utils/Recycler.ts
      */
     /**
      * @language zh_CN
      * 对象缓存复用工具类，可用于构建对象池，一段时间后会自动回收对象。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/utils/Recycler.ts
+     * @includeExample extension/game/utils/Recycler.ts
      */
     export class Recycler extends HashObject{
 
