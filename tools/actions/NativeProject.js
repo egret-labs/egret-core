@@ -22,11 +22,20 @@ var NativeProject = (function () {
             if (FileUtil.exists(tempurl2)) {
                 FileUtil.remove(tempurl2);
             }
-            FileUtil.rename(url2, tempurl2);
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
-            FileUtil.remove(tempurl2);
+            try {
+                FileUtil.rename(url2, tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+                FileUtil.remove(tempurl2);
+            }
+            catch (e) {
+                FileUtil.remove(url2);
+                FileUtil.remove(tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
             //修改java文件
             var entrance = new ChangeEntranceCMD();
             entrance.initCommand(url1, "android");
@@ -39,11 +48,20 @@ var NativeProject = (function () {
             if (FileUtil.exists(tempurl2)) {
                 FileUtil.remove(tempurl2);
             }
-            FileUtil.rename(url2, tempurl2);
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
-            FileUtil.remove(tempurl2);
+            try {
+                FileUtil.rename(url2, tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+                FileUtil.remove(tempurl2);
+            }
+            catch (e) {
+                FileUtil.remove(url2);
+                FileUtil.remove(tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
             //修改java文件
             var entrance = new ChangeEntranceCMD();
             entrance.initCommand(url1, "ios");

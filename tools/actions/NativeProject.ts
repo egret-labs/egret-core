@@ -15,6 +15,7 @@ class NativeProject {
     public static build(platform?: string) {
         console.log("----native build-----")
 
+
         CompileTemplate.compileNativeRequire(egret.args);
 
         //拷贝项目到native工程中
@@ -29,13 +30,24 @@ class NativeProject {
             if (FileUtil.exists(tempurl2)) {
                 FileUtil.remove(tempurl2);
             }
-            FileUtil.rename(url2, tempurl2);
 
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            try {
+                FileUtil.rename(url2, tempurl2);
 
-            FileUtil.remove(tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+
+                FileUtil.remove(tempurl2);
+            }
+            catch(e) {
+                FileUtil.remove(url2);
+                FileUtil.remove(tempurl2);
+
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();
@@ -50,13 +62,24 @@ class NativeProject {
             if (FileUtil.exists(tempurl2)) {
                 FileUtil.remove(tempurl2);
             }
-            FileUtil.rename(url2, tempurl2);
 
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            try {
+                FileUtil.rename(url2, tempurl2);
 
-            FileUtil.remove(tempurl2);
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+
+                FileUtil.remove(tempurl2);
+            }
+            catch(e) {
+                FileUtil.remove(url2);
+                FileUtil.remove(tempurl2);
+
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();

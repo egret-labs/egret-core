@@ -49,10 +49,18 @@ var Publish = (function () {
                     if (FileUtil.exists(tempurl2)) {
                         FileUtil.remove(tempurl2);
                     }
-                    FileUtil.rename(url2, tempurl2);
-                    FileUtil.createDirectory(url2);
-                    FileUtil.copy(releasePath, url2);
-                    FileUtil.remove(tempurl2);
+                    try {
+                        FileUtil.rename(url2, tempurl2);
+                        FileUtil.createDirectory(url2);
+                        FileUtil.copy(releasePath, url2);
+                        FileUtil.remove(tempurl2);
+                    }
+                    catch (e) {
+                        FileUtil.remove(url2);
+                        FileUtil.remove(tempurl2);
+                        FileUtil.createDirectory(url2);
+                        FileUtil.copy(releasePath, url2);
+                    }
                     //修改java文件
                     var entrance = new ChangeEntranceCMD();
                     entrance.initCommand(url1, "android", versionFile);
@@ -65,10 +73,18 @@ var Publish = (function () {
                     if (FileUtil.exists(tempurl2)) {
                         FileUtil.remove(tempurl2);
                     }
-                    FileUtil.rename(url2, tempurl2);
-                    FileUtil.createDirectory(url2);
-                    FileUtil.copy(releasePath, url2);
-                    FileUtil.remove(tempurl2);
+                    try {
+                        FileUtil.rename(url2, tempurl2);
+                        FileUtil.createDirectory(url2);
+                        FileUtil.copy(releasePath, url2);
+                        FileUtil.remove(tempurl2);
+                    }
+                    catch (e) {
+                        FileUtil.remove(url2);
+                        FileUtil.remove(tempurl2);
+                        FileUtil.createDirectory(url2);
+                        FileUtil.copy(releasePath, url2);
+                    }
                     //修改java文件
                     var entrance = new ChangeEntranceCMD();
                     entrance.initCommand(url1, "ios", versionFile);
