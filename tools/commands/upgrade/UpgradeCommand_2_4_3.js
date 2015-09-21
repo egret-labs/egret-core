@@ -282,7 +282,7 @@ var UpgradeCommand_2_4_3 = (function () {
         //step 3.2 将旧版配置文件的 document_class 属性 配置到template目录下的index.html文件
         var enter_class_name = null;
         if ((enter_class_name = oldProperties['document_class']) && enter_class_name != 'Main') {
-            globals.log2(1710);
+            //globals.log2(1710);
             rplc_parram.push('data-entry-class=\"Main\"');
             rplc_parram.push('data-entry-class=\"' + enter_class_name + '\"');
         }
@@ -386,7 +386,8 @@ var UpgradeCommand_2_4_3 = (function () {
                     }
                     else {
                         globals.log2(1706, AutoLogger._total);
-                        globals.exit(1711, projectPath);
+                        globals.log2(1711, projectPath);
+                        globals.exit(1713);
                     }
                     _this.asyncCallback();
                 }, 200);
