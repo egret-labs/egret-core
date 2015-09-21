@@ -57,7 +57,12 @@ class Publish implements egret.Command {
 
                     FileUtil.remove(url2);
 
-                    FileUtil.createDirectory(url2);
+                    try {
+                        FileUtil.createDirectory(url2);
+                    }
+                    catch(e) {
+                        globals.exit(10021);
+                    }
                     FileUtil.copy(releasePath, url2);
 
                     //修改java文件
@@ -72,7 +77,12 @@ class Publish implements egret.Command {
 
                     FileUtil.remove(url2);
 
-                    FileUtil.createDirectory(url2);
+                    try {
+                        FileUtil.createDirectory(url2);
+                    }
+                    catch(e) {
+                        globals.exit(10021);
+                    }
                     FileUtil.copy(releasePath, url2);
 
                     //修改java文件

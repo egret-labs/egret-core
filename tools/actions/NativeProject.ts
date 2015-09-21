@@ -29,9 +29,14 @@ class NativeProject {
 
             FileUtil.remove(url2);
 
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            try {
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
+            catch(e) {
+                globals.exit(10021);
+            }
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();
@@ -45,9 +50,14 @@ class NativeProject {
 
             FileUtil.remove(url2);
 
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            try {
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
+            catch(e) {
+                globals.exit(10021);
+            }
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();

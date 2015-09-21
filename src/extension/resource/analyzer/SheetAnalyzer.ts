@@ -147,7 +147,7 @@ module RES {
             return url;
         }
 
-        private parseSpriteSheet(texture:egret.Texture, data:any, name:string):egret.SpriteSheet  {
+        protected parseSpriteSheet(texture:egret.Texture, data:any, name:string):egret.SpriteSheet  {
             var frames:any = data.frames;
             if(!frames){
                 return null;
