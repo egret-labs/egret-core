@@ -25,12 +25,17 @@ class NativeProject {
         if (nativePath = egret.args.properties.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
-            FileUtil.remove(url2);
+            var tempurl2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game-temp");
+            if (FileUtil.exists(tempurl2)) {
+                FileUtil.remove(tempurl2);
+            }
+            FileUtil.rename(url2, tempurl2);
 
             cpFiles.outputPath = url2;
             cpFiles.ignorePathList = config.getIgnorePath();
             cpFiles.execute();
 
+            FileUtil.remove(tempurl2);
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();
@@ -41,11 +46,17 @@ class NativeProject {
         if (nativePath = egret.args.properties.getNativePath("ios")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
             url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
-            FileUtil.remove(url2);
+            var tempurl2 = FileUtil.joinPath(nativePath, "Resources", "egret-game-temp");
+            if (FileUtil.exists(tempurl2)) {
+                FileUtil.remove(tempurl2);
+            }
+            FileUtil.rename(url2, tempurl2);
 
             cpFiles.outputPath = url2;
             cpFiles.ignorePathList = config.getIgnorePath();
             cpFiles.execute();
+
+            FileUtil.remove(tempurl2);
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();
