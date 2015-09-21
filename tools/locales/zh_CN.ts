@@ -54,6 +54,7 @@ module egret {
                           + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
     locale_strings[10019] = "没有找到打包 App 所需要的项目文件，这些文件没有包含在 Github 中，请前往 http://www.egret.com 下载 Egret 安装包，如果您已经安装 Egret 安装包，请联系我们的工作人员";
     locale_strings[10020] = "编译服务异常退出";
+    locale_strings[10021] = "文件夹操作出现问题，请重新执行命令。由于操作系统刷新问题，请勿在操作文件后立马执行脚本。如果多次重试还不能解决，请联系我们，QQ群：{color_green}481169576{color_normal}";
     
 
     locale_strings[11001] = "{0}: error 找不到EXML文件";

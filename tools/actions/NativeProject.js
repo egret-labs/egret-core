@@ -19,9 +19,14 @@ var NativeProject = (function () {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
             FileUtil.remove(url2);
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            try {
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
+            catch (e) {
+                globals.exit(10021);
+            }
             //修改java文件
             var entrance = new ChangeEntranceCMD();
             entrance.initCommand(url1, "android");
@@ -31,9 +36,14 @@ var NativeProject = (function () {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
             url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
             FileUtil.remove(url2);
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            try {
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
+            catch (e) {
+                globals.exit(10021);
+            }
             //修改java文件
             var entrance = new ChangeEntranceCMD();
             entrance.initCommand(url1, "ios");
