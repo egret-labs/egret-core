@@ -322,7 +322,7 @@ module dragonBones {
 		 * @param animationData
 		 * @param armatureData
 		 */
-		public static addHideTimeline(animationData:AnimationData, armatureData:ArmatureData):void{
+		public static addHideTimeline(animationData:AnimationData, armatureData:ArmatureData, addHideSlot:boolean = false):void{
 			var boneDataList:Array<BoneData> =armatureData.boneDataList;
 			var slotDataList:Array<SlotData> =armatureData.slotDataList;
 			var i:number = boneDataList.length;
@@ -336,19 +336,21 @@ module dragonBones {
 					}
 				}
 			}
-
-			i = slotDataList.length;
-			var slotData:SlotData;
-			var slotName:string;
-			while (i--)
+			if(addHideSlot)
 			{
-				slotData = slotDataList[i];
-				slotName = slotData.name;
-				if (!animationData.getSlotTimeline(slotName))
+				i = slotDataList.length;
+				var slotData:SlotData;
+				var slotName:string;
+				while (i--)
 				{
-					if (animationData.hideSlotTimelineNameMap.indexOf(slotName) < 0)
+					slotData = slotDataList[i];
+					slotName = slotData.name;
+					if (!animationData.getSlotTimeline(slotName))
 					{
-						animationData.hideSlotTimelineNameMap.push(slotName);
+						if (animationData.hideSlotTimelineNameMap.indexOf(slotName) < 0)
+						{
+							animationData.hideSlotTimelineNameMap.push(slotName);
+						}
 					}
 				}
 			}
