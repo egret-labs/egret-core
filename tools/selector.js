@@ -143,6 +143,9 @@ function executeVersion(version, root) {
     }
     process.env["EGRET_PATH"] = root;
     var bin = getBin(root);
+    if (args.command != "info") {
+        console.log("----- Egret Engine " + version + " -----");
+    }
     require(bin);
     return true;
 }
@@ -578,5 +581,3 @@ var locals;
     ;
 })(locals || (locals = {}));
 entry();
-
-//# sourceMappingURL=selector.js.map
