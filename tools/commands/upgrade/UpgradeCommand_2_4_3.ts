@@ -1,8 +1,5 @@
 /// <reference path="../../lib/types.d.ts" />
 
-
-//import globals = require("../../Globals");
-//import params = require("../../ParamsParser");
 import TSP = require("./2.4.2/TsServiceProxy");
 import fs = require("fs");
 import file = require('../../lib/FileUtil');
@@ -364,11 +361,6 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             searchLST.forEach(item =>{
                 var searchName = item['name'];
                 var fatherName = item['category-name'];
-                //if(searchName == 'anchorX' && fatherName == 'DisplayObject' ||
-                //    searchName == 'addEventListener' && fatherName == 'DisplayObject' ||
-                //    searchName == '_setHeight' && fatherName == 'ScrollView'){
-                //    var a;
-                //}
                 if(searchName == 'identity' && fatherName == 'Matrix'){
                     var a;
                 }
@@ -385,7 +377,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                                 if(filePath){
                                     AutoLogger.logRef(filePath,line);
                                 }else{
-                                    console.log(item['category-name']+'.'+item['name']+' 0引用');
+                                    //console.log(item['category-name']+'.'+item['name']+' 0引用');
                                 }
                                 //console.log(filePath,line);
                             });
@@ -404,10 +396,12 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                     //写入log并打开log
                     var saveContent = AutoLogger._snapShot;
                     //写入html并打开网址
-                    var saveContent = AutoLogger._htmlTitle+
+                    var saveContent =
+                        AutoLogger._htmlTitle+
                         '<h1>'+projectPath + '  <b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
                         '<h2>共计 <b>'+AutoLogger._total+'</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
-                    AutoLogger._htmlBody + AutoLogger._htmlEnd;
+                        AutoLogger._htmlBody +
+                        AutoLogger._htmlEnd;
                     if(saveContent != ''){
                         var saveLogFilePath = file.joinPath(projectPath,'LOG_APITEST.html');
                         this.saveFileAndOpen(saveLogFilePath,saveContent);
@@ -418,7 +412,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                         globals.exit(1702);
                     }else{
                         //globals.log2(1706,AutoLogger._total);
-                        globals.exit(1711,projectPath);
+                        globals.log2(1711,projectPath);
                         globals.exit(1713);
                     }
                     this.asyncCallback();

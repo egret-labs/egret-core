@@ -1,6 +1,4 @@
 /// <reference path="../../lib/types.d.ts" />
-//import globals = require("../../Globals");
-//import params = require("../../ParamsParser");
 var TSP = require("./2.4.2/TsServiceProxy");
 var file = require('../../lib/FileUtil');
 var CHILD_EXEC = require('child_process');
@@ -353,11 +351,6 @@ var UpgradeCommand_2_4_3 = (function () {
             searchLST.forEach(function (item) {
                 var searchName = item['name'];
                 var fatherName = item['category-name'];
-                //if(searchName == 'anchorX' && fatherName == 'DisplayObject' ||
-                //    searchName == 'addEventListener' && fatherName == 'DisplayObject' ||
-                //    searchName == '_setHeight' && fatherName == 'ScrollView'){
-                //    var a;
-                //}
                 if (searchName == 'identity' && fatherName == 'Matrix') {
                     var a;
                 }
@@ -375,7 +368,6 @@ var UpgradeCommand_2_4_3 = (function () {
                                 AutoLogger.logRef(filePath, line);
                             }
                             else {
-                                console.log(item['category-name'] + '.' + item['name'] + ' 0引用');
                             }
                             //console.log(filePath,line);
                         });
@@ -396,7 +388,8 @@ var UpgradeCommand_2_4_3 = (function () {
                     var saveContent = AutoLogger._htmlTitle +
                         '<h1>' + projectPath + '  <b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
                         '<h2>共计 <b>' + AutoLogger._total + '</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
-                        AutoLogger._htmlBody + AutoLogger._htmlEnd;
+                        AutoLogger._htmlBody +
+                        AutoLogger._htmlEnd;
                     if (saveContent != '') {
                         var saveLogFilePath = file.joinPath(projectPath, 'LOG_APITEST.html');
                         _this.saveFileAndOpen(saveLogFilePath, saveContent);
@@ -408,7 +401,7 @@ var UpgradeCommand_2_4_3 = (function () {
                     }
                     else {
                         //globals.log2(1706,AutoLogger._total);
-                        globals.exit(1711, projectPath);
+                        globals.log2(1711, projectPath);
                         globals.exit(1713);
                     }
                     _this.asyncCallback();

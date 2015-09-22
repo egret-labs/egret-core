@@ -225,11 +225,6 @@ class APItestCommand implements egret.Command{
             searchLST.forEach(item =>{
                 var searchName = item['name'];
                 var fatherName = item['category-name'];
-                //if(searchName == 'anchorX' && fatherName == 'DisplayObject' ||
-                //    searchName == 'addEventListener' && fatherName == 'DisplayObject' ||
-                //    searchName == '_setHeight' && fatherName == 'ScrollView'){
-                //    var a;
-                //}
                 if(searchName == 'addEventListener'){
                     var a;
                 }
@@ -242,9 +237,12 @@ class APItestCommand implements egret.Command{
                     //console.log(item.name+'.'+item['category-name']);
                     if(pkg = this.tsp.getDeclarationPosition(fatherName,searchName)){
                         this.tsp.getAllReferenceAccordingDeclarationPosition(
-                            pkg.path,pkg.position,item['decorate'],fatherName,function(filePath,line){
-                                AutoLogger.logRef(filePath,line);
-                                //console.log(filePath,line);
+                            pkg.path,pkg.position,fatherName,item['decorate'],function(filePath,line){
+                                if(filePath){
+                                    AutoLogger.logRef(filePath,line);
+                                }else{
+                                    //console.log(item['category-name']+'.'+item['name']+' 0引用');
+                                }
                             });
                     }
                 }
@@ -260,11 +258,13 @@ class APItestCommand implements egret.Command{
                     //延时操作下一步
                     setTimeout(()=>{
                         //写入html并打开网址
-                        var saveContent = AutoLogger._htmlTitle+
+                        var saveContent =
+                            AutoLogger._htmlTitle+
                             '<h1>'+projectPath + '<b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
                             '<h2>共计 <b>'+AutoLogger._total+'</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
-                        AutoLogger._htmlBody + AutoLogger._htmlEnd;
-                        var saveContent = AutoLogger._snapShot;
+                            AutoLogger._htmlBody +
+                            AutoLogger._htmlEnd;
+                        //var saveContent = AutoLogger._snapShot;
                         if(saveContent != ''){
                             var saveLogFilePath = file.joinPath(projectPath,'LOG_APITEST.html');
                             this.saveFileAndOpen(saveLogFilePath,saveContent);

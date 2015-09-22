@@ -219,11 +219,6 @@ var APItestCommand = (function () {
             searchLST.forEach(function (item) {
                 var searchName = item['name'];
                 var fatherName = item['category-name'];
-                //if(searchName == 'anchorX' && fatherName == 'DisplayObject' ||
-                //    searchName == 'addEventListener' && fatherName == 'DisplayObject' ||
-                //    searchName == '_setHeight' && fatherName == 'ScrollView'){
-                //    var a;
-                //}
                 if (searchName == 'addEventListener') {
                     var a;
                 }
@@ -236,9 +231,12 @@ var APItestCommand = (function () {
                     AutoLogger.logTitle(item);
                     //console.log(item.name+'.'+item['category-name']);
                     if (pkg = _this.tsp.getDeclarationPosition(fatherName, searchName)) {
-                        _this.tsp.getAllReferenceAccordingDeclarationPosition(pkg.path, pkg.position, item['decorate'], fatherName, function (filePath, line) {
-                            AutoLogger.logRef(filePath, line);
-                            //console.log(filePath,line);
+                        _this.tsp.getAllReferenceAccordingDeclarationPosition(pkg.path, pkg.position, fatherName, item['decorate'], function (filePath, line) {
+                            if (filePath) {
+                                AutoLogger.logRef(filePath, line);
+                            }
+                            else {
+                            }
                         });
                     }
                 }
@@ -256,8 +254,9 @@ var APItestCommand = (function () {
                         var saveContent = AutoLogger._htmlTitle +
                             '<h1>' + projectPath + '<b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
                             '<h2>共计 <b>' + AutoLogger._total + '</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
-                            AutoLogger._htmlBody + AutoLogger._htmlEnd;
-                        var saveContent = AutoLogger._snapShot;
+                            AutoLogger._htmlBody +
+                            AutoLogger._htmlEnd;
+                        //var saveContent = AutoLogger._snapShot;
                         if (saveContent != '') {
                             var saveLogFilePath = file.joinPath(projectPath, 'LOG_APITEST.html');
                             _this.saveFileAndOpen(saveLogFilePath, saveContent);
