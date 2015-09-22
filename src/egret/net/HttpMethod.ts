@@ -59,7 +59,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static GET = "GET";
+        public static GET:string = "GET";
 
         /**
          * @language en_US
@@ -73,6 +73,6 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static POST = "POST";
+        public static POST:string = "POST";
     }
 }

@@ -291,7 +291,21 @@ module egret {
         }
 
         /**
-         * @inheritDoc
+         * @language en_US
+         * Distribute a specified event parameters.
+         * @param type The type of the event. Event listeners can access this information through the inherited type property.
+         * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
+         * the inherited bubbles property.
+         * @param data {any} data
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 派发一个指定参数的事件。
+         * @param type {string} 事件类型
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param data {any} 事件data
          * @version Egret 2.4
          * @platform Web,Native
          */

@@ -55,7 +55,7 @@ module eui {
      * @platform Web,Native
      * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
-    export class ItemRenderer extends Group implements IItemRenderer {
+    export class ItemRenderer extends Component implements IItemRenderer {
 
         /**
          * @language en_US
@@ -232,7 +232,8 @@ module eui {
                 state = "down";
             }
             var selectedState = state + "AndSelected";
-            if (this.hasState(selectedState)) {
+            var skin = this.skin;
+            if (skin&&skin.hasState(selectedState)) {
                 return selectedState;
             }
             return state;

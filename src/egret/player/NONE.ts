@@ -29,7 +29,7 @@
 
 module egret.sys {
     /**
-     * 
+     * @private
      * @param value 
      * @returns 
      * @version Egret 2.4
@@ -40,7 +40,7 @@ module egret.sys {
     }
 
     /**
-     * 
+     * @private
      * @param value 
      * @returns 
      * @version Egret 2.4

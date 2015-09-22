@@ -8,8 +8,8 @@
 declare module egret {
 
     export interface Command {
-        execute():number;
         isAsync?:boolean;
+        execute():number;
     }
 
     export interface Action {

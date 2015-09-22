@@ -198,6 +198,10 @@ export function parseCommandLine(commandLine: string[]) {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
+            else if (file.isDirectory(commands[1]) || options.command == "apitest") {
+                options.projectDir = commands[1];
+                commands.splice(1, 1);
+            }
             
             
         }

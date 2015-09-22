@@ -29,8 +29,44 @@
 
 module egret {
 
+    /**
+     * @language en_US
+     * Type of operation.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 运行类型的类型。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
     export class RuntimeType {
+        /**
+         * @language en_US
+         * Running on Web
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 运行在Web上
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static WEB:string = "web";
+        /**
+         * @language en_US
+         * Running on NATIVE
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 运行在NATIVE上
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static NATIVE:string = "native";
     }
 
@@ -152,6 +188,16 @@ module egret {
          */
         static $runtimeType:string = "Unknown";
 
+        /**
+         * @language en_US
+         * It indicates the current type of operation. runtimeType property returns the following string:
+         * <ul>
+         * <li>Run on Web     egret.RuntimeType.WEB</li>
+         * <li>Run on Native     egret.RuntimeType.NATIVE</li>
+         * </ul>
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         /**
          * @language zh_CN
          * 指示当前的运行类型。runtimeType 属性返回下列字符串：

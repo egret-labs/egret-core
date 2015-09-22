@@ -335,7 +335,7 @@ module egret {
         private invalidatePosition():void {
             this.$invalidateTransform();
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
-            sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
+                sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
             if (this.$parent) {
                 this.$parent.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
             }
@@ -445,7 +445,7 @@ module egret {
         /**
          * @language zh_CN
          * 显示对象的舞台。
-         * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指相同的 Stage 对象。<br/>
+         * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指向相同的 Stage 对象。<br/>
          * 如果显示对象未添加到显示列表，则其 stage 属性会设置为 null。
          * @version Egret 2.4
          * @platform Web,Native
@@ -538,15 +538,16 @@ module egret {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(),
                         matrix);
+                    var values = this.$DisplayObject;
+                    var offsetX = values[Keys.anchorOffsetX];
+                    var offsetY = values[Keys.anchorOffsetY];
                     var rect = this.$scrollRect;
                     if (rect) {
-                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), matrix);
+                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
 
                     }
-
-                    var values = this.$DisplayObject;
-                    if (values[Keys.anchorOffsetX] != 0 || values[Keys.anchorOffsetY] != 0) {
-                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -values[Keys.anchorOffsetX], -values[Keys.anchorOffsetY]), matrix);
+                    else if (offsetX != 0 || offsetY != 0) {
+                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
                     }
 
                 } else {
@@ -684,8 +685,7 @@ module egret {
         /**
          * @language en_US
          * Indicates the horizontal scale (percentage) of the object as applied from the registration point. <br/>
-         * The default 1.0 equals 100% scale.Scaling the local coordinate system changes the x and y property values, which are
-         * defined in whole pixels.
+         * The default 1.0 equals 100% scale.
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -693,7 +693,7 @@ module egret {
         /**
          * @language zh_CN
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。<br/>
-         * 1.0 等于 100% 缩放。缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
+         * 1.0 等于 100% 缩放。
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -733,8 +733,7 @@ module egret {
         /**
          * @language en_US
          * Indicates the vertical scale (percentage) of an object as applied from the registration point of the object.
-         * 1.0 is 100% scale.Scaling the local coordinate system changes the x and y property values, which are defined
-         * in whole pixels.
+         * 1.0 is 100% scale.
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -742,7 +741,6 @@ module egret {
         /**
          * @language zh_CN
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。1.0 是 100% 缩放。
-         * 缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -906,13 +904,13 @@ module egret {
         /**
          * @language en_US
          * Indicates the width of the display object, in pixels. The width is calculated based on the bounds of the content
-         * of the display object. When you set the width property, the scaleX property is adjusted accordingly.
+         * of the display object.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 表示显示对象的宽度，以像素为单位。宽度是根据显示对象内容的范围来计算的。如果您设置了 width 属性，则 scaleX 属性会相应调整.
+         * 表示显示对象的宽度，以像素为单位。宽度是根据显示对象内容的范围来计算的。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -976,13 +974,13 @@ module egret {
         /**
          * @language en_US
          * Indicates the height of the display object, in pixels. The height is calculated based on the bounds of the
-         * content of the display object. When you set the height property, the scaleY property is adjusted accordingly.
+         * content of the display object.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 表示显示对象的高度，以像素为单位。高度是根据显示对象内容的范围来计算的。如果您设置了 height 属性，则 scaleY 属性会相应调整。
+         * 表示显示对象的高度，以像素为单位。高度是根据显示对象内容的范围来计算的。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1248,7 +1246,7 @@ module egret {
                 parentCache.markDirty(this);
             }
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
-            sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
+                sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
         }
 
         /**
@@ -1496,7 +1494,7 @@ module egret {
          * The calling display object is masked by the specified mask object. To ensure that masking works when the Stage
          * is scaled, the mask display object must be in an active part of the display list. The mask object itself is not drawn.
          * Set mask to null to remove the mask. To be able to scale a mask object, it must be on the display list. To be
-         * able to drag a mask Sprite object , it must be on the display list.<br/>
+         * able to drag a mask object , it must be on the display list.<br/>
          * Note: A single mask object cannot be used to mask more than one calling display object. When the mask is assigned
          * to a second display object, it is removed as the mask of the first object, and that object's mask property becomes null.
          * @version Egret 2.4
@@ -1506,7 +1504,7 @@ module egret {
          * @language zh_CN
          * 调用显示对象被指定的 mask 对象遮罩。要确保当舞台缩放时蒙版仍然有效，mask 显示对象必须处于显示列表的活动部分。
          * 但不绘制 mask 对象本身。将 mask 设置为 null 可删除蒙版。要能够缩放遮罩对象，它必须在显示列表中。要能够拖动蒙版
-         * Sprite 对象，它必须在显示列表中。<br/>
+         * 对象，它必须在显示列表中。<br/>
          * 注意：单个 mask 对象不能用于遮罩多个执行调用的显示对象。在将 mask 分配给第二个显示对象时，会撤消其作为第一个对象的遮罩，
          * 该对象的 mask 属性将变为 null。
          *
@@ -1845,7 +1843,7 @@ module egret {
             matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
             if (root !== this.$stage) {
-                this.$getConcatenatedMatrixAt(root,matrix);
+                this.$getConcatenatedMatrixAt(root, matrix);
             }
             displayList.$ratioMatrix.$preMultiplyInto(matrix, matrix);
             region.updateRegion(bounds, matrix);
@@ -1858,22 +1856,22 @@ module egret {
          * @param root 根节点显示对象
          * @param matrix 目标显示对象相对于舞台的完整连接矩阵。
          */
-        $getConcatenatedMatrixAt(root:DisplayObject,matrix:Matrix):void{
+        $getConcatenatedMatrixAt(root:DisplayObject, matrix:Matrix):void {
             var invertMatrix = root.$getInvertedConcatenatedMatrix();
-            if(invertMatrix.a===0||invertMatrix.d===0){//缩放值为0，逆矩阵无效
+            if (invertMatrix.a === 0 || invertMatrix.d === 0) {//缩放值为0，逆矩阵无效
                 var target = this;
                 var rootLevel = root.$nestLevel;
                 matrix.identity();
                 while (target.$nestLevel > rootLevel) {
                     var rect = target.$scrollRect;
-                    if(rect){
+                    if (rect) {
                         matrix.concat($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y));
                     }
                     matrix.concat(target.$getMatrix());
                     target = target.$parent;
                 }
             }
-            else{
+            else {
                 invertMatrix.$preMultiplyInto(matrix, matrix);
             }
         }
@@ -1919,7 +1917,7 @@ module egret {
          * Note: Don't use accurate pixel collision detection on a large number of objects. Otherwise, this will cause serious performance deterioration.
          * @param x {number}  x coordinate of the object to be tested.
          * @param y {number}  y coordinate of the object to be tested.
-         * @param shapeFlag {boolean} Whether to check the actual pixel of object (true) or check that of border (false).
+         * @param shapeFlag {boolean} Whether to check the actual pixel of object (true) or check that of border (false).Write realized.
          * @returns {boolean} If display object overlaps or crosses with the specified point, it is true; otherwise, it is false.
          * @version Egret 2.4
          * @platform Web,Native
@@ -1930,7 +1928,7 @@ module egret {
          * 注意，不要在大量物体中使用精确碰撞像素检测，这回带来巨大的性能开销
          * @param x {number}  要测试的此对象的 x 坐标。
          * @param y {number}  要测试的此对象的 y 坐标。
-         * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。
+         * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。暂未实现。
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
          * @version Egret 2.4
          * @platform Web,Native

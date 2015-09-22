@@ -208,14 +208,14 @@ module egret {
         /**
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
-         * @default "sans-serif"
+         * @default null
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要使用的字体的名称或用逗号分隔的字体名称列表。
-         * @default "sans-serif"
+         * @default null
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -276,14 +276,14 @@ module egret {
 
         /**
          * @language en_US
-         * An integer representing the amount of vertical space between lines.
+         * An integer representing the amount of distance between characters.
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 一个整数，表示行与行之间的垂直间距量
+         * 一个整数，表示字符之间的距量。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
@@ -308,6 +308,16 @@ module egret {
         }
 
         /**
+         * @language en_US
+         * A ratio of the width of the space character. This value is multiplied by the height of the first character is the space character width.
+         * @default 0.33
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 一个空格字符的宽度比例。这个数值乘以第一个字符的高度即为空格字符的宽。
+         * @default 0.33
          * @version Egret 2.4
          * @platform Web,Native
          */

@@ -1,4 +1,33 @@
-declare module egret {
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
+module RES {
     /**
      * @language en_US
      * Version control loading interface
@@ -13,7 +42,7 @@ declare module egret {
      * @platform Web,Native
      * @includeExample extension/version/VersionControl.ts
      */
-    interface IVersionController extends egret.IEventDispatcher {
+    export interface IVersionController extends egret.IEventDispatcher {
         /**
          * @language en_US
          * Get the version information data.<br/>
@@ -28,7 +57,8 @@ declare module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        fetchVersion(): void;
+        fetchVersion():void;
+
         /**
          * @language en_US
          * Get all changed files.<br/>
@@ -45,10 +75,8 @@ declare module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        getChangeList(): Array<{
-            url: string;
-            size: number;
-        }>;
+        getChangeList():Array<{url:string; size:number}>;
+
         /**
          * @language en_US
          * Get the actual URL of the resource file.<br/>
@@ -69,8 +97,9 @@ declare module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        getVirtualUrl(url: string): string;
+        getVirtualUrl(url:string):string;
     }
+
     /**
      * @language en_US
      * Manage version control class
@@ -89,13 +118,15 @@ declare module egret {
      * @event egret.IOErrorEvent.IO_ERROR 版本控制加载失败时抛出
      * @includeExample extension/version/VersionControl.ts
      */
-    interface VersionController extends IVersionController {
+    export interface VersionController extends IVersionController {
+
     }
+
     /**
      * @version Egret 2.4
      * @platform Web,Native
      */
-    var VersionController: {
+    export var VersionController:{
         /**
          * @language en_US
          * Constructor initialization
@@ -104,48 +135,6 @@ declare module egret {
          * @language zh_CN
          * 初始化构造函数
          */
-        new (): VersionController;
+        new():VersionController
     };
-}
-declare module egret.native {
-    /**
-     * @private
-     */
-    class NativeVersionController extends egret.EventDispatcher implements VersionController {
-        private _versionInfo;
-        private _versionPath;
-        private _localFileArr;
-        constructor();
-        fetchVersion(): void;
-        private getList(callback, type, root?);
-        /**
-         * 获取所有有变化的文件
-         * @returns {Array<any>}
-         */
-        getChangeList(): Array<{
-            url: string;
-            size: number;
-        }>;
-        getVirtualUrl(url: string): string;
-        private getLocalData(filePath);
-    }
-}
-declare module egret.web {
-    /**
-     * @private
-     */
-    class Html5VersionController extends egret.EventDispatcher implements VersionController {
-        constructor();
-        private _versionInfo;
-        fetchVersion(): void;
-        /**
-         * 获取所有有变化的文件
-         * @returns {Array<any>}
-         */
-        getChangeList(): Array<{
-            url: string;
-            size: number;
-        }>;
-        getVirtualUrl(url: string): string;
-    }
 }
