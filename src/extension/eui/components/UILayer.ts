@@ -47,6 +47,22 @@ module eui {
      */
     export class UILayer extends Group {
 
+        /**
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
         public constructor(){
             super();
             this.addEventListener(egret.Event.ADDED_TO_STAGE,this.onAddToStage,this);
