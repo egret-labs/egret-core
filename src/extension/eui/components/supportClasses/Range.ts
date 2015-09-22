@@ -128,7 +128,6 @@ module eui {
          * maximum with the <code>nearestValidValue()</code> method.
          *
          * @default 100
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -142,7 +141,6 @@ module eui {
          * 将在<code>nearestValidValue()</code>方法中进行。
          *
          * @default 100
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -172,7 +170,6 @@ module eui {
          * minimum with the <code>nearestValidValue()</code> method.
          *
          * @default 0
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -186,7 +183,6 @@ module eui {
          * 将在<code>nearestValidValue()</code>方法中进行。
          *
          * @default 0
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -218,8 +214,6 @@ module eui {
          * method.
          *
          * @default 0
-         * @see #setValue()
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -233,8 +227,6 @@ module eui {
          * 和<code>minimum</code>属性所限制。此修正过程将在<code>nearestValidValue()</code>方法中进行。
          *
          * @default 0
-         * @see #setValue()
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -281,7 +273,6 @@ module eui {
          * to be between minimum and maximum inclusive.
          *
          * @default 1
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -297,7 +288,6 @@ module eui {
          * 如果此属性的值为零，则仅会将有效值约束到介于 minimum 和 maximum 之间（包括两者）。
          *
          * @default 1
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -464,7 +454,6 @@ module eui {
          * to constrain the value parameter
          *
          * @param value The new value of the <code>value</code> property.
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -477,7 +466,6 @@ module eui {
          * 此方法假定调用者已经使用了 nearestValidValue() 方法来约束 value 参数。
          *
          * @param value value属性的新值
-         * @see #nearestValidValue()
          *
          * @version Egret 2.4
          * @version eui 1.0
