@@ -172,7 +172,7 @@ var AutoLogger = {
     },
     _filterUrl:function(key){
         if(key in this._solutionMap){
-            return '<a herf="'+this._solutionMap[key]+'">'+this._solutionMap[key]+'</a>';
+            return '<a href="'+this._solutionMap[key]+'">'+this._solutionMap[key]+'</a>';
         }else
             return key;
     }
