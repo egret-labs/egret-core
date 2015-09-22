@@ -86,6 +86,11 @@ module egret {
 		 * @param request {URLRequest}  一个 URLRequest 对象，指定要下载的 URL。
          */
         public load(request:URLRequest):void {
+            if( request.url.indexOf("?") == -1){
+                request.url += "?v="+window["version"];
+            }else{
+                request.url += "&v="+window["version"];
+            }
             this._request = request;
             this.data = null;
             MainContext.instance.netContext.proceed(this);
