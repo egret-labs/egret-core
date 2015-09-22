@@ -768,6 +768,9 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
+        /**
+         * @private
+         */
         var WebAudioDecode = (function () {
             function WebAudioDecode() {
             }

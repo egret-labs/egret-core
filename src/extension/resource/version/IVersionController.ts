@@ -57,7 +57,7 @@ module RES {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        fetchVersion():void;
+        fetchVersion(callback:egret.$AsyncCallback):void;
 
         /**
          * @language en_US
@@ -137,4 +137,5 @@ module RES {
          */
         new():VersionController
     };
+
 }

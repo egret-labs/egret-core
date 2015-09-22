@@ -2573,6 +2573,7 @@ var RES;
             }
         };
         p.startLoadConfig = function () {
+            var _this = this;
             this.callLaterFlag = false;
             var configList = this.configItemList;
             this.configItemList = [];
@@ -2584,10 +2585,20 @@ var RES;
                 var resItem = new RES.ResourceItem(item.url, item.url, item.type);
                 itemList.push(resItem);
             }
+            var callback = {
+                onSuccess: function (data) {
+                    _this.resLoader.loadGroup(itemList, Resource.GROUP_CONFIG, Number.MAX_VALUE);
+                },
+                onFail: function (err, data) {
+                    RES.ResourceEvent.dispatchResourceEvent(_this, RES.ResourceEvent.CONFIG_LOAD_ERROR);
+                }
+            };
             if (this.vcs) {
-                this.vcs.fetchVersion();
+                this.vcs.fetchVersion(callback);
             }
-            this.resLoader.loadGroup(itemList, Resource.GROUP_CONFIG, Number.MAX_VALUE);
+            else {
+                this.resLoader.loadGroup(itemList, Resource.GROUP_CONFIG, Number.MAX_VALUE);
+            }
         };
         /**
          * 检查某个资源组是否已经加载完成

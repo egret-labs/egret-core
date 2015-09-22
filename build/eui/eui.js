@@ -5060,6 +5060,8 @@ var eui;
                 10: false,
                 11: false,
                 12: null,
+                13: null,
+                14: false,
             };
         }
         var d = __define,c=DataGroup;p=c.prototype;
@@ -5229,12 +5231,27 @@ var eui;
          */
         p.createOneRenderer = function (rendererClass) {
             var renderer = (new rendererClass());
-            this.$DataGroup[2 /* rendererToClassMap */][renderer.$hashCode] = rendererClass;
+            var values = this.$DataGroup;
+            values[2 /* rendererToClassMap */][renderer.$hashCode] = rendererClass;
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
             }
+            if (values[13 /* itemRendererSkinName */]) {
+                this.setItemRenderSkinName(renderer, values[13 /* itemRendererSkinName */]);
+            }
             this.addChild(renderer);
             return renderer;
+        };
+        /**
+         * @private
+         * 设置项呈示器的默认皮肤
+         */
+        p.setItemRenderSkinName = function (renderer, skinName) {
+            if (renderer && renderer instanceof eui.Component) {
+                var comp = renderer;
+                if (!comp.$Component[5 /* skinNameExplicitlySet */])
+                    comp.skinName = skinName;
+            }
         };
         d(p, "dataProvider"
             /**
@@ -5533,6 +5550,38 @@ var eui;
                 this.invalidateProperties();
             }
         );
+        d(p, "itemRendererSkinName"
+            /**
+             * @language en_US
+             * The skinName property of the itemRenderer.This property will be passed to itemRenderer.skinName as default value,if you
+             * did not set it explicitly.<br>
+             * Note: This property is invalid if the itemRenderer is not a subclass of the Component class.
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
+             * 注意:若 itemRenderer 不是 Component 的子类，则此属性无效。
+             * @version Egret 2.4
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$DataGroup[13 /* itemRendererSkinName */];
+            }
+            ,function (value) {
+                var values = this.$DataGroup;
+                if (values[13 /* itemRendererSkinName */] == value)
+                    return;
+                values[13 /* itemRendererSkinName */] = value;
+                if (value && this.$UIComponent[29 /* initialized */]) {
+                    values[14 /* itemRendererSkinNameChange */] = true;
+                    this.invalidateProperties();
+                }
+            }
+        );
         d(p, "itemRendererFunction"
             /**
              * @language en_US
@@ -5641,6 +5690,28 @@ var eui;
                 if (this.$dataProvider && this.$dataProvider.length > 0) {
                     values[12 /* typicalItem */] = this.$dataProvider.getItemAt(0);
                     this.measureRendererSize();
+                }
+            }
+            if (values[14 /* itemRendererSkinNameChange */]) {
+                values[14 /* itemRendererSkinNameChange */] = false;
+                var skinName = values[13 /* itemRendererSkinName */];
+                var indexToRenderer = this.$indexToRenderer;
+                var keys = Object.keys(indexToRenderer);
+                var length = keys.length;
+                for (var i = 0; i < length; i++) {
+                    var index = keys[i];
+                    this.setItemRenderSkinName(indexToRenderer[index], skinName);
+                }
+                var freeRenderers = values[3 /* freeRenderers */];
+                var keys = Object.keys(freeRenderers);
+                var length = keys.length;
+                for (var i = 0; i < length; i++) {
+                    var hashCode = keys[i];
+                    var list = freeRenderers[hashCode];
+                    var length = list.length;
+                    for (var i = 0; i < length; i++) {
+                        this.setItemRenderSkinName(list[i], skinName);
+                    }
                 }
             }
         };
@@ -5923,6 +5994,7 @@ var eui;
     eui.DataGroup = DataGroup;
     egret.registerClass(DataGroup,"eui.DataGroup");
     eui.registerProperty(DataGroup, "itemRenderer", "Class");
+    eui.registerProperty(DataGroup, "itemRendererSkinName", "Class");
     eui.registerProperty(DataGroup, "dataProvider", "eui.ICollection", true);
     if (DEBUG) {
         egret.$markReadOnly(DataGroup, "numElements");
@@ -8559,7 +8631,7 @@ var eui;
             return state;
         };
         return ItemRenderer;
-    })(eui.Group);
+    })(eui.Component);
     eui.ItemRenderer = ItemRenderer;
     egret.registerClass(ItemRenderer,"eui.ItemRenderer",["eui.IItemRenderer","eui.UIComponent"]);
     eui.registerBindable(ItemRenderer.prototype, "data");
@@ -12634,6 +12706,7 @@ var eui;
                         }
                     }
                 }
+                eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "hostComponent");
             }
         );
         /**
@@ -12645,12 +12718,13 @@ var eui;
             this.initializeStates(this._hostComponent.$stage);
         };
         return Skin;
-    })(egret.HashObject);
+    })(egret.EventDispatcher);
     eui.Skin = Skin;
     egret.registerClass(Skin,"eui.Skin");
     eui.sys.mixin(Skin, eui.sys.StateClient);
     eui.registerProperty(Skin, "elementsContent", "Array", true);
     eui.registerProperty(Skin, "states", "State[]");
+    eui.registerBindable(eui.ItemRenderer.prototype, "hostComponent");
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -16289,6 +16363,8 @@ var eui;
         var exmlParserPool = [];
         var parsedClasses = {};
         var innerClassCount = 1;
+        var HOST_COMPONENT = "hostComponent";
+        var SKIN_CLASS = "eui.Skin";
         var DECLARATIONS = "Declarations";
         var RECTANGLE = "egret.Rectangle";
         var TYPE_CLASS = "Class";
@@ -16396,7 +16472,6 @@ var eui;
                 this.currentClassName = className;
                 this.delayAssignmentDic = {};
                 this.idDic = {};
-                this.idToNode = {};
                 this.stateCode = [];
                 this.stateNames = [];
                 this.skinParts = [];
@@ -16427,7 +16502,9 @@ var eui;
                         egret.$error(2004, this.currentClassName, result.join("\n"));
                     }
                 }
-                this.currentClass.superClass = this.getClassNameOfNode(this.currentXML);
+                var superClass = this.getClassNameOfNode(this.currentXML);
+                this.isSkinClass = (superClass == SKIN_CLASS);
+                this.currentClass.superClass = superClass;
                 this.getStateNames();
                 var children = this.currentXML.children;
                 if (children) {
@@ -16495,7 +16572,6 @@ var eui;
                     else if (node.nodeType === 1) {
                         var id = node.attributes["id"];
                         if (id) {
-                            this.idToNode[id] = node;
                             if (this.skinParts.indexOf(id) == -1) {
                                 this.skinParts.push(id);
                             }
@@ -16505,7 +16581,6 @@ var eui;
                         }
                         else {
                             this.createIdForNode(node);
-                            this.idToNode[node.attributes.id] = node;
                             if (this.isStateNode(node))
                                 this.stateIds.push(node.attributes.id);
                         }
@@ -16983,6 +17058,10 @@ var eui;
                         value = value.substring(5);
                     }
                     this.checkIdForState(node);
+                    var firstKey = value.split(".")[0];
+                    if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
+                        value = HOST_COMPONENT + "." + value;
+                    }
                     this.bindings.push(new sys.EXBinding(node.attributes["id"], key, value));
                     value = "";
                 }

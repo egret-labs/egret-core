@@ -132,6 +132,14 @@ declare module egret {
          */
         hashCode: number;
     }
+    /**
+     * @private
+     */
+    interface $AsyncCallback {
+        onSuccess: (data: any) => any;
+        onFail: (error: number, data: any) => any;
+        onProgress?: (current: number, total: number) => any;
+    }
 }
 declare module egret {
     /**
@@ -245,7 +253,21 @@ declare module egret {
          */
         $notifyListener(event: Event, capturePhase: boolean): boolean;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Distribute a specified event parameters.
+         * @param type The type of the event. Event listeners can access this information through the inherited type property.
+         * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
+         * the inherited bubbles property.
+         * @param data {any} data
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 派发一个指定参数的事件。
+         * @param type {string} 事件类型
+         * @param bubbles {boolean} 确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param data {any} 事件data
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -309,12 +331,14 @@ declare module egret {
         /**
          * @language en_US
          * Releases a matrix instance to the object pool
+         * @param matrix matrix that Needs to be recycled
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 释放一个Matrix实例到对象池
+         * @param matrix 需要回收的 matrix
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1641,7 +1665,7 @@ declare module egret {
         /**
          * @language zh_CN
          * 显示对象的舞台。
-         * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指相同的 Stage 对象。<br/>
+         * 例如，您可以创建多个显示对象并加载到显示列表中，每个显示对象的 stage 属性是指向相同的 Stage 对象。<br/>
          * 如果显示对象未添加到显示列表，则其 stage 属性会设置为 null。
          * @version Egret 2.4
          * @platform Web,Native
@@ -1762,8 +1786,7 @@ declare module egret {
         /**
          * @language en_US
          * Indicates the horizontal scale (percentage) of the object as applied from the registration point. <br/>
-         * The default 1.0 equals 100% scale.Scaling the local coordinate system changes the x and y property values, which are
-         * defined in whole pixels.
+         * The default 1.0 equals 100% scale.
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -1771,7 +1794,7 @@ declare module egret {
         /**
          * @language zh_CN
          * 表示从注册点开始应用的对象的水平缩放比例（百分比）。<br/>
-         * 1.0 等于 100% 缩放。缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
+         * 1.0 等于 100% 缩放。
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -1791,8 +1814,7 @@ declare module egret {
         /**
          * @language en_US
          * Indicates the vertical scale (percentage) of an object as applied from the registration point of the object.
-         * 1.0 is 100% scale.Scaling the local coordinate system changes the x and y property values, which are defined
-         * in whole pixels.
+         * 1.0 is 100% scale.
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -1800,7 +1822,6 @@ declare module egret {
         /**
          * @language zh_CN
          * 表示从对象注册点开始应用的对象的垂直缩放比例（百分比）。1.0 是 100% 缩放。
-         * 缩放本地坐标系统将更改 x 和 y 属性值，这些属性值是以整像素定义的。
          * @default 1
          * @version Egret 2.4
          * @platform Web,Native
@@ -1875,13 +1896,13 @@ declare module egret {
         /**
          * @language en_US
          * Indicates the width of the display object, in pixels. The width is calculated based on the bounds of the content
-         * of the display object. When you set the width property, the scaleX property is adjusted accordingly.
+         * of the display object.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 表示显示对象的宽度，以像素为单位。宽度是根据显示对象内容的范围来计算的。如果您设置了 width 属性，则 scaleX 属性会相应调整.
+         * 表示显示对象的宽度，以像素为单位。宽度是根据显示对象内容的范围来计算的。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1905,13 +1926,13 @@ declare module egret {
         /**
          * @language en_US
          * Indicates the height of the display object, in pixels. The height is calculated based on the bounds of the
-         * content of the display object. When you set the height property, the scaleY property is adjusted accordingly.
+         * content of the display object.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 表示显示对象的高度，以像素为单位。高度是根据显示对象内容的范围来计算的。如果您设置了 height 属性，则 scaleY 属性会相应调整。
+         * 表示显示对象的高度，以像素为单位。高度是根据显示对象内容的范围来计算的。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2201,7 +2222,7 @@ declare module egret {
          * The calling display object is masked by the specified mask object. To ensure that masking works when the Stage
          * is scaled, the mask display object must be in an active part of the display list. The mask object itself is not drawn.
          * Set mask to null to remove the mask. To be able to scale a mask object, it must be on the display list. To be
-         * able to drag a mask Sprite object , it must be on the display list.<br/>
+         * able to drag a mask object , it must be on the display list.<br/>
          * Note: A single mask object cannot be used to mask more than one calling display object. When the mask is assigned
          * to a second display object, it is removed as the mask of the first object, and that object's mask property becomes null.
          * @version Egret 2.4
@@ -2211,7 +2232,7 @@ declare module egret {
          * @language zh_CN
          * 调用显示对象被指定的 mask 对象遮罩。要确保当舞台缩放时蒙版仍然有效，mask 显示对象必须处于显示列表的活动部分。
          * 但不绘制 mask 对象本身。将 mask 设置为 null 可删除蒙版。要能够缩放遮罩对象，它必须在显示列表中。要能够拖动蒙版
-         * Sprite 对象，它必须在显示列表中。<br/>
+         * 对象，它必须在显示列表中。<br/>
          * 注意：单个 mask 对象不能用于遮罩多个执行调用的显示对象。在将 mask 分配给第二个显示对象时，会撤消其作为第一个对象的遮罩，
          * 该对象的 mask 属性将变为 null。
          *
@@ -2403,7 +2424,7 @@ declare module egret {
          * Note: Don't use accurate pixel collision detection on a large number of objects. Otherwise, this will cause serious performance deterioration.
          * @param x {number}  x coordinate of the object to be tested.
          * @param y {number}  y coordinate of the object to be tested.
-         * @param shapeFlag {boolean} Whether to check the actual pixel of object (true) or check that of border (false).
+         * @param shapeFlag {boolean} Whether to check the actual pixel of object (true) or check that of border (false).Write realized.
          * @returns {boolean} If display object overlaps or crosses with the specified point, it is true; otherwise, it is false.
          * @version Egret 2.4
          * @platform Web,Native
@@ -2414,7 +2435,7 @@ declare module egret {
          * 注意，不要在大量物体中使用精确碰撞像素检测，这回带来巨大的性能开销
          * @param x {number}  要测试的此对象的 x 坐标。
          * @param y {number}  要测试的此对象的 y 坐标。
-         * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。
+         * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。暂未实现。
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
          * @version Egret 2.4
          * @platform Web,Native
@@ -2676,14 +2697,14 @@ declare module egret {
     class Bitmap extends DisplayObject {
         /**
          * @language en_US
-         * Initializes a Bitmap object to refer to the specified BitmapData object.
+         * Initializes a Bitmap object to refer to the specified BitmapData|Texture object.
          * @param bitmapData The BitmapData object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
+         * 创建一个引用指定 BitmapData|Texture 实例的 Bitmap 对象
          * @param bitmapData 被引用的 BitmapData 实例
          * @version Egret 2.4
          * @platform Web,Native
@@ -2705,17 +2726,22 @@ declare module egret {
         $onRemoveFromStage(): void;
         /**
          * @language en_US
-         * The BitmapData object being referenced.
+         * The BitmapData|Texture object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 被引用的 BitmapData 对象。
+         * 被引用的 BitmapData|Texture 对象。
          * @version Egret 2.4
          * @platform Web,Native
          */
         bitmapData: BitmapData | Texture;
+        /**
+         * @copy #bitmapData
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         texture: BitmapData | Texture;
         /**
          * @private
@@ -2754,7 +2780,6 @@ declare module egret {
         /**
          * @language en_US
          * Determines how the bitmap fills in the dimensions.
-         * <p>When set to <code>BitmapFillMode.CLIP</code>, the bitmap
          * ends at the edge of the region.</p>
          * <p>When set to <code>BitmapFillMode.REPEAT</code>, the bitmap
          * repeats to fill the region.</p>
@@ -2770,7 +2795,6 @@ declare module egret {
         /**
          * @language zh_CN
          * 确定位图填充尺寸的方式。
-         * <p>设置为 <code>BitmapFillMode.CLIP</code>时，位图将在边缘处被截断。</p>
          * <p>设置为 <code>BitmapFillMode.REPEAT</code>时，位图将重复以填充区域。</p>
          * <p>设置为 <code>BitmapFillMode.SCALE</code>时，位图将拉伸以填充区域。</p>
          *
@@ -4541,6 +4565,7 @@ declare module egret {
         /**
          * @language zh_CN
          * 返回 DisplayObject 的 child 实例的索引位置。
+         * @param child 要测试的子对象。
          * @returns 要查找的子显示对象的索引位置。
          * @version Egret 2.4
          * @platform Web,Native
@@ -4910,21 +4935,21 @@ declare module egret {
         toDataURL(type: string, rect?: egret.Rectangle): string;
         /**
          * @language en_US
-         * 裁剪指定区域并保存成图片。
-         * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
-         * @param type 转换的类型，如  "image/png"
-         * @param filePath 图片的名称的路径（主目录为游戏的私有空间，路径中不能有 "../"，Web只支持传名称。）
-         * @param rect 需要转换的区域
-         * @version Egret 2.4
-         * @platform Native
-         */
-        /**
-         * @language zh_CN
          * Crop designated area and save it as image.
          * native support only "image / png" and "image / jpeg"; Web browser because of the various implementations are not the same, it is recommended to use only these two kinds.
          * @param type Type conversions, such as "image / png"
          * @param filePath The path name of the image (the home directory for the game's private space, the path can not have "../",Web supports only pass names.)
          * @param rect The need to convert the area
+         * @version Egret 2.4
+         * @platform Native
+         */
+        /**
+         * @language zh_CN
+         * 裁剪指定区域并保存成图片。
+         * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
+         * @param type 转换的类型，如  "image/png"
+         * @param filePath 图片的名称的路径（主目录为游戏的私有空间，路径中不能有 "../"，Web只支持传名称。）
+         * @param rect 需要转换的区域
          * @version Egret 2.4
          * @platform Native
          */
@@ -5996,6 +6021,19 @@ declare module egret {
          */
         protected clean(): void;
         /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown Event. Objects thrown objects will be cached in the pool for the next round robin.
+         * @param target the event target
+         * @param type The type of the event. Event listeners can access this information through the inherited type property.
+         * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
+         * the inherited bubbles property.
+         * @param data {any} data
+         * @method egret.Event.dispatchEvent
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 使用指定的 EventDispatcher 对象来抛出 Event 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target {egret.IEventDispatcher} 派发事件目标
          * @param type {string} 事件类型
@@ -6020,6 +6058,10 @@ declare module egret {
          * which allows you to get better code execution performance.<br/>
          * Note: If you want to use this method to initialize your custom event object,you must make sure the constructor
          * of your custom event is the same as the constructor of egret.Event.
+         * @param EventClass Event Class。
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @example
          * <pre>
          *    var event = Event.create(Event,type, bubbles);
@@ -6035,6 +6077,10 @@ declare module egret {
          * 从对象池中取出或创建一个新的事件实例。我们建议您尽可能使用Event.create()和Event.release() 这一对方法来创建和释放事件对象，
          * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
          * 注意：若使用此方法来创建自定义事件的实例，自定义的构造函数参数列表必须跟Event类一致。
+         * @param EventClass Event类名。
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          * @example
          * <pre>
          *    var event = Event.create(Event,type, bubbles);
@@ -7325,12 +7371,16 @@ declare module egret {
         /**
          * @language en_US
          * get a point instance from the object pool or create a new one.
+         * @param x The horizontal coordinate.
+         * @param y The vertical coordinate.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 从对象池中取出或创建一个新的Point对象。
+         * @param x 该对象的x属性值，默认为0
+         * @param y 该对象的y属性值，默认为0
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -7940,6 +7990,7 @@ declare module egret {
 }
 declare module egret {
     /**
+     * @private
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -8746,7 +8797,7 @@ declare module egret {
      * @event egret.IOErrorEvent.IO_ERROR Dispatch when the audio resource is failed to load
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/media/SoundExample.ts
+     * @includeExample egret/media/Sound.ts
      */
     /**
      * @language zh_CN
@@ -8757,7 +8808,7 @@ declare module egret {
      * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/media/SoundExample.ts
+     * @includeExample egret/media/Sound.ts
      */
     interface Sound extends EventDispatcher {
         /**
@@ -8880,7 +8931,7 @@ declare module egret {
      * @event egret.Event.SOUND_COMPLETE Dispatch when a sound has finished playing
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/SoundExample.ts
+     * @includeExample egret/media/Sound.ts
      */
     /**
     * @language zh_CN
@@ -8890,7 +8941,7 @@ declare module egret {
      * @event egret.Event.SOUND_COMPLETE 音频播放完成时抛出
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/SoundExample.ts
+     * @includeExample egret/media/Sound.ts
     */
     interface SoundChannel extends IEventDispatcher {
         /**
@@ -8951,7 +9002,7 @@ declare module egret {
      * @event egret.Event.IO_ERROR when the video is failed to load
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/media/VideoExample.ts
+     * @includeExample egret/media/Video.ts
      */
     /**
      * @language zh_CN
@@ -8965,7 +9016,7 @@ declare module egret {
      * @event egret.Event.IO_ERROR 视频加载失败市触发
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/media/VideoExample.ts
+     * @includeExample egret/media/Video.ts
      */
     interface Video extends DisplayObject {
         /**
@@ -9730,6 +9781,18 @@ declare module egret {
      * @platform Web,Native
      */
     var ImageLoader: {
+        /**
+         * @language en_US
+         * constructor
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         new (): ImageLoader;
     };
 }
@@ -9799,7 +9862,7 @@ declare module egret.sys {
 }
 declare module egret.sys {
     /**
-     *
+     * @private
      * @param value
      * @returns
      * @version Egret 2.4
@@ -9807,7 +9870,7 @@ declare module egret.sys {
      */
     function isUndefined(value: any): boolean;
     /**
-     *
+     * @private
      * @param value
      * @returns
      * @version Egret 2.4
@@ -10412,12 +10475,6 @@ declare module egret.sys {
 }
 declare module egret {
     /**
-     * @copy egret.Orientation
-     */
-    var DeviceOrientation: {
-        new (): DeviceOrientation;
-    };
-    /**
      * @language en_US
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
      *
@@ -10462,6 +10519,12 @@ declare module egret {
          */
         stop(): void;
     }
+    /**
+     * @copy egret.Orientation
+     */
+    var DeviceOrientation: {
+        new (): DeviceOrientation;
+    };
 }
 declare module egret {
     /**
@@ -10525,6 +10588,18 @@ declare module egret {
      * @copy egret.Geolocation
      */
     var Geolocation: {
+        /**
+         * @language en_US
+         * constructor
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         new (): Geolocation;
     };
 }
@@ -10696,8 +10771,44 @@ declare module egret {
     }
 }
 declare module egret {
+    /**
+     * @language en_US
+     * Type of operation.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 运行类型的类型。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
     class RuntimeType {
+        /**
+         * @language en_US
+         * Running on Web
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 运行在Web上
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         static WEB: string;
+        /**
+         * @language en_US
+         * Running on NATIVE
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 运行在NATIVE上
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         static NATIVE: string;
     }
     /**
@@ -10805,6 +10916,16 @@ declare module egret {
          * @private
          */
         static $runtimeType: string;
+        /**
+         * @language en_US
+         * It indicates the current type of operation. runtimeType property returns the following string:
+         * <ul>
+         * <li>Run on Web     egret.RuntimeType.WEB</li>
+         * <li>Run on Native     egret.RuntimeType.NATIVE</li>
+         * </ul>
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         /**
          * @language zh_CN
          * 指示当前的运行类型。runtimeType 属性返回下列字符串：
@@ -11034,14 +11155,14 @@ declare module egret {
         /**
          * @language en_US
          * The name of the font to use, or a comma-separated list of font names.
-         * @default "sans-serif"
+         * @default null
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 要使用的字体的名称或用逗号分隔的字体名称列表。
-         * @default "sans-serif"
+         * @default null
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -11066,14 +11187,14 @@ declare module egret {
         $setLineSpacing(value: number): boolean;
         /**
          * @language en_US
-         * An integer representing the amount of vertical space between lines.
+         * An integer representing the amount of distance between characters.
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 一个整数，表示行与行之间的垂直间距量
+         * 一个整数，表示字符之间的距量。
          * @default 0
          * @version Egret 2.4
          * @platform Web,Native
@@ -11081,6 +11202,16 @@ declare module egret {
         letterSpacing: number;
         $setLetterSpacing(value: number): boolean;
         /**
+         * @language en_US
+         * A ratio of the width of the space character. This value is multiplied by the height of the first character is the space character width.
+         * @default 0.33
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 一个空格字符的宽度比例。这个数值乘以第一个字符的高度即为空格字符的宽。
+         * @default 0.33
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -11323,57 +11454,144 @@ declare module egret {
         textElementIndex: number;
     }
     /**
-     * @private
+     * @language en_US
+     * Text Style
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 文本样式
      * @version Egret 2.4
      * @platform Web,Native
      */
     interface ITextStyle {
         /**
+         * @language en_US
+         * text color
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 颜色值
          * @version Egret 2.4
          * @platform Web,Native
          */
         textColor?: number;
         /**
+         * @language en_US
+         * stroke color
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 描边颜色值
          * @version Egret 2.4
          * @platform Web,Native
          */
         strokeColor?: number;
         /**
+         * @language en_US
+         * size
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 字号
          * @version Egret 2.4
          * @platform Web,Native
          */
         size?: number;
         /**
+         * @language en_US
+         * stroke width
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 描边大小
          * @version Egret 2.4
          * @platform Web,Native
          */
         stroke?: number;
         /**
+         * @language en_US
+         * whether bold
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否加粗
          * @version Egret 2.4
          * @platform Web,Native
          */
         bold?: boolean;
         /**
+         * @language en_US
+         * whether italic
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否倾斜
          * @version Egret 2.4
          * @platform Web,Native
          */
         italic?: boolean;
         /**
+         * @language en_US
+         * fontFamily
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 字体名称
          * @version Egret 2.4
          * @platform Web,Native
          */
         fontFamily?: string;
         /**
+         * @language en_US
+         * Link events or address
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 链接事件或者地址
          * @version Egret 2.4
          * @platform Web,Native
          */
         href?: string;
         /**
+         * @language en_US
+         * @private
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
         target?: string;
         /**
+         * @language en_US
+         * Is underlined
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否加下划线
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -11395,11 +11613,27 @@ declare module egret {
      */
     interface ITextElement {
         /**
+         * @language en_US
+         * String Content
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 字符串内容
          * @version Egret 2.4
          * @platform Web,Native
          */
         text: string;
         /**
+         * @language en_US
+         * Text Style
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本样式
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -11553,6 +11787,7 @@ declare module egret {
 }
 declare module egret {
     /**
+     * @private
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -11802,6 +12037,14 @@ declare module egret {
      */
     class TextField extends DisplayObject {
         /**
+         * @language en_US
+         * default fontFamily
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本字体
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -12037,13 +12280,9 @@ declare module egret {
          */
         $setText(value: string): boolean;
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
          * @language en_US
          * Specify whether the text field is a password text field.
-         * Specify whether the text field is a password text field. If the value of this property is true, the text field is treated as a password text field and hides the input characters using asterisks instead of the actual characters. If false, the text field is not treated as a password text field.
+         * If the value of this property is true, the text field is treated as a password text field and hides the input characters using asterisks instead of the actual characters. If false, the text field is not treated as a password text field.
          * @default false
          */
         /**
@@ -12106,10 +12345,6 @@ declare module egret {
          */
         $setStroke(value: number): boolean;
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
          * @language en_US
          * The maximum number of characters that the text field can contain, as entered by a user. \n A script can insert more text than maxChars allows; the maxChars property indicates only how much text a user can enter. If the value of this property is 0, a user can enter an unlimited amount of text.
          * The default value is 0.
@@ -12159,16 +12394,19 @@ declare module egret {
          */
         maxScrollV: number;
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
         selectionBeginIndex: number;
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
         selectionEndIndex: number;
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -12748,7 +12986,7 @@ declare module egret {
     /**
      * @language zh_CN
      * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
-     * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
+     * 注意：ByteArray 类适用于需要在字节层访问数据的高级开发人员。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/ByteArray.ts
@@ -12839,6 +13077,7 @@ declare module egret {
          */
         buffer: ArrayBuffer;
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -12895,6 +13134,19 @@ declare module egret {
          * @platform Web,Native
          */
         bytesAvailable: number;
+        /**
+         * @language en_US
+         * Clears the contents of the byte array and resets the length and position properties to 0.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 清除字节数组的内容，并将 length 和 position 属性重置为 0。
+
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         clear(): void;
         /**
          * @language en_US
@@ -13344,31 +13596,79 @@ declare module egret {
      */
     class Logger {
         /**
+         * @language en_US
+         * open all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全开
          * @version Egret 2.4
          * @platform Web,Native
          */
         static ALL: string;
         /**
+         * @language en_US
+         * level: DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 DEBUG
          * @version Egret 2.4
          * @platform Web,Native
          */
         static DEBUG: string;
         /**
+         * @language en_US
+         * level: INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 INFO
          * @version Egret 2.4
          * @platform Web,Native
          */
         static INFO: string;
         /**
+         * @language en_US
+         * level: WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 WARN
          * @version Egret 2.4
          * @platform Web,Native
          */
         static WARN: string;
         /**
+         * @language en_US
+         * level: ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 ERROR
          * @version Egret 2.4
          * @platform Web,Native
          */
         static ERROR: string;
         /**
+         * @language en_US
+         * close all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全关
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -13415,8 +13715,17 @@ declare module egret {
      */
     class NumberUtils {
         /**
-         *
-         * @param value
+         * @language en_US
+         * Judge whether it is a numerical value
+         * @param value Parameter that needs to be judged
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 判断是否是数值
+         * @param value 需要判断的参数
          * @returns
          * @version Egret 2.4
          * @platform Web,Native
