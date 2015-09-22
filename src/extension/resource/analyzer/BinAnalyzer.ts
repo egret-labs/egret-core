@@ -62,10 +62,10 @@ module RES {
                 loader.load(new egret.URLRequest(resItem.url));
             }else{
                 if( resItem.url.indexOf(window["resBase"] != -1)){
-                    resItem.url = resItem.url.replace(window["resBase"],window["apiUrl"]+"/");
+                    resItem.url = resItem.url.replace(window["resBase"],window["resServer"]+"/");
                     loader.load(new egret.URLRequest(resItem.url));
                 }else{
-                    loader.load(new egret.URLRequest(window["apiUrl"]+"/" + resItem.url));
+                    loader.load(new egret.URLRequest(window["resServer"]+"/" + resItem.url));
                 }
 
             }
