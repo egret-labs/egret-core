@@ -3713,6 +3713,11 @@ declare module eui {
         private createOneRenderer(rendererClass);
         /**
          * @private
+         * 设置项呈示器的默认皮肤
+         */
+        private setItemRenderSkinName(renderer, skinName);
+        /**
+         * @private
          */
         $dataProviderChanged: boolean;
         /**
@@ -3878,6 +3883,24 @@ declare module eui {
          * @platform Web,Native
          */
         itemRenderer: any;
+        /**
+         * @language en_US
+         * The skinName property of the itemRenderer.This property will be passed to itemRenderer.skinName as default value,if you
+         * did not set it explicitly.<br>
+         * Note: This property is invalid if the itemRenderer is not a subclass of the Component class.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
+         * 注意:若 itemRenderer 不是 Component 的子类，则此属性无效。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        itemRendererSkinName: any;
         /**
          * @language en_US
          * Function that returns an item renderer for a
@@ -5853,7 +5876,7 @@ declare module eui {
      * @platform Web,Native
      * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
-    class ItemRenderer extends Group implements IItemRenderer {
+    class ItemRenderer extends Component implements IItemRenderer {
         /**
          * @language en_US
          * Constructor.
@@ -8423,7 +8446,7 @@ declare module eui {
      * @platform Web,Native
      * @includeExample  extension/eui/components/SkinExample.ts
      */
-    class Skin extends egret.HashObject {
+    class Skin extends egret.EventDispatcher {
         /**
          * @language en_US
          * The list of skin parts name
@@ -11163,6 +11186,10 @@ declare module eui.sys {
          */
         private currentClass;
         /**
+         * 当前exml的根节点是否为Skin
+         */
+        private isSkinClass;
+        /**
          * @private
          * 当前编译的类名
          */
@@ -11191,10 +11218,6 @@ declare module eui.sys {
          * 需要单独创建的实例id列表
          */
         private stateIds;
-        /**
-         * @private
-         */
-        private idToNode;
         /**
          * @private
          */

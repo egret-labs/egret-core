@@ -335,7 +335,7 @@ module egret {
         private invalidatePosition():void {
             this.$invalidateTransform();
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
-            sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
+                sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
             if (this.$parent) {
                 this.$parent.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
             }
@@ -538,15 +538,16 @@ module egret {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(),
                         matrix);
+                    var values = this.$DisplayObject;
+                    var offsetX = values[Keys.anchorOffsetX];
+                    var offsetY = values[Keys.anchorOffsetY];
                     var rect = this.$scrollRect;
                     if (rect) {
-                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), matrix);
+                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
 
                     }
-
-                    var values = this.$DisplayObject;
-                    if (values[Keys.anchorOffsetX] != 0 || values[Keys.anchorOffsetY] != 0) {
-                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -values[Keys.anchorOffsetX], -values[Keys.anchorOffsetY]), matrix);
+                    else if (offsetX != 0 || offsetY != 0) {
+                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
                     }
 
                 } else {
@@ -1245,7 +1246,7 @@ module egret {
                 parentCache.markDirty(this);
             }
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
-            sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
+                sys.DisplayObjectFlags.InvalidInvertedConcatenatedMatrix);
         }
 
         /**
@@ -1842,7 +1843,7 @@ module egret {
             matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
             if (root !== this.$stage) {
-                this.$getConcatenatedMatrixAt(root,matrix);
+                this.$getConcatenatedMatrixAt(root, matrix);
             }
             displayList.$ratioMatrix.$preMultiplyInto(matrix, matrix);
             region.updateRegion(bounds, matrix);
@@ -1855,22 +1856,22 @@ module egret {
          * @param root 根节点显示对象
          * @param matrix 目标显示对象相对于舞台的完整连接矩阵。
          */
-        $getConcatenatedMatrixAt(root:DisplayObject,matrix:Matrix):void{
+        $getConcatenatedMatrixAt(root:DisplayObject, matrix:Matrix):void {
             var invertMatrix = root.$getInvertedConcatenatedMatrix();
-            if(invertMatrix.a===0||invertMatrix.d===0){//缩放值为0，逆矩阵无效
+            if (invertMatrix.a === 0 || invertMatrix.d === 0) {//缩放值为0，逆矩阵无效
                 var target = this;
                 var rootLevel = root.$nestLevel;
                 matrix.identity();
                 while (target.$nestLevel > rootLevel) {
                     var rect = target.$scrollRect;
-                    if(rect){
+                    if (rect) {
                         matrix.concat($TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y));
                     }
                     matrix.concat(target.$getMatrix());
                     target = target.$parent;
                 }
             }
-            else{
+            else {
                 invertMatrix.$preMultiplyInto(matrix, matrix);
             }
         }

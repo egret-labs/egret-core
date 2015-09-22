@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
+module RES.native {
 
     /**
      * @private
@@ -74,7 +74,7 @@ module egret.native {
         }
 
         private getList(callback:Function, type:string, root:string = ""):void {
-            var promise = PromiseObject.create();
+            var promise = egret.PromiseObject.create();
             promise.onSuccessFunc = function(paths) {
                 callback(paths);
             };
