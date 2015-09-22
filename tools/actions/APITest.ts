@@ -50,7 +50,8 @@ class AutoLogger implements APIAutoReference{
     //private _item:null,
     private _logContent:any = {
         title:'API Math.abs discarded,solution:http//www.baidu.com/Math.abs',
-        isShow:true
+        isShow:true,
+        isAPIadd:false
     };
     private _categoryQuickLST :any = {};
 
@@ -88,11 +89,20 @@ class AutoLogger implements APIAutoReference{
         var no_solution = false;
         //是否输出
         var is_show = true;
+        //是否写API全称
+        var isAPIadd = false;
         //有url确定title
         this._api = item['category-name']+'.'+item['name'];
         if(item['solution-url']){
             titleStr = 'API '+this._api +' 变更,解决方案请查看 '+this._filterUrl(item['solution-url']);
-            this._isAPIadd = false;
+            isAPIadd = false;
+        }else
+        //无解决方案查看是否来源为正确
+        if('solved_right.json' == item['source']){
+            //不输出
+            titleStr = 'no need output';
+            is_show = false;
+            //isAPIadd = false;
         }else
         //无解决方案去查快表是否有解决方案
         if(item['category-name'] in this._categoryQuickLST){
@@ -101,17 +111,17 @@ class AutoLogger implements APIAutoReference{
             if(father_item['solution-url']) {
                 titleStr = 'API ' +
                     item['category-name'] + '.*' + ' 变更,解决方案请查看 ' + this._filterUrl(father_item['solution-url']);
-                this._isAPIadd = true;
+                isAPIadd = true;
             }else{
                 //快表无url查看快表的source属性
                 if('solved_name_change.json' == father_item['source']){
                     titleStr = 'API '+ item['category-name'] + '.*' + ' 名称变更,尝试用\'$\'代替\'_\'';
-                    this._isAPIadd = true;
+                    isAPIadd = true;
 
                 }else
                 if('solved_deprecated.json' == father_item['source']){
                     titleStr = 'API '+ item['category-name'] + '.*' + ' 废弃,新版本不再提供兼容';
-                    this._isAPIadd = true;
+                    isAPIadd = true;
                 }else
                 if('solved_right.json' == father_item['source']){
                     //不输出
@@ -136,12 +146,14 @@ class AutoLogger implements APIAutoReference{
                 titleStr = 'no need output';
                 is_show = false;
             }
-            this._isAPIadd = false;
+            isAPIadd = false;
         }
+        this._isAPIadd = isAPIadd;
         if(titleStr != this._logContent.title){
             this.clear();
             this._logContent.title = titleStr;
             this._logContent.isShow = is_show;
+            this._logContent.isAPIadd = this._isAPIadd;
         }
     }
 
@@ -156,7 +168,7 @@ class AutoLogger implements APIAutoReference{
             this._logContent.references[fileName][this._api] = [];
         }
         this._logContent.references[fileName][this._api].push(lineNum);
-        this._logContent.references[fileName][this._api].isAPIshow = this._isAPIadd;
+        //this._logContent.references[fileName][this._api].isAPIshow = this._isAPIadd;
     }
 
     clear():void{
@@ -178,13 +190,13 @@ class AutoLogger implements APIAutoReference{
                     this._logContent.references[file_path][api].forEach(lineNum=>{
                         //行号需要＋1
                         fileRefLine +=(lineNum + 1)+', ';
-                        htmlRefLine += '<b>'+(lineNum + 1)+'</b>'+', ';
+                        htmlRefLine += '  <b>'+(lineNum + 1)+'</b> '+', ';
                         this._total ++;
 
                     });
                     fileRefLine = fileRefLine.slice(0,fileRefLine.lastIndexOf(', ')) + '行处引用 ';
                     htmlRefLine = htmlRefLine.slice(0,htmlRefLine.lastIndexOf(', ')) + '行处引用 ';
-                    if(this._logContent.references[file_path][api].isAPIshow){
+                    if(this._logContent.isAPIadd){
                         fileRefLine += api + ' ;';
                         htmlRefLine += api + ' ;';
                     };
@@ -203,9 +215,10 @@ class AutoLogger implements APIAutoReference{
         }
         //清空_logContent对象
         this._logContent.title = null;
+        this._logContent.isAPIadd = false;
+        this._logContent.isShow = true;
         delete this._logContent.references;
-        this._api = '';
-        this._isAPIadd = false;
+        //this._api = '';
         //this.isShow = true;
     }
 
@@ -253,7 +266,7 @@ class APITestAction implements egret.Command {
             searchLST.forEach(item => {
                 var searchName = item['name'];
                 var fatherName = item['category-name'];
-                if (searchName == 'addEventListener') {
+                if (searchName == 'identity' && fatherName == 'Matrix') {
                     var a;//检测点
                 }
                 var pkg;
@@ -267,6 +280,9 @@ class APITestAction implements egret.Command {
                         this.tsp.getAllReferenceAccordingDeclarationPosition(
                             pkg.path, pkg.position, fatherName, item['decorate'], function (filePath, line) {
                                 if (filePath) {
+                                    if (searchName == 'identity' && fatherName == 'Matrix') {
+                                        var a;//检测点
+                                    }
                                     logger.logRef(filePath, line);
                                 } else {
                                     console.log(item['category-name'] + '.' + item['name'] + ' 0引用');

@@ -282,7 +282,6 @@ var TsServiceProxy = (function () {
             });
         }
         else {
-            callBack(null, null);
         }
     };
     TsServiceProxy.prototype.getLineAndCharacterOfPosition = function (sourceFile, position) {
