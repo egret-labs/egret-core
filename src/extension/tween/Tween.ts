@@ -563,7 +563,7 @@ module egret {
          * @param props 
          * @returns 
          */
-        private _cloneProps(props):any {
+        private _cloneProps(props:any):any {
             var o = {};
             for (var n in props) {
                 o[n] = props[n];
@@ -645,7 +645,7 @@ module egret {
          * @param props 
          * @param o 
          */
-        private _set(props, o):void {
+        private _set(props:any, o):void {
             for (var n in props) {
                 o[n] = props[n];
             }
@@ -679,7 +679,7 @@ module egret {
 
 		/**
          * @language en_US
-         * Modify the property of the specified display object to a specified value
+         * Modify the property of the specified object to a specified value
 		 * @param props {Object} Property set of an object
 		 * @param duration {number} Duration
 		 * @param ease {egret.Ease} Easing algorithm
@@ -689,7 +689,7 @@ module egret {
 		 */
 		/**
          * @language zh_CN
-         * 将指定显示对象的属性修改为指定值
+         * 将指定对象的属性修改为指定值
 		 * @param props {Object} 对象的属性集合
 		 * @param duration {number} 持续时间
 		 * @param ease {egret.Ease} 缓动算法
@@ -697,7 +697,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
 		 */
-        public to(props, duration?:number, ease:Function = undefined):Tween {
+        public to(props:any, duration?:number, ease:Function = undefined):Tween {
             if (isNaN(duration) || duration < 0) {
                 duration = 0;
             }
@@ -729,14 +729,22 @@ module egret {
         }
 
         /**
-         * 
-         * @param props 
-         * @param target 
-         * @returns 
+         * Now modify the properties of the specified object to the specified value
+         * @param props {Object} Property set of an object
+         * @param target The object whose Tween to be resumed
+         * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public set(props, target = null):Tween {
+        /**
+         * 立即将指定对象的属性修改为指定值
+         * @param props {Object} 对象的属性集合
+         * @param target 要继续播放 Tween 的对象
+         * @returns {egret.Tween} Tween对象本身
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public set(props:any, target = null):Tween {
             return this._addAction({f: this._set, o: this, p: [props, target ? target : this._target]});
         }
 

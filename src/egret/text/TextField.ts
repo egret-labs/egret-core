@@ -216,6 +216,14 @@ module egret {
     export class TextField extends DisplayObject {
 
         /**
+         * @language en_US
+         * default fontFamily
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本字体
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -793,17 +801,9 @@ module egret {
         }
 
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public get displayAsPassword():boolean {
-            return this.$TextField[sys.TextKeys.displayAsPassword];
-        }
-
-        /**
          * @language en_US
          * Specify whether the text field is a password text field.
-         * Specify whether the text field is a password text field. If the value of this property is true, the text field is treated as a password text field and hides the input characters using asterisks instead of the actual characters. If false, the text field is not treated as a password text field.
+         * If the value of this property is true, the text field is treated as a password text field and hides the input characters using asterisks instead of the actual characters. If false, the text field is not treated as a password text field.
          * @default false
          */
         /**
@@ -812,6 +812,10 @@ module egret {
          * 如果此属性的值为 true，则文本字段被视为密码文本字段，并使用星号而不是实际字符来隐藏输入的字符。如果为 false，则不会将文本字段视为密码文本字段。
          * @default false
          */
+        public get displayAsPassword():boolean {
+            return this.$TextField[sys.TextKeys.displayAsPassword];
+        }
+
         public set displayAsPassword(value:boolean) {
             this.$setDisplayAsPassword(value);
         }
@@ -923,13 +927,6 @@ module egret {
             return false;
         }
 
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        public get maxChars():number {
-            return this.$TextField[sys.TextKeys.maxChars];
-        }
 
         /**
          * @language en_US
@@ -943,6 +940,10 @@ module egret {
          * 脚本可以插入比 maxChars 允许的字符数更多的文本；maxChars 属性仅表示用户可以输入多少文本。如果此属性的值为 0，则用户可以输入无限数量的文本。
          * @default 0
          */
+        public get maxChars():number {
+            return this.$TextField[sys.TextKeys.maxChars];
+        }
+
         public set maxChars(value:number) {
             this.$setMaxChars(value);
         }
@@ -1006,6 +1007,7 @@ module egret {
         }
 
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1014,6 +1016,7 @@ module egret {
         }
 
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1022,6 +1025,7 @@ module egret {
         }
 
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */

@@ -115,5 +115,19 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export var ImageLoader:{new():ImageLoader};
+    export var ImageLoader:{
+        /**
+         * @language en_US
+         * constructor
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        new():ImageLoader
+    };
 }

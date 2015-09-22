@@ -959,8 +959,8 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -971,9 +971,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -984,8 +982,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -996,8 +993,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1008,8 +1004,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1019,8 +1014,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child1 {DisplayObject}
-         * @param child2 {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1030,8 +1024,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */

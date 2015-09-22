@@ -41,32 +41,86 @@ module egret {
      * @platform Web,Native
      */
     export class Logger {
+
         /**
+         * @language en_US
+         * open all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全开
          * @version Egret 2.4
          * @platform Web,Native
          */
         public static ALL:string = "all";
+
         /**
+         * @language en_US
+         * level: DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 DEBUG
          * @version Egret 2.4
          * @platform Web,Native
          */
         public static DEBUG:string = "debug";
+
         /**
+         * @language en_US
+         * level: INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 INFO
          * @version Egret 2.4
          * @platform Web,Native
          */
         public static INFO:string = "info";
+
         /**
+         * @language en_US
+         * level: WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 WARN
          * @version Egret 2.4
          * @platform Web,Native
          */
         public static WARN:string = "warn";
+
         /**
+         * @language en_US
+         * level: ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 ERROR
          * @version Egret 2.4
          * @platform Web,Native
          */
         public static ERROR:string = "error";
+
         /**
+         * @language en_US
+         * close all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全关
          * @version Egret 2.4
          * @platform Web,Native
          */

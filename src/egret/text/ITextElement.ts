@@ -49,57 +49,144 @@ module egret {
 
 
     /**
-     * @private
+     * @language en_US
+     * Text Style
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 文本样式
      * @version Egret 2.4
      * @platform Web,Native
      */
     export interface ITextStyle {
         /**
+         * @language en_US
+         * text color
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 颜色值
          * @version Egret 2.4
          * @platform Web,Native
          */
         textColor?:number;
         /**
+         * @language en_US
+         * stroke color
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 描边颜色值
          * @version Egret 2.4
          * @platform Web,Native
          */
         strokeColor?:number;
         /**
+         * @language en_US
+         * size
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 字号
          * @version Egret 2.4
          * @platform Web,Native
          */
         size?:number;
         /**
+         * @language en_US
+         * stroke width
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 描边大小
          * @version Egret 2.4
          * @platform Web,Native
          */
         stroke?:number;
         /**
+         * @language en_US
+         * whether bold
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否加粗
          * @version Egret 2.4
          * @platform Web,Native
          */
         bold?:boolean;
         /**
+         * @language en_US
+         * whether italic
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否倾斜
          * @version Egret 2.4
          * @platform Web,Native
          */
         italic?:boolean;
         /**
+         * @language en_US
+         * fontFamily
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 字体名称
          * @version Egret 2.4
          * @platform Web,Native
          */
         fontFamily?:string;
         /**
+         * @language en_US
+         * Link events or address
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 链接事件或者地址
          * @version Egret 2.4
          * @platform Web,Native
          */
         href?:string;
         /**
+         * @language en_US
+         * @private
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
         target?:string;
         /**
+         * @language en_US
+         * Is underlined
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否加下划线
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -122,11 +209,27 @@ module egret {
      */
     export interface ITextElement {
         /**
+         * @language en_US
+         * String Content
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 字符串内容
          * @version Egret 2.4
          * @platform Web,Native
          */
         text:string;
         /**
+         * @language en_US
+         * Text Style
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本样式
          * @version Egret 2.4
          * @platform Web,Native
          */

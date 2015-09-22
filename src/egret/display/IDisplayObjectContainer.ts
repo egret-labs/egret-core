@@ -171,6 +171,7 @@ module egret {
         /**
          * @language zh_CN
          * 返回 DisplayObject 的 child 实例的索引位置。
+         * @param child 要测试的子对象。
          * @returns 要查找的子显示对象的索引位置。
          * @version Egret 2.4
          * @platform Web,Native

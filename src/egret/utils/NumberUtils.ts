@@ -37,9 +37,18 @@ module egret {
     export class NumberUtils {
 
         /**
-         * 
-         * @param value 
+         * @language en_US
+         * Judge whether it is a numerical value
+         * @param value Parameter that needs to be judged
          * @returns 
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 判断是否是数值
+         * @param value 需要判断的参数
+         * @returns
          * @version Egret 2.4
          * @platform Web,Native
          */

@@ -55,7 +55,7 @@ module eui {
      * @platform Web,Native
      * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
-    export class ItemRenderer extends Group implements IItemRenderer {
+    export class ItemRenderer extends Component implements IItemRenderer {
 
         /**
          * @language en_US

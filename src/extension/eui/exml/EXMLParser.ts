@@ -39,6 +39,8 @@ module eui.sys {
     var parsedClasses:any = {};
     var innerClassCount = 1;
 
+    var HOST_COMPONENT = "hostComponent";
+    var SKIN_CLASS = "eui.Skin";
     var DECLARATIONS = "Declarations";
     var RECTANGLE = "egret.Rectangle";
     var TYPE_CLASS = "Class";
@@ -92,6 +94,10 @@ module eui.sys {
          */
         private currentClass:EXClass;
         /**
+         * 当前exml的根节点是否为Skin
+         */
+        private isSkinClass:boolean;
+        /**
          * @private
          * 当前编译的类名
          */
@@ -121,11 +127,6 @@ module eui.sys {
          * 需要单独创建的实例id列表
          */
         private stateIds:string[];
-
-        /**
-         * @private
-         */
-        private idToNode:any;
 
         /**
          * @private
@@ -189,7 +190,7 @@ module eui.sys {
                 return null;
             }
             if (hasClass && clazz) {
-                egret.registerClass(clazz,className);
+                egret.registerClass(clazz, className);
                 var paths = className.split(".");
                 var length = paths.length;
                 var definition = __global;
@@ -198,12 +199,12 @@ module eui.sys {
                     definition = definition[path] || (definition[path] = {});
                 }
                 if (definition[paths[length - 1]]) {
-                    if (DEBUG&&!parsedClasses[className]) {
+                    if (DEBUG && !parsedClasses[className]) {
                         egret.$warn(2101, className, toXMLString(xmlData));
                     }
                 }
                 else {
-                    if(DEBUG){
+                    if (DEBUG) {
                         parsedClasses[className] = true;
                     }
                     definition[paths[length - 1]] = clazz;
@@ -224,7 +225,6 @@ module eui.sys {
             this.currentClassName = className;
             this.delayAssignmentDic = {};
             this.idDic = {};
-            this.idToNode = {};
             this.stateCode = [];
             this.stateNames = [];
             this.skinParts = [];
@@ -232,6 +232,7 @@ module eui.sys {
             this.declarations = null;
             this.currentClass = new EXClass();
             this.stateIds = [];
+
             var index = className.lastIndexOf(".");
             if (index != -1) {
                 this.currentClass.className = className.substring(index + 1);
@@ -257,7 +258,9 @@ module eui.sys {
                     egret.$error(2004, this.currentClassName, result.join("\n"));
                 }
             }
-            this.currentClass.superClass = this.getClassNameOfNode(this.currentXML);
+            var superClass = this.getClassNameOfNode(this.currentXML);
+            this.isSkinClass = (superClass == SKIN_CLASS);
+            this.currentClass.superClass = superClass;
 
             this.getStateNames();
 
@@ -333,7 +336,6 @@ module eui.sys {
                 else if (node.nodeType === 1) {
                     var id = node.attributes["id"];
                     if (id) {
-                        this.idToNode[id] = node;
                         if (this.skinParts.indexOf(id) == -1) {
                             this.skinParts.push(id);
                         }
@@ -343,7 +345,6 @@ module eui.sys {
                     }
                     else {
                         this.createIdForNode(node);
-                        this.idToNode[node.attributes.id] = node;
                         if (this.isStateNode(node))
                             this.stateIds.push(node.attributes.id);
                     }
@@ -618,7 +619,7 @@ module eui.sys {
                         if (type) {
                             cb.addAssignment(varName, innerClassName, SKIN_NAME);
                         }
-                        else{
+                        else {
                             egret.$error(2005, this.currentClassName, SKIN_NAME, getPropertyStr(child));
                         }
                     }
@@ -851,6 +852,10 @@ module eui.sys {
                     value = value.substring(5);
                 }
                 this.checkIdForState(node);
+                var firstKey = value.split(".")[0];
+                if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
+                    value = HOST_COMPONENT+"."+value;
+                }
                 this.bindings.push(new EXBinding(node.attributes["id"], key, value));
                 value = "";
             }
@@ -868,7 +873,7 @@ module eui.sys {
                 var orgValue:string = value;
                 switch (type) {
                     case TYPE_CLASS:
-                        if(key==SKIN_NAME){
+                        if (key == SKIN_NAME) {
                             value = this.formatString(stringValue);
                         }
                         break;
@@ -1452,7 +1457,7 @@ module eui.sys {
                 var length:number = children.length;
                 for (var i:number = 0; i < length; i++) {
                     var node:any = children[i];
-                    if(this.isInnerClass(node)){
+                    if (this.isInnerClass(node)) {
                         continue;
                     }
                     this.getIds(node, result);

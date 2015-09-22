@@ -57,7 +57,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static TEXT = "text";
+        public static TEXT:string = "text";
         /**
          * @language en_US
          * Specifies that downloaded data is received as raw binary data.
@@ -70,7 +70,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static ARRAY_BUFFER = "arraybuffer";
+        public static ARRAY_BUFFER:string = "arraybuffer";
 
     }
 }

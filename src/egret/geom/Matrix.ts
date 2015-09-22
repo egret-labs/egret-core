@@ -98,12 +98,14 @@ module egret {
         /**
          * @language en_US
          * Releases a matrix instance to the object pool
+         * @param matrix matrix that Needs to be recycled
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 释放一个Matrix实例到对象池
+         * @param matrix 需要回收的 matrix
          * @version Egret 2.4
          * @platform Web,Native
          */
