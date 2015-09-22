@@ -46,7 +46,9 @@ module eui {
         typicalLayoutRect,
         cleanFreeRenderer,
         renderersBeingUpdated,
-        typicalItem
+        typicalItem,
+        itemRendererSkinName,
+        itemRendererSkinNameChange
     }
 
     /**
@@ -109,6 +111,8 @@ module eui {
                 10: false,    //cleanFreeRenderer
                 11: false,    //renderersBeingUpdated
                 12: null,     //typicalItem
+                13: null,     //itemRendererSkinName
+                14: false,    //itemRendererSkinNameChange
             };
         }
 
@@ -139,8 +143,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setLayout(value:LayoutBase):boolean {
             if (value == this.$layout)
@@ -180,7 +184,7 @@ module eui {
 
         /**
          * @inheritDoc
-         * 
+         *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -241,8 +245,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param renderer 
+         *
+         * @param renderer
          */
         private doFreeRenderer(renderer:IItemRenderer):void {
             var values = this.$DataGroup;
@@ -293,12 +297,28 @@ module eui {
          */
         private createOneRenderer(rendererClass:any):IItemRenderer {
             var renderer = <IItemRenderer> (new rendererClass());
-            this.$DataGroup[Keys.rendererToClassMap][renderer.$hashCode] = rendererClass;
+            var values = this.$DataGroup;
+            values[Keys.rendererToClassMap][renderer.$hashCode] = rendererClass;
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
             }
+            if (values[Keys.itemRendererSkinName]) {
+                this.setItemRenderSkinName(renderer,values[Keys.itemRendererSkinName]);
+            }
             this.addChild(renderer);
             return renderer;
+        }
+
+        /**
+         * @private
+         * 设置项呈示器的默认皮肤
+         */
+        private setItemRenderSkinName(renderer:IItemRenderer,skinName:any):void {
+            if (renderer && renderer instanceof Component) {
+                var comp:Component = <Component> <any>renderer;
+                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet])
+                    comp.skinName = skinName;
+            }
         }
 
         /**
@@ -344,8 +364,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setDataProvider(value:ICollection):boolean {
             if (this.$dataProvider == value)
@@ -629,6 +649,38 @@ module eui {
 
         /**
          * @language en_US
+         * The skinName property of the itemRenderer.This property will be passed to itemRenderer.skinName as default value,if you
+         * did not set it explicitly.<br>
+         * Note: This property is invalid if the itemRenderer is not a subclass of the Component class.
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 条目渲染器的可选皮肤标识符。在实例化itemRenderer时，若其内部没有设置过skinName,则将此属性的值赋值给它的skinName。
+         * 注意:若 itemRenderer 不是 Component 的子类，则此属性无效。
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public get itemRendererSkinName():any {
+            return this.$DataGroup[Keys.itemRendererSkinName];
+        }
+
+        public set itemRendererSkinName(value:any) {
+            var values = this.$DataGroup;
+            if (values[Keys.itemRendererSkinName] == value)
+                return;
+            values[Keys.itemRendererSkinName] = value;
+            if (value && this.$UIComponent[sys.UIKeys.initialized]) {
+                values[Keys.itemRendererSkinNameChange] = true;
+                this.invalidateProperties();
+            }
+        }
+
+        /**
+         * @language en_US
          * Function that returns an item renderer for a
          * specific item.
          *
@@ -740,6 +792,29 @@ module eui {
                 if (this.$dataProvider && this.$dataProvider.length > 0) {
                     values[Keys.typicalItem] = this.$dataProvider.getItemAt(0);
                     this.measureRendererSize();
+                }
+            }
+
+            if (values[Keys.itemRendererSkinNameChange]) {
+                values[Keys.itemRendererSkinNameChange] = false;
+                var skinName = values[Keys.itemRendererSkinName];
+                var indexToRenderer = this.$indexToRenderer;
+                var keys = Object.keys(indexToRenderer);
+                var length = keys.length;
+                for (var i = 0; i < length; i++) {
+                    var index = keys[i];
+                    this.setItemRenderSkinName(indexToRenderer[index],skinName);
+                }
+                var freeRenderers = values[Keys.freeRenderers];
+                var keys = Object.keys(freeRenderers);
+                var length = keys.length;
+                for (var i = 0; i < length; i++) {
+                    var hashCode = keys[i];
+                    var list:IItemRenderer[] = freeRenderers[hashCode];
+                    var length = list.length;
+                    for (var i = 0; i < length; i++) {
+                        this.setItemRenderSkinName(list[i],skinName);
+                    }
                 }
             }
         }
@@ -1039,8 +1114,9 @@ module eui {
     }
 
     registerProperty(DataGroup, "itemRenderer", "Class");
+    registerProperty(DataGroup, "itemRendererSkinName", "Class");
     registerProperty(DataGroup, "dataProvider", "eui.ICollection", true);
-    if(DEBUG){
-        egret.$markReadOnly(DataGroup,"numElements");
+    if (DEBUG) {
+        egret.$markReadOnly(DataGroup, "numElements");
     }
 }

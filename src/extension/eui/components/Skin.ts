@@ -73,7 +73,7 @@ module eui {
      * @platform Web,Native
      * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
      */
-    export class Skin extends egret.HashObject {
+    export class Skin extends egret.EventDispatcher {
 
         /**
          * @language en_US
@@ -275,6 +275,7 @@ module eui {
                     }
                 }
             }
+            PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "hostComponent");
         }
 
         /**
@@ -359,4 +360,5 @@ module eui {
     sys.mixin(Skin, sys.StateClient);
     registerProperty(Skin, "elementsContent", "Array", true);
     registerProperty(Skin, "states", "State[]");
+    registerBindable(ItemRenderer.prototype, "hostComponent");
 }
