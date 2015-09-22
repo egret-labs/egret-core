@@ -154,5 +154,15 @@ module dragonBones {
             this.tx = tx1 * ma + ty1 * mc + m.tx;
             this.ty = tx1 * mb + ty1 * md + m.ty;
         }
+
+        public copyFrom(m:Matrix):void
+        {
+            this.tx = m.tx;
+            this.ty = m.ty;
+            this.a = m.a;
+            this.b = m.b;
+            this.c = m.c;
+            this.d = m.d;
+        }
     }
 }

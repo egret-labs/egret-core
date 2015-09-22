@@ -171,7 +171,10 @@ module egret {
         //全屏键盘
         private showScreenKeyboard():void {
             var self = this;
-            self.dispatchEvent(new egret.Event("blur"));
+
+            self.dispatchEvent(new egret.Event("focus"));
+            Event.dispatchEvent(self, "focus", false, {"showing" : true});
+
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self._multiline) {//多行文本
                     if (self.isFinishDown) {
@@ -191,6 +194,7 @@ module egret {
                     egret_native.TextInputOp.setKeybordOpen(false);
 
                     self.dispatchEvent(new egret.Event("updateText"));
+                    self.dispatchEvent(new egret.Event("blur"));
                 }
             };
 
@@ -199,16 +203,19 @@ module egret {
                 if (self._multiline) {//多行文本
                     self.isFinishDown = true;
                 }
+                self.dispatchEvent(new egret.Event("blur"));
             };
         }
 
         private showPartKeyboard():void {
+            var self = this;
+            self.dispatchEvent(new egret.Event("focus"));
+
             var container:egret.DisplayObjectContainer = this.container;
             var stage:egret.Stage = egret.MainContext.instance.stage;
             stage.addChild(container);
             this.createText();
 
-            var self = this;
 
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self._multiline) {//多行文本
@@ -266,9 +273,12 @@ module egret {
                 }
             };
 
-            egret_native.TextInputOp.setInputTextMaxLenght(self._maxChars > 0 ? self._maxChars : -1);
-
-            egret_native.TextInputOp.setKeybordOpen(true);
+            var textfield:egret.TextField = this._textfield;
+            var inputMode = textfield.multiline ? 0 : 6;
+            var inputFlag = -1;//textfield.displayAsPassword ? 0 : -1;
+            var returnType = 1;
+            var maxLength = textfield.maxChars <= 0 ? -1 : textfield.maxChars;
+            egret_native.TextInputOp.setKeybordOpen(true, JSON.stringify({"inputMode" : inputMode,  "inputFlag" : inputFlag,   "returnType" :returnType,   "maxLength" :maxLength}));
         }
 
         public _remove():void {

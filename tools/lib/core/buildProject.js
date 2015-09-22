@@ -27,7 +27,7 @@ function build(properties, callback, keepGeneratedTypescript) {
     if (document_class) {
         replaceDocumentClass("index.html", document_class, projectPath);
         replaceDocumentClass("release.html", document_class, projectPath);
-        replaceDocumentClass("native_require.js", document_class, projectPath);
+        //replaceDocumentClass("native_require.js", document_class, projectPath);
     }
 
     //输出路径

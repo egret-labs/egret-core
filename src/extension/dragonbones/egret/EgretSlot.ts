@@ -125,8 +125,9 @@ module dragonBones {
             aMultiplier:number,
             rMultiplier:number,
             gMultiplier:number,
-            bMultiplier:number):void{
-            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier);
+            bMultiplier:number,
+            colorChange:boolean = false):void{
+            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChange);
             if(this._egretDisplay)
             {
                 this._egretDisplay.alpha = aMultiplier;
@@ -151,7 +152,9 @@ module dragonBones {
             this._global.x = this._origin.x + this._offset.x + this._parent._tweenPivot.x;
             this._global.y = this._origin.y + this._offset.y + this._parent._tweenPivot.y;
 
-            if(this._displayDataList[this._currentDisplayIndex] &&
+            if(this._displayDataList && 
+               this._currentDisplayIndex >= 0 && 
+               this._displayDataList[this._currentDisplayIndex] &&
                EgretTextureAtlas.rotatedDic[this._displayDataList[this._currentDisplayIndex].name] == 1)
             {
                 this._global.skewX -= 1.57;

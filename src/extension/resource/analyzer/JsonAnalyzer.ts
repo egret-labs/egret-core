@@ -29,7 +29,9 @@
 
 
 module RES {
-
+    /**
+     * @private
+     */
     export class JsonAnalyzer extends BinAnalyzer{
 
         public constructor(){

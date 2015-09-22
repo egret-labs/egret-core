@@ -55,6 +55,11 @@ module egret.gui {
          */
         public scrollBeginThreshold: number = 10;
 
+        /**
+         * 是否启用回弹，当启用回弹后，Scroller中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+         * 默认值是 true
+         */
+        public bounces: boolean;
 
         /**
          * 滚动速度，这个值为需要的速度与默认速度的比值。

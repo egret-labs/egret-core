@@ -34,6 +34,7 @@ module egret {
      * 用于计算相对时间。此方法返回自启动 Egret 引擎以来经过的毫秒数。
 	 * @method egret.getTimer
 	 * @returns {number} 启动 Egret 引擎以来经过的毫秒数。
+     * @includeExample egret/utils/getTimer.ts
      */
     export function getTimer():number {
         return Date.now() - __START_TIME;

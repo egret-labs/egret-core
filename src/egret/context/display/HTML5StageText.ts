@@ -52,7 +52,16 @@ module egret {
             var scaleY = egret.StageDelegate.getInstance().getScaleY();
 
             this.inputDiv.style.left = x * scaleX + "px";
-            this.inputDiv.style.top = y * scaleY + "px";
+            if (this._textfield._TF_Props_._multiline) {
+                this.inputDiv.style.top = y * scaleY + "px";
+
+                this.inputElement.style.top = (-this._textfield._TF_Props_._lineSpacing / 2) + "px";
+            }
+            else {
+                this.inputDiv.style.top = y * scaleY + "px";
+
+                this.inputElement.style.top = 0 + "px";
+            }
 
             this._gscaleX = scaleX * cX;
             this._gscaleY = scaleY * cY;
@@ -133,12 +142,61 @@ module egret {
             }
         }
 
+        $onBlur():void {
+            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
+                egret.Event.dispatchEvent(this, "updateText", false);
+            }
+        }
+
         public _onInput():void {
             var self = this;
-            self.textValue = self.inputElement.value;
 
-            egret.Event.dispatchEvent(self, "updateText", false);
+            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
+                var values = this._textfield._TF_Props_;
+                if (values._restrictAnd == null && values._restrictNot == null) {
+                    self.textValue = self.inputElement.value;
+
+                    egret.Event.dispatchEvent(self, "updateText", false);
+
+                    this._textfield._getLinesArr();
+                    this.setAreaHeight();
+                }
+            }
+            else {
+                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                    self.textValue = self.inputElement.value;
+
+                    egret.Event.dispatchEvent(self, "updateText", false);
+
+                    this._textfield._getLinesArr();
+                    this.setAreaHeight();
+                }
+            }
         }
+
+        private setAreaHeight() {
+            var textfield:egret.TextField = this._textfield;
+            if (textfield.multiline) {
+                var textheight = TextFieldUtils._getTextHeight(textfield);
+                if (textfield.height < textheight) {
+                    this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
+
+                    this.setElementStyle("padding", "0px");
+                }
+                else {
+                    this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
+
+                    var rap = (textfield.height - textheight) * this._gscaleY;
+                    var valign:number = TextFieldUtils._getValign(textfield);
+                    var top = rap * valign;
+                    var bottom = rap - top;
+                    this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
+                }
+
+                this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
+            }
+        }
+
 
         public _onClickHandler(e):void {
             if (this._isNeedShow) {
@@ -187,11 +245,35 @@ module egret {
                 this.setElementStyle("fontWeight", propertie._bold ? "bold" : "normal");
                 this.setElementStyle("textAlign", propertie._textAlign);
                 this.setElementStyle("fontSize", propertie._size * this._gscaleY + "px");
-                this.setElementStyle("lineHeight", propertie._size * this._gscaleY + "px");
                 this.setElementStyle("color", propertie._textColorString);
                 this.setElementStyle("width", textfield._getSize(Rectangle.identity).width * this._gscaleX + "px");
-                this.setElementStyle("height", textfield._getSize(Rectangle.identity).height * this._gscaleY + "px");
                 this.setElementStyle("verticalAlign", propertie._verticalAlign);
+
+                if (propertie._multiline) {
+                    this.setAreaHeight();
+                }
+                else {
+                    this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
+
+                    if (textfield.height < textfield.size) {
+                        this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+
+                        this.setElementStyle("padding", "0px");
+                    }
+                    else {
+                        this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
+
+                        var rap = (textfield.height - textfield.size) * this._gscaleY;
+                        var valign:number = TextFieldUtils._getValign(textfield);
+                        var top = rap * valign;
+                        var bottom = rap - top;
+                        this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
+                    }
+                }
+
+                this.inputDiv.style.clip = "rect(0px "+(textfield.width * this._gscaleX)+"px " +(textfield.height * this._gscaleY)+"px 0px)";
+                this.inputDiv.style.height = textfield.height * this._gscaleY + "px";
+                this.inputDiv.style.width = textfield.width * this._gscaleX + "px";
             }
         }
     }
@@ -237,8 +319,11 @@ module egret {
 
                 self.initValue(stageDelegateDiv);
 
-                stageDelegateDiv.style.width = "0px";
-                stageDelegateDiv.style.height = "0px";
+                var canvasDiv = document.getElementById(egret.StageDelegate.canvas_div_name);
+                stageDelegateDiv.style.left = canvasDiv.style.left;
+                stageDelegateDiv.style.top = canvasDiv.style.top;
+                stageDelegateDiv.style[egret.Browser.getInstance().getTrans("transform")] = canvasDiv.style[egret.Browser.getInstance().getTrans("transform")];
+
 
                 self._inputDIV = egret.Browser.getInstance().$new("div");
                 self.initValue(self._inputDIV);
@@ -362,6 +447,8 @@ module egret {
                 self._inputDIV.style.left = 0 + "px";
                 self._inputDIV.style.top = "-100px";
 
+                self._inputDIV.style.height = 0 + "px";
+                self._inputDIV.style.width = 0 + "px";
             }
 
             if (self._stageText) {

@@ -26,41 +26,46 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.localStorage {
+module egret {
     /**
-     * 读取数据
-     * @method egret.localStorage.getItem
-     * @param key {string} 要读取的键名称
+     * @includeExample egret/context/localStorage/localStorage.ts
      */
-    export function getItem(key:string):string {
-        return null;
-    }
+    export class localStorage {
+        /**
+         * 读取数据
+         * @method egret.localStorage.getItem
+         * @param key {string} 要读取的键名称
+         */
+        public static getItem(key:string):string {
+            return null;
+        }
 
-    /**
-     * 保存数据
-     * @method egret.localStorage.setItem
-     * @param key {string} 要保存的键名称
-     * @param value {string} 要保存的值
-     * @returns {boolean} 数据保存是否成功
-     */
-    export function setItem(key:string, value:string):boolean {
-        return false;
-    }
+        /**
+         * 保存数据
+         * @method egret.localStorage.setItem
+         * @param key {string} 要保存的键名称
+         * @param value {string} 要保存的值
+         * @returns {boolean} 数据保存是否成功
+         */
+        public static setItem(key:string, value:string):boolean {
+            return false;
+        }
 
-    /**
-     * 删除数据
-     * @method egret.localStorage.removeItem
-     * @param key {string} 要删除的键名称
-     */
-    export function removeItem(key:string):void {
+        /**
+         * 删除数据
+         * @method egret.localStorage.removeItem
+         * @param key {string} 要删除的键名称
+         */
+        public static removeItem(key:string):void {
 
-    }
+        }
 
-    /**
-     * 将所有数据清空
-     * @method egret.localStorage.clear
-     */
-    export function clear():void {
+        /**
+         * 将所有数据清空
+         * @method egret.localStorage.clear
+         */
+        public static clear():void {
 
+        }
     }
 }

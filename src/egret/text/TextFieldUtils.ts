@@ -97,12 +97,12 @@ module egret {
          */
         public static _getValign(textfield:egret.TextField):number{
             var textHeight:number = TextFieldUtils._getTextHeight(textfield);
-            if (textfield._TF_Props_._type == egret.TextFieldType.INPUT) {
-                if (textfield._TF_Props_._multiline) {
-                    return 0;
-                }
-                return 0.5;
-            }
+            //if (textfield._TF_Props_._type == egret.TextFieldType.INPUT) {
+            //    if (textfield._TF_Props_._multiline) {
+            //        return 0;
+            //    }
+            //    return 0.5;
+            //}
             if (textfield._DO_Props_._hasHeightSet) {//
                 if (textHeight < textfield._DO_Props_._explicitHeight) {//最大高度比需要显示的高度小
                     var valign:number = 0;

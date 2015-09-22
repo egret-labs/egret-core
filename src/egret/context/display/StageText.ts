@@ -186,5 +186,12 @@ module egret {
             return null;
         }
 
+        /**
+         * @private
+         *
+         */
+        $onBlur():void {
+        }
+
     }
 }

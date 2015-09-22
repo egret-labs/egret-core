@@ -176,15 +176,47 @@ module egret {
                 egret_native.download(virtualUrl, virtualUrl, promise);
             }
 
+            if (__global.Audio) {
+                var audio = new Audio(virtualUrl);
+                audio.addEventListener('canplaythrough', soundPreloadCanplayHandler, false);
+                audio.addEventListener("error", soundPreloadErrorHandler, false);
+            }
+
             function onLoadComplete() {
                 self.saveVersion(virtualUrl);
-                var nativeAudio:NativeAudio = new NativeAudio();
-                nativeAudio._setAudio(virtualUrl);
+
+                if (__global.Audio) {
+                    audio.load();
+                }
+                else {
+                    var nativeAudio:NativeAudio = new NativeAudio();
+                    nativeAudio._setAudio(virtualUrl);
+
+                    var sound = new egret.Sound();
+                    sound._setAudio(nativeAudio);
+                    loader.data = sound;
+                    Event.dispatchEvent(loader, Event.COMPLETE);
+                }
+            }
+
+            function soundPreloadCanplayHandler(event) {
+                audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
+                audio.removeEventListener("error", soundPreloadErrorHandler, false);
+
+                var nativeAudio:NaAudio = new NaAudio();
+                nativeAudio._setAudio(audio);
 
                 var sound = new egret.Sound();
                 sound._setAudio(nativeAudio);
+
                 loader.data = sound;
                 Event.dispatchEvent(loader, Event.COMPLETE);
+            }
+
+            function soundPreloadErrorHandler(event) {
+                audio.removeEventListener('canplaythrough', soundPreloadCanplayHandler, false);
+                audio.removeEventListener("error", soundPreloadErrorHandler, false);
+                IOErrorEvent.dispatchIOErrorEvent(loader);
             }
         }
 
@@ -256,7 +288,7 @@ module egret {
          * @param url
          * @returns {string}
          */
-        private getVirtualUrl(url:string):string {
+        public getVirtualUrl(url:string):string {
             if (this._versionCtr) {
                 return this._versionCtr.getVirtualUrl(url);
             }

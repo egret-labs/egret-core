@@ -29,7 +29,9 @@
 
 
 module RES {
-
+	/**
+	 * @private
+	 */
 	export class BinAnalyzer extends AnalyzerBase{
 		/**
 		 * 构造函数

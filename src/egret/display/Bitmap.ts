@@ -37,6 +37,7 @@ module egret {
      * 一个 Bitmap 对象可在若干 Bitmap 对象之中共享其 Texture 引用，与转换属性或旋转属性无关。由于能够创建引用相同 Texture 对象的多个 Bitmap 对象，因此，多个显示对象可以使用相同的复杂 Texture 对象，而不会因为每个显示对象实例使用一个 Texture 对象而产生内存开销。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=132&terms1_id=25&terms2_id=31&t3_id=132 创建位图
 	 * @extends egret.DisplayObject
+     * @includeExample egret/display/Bitmap.ts
 	 */
     export class Bitmap extends DisplayObject {
 
@@ -71,6 +72,7 @@ module egret {
             this._setSizeDirty();
             this._texture = value;
         }
+
         /**
          * 矩形区域，它定义位图对象的九个缩放区域。此属性仅当fillMode为BitmapFillMode.SCALE时有效。
          * scale9Grid的x、y、width、height分别代表九宫图中中间那块的左上点的x、y以及中间方块的宽高。

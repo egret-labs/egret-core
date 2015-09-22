@@ -87,7 +87,7 @@ module egret {
          * @param value {Object} 错误描述信息
          */
         public static fatal(actionCode:string, value:Object = null) {
-            egret.Logger.traceToConsole("Fatal", actionCode, value);
+            //egret.Logger.traceToConsole("Fatal", actionCode, value);
             throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
         }
 
@@ -157,7 +157,7 @@ module egret {
             Logger.fatal(actionCode);
         }
         else {
-            Logger.warning(getString(-1, code));
+            Logger.fatal(getString(-1, code));
         }
     }
 
@@ -168,7 +168,7 @@ module egret {
         args.unshift(code);
         var actionCode = getString.apply(null, args);
         if (actionCode) {
-            Logger.fatal(actionCode);
+            Logger.warning(actionCode);
         }
         else {
             Logger.warning(getString(-1, code));

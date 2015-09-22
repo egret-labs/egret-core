@@ -102,6 +102,7 @@ module dragonBones {
 		private _tweenTransform:boolean;
 		private _tweenScale:boolean;
 		private _tweenColor:boolean;
+		private _tweenCurve:CurveData;
 		
 		private _rawAnimationScale:number;
 		
@@ -322,7 +323,7 @@ module dragonBones {
 				if(currentFrame){
 					this._bone._arriveAtFrame(currentFrame, this, this._animationState, false);
 					
-					this._blendEnabled = currentFrame.displayIndex >= 0;
+					this._blendEnabled = !isNaN(currentFrame.tweenEasing);
 					if(this._blendEnabled){
 						this.updateToNextFrame(currentPlayTimes);
 					}
@@ -370,7 +371,8 @@ module dragonBones {
 				this._tweenEasing = this._animationState.clip.tweenEasing;
 				if(isNaN(this._tweenEasing)){
 					this._tweenEasing = currentFrame.tweenEasing;
-					if(isNaN(this._tweenEasing))    //frame no tween
+					this._tweenCurve = currentFrame.curve;
+					if(isNaN(this._tweenEasing) && this._tweenCurve == null)    //frame no tween
 					{
 						tweenEnabled = false;
 					}
@@ -390,7 +392,8 @@ module dragonBones {
 			}
 			else{
 				this._tweenEasing = currentFrame.tweenEasing;
-				if(isNaN(this._tweenEasing) || this._tweenEasing == 10)    //frame no tween
+				this._tweenCurve = currentFrame.curve;
+				if((isNaN(this._tweenEasing) || this._tweenEasing == 10) && this._tweenCurve == null)  //frame no tween
 				{
 					this._tweenEasing = NaN;
 					tweenEnabled = false;
@@ -411,6 +414,7 @@ module dragonBones {
 				this._durationTransform.scaleX = nextFrame.transform.scaleX - currentFrame.transform.scaleX + nextFrame.scaleOffset.x;
 				this._durationTransform.scaleY = nextFrame.transform.scaleY - currentFrame.transform.scaleY + nextFrame.scaleOffset.y;
 				
+				this._durationTransform.normalizeRotation();
 				if(nextFrameIndex == 0){
 					this._durationTransform.skewX = TransformUtil.formatRadian(this._durationTransform.skewX);
 					this._durationTransform.skewY = TransformUtil.formatRadian(this._durationTransform.skewY);
@@ -481,13 +485,18 @@ module dragonBones {
 		}
 		
 		private updateTween():void{
-			var progress:number = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
-			if(this._tweenEasing){
-				progress = MathUtil.getEaseValue(progress, this._tweenEasing);
-			}
 			
 			var currentFrame:TransformFrame = <TransformFrame><any> (this._timelineData.frameList[this._currentFrameIndex]);
 			if(this._tweenTransform){
+
+				var progress:number = (this._currentTime - this._currentFramePosition) / this._currentFrameDuration;
+				if(this._tweenCurve != null)
+				{
+					progress = this._tweenCurve.getValueByProgress(progress);
+				}
+				else if(this._tweenEasing){
+					progress = MathUtil.getEaseValue(progress, this._tweenEasing);
+				}
 				var currentTransform:DBTransform = currentFrame.transform;
 				var currentPivot:Point = currentFrame.pivot;
 				if(this._animationState.additiveBlending){

@@ -51,6 +51,6 @@ module egret {
         public _isVTweenPlaying: boolean = false;
         public _hScrollTween: Tween = null;
         public _vScrollTween: Tween = null;
-
+        public _bounces: boolean = true;
     }
 }

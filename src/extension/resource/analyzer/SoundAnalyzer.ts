@@ -28,7 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module RES {
-
+    /**
+     * @private
+     */
     export class SoundAnalyzer extends BinAnalyzer {
 
         public constructor() {

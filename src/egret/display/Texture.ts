@@ -38,6 +38,7 @@ module egret {
      * Texture类封装了这些底层实现的细节，开发者只需要关心接口即可
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=135&terms1_id=25&terms2_id=31 纹理集的使用
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=123&terms1_id=25&terms2_id=30 获取资源的几种方式
+     * @includeExample egret/display/Texture.ts
      */
     export class Texture extends HashObject {
 
@@ -132,8 +133,7 @@ module egret {
          * @platform Web
          */
         public getPixel32(x:number, y:number):number[] {
-            var result:any = this._bitmapData.getContext("2d").getImageData(x, y, 1, 1);
-            return result.data;
+            throw new Error();
         }
 
         /**
@@ -160,6 +160,31 @@ module egret {
 
         }
 
+        /**
+         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null。
+         * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
+         * @param type 转换的类型，如  "image/png"。
+         * @param rect 需要转换的区域
+         * @returns {any} base64字符串
+         * @version Egret 2.4
+         */
+        public toDataURL(type:string, rect?:egret.Rectangle):string {
+            throw new Error();
+        }
+
+        /**
+         * 裁剪指定区域并保存成图片。
+         * native只支持 "image/png" 和 "image/jpeg"；Web中由于各个浏览器的实现不一样，因此建议也只用这2种。
+         * @param type 转换的类型，如  "image/png"
+         * @param filePath 图片的名称的路径（主目录为游戏的私有空间，路径中不能有 "../"，Web只支持传名称。）
+         * @param rect 需要转换的区域
+         * @version Egret 2.4
+         * @platform Native
+         */
+        public saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
+            throw new Error();
+        }
+
         public _drawForCanvas(context:CanvasRenderingContext2D, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType) {
 
             var bitmapData = this._bitmapData;
@@ -179,6 +204,10 @@ module egret {
             if (!bitmapData || !bitmapData["avaliable"]) {
                 return;
             }
+            sourceX = Math.max(0, sourceX);
+            sourceY = Math.max(0, sourceY);
+            sourceWidth = Math.max(0, sourceWidth);
+            sourceHeight = Math.max(0, sourceHeight);
             if (renderType !== undefined) {
                 this._drawRepeatImageForNative(context, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, renderType);
             }
@@ -282,7 +311,16 @@ module egret {
                 callback(0, bitmapData);
                 return;
             }
-            bitmapData.crossOrigin = Texture.crossOrigin;
+
+            if (!Texture.crossOrigin) {
+                if (bitmapData.hasAttribute("crossOrigin")) {//兼容猎豹
+                    bitmapData.removeAttribute("crossOrigin");
+                }
+            }
+            else {
+                bitmapData.setAttribute("crossOrigin", Texture.crossOrigin);
+            }
+
             var winURL = window["URL"] || window["webkitURL"];
             if (Texture._bitmapCallbackMap[url] == null) {//非正在加载中
                 Texture._addToCallbackList(url, callback);
@@ -290,6 +328,9 @@ module egret {
                     var xhr = new XMLHttpRequest();
                     xhr.open("get", url, true);
                     xhr.responseType = "blob";
+                    xhr.onerror = function () {
+                        Texture._onError(url, bitmapData);
+                    };
                     xhr.onload = function () {
                         if (this.status == 200) {
                             var blob = this.response;
@@ -304,7 +345,7 @@ module egret {
                             bitmapData.src = winURL.createObjectURL(blob);
                         }
                         else {
-                            callback(1, null);
+                            Texture._onError(url, bitmapData);
                         }
                     };
                     xhr.send();
@@ -326,10 +367,10 @@ module egret {
 
         public static _onLoad(url, bitmapData):void {
             bitmapData["avaliable"] = true;
-            if(bitmapData.onload){
+            if (bitmapData.onload) {
                 bitmapData.onload = null;
             }
-            if(bitmapData.onerror){
+            if (bitmapData.onerror) {
                 bitmapData.onerror = null;
             }
             var list = Texture._bitmapCallbackMap[url];
@@ -419,7 +460,9 @@ declare module egret_native {
     module Texture {
 
         function addTexture(filePath:string):any;
+
         function addTextureAsyn(filePath:string, promise:any):any;
+
         function addTextureUnsyn(filePath:string, promise:any):any;
 
         function removeTexture(filePath:string):void;

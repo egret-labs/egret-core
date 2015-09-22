@@ -34,6 +34,7 @@ module egret {
      * @classdesc Sound 类允许您在应用程序中使用声音。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=157&terms1_id=25&terms2_id=36 播放音频
      * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
+     * @includeExample egret/media/Sound.ts
      */
     export class Sound extends egret.EventDispatcher {
 
@@ -163,7 +164,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          * @param thisObj 侦听函数绑定的this对象
-         * @platform Web
+         * @platform Web,Native
          */
         public addEventListener(type:string, listener:Function, thisObject:any):void {
             super.addEventListener(type, listener, thisObject);
@@ -177,9 +178,10 @@ module egret {
 
             if (this._eventsMap[type].length == 1) {
                 var func;
-                if (type == egret.SoundEvent.SOUND_COMPLETE) {
+                if (type == egret.SoundEvent.SOUND_COMPLETE || type == "ended") {
                     func = function (e) {
                         egret.Event._dispatchByTarget(egret.SoundEvent, self, egret.SoundEvent.SOUND_COMPLETE);
+                        egret.Event._dispatchByTarget(egret.Event, self, "ended");
                     };
                 }
                 else {
@@ -201,7 +203,7 @@ module egret {
          * @param type 事件类型
          * @param listener 监听函数
          * @param thisObj 侦听函数绑定的this对象
-         * @platform Web
+         * @platform Web,Native
          */
         public removeEventListener(type:string, listener:Function, thisObject:any):void {
             super.removeEventListener(type, listener, thisObject);

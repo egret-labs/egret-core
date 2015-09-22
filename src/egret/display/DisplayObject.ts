@@ -43,6 +43,7 @@ module egret {
      * _draw();
      * getBounds();
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=102&terms1_id=25&terms2_id=27 显示对象的基本概念
+     * @includeExample egret/display/DisplayObject.ts
      *
      * @event egret.Event.ADDED 将显示对象添加到显示列表中时调度。
      * @event egret.Event.ADDED_TO_STAGE 在将显示对象直接添加到舞台显示列表或将包含显示对象的子树添加至舞台显示列表中时调度。
@@ -50,6 +51,10 @@ module egret {
      * @event egret.Event.REMOVED_FROM_STAGE 在从显示列表中直接删除显示对象或删除包含显示对象的子树时调度。
      * @event egret.Event.ENTER_FRAME [广播事件] 播放头进入新帧时调度。
      * @event egret.Event.RENDER [广播事件] 将要更新和呈现显示列表时调度。
+     * @event egret.Event.TOUCH_BEGIN [触摸事件] 触摸开始时调度。
+     * @event egret.Event.TOUCH_MOVE [触摸事件] 触摸移动时调度。
+     * @event egret.Event.TOUCH_END [触摸事件] 触摸结束时调度。
+     * @event egret.Event.TOUCH_TAP [触摸事件] 单击时调度。
      */
     export class DisplayObject extends EventDispatcher implements RenderData {
 
@@ -292,6 +297,7 @@ module egret {
          * 表示从对象相对锚点X。
          * @member {number} egret.DisplayObject#anchorX
          * @default 0
+         * @deprecated
          */
         public get anchorX():number {
             return this._DO_Props_._anchorX;
@@ -315,6 +321,7 @@ module egret {
          * 表示从对象相对锚点Y。
          * @member {number} egret.DisplayObject#anchorY
          * @default 0
+         * @deprecated
          */
         public get anchorY():number {
             return this._DO_Props_._anchorY;
@@ -963,7 +970,7 @@ module egret {
 
         /**
          * 计算显示对象，以确定它是否与 x 和 y 参数指定的点重叠或相交。x 和 y 参数指定舞台的坐标空间中的点，而不是包含显示对象的显示对象容器中的点（除非显示对象容器是舞台）。
-         * 注意，不要在大量物体中使用精确碰撞像素检测，这回带来巨大的性能开销
+         * 注意，不要在大量物体中使用精确碰撞像素检测，这会带来巨大的性能开销
          * @method egret.DisplayObject#hitTestPoint
          * @param x {number}  要测试的此对象的 x 坐标。
          * @param y {number}  要测试的此对象的 y 坐标。
@@ -973,7 +980,6 @@ module egret {
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             var self = this;
-            var do_props = self._DO_Props_;
             var do_privs = self._DO_Privs_;
             var p:egret.Point = self.globalToLocal(x, y);
             if (!shapeFlag) {
@@ -984,8 +990,12 @@ module egret {
                     do_privs._hitTestPointTexture = new RenderTexture();
                 }
                 var testTexture:Texture = do_privs._hitTestPointTexture;
-                (<RenderTexture>testTexture).drawToTexture(self);
-                var pixelData:number[] = testTexture.getPixel32(p.x - do_privs._hitTestPointTexture._offsetX, p.y - do_privs._hitTestPointTexture._offsetY);
+
+                var px:number = p.x - do_privs._hitTestPointTexture._offsetX;
+                var py:number = p.y - do_privs._hitTestPointTexture._offsetY;
+
+                (<RenderTexture>testTexture).drawToTexture(self, new egret.Rectangle(px - 1, py - 1, 3, 3));
+                var pixelData:number[] = testTexture.getPixel32(1, 1);
                 if (pixelData[3] != 0) {
                     return true;
                 }

@@ -36,6 +36,7 @@ module egret {
      * DisplayObjectContainer 类是可用作显示列表中显示对象容器的所有对象的基类。
      * 该显示列表管理运行时中显示的所有对象。使用 DisplayObjectContainer 类排列显示列表中的显示对象。每个 DisplayObjectContainer 对象都有自己的子级列表，用于组织对象的 Z 轴顺序。Z 轴顺序是由前至后的顺序，可确定哪个对象绘制在前，哪个对象绘制在后等。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=108&terms1_id=25&terms2_id=28 显示容器的概念与实现
+     * @includeExample egret/display/DisplayObjectContainer.ts
      */
     export class DisplayObjectContainer extends DisplayObject {
 

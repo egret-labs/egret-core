@@ -169,7 +169,6 @@ function compileModule(callback, moduleName) {
             globals.debugLog(1111, moduleName);
             var tempTime = Date.now();
             var cmd = sourcemap + tsList.join(" ") + "-d -t ES5 --outDir " + globals.addQuotes(output);
-            typeScriptCompiler.defaultTscLib = projectProperties.getTscLibUrl();
             typeScriptCompiler.compile(function () {
                 globals.debugLog(1112, moduleName, (Date.now() - tempTime) / 1000);
                 callback();

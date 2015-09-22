@@ -83,6 +83,10 @@ module egret {
         public _multiline:boolean = false;
         //换行是否按单词换行
         public _wordWrap:boolean = false;
+        //输入框匹配内
+        public _restrictAnd:string = null;
+        //输入框匹配外
+        public _restrictNot:string = null;
 
         constructor() {
         }

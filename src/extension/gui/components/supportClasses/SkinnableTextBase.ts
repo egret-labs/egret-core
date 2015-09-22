@@ -231,7 +231,7 @@ module egret.gui {
 			var v:any = this.textDisplayProperties.restrict;
 			return (v === undefined) ? null : v;
 		}
-		
+
 		public set restrict(value:string){
 			if(this.textDisplay){
 				this.textDisplay.restrict = value;
@@ -240,9 +240,9 @@ module egret.gui {
 			else{
 				this.textDisplayProperties.restrict = value;
 			}
-			this.invalidateProperties();                    
+			this.invalidateProperties();
 		}
-		
+
 		/**
 		 * 一个布尔值，表示文本字段是否可选。值 true 表示文本可选。selectable 属性控制文本字段是否可选，
 		 * 而不控制文本字段是否可编辑。动态文本字段即使不可编辑，它也可能是可选的。如果动态文本字段是不可选的，
@@ -542,17 +542,17 @@ module egret.gui {
 				this.textDisplay.maxWidth = this.textDisplayProperties.maxWidth;
 				newTextDisplayProperties.maxWidth = true;
 			}
-			
+
 			if(this.textDisplayProperties.restrict !== undefined){
 				this.textDisplay.restrict = this.textDisplayProperties.restrict;
 				newTextDisplayProperties.restrict = true;
 			}
-			
+
 			if(this.textDisplayProperties.selectable !== undefined){
 				this.textDisplay.selectable = this.textDisplayProperties.selectable;
 				newTextDisplayProperties.selectable = true;
 			}
-			
+
 			if(this.textDisplayProperties.text !== undefined){
 				this.textDisplay.text = this.textDisplayProperties.text;
 				newTextDisplayProperties.text = true;
@@ -603,11 +603,11 @@ module egret.gui {
 			if(this.textDisplayProperties.maxWidth){
 				newTextDisplayProperties.maxWidth = this.textDisplay.maxWidth;
 			}
-			
+
 			if(this.textDisplayProperties.restrict){
 				newTextDisplayProperties.restrict = this.textDisplay.restrict;
 			}
-			
+
 			if(this.textDisplayProperties.selectable){
 				newTextDisplayProperties.selectable = this.textDisplay.selectable;
 			}

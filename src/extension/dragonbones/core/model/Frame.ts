@@ -61,6 +61,8 @@ module dragonBones {
 		 */
 		public sound:string;
 
+		public curve:CurveData;
+
 		/**
 		 *构造函数
 		 */

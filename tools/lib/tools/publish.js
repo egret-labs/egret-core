@@ -14,6 +14,9 @@ var genVer = require("../tools/generate_version");
 var projectProperties = require("../core/projectProperties.js");
 var async = require('../core/async');
 
+var execFile = require("child_process").execFile;
+var binPath = require("../lib/webp/webp-bin").path;
+
 var versionCtr;
 function run(dir, args, opts) {
     if (opts["-testJava"]) {
@@ -326,10 +329,43 @@ function publishHtml5(opts, versionFile) {
     if (true) {//拷贝
         task.push(function (tempCallback) {
             file.copy(path.join(projectPath, "resource"), path.join(releaseOutputPath, "resource"));
-
             compressJson(releaseOutputPath);
 
-            tempCallback();
+            var needWebP = opts["-webp"];
+            if (needWebP) {
+                //替换发布文件中对webp格式判断
+                var str = "useWebP = true;";
+                var txt = file.read(path.join(releaseOutputPath, "index.html"));
+                txt = txt.replace("//WebP_replace",str);
+                file.save(path.join(releaseOutputPath, "index.html"), txt);
+                file.copy(path.join(param.getEgretPath(), "tools", "lib", "lib", "webp", "4x4.webp"), path.join(releaseOutputPath, "4x4.webp"));
+                //图片转webp
+                var list = file.getDirectoryAllListing(path.join(releaseOutputPath, "resource"));
+                list = list.filter(function (item) {
+                    return item.indexOf(".png") != -1 || item.indexOf(".jpg") != -1;
+                });
+                var total = list.length;
+                var webPFormat = function () {
+                    if (list.length) {
+                        var item = list.shift();
+                        globals.debugLog(1419, total - list.length, total);
+                        var webpPath = item.replace(".png", ".webp").replace(".jpg", ".webp");
+                        execFile(binPath, (item + ' -q 80 -o ' + webpPath).split(/\s+/), function (err, stdout, stderr) {
+                            if (err) {
+                                globals.log2(1418, item);
+                            }
+                            webPFormat();
+                        });
+                    }
+                    else {
+                        tempCallback();
+                    }
+                };
+                webPFormat();
+            }
+            else {
+                tempCallback();
+            }
         });
     }
 

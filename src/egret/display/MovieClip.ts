@@ -33,7 +33,10 @@ module egret {
      * @class egret.MovieClip
      * @classdesc 影片剪辑，可以通过影片剪辑播放序列帧动画。MovieClip 类从以下类继承而来：DisplayObject 和 EventDispatcher。不同于 DisplayObject 对象，MovieClip 对象拥有一个时间轴。
      * @extends egret.DisplayObject
+     * @event egret.Event.COMPLETE 动画播放完成。
+     * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=151&terms1_id=25&terms2_id=34 MovieClip序列帧动画
+     * @includeExample egret/display/MovieClip.ts
      */
     export class MovieClip extends DisplayObject{
 
@@ -47,6 +50,9 @@ module egret {
         private _frames:any[] = null;
         private _totalFrames:number = 0;
         public _frameLabels:any[] = null;
+        private _labelStartFrame:number = 0;
+        private _labelEndFrame:number = 0;
+        public _frameEvents:any[] = null;
         private _frameIntervalTime:number = 0;
         public _eventPool:string[] = null;
 
@@ -81,6 +87,7 @@ module egret {
                 this._frames = movieClipData.frames;
                 this._totalFrames = movieClipData.numFrames;
                 this._frameLabels = movieClipData.labels;
+                this._frameEvents = movieClipData.events;
                 this._frameIntervalTime = 1000 / movieClipData.frameRate;
                 this._initFrame();
             }
@@ -105,7 +112,7 @@ module egret {
             }
         }
 
-        public _render(renderContext:RendererContext):void {
+        public _render(renderContext:RendererContext):void { 
             var texture = this._textureToRender;
             this._texture_to_render = texture;
             if (texture) {
@@ -170,7 +177,23 @@ module egret {
             }
             return null;
         }
-
+        /**
+         * 根据帧标签，设置开始和结束的帧数
+         */
+        private _setFrameLabelFrames(labelName:string):void{
+            var frameLabels = this._frameLabels;
+            if(frameLabels){
+                var outputFramelabel:FrameLabel = null;                
+                for (var i = 0; i < frameLabels.length; i++) {
+                    outputFramelabel = frameLabels[i];
+                    if(labelName == outputFramelabel.name){
+                        this._labelStartFrame = outputFramelabel.frame;
+                        this._labelEndFrame = outputFramelabel.end;
+                        break;
+                    }
+                }
+            }
+        }
         /**
          * 返回指定序号的帧的FrameLabel对象
          * @method egret.MovieClip#getFrameLabelByFrame
@@ -263,7 +286,13 @@ module egret {
             if (arguments.length === 0 || arguments.length > 2) {
                 $error(1022, "MovieClip.gotoAndPlay()");
             }
-            this.play(playTimes);
+            if (typeof frame === "string") {
+                this._setFrameLabelFrames(frame);
+            }else{
+                this._labelStartFrame = 0;
+                this._labelEndFrame = 0;
+            }
+            this.play(playTimes);            
             this._gotoFrame(frame);
         }
 
@@ -283,7 +312,7 @@ module egret {
         private _gotoFrame(frame:any): void
         {
             var frameNum:number;
-            if(typeof frame === "string"){
+            if(typeof frame === "string"){                
                 frameNum = this._getFrameLabelByName(frame).frame;
             }else{
                 frameNum = parseInt(frame+'', 10);
@@ -321,7 +350,7 @@ module egret {
             while(num >= 1) {
                 num--;
                 self._nextFrameNum++;
-                if(self._nextFrameNum > self._totalFrames){
+                if(self._nextFrameNum > self._totalFrames || (self._labelEndFrame>0 && self._nextFrameNum > self._labelEndFrame)){
                     if(self._playTimes == -1){
                         self._eventPool.push(Event.LOOP_COMPLETE);
                         self._nextFrameNum = 1;
@@ -340,6 +369,9 @@ module egret {
                         }
                     }
                 }
+                if(self._currentFrameNum == self._labelEndFrame){
+                    self._nextFrameNum = self._labelStartFrame;
+                }
                 self._advanceFrame();
             }
             self._constructFrame();
@@ -347,14 +379,18 @@ module egret {
             self._setDirty();
         }
 
-        public _advanceFrame(): void{
-            this._currentFrameNum = this._nextFrameNum;
+        public _advanceFrame(): void{ 
+            this._currentFrameNum = this._nextFrameNum; 
         }
 
         private _constructFrame() {
-            var currentFrameNum:number = this._currentFrameNum;
+            var currentFrameNum:number = this._currentFrameNum; 
             if(this._displayedKeyFrameNum == currentFrameNum){
                 return;
+            }
+            var event = this._frameEvents[currentFrameNum];
+            if(event && event!=""){
+                MovieClipEvent.dispatchMovieClipEvent(this,MovieClipEvent.FRAME_LABEL,event);
             }
             this._textureToRender = this._movieClipData.getTextureByFrame(currentFrameNum);
             this._DO_Props_._sizeDirty = true;

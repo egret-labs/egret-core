@@ -283,8 +283,8 @@ module egret {
                 outline = properties._stroke;
             }
 
-
-            egret_native.Label.createLabel(TextField.default_fontFamily, size, "", outline);
+            var font:string = (<NativeNetContext>egret.MainContext.instance.netContext).getVirtualUrl(TextField.default_fontFamily);
+            egret_native.Label.createLabel(font, size, "", outline);
         }
 
         /**
@@ -329,7 +329,7 @@ module egret {
 
             egret_native.Label.setTextColor(textColor);
             egret_native.Label.setStrokeColor(strokeColor);
-            egret_native.Label.drawText(text, x, y - 2);
+            egret_native.Label.drawText(text, x, y);
 
             super.drawText(textField, text, x, y, maxWidth, style);
         }

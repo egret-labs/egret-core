@@ -43,7 +43,7 @@ module egret {
         private _arrayBuffer:ArrayBuffer;
         private context = WebAudio.ctx;
         private gain;
-        private bufferSource:AudioBufferSourceNode = null;
+        private bufferSource: AudioBufferSourceNodeEgret = null;
         private paused = true;
 
         private static decodeArr:Array<any> = [];
@@ -60,6 +60,14 @@ module egret {
 
             WebAudio.ctx.decodeAudioData(decodeInfo["buffer"], function (audioBuffer) {
                 decodeInfo["self"].audioBuffer = audioBuffer;
+
+                if (decodeInfo["callback"]) {
+                    decodeInfo["callback"]();
+                }
+                WebAudio.isDecoding = false;
+                WebAudio.decodeAudios();
+            }, function () {
+                alert(egret.getString(1034, decodeInfo["url"]));
 
                 if (decodeInfo["callback"]) {
                     decodeInfo["callback"]();
@@ -207,14 +215,16 @@ module egret {
          * @method egret.Sound#load
          */
         public _load():void {
-            this._setArrayBuffer(this._arrayBuffer, null);
+            this._setArrayBuffer(this._arrayBuffer, this._url, null);
         }
 
-        public _setArrayBuffer(buffer:ArrayBuffer, callback:Function) {
+        private _url:string;
+        public _setArrayBuffer(buffer:ArrayBuffer, url:string, callback:Function) {
+            this._url = url;
             var self = this;
             this._arrayBuffer = buffer;
 
-            WebAudio.decodeArr.push({"buffer" : buffer, "callback" : callback, "self":self});
+            WebAudio.decodeArr.push({"buffer" : buffer, "callback" : callback, "self":self, "url":url});
             WebAudio.decodeAudios();
         }
 
@@ -269,7 +279,7 @@ interface AudioBuffer {
 /**
  * @private
  */
-interface AudioBufferSourceNode {
+interface AudioBufferSourceNodeEgret {
     buffer:any;
     context:any;
     onended:Function;

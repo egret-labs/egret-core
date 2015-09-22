@@ -37,6 +37,7 @@ module egret {
      * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
      * 但是，right 和 bottom 属性与这四个属性是整体相关的。例如，如果更改 right 属性的值，则 width 属性的值将发生变化；如果更改 bottom 属性，则 height 属性的值将发生变化。
      * @extends egret.HashObject
+     * @includeExample egret/geom/Rectangle.ts
      */
     export class Rectangle extends HashObject {
 
@@ -162,6 +163,7 @@ module egret {
          * @param width {number} 矩形的宽度
          * @param height {number} 矩形的高度
          * @returns {egret.Rectangle}
+         * @deprecated
          */
         public initialize(x:number, y:number, width:number, height:number):Rectangle {
             this.x = x;

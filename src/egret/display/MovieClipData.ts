@@ -54,7 +54,10 @@ module egret {
          * 帧标签列表
          */
         public labels:any[] = null;
-
+        /**
+         * 帧事件列表
+         */
+        public events:any[] = [];
         /**
          * 帧率
          */
@@ -134,6 +137,7 @@ module egret {
             this.frameRate = mcData["frameRate"] || 24;
             this._fillFramesData(mcData.frames);
             this._fillFrameLabelsData(mcData.labels);
+            this._fillFrameEventsData(mcData.events);
         }
 
         private _fillFramesData(framesData:any[]):void{
@@ -163,7 +167,20 @@ module egret {
                     this.labels = [];
                     for(var i=0; i < length; i++){
                         var label:any = frameLabelsData[i];
-                        this.labels.push(new FrameLabel(label.name, label.frame));
+                        this.labels.push(new FrameLabel(label.name, label.frame,label.end));
+                    }
+                }
+            }
+        }
+
+        private _fillFrameEventsData(frameEventsData:any[]):void{
+            if(frameEventsData){
+                var length:number = frameEventsData.length;
+                if(length>0){
+                    this.events = [];
+                    for (var i = 0; i < length; i++){
+                        var events:any = frameEventsData[i];
+                        this.events[events.frame] = events.name;
                     }
                 }
             }

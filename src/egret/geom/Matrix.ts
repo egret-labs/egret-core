@@ -35,6 +35,7 @@ module egret {
      * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。
      * 您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix 对象应用于 Transform 对象的 matrix 属性，然后应用该 Transform 对象作为显示对象的 transform 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
      * @extends egret.HashObject
+     * @includeExample egret/geom/Matrix.ts
      */
     export class Matrix extends HashObject {
         /**
@@ -327,6 +328,7 @@ module egret {
          * @method egret.Matrix#identityMatrix
          * @param matrix {egret.Matrix} 重置的目标矩阵
          * @returns {egret.Matrix}
+         * @deprecated
          */
         public identityMatrix(matrix:Matrix):Matrix {
             this.a = matrix.a;
@@ -370,6 +372,7 @@ module egret {
          * @param y {number}
          * @returns {numberPoint}
          * @stable C 该方法以后可能删除
+         * @deprecated
          */
         public static transformCoords(matrix:Matrix, x:number, y:number):Point {
             var resultPoint:Point = Point.identity;

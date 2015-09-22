@@ -32,6 +32,7 @@ module egret {
 
     /**
      * 用户在富文本中单击超链接时，对象将调度 TextEvent 对象。文本事件类型：TextEvent.LINK。
+     * @includeExample egret/events/TextEvent.ts
      */
     export class TextEvent extends Event {
 

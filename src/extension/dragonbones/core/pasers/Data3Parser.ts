@@ -49,7 +49,7 @@ module dragonBones {
                 version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION &&
 			    version.toString() != "2.3")
             {
-               egret.$error(4003);
+                throw new Error("Nonsupport version!");
             }
 			
 			var frameRate:number = Data3Parser.getNumber(rawDataToParse, ConstValues.A_FRAME_RATE, 0) || 0;
@@ -221,6 +221,8 @@ module dragonBones {
 			
 			var lastFrameDuration:number = animationData.duration;
 
+			var displayIndexChangeSlotTimelines:Array<SlotTimeline> = [];
+			var displayIndexChangeTimelines:Array<TransformTimeline> = [];
             var timelineObjectList:Array<any> = animationObject[ConstValues.TIMELINE];
 			if(timelineObjectList)
 			{
@@ -232,15 +234,77 @@ module dragonBones {
 					animationData.addTimeline(timeline);
 					var slotTimeline:SlotTimeline = Data3Parser.parseSlotTimeline(timelineObject, animationData.duration, frameRate);
 					animationData.addSlotTimeline(slotTimeline);
+
+					if(animationData.autoTween)
+					{
+						var displayIndexChange:boolean;
+						var slotFrame:SlotFrame;
+
+						for(var j:number = 0, jlen:number = slotTimeline.frameList.length; j < jlen; j++)
+						{
+							slotFrame = <SlotFrame>slotTimeline.frameList[j];
+							if(slotFrame && slotFrame.displayIndex < 0)
+							{
+								displayIndexChange = true;
+								break;
+							}
+						}
+						
+						if(displayIndexChange)
+						{
+							displayIndexChangeTimelines.push(timeline);
+							displayIndexChangeSlotTimelines.push(slotTimeline);
+						}
+						
+					}
+				}
+				
+				len = displayIndexChangeSlotTimelines.length;
+				var animationTween:number = animationData.tweenEasing;
+				if(len > 0)
+				{
+					
+					for ( i = 0; i < len; i++)
+					{
+						slotTimeline = displayIndexChangeSlotTimelines[i];
+						timeline = displayIndexChangeTimelines[i];
+						var curFrame:TransformFrame;
+						var curSlotFrame:SlotFrame;
+						var nextSlotFrame:SlotFrame;
+						for (j = 0, jlen = slotTimeline.frameList.length; j < jlen; j++)
+						{
+							curSlotFrame = <SlotFrame>slotTimeline.frameList[j];
+							curFrame = <TransformFrame>timeline.frameList[j];
+							nextSlotFrame = (j == jlen - 1) ? <SlotFrame>slotTimeline.frameList[0] : <SlotFrame>slotTimeline.frameList[j + 1];
+							if (curSlotFrame.displayIndex < 0 || nextSlotFrame.displayIndex < 0)
+							{
+								curFrame.tweenEasing = curSlotFrame.tweenEasing = NaN;
+							}
+							else if (animationTween == 10)
+							{
+								curFrame.tweenEasing = curSlotFrame.tweenEasing = 0;
+							}
+							else if (!isNaN(animationTween))
+							{
+								curFrame.tweenEasing = curSlotFrame.tweenEasing = animationTween;
+							}
+							else if(curFrame.tweenEasing == 10)
+							{
+								curFrame.tweenEasing = 0;
+							}
+						}
+					}
+					animationData.autoTween = false;
+					
 				}
 			}
+
 			
 			if(animationData.frameList.length > 0){
 				lastFrameDuration = Math.min(lastFrameDuration, animationData.frameList[animationData.frameList.length - 1].duration);
 			}
 			//取得timeline中最小的lastFrameDuration并保存
 			animationData.lastFrameDuration = lastFrameDuration;
-			
 			return animationData;
 		}
 
