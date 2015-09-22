@@ -121,62 +121,62 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quadIn = Ease.getPowIn(2);
+        public static quadIn:Function = Ease.getPowIn(2);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quadOut = Ease.getPowOut(2);
+        public static quadOut:Function = Ease.getPowOut(2);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quadInOut = Ease.getPowInOut(2);
+        public static quadInOut:Function = Ease.getPowInOut(2);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static cubicIn = Ease.getPowIn(3);
+        public static cubicIn:Function = Ease.getPowIn(3);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static cubicOut = Ease.getPowOut(3);
+        public static cubicOut:Function = Ease.getPowOut(3);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static cubicInOut = Ease.getPowInOut(3);
+        public static cubicInOut:Function = Ease.getPowInOut(3);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quartIn = Ease.getPowIn(4);
+        public static quartIn:Function = Ease.getPowIn(4);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quartOut = Ease.getPowOut(4);
+        public static quartOut:Function = Ease.getPowOut(4);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quartInOut = Ease.getPowInOut(4);
+        public static quartInOut:Function = Ease.getPowInOut(4);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quintIn = Ease.getPowIn(5);
+        public static quintIn:Function = Ease.getPowIn(5);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quintOut = Ease.getPowOut(5);
+        public static quintOut:Function = Ease.getPowOut(5);
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static quintInOut = Ease.getPowInOut(5);
+        public static quintInOut:Function = Ease.getPowInOut(5);
 
         /**
          * 

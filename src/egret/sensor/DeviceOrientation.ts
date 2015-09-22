@@ -3,12 +3,6 @@
 module egret {
 
     /**
-     * @copy egret.Orientation
-     */
-    export var DeviceOrientation: { new (): DeviceOrientation } = null;
-
-
-    /**
      * @language en_US
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
      *
@@ -53,4 +47,10 @@ module egret {
          */
         stop(): void;
     }
+
+    /**
+     * @copy egret.Orientation
+     */
+    export var DeviceOrientation: { new (): DeviceOrientation } = null;
+
 }

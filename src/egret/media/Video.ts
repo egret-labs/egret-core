@@ -42,7 +42,7 @@ module egret {
      * @event egret.Event.IO_ERROR when the video is failed to load
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/media/VideoExample.ts
+     * @includeExample egret/media/Video.ts
      */
     /**
      * @language zh_CN
@@ -56,7 +56,7 @@ module egret {
      * @event egret.Event.IO_ERROR 视频加载失败市触发
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/media/VideoExample.ts
+     * @includeExample egret/media/Video.ts
      */
     export interface Video extends DisplayObject {
 

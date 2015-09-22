@@ -82,14 +82,14 @@ module egret {
 
         /**
          * @language en_US
-         * Initializes a Bitmap object to refer to the specified BitmapData object.
+         * Initializes a Bitmap object to refer to the specified BitmapData|Texture object.
          * @param bitmapData The BitmapData object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 创建一个引用指定 BitmapData 实例的 Bitmap 对象
+         * 创建一个引用指定 BitmapData|Texture 实例的 Bitmap 对象
          * @param bitmapData 被引用的 BitmapData 实例
          * @version Egret 2.4
          * @platform Web,Native
@@ -159,13 +159,13 @@ module egret {
 
         /**
          * @language en_US
-         * The BitmapData object being referenced.
+         * The BitmapData|Texture object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 被引用的 BitmapData 对象。
+         * 被引用的 BitmapData|Texture 对象。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -177,6 +177,11 @@ module egret {
             this.$setBitmapData(value);
         }
 
+        /**
+         * @copy #bitmapData
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public get texture():BitmapData|Texture {
             return this.$Bitmap[sys.BitmapKeys.bitmapData];
         }
@@ -279,7 +284,6 @@ module egret {
         /**
          * @language en_US
          * Determines how the bitmap fills in the dimensions.
-         * <p>When set to <code>BitmapFillMode.CLIP</code>, the bitmap
          * ends at the edge of the region.</p>
          * <p>When set to <code>BitmapFillMode.REPEAT</code>, the bitmap
          * repeats to fill the region.</p>
@@ -295,7 +299,6 @@ module egret {
         /**
          * @language zh_CN
          * 确定位图填充尺寸的方式。
-         * <p>设置为 <code>BitmapFillMode.CLIP</code>时，位图将在边缘处被截断。</p>
          * <p>设置为 <code>BitmapFillMode.REPEAT</code>时，位图将重复以填充区域。</p>
          * <p>设置为 <code>BitmapFillMode.SCALE</code>时，位图将拉伸以填充区域。</p>
          *

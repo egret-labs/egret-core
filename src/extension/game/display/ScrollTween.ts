@@ -30,6 +30,9 @@
 
 module egret {
 
+    /**
+     * @private
+     */
     export class ScrollEase {
         /**
          * @version Egret 2.4
@@ -97,6 +100,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/ScrollTween.ts
+     * @private
 	 */
 	/**
      * @language zh_CN
@@ -105,6 +109,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/ScrollTween.ts
+     * @private
 	 */
     export class ScrollTween extends EventDispatcher {
 

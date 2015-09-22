@@ -633,6 +633,19 @@ module egret {
 
 
         /**
+         * @language en_US
+         * EventDispatcher object using the specified event object thrown Event. Objects thrown objects will be cached in the pool for the next round robin.
+         * @param target the event target
+         * @param type The type of the event. Event listeners can access this information through the inherited type property.
+         * @param bubbles Determines whether the Event object bubbles. Event listeners can access this information through
+         * the inherited bubbles property.
+         * @param data {any} data
+         * @method egret.Event.dispatchEvent
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 使用指定的 EventDispatcher 对象来抛出 Event 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target {egret.IEventDispatcher} 派发事件目标
          * @param type {string} 事件类型
@@ -666,7 +679,6 @@ module egret {
             return props;
         }
 
-
         /**
          * @language en_US
          * Gets one event instance from the object pool or create a new one. We highly recommend using the Event.create()
@@ -674,6 +686,10 @@ module egret {
          * which allows you to get better code execution performance.<br/>
          * Note: If you want to use this method to initialize your custom event object,you must make sure the constructor
          * of your custom event is the same as the constructor of egret.Event.
+         * @param EventClass Event Class。
+         * @param type  The type of the event, accessible as Event.type.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          * @example
          * <pre>
          *    var event = Event.create(Event,type, bubbles);
@@ -689,6 +705,10 @@ module egret {
          * 从对象池中取出或创建一个新的事件实例。我们建议您尽可能使用Event.create()和Event.release() 这一对方法来创建和释放事件对象，
          * 这一对方法会将事件实例在内部缓存下来供下次循环使用，减少对象的创建次数,从而获得更高的代码运行性能。<br/>
          * 注意：若使用此方法来创建自定义事件的实例，自定义的构造函数参数列表必须跟Event类一致。
+         * @param EventClass Event类名。
+         * @param type  事件的类型，可以作为 Event.type 访问。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          * @example
          * <pre>
          *    var event = Event.create(Event,type, bubbles);

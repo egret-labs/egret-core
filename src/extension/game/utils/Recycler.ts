@@ -35,6 +35,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
+     * @private
      */
     /**
      * @language zh_CN
@@ -42,6 +43,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
+     * @private
      */
     export class Recycler extends HashObject{
 

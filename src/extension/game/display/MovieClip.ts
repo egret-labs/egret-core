@@ -66,6 +66,7 @@ module egret {
         /**
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         public frameLabels:any[] = null;
         /**
@@ -79,6 +80,7 @@ module egret {
         /**
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         public frameEvents:any[] = null;
         /**

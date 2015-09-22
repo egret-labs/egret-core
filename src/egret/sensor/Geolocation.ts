@@ -63,6 +63,20 @@ module egret {
     /**
      * @copy egret.Geolocation
      */
-    export var Geolocation: { new (): Geolocation };
+    export var Geolocation: {
+        /**
+         * @language en_US
+         * constructor
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        new (): Geolocation
+    };
 
 }
