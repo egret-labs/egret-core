@@ -29,6 +29,7 @@
 
 
 module egret {
+    var SplitRegex = new RegExp("(?=[\\u00BF-\\u1FFF\\u2C00-\\uD7FF]|\\b|\\s)(?![。，！、》…）)}”】\\.\\,\\!\\?\\]\\:])");
     /**
      * @class egret.TextField
      * @classdesc
@@ -506,7 +507,8 @@ module egret {
          * 文本行数。
          * @member {number} egret.TextField#numLines
          */
-        public get numLines():number {
+        public get numLines(): number {
+            this._getLinesArr();
             return this._TF_Props_._numLines;
         }
 
@@ -527,6 +529,93 @@ module egret {
 
         public get multiline():boolean {
             return this._TF_Props_._multiline;
+        }
+
+        /**
+         * @language en_US
+         * Indicates a user can enter into the text field character set. If you restrict property is null, you can enter any character. If you restrict property is an empty string, you can not enter any character. If you restrict property is a string of characters, you can enter only characters in the string in the text field. The string is scanned from left to right. You can use a hyphen (-) to specify a range. Only restricts user interaction; a script may put any text into the text field. <br/>
+         * If the string of characters caret (^) at the beginning, all characters are initially accepted, then the string are excluded from receiving ^ character. If the string does not begin with a caret (^) to, any characters are initially accepted and then a string of characters included in the set of accepted characters. <br/>
+         * The following example allows only uppercase characters, spaces, and numbers in the text field: <br/>
+         * My_txt.restrict = "A-Z 0-9"; <br/>
+         * The following example includes all characters except lowercase letters: <br/>
+         * My_txt.restrict = "^ a-z"; <br/>
+         * If you need to enter characters \ ^, use two backslash "\\ -" "\\ ^": <br/>
+         * Can be used anywhere in the string ^ to rule out including characters and switch between characters, but can only be used to exclude a ^. The following code includes only uppercase letters except uppercase Q: <br/>
+         * My_txt.restrict = "A-Z ^ Q"; <br/>
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @default null
+         */
+        /**
+         * @language zh_CN
+         * 表示用户可输入到文本字段中的字符集。如果 restrict 属性的值为 null，则可以输入任何字符。如果 restrict 属性的值为空字符串，则不能输入任何字符。如果 restrict 属性的值为一串字符，则只能在文本字段中输入该字符串中的字符。从左向右扫描该字符串。可以使用连字符 (-) 指定一个范围。只限制用户交互；脚本可将任何文本放入文本字段中。<br/>
+         * 如果字符串以尖号 (^) 开头，则先接受所有字符，然后从接受字符集中排除字符串中 ^ 之后的字符。如果字符串不以尖号 (^) 开头，则最初不接受任何字符，然后将字符串中的字符包括在接受字符集中。<br/>
+         * 下例仅允许在文本字段中输入大写字符、空格和数字：<br/>
+         * my_txt.restrict = "A-Z 0-9";<br/>
+         * 下例包含除小写字母之外的所有字符：<br/>
+         * my_txt.restrict = "^a-z";<br/>
+         * 如果需要输入字符 \ ^，请使用2个反斜杠 "\\-" "\\^" ：<br/>
+         * 可在字符串中的任何位置使用 ^，以在包含字符与排除字符之间进行切换，但是最多只能有一个 ^ 用来排除。下面的代码只包含除大写字母 Q 之外的大写字母：<br/>
+         * my_txt.restrict = "A-Z^Q";<br/>
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @default null
+         */
+        public set restrict(value:string) {
+            var values = this._TF_Props_;
+            if (value == null) {
+                values._restrictAnd = null;
+                values._restrictNot = null;
+            }
+            else {
+                var index = -1;
+                while (index < value.length) {
+                    index = value.indexOf("^", index);
+                    if (index == 0) {
+                        break;
+                    }
+                    else if (index > 0) {
+                        if (value.charAt(index - 1) != "\\") {
+                            break;
+                        }
+                        index++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+
+                if (index == 0) {
+                    values._restrictAnd = null;
+                    values._restrictNot = value.substring(index + 1);
+                }
+                else if (index > 0) {
+                    values._restrictAnd = value.substring(0, index);
+                    values._restrictNot = value.substring(index + 1);
+                }
+                else {
+                    values._restrictAnd = value;
+                    values._restrictNot = null;
+                }
+            }
+
+        }
+
+        public get restrict():string {
+            var values = this._TF_Props_;
+
+            var str:string = null;
+            if (values._restrictAnd != null) {
+                str = values._restrictAnd;
+            }
+
+            if (values._restrictNot != null) {
+                if (str == null) {
+                    str = "";
+                }
+                str += "^" + values._restrictNot;
+            }
+            return str;
         }
 
         public _setWidth(value:number):void {
@@ -733,6 +822,7 @@ module egret {
         /**
          * 设置富文本
          * @param textArr 富文本数据
+         * @see http://edn.egret.com/cn/index.php/article/index/id/146
          */
         public set textFlow(textArr:Array<egret.ITextElement>) {
             var self = this;
@@ -792,6 +882,7 @@ module egret {
          * @member {number} egret.TextField#textWidth
          */
         public get textWidth():number {
+            this._getLinesArr();
             return this._TF_Props_._textMaxWidth;
         }
 
@@ -800,6 +891,7 @@ module egret {
          * @member {number} egret.TextField#textHeight
          */
         public get textHeight():number {
+            this._getLinesArr();
             return TextFieldUtils._getTextHeight(this);
         }
 
@@ -925,7 +1017,7 @@ module egret {
                                 var ww:number = 0;
                                 var word:string = textArr[j];
                                 if (this._TF_Props_._wordWrap) {
-                                    var words:Array<string> = word.split(/\b/);
+                                    var words:Array<string> = word.split(SplitRegex);
                                 }
                                 else {
                                     words = word.match(/./g);

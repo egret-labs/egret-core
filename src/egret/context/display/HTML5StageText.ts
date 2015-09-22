@@ -142,14 +142,36 @@ module egret {
             }
         }
 
+        $onBlur():void {
+            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
+                egret.Event.dispatchEvent(this, "updateText", false);
+            }
+        }
+
         public _onInput():void {
             var self = this;
-            self.textValue = self.inputElement.value;
 
-            egret.Event.dispatchEvent(self, "updateText", false);
+            if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {
+                var values = this._textfield._TF_Props_;
+                if (values._restrictAnd == null && values._restrictNot == null) {
+                    self.textValue = self.inputElement.value;
 
-            this._textfield._getLinesArr();
-            this.setAreaHeight();
+                    egret.Event.dispatchEvent(self, "updateText", false);
+
+                    this._textfield._getLinesArr();
+                    this.setAreaHeight();
+                }
+            }
+            else {
+                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                    self.textValue = self.inputElement.value;
+
+                    egret.Event.dispatchEvent(self, "updateText", false);
+
+                    this._textfield._getLinesArr();
+                    this.setAreaHeight();
+                }
+            }
         }
 
         private setAreaHeight() {
@@ -297,8 +319,11 @@ module egret {
 
                 self.initValue(stageDelegateDiv);
 
-                stageDelegateDiv.style.width = "0px";
-                stageDelegateDiv.style.height = "0px";
+                var canvasDiv = document.getElementById(egret.StageDelegate.canvas_div_name);
+                stageDelegateDiv.style.left = canvasDiv.style.left;
+                stageDelegateDiv.style.top = canvasDiv.style.top;
+                stageDelegateDiv.style[egret.Browser.getInstance().getTrans("transform")] = canvasDiv.style[egret.Browser.getInstance().getTrans("transform")];
+
 
                 self._inputDIV = egret.Browser.getInstance().$new("div");
                 self.initValue(self._inputDIV);

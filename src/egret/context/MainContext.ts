@@ -94,6 +94,8 @@ module egret {
             this.touchContext.run();
 
             this._profileInstance = egret.Profiler.getInstance();
+
+            this.stage.$setResolutionPolicy();
         }
 
         public static __DRAW_COMMAND_LIST:Array<RenderCommand> = [];

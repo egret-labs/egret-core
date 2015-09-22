@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -29,55 +29,31 @@
 
 
 module egret {
-
     /**
      * @private
+     * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    export class FrameLabel extends EventDispatcher
-    {
-        private _name: string;
-        private _frame: number /*int*/;
-        private _end: number = 0 /*int*/;
-
-        constructor (name: string, frame: number /*int*/,end?:any/*int*/)
-        {
-            super();
-            this._name = name;
-            this._frame = frame | 0;
-            if(end) this._end = end | 0;
-        }
+    export class OrientationMode {
 
         /**
-         * 标签名
-         * @member {string} egret.FrameLabel#name
+         * @private
+         * 适配屏幕
          */
-        public get name(): string {
-            return this._name;
-        }
-
+        public static AUTO = "auto";
         /**
-         * 标签所在帧序号
-         * @member {number} egret.FrameLabel#frame
+         * @private
+         * 默认竖屏
          */
-        public get frame(): number /*int*/ {
-            return this._frame;
-        }
+        public static PORTRAIT = "portrait";
         /**
-         * 标签对应的结束帧序号
-         * @member {number} egret.FrameLabel#frame
+         * @private
+         * 默认横屏，舞台顺时针旋转90度
          */
-        public get end(): number /*int*/ {
-            return this._end;
-        }
+        public static LANDSCAPE = "landscape";
         /**
-         * 复制当前帧标签对象
-         * @method egret.FrameLabel#clone
+         * @private
+         * 默认横屏，舞台逆时针旋转90度
          */
-        public clone() {
-            return new FrameLabel(this._name, this._frame ,this._end);
-        }
+        public static LANDSCAPE_FLIPPED = "landscapeFlipped";
     }
-
 }
-
-

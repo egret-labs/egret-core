@@ -160,8 +160,27 @@ module egret.gui {
 			this.multilineChanged = true;
 			this.invalidateProperties();
 		}
-		
-		
+
+		private _restrict:string = null;
+
+		private restrictChanged:boolean = false;
+		/**
+		 * @inheritDoc
+		 */
+		public get restrict():string{
+			return this._restrict;
+		}
+
+		public set restrict(value:string){
+			if (value == this._restrict)
+				return;
+
+			this._restrict = value;
+			this.restrictChanged = true;
+
+			this.invalidateProperties();
+		}
+
 		public styleChanged(styleProp:string):void{
 			super.styleChanged(styleProp);
 			if(!styleProp||styleProp=="size"){
@@ -411,6 +430,7 @@ module egret.gui {
 				this.displayAsPasswordChanged = true;
 				this.maxCharsChanged = true;
 				this.multilineChanged = true;
+				this.restrictChanged = true;
 			}
 			
 			super.commitProperties();
@@ -435,7 +455,12 @@ module egret.gui {
 				//this._textField.wordWrap = this._multiline;
 				this.multilineChanged = false;
 			}
-			
+
+			if (this.restrictChanged){
+				//this._textField.restrict = this._restrict;
+
+				this.restrictChanged = false;
+			}
 
 			if(this.heightInLinesChanged){
 				this.heightInLinesChanged = false;

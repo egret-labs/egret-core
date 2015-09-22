@@ -89,18 +89,27 @@ module egret {
 
         private focusHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
-            this._isFocus = true;
-            this._text._isTyping = true;
+            if (!this._isFocus) {
+                this._isFocus = true;
+                if (!event["showing"]) {
+                    this._text._isTyping = true;
+                }
 
-            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
+                this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
+            }
         }
 
         private blurHandler(event:Event):void {
-            //不再显示竖线，并且输入框显示最开始
-            this._isFocus = false;
-            this._text._isTyping = false;
+            if (this._isFocus) {
+                //不再显示竖线，并且输入框显示最开始
+                this._isFocus = false;
+                this._text._isTyping = false;
 
-            this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT, true));
+                //失去焦点后调用
+                this.stageText.$onBlur();
+
+                this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_OUT, true));
+            }
         }
 
         //点中文本
@@ -115,7 +124,6 @@ module egret {
             if (this._isFocus) {
                 return;
             }
-            this._isFocus = true;
 
             //强制更新输入框位置
             this.stageText._show(this._text._TF_Props_._multiline, this._text.size, this._text.width, this._text.height);
@@ -130,6 +138,35 @@ module egret {
         }
 
         private updateTextHandler(event:Event):void {
+            var values = this._text._TF_Props_;
+            var textValue = this.stageText._getText();
+            var isChanged:boolean = false;
+            if (values._restrictAnd != null) {//内匹配
+                var reg = new RegExp("[" + values._restrictAnd + "]", "g");
+                var result = textValue.match(reg);
+                if (result) {
+                    textValue = result.join("");
+                }
+                else {
+                    textValue = "";
+                }
+                isChanged = true;
+            }
+            if (values._restrictNot != null) {//外匹配
+                reg = new RegExp("[^" + values._restrictNot + "]", "g");
+                result = textValue.match(reg);
+                if (result) {
+                    textValue = result.join("");
+                }
+                else {
+                    textValue = "";
+                }
+                isChanged = true;
+            }
+
+            if (isChanged) {
+                this.stageText._setText(textValue);
+            }
             this.resetText();
 
             //抛出change事件

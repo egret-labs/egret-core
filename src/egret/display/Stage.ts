@@ -90,8 +90,29 @@ module egret {
         public set scaleMode(value:string){
             if (this._scaleMode != value){
                 this._scaleMode = value;
-                this.setResolutionPolicy();
+                this.$setResolutionPolicy();
             }
+        }
+
+        private _orientation:string = "auto";
+        public set orientation(value:string) {
+            this._orientation = value;
+
+            this.$setResolutionPolicy();
+        }
+
+        /**
+         * 屏幕显示方式
+         * 一个 egret.OrientationMode 类中指定要使用哪种显示方式。以下是有效值：
+         * egret.OrientationMode.AUTO -- 应用始终跟随屏幕的方向显示，始终保证由上往下看。
+         * egret.OrientationMode.PORTRAIT -- 应用始终保持竖屏模式，即横屏看时，屏幕由左往右看。
+         * egret.OrientationMode.LANDSCAPE -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由右往左。
+         * egret.OrientationMode.LANDSCAPE_FLIPPED -- 应用始终保持横屏模式，即竖屏看时，屏幕显示由左往右。
+         * @platform Web
+         * @version 2.4
+         */
+        public get orientation():string {
+            return this._orientation;
         }
 
         /**
@@ -103,7 +124,7 @@ module egret {
                 return;
             }
             //重新设置屏幕适配策略
-            this.setResolutionPolicy();
+            this.$setResolutionPolicy();
             //触发Event.RESIZE事件
             this.dispatchEventWith(Event.RESIZE);
         }
@@ -111,7 +132,7 @@ module egret {
         /**
          * 设置屏幕适配策略
          */
-        private setResolutionPolicy():void{
+        $setResolutionPolicy():void{
             var content = Stage.SCALE_MODE_ENUM[this._scaleMode];
             if (!content){
                 $error(1024);
@@ -124,6 +145,7 @@ module egret {
         }
 
         private _stageWidth:number = NaN;
+
         /**
          * 舞台宽度（坐标系宽度，非设备宽度）
          * @member {number} egret.Stage#stageWidth

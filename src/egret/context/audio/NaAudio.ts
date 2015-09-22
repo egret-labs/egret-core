@@ -30,7 +30,7 @@ module egret {
     /**
      * @private
      */
-    export class Html5Audio implements IAudio {
+    export class NaAudio implements IAudio {
         /**
          * audio音频对象
          * @member {any} egret.Sound#audio
@@ -49,28 +49,17 @@ module egret {
         public _play(type?:string):void {
             this.removeListeners();
 
-            if (Html5Capatibility._audioMustLoad) {
-                //this._audio = this._audio.cloneNode();
-                this._audio.load();
-            }
             this.paused = false;
             this._audio.autoplay = true;
-            this._audio.volume = this._volume;
+            this._audio.volume = this._volume * 100;
 
             this._audio.removeEventListener("ended", this.func);
             this._audio.addEventListener("ended", this.func);
 
             this.initStart();
 
-            try {
-                this._audio.currentTime = this._startTime;
-            }
-            catch(e) {
-
-            }
-            finally {
-                this._audio.play();
-            }
+            this._audio.currentTime = this._startTime;
+            this._audio.play();
         }
 
         private func = (e)=> {
@@ -84,18 +73,11 @@ module egret {
         };
 
         private clear():void {
-            try {
-                this._audio.pause();
-            }
-            catch(e) {
+            this._audio.pause();
+            this.removeListeners();
 
-            }
-            finally {
-                this.removeListeners();
-
-                if (this._loop && !this.paused)
-                    this._play();
-            }
+            if (this._loop && !this.paused)
+                this._play();
 
         }
 
@@ -205,7 +187,7 @@ module egret {
 
         public _setVolume(value:number):void {
             this._volume = Math.max(0, Math.min(value, 1));
-            this._audio.volume = this._volume;
+            this._audio.volume = this._volume * 100;
         }
 
         public _setLoop(value:boolean):void {

@@ -97,7 +97,7 @@ module egret {
         }
 
         private static initWebGLCanvas():void {
-            if(!RenderTexture["WebGLCanvas"]) {
+            if (!RenderTexture["WebGLCanvas"]) {
                 RenderTexture["WebGLCanvas"] = document.createElement("canvas");
                 RenderTexture["WebGLCanvas"]["avaliable"] = true;
                 RenderTexture["WebGLRenderer"] = new egret.WebGLRenderer(RenderTexture["WebGLCanvas"]);
@@ -230,7 +230,7 @@ module egret {
                 if (o._webglBitmapData) {
                     o.renderContext.setSize(width, height);
                 }
-                if(o._bitmapData) {
+                if (o._bitmapData) {
                     var canvas = o._bitmapData;
                     canvas.width = width;
                     canvas.height = height;
@@ -408,7 +408,7 @@ module egret {
         private setSize(width:number, height:number):void {
             var container = document.getElementById(egret.StageDelegate.canvas_div_name);
             if (this.canvas) {
-                this.canvas.width =  width;
+                this.canvas.width = width;
                 this.canvas.height = height;
                 this.canvas.style.width = container.style.width;
                 this.canvas.style.height = container.style.height;
@@ -684,7 +684,7 @@ module egret {
             var angle:number = filter.angle || 0;
             var distanceX:number = 0;
             var distanceY:number = 0;
-            if(distance != 0 && angle != 0) {
+            if (distance != 0 && angle != 0) {
                 distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                 distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
             }
@@ -701,14 +701,14 @@ module egret {
             var webGLBitmapData = RenderTexture["WebGLCanvas"];
 
             var renderTextureA:RenderTexture = RenderTexture.create();
-            if(!renderTextureA._bitmapData) {
+            if (!renderTextureA._bitmapData) {
                 renderTextureA.init();
             }
             renderTextureA.setSize(textureWidth, textureHeight);
             renderTextureA._sourceWidth = textureWidth;
             renderTextureA._sourceHeight = textureHeight;
             var renderTextureB:RenderTexture = RenderTexture.create();
-            if(!renderTextureB._bitmapData) {
+            if (!renderTextureB._bitmapData) {
                 renderTextureB.init();
             }
             renderTextureB.setSize(textureWidth, textureHeight);
@@ -729,7 +729,7 @@ module egret {
             renderContext.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, blurX + offset, blurY + offset, destWidth, destHeight);
             renderContext._drawWebGL();
             renderContext.filterType = null;
-            renderTextureA["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureA["canvasContext"].clearRect(0, 0, textureWidth, textureHeight);
             renderTextureA["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
 
             //blur x
@@ -742,7 +742,7 @@ module egret {
             renderContext.drawImage(renderTextureA, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2, blurX, blurY, textureWidth - blurX * 2, textureHeight - blurY * 2);
             renderContext._drawWebGL();
             renderContext.filterType = null;
-            renderTextureB["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureB["canvasContext"].clearRect(0, 0, textureWidth, textureHeight);
             renderTextureB["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
 
             //blur y
@@ -755,7 +755,7 @@ module egret {
             renderContext.drawImage(renderTextureB, 0, blurY, textureWidth, textureHeight - blurY * 2, 0, blurY + offset / 2, textureWidth, textureHeight - blurY * 2);
             renderContext._drawWebGL();
             renderContext.filterType = null;
-            renderTextureA["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureA["canvasContext"].clearRect(0, 0, textureWidth, textureHeight);
             renderTextureA["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
 
             //画回B 应用强度
@@ -763,7 +763,7 @@ module egret {
             renderContext.setAlpha(1, BlendMode.NORMAL);
             renderContext.setTransform(new Matrix(1, 0, 0, 1, 0, 0));
             Texture.deleteWebGLTexture(renderTextureA);
-            for (var i:number = 0 ; i < quality ; i++) {
+            for (var i:number = 0; i < quality; i++) {
                 renderContext.drawImage(renderTextureA, 0, 0, textureWidth, textureHeight, distanceX, distanceY, textureWidth, textureHeight);
             }
             renderContext._drawWebGL();
@@ -772,7 +772,7 @@ module egret {
             renderContext.currentBlendMode = null;
             renderContext.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX + blurX + offset, destY + blurY + offset * 1.5, destWidth, destHeight);
             renderContext._drawWebGL();
-            renderTextureB["canvasContext"].clearRect(0,0,textureWidth, textureHeight);
+            renderTextureB["canvasContext"].clearRect(0, 0, textureWidth, textureHeight);
             renderTextureB["canvasContext"].drawImage(webGLBitmapData, 0, 0, textureWidth, textureHeight, 0, 0, textureWidth, textureHeight);
 
             Texture.deleteWebGLTexture(renderTextureB);
@@ -922,21 +922,17 @@ module egret {
             gl.scissor(x, -y + MainContext.instance.stage.stageHeight - h, w, h);
         }
 
-        private colorTransformMatrix:Array<any> = null;
 
         private setGlobalColorTransform(colorTransformMatrix:Array<any>):void {
-            if (this.colorTransformMatrix != colorTransformMatrix) {
-                this._drawWebGL();
-                this.colorTransformMatrix = colorTransformMatrix;
-                if (colorTransformMatrix) {
-                    var colorTransformMatrix = colorTransformMatrix.concat();
-                    var shader:ColorTransformShader = this.shaderManager.colorTransformShader;
-                    shader.uniforms.colorAdd.value.w = colorTransformMatrix.splice(19, 1)[0] / 255.0;
-                    shader.uniforms.colorAdd.value.z = colorTransformMatrix.splice(14, 1)[0] / 255.0;
-                    shader.uniforms.colorAdd.value.y = colorTransformMatrix.splice(9, 1)[0] / 255.0;
-                    shader.uniforms.colorAdd.value.x = colorTransformMatrix.splice(4, 1)[0] / 255.0;
-                    shader.uniforms.matrix.value = colorTransformMatrix;
-                }
+            this._drawWebGL();
+            if (colorTransformMatrix) {
+                var colorTransformMatrix = colorTransformMatrix.concat();
+                var shader:ColorTransformShader = this.shaderManager.colorTransformShader;
+                shader.uniforms.colorAdd.value.w = colorTransformMatrix.splice(19, 1)[0] / 255.0;
+                shader.uniforms.colorAdd.value.z = colorTransformMatrix.splice(14, 1)[0] / 255.0;
+                shader.uniforms.colorAdd.value.y = colorTransformMatrix.splice(9, 1)[0] / 255.0;
+                shader.uniforms.colorAdd.value.x = colorTransformMatrix.splice(4, 1)[0] / 255.0;
+                shader.uniforms.matrix.value = colorTransformMatrix;
             }
         }
 
@@ -1133,6 +1129,7 @@ module egret_webgl_graphics {
 
     export function curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
     }
+
     export function cubicCurveTo(controlX1:number, controlY1:number, controlX2:number, controlY2:number, anchorX:number, anchorY:number):void {
 
     }

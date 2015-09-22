@@ -341,6 +341,13 @@ module egret {
                 return;
             }
             this._onTouchBeginTimer();
+            event.stopPropagation();
+            var evt: TouchEvent = this.cloneTouchEvent(event);
+            egret.callLater(()=>{
+                if(this.stage){
+                    this.dispatchPropagationEvent(evt);
+                }
+            },this);
         }
         private _onTouchBeginTimer():void {
             this.touchBeginTimer.stop();
@@ -376,6 +383,7 @@ module egret {
             for (var i: number = 0; i < length; i++) {
                 var currentTarget: DisplayObject = list[i];
                 event._currentTarget = currentTarget;
+                event._target = this;
                 if (i < targetIndex)
                     event._eventPhase = 1;
                 else if (i == targetIndex)

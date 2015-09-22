@@ -30,54 +30,47 @@
 
 module egret {
 
-    /**
-     * @private
-     */
-    export class FrameLabel extends EventDispatcher
-    {
-        private _name: string;
-        private _frame: number /*int*/;
-        private _end: number = 0 /*int*/;
-
-        constructor (name: string, frame: number /*int*/,end?:any/*int*/)
-        {
-            super();
-            this._name = name;
-            this._frame = frame | 0;
-            if(end) this._end = end | 0;
-        }
+  	/**
+  	 * @class egret.MovieClipEvent
+  	 * @classdesc
+     * 使用 MovieClipEvent 类，可以获取帧标签触发的事件
+  	 */
+    export class MovieClipEvent extends Event {
 
         /**
-         * 标签名
-         * @member {string} egret.FrameLabel#name
+         * 创建一个 egret.MovieClipEvent 对象
+         * @method egret.MovieClipEvent#constructor
+         * @param type {string} 事件的类型。事件侦听器可以通过继承的 type 属性访问此信息。
+         * @param bubbles {boolean} 确定 Event 对象是否冒泡。事件侦听器可以通过继承的 bubbles 属性访问此信息。
+         * @param cancelable {boolean} 确定是否可以取消 Event 对象。事件侦听器可以通过继承的 cancelable 属性访问此信息。
          */
-        public get name(): string {
-            return this._name;
+        public constructor(type: string, bubbles: boolean = false, cancelable: boolean = false, frameLabel: string = null) {
+            super(type, bubbles, cancelable);
+            this.frameLabel = frameLabel;
         }
+        /**
+         * 当前的帧标签
+         * @type {string}
+         */
+        public frameLabel: string = null;
+        /**
+         * 动画的某一帧上有标签时会触发事件
+         * @type {string}
+         */
+        public static FRAME_LABEL: string = "frame_label";
 
         /**
-         * 标签所在帧序号
-         * @member {number} egret.FrameLabel#frame
+         * 使用指定的EventDispatcher对象来抛出Event事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
+  		   * @method egret.TimerEvent.dispatchMovieClipEvent
+  		   * @param target {egret.IEventDispatcher} 派发事件目标
+  		   * @param type {string} 事件类型
+  		   * @param type {string} 具体的自定义帧事件
          */
-        public get frame(): number /*int*/ {
-            return this._frame;
-        }
-        /**
-         * 标签对应的结束帧序号
-         * @member {number} egret.FrameLabel#frame
-         */
-        public get end(): number /*int*/ {
-            return this._end;
-        }
-        /**
-         * 复制当前帧标签对象
-         * @method egret.FrameLabel#clone
-         */
-        public clone() {
-            return new FrameLabel(this._name, this._frame ,this._end);
+        public static dispatchMovieClipEvent(target: IEventDispatcher, type: string, frameLabel: string = null): void {
+            var eventClass: any = MovieClipEvent;
+            var props: any = egret.Event._getPropertyData(eventClass);
+            props.frameLabel = frameLabel;
+            Event._dispatchByTarget(eventClass, target, type, props);
         }
     }
-
 }
-
-
