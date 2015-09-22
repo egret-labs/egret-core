@@ -6,7 +6,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     /**
      * @language zh_CN
@@ -14,7 +14,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     class Binding {
         /**
@@ -84,7 +84,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
+     * @includeExample extension/eui/binding/WatcherExample.ts
      */
     /**
      * @language zh_CN
@@ -93,7 +93,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
+     * @includeExample extension/eui/binding/WatcherExample.ts
      */
     class Watcher {
         /**
@@ -381,7 +381,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     /**
      * @language zh_CN
@@ -394,7 +394,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     class ArrayCollection extends egret.EventDispatcher implements ICollection {
         /**
@@ -1878,7 +1878,7 @@ declare module eui {
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -1889,7 +1889,7 @@ declare module eui {
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -2507,7 +2507,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ButtonExample.ts
+     * @includeExample extension/eui/components/ButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -2518,7 +2518,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ButtonExample.ts
+     * @includeExample extension/eui/components/ButtonExample.ts
      */
     class Button extends Component {
         /**
@@ -2696,7 +2696,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -2716,7 +2716,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
      */
     class ToggleButton extends Button {
         /**
@@ -2783,7 +2783,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
      */
     /**
      * @language zh_CN
@@ -2793,7 +2793,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
      */
     class CheckBox extends ToggleButton {
         /**
@@ -3018,7 +3018,7 @@ declare module eui {
      * The scroller component can adds a scrolling touch operation for the Group.
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -3029,7 +3029,7 @@ declare module eui {
      * (将 Group 实例赋值给 Scroller 组件的 viewport 属性)。Scroller 会为 Group 添加滚动的触摸操作功能，并显示垂直或水平的滚动条。
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -3611,7 +3611,7 @@ declare module eui {
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -3623,7 +3623,7 @@ declare module eui {
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4073,7 +4073,7 @@ declare module eui {
      * @language en_US
      * Editable text for displaying,
      * scrolling, selecting, and editing text.
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4081,7 +4081,7 @@ declare module eui {
     /**
      * @language zh_CN
      * 可编辑文本，用于显示、滚动、选择和编辑文本。
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4552,7 +4552,7 @@ declare module eui {
      * you usually combine it as part of another group of components to
      * provide scrolling functionality.</p>
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4562,7 +4562,7 @@ declare module eui {
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
      * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4623,7 +4623,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
+     * @includeExample extension/eui/components/supportClasses/RangeExample.ts
      */
     /**
      * @language zh_CN
@@ -4637,7 +4637,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
+     * @includeExample extension/eui/components/supportClasses/RangeExample.ts
      */
     class Range extends Component {
         /**
@@ -5298,7 +5298,7 @@ declare module eui {
      * The current value of the slider is determined by the relative location of the thumb between
      * the end points of the slider, corresponding to the slider's minimum and maximum values.
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
+     * @includeExample  extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5308,7 +5308,7 @@ declare module eui {
      * 使用 HSlider（水平滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
+     * @includeExample  extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5362,7 +5362,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
     /**
      * @language zh_CN
@@ -5370,7 +5370,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
     class DefaultAssetAdapter implements IAssetAdapter {
         /**
@@ -5415,7 +5415,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
+     * @includeExample  extension/eui/components/ImageExample.ts
      */
     /**
      * @language zh_CN
@@ -5427,7 +5427,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
+     * @includeExample  extension/eui/components/ImageExample.ts
      */
     class Image extends egret.Bitmap implements UIComponent {
         /**
@@ -5838,7 +5838,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
+     * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
     /**
      * @language zh_CN
@@ -5851,7 +5851,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
+     * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
     class ItemRenderer extends Group implements IItemRenderer {
         /**
@@ -6014,7 +6014,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     /**
      * @language zh_CN
@@ -6027,7 +6027,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     class Label extends egret.TextField implements UIComponent, IDisplayText {
         /**
@@ -6919,7 +6919,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
+     * @includeExample  extension/eui/components/ListExample.ts
      */
     /**
      * @language zh_CN
@@ -6928,7 +6928,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
+     * @includeExample  extension/eui/components/ListExample.ts
      */
     class List extends ListBase {
         /**
@@ -7117,7 +7117,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     /**
      * @language zh_CN
@@ -7130,7 +7130,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     class Panel extends Component {
         /**
@@ -7379,7 +7379,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
+     * @includeExample  extension/eui/components/ProgressBarExample.ts
      */
     /**
      * @language zh_CN
@@ -7388,7 +7388,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
+     * @includeExample  extension/eui/components/ProgressBarExample.ts
      */
     class ProgressBar extends Range {
         /**
@@ -7617,7 +7617,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -7626,7 +7626,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     class RadioButton extends ToggleButton {
         /**
@@ -7811,7 +7811,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     /**
      * @language zh_CN
@@ -7822,7 +7822,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     class RadioButtonGroup extends egret.EventDispatcher {
         /**
@@ -8059,7 +8059,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     /**
      * @language zh_CN
@@ -8082,7 +8082,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     class Scroller extends Component {
         /**
@@ -8400,7 +8400,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     /**
      * @language zh_CN
@@ -8421,7 +8421,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     class Skin extends egret.HashObject {
         /**
@@ -8685,7 +8685,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/TabBarExample.ts
+     * @includeExample  extension/eui/components/TabBarExample.ts
      */
     /**
      * @language zh_CN
@@ -8705,7 +8705,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/TabBarExample.ts
+     * @includeExample  extension/eui/components/TabBarExample.ts
      */
     class TabBar extends ListBase {
         /**
@@ -8763,7 +8763,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleSwitchExample.ts
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
      */
     /**
      * @language zh_CN
@@ -8772,7 +8772,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleSwitchExample.ts
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
      */
     class ToggleSwitch extends ToggleButton {
         /**
@@ -8845,7 +8845,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
      */
     /**
      * @language zh_CN
@@ -8855,7 +8855,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
      */
     class VScrollBar extends ScrollBarBase {
         /**
@@ -8887,7 +8887,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
     /**
      * @language zh_CN
@@ -8897,7 +8897,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
     class VSlider extends SliderBase {
         /**
@@ -8956,7 +8956,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ViewStackExample.ts
+     * @includeExample  extension/eui/components/ViewStackExample.ts
      */
     /**
      * @language zh_CN
@@ -8969,7 +8969,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ViewStackExample.ts
+     * @includeExample  extension/eui/components/ViewStackExample.ts
      */
     class ViewStack extends Group implements ICollection {
         /**
@@ -9361,7 +9361,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
      */
     /**
      * @language zh_CN
@@ -9373,7 +9373,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
      */
     class BitmapFillMode {
         /**
@@ -9431,7 +9431,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
+     * @includeExample  extension/eui/core/DirectionExample.ts
      */
     /**
      * @language zh_CN
@@ -9439,7 +9439,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
+     * @includeExample  extension/eui/core/DirectionExample.ts
      */
     class Direction {
         /**
@@ -9818,7 +9818,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+     * @includeExample  extension/eui/core/ScrollPolicyExample.ts
      */
     /**
      * @language zh_CN
@@ -9828,7 +9828,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+     * @includeExample  extension/eui/core/ScrollPolicyExample.ts
      */
     class ScrollPolicy {
         /**
@@ -9887,7 +9887,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     /**
      * @language zh_CN
@@ -9896,7 +9896,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     class Theme extends egret.EventDispatcher {
         /**
@@ -10012,7 +10012,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
+     * @includeExample  extension/eui/events/CollectionEventExample.ts
      */
     /**
      * @language zh_CN
@@ -10020,7 +10020,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
+     * @includeExample  extension/eui/events/CollectionEventExample.ts
      */
     class CollectionEvent extends egret.Event {
         /**
@@ -10379,7 +10379,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     /**
      * @language zh_CN
@@ -10387,7 +10387,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     class ItemTapEvent extends egret.Event {
         /**
@@ -10496,7 +10496,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     /**
      * @language zh_CN
@@ -10505,7 +10505,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     class PropertyEvent extends egret.Event {
         /**
@@ -10624,7 +10624,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     /**
      * @language zh_CN
@@ -10632,7 +10632,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     class UIEvent extends egret.Event {
         /**
@@ -11786,7 +11786,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -11797,7 +11797,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     class BasicLayout extends LayoutBase {
         /**
@@ -11871,7 +11871,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
+     * @includeExample  extension/eui/layout/ColumnAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -11880,7 +11880,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
+     * @includeExample  extension/eui/layout/ColumnAlignExample.ts
      */
     class ColumnAlign {
         /**
@@ -12502,7 +12502,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/HorizontalLayoutExample.ts
+     * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -12511,7 +12511,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/HorizontalLayoutExample.ts
+     * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
      */
     class HorizontalLayout extends LinearLayoutBase {
         /**
@@ -12598,7 +12598,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
+     * @includeExample  extension/eui/layout/JustifyAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -12607,7 +12607,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
+     * @includeExample  extension/eui/layout/JustifyAlignExample.ts
      */
     class JustifyAlign {
         /**
@@ -12662,7 +12662,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/RowAlignExample.ts
+     * @includeExample  extension/eui/layout/RowAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -12671,7 +12671,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/RowAlignExample.ts
+     * @includeExample  extension/eui/layout/RowAlignExample.ts
      */
     class RowAlign {
         /**
@@ -12739,7 +12739,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
+     * @includeExample  extension/eui/layout/TileLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -12749,7 +12749,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
+     * @includeExample  extension/eui/layout/TileLayoutExample.ts
      */
     class TileLayout extends LayoutBase {
         /**
@@ -13360,7 +13360,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
+     * @includeExample  extension/eui/layout/TileOrientationExample.ts
      */
     /**
      * @language zh_CN
@@ -13369,7 +13369,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
+     * @includeExample  extension/eui/layout/TileOrientationExample.ts
      */
     class TileOrientation {
         /**
@@ -13418,7 +13418,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/VerticalLayoutExample.ts
+     * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -13427,7 +13427,7 @@ declare module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/VerticalLayoutExample.ts
+     * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
      */
     class VerticalLayout extends LinearLayoutBase {
         /**

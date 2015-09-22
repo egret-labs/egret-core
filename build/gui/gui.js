@@ -14281,10 +14281,18 @@ var egret;
              * @returns
              */
             p._onTouchEndCapture = function (event) {
+                var _this = this;
                 if (!this.delayTouchBeginEvent) {
                     return;
                 }
                 this._onTouchBeginTimer();
+                event.stopPropagation();
+                var evt = this.cloneTouchEvent(event);
+                egret.callLater(function () {
+                    if (_this.stage) {
+                        _this.dispatchPropagationEvent(evt);
+                    }
+                }, this);
             };
             /**
              * @private

@@ -3,19 +3,13 @@
 module egret {
 
     /**
-     * @copy egret.Orientation
-     */
-    export var DeviceOrientation: { new (): DeviceOrientation } = null;
-
-
-    /**
      * @language en_US
      * Orientation monitor the orientation of the device, send CHANGE event when the orientation is changed
      *
      * @event egret.Event.CHANGE device's orientation is changed
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     /**
      * @language zh_CN
@@ -23,7 +17,7 @@ module egret {
      * @event egret.Event.CHANGE 设备方向改变时派发
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     export interface DeviceOrientation extends EventDispatcher {
         /**
@@ -53,4 +47,10 @@ module egret {
          */
         stop(): void;
     }
+
+    /**
+     * @copy egret.Orientation
+     */
+    export var DeviceOrientation: { new (): DeviceOrientation } = null;
+
 }

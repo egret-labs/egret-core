@@ -35,6 +35,7 @@ module egret {
      * RotationRate to represents the device's rotation
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     /**
      * @language zh_CN
@@ -43,6 +44,7 @@ module egret {
      * RotationRate 呈现设备的旋转状态信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     export class MotionEvent extends Event {
         /**

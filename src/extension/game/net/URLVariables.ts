@@ -37,7 +37,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/senddata.html Send the request with parameters
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLVariables.ts
+     * @includeExample extension/game/net/URLVariables.ts
      */
     /**
      * @language zh_CN
@@ -46,7 +46,7 @@ module egret {
      * @see http://docs.egret-labs.org/post/manual/net/senddata.html 发送带参数的请求
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/net/URLVariables.ts
+     * @includeExample extension/game/net/URLVariables.ts
      */
     export class URLVariables extends HashObject {
 

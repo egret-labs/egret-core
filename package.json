@@ -283,13 +283,6 @@
         "files": [ ],
         "root": "src/extension/socket",
         "dependencies": [ "egret" ]
-      },
-      {
-        "name": "version",
-        "description": "Version Controller",
-        "files": [ ],
-        "root": "src/extension/version",
-        "dependencies": [ "egret" ]
       }
     ],
     "platforms": [
@@ -326,6 +319,9 @@
       },
       {
         "name": "eui",
+        "displayName": "Egret EUI 项目",
+        "language": "TypeScript",
+        "tag": "game,app,TypeScript",
         "description": "使用 eui 扩展库创建友好的交互界面",
         "modules": [ "egret", "eui", "res" ]
       },

@@ -37,7 +37,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     /**
      * @language zh_CN
@@ -45,7 +45,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/BindingExample.ts
+     * @includeExample extension/eui/binding/BindingExample.ts
      */
     var Binding = (function () {
         function Binding() {
@@ -205,7 +205,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
+     * @includeExample extension/eui/binding/WatcherExample.ts
      */
     /**
      * @language zh_CN
@@ -214,7 +214,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/binding/WatcherExample.ts
+     * @includeExample extension/eui/binding/WatcherExample.ts
      */
     var Watcher = (function () {
         /**
@@ -753,7 +753,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     /**
      * @language zh_CN
@@ -766,7 +766,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     var ArrayCollection = (function (_super) {
         __extends(ArrayCollection, _super);
@@ -2742,7 +2742,7 @@ var eui;
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -2753,7 +2753,7 @@ var eui;
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -3547,7 +3547,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ButtonExample.ts
+     * @includeExample extension/eui/components/ButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -3558,7 +3558,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ButtonExample.ts
+     * @includeExample extension/eui/components/ButtonExample.ts
      */
     var Button = (function (_super) {
         __extends(Button, _super);
@@ -3821,7 +3821,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -3841,7 +3841,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleButtonExample.ts
+     * @includeExample  extension/eui/components/ToggleButtonExample.ts
      */
     var ToggleButton = (function (_super) {
         __extends(ToggleButton, _super);
@@ -3979,7 +3979,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
      */
     /**
      * @language zh_CN
@@ -3989,7 +3989,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/CheckboxExample.ts
+     * @includeExample extension/eui/components/CheckboxExample.ts
      */
     var CheckBox = (function (_super) {
         __extends(CheckBox, _super);
@@ -4335,7 +4335,7 @@ var eui;
      * The scroller component can adds a scrolling touch operation for the Group.
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4346,7 +4346,7 @@ var eui;
      * (将 Group 实例赋值给 Scroller 组件的 viewport 属性)。Scroller 会为 Group 添加滚动的触摸操作功能，并显示垂直或水平的滚动条。
      *
      * @defaultProperty elementsContent
-     * @includeExample examples/Samples/src/extension/eui/components/GroupExample.ts
+     * @includeExample  extension/eui/components/GroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -4996,7 +4996,7 @@ var eui;
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5008,7 +5008,7 @@ var eui;
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5963,7 +5963,7 @@ var eui;
      * @language en_US
      * Editable text for displaying,
      * scrolling, selecting, and editing text.
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -5971,7 +5971,7 @@ var eui;
     /**
      * @language zh_CN
      * 可编辑文本，用于显示、滚动、选择和编辑文本。
-     * @includeExample examples/Samples/src/extension/eui/components/EditablTextExample.ts
+     * @includeExample  extension/eui/components/EditablTextExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -6475,7 +6475,7 @@ var eui;
      * you usually combine it as part of another group of components to
      * provide scrolling functionality.</p>
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -6485,7 +6485,7 @@ var eui;
      * HScrollBar（水平 ScrollBar）控件可以在因数据太多而不能在显示区域中以水平方向完全显示时控制显示的数据部分。
      * <p>虽然 HScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HScrollBarExample.ts
+     * @includeExample  extension/eui/components/HScrollBarExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -6604,7 +6604,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
+     * @includeExample extension/eui/components/supportClasses/RangeExample.ts
      */
     /**
      * @language zh_CN
@@ -6618,7 +6618,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/RangeExample.ts
+     * @includeExample extension/eui/components/supportClasses/RangeExample.ts
      */
     var Range = (function (_super) {
         __extends(Range, _super);
@@ -7631,7 +7631,7 @@ var eui;
      * The current value of the slider is determined by the relative location of the thumb between
      * the end points of the slider, corresponding to the slider's minimum and maximum values.
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
+     * @includeExample  extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -7641,7 +7641,7 @@ var eui;
      * 使用 HSlider（水平滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      *
-     * @includeExample examples/Samples/src/extension/eui/components/HSliderExample.ts
+     * @includeExample  extension/eui/components/HSliderExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -7766,7 +7766,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
     /**
      * @language zh_CN
@@ -7774,7 +7774,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
+     * @includeExample extension/eui/components/supportClasses/DefaultAssetAdapterExample.ts
      */
     var DefaultAssetAdapter = (function () {
         function DefaultAssetAdapter() {
@@ -7895,7 +7895,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
+     * @includeExample  extension/eui/components/ImageExample.ts
      */
     /**
      * @language zh_CN
@@ -7907,7 +7907,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ImageExample.ts
+     * @includeExample  extension/eui/components/ImageExample.ts
      */
     var Image = (function (_super) {
         __extends(Image, _super);
@@ -8367,7 +8367,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
+     * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
     /**
      * @language zh_CN
@@ -8380,7 +8380,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ItemRendererExample.ts
+     * @includeExample  extension/eui/components/ItemRendererExample.ts
      */
     var ItemRenderer = (function (_super) {
         __extends(ItemRenderer, _super);
@@ -8622,7 +8622,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     /**
      * @language zh_CN
@@ -8635,7 +8635,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     var Label = (function (_super) {
         __extends(Label, _super);
@@ -9724,7 +9724,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
+     * @includeExample  extension/eui/components/ListExample.ts
      */
     /**
      * @language zh_CN
@@ -9733,7 +9733,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ListExample.ts
+     * @includeExample  extension/eui/components/ListExample.ts
      */
     var List = (function (_super) {
         __extends(List, _super);
@@ -10161,7 +10161,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     /**
      * @language zh_CN
@@ -10174,7 +10174,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/PanelExample.ts
+     * @includeExample  extension/eui/components/PanelExample.ts
      */
     var Panel = (function (_super) {
         __extends(Panel, _super);
@@ -10521,7 +10521,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
+     * @includeExample  extension/eui/components/ProgressBarExample.ts
      */
     /**
      * @language zh_CN
@@ -10530,7 +10530,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ProgressBarExample.ts
+     * @includeExample  extension/eui/components/ProgressBarExample.ts
      */
     var ProgressBar = (function (_super) {
         __extends(ProgressBar, _super);
@@ -10923,7 +10923,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     /**
      * @language zh_CN
@@ -10932,7 +10932,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonExample.ts
+     * @includeExample  extension/eui/components/RadioButtonExample.ts
      */
     var RadioButton = (function (_super) {
         __extends(RadioButton, _super);
@@ -11271,7 +11271,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     /**
      * @language zh_CN
@@ -11282,7 +11282,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     var RadioButtonGroup = (function (_super) {
         __extends(RadioButtonGroup, _super);
@@ -11697,7 +11697,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     /**
      * @language zh_CN
@@ -11720,7 +11720,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     var Scroller = (function (_super) {
         __extends(Scroller, _super);
@@ -12419,7 +12419,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     /**
      * @language zh_CN
@@ -12440,7 +12440,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     var Skin = (function (_super) {
         __extends(Skin, _super);
@@ -12702,7 +12702,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/TabBarExample.ts
+     * @includeExample  extension/eui/components/TabBarExample.ts
      */
     /**
      * @language zh_CN
@@ -12722,7 +12722,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/TabBarExample.ts
+     * @includeExample  extension/eui/components/TabBarExample.ts
      */
     var TabBar = (function (_super) {
         __extends(TabBar, _super);
@@ -12846,7 +12846,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleSwitchExample.ts
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
      */
     /**
      * @language zh_CN
@@ -12855,7 +12855,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ToggleSwitchExample.ts
+     * @includeExample  extension/eui/components/ToggleSwitchExample.ts
      */
     var ToggleSwitch = (function (_super) {
         __extends(ToggleSwitch, _super);
@@ -13011,7 +13011,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
      */
     /**
      * @language zh_CN
@@ -13021,7 +13021,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VScrollBarExample.ts
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
      */
     var VScrollBar = (function (_super) {
         __extends(VScrollBar, _super);
@@ -13128,7 +13128,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
     /**
      * @language zh_CN
@@ -13138,7 +13138,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/VSliderExample.ts
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
     var VSlider = (function (_super) {
         __extends(VSlider, _super);
@@ -13266,7 +13266,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ViewStackExample.ts
+     * @includeExample  extension/eui/components/ViewStackExample.ts
      */
     /**
      * @language zh_CN
@@ -13279,7 +13279,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ViewStackExample.ts
+     * @includeExample  extension/eui/components/ViewStackExample.ts
      */
     var ViewStack = (function (_super) {
         __extends(ViewStack, _super);
@@ -14079,7 +14079,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
      */
     /**
      * @language zh_CN
@@ -14091,7 +14091,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/BitmapFillModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
      */
     var BitmapFillMode = (function () {
         function BitmapFillMode() {
@@ -14184,7 +14184,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
+     * @includeExample  extension/eui/core/DirectionExample.ts
      */
     /**
      * @language zh_CN
@@ -14192,7 +14192,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/DirectionExample.ts
+     * @includeExample  extension/eui/core/DirectionExample.ts
      */
     var Direction = (function () {
         function Direction() {
@@ -14413,7 +14413,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+     * @includeExample  extension/eui/core/ScrollPolicyExample.ts
      */
     /**
      * @language zh_CN
@@ -14423,7 +14423,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ScrollPolicyExample.ts
+     * @includeExample  extension/eui/core/ScrollPolicyExample.ts
      */
     var ScrollPolicy = (function () {
         function ScrollPolicy() {
@@ -14517,7 +14517,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     /**
      * @language zh_CN
@@ -14526,7 +14526,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/core/ThemeExample.ts
+     * @includeExample  extension/eui/core/ThemeExample.ts
      */
     var Theme = (function (_super) {
         __extends(Theme, _super);
@@ -14771,7 +14771,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
+     * @includeExample  extension/eui/events/CollectionEventExample.ts
      */
     /**
      * @language zh_CN
@@ -14779,7 +14779,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/CollectionEventExample.ts
+     * @includeExample  extension/eui/events/CollectionEventExample.ts
      */
     var CollectionEvent = (function (_super) {
         __extends(CollectionEvent, _super);
@@ -15137,7 +15137,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     /**
      * @language zh_CN
@@ -15145,7 +15145,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/ItemTapEventExample.ts
+     * @includeExample  extension/eui/events/ItemTapEventExample.ts
      */
     var ItemTapEvent = (function (_super) {
         __extends(ItemTapEvent, _super);
@@ -15305,7 +15305,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     /**
      * @language zh_CN
@@ -15314,7 +15314,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     var PropertyEvent = (function (_super) {
         __extends(PropertyEvent, _super);
@@ -15468,7 +15468,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     /**
      * @language zh_CN
@@ -15476,7 +15476,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/UIEventExample.ts
+     * @includeExample  extension/eui/events/UIEventExample.ts
      */
     var UIEvent = (function (_super) {
         __extends(UIEvent, _super);
@@ -18585,7 +18585,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -18596,7 +18596,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/BasicLayoutExample.ts
+     * @includeExample  extension/eui/layout/BasicLayoutExample.ts
      */
     var BasicLayout = (function (_super) {
         __extends(BasicLayout, _super);
@@ -18836,7 +18836,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
+     * @includeExample  extension/eui/layout/ColumnAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -18845,7 +18845,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/ColumnAlignExample.ts
+     * @includeExample  extension/eui/layout/ColumnAlignExample.ts
      */
     var ColumnAlign = (function () {
         function ColumnAlign() {
@@ -19750,7 +19750,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/HorizontalLayoutExample.ts
+     * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -19759,7 +19759,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/HorizontalLayoutExample.ts
+     * @includeExample  extension/eui/layout/HorizontalLayoutExample.ts
      */
     var HorizontalLayout = (function (_super) {
         __extends(HorizontalLayout, _super);
@@ -20272,7 +20272,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
+     * @includeExample  extension/eui/layout/JustifyAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -20281,7 +20281,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/JustifyAlignExample.ts
+     * @includeExample  extension/eui/layout/JustifyAlignExample.ts
      */
     var JustifyAlign = (function () {
         function JustifyAlign() {
@@ -20371,7 +20371,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/RowAlignExample.ts
+     * @includeExample  extension/eui/layout/RowAlignExample.ts
      */
     /**
      * @language zh_CN
@@ -20380,7 +20380,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/RowAlignExample.ts
+     * @includeExample  extension/eui/layout/RowAlignExample.ts
      */
     var RowAlign = (function () {
         function RowAlign() {
@@ -20484,7 +20484,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
+     * @includeExample  extension/eui/layout/TileLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -20494,7 +20494,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileLayoutExample.ts
+     * @includeExample  extension/eui/layout/TileLayoutExample.ts
      */
     var TileLayout = (function (_super) {
         __extends(TileLayout, _super);
@@ -21679,7 +21679,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
+     * @includeExample  extension/eui/layout/TileOrientationExample.ts
      */
     /**
      * @language zh_CN
@@ -21688,7 +21688,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/TileOrientationExample.ts
+     * @includeExample  extension/eui/layout/TileOrientationExample.ts
      */
     var TileOrientation = (function () {
         function TileOrientation() {
@@ -21773,7 +21773,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/VerticalLayoutExample.ts
+     * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
      */
     /**
      * @language zh_CN
@@ -21782,7 +21782,7 @@ var eui;
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/layout/VerticalLayoutExample.ts
+     * @includeExample  extension/eui/layout/VerticalLayoutExample.ts
      */
     var VerticalLayout = (function (_super) {
         __extends(VerticalLayout, _super);

@@ -85,7 +85,7 @@ module globals {
     export function getGlobalJava() {
         var JAVA_EXT = process.platform == 'win32' ? '.exe' : '';
 
-        var java = file.joinPath(process.execPath, "./jre/bin", "java" + JAVA_EXT);
+        var java = file.joinPath(process.execPath, "../jre/bin", "java" + JAVA_EXT);
         if (!file.exists(java)) {
             java = null;
             if (process.env["JAVA_HOME"]) {

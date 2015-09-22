@@ -39,8 +39,10 @@ class UpgradeCommand implements egret.Command {
             function handleCallBack(err?:string){
                 if(!err){
                     modify.save(v);
+                    callback();
+                }else{
+                    callback({name:"",message:err});
                 }
-                callback({name:"",message:err});
             }
 
             var v = info["v"];

@@ -128,7 +128,7 @@ module RES {
             var config:any = this.sheetMap[name];
             delete this.sheetMap[name];
             var targetName:string = resItem.data && resItem.data.subkeys ? "" : name;
-            var spriteSheet:any = this.parseSpriteSheet(texture, config, targetName);
+            var spriteSheet:egret.SpriteSheet  = this.parseSpriteSheet(texture, config, targetName);
             this.fileDic[name] = spriteSheet;
         }
 
@@ -147,31 +147,25 @@ module RES {
             return url;
         }
 
-        private parseSpriteSheet(texture:egret.Texture, data:any, name:string):any {
+        protected parseSpriteSheet(texture:egret.Texture, data:any, name:string):egret.SpriteSheet  {
             var frames:any = data.frames;
-            if (!frames) {
+            if(!frames){
                 return null;
             }
-
-            var spriteSheet = {};
+            var spriteSheet:egret.SpriteSheet = new egret.SpriteSheet(texture);
             var textureMap:any = this.textureMap;
-            for (var subkey in frames) {
+            for(var subkey in frames){
                 var config:any = frames[subkey];
-
-                var subTexture = new egret.Texture();
-                subTexture._bitmapData = texture._bitmapData;
-                subTexture.$initData(config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH, texture._sourceWidth, texture._sourceHeight);
-
-                spriteSheet[subkey] = subTexture;
-                if (config["scale9grid"]) {
+                var texture:egret.Texture = spriteSheet.createTexture(subkey,config.x,config.y,config.w,config.h,config.offX, config.offY,config.sourceW,config.sourceH);
+                if(config["scale9grid"]){
                     var str:string = config["scale9grid"];
                     var list:Array<string> = str.split(",");
-                    subTexture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]), parseInt(list[1]), parseInt(list[2]), parseInt(list[3]));
+                    texture["scale9Grid"] = new egret.Rectangle(parseInt(list[0]),parseInt(list[1]),parseInt(list[2]),parseInt(list[3]));
                 }
-                if (textureMap[subkey] == null) {
-                    textureMap[subkey] = subTexture;
-                    if (name) {
-                        this.addSubkey(subkey, name);
+                if(textureMap[subkey]==null){
+                    textureMap[subkey] = texture;
+                    if(name){
+                        this.addSubkey(subkey,name);
                     }
                 }
             }

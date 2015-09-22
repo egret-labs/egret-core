@@ -47,6 +47,10 @@ interface AudioBufferSourceNodeEgret {
 }
 
 module egret.web {
+
+    /**
+     * @private
+     */
     export class WebAudioDecode {
         /**
          * @private

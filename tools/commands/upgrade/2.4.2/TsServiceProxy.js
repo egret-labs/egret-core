@@ -1,4 +1,4 @@
-///<reference path="typescriptServices.d.ts" />
+///<reference path="./typescriptServices.d.ts" />
 var TSS = require("./typescriptServices");
 var fs = require("fs");
 //import Logger = require("./utils/Logger");
@@ -72,7 +72,7 @@ var TsServiceProxy = (function () {
         //初始化扩展库
         this.initExtLibs(_path);
         //初始化项目内的所有ts代码
-        this.readDir(file.joinPath(_path, "libs_old"), this.scriptAdded_handler, this);
+        //this.readDir(file.joinPath(_path,"libs_old"), this.scriptAdded_handler, this);
         this.readDir(file.joinPath(_path, "src"), this.scriptAdded_handler, this);
     };
     TsServiceProxy.prototype.setDefaultLibFileName = function (fileName) {
@@ -228,84 +228,13 @@ var TsServiceProxy = (function () {
         }
     };
     /**
-     * 更新代码路径
-     * @param filePath {string} 代码标识
-     * @param newPath {string} 新的代码标识
-     */
-    TsServiceProxy.prototype.renameScript = function (filePath, newPath) {
-        Logger.log("重命名代码:", filePath, newPath);
-        var content = this.host.getScriptInfo(filePath).content;
-        this.removeScript(filePath);
-        this.addScript(newPath, content);
-    };
-    /**
-     * 编辑代码
-     * @param filePath {string} 代码标识
-     * @param startIndex {number} 编辑的起始索引（包括）
-     * @param endIndex {number} 编辑的结束索引（不包括）
-     * @param newText {string} 新的文本内容
-     */
-    TsServiceProxy.prototype.editScript = function (filePath, startIndex, endIndex, newText) {
-        Logger.log("编辑代码:", filePath, startIndex, endIndex, newText.length);
-        this.host.editScript(filePath, startIndex, endIndex, newText);
-        var content = this.host.getScriptInfo(filePath).content;
-        var lastChar = content.slice(content.length - 1, content.length);
-        //经过测试更新一下最后一个字符可以使得整个文档都刷新一下，以防止其他获取不正常的情况
-        this.host.editScript(filePath, content.length - 1, content.length, lastChar);
-    };
-    /**
-* 得到大纲
-  * @param filePath {string} 代码标识
-      */
-    TsServiceProxy.prototype.getOutline = function (filePath) {
-        Logger.log("得到大纲:", filePath);
-        return this.tss.getNavigationBarItems(filePath);
-    };
-    /**
-     * 得到代码提示
-     * @param filePath {string} 代码标识
-     * @param position {number} 寻找的位置
-     */
-    TsServiceProxy.prototype.getCompletions = function (filePath, position) {
-        Logger.log("得到代码提示:", filePath, position);
-        var completionInfo = this.tss.getCompletionsAtPosition(filePath, position);
-        return completionInfo;
-    };
-    /**
-     * 得到代码提示,详细信息。
-     * @param filePath {string} 代码标识
-     * @param position {number} 寻找的位置
-     * @param name {string} 要查找的内容
-     */
-    TsServiceProxy.prototype.getCompletionDetails = function (filePath, position, name) {
-        Logger.log("得到详细代码提示:", filePath, position, name);
-        return this.tss.getCompletionEntryDetails(filePath, position, name);
-    };
-    /**
-* 获取方法签名提示信息，该方法只有方法的参数等，没有doc信息。
-  * @param filePath {string} 代码标识
-        * @param position {number} 寻找的位置
-      */
-    TsServiceProxy.prototype.getSignature = function (filePath, position) {
-        Logger.log("获取签名提示:", filePath, position);
-        return this.tss.getSignatureHelpItems(filePath, position);
-    };
-    /**
-* 获取指定位置的定义
-  * @param filePath {string} 代码标识
-        * @param position {number} 寻找的位置
-      */
-    TsServiceProxy.prototype.getDefinition = function (filePath, position) {
-        Logger.log("获取定义:", filePath, position);
-        return this.tss.getDefinitionAtPosition(filePath, position);
-    };
-    /**
 * 获取指定位置的引用
   * @param filePath {string} 代码标识
         * @param position {number} 寻找的位置
       */
     TsServiceProxy.prototype.getReferences = function (filePath, position) {
         Logger.log("得到引用:", filePath, position);
+        //return this.tss.findReferences(filePath,position);
         return this.tss.getReferencesAtPosition(filePath, position);
     };
     /**
@@ -325,9 +254,19 @@ var TsServiceProxy = (function () {
         }
         return null;
     };
-    TsServiceProxy.prototype.getAllReferenceAccordingDeclarationPosition = function (filePath, position, containerName, callBack) {
+    TsServiceProxy.prototype.getAllReferenceAccordingDeclarationPosition = function (filePath, position, containerName, decorate, callBack) {
         var _this = this;
         var res = this.getReferences(filePath, position);
+        if (!res) {
+            if (decorate) {
+                if (decorate == 'function') {
+                    res = this.getReferences(filePath, position + 10); //去掉function前导限定符
+                }
+                else if (decorate == 'static') {
+                    res = this.getReferences(filePath, position + 8); //去掉static前导限定符
+                }
+            }
+        }
         if (res) {
             Logger.log('找到:' + res.length + '处引用');
             res.forEach(function (resItem) {
@@ -341,6 +280,9 @@ var TsServiceProxy = (function () {
                     callBack(resItem.fileName, pos.line);
                 }
             });
+        }
+        else {
+            callBack(null, null);
         }
     };
     TsServiceProxy.prototype.getLineAndCharacterOfPosition = function (sourceFile, position) {
@@ -358,186 +300,96 @@ var TsServiceProxy = (function () {
         Logger.log("得到高亮:", filePath, position);
         return this.tss.getOccurrencesAtPosition(filePath, position);
     };
-    /**
-    * 获取指定位置的高亮内容
-    * @param filePath {string} 代码标识
-    * @param position {number} 寻找的位置
-    */
-    TsServiceProxy.prototype.getDiagnostics = function (filePath) {
-        Logger.log("获得诊断信息:", filePath);
-        //检查如果有扩展库则缓存起来，并从代码中移除
-        var extLibContents = new Array();
-        for (var i = 0; i < this.extLibs.length; i++) {
-            var scriptInfo = this.host.getScriptInfo(this.extLibs[i]);
-            if (scriptInfo) {
-                var extContent = scriptInfo.content;
-                extLibContents.push({
-                    "path": this.extLibs[i],
-                    "content": extContent
-                });
-                this.removeScript(this.extLibs[i]);
-            }
-        }
-        //如果不存在该文件
-        if (!this.host.contains(filePath)) {
-            //将缓存的扩展库添加回去
-            for (var i = 0; i < extLibContents.length; i++) {
-                this.addScript(extLibContents[i]["path"], extLibContents[i]["content"]);
-            }
-            return {
-                diagnostics: [],
-                filePath: filePath
-            };
-        }
-        var stt = this.tss.getSyntacticDiagnostics(filePath);
-        var smt = this.tss.getSemanticDiagnostics(filePath);
-        var compile = this.tss.getCompilerOptionsDiagnostics() || [];
-        if (compile && compile.length)
-            compile = compile.filter(function (d) { return d.file != null && d.file.fileName == filePath; });
-        var diagnostics = stt.concat(smt).concat(compile);
-        diagnostics = diagnostics.map(function (d) {
-            d.file = d.file.fileName;
-            return d;
-        });
-        var result = new Array();
-        for (var i = 0; i < diagnostics.length; i++) {
-            var currentDiagnostic = new Array();
-            if (typeof diagnostics[i].messageText === "string") {
-                currentDiagnostic.push({
-                    code: diagnostics[i].code,
-                    msg: diagnostics[i].messageText,
-                    category: diagnostics[i].category
-                });
-            }
-            else {
-                this.fixDiagnostics(currentDiagnostic, diagnostics[i].messageText);
-            }
-            result.push({
-                start: diagnostics[i].start,
-                length: diagnostics[i].length,
-                diagnostic: currentDiagnostic
-            });
-        }
-        var obj = {
-            diagnostics: result,
-            filePath: filePath
-        };
-        //将缓存的扩展库添加回去
-        for (var i = 0; i < extLibContents.length; i++) {
-            this.addScript(extLibContents[i]["path"], extLibContents[i]["content"]);
-        }
-        return obj;
-    };
-    /**
-     * 修复错误诊断信息，递归为一个数组
-     *
-     */
-    TsServiceProxy.prototype.fixDiagnostics = function (list, diagnostic) {
-        list.push({
-            code: diagnostic.code,
-            msg: diagnostic.messageText,
-            category: diagnostic.category
-        });
-        if (diagnostic.next) {
-            this.fixDiagnostics(list, diagnostic.next);
-        }
-    };
-    /**
-* 格式化指定区域
-  * @param filePath {string} 代码标识
-        * @param startIndex {number} 编辑的起始索引（包括）
-        * @param endIndex {number} 编辑的结束索引（不包括）
-        * @param option 格式化选项
-      */
-    TsServiceProxy.prototype.getFormattingCode = function (filePath, startIndex, endIndex, option) {
-        Logger.log("格式化代码:", filePath, startIndex, endIndex);
-        return this.tss.getFormattingEditsForRange(filePath, startIndex, endIndex, option);
-    };
-    /**
-* 得到某一个键后的格式化
-  * @param filePath {string} 代码标识
-        * @param position {number} 位置
-        * @param key {number} 要输入的键
-        * @param option 格式化选项
-      */
-    TsServiceProxy.prototype.getFormattingAfterKey = function (filePath, position, key, option) {
-        Logger.log("格式化键入:", filePath, position, key);
-        return this.tss.getFormattingEditsAfterKeystroke(filePath, position, key, option);
-    };
-    /**
-* 得到匹配括号
-* @param filePath {string} 代码标识
-* @param position {number} 寻找的位置
-*/
-    TsServiceProxy.prototype.getBraceMatching = function (filePath, position) {
-        Logger.log("得到匹配括号:", filePath, position);
-        return this.tss.getBraceMatchingAtPosition(filePath, position);
-    };
-    /**
-* 得到指定区域的代码分类，用于代码着色,此方法会综合getSyntacticClassifications与getSemanticClassifications。
-  * @param filePath {string} 代码标识
-        * @param startIndex {number} 编辑的起始索引（包括）
-        * @param endIndex {number} 编辑的结束索引（不包括）
-      */
-    TsServiceProxy.prototype.getClassifications = function (filePath, startIndex, endIndex) {
-        Logger.log("得到着色信息:", filePath, startIndex, endIndex);
-        var stc = this.tss.getEncodedSyntacticClassifications(filePath, TSS.createTextSpan(startIndex, endIndex - startIndex)).spans;
-        var smc = this.tss.getEncodedSemanticClassifications(filePath, TSS.createTextSpan(startIndex, endIndex - startIndex)).spans;
-        var result = new Array();
-        var indexCatch = 0;
-        for (var i = 0; i < stc.length; i += 3) {
-            var index = -1;
-            for (var j = indexCatch; j < smc.length; j += 3) {
-                if (smc[j] == stc[i] && smc[j + 1] == stc[i + 1]) {
-                    index = j;
-                    indexCatch = index;
-                    break;
-                }
-            }
-            if (index != -1) {
-                var start = smc[index];
-                var end = smc[index] + smc[index + 1];
-                if ((start >= startIndex && end <= endIndex)) {
-                    result.push(smc[index]);
-                    result.push(smc[index + 1]);
-                    result.push(smc[index + 2]);
-                }
-            }
-            else {
-                var start = stc[i];
-                var end = stc[i] + stc[i + 1];
-                if ((start >= startIndex && end <= endIndex)) {
-                    result.push(stc[i]);
-                    result.push(stc[i + 1]);
-                    result.push(stc[i + 2]);
-                }
-            }
-        }
-        return result;
-    };
-    /**
-* 得到整个文件的代码分类,此方法会综合getSyntacticClassifications与getSemanticClassifications。
-  * @param filePath {string} 代码标识
-        * @param startIndex {number} 编辑的起始索引（包括）
-        * @param endIndex {number} 编辑的结束索引（不包括）
-      */
-    TsServiceProxy.prototype.getClassificationsAll = function (filePath) {
-        Logger.log("得到全部代码着色", filePath);
-        var code = this.host.getScriptInfo(filePath).content;
-        var len = code.length;
-        var result = this.getClassifications(filePath, 0, len);
-        return result;
-    };
-    /**
-* 获取缩进数量
-* @param filePath {string} 代码标识
-* @param position {number} 寻找的位置
-     * @param optiton {TSS.EditorOptions} 配置参数
-*/
-    TsServiceProxy.prototype.getIndentation = function (filePath, position, optiton) {
-        Logger.log("得到缩进:", filePath, position);
-        return this.tss.getIndentationAtPosition(filePath, position, optiton);
-    };
+    ///**
+    //* 获取指定位置的高亮内容
+    //* @param filePath {string} 代码标识
+    //* @param position {number} 寻找的位置
+    //*/
+    //public getDiagnostics(filePath: string): any {
+    //	Logger.log("获得诊断信息:", filePath);
+    //	//检查如果有扩展库则缓存起来，并从代码中移除
+    //	var extLibContents: Array<any> = new Array<any>();
+    //	for (var i: number = 0; i < this.extLibs.length; i++) {
+    //		var scriptInfo: ScriptInfo = this.host.getScriptInfo(this.extLibs[i]);
+    //		if (scriptInfo) {
+    //			var extContent: string = scriptInfo.content;
+    //			extLibContents.push({
+    //				"path": this.extLibs[i],
+    //				"content": extContent
+    //			});
+    //			this.removeScript(this.extLibs[i]);
+    //		}
+    //	}
+    //
+    //	//如果不存在该文件
+    //	if (!this.host.contains(filePath)) {
+    //		//将缓存的扩展库添加回去
+    //		for (var i: number = 0; i < extLibContents.length; i++) {
+    //			this.addScript(extLibContents[i]["path"], extLibContents[i]["content"]);
+    //		}
+    //		return {
+    //			diagnostics: [],
+    //			filePath: filePath
+    //		};
+    //	}
+    //
+    //	var stt: TSS.Diagnostic[] = this.tss.getSyntacticDiagnostics(filePath);
+    //	var smt: TSS.Diagnostic[] = this.tss.getSemanticDiagnostics(filePath);
+    //	var compile: TSS.Diagnostic[] = this.tss.getCompilerOptionsDiagnostics() || [];
+    //	if (compile && compile.length)
+    //		compile = compile.filter(d=> d.file != null && d.file.fileName == filePath);
+    //	var diagnostics: TSS.Diagnostic[] = stt.concat(smt).concat(compile);
+    //	diagnostics = diagnostics.map(d=> {
+    //		d.file = <any>d.file.fileName;
+    //		return d;
+    //	});
+    //
+    //
+    //	var result: Array<any> = new Array<any>();
+    //	for (var i: number = 0; i < diagnostics.length; i++) {
+    //
+    //		var currentDiagnostic: Array<any> = new Array<any>();
+    //		if (typeof diagnostics[i].messageText === "string") {
+    //			currentDiagnostic.push({
+    //				code: diagnostics[i].code,
+    //				msg: diagnostics[i].messageText,
+    //				category: diagnostics[i].category
+    //			});
+    //		} else {
+    //			this.fixDiagnostics(currentDiagnostic, <TSS.DiagnosticMessageChain> diagnostics[i].messageText);
+    //		}
+    //		result.push({
+    //			start: diagnostics[i].start,
+    //			length: diagnostics[i].length,
+    //			diagnostic: currentDiagnostic
+    //		});
+    //	}
+    //
+    //	var obj: any = {
+    //		diagnostics: result,
+    //		filePath: filePath
+    //	}
+    //
+    //	//将缓存的扩展库添加回去
+    //	for (var i: number = 0; i < extLibContents.length; i++) {
+    //		this.addScript(extLibContents[i]["path"], extLibContents[i]["content"]);
+    //	}
+    //	return obj;
+    //}
+    ///**
+    // * 修复错误诊断信息，递归为一个数组
+    // *
+    // */
+    //private fixDiagnostics(list: Array<any>, diagnostic: TSS.DiagnosticMessageChain): void {
+    //	list.push({
+    //		code: diagnostic.code,
+    //		msg: diagnostic.messageText,
+    //		category: diagnostic.category
+    //	})
+    //	if (diagnostic.next) {
+    //		this.fixDiagnostics(list, diagnostic.next);
+    //	}
+    //}
     /**
 * 在指定的位置获得doc信息
 * @param filePath {string} 代码标识
@@ -615,17 +467,6 @@ var TsServiceProxy = (function () {
             return result;
         return null;
     };
-    /**
-     * 语义分割，用于调试  this.text.indexOf => 鼠标在 indexOf 上，告诉你this.text.indexOf是完整的语句
-     * @param filePath {string} 代码标识
-     * @param startIndex {number} 起始索引（包括）
-     * @param endIndex {number} 结束索引（不包括）
-     */
-    TsServiceProxy.prototype.getDottedNameSpan = function (filePath, startIndex, endIndex) {
-        Logger.log("语义分割:", filePath, startIndex, endIndex);
-        var textSpan = this.tss.getNameOrDottedNameSpan(filePath, startIndex, endIndex);
-        return textSpan;
-    };
     return TsServiceProxy;
 })();
 exports.TsServiceProxy = TsServiceProxy;
@@ -650,21 +491,21 @@ var Host = (function () {
     Host.prototype.addScript = function (fileName, content) {
         this.fileNameToScript[fileName] = new ScriptInfo(fileName, content);
     };
-    /**
-     * 编辑代码
-     * @param fileName {string} 代码标识
-     * @param startIndex {number} 编辑的起始索引（包括）
-     * @param endIndex {number} 编辑的结束索引（不包括）
-     * @param newText {string} 新的文本内容
-     */
-    Host.prototype.editScript = function (fileName, startIndex, endIndex, newText) {
-        var script = this.getScriptInfo(fileName);
-        if (script !== null) {
-            script.editContent(startIndex, endIndex, newText);
-            return;
-        }
-        throw new Error("No script with name '" + fileName + "'");
-    };
+    ///**
+    // * 编辑代码
+    // * @param fileName {string} 代码标识
+    // * @param startIndex {number} 编辑的起始索引（包括）
+    // * @param endIndex {number} 编辑的结束索引（不包括）
+    // * @param newText {string} 新的文本内容
+    // */
+    //public editScript(fileName: string, startIndex: number, endIndex: number, newText: string): void {
+    //	var script = this.getScriptInfo(fileName);
+    //	if (script !== null) {
+    //		script.editContent(startIndex, endIndex, newText);
+    //		return;
+    //	}
+    //	throw new Error("No script with name '" + fileName + "'");
+    //}
     /**
      * 更新代码
      * @param fileName {string} 代码标识

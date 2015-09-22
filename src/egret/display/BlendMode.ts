@@ -66,7 +66,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static NORMAL = "normal";
+        public static NORMAL:string = "normal";
         /**
          * @language en_US
          * Adds the values of the constituent colors of the display object to the colors of its background, applying a
@@ -85,7 +85,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static ADD = "add";
+        public static ADD:string = "add";
         /**
          * @language en_US
          * Erases the background based on the alpha value of the display object.
@@ -98,7 +98,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static ERASE = "erase";
+        public static ERASE:string = "erase";
 
     }
 }

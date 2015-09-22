@@ -54,9 +54,15 @@ class Publish implements egret.Command {
                 if (nativePath = egret.args.properties.getNativePath("android")) {
                     var url1 = FileUtil.joinPath(nativePath, "proj.android");
                     var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
+
                     FileUtil.remove(url2);
 
-                    FileUtil.createDirectory(url2);
+                    try {
+                        FileUtil.createDirectory(url2);
+                    }
+                    catch(e) {
+                        globals.exit(10021);
+                    }
                     FileUtil.copy(releasePath, url2);
 
                     //修改java文件
@@ -68,9 +74,15 @@ class Publish implements egret.Command {
                 if (nativePath = egret.args.properties.getNativePath("ios")) {
                     var url1 = FileUtil.joinPath(nativePath, "proj.ios");
                     url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
+
                     FileUtil.remove(url2);
 
-                    FileUtil.createDirectory(url2);
+                    try {
+                        FileUtil.createDirectory(url2);
+                    }
+                    catch(e) {
+                        globals.exit(10021);
+                    }
                     FileUtil.copy(releasePath, url2);
 
                     //修改java文件

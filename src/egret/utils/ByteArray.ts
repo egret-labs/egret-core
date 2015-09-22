@@ -89,7 +89,7 @@ module egret {
     /**
      * @language zh_CN
      * ByteArray 类提供用于优化读取、写入以及处理二进制数据的方法和属性。
-     * 注意：ByteArray 类适用于需要在字节层访问数据的高级 开发人员。
+     * 注意：ByteArray 类适用于需要在字节层访问数据的高级开发人员。
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/utils/ByteArray.ts
@@ -203,6 +203,7 @@ module egret {
         }
 
         /**
+         * @private
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -301,6 +302,18 @@ module egret {
             return this.data.byteLength - this._position;
         }
 
+        /**
+         * @language en_US
+         * Clears the contents of the byte array and resets the length and position properties to 0.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 清除字节数组的内容，并将 length 和 position 属性重置为 0。 
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public clear():void {
             this._setArrayBuffer(new ArrayBuffer(this.BUFFER_EXT_SIZE));
         }
@@ -752,16 +765,6 @@ module egret {
             this.data.setInt32(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
             this.position += ByteArray.SIZE_OF_INT32;
         }
-
-        ///**
-        // * @language zh_CN
-        // * 使用指定的字符集将多字节字符串写入字节流
-        // * @param value 要写入的字符串值
-        // * @param charSet 表示要使用的字符集的字符串。可能的字符集字符串包括 "shift-jis"、"cn-gb"、"iso-8859-1"”等
-        // */
-        //public writeMultiByte(value:string, charSet:string):void {
-        //
-        //}
 
         /**
          * @language en_US

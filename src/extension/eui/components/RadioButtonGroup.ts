@@ -76,7 +76,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     /**
      * @language zh_CN
@@ -87,7 +87,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/RadioButtonGroupExample.ts
+     * @includeExample  extension/eui/components/RadioButtonGroupExample.ts
      */
     export class RadioButtonGroup extends egret.EventDispatcher {
 

@@ -825,7 +825,7 @@ declare module RES {
          * 获取相对位置
          */
         getRelativePath(url: string, file: string): string;
-        private parseSpriteSheet(texture, data, name);
+        protected parseSpriteSheet(texture: egret.Texture, data: any, name: string): egret.SpriteSheet;
         destroyRes(name: string): boolean;
         /**
          * ImageLoader对象池
@@ -911,6 +911,7 @@ declare module RES {
      * @param analyzerClass Injection type classes need to be resolved.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
      */
     /**
      * @language zh_CN
@@ -919,6 +920,7 @@ declare module RES {
      * @param analyzerClass 注入类型需要解析的类。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
      */
     function registerAnalyzer(type: string, analyzerClass: any): void;
     /**

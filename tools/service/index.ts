@@ -36,15 +36,18 @@ export function run() {
     catch (e) {
         console.error("Service.run", e);
     }
-    process.on('uncaughtException', function (e) {
-
+    process.on('uncaughtException', function (e: NodeJS.ErrnoException) {
+        console.log("未捕获的异常:",e);
+        if (e.code == 'EADDRINUSE') {
+            console.log(`无法启动 service, 请检查端口 ${LARK_SERVICE_PORT} 是否被占用。`)
+        }
     });
     process.on('exit', shutdown);
 }
 
 
 function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
-    console.log("Got task:", task);
+    console.log("得到任务:", task.command, task.path);
     //|| task.version && task.version != version
     if (task.command == 'shutdown' ) {
         res.send({});
@@ -75,8 +78,11 @@ function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
     }
     else if (task.command == 'status') {
         var heapTotal: number = task['status']['heapTotal'];
-        console.log(heapTotal);
-        if (heapTotal > 500 * 1024 * 1024) {
+        heapTotal = heapTotal / 1024 / 1024;
+        heapTotal = heapTotal | 0;
+        console.log(`内存占用: ${heapTotal}M ${proj.path}`);
+        if (heapTotal > 500) {
+            console.log("内存占用过高,关闭进程:" + proj.path);
             proj.shutdown();
         }
     }
@@ -102,7 +108,7 @@ export function execCommand(command :egret.ServiceCommand, callback?: Function,s
 
     ss.send(command);
 
-    ss.on('message', cmd=> callback && callback(cmd));
+    ss.on('message', cmd=> callback && callback(cmd,ss));
     return ss;
 }
 
@@ -145,7 +151,6 @@ function shutdown() {
         var project:Project = projects[path];
         project.shutdown();
     }
-    console.log("shutdown method");
     process.exit(0);
 }
 

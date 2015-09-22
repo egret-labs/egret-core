@@ -164,7 +164,6 @@ var AutoCompileCommand = (function () {
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
-        console.log(msg);
         if (msg.command == 'build' && msg.option)
             egret.args = parser.parseJSON(msg.option);
         if (msg.command == 'build')

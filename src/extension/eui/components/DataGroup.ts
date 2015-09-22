@@ -60,7 +60,7 @@ module eui {
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -72,7 +72,7 @@ module eui {
      *
      * @see eui.Group
      * @defaultProperty dataProvider
-     * @includeExample examples/Samples/src/extension/eui/components/DataGroupExample.ts
+     * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native

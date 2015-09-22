@@ -8,7 +8,7 @@ import FileUtil = require('../lib/FileUtil');
 class CompileOptions implements egret.ToolArgs {
     command: string;
     action: string;
-    params: string[];
+    commands: string[];
     platform: string;
     projectDir: string;
     properties: egret.EgretPropertiesClass;

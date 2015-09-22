@@ -13,7 +13,7 @@ module egret {
      * @event egret.Event.IO_ERROR Error occurred while getting the location
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
+     * @includeExample egret/sensor/Geolocation.ts
      */
     /**
      * @language zh_CN
@@ -25,7 +25,7 @@ module egret {
      * @event egret.Event.IO_ERROR 获取设备位置时发生错误
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
+     * @includeExample egret/sensor/Geolocation.ts
      */
     export interface Geolocation extends EventDispatcher {
         /**
@@ -63,6 +63,20 @@ module egret {
     /**
      * @copy egret.Geolocation
      */
-    export var Geolocation: { new (): Geolocation };
+    export var Geolocation: {
+        /**
+         * @language en_US
+         * constructor
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 构造函数
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        new (): Geolocation
+    };
 
 }

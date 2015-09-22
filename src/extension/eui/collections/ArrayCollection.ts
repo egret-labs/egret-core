@@ -44,7 +44,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     /**
      * @language zh_CN
@@ -57,7 +57,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/collections/ArrayCollectionExample.ts
+     * @includeExample extension/eui/collections/ArrayCollectionExample.ts
      */
     export class ArrayCollection extends egret.EventDispatcher implements ICollection {
         /**

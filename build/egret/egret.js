@@ -3116,23 +3116,23 @@ var egret;
         d(p, "touchEnabled"
             /**
              * @language en_US
-             * Specifies whether this object receives touch or other user input. The default value is true, which means that
-             * by default any DisplayObject instance that is on the display list receives touch events. If touchEnabled is
+             * Specifies whether this object receives touch or other user input. The default value is false, which means that
+             * by default any DisplayObject instance that is on the display list cannot receive touch events. If touchEnabled is
              * set to false, the instance does not receive any touch events (or other user input events). Any children of
              * this instance on the display list are not affected. To change the touchEnabled behavior for all children of
              * an object on the display list, use DisplayObjectContainer.touchChildren.
              * @see egret.DisplayObjectContainer#touchChildren
-             * @default true
+             * @default false
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 指定此对象是否接收触摸或其他用户输入。默认值为 true，这表示默认情况下，显示列表上的任何 isplayObject 实例都会接收触摸事件或
+             * 指定此对象是否接收触摸或其他用户输入。默认值为 false，这表示默认情况下，显示列表上的任何 DisplayObject 实例都不会接收触摸事件或
              * 其他用户输入事件。如果将 touchEnabled 设置为 false，则实例将不接收任何触摸事件（或其他用户输入事件）。显示列表上的该实例的任
              * 何子级都不会受到影响。要更改显示列表上对象的所有子级的 touchEnabled 行为，请使用 DisplayObjectContainer.touchChildren。
              * @see egret.DisplayObjectContainer#touchChildren
-             * @default true
+             * @default false
              * @version Egret 2.4
              * @platform Web,Native
              */
@@ -4633,6 +4633,8 @@ var egret;
             }
             else {
                 this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0);
+                this.$invalidateContentBounds();
+                return true;
             }
             if (this.$stage) {
                 if (value instanceof egret.Texture) {
@@ -9850,12 +9852,14 @@ var egret;
      * and show errors occurred while getting the location of the device.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     /**
      * @language zh_CN
      * GeolocationEvent 提供设备的地理位置信息和获取位置时发生的错误信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     var GeolocationEvent = (function (_super) {
         __extends(GeolocationEvent, _super);
@@ -10199,6 +10203,7 @@ var egret;
      * RotationRate to represents the device's rotation
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     /**
      * @language zh_CN
@@ -10207,6 +10212,7 @@ var egret;
      * RotationRate 呈现设备的旋转状态信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     var MotionEvent = (function (_super) {
         __extends(MotionEvent, _super);
@@ -10256,6 +10262,7 @@ var egret;
      * Take care about this while using them.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     /**
      * @language zh_CN
@@ -10264,6 +10271,7 @@ var egret;
      * 比如使用两次方向数据的变化而不是直接使用方向的值
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     var OrientationEvent = (function (_super) {
         __extends(OrientationEvent, _super);
@@ -10476,12 +10484,14 @@ var egret;
      * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      */
     /**
      * @language zh_CN
      * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      */
     var StageOrientationEvent = (function (_super) {
         __extends(StageOrientationEvent, _super);
@@ -12872,6 +12882,11 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @version Egret 2.4
+ * @platform Web,Native
+ * @includeExample egret/localStorage/localStorage.ts
+ */
 var egret;
 (function (egret) {
     var localStorage;
@@ -14377,10 +14392,16 @@ var egret;
     /**
      * @language en_US
      * StageScaleMode class provides values for the stage zoom mode.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     /**
      * @language zh_CN
      * StageScaleMode 类为舞台缩放模式提供值。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     var StageScaleMode = (function () {
         function StageScaleMode() {
@@ -14563,6 +14584,10 @@ var egret;
     (function (sys) {
         /**
          * @private
+         */
+        sys.$START_TIME = 0;
+        /**
+         * @private
          * 是否要广播Event.RENDER事件的标志。
          */
         sys.$invalidateRenderFlag = false;
@@ -14608,7 +14633,7 @@ var egret;
                 if (DEBUG && sys.$ticker) {
                     egret.$error(1008, "egret.sys.SystemTicker");
                 }
-                egret.$START_TIME = Date.now();
+                sys.$START_TIME = Date.now();
             }
             var d = __define,c=SystemTicker;p=c.prototype;
             /**
@@ -15006,12 +15031,14 @@ var egret;
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     /**
      * @language zh_CN
      * Capabilities 类提供一些属性，这些属性描述了承载应用程序的系统和运行时。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     var Capabilities = (function () {
         function Capabilities() {
@@ -15974,6 +16001,7 @@ var egret;
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     /**
      * @language zh_CN
@@ -15981,6 +16009,7 @@ var egret;
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     var HtmlTextParser = (function () {
         /**
@@ -17380,6 +17409,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
+                this.$getLinesArr();
                 return this.$TextField[29 /* numLines */];
             }
         );
@@ -17503,7 +17533,18 @@ var egret;
          */
         p.$setWidth = function (value) {
             var values = this.$TextField;
-            values[3 /* textFieldWidth */] = isNaN(value) ? NaN : value;
+            if (isNaN(value)) {
+                if (isNaN(values[3 /* textFieldWidth */])) {
+                    return false;
+                }
+                values[3 /* textFieldWidth */] = NaN;
+            }
+            else {
+                if (values[3 /* textFieldWidth */] == value) {
+                    return false;
+                }
+                values[3 /* textFieldWidth */] = value;
+            }
             value = +value;
             if (value < 0) {
                 return false;
@@ -17518,7 +17559,18 @@ var egret;
          */
         p.$setHeight = function (value) {
             var values = this.$TextField;
-            values[4 /* textFieldHeight */] = isNaN(value) ? NaN : value;
+            if (isNaN(value)) {
+                if (isNaN(values[4 /* textFieldHeight */])) {
+                    return false;
+                }
+                values[4 /* textFieldHeight */] = NaN;
+            }
+            else {
+                if (values[4 /* textFieldHeight */] == value) {
+                    return false;
+                }
+                values[4 /* textFieldHeight */] = value;
+            }
             value = +value;
             if (value < 0) {
                 return false;
@@ -20451,6 +20503,7 @@ var egret;
     /**
      * @language en_US
      * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
+     * @param currentClass The current class class name, non-string
      * @param thisObj The current object. Always this
      * @param type Setter property names need to call
      * @param values Value passed to the parent class
@@ -20461,17 +20514,18 @@ var egret;
      * @language zh_CN
      * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
      * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
      * @param type 需要调用的setter属性名称
      * @param values 传给父类的值
      *
      * @exmaple egret.superSetter(this, "alpha", 1);
      */
-    function superSetter(thisObj, type) {
+    function superSetter(currentClass, thisObj, type) {
         var values = [];
-        for (var _i = 2; _i < arguments.length; _i++) {
-            values[_i - 2] = arguments[_i];
+        for (var _i = 3; _i < arguments.length; _i++) {
+            values[_i - 3] = arguments[_i];
         }
-        var cla = Object.getPrototypeOf(thisObj);
+        var cla = currentClass.prototype;
         var seters = cla["__sets__"];
         if (seters == null) {
             seters = cla["__sets__"] = {};
@@ -20481,8 +20535,14 @@ var egret;
             return setF.apply(thisObj, values);
         }
         var d = Object.getPrototypeOf(cla);
+        if (d == null) {
+            return;
+        }
         while (!d.hasOwnProperty(type)) {
             d = Object.getPrototypeOf(d);
+            if (d == null) {
+                return;
+            }
         }
         setF = Object.getOwnPropertyDescriptor(d, type).set;
         seters[type] = setF;
@@ -20492,8 +20552,9 @@ var egret;
     /**
      * @language en_US
      * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
-     * @param thisObj 当前对象。永远都this
-     * @param type 需要调用的setter属性名称
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
      * @returns {any} The value returned by the parent
      *
      * @exmaple egret.superGetter(this, "alpha");
@@ -20502,13 +20563,14 @@ var egret;
      * @language zh_CN
      * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
      * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
      * @param type 需要调用的setter属性名称
      * @returns {any} 父类返回的值
      *
      * @exmaple egret.superGetter(this, "alpha");
      */
-    function superGetter(thisObj, type) {
-        var cla = Object.getPrototypeOf(thisObj);
+    function superGetter(currentClass, thisObj, type) {
+        var cla = currentClass.prototype;
         var geters = cla["__gets__"];
         if (geters == null) {
             geters = cla["__gets__"] = {};
@@ -20518,8 +20580,14 @@ var egret;
             return getF.call(thisObj);
         }
         var d = Object.getPrototypeOf(cla);
+        if (d == null) {
+            return;
+        }
         while (!d.hasOwnProperty(type)) {
             d = Object.getPrototypeOf(d);
+            if (d == null) {
+                return;
+            }
         }
         getF = Object.getOwnPropertyDescriptor(d, type).get;
         geters[type] = getF;
@@ -20840,10 +20908,6 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @private
-     */
-    egret.$START_TIME = 0;
-    /**
      * @language en_US
      * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
      * @returns The number of milliseconds since the Egret framework was initialized
@@ -20860,7 +20924,7 @@ var egret;
      * @includeExample egret/utils/getTimer.ts
      */
     function getTimer() {
-        return Date.now() - egret.$START_TIME;
+        return Date.now() - egret.sys.$START_TIME;
     }
     egret.getTimer = getTimer;
 })(egret || (egret = {}));

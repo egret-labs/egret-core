@@ -203,7 +203,9 @@ export function remove(path:string):void {
     try {
         FS.lstatSync(path).isDirectory()
             ? rmdir(path)
-            : FS.unlinkSync(path)
+            : FS.unlinkSync(path);
+
+        getDirectoryListing(path);
     }
     catch (e) {
     }
@@ -223,6 +225,12 @@ function rmdir(path) {
             }
         });
         FS.rmdirSync(path);
+    }
+}
+
+export function rename(oldPath, newPath) {
+    if (isDirectory(oldPath)) {
+        FS.renameSync(oldPath, newPath);
     }
 }
 

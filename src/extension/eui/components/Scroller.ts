@@ -78,7 +78,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     /**
      * @language zh_CN
@@ -101,7 +101,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/ScrollerExample.ts
+     * @includeExample  extension/eui/components/ScrollerExample.ts
      */
     export class Scroller extends Component {
 

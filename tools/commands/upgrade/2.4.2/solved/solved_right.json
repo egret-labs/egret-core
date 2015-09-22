@@ -143,5 +143,9 @@
   {
     "desc":"class HTTPStatusEvent{ static dispatchHTTPStatusEvent(target: IEventDispatcher, status: number): void; }",
     "solved":true
+  },
+  {
+    "desc":"class Sound{ play(loop?: boolean, position?: number): void; }",
+    "solved":true
   }
 ]

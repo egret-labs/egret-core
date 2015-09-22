@@ -39,7 +39,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     /**
      * @language zh_CN
@@ -48,7 +48,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/events/PropertyEventExample.ts
+     * @includeExample  extension/eui/events/PropertyEventExample.ts
      */
     export class PropertyEvent extends egret.Event {
         /**

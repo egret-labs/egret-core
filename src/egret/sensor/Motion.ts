@@ -16,7 +16,7 @@ module egret {
      * @event egret.Event.CHANGE device is moved
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
+     * @includeExample egret/sensor/Motion.ts
      */
     /**
      * @language zh_CN
@@ -27,7 +27,7 @@ module egret {
      * @event egret.Event.CHANGE 运动状态发生改变
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
+     * @includeExample egret/sensor/Motion.ts
      */
     export interface Motion extends EventDispatcher {
         /**

@@ -34,14 +34,14 @@ module egret {
      * ScrollView auxiliary classes for slides, you will pass a display object constructor. It can display more than the range display object within the specified size range. And can easily drag in this range.
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/ScrollView.ts
+     * @includeExample extension/game/display/ScrollView.ts
      */
     /**
      * @language zh_CN
      * ScrollView 是用于滑动的辅助类，将一个显示对象传入构造函数即可。可以在指定的尺寸范围内显示超过该范围的显示对象。并可以在此范围内随意拖动。
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/display/ScrollView.ts
+     * @includeExample extension/game/display/ScrollView.ts
      */
     export class ScrollView extends DisplayObjectContainer {
 
@@ -525,6 +525,13 @@ module egret {
                 return;
             }
             this._onTouchBeginTimer();
+            event.stopPropagation();
+            var evt: TouchEvent = this.cloneTouchEvent(event);
+            egret.callLater(() => {
+                if (this.stage) {
+                    this.dispatchPropagationEvent(evt);
+                }
+            }, this);
         }
 
         /**
@@ -952,8 +959,8 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -964,9 +971,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -977,8 +982,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -989,8 +993,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1001,8 +1004,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1012,8 +1014,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param child1 {DisplayObject}
-         * @param child2 {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1023,8 +1024,7 @@ module egret {
 
         /**
          * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */

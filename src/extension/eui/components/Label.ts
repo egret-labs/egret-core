@@ -57,7 +57,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     /**
      * @language zh_CN
@@ -70,7 +70,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/LabelExample.ts
+     * @includeExample  extension/eui/components/LabelExample.ts
      */
     export class Label extends egret.TextField implements UIComponent,IDisplayText {
 

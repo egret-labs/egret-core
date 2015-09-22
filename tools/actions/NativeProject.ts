@@ -15,6 +15,7 @@ class NativeProject {
     public static build(platform?: string) {
         console.log("----native build-----")
 
+
         CompileTemplate.compileNativeRequire(egret.args);
 
         //拷贝项目到native工程中
@@ -25,12 +26,17 @@ class NativeProject {
         if (nativePath = egret.args.properties.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
+
             FileUtil.remove(url2);
 
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
-
+            try {
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
+            catch(e) {
+                globals.exit(10021);
+            }
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();
@@ -41,11 +47,17 @@ class NativeProject {
         if (nativePath = egret.args.properties.getNativePath("ios")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
             url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
+
             FileUtil.remove(url2);
 
-            cpFiles.outputPath = url2;
-            cpFiles.ignorePathList = config.getIgnorePath();
-            cpFiles.execute();
+            try {
+                cpFiles.outputPath = url2;
+                cpFiles.ignorePathList = config.getIgnorePath();
+                cpFiles.execute();
+            }
+            catch(e) {
+                globals.exit(10021);
+            }
 
             //修改java文件
             var entrance = new ChangeEntranceCMD();

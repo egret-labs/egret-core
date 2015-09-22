@@ -2081,23 +2081,23 @@ declare module egret {
         $touchEnabled: boolean;
         /**
          * @language en_US
-         * Specifies whether this object receives touch or other user input. The default value is true, which means that
-         * by default any DisplayObject instance that is on the display list receives touch events. If touchEnabled is
+         * Specifies whether this object receives touch or other user input. The default value is false, which means that
+         * by default any DisplayObject instance that is on the display list cannot receive touch events. If touchEnabled is
          * set to false, the instance does not receive any touch events (or other user input events). Any children of
          * this instance on the display list are not affected. To change the touchEnabled behavior for all children of
          * an object on the display list, use DisplayObjectContainer.touchChildren.
          * @see egret.DisplayObjectContainer#touchChildren
-         * @default true
+         * @default false
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 指定此对象是否接收触摸或其他用户输入。默认值为 true，这表示默认情况下，显示列表上的任何 isplayObject 实例都会接收触摸事件或
+         * 指定此对象是否接收触摸或其他用户输入。默认值为 false，这表示默认情况下，显示列表上的任何 DisplayObject 实例都不会接收触摸事件或
          * 其他用户输入事件。如果将 touchEnabled 设置为 false，则实例将不接收任何触摸事件（或其他用户输入事件）。显示列表上的该实例的任
          * 何子级都不会受到影响。要更改显示列表上对象的所有子级的 touchEnabled 行为，请使用 DisplayObjectContainer.touchChildren。
          * @see egret.DisplayObjectContainer#touchChildren
-         * @default true
+         * @default false
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -6214,12 +6214,14 @@ declare module egret {
      * and show errors occurred while getting the location of the device.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     /**
      * @language zh_CN
      * GeolocationEvent 提供设备的地理位置信息和获取位置时发生的错误信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Geolocation.ts
      */
     class GeolocationEvent extends Event {
         /**
@@ -6766,6 +6768,7 @@ declare module egret {
      * RotationRate to represents the device's rotation
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     /**
      * @language zh_CN
@@ -6774,6 +6777,7 @@ declare module egret {
      * RotationRate 呈现设备的旋转状态信息
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/Motion.ts
      */
     class MotionEvent extends Event {
         /**
@@ -6825,6 +6829,7 @@ declare module egret {
      * Take care about this while using them.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     /**
      * @language zh_CN
@@ -6833,6 +6838,7 @@ declare module egret {
      * 比如使用两次方向数据的变化而不是直接使用方向的值
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     class OrientationEvent extends Event {
         /**
@@ -7003,12 +7009,14 @@ declare module egret {
      * When the direction of the stage of change, Stage object dispatches StageOrientationEvent object.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      */
     /**
      * @language zh_CN
      * 当舞台的方向更改时，Stage 对象将调度 StageOrientationEvent 对象。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/events/StageOrientationEvent.ts
      */
     class StageOrientationEvent extends Event {
         /**
@@ -7889,7 +7897,7 @@ declare module egret {
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android between language communication within the project
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/context/external/ExternalInterface.ts
+     * @includeExample egret/external/ExternalInterface.ts
      */
     /**
      * @language zh_CN
@@ -7897,7 +7905,7 @@ declare module egret {
      * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=167&terms1_id=25&terms2_id=39 Android项目内的语言间通讯
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample egret/context/external/ExternalInterface.ts
+     * @includeExample egret/external/ExternalInterface.ts
      */
     interface ExternalInterface {
     }
@@ -8658,6 +8666,11 @@ declare module egret.sys {
 }
 declare module egret {
 }
+/**
+ * @version Egret 2.4
+ * @platform Web,Native
+ * @includeExample egret/localStorage/localStorage.ts
+ */
 declare module egret.localStorage {
     /**
      * @language en_US
@@ -8733,7 +8746,7 @@ declare module egret {
      * @event egret.IOErrorEvent.IO_ERROR Dispatch when the audio resource is failed to load
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/SoundExample.ts
+     * @includeExample egret/media/SoundExample.ts
      */
     /**
      * @language zh_CN
@@ -8744,7 +8757,7 @@ declare module egret {
      * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/SoundExample.ts
+     * @includeExample egret/media/SoundExample.ts
      */
     interface Sound extends EventDispatcher {
         /**
@@ -8938,7 +8951,7 @@ declare module egret {
      * @event egret.Event.IO_ERROR when the video is failed to load
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/VideoExample.ts
+     * @includeExample egret/media/VideoExample.ts
      */
     /**
      * @language zh_CN
@@ -8952,7 +8965,7 @@ declare module egret {
      * @event egret.Event.IO_ERROR 视频加载失败市触发
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/media/VideoExample.ts
+     * @includeExample egret/media/VideoExample.ts
      */
     interface Video extends DisplayObject {
         /**
@@ -9407,7 +9420,7 @@ declare module egret {
      * @event egret.ProgressEvent.PROGRESS Dispatched when data is received as the download operation progresses.
      * @see egret.HttpMethod
      * @see egret.HttpResponseType
-     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @includeExample egret/net/HttpRequestExample.ts
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -9421,7 +9434,7 @@ declare module egret {
      * @event egret.ProgressEvent.PROGRESS 加载进度，可通过event.bytesLoaded和event.bytesTotal统计进度信息。
      * @see egret.HttpMethod
      * @see egret.HttpResponseType
-     * @includeExample examples/Samples/src/egret/net/HttpRequestExample.ts
+     * @includeExample egret/net/HttpRequestExample.ts
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -9641,7 +9654,7 @@ declare module egret {
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/net/ImageLoaderExample.ts
+     * @includeExample egret/net/ImageLoaderExample.ts
      */
     /**
      * @language zh_CN
@@ -9651,7 +9664,7 @@ declare module egret {
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/net/ImageLoaderExample.ts
+     * @includeExample egret/net/ImageLoaderExample.ts
      */
     interface ImageLoader extends EventDispatcher {
         /**
@@ -10102,10 +10115,16 @@ declare module egret {
     /**
      * @language en_US
      * StageScaleMode class provides values for the stage zoom mode.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     /**
      * @language zh_CN
      * StageScaleMode 类为舞台缩放模式提供值。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/player/StageScaleMode.ts
      */
     class StageScaleMode {
         /**
@@ -10220,6 +10239,10 @@ declare module egret.sys {
     }
 }
 declare module egret.sys {
+    /**
+     * @private
+     */
+    var $START_TIME: number;
     /**
      * @private
      * 是否要广播Event.RENDER事件的标志。
@@ -10401,7 +10424,7 @@ declare module egret {
      * @event egret.Event.CHANGE device's orientation is changed
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     /**
      * @language zh_CN
@@ -10409,7 +10432,7 @@ declare module egret {
      * @event egret.Event.CHANGE 设备方向改变时派发
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/OrientationExample.ts
+     * @includeExample egret/sensor/DeviceOrientation.ts
      */
     interface DeviceOrientation extends EventDispatcher {
         /**
@@ -10452,7 +10475,7 @@ declare module egret {
      * @event egret.Event.IO_ERROR Error occurred while getting the location
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
+     * @includeExample egret/sensor/Geolocation.ts
      */
     /**
      * @language zh_CN
@@ -10464,7 +10487,7 @@ declare module egret {
      * @event egret.Event.IO_ERROR 获取设备位置时发生错误
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/GeolocationExample.ts
+     * @includeExample egret/sensor/Geolocation.ts
      */
     interface Geolocation extends EventDispatcher {
         /**
@@ -10521,7 +10544,7 @@ declare module egret {
      * @event egret.Event.CHANGE device is moved
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
+     * @includeExample egret/sensor/Motion.ts
      */
     /**
      * @language zh_CN
@@ -10532,7 +10555,7 @@ declare module egret {
      * @event egret.Event.CHANGE 运动状态发生改变
      * @version Egret 2.4
      * @platform Web,Native
-     * @includeExample examples/Samples/src/egret/sensor/MotionExample.ts
+     * @includeExample egret/sensor/Motion.ts
      */
     interface Motion extends EventDispatcher {
         /**
@@ -10682,12 +10705,14 @@ declare module egret {
      * The Capabilities class provides properties that describe the system and runtime that are hosting the application.
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     /**
      * @language zh_CN
      * Capabilities 类提供一些属性，这些属性描述了承载应用程序的系统和运行时。
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/system/Capabilities.ts
      */
     class Capabilities {
         /**
@@ -11200,6 +11225,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     /**
      * @language zh_CN
@@ -11207,6 +11233,7 @@ declare module egret {
      * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
      * @version Egret 2.4
      * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
      */
     class HtmlTextParser {
         /**
@@ -13865,6 +13892,7 @@ declare module egret {
     /**
      * @language en_US
      * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
+     * @param currentClass The current class class name, non-string
      * @param thisObj The current object. Always this
      * @param type Setter property names need to call
      * @param values Value passed to the parent class
@@ -13875,17 +13903,19 @@ declare module egret {
      * @language zh_CN
      * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
      * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
      * @param type 需要调用的setter属性名称
      * @param values 传给父类的值
      *
      * @exmaple egret.superSetter(this, "alpha", 1);
      */
-    function superSetter(thisObj: any, type: string, ...values: any[]): any;
+    function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
     /**
      * @language en_US
      * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
-     * @param thisObj 当前对象。永远都this
-     * @param type 需要调用的setter属性名称
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
      * @returns {any} The value returned by the parent
      *
      * @exmaple egret.superGetter(this, "alpha");
@@ -13894,12 +13924,13 @@ declare module egret {
      * @language zh_CN
      * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
      * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
      * @param type 需要调用的setter属性名称
      * @returns {any} 父类返回的值
      *
      * @exmaple egret.superGetter(this, "alpha");
      */
-    function superGetter(thisObj: any, type: string): any;
+    function superGetter(currentClass: any, thisObj: any, type: string): any;
 }
 declare module egret {
     /**
@@ -14005,10 +14036,6 @@ declare module egret {
     function getQualifiedSuperclassName(value: any): string;
 }
 declare module egret {
-    /**
-     * @private
-     */
-    var $START_TIME: number;
     /**
      * @language en_US
      * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized

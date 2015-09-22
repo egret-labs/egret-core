@@ -50,7 +50,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     /**
      * @language zh_CN
@@ -71,7 +71,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample examples/Samples/src/extension/eui/components/SkinExample.ts
+     * @includeExample  extension/eui/components/SkinExample.ts
      */
     export class Skin extends egret.EventDispatcher {
 

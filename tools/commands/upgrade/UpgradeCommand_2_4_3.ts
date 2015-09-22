@@ -1,159 +1,22 @@
 /// <reference path="../../lib/types.d.ts" />
 
-
-//import globals = require("../../Globals");
-//import params = require("../../ParamsParser");
-import TSP = require("./2.4.2/TsServiceProxy");
+//import TSP = require("./2.4.2/TsServiceProxy");
 import fs = require("fs");
 import file = require('../../lib/FileUtil');
 import CHILD_EXEC = require('child_process');
-import TSS = require("./2.4.2/typescriptServices");
+//import TSS = require("./2.4.2/typescriptServices");
+import utils = require('../../lib/utils');
+import APITestTool = require('../../actions/APITest');
 
-var DTS = require('./2.4.2/compare2dts.js');
-
-var AutoLogger = {
-    _solutionMap:{},
-    _dir:'',
-    _total:0,
-    _isAPIadd : false,
-    _api:null,
-    _item:null,
-    _logContent:{
-        title:'API Math.abs discarded,solution:http//www.baidu.com/Math.abs',
-        isShow:true
-    },
-    _categoryQuickLST:{},
-    init:function(ignorePath:string):void{
-        this._dir = ignorePath;
-        this._total = 0;
-        var solutionPath = file.joinPath(egret.root,'/tools/commands/upgrade/2.4.2','solution_urls.json');
-        this._solutionMap = JSON.parse(file.read(solutionPath));
-    },
-    close:function():void{
-        this.clear();
-    },
-    acceptCategory:function(item:any):void{
-        this._categoryQuickLST[item['category-name']] = item;
-    },
-    logTitle:function(item:any):void{
-        //拼title
-        var titleStr;
-        //无解决方案
-        var no_solution = false;
-        //是否输出
-        var is_show = true;
-        //有url确定title
-        this._api = item['category-name']+'.'+item['name'];
-        if(item['solution-url']){
-            titleStr = 'API '+this._api +' 变更,解决方案请查看 '+this._filterUrl(item['solution-url']);
-            this._isAPIadd = false;
-        }else
-        //无解决方案去查快表是否有解决方案
-        if(item['category-name'] in this._categoryQuickLST){
-            var father_item = this._categoryQuickLST[item['category-name']];
-            //快表有url
-            if(father_item['solution-url']) {
-                titleStr = 'API ' +
-                    item['category-name'] + '.*' + ' 变更,解决方案请查看 ' + this._filterUrl(father_item['solution-url']);
-                this._isAPIadd = true;
-            }else{
-            //快表无url查看快表的source属性
-                if('solved_name_change.json' == father_item['source']){
-                    titleStr = 'API '+ item['category-name'] + '.*' + ' 名称变更,尝试用\'$\'代替\'_\'';
-                    this._isAPIadd = true;
-
-                }else
-                if('solved_deprecated.json' == father_item['source']){
-                    titleStr = 'API '+ item['category-name'] + '.*' + ' 废弃,新版本不再提供兼容';
-                    this._isAPIadd = true;
-                }else
-                if('solved_right.json' == father_item['source']){
-                    //不输出
-                    titleStr = 'no need output';
-                    is_show = false;
-                }else{
-                    no_solution = true;
-                }
-            }
-        }else{
-            no_solution = true;
-        }
-        if(no_solution){//无解决方案 查看source属性
-            if('solved_name_change.json' == item['soucre']){
-                titleStr = 'API '+ this._api + ' 名称改变,尝试用\'$\'代替\'_\'';
-            }else
-            if('solved_deprecated.json' == item['source']){
-                titleStr = 'API '+ this._api +' 废弃,新版本不再提供兼容。 '
-            }else
-            if('solved_right.json' == item['source']){
-                //不输出
-                titleStr = 'no need output';
-                is_show = false;
-            }
-            this._isAPIadd = false;
-        }
-        if(titleStr != this._logContent.title){
-            this.clear();
-            this._logContent.title = titleStr;
-            this._logContent.isShow = is_show;
-        }
-    },
-    logRef:function(fileName:string,lineNum:number):void{
-        if(!this._logContent.references){
-            this._logContent.references = {};
-        }
-        if(!this._logContent.references[fileName]){
-            this._logContent.references[fileName] = {};
-        }
-        if(!this._logContent.references[fileName][this._api]){
-            this._logContent.references[fileName][this._api] = [];
-        }
-        this._logContent.references[fileName][this._api].push(lineNum);
-        this._logContent.references[fileName][this._api].isAPIshow = this._isAPIadd;
-    },
-    clear:function():void{
-        //过滤掉只有title的情况
-        if(this._logContent.title && this._logContent.references && this._logContent.isShow){
-            //step1
-            console.log(this._logContent.title);
-            //step2
-            var fileRefLine;
-            for(var file_path in this._logContent.references){
-                fileRefLine = file.getRelativePath(this._dir,file_path) +' ';
-                for(var api in this._logContent.references[file_path]){
-                    this._logContent.references[file_path][api].forEach(lineNum=>{
-                        //行号需要＋1
-                        fileRefLine +=(lineNum + 1)+', ';
-                        this._total ++;
-
-                    });
-                    fileRefLine = fileRefLine.slice(0,fileRefLine.lastIndexOf(', ')) + '行处引用 ';
-                    if(this._logContent.references[file_path][api].isAPIshow){
-                        fileRefLine += api + ' ;';
-                    };
-                }
-                console.log(fileRefLine);
-            }
-            console.log('\n');
-        }
-        //清空_logContent对象
-        this._logContent.title = null;
-        delete this._logContent.references;
-        delete this._api;
-        this._isAPIadd = false;
-        this.isShow = true;
-    },
-    _filterUrl:function(key){
-        if(key in this._solutionMap){
-            return this._solutionMap[key];
-        }else
-            return key;
-    }
+declare class AutoLogger{
+    _htmlTitle:string;
+    _htmlBody:string;
+    _htmlEnd:string;
+    total:number;
 }
 
 class UpgradeCommand_2_4_3 implements egret.Command {
     isAsync = true;
-    private tsp:TSP.TsServiceProxy;
     private asyncCallback:(err?:Error)=>void = null;
 
     //execute():number {
@@ -193,7 +56,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             globals.log2(1707,projectPath,newPath);
             var egretPath = egret.root;
             //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
-            CHILD_EXEC.exec('node '+file.joinPath(egretPath,'/tools/bin/egret')+' create '+newPath,{
+            //处理命令行中的空格(用“”抱起来作为一个单独的参数)
+            CHILD_EXEC.exec('node \"'+file.joinPath(egretPath,'/tools/bin/egret')+'\" create \"'+newPath+"\"",{
                 encoding: 'utf8',
                 timeout: 0,
                 maxBuffer: 200*1024,
@@ -202,7 +66,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                 env: process.env
             },function(error,stdout,stderror){
                 if(error){
-                    //无法创建新目录 直接返回
+                    //无法创建新目录输出错误日志 直接返回
+                    console.log(stderror);
                     self.asyncCallback({name:'消息',message:"无法创建新目录"});
                 }else{
                     console.log(stdout);
@@ -271,18 +136,20 @@ class UpgradeCommand_2_4_3 implements egret.Command {
         //step 3.2 将旧版配置文件的 document_class 属性 配置到template目录下的index.html文件
         var enter_class_name = null;
         if((enter_class_name = oldProperties['document_class']) && enter_class_name != 'Main') {
-            globals.log2(1710);
+            globals.log2(1714);
+            //globals.log2(1710);
             rplc_parram.push('data-entry-class=\"Main\"');
             rplc_parram.push('data-entry-class=\"' + enter_class_name + '\"');
         }
         this.replaceFileStr(file.joinPath(newPath,'template/index.html'),rplc_parram);
-            //step 4.拷贝旧的库文件用于比较
-            var libOld = file.joinPath(egret.args.projectDir,'/libs');
-            var libOld_temp = file.joinPath(newPath,'src/libs_old/');
-            if(libOld.toLowerCase() != libOld_temp.toLowerCase()){
-                globals.log2(1707,libOld,libOld_temp);
-                file.copy(libOld,libOld_temp);
-            }
+        //step 4.拷贝旧的库文件用于比较(引擎自带历史版本的核心库声明文件)
+
+        //var libOld = file.joinPath(egret.args.projectDir,'/libs');
+        //var libOld_temp = file.joinPath(newPath,'/libs_old/');
+        //if(libOld.toLowerCase() != libOld_temp.toLowerCase()){
+        //    globals.log2(1707,libOld,libOld_temp);
+        //    file.copy(libOld,libOld_temp);
+        //}
 
             //找到入口文件替换资源引用
             //    globals.log2(1708);
@@ -298,75 +165,44 @@ class UpgradeCommand_2_4_3 implements egret.Command {
      * @param projectPath
      */
     private apiTest(projectPath:string) {
-        //var open = globals.getOpen();
-        //open("https://github.com/egret-labs/egret-core/tree/v2.4.2/docs/cn/2.4.2_ReleaseNotes.md");
-
-        //var projectPath = this.createAndCopyProjectFile();
-        var egretRoot = egret.root;
-        //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
-
-        var libPath = file.joinPath(projectPath,'/src/libs_old');//用旧的api检测
-        //var libPath = file.joinPath(projectPath,'/libs');//
-        var configPath = file.joinPath(egretRoot,'tools/commands/upgrade/2.4.2/solved');
-        var searchLST = DTS.load_format(configPath);
-        if(searchLST){
-            console.log('API 冲突检测中...');
-            //ts服务初始化设置
-            var settings: TSS.CompilerOptions = {
-                mapSourceFiles: true,
-                sourceMap: true,
-                target: TSS.ScriptTarget.ES5
-            };
-            this.tsp = new TSP.TsServiceProxy(settings);
-            this.tsp.setExceptDir(file.joinPath(projectPath,'src/libs'));
-            this.tsp.setDefaultLibFileName(file.joinPath(libPath, 'core','core.d'));
-            this.tsp.initProject(projectPath);
-            this.tsp.initLibs([libPath]);
-            //初始化
-            AutoLogger.init(projectPath);
-            if('quickLST' in searchLST){
-                for(var p in searchLST.quickLST){
-                    var item = searchLST.quickLST[p];
-                    AutoLogger.acceptCategory(item);
-                }
-            }
-            searchLST.forEach(item =>{
-                var searchName = item['name'];
-                var fatherName = item['category-name'];
-                //if(searchName == 'anchorX' && fatherName == 'DisplayObject' ||
-                //    searchName == 'addEventListener' && fatherName == 'DisplayObject' ||
-                //    searchName == '_setHeight' && fatherName == 'ScrollView'){
-                //    var a;
-                //}
-                if(searchName == 'addEventListener'){
-                    var a;
-                }
-                var pkg;
-                //过滤＊
-                if(searchName == '*'){
-                    AutoLogger.acceptCategory(item);
-                }else{
-                    AutoLogger.logTitle(item);
-                    //console.log(item.name+'.'+item['category-name']);
-                    if(pkg = this.tsp.getDeclarationPosition(fatherName,searchName)){
-                        this.tsp.getAllReferenceAccordingDeclarationPosition(
-                            pkg.path,pkg.position,fatherName,function(filePath,line){
-                                AutoLogger.logRef(filePath,line);
-                                //console.log(filePath,line);
-                            });
-                    }
-                }
-            });
-            AutoLogger.close();
-            if(AutoLogger._total === 0){
-                globals.exit(1702);
+        var self = this;
+        new APITestTool().execute(projectPath,onAPICallBack);
+        function onAPICallBack(error:boolean, total:number|string, logger?:AutoLogger){
+            if(error){
+                globals.exit(1705);
+                self.asyncCallback();
             }else{
-                globals.exit(1706,AutoLogger._total);
+                if(total != 0){
+                    //打开项目目录(异步方法)
+                    utils.open(projectPath,(err,stdout,stderr)=>{
+                        if(err){
+                            console.log(stderr);
+                        }
+                        //延时操作下一步
+                        setTimeout(()=>{
+                            //写入html并打开网址
+                            var saveContent =
+                                logger._htmlTitle+
+                                '<h1>'+ projectPath + '<b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
+                                '<h2>共计 <b>'+logger.total+'</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
+                                logger._htmlBody +
+                                logger._htmlEnd;
+                            //var saveContent = logger._snapShot;
+                            if(saveContent != ''){
+                                var saveLogFilePath = file.joinPath(projectPath,'LOG_APITEST.html');
+                                self.saveFileAndOpen(saveLogFilePath,saveContent);
+                                globals.log2(1712,saveLogFilePath);//检测结果已写入
+                            }
+                            globals.log2(1711,projectPath);//工程目录已变更
+                            globals.exit(1713);//qq体验群
+                            self.asyncCallback();
+                        },200);
+                    });
+                }else{
+                    globals.exit(1702);
+                    self.asyncCallback();
+                }
             }
-            this.asyncCallback();
-        }else{
-            globals.exit(1705);
-            this.asyncCallback();
         }
     }
 
@@ -381,6 +217,11 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             }
             file.save(filePath,contentTxt);
         }
+    }
+
+    private saveFileAndOpen(filePath:string,content:string){
+        file.save(filePath,content);
+        utils.open(filePath);
     }
 }
 

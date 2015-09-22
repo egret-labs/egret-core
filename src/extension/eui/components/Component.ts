@@ -56,7 +56,7 @@ module eui {
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
@@ -67,7 +67,7 @@ module eui {
      * @copy eui.UIComponents
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
-     * @includeExample examples/Samples/src/extension/eui/components/ComponentExample.ts
+     * @includeExample  extension/eui/components/ComponentExample.ts
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
