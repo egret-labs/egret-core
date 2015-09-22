@@ -67,21 +67,8 @@ module RES {
      * 根据url返回实际加载url地址
      * @param call
      */
-    export function registerUrlConvert(call:(url:string)=>string, thisObj:any):void {
-        instance.$registerVirtualCall(call, thisObj);
-    }
-
-    /**
-     * @private
-     * @param url
-     * @returns {string}
-     */
-    export function $getVirtualUrl(url:string):string {
-        if (instance.$urlCall) {
-            return instance.$urlCall.call(instance.$callObj, url);
-        }
-
-        return url;
+    export function registerVersionController(vcs:VersionController):void {
+        instance.$registerVersionController(vcs);
     }
 
     /**
@@ -458,6 +445,15 @@ module RES {
         instance.removeEventListener(type,listener,thisObject,useCapture);
     }
 
+    export function $getVirtualUrl(url){
+        if (instance.vcs){
+            return instance.vcs.getVirtualUrl(url);
+        }
+        else{
+            return url;
+        }
+    }
+
 
     /**
      * @private
@@ -472,6 +468,8 @@ module RES {
             super();
             this.init();
         }
+
+        public vcs:VersionController;
 
         /**
          * 解析器字典
@@ -499,13 +497,6 @@ module RES {
             return analyzer;
         }
 
-        $urlCall:(url:string)=>string;
-        $callObj:any;
-        $registerVirtualCall(call:(url:string)=>string, thisObj:any):void {
-            this.$urlCall = call;
-            this.$callObj = thisObj;
-        }
-
         /**
          * 注册一个自定义文件类型解析器
          * @param type 文件类型字符串，例如：bin,text,image,json等。
@@ -513,6 +504,10 @@ module RES {
          */
         public registerAnalyzer(type:string, analyzerClass:any):void {
             this.analyzerClassMap[type] = analyzerClass;
+        }
+
+        public $registerVersionController(vcs:VersionController){
+            this.vcs = vcs;
         }
 
         /**
@@ -584,6 +579,9 @@ module RES {
                 var item:any = configList[i];
                 var resItem:ResourceItem = new ResourceItem(item.url,item.url,item.type);
                 itemList.push(resItem);
+            }
+            if (this.vcs){
+                this.vcs.fetchVersion();
             }
             this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
         }
