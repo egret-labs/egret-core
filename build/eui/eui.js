@@ -8625,7 +8625,8 @@ var eui;
                 state = "down";
             }
             var selectedState = state + "AndSelected";
-            if (this.hasState(selectedState)) {
+            var skin = this.skin;
+            if (skin && skin.hasState(selectedState)) {
                 return selectedState;
             }
             return state;

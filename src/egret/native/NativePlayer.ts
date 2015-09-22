@@ -60,6 +60,12 @@ module egret.native {
             stage.frameRate = option.frameRate;
             stage.textureScaleFactor = option.textureScaleFactor;
 
+            stage.addEventListener(egret.Event.ENTER_FRAME, function (){
+                if($currentSurface) {
+                    $currentSurface.end();
+                }
+            }, this);
+
             var surface:NativeSurface = <NativeSurface>egret.sys.surfaceFactory.create();
             surface.$isRoot = true;
 

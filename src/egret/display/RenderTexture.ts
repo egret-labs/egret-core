@@ -49,6 +49,8 @@ module egret {
      */
     export class RenderTexture extends egret.Texture {
 
+        protected context;
+
         constructor() {
             super();
         }
@@ -93,18 +95,18 @@ module egret {
             sys.DisplayList.release(displayList);
             root.$displayList = null;
             var bounds = displayObject.getBounds();
-            var context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
-            context.clearRect(0, 0, bounds.width * scale, bounds.height * scale);
+            this.context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
+            this.context.clearRect(0, 0, bounds.width * scale, bounds.height * scale);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;
-            if (!context) {
+            if (!this.context) {
                 return false;
             }
-            var drawCalls = this.drawDisplayObject(root, context);
+            var drawCalls = this.drawDisplayObject(root, this.context);
             if (drawCalls == 0) {
                 return false;
             }
-            this._setBitmapData(context.surface);
+            this._setBitmapData(this.context.surface);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;
             if (originParent) {
@@ -128,7 +130,7 @@ module egret {
             }
         }
 
-        private drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext):number {
+        protected drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext):number {
             var drawCalls = 0;
             var node:sys.Renderable;
             var globalAlpha:number;

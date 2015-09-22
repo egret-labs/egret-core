@@ -31,12 +31,60 @@ module eui {
 
 
     interface ThemeData {
+        /**
+         * @language en_US
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
         skins: { [component: string]: string };
+        /**
+         * @language en_US
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
         exmls?: Array<string|EXMLFile>;
     }
 
     interface EXMLFile {
+        /**
+         * @language en_US
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
         path: string;
+        /**
+         * @language en_US
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
         content?: string;
     }
 

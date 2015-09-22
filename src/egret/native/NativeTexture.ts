@@ -63,7 +63,6 @@ module egret.native {
 
         var bitmapData = texture;
         var renderContext = surface.renderContext;
-        (<NativeRenderContext>renderContext).begin();
         renderContext.imageSmoothingEnabled = false;
         var offsetX:number = Math.round(bitmapData._offsetX);
         var offsetY:number = Math.round(bitmapData._offsetY);
@@ -74,7 +73,6 @@ module egret.native {
         renderContext.setTransform(1, 0, 0, 1, 0, 0);
         renderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
-        (<NativeRenderContext>renderContext).end();
         return <egret.native.NativeSurface>surface;
     }
 
