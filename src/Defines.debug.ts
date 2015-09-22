@@ -43,10 +43,8 @@
 //  console.log("release");
 //
 
-declare
-var DEBUG:boolean;
-declare
-var RELEASE:boolean;
+declare var DEBUG:boolean;
+declare var RELEASE:boolean;
 
 this["DEBUG"] = true;
 this["RELEASE"] = false;

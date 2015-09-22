@@ -31,9 +31,9 @@
 
 默认版本查找顺序
     config.json defaultEngine 指定的版本号
-        config.json 中指定的自定义路径
-        历史版本根目录/${version}
+    config.json 中指定的自定义路径
     引擎安装目录/egret
+    历史版本根目录/${version}
 EGRET_PATH环境变量仅仅作为兼容以前版本使用
 
 
@@ -50,6 +50,7 @@ var DEFAULT_ENGINE = "defaultEngine";
 var args;
 var configData;
 var language;
+var engines;
 var commandsToSkip = {
     "upgrade": true,
     "help": true
@@ -71,11 +72,6 @@ function entry() {
         }
         return;
     }
-    var defaultVersion = getDefaultEngineInfo();
-    if (!defaultVersion.root) {
-        exit(2, defaultVersion.version);
-        return;
-    }
     var projectVersion = getProjectVersion();
     if (projectVersion && !(args.command in commandsToSkip)) {
         handled = executeVersion(projectVersion);
@@ -84,8 +80,180 @@ function entry() {
             return;
         }
     }
+    var defaultVersion = getDefaultEngineInfo();
+    if (!defaultVersion.root) {
+        exit(2, defaultVersion.version);
+        return;
+    }
     if (!handled) {
         executeVersion(defaultVersion.version, defaultVersion.root);
+    }
+}
+function printVersions() {
+    if (!engines) {
+        getAllEngineVersions();
+    }
+    Object.keys(engines).sort().forEach(function (v) {
+        console.log(("Egret Engine " + engines[v].version + "  ") + engines[v].root);
+    });
+}
+function executeVersion(version, root) {
+    if (!engines) {
+        getAllEngineVersions();
+    }
+    if (!root) {
+        var targetEngine = engines[version];
+        if (!targetEngine || !targetEngine.root) {
+            return false;
+        }
+        root = targetEngine.root;
+    }
+    process.env["EGRET_PATH"] = root;
+    var bin = getBin(root);
+    if (args.command != "info") {
+        console.log("----- Egret Engine " + version + " -----");
+    }
+    require(bin);
+    return true;
+}
+function getDefaultEngineInfo() {
+    var defaultRoot = null;
+    var version = null;
+    if (configData && configData.egret) {
+        var defaultVersion = configData.egret[DEFAULT_ENGINE];
+        if (defaultVersion) {
+            version = defaultVersion;
+        }
+    }
+    if (!version) {
+        var info = getEngineInfoInInstaller();
+        if (info && info.root) {
+            version = info.version;
+        }
+    }
+    if (!engines) {
+        getAllEngineVersions();
+    }
+    if (!version || !engines[version]) {
+        exit(2);
+    }
+    return engines[version];
+}
+function getBin(versionRoot) {
+    return file.joinPath(versionRoot, "tools/bin/egret");
+}
+function getEngineVersion(root) {
+    var packagePath = file.joinPath(root || "", "package.json");
+    if (!file.exists(packagePath)) {
+        return null;
+    }
+    var packageText = file.read(packagePath);
+    var packageData = JSON.parse(packageText);
+    var engineInfo = {
+        version: packageData['version'],
+        root: root
+    };
+    return engineInfo;
+}
+function getProjectVersion() {
+    var propsPath = file.joinPath(args.projectDir, "egretProperties.json");
+    if (file.exists(propsPath)) {
+        var jsonText = file.read(propsPath);
+        var props = JSON.parse(jsonText);
+        return props["egret_version"];
+    }
+    return null;
+}
+function readConfig() {
+    var configPath = getAppDataEnginesRootPath() + "config.json";
+    if (file.exists(configPath)) {
+        var jsonText = file.read(configPath);
+        try {
+            configData = JSON.parse(jsonText);
+        }
+        catch (e) {
+            configData = null;
+        }
+    }
+}
+function getEngineInfoInInstaller() {
+    var root;
+    var globalpath = module['paths'].concat();
+    var existsFlag = false;
+    for (var i = 0; i < globalpath.length; i++) {
+        var prefix = globalpath[i];
+        var url = file.joinPath(prefix, '../');
+        if (file.exists(file.joinPath(url, 'egret/tools/bin/egret'))) {
+            existsFlag = true;
+            break;
+        }
+        url = prefix;
+        if (file.exists(file.joinPath(url, 'egret/tools/bin/egret'))) {
+            existsFlag = true;
+            break;
+        }
+    }
+    if (!existsFlag) {
+        return null;
+    }
+    root = file.escapePath(file.joinPath(url, '/egret/'));
+    return getEngineVersion(root);
+}
+function getAppDataEnginesRootPath() {
+    var path;
+    switch (process.platform) {
+        case 'darwin':
+            var user = process.env.NAME || process.env.LOGNAME;
+            if (!user)
+                return null;
+            path = "/Users/" + user + "/Library/Application Support/Egret/engine/";
+            break;
+        case 'win32':
+            var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
+            path = file.escapePath(appdata + "/Egret/engine/");
+            break;
+        default:
+            ;
+    }
+    if (file.exists(path))
+        return path;
+    return null;
+}
+function getAllEngineVersions() {
+    var root = getAppDataEnginesRootPath();
+    var egret = getEngineInfoInInstaller();
+    engines = {};
+    if (!root) {
+        engines[egret.version] = egret;
+        return;
+    }
+    var versionRoots = file.getDirectoryListing(root);
+    versionRoots && versionRoots.forEach(function (versionRoot) {
+        versionRoot = file.escapePath(versionRoot);
+        var bin = getBin(versionRoot);
+        var exist = file.exists(bin);
+        if (exist) {
+            var info = getEngineVersion(versionRoot);
+            if (!info) {
+                return;
+            }
+            engines[info.version] = info;
+        }
+    });
+    // AppData 中的引擎不能覆盖默认安装，确保用户能够用新安装覆盖原来有问题的引擎
+    engines[egret.version] = egret;
+    if (configData) {
+        for (var v in configData.egret) {
+            var rootInConfig = file.escapePath(configData.egret[v].root);
+            var exist = file.exists(getBin(rootInConfig));
+            if (!exist)
+                continue;
+            var info = {
+                root: rootInConfig,
+                version: v
+            };
+            engines[info.version] = info;
+        }
     }
 }
 function exit(code) {
@@ -100,7 +268,7 @@ function exit(code) {
         },
         zh: {
             1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
-            2: "找不到任何版本的引擎，请尝试打开引擎面板并点击“重置引擎”按钮"
+            2: "找不到默认引擎，请尝试打开引擎面板并点击“重置引擎”按钮"
         }
     };
     function tr() {
@@ -131,220 +299,6 @@ function exit(code) {
         tr();
         process.exit(code);
     }
-}
-function printVersions() {
-    var versions = getEngineVersions();
-    versions.forEach(function (engine) {
-        console.log(("Egret Engine " + engine.version + "  ") + engine.root);
-    });
-}
-function executeVersion(version, root) {
-    if (!root) {
-        var targetEngine = getEngineInfo(version);
-        if (!targetEngine.root) {
-            return false;
-        }
-        root = targetEngine.root;
-    }
-    process.env["EGRET_PATH"] = root;
-    var bin = getBin(root);
-    if (args.command != "info") {
-        console.log("----- Egret Engine " + version + " -----");
-    }
-    require(bin);
-    return true;
-}
-function getProjectVersion() {
-    var propsPath = file.joinPath(args.projectDir, "egretProperties.json");
-    if (file.exists(propsPath)) {
-        var jsonText = file.read(propsPath);
-        var props = JSON.parse(jsonText);
-        return props["egret_version"];
-    }
-    return null;
-}
-function getEngineInfo(version) {
-    version = version || DEFAULT_ENGINE;
-    var defaultRoot = null;
-    if (configData && configData.egret && configData.egret[version]) {
-        var root = configData.egret[version].root;
-        if (file.exists(getBin(root))) {
-            return {
-                version: version,
-                root: root
-            };
-        }
-    }
-    if (!defaultRoot) {
-        var versionPath = getEnginesRootPath() + version;
-        if (file.exists(versionPath)) {
-            defaultRoot = versionPath;
-        }
-    }
-    if (!defaultRoot && version != DEFAULT_ENGINE) {
-        var info = getLastEgretEngine();
-        if (info && info.version == version)
-            return info;
-    }
-    var versionInfo = getEngineVersion(defaultRoot);
-    return versionInfo || {};
-}
-function getDefaultEngineInfo() {
-    var defaultRoot = null;
-    var version = null;
-    if (configData) {
-        var defaultVersion = configData.egret[DEFAULT_ENGINE];
-        if (defaultVersion) {
-            version = defaultVersion;
-            var engineInfo = configData.egret[defaultVersion];
-            if (engineInfo) {
-                defaultRoot = engineInfo.root;
-            }
-            else {
-                var versionPath = getEnginesRootPath() + defaultVersion;
-                if (file.exists(versionPath)) {
-                    defaultRoot = versionPath;
-                }
-            }
-        }
-    }
-    if (!defaultRoot) {
-        var info = getLastEgretEngine();
-        if (info && info.root) {
-            version = info.version;
-            if (configData.egret[info.version]) {
-                defaultRoot = configData.egret[info.version].root;
-            }
-            else {
-                defaultRoot = info.root;
-            }
-        }
-    }
-    if (!defaultRoot) {
-        exit(2);
-    }
-    return {
-        version: version,
-        root: file.escapePath(defaultRoot)
-    };
-}
-function getBin(versionRoot) {
-    return file.joinPath(versionRoot, "tools/bin/egret");
-}
-function getEngineVersion(root) {
-    var packagePath = file.joinPath(root || "", "package.json");
-    if (!file.exists(packagePath)) {
-        return null;
-    }
-    var packageText = file.read(packagePath);
-    var packageData = JSON.parse(packageText);
-    var engineInfo = {
-        version: packageData['version'],
-        root: root
-    };
-    return engineInfo;
-}
-function readConfig() {
-    var configPath = getEnginesRootPath() + "config.json";
-    if (file.exists(configPath)) {
-        var jsonText = file.read(configPath);
-        try {
-            configData = JSON.parse(jsonText);
-        }
-        catch (e) {
-            configData = null;
-        }
-    }
-}
-function getLastEgretEngine() {
-    var root;
-    var globalpath = module['paths'].concat();
-    var existsFlag = false;
-    for (var i = 0; i < globalpath.length; i++) {
-        var prefix = globalpath[i];
-        var url = file.joinPath(prefix, '../');
-        if (file.exists(file.joinPath(url, 'egret/tools/bin/egret'))) {
-            existsFlag = true;
-            break;
-        }
-        url = prefix;
-        if (file.exists(file.joinPath(url, 'egret/tools/bin/egret'))) {
-            existsFlag = true;
-            break;
-        }
-    }
-    if (!existsFlag) {
-        return null;
-    }
-    root = file.escapePath(file.joinPath(url, '/egret/'));
-    return getEngineVersion(root);
-}
-function getEnginesRootPath() {
-    var path;
-    switch (process.platform) {
-        case 'darwin':
-            var user = process.env.NAME || process.env.LOGNAME;
-            if (!user)
-                return null;
-            path = "/Users/" + user + "/Library/Application Support/Egret/engine/";
-            break;
-        case 'win32':
-            var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
-            path = file.escapePath(appdata + "/Egret/engine/");
-            break;
-        default:
-            ;
-    }
-    if (file.exists(path))
-        return path;
-    return null;
-}
-function getEngineVersions() {
-    var root = getEnginesRootPath();
-    var versions = [];
-    var egret = getLastEgretEngine();
-    versions.push(egret);
-    versions[egret.version] = egret;
-    if (!root)
-        return versions;
-    var versionRoots = file.getDirectoryListing(root);
-    versionRoots && versionRoots.forEach(function (versionRoot) {
-        versionRoot = file.escapePath(versionRoot);
-        var bin = getBin(versionRoot);
-        var exist = file.exists(bin);
-        if (exist) {
-            var version = file.getFileName(versionRoot);
-            if (!/\/$/.test(versionRoot)) {
-                versionRoot += "/";
-            }
-            var info = {
-                root: versionRoot,
-                version: version
-            };
-            versions.push(info);
-            versions[info.version] = info;
-        }
-    });
-    if (configData) {
-        for (var v in configData.egret) {
-            var rootInConfig = file.escapePath(configData.egret[v].root);
-            var exist = file.exists(getBin(rootInConfig));
-            if (!exist)
-                continue;
-            if (versions[v]) {
-                versions[v].root = rootInConfig;
-            }
-            else {
-                var info = {
-                    root: rootInConfig,
-                    version: v
-                };
-                versions.push(info);
-                versions[info.version] = info;
-            }
-        }
-    }
-    return versions;
 }
 function parseArgs() {
     var i = 0;
@@ -586,4 +540,5 @@ var locals;
     ;
 })(locals || (locals = {}));
 entry();
+
 //# sourceMappingURL=selector.js.map
