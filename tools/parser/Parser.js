@@ -173,6 +173,10 @@ function parseCommandLine(commandLine) {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
+            else if (file.isDirectory(commands[1]) || options.command == "apitest") {
+                options.projectDir = commands[1];
+                commands.splice(1, 1);
+            }
         }
         if (options.projectDir == null)
             options.projectDir = process.cwd();
