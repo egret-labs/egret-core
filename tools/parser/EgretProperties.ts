@@ -8,14 +8,22 @@ class EgretProperties implements egret.EgretPropertiesClass {
     properties: Object = {};
     modulesConfig: Object = {};
 
+    projectRoot:string = "";
     init(projectRoot: string) {
-        if (file.exists(file.joinPath(projectRoot, "egretProperties.json"))) {
-            this.properties = JSON.parse(file.read(file.joinPath(projectRoot, "egretProperties.json")));
+        this.projectRoot = projectRoot;
+        this.reload();
+    }
+
+    reload() {
+        this.properties = {};
+        this.modulesConfig = {};
+        if (file.exists(file.joinPath(this.projectRoot, "egretProperties.json"))) {
+            this.properties = JSON.parse(file.read(file.joinPath(this.projectRoot, "egretProperties.json")));
             for (var key in this.properties["modules"]) {
                 this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
             }
-            this.modulesConfig["html5"] = { "name": "html5" };
-            this.modulesConfig["native"] = { "name": "native" };
+            //this.modulesConfig["html5"] = { "name": "html5" };
+            //this.modulesConfig["native"] = { "name": "native" };
         }
 
         if (this.modulesConfig["eui"] != null && this.modulesConfig["gui"] != null) {
@@ -82,7 +90,7 @@ class EgretProperties implements egret.EgretPropertiesClass {
         else {
             egret_file = file.joinPath(currDir, "bin-debug/lib/egret_file_list_native.js");
         }
-        var egretFileList = this.getFileList(egret_file).map(function (item) {
+        var egretFileList:any = this.getFileList(egret_file).map(function (item) {
             return file.joinPath(currDir, "libs", item);
         });
 
@@ -180,12 +188,11 @@ class EgretProperties implements egret.EgretPropertiesClass {
 
     getAllModuleNames() {
         var names = [];
-
         for (var key in this.properties["modules"]) {
             names.push(this.properties["modules"][key]["name"]);
             if (this.properties["modules"][key]["name"] == "core") {
-                names.push("html5");
-                names.push("native");
+                //names.push("html5");
+                //names.push("native");
             }
         }
 

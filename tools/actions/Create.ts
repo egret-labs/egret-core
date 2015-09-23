@@ -16,6 +16,7 @@ var TemplatesRoot = "tools/templates/";
 class Create implements egret.Command {
     project: egret.ILarkProject;
     execute(): number {
+
         var proj = this.project;
         var options = egret.args;
 
@@ -27,10 +28,14 @@ class Create implements egret.Command {
         FileUtil.copy(emptyTemplate, options.projectDir);
         FileUtil.copy(template, options.projectDir);
 
-        CopyFiles.copyLark();
-
         //options.outDir = FileUtil.joinPath("..", options.outDir);
         compileTemplate(proj);
+
+        var properties = egret.args.properties;
+        properties.reload();
+
+        CopyFiles.copyLark();
+
         var compileProject = new CompileProject();
         var result = compileProject.compileProject(options);
         CopyFiles.copyProjectFiles();

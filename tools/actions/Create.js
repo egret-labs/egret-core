@@ -19,9 +19,11 @@ var Create = (function () {
         var template = FileUtil.joinPath(egret.root, TemplatesRoot + proj.type);
         FileUtil.copy(emptyTemplate, options.projectDir);
         FileUtil.copy(template, options.projectDir);
-        CopyFiles.copyLark();
         //options.outDir = FileUtil.joinPath("..", options.outDir);
         compileTemplate(proj);
+        var properties = egret.args.properties;
+        properties.reload();
+        CopyFiles.copyLark();
         var compileProject = new CompileProject();
         var result = compileProject.compileProject(options);
         CopyFiles.copyProjectFiles();

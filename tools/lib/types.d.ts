@@ -108,7 +108,7 @@ declare module egret {
         properties: Object;
         modulesConfig: Object;
         init(projectRoot: string);
-
+        reload();
         /**
          * 是否有swan
          */

@@ -4,15 +4,20 @@ var EgretProperties = (function () {
     function EgretProperties() {
         this.properties = {};
         this.modulesConfig = {};
+        this.projectRoot = "";
     }
     EgretProperties.prototype.init = function (projectRoot) {
-        if (file.exists(file.joinPath(projectRoot, "egretProperties.json"))) {
-            this.properties = JSON.parse(file.read(file.joinPath(projectRoot, "egretProperties.json")));
+        this.projectRoot = projectRoot;
+        this.reload();
+    };
+    EgretProperties.prototype.reload = function () {
+        this.properties = {};
+        this.modulesConfig = {};
+        if (file.exists(file.joinPath(this.projectRoot, "egretProperties.json"))) {
+            this.properties = JSON.parse(file.read(file.joinPath(this.projectRoot, "egretProperties.json")));
             for (var key in this.properties["modules"]) {
                 this.modulesConfig[this.properties["modules"][key]["name"]] = this.properties["modules"][key];
             }
-            this.modulesConfig["html5"] = { "name": "html5" };
-            this.modulesConfig["native"] = { "name": "native" };
         }
         if (this.modulesConfig["eui"] != null && this.modulesConfig["gui"] != null) {
             globals.log2(8);
@@ -154,8 +159,6 @@ var EgretProperties = (function () {
         for (var key in this.properties["modules"]) {
             names.push(this.properties["modules"][key]["name"]);
             if (this.properties["modules"][key]["name"] == "core") {
-                names.push("html5");
-                names.push("native");
             }
         }
         //for (var key in this.modulesConfig) {
