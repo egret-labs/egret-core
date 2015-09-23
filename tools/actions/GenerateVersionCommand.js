@@ -50,7 +50,7 @@ var GenerateVersionCommand = (function () {
         }
         FileUtil.save(allPath, JSON.stringify(allVersion));
         for (var tempPath in allVersion) {
-            var outputFilePath = FileUtil.joinPath(releasePath, "egretResourceRoot", allVersion[tempPath]["v"].substring(0, 2), allVersion[tempPath]["v"] + "_" + allVersion[tempPath]["s"]);
+            var outputFilePath = FileUtil.joinPath(releasePath, "egretResourceRoot", allVersion[tempPath]["v"].substring(0, 2), allVersion[tempPath]["v"] + "_" + allVersion[tempPath]["s"] + "." + tempPath.substring(tempPath.lastIndexOf(".") + 1));
             FileUtil.copy(FileUtil.joinPath(releasePath, tempPath), outputFilePath);
         }
         //删除原始资源文件
