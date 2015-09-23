@@ -33,12 +33,14 @@ module eui {
     interface ThemeData {
         /**
          * @language en_US
+         * The skins list.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
+         * 皮肤列表
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -46,12 +48,14 @@ module eui {
         skins: { [component: string]: string };
         /**
          * @language en_US
+         * An array of exmls data.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
+         * exml数据的数组，数据可以是字符串或者实现EXMLFile接口的对象
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -62,12 +66,14 @@ module eui {
     interface EXMLFile {
         /**
          * @language en_US
+         * EXML file path.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
+         * EXML文件的路径
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -75,12 +81,14 @@ module eui {
         path: string;
         /**
          * @language en_US
+         * EXML file content.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
+         * EXML文件的内容
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
