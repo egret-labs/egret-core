@@ -2414,13 +2414,15 @@ var egret;
             if (this.$hasFlags(16 /* InvalidConcatenatedMatrix */)) {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(), matrix);
+                    var values = this.$DisplayObject;
+                    var offsetX = values[12 /* anchorOffsetX */];
+                    var offsetY = values[13 /* anchorOffsetY */];
                     var rect = this.$scrollRect;
                     if (rect) {
-                        matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -rect.x, -rect.y), matrix);
+                        matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
                     }
-                    var values = this.$DisplayObject;
-                    if (values[12 /* anchorOffsetX */] != 0 || values[13 /* anchorOffsetY */] != 0) {
-                        matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -values[12 /* anchorOffsetX */], -values[13 /* anchorOffsetY */]), matrix);
+                    else if (offsetX != 0 || offsetY != 0) {
+                        matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
                     }
                 }
                 else {
@@ -8001,18 +8003,18 @@ var egret;
             egret.sys.DisplayList.release(displayList);
             root.$displayList = null;
             var bounds = displayObject.getBounds();
-            var context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
-            context.clearRect(0, 0, bounds.width * scale, bounds.height * scale);
+            this.context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
+            this.context.clearRect(0, 0, bounds.width * scale, bounds.height * scale);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;
-            if (!context) {
+            if (!this.context) {
                 return false;
             }
-            var drawCalls = this.drawDisplayObject(root, context);
+            var drawCalls = this.drawDisplayObject(root, this.context);
             if (drawCalls == 0) {
                 return false;
             }
-            this._setBitmapData(context.surface);
+            this._setBitmapData(this.context.surface);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;
             if (originParent) {
