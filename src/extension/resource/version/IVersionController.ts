@@ -42,7 +42,7 @@ module RES {
      * @platform Web,Native
      * @includeExample extension/version/VersionControl.ts
      */
-    export interface IVersionController extends egret.IEventDispatcher {
+    export interface IVersionController  {
         /**
          * @language en_US
          * Get the version information data.<br/>
@@ -57,7 +57,7 @@ module RES {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        fetchVersion(callback:egret.$AsyncCallback):void;
+        fetchVersion(callback:egret.AsyncCallback):void;
 
         /**
          * @language en_US

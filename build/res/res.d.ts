@@ -1316,7 +1316,7 @@ declare module RES.web {
     class Html5VersionController extends egret.EventDispatcher implements VersionController {
         constructor();
         private _versionInfo;
-        fetchVersion(): void;
+        fetchVersion(callback: egret.AsyncCallback): void;
         /**
          * 获取所有有变化的文件
          * @returns {Array<any>}
@@ -1343,7 +1343,7 @@ declare module RES {
      * @platform Web,Native
      * @includeExample extension/version/VersionControl.ts
      */
-    interface IVersionController extends egret.IEventDispatcher {
+    interface IVersionController {
         /**
          * @language en_US
          * Get the version information data.<br/>
@@ -1358,7 +1358,7 @@ declare module RES {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        fetchVersion(callback: egret.$AsyncCallback): void;
+        fetchVersion(callback: egret.AsyncCallback): void;
         /**
          * @language en_US
          * Get all changed files.<br/>
@@ -1441,12 +1441,12 @@ declare module RES.native {
     /**
      * @private
      */
-    class NativeVersionController extends egret.EventDispatcher implements VersionController {
+    class NativeVersionController implements VersionController {
         private _versionInfo;
         private _versionPath;
         private _localFileArr;
         constructor();
-        fetchVersion(): void;
+        fetchVersion(callback: egret.AsyncCallback): void;
         private getList(callback, type, root?);
         /**
          * 获取所有有变化的文件

@@ -3239,29 +3239,45 @@ var RES;
                 this._versionInfo = {};
             }
             var d = __define,c=Html5VersionController;p=c.prototype;
-            p.fetchVersion = function () {
+            p.fetchVersion = function (callback) {
+                callback.onSuccess(null);
+                return;
+                /*
+    
+                todo
+    
                 var self = this;
-                var virtualUrl = "all.manifest";
-                var httpLoader = new egret.HttpRequest();
+    
+                var virtualUrl:string = "all.manifest";
+    
+                var httpLoader:egret.HttpRequest = new egret.HttpRequest();
                 httpLoader.addEventListener(egret.Event.COMPLETE, onLoadComplete, this);
                 httpLoader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, this);
+    
                 httpLoader.open(virtualUrl + "?r=" + Date.now(), "get");
                 httpLoader.send();
-                function onError(event) {
+    
+                function onError(event:egret.IOErrorEvent) {
                     removeListeners();
                     self.dispatchEvent(event);
                 }
+    
                 function onLoadComplete() {
                     removeListeners();
+    
                     self._versionInfo = JSON.parse(httpLoader.response);
+    
                     window.setTimeout(function () {
                         self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
                     }, 0);
                 }
-                function removeListeners() {
+    
+                function removeListeners():void {
                     httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
                     httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
                 }
+    
+                */
             };
             /**
              * 获取所有有变化的文件
@@ -3271,6 +3287,11 @@ var RES;
                 return [];
             };
             p.getVirtualUrl = function (url) {
+                return url;
+                /*
+    
+                todo
+    
                 if (DEBUG) {
                     return url;
                 }
@@ -3280,11 +3301,13 @@ var RES;
                 else {
                     return url;
                 }
+    
+                */
             };
             return Html5VersionController;
         })(egret.EventDispatcher);
         web.Html5VersionController = Html5VersionController;
-        egret.registerClass(Html5VersionController,"RES.web.Html5VersionController",["RES.VersionController","RES.IVersionController","egret.IEventDispatcher"]);
+        egret.registerClass(Html5VersionController,"RES.web.Html5VersionController",["RES.VersionController","RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
             RES.VersionController = Html5VersionController;
         }
@@ -3361,22 +3384,20 @@ var RES;
         /**
          * @private
          */
-        var NativeVersionController = (function (_super) {
-            __extends(NativeVersionController, _super);
+        var NativeVersionController = (function () {
             function NativeVersionController() {
-                _super.call(this);
                 this._versionInfo = {};
                 this._versionPath = "";
                 this._localFileArr = [];
             }
             var d = __define,c=NativeVersionController;p=c.prototype;
-            p.fetchVersion = function () {
+            p.fetchVersion = function (callback) {
                 var self = this;
                 self._versionPath = "all.manifest";
                 self._versionInfo = self.getLocalData(self._versionPath);
                 if (self._versionInfo == null) {
                     egret.callLater(function () {
-                        self.dispatchEvent(new egret.IOErrorEvent(egret.IOErrorEvent.IO_ERROR));
+                        callback.onFail(1, null);
                     }, self);
                     return;
                 }
@@ -3391,7 +3412,7 @@ var RES;
                     }
                     count++;
                     if (count == 2) {
-                        self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+                        callback.onSuccess(null);
                     }
                 };
                 self.getList(loadOver, "assets", "resource");
@@ -3454,9 +3475,9 @@ var RES;
                 return null;
             };
             return NativeVersionController;
-        })(egret.EventDispatcher);
+        })();
         native.NativeVersionController = NativeVersionController;
-        egret.registerClass(NativeVersionController,"RES.native.NativeVersionController",["RES.VersionController","RES.IVersionController","egret.IEventDispatcher"]);
+        egret.registerClass(NativeVersionController,"RES.native.NativeVersionController",["RES.VersionController","RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
             RES.VersionController = NativeVersionController;
         }

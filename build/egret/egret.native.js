@@ -854,6 +854,7 @@ var egret;
                 return { width: sw, height: sh, data: null };
             };
             p.checkSurface = function () {
+                //todo 暂时先写这里
                 if (native.$currentSurface != this.surface) {
                     if (native.$currentSurface != null) {
                         native.$currentSurface.end();
@@ -913,6 +914,8 @@ var egret;
              */
             function NativeSurface() {
                 _super.call(this);
+                //private id;
+                //private static id = 0;
                 /**
                  * @private
                  * @inheritDoc
@@ -922,7 +925,7 @@ var egret;
                 this.$heightReadySet = false;
                 this.$isRoot = false;
                 this.$isDispose = false;
-                this.id = NativeSurface.id++;
+                //this.id = NativeSurface.id++;
             }
             var d = __define,c=NativeSurface;p=c.prototype;
             p.toDataURL = function (type) {
@@ -980,7 +983,7 @@ var egret;
                     if (this.$nativeRenderTexture) {
                         this.$nativeRenderTexture.dispose();
                     }
-                    console.log("new RenderTexture" + this.id);
+                    //console.log("new RenderTexture" + this.id);
                     this.$nativeRenderTexture = new egret_native.RenderTexture(this.$width, this.$height);
                     this.renderContext.globalAlpha = 1;
                     this.renderContext.globalCompositeOperation = "source-over";
@@ -990,24 +993,26 @@ var egret;
             };
             p.begin = function () {
                 if (this.$nativeRenderTexture) {
-                    console.log("begin" + this.id);
+                    //console.log("begin" + this.id);
                     native.$currentSurface = this;
+                    //this.$nativeRenderTexture.begin();
                     this.$nativeRenderTexture.getIn();
                 }
             };
             p.end = function () {
                 if (this.$nativeRenderTexture) {
-                    console.log("end" + this.id);
+                    //console.log("end" + this.id);
                     native.$currentSurface = null;
+                    //this.$nativeRenderTexture.end();
                     this.$nativeRenderTexture.getOut();
                 }
             };
             p.$dispose = function () {
                 if (this.$nativeRenderTexture) {
                     if (native.$currentSurface == this) {
-                        this.end();
+                        native.$currentSurface.end();
                     }
-                    console.log("dispose" + this.id);
+                    //console.log("dispose" + this.id);
                     this.$nativeRenderTexture.dispose();
                     this.$nativeRenderTexture = null;
                 }
@@ -1016,7 +1021,6 @@ var egret;
             p.$reload = function () {
                 this.$isDispose = false;
             };
-            NativeSurface.id = 0;
             return NativeSurface;
         })(egret.HashObject);
         native.NativeSurface = NativeSurface;

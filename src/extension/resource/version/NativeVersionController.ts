@@ -32,7 +32,7 @@ module RES.native {
     /**
      * @private
      */
-    export class NativeVersionController extends egret.EventDispatcher implements VersionController {
+    export class NativeVersionController implements VersionController {
 
         private _versionInfo:Object = {};
         private _versionPath:string = "";
@@ -40,17 +40,16 @@ module RES.native {
         private _localFileArr:Array<string> = [];
 
         constructor() {
-            super();
         }
 
-        public fetchVersion():void {
+        public fetchVersion(callback:egret.AsyncCallback):void {
             var self = this;
             self._versionPath = "all.manifest";
 
             self._versionInfo = self.getLocalData(self._versionPath);
             if (self._versionInfo == null) {
                 egret.callLater(function() {
-                    self.dispatchEvent(new egret.IOErrorEvent(egret.IOErrorEvent.IO_ERROR));
+                    callback.onFail(1,null);
                 }, self);
                 return;
             }
@@ -66,7 +65,7 @@ module RES.native {
                 count++;
 
                 if (count == 2) {
-                    self.dispatchEvent(new egret.Event(egret.Event.COMPLETE));
+                    callback.onSuccess(null);
                 }
             };
             self.getList(loadOver, "assets", "resource");

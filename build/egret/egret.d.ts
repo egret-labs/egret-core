@@ -135,10 +135,9 @@ declare module egret {
     /**
      * @private
      */
-    interface $AsyncCallback {
+    interface AsyncCallback {
         onSuccess: (data: any) => any;
         onFail: (error: number, data: any) => any;
-        onProgress?: (current: number, total: number) => any;
     }
 }
 declare module egret {
@@ -4992,6 +4991,7 @@ declare module egret {
      * @includeExample egret/display/RenderTexture.ts
      */
     class RenderTexture extends egret.Texture {
+        protected context: any;
         constructor();
         /**
          * @language en_US
@@ -5013,7 +5013,7 @@ declare module egret {
          */
         drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
         private $update(displayObject);
-        private drawDisplayObject(displayObject, context);
+        protected drawDisplayObject(displayObject: DisplayObject, context: sys.RenderContext): number;
         private drawWithClip(displayObject, context);
         private drawWithScrollRect(displayObject, context);
         private createRenderContext(width, height);

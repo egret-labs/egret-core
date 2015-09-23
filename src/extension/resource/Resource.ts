@@ -581,7 +581,7 @@ module RES {
                 itemList.push(resItem);
             }
 
-            var callback:egret.$AsyncCallback = {
+            var callback:egret.AsyncCallback = {
 
 
                 onSuccess:(data:any)=>{

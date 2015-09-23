@@ -125,14 +125,11 @@ module egret {
     /**
      * @private
      */
-    export interface $AsyncCallback {
+    export interface AsyncCallback {
 
         onSuccess: (data:any) => any;
 
         onFail: (error:number,data:any) => any;
-
-        onProgress?: (current:number,total:number) => any;
-
 
     }
 }
