@@ -50,7 +50,12 @@ module egret.gui {
 		 */		
 		private static getImpl():IPopUpManager{
 			if (!PopUpManager._impl){
-				PopUpManager._impl = new PopUpManagerImpl();
+				try{
+					PopUpManager._impl = $getAdapter("egret.gui.IPopUpManager");
+				}
+				catch(e){
+					PopUpManager._impl = new PopUpManagerImpl();
+				}
 			}
 			return PopUpManager._impl;
 		}

@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.native {
+
+    export var $currentSurface:NativeSurface;
+
     /**
      * @private
      * 呈现最终绘图结果的画布
@@ -38,7 +41,10 @@ module egret.native {
          */
         constructor() {
             super();
+            //this.id = NativeSurface.id++;
         }
+        //private id;
+        //private static id = 0;
 
         /**
          * @private
@@ -106,7 +112,10 @@ module egret.native {
                 if(this.$nativeRenderTexture) {
                     this.$nativeRenderTexture.dispose();
                 }
+                //console.log("new RenderTexture" + this.id);
                 this.$nativeRenderTexture = new egret_native.RenderTexture(this.$width, this.$height);
+                this.renderContext.globalAlpha = 1;
+                this.renderContext.globalCompositeOperation = "source-over";
                 this.$widthReadySet = false;
                 this.$heightReadySet = false;
             }
@@ -114,15 +123,19 @@ module egret.native {
 
         public begin():void {
             if(this.$nativeRenderTexture) {
-                //console.log("begin");
-                this.$nativeRenderTexture.begin();
+                //console.log("begin" + this.id);
+                $currentSurface = this;
+                //this.$nativeRenderTexture.begin();
+                this.$nativeRenderTexture.getIn();
             }
         }
 
         public end():void {
             if(this.$nativeRenderTexture) {
-                //console.log("end");
-                this.$nativeRenderTexture.end();
+                //console.log("end" + this.id);
+                $currentSurface = null;
+                //this.$nativeRenderTexture.end();
+                this.$nativeRenderTexture.getOut();
             }
         }
 
@@ -130,6 +143,10 @@ module egret.native {
 
         public $dispose():void {
             if(this.$nativeRenderTexture) {
+                if($currentSurface == this) {
+                    $currentSurface.end();
+                }
+                //console.log("dispose" + this.id);
                 this.$nativeRenderTexture.dispose();
                 this.$nativeRenderTexture = null;
             }

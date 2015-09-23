@@ -295,7 +295,7 @@ export class TsServiceProxy {
 				}
 			});
 		}else{
-			callBack(null,null);
+			//callBack(null,null);
 		}
 	}
 	public getLineAndCharacterOfPosition(sourceFile: TSS.SourceFile,position: number){

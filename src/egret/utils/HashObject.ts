@@ -120,4 +120,16 @@ module egret {
     if(DEBUG){
         egret.$markReadOnly(HashObject, "hashCode");
     }
+
+
+    /**
+     * @private
+     */
+    export interface AsyncCallback {
+
+        onSuccess: (data:any) => any;
+
+        onFail: (error:number,data:any) => any;
+
+    }
 }

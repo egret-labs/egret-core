@@ -199,6 +199,7 @@ var egret;
             /**
              * @version Egret 2.4
              * @platform Web,Native
+             * @private
              */
             this.frameLabels = null;
             /**
@@ -212,6 +213,7 @@ var egret;
             /**
              * @version Egret 2.4
              * @platform Web,Native
+             * @private
              */
             this.frameEvents = null;
             /**
@@ -1304,7 +1306,7 @@ var egret;
          * EventDispatcher object using the specified event object thrown MovieClipEvent. The objects will be thrown in the object cache pool for the next round robin.
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param text  MovieClipEvent object frameLabel
+         * @param frameLabel  MovieClipEvent object frameLabel
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1313,7 +1315,7 @@ var egret;
          * 使用指定的EventDispatcher对象来抛出 MovieClipEvent 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 派发事件目标
          * @param type  事件类型
-         * @param text  MovieClipEvent 对象的 frameLabel 赋值
+         * @param frameLabel  MovieClipEvent 对象的 frameLabel 赋值
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1373,6 +1375,9 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
+    /**
+     * @private
+     */
     var ScrollEase = (function () {
         /**
          * @version Egret 2.4
@@ -1439,6 +1444,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/ScrollTween.ts
+     * @private
      */
     /**
      * @language zh_CN
@@ -1447,6 +1453,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/ScrollTween.ts
+     * @private
      */
     var ScrollTween = (function (_super) {
         __extends(ScrollTween, _super);
@@ -2877,8 +2884,8 @@ var egret;
         };
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2888,9 +2895,7 @@ var egret;
         };
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2900,8 +2905,7 @@ var egret;
         };
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2911,8 +2915,7 @@ var egret;
         };
         /**
          * @deprecated
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2922,8 +2925,7 @@ var egret;
         };
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2932,8 +2934,7 @@ var egret;
         };
         /**
          * @deprecated
-         * @param child1 {DisplayObject}
-         * @param child2 {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2942,8 +2943,7 @@ var egret;
         };
         /**
          * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -4259,6 +4259,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
+     * @private
      */
     /**
      * @language zh_CN
@@ -4266,6 +4267,7 @@ var egret;
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
+     * @private
      */
     var Recycler = (function (_super) {
         __extends(Recycler, _super);

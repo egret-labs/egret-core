@@ -34,10 +34,6 @@
             "platform": "native"
           },
           {
-            "path": "native/NativeDisplayList.ts",
-            "platform": "native"
-          },
-          {
             "path": "native/NativeSurface.ts",
             "platform": "native"
           },

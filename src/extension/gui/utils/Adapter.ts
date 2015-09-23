@@ -33,7 +33,8 @@ module egret.gui {
      * @language en_US
      * Conduct mapping injection with class definition as the value.
      * @param whenAskedFor {any} whenAskedFor passes class definition or fully qualified name of the class as the key to map.
-     * @param adapterClass {any} adapterClass passes the class as a value to be mapped, and its constructor function must be empty.
+     * @param instantiateClass {any} adapterClass passes the class as a value to be mapped, and its constructor function must be empty.
+     * @param named {string} named optional parameters, when the same class as the key needs to be mapped multiple rules, you can pass this parameter to distinguish between different maps.
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -41,12 +42,13 @@ module egret.gui {
      * @language zh_CN
      * 以类定义为值进行映射注入。
      * @param whenAskedFor {any} whenAskedFor 传递类定义或类完全限定名作为需要映射的键。
-     * @param adapterClass {any} adapterClass 传递类作为需要映射的值，它的构造函数必须为空。
+     * @param instantiateClass {any} adapterClass 传递类作为需要映射的值，它的构造函数必须为空。
+     * @param named {string} named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export function registerAdapter(whenAskedFor:string, adapterClass:any) {
-        instance.mapClass(whenAskedFor, adapterClass);
+    export function mapClass(whenAskedFor:any, instantiateClass:any, named:string = ""):void {
+        instance.mapClass(whenAskedFor, instantiateClass, named);
     }
 
     /**
@@ -54,8 +56,28 @@ module egret.gui {
      * @param type
      * @returns {any}
      */
-    export function $getAdapter(whenAskedFor:string):any {
-        return instance.getInstance(whenAskedFor);
+    export function $getAdapter(whenAskedFor:string, named:string = ""):any {
+        return instance.getInstance(whenAskedFor, named);
+    }
+
+    /**
+     * @language en_US
+     * Instance of values is mapped to the injection.
+     * @method egret.Injector.mapValue
+     * @param whenAskedFor {any} Fully qualified name of the class passed the class definition or needs to be mapped as a key.
+     * @param useValue {any} Passing object instance as a value to be mapped.
+     * @param named {string} named optional parameters, when the same class as the key needs to be mapped multiple rules, you can pass this parameter to distinguish between different maps.
+     */
+    /**
+     * @language zh_CN
+     * 以实例为值进行映射注入.
+     * @method egret.Injector.mapValue
+     * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
+     * @param useValue {any} 传递对象实例作为需要映射的值。
+     * @param named {string} named 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。
+     */
+    export function mapValue(whenAskedFor:any, useValue:any, named:string = ""):void {
+        instance.mapValue(whenAskedFor, useValue, named);
     }
 
     /**
@@ -99,6 +121,18 @@ module egret.gui {
          * @private
          */
         private mapValueDic:any = {};
+
+        /**
+         * 以实例为值进行映射注入,当用getInstance()请求单例时始终返回注入的这个实例。
+         * @method egret.Injector.mapValue
+         * @param whenAskedFor {any} 传递类定义或类的完全限定名作为需要映射的键。
+         * @param useValue {any} 传递对象实例作为需要映射的值。
+         * @param named {string} 可选参数，在同一个类作为键需要映射多条规则时，可以传入此参数区分不同的映射。在调用getInstance()方法时要传入同样的参数。
+         */
+        public mapValue(whenAskedFor:any,useValue:any,named:string=""):void{
+            var requestName:string = this.getKey(whenAskedFor)+"#"+named;
+            this.mapValueDic[requestName] = useValue;
+        }
 
         /**
          * @language en_US
