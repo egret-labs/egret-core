@@ -946,11 +946,11 @@ declare module egret.sys {
         /**
          * @private
          */
-        private clipWidth;
+        clipWidth: number;
         /**
          * @private
          */
-        private clipHeight;
+        clipHeight: number;
         /**
          * @private
          */

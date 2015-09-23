@@ -63,11 +63,11 @@ module egret.sys {
         /**
          * @private
          */
-        private clipWidth:number = 0;
+        public clipWidth:number = 0;
         /**
          * @private
          */
-        private clipHeight:number = 0;
+        public clipHeight:number = 0;
         /**
          * @private
          */
