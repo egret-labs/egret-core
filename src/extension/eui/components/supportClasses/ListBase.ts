@@ -104,12 +104,14 @@ module eui {
 
         /**
          * @language en_US
+         * Constructor.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
+         * 构造函数
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
