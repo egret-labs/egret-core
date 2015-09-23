@@ -103,7 +103,7 @@ module RES.web {
                 return url;
             }
             if (this._versionInfo && this._versionInfo[url]) {
-                return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"];
+                return "resource/" + this._versionInfo[url]["v"].substring(0, 2) + "/" + this._versionInfo[url]["v"] + "_" + this._versionInfo[url]["s"] + "." + url.substring(url.lastIndexOf(".") + 1);
             }
             else {
                 return url;
