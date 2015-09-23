@@ -43,21 +43,24 @@ module egret {
          * @private
          */
         static $getStartLine(textfield:egret.TextField):number {
+            var values = textfield.$TextField;
             var textHeight:number = TextFieldUtils.$getTextHeight(textfield);
             var startLine:number = 0;
-            var textFieldHeight:number = textfield.$TextField[sys.TextKeys.textFieldHeight];
+            var textFieldHeight: number = values[sys.TextKeys.textFieldHeight];
             if (!isNaN(textFieldHeight)) {//
                 if (textHeight < textFieldHeight) {//最大高度比需要显示的高度小
 
                 }
                 else if (textHeight > textFieldHeight) {//最大高度比需要显示的高度大
-                    startLine = Math.max(textfield.$TextField[sys.TextKeys.scrollV] - 1, 0);
-                    startLine = Math.min(textfield.$TextField[sys.TextKeys.numLines] - 1, startLine);
+                    startLine = Math.max(values[sys.TextKeys.scrollV] - 1, 0);
+                    startLine = Math.min(values[sys.TextKeys.numLines] - 1, startLine);
                 }
 
-                if (!textfield.$TextField[sys.TextKeys.multiline]) {
-                    startLine = Math.max(textfield.$TextField[sys.TextKeys.scrollV] - 1, 0);
-                    startLine = Math.min(textfield.$TextField[sys.TextKeys.numLines] - 1, startLine);
+                if (!values[sys.TextKeys.multiline]) {
+                    startLine = Math.max(values[sys.TextKeys.scrollV] - 1, 0);
+                    if (values[sys.TextKeys.numLines] > 0) {
+                        startLine = Math.min(values[sys.TextKeys.numLines] - 1, startLine);    
+                    }
                 }
             }
 
