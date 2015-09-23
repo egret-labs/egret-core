@@ -1,0 +1,120 @@
+﻿
+<section>
+
+    <div ng-hide="model.isConfig">
+        <h2>选择一个项目模板</h2>
+        <div class="template" ng-repeat="template in model.larkManifest.templates"
+             title="{{template.description}}"
+             ng-class="template.name==model.type?'active':''"
+             ng-click="model.selectTemplate(template.name)">
+            {{template.name}}
+
+        </div>
+
+        <div ng-repeat="template in model.larkManifest.templates" ng-show="template.name==model.template">{{template.description}}</div>
+    </div>
+</section>
+<section class="half clear">
+    <h2>请输入舞台尺寸和帧率</h2>
+    <div>
+        宽高： <input type="number" name="contentWidth" ng-model="model.contentWidth" required />
+        <span class="error" ng-show="createForm.contentWidth.$error.required">
+            请输入屏幕宽度
+        </span>
+        <span class="error" ng-show="createForm.contentWidth.$error.number">
+            请输入数字
+        </span>
+
+        <button ng-click="model.switchSize()"> ⇄ </button>
+
+        <input type="number" name="contentHeight" ng-model="model.contentHeight" required />
+        <span class="error" ng-show="createForm.contentHeight.$error.required">
+            请输入屏幕高度
+        </span>
+        <span class="error" ng-show="createForm.contentHeight.$error.number">
+            请输入数字
+        </span>
+        FPS：<input type="number" name="frameRate" ng-model="model.frameRate" required /> 
+        <span class="error" ng-show="createForm.frameRate.$error.required">
+            请输入帧率
+        </span>
+        <span class="error" ng-show="createForm.frameRate.$error.number">
+            请输入数字
+        </span>
+    </div>
+</section>
+<section>
+    <h2>选择舞台背景颜色</h2>
+    <div>
+        <input type="text" name="background" ng-model="model.background" value="#888888" class="color" />
+    </div>
+</section>
+<section>
+    <h2>选择屏幕缩放模式</h2>
+    <div class="scaleModes">
+        <img class="scaleModeSample" src="/$/content/images/config/sample.png" />
+        <div class="scaleMode mode" ng-repeat="mode in model.scaleModes"
+             ng-click="model.scaleMode = mode.name"
+             ng-class="mode.name==model.scaleMode?'active':''">
+            <img ng-src="/$/content/images/config/{{mode.name}}.png" title="{{mode.description}}" />
+            <span>{{mode.name}}</span>
+        </div>
+    </div>
+    <h2>选择屏幕方向</h2>
+    <div class="orientationModes">
+        <div class="orientationMode mode" ng-repeat="mode in model.orientationModes"
+             ng-click="model.orientationMode = mode.name"
+             ng-class="mode.name==model.orientationMode?'active':''">
+            <img ng-src="/$/content/images/config/{{mode.name}}.png" title="{{mode.description}}" />
+            <span>{{mode.name}}</span>
+        </div>
+    </div>
+</section>
+<section>
+    <h2>请选择希望发布的平台</h2>
+    <div>
+        <label ng-repeat="platform in model.larkManifest.platforms" ng-hide="platform.hidden">
+            <input type="radio" name="platform" ng-value="platform.name" ng-model="model.platform" /> {{platform.description}}
+        </label>
+    </div>
+
+    <input type="button" class="finish" id="finish" value="Finish" ng-click="model.finish()" />
+</section>
+<!--<section>
+    <h2> Development </h2>
+
+    <h4>Debug server</h4>
+    <div>
+        IP address: <input type="text" ng-model="model.ip" />
+    </div>
+    <div>
+        Host name: <input type="text" ng-model="model.host" />
+    </div>
+    <div>
+        Port: <input type="text" ng-model="model.port" />
+    </div>
+</section>-->
+
+
+<div id="loadingMask" style="display:none" class="mask">
+    <img id="loading" src="/$/content/images/config/loading.png" />
+</div>
+
+<div id="confirmMask" ng-hide="model.isConfirmed" class="mask">
+    <div id="confirm">
+        <p>在这个目录中发现了 src 目录，如果继续创建 Lark 项目可能会覆盖这些文件，是否要继续创建项目？</p>
+        <p class="buttons">
+            <button ng-click="model.isConfirmed=true">确定</button>
+            <button ng-click="model.cancel()">取消</button>
+        </p>
+    </div>
+</div>
+
+<div id="createdMask" style="display:none" class="mask">
+    <div id="confirm">
+        <p>项目创建完成</p>
+        <p class="buttons">
+            <button ng-click="model.close()">确定</button>
+        </p>
+    </div>
+</div>

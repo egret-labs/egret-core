@@ -826,17 +826,6 @@ module dragonBones {
                     bone._hideSlots();
                 }
             }
-
-            var slotTimelineName:string;
-            for(i = 0,len = this._clip.hideSlotTimelineNameMap.length; i < len; i++)
-			{
-				slotTimelineName = this._clip.hideSlotTimelineNameMap[i];
-				var slot:Slot = this._armature.getSlot(slotTimelineName);
-				if (slot)
-				{
-					slot._resetToOrigin();
-				}
-			}
 		}
 		
 	//属性访问

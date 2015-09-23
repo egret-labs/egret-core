@@ -248,8 +248,8 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if (!isNaN(this.explicitWidth))
-                availableWidth = this.explicitWidth;
+            if (!isNaN(this.$getExplicitWidth()))
+                availableWidth = this.$getExplicitWidth();
             else if (this.maxWidth!=10000)
                 availableWidth = this.maxWidth;
 
@@ -262,7 +262,7 @@ module egret.gui {
         private isSpecialCase():boolean{
             return this._maxDisplayedLines!=1&&
                 (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                isNaN(this.explicitHeight) &&
+                isNaN(this.$getExplicitHeight()) &&
                 isNaN(this.percentHeight);
         }
 
@@ -273,7 +273,7 @@ module egret.gui {
             if(this._textChanged){
                 this._textField.text = this._text;
             }
-            if (this._textFlowChanged) { 
+            if (this._textFlowChanged) {
                 this._textField.textFlow = this._textFlow;
             }
 

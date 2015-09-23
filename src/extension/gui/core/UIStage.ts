@@ -55,7 +55,7 @@ module egret.gui {
 		 */		
 		private onAddToStage(event:Event=null):void{
             if(UIGlobals._uiStage){
-                $error(3013);
+				egret.$error(3013);
             }
             UIGlobals._uiStage = this;
             if(this._autoResize){
@@ -77,8 +77,8 @@ module egret.gui {
 		 * 舞台尺寸改变
 		 */		
 		private onResize(event:Event=null):void{
-			this._setWidth(this.stage.stageWidth);
-			this._setHeight(this.stage.stageHeight);
+			this.$setWidth(this.stage.stageWidth);
+			this.$setHeight(this.stage.stageHeight);
 		}
 
         private _autoResize:boolean = true;
@@ -113,7 +113,7 @@ module egret.gui {
 		 * @constant egret.gui.UIStage#x
 		 */
         public get x():number{
-            return this._DO_Props_._x;
+            return this.$getX();
         }
 		/**
 		 * @inheritDoc
@@ -121,14 +121,14 @@ module egret.gui {
 		public set x(value:number){
             if(this._autoResize)
                 return;
-            this._DO_Props_._x = value;
+            this.$setX(value);
 		}
 
 		/**
 		 * @constant egret.gui.UIStage#y
 		 */
         public get y():number{
-            return this._DO_Props_._y;
+            return this.$getY();
         }
 		/**
 		 * @inheritDoc
@@ -136,14 +136,14 @@ module egret.gui {
 		public set y(value:number){
             if(this._autoResize)
                 return;
-            this._DO_Props_._y = value;
+            this.$setY(value);
 		}
 
 		/**
 		 * @member egret.gui.UIStage#width
 		 */
         public get width():number{
-            return this._UIC_Props_._width;
+            return this._UIC_Props_._uiWidth;
         }
 		/**
 		 * @inheritDoc
@@ -151,14 +151,14 @@ module egret.gui {
 		public set width(value:number){
             if(this._autoResize)
                 return;
-            this._setWidth(value);
+            this.$setWidth(value);
 		}
 
 		/**
 		 * @member egret.gui.UIStage#height
 		 */
         public get height():number{
-            return this._UIC_Props_._height;
+            return this._UIC_Props_._uiHeight;
         }
 		/**
 		 * @inheritDoc
@@ -166,14 +166,14 @@ module egret.gui {
 		public set height(value:number){
             if(this._autoResize)
                 return;
-            this._setHeight(value);
+            this.$setHeight(value);
 		}
 
 		/**
 		 * @member egret.gui.UIStage#scaleX
 		 */
         public get scaleX():number{
-            return this._DO_Props_._scaleX;
+            return this.$getScaleX();
         }
 		/**
 		 * @inheritDoc
@@ -181,13 +181,13 @@ module egret.gui {
 		public set scaleX(value:number){
             if(this._autoResize)
                 return;
-            this._setScaleX(value);
+            this.$setScaleX(value);
 		}
 
 		/**
 		 */
         public get scaleY():number{
-            return this._DO_Props_._scaleY;
+            return this.$getScaleY();
         }
 		/**
 		 * @inheritDoc
@@ -195,7 +195,7 @@ module egret.gui {
 		public set scaleY(value:number){
             if(this._autoResize)
                 return;
-            this._setScaleY(value);
+            this.$setScaleY(value);
 		}
 		/**
 		 * @param w {number}

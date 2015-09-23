@@ -75,7 +75,6 @@ module dragonBones {
 		public lastFrameDuration:number = 0;
 		
 		public hideTimelineNameMap:Array<string>;
-		public hideSlotTimelineNameMap:Array<string>;
 		
 		private _timelineList:Array<TransformTimeline>;
 		/**
@@ -100,7 +99,6 @@ module dragonBones {
 			this.autoTween = true;
 			this.tweenEasing = NaN;
 			this.hideTimelineNameMap = [];
-			this.hideSlotTimelineNameMap = [];
 			
 			this._timelineList = [];
 			this._slotTimelineList = [];

@@ -29,38 +29,69 @@
 
 module egret {
 
-    export var __callLaterFunctionList:Array<any> = [];
-    export var __callLaterThisList:Array<any> = [];
-    export var __callLaterArgsList:Array<any> = [];
     /**
+     * @private
+     */
+    export var $callLaterFunctionList:Array<any> = [];
+    /**
+     * @private
+     */
+    export var $callLaterThisList:Array<any> = [];
+    /**
+     * @private
+     */
+    export var $callLaterArgsList:Array<any> = [];
+
+    /**
+     * @language en_US
+     * Delay the function to run unless screen is redrawn.
+     * @param method {Function} The function to be delayed to run
+     * @param thisObject {any} this reference of callback function
+     * @param ...args {any} Function parameter list
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     */
+    /**
+     * @language zh_CN
      * 延迟函数到屏幕重绘前执行。
-	 * @method egret.callLater
      * @param method {Function} 要延迟执行的函数
      * @param thisObject {any} 回调函数的this引用
      * @param ...args {any} 函数参数列表
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/utils/callLater.ts
      */
     export function callLater(method:Function,thisObject:any,...args):void
     {
-        __callLaterFunctionList.push(method);
-        __callLaterThisList.push(thisObject);
-        __callLaterArgsList.push(args);
+        $callLaterFunctionList.push(method);
+        $callLaterThisList.push(thisObject);
+        $callLaterArgsList.push(args);
     }
 
-    export var __callAsyncFunctionList:Array<any> = [];
-    export var __callAsyncThisList:Array<any> = [];
-    export var __callAsyncArgsList:Array<any> = [];
+    /**
+     * @private
+     */
+    export var $callAsyncFunctionList:Array<any> = [];
+    /**
+     * @private
+     */
+    export var $callAsyncThisList:Array<any> = [];
+    /**
+     * @private
+     */
+    export var $callAsyncArgsList:Array<any> = [];
     /**
      * 异步调用函数
      * @param method {Function} 要异步调用的函数
      * @param thisObject {any} 函数的this引用
      * @param ...args {any} 函数参数列表
-     * @includeExample egret/utils/callLater.ts
+     * @private
      */
-    export function __callAsync(method:Function,thisObject:any,...args):void
+    export function $callAsync(method:Function,thisObject:any,...args):void
     {
-        __callAsyncFunctionList.push(method);
-        __callAsyncThisList.push(thisObject);
-        __callAsyncArgsList.push(args);
+        $callAsyncFunctionList.push(method);
+        $callAsyncThisList.push(thisObject);
+        $callAsyncArgsList.push(args);
     }
 }

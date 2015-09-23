@@ -194,7 +194,7 @@ module dragonBones {
             {
                 var animationObject:any = animationList[key];
                 var animationData:AnimationData = DataParser.parseAnimationData(animationObject, frameRate);
-                DBDataUtil.addHideTimeline(animationData, outputArmatureData, true);
+                DBDataUtil.addHideTimeline(animationData, outputArmatureData);
                 DBDataUtil.transformAnimationData(animationData, outputArmatureData, DataParser.tempDragonBonesData.isGlobal);
                 outputArmatureData.addAnimationData(animationData);
             }

@@ -70,9 +70,11 @@ module egret.gui {
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method egret.gui.TrackBaseEvent.dispatchTrackBaseEvent
          */
-        public static dispatchTrackBaseEvent(target:IEventDispatcher,type:string):void{
-            var eventClass:any = TrackBaseEvent;
-            Event._dispatchByTarget(eventClass,target,type);
+        public static dispatchTrackBaseEvent(target:IEventDispatcher,type:string):boolean{
+			var event:TrackBaseEvent = Event.create(TrackBaseEvent, type);
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 	

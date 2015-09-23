@@ -29,81 +29,129 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export class InputController extends HashObject {
+        /**
+         * @private
+         */
         private stageText:egret.StageText;
 
+        /**
+         * @private
+         */
         private _text:TextField = null;
 
+        /**
+         * @private
+         */
         private _isFocus:boolean = false;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public constructor() {
             super();
         }
 
+        /**
+         * 
+         * @param text 
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public init(text:TextField):void {
             this._text = text;
-            this.stageText = egret.StageText.create();
-            this.stageText._setTextField(this._text);
+            this.stageText = new egret.StageText();
+            this.stageText.$setTextField(this._text);
         }
 
+        /**
+         * @private
+         * 
+         */
         public _addStageText():void {
-            if (!this._text._inputEnabled) {
-                this._text._DO_Props_._touchEnabled = true;
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = true;
             }
 
-            this.stageText._add();
-            this.stageText._addListeners();
+            this.stageText.$addToStage();
 
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            egret.MainContext.instance.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
         }
 
+        /**
+         * @private
+         * 
+         */
         public _removeStageText():void {
-            if (!this._text._inputEnabled) {
-                this._text._DO_Props_._touchEnabled = false;
+            if (!this._text.$inputEnabled) {
+                this._text.$touchEnabled = false;
             }
 
-            this.stageText._remove();
-            this.stageText._removeListeners();
-            this.stageText._removeInput();
+            this.stageText.$removeFromStage();
 
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            egret.MainContext.instance.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            this._text.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
             this.stageText.removeEventListener("blur", this.blurHandler, this);
             this.stageText.removeEventListener("focus", this.focusHandler, this);
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         public _getText():string {
-            return this.stageText._getText();
+            return this.stageText.$getText();
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         public _setText(value:string) {
-            this.stageText._setText(value);
+            this.stageText.$setText(value);
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         */
         private focusHandler(event:Event):void {
             //不再显示竖线，并且输入框显示最开始
             if (!this._isFocus) {
                 this._isFocus = true;
                 if (!event["showing"]) {
-                    this._text._isTyping = true;
+                    this._text.$isTyping = true;
                 }
+                this._text.$invalidateContentBounds();
 
                 this._text.dispatchEvent(new egret.FocusEvent(egret.FocusEvent.FOCUS_IN, true));
             }
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         */
         private blurHandler(event:Event):void {
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
-                this._text._isTyping = false;
+                this._text.$isTyping = false;
+                this._text.$invalidateContentBounds();
 
                 //失去焦点后调用
                 this.stageText.$onBlur();
@@ -117,7 +165,7 @@ module egret {
             event.stopPropagation();
 
             var self = this;
-            if (!this._text._DO_Props_._visible) {
+            if (!this._text.visible) {
                 return;
             }
 
@@ -126,23 +174,25 @@ module egret {
             }
 
             //强制更新输入框位置
-            this.stageText._show(this._text._TF_Props_._multiline, this._text.size, this._text.width, this._text.height);
-
-            var point = this._text.localToGlobal();
-            this.stageText._initElement(point.x, point.y, self._text._worldTransform.a, self._text._worldTransform.d);
+            this.stageText.$show();
         }
 
         //未点中文本
         private onStageDownHandler(event:TouchEvent) {
-            this.stageText._hide();
+            this.stageText.$hide();
         }
 
+        /**
+         * @private
+         * 
+         * @param event 
+         */
         private updateTextHandler(event:Event):void {
-            var values = this._text._TF_Props_;
-            var textValue = this.stageText._getText();
+            var values = this._text.$TextField;
+            var textValue = this.stageText.$getText();
             var isChanged:boolean = false;
-            if (values._restrictAnd != null) {//内匹配
-                var reg = new RegExp("[" + values._restrictAnd + "]", "g");
+            if (values[sys.TextKeys.restrictAnd] != null) {//内匹配
+                var reg = new RegExp("[" + values[sys.TextKeys.restrictAnd] + "]", "g");
                 var result = textValue.match(reg);
                 if (result) {
                     textValue = result.join("");
@@ -152,8 +202,8 @@ module egret {
                 }
                 isChanged = true;
             }
-            if (values._restrictNot != null) {//外匹配
-                reg = new RegExp("[^" + values._restrictNot + "]", "g");
+            if (values[sys.TextKeys.restrictNot] != null) {//外匹配
+                reg = new RegExp("[^" + values[sys.TextKeys.restrictNot] + "]", "g");
                 result = textValue.match(reg);
                 if (result) {
                     textValue = result.join("");
@@ -164,8 +214,8 @@ module egret {
                 isChanged = true;
             }
 
-            if (isChanged) {
-                this.stageText._setText(textValue);
+            if (isChanged && this.stageText.$getText() != textValue) {
+                this.stageText.$setText(textValue);
             }
             this.resetText();
 
@@ -173,35 +223,50 @@ module egret {
             this._text.dispatchEvent(new egret.Event(egret.Event.CHANGE, true));
         }
 
+        /**
+         * @private
+         * 
+         */
         private resetText():void {
-            this._text._setBaseText(this.stageText._getText());
+            this._text.$setBaseText(this.stageText.$getText());
         }
 
+        /**
+         * @private
+         * 
+         */
         public _hideInput():void {
-            this.stageText._removeInput();
+            this.stageText.$removeFromStage();
         }
 
-        public _updateTransform():void {//
-            this._text._updateBaseTransform();
-
-            if (!this._text._DO_Props_._visible && this.stageText) {
+        /**
+         * @private
+         * 
+         */
+        private updateInput():void {//
+            if (!this._text.$visible && this.stageText) {
                 this._hideInput();
             }
         }
 
+        /**
+         * @private
+         * 
+         */
         public _updateProperties():void {
             if (this._isFocus) {
-                this._updateTransform();
+                //整体修改
+                this.stageText.$resetStageText();
+                this.updateInput();
                 return;
             }
 
-            var stage:egret.Stage = this._text._DO_Props_._stage;
+            var stage:egret.Stage = this._text.$stage;
             if (stage == null) {
-                this.stageText._setVisible(false);
             }
             else {
                 var item:DisplayObject = this._text;
-                var visible:boolean = item._DO_Props_._visible;
+                var visible:boolean = item.$visible;
                 while (true) {
                     if (!visible) {
                         break;
@@ -210,20 +275,16 @@ module egret {
                     if (item == stage) {
                         break;
                     }
-                    visible = item._DO_Props_._visible;
+                    visible = item.$visible;
                 }
-                this.stageText._setVisible(visible);
             }
 
-            this.stageText._setMultiline(this._text._TF_Props_._multiline);
-
-            this.stageText._setTextType(this._text._TF_Props_._displayAsPassword ? "password" :  "text");
-            this.stageText._setText(this._text._TF_Props_._text);
+            this.stageText.$setText(this._text.$TextField[egret.sys.TextKeys.text]);
 
             //整体修改
-            this.stageText._resetStageText();
+            this.stageText.$resetStageText();
 
-            this._updateTransform();
+            this.updateInput();
         }
     }
 }

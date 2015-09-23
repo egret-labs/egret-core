@@ -165,7 +165,7 @@ module egret.gui {
             this._clipAndEnableScrolling = value;
             if (this._clipAndEnableScrolling){
                 this.scrollRect = new Rectangle(this._horizontalScrollPosition,
-                    this._verticalScrollPosition, this.width, this.height);
+                    this._verticalScrollPosition, 400, 800);
             }
             else{
                 this.scrollRect = null;
@@ -232,21 +232,22 @@ module egret.gui {
          */
         private updateScrollRect(w:number, h:number):void{
 
-            var rect:Rectangle = this._DO_Props_._scrollRect;
+            var rect:Rectangle = this.scrollRect;
             if(this._clipAndEnableScrolling){
                 if(rect){
                     rect.x = this._horizontalScrollPosition;
                     rect.y = this._verticalScrollPosition;
                     rect.width = w;
                     rect.height = h;
+                    this.scrollRect = rect;
                 }
                 else{
-                    this._DO_Props_._scrollRect = new Rectangle(this._horizontalScrollPosition,
+                    this.scrollRect = new Rectangle(this._horizontalScrollPosition,
                         this._verticalScrollPosition, w, h)
                 }
             }
             else if(rect){
-                this._DO_Props_._scrollRect = null;
+                this.scrollRect = null;
             }
 
         }
@@ -334,7 +335,6 @@ module egret.gui {
          * 返回指定索引处的可视元素。
 		 * @method egret.gui.GroupBase#getElementAt
          * @param index {number} 要检索的元素的索引。
-         * @throws RangeError 如果在子列表中不存在该索引位置。
 		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement{

@@ -46,8 +46,7 @@ module egret.gui {
 		/**
 		 * 获取指定索引处的项目。
 		 * @method egret.gui.ICollection#getItemAt
-		 * @throws Error 如果索引小于 0 或大于长度。
-		 * @param index {number} 
+		 * @param index {number}
 		 * @returns {any}
 		 */		
 		getItemAt(index:number):any;

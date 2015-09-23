@@ -528,13 +528,10 @@ module dragonBones {
                 for(var j:number = 0,jLen:number = displayList.length; j < jLen; j++)
                 {
                     var displayObject:any = displayList[j];
-					if(!displayObject)
-					{
-						continue;
-					}
                     if(displayObject instanceof Armature){
                         displayObject = (<Armature><any> displayObject).display;
                     }
+
                     if(displayObject.hasOwnProperty("name")){
                         try{
                             displayObject["name"] = slot.name;
@@ -603,13 +600,8 @@ module dragonBones {
 				//==================================================
 				//如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者
 				var length1:number = displayList.length;
-				for(var i1:number = 0;i1 < length1;i1++)
-				{
+				for(var i1:number = 0;i1 < length1;i1++){
 					var displayObject:any = displayList[i1];
-					if(!displayObject)
-					{
-						continue;
-					}
 					if(displayObject instanceof FastArmature){
 						displayObject = (<FastArmature><any> displayObject).display;
 					}

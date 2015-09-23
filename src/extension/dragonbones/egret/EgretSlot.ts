@@ -105,7 +105,7 @@ module dragonBones {
         public _updateTransform():void{
             if(this._egretDisplay)
             {
-                this._egretDisplay.__hack_local_matrix = this._globalTransformMatrix;
+                this._egretDisplay.$setMatrix(egret.$TempMatrix.copyFrom(<egret.Matrix><any>this._globalTransformMatrix), false);
             }
         }
 
@@ -125,9 +125,8 @@ module dragonBones {
             aMultiplier:number,
             rMultiplier:number,
             gMultiplier:number,
-            bMultiplier:number,
-            colorChange:boolean = false):void{
-            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier, colorChange);
+            bMultiplier:number):void{
+            super._updateDisplayColor(aOffset, rOffset, gOffset, bOffset, aMultiplier, rMultiplier, gMultiplier, bMultiplier);
             if(this._egretDisplay)
             {
                 this._egretDisplay.alpha = aMultiplier;

@@ -49,7 +49,7 @@ class Main extends egret.DisplayObjectContainer {
         //初始化Resource资源加载库
         //initiate Resource loading library
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        RES.loadConfig("resource/resource.json", "resource/");
+        RES.loadConfig("resource/default.res.json", "resource/");
     }
 
     /**
@@ -126,25 +126,27 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(icon);
         icon.scaleX = 0.55;
         icon.scaleY = 0.55;
-        icon.x = (stageW - icon.width * icon.scaleX) / 2;
-        icon.y = (stageH - icon.height * icon.scaleY) / 2 - 60;
+        icon.anchorOffsetX = icon.width / 2;
+        icon.anchorOffsetY = icon.height / 2;
+        icon.x = stageW / 2;
+        icon.y = stageH / 2 - 60;
 
         var colorLabel:egret.TextField = new egret.TextField();
-        colorLabel.width = stageW;
-        colorLabel.y = stageH / 2 + 50;
         colorLabel.textColor = 0xffffff;
-        colorLabel.textAlign = egret.HorizontalAlign.CENTER;
+        colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
         colorLabel.size = 20;
+        colorLabel.x = stageW - colorLabel.width >> 1;
+        colorLabel.y = (stageH - colorLabel.height >> 1) + 50;
         this.addChild(colorLabel);
 
         var textfield:egret.TextField = new egret.TextField();
+        this.addChild(textfield);
+        textfield.alpha = 0;
         textfield.width = stageW;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
-        this.addChild(textfield);
+        textfield.x = 0;
         textfield.y = stageH / 2 + 100;
-        textfield.alpha = 0;
-
         this.textfield = textfield;
 
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。

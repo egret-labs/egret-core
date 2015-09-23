@@ -27,121 +27,127 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 module egret {
-
     /**
-     * @extends egret.DisplayObjectContainer
-     * @class egret.Sprite
-     * @classdesc Sprite 类是基本显示列表构造块：一个可显示图形并且也可包含子项的显示列表节点。Sprite 对象与影片剪辑类似，但没有时间轴。Sprite 是不需要时间轴的对象的相应基类。例如，Sprite 将是通常不使用时间轴的用户界面 (UI) 组件的逻辑基类。
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=102&terms1_id=25&terms2_id=27 显示对象的基本概念
+     * @language en_US
+     * The Sprite class is a basic display list building block: a display list node that can contain children.
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/display/Sprite.ts
      */
-    export class Sprite extends DisplayObjectContainer {
+    /**
+     * @language zh_CN
+     * Sprite 类是基本显示列表构造块：一个可包含子项的显示列表节点。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/Sprite.ts
+     */
+    export class Sprite extends DisplayObjectContainer implements IDisplayObjectContainer {
 
         /**
-         * 创建一个 egret.Sprite 对象
+         * @language en_US
+         * Creates a new Sprite instance.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 实例化一个容器
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public constructor() {
             super();
+            this.$graphics = new Graphics();
+            this.$graphics.$renderContext.$targetDisplay = this;
+            this.$renderRegion = new sys.Region();
         }
 
-        private _graphics:Graphics = null;
+        /**
+         * @private
+         */
+        $graphics:Graphics;
 
         /**
-         * 获取 Sprite 中的 Graphics 对象。
-         * 指定属于此 sprite 的 Graphics 对象，在此 sprite 中可执行矢量绘图命令。
-         * @member {egret.Graphics} egret.Sprite#graphics
+         * @language en_US
+         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public get graphics():Graphics {
-            if (!this._graphics) {
-                this._graphics = new Graphics();
-                this.needDraw = true;
+            return this.$graphics;
+        }
+
+        $hitTest(stageX:number, stageY:number):DisplayObject {
+            if (!this.$visible) {
+                return null;
             }
-            return this._graphics;
-        }
+            var m = this.$getInvertedConcatenatedMatrix();
+            var localX = m.a * stageX + m.c * stageY + m.tx;
+            var localY = m.b * stageX + m.d * stageY + m.ty;
 
-        public _draw(renderContext:RendererContext):void {
-            if(this._graphics && this._graphics._dirty) {
-                this._setCacheDirty();
+            var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+            if (rect && !rect.contains(localX, localY)) {
+                return null;
             }
-            super._draw(renderContext);
-        }
 
-        public _render(renderContext:RendererContext):void {
-            if (this._graphics)
-                this._graphics._draw(renderContext);
-            super._render(renderContext);
-        }
-
-        public _measureBounds():egret.Rectangle {
-
-            var minX = 0, maxX = 0, minY = 0, maxY = 0;
-            var l = this._children.length;
-            for (var i = 0; i < l; i++) {
-                var child = this._children[i];
-                if (!child.visible) {
+            if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+                return null;
+            }
+            var children = this.$children;
+            var found = false;
+            for (var i = children.length - 1; i >= 0; i--) {
+                var child = children[i];
+                if (child.$maskedObject) {
                     continue;
                 }
-
-                var childBounds:Rectangle = child.getBounds(Rectangle.identity, false);
-                var childBoundsX:number = childBounds.x;
-                var childBoundsY:number = childBounds.y;
-                var childBoundsW:number = childBounds.width;
-                var childBoundsH:number = childBounds.height;
-
-                var childMatrix:Matrix = child._getMatrix();
-
-                var bounds:Rectangle = DisplayObject.getTransformBounds(Rectangle.identity.initialize(childBoundsX, childBoundsY, childBoundsW, childBoundsH), childMatrix);
-                var x1 = bounds.x , y1 = bounds.y,
-                    x2 = bounds.width + bounds.x,
-                    y2 = bounds.height + bounds.y;
-                if (x1 < minX || i == 0) {
-                    minX = x1;
-                }
-                if (x2 > maxX || i == 0) {
-                    maxX = x2;
-                }
-                if (y1 < minY || i == 0) {
-                    minY = y1;
-                }
-                if (y2 > maxY || i == 0) {
-                    maxY = y2;
+                var target = child.$hitTest(stageX, stageY);
+                if (target) {
+                    found = true;
+                    if(target.$touchEnabled){
+                        break;
+                    }
+                    else{
+                        target = null;
+                    }
                 }
             }
-            if(this._graphics) {
-                var graphicsBounds:Rectangle = this._graphics._measureBounds();
-                var x1 = graphicsBounds.x , y1 = graphicsBounds.y,
-                    x2 = graphicsBounds.width + graphicsBounds.x,
-                    y2 = graphicsBounds.height + graphicsBounds.y;
-                if (x1 < minX || i == 0) {
-                    minX = x1;
+            if (target) {
+                if (this.$touchChildren) {
+                    return target;
                 }
-                if (x2 > maxX || i == 0) {
-                    maxX = x2;
-                }
-                if (y1 < minY || i == 0) {
-                    minY = y1;
-                }
-                if (y2 > maxY || i == 0) {
-                    maxY = y2;
-                }
+                return this;
             }
-            return Rectangle.identity.initialize(minX, minY, maxX - minX, maxY - minY);
+            if (found) {
+                return this;
+            }
+
+            target =  DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
+            if (target) {
+                target = this.$graphics.$hitTest(stageX, stageY);
+            }
+
+            return target;
         }
 
         /**
-         * @inheritDoc
+         * @private
          */
-        public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
-            var result:DisplayObject = super.hitTest(x, y, ignoreTouchEnabled);
-            if (result) {
-                return result;
-            }
-            else if (this._graphics) {
-                return DisplayObject.prototype.hitTest.call(this, x, y, ignoreTouchEnabled);
-            }
-            return null;
+        $measureContentBounds(bounds:Rectangle):void {
+            this.$graphics.$measureContentBounds(bounds);
+        }
+
+        /**
+         * @private
+         */
+        $render(context:sys.RenderContext):void {
+            this.$graphics.$render(context);
         }
     }
 }

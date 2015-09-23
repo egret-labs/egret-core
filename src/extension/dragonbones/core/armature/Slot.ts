@@ -110,8 +110,6 @@ module dragonBones {
 		public _tweenZOrder:number;
 		/** @private */
 		public _offsetZOrder:number;
-		/** @private */
-		public _originDisplayIndex:number;
 		
 		public _displayList:Array<any>;
 		public _currentDisplayIndex:number = 0;
@@ -125,7 +123,6 @@ module dragonBones {
 		//protected var _childArmature:Armature;
 		public _blendMode:string;
 		public _isColorChanged:boolean;
-		public _needUpdate:boolean;
 		public _timelineStateList:Array<SlotTimelineState>
 
 		public constructor(self:Slot){
@@ -161,7 +158,6 @@ module dragonBones {
 			this.blendMode = slotData.blendMode;
 			this._originZOrder = slotData.zOrder;
 			this._displayDataList = slotData.displayDataList;
-			this._originDisplayIndex = slotData.displayIndex;
 		}
 		
 		/**
@@ -225,13 +221,12 @@ module dragonBones {
 //动画
 		/** @private */
 		public _update():void{
-			if(this._parent._needUpdate <= 0 && !this._needUpdate){
+			if(this._parent._needUpdate <= 0){
 				return;
 			}
 
             this._updateGlobal();
             this._updateTransform();
-			this._needUpdate = false;
 		}
 
         public _calculateRelativeParentTransform():void
@@ -292,7 +287,6 @@ module dragonBones {
 					){
 						this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
 					}
-					this._needUpdate = true;
 				}
 				else if(!this._isShowDisplay){
 					this._isShowDisplay = true;
@@ -604,11 +598,5 @@ module dragonBones {
             }
             return output;
         }
-
-        public _resetToOrigin():void
-		{
-			this._changeDisplay(this._originDisplayIndex);
-			this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
-		}
 	}
 }

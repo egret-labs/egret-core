@@ -30,14 +30,14 @@
 
 module egret.gui {
 
-    /**
-     * @class egret.gui.IEditableText
-     * @interface
-     * @classdesc
-     * 可编辑文本控件接口
-     * @extends egret.gui.IDisplayText
-     */
-    export interface IEditableText extends IDisplayText {
+	/**
+	 * @class egret.gui.IEditableText
+	 * @interface
+	 * @classdesc
+	 * 可编辑文本控件接口
+	 * @extends egret.gui.IDisplayText
+	 */	
+	export interface IEditableText extends IDisplayText{ 
         /**
          * 文本颜色。
          * @member egret.gui.IEditableText#textColor
@@ -92,7 +92,7 @@ module egret.gui {
          * 如果动态文本字段是不可选的，则用户不能选择其中的文本。 <p/>
          * 如果 selectable 设置为 false，则文本字段中的文本不响应来自鼠标或键盘的选择命令，
          * 并且不能使用“复制”命令复制文本。如果 selectable 设置为 true，则可以使用鼠标或键盘选择文本字段中的文本，
-         * 并且可以使用“复制”命令复制文本。即使文本字段是动态文本字段而不是输入文本字段，您也可以用这种方式选择文本。
+         * 并且可以使用“复制”命令复制文本。即使文本字段是动态文本字段而不是输入文本字段，您也可以用这种方式选择文本。 
          * @member egret.gui.IEditableText#selectable
          */
         selectable: boolean;
@@ -126,7 +126,7 @@ module egret.gui {
          * @param beginIndex {number} 所选内容中第一个字符从零开始的索引值（例如，第一个字符的索引值是 0，第二个字符的索引值是 1，依此类推）。
          * @param endIndex {number} 所选内容中最后一个字符从零开始的索引值。
          */
-        setSelection(beginIndex:number, endIndex:number): void;
+        setSelection(beginIndex: number, endIndex: number): void;
 
         /**
          * 选中所有文本。
@@ -147,5 +147,5 @@ module egret.gui {
         heightInLines: number;
 
         setFocus(): void;
-    }
+	}
 }

@@ -97,7 +97,7 @@ module egret.gui {
          */
         private checkIndex(index:number):void{
             if(index<0||index>=this._source.length){
-                $error(3002, index);
+                egret.$error(3002, index);
             }
         }
 
@@ -125,13 +125,12 @@ module egret.gui {
          * 在指定的索引处添加项目。
          * 任何大于已添加项目的索引的项目索引都会增加 1。
          * @method egret.gui.ArrayCollection#addItemAt
-         * @throws Error 如果索引小于 0 或大于长度。
          * @param item {any}
          * @param index {number}
          */
         public addItemAt(item:any, index:number):void{
             if(index<0||index>this._source.length){
-                $error(3002, index);
+                egret.$error(3002, index);
             }
             this._source.splice(index,0,item);
             this.dispatchCoEvent(CollectionEventKind.ADD,index,-1,[item]);
@@ -183,7 +182,6 @@ module egret.gui {
         /**
          * 删除指定索引处的项目并返回该项目。原先位于此索引之后的所有项目的索引现在都向前移动一个位置。
          * @method egret.gui.ArrayCollection#removeItemAt
-         * @throws Error 如果索引小于 0 或大于长度。
          * @param index {number}
          * @returns {any}
          */
@@ -196,7 +194,6 @@ module egret.gui {
         /**
          * 替换在指定索引处的项目，并返回该项目。
          * @method egret.gui.ArrayCollection#replaceItemAt
-         * @throws Error 如果索引小于 0 或大于长度。
          * @param item {any}
          * @param index {number}
          * @returns {any}
@@ -237,7 +234,6 @@ module egret.gui {
          * @param oldIndex {number}
          * @param newIndex {number}
          * @returns {any}
-         * @throws Error 如果索引小于 0 或大于长度。
          */
         public moveItemAt(oldIndex:number,newIndex:number):any{
             this.checkIndex(oldIndex);

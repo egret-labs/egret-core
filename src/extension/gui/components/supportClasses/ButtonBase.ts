@@ -311,23 +311,24 @@ module egret.gui {
 		public mouseEventHandler(event:Event):void{
 			var touchEvent:TouchEvent = <TouchEvent> event;
 			switch (event.type){
-				case TouchEvent.TOUCH_ROLL_OVER:{
-					if (touchEvent.touchDown && !this.mouseCaptured)
-						return;
-					this.hovered = true;
-					break;
-				}
-
-				case TouchEvent.TOUCH_ROLL_OUT:{
-					this.hovered = false;
-					break;
-				}
+				//case TouchEvent.TOUCH_ROLL_OVER:{
+				//	if (touchEvent.touchDown && !this.mouseCaptured)
+				//		return;
+				//	this.hovered = true;
+				//	break;
+				//}
+                //
+				//case TouchEvent.TOUCH_ROLL_OUT:{
+				//	this.hovered = false;
+				//	break;
+				//}
 
 				case TouchEvent.TOUCH_BEGIN:{
 					this.addStageMouseHandlers();
-                    if(InteractionMode.mode==InteractionMode.TOUCH)
-                        this.hovered = true;
+                    //if(InteractionMode.mode==InteractionMode.TOUCH)
+                    //    this.hovered = true;
 					this.mouseCaptured = true;
+						this.hovered = true;
 					break;
 				}
 
@@ -375,6 +376,7 @@ module egret.gui {
 				return;
 
 			this.mouseCaptured = false;
+			this.hovered = false;
 		}
 
 		/**
@@ -408,8 +410,8 @@ module egret.gui {
 			if (this.isDown()||this._keepDown)
 				return "down";
 
-			if (InteractionMode.mode==InteractionMode.MOUSE&&(this.hovered || this.mouseCaptured))
-				return "over";
+			//if (InteractionMode.mode==InteractionMode.MOUSE&&(this.hovered || this.mouseCaptured))
+			//	return "over";
 
 			return "up";
 		}

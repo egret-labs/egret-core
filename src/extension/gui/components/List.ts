@@ -349,7 +349,7 @@ module egret.gui {
          * @param event {TouchEvent}
          */
         public _item_touchBeginHandler(event:TouchEvent):void {
-            if (event._isDefaultPrevented)
+            if (event.$isDefaultPrevented)
                 return;
 
             var itemRenderer:IItemRenderer = <IItemRenderer> (event.currentTarget);

@@ -55,7 +55,7 @@ module egret.gui {
          * @deprecated
          */
         public set trackAlpha(value:number){
-            $warn(1016, "HScrollBar.trackAlpha");
+            egret.$warn(1016, "HScrollBar.trackAlpha");
         }
 
         public get trackAlpha():number {
@@ -66,7 +66,7 @@ module egret.gui {
          * @deprecated
          */
         public set thumbAlpha(value: number) {
-            $warn(1016, "HScrollBar.thumbAlpha");
+            egret.$warn(1016, "HScrollBar.thumbAlpha");
         }
 
         public get thumbAlpha():number {
@@ -126,7 +126,7 @@ module egret.gui {
             var thumbPos: Point = this.track.localToGlobal(thumbPosTrackX, 0);
             var thumbPosX: number = thumbPos.x;
             var thumbPosY: number = thumbPos.y;
-            var thumbPosParentX: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, Point.identity).x;
+            var thumbPosParentX: number = this.thumb.parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).x;
             this.thumb.setLayoutBoundsPosition(Math.round(thumbPosParentX), this.thumb.layoutBoundsY);
             if (thumbWidth != oldThumbWidth)
                 this.thumb.setLayoutBoundsSize(thumbWidth, this.thumb.layoutBoundsHeight);
