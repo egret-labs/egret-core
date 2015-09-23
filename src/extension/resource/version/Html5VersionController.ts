@@ -40,7 +40,15 @@ module RES.web {
 
         private _versionInfo:Object = {};
 
-        public fetchVersion():void {
+        public fetchVersion(callback:egret.AsyncCallback):void {
+
+            callback.onSuccess(null);
+            return;
+
+            /*
+
+            todo
+
             var self = this;
 
             var virtualUrl:string = "all.manifest";
@@ -71,6 +79,8 @@ module RES.web {
                 httpLoader.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
                 httpLoader.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
             }
+
+            */
         }
 
         /**
@@ -82,6 +92,13 @@ module RES.web {
         }
 
         public getVirtualUrl(url:string):string {
+
+            return url;
+
+            /*
+
+            todo
+
             if (DEBUG) {
                 return url;
             }
@@ -91,6 +108,8 @@ module RES.web {
             else {
                 return url;
             }
+
+            */
         }
     }
 

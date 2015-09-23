@@ -39,7 +39,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillModeEuiExample.ts
      */
     /**
      * @language zh_CN
@@ -51,7 +51,7 @@ module eui {
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
-     * @includeExample  extension/eui/core/BitmapFillEuiModeExample.ts
+     * @includeExample  extension/eui/core/BitmapFillModeEuiExample.ts
      */
     export class BitmapFillMode{
 

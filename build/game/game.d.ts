@@ -108,6 +108,7 @@ declare module egret {
         /**
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         frameLabels: any[];
         /**
@@ -121,6 +122,7 @@ declare module egret {
         /**
          * @version Egret 2.4
          * @platform Web,Native
+         * @private
          */
         frameEvents: any[];
         /**
@@ -661,7 +663,7 @@ declare module egret {
          * EventDispatcher object using the specified event object thrown MovieClipEvent. The objects will be thrown in the object cache pool for the next round robin.
          * @param type  The type of the event, accessible as Event.type.
          * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
-         * @param text  MovieClipEvent object frameLabel
+         * @param frameLabel  MovieClipEvent object frameLabel
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -670,7 +672,7 @@ declare module egret {
          * 使用指定的EventDispatcher对象来抛出 MovieClipEvent 事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @param target 派发事件目标
          * @param type  事件类型
-         * @param text  MovieClipEvent 对象的 frameLabel 赋值
+         * @param frameLabel  MovieClipEvent 对象的 frameLabel 赋值
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -678,6 +680,9 @@ declare module egret {
     }
 }
 declare module egret {
+    /**
+     * @private
+     */
     class ScrollEase {
         /**
          * @version Egret 2.4
@@ -718,6 +723,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/ScrollTween.ts
+     * @private
      */
     /**
      * @language zh_CN
@@ -726,6 +732,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/tween/ScrollTween.ts
+     * @private
      */
     class ScrollTween extends EventDispatcher {
         /**
@@ -1439,57 +1446,50 @@ declare module egret {
         private throwNotSupportedError();
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
         addChild(child: DisplayObject): DisplayObject;
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
         addChildAt(child: DisplayObject, index: number): DisplayObject;
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
         removeChild(child: DisplayObject): DisplayObject;
         /**
          * @deprecated
-         * @param index {number}
-         * @returns {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
         removeChildAt(index: number): DisplayObject;
         /**
          * @deprecated
-         * @param child {DisplayObject}
-         * @param index {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
         setChildIndex(child: DisplayObject, index: number): void;
         /**
          * @deprecated
-         * @param child1 {DisplayObject}
-         * @param child2 {DisplayObject}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
         swapChildren(child1: DisplayObject, child2: DisplayObject): void;
         /**
          * @deprecated
-         * @param index1 {number}
-         * @param index2 {number}
+         * @inheritDoc
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2309,6 +2309,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
+     * @private
      */
     /**
      * @language zh_CN
@@ -2316,6 +2317,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/utils/Recycler.ts
+     * @private
      */
     class Recycler extends HashObject {
         /**

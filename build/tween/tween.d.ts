@@ -587,7 +587,7 @@ declare module egret {
         wait(duration: number, passive?: boolean): Tween;
         /**
          * @language en_US
-         * Modify the property of the specified display object to a specified value
+         * Modify the property of the specified object to a specified value
          * @param props {Object} Property set of an object
          * @param duration {number} Duration
          * @param ease {egret.Ease} Easing algorithm
@@ -597,7 +597,7 @@ declare module egret {
          */
         /**
          * @language zh_CN
-         * 将指定显示对象的属性修改为指定值
+         * 将指定对象的属性修改为指定值
          * @param props {Object} 对象的属性集合
          * @param duration {number} 持续时间
          * @param ease {egret.Ease} 缓动算法
@@ -628,10 +628,18 @@ declare module egret {
          */
         call(callback: Function, thisObj?: any, params?: Array<any>): Tween;
         /**
-         *
-         * @param props
-         * @param target
-         * @returns
+         * Now modify the properties of the specified object to the specified value
+         * @param props {Object} Property set of an object
+         * @param target The object whose Tween to be resumed
+         * @returns {egret.Tween} Tween object itself
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * 立即将指定对象的属性修改为指定值
+         * @param props {Object} 对象的属性集合
+         * @param target 要继续播放 Tween 的对象
+         * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
          */

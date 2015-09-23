@@ -39,6 +39,9 @@
 /// <reference path="analyzer/FontAnalyzer.ts" />
 /// <reference path="analyzer/SoundAnalyzer.ts" />
 /// <reference path="analyzer/XMLAnalyzer.ts" />
+/// <reference path="version/IVersionController.ts" />
+/// <reference path="version/HTML5VersionController.ts" />
+/// <reference path="version/NativeVersionController.ts" />
 
 module RES {
     /**
@@ -518,6 +521,7 @@ module RES {
          * 初始化
          */
         private init():void{
+            this.vcs = new VersionController();
             var analyzerClassMap = this.analyzerClassMap;
             //analyzerClassMap[ResourceItem.TYPE_ANIMATION] = AnimationAnalyzer;
             analyzerClassMap[ResourceItem.TYPE_BIN] = BinAnalyzer;
@@ -580,10 +584,27 @@ module RES {
                 var resItem:ResourceItem = new ResourceItem(item.url,item.url,item.type);
                 itemList.push(resItem);
             }
+
+            var callback:egret.AsyncCallback = {
+
+
+                onSuccess:(data:any)=>{
+                    this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
+                },
+
+                onFail:(err:number,data:any)=>{
+                    ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_LOAD_ERROR);
+                }
+
+            };
+
             if (this.vcs){
-                this.vcs.fetchVersion();
+                this.vcs.fetchVersion(callback);
             }
-            this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
+            else{
+                this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
+            }
+
         }
         /**
          * 已经加载过组名列表
