@@ -39,6 +39,9 @@
 /// <reference path="analyzer/FontAnalyzer.ts" />
 /// <reference path="analyzer/SoundAnalyzer.ts" />
 /// <reference path="analyzer/XMLAnalyzer.ts" />
+/// <reference path="version/IVersionController.ts" />
+/// <reference path="version/HTML5VersionController.ts" />
+/// <reference path="version/NativeVersionController.ts" />
 
 module RES {
     /**
@@ -518,6 +521,7 @@ module RES {
          * 初始化
          */
         private init():void{
+            this.vcs = new VersionController();
             var analyzerClassMap = this.analyzerClassMap;
             //analyzerClassMap[ResourceItem.TYPE_ANIMATION] = AnimationAnalyzer;
             analyzerClassMap[ResourceItem.TYPE_BIN] = BinAnalyzer;
