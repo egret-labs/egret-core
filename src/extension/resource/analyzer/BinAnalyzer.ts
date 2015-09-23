@@ -58,16 +58,23 @@ module RES {
 			}
 			var loader:egret.URLLoader = this.getLoader();
 			this.resItemDic[loader.hashCode] = {item:resItem,func:compFunc,thisObject:thisObject};
-			if( resItem.url.indexOf(".json") == -1 ){
-                loader.load(new egret.URLRequest(resItem.url));
+			var url = resItem.url;
+			if( url.indexOf(".json") == -1 ){
+				if( url.indexOf(window["resServer"]) != -1){
+					url = url.replace(window["resServer"],window["resBase"]);
+				}else if( url.indexOf(window["resBase"]) == -1){
+					url = window["resBase"]+url;
+				}
+				loader.load(new egret.URLRequest(url));
+				//console.log("no json : ",url);
             }else{
-                if( resItem.url.indexOf(window["resBase"] != -1)){
-                    resItem.url = resItem.url.replace(window["resBase"],window["resServer"]+"/");
-                    loader.load(new egret.URLRequest(resItem.url));
-                }else{
-                    loader.load(new egret.URLRequest(window["resServer"]+"/" + resItem.url));
+                if( url.indexOf(window["resBase"]) != -1){
+                    url = url.replace(window["resBase"],window["resServer"]);
+                }else if( url.indexOf(window["resServer"]) == -1){
+                    url = window["resServer"]+url;
                 }
-
+                loader.load(new egret.URLRequest(url));
+                //console.log("json : ",url);
             }
 			//loader.load(new egret.URLRequest(resItem.url));
 		}

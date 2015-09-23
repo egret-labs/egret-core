@@ -54,7 +54,6 @@ module egret {
          * @member {string} egret.StageScaleMode.SHOW_ALL
          */
         public static SHOW_ALL:string = "showAll";
-
         /**
          * 指定整个应用程序在指定区域中可见，但不尝试保持原始高宽比。可能会发生扭曲。
          * @member {string} egret.StageScaleMode.EXACT_FIT

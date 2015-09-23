@@ -430,14 +430,16 @@ module egret {
             if (this.minHeight != 0) {
                 scale2 = Math.min(1, designH / this.minHeight);
             }
+            
+            //delegate._offSetY = Math.floor(this.$stageHeight ,clientHeight);
 
             this.$stageWidth = designW;
             this.$stageHeight = designH / scale2;
             this.$displayWidth = clientWidth * scale2;
             this.$displayHeight = clientHeight;
-
             delegate._scaleX = scale * scale2;
             delegate._scaleY = scale * scale2;
+            
         }
     }
 
@@ -498,7 +500,7 @@ module egret {
             var viewPortWidth = designW * scale;
             var viewPortHeight = designH * scale;
 
-            delegate._offSetY = Math.floor((clientHeight - viewPortHeight) / 2);
+            delegate._offSetY = Math.floor(clientHeight - viewPortHeight);
 
             this.$stageWidth = designW;
             this.$stageHeight = designH;
@@ -510,6 +512,7 @@ module egret {
 
         }
     }
+
 
     /**
      * @private
