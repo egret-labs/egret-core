@@ -35,7 +35,8 @@ interface APIAutoReference{
 class AutoLogger implements APIAutoReference{
     private static _instance :AutoLogger;
     private _isConsoleOut :boolean = false;
-    public _htmlTitle :string = '<!DOCTYPE html><html><head><title>API检测结果报告</title><meta charset="UTF-8"></head><body>';
+    public _htmlTitle :string = '<!DOCTYPE html><html><head><title>API检测结果报告</title><meta charset="UTF-8">' +
+        '<style type="text/css">'+'li{list-style:none;}li b{color:#aa0000;}h2 b{color:red;}</style></head><body>';
     public _htmlBody:string = '';
     public _htmlEnd:string = '</body></html>';
 
@@ -179,7 +180,7 @@ class AutoLogger implements APIAutoReference{
                 console.log(this._logContent.title);
             }
             this._snapShot += '\n'+this._logContent.title;
-            this._htmlBody += '<ul class="solution"><h3>'+this._logContent.title+'</h3>';
+            this._htmlBody += '<ul class="solution"><h3><b>\>\></b> '+this._logContent.title+'</h3>';
             //step2
             var fileRefLine;
             var htmlRefLine;
@@ -205,7 +206,7 @@ class AutoLogger implements APIAutoReference{
                     console.log(fileRefLine);
                 }
                 this._snapShot += '\n'+fileRefLine;
-                this._htmlBody += '<li>'+htmlRefLine+'</li>';
+                this._htmlBody += '<li>\t'+htmlRefLine+'</li>';
             }
             if(this._isConsoleOut){
                 console.log('\n');

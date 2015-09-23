@@ -9,7 +9,8 @@ var DTS = require('../commands/upgrade/2.4.2/compare2dts.js');
 var AutoLogger = (function () {
     function AutoLogger() {
         this._isConsoleOut = false;
-        this._htmlTitle = '<!DOCTYPE html><html><head><title>API检测结果报告</title><meta charset="UTF-8"></head><body>';
+        this._htmlTitle = '<!DOCTYPE html><html><head><title>API检测结果报告</title><meta charset="UTF-8">' +
+            '<style type="text/css">' + 'li{list-style:none;}li b{color:#aa0000;}h2 b{color:red;}</style></head><body>';
         this._htmlBody = '';
         this._htmlEnd = '</body></html>';
         this._snapShot = '';
@@ -151,7 +152,7 @@ var AutoLogger = (function () {
                 console.log(this._logContent.title);
             }
             this._snapShot += '\n' + this._logContent.title;
-            this._htmlBody += '<ul class="solution"><h3>' + this._logContent.title + '</h3>';
+            this._htmlBody += '<ul class="solution"><h3><b>\>\></b> ' + this._logContent.title + '</h3>';
             //step2
             var fileRefLine;
             var htmlRefLine;
@@ -177,7 +178,7 @@ var AutoLogger = (function () {
                     console.log(fileRefLine);
                 }
                 this._snapShot += '\n' + fileRefLine;
-                this._htmlBody += '<li>' + htmlRefLine + '</li>';
+                this._htmlBody += '<li>\t' + htmlRefLine + '</li>';
             }
             if (this._isConsoleOut) {
                 console.log('\n');
