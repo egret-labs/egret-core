@@ -234,7 +234,7 @@ export function getAvailablePort(callback: (port: number) => void, port= 0) {
             server.close()
         })
         server.on('close', function () {
-            console.log("Got port", port);
+            console.log("Server running at port:", port);
             callback(port)
         })
         server.on('error', function (err) {

@@ -37,27 +37,30 @@ class Run implements egret.Command {
 
     private onGotPort(port: number) {
         egret.args.port = port;
-        console.log('\n');
         var addresses = utils.getNetworkAddress();
         if (addresses.length > 0) {
             egret.args.host = addresses[0];
         }
         this.serverStarted = true;
         server.startServer(egret.args, egret.args.startUrl);
-        console.log("    " + utils.tr(10013, ''));
-        console.log('\n');
-        console.log('        ' + egret.args.startUrl);
-        for (var i = 1; i < addresses.length; i++) {
-            console.log('        ' + egret.args.getStartURL(addresses[i]));
+        if(egret.args.serverOnly){
+            console.log("Url:" + egret.args.startUrl);
+        }else{
+            console.log('\n');
+            console.log("    " + utils.tr(10013, ''));
+            console.log('\n');
+            console.log('        ' + egret.args.startUrl);
+            for (var i = 1; i < addresses.length; i++) {
+                console.log('        ' + egret.args.getStartURL(addresses[i]));
+            }
+            console.log('\n');
         }
-
-        console.log('\n');
         if (egret.args.autoCompile) {
             console.log('    ' + utils.tr(10010));
             this.watchFiles(egret.args.srcDir);
             this.watchFiles(egret.args.templateDir);
         }
-        else {
+        else if (!egret.args.serverOnly) {
             console.log('    ' + utils.tr(10012));
         }
     }
