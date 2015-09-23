@@ -36,9 +36,10 @@ var Run = (function () {
         }
         this.serverStarted = true;
         server.startServer(egret.args, egret.args.startUrl);
-        if(egret.args.serveronly){
-            console.log("Url:"+egret.args.startUrl)
-        }else{
+        if (egret.args.serverOnly) {
+            console.log("Url:" + egret.args.startUrl);
+        }
+        else {
             console.log('\n');
             console.log("    " + utils.tr(10013, ''));
             console.log('\n');
@@ -47,13 +48,13 @@ var Run = (function () {
                 console.log('        ' + egret.args.getStartURL(addresses[i]));
             }
             console.log('\n');
-        }        
+        }
         if (egret.args.autoCompile) {
             console.log('    ' + utils.tr(10010));
             this.watchFiles(egret.args.srcDir);
             this.watchFiles(egret.args.templateDir);
         }
-        else if(!egret.args.serveronly){
+        else if (!egret.args.serverOnly) {
             console.log('    ' + utils.tr(10012));
         }
     };

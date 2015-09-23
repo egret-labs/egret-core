@@ -42,71 +42,80 @@ class CopyFiles {
         var list = FileUtil.getDirectoryListing(options.templateDir);
         for (var key in list) {
             var filepath = list[key];
-
             if (FileUtil.getExtension(filepath) == "html") {
-                var htmlContent = FileUtil.read(filepath);
 
-                var str = "";
-                for (var tempK in modules) {
-                    var moduleName = modules[tempK];
-                    var debugJs = "";
-                    var releaseJs = "";
-
-                    var jsDebugpath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".js");
-                    var jsReleasepath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".min.js");
-                    if (FileUtil.exists(jsDebugpath)) {
-                        debugJs = 'libs/'+ moduleName + "/" + moduleName + ".js";
-                    }
-
-                    if (FileUtil.exists(jsReleasepath)) {
-                        releaseJs = 'libs/'+ moduleName + "/" + moduleName + ".min.js";
-                    }
-
-                    if (debugJs == "") {
-                        debugJs = releaseJs;
-                    }
-                    if (releaseJs == "") {
-                        releaseJs = debugJs;
-                    }
-
-                    if (debugJs != "") {
-                        str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n\n';
-                    }
-
-                    debugJs = "";
-                    releaseJs = "";
-                    jsDebugpath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".web.js");
-                    jsReleasepath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".web.min.js");
-                    if (FileUtil.exists(jsDebugpath)) {
-                        debugJs = 'libs/'+ moduleName + "/" + moduleName + ".web.js";
-                    }
-
-                    if (FileUtil.exists(jsReleasepath)) {
-                        releaseJs = 'libs/'+ moduleName + "/" + moduleName + ".web.min.js";
-                    }
-
-                    if (debugJs == "") {
-                        debugJs = releaseJs;
-                    }
-                    if (releaseJs == "") {
-                        releaseJs = debugJs;
-                    }
-
-                    if (debugJs != "") {
-                        str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n\n';
-                    }
-                }
-                var reg = /<!--libs_files_start-->[\s\S]*<!--libs_files_end-->/;
-                htmlContent = htmlContent.replace(reg, '<!--libs_files_start-->\n' + str + '\t<!--libs_files_end-->');
-                FileUtil.save(filepath, htmlContent);
             }
         }
+        CopyFiles.modifyIndexHTML();
 
         return 0;
     }
 
     static copyOutputToNative() {
 
+    }
+
+    static modifyIndexHTML(){
+        var options = egret.args;
+        var filepath = options.projectDir + "/index.html";
+        var htmlContent = FileUtil.read(filepath);
+        var properties = egret.args.properties;
+        var modules = properties.getAllModuleNames();
+        var str = "";
+        for (var tempK in modules) {
+            var moduleName = modules[tempK];
+            var debugJs = "";
+            var releaseJs = "";
+
+            var jsDebugpath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".js");
+            var jsReleasepath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".min.js");
+            if (FileUtil.exists(jsDebugpath)) {
+                debugJs = 'libs/'+ moduleName + "/" + moduleName + ".js";
+            }
+
+            if (FileUtil.exists(jsReleasepath)) {
+                releaseJs = 'libs/'+ moduleName + "/" + moduleName + ".min.js";
+            }
+
+            if (debugJs == "") {
+                debugJs = releaseJs;
+            }
+            if (releaseJs == "") {
+                releaseJs = debugJs;
+            }
+
+            if (debugJs != "") {
+                debugJs = "bin-debug/" + debugJs;
+                str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n\n';
+            }
+
+            debugJs = "";
+            releaseJs = "";
+            jsDebugpath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".web.js");
+            jsReleasepath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".web.min.js");
+            if (FileUtil.exists(jsDebugpath)) {
+                debugJs = 'libs/'+ moduleName + "/" + moduleName + ".web.js";
+            }
+
+            if (FileUtil.exists(jsReleasepath)) {
+                releaseJs = 'libs/'+ moduleName + "/" + moduleName + ".web.min.js";
+            }
+
+            if (debugJs == "") {
+                debugJs = releaseJs;
+            }
+            if (releaseJs == "") {
+                releaseJs = debugJs;
+            }
+
+            if (debugJs != "") {
+                debugJs = "bin-debug/" + debugJs;
+                str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n\n';
+            }
+        }
+        var reg = /<!--libs_files_start-->[\s\S]*<!--libs_files_end-->/;
+        htmlContent = htmlContent.replace(reg, '<!--libs_files_start-->\n' + str + '\t<!--libs_files_end-->');
+        FileUtil.save(filepath, htmlContent);
     }
 }
 
