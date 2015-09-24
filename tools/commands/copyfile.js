@@ -15,17 +15,19 @@ var CopyFilesCommand = (function () {
         return 0;
     };
     CopyFilesCommand.prototype.copyFilesToNative = function (projectPath, outputPath, ignorePathList) {
-        var url = outputPath;
         var startTime = Date.now();
         //1、清除文件夹
-        file.remove(url);
+        file.remove(outputPath);
         //js
-        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(url));
+        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(outputPath));
         //resource
-        if (file.exists(file.joinPath(projectPath, config.getResourceName()))) {
-            this.copyFilesWithIgnore(file.joinPath(projectPath, config.getResourceName()), file.joinPath(url, config.getResourceName()), ignorePathList);
-        }
+        this.copyResources(projectPath, outputPath, ignorePathList);
         globals.log2(7, (Date.now() - startTime) / 1000);
+    };
+    CopyFilesCommand.prototype.copyResources = function (projectPath, outputPath, ignorePathList) {
+        if (file.exists(file.joinPath(projectPath, config.getResourceName()))) {
+            this.copyFilesWithIgnore(file.joinPath(projectPath, config.getResourceName()), file.joinPath(outputPath, config.getResourceName()), ignorePathList);
+        }
     };
     CopyFilesCommand.prototype.copyFilesWithIgnore = function (sourceRootPath, desRootPath, ignorePathList) {
         ignorePathList = ignorePathList.map(function (item) {

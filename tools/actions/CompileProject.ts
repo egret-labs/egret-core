@@ -10,7 +10,6 @@ import tsclark = require("../lib/typescript/tsclark");
 class CompileProject {
     public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
         var compileResult: tsclark.LarkCompileResult;
-        console.log("1111111")
         if (files && this.recompile) {
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
             compileResult = this.recompile(files);

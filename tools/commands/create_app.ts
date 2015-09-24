@@ -13,6 +13,7 @@ import ParseConfigCommand = require("../actions/ParseConfig");
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
 
+import copyNative = require("../actions/CopyNativeFiles");
 
 class CreateAppCommand implements egret.Command {
     executeRes : number = 0;
@@ -61,7 +62,6 @@ class CreateAppCommand implements egret.Command {
         var projectPath = file.joinPath(arg_h5_path);
         var nativePath = file.joinPath(arg_app_name);
 
-
         file.remove(nativePath);
 
         //生成native工程
@@ -88,23 +88,13 @@ class CreateAppCommand implements egret.Command {
         new ParseConfigCommand().execute();
 
         //修改文件
-        var fileModify = new FileAutoChangeCommand();
-        fileModify.needCompile = false;
-        fileModify.debug = true;
-        fileModify.execute();
-
+        //var fileModify = new FileAutoChangeCommand();
+        //fileModify.needCompile = false;
+        //fileModify.debug = true;
+        //fileModify.execute();
 
         //拷贝项目到native工程中
-        var cpFiles = new CopyFilesCommand();
-        if (platform == "android") {
-            var url2 = file.joinPath(nativePath, "proj.android/assets", "egret-game");
-        }
-        else if (platform == "ios") {
-            url2 = file.joinPath(nativePath, "Resources", "egret-game");
-        }
-        cpFiles.outputPath = url2;
-        cpFiles.ignorePathList = config.getIgnorePath();
-        cpFiles.execute();
+        copyNative.refreshNative(true);
 
         globals.log2(1606, (Date.now() - startTime) / 1000);
     }

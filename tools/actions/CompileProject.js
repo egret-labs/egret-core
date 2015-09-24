@@ -6,7 +6,6 @@ var CompileProject = (function () {
     }
     CompileProject.prototype.compileProject = function (option, files) {
         var compileResult;
-        console.log("1111111");
         if (files && this.recompile) {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
             compileResult = this.recompile(files);
