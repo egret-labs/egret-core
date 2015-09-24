@@ -49,7 +49,7 @@ module egret {
     locale_strings[10014] = "自动编译失败，请参考下面的错误信息：";
     locale_strings[10015] = "\"{0}\" 不是一个有效的 Egret 项目目录";
     locale_strings[10016] = "如果浏览器没有启动，请手动打开URL: {0}";
-    locale_strings[10017] = "项目创建成功，您可以执行 egret run 来运行刚刚创建的应用";
+    locale_strings[10017] = "项目创建成功，您可以执行 egret startserver 来运行刚刚创建的应用";
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"
                           + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
     locale_strings[10019] = "没有找到打包 App 所需要的项目文件，这些文件没有包含在 Github 中，请前往 http://www.egret.com 下载 Egret 安装包，如果您已经安装 Egret 安装包，请联系我们的工作人员";
