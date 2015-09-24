@@ -123,19 +123,23 @@ class FileAutoChangeCommand implements egret.Command {
         return str;
     }
 
-    libsList:string[];
-    refreshNativeRequire(htmlPath, isDebug) {
+    refreshNativeRequire(htmlPath, isDebug):ObjectURLOptions {
         var options = egret.args;
         //生成 获取列表
-        this.libsList = this.getLibsList(FileUtil.read(htmlPath), true, isDebug);
+        var listInfo = this.getLibsList(FileUtil.read(htmlPath), true, isDebug);
+
+        var allList = [];
+        if (!isDebug) {
+            allList = listInfo["libs"].concat(["main.min.js"]);
+        }
+        else {
+            allList = listInfo["game"].concat(listInfo["libs"]);
+        }
+
         var listStr = "\n";
-        this.libsList.forEach(function (filepath) {
+        allList.forEach(function (filepath) {
             listStr += '\t"' + filepath + '",\n';
         });
-
-        if (!isDebug) {
-            listStr += '\t"main.min.js"\n';
-        }
 
         var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         var requireContent = FileUtil.read(requirePath);
@@ -150,9 +154,14 @@ class FileAutoChangeCommand implements egret.Command {
         requireContent = requireContent.replace(reg, replaceStr);
 
         FileUtil.save(requirePath, requireContent);
+
+        return listInfo;
     }
 
-    private getLibsList(html:string, isNative:boolean, isDebug:boolean):string[] {
+    private getLibsList(html:string, isNative:boolean, isDebug:boolean):Object {
+        var gameList:string[] = [];
+        var libsList:string[] = [];
+
         var handler = new htmlparser.DefaultHandler(function (error, dom) {
             if (error)
                 console.log(error);
@@ -162,7 +171,7 @@ class FileAutoChangeCommand implements egret.Command {
         parser.parseComplete(html);
         handler.dom.forEach(d=> visitDom(d));
 
-        return resultArr;
+        return {game:gameList, libs:libsList};
 
         function visitDom(el:htmlparser.Element) {
             if (el.type == "script" && el.attribs && el.attribs["egret"]) {
@@ -171,14 +180,27 @@ class FileAutoChangeCommand implements egret.Command {
                     if (isNative) {
                         src = src.replace(".web.", ".native.");
                     }
+
+                    if (el.attribs["egret"] == "lib") {
+                        libsList.push(src);
+                    }
+                    else {
+                        gameList.push(src);
+                    }
                 }
                 else {
-                    if (el.attribs["egret"] == "lib") {
-                        var src = el.attribs['src-release'] || el.attribs['src'];
-                        if (isNative) {
-                            src = src.replace(".web.", ".native.");
+                    var src = el.attribs['src-release'] || el.attribs['src'];
+                    if (isNative) {
+                        src = src.replace(".web.", ".native.");
+
+                        if (el.attribs["egret"] == "lib") {
+                            libsList.push(src);
+                        }
+                        else {
+                            gameList.push(src);
                         }
                     }
+
                 }
                 if (src) {
                     resultArr.push(src);

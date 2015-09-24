@@ -103,14 +103,18 @@ var FileAutoChangeCommand = (function () {
     FileAutoChangeCommand.prototype.refreshNativeRequire = function (htmlPath, isDebug) {
         var options = egret.args;
         //生成 获取列表
-        this.libsList = this.getLibsList(FileUtil.read(htmlPath), true, isDebug);
+        var listInfo = this.getLibsList(FileUtil.read(htmlPath), true, isDebug);
+        var allList = [];
+        if (!isDebug) {
+            allList = listInfo["libs"].concat(["main.min.js"]);
+        }
+        else {
+            allList = listInfo["game"].concat(listInfo["libs"]);
+        }
         var listStr = "\n";
-        this.libsList.forEach(function (filepath) {
+        allList.forEach(function (filepath) {
             listStr += '\t"' + filepath + '",\n';
         });
-        if (!isDebug) {
-            listStr += '\t"main.min.js"\n';
-        }
         var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         var requireContent = FileUtil.read(requirePath);
         var reg = /\/\/----auto game_file_list start----[\s\S]*\/\/----auto game_file_list end----/;
@@ -121,8 +125,11 @@ var FileAutoChangeCommand = (function () {
         var replaceStr = '\/\/----auto option start----\n\t\t' + optionStr + '\n\t\t\/\/----auto option end----';
         requireContent = requireContent.replace(reg, replaceStr);
         FileUtil.save(requirePath, requireContent);
+        return listInfo;
     };
     FileAutoChangeCommand.prototype.getLibsList = function (html, isNative, isDebug) {
+        var gameList = [];
+        var libsList = [];
         var handler = new htmlparser.DefaultHandler(function (error, dom) {
             if (error)
                 console.log(error);
@@ -131,7 +138,7 @@ var FileAutoChangeCommand = (function () {
         var parser = new htmlparser.Parser(handler);
         parser.parseComplete(html);
         handler.dom.forEach(function (d) { return visitDom(d); });
-        return resultArr;
+        return { game: gameList, libs: libsList };
         function visitDom(el) {
             if (el.type == "script" && el.attribs && el.attribs["egret"]) {
                 if (isDebug) {
@@ -139,12 +146,22 @@ var FileAutoChangeCommand = (function () {
                     if (isNative) {
                         src = src.replace(".web.", ".native.");
                     }
+                    if (el.attribs["egret"] == "lib") {
+                        libsList.push(src);
+                    }
+                    else {
+                        gameList.push(src);
+                    }
                 }
                 else {
-                    if (el.attribs["egret"] == "lib") {
-                        var src = el.attribs['src-release'] || el.attribs['src'];
-                        if (isNative) {
-                            src = src.replace(".web.", ".native.");
+                    var src = el.attribs['src-release'] || el.attribs['src'];
+                    if (isNative) {
+                        src = src.replace(".web.", ".native.");
+                        if (el.attribs["egret"] == "lib") {
+                            libsList.push(src);
+                        }
+                        else {
+                            gameList.push(src);
                         }
                     }
                 }

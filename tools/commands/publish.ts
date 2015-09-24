@@ -43,7 +43,7 @@ class Publish implements egret.Command {
 
             //修改 native_require.js
             var autoChange = new FileAutoChange();
-            autoChange.refreshNativeRequire(rootHtmlPath, false);
+            var listInfo = autoChange.refreshNativeRequire(rootHtmlPath, false);
 
             //先拷贝 launcher
             FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
@@ -51,7 +51,7 @@ class Publish implements egret.Command {
             FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
             FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
 
-            autoChange.libsList.forEach(function (filepath) {
+            listInfo["libs"].forEach(function (filepath) {
                 FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
             });
 
