@@ -29,18 +29,21 @@ class Publish implements egret.Command {
         options.publish = true;
 
         utils.clean(options.releaseDir);
+
         exml.beforeBuild();
         var compileProject = new CompileProject();
         exml.build();
         var result = compileProject.compileProject(options);
         if(result.exitStatus)
             return result.exitStatus;
-        utils.minify(options.out,options.out);
-
-        CopyFiles.copyProjectFiles();
-
         exml.afterBuild();
-        CompileTemplate.compileTemplates(options, result.files);
+
+        CompileTemplate.modifyIndexHTML(result.files);
+
+        CompileTemplate.modifyNativeRequire();
+
+
+        utils.minify(options.out,options.out);
 
         //生成 all.manifest
         (new GenerateVersion).execute();

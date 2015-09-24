@@ -21,14 +21,22 @@ var Clean = (function () {
             option: egret.args
         }, null, false);
         utils.clean(options.debugDir);
-        CopyFiles.copyLark();
+        //刷新libs 中 modules 文件
+        CopyFiles.copyToLibs();
+        //编译 bin-debug 文件
         exmlActions.beforeBuild();
         var compileProject = new CompileProject();
         //编译
-        var exmlresult = exmlActions.build();
+        exmlActions.build();
         var result = compileProject.compileProject(options);
-        //操作其他文件
-        CompileTemplate.compileTemplates(options, result.files);
+        if (result.exitStatus)
+            return result.exitStatus;
+        //修改 html 中 modules 块
+        CopyFiles.modifyHTMLWithModules();
+        //修改 html 中 game_list 块
+        CompileTemplate.modifyIndexHTML(result.files);
+        //根据 index.html 修改 native_require.js 文件
+        CompileTemplate.modifyNativeRequire();
         exmlActions.afterBuild();
         //Wait for 'shutdown' command, node will exit when there are no tasks.
         return DontExitCode;

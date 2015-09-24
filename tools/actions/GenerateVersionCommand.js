@@ -53,7 +53,6 @@ var GenerateVersionCommand = (function () {
             var txt = FileUtil.read(filePath);
             var crc32 = globals.getCrc32();
             var txtCrc32 = crc32(txt);
-            console.log(filePath);
             var savePath = FileUtil.relative(sourceRoot, filePath);
             allVersion[savePath] = { "v": txtCrc32, "s": fs.statSync(filePath).size };
         }

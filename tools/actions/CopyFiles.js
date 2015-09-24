@@ -16,7 +16,7 @@ var CopyFiles = (function () {
     };
     CopyFiles.copyLark = function () {
         CopyFiles.copyToLibs();
-        CopyFiles.modifyIndexHTML();
+        CopyFiles.modifyHTMLWithModules();
         return 0;
     };
     CopyFiles.copyToLibs = function () {
@@ -88,7 +88,7 @@ var CopyFiles = (function () {
         }
         return str;
     };
-    CopyFiles.modifyIndexHTML = function () {
+    CopyFiles.modifyHTMLWithModules = function () {
         var options = egret.args;
         var libsScriptsStr = CopyFiles.getLibsScripts();
         var reg = /<!--modules_files_start-->[\s\S]*<!--modules_files_end-->/;
