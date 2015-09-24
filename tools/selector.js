@@ -108,10 +108,14 @@ function executeVersion(version, root) {
         }
         root = targetEngine.root;
     }
-    process.env["EGRET_PATH"] = root;
     var bin = getBin(root);
     if (args.command != "info") {
         console.log("----- Egret Engine " + version + " -----");
+    }
+    process.env["EGRET_PATH"] = root;
+    //Fix 1.5 can not find typescript lib
+    if (process['mainModule']) {
+        process['mainModule'].filename = bin;
     }
     require(bin);
     return true;

@@ -1834,11 +1834,13 @@ var egret;
              */
             p.getDirtyRegions = function () {
                 var dirtyList = this.dirtyList;
-                if (this.clipRectChanged) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
                     //todo 现在为全部dirty
-                    if (egret.Capabilities.runtimeType != egret.RuntimeType.NATIVE) {
-                        this.clipRectChanged = false;
-                    }
+                    var region = sys.Region.create();
+                    dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
+                }
+                else if (this.clipRectChanged) {
+                    this.clipRectChanged = false;
                     this.clear();
                     var region = sys.Region.create();
                     dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));

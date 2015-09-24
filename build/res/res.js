@@ -2190,6 +2190,10 @@ var RES;
             }
             var d = __define,c=NativeVersionController;p=c.prototype;
             p.fetchVersion = function (callback) {
+                if (DEBUG) {
+                    callback.onSuccess(null);
+                    return;
+                }
                 var self = this;
                 self._versionPath = "all.manifest";
                 self._versionInfo = self.getLocalData(self._versionPath);
