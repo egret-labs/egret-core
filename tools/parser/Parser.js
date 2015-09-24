@@ -100,7 +100,7 @@ exports.optionDeclarations = [
         name: 'egretVersion',
         type: 'string',
         shortName: "ev"
-    },{
+    }, {
         name: 'serveronly',
         type: 'boolean'
     }
