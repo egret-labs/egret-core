@@ -1,13 +1,13 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
 var FileUtil = require('../lib/FileUtil');
-var CopyFiles = require('../actions/CopyFiles');
 var exml = require("../actions/exml");
 var CompileProject = require('../actions/CompileProject');
 var CompileTemplate = require('../actions/CompileTemplate');
 var GenerateVersion = require('../actions/GenerateVersionCommand');
 var ZipCMD = require("../actions/ZipCommand");
-var ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
+var project = require("../actions/Project");
+var copyNative = require("../actions/CopyNativeFiles");
 var Publish = (function () {
     function Publish() {
     }
@@ -26,54 +26,60 @@ var Publish = (function () {
         var result = compileProject.compileProject(options);
         if (result.exitStatus)
             return result.exitStatus;
-        utils.minify(options.out, options.out);
-        CopyFiles.copyProjectFiles();
         exml.afterBuild();
-        CompileTemplate.compileTemplates(options, result.files);
+        CompileTemplate.modifyIndexHTML(result.files);
+        CompileTemplate.modifyNativeRequire();
+        utils.minify(options.out, options.out);
         //生成 all.manifest
-        if (egret.args.properties.getPublishType(egret.args.runtime) == 1) {
-            //生成 all.manifest 文件，并拷贝文件 删除旧文件
-            (new GenerateVersion).execute();
-        }
+        (new GenerateVersion).execute();
         if (egret.args.runtime == "native") {
+            var rootHtmlPath = FileUtil.joinPath(options.projectDir, "index.html");
+            //生成 获取列表
+            var libsList = project.getLibsList(FileUtil.read(rootHtmlPath), true, false);
+            var listStr = "\n";
+            libsList.forEach(function (filepath) {
+                listStr += '\t"' + filepath + '",\n';
+            });
+            listStr += '\t"main.min.js"\n';
+            var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
+            var requireContent = FileUtil.read(requirePath);
+            var reg = /\/\/----auto game_file_list start----[\s\S]*\/\/----auto game_file_list end----/;
+            var replaceStr = '\/\/----auto game_file_list start----' + listStr + '\t\/\/----auto game_file_list end----';
+            requireContent = requireContent.replace(reg, replaceStr);
+            var optionStr = project.getNativeProjectInfo(rootHtmlPath);
+            var reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
+            var replaceStr = '\/\/----auto option start----\n\t\t' + optionStr + '\n\t\t\/\/----auto option end----';
+            requireContent = requireContent.replace(reg, replaceStr);
+            FileUtil.save(requirePath, requireContent);
+            //先拷贝 launcher
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
+            FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
+            FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
+            libsList.forEach(function (filepath) {
+                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
+            });
             var versionFile = (egret.args.version || Math.round(Date.now() / 1000)).toString();
             //runtime  打包所有js文件以及all.manifest
             var zip = new ZipCMD(versionFile);
             zip.execute(function (code) {
-                var releasePath = egret.args.releaseDir;
-                var nativePath;
-                if (nativePath = egret.args.properties.getNativePath("android")) {
-                    var url1 = FileUtil.joinPath(nativePath, "proj.android");
-                    var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
-                    FileUtil.remove(url2);
-                    try {
-                        FileUtil.createDirectory(url2);
-                    }
-                    catch (e) {
-                        globals.exit(10021);
-                    }
-                    FileUtil.copy(releasePath, url2);
-                    //修改java文件
-                    var entrance = new ChangeEntranceCMD();
-                    entrance.initCommand(url1, "android", versionFile);
-                    entrance.execute();
-                }
-                if (nativePath = egret.args.properties.getNativePath("ios")) {
-                    var url1 = FileUtil.joinPath(nativePath, "proj.ios");
-                    url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
-                    FileUtil.remove(url2);
-                    try {
-                        FileUtil.createDirectory(url2);
-                    }
-                    catch (e) {
-                        globals.exit(10021);
-                    }
-                    FileUtil.copy(releasePath, url2);
-                    //修改java文件
-                    var entrance = new ChangeEntranceCMD();
-                    entrance.initCommand(url1, "ios", versionFile);
-                    entrance.execute();
-                }
+                copyNative.refreshNative(false, versionFile);
+            });
+        }
+        else {
+            var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
+            FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), releaseHtmlPath);
+            var htmlContent = FileUtil.read(releaseHtmlPath);
+            //替换使用 html 中的 src-release 目录
+            var reg = /src[^>]*src-release/g;
+            htmlContent = htmlContent.replace(reg, "src");
+            //替换 game_files 脚本
+            var reg = /<!--game_files_start-->[\s\S]*<!--game_files_end-->/;
+            var replaceStr = '<!--game_files_start-->\n' + '\t<script src="main.min.js"></script>\n' + '\t<!--game_files_end-->';
+            htmlContent = htmlContent.replace(reg, replaceStr);
+            FileUtil.save(releaseHtmlPath, htmlContent);
+            var libsList = project.getLibsList(htmlContent, false, false);
+            libsList.forEach(function (filepath) {
+                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, filepath));
             });
         }
         return DontExitCode;

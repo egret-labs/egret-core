@@ -9,8 +9,8 @@ export function normalize(project: egret.ILarkProject) {
     project.entryClass = project.entryClass || "Main";
     project.platform = project.platform || "web";
     project.background = project.background || "#888888";
-    project.scaleMode = project.scaleMode || "noScale"
-    project.orientationMode = project.orientationMode || "auto"
+    project.scaleMode = project.scaleMode || "showAll";
+    project.orientationMode = project.orientationMode || "auto";
     project.frameRate = project.frameRate || 30;
     project.contentWidth = project.contentWidth || 480;
     project.contentHeight = project.contentHeight || 800;
@@ -27,6 +27,80 @@ export function normalize(project: egret.ILarkProject) {
     project.resolutionMode = project.resolutionMode || "retina";
 }
 
+export function getLibsList(html:string, isNative:boolean, isDebug:boolean):string[] {
+    var handler = new htmlparser.DefaultHandler(function (error, dom) {
+        if (error)
+            console.log(error);
+    });
+    var resultArr:string[] = [];
+    var parser = new htmlparser.Parser(handler);
+    parser.parseComplete(html);
+    handler.dom.forEach(d=> visitDom(d));
+
+    return resultArr;
+
+    function visitDom(el: htmlparser.Element) {
+        if (el.type == "script" && el.attribs && el.attribs["egret"]) {
+            if (isDebug) {
+                var src = el.attribs['src'];
+                if (isNative) {
+                    src = src.replace(".web.", ".native.");
+                }
+            }
+            else {
+                if (el.attribs["egret"] == "lib") {
+                    var src = el.attribs['src-release'] || el.attribs['src'];
+                    if (isNative) {
+                        src = src.replace(".web.", ".native.");
+                    }
+                }
+            }
+            if (src) {
+                resultArr.push(src);
+            }
+        }
+
+        if (el.children) {
+            el.children.forEach(e=> visitDom(e));
+        }
+    }
+}
+
+import doT = require('../lib/doT');
+import FileUtil = require('../lib/FileUtil');
+
+export function getNativeProjectInfo(html:string) {
+    if (!FileUtil.exists(html))
+        return;
+    var content = FileUtil.read(html);
+
+    var projs = parseProjectInfo(content);
+    var proj: egret.ILarkProject;
+    if (projs.length == 0) {
+        proj = {};
+    } else {
+        proj = projs[0];
+    }
+
+    var optionStr =
+        'entryClassName: "{{=it.entryClass}}",\n\t\t' +
+        'frameRate: {{=it.frameRate}},\n\t\t' +
+        'scaleMode: "{{=it.scaleMode}}",\n\t\t' +
+        'contentWidth: {{=it.contentWidth}},\n\t\t' +
+        'contentHeight: {{=it.contentHeight}},\n\t\t' +
+        'showPaintRect: {{=it.showPaintRect}},\n\t\t' +
+        'showFPS: {{=it.showFPS}},\n\t\t' +
+        'fpsStyles: "{{=it.fpsStyles}}",\n\t\t' +
+        'showLog: {{=it.showLog}},\n\t\t' +
+        'logFilter: "{{=it.logFilter}}",\n\t\t' +
+        'maxTouches: {{=it.maxTouches}},\n\t\t' +
+        'textureScaleFactor: 1';
+
+    var temp = doT.template(optionStr);
+    optionStr = temp(proj);
+
+    return optionStr;
+}
 
 export function parseProjectInfo(html: string): egret.ILarkProject[] {
     var handler = new htmlparser.DefaultHandler(function (error, dom) {

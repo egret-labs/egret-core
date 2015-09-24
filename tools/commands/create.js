@@ -18,6 +18,10 @@ var Create = (function () {
         var project = option.getProject(true);
         //默认使用命令行创建
         project.type = project.type || "game";
+        var template = egret.manifest.templates.filter(function (t) { return t.name == project.type; });
+        if (!template || template.length == 0) {
+            project.type = "game";
+        }
         if (project.type) {
             var create = new createAction();
             create.project = project;

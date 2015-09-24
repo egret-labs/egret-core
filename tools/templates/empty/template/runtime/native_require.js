@@ -1,8 +1,10 @@
+
 var game_file_list = [
-    {{~it.nativeScripts :value:index}}
-    {{? index != 0}},{{?}}"{{=value}}"
-    {{~}}
+    //以下为自动修改，请勿修改
+    //----auto game_file_list start----
+    //----auto game_file_list end----
 ];
+
 var window = {};
 
 egret_native.setSearchPaths([""]);
@@ -25,19 +27,11 @@ egret_native.egretInit = function () {
 
 egret_native.egretStart = function () {
     var option = {
-        entryClassName: "{{=it.entryClass}}",
-        frameRate: {{=it.frameRate}},
-        scaleMode: "{{=it.scaleMode}}",
-        contentWidth: {{=it.contentWidth}},
-        contentHeight: {{=it.contentHeight}},
-        showPaintRect: {{=it.showPaintRect}},
-        showFPS: {{=it.showFPS}},
-        fpsStyles: "{{=it.fpsStyles}}",
-        showLog: {{=it.showLog}},
-        logFilter: "{{=it.logFilter}}",
-        maxTouches: {{=it.maxTouches}},
-        textureScaleFactor: {{=it.textureScaleFactor}}
+        //以下为自动修改，请勿修改
+        //----auto option start----
+        //----auto option end----
     };
+
     egret.native.NativePlayer.option = option;
     egret.runEgret();
     egret_native.Label.createLabel(egret.TextField.default_fontFamily, 20, "", 0);

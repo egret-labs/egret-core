@@ -8,12 +8,20 @@ var CopyFiles = (function () {
     }
     CopyFiles.copyProjectFiles = function () {
         var targetFolder = egret.args.outDir;
-        copyDirectory(egret.args.srcDir, targetFolder, srcFolderOutputFilter);
+        //copyDirectory(egret.args.srcDir, targetFolder,srcFolderOutputFilter);
+    };
+    CopyFiles.copyRuntimeFiles = function () {
+        var targetFolder = egret.args.outDir;
         copyDirectory(egret.args.templateDir, targetFolder);
     };
     CopyFiles.copyLark = function () {
+        CopyFiles.copyToLibs();
+        CopyFiles.modifyHTMLWithModules();
+        return 0;
+    };
+    CopyFiles.copyToLibs = function () {
         var options = egret.args;
-        FileUtil.remove(FileUtil.joinPath(options.srcDir, 'libs'));
+        FileUtil.remove(FileUtil.joinPath(options.libsDir, 'modules'));
         var properties = egret.args.properties;
         var modules = properties.getAllModuleNames();
         for (var tempK in modules) {
@@ -25,26 +33,14 @@ var CopyFiles = (function () {
             else {
                 moduleBin = FileUtil.joinPath(modulePath, "bin", moduleName);
             }
-            var targetFile = FileUtil.joinPath(options.srcDir, 'libs', moduleName);
+            var targetFile = FileUtil.joinPath(options.libsDir, 'modules', moduleName);
             if (options.projectDir.toLowerCase() != egret.root.toLowerCase()) {
                 FileUtil.copy(moduleBin, targetFile);
             }
         }
-        var list = FileUtil.getDirectoryListing(options.templateDir);
-        for (var key in list) {
-            var filepath = list[key];
-            if (FileUtil.getExtension(filepath) == "html") {
-            }
-        }
-        CopyFiles.modifyIndexHTML();
-        return 0;
     };
-    CopyFiles.copyOutputToNative = function () {
-    };
-    CopyFiles.modifyIndexHTML = function () {
+    CopyFiles.getLibsScripts = function () {
         var options = egret.args;
-        var filepath = options.projectDir + "/index.html";
-        var htmlContent = FileUtil.read(filepath);
         var properties = egret.args.properties;
         var modules = properties.getAllModuleNames();
         var str = "";
@@ -52,13 +48,14 @@ var CopyFiles = (function () {
             var moduleName = modules[tempK];
             var debugJs = "";
             var releaseJs = "";
-            var jsDebugpath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".js");
-            var jsReleasepath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".min.js");
+            var moduleReRoot = 'libs/modules/' + moduleName + "/";
+            var jsDebugpath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".js");
+            var jsReleasepath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".min.js");
             if (FileUtil.exists(jsDebugpath)) {
-                debugJs = 'libs/' + moduleName + "/" + moduleName + ".js";
+                debugJs = moduleReRoot + moduleName + ".js";
             }
             if (FileUtil.exists(jsReleasepath)) {
-                releaseJs = 'libs/' + moduleName + "/" + moduleName + ".min.js";
+                releaseJs = moduleReRoot + moduleName + ".min.js";
             }
             if (debugJs == "") {
                 debugJs = releaseJs;
@@ -67,18 +64,17 @@ var CopyFiles = (function () {
                 releaseJs = debugJs;
             }
             if (debugJs != "") {
-                debugJs = "bin-debug/" + debugJs;
-                str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n\n';
+                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
             }
             debugJs = "";
             releaseJs = "";
-            jsDebugpath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".web.js");
-            jsReleasepath = FileUtil.joinPath(options.srcDir, 'libs', moduleName, moduleName + ".web.min.js");
+            jsDebugpath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".web.js");
+            jsReleasepath = FileUtil.joinPath(options.projectDir, moduleReRoot, moduleName + ".web.min.js");
             if (FileUtil.exists(jsDebugpath)) {
-                debugJs = 'libs/' + moduleName + "/" + moduleName + ".web.js";
+                debugJs = moduleReRoot + moduleName + ".web.js";
             }
             if (FileUtil.exists(jsReleasepath)) {
-                releaseJs = 'libs/' + moduleName + "/" + moduleName + ".web.min.js";
+                releaseJs = moduleReRoot + moduleName + ".web.min.js";
             }
             if (debugJs == "") {
                 debugJs = releaseJs;
@@ -87,13 +83,25 @@ var CopyFiles = (function () {
                 releaseJs = debugJs;
             }
             if (debugJs != "") {
-                debugJs = "bin-debug/" + debugJs;
-                str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n\n';
+                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
             }
         }
-        var reg = /<!--libs_files_start-->[\s\S]*<!--libs_files_end-->/;
-        htmlContent = htmlContent.replace(reg, '<!--libs_files_start-->\n' + str + '\t<!--libs_files_end-->');
-        FileUtil.save(filepath, htmlContent);
+        return str;
+    };
+    CopyFiles.modifyHTMLWithModules = function () {
+        var options = egret.args;
+        var libsScriptsStr = CopyFiles.getLibsScripts();
+        var reg = /<!--modules_files_start-->[\s\S]*<!--modules_files_end-->/;
+        var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
+        var list = FileUtil.getDirectoryListing(options.projectDir);
+        for (var key in list) {
+            var filepath = list[key];
+            if (FileUtil.getExtension(filepath) == "html") {
+                var htmlContent = FileUtil.read(filepath);
+                htmlContent = htmlContent.replace(reg, replaceStr);
+                FileUtil.save(filepath, htmlContent);
+            }
+        }
     };
     return CopyFiles;
 })();

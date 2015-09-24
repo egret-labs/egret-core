@@ -27,31 +27,6 @@ class ZipCommand implements egret.Command {
 
         FileUtil.createDirectory(ziptempPath);
 
-        if (FileUtil.exists(FileUtil.joinPath(releasePath, "all.manifest"))) {
-            FileUtil.copy(FileUtil.joinPath(releasePath, "all.manifest"), FileUtil.joinPath(releasePath, "ziptemp", "all.manifest"));
-            this.useList.push(FileUtil.joinPath(releasePath, "all.manifest"));
-        }
-
-        FileUtil.copy(FileUtil.joinPath(releasePath, "launcher"), FileUtil.joinPath(releasePath, "ziptemp", "launcher"));
-        this.useList.push(FileUtil.joinPath(releasePath, "launcher"));
-
-        var index = FileUtil.joinPath(releasePath, "index.html");
-        var content = FileUtil.read(index);
-
-
-        var projs = project.parseProjectInfo(content);
-        var proj: egret.ILarkProject;
-        if (projs.length == 0) {
-            proj = {};
-        } else {
-            proj = projs[0];
-        }
-        var list = proj.nativeScripts;
-        for (var key in list) {
-            FileUtil.copy(FileUtil.joinPath(releasePath, list[key]), FileUtil.joinPath(releasePath, "ziptemp", list[key]));
-            this.useList.push(FileUtil.joinPath(releasePath, list[key]));
-        }
-
         //runtime  打包所有js文件以及all.manifest
         this.outputFile = FileUtil.joinPath(releasePath, "game_code_" + this.versionFile + ".zip");
         this.sourcePath = ziptempPath;

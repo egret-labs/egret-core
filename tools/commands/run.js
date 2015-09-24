@@ -36,7 +36,7 @@ var Run = (function () {
         }
         this.serverStarted = true;
         server.startServer(egret.args, egret.args.startUrl);
-        if (egret.args.serverOnly) {
+        if (egret.args.serveronly) {
             console.log("Url:" + egret.args.startUrl);
         }
         else {
@@ -54,7 +54,7 @@ var Run = (function () {
             this.watchFiles(egret.args.srcDir);
             this.watchFiles(egret.args.templateDir);
         }
-        else if (!egret.args.serverOnly) {
+        else if (!egret.args.serveronly) {
             console.log('    ' + utils.tr(10012));
         }
     };

@@ -13,9 +13,10 @@ var CompileProject = (function () {
         else {
             var compiler = new Compiler();
             var tsList = FileUtil.search(option.srcDir, "ts");
+            var libsList = FileUtil.search(option.libsDir, "ts");
             var compileOptions = {
                 args: option,
-                files: tsList,
+                files: tsList.concat(libsList),
                 out: option.out,
                 outDir: option.outDir
             };

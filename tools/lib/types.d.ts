@@ -38,7 +38,6 @@ declare module egret {
         commands?: string[];
         platform?: string;
 
-
         type?: string;
         native?: boolean;
         runtime?: string;
@@ -50,6 +49,7 @@ declare module egret {
         nativeTemplatePath: string;
         all: boolean;
         projectDir: string;
+        libsDir: string;
         getTmpDir(): string;
         srcDir: string;
         larkPropertiesFile: string;

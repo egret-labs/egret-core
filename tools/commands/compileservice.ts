@@ -181,7 +181,7 @@ class AutoCompileCommand implements egret.Command {
             if (fileName == proj) {
                 this.buildProject();
             }
-            if (fileName.indexOf(src) < 0 && fileName.indexOf(temp) < 0) {
+            if (fileName.indexOf(src) < 0/* && fileName.indexOf(temp) < 0*/) {
                 return;
             }
 

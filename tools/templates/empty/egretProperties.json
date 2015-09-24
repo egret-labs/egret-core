@@ -1,7 +1,10 @@
 {
-  "native": {
-    "path_ignore": [
-
-    ]
-  }
+    "native": {
+        "path_ignore": [
+        ]
+    },
+    "publish": {
+        "web": 0,
+        "native": 1
+    }
 }

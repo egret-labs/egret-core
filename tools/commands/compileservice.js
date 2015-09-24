@@ -139,7 +139,7 @@ var AutoCompileCommand = (function () {
             if (fileName == proj) {
                 _this.buildProject();
             }
-            if (fileName.indexOf(src) < 0 && fileName.indexOf(temp) < 0) {
+            if (fileName.indexOf(src) < 0 /* && fileName.indexOf(temp) < 0*/) {
                 return;
             }
             var relativePath = fileName.replace(src, '').replace(temp, '');
