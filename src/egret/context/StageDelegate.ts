@@ -217,7 +217,7 @@ module egret {
                 }
             }
             else {
-                canvasDiv.style.top = Math.max((clientHeight - styleH) / 2, 0) + "px";
+                canvasDiv.style.top = Math.max(clientHeight - styleH, 0) + "px";
                 canvasDiv.style.left = Math.max((clientWidth - styleW) / 2, 0) + "px";
             }
 
