@@ -6,6 +6,7 @@ var CompileProject = (function () {
     }
     CompileProject.prototype.compileProject = function (option, files) {
         var compileResult;
+        console.log("1111111");
         if (files && this.recompile) {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
             compileResult = this.recompile(files);
@@ -13,9 +14,10 @@ var CompileProject = (function () {
         else {
             var compiler = new Compiler();
             var tsList = FileUtil.search(option.srcDir, "ts");
+            var libsList = FileUtil.search(option.libsDir, "ts");
             var compileOptions = {
                 args: option,
-                files: tsList,
+                files: tsList.concat(libsList),
                 out: option.out,
                 outDir: option.outDir
             };

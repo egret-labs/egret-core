@@ -15,7 +15,6 @@ class NativeProject {
     public static build(platform?: string) {
         console.log("----native build-----")
 
-
         CompileTemplate.compileNativeRequire(egret.args);
 
         //拷贝项目到native工程中

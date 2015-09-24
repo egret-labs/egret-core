@@ -13,6 +13,8 @@ import GenerateVersion = require('../actions/GenerateVersionCommand');
 import ZipCMD = require("../actions/ZipCommand");
 import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
+import project = require("../actions/Project");
+
 class Publish implements egret.Command {
     execute():number {
         var options = egret.args;
@@ -32,7 +34,9 @@ class Publish implements egret.Command {
         if(result.exitStatus)
             return result.exitStatus;
         utils.minify(options.out,options.out);
+
         CopyFiles.copyProjectFiles();
+
         exml.afterBuild();
         CompileTemplate.compileTemplates(options, result.files);
 
@@ -42,8 +46,26 @@ class Publish implements egret.Command {
             (new GenerateVersion).execute();
         }
 
+        if (egret.args.runtime == "native") {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
+
+            //
+            var fileList = project.getFileList(FileUtil.joinPath(options.projectDir, "index.html"), true, false);
+
+        }
+        else {
+            FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), FileUtil.joinPath(options.releaseDir, "index.html"));
+        }
+
+
+        return 1;
+
+
+        FileUtil.copy(FileUtil.joinPath(options.libsDir), FileUtil.joinPath(options.releaseDir, "libs"));
 
         if (egret.args.runtime == "native") {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
+
             var versionFile = (egret.args.version || Math.round(Date.now() / 1000)).toString();
 
             //runtime  打包所有js文件以及all.manifest

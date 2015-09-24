@@ -8,6 +8,7 @@ var CompileTemplate = require('../actions/CompileTemplate');
 var GenerateVersion = require('../actions/GenerateVersionCommand');
 var ZipCMD = require("../actions/ZipCommand");
 var ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
+var project = require("../actions/Project");
 var Publish = (function () {
     function Publish() {
     }
@@ -36,6 +37,17 @@ var Publish = (function () {
             (new GenerateVersion).execute();
         }
         if (egret.args.runtime == "native") {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
+            //
+            var fileList = project.getFileList(FileUtil.joinPath(options.projectDir, "index.html"), true, false);
+        }
+        else {
+            FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), FileUtil.joinPath(options.releaseDir, "index.html"));
+        }
+        return 1;
+        FileUtil.copy(FileUtil.joinPath(options.libsDir), FileUtil.joinPath(options.releaseDir, "libs"));
+        if (egret.args.runtime == "native") {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
             var versionFile = (egret.args.version || Math.round(Date.now() / 1000)).toString();
             //runtime  打包所有js文件以及all.manifest
             var zip = new ZipCMD(versionFile);

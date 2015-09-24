@@ -21,7 +21,7 @@ var Build = (function () {
             FileUtil.exists(options.templateDir) == false) {
             utils.exit(10015, options.projectDir);
         }
-        if (FileUtil.exists(FileUtil.joinPath(options.srcDir, 'libs/egret/')) == false) {
+        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/egret/'))) {
             CopyFiles.copyLark();
         }
         service.execCommand({
@@ -90,9 +90,7 @@ function onGotBuildCommandResult(cmd, callback) {
     if (cmd.exitCode > 10000) {
         console.log(utils.tr(cmd.exitCode));
     }
-    if (egret.args.runtime == "native") {
-        Native.build();
-    }
+    Native.build();
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(function () { return callback(0); }, 500);
     }

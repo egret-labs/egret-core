@@ -20,15 +20,16 @@
         }
     </style>
 
-    <!--libs_files_start-->
-    {{~it.moduleScripts :value:index}}
-    <script src="{{=value}}.js" src-release="{{=value}}.min.js"></script>
-    {{~}}
-    <!--libs_files_end-->
+    <!--这个标签为通过egret提供的第三方库的方式生成的 javascript 文件-->
+    <!--modules_files_start-->
+    <!--modules_files_end-->
+
+    <!--这个标签为不通过egret提供的第三方库的方式使用的 javascript 文件，请将这些文件放在libs下，但不要放在modules下面。-->
+    <!--other_libs_files_start-->
+    <!--other_libs_files_end-->
 
     <!--这个标签会被替换为项目中所有的 javascript 文件-->
     <!--game_files_start-->
-    {{=it.scriptTemplate}}
     <!--game_files_end-->
 </head>
 <body>
