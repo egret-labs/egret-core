@@ -1,10 +1,8 @@
 /// <reference path="../../lib/types.d.ts" />
 
-//import TSP = require("./2.4.2/TsServiceProxy");
 import fs = require("fs");
 import file = require('../../lib/FileUtil');
 import CHILD_EXEC = require('child_process');
-//import TSS = require("./2.4.2/typescriptServices");
 import utils = require('../../lib/utils');
 import APITestTool = require('../../actions/APITest');
 

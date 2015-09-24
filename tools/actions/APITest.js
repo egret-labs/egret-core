@@ -2,10 +2,10 @@
  * Created by yanjiaqi on 15/9/22.
  */
 /// <reference path="../lib/types.d.ts" />
-var TSP = require("../commands/upgrade/2.4.2/TsServiceProxy");
+var TSP = require("../commands/upgrade/2.4.3/TsServiceProxy");
 var file = require('../lib/FileUtil');
-var TSS = require("../commands/upgrade/2.4.2/typescriptServices");
-var DTS = require('../commands/upgrade/2.4.2/compare2dts.js');
+var TSS = require("../commands/upgrade/2.4.3/typescriptServices");
+var DTS = require('../commands/upgrade/2.4.3/compare2dts.js');
 var AutoLogger = (function () {
     function AutoLogger() {
         this._isConsoleOut = false;
@@ -43,7 +43,7 @@ var AutoLogger = (function () {
     AutoLogger.prototype.init = function (ignorePath) {
         this._dir = ignorePath || '';
         this._total = 0;
-        var solutionPath = file.joinPath(egret.root, '/tools/commands/upgrade/2.4.2', 'solution_urls.json');
+        var solutionPath = file.joinPath(egret.root, '/tools/commands/upgrade/2.4.3', 'solution_urls.json');
         this._solutionMap = JSON.parse(file.read(solutionPath));
         this._snapShot = '';
     };
@@ -212,8 +212,8 @@ var APITestAction = (function () {
             projectPath = egret.args.projectDir;
         }
         var egretRoot = egret.root;
-        var libPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.2/libs'); //用自带的旧api检测
-        var configPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.2/solved');
+        var libPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.3/libs'); //用自带的旧api检测
+        var configPath = file.joinPath(egretRoot, 'tools/commands/upgrade/2.4.3/solved');
         var searchLST = DTS.load_format(configPath);
         if (searchLST) {
             console.log('API 冲突检测中...');
