@@ -1574,6 +1574,8 @@ declare module dragonBones {
         _tweenZOrder: number;
         /** @private */
         _offsetZOrder: number;
+        /** @private */
+        _originDisplayIndex: number;
         _displayList: Array<any>;
         _currentDisplayIndex: number;
         _colorTransform: ColorTransform;
@@ -1581,6 +1583,7 @@ declare module dragonBones {
         _isShowDisplay: boolean;
         _blendMode: string;
         _isColorChanged: boolean;
+        _needUpdate: boolean;
         _timelineStateList: Array<SlotTimelineState>;
         constructor(self: Slot);
         /**
@@ -1696,6 +1699,7 @@ declare module dragonBones {
         /** @private When bone timeline enter a key frame, call this func*/
         _arriveAtFrame(frame: Frame, timelineState: SlotTimelineState, animationState: AnimationState, isCross: boolean): void;
         _updateGlobal(): any;
+        _resetToOrigin(): void;
     }
 }
 declare module dragonBones {
@@ -3002,12 +3006,12 @@ declare module dragonBones {
         getAnimation(): any;
         /**
          * ArmatureData.
-         * @see dragonBones.objects.ArmatureData.
+         * @see dragonBones.ArmatureData.
          */
         armatureData: ArmatureData;
         /**
          * An Animation instance
-         * @see dragonBones.animation.Animation
+         * @see dragonBones.Animation
          */
         animation: FastAnimation;
         /**
@@ -3083,13 +3087,13 @@ declare module dragonBones {
         name: string;
         /**
          * This DBObject instance global transform instance.
-         * @see dragonBones.objects.DBTransform
+         * @see dragonBones.DBTransform
          */
         global: DBTransform;
         globalTransformMatrix: Matrix;
         /**
          * This DBObject instance related to parent transform instance.
-         * @see dragonBones.objects.DBTransform
+         * @see dragonBones.DBTransform
          */
         origin: DBTransform;
         /**
@@ -3120,6 +3124,7 @@ declare module dragonBones {
         _timelineState: FastBoneTimelineState;
         /** @private */
         _needUpdate: number;
+        _tweenPivot: Point;
         constructor();
         /**
          * 获取当前骨头包含的所有 FastBone 实例
@@ -3146,6 +3151,9 @@ declare module dragonBones {
         updateByCache(): void;
         /** @private */
         update(needUpdate?: boolean): void;
+        /** @private */
+        _hideSlots(): void;
+        private blendingTimeline();
         /** @private When bone timeline enter a key frame, call this func*/
         arriveAtFrame(frame: Frame, animationState: FastAnimationState): void;
         /**
@@ -3186,6 +3194,8 @@ declare module dragonBones {
         _tweenZOrder: number;
         /** @private */
         _offsetZOrder: number;
+        /** @private */
+        _originDisplayIndex: number;
         _displayList: Array<any>;
         _currentDisplayIndex: number;
         _colorTransform: ColorTransform;
@@ -3300,6 +3310,7 @@ declare module dragonBones {
         /** @private */
         hideSlots(): void;
         _updateGlobal(): any;
+        _resetToOrigin(): void;
     }
 }
 declare module dragonBones {
@@ -3421,7 +3432,7 @@ declare module dragonBones {
         /**
          * check if contains a AnimationData by name.
          * @return Boolean.
-         * @see dragonBones.animation.AnimationData.
+         * @see dragonBones.AnimationData.
          */
         hasAnimation(animationName: string): boolean;
         /**
@@ -3654,6 +3665,9 @@ declare module dragonBones {
         _isComplete: boolean;
         /** @private */
         _transform: DBTransform;
+        _durationPivot: Point;
+        _originPivot: Point;
+        _pivot: Point;
         constructor();
         private clear();
         /** @private */
@@ -3760,7 +3774,7 @@ declare module dragonBones {
 }
 declare module dragonBones {
     /**
-     * @class dragonBones.geom
+     * @class dragonBones
      * @classdesc
      * Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。
      * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。
@@ -3877,6 +3891,7 @@ declare module dragonBones {
          */
         lastFrameDuration: number;
         hideTimelineNameMap: Array<string>;
+        hideSlotTimelineNameMap: Array<string>;
         private _timelineList;
         /**
          * 时间轴列表
@@ -5137,7 +5152,7 @@ declare module dragonBones {
          * @param animationData
          * @param armatureData
          */
-        static addHideTimeline(animationData: AnimationData, armatureData: ArmatureData): void;
+        static addHideTimeline(animationData: AnimationData, armatureData: ArmatureData, addHideSlot?: boolean): void;
     }
 }
 declare module dragonBones {
@@ -5354,7 +5369,7 @@ declare module dragonBones {
         /** @private */
         _updateDisplayVisible(value: boolean): void;
         /** @private */
-        _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number): void;
+        _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChange?: boolean): void;
         /** @private */
         _updateDisplayBlendMode(value: string): void;
         _calculateRelativeParentTransform(): void;

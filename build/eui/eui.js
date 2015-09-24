@@ -9565,7 +9565,7 @@ var eui;
         /**
          * @language en_US
          * Event Listener of source data changed.
-         * @param The <code>egret.CollectionEvent</code> object.
+         * @param The <code>egret.gui.CollectionEvent</code> object.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -9573,7 +9573,7 @@ var eui;
         /**
          * @language zh_CN
          * 数据源改变事件处理。
-         * @param event 事件 <code>egret.CollectionEvent</code> 的对象。
+         * @param event 事件 <code>egret.gui.CollectionEvent</code> 的对象。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
