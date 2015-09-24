@@ -11,10 +11,17 @@ var GenerateVersionCommand = (function () {
         var releasePath = egret.args.releaseDir;
         var ignorePathList = egret.args.properties.getIgnorePath();
         var allPath = FileUtil.joinPath(releasePath, "all.manifest");
+        var sourceRoot = egret.args.projectDir;
         var resources = egret.args.properties.getResources();
+        if (egret.args.properties.getPublishType(egret.args.runtime) != 1) {
+            resources.forEach(function (resourcePath) {
+                FileUtil.copy(FileUtil.joinPath(sourceRoot, resourcePath), FileUtil.joinPath(releasePath, resourcePath));
+            });
+            return 0;
+        }
         var list = [];
         for (var key in resources) {
-            var tempList = FileUtil.search(FileUtil.joinPath(releasePath, resources[key]));
+            var tempList = FileUtil.search(FileUtil.joinPath(sourceRoot, resources[key]));
             list = list.concat(tempList);
         }
         ignorePathList = ignorePathList.map(function (item) {
@@ -50,15 +57,17 @@ var GenerateVersionCommand = (function () {
         }
         FileUtil.save(allPath, JSON.stringify(allVersion));
         for (var tempPath in allVersion) {
-            var outputFilePath = FileUtil.joinPath(releasePath, "egretResourceRoot", allVersion[tempPath]["v"].substring(0, 2), allVersion[tempPath]["v"] + "_" + allVersion[tempPath]["s"] + "." + tempPath.substring(tempPath.lastIndexOf(".") + 1));
-            FileUtil.copy(FileUtil.joinPath(releasePath, tempPath), outputFilePath);
+            var outputFilePath = FileUtil.joinPath(releasePath, "resource", allVersion[tempPath]["v"].substring(0, 2), allVersion[tempPath]["v"] + "_" + allVersion[tempPath]["s"] + "." + tempPath.substring(tempPath.lastIndexOf(".") + 1));
+            FileUtil.copy(FileUtil.joinPath(sourceRoot, tempPath), outputFilePath);
         }
-        //删除原始资源文件
-        for (var key in resources) {
-            FileUtil.remove(FileUtil.joinPath(releasePath, resources[key]));
-        }
-        FileUtil.copy(FileUtil.joinPath(releasePath, "egretResourceRoot"), FileUtil.joinPath(releasePath, "resource"));
-        FileUtil.remove(FileUtil.joinPath(releasePath, "egretResourceRoot"));
+        ////删除原始资源文件
+        //for (var key in resources) {
+        //    FileUtil.remove(FileUtil.joinPath(releasePath, resources[key]));
+        //}
+        //
+        //FileUtil.copy(FileUtil.joinPath(releasePath, "egretResourceRoot"), FileUtil.joinPath(releasePath, "resource"));
+        //
+        //FileUtil.remove(FileUtil.joinPath(releasePath, "egretResourceRoot"));
         //globals.debugLog(1408, (Date.now() - tempTime) / 1000);
         return 0;
     };

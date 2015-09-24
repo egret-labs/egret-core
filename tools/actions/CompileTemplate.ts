@@ -24,7 +24,7 @@ class CompileTemplate {
             var debugJs = "";
             debugJs = 'bin-debug/'+ script;
 
-            str += '\t<script src="' + debugJs + '"></script>\n';
+            str += '\t<script egret="game" src="' + debugJs + '"></script>\n';
         }
 
         var reg = /<!--game_files_start-->[\s\S]*<!--game_files_end-->/;

@@ -55,7 +55,7 @@ var CopyFiles = (function () {
                 debugJs = moduleReRoot + moduleName + ".js";
             }
             if (FileUtil.exists(jsReleasepath)) {
-                releaseJs = moduleReRoot + ".min.js";
+                releaseJs = moduleReRoot + moduleName + ".min.js";
             }
             if (debugJs == "") {
                 debugJs = releaseJs;
@@ -64,7 +64,7 @@ var CopyFiles = (function () {
                 releaseJs = debugJs;
             }
             if (debugJs != "") {
-                str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
+                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
             }
             debugJs = "";
             releaseJs = "";
@@ -83,7 +83,7 @@ var CopyFiles = (function () {
                 releaseJs = debugJs;
             }
             if (debugJs != "") {
-                str += '\t<script src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
+                str += '\t<script egret="lib" src="' + debugJs + '" src-release="' + releaseJs + '"></script>\n';
             }
         }
         return str;

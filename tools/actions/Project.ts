@@ -27,7 +27,7 @@ export function normalize(project: egret.ILarkProject) {
     project.resolutionMode = project.resolutionMode || "retina";
 }
 
-export function getFileList(html:string, isNative:boolean, isDebug:boolean):string[] {
+export function getLibsList(html:string, isNative:boolean, isDebug:boolean):string[] {
     var handler = new htmlparser.DefaultHandler(function (error, dom) {
         if (error)
             console.log(error);
@@ -36,10 +36,6 @@ export function getFileList(html:string, isNative:boolean, isDebug:boolean):stri
     var parser = new htmlparser.Parser(handler);
     parser.parseComplete(html);
     handler.dom.forEach(d=> visitDom(d));
-
-    if (!isDebug) {
-        resultArr.push("main.min.js");
-    }
 
     return resultArr;
 

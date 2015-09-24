@@ -22,7 +22,7 @@ function normalize(project) {
     project.resolutionMode = project.resolutionMode || "retina";
 }
 exports.normalize = normalize;
-function getFileList(html, isNative, isDebug) {
+function getLibsList(html, isNative, isDebug) {
     var handler = new htmlparser.DefaultHandler(function (error, dom) {
         if (error)
             console.log(error);
@@ -31,9 +31,6 @@ function getFileList(html, isNative, isDebug) {
     var parser = new htmlparser.Parser(handler);
     parser.parseComplete(html);
     handler.dom.forEach(function (d) { return visitDom(d); });
-    if (!isDebug) {
-        resultArr.push("main.min.js");
-    }
     return resultArr;
     function visitDom(el) {
         if (el.type == "script" && el.attribs && el.attribs["egret"]) {
@@ -58,7 +55,7 @@ function getFileList(html, isNative, isDebug) {
         }
     }
 }
-exports.getFileList = getFileList;
+exports.getLibsList = getLibsList;
 function getProjectInfo(html) {
     var handler = new htmlparser.DefaultHandler(function (error, dom) {
         if (error)

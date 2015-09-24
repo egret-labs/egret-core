@@ -17,7 +17,7 @@ var CompileTemplate = (function () {
             var script = scripts[tempK];
             var debugJs = "";
             debugJs = 'bin-debug/' + script;
-            str += '\t<script src="' + debugJs + '"></script>\n';
+            str += '\t<script egret="game" src="' + debugJs + '"></script>\n';
         }
         var reg = /<!--game_files_start-->[\s\S]*<!--game_files_end-->/;
         var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
