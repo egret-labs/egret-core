@@ -109,7 +109,7 @@ var FileAutoChangeCommand = (function () {
             allList = listInfo["libs"].concat(["main.min.js"]);
         }
         else {
-            allList = listInfo["game"].concat(listInfo["libs"]);
+            allList = listInfo["libs"].concat(listInfo["game"]);
         }
         var listStr = "\n";
         allList.forEach(function (filepath) {
