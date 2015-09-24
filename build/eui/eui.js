@@ -12715,7 +12715,7 @@ var eui;
     eui.sys.mixin(Skin, eui.sys.StateClient);
     eui.registerProperty(Skin, "elementsContent", "Array", true);
     eui.registerProperty(Skin, "states", "State[]");
-    eui.registerBindable(eui.ItemRenderer.prototype, "hostComponent");
+    eui.registerBindable(Skin.prototype, "hostComponent");
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

@@ -1809,7 +1809,9 @@ var RES;
             return url;
         };
         p.onResourceDestroy = function (font) {
-            font.dispose();
+            if (font) {
+                font.dispose();
+            }
         };
         return FontAnalyzer;
     })(RES.SheetAnalyzer);
