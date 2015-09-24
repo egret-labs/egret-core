@@ -808,23 +808,33 @@ var egret;
                     width = surfaceImageWidth = image.width;
                     height = surfaceImageHeight = image.height;
                 }
+                else if (arguments.length == 5) {
+                    surfaceOffsetX = offsetX;
+                    surfaceOffsetY = offsetY;
+                    surfaceImageWidth = width;
+                    surfaceImageHeight = height;
+                    offsetX = 0;
+                    offsetY = 0;
+                    width = image.width;
+                    height = image.height;
+                }
                 else {
-                    if (!width) {
+                    if (width == void 0) {
                         width = image.width;
                     }
-                    if (!height) {
+                    if (height == void 0) {
                         height = image.height;
                     }
-                    if (!surfaceOffsetX) {
+                    if (surfaceOffsetX == void 0) {
                         surfaceOffsetX = 0;
                     }
-                    if (!surfaceOffsetY) {
+                    if (surfaceOffsetY == void 0) {
                         surfaceOffsetY = 0;
                     }
-                    if (!surfaceImageWidth) {
+                    if (surfaceImageWidth == void 0) {
                         surfaceImageWidth = width;
                     }
-                    if (!surfaceImageHeight) {
+                    if (surfaceImageHeight == void 0) {
                         surfaceImageHeight = height;
                     }
                 }
@@ -952,6 +962,9 @@ var egret;
                     return this.$width;
                 }
                 ,function (value) {
+                    if (this.$width == value) {
+                        return;
+                    }
                     this.$width = value;
                     if (!this.$isDispose) {
                         this.$widthReadySet = true;
@@ -968,6 +981,9 @@ var egret;
                     return this.$height;
                 }
                 ,function (value) {
+                    if (this.$height == value) {
+                        return;
+                    }
                     this.$height = value;
                     if (!this.$isDispose) {
                         this.$heightReadySet = true;
@@ -979,7 +995,7 @@ var egret;
                 if (this.$isRoot) {
                     return;
                 }
-                if (this.$widthReadySet && this.$heightReadySet) {
+                if (this.$nativeRenderTexture || (this.$widthReadySet && this.$heightReadySet)) {
                     if (this.$nativeRenderTexture) {
                         this.$nativeRenderTexture.dispose();
                     }
@@ -987,6 +1003,7 @@ var egret;
                     this.$nativeRenderTexture = new egret_native.RenderTexture(this.$width, this.$height);
                     this.renderContext.globalAlpha = 1;
                     this.renderContext.globalCompositeOperation = "source-over";
+                    this.renderContext.setTransform(1, 0, 0, 1, 0, 0);
                     this.$widthReadySet = false;
                     this.$heightReadySet = false;
                 }
@@ -1202,8 +1219,8 @@ var egret;
                 if (!surface) {
                     return;
                 }
-                surface.$dispose();
-                surface.width = surface.height = 1;
+                //surface.$dispose();
+                //surface.width = surface.height = 1;
                 surfacePool.push(surface);
             };
             /**

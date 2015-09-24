@@ -744,23 +744,33 @@ module egret.native {
                 width = surfaceImageWidth = image.width;
                 height = surfaceImageHeight = image.height;
             }
+            else if(arguments.length == 5) {
+                surfaceOffsetX = offsetX;
+                surfaceOffsetY = offsetY;
+                surfaceImageWidth = width;
+                surfaceImageHeight = height;
+                offsetX = 0;
+                offsetY = 0;
+                width = image.width;
+                height = image.height;
+            }
             else {
-                if (!width) {
+                if (width == void 0) {
                     width = image.width;
                 }
-                if (!height) {
+                if (height == void 0) {
                     height = image.height;
                 }
-                if (!surfaceOffsetX) {
+                if (surfaceOffsetX == void 0) {
                     surfaceOffsetX = 0;
                 }
-                if (!surfaceOffsetY) {
+                if (surfaceOffsetY == void 0) {
                     surfaceOffsetY = 0;
                 }
-                if (!surfaceImageWidth) {
+                if (surfaceImageWidth == void 0) {
                     surfaceImageWidth = width;
                 }
-                if (!surfaceImageHeight) {
+                if (surfaceImageHeight == void 0) {
                     surfaceImageHeight = height;
                 }
             }
