@@ -191,8 +191,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                                         'version_new':"2.5.0",
                                         'conflict_count':logger.total+'',
                                         'title':'API检测报告',
-                                        'dir_changed_tip':utils.ti(1711,{ '0':saveLogFilePath }),//检测结果已写入
-                                        'qq_new_feature':'<strong>'+utils.ti(1713)+'</strong>',//qq体验群
+                                        'dir_changed_tip':utils.ti(1711,{ '0':projectPath }),//检测结果已写入
+                                        'qq_new_feature':'如果您在升级过程中遇到了问题，请在 <a target="_blank" href="http://bbs.egret.com/forum.php?mod=viewthread&tid=11702&extra=&page=1">这里</a>回帖',//qq体验群
                                         'color_red':'',
                                         'color_green':'',
                                         'color_normal':''

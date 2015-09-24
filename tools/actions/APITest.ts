@@ -253,7 +253,7 @@ class AutoLogger implements APIAutoReference{
                 '</style>' +
             '</head>' +
             '<body>' +
-                    // 目录                    原版本号                           升级后版本号               标题
+                    // 目录                 原版本号                         升级后版本号            标题
                 '<h1>{dir}&nbsp;&nbsp;<b>{version_old}</b>&nbsp;到&nbsp;<b>{version_new}</b>&nbsp;{title}</h1><br>' +
                     //               冲突总数
                 '<h2>共计 <b>{conflict_count}</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +

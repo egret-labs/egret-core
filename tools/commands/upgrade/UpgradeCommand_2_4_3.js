@@ -175,8 +175,8 @@ var UpgradeCommand_2_4_3 = (function () {
                                     'version_new': "2.5.0",
                                     'conflict_count': logger.total + '',
                                     'title': 'API检测报告',
-                                    'dir_changed_tip': utils.ti(1711, { '0': saveLogFilePath }),
-                                    'qq_new_feature': '<strong>' + utils.ti(1713) + '</strong>',
+                                    'dir_changed_tip': utils.ti(1711, { '0': projectPath }),
+                                    'qq_new_feature': '如果您在升级过程中遇到了问题，请在 <a target="_blank" href="http://bbs.egret.com/forum.php?mod=viewthread&tid=11702&extra=&page=1">这里</a>回帖',
                                     'color_red': '',
                                     'color_green': '',
                                     'color_normal': ''

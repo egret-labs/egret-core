@@ -36,15 +36,16 @@ class APItestCommand implements egret.Command{
                         setTimeout(()=>{
                             //写入html并打开网址
                             if(logger._htmlBody != ''){
+                                var currentVersion = egret.args.properties.getVersion();
                                 var saveContent = logger.htmlOut(
                                     //为模版html注入属性值
                                     {   'dir':self.projectPath,
-                                        'version_old':egret.args.properties.getVersion(),
+                                        'version_old':globals.compressVersion(currentVersion,"2.5.0")<0?currentVersion:'',
                                         'version_new':"2.5.0",
                                         'conflict_count':logger.total+'',
                                         'title':'API检测报告',
                                         'dir_changed_tip':'',
-                                        'qq_new_feature':'<strong>'+utils.ti(1713)+'</strong>',//qq体验群
+                                        'qq_new_feature':'如果您在升级过程中遇到了问题，请在 <a target="_blank" href="http://bbs.egret.com/forum.php?mod=viewthread&tid=11702&extra=&page=1">这里</a>回帖',//qq体验群
                                         'color_red':'',
                                         'color_green':'',
                                         'color_normal':''
@@ -67,6 +68,7 @@ class APItestCommand implements egret.Command{
         file.save(filePath,content);
         utils.open(filePath);
     }
+
 }
 
 export = APItestCommand;
