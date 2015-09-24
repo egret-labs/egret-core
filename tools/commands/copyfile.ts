@@ -23,7 +23,7 @@ class CopyFilesCommand implements egret.Command {
         file.remove(outputPath);
 
         //js
-        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(outputPath));
+        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(outputPath, "bin-debug"));
 
         //resource
         this.copyResources(projectPath, outputPath, ignorePathList);

@@ -49,7 +49,7 @@ var Publish = (function () {
             requireContent = requireContent.replace(reg, replaceStr);
             var optionStr = project.getNativeProjectInfo(rootHtmlPath);
             var reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
-            var replaceStr = '\/\/----auto option start----' + optionStr + '\/\/----auto option end----';
+            var replaceStr = '\/\/----auto option start----\n\t\t' + optionStr + '\n\t\t\/\/----auto option end----';
             requireContent = requireContent.replace(reg, replaceStr);
             FileUtil.save(requirePath, requireContent);
             //先拷贝 launcher

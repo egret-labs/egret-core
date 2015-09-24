@@ -8,7 +8,7 @@ var CompileTemplate = (function () {
     }
     CompileTemplate.compileTemplates = function (options, scripts) {
         CompileTemplate.modifyIndexHTML(scripts);
-        CompileTemplate.compileNativeRequire(options);
+        CompileTemplate.compileNativeRequire();
     };
     CompileTemplate.modifyIndexHTML = function (scripts) {
         var options = egret.args;
@@ -31,7 +31,8 @@ var CompileTemplate = (function () {
             }
         }
     };
-    CompileTemplate.compileNativeRequire = function (options) {
+    CompileTemplate.compileNativeRequire = function () {
+        var options = egret.args;
         var time1 = Date.now();
         var index = FileUtil.joinPath(options.projectDir, "index.html");
         if (!FileUtil.exists(index))
@@ -73,7 +74,7 @@ var CompileTemplate = (function () {
         var replaceStr = '\/\/----auto game_file_list start----' + gameFileListStr + '\/\/----auto game_file_list end----';
         requireContent = requireContent.replace(reg, replaceStr);
         var reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
-        var replaceStr = '\/\/----auto option start----' + optionStr + '\/\/----auto option end----';
+        var replaceStr = '\/\/----auto option start----\n' + optionStr + '\n\/\/----auto option end----';
         requireContent = requireContent.replace(reg, replaceStr);
         FileUtil.save(requirejs, requireContent);
     };

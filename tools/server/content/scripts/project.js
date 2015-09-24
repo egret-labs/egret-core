@@ -14,7 +14,7 @@ var egret;
                 this.orientationModes = egret.manifest.orientationModes;
                 this.modules = [];
                 this.platform = "web";
-                this.scaleMode = 'noScale';
+                this.scaleMode = 'fixedWidth';
                 this.orientationMode = 'auto';
                 this.contentWidth = 480;
                 this.contentHeight = 800;

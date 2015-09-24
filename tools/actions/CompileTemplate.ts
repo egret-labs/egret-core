@@ -13,7 +13,7 @@ class CompileTemplate {
 	public static compileTemplates(options: egret.ToolArgs,scripts:string[]) {
         CompileTemplate.modifyIndexHTML(scripts);
 
-        CompileTemplate.compileNativeRequire(options);
+        CompileTemplate.compileNativeRequire();
     }
 
     static modifyIndexHTML(scripts:string[]){
@@ -40,7 +40,8 @@ class CompileTemplate {
         }
     }
 
-    public static compileNativeRequire(options: egret.ToolArgs) {
+    public static compileNativeRequire() {
+        var options = egret.args;
         var time1 = Date.now();
         var index = FileUtil.joinPath(options.projectDir, "index.html");
         if (!FileUtil.exists(index))
@@ -90,7 +91,7 @@ class CompileTemplate {
         requireContent = requireContent.replace(reg, replaceStr);
 
         var reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
-        var replaceStr = '\/\/----auto option start----' + optionStr + '\/\/----auto option end----';
+        var replaceStr = '\/\/----auto option start----\n' + optionStr + '\n\/\/----auto option end----';
         requireContent = requireContent.replace(reg, replaceStr);
         FileUtil.save(requirejs, requireContent);
     }

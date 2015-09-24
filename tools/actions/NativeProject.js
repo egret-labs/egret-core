@@ -11,7 +11,7 @@ var NativeProject = (function () {
     NativeProject.build = function (platform) {
         console.log("----native build-----");
         var options = egret.args;
-        CompileTemplate.compileNativeRequire(egret.args);
+        CompileTemplate.compileNativeRequire();
         //拷贝项目到native工程中
         var cpFiles = new CopyFilesCommand();
         if (egret.args.runtime == "native") {

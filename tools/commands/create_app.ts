@@ -9,6 +9,7 @@ import FileAutoChangeCommand = require("../actions/FileAutoChange");
 var config = egret.args.properties;
 import CopyFilesCommand = require("./copyfile");
 import ParseConfigCommand = require("../actions/ParseConfig");
+import CompileTemplate = require('../actions/CompileTemplate');
 
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
@@ -92,6 +93,8 @@ class CreateAppCommand implements egret.Command {
         //fileModify.needCompile = false;
         //fileModify.debug = true;
         //fileModify.execute();
+
+        CompileTemplate.compileNativeRequire();
 
         //拷贝项目到native工程中
         copyNative.refreshNative(true);

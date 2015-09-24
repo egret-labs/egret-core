@@ -19,7 +19,7 @@ class NativeProject {
 
         var options = egret.args;
 
-        CompileTemplate.compileNativeRequire(egret.args);
+        CompileTemplate.compileNativeRequire();
 
         //拷贝项目到native工程中
         var cpFiles = new CopyFilesCommand();
