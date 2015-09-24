@@ -224,6 +224,7 @@ module dragonBones {
 			var displayIndexChangeSlotTimelines:Array<SlotTimeline> = [];
 			var displayIndexChangeTimelines:Array<TransformTimeline> = [];
             var timelineObjectList:Array<any> = animationObject[ConstValues.TIMELINE];
+            var displayIndexChange:boolean;
 			if(timelineObjectList)
 			{
 				for(i = 0,len = timelineObjectList.length; i < len; i++) {
@@ -235,11 +236,10 @@ module dragonBones {
 					var slotTimeline:SlotTimeline = Data3Parser.parseSlotTimeline(timelineObject, animationData.duration, frameRate);
 					animationData.addSlotTimeline(slotTimeline);
 
-					if(animationData.autoTween)
+					if(animationData.autoTween && !displayIndexChange)
 					{
-						var displayIndexChange:boolean;
+						
 						var slotFrame:SlotFrame;
-
 						for(var j:number = 0, jlen:number = slotTimeline.frameList.length; j < jlen; j++)
 						{
 							slotFrame = <SlotFrame>slotTimeline.frameList[j];
@@ -249,25 +249,22 @@ module dragonBones {
 								break;
 							}
 						}
-						
-						if(displayIndexChange)
-						{
-							displayIndexChangeTimelines.push(timeline);
-							displayIndexChangeSlotTimelines.push(slotTimeline);
-						}
-						
 					}
 				}
 				
-				len = displayIndexChangeSlotTimelines.length;
+				/**
+			 	 * 如果有slot的displayIndex为空的情况，那么当autoTween为ture时，它对应的bone的补间应该去掉
+			 	 * 以下就是处理这种情况，把autoTween的全局的tween应用到每一帧上，然后把autoTween变为false
+			 	 * 此时autoTween就不起任何作用了
+			 	 */
 				var animationTween:number = animationData.tweenEasing;
-				if(len > 0)
+				if(displayIndexChange)
 				{
-					
+					len = animationData.slotTimelineList.length;
 					for ( i = 0; i < len; i++)
 					{
-						slotTimeline = displayIndexChangeSlotTimelines[i];
-						timeline = displayIndexChangeTimelines[i];
+						slotTimeline = animationData.slotTimelineList[i];
+						timeline = animationData.timelineList[i];
 						var curFrame:TransformFrame;
 						var curSlotFrame:SlotFrame;
 						var nextSlotFrame:SlotFrame;
@@ -295,7 +292,6 @@ module dragonBones {
 						}
 					}
 					animationData.autoTween = false;
-					
 				}
 			}
 
