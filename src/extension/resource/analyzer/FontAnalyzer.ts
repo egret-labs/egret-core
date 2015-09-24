@@ -96,7 +96,9 @@ module RES {
         }
 
         protected onResourceDestroy(font:egret.BitmapFont) {
-            font.dispose();
+            if (font) {
+                font.dispose();
+            }
         }
     }
 }
