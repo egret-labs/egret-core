@@ -52,6 +52,7 @@ module egret.sys {
      */
     export class DirtyRegion {
 
+        public displayList:DisplayList;
         /**
          * @private
          */
@@ -63,11 +64,11 @@ module egret.sys {
         /**
          * @private
          */
-        public clipWidth:number = 0;
+        private clipWidth:number = 0;
         /**
          * @private
          */
-        public clipHeight:number = 0;
+        private clipHeight:number = 0;
         /**
          * @private
          */

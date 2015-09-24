@@ -91,6 +91,7 @@ module egret.sys {
         public constructor(root:DisplayObject) {
             super();
             this.root = root;
+            this.dirtyRegion.displayList = this;
         }
 
         /**
@@ -694,10 +695,6 @@ module egret.sys {
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             }
-
-            //兼容关闭脏矩形的情况，防止cacheAsBitmap情况下，对应DirtyRegion总是返回宽高为0的矩形。
-            this.dirtyRegion.clipWidth = this.surface.width;
-            this.dirtyRegion.clipHeight = this.surface.height;
 
             this.rootMatrix.setTo(1, 0, 0, 1, - this.offsetX, - this.offsetY);
             this.renderContext.setTransform(1, 0, 0, 1, - bounds.x, - bounds.y);
