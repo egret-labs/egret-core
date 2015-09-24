@@ -12,7 +12,7 @@ var fileExtensionToIgnore = {
 class CopyFiles {
 	static copyProjectFiles(){
 		var targetFolder = egret.args.outDir;
-        copyDirectory(egret.args.srcDir, targetFolder,srcFolderOutputFilter);
+        //copyDirectory(egret.args.srcDir, targetFolder,srcFolderOutputFilter);
 	}
 
     static copyRuntimeFiles() {

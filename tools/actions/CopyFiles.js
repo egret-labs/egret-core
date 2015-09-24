@@ -8,7 +8,7 @@ var CopyFiles = (function () {
     }
     CopyFiles.copyProjectFiles = function () {
         var targetFolder = egret.args.outDir;
-        copyDirectory(egret.args.srcDir, targetFolder, srcFolderOutputFilter);
+        //copyDirectory(egret.args.srcDir, targetFolder,srcFolderOutputFilter);
     };
     CopyFiles.copyRuntimeFiles = function () {
         var targetFolder = egret.args.outDir;
