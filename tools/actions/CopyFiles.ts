@@ -15,11 +15,6 @@ class CopyFiles {
         //copyDirectory(egret.args.srcDir, targetFolder,srcFolderOutputFilter);
 	}
 
-    static copyRuntimeFiles() {
-        var targetFolder = egret.args.outDir;
-        copyDirectory(egret.args.templateDir,targetFolder);
-    }
-
     static copyLark(): number {
         CopyFiles.copyToLibs();
         CopyFiles.modifyHTMLWithModules();

@@ -10,10 +10,6 @@ var CopyFiles = (function () {
         var targetFolder = egret.args.outDir;
         //copyDirectory(egret.args.srcDir, targetFolder,srcFolderOutputFilter);
     };
-    CopyFiles.copyRuntimeFiles = function () {
-        var targetFolder = egret.args.outDir;
-        copyDirectory(egret.args.templateDir, targetFolder);
-    };
     CopyFiles.copyLark = function () {
         CopyFiles.copyToLibs();
         CopyFiles.modifyHTMLWithModules();

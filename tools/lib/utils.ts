@@ -264,3 +264,11 @@ export function getAvailablePort(callback: (port: number) => void, port= 0) {
 
     getPort();
 }
+
+export function checkEgret() {
+    var options = egret.args;
+    if (file.exists(options.srcDir) == false ||
+        file.exists(options.templateDir) == false) {
+        exit(10015, options.projectDir);
+    }
+}

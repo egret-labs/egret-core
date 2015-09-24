@@ -13,42 +13,31 @@ import exmlActions = require('../actions/exml');
 
 class Clean implements egret.Command {
     execute(): number {
-        var options = egret.args;
+        utils.checkEgret();
 
-        if (FileUtil.exists(options.srcDir) == false ||
-            FileUtil.exists(options.templateDir) == false) {
-            utils.exit(10015, options.projectDir);
-        }
+        var options = egret.args;
 
         service.execCommand({
             path: options.projectDir,
             command: "shutdown",
             option: egret.args
         }, null, false);
-        utils.clean(options.debugDir)
+
+        utils.clean(options.debugDir);
 
         //刷新libs 中 modules 文件
         CopyFiles.copyToLibs();
 
         //编译 bin-debug 文件
-        exmlActions.beforeBuild();
         var compileProject = new CompileProject();
-        //编译
-        exmlActions.build();
-        var result = compileProject.compileProject(options);
-        if(result.exitStatus)
-            return result.exitStatus;
+        var result = compileProject.compile(options);
 
         //修改 html 中 modules 块
         CopyFiles.modifyHTMLWithModules();
-
         //修改 html 中 game_list 块
         CompileTemplate.modifyIndexHTML(result.files);
-
         //根据 index.html 修改 native_require.js 文件
         CompileTemplate.modifyNativeRequire();
-
-        exmlActions.afterBuild();
 
         //Wait for 'shutdown' command, node will exit when there are no tasks.
         return DontExitCode;

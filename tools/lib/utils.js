@@ -259,5 +259,13 @@ function getAvailablePort(callback, port) {
     getPort();
 }
 exports.getAvailablePort = getAvailablePort;
+function checkEgret() {
+    var options = egret.args;
+    if (file.exists(options.srcDir) == false ||
+        file.exists(options.templateDir) == false) {
+        exit(10015, options.projectDir);
+    }
+}
+exports.checkEgret = checkEgret;
 
 //# sourceMappingURL=../lib/utils.js.map
