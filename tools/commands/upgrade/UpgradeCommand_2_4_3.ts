@@ -43,40 +43,36 @@ class UpgradeCommand_2_4_3 implements egret.Command {
         var self = this;
         var adding_suffix:string = '_new';
         var newPath:string = null;
-        if(projectPath.indexOf('_new') == -1){
-            newPath = projectPath + adding_suffix;
-            var i:number = 0;
-            while(file.exists(newPath)){
-                newPath = projectPath + adding_suffix + (++i);
-            }
-            //file.copy(projectPath,newPath);
-            globals.log2(1707,projectPath,newPath);
-            var egretPath = egret.root;
-            //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
-            //处理命令行中的空格(用“”抱起来作为一个单独的参数)
-            CHILD_EXEC.exec('node \"'+file.joinPath(egretPath,'/tools/bin/egret')+'\" create \"'+newPath+"\"",{
-                encoding: 'utf8',
-                timeout: 0,
-                maxBuffer: 200*1024,
-                killSignal: 'SIGTERM',
-                cwd: process.cwd(),
-                env: process.env
-            },function(error,stdout,stderror){
-                if(error){
-                    //无法创建新目录输出错误日志 直接返回
-                    console.log(stderror);
-                    self.asyncCallback({name:'消息',message:"无法创建新目录"});
-                }else{
-                    console.log(stdout);
-                    console.log(stderror);
-                    self.configNewProject(newPath);
-                    self.apiTest(newPath);
-                }
-            });
-        }else{
-            //跳过配置新项目
-            this.apiTest(projectPath);
+
+        newPath = projectPath + adding_suffix;
+        var i:number = 0;
+        while(file.exists(newPath)){
+            newPath = projectPath + adding_suffix + (++i);
         }
+        //file.copy(projectPath,newPath);
+        globals.log2(1707,projectPath,newPath);
+        var egretPath = egret.root;
+        //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
+        //处理命令行中的空格(用“”抱起来作为一个单独的参数)
+        CHILD_EXEC.exec('node \"'+file.joinPath(egretPath,'/tools/bin/egret')+'\" create \"'+newPath+"\"",{
+            encoding: 'utf8',
+            timeout: 0,
+            maxBuffer: 200*1024,
+            killSignal: 'SIGTERM',
+            cwd: process.cwd(),
+            env: process.env
+        },function(error,stdout,stderror){
+            if(error){
+                //无法创建新目录输出错误日志 直接返回
+                console.log(stderror);
+                self.asyncCallback({name:'消息',message:"无法创建新目录"});
+            }else{
+                console.log(stdout);
+                console.log(stderror);
+                self.configNewProject(newPath);
+                self.apiTest(newPath);
+            }
+        });
     }
 
     /**
@@ -86,6 +82,9 @@ class UpgradeCommand_2_4_3 implements egret.Command {
     private configNewProject(newPath:string){
         //step 1.拷贝src工程文件
         var srcOld = file.joinPath(egret.args.srcDir);
+        if(!file.exists(srcOld)){
+            globals.exit(10015,egret.args.projectDir);
+        }
         var srcNew = file.joinPath(newPath,'/src/');
         if (srcOld.toLowerCase() != srcNew.toLowerCase()){
             globals.log2(1707,srcOld,srcNew);
@@ -93,11 +92,15 @@ class UpgradeCommand_2_4_3 implements egret.Command {
         }
         //step 2.拷贝resource资源文件
         var resourceOld = file.joinPath(egret.args.projectDir,'/resource/');
-        var resourceNew = file.joinPath(newPath,'/src/resource/');
-        if(resourceOld.toLowerCase() != resourceNew.toLowerCase()){
-            globals.log2(1707,resourceOld,resourceNew);
-            file.copy(resourceOld,resourceNew);
+        //兼容处理
+        if(file.exists(resourceOld)){
+            var resourceNew = file.joinPath(newPath,'/src/resource/');
+            if(resourceOld.toLowerCase() != resourceNew.toLowerCase()){
+                globals.log2(1707,resourceOld,resourceNew);
+                file.copy(resourceOld,resourceNew);
+            }
         }
+
         //step 3.将旧配置注入新配置 和 template/index.html文件
         var oldProperties = require('./ModifyProperties').getProperties();
 
