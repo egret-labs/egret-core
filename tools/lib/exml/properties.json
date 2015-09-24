@@ -1,10 +1,13 @@
 {
 	"egret.Bitmap":
 	{
+		"bitmapData":"any",
 		"fillMode":"string",
+		"pixelHitTest":"boolean",
 		"scale9Grid":"egret.Rectangle",
+		"smoothing":"boolean",
 		"super":"egret.DisplayObject",
-		"texture":"egret.Texture"
+		"texture":"any"
 	},
 	"egret.BitmapFont":
 	{
@@ -18,39 +21,28 @@
 		"super":"egret.DisplayObject",
 		"text":"string"
 	},
-	"egret.BitmapTextSpriteSheet":
-	{
-		"super":"egret.BitmapFont"
-	},
 	"egret.BlurFilter":
 	{
 		"blurX":"number",
 		"super":"egret.Filter"
 	},
-	"egret.ByteArray":
+	"egret.ColorMatrixFilter":
 	{
-		"endian":"string",
-		"length":"number",
-		"position":"number"
-	},
-	"egret.ColorTransform":
-	{
-		"matrix":"Array"
+		"matrix":"Array",
+		"super":"egret.Filter"
 	},
 	"egret.DisplayObject":
 	{
 		"alpha":"number",
 		"anchorOffsetX":"number",
 		"anchorOffsetY":"number",
-		"anchorX":"number",
-		"anchorY":"number",
 		"blendMode":"string",
 		"cacheAsBitmap":"boolean",
 		"height":"number",
-		"implements":["egret.RenderData"],
-		"mask":"egret.Rectangle",
+		"implements":["sys.Renderable"],
+		"mask":"any",
+		"matrix":"egret.Matrix",
 		"name":"string",
-		"needDraw":"boolean",
 		"rotation":"number",
 		"scaleX":"number",
 		"scaleY":"number",
@@ -66,8 +58,14 @@
 	},
 	"egret.DisplayObjectContainer":
 	{
+		"implements":["egret.IDisplayObjectContainer"],
 		"super":"egret.DisplayObject",
 		"touchChildren":"boolean"
+	},
+	"egret.DropShadowFilter":
+	{
+		"distance":"number",
+		"super":"egret.GlowFilter"
 	},
 	"egret.EventDispatcher":
 	{
@@ -76,11 +74,17 @@
 	},
 	"egret.Filter":
 	{
+		"super":"egret.HashObject",
 		"type":"string"
 	},
-	"egret.HTML5StageText":
+	"egret.GlowFilter":
 	{
-		"super":"egret.StageText"
+		"color":"number",
+		"super":"egret.Filter"
+	},
+	"egret.Graphics":
+	{
+		"super":"egret.HashObject"
 	},
 	"egret.HashObject":
 	{
@@ -96,33 +100,10 @@
 		"tx":"number",
 		"ty":"number"
 	},
-	"egret.MovieClip":
-	{
-		"frameRate":"number",
-		"movieClipData":"egret.MovieClipData",
-		"super":"egret.DisplayObject"
-	},
-	"egret.MovieClipData":
-	{
-		"frameRate":"number",
-		"frames":"any",
-		"labels":"any",
-		"mcData":"egret.MovieClipData",
-		"numFrames":"number",
-		"spriteSheet":"egret.SpriteSheet",
-		"super":"egret.HashObject",
-		"textureData":"any"
-	},
-	"egret.MovieClipDataFactory":
-	{
-		"enableCache":"boolean",
-		"mcDataSet":"any",
-		"super":"egret.EventDispatcher",
-		"texture":"egret.Texture"
-	},
 	"egret.NativeStageText":
 	{
-		"super":"egret.StageText"
+		"implements":["egret.StageText"],
+		"super":"egret.EventDispatcher"
 	},
 	"egret.Point":
 	{
@@ -133,17 +114,20 @@
 	"egret.Rectangle":
 	{
 		"bottom":"number",
+		"bottomRight":"egret.Point",
 		"height":"number",
+		"left":"number",
 		"right":"number",
 		"super":"egret.HashObject",
+		"top":"number",
+		"topLeft":"egret.Point",
 		"width":"number",
 		"x":"number",
 		"y":"number"
 	},
-	"egret.RenderCommand":
+	"egret.RenderTexture":
 	{
-		"callback":"any",
-		"thisObject":"any"
+		"super":"egret.Texture"
 	},
 	"egret.Shape":
 	{
@@ -151,15 +135,12 @@
 	},
 	"egret.Sprite":
 	{
+		"implements":["egret.IDisplayObjectContainer"],
 		"super":"egret.DisplayObjectContainer"
 	},
 	"egret.SpriteSheet":
 	{
 		"super":"egret.HashObject"
-	},
-	"egret.StageText":
-	{
-		"super":"egret.EventDispatcher"
 	},
 	"egret.TextField":
 	{
@@ -173,8 +154,8 @@
 		"italic":"boolean",
 		"lineSpacing":"number",
 		"maxChars":"number",
-		"maxWidth":"any",
 		"multiline":"boolean",
+		"restrict":"string",
 		"scrollV":"number",
 		"size":"number",
 		"stroke":"number",
@@ -185,7 +166,8 @@
 		"textColor":"number",
 		"textFlow":"Array",
 		"type":"string",
-		"verticalAlign":"string"
+		"verticalAlign":"string",
+		"wordWrap":"boolean"
 	},
 	"egret.Texture":
 	{
@@ -241,6 +223,25 @@
 		"initialized":"boolean",
 		"super":"egret.gui.AnimateInstance",
 		"transformCenter":"egret.Point"
+	},
+	"egret.gui.Animation":
+	{
+		"currentValue":"any",
+		"duration":"number",
+		"easer":"egret.gui.IEaser",
+		"endFunction":"Function",
+		"interpolator":"egret.gui.IInterpolator",
+		"motionPaths":"Array",
+		"playReversed":"boolean",
+		"playheadTime":"number",
+		"repeatBehavior":"string",
+		"repeatCount":"number",
+		"repeatDelay":"number",
+		"repeatFunction":"Function",
+		"startDelay":"number",
+		"startFunction":"Function",
+		"stopFunction":"Function",
+		"updateFunction":"Function"
 	},
 	"egret.gui.ArrayCollection":
 	{
@@ -621,6 +622,7 @@
 	{
 		"autoHideDelay":"number",
 		"autoHideScrollBars":"boolean",
+		"bounces":"boolean",
 		"horizontalScrollBar":"egret.gui.HScrollBar",
 		"horizontalScrollPolicy":"string",
 		"implements":["egret.gui.IVisualElementContainer"],
@@ -933,8 +935,8 @@
 		{
 			"fillMode":"egret.BitmapFillMode"
 		},
-		"egret.BitmapFillMode":["repeat","scale"],
-		"egret.BlendMode":["normal","add"],
+		"egret.BitmapFillMode":["repeat","scale","clip"],
+		"egret.BlendMode":["normal","add","erase"],
 		"egret.DisplayObject":
 		{
 			"blendMode":"egret.BlendMode"
