@@ -32,7 +32,7 @@ function startServer(options, startupUrl) {
     framework.config['allow-compile-css'] = false;
     try {
         total.http('debug', { port: options.port, ip: '0.0.0.0' });
-        if (!options.serverOnly)
+        if (!options.serveronly)
             utils.open(startupUrl || options.manageUrl);
     }
     catch (e) {
