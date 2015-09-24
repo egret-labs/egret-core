@@ -3,6 +3,7 @@
 //import globals = require("../globals");
 import FileUtil = require('../lib/FileUtil');
 var fs = require("fs");
+import CopyFilesCommand = require("../commands/copyfile");
 
 class GenerateVersionCommand implements egret.Command {
     execute():number {
@@ -18,13 +19,15 @@ class GenerateVersionCommand implements egret.Command {
         var resources = egret.args.properties.getResources();
 
         if (egret.args.properties.getPublishType(egret.args.runtime) != 1) {
-            resources.forEach(function (resourcePath) {
-                FileUtil.copy(FileUtil.joinPath(sourceRoot, resourcePath), FileUtil.joinPath(releasePath, resourcePath));
-            });
+            //resources.forEach(function (resourcePath) {
+            //    FileUtil.copy(FileUtil.joinPath(sourceRoot, resourcePath), FileUtil.joinPath(releasePath, resourcePath));
+            //});
 
+            var config = egret.args.properties;
+            var cpFiles = new CopyFilesCommand();
+            cpFiles.copyResources(sourceRoot, releasePath, config.getIgnorePath());
             return 0;
         }
-
 
         var list = [];
         for (var key in resources) {

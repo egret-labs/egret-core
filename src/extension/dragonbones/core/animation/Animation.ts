@@ -221,6 +221,7 @@ module dragonBones {
 			if (!animationData){
 				return null;
 			}
+			var needUpdate:boolean = this._isPlaying == false;
 			this._isPlaying = true;
 			this._isFading = true;
 			
@@ -298,6 +299,10 @@ module dragonBones {
 				if(slot.childArmature){
 					slot.childArmature.animation.gotoAndPlay(animationName, fadeInTime);
 				}
+			}
+			if(needUpdate)
+			{
+				this._armature.advanceTime(0);
 			}
 			
 			return this._lastAnimationState;

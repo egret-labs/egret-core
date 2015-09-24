@@ -76,7 +76,6 @@ var CompileTemplate = (function () {
         var replaceStr = '\/\/----auto option start----' + optionStr + '\/\/----auto option end----';
         requireContent = requireContent.replace(reg, replaceStr);
         FileUtil.save(requirejs, requireContent);
-        console.log(Date.now() - time1);
     };
     return CompileTemplate;
 })();

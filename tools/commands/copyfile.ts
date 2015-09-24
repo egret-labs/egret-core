@@ -17,22 +17,24 @@ class CopyFilesCommand implements egret.Command {
     }
 
     private copyFilesToNative(projectPath, outputPath, ignorePathList) {
-        var url = outputPath;
-
         var startTime = Date.now();
 
         //1、清除文件夹
-        file.remove(url);
+        file.remove(outputPath);
 
         //js
-        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(url));
+        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(outputPath));
 
         //resource
-        if (file.exists(file.joinPath(projectPath, config.getResourceName()))) {
-            this.copyFilesWithIgnore(file.joinPath(projectPath, config.getResourceName()), file.joinPath(url, config.getResourceName()), ignorePathList);
-        }
+        this.copyResources(projectPath, outputPath, ignorePathList);
 
         globals.log2(7, (Date.now() - startTime) / 1000);
+    }
+
+    copyResources(projectPath, outputPath, ignorePathList) {
+        if (file.exists(file.joinPath(projectPath, config.getResourceName()))) {
+            this.copyFilesWithIgnore(file.joinPath(projectPath, config.getResourceName()), file.joinPath(outputPath, config.getResourceName()), ignorePathList);
+        }
     }
 
     private copyFilesWithIgnore(sourceRootPath, desRootPath, ignorePathList) {

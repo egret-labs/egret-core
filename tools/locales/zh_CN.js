@@ -153,7 +153,7 @@ var egret;
     locale_strings[1609] = "> rename project name ...";
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
-    locale_strings[1702] = "项目升级后，请执行一次 egret build {your_project} {color_green}-e{color_normal} 编译引擎，\n命令中请不要加上大括号{}";
+    locale_strings[1702] = "项目升级成功";
     locale_strings[1703] = "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n";
     locale_strings[1704] = "正在更新到{0}";
     locale_strings[1705] = "升级配置文件损坏,请检查引擎后重试";
