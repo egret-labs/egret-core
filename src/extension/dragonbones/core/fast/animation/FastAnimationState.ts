@@ -278,6 +278,7 @@ module dragonBones {
 			
 			//计算是否已经播放完成isThisComplete
 
+			var startFlg:boolean = false;
 			var loopCompleteFlg:boolean = false;
 			var completeFlg:boolean = false;
 			var isThisComplete:boolean = false;
@@ -318,6 +319,10 @@ module dragonBones {
 					}
 					this._currentPlayTimes = currentPlayTimes;
 				}
+				if(this._currentTime < 0)    //check start
+				{
+					startFlg = true;
+				}
 				if(this._isComplete)
 				{
 					completeFlg = true;
@@ -329,6 +334,14 @@ module dragonBones {
 			
 			//抛事件
 			var event:AnimationEvent;
+			if(startFlg){
+
+				if(this._armature.hasEventListener(AnimationEvent.START)){
+					event = new AnimationEvent(AnimationEvent.START);
+					event.animationState = this;
+					this._armature._addEvent(event);
+				}
+			}
 			if(completeFlg){
 				if(this._armature.hasEventListener(AnimationEvent.COMPLETE))
 				{
@@ -511,9 +524,19 @@ module dragonBones {
 			for(var i:number = 0;i < length;i++){
 				var timelineName:string = this.animationData.hideTimelineNameMap[i];
 				
-				var slot:FastSlot = this._armature.getSlot(timelineName);
-				if(slot){
-					slot.hideSlots();
+				var bone:FastBone = this._armature.getBone(timelineName);
+				if(bone){
+					bone._hideSlots();
+				}
+			}
+			var slotTimelineName:string;
+            for(i = 0,length = this.animationData.hideSlotTimelineNameMap.length; i < length; i++)
+			{
+				slotTimelineName = this.animationData.hideSlotTimelineNameMap[i];
+				var slot:FastSlot = this._armature.getSlot(slotTimelineName);
+				if (slot)
+				{
+					slot._resetToOrigin();
 				}
 			}
 		}
