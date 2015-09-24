@@ -177,15 +177,14 @@ module RES {
             if (sheet) {
                 delete this.fileDic[name];
                 var texture;
-                for (var subkey in sheet) {
-                    if (this.textureMap[subkey]) {
-                        if (texture == null) {
-                            texture = sheet[subkey];
-                        }
-                        delete this.textureMap[subkey];
+                for (var subkey in sheet._textureMap) {
+                    if (texture == null) {
+                        texture = sheet._textureMap[subkey];
+                        this.onResourceDestroy(texture);
+                        texture = null;
                     }
+                    delete this.textureMap[subkey];
                 }
-                this.onResourceDestroy(texture);
                 return true;
             }
             return false;
