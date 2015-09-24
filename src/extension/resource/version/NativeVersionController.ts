@@ -43,6 +43,10 @@ module RES.native {
         }
 
         public fetchVersion(callback:egret.AsyncCallback):void {
+            if(DEBUG) {
+                callback.onSuccess(null);
+                return;
+            }
             var self = this;
             self._versionPath = "all.manifest";
 
