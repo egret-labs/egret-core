@@ -12,6 +12,7 @@ import tsclark = require("../lib/typescript/tsclark");
 class CompileTemplate {
 	public static compileTemplates(options: egret.ToolArgs,scripts:string[]) {
 
+        //todo:yjtx
         var index = FileUtil.joinPath(options.templateDir, "index.html");
         if (!FileUtil.exists(index))
             return;

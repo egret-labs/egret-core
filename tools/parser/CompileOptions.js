@@ -117,7 +117,7 @@ var CompileOptions = (function () {
     });
     Object.defineProperty(CompileOptions.prototype, "startUrl", {
         get: function () {
-            var url = "http://" + (this.host || "localhost") + ':' + this.port + '/bin-debug/index.html';
+            var url = "http://" + (this.host || "localhost") + ':' + this.port + '/index.html';
             return url;
         },
         enumerable: true,

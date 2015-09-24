@@ -7,6 +7,7 @@ var CompileTemplate = (function () {
     function CompileTemplate() {
     }
     CompileTemplate.compileTemplates = function (options, scripts) {
+        //todo:yjtx
         var index = FileUtil.joinPath(options.templateDir, "index.html");
         if (!FileUtil.exists(index))
             return;
