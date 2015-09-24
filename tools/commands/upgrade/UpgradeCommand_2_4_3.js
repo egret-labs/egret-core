@@ -166,7 +166,7 @@ var UpgradeCommand_2_4_3 = (function () {
                         setTimeout(function () {
                             //写入html并打开网址
                             var saveContent = logger._htmlTitle +
-                                '<h1>' + projectPath + '&nbsp;&nbsp;<b>v2.0.5</b>&nbsp;到&nbsp;<b>v2.4.3</b>&nbsp;API升级检测报告</h1><br>' +
+                                '<h1>' + projectPath + '<b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
                                 '<h2>共计 <b>' + logger.total + '</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
                                 logger._htmlBody +
                                 logger._htmlEnd;

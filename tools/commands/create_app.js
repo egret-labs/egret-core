@@ -11,11 +11,10 @@ var fs = require('fs');
 var cp_exec = require('child_process').exec;
 var CreateAppCommand = (function () {
     function CreateAppCommand() {
-        this.executeRes = 0;
     }
     CreateAppCommand.prototype.execute = function () {
         this.run();
-        return this.executeRes;
+        return 0;
     };
     CreateAppCommand.prototype.run = function () {
         var option = egret.args;
@@ -123,16 +122,13 @@ var CreateAppCommand = (function () {
     CreateAppCommand.prototype.run_unzip = function (app_path, template_path, app_data) {
         var template_zip_path = file.joinPath(template_path, app_data["template"]["zip"]);
         var cmd = "unzip -q " + globals.addQuotes(template_zip_path) + " -d " + globals.addQuotes(app_path);
-        //执行异步方法必须指定返回值为DontExitCode
-        this.executeRes = DontExitCode;
-        var self = this;
         var build = cp_exec(cmd);
         build.stderr.on("data", function (data) {
             globals.log(data);
         });
         build.on("exit", function (result) {
             if (result == 0) {
-                self.rename_app(app_path, app_data);
+                this.rename_app(app_path, app_data);
             }
             else {
                 console.error("unzip出现异常！");
