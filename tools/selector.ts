@@ -113,7 +113,7 @@ function printVersions() {
     if (!engines) {
         getAllEngineVersions();
     }
-    Object.keys(engines).sort().forEach(v=> {
+    Object.keys(engines).sort(compareVersion).reverse().forEach(v=> {
         console.log(`Egret Engine ${engines[v].version}  ` + engines[v].root);
     });
 }
@@ -420,6 +420,25 @@ function parseArgs(): Args {
     }
     options.projectDir = file.joinPath(options.projectDir, "/");
     return options;
+}
+
+function compareVersion(v1: string, v2: string) {
+    return versionToNumber(v1) - versionToNumber(v2);
+    function versionToNumber(v: string): number {
+        var numbers = v.split(".").map(n=> {
+            try {
+                return parseInt(n) || 0;
+            }
+            catch (e) {
+                return 0;
+            }
+        });
+        var total = 0;
+        numbers.forEach((n, i) => {
+            total += n * Math.pow(0.01, i);
+        });
+        return total;
+    }   
 }
 
 

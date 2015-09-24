@@ -93,7 +93,7 @@ function printVersions() {
     if (!engines) {
         getAllEngineVersions();
     }
-    Object.keys(engines).sort().forEach(function (v) {
+    Object.keys(engines).sort(compareVersion).reverse().forEach(function (v) {
         console.log(("Egret Engine " + engines[v].version + "  ") + engines[v].root);
     });
 }
@@ -343,6 +343,24 @@ function parseArgs() {
     options.projectDir = file.joinPath(options.projectDir, "/");
     return options;
 }
+function compareVersion(v1, v2) {
+    return versionToNumber(v1) - versionToNumber(v2);
+    function versionToNumber(v) {
+        var numbers = v.split(".").map(function (n) {
+            try {
+                return parseInt(n) || 0;
+            }
+            catch (e) {
+                return 0;
+            }
+        });
+        var total = 0;
+        numbers.forEach(function (n, i) {
+            total += n * Math.pow(0.01, i);
+        });
+        return total;
+    }
+}
 var file;
 (function (file) {
     var charset = "utf-8";
@@ -544,5 +562,4 @@ var locals;
     ;
 })(locals || (locals = {}));
 entry();
-
 //# sourceMappingURL=selector.js.map
