@@ -19,7 +19,7 @@ var CopyFilesCommand = (function () {
         //1、清除文件夹
         file.remove(outputPath);
         //js
-        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(outputPath));
+        file.copy(file.joinPath(projectPath, "bin-debug"), file.joinPath(outputPath, "bin-debug"));
         //resource
         this.copyResources(projectPath, outputPath, ignorePathList);
         globals.log2(7, (Date.now() - startTime) / 1000);

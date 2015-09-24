@@ -8,15 +8,11 @@ var CopyFiles = (function () {
     }
     CopyFiles.copyProjectFiles = function () {
         var targetFolder = egret.args.outDir;
-        copyDirectory(egret.args.srcDir, targetFolder, srcFolderOutputFilter);
-    };
-    CopyFiles.copyRuntimeFiles = function () {
-        var targetFolder = egret.args.outDir;
-        copyDirectory(egret.args.templateDir, targetFolder);
+        //copyDirectory(egret.args.srcDir, targetFolder,srcFolderOutputFilter);
     };
     CopyFiles.copyLark = function () {
         CopyFiles.copyToLibs();
-        CopyFiles.modifyIndexHTML();
+        CopyFiles.modifyHTMLWithModules();
         return 0;
     };
     CopyFiles.copyToLibs = function () {
@@ -88,7 +84,7 @@ var CopyFiles = (function () {
         }
         return str;
     };
-    CopyFiles.modifyIndexHTML = function () {
+    CopyFiles.modifyHTMLWithModules = function () {
         var options = egret.args;
         var libsScriptsStr = CopyFiles.getLibsScripts();
         var reg = /<!--modules_files_start-->[\s\S]*<!--modules_files_end-->/;

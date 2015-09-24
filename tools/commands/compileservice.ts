@@ -76,7 +76,11 @@ class AutoCompileCommand implements egret.Command {
         //操作其他文件
         CopyFiles.copyProjectFiles();
         _scripts = result.files.length > 0 ? result.files : _scripts;
-        CompileTemplate.compileTemplates(options, _scripts);
+
+        CompileTemplate.modifyIndexHTML(_scripts);
+
+        CompileTemplate.modifyNativeRequire();
+
         exmlActions.afterBuild();
 
         this.dirState.init();
@@ -206,7 +210,11 @@ class AutoCompileCommand implements egret.Command {
         var index = FileUtil.joinPath(egret.args.templateDir, "index.html");
         index = FileUtil.escapePath(index);
         console.log('Compile Template: ' + index);
-        CompileTemplate.compileTemplates(egret.args, this._scripts);
+
+        CompileTemplate.modifyIndexHTML(this._scripts);
+
+        CompileTemplate.modifyNativeRequire();
+
         return 0;
     }
 

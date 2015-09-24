@@ -5,6 +5,7 @@ var file = require('../lib/FileUtil');
 //import config = require("../ProjectConfig");
 var config = egret.args.properties;
 var ParseConfigCommand = require("../actions/ParseConfig");
+var CompileTemplate = require('../actions/CompileTemplate');
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
 var copyNative = require("../actions/CopyNativeFiles");
@@ -58,20 +59,10 @@ var CreateAppCommand = (function () {
         }
         properties["native"][platform + "_path"] = file.relative(projectPath, nativePath);
         file.save(file.joinPath(projectPath, "egretProperties.json"), JSON.stringify(properties, null, "\t"));
-        //params.setArgv({
-        //    name: "create_app",
-        //    currDir: projectPath,
-        //    args: "",
-        //    opts: {}
-        //});
         config.init(arg_h5_path);
         //修改native项目配置
         new ParseConfigCommand().execute();
-        //修改文件
-        //var fileModify = new FileAutoChangeCommand();
-        //fileModify.needCompile = false;
-        //fileModify.debug = true;
-        //fileModify.execute();
+        CompileTemplate.modifyNativeRequire();
         //拷贝项目到native工程中
         copyNative.refreshNative(true);
         globals.log2(1606, (Date.now() - startTime) / 1000);

@@ -5,14 +5,12 @@
 var TSP = require("../commands/upgrade/2.4.3/TsServiceProxy");
 var file = require('../lib/FileUtil');
 var TSS = require("../commands/upgrade/2.4.3/typescriptServices");
+var utils = require('../lib/utils');
 var DTS = require('../commands/upgrade/2.4.3/compare2dts.js');
 var AutoLogger = (function () {
     function AutoLogger() {
         this._isConsoleOut = false;
-        this._htmlTitle = '<!DOCTYPE html><html><head><title>API升级检测报告</title><meta charset="UTF-8">' +
-            '<style type="text/css">' + 'li{list-style:none;}li b{color:#aa0000;}h2 b{color:red;}</style></head><body>';
         this._htmlBody = '';
-        this._htmlEnd = '</body></html>';
         this._snapShot = '';
         this._solutionMap = {};
         this._dir = '';
@@ -26,6 +24,28 @@ var AutoLogger = (function () {
             isAPIadd: false
         };
         this._categoryQuickLST = {};
+        this._htmlStart = '<!DOCTYPE html>' +
+            '<html>' +
+            '<head>' +
+            '<title>{title}</title>' +
+            '<meta charset="UTF-8">' +
+            '<style type="text/css">' +
+            'li{list-style:none;}' +
+            'li b{color:#aa0000;}' +
+            'h2 b{color:red;}' +
+            '</style>' +
+            '</head>' +
+            '<body>' +
+            // 目录                    原版本号                           升级后版本号               标题
+            '<h1>{dir}&nbsp;&nbsp;<b>{version_old}</b>&nbsp;到&nbsp;<b>{version_new}</b>&nbsp;{title}</h1><br>' +
+            //               冲突总数
+            '<h2>共计 <b>{conflict_count}</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
+            // 告知目录已变更
+            '<h3>{dir_changed_tip}</h3>' +
+            //   告知qq群
+            '<h3>{qq_new_feature}</h3>';
+        this._htmlEnd = '</body>' +
+            '</html>';
     }
     Object.defineProperty(AutoLogger.prototype, "total", {
         get: function () {
@@ -196,10 +216,23 @@ var AutoLogger = (function () {
     };
     AutoLogger.prototype._filterUrl = function (key) {
         if (key in this._solutionMap) {
-            return '<a href="' + this._solutionMap[key] + '">' + this._solutionMap[key] + '</a>';
+            return '<a target="_blank" href="' + this._solutionMap[key] + '">这里</a>';
         }
         else
             return key;
+    };
+    AutoLogger.prototype.htmlOut = function (injector) {
+        //var saveContent = injector ? utils.inject(this._htmlStart,injector):this._htmlStart +
+        //    this._htmlBody +
+        //    this._htmlEnd;
+        var saveContent = null;
+        if (injector) {
+            saveContent = utils.inject(this._htmlStart, injector) + this._htmlBody + this._htmlEnd;
+        }
+        else {
+            saveContent = this._htmlStart + this._htmlBody + this._htmlEnd;
+        }
+        return saveContent;
     };
     return AutoLogger;
 })();

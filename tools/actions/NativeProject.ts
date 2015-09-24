@@ -17,28 +17,15 @@ class NativeProject {
     public static build(platform?: string) {
         console.log("----native build-----")
 
-        var options = egret.args;
-
-        CompileTemplate.compileNativeRequire(egret.args);
+        CompileTemplate.modifyNativeRequire();
 
         //拷贝项目到native工程中
-        var cpFiles = new CopyFilesCommand();
-
         if (egret.args.runtime == "native") {
             copyNative.refreshNative(true);
         }
-
-        return;
-        copyOutputToNative(platform);
-        var platformFolders = getPlatformFolders(platform);
-        console.log(platformFolders)
-        platformFolders.forEach(folder=> exec(FileUtil.joinPath(folder, "commands/build"), [], code=> console.log("Native build exit with: " + code)));
     }
 
     public static run(platform?: string) {
-
-    }
-    public static emulate(platform?: string) {
 
     }
 }

@@ -1,0 +1,23 @@
+{
+	"modules": [
+		{
+			"name": "core"
+		},
+		{
+			"name": "version_old"
+		},
+		{
+			"name": "res"
+		},
+		{
+			"name": "gui"
+		},
+		{
+			"name": "dragonbones"
+		}
+	],
+	"native": {
+		"path_ignore": []
+	},
+	"egret_version": "1.7.3"
+}

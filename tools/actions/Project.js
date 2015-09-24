@@ -4,7 +4,7 @@ function normalize(project) {
     project.entryClass = project.entryClass || "Main";
     project.platform = project.platform || "web";
     project.background = project.background || "#888888";
-    project.scaleMode = project.scaleMode || "noScale";
+    project.scaleMode = project.scaleMode || "showAll";
     project.orientationMode = project.orientationMode || "auto";
     project.frameRate = project.frameRate || 30;
     project.contentWidth = project.contentWidth || 480;
@@ -83,7 +83,7 @@ function getNativeProjectInfo(html) {
         'showLog: {{=it.showLog}},\n\t\t' +
         'logFilter: "{{=it.logFilter}}",\n\t\t' +
         'maxTouches: {{=it.maxTouches}},\n\t\t' +
-        'textureScaleFactor: {{=it.textureScaleFactor}}';
+        'textureScaleFactor: 1';
     var temp = doT.template(optionStr);
     optionStr = temp(proj);
     return optionStr;
