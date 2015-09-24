@@ -9,7 +9,7 @@ export function normalize(project: egret.ILarkProject) {
     project.entryClass = project.entryClass || "Main";
     project.platform = project.platform || "web";
     project.background = project.background || "#888888";
-    project.scaleMode = project.scaleMode || "fixedWidth";
+    project.scaleMode = project.scaleMode || "showAll";
     project.orientationMode = project.orientationMode || "auto";
     project.frameRate = project.frameRate || 30;
     project.contentWidth = project.contentWidth || 480;

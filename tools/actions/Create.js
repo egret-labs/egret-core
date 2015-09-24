@@ -2,12 +2,11 @@
 var utils = require('../lib/utils');
 var CopyFiles = require('../actions/CopyFiles');
 var NativeProject = require('../actions/NativeProject');
-var CompileProject = require('../actions/CompileProject');
 var projectAction = require('../actions/project');
-var CompileTemplate = require('../actions/CompileTemplate');
 var FileUtil = require('../lib/FileUtil');
 var doT = require('../lib/doT');
 var TemplatesRoot = "tools/templates/";
+var Clean = require('../commands/clean');
 var Create = (function () {
     function Create() {
     }
@@ -24,15 +23,19 @@ var Create = (function () {
         var properties = egret.args.properties;
         properties.reload();
         CopyFiles.copyLark();
-        var compileProject = new CompileProject();
-        var result = compileProject.compileProject(options);
-        CopyFiles.copyProjectFiles();
-        CompileTemplate.compileTemplates(options, result.files);
-        var project = JSON.stringify(this.project, null, "  ");
-        var tmpFile = FileUtil.joinPath(options.getTmpDir(), "proj.json");
-        FileUtil.save(tmpFile, project);
+        //
+        //var compileProject = new CompileProject();
+        //var result = compileProject.compileProject(options);
+        //CopyFiles.copyProjectFiles();
+        //CompileTemplate.compileTemplates(options, result.files);
+        //var project = JSON.stringify(this.project, null, "  ");
+        //var tmpFile = FileUtil.joinPath(options.getTmpDir(), "proj.json");
+        //FileUtil.save(tmpFile, project);
+        //console.log(utils.tr(10017));
+        //return result.exitStatus;
+        new Clean().execute();
         console.log(utils.tr(10017));
-        return result.exitStatus;
+        return DontExitCode;
     };
     return Create;
 })();

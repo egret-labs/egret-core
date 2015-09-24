@@ -38,7 +38,6 @@ declare module egret {
         commands?: string[];
         platform?: string;
 
-
         type?: string;
         native?: boolean;
         runtime?: string;

@@ -1,7 +1,6 @@
 /// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
 var FileUtil = require('../lib/FileUtil');
-var CopyFiles = require('../actions/CopyFiles');
 var exml = require("../actions/exml");
 var CompileProject = require('../actions/CompileProject');
 var CompileTemplate = require('../actions/CompileTemplate');
@@ -27,10 +26,10 @@ var Publish = (function () {
         var result = compileProject.compileProject(options);
         if (result.exitStatus)
             return result.exitStatus;
-        utils.minify(options.out, options.out);
-        CopyFiles.copyProjectFiles();
         exml.afterBuild();
-        CompileTemplate.compileTemplates(options, result.files);
+        CompileTemplate.modifyIndexHTML(result.files);
+        CompileTemplate.modifyNativeRequire();
+        utils.minify(options.out, options.out);
         //生成 all.manifest
         (new GenerateVersion).execute();
         if (egret.args.runtime == "native") {
