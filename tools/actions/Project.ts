@@ -27,6 +27,92 @@ export function normalize(project: egret.ILarkProject) {
     project.resolutionMode = project.resolutionMode || "retina";
 }
 
+export function getLibsList(html:string, isNative:boolean, isDebug:boolean):string[] {
+    var handler = new htmlparser.DefaultHandler(function (error, dom) {
+        if (error)
+            console.log(error);
+    });
+    var resultArr:string[] = [];
+    var parser = new htmlparser.Parser(handler);
+    parser.parseComplete(html);
+    handler.dom.forEach(d=> visitDom(d));
+
+    return resultArr;
+
+    function visitDom(el: htmlparser.Element) {
+        if (el.type == "script" && el.attribs && el.attribs["egret"]) {
+            if (isDebug) {
+                var src = el.attribs['src'];
+                if (isNative) {
+                    src = src.replace(".web.", ".native.");
+                }
+            }
+            else {
+                if (el.attribs["egret"] == "lib") {
+                    var src = el.attribs['src'];
+                    if (isNative) {
+                        src = src.replace(".web.", ".native.");
+                    }
+                }
+            }
+
+            resultArr.push(src);
+        }
+
+        if (el.children) {
+            el.children.forEach(e=> visitDom(e));
+        }
+    }
+}
+
+export function getProjectInfo(html:string) {
+    var handler = new htmlparser.DefaultHandler(function (error, dom) {
+        if (error)
+            console.log(error);
+    });
+    var containers: htmlparser.Element[] = [];
+    var projects: egret.ILarkProject[] = [];
+    var scripts: string[] = [];
+    var nativeScripts: string[] = [];
+    var parser = new htmlparser.Parser(handler);
+    parser.parseComplete(html);
+    handler.dom.forEach(d=> visitDom(d));
+    parseProject();
+    return projects;
+
+    function visitDom(el: htmlparser.Element) {
+        if (el.attribs && el.attribs['class'] == "egret-player") {
+            containers.push(el);
+        }
+
+        if (el.children) {
+            el.children.forEach(e=> visitDom(e));
+        }
+    }
+
+    function parseProject() {
+        containers.forEach(s=> {
+            var project: egret.ILarkProject = {};
+            project.contentHeight = s.attribs['data-content-height'];
+            project.contentWidth = s.attribs['data-content-width'];
+            project.entryClass = s.attribs['data-entry-class'];
+            project.frameRate = s.attribs['data-frame-rate'];
+            project.orientationMode = s.attribs['data-orientation-mode'];
+            project.resolutionMode = s.attribs['data-resolution-mode'];
+            project.scaleMode = s.attribs['data-scale-mode'];
+            project.showFPS = s.attribs['data-show-fps'];
+            project.showPaintRect = s.attribs['data-show-paint-rect'];
+            project.fpsStyles = s.attribs['data-show-fps-style'];
+            project.showLog = s.attribs['data-show-log'];
+            project.logFilter = s.attribs['data-log-filter'];
+            project.textureScaleFactor = s.attribs['texture-scale-factor'];
+            project.maxTouches = s.attribs['data-multi-fingered'];
+            project.scripts = scripts;
+            project.nativeScripts = nativeScripts;
+            projects.push(project);
+        });
+    }
+}
 
 export function parseProjectInfo(html: string): egret.ILarkProject[] {
     var handler = new htmlparser.DefaultHandler(function (error, dom) {

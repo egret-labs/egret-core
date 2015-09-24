@@ -8,6 +8,7 @@ var CompileTemplate = require('../actions/CompileTemplate');
 var GenerateVersion = require('../actions/GenerateVersionCommand');
 var ZipCMD = require("../actions/ZipCommand");
 var ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
+var project = require("../actions/Project");
 var Publish = (function () {
     function Publish() {
     }
@@ -31,11 +32,32 @@ var Publish = (function () {
         exml.afterBuild();
         CompileTemplate.compileTemplates(options, result.files);
         //生成 all.manifest
-        if (egret.args.properties.getPublishType(egret.args.runtime) == 1) {
-            //生成 all.manifest 文件，并拷贝文件 删除旧文件
-            (new GenerateVersion).execute();
-        }
+        (new GenerateVersion).execute();
         if (egret.args.runtime == "native") {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
+            //
+            var fileList = project.getLibsList(FileUtil.joinPath(options.projectDir, "index.html"), true, false);
+        }
+        else {
+            var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
+            FileUtil.copy(FileUtil.joinPath(options.projectDir, "index.html"), releaseHtmlPath);
+            var htmlContent = FileUtil.read(releaseHtmlPath);
+            //替换使用 html 中的 src-release 目录
+            var reg = /src[^>]*src-release/g;
+            htmlContent = htmlContent.replace(reg, "src");
+            //替换 game_files 脚本
+            var reg = /<!--game_files_start-->[\s\S]*<!--game_files_end-->/;
+            var replaceStr = '<!--game_files_start-->\n' + '\t<script src="main.min.js"></script>\n' + '\t<!--game_files_end-->';
+            htmlContent = htmlContent.replace(reg, replaceStr);
+            FileUtil.save(releaseHtmlPath, htmlContent);
+            var libsList = project.getLibsList(htmlContent, false, false);
+            libsList.forEach(function (filepath) {
+                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, filepath));
+            });
+        }
+        return 1;
+        if (egret.args.runtime == "native") {
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
             var versionFile = (egret.args.version || Math.round(Date.now() / 1000)).toString();
             //runtime  打包所有js文件以及all.manifest
             var zip = new ZipCMD(versionFile);
