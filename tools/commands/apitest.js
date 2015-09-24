@@ -29,16 +29,23 @@ var APItestCommand = (function () {
                         //延时操作下一步
                         setTimeout(function () {
                             //写入html并打开网址
-                            var saveContent = logger._htmlTitle +
-                                '<h1>' + self.projectPath + '<b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
-                                '<h2>共计 <b>' + logger.total + '</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
-                                logger._htmlBody +
-                                logger._htmlEnd;
-                            //var saveContent = logger._snapShot;
-                            if (saveContent != '') {
+                            if (logger._htmlBody != '') {
+                                var saveContent = logger.htmlOut(
+                                //为模版html注入属性值
+                                { 'dir': self.projectPath,
+                                    'version_old': egret.args.properties.getVersion(),
+                                    'version_new': "2.5.0",
+                                    'conflict_count': logger.total + '',
+                                    'title': 'API检测报告',
+                                    'dir_changed_tip': '',
+                                    'qq_new_feature': '<strong>' + utils.ti(1713) + '</strong>',
+                                    'color_red': '',
+                                    'color_green': '',
+                                    'color_normal': ''
+                                });
                                 var saveLogFilePath = file.joinPath(self.projectPath, 'LOG_APITEST.html');
                                 self.saveFileAndOpen(saveLogFilePath, saveContent);
-                                globals.log2(1712, saveLogFilePath);
+                                globals.exit(1712, saveLogFilePath); //检测结果已写入
                             }
                             //sumUpAndEndProcess();
                         }, 200);

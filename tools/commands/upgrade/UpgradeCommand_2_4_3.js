@@ -165,19 +165,27 @@ var UpgradeCommand_2_4_3 = (function () {
                         //延时操作下一步
                         setTimeout(function () {
                             //写入html并打开网址
-                            var saveContent = logger._htmlTitle +
-                                '<h1>' + projectPath + '<b>v2.0.5</b>到<b>v2.4.3</b>API升级检测报告</h1><br>' +
-                                '<h2>共计 <b>' + logger.total + '</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
-                                logger._htmlBody +
-                                logger._htmlEnd;
-                            //var saveContent = logger._snapShot;
-                            if (saveContent != '') {
+                            if (logger._htmlBody != '') {
                                 var saveLogFilePath = file.joinPath(projectPath, 'LOG_APITEST.html');
+                                var saveContent = logger.htmlOut(
+                                //为模版html注入属性值
+                                {
+                                    'dir': projectPath,
+                                    'version_old': egret.args.properties.getVersion(),
+                                    'version_new': "2.5.0",
+                                    'conflict_count': logger.total + '',
+                                    'title': 'API检测报告',
+                                    'dir_changed_tip': utils.ti(1711, { '0': saveLogFilePath }),
+                                    'qq_new_feature': '<strong>' + utils.ti(1713) + '</strong>',
+                                    'color_red': '',
+                                    'color_green': '',
+                                    'color_normal': ''
+                                });
                                 self.saveFileAndOpen(saveLogFilePath, saveContent);
                                 globals.log2(1712, saveLogFilePath); //检测结果已写入
                             }
-                            globals.log2(1711, projectPath); //工程目录已变更
-                            globals.exit(1713); //qq体验群
+                            //globals.log2(1711,projectPath);//工程目录已变更
+                            //globals.exit(1713);//qq体验群
                             self.asyncCallback();
                         }, 200);
                     });

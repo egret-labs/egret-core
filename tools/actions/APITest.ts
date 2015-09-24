@@ -6,6 +6,7 @@ import TSP = require("../commands/upgrade/2.4.3/TsServiceProxy");
 import fs = require("fs");
 import file = require('../lib/FileUtil');
 import TSS = require("../commands/upgrade/2.4.3/typescriptServices");
+import utils = require('../lib/utils');
 
 
 var DTS = require('../commands/upgrade/2.4.3/compare2dts.js');
@@ -35,18 +36,14 @@ interface APIAutoReference{
 class AutoLogger implements APIAutoReference{
     private static _instance :AutoLogger;
     private _isConsoleOut :boolean = false;
-    public _htmlTitle :string = '<!DOCTYPE html><html><head><title>API升级检测报告</title><meta charset="UTF-8">' +
-        '<style type="text/css">'+'li{list-style:none;}li b{color:#aa0000;}h2 b{color:red;}</style></head><body>';
     public _htmlBody:string = '';
-    public _htmlEnd:string = '</body></html>';
-
     public _snapShot:string = '';
 
     private _solutionMap:any = {};
     private _dir:string = '';
     public _total:number = 0;
 
-    private _isAPIadd :boolean =  false;
+    private _isAPIadd :boolean = false;
     private _api:string = null;
     //private _item:null,
     private _logContent:any = {
@@ -225,10 +222,48 @@ class AutoLogger implements APIAutoReference{
 
     _filterUrl(key){
         if(key in this._solutionMap){
-            return '<a href="'+this._solutionMap[key]+'">'+this._solutionMap[key]+'</a>';
+            return '<a target="_blank" href="'+this._solutionMap[key]+'">这里</a>';
         }else
             return key;
     }
+
+    htmlOut(injector?:any):string{
+        //var saveContent = injector ? utils.inject(this._htmlStart,injector):this._htmlStart +
+        //    this._htmlBody +
+        //    this._htmlEnd;
+        var saveContent = null;
+        if(injector){
+            saveContent = utils.inject(this._htmlStart,injector) + this._htmlBody + this._htmlEnd;
+        }else{
+            saveContent = this._htmlStart + this._htmlBody + this._htmlEnd;
+        }
+        return saveContent;
+    }
+
+    private _htmlStart :string =
+        '<!DOCTYPE html>' +
+        '<html>' +
+            '<head>' +
+                '<title>{title}</title>' +
+                '<meta charset="UTF-8">' +
+                '<style type="text/css">' +
+                    'li{list-style:none;}' +
+                    'li b{color:#aa0000;}' +
+                    'h2 b{color:red;}' +
+                '</style>' +
+            '</head>' +
+            '<body>' +
+                    // 目录                    原版本号                           升级后版本号               标题
+                '<h1>{dir}&nbsp;&nbsp;<b>{version_old}</b>&nbsp;到&nbsp;<b>{version_new}</b>&nbsp;{title}</h1><br>' +
+                    //               冲突总数
+                '<h2>共计 <b>{conflict_count}</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
+                    // 告知目录已变更
+                '<h3>{dir_changed_tip}</h3>'+
+                    //   告知qq群
+                '<h3>{qq_new_feature}</h3>';
+    private _htmlEnd :string =
+            '</body>'+
+        '</html>';
 }
 
 class APITestAction implements egret.Command {
