@@ -2,13 +2,12 @@
 //import globals = require("../globals");
 //import params = require("../ParamsParser");
 var file = require('../lib/FileUtil');
-var FileAutoChangeCommand = require("../actions/FileAutoChange");
 //import config = require("../ProjectConfig");
 var config = egret.args.properties;
-var CopyFilesCommand = require("./copyfile");
 var ParseConfigCommand = require("../actions/ParseConfig");
 var fs = require('fs');
 var cp_exec = require('child_process').exec;
+var copyNative = require("../actions/CopyNativeFiles");
 var CreateAppCommand = (function () {
     function CreateAppCommand() {
         this.executeRes = 0;
@@ -69,21 +68,12 @@ var CreateAppCommand = (function () {
         //修改native项目配置
         new ParseConfigCommand().execute();
         //修改文件
-        var fileModify = new FileAutoChangeCommand();
-        fileModify.needCompile = false;
-        fileModify.debug = true;
-        fileModify.execute();
+        //var fileModify = new FileAutoChangeCommand();
+        //fileModify.needCompile = false;
+        //fileModify.debug = true;
+        //fileModify.execute();
         //拷贝项目到native工程中
-        var cpFiles = new CopyFilesCommand();
-        if (platform == "android") {
-            var url2 = file.joinPath(nativePath, "proj.android/assets", "egret-game");
-        }
-        else if (platform == "ios") {
-            url2 = file.joinPath(nativePath, "Resources", "egret-game");
-        }
-        cpFiles.outputPath = url2;
-        cpFiles.ignorePathList = config.getIgnorePath();
-        cpFiles.execute();
+        copyNative.refreshNative(true);
         globals.log2(1606, (Date.now() - startTime) / 1000);
     };
     CreateAppCommand.prototype.create_app_from = function (app_path, template_path, app_data) {

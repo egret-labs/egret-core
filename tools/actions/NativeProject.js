@@ -4,50 +4,18 @@ var FileUtil = require('../lib/FileUtil');
 var childProcess = require("child_process");
 var CompileTemplate = require('../actions/CompileTemplate');
 var CopyFilesCommand = require("../commands/copyfile");
-var ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
+var copyNative = require("../actions/CopyNativeFiles");
 var NativeProject = (function () {
     function NativeProject() {
     }
     NativeProject.build = function (platform) {
         console.log("----native build-----");
+        var options = egret.args;
         CompileTemplate.compileNativeRequire(egret.args);
         //拷贝项目到native工程中
         var cpFiles = new CopyFilesCommand();
-        var config = egret.args.properties;
-        var nativePath;
-        if (nativePath = egret.args.properties.getNativePath("android")) {
-            var url1 = FileUtil.joinPath(nativePath, "proj.android");
-            var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
-            FileUtil.remove(url2);
-            try {
-                cpFiles.outputPath = url2;
-                cpFiles.ignorePathList = config.getIgnorePath();
-                cpFiles.execute();
-            }
-            catch (e) {
-                globals.exit(10021);
-            }
-            //修改java文件
-            var entrance = new ChangeEntranceCMD();
-            entrance.initCommand(url1, "android");
-            entrance.execute();
-        }
-        if (nativePath = egret.args.properties.getNativePath("ios")) {
-            var url1 = FileUtil.joinPath(nativePath, "proj.ios");
-            url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
-            FileUtil.remove(url2);
-            try {
-                cpFiles.outputPath = url2;
-                cpFiles.ignorePathList = config.getIgnorePath();
-                cpFiles.execute();
-            }
-            catch (e) {
-                globals.exit(10021);
-            }
-            //修改java文件
-            var entrance = new ChangeEntranceCMD();
-            entrance.initCommand(url1, "ios");
-            entrance.execute();
+        if (egret.args.runtime == "native") {
+            copyNative.refreshNative(true);
         }
         return;
         copyOutputToNative(platform);

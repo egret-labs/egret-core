@@ -15,6 +15,8 @@ import ChangeEntranceCMD = require("../actions/ChangeEntranceCommand");
 
 import project = require("../actions/Project");
 
+import copyNative = require("../actions/CopyNativeFiles");
+
 class Publish implements egret.Command {
     execute():number {
         var options = egret.args;
@@ -44,11 +46,47 @@ class Publish implements egret.Command {
         (new GenerateVersion).execute();
 
         if (egret.args.runtime == "native") {
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
+            var rootHtmlPath = FileUtil.joinPath(options.projectDir, "index.html");
 
-            //
-            var fileList = project.getLibsList(FileUtil.joinPath(options.projectDir, "index.html"), true, false);
+            //生成 获取列表
+            var libsList = project.getLibsList(FileUtil.read(rootHtmlPath), true, false);
+            var listStr = "\n";
+            libsList.forEach(function (filepath) {
+                listStr += '\t"' + filepath + '",\n';
+            });
+            listStr += '\t"main.min.js"\n';
 
+            var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
+            var requireContent = FileUtil.read(requirePath);
+
+            var reg = /\/\/----auto game_file_list start----[\s\S]*\/\/----auto game_file_list end----/;
+            var replaceStr = '\/\/----auto game_file_list start----' + listStr + '\t\/\/----auto game_file_list end----';
+            requireContent = requireContent.replace(reg, replaceStr);
+
+            var optionStr = project.getNativeProjectInfo(rootHtmlPath);
+            var reg = /\/\/----auto option start----[\s\S]*\/\/----auto option end----/;
+            var replaceStr = '\/\/----auto option start----' + optionStr + '\/\/----auto option end----';
+            requireContent = requireContent.replace(reg, replaceStr);
+
+            FileUtil.save(requirePath, requireContent);
+
+            //先拷贝 launcher
+            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
+
+            FileUtil.copy(FileUtil.joinPath(options.releaseDir, "main.min.js"), FileUtil.joinPath(options.releaseDir, "ziptemp", "main.min.js"));
+            FileUtil.remove(FileUtil.joinPath(options.releaseDir, "main.min.js"));
+
+            libsList.forEach(function (filepath) {
+                FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
+            });
+
+            var versionFile = (egret.args.version || Math.round(Date.now() / 1000)).toString();
+
+            //runtime  打包所有js文件以及all.manifest
+            var zip = new ZipCMD(versionFile);
+            zip.execute(function (code) {
+                copyNative.refreshNative(false, versionFile);
+            });
         }
         else {
             var releaseHtmlPath = FileUtil.joinPath(options.releaseDir, "index.html");
@@ -71,61 +109,6 @@ class Publish implements egret.Command {
             libsList.forEach(function (filepath) {
                 FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, filepath));
             });
-        }
-
-        return 1;
-
-        if (egret.args.runtime == "native") {
-            FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "launcher"));
-
-            var versionFile = (egret.args.version || Math.round(Date.now() / 1000)).toString();
-
-            //runtime  打包所有js文件以及all.manifest
-            var zip = new ZipCMD(versionFile);
-            zip.execute(function (code) {
-                var releasePath = egret.args.releaseDir;
-                var nativePath;
-                if (nativePath = egret.args.properties.getNativePath("android")) {
-                    var url1 = FileUtil.joinPath(nativePath, "proj.android");
-                    var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
-
-                    FileUtil.remove(url2);
-
-                    try {
-                        FileUtil.createDirectory(url2);
-                    }
-                    catch(e) {
-                        globals.exit(10021);
-                    }
-                    FileUtil.copy(releasePath, url2);
-
-                    //修改java文件
-                    var entrance = new ChangeEntranceCMD();
-                    entrance.initCommand(url1, "android", versionFile);
-                    entrance.execute();
-                }
-
-                if (nativePath = egret.args.properties.getNativePath("ios")) {
-                    var url1 = FileUtil.joinPath(nativePath, "proj.ios");
-                    url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
-
-                    FileUtil.remove(url2);
-
-                    try {
-                        FileUtil.createDirectory(url2);
-                    }
-                    catch(e) {
-                        globals.exit(10021);
-                    }
-                    FileUtil.copy(releasePath, url2);
-
-                    //修改java文件
-                    var entrance = new ChangeEntranceCMD();
-                    entrance.initCommand(url1, "ios", versionFile);
-                    entrance.execute();
-                }
-            });
-
         }
 
         return DontExitCode;
