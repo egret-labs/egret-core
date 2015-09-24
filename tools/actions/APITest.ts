@@ -35,7 +35,7 @@ interface APIAutoReference{
 class AutoLogger implements APIAutoReference{
     private static _instance :AutoLogger;
     private _isConsoleOut :boolean = false;
-    public _htmlTitle :string = '<!DOCTYPE html><html><head><title>API检测结果报告</title><meta charset="UTF-8">' +
+    public _htmlTitle :string = '<!DOCTYPE html><html><head><title>API升级检测报告</title><meta charset="UTF-8">' +
         '<style type="text/css">'+'li{list-style:none;}li b{color:#aa0000;}h2 b{color:red;}</style></head><body>';
     public _htmlBody:string = '';
     public _htmlEnd:string = '</body></html>';
