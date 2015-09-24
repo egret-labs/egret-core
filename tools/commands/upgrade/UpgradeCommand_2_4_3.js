@@ -1,7 +1,6 @@
 /// <reference path="../../lib/types.d.ts" />
 var file = require('../../lib/FileUtil');
 var CHILD_EXEC = require('child_process');
-//import TSS = require("./2.4.2/typescriptServices");
 var utils = require('../../lib/utils');
 var APITestTool = require('../../actions/APITest');
 var UpgradeCommand_2_4_3 = (function () {
