@@ -43,7 +43,7 @@ class Run implements egret.Command {
         }
         this.serverStarted = true;
         server.startServer(egret.args, egret.args.startUrl);
-        if(egret.args.serveronly){
+        if (egret.args.serverOnly) {
             console.log("Url:" + egret.args.startUrl);
         }else{
             console.log('\n');
@@ -60,7 +60,7 @@ class Run implements egret.Command {
             this.watchFiles(egret.args.srcDir);
             this.watchFiles(egret.args.templateDir);
         }
-        else if (!egret.args.serveronly) {
+        else if (!egret.args.serverOnly) {
             console.log('    ' + utils.tr(10012));
         }
     }
