@@ -370,22 +370,22 @@
   },
   {
     "desc":"class DeviceContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {
     "desc":"class MainContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {
     "desc":"class NetContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {
     "desc":"class TouchContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {
