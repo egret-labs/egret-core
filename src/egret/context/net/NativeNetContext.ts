@@ -119,7 +119,12 @@ module egret {
                     loader.data = content;
                     Event.dispatchEvent(loader, Event.COMPLETE);
                 };
-                egret_native.readFileAsync(virtualUrl, promise);
+                if(loader.dataFormat == URLLoaderDataFormat.BINARY) {
+                    egret_native.readFileAsync(virtualUrl, promise, "ArrayBuffer");
+                }
+                else {
+                    egret_native.readFileAsync(virtualUrl, promise);
+                }
             }
 
             function download() {
@@ -133,7 +138,13 @@ module egret {
 
             function onLoadComplete() {
                 self.saveVersion(virtualUrl);
-                var content = egret_native.readFileSync(virtualUrl);
+                var content;
+                if(loader.dataFormat == URLLoaderDataFormat.BINARY) {
+                    content = egret_native.readFileSync(virtualUrl, "ArrayBuffer");
+                }
+                else {
+                    content = egret_native.readFileSync(virtualUrl);
+                }
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }

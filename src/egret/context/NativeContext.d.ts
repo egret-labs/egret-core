@@ -57,7 +57,7 @@ declare module egret_native {
 
     function isRecordExists(filepath:string):boolean;
 
-    function readFileSync(filepath:string):any;
+    function readFileSync(filepath:string, type?:string):any;
 
     function readResourceFileSync(filepath:string):any;
 
@@ -65,7 +65,7 @@ declare module egret_native {
 
     function deleteUpdateFile(filepath:string):void;
 
-    function readFileAsync(filepath:string, promise:egret.PromiseObject):any;
+    function readFileAsync(filepath:string, promise:egret.PromiseObject, type?:string):any;
 
     function writeFileSync(filepath:string, fileContent:string):any;
 
