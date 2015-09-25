@@ -27,12 +27,8 @@ var CopyFiles = (function () {
                 var moduleBin = FileUtil.joinPath(egret.root, "build", moduleName);
             }
             else {
-                if (FileUtil.exists(FileUtil.joinPath(modulePath))) {
-                    moduleBin = FileUtil.joinPath(modulePath, "bin", moduleName);
-                }
-                else {
-                    moduleBin = FileUtil.joinPath(options.projectDir, modulePath, "bin", moduleName);
-                }
+                var tempModulePath = FileUtil.getAbsolutePath(modulePath);
+                moduleBin = FileUtil.joinPath(tempModulePath, "bin", moduleName);
             }
             var targetFile = FileUtil.joinPath(options.libsDir, 'modules', moduleName);
             if (options.projectDir.toLowerCase() != egret.root.toLowerCase()) {

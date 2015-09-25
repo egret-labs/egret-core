@@ -66,7 +66,8 @@ class EgretProperties implements egret.EgretPropertiesClass {
             p = this.properties["publish"]["path"];
         }
 
-        return file.joinPath(egret.args.projectDir, p);
+        return file.getAbsolutePath(p);
+        //return file.joinPath(egret.args.projectDir, p);
     }
 
     //获得egret_file_list

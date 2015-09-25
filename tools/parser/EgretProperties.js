@@ -53,7 +53,8 @@ var EgretProperties = (function () {
         if (globals.hasKeys(this.properties, ["publish", "path"])) {
             p = this.properties["publish"]["path"];
         }
-        return file.joinPath(egret.args.projectDir, p);
+        return file.getAbsolutePath(p);
+        //return file.joinPath(egret.args.projectDir, p);
     };
     //获得egret_file_list
     EgretProperties.prototype.getFileList = function (file_list) {

@@ -443,5 +443,15 @@ function relative(from, to) {
     return path;
 }
 exports.relative = relative;
+function getAbsolutePath(path) {
+    var tempPath = Path.resolve(path);
+    tempPath = escapePath(tempPath);
+    path = escapePath(path);
+    if (tempPath == path) {
+        return path;
+    }
+    return joinPath(egret.args.projectDir, path);
+}
+exports.getAbsolutePath = getAbsolutePath;
 
 //# sourceMappingURL=../lib/FileUtil.js.map
