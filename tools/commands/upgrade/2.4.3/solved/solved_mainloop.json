@@ -30,6 +30,11 @@
     "solved":true
   },
   {
+    "desc":"class Logger{ static openLogByType(logType: string): void; }",
+    "solution-url":"logger",
+    "solved":true
+  },
+  {
     "desc":"class DisplayObject{ anchorX: number; }",
     "solution-url":"anchor",
     "solved":true
@@ -66,6 +71,16 @@
   },
   {
     "desc":"class Event{ static _dispatchByTarget(EventClass: any, target: IEventDispatcher, type: string, props?: Object, bubbles?: boolean, cancelable?: boolean): boolean; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ constructor(type: string, bubbles?: boolean, cancelable?: boolean, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean); }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ static dispatchTouchEvent(target: IEventDispatcher, type: string, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean): void; }",
     "solution-url":"events",
     "solved":true
   },
