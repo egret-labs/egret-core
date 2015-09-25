@@ -17,6 +17,6 @@
     "events":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#事件相关调整",
     "blendmode":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#BlendMode",
     "deprecated-display":"http://edn.egret.com/cn/index.php/article/index/id/628#内部%20API%20调整",
-    "ticker":"http://edn.egret.com/cn/index.php/article/index/id/628#Ticker"
+    "ticker":"http://edn.egret.com/cn/index.php/article/index/id/628#Ticker",
     "MainContext":"http://edn.egret.com/cn/index.php/article/index/id/628#MainContext"
 }
