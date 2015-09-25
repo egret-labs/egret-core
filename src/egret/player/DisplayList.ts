@@ -692,8 +692,10 @@ module egret.sys {
                     newContext.setTransform(1, 0, 0, 1, 0, 0);
                     newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
                 }
-                oldSurface.height = 1;
-                oldSurface.width = 1;
+                if (Capabilities.runtimeType != RuntimeType.NATIVE) {
+                    oldSurface.height = 1;
+                    oldSurface.width = 1;
+                }
             }
 
             this.rootMatrix.setTo(1, 0, 0, 1, - this.offsetX, - this.offsetY);

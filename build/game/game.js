@@ -3487,13 +3487,13 @@ var egret;
          * @language en_US
          * Specify that downloaded data is received as raw binary data.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 指定以原始二进制数据形式接收下载的数据。
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         URLLoaderDataFormat.BINARY = "binary";
         /**

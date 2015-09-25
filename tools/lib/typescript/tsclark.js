@@ -11478,7 +11478,7 @@ var ts;
                 }
                 if (!defineEmitted) {
                     writeLine();
-                    write('var __define = this.__define || function (o, p, g, s) { \n  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };');
+                    write('var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };');
                     defineEmitted = true;
                 }
                 if (ts.isExternalModule(node)) {
@@ -21233,7 +21233,6 @@ var ts;
 /// <reference path="emitter.ts"/>
 /// <reference path="commandLineParser.ts"/>
 /// <reference path="sort.ts" />
-/// <reference path="../../types.d.ts" />
 var ts;
 (function (ts) {
     var version = "1.4.0.0";

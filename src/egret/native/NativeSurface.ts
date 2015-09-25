@@ -43,6 +43,7 @@ module egret.native {
             super();
             //this.id = NativeSurface.id++;
         }
+
         //private id;
         //private static id = 0;
 
@@ -52,15 +53,15 @@ module egret.native {
          */
         public renderContext:egret.sys.RenderContext = new NativeRenderContext();
 
-        public toDataURL(type?: string, ...args: any[]): string {
-            if(this.$nativeRenderTexture) {
+        public toDataURL(type?:string, ...args:any[]):string {
+            if (this.$nativeRenderTexture) {
                 return this.$nativeRenderTexture.toDataURL.apply(this, arguments);
             }
             return null;
         }
 
         public saveToFile(type:string, filePath:string):void {
-            if(this.$nativeRenderTexture) {
+            if (this.$nativeRenderTexture) {
                 this.$nativeRenderTexture.saveToFile(type, filePath);
             }
         }
@@ -74,13 +75,17 @@ module egret.native {
         }
 
         public set width(value:number) {
+            if (this.$width == value) {
+                return;
+            }
             this.$width = value;
-            if(!this.$isDispose) {
+            if (!this.$isDispose) {
                 this.$widthReadySet = true;
                 this.createRenderTexture();
             }
         }
-        private $width: number;
+
+        private $width:number;
         private $widthReadySet:boolean = false;
 
         /**
@@ -92,37 +97,42 @@ module egret.native {
         }
 
         public set height(value:number) {
+            if (this.$height == value) {
+                return;
+            }
             this.$height = value;
-            if(!this.$isDispose) {
+            if (!this.$isDispose) {
                 this.$heightReadySet = true;
                 this.createRenderTexture();
             }
         }
-        private $height: number;
+
+        private $height:number;
         private $heightReadySet:boolean = false;
 
         public $nativeRenderTexture;
         public $isRoot:boolean = false;
 
         private createRenderTexture():void {
-            if(this.$isRoot) {
+            if (this.$isRoot) {
                 return;
             }
-            if(this.$widthReadySet && this.$heightReadySet) {
-                if(this.$nativeRenderTexture) {
+            if (this.$nativeRenderTexture || (this.$widthReadySet && this.$heightReadySet)) {
+                if (this.$nativeRenderTexture) {
                     this.$nativeRenderTexture.dispose();
                 }
                 //console.log("new RenderTexture" + this.id);
                 this.$nativeRenderTexture = new egret_native.RenderTexture(this.$width, this.$height);
                 this.renderContext.globalAlpha = 1;
                 this.renderContext.globalCompositeOperation = "source-over";
+                this.renderContext.setTransform(1, 0, 0, 1, 0, 0);
                 this.$widthReadySet = false;
                 this.$heightReadySet = false;
             }
         }
 
         public begin():void {
-            if(this.$nativeRenderTexture) {
+            if (this.$nativeRenderTexture) {
                 //console.log("begin" + this.id);
                 $currentSurface = this;
                 //this.$nativeRenderTexture.begin();
@@ -131,7 +141,7 @@ module egret.native {
         }
 
         public end():void {
-            if(this.$nativeRenderTexture) {
+            if (this.$nativeRenderTexture) {
                 //console.log("end" + this.id);
                 $currentSurface = null;
                 //this.$nativeRenderTexture.end();
@@ -142,8 +152,8 @@ module egret.native {
         private $isDispose:boolean = false;
 
         public $dispose():void {
-            if(this.$nativeRenderTexture) {
-                if($currentSurface == this) {
+            if (this.$nativeRenderTexture) {
+                if ($currentSurface == this) {
                     $currentSurface.end();
                 }
                 //console.log("dispose" + this.id);

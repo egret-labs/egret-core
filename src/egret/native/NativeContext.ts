@@ -41,6 +41,8 @@ declare module egret_native {
 
     function callRender():void;
 
+    function setFrameRate(frameRate:number):void;
+
     function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
 
     function onTouchesMove(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);

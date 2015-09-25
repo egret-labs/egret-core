@@ -69,8 +69,8 @@ module egret.native {
             if (!surface) {
                 return;
             }
-            surface.$dispose();
-            surface.width = surface.height = 1;
+            //surface.$dispose();
+            //surface.width = surface.height = 1;
             surfacePool.push(surface);
         }
 

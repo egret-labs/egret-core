@@ -55,13 +55,13 @@ declare module RES {
          * @language en_US
          * Binary file.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 二进制文件。
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         static TYPE_BIN: string;
         /**
