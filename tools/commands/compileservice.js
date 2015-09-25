@@ -166,8 +166,11 @@ var AutoCompileCommand = (function () {
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
-        if (msg.command == 'build' && msg.option)
+        if (msg.command == 'build' && msg.option) {
+            var props = egret.args.properties;
             egret.args = parser.parseJSON(msg.option);
+            egret.args.properties = props;
+        }
         if (msg.command == 'build')
             this.buildChanges(msg.changes);
         if (msg.command == 'shutdown')
@@ -200,5 +203,4 @@ var AutoCompileCommand = (function () {
     return AutoCompileCommand;
 })();
 module.exports = AutoCompileCommand;
-
-//# sourceMappingURL=../commands/compileservice.js.map
+//# sourceMappingURL=compileservice.js.map
