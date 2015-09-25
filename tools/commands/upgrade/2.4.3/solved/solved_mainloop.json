@@ -314,13 +314,8 @@
     "solved":true
   },
   {
-    "desc":"class Ticker{ run(): void; }",
-    "solution-url":"draw_md",
-    "solved":true
-  },
-  {
-    "desc":"class Ticker{ setTimeout(listener: Function, thisObject: any, delay: number, ...parameters: any[]): void; }",
-    "solution-url":"draw_md",
+    "desc":"class Ticker{ * }",
+    "solution-url":"ticker",
     "solved":true
   },
   {
