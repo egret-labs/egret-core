@@ -30,7 +30,6 @@ class FileAutoChangeCommand implements egret.Command {
     }
 
     refreshDebugHtml(htmlPath, gameScripts) {
-        var options = egret.args;
         var libsScriptsStr = this.getModuleScripts();
         var reg = /<!--modules_files_start-->[\s\S]*<!--modules_files_end-->/;
         var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
@@ -50,15 +49,7 @@ class FileAutoChangeCommand implements egret.Command {
 
         var reg = /<!--game_files_start-->[\s\S]*<!--game_files_end-->/;
         var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
-        var list = FileUtil.getDirectoryListing(options.projectDir);
-        for (var key in list) {
-            var filepath = list[key];
-            if (FileUtil.getExtension(filepath) == "html") {
-                var htmlContent = FileUtil.read(filepath);
-                htmlContent = htmlContent.replace(reg, replaceStr);
-                FileUtil.save(filepath, htmlContent);
-            }
-        }
+        htmlContent = htmlContent.replace(reg, replaceStr);
 
         FileUtil.save(htmlPath, htmlContent);
     }
