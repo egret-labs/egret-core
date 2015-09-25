@@ -44,7 +44,7 @@ var APItestCommand = (function () {
                                     'color_green': '',
                                     'color_normal': ''
                                 });
-                                var saveLogFilePath = file.joinPath(self.projectPath, 'LOG_APITEST.html');
+                                var saveLogFilePath = file.joinPath(self.projectPath, logger.HTML_FILENAME);
                                 self.saveFileAndOpen(saveLogFilePath, saveContent);
                                 globals.exit(1712, saveLogFilePath); //检测结果已写入
                             }

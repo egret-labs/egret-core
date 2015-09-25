@@ -58,7 +58,10 @@ var UpgradeCommand = (function () {
         async.eachSeries(this.upgradeConfigArr, function (info, callback) {
             function handleCallBack(err) {
                 if (!err) {
-                    modify.save(v);
+                    //2.5.0升级较特殊 新建目录保持旧目录的版本号不变
+                    if (v != '2.5.0') {
+                        modify.save(v);
+                    }
                     callback();
                 }
                 else {

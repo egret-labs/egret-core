@@ -35,6 +35,7 @@ interface APIAutoReference{
 
 class AutoLogger implements APIAutoReference{
     private static _instance :AutoLogger;
+    HTML_FILENAME :string = 'LOG_APITEST.html';
     private _isConsoleOut :boolean = false;
     public _htmlBody:string = '';
     public _snapShot:string = '';
@@ -328,15 +329,44 @@ class APITestAction implements egret.Command {
                 }
             });
             logger.close();
+            //成功后删除已有的HTML文件
+            if(logger.total == 0){
+                APITestAction.deleteHtmlFile(projectPath);
+            }
+            //执行结果回调
             if(callBack){
                 callBack(false,logger.total,logger);
             }
         }else{
+            //错误回调
             if(callBack){
                 callBack(true,1705);
             }
         }
         return 0;
+    }
+
+    /**
+     * build
+      * @param projectPath
+     * @returns {boolean}
+     */
+    static isTestPass(projectPath:string):boolean{
+        var testHtmlFilePath = file.joinPath(projectPath,new AutoLogger().HTML_FILENAME) ;
+        //执行过upgrade并进行了APITest 结果不为0 保留APITest.html
+        if(file.exists(testHtmlFilePath)){
+            return false;
+        }else{
+            //执行过APITest但是结果为0 APITest.html文件被自动删除(或手动删除)
+            return true;
+        }
+    }
+
+    static deleteHtmlFile(projectPath:string){
+        var testHtmlFilePath = file.joinPath(projectPath,new AutoLogger().HTML_FILENAME) ;
+        if(file.exists(testHtmlFilePath)){
+            file.remove(testHtmlFilePath);
+        }
     }
 }
 
