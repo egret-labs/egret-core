@@ -79,8 +79,9 @@ class Build implements egret.Command {
             utils.exit(10015, options.projectDir);
         }
         if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/egret/'))) {
-            CopyFiles.copyLark();
+            CopyFiles.copyToLibs();
         }
+
         service.execCommand({
             path: egret.args.projectDir,
             command: "build",
