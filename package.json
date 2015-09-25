@@ -26,10 +26,6 @@
             "debug": false
           },
           {
-            "path": "media/native/NativeSound.ts",
-            "platform": "native"
-          },
-          {
             "path": "native/NativeRenderContext.ts",
             "platform": "native"
           },
@@ -66,6 +62,18 @@
             "platform": "native"
           },
           {
+            "path": "media/native/NativeSoundChannel.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NaSound.ts",
+            "platform": "native"
+          },
+          {
+            "path": "media/native/NaSoundChannel.ts",
+            "platform": "native"
+          },
+          {
             "path": "native/NativeGetOption.ts",
             "platform": "native"
           },
@@ -75,10 +83,6 @@
           },
           {
             "path": "localStorage/native/NativeLocalStorage.ts",
-            "platform": "native"
-          },
-          {
-            "path": "media/native/NativeSoundChannel.ts",
             "platform": "native"
           },
           {

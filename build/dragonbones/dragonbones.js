@@ -46,7 +46,7 @@ var dragonBones;
          *
          */
         DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.1.5";
+        DragonBones.VERSION = "4.1.6";
         return DragonBones;
     })();
     dragonBones.DragonBones = DragonBones;
@@ -6740,6 +6740,7 @@ var dragonBones;
                 slot = this._generateSlot();
                 slot.initWithSlotData(slotData);
                 bone.addSlot(slot);
+                displayList.length = 0;
                 var l = slotData.displayDataList.length;
                 while (l--) {
                     var displayData = slotData.displayDataList[l];

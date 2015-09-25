@@ -33,7 +33,7 @@ module egret.native {
      * @private
      * @inheritDoc
      */
-    export class NativeSound extends egret.EventDispatcher implements egret.Sound {
+    export class NaSound extends egret.EventDispatcher implements egret.Sound {
         /**
          * @language en_US
          * Background music
@@ -104,42 +104,36 @@ module egret.native {
                 download();
             }
             else {
-                $callAsync(onCanPlay, self);
+                $callAsync(onLoadComplete, self);
             }
 
             function download() {
                 var promise = PromiseObject.create();
-                promise.onSuccessFunc = onAudioLoaded;
-                promise.onErrorFunc = onAudioError;
+                promise.onSuccessFunc = onLoadComplete;
+                promise.onErrorFunc = function () {
+                    egret.IOErrorEvent.dispatchIOErrorEvent(self);
+                };
                 egret_native.download(url, url, promise);
             }
 
-            var audio = new Audio(url);
-            audio.addEventListener("canplaythrough", onCanPlay);
-            audio.addEventListener("error", onAudioError);
-            this.originAudio = audio;
-            function onAudioLoaded():void {
-                audio.load();
-
-                NativeSound.$recycle(this.url, audio);
-            }
-
-            function onCanPlay():void {
-                removeListeners();
-
+            function onLoadComplete() {
                 self.loaded = true;
+
+                self.preload();
+            }
+        }
+
+        private preload():void {
+            var self = this;
+            if (self.type == egret.Sound.EFFECT) {
+                var promise = new egret.PromiseObject();
+                promise.onSuccessFunc = function (soundId) {
+                    self.dispatchEventWith(egret.Event.COMPLETE);
+                };
+                egret_native.Audio.preloadEffectAsync(self.url, promise);
+            }
+            else {
                 self.dispatchEventWith(egret.Event.COMPLETE);
-            }
-
-            function onAudioError():void {
-                removeListeners();
-
-                self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-            }
-
-            function removeListeners():void {
-                audio.removeEventListener("canplaythrough", onAudioLoaded);
-                audio.removeEventListener("error", onAudioError);
             }
         }
 
@@ -154,18 +148,10 @@ module egret.native {
                 egret.$error(3001);
             }
 
-            var audio = NativeSound.$pop(this.url);
-            if (audio == null) {
-                audio = new Audio(this.url);
-            }
-            else {
-                audio.load();
-            }
-            audio.autoplay = true;
-
-            var channel = new NativeSoundChannel(audio);
+            var channel = new NaSoundChannel();
             channel.$url = this.url;
             channel.$loops = loops;
+            channel.$type = this.type;
             channel.$startTime = startTime;
             channel.$play();
             return channel;
@@ -175,43 +161,12 @@ module egret.native {
          * @inheritDoc
          */
         public close() {
-            if (this.loaded == false && this.originAudio)
-                this.originAudio.src = "";
-            if (this.originAudio)
-                this.originAudio = null;
-            NativeSound.$clear(this.url);
-        }
-
-        /**
-         * @private
-         */
-        private static audios:Object = {};
-
-        static $clear(url:string):void {
-            var array:HTMLAudioElement[] = NativeSound.audios[url];
-            if (array) {
-                array.length = 0;
-            }
-        }
-
-        static $pop(url:string):HTMLAudioElement {
-            var array:HTMLAudioElement[] = NativeSound.audios[url];
-            if (array && array.length > 0) {
-                return array.pop();
-            }
-            return null;
-        }
-
-        static $recycle(url:string, audio:HTMLAudioElement):void {
-            var array:HTMLAudioElement[] = NativeSound.audios[url];
-            if (NativeSound.audios[url] == null) {
-                array = NativeSound.audios[url] = [];
-            }
-            array.push(audio);
         }
     }
 
-    if (__global.Audio) {
-        egret.Sound = NativeSound;
+
+    if (!__global.Audio) {
+        egret.Sound = NaSound;
     }
 }
+
