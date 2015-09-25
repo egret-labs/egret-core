@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "out": "tsc.js",
+        "sourceMap": true,
+        "target": "ES5"
+    }
+}

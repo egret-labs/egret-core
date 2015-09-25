@@ -48,6 +48,8 @@ module egret.gui {
             if(source){
                 this.source = source;
             }
+			this.$renderRegion = new sys.Region();
+
             this.autoScale = autoScale;
 		}
 
@@ -90,7 +92,7 @@ module egret.gui {
 				this.sourceChanged = true;
 			}
 
-            this._setSizeDirty();
+            this.$invalidateContentBounds();
 		}
         
         public _content: any = null;
@@ -144,7 +146,7 @@ module egret.gui {
         private getAdapter():IAssetAdapter{
             var adapter:IAssetAdapter;
             try{
-                adapter = Injector.getInstance("egret.gui.IAssetAdapter");
+                adapter = $getAdapter("egret.gui.IAssetAdapter");
             }
             catch(e){
                 adapter = new DefaultAssetAdapter();
@@ -161,24 +163,22 @@ module egret.gui {
             var oldContent:any = this._content;
             this._content = content;
             if(this._content instanceof Texture){
-                this._texture_to_render = content;
 				this._contentIsTexture = true;
             }
             else{
-                this._texture_to_render = null;
 				this._contentIsTexture = false;
             }
             if(oldContent!==content) {
                 if(oldContent instanceof DisplayObject){
 					if((<DisplayObject> oldContent).parent==this){
-						(<DisplayObject> oldContent)._sizeChangeCallBack = null;
-						(<DisplayObject> oldContent)._sizeChangeCallTarget = null;
+						//(<DisplayObject> oldContent)._sizeChangeCallBack = null;
+						//(<DisplayObject> oldContent)._sizeChangeCallTarget = null;
 						this._removeFromDisplayList(<DisplayObject> oldContent);
 					}
                 }
                 if(content instanceof  DisplayObject){
-					(<DisplayObject> content)._sizeChangeCallBack = this.invalidateSize;
-					(<DisplayObject> content)._sizeChangeCallTarget = this;
+					//(<DisplayObject> content)._sizeChangeCallBack = this.invalidateSize;
+					//(<DisplayObject> content)._sizeChangeCallTarget = this;
                     this._addToDisplayListAt(<DisplayObject> content,0);
                 }
             }
@@ -213,8 +213,8 @@ module egret.gui {
                 }
             }
             else if(this._contentIsTexture){
-                this.measuredWidth = (<Texture> content)._textureWidth;
-                this.measuredHeight = (<Texture> content)._textureHeight;
+                this.measuredWidth = (<Texture> content).$getTextureWidth();
+                this.measuredHeight = (<Texture> content).$getTextureHeight();
             }
 		}
         /**
@@ -238,50 +238,73 @@ module egret.gui {
 					content.height = unscaledHeight/content.scaleY;
 				}
 			}
-            this._setSizeDirty();
+            this.$invalidateContentBounds();
 		}
 
 		/**
-		 *
-		 * @param renderContext
 		 * @private
 		 */
-        public _render(renderContext:RendererContext):void {
-            if(this._contentIsTexture){
-                var texture:Texture = <Texture> this._content;
-                var w:number;
-                var h:number;
-                if(this.autoScale){
-                    w = this._UIC_Props_._width;
-                    h = this._UIC_Props_._height;
-                }
-                else{
-                    w = texture._textureWidth;
-                    h = texture._textureHeight;
-                }
-				this._texture_to_render = texture;
-                Bitmap._drawBitmap(renderContext,w,h,this);
-            }
-            super._render(renderContext);
-        }
+		$render(context:sys.RenderContext):void{
+			if (this._contentIsTexture) {
+				var bitmapData = <Texture> this._content;
+				context.imageSmoothingEnabled = false;
+				var destW:number;
+				var destH:number;
+				if(this.autoScale){
+					destW = this._UIC_Props_._uiWidth;
+					destH = this._UIC_Props_._uiHeight;
+				}
+				else{
+					destW = bitmapData.$getTextureWidth();
+					destH = bitmapData.$getTextureHeight();
+				}
 
-        /**
-         * @returns {Rectangle}
-         * @private
-         */
-        public _measureBounds():egret.Rectangle {
-            if(this._contentIsTexture){
-                var texture:Texture = <Texture> this._content;
-                var textureW:number = texture._textureWidth;
-                var textureH:number = texture._textureHeight;
-                var w:number = this.width;
-                var h:number = this.height;
-                var x:number = Math.floor(texture._offsetX*w/textureW);
-                var y:number = Math.floor(texture._offsetY*h/textureH);
-                return Rectangle.identity.initialize(x,y, w, h);
-            }
-            return super._measureBounds();
-        }
+                Bitmap.$drawImage(context, bitmapData._bitmapData,
+                    bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(),
+                    destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
+
+				//var offsetX:number = Math.round(bitmapData._offsetX);
+				//var offsetY:number = Math.round(bitmapData._offsetY);
+				//var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
+				//var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
+				//var scale9Grid = this.scale9Grid || bitmapData["scale9Grid"];
+				//if (scale9Grid ) {
+				//	Bitmap.$drawScale9GridImage(context, bitmapData, scale9Grid, destW, destH);
+				//}
+				//else {
+				//	context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
+				//		bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+				//}
+			}
+			super.$render(context);
+		}
+		/**
+		 * @private
+		 */
+		$measureContentBounds(bounds:Rectangle):void {
+			if(this._contentIsTexture){
+				var texture:Texture = <Texture> this._content;
+				var w = NaN;
+				var h = NaN;
+				if(this.autoScale){
+					w = this._UIC_Props_._uiWidth == 10000 ? this.$getExplicitWidth() : this._UIC_Props_._uiWidth;
+					h = this._UIC_Props_._uiHeight == 10000 ? this.$getExplicitHeight() : this._UIC_Props_._uiHeight;
+				}
+
+				if (isNaN(w)) {
+					w = texture.$getTextureWidth();
+				}
+				if (isNaN(h)) {
+					h = texture.$getTextureHeight();
+				}
+
+				bounds.setTo(0, 0, w, h);
+
+			}
+			else{
+				super.$measureContentBounds(bounds);
+			}
+		}
 
 		/**
 		 * 此方法不支持
@@ -290,7 +313,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3004, getString(3003))));
+			egret.$error(3004, egret.sys.tr(3003));
+			return null;
 		}
 		/**
 		 * 此方法不支持
@@ -300,7 +324,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public addChildAt(child:DisplayObject, index:number):DisplayObject{
-			throw(new Error(getString(3005, getString(3003))));
+			egret.$error(3005, egret.sys.tr(3003));
+			return null;
 		}
 		/**
 		 * 此方法不支持
@@ -309,7 +334,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChild(child:DisplayObject):DisplayObject{
-			throw(new Error(getString(3006, getString(3003))));
+			egret.$error(3006, egret.sys.tr(3003));
+			return null;
 		}
 		/**
 		 * 此方法不支持
@@ -318,7 +344,8 @@ module egret.gui {
 		 * @returns {DisplayObject}
 		 */		
 		public removeChildAt(index:number):DisplayObject{
-			throw(new Error(getString(3007, getString(3003))));
+			egret.$error(3007, egret.sys.tr(3003));
+			return null;
 		}
 		/**
 		 * 此方法不支持
@@ -327,7 +354,7 @@ module egret.gui {
 		 * @param index {number} 
 		 */		
 		public setChildIndex(child:DisplayObject, index:number):void{
-			throw(new Error(getString(3008, getString(3003))));
+			egret.$error(3008, egret.sys.tr(3003));
 		}
 		/**
 		 * 此方法不支持
@@ -336,7 +363,7 @@ module egret.gui {
 		 * @param child2 {DisplayObject} 
 		 */		
 		public swapChildren(child1:DisplayObject, child2:DisplayObject):void{
-			throw(new Error(getString(3009, getString(3003))));
+			egret.$error(3009, egret.sys.tr(3003));
 		}
 		/**
 		 * 此方法不支持
@@ -345,7 +372,7 @@ module egret.gui {
 		 * @param index2 {number} 
 		 */		
 		public swapChildrenAt(index1:number, index2:number):void{
-			throw(new Error(getString(3010, getString(3003))));
+			egret.$error(3010, egret.sys.tr(3003));
 		}
 	}
 }

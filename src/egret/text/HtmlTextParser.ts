@@ -29,46 +29,76 @@
 module egret {
 
     /**
-     * @class egret.HtmlTextParser
-     * @classdesc 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=146&terms1_id=25&terms2_id=33&t3_id=146 多种样式文本混合
+     * @language en_US
+     * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
+     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html Text mixed in a variety of style
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/text/HtmlTextParser.ts
+     */
+    /**
+     * @language zh_CN
+     * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
+     * @see http://docs.egret-labs.org/jkdoc/manual-text-multiformat.html 多种样式文本混合
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/text/HtmlTextParser.ts
      */
     export class HtmlTextParser{
 
         /**
-         * 创建一个 egret.HtmlTextParser 对象
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         constructor () {
             this.initReplaceArr();
         }
 
-        private _replaceArr:Array<any> = [];
+        private replaceArr:Array<any> = [];
         private initReplaceArr():void {
-            this._replaceArr = [];
-            this._replaceArr.push([/&lt;/g, "<"]);
-            this._replaceArr.push([/&gt;/g, ">"]);
-            this._replaceArr.push([/&amp;/g, "&"]);
-            this._replaceArr.push([/&quot;/g, "\""]);
-            this._replaceArr.push([/&apos;/g, "\'"]);
+            this.replaceArr = [];
+            this.replaceArr.push([/&lt;/g, "<"]);
+            this.replaceArr.push([/&gt;/g, ">"]);
+            this.replaceArr.push([/&amp;/g, "&"]);
+            this.replaceArr.push([/&quot;/g, "\""]);
+            this.replaceArr.push([/&apos;/g, "\'"]);
         }
+        /**
+         * @private
+         * 
+         * @param value 
+         * @returns 
+         */
         private replaceSpecial(value:string):string {
-            for (var i = 0; i < this._replaceArr.length; i++) {
-                var k = this._replaceArr[i][0];
-                var v = this._replaceArr[i][1];
+            for (var i = 0; i < this.replaceArr.length; i++) {
+                var k = this.replaceArr[i][0];
+                var v = this.replaceArr[i][1];
 
                 value = value.replace(k, v);
             }
             return value;
         }
 
+        /**
+         * @private
+         */
         private resutlArr:Array<egret.ITextElement> = [];
 
         /**
+         * @language en_US
+         * Convert the text in html format to the object that can be assigned to the egret.TextField#textFlow property
+         * @param htmltext {string} Text in html
+         * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow Object that can be assigned to the egret.TextField#textFlow property
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 将html格式文本转换为可赋值给 egret.TextField#textFlow 属性的对象
          * @param htmltext {string} html文本
-         * @method egret.HtmlTextParser#parser
          * @returns {Array<egret.ITextElement>} 可赋值给 egret.TextField#textFlow 属性的对象
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public parser(htmltext:string):Array<egret.ITextElement> {
             this.stackArray = [];
@@ -100,6 +130,11 @@ module egret {
             return this.resutlArr;
         }
 
+        /**
+         * @private
+         * 
+         * @param value 
+         */
         private addToResultArr(value:string):void {
             if (value == "") {
                 return;
@@ -121,7 +156,7 @@ module egret {
             var info:any = {};
 
             var header = [];
-            if (str.charAt(0) == "i" || str.charAt(0) == "b")  {
+            if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u")  {
                 this.addProperty(info, str, "true");
             }
             else if (header = str.match(/^(font|a)\s/)){
@@ -157,10 +192,22 @@ module egret {
             return info;
         }
 
+        /**
+         * @private
+         * 
+         * @returns 
+         */
         private getHeadReg():RegExp {
-            return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|size|fontfamily|href)(\s)*=/;
+            return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|u|size|fontfamily|href|target)(\s)*=/;
         }
 
+        /**
+         * @private
+         * 
+         * @param info 
+         * @param head 
+         * @param value 
+         */
         private addProperty(info:egret.ITextStyle, head:string, value:string):void {
 
             switch (head.toLowerCase()) {
@@ -180,6 +227,9 @@ module egret {
                 case "bold" :
                     info.bold = value == "true";
                     break;
+                case "u" :
+                    info.underline = value == "true";
+                    break;
                 case "i" :
                 case "italic" :
                     info.italic = value == "true";
@@ -193,11 +243,22 @@ module egret {
                 case "href" :
                     info.href = this.replaceSpecial(value);
                     break;
+                case "target" :
+                    info.target = this.replaceSpecial(value);
+                    break;
             }
         }
 
+        /**
+         * @private
+         */
         private stackArray:Array<egret.ITextStyle>;
 
+        /**
+         * @private
+         * 
+         * @param infoStr 
+         */
         private addToArray(infoStr:string):void {
             var info:egret.ITextStyle = this.changeStringToObject(infoStr);
 

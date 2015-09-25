@@ -30,7 +30,7 @@
 
 module dragonBones {
     /**
-     * @class dragonBones.geom
+     * @class dragonBones
      * @classdesc
      * Rectangle 对象是按其位置（由它左上角的点 (x, y) 确定）以及宽度和高度定义的区域。
      * Rectangle 类的 x、y、width 和 height 属性相互独立；更改一个属性的值不会影响其他属性。

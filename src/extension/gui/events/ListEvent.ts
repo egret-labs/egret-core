@@ -73,14 +73,8 @@ module egret.gui {
 		 * @param itemRenderer {IItemRenderer} 
 		 */
 		public constructor(type:string, bubbles:boolean=true, cancelable:boolean=true,
-                           touchPointID:number=0,stageX:number=0,stageY:number=0,ctrlKey:boolean = false,
-                           altKey:boolean = false,shiftKey:boolean = false,buttonDown:boolean = false,
-						   itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null){
-			super(type, bubbles, cancelable, touchPointID, stageX, stageY,ctrlKey,altKey,shiftKey,buttonDown);
-			
-			this.itemIndex = itemIndex;
-			this.item = item;
-			this.itemRenderer = itemRenderer;
+                           touchPointID:number=0,stageX:number=0,stageY:number=0){
+			super(type, bubbles, cancelable, touchPointID, stageX, stageY);
 		}
 		
 		
@@ -107,20 +101,21 @@ module egret.gui {
          * @method egret.gui.ListEvent.dispatchListEvent
          */
         public static dispatchListEvent(target:IEventDispatcher,type:string,touchEvent:TouchEvent=null,
-                                        itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null):void{
-            var eventClass:any = ListEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.touchPointID = touchEvent.touchPointID;
-            props._stageX = touchEvent.stageX;
-            props._stageY = touchEvent.stageY;
-            props.ctrlKey = touchEvent.ctrlKey;
-            props.altKey = touchEvent.altKey;
-            props.shiftKey = touchEvent.shiftKey;
-            props.touchDown = touchEvent.touchDown;
-            props.itemIndex = itemIndex;
-            props.item = item;
-            props.itemRenderer = itemRenderer;
-            Event._dispatchByTarget(eventClass,target,type,props);
+                                        itemIndex:number = -1,item:any = null,itemRenderer:IItemRenderer = null):boolean{
+            var event:ListEvent = Event.create(ListEvent, type);
+            event.touchPointID = touchEvent.touchPointID;
+            event.$stageX = touchEvent.stageX;
+            event.$stageY = touchEvent.stageY;
+            //event.ctrlKey = touchEvent.ctrlKey;
+            //event.altKey = touchEvent.altKey;
+            //event.shiftKey = touchEvent.shiftKey;
+            event.touchDown = touchEvent.touchDown;
+            event.itemIndex = itemIndex;
+            event.item = item;
+            event.itemRenderer = itemRenderer;
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
         }
 	}
 }

@@ -28,20 +28,42 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret {
+
     /**
-     * 返回一个对象的完全限定名<br/>
-	 * @method egret.getQualifiedClassName
-     * @param value {any} 需要完全限定类名称的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
-	 * @returns {string}
+     * @language en_US
+     * Return the fully qualified class name of an object
+     * @param value The object for which a fully qualified class name is desired. Any JavaScript value may be passed to
+     * this method including all available JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns A string containing the fully qualified class name.
+     * @example
+     * <pre>
+     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
+     */
+    /**
+     * @language zh_CN
+     * 返回对象的完全限定类名。
+     * @param value 需要完全限定类名称的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型
+     * （如number)和类对象
+     * @returns 包含完全限定类名称的字符串。
      * @example
      * <pre>
      *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
      * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/utils/getQualifiedClassName.ts
      */
     export function getQualifiedClassName(value:any):string {
-        var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
-        if(prototype.hasOwnProperty("__class__")){
+        var type = typeof value;
+        if (!value || (type != "object"&&!value.prototype)) {
+            return type;
+        }
+        var prototype:any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
+        if (prototype.hasOwnProperty("__class__")) {
             return prototype["__class__"];
         }
         var constructorString:string = prototype.constructor.toString();
@@ -53,35 +75,5 @@ module egret {
             writable: true
         });
         return className;
-    }
-
-    
-     /**
-     * 返回一个对象的父类完全限定名<br/>
-     * @method egret.getQualifiedSuperclassName
-     * @param value {any} 需要取得父类的对象，可以将任何 TypeScript / JavaScript值传递给此方法，包括所有可用的TypeScript / JavaScript类型、对象实例、原始类型（如number）和类对象
-     * @returns {Function}
-     * @example
-     * <pre>
-     *  egret.getQualifiedSuperclassName(egret.DisplayObjectContainer) //返回 "egret.DisplayObject"
-     * </pre>
-     */
-    export function getQualifiedSuperclassName(value: any):string {
-        var prototype: any = value.prototype ? value.prototype : Object.getPrototypeOf(value);
-        if (prototype.hasOwnProperty("__superclass__")) {
-            return prototype["__superclass__"];
-        }
-        var superProto = Object.getPrototypeOf(prototype);
-        if (superProto == null)
-            return null;
-        var superClass = getQualifiedClassName(superProto.constructor);
-        if (!superClass)
-            return null;
-        Object.defineProperty(prototype, "__superclass__", {
-            value: superClass,
-            enumerable: false,
-            writable: true
-        });
-        return superClass;
     }
 }

@@ -58,11 +58,11 @@ function init(name){
 function initConfigJson() {
     for (var key in modules) {
         var module = modules[key];
-        modulesConfig[key] = getModuleConfigByModuleName(module["name"]);
+        modulesConfig[key] = initModuleConfig(module["name"]);
     }
 }
 
-function getModuleConfigByModuleName(moduleName) {
+function initModuleConfig(moduleName) {
     var moduleJsonPath;
 
     var modulePath = getModulePath(moduleName);
@@ -84,32 +84,6 @@ function getModuleConfigByModuleName(moduleName) {
     }
     else {
         moduleConfig.prefix = path.join(projectName, modulePath);
-    }
-
-    //写入语言包文件
-    if(moduleConfig.name == "core") {
-        moduleConfig.file_list.unshift("egret/i18n/" + globals.getLanguageInfo() + ".ts");
-    }
-
-    moduleConfig.getAbsoluteFilePath = function (){
-        return moduleConfig.file_list.map( function(item){
-            return path.join(moduleConfig.prefix,moduleConfig.source,item);
-        })
-    }
-
-    var self = this;
-
-    moduleConfig.getDependencyList = function () {
-        var tsList = [];
-        //如果有依赖，则需要将依赖的库.d.ts（已生成在项目中）文件也放入到list中
-        var dependencyList = this.dependence;
-        if (dependencyList) {
-            for (var i = 0; i < dependencyList.length; i++) {
-                var depModuleName = dependencyList[i];
-                tsList.push(depModuleName + ".d.ts");
-            }
-        }
-        return tsList;
     }
 
     return moduleConfig;
@@ -200,7 +174,7 @@ function hasKeys(obj, keys) {
 }
 
 function getModuleDetailConfig(name) {
-    var moduleConfig = getModuleConfigByModuleName(name);
+    var moduleConfig = initModuleConfig(name);
     var jsList = moduleConfig.file_list;
 
     for (var i = 0; i < jsList.length; i++) {
@@ -247,6 +221,42 @@ function getModuleReferenceInfo() {
     return referenceInfo;
 }
 
+function getFileList(moduleConfig) {
+    var configList = moduleConfig["file_list"];
+    var webList = [];
+    var nativeList = [];
+
+    var debugList = [];
+
+    for (var i = 0; i < configList.length; i++) {
+        var item = configList[i];
+        if (typeof item == "string") {
+            webList.push(item);
+            nativeList.push(item);
+        }
+        else {
+            if (item.platform) {
+                if (item.platform == "web") {
+                    webList.push(item.path);
+                }
+                else {
+                    nativeList.push(item.path);
+                }
+            }
+            else {
+                webList.push(item.path);
+                nativeList.push(item.path);
+            }
+
+            if (item.debug != null && item.debug == true) {
+                debugList.push(item.path);
+            }
+        }
+    }
+
+    return {"web": webList, "native": nativeList, "debug": debugList};
+}
+
 exports.getModuleReferenceInfo = getModuleReferenceInfo;
 
 
@@ -264,5 +274,3 @@ exports.getModulePath = getModulePath;
 exports.getModuleConfig = getModuleConfig;
 exports.getProjectPath = getProjectPath;
 exports.getModulesDts = getModulesDts;
-
-exports.getModuleConfigByModuleName = getModuleConfigByModuleName;

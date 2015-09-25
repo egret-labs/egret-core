@@ -19,14 +19,12 @@
 var sax = require("./sax/sax");
 var saxparser = sax.parser(true);
 
-function parse(xmlString, exmlPath) {
+function parse(xmlString) {
     var object = null;
     var namespaces = {};
     var hasError = false;
     saxparser.onerror = function (err) {
         hasError = true;
-        console.log("Failed to parse the EXML:");
-        console.log(exmlPath || xmlString);
     };
     saxparser.onopentag = function (node) {
         var attribs = node.attributes;

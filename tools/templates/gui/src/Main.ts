@@ -43,10 +43,10 @@ class Main extends egret.DisplayObjectContainer {
     private onAddToStage(event:egret.Event) {
         //inject the custom material parser
         //注入自定义的素材解析器
-        egret.Injector.mapClass("egret.gui.IAssetAdapter", AssetAdapter);
+        egret.gui.mapClass("egret.gui.IAssetAdapter", AssetAdapter);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        egret.gui.Theme.load("resource/theme.thm");
+        egret.gui.Theme.load("resource/default.thm.json");
         //Config loading process interface
         //设置加载进度界面
         this.loadingView = new LoadingUI();
@@ -54,7 +54,7 @@ class Main extends egret.DisplayObjectContainer {
         // initialize the Resource loading library
         //初始化Resource资源加载库
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
-        RES.loadConfig("resource/resource.json", "resource/");
+        RES.loadConfig("resource/default.res.json", "resource/");
     }
 
     /**

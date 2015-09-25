@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="../core/Logger.ts"/>
 /// <reference path="../core/MainContext.ts"/>
-/// <reference path="../core/Ticker.ts"/>
+/// <reference path="../core/SystemTicker.ts"/>
 /// <reference path="../texture/Texture.ts"/>
 var egret;
 (function (egret) {
@@ -43,7 +43,7 @@ var egret;
         */
         DEBUG.TRACE_RENDER_LOOP = function (command) {
             if (typeof command === "undefined") { command = 0; }
-            var ticker = egret.Ticker.getInstance();
+            var ticker = egret.SystemTicker.getInstance();
             var context = egret.MainContext.instance;
             switch (command) {
                 case 0:

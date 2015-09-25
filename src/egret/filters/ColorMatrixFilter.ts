@@ -28,48 +28,53 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     /**
-     * @class egret.ColorMatrixFilter
-     * @classdesc
-     * 使用 ColorMatrixFilter 类可以将 4 x 5 矩阵转换应用于输入图像上的每个像素的 RGBA 颜色和 Alpha 值，以生成具有一组新的 RGBA 颜色和 Alpha 值的结果。
-     * @extends egret.Filter
      * @private
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export class ColorMatrixFilter extends Filter {
         /**
          * @private
          */
-        public _matrix:Array<number> = [];
-        private _matrix2:Array<number> = [];
+        public $matrix:Array<number> = [];
+        /**
+         * @private
+         */
+        private matrix2:Array<number> = [];
 
         /**
-         * 创建一个 egret.ColorMatrixFilter 对象
-         * @method egret.ColorMatrixFilter#constructor
-         * @param matrix {Array<number>} 由 20 个项目（排列成 4 x 5 矩阵）组成的数组。
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         constructor(matrix:Array<number> = null) {
             super();
             this.type = "colorTransform";
-            this._setMatrix(matrix);
-        }
-
-        public get matrix():Array<number> {
-            for (var i = 0; i < 20; i++) {
-                this._matrix2[i] = this._matrix[i];
-            }
-            return this._matrix2;
+            this.setMatrix(matrix);
         }
 
         /**
-         * 由 20 个项目组成的数组，适用于 4 x 5 颜色转换。
-         * @member egret.ColorMatrixFilter#matrix
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public set matrix(value:Array<number>) {
-            this._setMatrix(value);
+        public get matrix():Array<number> {
+            for (var i = 0; i < 20; i++) {
+                this.matrix2[i] = this.$matrix[i];
+            }
+            return this.matrix2;
         }
 
-        private _setMatrix(value:Array<number>):void {
+        public set matrix(value:Array<number>) {
+            this.setMatrix(value);
+        }
+
+        /**
+         * @private
+         * 
+         * @param value 
+         */
+        private setMatrix(value:Array<number>):void {
             for (var i = 0; i < 20; i++) {
-                this._matrix[i] = (value && value[i]) || 0;
+                this.$matrix[i] = (value && value[i]) || 0;
             }
         }
     }

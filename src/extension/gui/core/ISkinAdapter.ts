@@ -35,7 +35,6 @@ module egret.gui {
 	 * @classdesc
 	 * 皮肤适配器接口。
 	 * 若项目需要自定义可设置外观组件的skinName属性的解析规则，需要实现这个接口，
-     * 然后调用Injector.mapClass("egret.gui.ISkinAdapter",YourSkinAdapter)注入到框架即可。
 	 */
 	export interface ISkinAdapter{
 		/**

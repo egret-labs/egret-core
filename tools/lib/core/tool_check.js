@@ -27,6 +27,8 @@ function run(option) {
     tool.run(option.currDir, option.args, option.opts);
 }
 
+var e = new Error("eee");
+console.log(e.stack);
 
 var Build = require("../commands/BuildCommand");
 var AutoCompile = require("../commands/AutoCompileCommand");

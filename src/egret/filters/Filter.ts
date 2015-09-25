@@ -30,8 +30,14 @@
 module egret {
     /**
      * @private
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export class Filter extends HashObject {
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public type:string = null;
     }
 }

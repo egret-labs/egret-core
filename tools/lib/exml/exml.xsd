@@ -3,14 +3,26 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="repeat"/>
       <xs:enumeration value="scale"/>
+      <xs:enumeration value="clip"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:attributeGroup name="egret.Bitmap">
     <xs:attributeGroup ref="egret.DisplayObject"/>
+    <xs:attribute name="bitmapData" type="xs:string"/>
     <xs:attribute name="fillMode" type="egret.BitmapFillMode"/>
+    <xs:attribute name="pixelHitTest" type="xs:boolean"/>
     <xs:attribute name="scale9Grid" type="xs:string"/>
+    <xs:attribute name="smoothing" type="xs:boolean"/>
     <xs:attribute name="texture" type="xs:string"/>
   </xs:attributeGroup>
+  <xs:group name="any">
+    <xs:choice>
+      <xs:any/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="any">
+    <xs:group ref="any"/>
+  </xs:complexType>
   <xs:group name="string">
     <xs:choice>
       <xs:element ref="string"/>
@@ -18,6 +30,14 @@
   </xs:group>
   <xs:complexType name="string">
     <xs:group ref="string"/>
+  </xs:complexType>
+  <xs:group name="boolean">
+    <xs:choice>
+      <xs:element ref="boolean"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="boolean">
+    <xs:group ref="boolean"/>
   </xs:complexType>
   <xs:group name="egret.Rectangle">
     <xs:choice>
@@ -27,20 +47,15 @@
   <xs:complexType name="egret.Rectangle">
     <xs:group ref="egret.Rectangle"/>
   </xs:complexType>
-  <xs:group name="egret.Texture">
-    <xs:choice>
-      <xs:element ref="Texture"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="egret.Texture">
-    <xs:group ref="egret.Texture"/>
-  </xs:complexType>
   <xs:group name="Bitmap_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObject_attributeElement"/>
+      <xs:element name="bitmapData" type="any"/>
       <xs:element name="fillMode" type="string"/>
+      <xs:element name="pixelHitTest" type="boolean"/>
       <xs:element name="scale9Grid" type="egret.Rectangle"/>
-      <xs:element name="texture" type="egret.Texture"/>
+      <xs:element name="smoothing" type="boolean"/>
+      <xs:element name="texture" type="any"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Bitmap">
@@ -79,7 +94,6 @@
   <xs:group name="egret.BitmapFont">
     <xs:choice>
       <xs:element ref="BitmapFont"/>
-      <xs:element ref="BitmapTextSpriteSheet"/>
     </xs:choice>
   </xs:group>
   <xs:complexType name="egret.BitmapFont">
@@ -111,23 +125,6 @@
       <xs:attributeGroup ref="egret.BitmapText"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.BitmapTextSpriteSheet">
-    <xs:attributeGroup ref="egret.BitmapFont"/>
-  </xs:attributeGroup>
-  <xs:group name="BitmapTextSpriteSheet_attributeElement">
-    <xs:choice>
-      <xs:group ref="BitmapFont_attributeElement"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="BitmapTextSpriteSheet">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="BitmapTextSpriteSheet_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.BitmapTextSpriteSheet"/>
-    </xs:complexType>
-  </xs:element>
   <xs:attributeGroup name="egret.BlurFilter">
     <xs:attributeGroup ref="egret.Filter"/>
     <xs:attribute name="blurX" type="xs:decimal"/>
@@ -147,28 +144,8 @@
       <xs:attributeGroup ref="egret.BlurFilter"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.ByteArray">
-    <xs:attribute name="endian" type="xs:string"/>
-    <xs:attribute name="length" type="xs:decimal"/>
-    <xs:attribute name="position" type="xs:decimal"/>
-  </xs:attributeGroup>
-  <xs:group name="ByteArray_attributeElement">
-    <xs:choice>
-      <xs:element name="endian" type="string"/>
-      <xs:element name="length" type="number"/>
-      <xs:element name="position" type="number"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="ByteArray">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="ByteArray_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.ByteArray"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="egret.ColorTransform">
+  <xs:attributeGroup name="egret.ColorMatrixFilter">
+    <xs:attributeGroup ref="egret.Filter"/>
     <xs:attribute name="matrix" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Array">
@@ -179,24 +156,26 @@
   <xs:complexType name="Array">
     <xs:group ref="Array"/>
   </xs:complexType>
-  <xs:group name="ColorTransform_attributeElement">
+  <xs:group name="ColorMatrixFilter_attributeElement">
     <xs:choice>
+      <xs:group ref="Filter_attributeElement"/>
       <xs:element name="matrix" type="Array"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="ColorTransform">
+  <xs:element name="ColorMatrixFilter">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="ColorTransform_attributeElement"/>
+        <xs:group ref="ColorMatrixFilter_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="egret.ColorTransform"/>
+      <xs:attributeGroup ref="egret.ColorMatrixFilter"/>
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="egret.BlendMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="normal"/>
       <xs:enumeration value="add"/>
+      <xs:enumeration value="erase"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:attributeGroup name="egret.DisplayObject">
@@ -206,8 +185,8 @@
     <xs:attribute name="cacheAsBitmap" type="xs:boolean"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="mask" type="xs:string"/>
+    <xs:attribute name="matrix" type="xs:string"/>
     <xs:attribute name="name" type="xs:string"/>
-    <xs:attribute name="needDraw" type="xs:boolean"/>
     <xs:attribute name="rotation" type="xs:decimal"/>
     <xs:attribute name="scaleX" type="xs:decimal"/>
     <xs:attribute name="scaleY" type="xs:decimal"/>
@@ -220,13 +199,13 @@
     <xs:attribute name="x" type="xs:decimal"/>
     <xs:attribute name="y" type="xs:decimal"/>
   </xs:attributeGroup>
-  <xs:group name="boolean">
+  <xs:group name="egret.Matrix">
     <xs:choice>
-      <xs:element ref="boolean"/>
+      <xs:element ref="Matrix"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="boolean">
-    <xs:group ref="boolean"/>
+  <xs:complexType name="egret.Matrix">
+    <xs:group ref="egret.Matrix"/>
   </xs:complexType>
   <xs:group name="DisplayObject_attributeElement">
     <xs:choice>
@@ -235,9 +214,9 @@
       <xs:element name="blendMode" type="string"/>
       <xs:element name="cacheAsBitmap" type="boolean"/>
       <xs:element name="height" type="number"/>
-      <xs:element name="mask" type="egret.Rectangle"/>
+      <xs:element name="mask" type="any"/>
+      <xs:element name="matrix" type="egret.Matrix"/>
       <xs:element name="name" type="string"/>
-      <xs:element name="needDraw" type="boolean"/>
       <xs:element name="rotation" type="number"/>
       <xs:element name="scaleX" type="number"/>
       <xs:element name="scaleY" type="number"/>
@@ -279,6 +258,25 @@
       <xs:attributeGroup ref="egret.DisplayObjectContainer"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="egret.DropShadowFilter">
+    <xs:attributeGroup ref="egret.GlowFilter"/>
+    <xs:attribute name="distance" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="DropShadowFilter_attributeElement">
+    <xs:choice>
+      <xs:group ref="GlowFilter_attributeElement"/>
+      <xs:element name="distance" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="DropShadowFilter">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="DropShadowFilter_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.DropShadowFilter"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="egret.EventDispatcher">
     <xs:attributeGroup ref="egret.HashObject"/>
   </xs:attributeGroup>
@@ -297,10 +295,12 @@
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.Filter">
+    <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="type" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Filter_attributeElement">
     <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
       <xs:element name="type" type="string"/>
     </xs:choice>
   </xs:group>
@@ -313,21 +313,40 @@
       <xs:attributeGroup ref="egret.Filter"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.HTML5StageText">
-    <xs:attributeGroup ref="egret.StageText"/>
+  <xs:attributeGroup name="egret.GlowFilter">
+    <xs:attributeGroup ref="egret.Filter"/>
+    <xs:attribute name="color" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="HTML5StageText_attributeElement">
+  <xs:group name="GlowFilter_attributeElement">
     <xs:choice>
-      <xs:group ref="StageText_attributeElement"/>
+      <xs:group ref="Filter_attributeElement"/>
+      <xs:element name="color" type="number"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="HTML5StageText">
+  <xs:element name="GlowFilter">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="HTML5StageText_attributeElement"/>
+        <xs:group ref="GlowFilter_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="egret.HTML5StageText"/>
+      <xs:attributeGroup ref="egret.GlowFilter"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.Graphics">
+    <xs:attributeGroup ref="egret.HashObject"/>
+  </xs:attributeGroup>
+  <xs:group name="Graphics_attributeElement">
+    <xs:choice>
+      <xs:group ref="HashObject_attributeElement"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Graphics">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Graphics_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.Graphics"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.HashObject">
@@ -376,113 +395,12 @@
       <xs:attributeGroup ref="egret.Matrix"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.MovieClip">
-    <xs:attributeGroup ref="egret.DisplayObject"/>
-    <xs:attribute name="frameRate" type="xs:decimal"/>
-    <xs:attribute name="movieClipData" type="xs:string"/>
-  </xs:attributeGroup>
-  <xs:group name="egret.MovieClipData">
-    <xs:choice>
-      <xs:element ref="MovieClipData"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="egret.MovieClipData">
-    <xs:group ref="egret.MovieClipData"/>
-  </xs:complexType>
-  <xs:group name="MovieClip_attributeElement">
-    <xs:choice>
-      <xs:group ref="DisplayObject_attributeElement"/>
-      <xs:element name="frameRate" type="number"/>
-      <xs:element name="movieClipData" type="egret.MovieClipData"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="MovieClip">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="MovieClip_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.MovieClip"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="egret.MovieClipData">
-    <xs:attributeGroup ref="egret.HashObject"/>
-    <xs:attribute name="frameRate" type="xs:decimal"/>
-    <xs:attribute name="frames" type="xs:string"/>
-    <xs:attribute name="labels" type="xs:string"/>
-    <xs:attribute name="mcData" type="xs:string"/>
-    <xs:attribute name="numFrames" type="xs:decimal"/>
-    <xs:attribute name="spriteSheet" type="xs:string"/>
-    <xs:attribute name="textureData" type="xs:string"/>
-  </xs:attributeGroup>
-  <xs:group name="any">
-    <xs:choice>
-      <xs:element ref="any"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="any">
-    <xs:group ref="any"/>
-  </xs:complexType>
-  <xs:group name="egret.SpriteSheet">
-    <xs:choice>
-      <xs:element ref="BitmapFont"/>
-      <xs:element ref="BitmapTextSpriteSheet"/>
-      <xs:element ref="SpriteSheet"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="egret.SpriteSheet">
-    <xs:group ref="egret.SpriteSheet"/>
-  </xs:complexType>
-  <xs:group name="MovieClipData_attributeElement">
-    <xs:choice>
-      <xs:group ref="HashObject_attributeElement"/>
-      <xs:element name="frameRate" type="number"/>
-      <xs:element name="frames" type="any"/>
-      <xs:element name="labels" type="any"/>
-      <xs:element name="mcData" type="egret.MovieClipData"/>
-      <xs:element name="numFrames" type="number"/>
-      <xs:element name="spriteSheet" type="egret.SpriteSheet"/>
-      <xs:element name="textureData" type="any"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="MovieClipData">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="MovieClipData_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.MovieClipData"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:attributeGroup name="egret.MovieClipDataFactory">
-    <xs:attributeGroup ref="egret.EventDispatcher"/>
-    <xs:attribute name="enableCache" type="xs:boolean"/>
-    <xs:attribute name="mcDataSet" type="xs:string"/>
-    <xs:attribute name="texture" type="xs:string"/>
-  </xs:attributeGroup>
-  <xs:group name="MovieClipDataFactory_attributeElement">
-    <xs:choice>
-      <xs:group ref="EventDispatcher_attributeElement"/>
-      <xs:element name="enableCache" type="boolean"/>
-      <xs:element name="mcDataSet" type="any"/>
-      <xs:element name="texture" type="egret.Texture"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="MovieClipDataFactory">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="MovieClipDataFactory_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.MovieClipDataFactory"/>
-    </xs:complexType>
-  </xs:element>
   <xs:attributeGroup name="egret.NativeStageText">
-    <xs:attributeGroup ref="egret.StageText"/>
+    <xs:attributeGroup ref="egret.EventDispatcher"/>
   </xs:attributeGroup>
   <xs:group name="NativeStageText_attributeElement">
     <xs:choice>
-      <xs:group ref="StageText_attributeElement"/>
+      <xs:group ref="EventDispatcher_attributeElement"/>
     </xs:choice>
   </xs:group>
   <xs:element name="NativeStageText">
@@ -518,18 +436,34 @@
   <xs:attributeGroup name="egret.Rectangle">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="bottom" type="xs:decimal"/>
+    <xs:attribute name="bottomRight" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
+    <xs:attribute name="left" type="xs:decimal"/>
     <xs:attribute name="right" type="xs:decimal"/>
+    <xs:attribute name="top" type="xs:decimal"/>
+    <xs:attribute name="topLeft" type="xs:string"/>
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="x" type="xs:decimal"/>
     <xs:attribute name="y" type="xs:decimal"/>
   </xs:attributeGroup>
+  <xs:group name="egret.Point">
+    <xs:choice>
+      <xs:element ref="Point"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.Point">
+    <xs:group ref="egret.Point"/>
+  </xs:complexType>
   <xs:group name="Rectangle_attributeElement">
     <xs:choice>
       <xs:group ref="HashObject_attributeElement"/>
       <xs:element name="bottom" type="number"/>
+      <xs:element name="bottomRight" type="egret.Point"/>
       <xs:element name="height" type="number"/>
+      <xs:element name="left" type="number"/>
       <xs:element name="right" type="number"/>
+      <xs:element name="top" type="number"/>
+      <xs:element name="topLeft" type="egret.Point"/>
       <xs:element name="width" type="number"/>
       <xs:element name="x" type="number"/>
       <xs:element name="y" type="number"/>
@@ -544,23 +478,21 @@
       <xs:attributeGroup ref="egret.Rectangle"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.RenderCommand">
-    <xs:attribute name="callback" type="xs:string"/>
-    <xs:attribute name="thisObject" type="xs:string"/>
+  <xs:attributeGroup name="egret.RenderTexture">
+    <xs:attributeGroup ref="egret.Texture"/>
   </xs:attributeGroup>
-  <xs:group name="RenderCommand_attributeElement">
+  <xs:group name="RenderTexture_attributeElement">
     <xs:choice>
-      <xs:element name="callback" type="any"/>
-      <xs:element name="thisObject" type="any"/>
+      <xs:group ref="Texture_attributeElement"/>
     </xs:choice>
   </xs:group>
-  <xs:element name="RenderCommand">
+  <xs:element name="RenderTexture">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other"/>
-        <xs:group ref="RenderCommand_attributeElement"/>
+        <xs:group ref="RenderTexture_attributeElement"/>
       </xs:choice>
-      <xs:attributeGroup ref="egret.RenderCommand"/>
+      <xs:attributeGroup ref="egret.RenderTexture"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.Shape">
@@ -614,23 +546,6 @@
       <xs:attributeGroup ref="egret.SpriteSheet"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.StageText">
-    <xs:attributeGroup ref="egret.EventDispatcher"/>
-  </xs:attributeGroup>
-  <xs:group name="StageText_attributeElement">
-    <xs:choice>
-      <xs:group ref="EventDispatcher_attributeElement"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="StageText">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="StageText_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.StageText"/>
-    </xs:complexType>
-  </xs:element>
   <xs:simpleType name="text_textAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="left"/>
@@ -657,8 +572,8 @@
     <xs:attribute name="italic" type="xs:boolean"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="maxChars" type="xs:decimal"/>
-    <xs:attribute name="maxWidth" type="xs:string"/>
     <xs:attribute name="multiline" type="xs:boolean"/>
+    <xs:attribute name="restrict" type="xs:string"/>
     <xs:attribute name="scrollV" type="xs:decimal"/>
     <xs:attribute name="size" type="xs:decimal"/>
     <xs:attribute name="stroke" type="xs:decimal"/>
@@ -669,6 +584,7 @@
     <xs:attribute name="textFlow" type="xs:string"/>
     <xs:attribute name="type" type="xs:string"/>
     <xs:attribute name="verticalAlign" type="text_verticalAlign"/>
+    <xs:attribute name="wordWrap" type="xs:boolean"/>
   </xs:attributeGroup>
   <xs:group name="TextField_attributeElement">
     <xs:choice>
@@ -683,8 +599,8 @@
       <xs:element name="italic" type="boolean"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="maxChars" type="number"/>
-      <xs:element name="maxWidth" type="any"/>
       <xs:element name="multiline" type="boolean"/>
+      <xs:element name="restrict" type="string"/>
       <xs:element name="scrollV" type="number"/>
       <xs:element name="size" type="number"/>
       <xs:element name="stroke" type="number"/>
@@ -695,6 +611,7 @@
       <xs:element name="textFlow" type="Array"/>
       <xs:element name="type" type="string"/>
       <xs:element name="verticalAlign" type="string"/>
+      <xs:element name="wordWrap" type="boolean"/>
     </xs:choice>
   </xs:group>
   <xs:element name="TextField">
@@ -870,7 +787,9 @@
     <xs:attribute name="repeatBehavior" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="egret.gui.Animation">
-    <xs:choice/>
+    <xs:choice>
+      <xs:element ref="Animation"/>
+    </xs:choice>
   </xs:group>
   <xs:complexType name="egret.gui.Animation">
     <xs:group ref="egret.gui.Animation"/>
@@ -925,14 +844,6 @@
     <xs:attribute name="initialized" type="xs:boolean"/>
     <xs:attribute name="transformCenter" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="egret.Point">
-    <xs:choice>
-      <xs:element ref="Point"/>
-    </xs:choice>
-  </xs:group>
-  <xs:complexType name="egret.Point">
-    <xs:group ref="egret.Point"/>
-  </xs:complexType>
   <xs:group name="AnimateTransformInstance_attributeElement">
     <xs:choice>
       <xs:group ref="AnimateInstance_attributeElement"/>
@@ -948,6 +859,59 @@
         <xs:group ref="AnimateTransformInstance_attributeElement"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.AnimateTransformInstance"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="egret.gui.Animation">
+    <xs:attribute name="currentValue" type="xs:string"/>
+    <xs:attribute name="duration" type="xs:decimal"/>
+    <xs:attribute name="easer" type="xs:string"/>
+    <xs:attribute name="endFunction" type="xs:string"/>
+    <xs:attribute name="interpolator" type="xs:string"/>
+    <xs:attribute name="motionPaths" type="xs:string"/>
+    <xs:attribute name="playReversed" type="xs:boolean"/>
+    <xs:attribute name="playheadTime" type="xs:decimal"/>
+    <xs:attribute name="repeatBehavior" type="egret.gui.RepeatBehavior"/>
+    <xs:attribute name="repeatCount" type="xs:decimal"/>
+    <xs:attribute name="repeatDelay" type="xs:decimal"/>
+    <xs:attribute name="repeatFunction" type="xs:string"/>
+    <xs:attribute name="startDelay" type="xs:decimal"/>
+    <xs:attribute name="startFunction" type="xs:string"/>
+    <xs:attribute name="stopFunction" type="xs:string"/>
+    <xs:attribute name="updateFunction" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="Function">
+    <xs:choice/>
+  </xs:group>
+  <xs:complexType name="Function">
+    <xs:group ref="Function"/>
+  </xs:complexType>
+  <xs:group name="Animation_attributeElement">
+    <xs:choice>
+      <xs:element name="currentValue" type="any"/>
+      <xs:element name="duration" type="number"/>
+      <xs:element name="easer" type="egret.gui.IEaser"/>
+      <xs:element name="endFunction" type="Function"/>
+      <xs:element name="interpolator" type="egret.gui.IInterpolator"/>
+      <xs:element name="motionPaths" type="Array_egret.gui.MotionPath"/>
+      <xs:element name="playReversed" type="boolean"/>
+      <xs:element name="playheadTime" type="number"/>
+      <xs:element name="repeatBehavior" type="string"/>
+      <xs:element name="repeatCount" type="number"/>
+      <xs:element name="repeatDelay" type="number"/>
+      <xs:element name="repeatFunction" type="Function"/>
+      <xs:element name="startDelay" type="number"/>
+      <xs:element name="startFunction" type="Function"/>
+      <xs:element name="stopFunction" type="Function"/>
+      <xs:element name="updateFunction" type="Function"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Animation">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Animation_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="egret.gui.Animation"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="egret.gui.ArrayCollection">
@@ -1236,12 +1200,6 @@
   <xs:complexType name="egret.gui.IFactory">
     <xs:group ref="egret.gui.IFactory"/>
   </xs:complexType>
-  <xs:group name="Function">
-    <xs:choice/>
-  </xs:group>
-  <xs:complexType name="Function">
-    <xs:group ref="Function"/>
-  </xs:complexType>
   <xs:group name="Class">
     <xs:choice/>
   </xs:group>
@@ -1318,7 +1276,6 @@
       <xs:element ref="Label"/>
       <xs:element ref="List"/>
       <xs:element ref="ListBase"/>
-      <xs:element ref="MovieClip"/>
       <xs:element ref="Panel"/>
       <xs:element ref="PopUpAnchor"/>
       <xs:element ref="ProgressBar"/>
@@ -2412,11 +2369,9 @@
     <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
     <xs:attribute name="autoHideDelay" type="xs:decimal"/>
     <xs:attribute name="autoHideScrollBars" type="xs:boolean"/>
+    <xs:attribute name="bounces" type="xs:boolean"/>
     <xs:attribute name="horizontalScrollBar" type="xs:string"/>
     <xs:attribute name="horizontalScrollPolicy" type="egret.gui.ScrollPolicy"/>
-    <xs:attribute name="scrollBeginThreshold" type="xs:decimal"/>
-    <xs:attribute name="scrollSpeed" type="xs:decimal"/>
-    <xs:attribute name="bounces" type="xs:boolean"/>
     <xs:attribute name="verticalScrollBar" type="xs:string"/>
     <xs:attribute name="verticalScrollPolicy" type="egret.gui.ScrollPolicy"/>
     <xs:attribute name="viewport" type="xs:string"/>
@@ -2454,11 +2409,9 @@
       <xs:group ref="SkinnableComponent_attributeElement"/>
       <xs:element name="autoHideDelay" type="number"/>
       <xs:element name="autoHideScrollBars" type="boolean"/>
+      <xs:element name="bounces" type="boolean"/>
       <xs:element name="horizontalScrollBar" type="egret.gui.HScrollBar"/>
       <xs:element name="horizontalScrollPolicy" type="string"/>
-      <xs:element name="scrollBeginThreshold" type="number"/>
-      <xs:element name="scrollSpeed" type="number"/>
-      <xs:element name="bounces" type="boolean"/>
       <xs:element name="verticalScrollBar" type="egret.gui.VScrollBar"/>
       <xs:element name="verticalScrollPolicy" type="string"/>
       <xs:element name="viewport" type="egret.gui.IViewport"/>
@@ -3538,12 +3491,6 @@
         <xs:group ref="egret.gui.IVisualElement"/>
       </xs:choice>
       <xs:attributeGroup ref="egret.gui.ViewStack"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="any">
-    <xs:complexType>
-      <xs:attribute name="id" type="xs:string"/>
-      <xs:anyAttribute processContents="skip"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="boolean">

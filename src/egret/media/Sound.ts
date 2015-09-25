@@ -27,279 +27,148 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+
 module egret {
+    
 
     /**
-     * @class egret.Sound
-     * @classdesc Sound 类允许您在应用程序中使用声音。
-     * @see http://edn.egret.com/cn/index.php?g=&m=article&a=index&id=157&terms1_id=25&terms2_id=36 播放音频
-     * @event egret.SoundEvent.SOUND_COMPLETE 在声音完成播放后调度。
+     * @language en_US
+     * The Sound class lets you work with sound in an application.
+     * The Sound class lets you create a Sound object, load and play an external audio file into that object.
+     * More detailed control of the sound is performed through the SoundChannel
+     *
+     * @event egret.Event.COMPLETE Dispatch when the audio resource is loaded and ready to play
+     * @event egret.IOErrorEvent.IO_ERROR Dispatch when the audio resource is failed to load
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/media/Sound.ts
      */
-    export class Sound extends egret.EventDispatcher {
+    /**
+     * @language zh_CN
+     * Sound 允许您在应用程序中使用声音。使用 Sound 类可以创建 Sound 对象、将外部音频文件加载到该对象并播放该文件。
+     * 可通过 SoundChannel 对声音执行更精细的控制，如控制音量和监控播放进度。
+     *
+     * @event egret.Event.COMPLETE 音频加载完成时抛出
+     * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/media/Sound.ts
+     */
+    export interface Sound extends EventDispatcher {
 
         /**
-         * 背景音乐
-         * @constant egret.Sound.MUSIC
+         * @language en_US
+         * Initiates loading of an external audio file from the specified URL.
+         * @param url Audio file URL
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public static MUSIC:string = "music";
         /**
-         * 音效
-         * @constant egret.Sound.EFFECT
+         * @language zh_CN
+         * 启动从指定 URL 加载外部音频文件的过程。
+         * @param url 需要加载的音频文件URL
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public static EFFECT:string = "effect";
+        load(url:string):void;
 
         /**
-         * @private
-         * @deprecated
-         * @type {string}
+         * @language en_US
+         * Generates a new SoundChannel object to play back the sound.
+         * @param startTime The initial position in seconds at which playback should start, (default = 0)
+         * @param loops Plays, the default value is 0. Greater than 0 to the number of plays, such as 1 to play 1, less than or equal to 0, to loop.
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public path:string = "";
+        /**
+         * @language zh_CN
+         * 生成一个新的 SoundChannel 对象来播放该声音。此方法返回 SoundChannel 对象，访问该对象可停止声音调整音量。
+         * @param startTime 应开始播放的初始位置（以秒为单位），默认值是 0
+         * @param loops 播放次数，默认值是 0，循环播放。 大于 0 为播放次数，如 1 为播放 1 次；小于等于 0，为循环播放。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        play(startTime?:number, loops?:number):SoundChannel;
 
         /**
-         * 创建一个 egret.Sound 对象
+         * @language en_US
+         * Closes the stream, causing any download of data to cease
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        constructor() {
-            super();
-        }
+        /**
+         * @language zh_CN
+         * 关闭该流，从而停止所有数据的下载。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        close():void;
 
         /**
-         * audio音频对象
-         * @member {any} egret.Sound#audio
+         * @language en_US
+         * Type, default is egret.Sound.EFFECT.
+         * In the native and runtime environment, while only play a background music, sound length so as not to be too long.
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        private audio:IAudio = null;
-
         /**
+         * @language zh_CN
          * 类型，默认为 egret.Sound.EFFECT。
          * 在 native 和 runtime 环境下，背景音乐同时只能播放一个，音效长度尽量不要太长。
-         * @member {any} egret.Sound#audio
-         */
-        public type:string = Sound.EFFECT;
-
-        /**
-         * 当播放声音时，position 属性表示声音文件中当前播放的位置（以毫秒为单位）。
-         * h5支持，native不支持
-         * @returns {number}
-         * @platform Web
-         */
-        public get position():number {
-            return this.audio ? Math.floor(this.audio._getCurrentTime() * 1000) : 0;
-        }
-
-        /**
-         * 播放声音
-         * @param loop  是否循环播放，默认为false
-         * @param position  是否从刚开始播放 h5支持，native不支持
-         */
-        public play(loop:boolean = false, position:number = 0):void {
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-            sound._setCurrentTime(position / 1000);
-            sound._setLoop(loop);
-            sound._play(this.type);
-        }
-
-        private _pauseTime:number = 0;
-
-        /**
-         * 声音停止播放
-         */
-        public stop():void {
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-            this._pauseTime = 0;
-            sound._setCurrentTime(0);
-            sound._pause();
-        }
-
-        /**
-         * 暂停声音
-         */
-        public pause():void {
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-            this._pauseTime = sound._getCurrentTime();
-            sound._pause();
-        }
-
-        /**
-         * 继续从上次暂停的位置播放
-         * h5支持，native不支持
-         * @platform Web
-         */
-        public resume():void {
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-            sound._setCurrentTime(this._pauseTime);
-            this._pauseTime = 0;
-            sound._play(this.type);
-        }
-
-        /**
-         * @private
-         * 重新加载声音
-         * @deprecated
-         */
-        public load():void {
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-            sound._load();
-        }
-
-        private _listeners:Array<any> = [];
-
-        /**
-         * 添加事件监听
-         * h5支持，native不支持
-         * @param type 事件类型
-         * @param listener 监听函数
-         * @param thisObj 侦听函数绑定的this对象
+         * @version Egret 2.4
          * @platform Web,Native
          */
-        public addEventListener(type:string, listener:Function, thisObject:any):void {
-            super.addEventListener(type, listener, thisObject);
-
-            var self = this;
-
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-
-            if (this._eventsMap[type].length == 1) {
-                var func;
-                if (type == egret.SoundEvent.SOUND_COMPLETE || type == "ended") {
-                    func = function (e) {
-                        egret.Event._dispatchByTarget(egret.SoundEvent, self, egret.SoundEvent.SOUND_COMPLETE);
-                        egret.Event._dispatchByTarget(egret.Event, self, "ended");
-                    };
-                }
-                else {
-                    func = function (e) {
-                        egret.Event._dispatchByTarget(egret.Event, self, e.type);
-                    };
-                }
-
-                this._listeners.push({type: type, func: func});
-
-                var virtualType = self.getVirtualType(type);
-                this.audio._addEventListener(virtualType, func, false);
-            }
-        }
-
-        /**
-         * 移除事件监听
-         * h5支持，native不支持
-         * @param type 事件类型
-         * @param listener 监听函数
-         * @param thisObj 侦听函数绑定的this对象
-         * @platform Web,Native
-         */
-        public removeEventListener(type:string, listener:Function, thisObject:any):void {
-            super.removeEventListener(type, listener, thisObject);
-
-            var self = this;
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-
-            if (!this._eventsMap || !this._eventsMap[type] || this._eventsMap[type].length == 0) {
-                for (var i = 0; i < self._listeners.length; i++) {
-                    var bin = self._listeners[i];
-                    if (bin.type == type) {
-                        self._listeners.splice(i, 1);
-
-                        var virtualType = self.getVirtualType(type);
-                        self.audio._removeEventListener(virtualType, bin.func, false);
-                        break;
-                    }
-                }
-            }
-        }
-
-        private getVirtualType(type:string):string {
-            switch (type) {
-                case egret.SoundEvent.SOUND_COMPLETE:
-                    return "ended";
-                default:
-                    return type;
-            }
-        }
-
-        /**
-         * 音量范围从 0（静音）至 1（最大音量）。
-         * h5支持，native不支持
-         * @returns number
-         * @platform Web
-         */
-        public set volume(value:number) {
-            var sound = this.audio;
-            if (!sound) {
-                return;
-            }
-            sound._setVolume(Math.max(0, Math.min(value, 1)));
-        }
-
-        public get volume():number {
-            return this.audio ? this.audio._getVolume() : 0;
-        }
-
-        /**
-         * @private
-         * @deprecated
-         * 设置音量
-         * @param value 值需大于0 小于等于 1
-         */
-        public setVolume(value:number):void {
-            $warn(1031);
-            this.volume = value;
-        }
-
-        /**
-         * @private
-         * @deprecated
-         * 获取当前音量值
-         * @returns number
-         */
-        public getVolume():number {
-            $warn(1032);
-            return this.volume;
-        }
-
-        /**
-         * 将声音文件加载到内存，
-         * native中使用，html5里为空实现
-         * @param type 声音类型
-         * @param callback 回调函数
-         * @param thisObj 侦听函数绑定的this对象
-         */
-        public preload(type:string, callback:Function = null, thisObj:any = null):void {
-            this.type = type;
-
-            this.audio._preload(type, callback, thisObj);
-        }
-
-        public _setAudio(value:IAudio):void {
-            this.audio = value;
-        }
-
-        /**
-         * 释放当前音频
-         * native中使用，html5里为空实现
-         */
-        public destroy():void {
-            this.audio._destroy();
-        }
+         type:string;
     }
+
+
+    /**
+     * @copy egret.Sound
+     */
+    export var Sound:{
+
+        /**
+         * @language en_US
+         * Create Sound object, load an external audio file and play
+         * @param url Audio file URL, Sound will start to load the media if url is not empty
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建 Sound 对象、将外部音频文件加载到该对象并播放该文件
+         * @param url 需要加载的音频文件URL,如果指定了 url, Sound会立即开始加载指定的媒体文件
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        new():Sound
+
+        /**
+         * @language en_US
+         * Background music
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 背景音乐
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+         MUSIC:string;
+
+        /**
+         * @language en_US
+         * EFFECT
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 音效
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+         EFFECT:string;
+    };
 }

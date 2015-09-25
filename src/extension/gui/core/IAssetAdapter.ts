@@ -34,7 +34,6 @@ module egret.gui {
      * @classdesc
      * 素材适配器接口。
      * 若项目需要自定义UIAsset.source的解析规则，需要实现这个接口，
-     * 然后调用Injector.mapClass("egret.gui.IAssetAdapter",YourAssetAdapter)注入到框架即可。
      */
     export interface IAssetAdapter{
         /**

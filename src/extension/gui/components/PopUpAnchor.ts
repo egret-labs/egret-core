@@ -159,7 +159,7 @@ module egret.gui {
 		 * 计算popUp的弹出位置
 		 */		
 		private calculatePopUpPosition():Point{
-            var registrationPoint: Point = Point.identity;
+            var registrationPoint: Point = egret.$TempPoint;
             switch (this._popUpPosition) {
                 case PopUpPosition.SCREEN_CENTER:
                     //由popup manager负责居中显示
@@ -240,7 +240,7 @@ module egret.gui {
 		 * 动画播放过程中触发的更新数值函数
 		 */		
 		private animationUpdateHandler(animation:Animation):void{
-            var rect:Rectangle = (<DisplayObject><any> (this.popUp))._DO_Props_._scrollRect;
+            var rect:Rectangle = (<DisplayObject><any> (this.popUp)).scrollRect;
             var x:number = Math.round(animation.currentValue["x"]);
             var y:number = Math.round(animation.currentValue["y"]);
             if(rect){
@@ -248,10 +248,10 @@ module egret.gui {
                 rect.y = y;
                 rect.width = this.popUp.width;
                 rect.height = this.popUp.height;
-                (<DisplayObject><any> (this.popUp))._setScrollRect(rect);
+                (<DisplayObject><any> (this.popUp)).scrollRect = (rect);
             }
             else{
-                (<DisplayObject><any> (this.popUp))._DO_Props_._scrollRect = new Rectangle(x,y,
+                (<DisplayObject><any> (this.popUp)).scrollRect = new Rectangle(x,y,
                     this.popUp.width, this.popUp.height)
             }
 		}

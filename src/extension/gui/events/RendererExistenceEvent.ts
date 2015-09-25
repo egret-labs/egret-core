@@ -30,73 +30,74 @@
 
 module egret.gui {
 
-	/**
-	 * @class egret.gui.RendererExistenceEvent
-	 * @classdesc
-	 * 在DataGroup添加或删除项呈示器时分派的事件。
-	 * @extends egret.Event
-	 */	
-	export class RendererExistenceEvent extends Event{
-		/**
-		 * 添加了项呈示器 
-		 * @constant egret.gui.RendererExistenceEvent.RENDERER_ADD
-		 */		
-		public static RENDERER_ADD:string = "rendererAdd";
-		/**
-		 * 移除了项呈示器 
-		 * @constant egret.gui.RendererExistenceEvent.RENDERER_REMOVE
-		 */		
-		public static RENDERER_REMOVE:string = "rendererRemove";
+    /**
+     * @class egret.gui.RendererExistenceEvent
+     * @classdesc
+     * 在DataGroup添加或删除项呈示器时分派的事件。
+     * @extends egret.Event
+     */
+    export class RendererExistenceEvent extends Event {
+        /**
+         * 添加了项呈示器
+         * @constant egret.gui.RendererExistenceEvent.RENDERER_ADD
+         */
+        public static RENDERER_ADD:string = "rendererAdd";
+        /**
+         * 移除了项呈示器
+         * @constant egret.gui.RendererExistenceEvent.RENDERER_REMOVE
+         */
+        public static RENDERER_REMOVE:string = "rendererRemove";
 
-		/**
-		 * @method egret.gui.RendererExistenceEvent#constructor
-		 * @param type {string} 
-		 * @param bubbles {boolean} 
-		 * @param cancelable {boolean} 
-		 * @param renderer {IItemRenderer} 
-		 * @param index {number} 
-		 * @param data {any} 
-		 */
-		public constructor(type:string, bubbles:boolean = false,
-											   cancelable:boolean = false,renderer:IItemRenderer = null, 
-											   index:number = -1, data:any = null){
-			super(type, bubbles, cancelable);
-			
-			this.renderer = renderer;
-			this.index = index;
-			this.data = data;
-		}
-		
-		/**
-		 * 呈示器的数据项目。 
-		 * @member egret.gui.RendererExistenceEvent#data
-		 */		
-        public data: any = null;
-		
-		/**
-		 * 指向已添加或删除项呈示器的位置的索引。 
-		 * @member egret.gui.RendererExistenceEvent#index
-		 */		
-		public index:number = NaN;
-		
-		/**
-		 * 对已添加或删除的项呈示器的引用。 
-		 * @member egret.gui.RendererExistenceEvent#renderer
-		 */		
-        public renderer: IItemRenderer = null;
+        /**
+         * @method egret.gui.RendererExistenceEvent#constructor
+         * @param type {string}
+         * @param bubbles {boolean}
+         * @param cancelable {boolean}
+         * @param renderer {IItemRenderer}
+         * @param index {number}
+         * @param data {any}
+         */
+        public constructor(type:string, bubbles:boolean = false,
+                           cancelable:boolean = false, renderer:IItemRenderer = null,
+                           index:number = -1, data:any = null) {
+            super(type, bubbles, cancelable);
+
+            this.renderer = renderer;
+            this.index = index;
+            this.data = data;
+        }
+
+        /**
+         * 呈示器的数据项目。
+         * @member egret.gui.RendererExistenceEvent#data
+         */
+        public data:any = null;
+
+        /**
+         * 指向已添加或删除项呈示器的位置的索引。
+         * @member egret.gui.RendererExistenceEvent#index
+         */
+        public index:number = NaN;
+
+        /**
+         * 对已添加或删除的项呈示器的引用。
+         * @member egret.gui.RendererExistenceEvent#renderer
+         */
+        public renderer:IItemRenderer = null;
 
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method egret.gui.RendererExistenceEvent.dispatchRendererExistenceEvent
          */
-        public static dispatchRendererExistenceEvent(target:IEventDispatcher,type:string,renderer:IItemRenderer = null,
-                                             index:number = -1, data:any = null):void{
-            var eventClass:any = RendererExistenceEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.renderer = renderer;
-            props.index = index;
-            props.data = data;
-            Event._dispatchByTarget(eventClass,target,type,props);
+        public static dispatchRendererExistenceEvent(target:IEventDispatcher, type:string, renderer:IItemRenderer = null,
+                                                     index:number = -1, data:any = null):boolean {
+            var event:RendererExistenceEvent = Event.create(RendererExistenceEvent, type);
+            event.renderer = renderer;
+            event.index = index;
+            event.data = data;
+            var result = target.dispatchEvent(event);
+            Event.release(event);
+            return result;
         }
-	}
+    }
 }

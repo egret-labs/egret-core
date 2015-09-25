@@ -492,7 +492,7 @@ module dragonBones {
 
 		/**
 		 * ArmatureData.
-		 * @see dragonBones.objects.ArmatureData.
+		 * @see dragonBones.ArmatureData.
 		 */
 		public get armatureData():ArmatureData{
 			return this._armatureData;
@@ -500,7 +500,7 @@ module dragonBones {
 		
 		/**
 		 * An Animation instance
-		 * @see dragonBones.animation.Animation
+		 * @see dragonBones.Animation
 		 */
 		public get animation():FastAnimation{
 			return this._animation;

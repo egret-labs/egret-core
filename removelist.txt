@@ -1,0 +1,69 @@
+未加入的功能:
+webGL、滤镜
+native
+
+废弃
+* 废弃 DisplayObject 中 explicitWidth explicitHeight measuredHeight measuredWidth needDraw 几个属性调用。
+* 废弃 DisplayObject 中的相对锚点 anchorX anchorY，如果想使用，请通过绝对锚点 anchorOffsetX anchorOffsetY 来实现。
+* 废弃 DisplayObject 中 hitTest方法，不在提供重写点击区域的判断，如果想调用点是否在DisplayObject内，请调用 hitTestPoint
+* 废弃 Ticker 中 run setTimeScale getTimeScale pause resume 几个方法。
+* 废弃 Event 中 ctrlKey altKey shiftKey 几个属性
+* 不能对Stage进行以下设置 alpha、visible、x、y、scaleX、scaleY、rotation、cacheAsBitmap、scrollRect、filters、blendMode、touchEnabled、matrix
+
+不一样
+* TouchEvent 中 dispatchTouchEvent 参数不一样。具体由
+  target:IEventDispatcher,type:string,touchPointID:number = 0, stageX:number = 0, stageY:number = 0, ctrlKey:boolean=false,altKey:boolean=false,shiftKey:boolean=false,touchDown:boolean=false  变成
+  target:IEventDispatcher, type:string, bubbles?:boolean, cancelable?:boolean, stageX?:number, stageY?:number, touchPointID?:number, touchDown:boolean = false
+
+* TouchEvent 中 localX localY的实现不一致。具体由
+  localX localY 相对于 currentTarget 变成
+  localX localY 相对于 相对于target。如已使用，请通过stageX stageY 来实现功能。
+
+* fps 实现不一致。具体由
+  通过 Profiler 类来控制 fps，变成
+  直接设置 index.html。打开关闭 data-show-fps="true"，设置fps位置大小颜色 data-show-fps-style="x:0,y:600,size:50,textColor:0xff0000"
+
+* 屏幕适配中NO_SCALE不一致。具体由
+
+* 屏幕适配中NO_BORDER不一致。具体由
+  NO_BORDER 适配宽或者高并且原点位置不一样，变成
+  NO_BORDER 适配后，stage宽高不会变化，多出的部分会在显示范围外而被裁切。如果之前使用过 NO_BORDER，请使用 FIXED_WIDTH 或者 FIXED_HEIGHT 代替，具体请看 StageScaleMode。
+
+* 纹理缩放实现不一致。具体由
+  需要对应的图片和配置文件并且设置方法是设置 egret.MainContext.instance.rendererContext.texture_scale_factor，变成
+  只修改图片的大小（即在不同的纹理缩放的设置中，配置文件是永远一样的，只需要改变图片大小）并且设置方法是对stage 的 textureScaleFactor 进行设置或者直接在index.html中设置 texture-scale-factor="1"。
+  texture-scale-factor="2" 意味着使用的素材相对于原始素材宽高都缩小了1倍，即为原来的 1/2;
+
+* 属性舞台显示。具体由
+  调用 stage.changeSize 变成
+  调用 egret.updateAllScreens();
+
+
+* 容器的空白区域将不能点击。
+
+* 多指触摸设置调用变化。由
+  设置 TouchContext.maxTouches 变成
+  设置 stage.maxTouches  默认值也从2改成99
+
+* 入口文件变化，由
+  原来的egret.loader调用 变成
+  在 index.html 中直接调用 egret.runEgret()，并在 index.html 中配置 文档类文件名、适配模式、舞台宽高等。
+
+* js文件加载变化，由
+  通过动态创建加载 变成
+  通过脚本命令直接放入到 index.html中
+
+新加功能
+* DisplayObject 中 mask 增加同事支持 Rectangle 和 DisplayObject。
+
+* 屏幕适配已支持旋转，并且可以指定横竖屏。
+  在index.html中
+     data-orientation="auto" 设置横竖屏，具体见 OrientationMode，
+     data-content-width="480" 设置宽
+     data-content-height="800" 设置高
+
+* 设置脏矩形显示区域
+  在 index.html 中设置 data-show-paint-rect="false"
+
+注意
+* 如果调用过引擎内部的方法或者属性，请自行查找最新对应的方法或者属性。

@@ -27,174 +27,434 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/// <reference path="core/ResourceItem.ts" />
+/// <reference path="core/ResourceConfig.ts" />
+/// <reference path="core/ResourceLoader.ts" />
+/// <reference path="events/ResourceEvent.ts" />
+/// <reference path="analyzer/BinAnalyzer.ts" />
+/// <reference path="analyzer/ImageAnalyzer.ts" />
+/// <reference path="analyzer/TextAnalyzer.ts" />
+/// <reference path="analyzer/JsonAnalyzer.ts" />
+/// <reference path="analyzer/SheetAnalyzer.ts" />
+/// <reference path="analyzer/FontAnalyzer.ts" />
+/// <reference path="analyzer/SoundAnalyzer.ts" />
+/// <reference path="analyzer/XMLAnalyzer.ts" />
+/// <reference path="version/IVersionController.ts" />
+/// <reference path="version/HTML5VersionController.ts" />
+/// <reference path="version/NativeVersionController.ts" />
 
 module RES {
     /**
-     * 加载配置文件并解析
-	 * @method RES.loadConfig
-     * @param url {string} 配置文件路径(resource.json的路径)
-     * @param resourceRoot {string} 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
-     * @param type {string} 配置文件的格式。确定要用什么解析器来解析配置文件。默认"json"
+     * @language en_US
+     * Conduct mapping injection with class definition as the value.
+     * @param type Injection type.
+     * @param analyzerClass Injection type classes need to be resolved.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
+     */
+    /**
+     * @language zh_CN
+     * 以类定义为值进行映射注入。
+     * @param type 注入的类型。
+     * @param analyzerClass 注入类型需要解析的类。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/resource/Resource.ts
+     */
+    export function registerAnalyzer(type:string, analyzerClass:any) {
+        instance.registerAnalyzer(type, analyzerClass);
+    }
+
+    /**
+     * 根据url返回实际加载url地址
+     * @param call
+     */
+    export function registerVersionController(vcs:VersionController):void {
+        instance.$registerVersionController(vcs);
+    }
+
+    /**
+     * @language en_US
+     * Load configuration file and parse.
+     * @param url Configuration file path (path resource.json).
+     * @param resourceRoot Resource path. All URL in the configuration is the relative value of the path. The ultimate URL is the value of the sum of the URL of the string and the resource in the configuration.
+     * @param type Configuration file format. Determine what parser to parse the configuration file. Default "json".
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 加载配置文件并解析。
+     * @param url 配置文件路径(resource.json的路径)。
+     * @param resourceRoot 资源根路径。配置中的所有url都是这个路径的相对值。最终url是这个字符串与配置里资源项的url相加的值。
+     * @param type 配置文件的格式。确定要用什么解析器来解析配置文件。默认"json"
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function loadConfig(url:string,resourceRoot:string="",type="json"):void{
         instance.loadConfig(url,resourceRoot,type);
     }
     /**
-     * 根据组名加载一组资源
-	 * @method RES.loadGroup
-     * @param name {string} 要加载资源组的组名
-     * @param priority {number} 加载优先级,可以为负数,默认值为0。
-     * 低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组会同时加载。
+     * @language en_US
+     * Load a set of resources according to the group name.
+     * @param name Group name to load the resource group.
+     * @param priority Load priority can be negative, the default value is 0.
+     * <br>A low priority group must wait for the high priority group to complete the end of the load to start, and the same priority group will be loaded at the same time.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 根据组名加载一组资源。
+     * @param name 要加载资源组的组名。
+     * @param priority 加载优先级,可以为负数,默认值为 0。
+     * <br>低优先级的组必须等待高优先级组完全加载结束才能开始，同一优先级的组会同时加载。
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function loadGroup(name:string,priority:number=0):void{
         instance.loadGroup(name,priority);
     }
     /**
-     * 检查某个资源组是否已经加载完成
-	 * @method RES.isGroupLoaded
-     * @param name {string} 组名
-	 * @returns {boolean}
+     * @language en_US
+     * Check whether a resource group has been loaded.
+     * @param name Group name。
+     * @returns Is loading or not.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 检查某个资源组是否已经加载完成。
+     * @param name 组名。
+     * @returns 是否正在加载。
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function isGroupLoaded(name:string):boolean{
         return instance.isGroupLoaded(name);
     }
     /**
-     * 根据组名获取组加载项列表
-	 * @method RES.getGroupByName
-     * @param name {string} 组名
-	 * @returns {egret.ResourceItem}
+     * @language en_US
+     * A list of groups of loading is obtained according to the group name.
+     * @param name Group name.
+     * @returns The resource item array of group.
+     * @see RES.ResourceItem
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 根据组名获取组加载项列表。
+     * @param name 组名。
+     * @returns 加载项列表。
+     * @see RES.ResourceItem
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function getGroupByName(name:string):Array<ResourceItem>{
         return instance.getGroupByName(name);
     }
     /**
-     * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
-     * 可以监听ResourceEvent.CONFIG_COMPLETE事件来确认配置加载完成。
-     * @method RES.createGroup
-     * @param name {string} 要创建的加载资源组的组名
-     * @param keys {egret.Array<string>} 要包含的键名列表，key对应配置文件里的name属性或sbuKeys属性的一项或一个资源组名。
-     * @param override {boolean} 是否覆盖已经存在的同名资源组,默认false。
-     * @returns {boolean}
+     * @language en_US
+     * Create a custom load resource group, note that this method is valid only after the resource configuration file is loaded.
+     * <br>You can monitor the ResourceEvent.CONFIG_COMPLETE event to verify that the configuration is complete.
+     * @param name Group name to create the load resource group.
+     * @param keys To be included in the list of key keys, the corresponding configuration file in the name or sbuKeys property one or a resource group name.
+     * @param override Is the default false for the same name resource group already exists.
+     * @returns Create success or fail.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 创建自定义的加载资源组,注意：此方法仅在资源配置文件加载完成后执行才有效。
+     * <br>可以监听 ResourceEvent.CONFIG_COMPLETE 事件来确认配置加载完成。
+     * @param name 要创建的加载资源组的组名。
+     * @param keys 要包含的键名列表，key 对应配置文件里的 name 属性或 sbuKeys 属性的一项或一个资源组名。
+     * @param override 是否覆盖已经存在的同名资源组,默认 false。
+     * @returns 是否创建成功。
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function createGroup(name:string,keys:Array<string>,override:boolean = false):boolean{
         return instance.createGroup(name,keys,override);
     }
     /**
-     * 检查配置文件里是否含有指定的资源
-	 * @method RES.hasRes
-     * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-	 * @returns {boolean}
+     * @language en_US
+     * Check whether the configuration file contains the specified resources.
+     * @param key A sbuKeys attribute or name property in a configuration file.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 检查配置文件里是否含有指定的资源。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function hasRes(key:string):boolean{
         return instance.hasRes(key);
     }
     /**
-     * 运行时动态解析一个配置文件,
-     * @method RES.parseConfig
-     * @param data {any} 配置文件数据，请参考resource.json的配置文件格式。传入对应的json对象即可。
-     * @param folder {string} 加载项的路径前缀。
+     * @language en_US
+     * Run time dynamic analysis of a configuration file.
+     * @param data Configuration file data, please refer to the resource.json configuration file format. JSON object can be introduced into the corresponding.
+     * @param folder Path prefix for load.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 运行时动态解析一个配置文件。
+     * @param data 配置文件数据，请参考 resource.json 的配置文件格式。传入对应的 json 对象即可。
+     * @param folder 加载项的路径前缀。
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function parseConfig(data:any, folder:string=""):void {
         instance.parseConfig(data,folder);
     }
     /**
-     * 同步方式获取缓存的已经加载成功的资源。<br/>
-	 * @method RES.getRes
-     * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-	 * @returns {any}
+     * @language en_US
+     * The synchronization method for obtaining the cache has been loaded with the success of the resource.
+     * <br>The type of resource and the corresponding return value types are as follows:
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
+     * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript primary object
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or egret.BitmapData interface。
+     * <br>RES.ResourceItem.TYPE_JSON : Object
+     * <br>RES.ResourceItem.TYPE_SHEET : Object
+     * <br>  1. If the incoming parameter is the name of the entire SpriteSheet is returned is {image1: Texture, "image2": Texture}.
+     * <br>  2. If the incoming is "sheet.image1", the return is a single resource.
+     * <br>  3. If the incoming is the name of the "image1" single resource, the return is a single resource.
+     * But if there are two SpriteSheet in a single picture of the same name, the return of the image after the load.
+     * <br>RES.ResourceItem.TYPE_SOUND : HtmlSound Html Object
+     * <br>RES.ResourceItem.TYPE_TEXT : string
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @see RES.ResourceItem
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 同步方式获取缓存的已经加载成功的资源。
+     * <br>资源类型和对应的返回值类型关系如下：
+     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
+     * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript 原生对象
+     * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 egret.BitmapData 接口。
+     * <br>RES.ResourceItem.TYPE_JSON : Object
+     * <br>RES.ResourceItem.TYPE_SHEET : Object
+     * <br>  1. 如果传入的参数是整个 SpriteSheet 的名称返回的是 {"image1":Texture,"image2":Texture} 这样的格式。
+     * <br>  2. 如果传入的是 "sheet.image1"，返回的是单个资源。
+     * <br>  3. 如果传入的是 "image1" 单个资源的名称，返回的是单个资源。但是如果有两张 SpriteSheet 中有单个图片资源名称相同，返回的是后加载的那个图片资源。
+     * <br>RES.ResourceItem.TYPE_SOUND : HtmlSound Html 对象
+     * <br>RES.ResourceItem.TYPE_TEXT : string
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @see RES.ResourceItem
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function getRes(key:string):any{
         return instance.getRes(key);
     }
     /**
-     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
-	 * @method RES.getResAsync
-     * @param key {string} 对应配置文件里的name属性或sbuKeys属性的一项。
-     * @param compFunc {Function} 回调函数。示例：compFunc(data,key):void。
-     * @param thisObject {any} 回调函数的this引用
+     * @language en_US
+     * Asynchronous mode to get the resources in the configuration. As long as the resources exist in the configuration file, you can get it in an asynchronous way.
+     * @param key A sbuKeys attribute or name property in a configuration file.
+     * @param compFunc Call back function. Example：compFunc(data,key):void.
+     * @param thisObject This pointer of call back function.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 异步方式获取配置里的资源。只要是配置文件里存在的资源，都可以通过异步方式获取。
+     * @param key 对应配置文件里的 name 属性或 sbuKeys 属性的一项。
+     * @param compFunc 回调函数。示例：compFunc(data,key):void。
+     * @param thisObject 回调函数的 this 引用。
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function getResAsync(key:string,compFunc:Function,thisObject:any):void{
         instance.getResAsync(key,compFunc,thisObject);
     }
     /**
+     * @language en_US
+     * Access to external resources through the full URL.
+     * @param url The external path to load the file.
+     * @param compFunc Call back function. Example：compFunc(data,url):void。
+     * @param thisObject This pointer of call back function.
+     * @param type File type (optional). Use the static constants defined in the ResourceItem class. If you do not set the file name extension.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample extension/resource/GetResByUrl.ts
+     */
+    /**
+     * @language zh_CN
      * 通过完整URL方式获取外部资源。
-	 * @method RES.getResByUrl
-     * @param url {string} 要加载文件的外部路径。
-     * @param compFunc {Function} 回调函数。示例：compFunc(data,url):void。
-     * @param thisObject {any} 回调函数的this引用
-     * @param type {string} 文件类型(可选)。请使用ResourceItem类中定义的静态常量。若不设置将根据文件扩展名生成。
+     * @param url 要加载文件的外部路径。
+     * @param compFunc 回调函数。示例：compFunc(data,url):void。
+     * @param thisObject 回调函数的 this 引用。
+     * @param type 文件类型(可选)。请使用 ResourceItem 类中定义的静态常量。若不设置将根据文件扩展名生成。
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample extension/resource/GetResByUrl.ts
      */
     export function getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
         instance.getResByUrl(url,compFunc,thisObject,type);
     }
     /**
-     * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
-     * @method RES.destroyRes
-     * @param name {string} 配置文件中加载项的name属性或资源组名
-     * @param force {boolean} 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值true
-     * @returns {boolean}
+     * @language en_US
+     * Destroy a single resource file or a set of resources to the cache data, to return whether to delete success.
+     * @param name Name attribute or resource group name of the load item in the configuration file.
+     * @param force Destruction of a resource group when the other resources groups have the same resource situation whether the resources will be deleted, the default value true.
+     * @returns Are successful destruction.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 销毁单个资源文件或一组资源的缓存数据,返回是否删除成功。
+     * @param name 配置文件中加载项的name属性或资源组名。
+     * @param force 销毁一个资源组时其他资源组有同样资源情况资源是否会被删除，默认值 true。
+     * @see #setMaxRetryTimes
+     * @returns 是否销毁成功。
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function destroyRes(name:string, force?:boolean):boolean{
         return instance.destroyRes(name, force);
     }
     /**
-     * 设置最大并发加载线程数量，默认值是2.
-     * @method RES.setMaxLoadingThread
-     * @param thread {number} 要设置的并发加载数。
+     * @language en_US
+     * Sets the maximum number of concurrent load threads, the default value is 2.
+     * @param thread The number of concurrent loads to be set.
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 设置最大并发加载线程数量，默认值是 2。
+     * @param thread 要设置的并发加载数。
+     * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function setMaxLoadingThread(thread:number):void{
         instance.setMaxLoadingThread(thread);
     }
 
     /**
+     * @language en_US
+     * Sets the number of retry times when the resource failed to load, and the default value is 3.
+     * @param retry To set the retry count.
+     * @includeExample extension/resource/Resource.ts
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
      * 设置资源加载失败时的重试次数，默认值是 3。
      * @param retry 要设置的重试次数。
      * @includeExample extension/resource/Resource.ts
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export function setMaxRetryTimes(retry: number): void {
         instance.setMaxRetryTimes(retry);
     }
 
     /**
-     * 添加事件侦听器,参考ResourceEvent定义的常量。
-	 * @method RES.addEventListener
-     * @param type {string} 事件的类型。
-     * @param listener {Function} 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
+     * @language en_US
+     * Add event listeners, reference ResourceEvent defined constants.
+     * @param type Event name。
+     * @param listener Listener functions for handling events. This function must accept the Event object as its only parameter, and can't return any results,
+     * As shown in the following example: function (evt:Event):void can have any name.
+     * @param thisObject The this object that is bound to a function.
+     * @param useCapture Determine the listener is running on the capture or running on the target and the bubbling phase. Set useCapture to true,
+     * then the listener in the capture phase processing events, but not in the target or the bubbling phase processing events.
+     * If useCapture is false, then the listener only in the target or the bubbling phase processing events.
+     * To listen for events in all three stages, please call addEventListener two times: once the useCapture is set to true, once the useCapture is set to false.
+     * @param priority Event listener priority. Priority is specified by a 32 - bit integer with a symbol. The higher the number, the higher the priority.
+     * All listeners with a priority for n will be processed before the -1 n listener.
+     * If two or more listeners share the same priority, they are processed in accordance with the order of their added. The default priority is 0.
+     * @see RES.ResourceEvent
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 添加事件侦听器,参考 ResourceEvent 定义的常量。
+     * @param type 事件的类型。
+     * @param listener 处理事件的侦听器函数。此函数必须接受 Event 对象作为其唯一的参数，并且不能返回任何结果，
      * 如下面的示例所示： function(evt:Event):void 函数可以有任何名称。
-     * @param thisObject {any} 侦听函数绑定的this对象
-     * @param useCapture {boolean} 确定侦听器是运行于捕获阶段还是运行于目标和冒泡阶段。如果将 useCapture 设置为 true，
+     * @param thisObject 侦听函数绑定的 this 对象。
+     * @param useCapture 确定侦听器是运行于捕获阶段还是运行于目标和冒泡阶段。如果将 useCapture 设置为 true，
      * 则侦听器只在捕获阶段处理事件，而不在目标或冒泡阶段处理事件。如果 useCapture 为 false，则侦听器只在目标或冒泡阶段处理事件。
      * 要在所有三个阶段都侦听事件，请调用 addEventListener 两次：一次将 useCapture 设置为 true，一次将 useCapture 设置为 false。
-     * @param priority {number} 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
+     * @param priority 事件侦听器的优先级。优先级由一个带符号的 32 位整数指定。数字越大，优先级越高。优先级为 n 的所有侦听器会在
      * 优先级为 n -1 的侦听器之前得到处理。如果两个或更多个侦听器共享相同的优先级，则按照它们的添加顺序进行处理。默认优先级为 0。
+     * @see RES.ResourceEvent
      * @see #setMaxRetryTimes
+     * @version Egret 2.4
+     * @platform Web,Native
      */
-    export function addEventListener(type:string, listener:Function, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
+    export function addEventListener(type:string, listener:(event:egret.Event)=>void, thisObject:any, useCapture:boolean = false, priority:number = 0):void {
         instance.addEventListener(type,listener,thisObject,useCapture,priority);
     }
     /**
-     * 移除事件侦听器,参考ResourceEvent定义的常量。
-	 * @method RES.removeEventListener
-     * @param type {string} 事件名
-     * @param listener {Function} 侦听函数
-     * @param thisObject {any} 侦听函数绑定的this对象
-     * @param useCapture {boolean} 是否使用捕获，这个属性只在显示列表中生效。
-     * @see #setMaxRetryTimes
+     * @language en_US
+     * Remove event listeners, reference ResourceEvent defined constants.
+     * @param type Event name。
+     * @param listener Listening function。
+     * @param thisObject The this object that is bound to a function.
+     * @param useCapture Is used to capture, and this property is only valid in the display list.
+     * @version Egret 2.4
+     * @platform Web,Native
      */
-    export function removeEventListener(type:string, listener:Function,thisObject:any,useCapture:boolean = false):void {
+    /**
+     * @language zh_CN
+     * 移除事件侦听器,参考ResourceEvent定义的常量。
+     * @param type 事件名。
+     * @param listener 侦听函数。
+     * @param thisObject 侦听函数绑定的this对象。
+     * @param useCapture 是否使用捕获，这个属性只在显示列表中生效。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    export function removeEventListener(type:string, listener:(event:egret.Event)=>void,thisObject:any,useCapture:boolean = false):void {
         instance.removeEventListener(type,listener,thisObject,useCapture);
+    }
+
+    export function $getVirtualUrl(url){
+        if (instance.vcs){
+            return instance.vcs.getVirtualUrl(url);
+        }
+        else{
+            return url;
+        }
     }
 
 
@@ -205,25 +465,52 @@ module RES {
         /**
          * 构造函数
 		 * @method RES.constructor
+         * @private
          */
         public constructor(){
             super();
             this.init();
         }
 
+        public vcs:VersionController;
+
         /**
          * 解析器字典
          */
         private analyzerDic:any = {};
+
+
+        private analyzerClassMap:any = {};
+
         /**
          * 根据type获取对应的文件解析库
          */
-        private getAnalyzerByType(type:string):AnalyzerBase{
+        $getAnalyzerByType(type:string):AnalyzerBase{
             var analyzer:AnalyzerBase = this.analyzerDic[type];
-            if(!analyzer){
-                analyzer = this.analyzerDic[type] = egret.Injector.getInstance(AnalyzerBase,type);
+            if (!analyzer) {
+                var clazz = this.analyzerClassMap[type];
+                if (!clazz) {
+                    if (DEBUG) {
+                        egret.$error(2003, type);
+                    }
+                    return null;
+                }
+                analyzer = this.analyzerDic[type] = new clazz();
             }
             return analyzer;
+        }
+
+        /**
+         * 注册一个自定义文件类型解析器
+         * @param type 文件类型字符串，例如：bin,text,image,json等。
+         * @param analyzerClass 自定义解析器的类定义
+         */
+        public registerAnalyzer(type:string, analyzerClass:any):void {
+            this.analyzerClassMap[type] = analyzerClass;
+        }
+
+        public $registerVersionController(vcs:VersionController){
+            this.vcs = vcs;
         }
 
         /**
@@ -234,22 +521,18 @@ module RES {
          * 初始化
          */
         private init():void{
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_BIN))
-                egret.Injector.mapClass(AnalyzerBase,BinAnalyzer,ResourceItem.TYPE_BIN);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_IMAGE))
-                egret.Injector.mapClass(AnalyzerBase,ImageAnalyzer,ResourceItem.TYPE_IMAGE);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_TEXT))
-                egret.Injector.mapClass(AnalyzerBase,TextAnalyzer,ResourceItem.TYPE_TEXT);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_JSON))
-                egret.Injector.mapClass(AnalyzerBase,JsonAnalyzer,ResourceItem.TYPE_JSON);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SHEET))
-                egret.Injector.mapClass(AnalyzerBase,SheetAnalyzer,ResourceItem.TYPE_SHEET);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_FONT))
-                egret.Injector.mapClass(AnalyzerBase,FontAnalyzer,ResourceItem.TYPE_FONT);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_SOUND))
-                egret.Injector.mapClass(AnalyzerBase,SoundAnalyzer,ResourceItem.TYPE_SOUND);
-            if(!egret.Injector.hasMapRule(AnalyzerBase,ResourceItem.TYPE_XML))
-                egret.Injector.mapClass(AnalyzerBase,XMLAnalyzer,ResourceItem.TYPE_XML);
+            this.vcs = new VersionController();
+            var analyzerClassMap = this.analyzerClassMap;
+            //analyzerClassMap[ResourceItem.TYPE_ANIMATION] = AnimationAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_BIN] = BinAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_IMAGE] = ImageAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_TEXT] = TextAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_JSON] = JsonAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_SHEET] = SheetAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_FONT] = FontAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_SOUND] = SoundAnalyzer;
+            analyzerClassMap[ResourceItem.TYPE_XML] = XMLAnalyzer;
+
             this.resConfig = new ResourceConfig();
             this.resLoader = new ResourceLoader();
             this.resLoader.callBack = this.onResourceItemComp;
@@ -301,7 +584,27 @@ module RES {
                 var resItem:ResourceItem = new ResourceItem(item.url,item.url,item.type);
                 itemList.push(resItem);
             }
-            this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
+
+            var callback:egret.AsyncCallback = {
+
+
+                onSuccess:(data:any)=>{
+                    this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
+                },
+
+                onFail:(err:number,data:any)=>{
+                    ResourceEvent.dispatchResourceEvent(this,ResourceEvent.CONFIG_LOAD_ERROR);
+                }
+
+            };
+
+            if (this.vcs){
+                this.vcs.fetchVersion(callback);
+            }
+            else{
+                this.resLoader.loadGroup(itemList,Resource.GROUP_CONFIG,Number.MAX_VALUE);
+            }
+
         }
         /**
          * 已经加载过组名列表
@@ -378,7 +681,7 @@ module RES {
                 var length:number = this.loadingConfigList.length;
                 for(var i:number = 0;i < length;i++){
                     var config:any = this.loadingConfigList[i];
-                    var resolver:AnalyzerBase = this.getAnalyzerByType(config.type);
+                    var resolver:AnalyzerBase = this.$getAnalyzerByType(config.type);
                     var data:any = resolver.getRes(config.url);
                     resolver.destroyRes(config.url);
                     this.resConfig.parseConfig(data,config.resourceRoot);
@@ -464,7 +767,7 @@ module RES {
                 }
             }
 
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
             return analyzer.getRes(key);
         }
 
@@ -486,14 +789,14 @@ module RES {
                 name = RES.AnalyzerBase.getStringPrefix(key);
                 type = this.resConfig.getType(name);
                 if(type==""){
-                    egret.__callAsync(compFunc, thisObject);
+                    egret.$callAsync(compFunc, thisObject);
                     return;
                 }
             }
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
             var res:any = analyzer.getRes(key);
             if(res){
-                egret.__callAsync(compFunc, thisObject, res, key);
+                egret.$callAsync(compFunc, thisObject, res, key);
                 return;
             }
             var args:any = {key:key,compFunc:compFunc,thisObject:thisObject};
@@ -511,14 +814,14 @@ module RES {
         /**
          * 通过url获取资源
 		 * @method RES.getResByUrl
-		 * @param url {string}
-		 * @param compFunc {Function}
-		 * @param thisObject {any}
-		 * @param type {string}
+		 * @param url {string} 
+		 * @param compFunc {Function} 
+		 * @param thisObject {any} 
+		 * @param type {string} 
          */
         public getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
             if(!url){
-                egret.__callAsync(compFunc, thisObject);
+                egret.$callAsync(compFunc, thisObject);
                 return;
             }
             if(!type)
@@ -529,12 +832,12 @@ module RES {
             }
             this._loadedUrlTypes[url] = type;
 
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
 
             var name:string = url;
             var res:any = analyzer.getRes(name);
             if(res){
-                egret.__callAsync(compFunc, thisObject, res, url);
+                egret.$callAsync(compFunc, thisObject, res, url);
                 return;
             }
             var args:any = {key:name,compFunc:compFunc,thisObject:thisObject};
@@ -599,7 +902,7 @@ module RES {
         private onResourceItemComp(item:ResourceItem):void{
             var argsList:Array<any> = this.asyncDic[item.name];
             delete this.asyncDic[item.name];
-            var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
+            var analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
             var length:number = argsList.length;
             for(var i:number=0;i<length;i++){
                 var args:any = argsList[i];
@@ -629,7 +932,7 @@ module RES {
                     }
                     else {
                         item.loaded = false;
-                        var analyzer:AnalyzerBase = this.getAnalyzerByType(item.type);
+                        var analyzer:AnalyzerBase = this.$getAnalyzerByType(item.type);
                         analyzer.destroyRes(item.name);
                         this.removeLoadedGroupsByItemName(item.name);
                     }
@@ -645,14 +948,13 @@ module RES {
                         return false;
                     }
                     delete this._loadedUrlTypes[name];
-                    var analyzer:AnalyzerBase = this.getAnalyzerByType(type);
+                    var analyzer:AnalyzerBase = this.$getAnalyzerByType(type);
                     analyzer.destroyRes(name);
                     return true;
                 }
-
                 item = this.resConfig.getRawResourceItem(name);
                 item.loaded = false;
-                analyzer = this.getAnalyzerByType(type);
+                analyzer = this.$getAnalyzerByType(type);
                 var result = analyzer.destroyRes(name);
                 this.removeLoadedGroupsByItemName(item.name);
                 return result;

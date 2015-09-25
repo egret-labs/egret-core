@@ -107,15 +107,16 @@ module egret.gui {
          */
         public static dispatchPropertyChangeEvent(target:IEventDispatcher,kind:string = null,
                                                   property:any = null,oldValue:any = null,
-                                                  newValue:any = null,source:any = null):void{
-            var eventClass:any = PropertyChangeEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.kind = kind;
-            props.property = property;
-            props.oldValue = oldValue;
-            props.newValue = newValue;
-            props.source = source;
-            Event._dispatchByTarget(eventClass,target,PropertyChangeEvent.PROPERTY_CHANGE,props);
+                                                  newValue:any = null,source:any = null):boolean{
+			var event:PropertyChangeEvent = Event.create(PropertyChangeEvent, PropertyChangeEvent.PROPERTY_CHANGE);
+			event.kind = kind;
+			event.property = property;
+			event.oldValue = oldValue;
+			event.newValue = newValue;
+			event.source = source;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 }

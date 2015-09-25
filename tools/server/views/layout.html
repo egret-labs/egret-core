@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html ng-app="lark">
+<head>
+    @{meta}
+    <meta charset="utf-8" />
+    <meta http-equiv="content-language" content="sk" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=1024, user-scalable=yes" />
+    <meta name="robots" content="all,follow" />
+    <!--<link href="/$/content/style/pure.css" rel="stylesheet" />-->
+    <link href="/$/content/style/larkserver.css" rel="stylesheet" />
+    <script type="text/javascript" src="/$/content/scripts/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="/$/content/scripts/libs/angular.min.js"></script>
+    <script src="/$/content/scripts/utils.js"></script>
+</head>
+<body>
+    <div id="layout">
+
+        <div id="main">
+            <div id="page-main" class="page">@{body}</div>
+        </div>
+    </div>
+    <script>
+        var egret = egret || {
+            server:{},
+            portal:{}
+        };
+        egret.server.options = @{! JSON.stringify(repository.options) };
+        egret.server.IPs =  @{! JSON.stringify(repository.IPs) };
+        egret.manifest = @{! JSON.stringify(repository.manifest) };
+        egret.portal.project = egret.server.options.project;
+    </script>
+</body>
+</html>

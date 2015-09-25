@@ -1,74 +1,91 @@
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Copyright (c) 2014,lark.com
+ * All rights reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the lark.com nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY lark-LABS.ORG AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL lark-LABS.ORG AND CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-/// <reference path="node.d.ts"/>
+/// <reference path="../types.d.ts" />
 /// <reference path="exml_config.ts"/>
 
-var xml = require("../core/xml.js");
-var globals = require("../core/globals.js");
-var CodeUtil = require("../core/code_util.js");
-var file = require("../core/file.js");
-var exml_config = require("./exml_config.js");
+import xml = require("../xml/index");
+import utils = require("../utils");
+import file = require("../FileUtil");
+import CodeUtil = require("./code_util");
+import exml_config = require("./exml_config");
 
 var compiler:EXMLCompiler;
 
-function compile(exmlPath:string,srcPath:string):void{
+
+export function compile(exmlPath: string, srcPath: string): egret.TaskResult{
+    var result: egret.TaskResult = { exitCode: 0, messages:[] };
     exmlPath = exmlPath.split("\\").join("/");
     srcPath = srcPath.split("\\").join("/");
     if(srcPath.charAt(srcPath.length-1)!="/"){
         srcPath += "/";
     }
-    if(!file.exists(exmlPath)){
-        globals.exit(2001,exmlPath);
+    if (!file.exists(exmlPath)) {
+        result.messages.push(utils.tr(2001, exmlPath));
+        result.exitCode = 2001;
+        return result;
     }
     var className:string = exmlPath.substring(srcPath.length,exmlPath.length-5);
     className = className.split("/").join(".");
-    var xmlString = file.read(exmlPath);
+    var xmlString = file.read(exmlPath,true);
     try{
         var xmlData = xml.parse(xmlString);
     }
     catch(e){
-        globals.exit(2002,exmlPath);
+        result.messages.push(utils.tr(2002, exmlPath));
+        result.exitCode = 2002;
+        return result;
     }
-    if(!xmlData){
-        globals.exit(2002,exmlPath);
+    if (!xmlData) {
+        result.messages.push(utils.tr(2002, exmlPath));
+        result.exitCode = 2002;
+        return result;
     }
     if(!compiler){
         compiler = new EXMLCompiler();
     }
-    var tsText = compiler.compile(xmlData,className,srcPath,exmlPath);
-    var tsPath:string = exmlPath.substring(0,exmlPath.length-5)+".ts";
-    file.save(tsPath,tsText);
+
+    try {
+        var tsText = compiler.compile(xmlData, className, srcPath, exmlPath);
+        var tsPath: string = exmlPath.substring(0, exmlPath.length - 5) + ".g.ts";
+        file.save(tsPath, tsText);
+        return {
+            exitCode: 0,
+            messages:[]
+        };
+    }
+    catch (e) {
+        result.messages.push(compiler.errorMessage);
+        result.exitCode = compiler.errorCode || 2002;
+        return result;
+    }
 };
 
 
-exports.compile = compile;
 class EXMLCompiler{
     /**
      * Egret命名空间
@@ -79,7 +96,10 @@ class EXMLCompiler{
      */
     public static W:string = "http://ns.egret-labs.org/wing";
 
-    private static DECLARATIONS:string = "Declarations";
+    private static DECLARATIONS: string = "Declarations";
+
+    public errorCode: number;
+    public errorMessage: string;
 
     /**
      * 构造函数
@@ -90,7 +110,7 @@ class EXMLCompiler{
     /**
      * 配置管理器实例
      */
-    private exmlConfig:EXMLConfig;
+    private exmlConfig: exml_config;
 
     /**
      * 获取重复的ID名
@@ -100,6 +120,12 @@ class EXMLCompiler{
         this.getIds(xml,result);
         this.repeatedIdDic = {};
         return result;
+    }
+
+    private exit(code: number, ...params: string[]) {
+        this.errorCode = code;
+        this.errorMessage = utils.tr.apply(utils, [<any>code].concat(params));
+        throw this.errorMessage;
     }
 
     private repeatedIdDic:any = {};
@@ -189,7 +215,7 @@ class EXMLCompiler{
      */
     public compile(xmlData:any,className:string,srcPath:string,exmlPath:string):string{
         if(!this.exmlConfig){
-            this.exmlConfig = new exml_config.getInstance();
+            this.exmlConfig = exml_config.getInstance();
         }
         this.exmlPath = exmlPath;
         this.currentXML = xmlData;
@@ -226,7 +252,7 @@ class EXMLCompiler{
     private startCompile():void{
         var result:Array<any> = this.getRepeatedIds(this.currentXML);
         if(result.length>0){
-            globals.exit(2004,this.exmlPath,result.join("\n"));
+            this.exit(2004, this.exmlPath, result.join("\n"));
         }
         this.currentClass.superClass = this.getPackageByNode(this.currentXML);
 
@@ -249,11 +275,11 @@ class EXMLCompiler{
         this.checkDeclarations(this.declarations,list);
 
         if(list.length>0){
-            globals.exit(2020,this.exmlPath,list.join("\n"));
+            this.exit(2020,this.exmlPath,list.join("\n"));
         }
 
         if(!this.currentXML.namespace){
-            globals.exit(2017,this.exmlPath,this.toXMLString(this.currentXML));
+            this.exit(2017,this.exmlPath,this.toXMLString(this.currentXML));
         }
         this.addIds(this.currentXML.children);
         this.currentClass.addVariable(new CpVariable("__s",Modifiers.M_PRIVATE,"Function","egret.gui.setProperties"));
@@ -295,7 +321,7 @@ class EXMLCompiler{
         for(var i:number=0;i<length;i++){
             var node:any = items[i];
             if(!node.namespace){
-                globals.exit(2017,this.exmlPath,this.toXMLString(node));
+                this.exit(2017,this.exmlPath,this.toXMLString(node));
             }
             this.addIds(node.children);
             if(node.namespace==EXMLCompiler.W){
@@ -568,7 +594,7 @@ class EXMLCompiler{
                 }
                 var type:string = this.exmlConfig.getPropertyType(child.localName,className);
                 if(!type){
-                    globals.exit(2005,this.exmlPath,child.localName,this.getPropertyStr(child));
+                    this.exit(2005,this.exmlPath,child.localName,this.getPropertyStr(child));
                 }
                 if(!child.children||child.children.length==0){
                     globals.warn(2102,this.exmlPath,this.getPropertyStr(child));
@@ -588,7 +614,7 @@ class EXMLCompiler{
         var defaultType:string = this.exmlConfig.getPropertyType(defaultProp,className);
         var errorInfo:string = this.getPropertyStr(directChild[0]);
         if(!defaultProp||!defaultType){
-            globals.exit(2012,this.exmlPath,errorInfo);
+            this.exit(2012,this.exmlPath,errorInfo);
         }
         this.addChildrenToProp(directChild,defaultType,defaultProp,cb,varName,errorInfo,propList,className,isContainer);
     }
@@ -603,7 +629,7 @@ class EXMLCompiler{
         var childLength:number = children.length;
         if(childLength>1){
             if(type!="Array"){
-                globals.exit(2011,this.exmlPath,prop,errorInfo)
+                this.exit(2011,this.exmlPath,prop,errorInfo)
             }
             var values:Array<any> = [];
             for(var j:number = 0;j<childLength;j++){
@@ -647,7 +673,7 @@ class EXMLCompiler{
             else{
                 var targetClass:string = this.exmlConfig.getClassNameById(firstChild.localName,firstChild.namespace);
                 if(!this.exmlConfig.isInstanceOf(targetClass,type)){
-                    globals.exit(2008,this.exmlPath,targetClass,prop,errorInfo);
+                    this.exit(2008,this.exmlPath,targetClass,prop,errorInfo);
                 }
                 childFunc = this.createFuncForNode(firstChild);
             }
@@ -724,7 +750,7 @@ class EXMLCompiler{
         var className:string = this.exmlConfig.getClassNameById(node.localName,node.namespace);
         var type:string = this.exmlConfig.getPropertyType(key,className);
         if(!type){
-            globals.exit(2005,this.exmlPath,key,this.toXMLString(node));
+            this.exit(2005,this.exmlPath,key,this.toXMLString(node));
         }
         if(type!="string"&&value.charAt(0)=="{"&&value.charAt(value.length-1)=="}"){
             value = value.substr(1,value.length-2);
@@ -737,22 +763,22 @@ class EXMLCompiler{
             if(CodeUtil.isVariableWord(value)){
                 var targetNode:any = this.idToNode[value];
                 if(!targetNode){
-                    globals.exit(2010,this.exmlPath,key,value,this.toXMLString(node));
+                    this.exit(2010,this.exmlPath,key,value,this.toXMLString(node));
                 }
                 var targetClass:string = this.exmlConfig.getClassNameById(targetNode.localName,targetNode.namespace);
                 if(!this.exmlConfig.isInstanceOf(targetClass,type)){
-                    globals.exit(2008,this.exmlPath,targetClass,key,this.toXMLString(node));
+                    this.exit(2008,this.exmlPath,targetClass,key,this.toXMLString(node));
                 }
             }
             else{
-                globals.exit(2009,this.exmlPath,this.toXMLString(node));
+                this.exit(2009,this.exmlPath,this.toXMLString(node));
             }
         }
         else if(type=="Class"&&value.indexOf("@ButtonSkin(")==0&&value.charAt(value.length-1)==")"){
             value = value.substring(12,value.length-1);
             var skinNames:Array<string> = value.split(",");
             if(skinNames.length>3){
-                globals.exit(2018,this.exmlPath,this.toXMLString(node));
+                this.exit(2018,this.exmlPath,this.toXMLString(node));
             }
             for(var i:number=skinNames.length-1;i>=0;i--){
                 var skinName:string = skinNames[i];
@@ -760,7 +786,7 @@ class EXMLCompiler{
                 var firstChar:string = skinName.charAt(0);
                 var lastChar:string = skinName.charAt(skinName.length-1);
                 if(firstChar!=lastChar||(firstChar!="'"&&firstChar!="\"")){
-                    globals.exit(2018,this.exmlPath,this.toXMLString(node));
+                    this.exit(2018,this.exmlPath,this.toXMLString(node));
                     break;
                 }
                 skinNames[i] = this.formatString(skinName.substring(1,skinName.length-1));
@@ -771,7 +797,7 @@ class EXMLCompiler{
             var rect:Array<any> = value.split(",");
             if(rect.length!=4||isNaN(parseInt(rect[0]))||isNaN(parseInt(rect[1]))||
                 isNaN(parseInt(rect[2]))||isNaN(parseInt(rect[3]))){
-                globals.exit(2016,this.exmlPath,this.toXMLString(node));
+                this.exit(2016,this.exmlPath,this.toXMLString(node));
             }
             value = "egret.gui.getScale9Grid(\""+value+"\")";
         }
@@ -782,10 +808,10 @@ class EXMLCompiler{
                     value = "new egret.gui.ClassFactory("+orgValue+")";
                 case "Class":
                     if(!this.exmlConfig.checkClassName(orgValue)){
-                        globals.exit(2015, this.exmlPath, orgValue,this.toXMLString(node));
+                        this.exit(2015, this.exmlPath, orgValue,this.toXMLString(node));
                     }
                     if(value==this.currentClassName) {//防止无限循环。
-                        globals.exit(2014, this.exmlPath, this.toXMLString(node));
+                        this.exit(2014, this.exmlPath, this.toXMLString(node));
                     }
                     break;
                 case "number":
@@ -803,7 +829,7 @@ class EXMLCompiler{
                     value = this.formatString(stringValue);
                     break;
                 default:
-                    globals.exit(2008,this.exmlPath,"string",key+":"+type,this.toXMLString(node));
+                    this.exit(2008,this.exmlPath,"string",key+":"+type,this.toXMLString(node));
                     break;
             }
         }
@@ -1047,10 +1073,10 @@ class EXMLCompiler{
 
                 var type:string = this.exmlConfig.getPropertyType(prop,className);
                 if(type=="Array"){
-                    globals.exit(2013,this.exmlPath,this.getPropertyStr(node));
+                    this.exit(2013,this.exmlPath,this.getPropertyStr(node));
                 }
                 if(children.length>1){
-                    globals.exit(2011,this.exmlPath,prop,this.getPropertyStr(node));
+                    this.exit(2011,this.exmlPath,prop,this.getPropertyStr(node));
                 }
                 var firstChild:any = children[0];
                 this.createFuncForNode(firstChild);
@@ -1079,7 +1105,7 @@ class EXMLCompiler{
                 var state:CpState;
                 if(this.isStateNode(node)){
                     if(!this.isIVisualElement(node)){
-                        globals.exit(2007,this.exmlPath,this.toXMLString(node));
+                        this.exit(2007,this.exmlPath,this.toXMLString(node));
                     }
                     var propertyName:string = "";
                     var parent:any = (node.parent);
@@ -1238,7 +1264,7 @@ class EXMLCompiler{
             }
         }
         if(states.length==0){
-            globals.exit(2006,this.exmlPath,name,this.toXMLString(node));
+            this.exit(2006,this.exmlPath,name,this.toXMLString(node));
         }
         return states;
     }
@@ -1300,7 +1326,7 @@ class EXMLCompiler{
         var moduleName:string =
             this.exmlConfig.getClassNameById(node.localName,node.namespace);
         if(!moduleName){
-            globals.exit(2003,this.exmlPath,this.toXMLString(node));
+            this.exit(2003,this.exmlPath,this.toXMLString(node));
         }
         return moduleName;
     }

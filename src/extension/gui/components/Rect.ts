@@ -44,22 +44,43 @@ module egret.gui {
         public constructor() {
             super();
             this.touchChildren = false;
+            this.$renderRegion = new sys.Region();
         }
 
-        private _graphics: Graphics = null;
+        /**
+         * @private
+         */
+        $graphics:Graphics;
 
         public get graphics():Graphics {
-            if (!this._graphics) {
-                this._graphics = new Graphics();
-                this.needDraw = true;
+            if (!this.$graphics) {
+                this.$graphics = new Graphics();
+                this.$graphics.$renderContext.$targetDisplay = this;
             }
-            return this._graphics;
+            return this.$graphics;
         }
 
-        public _render(renderContext:RendererContext):void {
-            if (this._graphics)
-                this._graphics._draw(renderContext);
-            super._render(renderContext);
+        $render(context:egret.sys.RenderContext):void {
+            if (this.$graphics)
+                this.$graphics.$render(context);
+            super.$render(context);
+        }
+
+        $hitTest(stageX:number, stageY:number):DisplayObject {
+            var target = super.$hitTest(stageX, stageY);
+            if (target == this) {
+                target = this.$graphics.$hitTest(stageX, stageY);
+            }
+            return target;
+        }
+
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds:Rectangle):void {
+            if (this.$graphics) {
+                this.$graphics.$measureContentBounds(bounds);
+            }
         }
 
         private _fillColor:number = 0xFFFFFF;
@@ -147,26 +168,26 @@ module egret.gui {
          * @returns {Rectangle}
          * @private
          */
-        public _measureBounds():egret.Rectangle {
-            var bounds:Rectangle = super._measureBounds();
-            var w:number = this.width;
-            var h:number = this.height;
-            var x:number = 0;
-            var y:number = 0;
-            if (x < bounds.x) {
-                bounds.x = x;
-            }
-            if (y < bounds.y) {
-                bounds.y = y;
-            }
-            if (x + w > bounds.right) {
-                bounds.right = x + w;
-            }
-            if (y + h > bounds.bottom) {
-                bounds.bottom = y + h;
-            }
-            return bounds;
-        }
+        //public _measureBounds():egret.Rectangle {
+        //    var bounds:Rectangle = super._measureBounds();
+        //    var w:number = this.width;
+        //    var h:number = this.height;
+        //    var x:number = 0;
+        //    var y:number = 0;
+        //    if (x < bounds.x) {
+        //        bounds.x = x;
+        //    }
+        //    if (y < bounds.y) {
+        //        bounds.y = y;
+        //    }
+        //    if (x + w > bounds.right) {
+        //        bounds.right = x + w;
+        //    }
+        //    if (y + h > bounds.bottom) {
+        //        bounds.bottom = y + h;
+        //    }
+        //    return bounds;
+        //}
 
         /**
          * 绘制对象和/或设置其子项的大小和位置
@@ -186,22 +207,5 @@ module egret.gui {
             g.endFill();
         }
 
-        /**
-         * 碰撞检测
-         * @param x
-         * @param y
-         * @param ignoreTouchEnabled
-         * @returns {*}
-         */
-        public hitTest(x:number, y:number, ignoreTouchEnabled:boolean = false):DisplayObject {
-            var result:DisplayObject = super.hitTest(x, y, ignoreTouchEnabled);
-            if (result) {
-                return result;
-            }
-            else if (this._graphics) {
-                return DisplayObject.prototype.hitTest.call(this, x, y, ignoreTouchEnabled);
-            }
-            return null;
-        }
     }
 }
