@@ -99,6 +99,7 @@ module egret {
                 this._txt.size = 28;
                 this._txt.multiline = true;
                 this._txt._DO_Props_._parent = new egret.DisplayObjectContainer();
+                this._txt.textColor = 0xff0000;
             }
 
             if (this._isRunning) {
