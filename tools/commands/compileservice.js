@@ -2,7 +2,6 @@
 var utils = require('../lib/utils');
 var service = require('../service/index');
 var FileUtil = require('../lib/FileUtil');
-var CopyFiles = require('../actions/CopyFiles');
 var exmlActions = require('../actions/exml');
 var state = require('../lib/DirectoryState');
 var CompileProject = require('../actions/CompileProject');
@@ -54,7 +53,6 @@ var AutoCompileCommand = (function () {
         this.messages[0] = exmlresult.messages;
         var result = compileProject.compileProject(options);
         //操作其他文件
-        CopyFiles.copyProjectFiles();
         _scripts = result.files.length > 0 ? result.files : _scripts;
         CompileTemplate.modifyIndexHTML(_scripts);
         CompileTemplate.modifyNativeRequire();

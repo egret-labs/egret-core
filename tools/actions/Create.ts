@@ -35,18 +35,6 @@ class Create implements egret.Command {
         var properties = egret.args.properties;
         properties.reload();
 
-        CopyFiles.copyLark();
-        //
-        //var compileProject = new CompileProject();
-        //var result = compileProject.compileProject(options);
-        //CopyFiles.copyProjectFiles();
-        //CompileTemplate.compileTemplates(options, result.files);
-        //var project = JSON.stringify(this.project, null, "  ");
-        //var tmpFile = FileUtil.joinPath(options.getTmpDir(), "proj.json");
-        //FileUtil.save(tmpFile, project);
-        //console.log(utils.tr(10017));
-        //return result.exitStatus;
-
         new Clean().execute();
         console.log(utils.tr(10017));
         return DontExitCode;

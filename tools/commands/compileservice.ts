@@ -74,7 +74,6 @@ class AutoCompileCommand implements egret.Command {
         var result = compileProject.compileProject(options);
 
         //操作其他文件
-        CopyFiles.copyProjectFiles();
         _scripts = result.files.length > 0 ? result.files : _scripts;
 
         CompileTemplate.modifyIndexHTML(_scripts);
