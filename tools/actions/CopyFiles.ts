@@ -36,7 +36,12 @@ class CopyFiles {
                 var moduleBin = FileUtil.joinPath(egret.root, "build", moduleName);
             }
             else {
-                moduleBin = FileUtil.joinPath(modulePath, "bin", moduleName);
+                if (FileUtil.exists(FileUtil.joinPath(modulePath))) {
+                    moduleBin = FileUtil.joinPath(modulePath, "bin", moduleName);
+                }
+                else {
+                    moduleBin = FileUtil.joinPath(options.projectDir, modulePath, "bin", moduleName);
+                }
             }
             var targetFile = FileUtil.joinPath(options.libsDir, 'modules', moduleName);
             if (options.projectDir.toLowerCase() != egret.root.toLowerCase()) {
