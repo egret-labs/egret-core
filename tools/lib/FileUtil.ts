@@ -445,3 +445,14 @@ export function relative(from: string, to: string) {
     path = escapePath(path);
     return path;
 }
+
+export function getAbsolutePath(path:string) {
+    var tempPath = Path.resolve(path);
+    tempPath = escapePath(tempPath);
+    path = escapePath(path);
+    if (tempPath == path) {
+        return path;
+    }
+
+    return joinPath(egret.args.projectDir, path);
+}

@@ -135,21 +135,6 @@
     "solved":true
   },
   {
-    "desc":"class Logger{ static openLogByType(logType: string): void; }",
-    "solution-url":"changed_md",
-    "solved":true
-  },
-  {
-    "desc":"class TouchEvent{ constructor(type: string, bubbles?: boolean, cancelable?: boolean, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean); }",
-    "solution-url":"touchevent_md",
-    "solved":true
-  },
-  {
-    "desc":"class TouchEvent{ static dispatchTouchEvent(target: IEventDispatcher, type: string, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean): void; }",
-    "solution-url":"touchevent_md",
-    "solved":true
-  },
-  {
     "desc":"class Matrix{ * }",
     "solution-url":"matrix_md",
     "solved":true

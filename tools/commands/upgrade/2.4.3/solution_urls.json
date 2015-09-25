@@ -10,13 +10,12 @@
     "changed_md" : "http://edn.egret.com/cn/index.php/article/index/id/550",
     "mainloop" : "http://edn.egret.com/cn/index.php/article/index/id/550",
     "draw_md" : "http://edn.egret.com/cn/index.php/article/index/id/550",
-    "touchevent_md" : "http://edn.egret.com/cn/index.php/article/index/id/550",
     "matrix_md" : "http://edn.egret.com/cn/index.php/article/index/id/550",
-    "res_selfparse_md":"http://edn.egret.com/cn/index.php/article/index/id/552",
-    "anchor":"http://edn.egret.com/test/index.php/article/index/id/628#AnchorX%20API调整",
-    "logger":"http://edn.egret.com/test/index.php/portal/article/index/id/628#LoggerAPI",
-    "injector":"http://edn.egret.com/test/index.php/portal/article/index/id/628#Injector",
-    "events":"http://edn.egret.com/test/index.php/portal/article/index/id/628#事件相关调整",
-    "blendmode":"http://edn.egret.com/test/index.php/portal/article/index/id/628#BlendMode",
-    "deprecated-display":"http://edn.egret.com/test/index.php/article/index/id/628#内部%20API%20调整"
+    "anchor":"http://edn.egret.com/cn/index.php/article/index/id/628#AnchorX%20API调整",
+    "logger":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#LoggerAPI",
+    "injector":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#Injector",
+    "events":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#事件相关调整",
+    "blendmode":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#BlendMode",
+    "deprecated-display":"http://edn.egret.com/cn/index.php/article/index/id/628#内部%20API%20调整",
+    "ticker":"http://edn.egret.com/cn/index.php/article/index/id/628#Ticker"
 }

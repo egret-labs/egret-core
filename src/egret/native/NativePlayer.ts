@@ -57,8 +57,10 @@ module egret.native {
             stage.$screen = this;
             stage.$scaleMode = option.scaleMode;
             stage.$maxTouches = option.maxTouches;
-            stage.frameRate = option.frameRate;
             stage.textureScaleFactor = option.textureScaleFactor;
+            //设置帧频到native
+            stage.frameRate = 60;
+            egret_native.setFrameRate(option.frameRate > 60 ? 60 : option.frameRate);
 
             stage.addEventListener(egret.Event.ENTER_FRAME, function (){
                 if($currentSurface) {
