@@ -61,12 +61,13 @@ class EgretProperties implements egret.EgretPropertiesClass {
      * @returns {string}
      */
     getReleaseRoot(): string {
-        var p = "release";
-        if (globals.hasKeys(this.properties, ["release"])) {
-            p = this.properties["release"];
+        var p = "bin-release";
+        if (globals.hasKeys(this.properties, ["publish", "path"])) {
+            p = this.properties["publish"]["path"];
         }
 
-        return file.joinPath(egret.args.projectDir, p);
+        return file.getAbsolutePath(p);
+        //return file.joinPath(egret.args.projectDir, p);
     }
 
     //获得egret_file_list

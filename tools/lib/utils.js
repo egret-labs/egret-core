@@ -90,6 +90,24 @@ function format(text) {
     return text;
 }
 exports.format = format;
+function ti(code, injector) {
+    var text = $locale_strings[code];
+    if (!text) {
+        return "{" + code + "}";
+    }
+    text = inject.call(this, text, injector);
+    return text;
+}
+exports.ti = ti;
+function inject(text, injector) {
+    if (injector) {
+        for (var p in injector) {
+            text = text.replace(new RegExp("\\{" + p + "\\}", "ig"), injector[p]);
+        }
+    }
+    return text;
+}
+exports.inject = inject;
 function exit(code) {
     var args = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -241,5 +259,13 @@ function getAvailablePort(callback, port) {
     getPort();
 }
 exports.getAvailablePort = getAvailablePort;
+function checkEgret() {
+    var options = egret.args;
+    if (file.exists(options.srcDir) == false ||
+        file.exists(options.templateDir) == false) {
+        exit(10015, options.projectDir);
+    }
+}
+exports.checkEgret = checkEgret;
 
 //# sourceMappingURL=../lib/utils.js.map

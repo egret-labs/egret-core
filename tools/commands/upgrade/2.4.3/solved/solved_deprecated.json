@@ -1,17 +1,5 @@
 [
   {
-    "desc":"class DisplayObject{ _DO_Props_: DisplayObjectProperties; }",
-    "solved":true
-  },
-  {
-    "desc":"class DisplayObjectProperties{ * }",
-    "solved":true
-  },
-  {
-    "desc":"class TextFieldProperties{ * }",
-    "solved":true
-  },
-  {
     "desc":"class InteractionMode{ * }",
     "solved":true
   },
@@ -48,18 +36,12 @@
     "solved":true
   },
 
-  {
-    "desc":"class DisplayObject{ anchorX: number; }",
-    "solved":true
-  },
+
   {
     "desc":"class DisplayObject{ _setAnchorX(value: number): void; }",
     "solved":true
   },
-  {
-    "desc":"class DisplayObject{ anchorY: number; }",
-    "solved":true
-  },
+
   {
     "desc":"class DisplayObject{ _setAnchorY(value: number): void; }",
     "solved":true
@@ -145,18 +127,6 @@
     "solved":true
   },
   {
-    "desc":"class Logger{ static fatal(actionCode: string, value?: Object): void; }",
-    "solved":true
-  },
-  {
-    "desc":"class Logger{ static info(actionCode: string, value?: Object): void; }",
-    "solved":true
-  },
-  {
-    "desc":"class Logger{ static warning(actionCode: string, value?: Object): void; }",
-    "solved":true
-  },
-  {
     "desc":"class RenderCommand{ * }",
     "solved":true
   },
@@ -170,10 +140,6 @@
   },
   {
     "desc":"class SAXParser{ * }",
-    "solved":true
-  },
-  {
-    "desc":"class Injector{ * }",
     "solved":true
   },
   {
@@ -290,50 +256,6 @@
     "solved":true
   },
   {
-    "desc":"class Event{ static FINISH_RENDER: string; }",
-    "solved":true
-  },
-  {
-    "desc":"class Event{ static FINISH_UPDATE_TRANSFORM: string; }",
-    "solved":true
-  },
-  {
-    "desc":"class Event{ _reset(): void; }",
-    "solved":true
-  },
-  {
-    "desc":"class Event{ __recycle(): void; }",
-    "solved":true
-  },
-  {
-    "desc":"class Event{ static _dispatchByTarget(EventClass: any, target: IEventDispatcher, type: string, props?: Object, bubbles?: boolean, cancelable?: boolean): boolean; }",
-    "solved":true
-  },
-  {
-    "desc":"class TouchEvent{ static TOUCH_OUT: string; }",
-    "solved":true
-  },
-  {
-    "desc":"class TouchEvent{ static TOUCH_OVER: string; }",
-    "solved":true
-  },
-  {
-    "desc":"class TouchEvent{ ctrlKey: boolean; }",
-    "solved":true
-  },
-  {
-    "desc":"class TouchEvent{ shiftKey: boolean; }",
-    "solved":true
-  },
-  {
-    "desc":"class TouchEvent{ altKey: boolean; }",
-    "solved":true
-  },
-  {
-    "desc":"class BlendMode{ static ERASE_REVERSE: string; }",
-    "solved":true
-  },
-  {
     "desc":"class InputController{ _updateTransform(): void; }",
     "solved":true
   },
@@ -343,10 +265,6 @@
   },
   {
     "desc":"class Texture{ _textureHeight: number; }",
-    "solved":true
-  },
-  {
-    "desc":"class RenderTexture{ * }",
     "solved":true
   }
 ]

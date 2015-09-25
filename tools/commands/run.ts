@@ -43,7 +43,7 @@ class Run implements egret.Command {
         }
         this.serverStarted = true;
         server.startServer(egret.args, egret.args.startUrl);
-        if(egret.args.serverOnly){
+        if (egret.args.serverOnly) {
             console.log("Url:" + egret.args.startUrl);
         }else{
             console.log('\n');

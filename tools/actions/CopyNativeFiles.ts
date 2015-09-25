@@ -48,7 +48,7 @@ class CopyNativeFiles {
     static refreshNative(isDebug, versionFile = null) {
         var config = egret.args.properties;
         var nativePath;
-        if (nativePath = egret.args.properties.getNativePath("android")) {
+        if (nativePath = config.getNativePath("android")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.android");
             var url2 = FileUtil.joinPath(nativePath, "proj.android/assets", "egret-game");
 
@@ -60,7 +60,7 @@ class CopyNativeFiles {
             entrance.execute();
         }
 
-        if (nativePath = egret.args.properties.getNativePath("ios")) {
+        if (nativePath = config.getNativePath("ios")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
             url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
 

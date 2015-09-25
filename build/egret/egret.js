@@ -26,8 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __define = this.__define || function (o, p, g, s) { 
-  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 this["DEBUG"] = true;
 this["RELEASE"] = false;
 var egret;
@@ -92,7 +91,7 @@ var egret;
                 return defaultValue;
             },
             set: function (value) {
-                $error(1009, egret.getQualifiedClassName(instance), property);
+                egret.$error(1009, egret.getQualifiedClassName(instance), property);
             },
             enumerable: true,
             configurable: true
@@ -4447,8 +4446,10 @@ var egret;
                         newContext.setTransform(1, 0, 0, 1, 0, 0);
                         newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
                     }
-                    oldSurface.height = 1;
-                    oldSurface.width = 1;
+                    if (egret.Capabilities.runtimeType != egret.RuntimeType.NATIVE) {
+                        oldSurface.height = 1;
+                        oldSurface.width = 1;
+                    }
                 }
                 this.rootMatrix.setTo(1, 0, 0, 1, -this.offsetX, -this.offsetY);
                 this.renderContext.setTransform(1, 0, 0, 1, -bounds.x, -bounds.y);

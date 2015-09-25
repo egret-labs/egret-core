@@ -26,8 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __define = this.__define || function (o, p, g, s) { 
-  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 var RES;
 (function (RES) {
     /**
@@ -184,13 +183,13 @@ var RES;
          * @language en_US
          * Binary file.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 二进制文件。
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         ResourceItem.TYPE_BIN = "bin";
         /**
@@ -1682,15 +1681,14 @@ var RES;
             if (sheet) {
                 delete this.fileDic[name];
                 var texture;
-                for (var subkey in sheet) {
-                    if (this.textureMap[subkey]) {
-                        if (texture == null) {
-                            texture = sheet[subkey];
-                        }
-                        delete this.textureMap[subkey];
+                for (var subkey in sheet._textureMap) {
+                    if (texture == null) {
+                        texture = sheet._textureMap[subkey];
+                        this.onResourceDestroy(texture);
+                        texture = null;
                     }
+                    delete this.textureMap[subkey];
                 }
-                this.onResourceDestroy(texture);
                 return true;
             }
             return false;

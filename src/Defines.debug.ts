@@ -113,7 +113,7 @@ module egret {
                 return defaultValue;
             },
             set: function (value) {
-                $error(1009, getQualifiedClassName(instance), property);
+                egret.$error(1009, getQualifiedClassName(instance), property);
             },
             enumerable: true,
             configurable: true

@@ -90,6 +90,24 @@ export function format(text: string, ...args): string {
     return text;
 }
 
+export function ti(code: number,injector?:any): string {
+    var text = $locale_strings[code];
+    if (!text) {
+        return "{" + code + "}";
+    }
+    text = inject.call(this,text,injector);
+    return text;
+}
+
+export function inject(text: string,injector?:any):string {
+    if(injector){
+        for(var p in injector){
+            text = text.replace(new RegExp("\\{" + p + "\\}", "ig"), injector[p]);
+        }
+    }
+    return text;
+}
+
 export function exit(code: number, ...args) {
     if (code) {
         var message = tr.apply(this, [code].concat(args));
@@ -245,4 +263,12 @@ export function getAvailablePort(callback: (port: number) => void, port= 0) {
     }
 
     getPort();
+}
+
+export function checkEgret() {
+    var options = egret.args;
+    if (file.exists(options.srcDir) == false ||
+        file.exists(options.templateDir) == false) {
+        exit(10015, options.projectDir);
+    }
 }

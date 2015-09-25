@@ -58,7 +58,7 @@ var UpgradeCommand = (function () {
         async.eachSeries(this.upgradeConfigArr, function (info, callback) {
             function handleCallBack(err) {
                 if (!err) {
-                    modify.save(v);
+                    //modify.save(v);
                     callback();
                 }
                 else {

@@ -3,29 +3,19 @@ var utils = require('../lib/utils');
 var FileUtil = require('../lib/FileUtil');
 var childProcess = require("child_process");
 var CompileTemplate = require('../actions/CompileTemplate');
-var CopyFilesCommand = require("../commands/copyfile");
 var copyNative = require("../actions/CopyNativeFiles");
 var NativeProject = (function () {
     function NativeProject() {
     }
     NativeProject.build = function (platform) {
         console.log("----native build-----");
-        var options = egret.args;
-        CompileTemplate.compileNativeRequire(egret.args);
+        CompileTemplate.modifyNativeRequire();
         //拷贝项目到native工程中
-        var cpFiles = new CopyFilesCommand();
         if (egret.args.runtime == "native") {
             copyNative.refreshNative(true);
         }
-        return;
-        copyOutputToNative(platform);
-        var platformFolders = getPlatformFolders(platform);
-        console.log(platformFolders);
-        platformFolders.forEach(function (folder) { return exec(FileUtil.joinPath(folder, "commands/build"), [], function (code) { return console.log("Native build exit with: " + code); }); });
     };
     NativeProject.run = function (platform) {
-    };
-    NativeProject.emulate = function (platform) {
     };
     NativeProject.copyNativeTemplate = copyNativeTemplate;
     NativeProject.copyOutputToNative = copyOutputToNative;

@@ -51,12 +51,26 @@ var args;
 var configData;
 var language;
 var engines;
+var localsMessages = {
+    en: {
+        1: "Can not find Egret Engine {0}, please install it with Egret Launcher.",
+        2: "Can not find Egret Engine, please open Egret Launcher and press the \"Reset\" button.",
+        3: "Egret Engine default version: {0}\nEgret Engine current version: {1}\nYou can upgrade your project via egret upgrade",
+        4: "Egret Engine current version: {0}"
+    },
+    zh: {
+        1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
+        2: "找不到默认引擎，请尝试打开引擎面板并点击“重置引擎”按钮",
+        3: "您的默认引擎版本为 {0}\n当前项目使用版本为 {1}\n您可以执行 egret upgrade 命令升级项目",
+        4: "您正在使用的引擎版本为 {0}"
+    }
+};
 var commandsToSkip = {
-    "upgrade": true,
-    "help": true
+    "upgrade": true
 };
 function entry() {
     readConfig();
+    getLanguage();
     args = parseArgs();
     var requestVersion = args.egretversion || args.ev;
     if (requestVersion === true)
@@ -65,27 +79,28 @@ function entry() {
     if (args.command == "versions") {
         return printVersions();
     }
-    if (requestVersion) {
-        handled = executeVersion(requestVersion);
-        if (!handled) {
-            exit(1, requestVersion);
-        }
-        return;
-    }
     var projectVersion = getProjectVersion();
-    if (projectVersion && !(args.command in commandsToSkip)) {
-        handled = executeVersion(projectVersion);
-        if (!handled) {
-            exit(1, projectVersion);
+    var defaultVersion = getDefaultEngineInfo();
+    if (requestVersion || (projectVersion && !(args.command in commandsToSkip))) {
+        requestVersion = requestVersion || projectVersion;
+        var isUsingDefault = requestVersion == defaultVersion.version;
+        var messageCode = isUsingDefault ? 4 : 3;
+        console.log(tr(messageCode, defaultVersion.version, requestVersion));
+        if (!engines[requestVersion]) {
+            console.log(tr(1, requestVersion));
+            process.exit(1);
             return;
         }
+        executeVersion(requestVersion);
+        return;
     }
-    var defaultVersion = getDefaultEngineInfo();
-    if (!defaultVersion.root) {
-        exit(2, defaultVersion.version);
+    if (!defaultVersion) {
+        console.log(tr(2, defaultVersion.version));
+        process.exit(2);
         return;
     }
     if (!handled) {
+        console.log(tr(4, defaultVersion.version, requestVersion));
         executeVersion(defaultVersion.version, defaultVersion.root);
     }
 }
@@ -101,17 +116,8 @@ function executeVersion(version, root) {
     if (!engines) {
         getAllEngineVersions();
     }
-    if (!root) {
-        var targetEngine = engines[version];
-        if (!targetEngine || !targetEngine.root) {
-            return false;
-        }
-        root = targetEngine.root;
-    }
+    root = root || engines[version].root;
     var bin = getBin(root);
-    if (args.command != "info") {
-        console.log("----- Egret Engine " + version + " -----");
-    }
     process.env["EGRET_PATH"] = root;
     //Fix 1.5 can not find typescript lib
     if (process['mainModule']) {
@@ -123,9 +129,12 @@ function executeVersion(version, root) {
 function getDefaultEngineInfo() {
     var defaultRoot = null;
     var version = null;
+    if (!engines) {
+        getAllEngineVersions();
+    }
     if (configData && configData.egret) {
         var defaultVersion = configData.egret[DEFAULT_ENGINE];
-        if (defaultVersion) {
+        if (defaultVersion && engines[defaultVersion]) {
             version = defaultVersion;
         }
     }
@@ -135,11 +144,9 @@ function getDefaultEngineInfo() {
             version = info.version;
         }
     }
-    if (!engines) {
-        getAllEngineVersions();
-    }
     if (!version || !engines[version]) {
-        exit(2);
+        console.log(tr(2, version));
+        process.exit(2);
     }
     return engines[version];
 }
@@ -181,26 +188,8 @@ function readConfig() {
     }
 }
 function getEngineInfoInInstaller() {
-    var root;
-    var globalpath = module['paths'].concat();
-    var existsFlag = false;
-    for (var i = 0; i < globalpath.length; i++) {
-        var prefix = globalpath[i];
-        var url = file.joinPath(prefix, '../');
-        if (file.exists(file.joinPath(url, 'egret/tools/bin/egret'))) {
-            existsFlag = true;
-            break;
-        }
-        url = prefix;
-        if (file.exists(file.joinPath(url, 'egret/tools/bin/egret'))) {
-            existsFlag = true;
-            break;
-        }
-    }
-    if (!existsFlag) {
-        return null;
-    }
-    root = file.escapePath(file.joinPath(url, '/egret/'));
+    var selector = process['mainModule'].filename;
+    var root = file.escapePath(file.joinPath(Path.dirname(selector), './egret/'));
     return getEngineVersion(root);
 }
 function getAppDataEnginesRootPath() {
@@ -249,60 +238,34 @@ function getAllEngineVersions() {
     if (configData) {
         for (var v in configData.egret) {
             var rootInConfig = file.escapePath(configData.egret[v].root);
-            var exist = file.exists(getBin(rootInConfig));
-            if (!exist)
-                continue;
-            var info = {
-                root: rootInConfig,
-                version: v
-            };
-            engines[info.version] = info;
+            var bin = getBin(rootInConfig);
+            var exist = file.exists(bin);
+            if (exist) {
+                var info = getEngineVersion(rootInConfig);
+                if (!info) {
+                    return;
+                }
+                engines[info.version] = info;
+            }
         }
     }
 }
-function exit(code) {
+function tr(code) {
     var args = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         args[_i - 1] = arguments[_i];
     }
-    var localsMessages = {
-        en: {
-            1: "Can not find Egret Engine {0}, please install it with Egret Launcher.",
-            2: "Can not find Egret Engine, please open Egret Launcher and press the \"Reset\" button."
-        },
-        zh: {
-            1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
-            2: "找不到默认引擎，请尝试打开引擎面板并点击“重置引擎”按钮"
-        }
-    };
-    function tr() {
-        var messages = localsMessages[language] || localsMessages["en"];
-        var message = messages[code];
-        message = format(message, args);
-        console.error(message);
+    var messages = localsMessages[language];
+    var message = messages[code];
+    message = format(message, args);
+    return message;
+}
+function format(text, args) {
+    var length = args.length;
+    for (var i = 0; i < length; i++) {
+        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]);
     }
-    function format(text, args) {
-        var length = args.length;
-        for (var i = 0; i < length; i++) {
-            text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]);
-        }
-        return text;
-    }
-    if (!language) {
-        locals.getLanguage(function (err, local) {
-            var lang = local.split("_")[0];
-            if (lang != "zh" && lang != "en") {
-                lang = "en";
-            }
-            language = lang;
-            tr();
-            process.exit(code);
-        });
-    }
-    else {
-        tr();
-        process.exit(code);
-    }
+    return text;
 }
 function parseArgs() {
     var i = 0;
@@ -479,88 +442,23 @@ var file;
     }
     file.getFileName = getFileName;
 })(file || (file = {}));
-var locals;
-(function (locals) {
-    var childProcess = require('child_process');
-    var execFileSync = childProcess.execFileSync;
-    var defaultOpts = { spawn: true };
-    var cache;
-    var zhCodes = {
-        4: "zh_CHS",
-        31748: "zh_CHT",
-        2052: "zh_CN",
-        3076: "zh_HK",
-        5124: "zh_MO",
-        4100: "zh_SG",
-        1028: "zh_TW"
-    };
-    function fallback() {
-        cache = 'en_US';
-        return cache;
-    }
-    function getEnvLocale(env) {
-        env = env || process.env;
-        var ret = env.LC_ALL || env.LC_MESSAGES || env.LANG || env.LANGUAGE;
-        cache = getLocale(ret);
-        return ret;
-    }
-    function parseLocale(x) {
-        var env = x.split('\n').reduce(function (env, def) {
-            def = def.split('=');
-            env[def[0]] = def[1];
-            return env;
-        }, {});
-        return getEnvLocale(env);
-    }
-    function getLocale(str) {
-        return (str && str.replace(/[.:].*/, '')) || fallback();
-    }
-    function getLanguage(cb) {
-        var opts = defaultOpts;
-        if (cache || getEnvLocale() || opts.spawn === false) {
-            setImmediate(cb, null, cache);
-            return;
-        }
-        var getAppleLocale = function () {
-            childProcess.execFile('defaults', ['read', '-g', 'AppleLocale'], function (err, stdout) {
-                if (err) {
-                    fallback();
-                    return;
-                }
-                cache = stdout.trim() || fallback();
-                cb(null, cache);
-            });
-        };
-        if (process.platform === 'win32') {
-            childProcess.execFile('wmic', ['os', 'get', 'locale'], function (err, stdout) {
-                if (err) {
-                    fallback();
-                    return;
-                }
-                var lcidCode = parseInt(stdout.replace('Locale', ''), 16);
-                cache = zhCodes[lcidCode] || fallback();
-                cb(null, cache);
-            });
-        }
-        else {
-            childProcess.execFile('locale', function (err, stdout) {
-                if (err) {
-                    fallback();
-                    return;
-                }
-                var res = parseLocale(stdout);
-                if (!res && process.platform === 'darwin') {
-                    getAppleLocale();
-                    return;
-                }
-                cache = getLocale(res);
-                cb(null, cache);
-            });
+function getLanguage() {
+    var selector = process['mainModule'].filename;
+    var languageXML = file.escapePath(file.joinPath(Path.dirname(selector), '../locales/language.xml'));
+    if (file.exists(languageXML)) {
+        var xml = file.read(languageXML);
+        var lang = /\<language\>([\w_]*)\<\/language>/.exec(xml);
+        if (lang) {
+            var localParts = lang[1].split('_');
+            if (localParts.length >= 1) {
+                language = localParts[0];
+            }
         }
     }
-    locals.getLanguage = getLanguage;
-    ;
-})(locals || (locals = {}));
+    if (!language || language != "zh") {
+        language = "en";
+    }
+}
 entry();
 
 //# sourceMappingURL=selector.js.map

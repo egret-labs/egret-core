@@ -6808,7 +6808,7 @@ declare module eui {
         /**
          * @language en_US
          * Event Listener of source data changed.
-         * @param The <code>egret.CollectionEvent</code> object.
+         * @param The <code>egret.gui.CollectionEvent</code> object.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -6816,7 +6816,7 @@ declare module eui {
         /**
          * @language zh_CN
          * 数据源改变事件处理。
-         * @param event 事件 <code>egret.CollectionEvent</code> 的对象。
+         * @param event 事件 <code>egret.gui.CollectionEvent</code> 的对象。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -9377,79 +9377,6 @@ declare module eui.sys {
          * 更新水平滚动位置
          */
         private onScrollingUpdate(animation);
-    }
-}
-declare module eui {
-    /**
-     * @language en_US
-     * The BitmapFillMode class defines an enumeration of the resize modes that
-     * determine how a Bitmap fills in the dimensions specified by the layout system.
-     *
-     * @see eui.Image#fillMode
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/core/BitmapFillModeEuiExample.ts
-     */
-    /**
-     * @language zh_CN
-     * BitmapFillMode 类定义 Image 控件的图像填充方式。
-     * BitmapFillMode 类定义了调整大小模式的一个枚举，这些模式确定 Bitmap 如何填充由布局系统指定的尺寸。
-     *
-     * @see eui.Image#fillMode
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/core/BitmapFillModeEuiExample.ts
-     */
-    class BitmapFillMode {
-        /**
-         * @language en_US
-         * The bitmap ends at the edge of the region.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 在区域的边缘处截断不显示位图。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        static CLIP: string;
-        /**
-         * @language en_US
-         * The bitmap is repeated to fill the region.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 重复位图以填充区域。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        static REPEAT: string;
-        /**
-         * @language en_US
-         * The bitmap fill stretches to fill the region.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 拉伸位图以填充区域。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        static SCALE: string;
     }
 }
 declare module eui {

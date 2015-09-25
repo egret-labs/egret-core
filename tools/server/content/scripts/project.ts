@@ -22,7 +22,7 @@ module egret.portal {
         orientationModes = egret.manifest.orientationModes;
         modules: egret.EgretModule[] = [];
         platform: string = "web";
-        scaleMode: string = 'noScale'; 
+        scaleMode: string = 'showAll';
         orientationMode: string = 'auto'; 
         contentWidth: number = 480;
         contentHeight: number = 800;

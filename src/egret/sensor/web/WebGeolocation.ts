@@ -1,4 +1,4 @@
-﻿
+
 interface BrowerGeolocation extends Geolocation { }
 
 module egret.web {

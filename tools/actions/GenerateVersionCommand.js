@@ -15,9 +15,6 @@ var GenerateVersionCommand = (function () {
         var sourceRoot = egret.args.projectDir;
         var resources = egret.args.properties.getResources();
         if (egret.args.properties.getPublishType(egret.args.runtime) != 1) {
-            //resources.forEach(function (resourcePath) {
-            //    FileUtil.copy(FileUtil.joinPath(sourceRoot, resourcePath), FileUtil.joinPath(releasePath, resourcePath));
-            //});
             var config = egret.args.properties;
             var cpFiles = new CopyFilesCommand();
             cpFiles.copyResources(sourceRoot, releasePath, config.getIgnorePath());
@@ -56,7 +53,7 @@ var GenerateVersionCommand = (function () {
             var txt = FileUtil.read(filePath);
             var crc32 = globals.getCrc32();
             var txtCrc32 = crc32(txt);
-            var savePath = FileUtil.relative(releasePath, filePath);
+            var savePath = FileUtil.relative(sourceRoot, filePath);
             allVersion[savePath] = { "v": txtCrc32, "s": fs.statSync(filePath).size };
         }
         FileUtil.save(allPath, JSON.stringify(allVersion));

@@ -6,8 +6,21 @@ import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import tsclark = require("../lib/typescript/tsclark");
 
+import exmlActions = require('../actions/exml');
 
 class CompileProject {
+    compile(options: egret.ToolArgs) {
+        exmlActions.beforeBuild();
+        //编译
+        exmlActions.build();
+        var result = this.compileProject(options);
+        if(result.exitStatus)
+            return null;
+        exmlActions.afterBuild()
+
+        return result;
+    }
+
     public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
         var compileResult: tsclark.LarkCompileResult;
         if (files && this.recompile) {

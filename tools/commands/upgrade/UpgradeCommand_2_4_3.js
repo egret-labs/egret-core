@@ -33,42 +33,43 @@ var UpgradeCommand_2_4_3 = (function () {
         var self = this;
         var adding_suffix = '_new';
         var newPath = null;
-        if (projectPath.indexOf('_new') == -1) {
-            newPath = projectPath + adding_suffix;
-            var i = 0;
-            while (file.exists(newPath)) {
-                newPath = projectPath + adding_suffix + (++i);
+        newPath = projectPath + adding_suffix;
+        var i = 0;
+        while (file.exists(newPath)) {
+            newPath = projectPath + adding_suffix + (++i);
+        }
+        globals.log2(1707, projectPath, newPath);
+        var egretPath = egret.root;
+        //判断生成项目的类型
+        var oldProperties = require('./ModifyProperties').getProperties();
+        var extra_param = '';
+        for (var i = 0; i < oldProperties.modules.length; i++) {
+            if (oldProperties.modules['name'] == 'gui') {
+                extra_param = ' --type gui';
+                break;
             }
-            //file.copy(projectPath,newPath);
-            globals.log2(1707, projectPath, newPath);
-            var egretPath = egret.root;
-            //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
-            //处理命令行中的空格(用“”抱起来作为一个单独的参数)
-            CHILD_EXEC.exec('node \"' + file.joinPath(egretPath, '/tools/bin/egret') + '\" create \"' + newPath + "\"", {
-                encoding: 'utf8',
-                timeout: 0,
-                maxBuffer: 200 * 1024,
-                killSignal: 'SIGTERM',
-                cwd: process.cwd(),
-                env: process.env
-            }, function (error, stdout, stderror) {
-                if (error) {
-                    //无法创建新目录输出错误日志 直接返回
-                    console.log(stderror);
-                    self.asyncCallback({ name: '消息', message: "无法创建新目录" });
-                }
-                else {
-                    console.log(stdout);
-                    console.log(stderror);
-                    self.configNewProject(newPath);
-                    self.apiTest(newPath);
-                }
-            });
         }
-        else {
-            //跳过配置新项目
-            this.apiTest(projectPath);
-        }
+        //处理命令行中的空格(用“”抱起来作为一个单独的参数)
+        CHILD_EXEC.exec('node \"' + file.joinPath(egretPath, '/tools/bin/egret') + '\" create \"' + newPath + "\"" + extra_param, {
+            encoding: 'utf8',
+            timeout: 0,
+            maxBuffer: 200 * 1024,
+            killSignal: 'SIGTERM',
+            cwd: process.cwd(),
+            env: process.env
+        }, function (error, stdout, stderror) {
+            if (error) {
+                //无法创建新目录输出错误日志 直接返回
+                console.log(stderror);
+                self.asyncCallback({ name: '消息', message: "无法创建新目录" });
+            }
+            else {
+                console.log(stdout);
+                console.log(stderror);
+                self.configNewProject(newPath);
+                self.apiTest(newPath);
+            }
+        });
     };
     /**
      * step2.配置新项目
@@ -77,6 +78,9 @@ var UpgradeCommand_2_4_3 = (function () {
     UpgradeCommand_2_4_3.prototype.configNewProject = function (newPath) {
         //step 1.拷贝src工程文件
         var srcOld = file.joinPath(egret.args.srcDir);
+        if (!file.exists(srcOld)) {
+            globals.exit(10015, egret.args.projectDir);
+        }
         var srcNew = file.joinPath(newPath, '/src/');
         if (srcOld.toLowerCase() != srcNew.toLowerCase()) {
             globals.log2(1707, srcOld, srcNew);
@@ -84,10 +88,13 @@ var UpgradeCommand_2_4_3 = (function () {
         }
         //step 2.拷贝resource资源文件
         var resourceOld = file.joinPath(egret.args.projectDir, '/resource/');
-        var resourceNew = file.joinPath(newPath, '/src/resource/');
-        if (resourceOld.toLowerCase() != resourceNew.toLowerCase()) {
-            globals.log2(1707, resourceOld, resourceNew);
-            file.copy(resourceOld, resourceNew);
+        //兼容处理
+        if (file.exists(resourceOld)) {
+            var resourceNew = file.joinPath(newPath, '/src/resource/');
+            if (resourceOld.toLowerCase() != resourceNew.toLowerCase()) {
+                globals.log2(1707, resourceOld, resourceNew);
+                file.copy(resourceOld, resourceNew);
+            }
         }
         //step 3.将旧配置注入新配置 和 template/index.html文件
         var oldProperties = require('./ModifyProperties').getProperties();
@@ -165,19 +172,27 @@ var UpgradeCommand_2_4_3 = (function () {
                         //延时操作下一步
                         setTimeout(function () {
                             //写入html并打开网址
-                            var saveContent = logger._htmlTitle +
-                                '<h1>' + projectPath + '&nbsp;&nbsp;<b>v2.0.5</b>&nbsp;到&nbsp;<b>v2.4.3</b>&nbsp;API升级检测报告</h1><br>' +
-                                '<h2>共计 <b>' + logger.total + '</b> 处冲突,请解决完所有冲突后再执行build</h2><br>' +
-                                logger._htmlBody +
-                                logger._htmlEnd;
-                            //var saveContent = logger._snapShot;
-                            if (saveContent != '') {
-                                var saveLogFilePath = file.joinPath(projectPath, 'LOG_APITEST.html');
+                            if (logger._htmlBody != '') {
+                                var saveLogFilePath = file.joinPath(projectPath, logger.HTML_FILENAME);
+                                var saveContent = logger.htmlOut(
+                                //为模版html注入属性值
+                                {
+                                    'dir': projectPath,
+                                    'version_old': egret.args.properties.getVersion(),
+                                    'version_new': "2.5.0",
+                                    'conflict_count': logger.total + '',
+                                    'title': 'API检测报告',
+                                    'dir_changed_tip': utils.ti(1711, { '0': projectPath }),
+                                    'qq_new_feature': '如果您在升级过程中遇到了问题，请在 <a target="_blank" href="http://bbs.egret.com/forum.php?mod=viewthread&tid=11702&extra=&page=1">这里</a>回帖',
+                                    'color_red': '',
+                                    'color_green': '',
+                                    'color_normal': ''
+                                });
                                 self.saveFileAndOpen(saveLogFilePath, saveContent);
                                 globals.log2(1712, saveLogFilePath); //检测结果已写入
                             }
-                            globals.log2(1711, projectPath); //工程目录已变更
-                            globals.exit(1713); //qq体验群
+                            //globals.log2(1711,projectPath);//工程目录已变更
+                            //globals.exit(1713);//qq体验群
                             self.asyncCallback();
                         }, 200);
                     });
