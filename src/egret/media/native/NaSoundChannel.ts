@@ -33,8 +33,8 @@ module egret.native {
      * @private
      * @inheritDoc
      */
-    export class NativeSoundChannel extends egret.EventDispatcher implements egret.SoundChannel {
-
+    export class NaSoundChannel extends egret.EventDispatcher implements egret.SoundChannel {
+        static currentPath:string;
 
         /**
          * @private
@@ -51,7 +51,8 @@ module egret.native {
         /**
          * @private
          */
-        private audio:any = null;
+        $type:string;
+        private _effectId;
 
         //声音是否已经播放完成
         private isStopped:boolean = false;
@@ -59,62 +60,38 @@ module egret.native {
         /**
          * @private
          */
-        constructor(audio:any) {
+        constructor() {
             super();
-            audio.addEventListener("ended", this.onPlayEnd);
-            this.audio = audio;
         }
 
         $play():void {
-            if (this.isStopped) {
-                egret.$error(1036);
-                return;
+            this.isStopped = false;
+            if (this.$type == egret.Sound.EFFECT) {
+                this._effectId = egret_native.Audio.playEffect(this.$url, this.$loops != 1);
             }
-
-            try {
-                this.audio.currentTime = this.$startTime;
-            }
-            catch (e) {
-
-            }
-            finally {
-                this.audio.play();
+            else {
+                NaSoundChannel.currentPath = this.$url;
+                egret_native.Audio.playBackgroundMusic(this.$url, this.$loops != 1);
             }
         }
-
-        /**
-         * @private
-         */
-        private onPlayEnd = () => {
-            if (this.$loops == 1) {
-                this.stop();
-
-                this.dispatchEventWith(egret.Event.SOUND_COMPLETE);
-                return;
-            }
-
-            if (this.$loops > 0) {
-                this.$loops--;
-            }
-
-            /////////////
-            this.audio.load();
-            this.$play();
-        };
 
         /**
          * @private
          * @inheritDoc
          */
         public stop() {
-            if (!this.audio)
-                return;
-            var audio = this.audio;
-            audio.pause();
-            audio.removeEventListener("ended", this.onPlayEnd);
-            this.audio = null;
-
-            NativeSound.$recycle(this.$url, audio);
+            this.isStopped = true;
+            if (this.$type == egret.Sound.EFFECT) {
+                if (this._effectId) {
+                    egret_native.Audio.stopEffect(this._effectId);
+                    this._effectId = null;
+                }
+            }
+            else {
+                if (this.$url == NaSoundChannel.currentPath) {
+                    egret_native.Audio.stopBackgroundMusic(false);
+                }
+            }
         }
 
         /**
@@ -122,23 +99,25 @@ module egret.native {
          * @inheritDoc
          */
         public get volume():number {
-            if (!this.audio)
-                return 1;
-            return this.audio.volume;
+            if (this.$type == egret.Sound.EFFECT) {
+                return egret_native.Audio.getEffectVolume();
+            }
+            else {
+                return egret_native.Audio.getBackgroundMusicVolume();
+            }
+            return 1;
         }
 
         /**
          * @inheritDoc
          */
         public set volume(value:number) {
-            if (this.isStopped) {
-                egret.$error(1036);
-                return;
+            if (this.$type == egret.Sound.EFFECT) {
+                egret_native.Audio.setEffectVolume(value)
             }
-
-            if (!this.audio)
-                return;
-            this.audio.volume = value;
+            else {
+                egret_native.Audio.setBackgroundMusicVolume(value);
+            }
         }
 
         /**
@@ -146,9 +125,7 @@ module egret.native {
          * @inheritDoc
          */
         public get position():number {
-            if (!this.audio)
-                return 0;
-            return this.audio.currentTime;
+            return 0;
         }
     }
 }
