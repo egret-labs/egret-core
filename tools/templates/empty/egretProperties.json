@@ -5,6 +5,7 @@
     },
     "publish": {
         "web": 0,
-        "native": 1
+        "native": 1,
+        "path": "bin-release"
     }
 }

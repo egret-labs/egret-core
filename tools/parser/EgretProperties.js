@@ -49,9 +49,9 @@ var EgretProperties = (function () {
      * @returns {string}
      */
     EgretProperties.prototype.getReleaseRoot = function () {
-        var p = "release";
-        if (globals.hasKeys(this.properties, ["release"])) {
-            p = this.properties["release"];
+        var p = "bin-release";
+        if (globals.hasKeys(this.properties, ["publish", "path"])) {
+            p = this.properties["publish"]["path"];
         }
         return file.joinPath(egret.args.projectDir, p);
     };

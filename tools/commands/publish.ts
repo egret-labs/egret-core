@@ -22,10 +22,44 @@ import Clean = require("../commands/clean");
 import FileAutoChange = require("../actions/FileAutoChange");
 
 class Publish implements egret.Command {
+    private getVersionInfo():string {
+        if (egret.args.version) {
+            return egret.args.version;
+        }
+
+        var date = new Date();
+        var year = date.getFullYear() % 100;
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        var second = date.getSeconds();
+        var timeStr = year * 10000000000 + month * 100000000 + day * 1000000 + hour * 10000 + min * 100 + second;
+        return timeStr.toString();
+
+        //return (Math.round(Date.now() / 1000)).toString();
+    }
+
     execute():number {
         utils.checkEgret();
 
         var options = egret.args;
+        var config = egret.args.properties;
+        //重新设置 releaseDir
+        var versionFile = this.getVersionInfo();
+
+
+        if (egret.args.runtime == "native") {
+            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "native", versionFile);
+
+            globals.log(1402, "native", versionFile);
+        }
+        else {
+            options.releaseDir = FileUtil.joinPath(config.getReleaseRoot(), "web", versionFile);
+
+            globals.log(1402, "web", versionFile);
+        }
+
         utils.clean(options.releaseDir);
         options.minify = true;
         options.publish = true;
@@ -45,6 +79,12 @@ class Publish implements egret.Command {
             var autoChange = new FileAutoChange();
             var listInfo = autoChange.refreshNativeRequire(rootHtmlPath, false);
 
+            var allMainfestPath = FileUtil.joinPath(options.releaseDir, "all.manifest");
+            if (FileUtil.exists(allMainfestPath)) {
+                FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
+            }
+            FileUtil.remove(allMainfestPath);
+
             //先拷贝 launcher
             FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
 
@@ -55,7 +95,6 @@ class Publish implements egret.Command {
                 FileUtil.copy(FileUtil.joinPath(options.projectDir, filepath), FileUtil.joinPath(options.releaseDir, "ziptemp", filepath));
             });
 
-            var versionFile = (egret.args.version || Math.round(Date.now() / 1000)).toString();
 
             //runtime  打包所有js文件以及all.manifest
             var zip = new ZipCMD(versionFile);
