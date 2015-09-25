@@ -56,7 +56,7 @@ var APItestCommand = (function () {
                     if (successCallBack && successCallBack()) {
                     }
                     else {
-                        globals.exit(1702);
+                        globals.exit(1715); //项目检测成功
                     }
                 }
             }

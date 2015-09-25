@@ -17,6 +17,7 @@ var Build = (function () {
         if (!APITestTool.isTestPass(egret.args.projectDir)) {
             var apitest_command = new APITestCommand();
             apitest_command.execute(function () {
+                globals.log2(1715); //项目检测成功
                 //成功以后再次执行build
                 var build = CHILD_EXEC.exec('node \"' + FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"", {
                     encoding: 'utf8',
@@ -35,6 +36,7 @@ var Build = (function () {
                 build.on("exit", function (result) {
                     process.exit(result);
                 });
+                //返回true截断默认的exit操作
                 return true;
             });
             //var build = CHILD_EXEC.exec(

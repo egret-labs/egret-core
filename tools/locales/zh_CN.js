@@ -174,6 +174,7 @@ var egret;
     locale_strings[1712] = "检测结果已写入'{0}'";
     locale_strings[1713] = "{color_green}Egret 新特性体验群 481169576 {color_normal}";
     locale_strings[1714] = "正在更新配置文件..";
+    locale_strings[1715] = "项目检测成功";
     //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";
