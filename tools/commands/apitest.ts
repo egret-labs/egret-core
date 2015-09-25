@@ -10,6 +10,7 @@ declare class AutoLogger{
     _htmlBody:string;
     total:number;
     htmlOut(injector?:any):string;
+    HTML_FILENAME :string
 }
 
 class APItestCommand implements egret.Command{
@@ -50,7 +51,7 @@ class APItestCommand implements egret.Command{
                                         'color_green':'',
                                         'color_normal':''
                                     });
-                                var saveLogFilePath = file.joinPath(self.projectPath,'LOG_APITEST.html');
+                                var saveLogFilePath = file.joinPath(self.projectPath,logger.HTML_FILENAME);
                                 self.saveFileAndOpen(saveLogFilePath,saveContent);
                                 globals.exit(1712,saveLogFilePath);//检测结果已写入
                             }

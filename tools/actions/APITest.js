@@ -9,6 +9,7 @@ var utils = require('../lib/utils');
 var DTS = require('../commands/upgrade/2.4.3/compare2dts.js');
 var AutoLogger = (function () {
     function AutoLogger() {
+        this.HTML_FILENAME = 'LOG_APITEST.html';
         this._isConsoleOut = false;
         this._htmlBody = '';
         this._snapShot = '';
@@ -300,16 +301,44 @@ var APITestAction = (function () {
                 }
             });
             logger.close();
+            //成功后删除已有的HTML文件
+            if (logger.total == 0) {
+                APITestAction.deleteHtmlFile(projectPath);
+            }
+            //执行结果回调
             if (callBack) {
                 callBack(false, logger.total, logger);
             }
         }
         else {
+            //错误回调
             if (callBack) {
                 callBack(true, 1705);
             }
         }
         return 0;
+    };
+    /**
+     * build
+      * @param projectPath
+     * @returns {boolean}
+     */
+    APITestAction.isTestPass = function (projectPath) {
+        var testHtmlFilePath = file.joinPath(projectPath, new AutoLogger().HTML_FILENAME);
+        //执行过upgrade并进行了APITest 结果不为0 保留APITest.html
+        if (file.exists(testHtmlFilePath)) {
+            return false;
+        }
+        else {
+            //执行过APITest但是结果为0 APITest.html文件被自动删除(或手动删除)
+            return true;
+        }
+    };
+    APITestAction.deleteHtmlFile = function (projectPath) {
+        var testHtmlFilePath = file.joinPath(projectPath, new AutoLogger().HTML_FILENAME);
+        if (file.exists(testHtmlFilePath)) {
+            file.remove(testHtmlFilePath);
+        }
     };
     return APITestAction;
 })();
