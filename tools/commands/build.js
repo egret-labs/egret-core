@@ -6,6 +6,7 @@ var Native = require('../actions/NativeProject');
 var CopyFiles = require('../actions/CopyFiles');
 var APITestTool = require('../actions/APITest');
 var CHILD_EXEC = require('child_process');
+var APITestCommand = require('./apitest');
 var Compiler = require('../actions/Compiler');
 var Build = (function () {
     function Build() {
@@ -14,23 +15,47 @@ var Build = (function () {
         callback = callback || defaultBuildCallback;
         //如果APITest未通过继续执行APITest
         if (!APITestTool.isTestPass(egret.args.projectDir)) {
-            var build = CHILD_EXEC.exec('node \"' + FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" apitest \"' + egret.args.projectDir + "\"", {
-                encoding: 'utf8',
-                timeout: 0,
-                maxBuffer: 200 * 1024,
-                killSignal: 'SIGTERM',
-                cwd: process.cwd(),
-                env: process.env
+            var apitest_command = new APITestCommand();
+            apitest_command.execute(function () {
+                //成功以后再次执行build
+                var build = CHILD_EXEC.exec('node \"' + FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"", {
+                    encoding: 'utf8',
+                    timeout: 0,
+                    maxBuffer: 200 * 1024,
+                    killSignal: 'SIGTERM',
+                    cwd: process.cwd(),
+                    env: process.env
+                });
+                build.stderr.on("data", function (data) {
+                    console.log(data);
+                });
+                build.stdout.on("data", function (data) {
+                    console.log(data);
+                });
+                build.on("exit", function (result) {
+                    process.exit(result);
+                });
+                return true;
             });
-            build.stderr.on("data", function (data) {
-                console.log(data);
-            });
-            build.stdout.on("data", function (data) {
-                console.log(data);
-            });
-            build.on("exit", function (result) {
-                process.exit(result);
-            });
+            //var build = CHILD_EXEC.exec(
+            //    'node \"'+FileUtil.joinPath(egret.root,'/tools/bin/egret')+'\" apitest \"'+egret.args.projectDir+"\"",
+            //    {
+            //        encoding: 'utf8',
+            //        timeout: 0,
+            //        maxBuffer: 200*1024,
+            //        killSignal: 'SIGTERM',
+            //        cwd: process.cwd(),
+            //        env: process.env
+            //    });
+            //build.stderr.on("data", (data) =>{
+            //    console.log(data);
+            //});
+            //build.stdout.on("data",(data)=>{
+            //    console.log(data);
+            //});
+            //build.on("exit", (result)=>{
+            //    process.exit(result);
+            //});
             return DontExitCode;
         }
         var options = egret.args;
