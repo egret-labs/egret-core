@@ -1937,7 +1937,7 @@ var egret;
                  */
                 ,function () {
                     if (this.$type == egret.Sound.EFFECT) {
-                        return egret_native.Audio.getEffectVolume();
+                        return egret_native.Audio.getEffectsVolume();
                     }
                     else {
                         return egret_native.Audio.getBackgroundMusicVolume();
@@ -1949,7 +1949,7 @@ var egret;
                  */
                 ,function (value) {
                     if (this.$type == egret.Sound.EFFECT) {
-                        egret_native.Audio.setEffectVolume(value);
+                        egret_native.Audio.setEffectsVolume(value);
                     }
                     else {
                         egret_native.Audio.setBackgroundMusicVolume(value);
