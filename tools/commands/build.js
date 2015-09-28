@@ -2,7 +2,6 @@
 var utils = require('../lib/utils');
 var service = require('../service/index');
 var FileUtil = require('../lib/FileUtil');
-var Native = require('../actions/NativeProject');
 var CopyFiles = require('../actions/CopyFiles');
 var APITestTool = require('../actions/APITest');
 var CHILD_EXEC = require('child_process');
@@ -71,7 +70,7 @@ var Build = (function () {
             FileUtil.exists(options.templateDir) == false) {
             utils.exit(10015, options.projectDir);
         }
-        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/egret/'))) {
+        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
             CopyFiles.copyToLibs();
         }
         service.execCommand({
@@ -140,7 +139,6 @@ function onGotBuildCommandResult(cmd, callback) {
     if (cmd.exitCode > 10000) {
         console.log(utils.tr(cmd.exitCode));
     }
-    Native.build();
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(function () { return callback(0); }, 500);
     }
@@ -151,5 +149,4 @@ function defaultBuildCallback(code) {
     utils.exit(code);
 }
 module.exports = Build;
-
-//# sourceMappingURL=../commands/build.js.map
+//# sourceMappingURL=build.js.map

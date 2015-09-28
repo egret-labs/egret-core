@@ -7,6 +7,7 @@ import server = require('../server/server');
 import service = require('../service/index');
 import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
+import Native = require('../actions/NativeProject');
 import CopyFiles = require('../actions/CopyFiles');
 import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
@@ -82,6 +83,7 @@ class AutoCompileCommand implements egret.Command {
 
         exmlActions.afterBuild();
 
+        Native.build();
         this.dirState.init();
 
         this._scripts = result.files;
@@ -136,6 +138,7 @@ class AutoCompileCommand implements egret.Command {
             exmlActions.afterBuildChanges(exmls);
         }
 
+        Native.build();
         this.dirState.init();
 
         this.sendCommand();

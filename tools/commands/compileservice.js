@@ -2,6 +2,7 @@
 var utils = require('../lib/utils');
 var service = require('../service/index');
 var FileUtil = require('../lib/FileUtil');
+var Native = require('../actions/NativeProject');
 var exmlActions = require('../actions/exml');
 var state = require('../lib/DirectoryState');
 var CompileProject = require('../actions/CompileProject');
@@ -57,6 +58,7 @@ var AutoCompileCommand = (function () {
         CompileTemplate.modifyIndexHTML(_scripts);
         CompileTemplate.modifyNativeRequire();
         exmlActions.afterBuild();
+        Native.build();
         this.dirState.init();
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
@@ -104,6 +106,7 @@ var AutoCompileCommand = (function () {
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
         }
+        Native.build();
         this.dirState.init();
         this.sendCommand();
         global.gc && global.gc();
@@ -201,5 +204,4 @@ var AutoCompileCommand = (function () {
     return AutoCompileCommand;
 })();
 module.exports = AutoCompileCommand;
-
-//# sourceMappingURL=../commands/compileservice.js.map
+//# sourceMappingURL=compileservice.js.map
