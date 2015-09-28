@@ -1439,7 +1439,7 @@ var egret;
                     download();
                 }
                 else {
-                    egret.$callAsync(onCanPlay, self);
+                    egret.$callAsync(onAudioLoaded, self);
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();
