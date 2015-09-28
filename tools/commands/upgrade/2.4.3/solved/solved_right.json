@@ -147,5 +147,17 @@
   {
     "desc":"class Sound{ play(loop?: boolean, position?: number): void; }",
     "solved":true
+  },
+  {
+    "desc":"class Sound{ static MUSIC: string; }",
+    "solved":true
+  },
+  {
+    "desc":"class Sound{ static EFFECT: string; }",
+    "solved":true
+  }
+  {
+    "desc":"class Sound{ type: string; }",
+    "solved":true
   }
 ]
