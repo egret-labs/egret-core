@@ -344,7 +344,7 @@ module dragonBones {
 				this._updateDisplayBlendMode(this._blendMode);
 				this._updateDisplayColor(
                     this._colorTransform.alphaOffset, this._colorTransform.redOffset, this._colorTransform.greenOffset, this._colorTransform.blueOffset,
-                    this._colorTransform.alphaMultiplier, this._colorTransform.redMultiplier, this._colorTransform.greenMultiplier, this._colorTransform.blueMultiplier)
+                    this._colorTransform.alphaMultiplier, this._colorTransform.redMultiplier, this._colorTransform.greenMultiplier, this._colorTransform.blueMultiplier, true)
 				this._updateDisplayVisible(this._visible);
 				this._updateTransform();
 			}
