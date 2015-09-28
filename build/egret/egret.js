@@ -8048,7 +8048,7 @@ var egret;
                 }
             }
         };
-        p.drawDisplayObject = function (displayObject, context) {
+        p.drawDisplayObject = function (displayObject, context, rootMatrix) {
             var drawCalls = 0;
             var node;
             var globalAlpha;
@@ -8060,8 +8060,15 @@ var egret;
                 drawCalls++;
                 context.globalAlpha = globalAlpha;
                 var m = node.$renderMatrix;
-                context.setTransform(m.a, m.b, m.c, m.d, m.tx - this._offsetX, m.ty - this._offsetY);
-                node.$render(context);
+                if (rootMatrix) {
+                    context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    node.$render(context);
+                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                }
+                else {
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    node.$render(context);
+                }
             }
             var children = displayObject.$children;
             if (children) {
@@ -8142,7 +8149,7 @@ var egret;
             }
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
             var rootM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-            drawCalls += this.drawDisplayObject(displayObject, displayContext);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, rootM);
             egret.Matrix.release(rootM);
             //绘制遮罩
             if (mask) {
