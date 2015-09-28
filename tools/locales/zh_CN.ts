@@ -131,7 +131,7 @@ module egret {
     locale_strings[1309] = "编译成功";
     //publish
     locale_strings[1401] = "找不到java或java版本过低（最低需求为 java 7 ),请安装java并执行 egret publish -testJava 命令进行测试";
-    locale_strings[1402] = "开始发布{0}版本：{1}";
+    locale_strings[1402] = "开始发布 {0} 版本：{1}";
     locale_strings[1403] = "开始压缩js文件";
     locale_strings[1404] = "压缩js文件耗时：{0}秒";
     locale_strings[1405] = "未压缩js文件，拷贝js文件";
@@ -187,6 +187,7 @@ module egret {
     locale_strings[1712] =  "检测结果已写入'{0}'";
     locale_strings[1713] =  "{color_green}Egret 新特性体验群 481169576 {color_normal}";
     locale_strings[1714] =  "正在更新配置文件..";
+    locale_strings[1715] =  "项目检测成功";
 
 
     //info

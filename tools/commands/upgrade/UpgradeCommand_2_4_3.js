@@ -38,12 +38,19 @@ var UpgradeCommand_2_4_3 = (function () {
         while (file.exists(newPath)) {
             newPath = projectPath + adding_suffix + (++i);
         }
-        //file.copy(projectPath,newPath);
         globals.log2(1707, projectPath, newPath);
         var egretPath = egret.root;
-        //var egretPath = "/Users/yanjiaqi/workspace/main/new_1/egret";
+        //判断生成项目的类型
+        var oldProperties = require('./ModifyProperties').getProperties();
+        var extra_param = '';
+        for (var i = 0; i < oldProperties.modules.length; i++) {
+            if (oldProperties.modules['name'] == 'gui') {
+                extra_param = ' --type gui';
+                break;
+            }
+        }
         //处理命令行中的空格(用“”抱起来作为一个单独的参数)
-        CHILD_EXEC.exec('node \"' + file.joinPath(egretPath, '/tools/bin/egret') + '\" create \"' + newPath + "\"", {
+        CHILD_EXEC.exec('node \"' + file.joinPath(egretPath, '/tools/bin/egret') + '\" create \"' + newPath + "\"" + extra_param, {
             encoding: 'utf8',
             timeout: 0,
             maxBuffer: 200 * 1024,
@@ -166,7 +173,7 @@ var UpgradeCommand_2_4_3 = (function () {
                         setTimeout(function () {
                             //写入html并打开网址
                             if (logger._htmlBody != '') {
-                                var saveLogFilePath = file.joinPath(projectPath, 'LOG_APITEST.html');
+                                var saveLogFilePath = file.joinPath(projectPath, logger.HTML_FILENAME);
                                 var saveContent = logger.htmlOut(
                                 //为模版html注入属性值
                                 {

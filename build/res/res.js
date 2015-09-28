@@ -26,8 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __define = this.__define || function (o, p, g, s) { 
-  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 var RES;
 (function (RES) {
     /**
@@ -184,13 +183,13 @@ var RES;
          * @language en_US
          * Binary file.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 二进制文件。
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         ResourceItem.TYPE_BIN = "bin";
         /**
@@ -1880,6 +1879,9 @@ var RES;
             sound.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadFinish, this);
             this.resItemDic[sound.$hashCode] = { item: resItem, func: callBack, thisObject: thisObject };
             sound.load(RES.$getVirtualUrl(resItem.url));
+            if (resItem.data) {
+                sound.type = resItem.data.soundType;
+            }
         };
         /**
          * 一项加载结束

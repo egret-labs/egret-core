@@ -9,7 +9,7 @@ var APItestCommand = (function () {
     function APItestCommand() {
         this.isAsync = true; //APITestTool是一个异步Action必须配置异步环境 很重要
     }
-    APItestCommand.prototype.execute = function () {
+    APItestCommand.prototype.execute = function (successCallBack) {
         var self = this;
         this.projectPath = egret.args.projectDir;
         new APITestTool().execute(this.projectPath, onAPICallBack);
@@ -44,7 +44,7 @@ var APItestCommand = (function () {
                                     'color_green': '',
                                     'color_normal': ''
                                 });
-                                var saveLogFilePath = file.joinPath(self.projectPath, 'LOG_APITEST.html');
+                                var saveLogFilePath = file.joinPath(self.projectPath, logger.HTML_FILENAME);
                                 self.saveFileAndOpen(saveLogFilePath, saveContent);
                                 globals.exit(1712, saveLogFilePath); //检测结果已写入
                             }
@@ -53,7 +53,11 @@ var APItestCommand = (function () {
                     });
                 }
                 else {
-                    globals.exit(1702);
+                    if (successCallBack && successCallBack()) {
+                    }
+                    else {
+                        globals.exit(1715); //项目检测成功
+                    }
                 }
             }
         }

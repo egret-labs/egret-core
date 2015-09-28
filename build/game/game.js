@@ -32,8 +32,7 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var __define = this.__define || function (o, p, g, s) { 
-  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 var egret;
 (function (egret) {
     /**
@@ -3487,13 +3486,13 @@ var egret;
          * @language en_US
          * Specify that downloaded data is received as raw binary data.
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         /**
          * @language zh_CN
          * 指定以原始二进制数据形式接收下载的数据。
          * @version Egret 2.4
-         * @platform Web,Native
+         * @platform Web
          */
         URLLoaderDataFormat.BINARY = "binary";
         /**

@@ -3540,7 +3540,7 @@ module ts {
                 }
                 if (!defineEmitted) {
                     writeLine();
-                    write('var __define = this.__define || function (o, p, g, s) { \n  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };');
+                    write('var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };');
                     defineEmitted = true;
                 }
                 if (isExternalModule(node)) {

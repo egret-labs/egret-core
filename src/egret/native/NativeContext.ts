@@ -41,6 +41,8 @@ declare module egret_native {
 
     function callRender():void;
 
+    function setFrameRate(frameRate:number):void;
+
     function onTouchesBegin(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
 
     function onTouchesMove(num:number, ids:Array<any>, xs_array:Array<any>, ys_array:Array<any>);
@@ -96,6 +98,12 @@ declare module egret_native {
         function preloadBackgroundMusic(path:string):void;
 
         function playBackgroundMusic(path:string, loop:boolean):void;
+
+        function setBackgroundMusicVolume(value:number):void;
+        function setEffectVolume(value:number):void;
+        function getBackgroundMusicVolume():number;
+        function getEffectVolume():number;
+
 
         function stopBackgroundMusic(isRelease:boolean):void;
 

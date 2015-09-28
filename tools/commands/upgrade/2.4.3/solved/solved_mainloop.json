@@ -30,6 +30,11 @@
     "solved":true
   },
   {
+    "desc":"class Logger{ static openLogByType(logType: string): void; }",
+    "solution-url":"logger",
+    "solved":true
+  },
+  {
     "desc":"class DisplayObject{ anchorX: number; }",
     "solution-url":"anchor",
     "solved":true
@@ -66,6 +71,16 @@
   },
   {
     "desc":"class Event{ static _dispatchByTarget(EventClass: any, target: IEventDispatcher, type: string, props?: Object, bubbles?: boolean, cancelable?: boolean): boolean; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ constructor(type: string, bubbles?: boolean, cancelable?: boolean, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean); }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ static dispatchTouchEvent(target: IEventDispatcher, type: string, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean): void; }",
     "solution-url":"events",
     "solved":true
   },
@@ -299,13 +314,8 @@
     "solved":true
   },
   {
-    "desc":"class Ticker{ run(): void; }",
-    "solution-url":"draw_md",
-    "solved":true
-  },
-  {
-    "desc":"class Ticker{ setTimeout(listener: Function, thisObject: any, delay: number, ...parameters: any[]): void; }",
-    "solution-url":"draw_md",
+    "desc":"class Ticker{ * }",
+    "solution-url":"ticker",
     "solved":true
   },
   {
@@ -360,22 +370,22 @@
   },
   {
     "desc":"class DeviceContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {
     "desc":"class MainContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {
     "desc":"class NetContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {
     "desc":"class TouchContext{ * }",
-    "solution-url":"draw_md",
+    "solution-url":"MainContext",
     "solved":true
   },
   {

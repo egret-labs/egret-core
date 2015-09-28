@@ -504,7 +504,7 @@ module dragonBones {
 				slot = this._generateSlot();
 				slot.initWithSlotData(slotData);
 				bone.addSlot(slot);
-				
+				displayList.length = 0;
 				var l:number = slotData.displayDataList.length;
 				while(l--){
 					var displayData:DisplayData = slotData.displayDataList[l];

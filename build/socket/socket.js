@@ -1,5 +1,4 @@
-var __define = this.__define || function (o, p, g, s) { 
-  Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
+var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.

@@ -22,7 +22,7 @@ var Clean = (function () {
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
         //修改 html 中 modules 块
-        CopyFiles.modifyHTMLWithModules();
+        //CopyFiles.modifyHTMLWithModules();
         //修改 html 中 game_list 块
         CompileTemplate.modifyIndexHTML(result.files);
         //根据 index.html 修改 native_require.js 文件

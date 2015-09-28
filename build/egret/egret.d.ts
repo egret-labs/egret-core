@@ -9186,6 +9186,7 @@ declare module egret_native {
     function startGame(): void;
     function loglevel(logType: any): void;
     function callRender(): void;
+    function setFrameRate(frameRate: number): void;
     function onTouchesBegin(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
     function onTouchesMove(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
     function onTouchesEnd(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
@@ -9217,6 +9218,10 @@ declare module egret_native {
     module Audio {
         function preloadBackgroundMusic(path: string): void;
         function playBackgroundMusic(path: string, loop: boolean): void;
+        function setBackgroundMusicVolume(value: number): void;
+        function setEffectVolume(value: number): void;
+        function getBackgroundMusicVolume(): number;
+        function getEffectVolume(): number;
         function stopBackgroundMusic(isRelease: boolean): void;
         function preloadEffect(path: string): void;
         function preloadEffectAsync(path: string, promise: egret.PromiseObject): void;
