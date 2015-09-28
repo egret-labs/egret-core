@@ -104,7 +104,7 @@ module egret.native {
                 download();
             }
             else {
-                $callAsync(onCanPlay, self);
+                $callAsync(onAudioLoaded, self);
             }
 
             function download() {
