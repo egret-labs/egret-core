@@ -71,7 +71,7 @@ var Build = (function () {
             FileUtil.exists(options.templateDir) == false) {
             utils.exit(10015, options.projectDir);
         }
-        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/egret/'))) {
+        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret'))) {
             CopyFiles.copyToLibs();
         }
         service.execCommand({
