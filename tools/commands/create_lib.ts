@@ -21,6 +21,7 @@ class CreateLib implements egret.Command {
         FileUtil.save(FileUtil.joinPath(option.projectDir, "package.json"), JSON.stringify(packageJson, null, "\t"));
         FileUtil.createDirectory(FileUtil.joinPath(option.projectDir, "src"));
         FileUtil.createDirectory(FileUtil.joinPath(option.projectDir, "bin"));
+        FileUtil.createDirectory(FileUtil.joinPath(option.projectDir, "libs"));
         return 0;
     }
 }
