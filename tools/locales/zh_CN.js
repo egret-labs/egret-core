@@ -175,6 +175,7 @@ var egret;
     locale_strings[1713] = "{color_green}Egret 新特性体验群 481169576 {color_normal}";
     locale_strings[1714] = "正在更新配置文件..";
     locale_strings[1715] = "项目检测成功";
+    locale_strings[1716] = "检测到你使用了旧的第三方库{0},建议手动检查这些库文件是否使用了废弃的API或使用与{1}兼容的第三方库";
     //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";
