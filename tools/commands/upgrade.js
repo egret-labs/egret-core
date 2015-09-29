@@ -58,7 +58,10 @@ var UpgradeCommand = (function () {
         async.eachSeries(this.upgradeConfigArr, function (info, callback) {
             function handleCallBack(err) {
                 if (!err) {
-                    //modify.save(v);
+                    if (globals.compressVersion("2.5.0", v) < 0) {
+                        //2.5.0及以上 拷贝升级 不存储版本号
+                        modify.save(v);
+                    }
                     callback();
                 }
                 else {

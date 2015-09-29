@@ -6,7 +6,6 @@ import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import Cordova = require('../actions/Cordova');
-import Native = require('../actions/NativeProject');
 import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
@@ -80,7 +79,7 @@ class Build implements egret.Command {
             FileUtil.exists(options.templateDir) == false) {
             utils.exit(10015, options.projectDir);
         }
-        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret'))) {
+        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
             CopyFiles.copyToLibs();
         }
 
@@ -160,7 +159,6 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
     }
 
 
-    Native.build();
 
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(() => callback(0), 500);

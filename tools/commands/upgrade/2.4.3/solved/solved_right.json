@@ -155,7 +155,7 @@
   {
     "desc":"class Sound{ static EFFECT: string; }",
     "solved":true
-  }
+  },
   {
     "desc":"class Sound{ type: string; }",
     "solved":true

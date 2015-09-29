@@ -5014,7 +5014,7 @@ declare module egret {
          */
         drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
         private $update(displayObject);
-        protected drawDisplayObject(displayObject: DisplayObject, context: sys.RenderContext): number;
+        protected drawDisplayObject(displayObject: DisplayObject, context: sys.RenderContext, rootMatrix?: Matrix): number;
         private drawWithClip(displayObject, context);
         private drawWithScrollRect(displayObject, context);
         private createRenderContext(width, height);
