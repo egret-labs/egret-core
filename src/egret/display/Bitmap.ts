@@ -540,7 +540,7 @@ module egret {
                     tempCanvas = egret.sys.surfaceFactory.create(true);
                     tempCanvas.width = textureWidth;
                     tempCanvas.height = textureHeight;
-                    tempCanvas.renderContext.drawImage(tempImage, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, clipX * $TextureScaleFactor, clipY * $TextureScaleFactor);
+                    tempCanvas.renderContext.drawImage(tempImage, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, clipWidth * $TextureScaleFactor, clipHeight * $TextureScaleFactor);
                     tempImage = tempCanvas;
                 }
 
