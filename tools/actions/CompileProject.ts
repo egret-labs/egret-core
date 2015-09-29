@@ -25,7 +25,10 @@ class CompileProject {
         var compileResult: tsclark.LarkCompileResult;
         if (files && this.recompile) {
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
+            var realCWD = process.cwd();
+            process.chdir(option.projectDir);
             compileResult = this.recompile(files);
+            process.chdir(realCWD);
         }
         else {
             var compiler = new Compiler();

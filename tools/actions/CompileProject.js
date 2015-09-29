@@ -19,7 +19,10 @@ var CompileProject = (function () {
         var compileResult;
         if (files && this.recompile) {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
+            var realCWD = process.cwd();
+            process.chdir(option.projectDir);
             compileResult = this.recompile(files);
+            process.chdir(realCWD);
         }
         else {
             var compiler = new Compiler();
@@ -57,5 +60,4 @@ function GetJavaScriptFileNames(tsFiles, root, prefix) {
     return files;
 }
 module.exports = CompileProject;
-
-//# sourceMappingURL=../actions/CompileProject.js.map
+//# sourceMappingURL=CompileProject.js.map

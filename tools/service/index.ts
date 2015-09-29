@@ -6,6 +6,7 @@ import ServiceSocket = require('./ServiceSocket');
 import file = require('../lib/FileUtil');
 import childProcess = require('child_process');
 import parser = require('../parser/Parser');
+import os = require("os");
 
 
 
@@ -14,6 +15,8 @@ export var LARK_SERVICE_PORT = 51545;
 var version = process.argv[2];
 var projects = {};
 var serviceCreated = false;
+var timer: NodeJS.Timer;
+var lastBuildTime: number = Date.now();
 
 
 
@@ -53,13 +56,13 @@ function handleCommands(task: egret.ServiceCommand, res: ServiceSocket) {
         res.send({});
         shutdown();
     }
-
     var proj: Project = getProject(task.path);
     proj.option = parser.parseJSON(task.option);
     if (task.command == 'init') {
         proj.buildPort = res;
     }
     else if (task.command == 'build') {
+        autoExitTimer();
         var buildHandled = false;
         if (task.option.added && task.option.added.length) {
             task.option.added.forEach(file=> proj.fileChanged(res, task, file, "added"));
@@ -128,10 +131,21 @@ function getProject(path: string) {
 }
 
 
+function autoExitTimer() {
+    lastBuildTime = Date.now();
+    if (timer) {
+        clearTimeout(timer);
+    }
+
+    timer = <any>setTimeout(shutdown, 10 * 60 * 1000);
+}
+
+
 
 
 function startBackgroundService() {
     serviceCreated = true;
+    var cwd = os.tmpdir();
     var options = egret.args;
     var nodePath = process.execPath,
         service = file.joinPath(egret.root, 'tools/bin/egret');
@@ -139,7 +153,7 @@ function startBackgroundService() {
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,
         stdio: ['ignore', 'ignore', 'ignore'],
-        cwd: process.cwd(),
+        cwd: cwd,
         silent: true
     });
 

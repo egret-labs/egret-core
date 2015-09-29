@@ -13,7 +13,7 @@ export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
 }
 
 export function build(): egret.TaskResult {
-    var exmls = file.search(egret.args.srcDir, 'exml');
+    var exmls = file.search(egret.args.projectDir, 'exml');
     return buildChanges(exmls);
 }
 
@@ -26,12 +26,6 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
 
     if (!exmls || exmls.length == 0)
         return state;
-
-    exmls.forEach(exml=> {
-        var pathToSrc = exml.substring(egret.args.srcDir.length);
-        var target = file.joinPath(egret.args.outDir, pathToSrc);
-        file.copy(exml, target);
-    });
 
     return state;
 }
@@ -48,12 +42,12 @@ export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
 
 function getSortedEXML(): exml.EXMLFile[] {
 
-    var files = file.search(egret.args.srcDir, "exml");
+    var files = file.search(egret.args.projectDir, "exml");
     var exmls: exml.EXMLFile[] = files.map(path=> ({
         path: path,
         content: file.read(path)
     }));
-    exmls.forEach(it=> it.path = file.getRelativePath(egret.args.srcDir, it.path));
+    exmls.forEach(it=> it.path = file.getRelativePath(egret.args.projectDir, it.path));
     exmls = exml.sort(exmls);
     return exmls;
 }
@@ -70,7 +64,7 @@ export function updateSetting(merge = false) {
 
     themeDatas = themes.map(t=> {
         try {
-            var data = JSON.parse(file.read(file.joinPath(egret.args.srcDir, t)));
+            var data = JSON.parse(file.read(file.joinPath(egret.args.projectDir, t)));
             return data || {};
         }
         catch (e) {
@@ -121,8 +115,8 @@ export function updateSetting(merge = false) {
     themes.forEach((thm, i) => {
         if (themeDatas[i].autoGenerateExmlsList == false)
             return;
-        var path = file.joinPath(egret.args.outDir, thm);
-        delete themeDatas[i].autoGenerateExmlsList;
+        var path = file.joinPath(egret.args.projectDir, thm);
+        themeDatas[i].autoGenerateExmlsList;
         var thmData = JSON.stringify(themeDatas[i], null, "  ");
         file.save(path, thmData);
     });
@@ -130,8 +124,8 @@ export function updateSetting(merge = false) {
 }
 
 function searchTheme(): string[] {
-    var files = file.searchByFunction(egret.args.srcDir, f=> f.indexOf('.thm.json') > 0);
-    files = files.map(it=> file.getRelativePath(egret.args.srcDir, it));
+    var files = file.searchByFunction(egret.args.projectDir, f=> f.indexOf('.thm.json') > 0);
+    files = files.map(it=> file.getRelativePath(egret.args.projectDir, it));
     console.log(files);
     return files;
 }

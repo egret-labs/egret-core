@@ -8,7 +8,7 @@ function beforeBuildChanges(exmlsChanged) {
 }
 exports.beforeBuildChanges = beforeBuildChanges;
 function build() {
-    var exmls = file.search(egret.args.srcDir, 'exml');
+    var exmls = file.search(egret.args.projectDir, 'exml');
     return buildChanges(exmls);
 }
 exports.build = build;
@@ -19,11 +19,6 @@ function buildChanges(exmls) {
     };
     if (!exmls || exmls.length == 0)
         return state;
-    exmls.forEach(function (exml) {
-        var pathToSrc = exml.substring(egret.args.srcDir.length);
-        var target = file.joinPath(egret.args.outDir, pathToSrc);
-        file.copy(exml, target);
-    });
     return state;
 }
 exports.buildChanges = buildChanges;
@@ -36,12 +31,12 @@ function afterBuildChanges(exmlsChanged) {
 }
 exports.afterBuildChanges = afterBuildChanges;
 function getSortedEXML() {
-    var files = file.search(egret.args.srcDir, "exml");
+    var files = file.search(egret.args.projectDir, "exml");
     var exmls = files.map(function (path) { return ({
         path: path,
         content: file.read(path)
     }); });
-    exmls.forEach(function (it) { return it.path = file.getRelativePath(egret.args.srcDir, it.path); });
+    exmls.forEach(function (it) { return it.path = file.getRelativePath(egret.args.projectDir, it.path); });
     exmls = exml.sort(exmls);
     return exmls;
 }
@@ -54,7 +49,7 @@ function updateSetting(merge) {
     }
     themeDatas = themes.map(function (t) {
         try {
-            var data = JSON.parse(file.read(file.joinPath(egret.args.srcDir, t)));
+            var data = JSON.parse(file.read(file.joinPath(egret.args.projectDir, t)));
             return data || {};
         }
         catch (e) {
@@ -96,21 +91,20 @@ function updateSetting(merge) {
     themes.forEach(function (thm, i) {
         if (themeDatas[i].autoGenerateExmlsList == false)
             return;
-        var path = file.joinPath(egret.args.outDir, thm);
-        delete themeDatas[i].autoGenerateExmlsList;
+        var path = file.joinPath(egret.args.projectDir, thm);
+        themeDatas[i].autoGenerateExmlsList;
         var thmData = JSON.stringify(themeDatas[i], null, "  ");
         file.save(path, thmData);
     });
 }
 exports.updateSetting = updateSetting;
 function searchTheme() {
-    var files = file.searchByFunction(egret.args.srcDir, function (f) { return f.indexOf('.thm.json') > 0; });
-    files = files.map(function (it) { return file.getRelativePath(egret.args.srcDir, it); });
+    var files = file.searchByFunction(egret.args.projectDir, function (f) { return f.indexOf('.thm.json') > 0; });
+    files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
     console.log(files);
     return files;
 }
 function sort(exmls) {
     var preload = exmls.filter(function (e) { return e.preload; });
 }
-
-//# sourceMappingURL=../actions/exml.eui.js.map
+//# sourceMappingURL=exml.eui.js.map
