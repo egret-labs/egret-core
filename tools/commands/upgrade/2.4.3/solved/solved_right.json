@@ -159,5 +159,9 @@
   {
     "desc":"class Sound{ type: string; }",
     "solved":true
+  },
+  {
+    "desc": "class XML{ static parse(value: string): any; }",
+    "solved":true
   }
 ]

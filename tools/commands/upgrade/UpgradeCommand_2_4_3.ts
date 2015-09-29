@@ -63,7 +63,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             }
         }
 
-        var nodePath = process.execPath;
+        var nodePath = globals.addQuotes(process.execPath);
         //var exposeGCCommand = '--expose-gc';
         var egretCommand = globals.addQuotes(file.joinPath(egretPath,'/tools/bin/egret'));
         var embraceNewPath = globals.addQuotes(newPath);
