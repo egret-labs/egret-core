@@ -126,7 +126,6 @@ export function updateSetting(merge = false) {
 function searchTheme(): string[] {
     var files = file.searchByFunction(egret.args.projectDir, f=> f.indexOf('.thm.json') > 0);
     files = files.map(it=> file.getRelativePath(egret.args.projectDir, it));
-    console.log(files);
     return files;
 }
 

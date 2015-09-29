@@ -101,7 +101,6 @@ exports.updateSetting = updateSetting;
 function searchTheme() {
     var files = file.searchByFunction(egret.args.projectDir, function (f) { return f.indexOf('.thm.json') > 0; });
     files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
-    console.log(files);
     return files;
 }
 function sort(exmls) {
