@@ -132,10 +132,16 @@ function getProject(path: string) {
 
 function startBackgroundService() {
     serviceCreated = true;
-    var options = egret.args;
+    var option = egret.args;
     var nodePath = process.execPath,
         service = file.joinPath(egret.root, 'tools/bin/egret');
-    var startupParams = ['--expose-gc', service, 'service'];
+    var startupParams = [
+        '--expose-gc',
+        service,
+        'service'];
+    if(option.runtime){
+        startupParams.push("--runtime",option.runtime);
+    }
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,
         stdio: ['ignore', 'ignore', 'ignore'],
