@@ -4,6 +4,7 @@ var service = require('../service/index');
 var CopyFiles = require('../actions/CopyFiles');
 var CompileProject = require('../actions/CompileProject');
 var CompileTemplate = require('../actions/CompileTemplate');
+var NativeProject = require('../actions/NativeProject');
 var Clean = (function () {
     function Clean() {
     }
@@ -25,8 +26,8 @@ var Clean = (function () {
         //CopyFiles.modifyHTMLWithModules();
         //修改 html 中 game_list 块
         CompileTemplate.modifyIndexHTML(result.files);
-        //根据 index.html 修改 native_require.js 文件
-        CompileTemplate.modifyNativeRequire();
+        //根据 index.html 修改 native_require.js 文件，并看情况刷新 native 工程
+        NativeProject.build();
         //Wait for 'shutdown' command, node will exit when there are no tasks.
         return DontExitCode;
     };

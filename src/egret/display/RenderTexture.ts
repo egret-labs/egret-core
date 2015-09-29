@@ -130,7 +130,7 @@ module egret {
             }
         }
 
-        protected drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext):number {
+        protected drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix?:Matrix):number {
             var drawCalls = 0;
             var node:sys.Renderable;
             var globalAlpha:number;
@@ -142,8 +142,15 @@ module egret {
                 drawCalls++;
                 context.globalAlpha = globalAlpha;
                 var m = node.$renderMatrix;
-                context.setTransform(m.a, m.b, m.c, m.d, m.tx - this._offsetX, m.ty - this._offsetY);
-                node.$render(context);
+                if (rootMatrix) {
+                    context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    node.$render(context);
+                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                }
+                else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    node.$render(context);
+                }
             }
             var children = displayObject.$children;
             if (children) {
@@ -228,7 +235,7 @@ module egret {
             }
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
             var rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-            drawCalls += this.drawDisplayObject(displayObject, displayContext);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, rootM);
             Matrix.release(rootM);
             //绘制遮罩
             if (mask) {

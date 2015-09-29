@@ -7,11 +7,11 @@ var copyNative = require("../actions/CopyNativeFiles");
 var NativeProject = (function () {
     function NativeProject() {
     }
-    NativeProject.build = function (platform) {
-        console.log("----native build-----");
+    NativeProject.build = function () {
         CompileTemplate.modifyNativeRequire();
         //拷贝项目到native工程中
         if (egret.args.runtime == "native") {
+            console.log("----native build-----");
             copyNative.refreshNative(true);
         }
     };

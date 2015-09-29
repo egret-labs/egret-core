@@ -1565,7 +1565,7 @@ var RES;
                 res = this.fileDic[prefix];
                 if (res) {
                     var tail = RES.AnalyzerBase.getStringTail(name);
-                    res = res[tail];
+                    res = res.getTexture(tail);
                 }
             }
             return res;

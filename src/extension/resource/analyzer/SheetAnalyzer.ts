@@ -51,7 +51,7 @@ module RES {
                 res = this.fileDic[prefix];
                 if (res) {
                     var tail:string = RES.AnalyzerBase.getStringTail(name);
-                    res = res[tail];
+                    res = (<egret.SpriteSheet> res).getTexture(tail);
                 }
             }
             return res;

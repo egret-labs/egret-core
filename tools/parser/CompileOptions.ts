@@ -96,7 +96,7 @@ class CompileOptions implements egret.ToolArgs {
 
     getStartURL(host: string) {
 
-        var url = "http://" + host + ':' + this.port + '/bin-debug/index.html';
+        var url = "http://" + host + ':' + this.port + '/index.html';
         return url;
     }
 
