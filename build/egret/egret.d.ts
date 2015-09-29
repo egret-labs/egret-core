@@ -53,6 +53,8 @@ declare module egret {
      */
     function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void;
 }
+declare function __extends(d: any, b: any): void;
+declare var __define: any;
 declare module egret {
     /**
      * @language en_US
@@ -14204,7 +14206,6 @@ declare module egret {
      */
     function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
 }
-declare function __extends(d: any, b: any): void;
 declare module egret {
     /**
      * @language en_US
