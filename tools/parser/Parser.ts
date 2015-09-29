@@ -254,6 +254,7 @@ export function parseJSON(json: egret.ToolArgs): egret.ToolArgs {
     options.added = json.added;
     options.modified = json.modified;
     options.removed = json.removed;
+    options.runtime = json.runtime;
 
     return options;
 }

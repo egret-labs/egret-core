@@ -222,6 +222,7 @@ function parseJSON(json) {
     options.added = json.added;
     options.modified = json.modified;
     options.removed = json.removed;
+    options.runtime = json.runtime;
     return options;
 }
 exports.parseJSON = parseJSON;

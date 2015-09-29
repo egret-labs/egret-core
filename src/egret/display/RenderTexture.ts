@@ -75,9 +75,8 @@ module egret {
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
             scale /= $TextureScaleFactor;
-            var originParent = displayObject.$parent;
             var c1 = new egret.DisplayObjectContainer();
-            c1.addChild(displayObject);
+            c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
 
             if (clipBounds) {
@@ -109,9 +108,6 @@ module egret {
             this._setBitmapData(this.context.surface);
             this._offsetX = bounds.x * scale;
             this._offsetY = bounds.y * scale;
-            if (originParent) {
-                originParent.addChild(displayObject);
-            }
             return true;
         }
 

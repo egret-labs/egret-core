@@ -9096,12 +9096,14 @@ declare module egret {
         /**
          * @language en_US
          * Should play the video in fullscreen mode (default = true).
+         * Some browsers only support full-screen, such as ios.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否全屏播放这个视频（默认值是 true）。
+         * 一些浏览器只支持全屏，比如 ios。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -11447,101 +11449,6 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    class InputController extends HashObject {
-        /**
-         * @private
-         */
-        private stageText;
-        /**
-         * @private
-         */
-        private _text;
-        /**
-         * @private
-         */
-        private _isFocus;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         *
-         * @param text
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        init(text: TextField): void;
-        /**
-         * @private
-         *
-         */
-        _addStageText(): void;
-        /**
-         * @private
-         *
-         */
-        _removeStageText(): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        _getText(): string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setText(value: string): void;
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private focusHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private blurHandler(event);
-        private onMouseDownHandler(event);
-        private onStageDownHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private updateTextHandler(event);
-        /**
-         * @private
-         *
-         */
-        private resetText();
-        /**
-         * @private
-         *
-         */
-        _hideInput(): void;
-        /**
-         * @private
-         *
-         */
-        private updateInput();
-        /**
-         * @private
-         *
-         */
-        _updateProperties(): void;
-    }
-}
-declare module egret {
-    /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
     interface IHitTextElement {
         /**
          * @version Egret 2.4
@@ -11789,6 +11696,101 @@ declare module egret {
          * @platform Web,Native
          */
         elements: Array<IWTextElement>;
+    }
+}
+declare module egret {
+    /**
+     * @private
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class InputController extends HashObject {
+        /**
+         * @private
+         */
+        private stageText;
+        /**
+         * @private
+         */
+        private _text;
+        /**
+         * @private
+         */
+        private _isFocus;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor();
+        /**
+         *
+         * @param text
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        init(text: TextField): void;
+        /**
+         * @private
+         *
+         */
+        _addStageText(): void;
+        /**
+         * @private
+         *
+         */
+        _removeStageText(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _getText(): string;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        _setText(value: string): void;
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private focusHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private blurHandler(event);
+        private onMouseDownHandler(event);
+        private onStageDownHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private updateTextHandler(event);
+        /**
+         * @private
+         *
+         */
+        private resetText();
+        /**
+         * @private
+         *
+         */
+        _hideInput(): void;
+        /**
+         * @private
+         *
+         */
+        private updateInput();
+        /**
+         * @private
+         *
+         */
+        _updateProperties(): void;
     }
 }
 declare module egret {
@@ -13589,291 +13591,6 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @private
-     */
-    var $callLaterFunctionList: Array<any>;
-    /**
-     * @private
-     */
-    var $callLaterThisList: Array<any>;
-    /**
-     * @private
-     */
-    var $callLaterArgsList: Array<any>;
-    /**
-     * @language en_US
-     * Delay the function to run unless screen is redrawn.
-     * @param method {Function} The function to be delayed to run
-     * @param thisObject {any} this reference of callback function
-     * @param ...args {any} Function parameter list
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
-     */
-    /**
-     * @language zh_CN
-     * 延迟函数到屏幕重绘前执行。
-     * @param method {Function} 要延迟执行的函数
-     * @param thisObject {any} 回调函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/callLater.ts
-     */
-    function callLater(method: Function, thisObject: any, ...args: any[]): void;
-    /**
-     * @private
-     */
-    var $callAsyncFunctionList: Array<any>;
-    /**
-     * @private
-     */
-    var $callAsyncThisList: Array<any>;
-    /**
-     * @private
-     */
-    var $callAsyncArgsList: Array<any>;
-    /**
-     * 异步调用函数
-     * @param method {Function} 要异步调用的函数
-     * @param thisObject {any} 函数的this引用
-     * @param ...args {any} 函数参数列表
-     * @private
-     */
-    function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
-}
-declare function __extends(d: any, b: any): void;
-declare module egret {
-    /**
-     * @language en_US
-     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
-     * @param currentClass The current class class name, non-string
-     * @param thisObj The current object. Always this
-     * @param type Setter property names need to call
-     * @param values Value passed to the parent class
-     *
-     * @exmaple egret.superSetter(this, "alpha", 1);
-     */
-    /**
-     * @language zh_CN
-     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
-     * @param thisObj 当前对象。永远都this
-     * @param currentClass 当前 class 类名，非字符串
-     * @param type 需要调用的setter属性名称
-     * @param values 传给父类的值
-     *
-     * @exmaple egret.superSetter(this, "alpha", 1);
-     */
-    function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
-    /**
-     * @language en_US
-     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
-     * @param currentClass The current class class name, non-string
-     * @param thisObj The current object. Always this
-     * @param type Setter property names need to call
-     * @returns {any} The value returned by the parent
-     *
-     * @exmaple egret.superGetter(this, "alpha");
-     */
-    /**
-     * @language zh_CN
-     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
-     * @param thisObj 当前对象。永远都this
-     * @param currentClass 当前 class 类名，非字符串
-     * @param type 需要调用的setter属性名称
-     * @returns {any} 父类返回的值
-     *
-     * @exmaple egret.superGetter(this, "alpha");
-     */
-    function superGetter(currentClass: any, thisObj: any, type: string): any;
-}
-declare module egret {
-    /**
-     * @language en_US
-     * Returns a reference to the class object of the class specified by the name parameter.
-     * @param name The name of a class.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
-     */
-    /**
-     * @language zh_CN
-     * 返回 name 参数指定的类的类对象引用。
-     * @param name 类的名称。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getDefinitionByName.ts
-     */
-    function getDefinitionByName(name: string): any;
-}
-declare var __global: any;
-declare module egret {
-    /**
-     * @language en_US
-     * Get browser or Runtime parameters, returns an empty string if not set
-     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
-     * @method egret.getOption
-     * @param key {string} Parameters key
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
-     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
-     * @method egret.getOption
-     * @param key {string} 参数key
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    var getOption: (key: string) => string;
-}
-declare module egret {
-    /**
-     * @language en_US
-     * Return the fully qualified class name of an object
-     * @param value The object for which a fully qualified class name is desired. Any JavaScript value may be passed to
-     * this method including all available JavaScript types, object instances, primitive types such as number, and class objects.
-     * @returns A string containing the fully qualified class name.
-     * @example
-     * <pre>
-     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedClassName.ts
-     */
-    /**
-     * @language zh_CN
-     * 返回对象的完全限定类名。
-     * @param value 需要完全限定类名称的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型
-     * （如number)和类对象
-     * @returns 包含完全限定类名称的字符串。
-     * @example
-     * <pre>
-     *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedClassName.ts
-     */
-    function getQualifiedClassName(value: any): string;
-}
-declare module egret {
-    /** @language en_US
-     * Returns the fully qualified class name of the base class of the object specified by the value parameter.
-     * @param value The object for which a parent class is desired. Any JavaScript value may be passed to this method including
-     * all available JavaScript types, object instances, primitive types such as number, and class objects.
-     * @returns  A fully qualified base class name, or null if none exists.
-     * @example
-     * <pre>
-     *  egret.getQualifiedSuperclassName(egret.Bitmap) //return "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedSuperclassName.ts
-     */
-    /**
-     * @language zh_CN
-     * 返回 value 参数指定的对象的基类的完全限定类名。
-     * @param value 需要取得父类的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型（如number）和类对象
-     * @returns 完全限定的基类名称，或 null（如果不存在基类名称）。
-     * @example
-     * <pre>
-     *  egret.getQualifiedSuperclassName(egret.Sprite) //返回 "egret.DisplayObject"
-     * </pre>
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getQualifiedSuperclassName.ts
-     */
-    function getQualifiedSuperclassName(value: any): string;
-}
-declare module egret {
-    /**
-     * @language en_US
-     * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
-     * @returns The number of milliseconds since the Egret framework was initialized
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getTimer.ts
-     */
-    /**
-     * @language zh_CN
-     * 用于计算相对时间。此方法返回自启动 Egret 框架以来经过的毫秒数。
-     * @returns 启动 Egret 框架以来经过的毫秒数。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/getTimer.ts
-     */
-    function getTimer(): number;
-}
-declare module egret {
-    /**
-     * @language en_US
-     * Check whether a public definition exists in the specified application domain. The definition can be that of a class, a naming space or a function.
-     * @param name {string} Name of the definition.
-     * @returns {boolean} Whether the public definition exists
-     * @example
-     * egret.hasDefinition("egret.DisplayObject") //return true
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/hasDefinition.ts
-     */
-    /**
-     * @language zh_CN
-     * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
-     * @param name {string} 定义的名称。
-     * @returns {boolean} 公共定义是否存在
-     * @example
-     * egret.hasDefinition("egret.DisplayObject") //返回 true
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/hasDefinition.ts
-     */
-    function hasDefinition(name: string): boolean;
-}
-declare module egret {
-    /**
-     * @language en_US
-     * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance
-     * compared width the instanceOf operator,and it can indicate whether an object is a instance of the specific interface.
-     * @param instance the instance to be checked.
-     * @param typeName the string value representing a specific class or interface.
-     * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
-     * @example
-     * <pre>
-     *     var instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
-     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
-     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
-     * </pre>
-     * @see egret.registerClass()
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 检查指定对象是否为 Egret 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
-     * @param instance 要判断的实例。
-     * @param typeName 类或接口的完全名称.
-     * @returns 返回true表示当前对象是指定类或接口的实例。
-     * @example
-     * <pre>
-     *     var instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
-     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
-     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
-     * </pre>
-     * @see egret.registerClass()
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    function is(instance: any, typeName: string): boolean;
-}
-declare module egret {
-    /**
      * @language en_US
      * Logger is an entrance for the log processing module of the engine
      * @version Egret 2.4
@@ -14078,51 +13795,6 @@ declare var DEG_TO_RAD: number;
 declare module egret {
     /**
      * @language en_US
-     * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
-     * Note: After the registration,it will notify the callback method continuously,you can call the stopTick () method to stop it.
-     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
-     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
-     * to render after processing of this method completes.
-     * @param thisObject the call back method's "this"
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 注册并启动一个计时器，通常会以60FPS的速率触发回调方法，并传入当前时间戳。注意：注册后将会持续触发回调方法，若要停止回调，需要手动调用stopTick()方法。
-     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
-     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
-     * @param thisObject 回调方法的this对象引用。
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    function startTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
-}
-declare module egret {
-    /**
-     * @language en_US
-     * Stops the timer started by the egret.startTick() method.
-     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
-     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
-     * to render after processing of this method completes.
-     * @param thisObject the call back method's "this"
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 停止之前用 startTick() 方法启动的计时器。
-     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
-     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
-     * @param thisObject 回调方法的this对象引用。
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    function stopTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
-}
-declare module egret {
-    /**
-     * @language en_US
      * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
      * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
      * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
@@ -14288,27 +13960,6 @@ declare module egret {
          */
         $update(timeStamp: number): boolean;
     }
-}
-declare module egret {
-    /**
-     * @language en_US
-     * Transfer number to color character string
-     * @param value {number} color value ,such as 0xffffff
-     * @returns {string} Color character string, for example, #ffffff.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/toColorString.ts
-     */
-    /**
-     * @language zh_CN
-     * 转换数字为颜色字符串
-     * @param value {number} 颜色值，例如 0xffffff
-     * @returns {string} 颜色字符串，例如"#ffffff"。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/toColorString.ts
-     */
-    function toColorString(value: number): string;
 }
 declare module egret {
     /**
@@ -14497,4 +14148,355 @@ declare module egret {
          */
         parse(text: string): XML;
     };
+}
+declare module egret {
+    /**
+     * @private
+     */
+    var $callLaterFunctionList: Array<any>;
+    /**
+     * @private
+     */
+    var $callLaterThisList: Array<any>;
+    /**
+     * @private
+     */
+    var $callLaterArgsList: Array<any>;
+    /**
+     * @language en_US
+     * Delay the function to run unless screen is redrawn.
+     * @param method {Function} The function to be delayed to run
+     * @param thisObject {any} this reference of callback function
+     * @param ...args {any} Function parameter list
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     */
+    /**
+     * @language zh_CN
+     * 延迟函数到屏幕重绘前执行。
+     * @param method {Function} 要延迟执行的函数
+     * @param thisObject {any} 回调函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/callLater.ts
+     */
+    function callLater(method: Function, thisObject: any, ...args: any[]): void;
+    /**
+     * @private
+     */
+    var $callAsyncFunctionList: Array<any>;
+    /**
+     * @private
+     */
+    var $callAsyncThisList: Array<any>;
+    /**
+     * @private
+     */
+    var $callAsyncArgsList: Array<any>;
+    /**
+     * 异步调用函数
+     * @param method {Function} 要异步调用的函数
+     * @param thisObject {any} 函数的this引用
+     * @param ...args {any} 函数参数列表
+     * @private
+     */
+    function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
+}
+declare function __extends(d: any, b: any): void;
+declare module egret {
+    /**
+     * @language en_US
+     * Call setter properties of the parent class, instead of the other writing languages, such as super.alpha = 1;
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
+     * @param values Value passed to the parent class
+     *
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     */
+    /**
+     * @language zh_CN
+     * 调用父类的setter属性，代替其他语言的写法，如 super.alpha = 1;
+     * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
+     * @param type 需要调用的setter属性名称
+     * @param values 传给父类的值
+     *
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
+     */
+    function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
+    /**
+     * @language en_US
+     * Get getter property value of the parent class. Instead of writing in other languages, such as super.alpha;
+     * @param currentClass The current class class name, non-string
+     * @param thisObj The current object. Always this
+     * @param type Setter property names need to call
+     * @returns {any} The value returned by the parent
+     *
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     */
+    /**
+     * @language zh_CN
+     * 获取父类的getter属性值。代替其他语言的写法，如 super.alpha;
+     * @param thisObj 当前对象。永远都this
+     * @param currentClass 当前 class 类名，非字符串
+     * @param type 需要调用的setter属性名称
+     * @returns {any} 父类返回的值
+     *
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
+     */
+    function superGetter(currentClass: any, thisObj: any, type: string): any;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Returns a reference to the class object of the class specified by the name parameter.
+     * @param name The name of a class.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     */
+    /**
+     * @language zh_CN
+     * 返回 name 参数指定的类的类对象引用。
+     * @param name 类的名称。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getDefinitionByName.ts
+     */
+    function getDefinitionByName(name: string): any;
+}
+declare var __global: any;
+declare module egret {
+    /**
+     * @language en_US
+     * Get browser or Runtime parameters, returns an empty string if not set
+     * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
+     * @method egret.getOption
+     * @param key {string} Parameters key
+     * @private
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 获取浏览器或者Runtime参数，如果没有设置返回空字符串
+     * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
+     * @method egret.getOption
+     * @param key {string} 参数key
+     * @private
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    var getOption: (key: string) => string;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Return the fully qualified class name of an object
+     * @param value The object for which a fully qualified class name is desired. Any JavaScript value may be passed to
+     * this method including all available JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns A string containing the fully qualified class name.
+     * @example
+     * <pre>
+     *  egret.getQualifiedClassName(egret.DisplayObject) //return "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
+     */
+    /**
+     * @language zh_CN
+     * 返回对象的完全限定类名。
+     * @param value 需要完全限定类名称的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型
+     * （如number)和类对象
+     * @returns 包含完全限定类名称的字符串。
+     * @example
+     * <pre>
+     *  egret.getQualifiedClassName(egret.DisplayObject) //返回 "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedClassName.ts
+     */
+    function getQualifiedClassName(value: any): string;
+}
+declare module egret {
+    /** @language en_US
+     * Returns the fully qualified class name of the base class of the object specified by the value parameter.
+     * @param value The object for which a parent class is desired. Any JavaScript value may be passed to this method including
+     * all available JavaScript types, object instances, primitive types such as number, and class objects.
+     * @returns  A fully qualified base class name, or null if none exists.
+     * @example
+     * <pre>
+     *  egret.getQualifiedSuperclassName(egret.Bitmap) //return "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
+     */
+    /**
+     * @language zh_CN
+     * 返回 value 参数指定的对象的基类的完全限定类名。
+     * @param value 需要取得父类的对象，可以将任何 JavaScript 值传递给此方法，包括所有可用的 JavaScript 类型、对象实例、原始类型（如number）和类对象
+     * @returns 完全限定的基类名称，或 null（如果不存在基类名称）。
+     * @example
+     * <pre>
+     *  egret.getQualifiedSuperclassName(egret.Sprite) //返回 "egret.DisplayObject"
+     * </pre>
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getQualifiedSuperclassName.ts
+     */
+    function getQualifiedSuperclassName(value: any): string;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Used to compute relative time.this method returns the number of milliseconds since the Egret framework was initialized
+     * @returns The number of milliseconds since the Egret framework was initialized
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
+     */
+    /**
+     * @language zh_CN
+     * 用于计算相对时间。此方法返回自启动 Egret 框架以来经过的毫秒数。
+     * @returns 启动 Egret 框架以来经过的毫秒数。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/getTimer.ts
+     */
+    function getTimer(): number;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Check whether a public definition exists in the specified application domain. The definition can be that of a class, a naming space or a function.
+     * @param name {string} Name of the definition.
+     * @returns {boolean} Whether the public definition exists
+     * @example
+     * egret.hasDefinition("egret.DisplayObject") //return true
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/hasDefinition.ts
+     */
+    /**
+     * @language zh_CN
+     * 检查指定的应用程序域之内是否存在一个公共定义。该定义可以是一个类、一个命名空间或一个函数的定义。
+     * @param name {string} 定义的名称。
+     * @returns {boolean} 公共定义是否存在
+     * @example
+     * egret.hasDefinition("egret.DisplayObject") //返回 true
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/hasDefinition.ts
+     */
+    function hasDefinition(name: string): boolean;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Indicates whether an object is a instance of the class or interface specified as the parameter.This method has better performance
+     * compared width the instanceOf operator,and it can indicate whether an object is a instance of the specific interface.
+     * @param instance the instance to be checked.
+     * @param typeName the string value representing a specific class or interface.
+     * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
+     * @example
+     * <pre>
+     *     var instance = new egret.Sprite();
+     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
+     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
+     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
+     * </pre>
+     * @see egret.registerClass()
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 检查指定对象是否为 Egret 框架内指定接口或类或其子类的实例。此方法与使用 instanceOf 关键字相比具有更高的性能，并且能判断接口的实现。
+     * @param instance 要判断的实例。
+     * @param typeName 类或接口的完全名称.
+     * @returns 返回true表示当前对象是指定类或接口的实例。
+     * @example
+     * <pre>
+     *     var instance = new egret.Sprite();
+     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
+     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
+     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
+     * </pre>
+     * @see egret.registerClass()
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    function is(instance: any, typeName: string): boolean;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
+     * Note: After the registration,it will notify the callback method continuously,you can call the stopTick () method to stop it.
+     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
+     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
+     * to render after processing of this method completes.
+     * @param thisObject the call back method's "this"
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 注册并启动一个计时器，通常会以60FPS的速率触发回调方法，并传入当前时间戳。注意：注册后将会持续触发回调方法，若要停止回调，需要手动调用stopTick()方法。
+     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
+     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
+     * @param thisObject 回调方法的this对象引用。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    function startTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Stops the timer started by the egret.startTick() method.
+     * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
+     * since the Egret framework was initialized. If the return value of this method is true, it will force Egret runtime
+     * to render after processing of this method completes.
+     * @param thisObject the call back method's "this"
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 停止之前用 startTick() 方法启动的计时器。
+     * @param callBack 要执行的回调方法。参数 timeStamp 表示从启动Egret框架开始经过的时间(毫秒)。
+     * 若回调方法返回值为true，其作用与TimerEvent.updateAfterEvent()类似，将会忽略帧频限制，在此方法处理完成后立即重绘屏幕。
+     * @param thisObject 回调方法的this对象引用。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    function stopTick(callBack: (timeStamp: number) => boolean, thisObject: any): void;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * Transfer number to color character string
+     * @param value {number} color value ,such as 0xffffff
+     * @returns {string} Color character string, for example, #ffffff.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/toColorString.ts
+     */
+    /**
+     * @language zh_CN
+     * 转换数字为颜色字符串
+     * @param value {number} 颜色值，例如 0xffffff
+     * @returns {string} 颜色字符串，例如"#ffffff"。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/toColorString.ts
+     */
+    function toColorString(value: number): string;
 }

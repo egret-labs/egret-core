@@ -141,12 +141,14 @@ module egret {
         /**
          * @language en_US
          * Should play the video in fullscreen mode (default = true).
+         * Some browsers only support full-screen, such as ios.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否全屏播放这个视频（默认值是 true）。
+         * 一些浏览器只支持全屏，比如 ios。
          * @version Egret 2.4
          * @platform Web,Native
          */

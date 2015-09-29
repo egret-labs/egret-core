@@ -95,25 +95,25 @@ module egret.web {
             var video = document.createElement("video");
             video.controls = null;
             video.src = url;//
-            //video["autoplay"] = "autoplay";
             video.setAttribute("autoplay","autoplay");
             video.setAttribute("webkit-playsinline", "true");
             video.addEventListener("canplay", this.onVideoLoaded);
-            setTimeout(this.onVideoLoaded.bind(this),this,100);
+            //setTimeout(this.onVideoLoaded.bind(this),this,100);
             video.addEventListener("error", () => this.onVideoError());
             video.addEventListener("ended", () => this.onVideoEnded());
             video.load();
             video.play();
             video.style.position = "absolute";
             video.style.top = "0px";
-            video.style.zIndex = "-88888"
+            video.style.zIndex = "-88888";
             video.style.left = "0px";
             video.height = 1;
             video.width = 1;
-            document.body.appendChild(video);
             window.setTimeout(() => video.pause(), 16);
             this.video = video;
         }
+
+        private isPlayed:boolean = false;
 
         /**
          * @inheritDoc
@@ -124,6 +124,8 @@ module egret.web {
                 this.once(egret.Event.COMPLETE, e=> this.play(startTime, loop), this);
                 return;
             }
+
+            this.isPlayed = true;
 
             var video = this.video;
             if (startTime != undefined)
@@ -136,41 +138,113 @@ module egret.web {
             video.style.left = "0px";
             video.height = this.heightSet;
             video.width = this.widthSet;
-            document.body.appendChild(video);
-            video.play();
-            var fullscreen = false;
-            if (this._fullscreen) {
-                fullscreen = this.goFullscreen();
+
+            this.checkFullScreen(this._fullscreen);
+        }
+
+        private checkFullScreen(playFullScreen:boolean):void {
+            var video = this.video;
+            var fullScreen = false;
+
+            if (playFullScreen) {
+                if (video.parentElement == null) {
+                    video.removeAttribute("webkit-playsinline");
+                    document.body.appendChild(video);
+
+                    fullScreen = this.goFullscreen();
+
+                    egret.stopTick(this.markDirty, this);
+                }
             }
-            if (fullscreen == false) {
+
+            if (fullScreen == false) {
+                if (video.parentElement != null) {
+                    video.parentElement.removeChild(video);
+                }
                 video.setAttribute("webkit-playsinline", "true");
+
+                video['onwebkitfullscreenchange'] = function () {};
+                video['onwebkitfullscreenerror'] = function () {};
+
                 egret.startTick(this.markDirty, this);
             }
+
+            video.play();
         }
 
         private goFullscreen():boolean {
             var video = this.video;
-            if (video['webkitRequestFullscreen'])
-                video['webkitRequestFullscreen']();
-            else if (video['webkitRequestFullScreen'])
-                video['webkitRequestFullScreen']();
-            else if (video['msRequestFullscreen'])
-                video['msRequestFullscreen']();
-            else if (video['requestFullscreen'])
-                video['requestFullscreen']();
-            else
+
+            var fullscreenType:string;
+
+            if(video['requestFullscreen']) {
+                fullscreenType = 'requestFullscreen';
+            }
+            else if(video['mozRequestFullScreen']) {
+                fullscreenType = 'mozRequestFullScreen';
+            }
+            else if(video['msRequestFullscreen']){
+                fullscreenType = 'msRequestFullscreen';
+            }
+            else if(video['oRequestFullscreen']){
+                fullscreenType = 'oRequestFullscreen';
+            }
+            else if(video['webkitRequestFullscreen']){
+                fullscreenType = 'webkitRequestFullscreen';
+            }
+            else {
                 return false;
+            }
+
             video.removeAttribute("webkit-playsinline");
             video['onwebkitfullscreenchange'] = (e:any) => {
                 var isfullscreen = !!video['webkitDisplayingFullscreen'];
                 if (!isfullscreen) {
-                    this.pause();
+                    this.checkFullScreen(false);
                 }
             };
             video['onwebkitfullscreenerror'] = (e: any) => {
                 egret.$error(3003);
             };
+
+            video[fullscreenType]();
             return true;
+        }
+
+        private exitFullscreen():void {
+            //退出全屏
+            if (document['exitFullscreen']) {
+                document['exitFullscreen']();
+            } else if (document['msExitFullscreen']) {
+                document['msExitFullscreen']();
+            } else if (document['mozCancelFullScreen']) {
+                document['mozCancelFullScreen']();
+            } else if(document['oCancelFullScreen']){
+                document['oCancelFullScreen']();
+            }else if (document['webkitExitFullscreen']){
+                document['webkitExitFullscreen']();
+            }else{
+            }
+        }
+
+        /**
+         * @private
+         *
+         */
+        private onVideoEnded() {
+            this.pause();
+            this.isPlayed = false;
+            this.$invalidateContentBounds();
+
+            this.dispatchEventWith(egret.Event.ENDED);
+        }
+
+        /**
+         * @private
+         *
+         */
+        private onVideoError() {
+            this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
         }
 
         /**
@@ -184,7 +258,7 @@ module egret.web {
             this.pause();
             if (this.loaded == false && this.video)
                 this.video.src = "";
-            if (this.video) {
+            if (this.video && this.video.parentElement) {
                 this.video.parentElement.removeChild(this.video);
                 this.video = null;
             }
@@ -199,12 +273,10 @@ module egret.web {
         public pause() {
             if (this.video) {
                 this.video.pause();
-                if (!this.closed){
-                    this.onVideoEnded();
-                }
             }
 
             egret.stopTick(this.markDirty, this);
+            this.$invalidate();
         }
 
 
@@ -258,7 +330,7 @@ module egret.web {
         public set fullscreen(value: boolean) {
             this._fullscreen = !!value;
             if (this.video && this.video.paused == false) {
-                this.goFullscreen();
+                this.checkFullScreen(this._fullscreen);
             }
         }
 
@@ -286,14 +358,10 @@ module egret.web {
             imageLoader.once(egret.Event.COMPLETE, e=> {
                 var posterData = <HTMLImageElement><any>imageLoader.data;
                 this.posterData = imageLoader.data;
-                if (this.video && this.loaded) {
-                    posterData.width = this.video.videoWidth;
-                    posterData.height = this.video.videoHeight;
-                }
-                else {
-                    posterData.width = isNaN(this.widthSet) ? posterData.width : this.widthSet;
-                    posterData.height = isNaN(this.heightSet) ? posterData.height : this.heightSet;
-                }
+
+                this.posterData.width = this.getPlayWidth();
+                this.posterData.height = this.getPlayHeight();
+
                 this.$invalidateContentBounds();
             }, this);
             imageLoader.load(poster);
@@ -306,39 +374,17 @@ module egret.web {
         private onVideoLoaded = () => {
             this.video.removeEventListener("canplay", this.onVideoLoaded);
             var video = this.video;
-            var width = this.width;
-            var height = this.height;
             this.loaded = true;
             video.pause();
             if (this.posterData) {
-                this.posterData.width = video.videoWidth;
-                this.posterData.height = video.videoHeight;
+                this.posterData.width = this.getPlayWidth();
+                this.posterData.height = this.getPlayHeight();
             }
             video.width = video.videoWidth;
             video.height = video.videoHeight;
             this.$invalidateContentBounds();
-            this.width = isNaN(this.widthSet) ? video.videoWidth : this.widthSet;
-            this.height = isNaN(this.heightSet) ? video.videoHeight : this.heightSet;
             this.dispatchEventWith(egret.Event.COMPLETE);
-
-        }
-
-        /**
-         * @private
-         *
-         */
-        private onVideoEnded() {
-            this.dispatchEventWith(egret.Event.ENDED);
-            this.$invalidateContentBounds();
-        }
-
-        /**
-         * @private
-         *
-         */
-        private onVideoError() {
-            this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
-        }
+        };
 
         /**
          * @private
@@ -347,14 +393,46 @@ module egret.web {
             var bitmapData = this.bitmapData;
             var posterData = this.posterData;
             if (bitmapData) {
-                bounds.setTo(0, 0, bitmapData.width, bitmapData.height);
+                bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
             }
             else if (posterData) {
-                bounds.setTo(0, 0, posterData.width, posterData.height);
+                bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
             }
             else {
                 bounds.setEmpty();
             }
+        }
+
+        private getPlayWidth():number {
+            if (!isNaN(this.widthSet)) {
+                return this.widthSet;
+            }
+
+            if (this.bitmapData) {
+                return this.bitmapData.width;
+            }
+
+            if (this.posterData) {
+                return this.posterData.width;
+            }
+
+            return NaN;
+        }
+
+        private getPlayHeight():number {
+            if (!isNaN(this.heightSet)) {
+                return this.heightSet;
+            }
+
+            if (this.bitmapData) {
+                return this.bitmapData.height;
+            }
+
+            if (this.posterData) {
+                return this.posterData.height;
+            }
+
+            return NaN;
         }
 
         /**
@@ -363,12 +441,14 @@ module egret.web {
         $render(context: sys.RenderContext): void {
             var bitmapData = this.bitmapData;
             var posterData = this.posterData;
-            if ((!bitmapData || this.video && this.video.paused) && posterData) {
-                context.drawImage(posterData, 0, 0, posterData.width, posterData.height);
+
+            if (!this.isPlayed && posterData) {
+                context.drawImage(posterData, 0, 0, this.getPlayWidth(), this.getPlayHeight());
             }
-            if (bitmapData) {
+
+            if (this.isPlayed && bitmapData) {
                 context.imageSmoothingEnabled = true;
-                context.drawImage(bitmapData, 0, 0, bitmapData.width, bitmapData.height);
+                context.drawImage(bitmapData, 0, 0, this.getPlayWidth(), this.getPlayHeight());
             }
         }
 
