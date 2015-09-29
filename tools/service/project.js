@@ -58,7 +58,16 @@ var Project = (function () {
         console.log('启动编译进程:' + this.path);
         this.shutdown(11);
         var larkPath = FileUtil.joinPath(utils.getEgretRoot(), 'tools/bin/egret');
-        var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'compileservice', this.path, (this.option.sourceMap ? "-sourcemap" : "")], {
+        var params = [
+            '--expose-gc',
+            larkPath,
+            'compileservice', this.path,
+            (this.option.sourceMap ? "-sourcemap" : "")
+        ];
+        if (this.option && this.option.runtime) {
+            params.push("--runtime", this.option.runtime);
+        }
+        var build = cprocess.spawn(process.execPath, params, {
             detached: true,
             cwd: os.tmpdir()
         });
