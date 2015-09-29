@@ -13377,7 +13377,7 @@ var dragonBones;
         /** @private */
         p._updateTransform = function () {
             if (this._egretDisplay) {
-                this._egretDisplay.$setMatrix(egret.$TempMatrix.copyFrom(this._globalTransformMatrix), false);
+                this._egretDisplay.$setMatrix(this._globalTransformMatrix, false);
             }
         };
         /** @private */
@@ -13592,7 +13592,7 @@ var dragonBones;
         /** @private */
         p._updateTransform = function () {
             if (this._egretDisplay) {
-                this._egretDisplay.$setMatrix(egret.$TempMatrix.copyFrom(this._globalTransformMatrix), false);
+                this._egretDisplay.$setMatrix(this._globalTransformMatrix, false);
             }
         };
         /** @private */
