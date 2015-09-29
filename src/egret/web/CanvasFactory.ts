@@ -109,15 +109,6 @@ module egret.web {
             canvas["renderContext"] = context;
             context["surface"] = canvas;
             toBitmapData(canvas);
-            var drawImage = context.drawImage;
-            context.drawImage = function (image:HTMLElement, offsetX:number, offsetY:number, width?:number,
-                                          height?:number, surfaceOffsetX?:number, surfaceOffsetY?:number,
-                                          surfaceImageWidth?:number, surfaceImageHeight?:number):void {
-                if (!image || image["width"] == 0 || image["height"] == 0) {//屏蔽IE下对绘制空canvas的报错。
-                    return;
-                }
-                drawImage.apply(context, arguments);
-            };
 
             if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
