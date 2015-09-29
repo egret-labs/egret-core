@@ -9096,12 +9096,14 @@ declare module egret {
         /**
          * @language en_US
          * Should play the video in fullscreen mode (default = true).
+         * Some browsers only support full-screen, such as ios.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否全屏播放这个视频（默认值是 true）。
+         * 一些浏览器只支持全屏，比如 ios。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -14212,7 +14214,7 @@ declare module egret {
      * @param type Setter property names need to call
      * @param values Value passed to the parent class
      *
-     * @exmaple egret.superSetter(this, "alpha", 1);
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
      */
     /**
      * @language zh_CN
@@ -14222,7 +14224,7 @@ declare module egret {
      * @param type 需要调用的setter属性名称
      * @param values 传给父类的值
      *
-     * @exmaple egret.superSetter(this, "alpha", 1);
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
      */
     function superSetter(currentClass: any, thisObj: any, type: string, ...values: any[]): any;
     /**
@@ -14233,7 +14235,7 @@ declare module egret {
      * @param type Setter property names need to call
      * @returns {any} The value returned by the parent
      *
-     * @exmaple egret.superGetter(this, "alpha");
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
      */
     /**
      * @language zh_CN
@@ -14243,7 +14245,7 @@ declare module egret {
      * @param type 需要调用的setter属性名称
      * @returns {any} 父类返回的值
      *
-     * @exmaple egret.superGetter(this, "alpha");
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
      */
     function superGetter(currentClass: any, thisObj: any, type: string): any;
 }
