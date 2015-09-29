@@ -2579,13 +2579,6 @@ var egret;
                 canvas["renderContext"] = context;
                 context["surface"] = canvas;
                 web.toBitmapData(canvas);
-                var drawImage = context.drawImage;
-                context.drawImage = function (image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight) {
-                    if (!image || image["width"] == 0 || image["height"] == 0) {
-                        return;
-                    }
-                    drawImage.apply(context, arguments);
-                };
                 if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                     var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                     for (var i = keys.length - 1; i >= 0; i--) {
