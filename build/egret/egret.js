@@ -14158,7 +14158,7 @@ var egret;
                     var textField = new egret.TextField();
                     this.infoText = textField;
                     this.addChild(textField);
-                    textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0xb0b0b0 : parseInt(this.styles["textColor"]);
+                    textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
                     textField.fontFamily = "monospace";
                     textField.x = 10;
                     textField.size = egret.sys.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
@@ -14222,7 +14222,7 @@ var egret;
                     }
                     var g = this.shape.$graphics.$renderContext;
                     g.clear();
-                    g.fillStyle = "rgba(68,68,68,0.4)";
+                    g.fillStyle = "rgba(68,68,68," + (this.styles["bgAlpha"] || 0.9) + ")";
                     g.fillRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
                 };
                 return FPSImpl;
