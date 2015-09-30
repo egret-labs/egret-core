@@ -212,6 +212,22 @@ module egret {
          * @platform Web,Native
          */
         bitmapData: BitmapData;
+
+        /**
+         * @language en_US
+         * Whether current video is paused.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        /**
+         * @language zh_CN
+         * 当前视频是否在暂停状态。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        paused:boolean;
     }
     /**
      * @copy egret.Video

@@ -60,12 +60,14 @@ module egret {
          * a unique identification number assigned to this instance.
          * @version Egret 2.4
          * @platform Web,Native
+         * @readOnly
          */
         /**
          * @language zh_CN
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
          * @version Egret 2.4
          * @platform Web,Native
+         * @readOnly
          */
         hashCode:number;
     }
