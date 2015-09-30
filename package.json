@@ -110,6 +110,10 @@
             "platform": "native"
           },
           {
+            "path": "native/NativeXML.ts",
+            "platform": "native"
+          },
+          {
             "path": "external/web/WebExternalInterface.ts",
             "platform": "web"
           },
