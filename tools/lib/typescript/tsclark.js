@@ -20989,16 +20989,13 @@ var ts;
                 return;
             var className = checker.getFullyQualifiedName(classNode.symbol);
             var nodesToCheck = [];
-            ts.forEachChild(classNode, function (node) {
-                if (node.kind == 124 /* Property */ && node.modifiers && (node.modifiers.flags & 128 /* Static */) && node.initializer) {
-                    //if (node.name && node.name.text == "typeNight") {
-                    //    console.log((<PropertyDeclaration>node).initializer.kind);
-                    //}
-                    switch (node.initializer.kind) {
+            function findClass(rootNode) {
+                ts.forEachChild(rootNode, function (cnode) {
+                    switch (cnode.kind) {
                         case 143 /* PropertyAccessExpression */:
                         case 145 /* CallExpression */:
                         case 146 /* NewExpression */:
-                            var nodeToGet = (node.initializer).expression;
+                            var nodeToGet = cnode.expression;
                             if (!nodeToGet)
                                 return;
                             try {
@@ -21015,7 +21012,13 @@ var ts;
                                 bases.push(fullName);
                             classNameToBaseClassMap[className] = bases;
                         default:
+                            findClass(cnode);
                     }
+                });
+            }
+            ts.forEachChild(classNode, function (node) {
+                if (node.kind == 124 /* Property */ && node.modifiers && (node.modifiers.flags & 128 /* Static */) && node.initializer) {
+                    findClass(node);
                 }
             });
         };

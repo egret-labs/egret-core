@@ -167,6 +167,7 @@ module ts {
                         node.kind == SyntaxKind.Identifier ){
                             
                         var name = "callExpression" + ++functionId;
+                        console.log(node);
                         self.findUsedClasses(node,name,functionCallToClassMap,0);
                     }
                     else
@@ -292,34 +293,38 @@ module ts {
                 return;
             var className = checker.getFullyQualifiedName(classNode.symbol);
             var nodesToCheck: Node[] = [];
-            forEachChild(classNode, node=> {
-                if (node.kind == SyntaxKind.Property && node.modifiers && (node.modifiers.flags & NodeFlags.Static) && (<PropertyDeclaration>node).initializer) {
-                    //if (node.name && node.name.text == "typeNight") {
-                    //    console.log((<PropertyDeclaration>node).initializer.kind);
-                    //}
-                    switch ((<PropertyDeclaration>node).initializer.kind) {
-                            case SyntaxKind.PropertyAccessExpression:
-                            case SyntaxKind.CallExpression:
-                            case SyntaxKind.NewExpression:
-                                var nodeToGet = (<CallExpression>((<PropertyDeclaration>node).initializer)).expression;
-                                if (!nodeToGet)
-                                    return;
-                                try {
-                                    var staticMemberType = checker.checkAndMarkExpression(nodeToGet);
-                                    if (staticMemberType.symbol == undefined || (staticMemberType.symbol.flags & SymbolFlags.Interface))
-                                        return;
-                                    var fullName = checker.getFullyQualifiedName(staticMemberType.symbol);
-                                }
-                                catch (e) {
-                                    return;
-                                }
-                                var bases = classNameToBaseClassMap[className] || [];
-                                if (bases.indexOf(fullName) < 0)
-                                    bases.push(fullName);
-                                classNameToBaseClassMap[className] = bases;
-                            default:
-                        }
 
+            function findClass(rootNode: Node) {
+                ts.forEachChild(rootNode, function (cnode) {
+                    switch (cnode.kind) {
+                        case SyntaxKind.PropertyAccessExpression:
+                        case SyntaxKind.CallExpression:
+                        case SyntaxKind.NewExpression:
+                            var nodeToGet = (<CallExpression>cnode).expression;
+                            if (!nodeToGet)
+                                return;
+                            try {
+                                var staticMemberType = checker.checkAndMarkExpression(nodeToGet);
+                                if (staticMemberType.symbol == undefined || (staticMemberType.symbol.flags & SymbolFlags.Interface))
+                                    return;
+                                var fullName = checker.getFullyQualifiedName(staticMemberType.symbol);
+                            }
+                            catch (e) {
+                                return;
+                            }
+                            var bases = classNameToBaseClassMap[className] || [];
+                            if (bases.indexOf(fullName) < 0)
+                                bases.push(fullName);
+                            classNameToBaseClassMap[className] = bases;
+                        default:
+                            findClass(cnode);
+                    }
+                });
+            }
+
+            ts.forEachChild(classNode, function (node) {
+                if (node.kind == SyntaxKind.Property && node.modifiers && (node.modifiers.flags & NodeFlags.Static) && (<PropertyDeclaration>node).initializer) {
+                    findClass(node);
                 }
             });
         }
