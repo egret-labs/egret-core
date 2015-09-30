@@ -75,12 +75,14 @@ declare module egret {
          * a unique identification number assigned to this instance.
          * @version Egret 2.4
          * @platform Web,Native
+         * @readOnly
          */
         /**
          * @language zh_CN
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
          * @version Egret 2.4
          * @platform Web,Native
+         * @readOnly
          */
         hashCode: number;
     }
@@ -9166,6 +9168,21 @@ declare module egret {
          * @platform Web,Native
          */
         bitmapData: BitmapData;
+        /**
+         * @language en_US
+         * Whether current video is paused.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        /**
+         * @language zh_CN
+         * 当前视频是否在暂停状态。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        paused: boolean;
     }
     /**
      * @copy egret.Video

@@ -40,4 +40,30 @@ module egret {
     export declare function getString(code:number, ...params:any[]):string;
     export declare function $markReadOnly(instance:any,property:string, isProperty?:boolean):void;
     export declare function $markCannotUse(instance:any, property:string, defaultVale:any):void;
+
+    /**
+     * @private
+     */
+    function _getString():string {
+        return "";
+    }
+    egret.getString = _getString;
+
+    function _error():void {
+    }
+
+    egret.$error = _error;
+
+    function _warn():void {
+    }
+
+    egret.$warn = _warn;
+
+    function _markReadOnly():void {
+    }
+    egret.$markReadOnly = _markReadOnly;
+
+    function markCannotUse():void {
+    }
+    egret.$markCannotUse = markCannotUse;
 }
