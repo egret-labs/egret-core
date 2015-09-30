@@ -51,6 +51,8 @@ module egret {
 
         protected context;
 
+        private rootDisplayList:sys.DisplayList;
+
         constructor() {
             super();
         }
@@ -74,6 +76,7 @@ module egret {
          * @platform Web,Native
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
+            this.dispose();
             scale /= $TextureScaleFactor;
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
@@ -86,12 +89,12 @@ module egret {
             }
 
             var root = new egret.DisplayObjectContainer();
-            var displayList = sys.DisplayList.create(root);
-            root.$displayList = displayList;
+            this.rootDisplayList = sys.DisplayList.create(root);
+            root.$displayList = this.rootDisplayList;
             root.addChild(c1);
 
             this.$update(displayObject);
-            sys.DisplayList.release(displayList);
+
             root.$displayList = null;
             var bounds = displayObject.getBounds();
             this.context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
@@ -310,6 +313,14 @@ module egret {
             surface.width = Math.max(257, width);
             surface.height = Math.max(257, height);
             return surface.renderContext;
+        }
+
+        public dispose():void {
+            super.dispose();
+            if(this.rootDisplayList) {
+                sys.DisplayList.release(this.rootDisplayList);
+                this.rootDisplayList = null;
+            }
         }
     }
 }
