@@ -132,7 +132,12 @@ module egret.web {
                 video.currentTime = +startTime||0;
             video.loop = !!loop;
 
-            video.style.zIndex = "9999";
+            if (egret.Capabilities.isMobile) {
+                video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
+            }
+            else {
+                video.style.zIndex = "9999";
+            }
             video.style.position = "absolute";
             video.style.top = "0px";
             video.style.left = "0px";
