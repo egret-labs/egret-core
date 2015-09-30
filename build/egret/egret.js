@@ -8003,6 +8003,7 @@ var egret;
          */
         p.drawToTexture = function (displayObject, clipBounds, scale) {
             if (scale === void 0) { scale = 1; }
+            this.dispose();
             scale /= egret.$TextureScaleFactor;
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
@@ -8013,11 +8014,10 @@ var egret;
                 c1.scrollRect = scrollRect;
             }
             var root = new egret.DisplayObjectContainer();
-            var displayList = egret.sys.DisplayList.create(root);
-            root.$displayList = displayList;
+            this.rootDisplayList = egret.sys.DisplayList.create(root);
+            root.$displayList = this.rootDisplayList;
             root.addChild(c1);
             this.$update(displayObject);
-            egret.sys.DisplayList.release(displayList);
             root.$displayList = null;
             var bounds = displayObject.getBounds();
             this.context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
@@ -8222,6 +8222,13 @@ var egret;
             surface.width = Math.max(257, width);
             surface.height = Math.max(257, height);
             return surface.renderContext;
+        };
+        p.dispose = function () {
+            _super.prototype.dispose.call(this);
+            if (this.rootDisplayList) {
+                egret.sys.DisplayList.release(this.rootDisplayList);
+                this.rootDisplayList = null;
+            }
         };
         return RenderTexture;
     })(egret.Texture);

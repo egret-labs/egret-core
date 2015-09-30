@@ -337,6 +337,9 @@ module egret.web {
          * @inheritDoc
          */
         public set fullscreen(value: boolean) {
+            if (egret.Capabilities.isMobile) {
+                return;
+            }
             this._fullscreen = !!value;
             if (this.video && this.video.paused == false) {
                 this.checkFullScreen(this._fullscreen);
