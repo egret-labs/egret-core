@@ -109,7 +109,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
         var resourceOld = file.joinPath(egret.args.projectDir,'/resource/');
         //兼容处理
         if(file.exists(resourceOld)){
-            var resourceNew = file.joinPath(newPath,'/src/resource/');
+            var resourceNew = file.joinPath(newPath,'/resource/');
             if(resourceOld.toLowerCase() != resourceNew.toLowerCase()){
                 globals.log2(1707,resourceOld,resourceNew);
                 file.copy(resourceOld,resourceNew);
