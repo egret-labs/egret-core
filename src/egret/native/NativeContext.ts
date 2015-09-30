@@ -64,6 +64,8 @@ declare module egret_native {
 
     function readXML(filepath:string):any;
 
+    function xmlStr2JsonStr(text:string):any;
+
     function isFileExists(filepath:string):boolean;
 
     function isRecordExists(filepath:string):boolean;

@@ -9223,6 +9223,7 @@ declare module egret_native {
     function pauseApp(): void;
     function resumeApp(): void;
     function readXML(filepath: string): any;
+    function xmlStr2JsonStr(text: string): any;
     function isFileExists(filepath: string): boolean;
     function isRecordExists(filepath: string): boolean;
     function readFileSync(filepath: string): any;
