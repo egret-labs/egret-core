@@ -131,7 +131,6 @@ module egret.web {
      */
     function parse(text:string):XML {
         var xmlDocStr = egret_native.xmlStr2JsonStr(text);
-        console.log(xmlDocStr);
         var xmlDoc = JSON.parse(xmlDocStr);
         return parseNode(xmlDoc, null);
     }
