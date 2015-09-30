@@ -20941,6 +20941,7 @@ var ts;
                         node.kind == 146 /* NewExpression */ ||
                         node.kind == 63 /* Identifier */) {
                         var name = "callExpression" + ++functionId;
+                        console.log(node);
                         self.findUsedClasses(node, name, functionCallToClassMap, 0);
                     }
                     else
@@ -21382,7 +21383,8 @@ var ts;
         var program = result.program;
         result.compileWithChanges = compileWithChanges;
         return result;
-        function compileWithChanges(filesChanged) {
+        function compileWithChanges(filesChanged, sourceMap) {
+            commandLine.options.sourceMap = !!sourceMap;
             filesChanged.forEach(function (file) {
                 if (file.type == "added") {
                     commandLine.filenames.push(file.fileName);
@@ -21411,8 +21413,8 @@ var ts;
             // so long as they were not modified.
             var newCompilerHost = ts.clone(compilerHost);
             newCompilerHost.getSourceFile = function (fileName, languageVersion, onError) {
-                fileName = getCanonicalName(fileName);
-                var sourceFile = ts.lookUp(oldSourceFiles, fileName);
+                var name = getCanonicalName(fileName);
+                var sourceFile = ts.lookUp(oldSourceFiles, name);
                 if (sourceFile) {
                     return sourceFile;
                 }

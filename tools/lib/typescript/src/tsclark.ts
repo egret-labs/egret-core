@@ -186,8 +186,10 @@ module ts {
         result.compileWithChanges = compileWithChanges;
         return result;
 
-        function compileWithChanges(filesChanged: egret.FileChanges): LarkCompileResult {
-
+        function compileWithChanges(filesChanged: egret.FileChanges, sourceMap?: boolean): LarkCompileResult {
+            
+            commandLine.options.sourceMap = !!sourceMap;
+            
             filesChanged.forEach(file=> {
                 if (file.type == "added") {
                     commandLine.filenames.push(file.fileName);
@@ -222,9 +224,9 @@ module ts {
             // so long as they were not modified.
             var newCompilerHost = clone(compilerHost);
             newCompilerHost.getSourceFile = (fileName, languageVersion, onError) => {
-                fileName = getCanonicalName(fileName);
+                var name = getCanonicalName(fileName);
 
-                var sourceFile = lookUp(oldSourceFiles, fileName);
+                var sourceFile = lookUp(oldSourceFiles, name);
                 if (sourceFile) {
                     return sourceFile;
                 }
@@ -247,7 +249,7 @@ module ts {
         program: ts.Program;
         files?: string[];
         exitStatus: EmitReturnStatus;
-        compileWithChanges?: (filesChanged: egret.FileChanges) => LarkCompileResult;
+        compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => LarkCompileResult;
         messages?: string[];
     }
 

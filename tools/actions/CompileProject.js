@@ -21,7 +21,7 @@ var CompileProject = (function () {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
-            compileResult = this.recompile(files);
+            compileResult = this.recompile(files, option.sourceMap);
             process.chdir(realCWD);
         }
         else {

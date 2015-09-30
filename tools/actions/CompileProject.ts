@@ -27,7 +27,7 @@ class CompileProject {
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
-            compileResult = this.recompile(files);
+            compileResult = this.recompile(files, option.sourceMap);
             process.chdir(realCWD);
         }
         else {
@@ -52,7 +52,7 @@ class CompileProject {
 
     }
 
-    private recompile: (files: egret.FileChanges) => tsclark.LarkCompileResult;
+    private recompile: (files: egret.FileChanges, sourceMap?: boolean) => tsclark.LarkCompileResult;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {
