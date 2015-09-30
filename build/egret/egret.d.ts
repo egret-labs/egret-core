@@ -53,6 +53,8 @@ declare module egret {
      */
     function registerClass(classDefinition: any, className: string, interfaceNames?: string[]): void;
 }
+declare function __extends(d: any, b: any): void;
+declare var __define: any;
 declare module egret {
     /**
      * @language en_US
@@ -73,12 +75,14 @@ declare module egret {
          * a unique identification number assigned to this instance.
          * @version Egret 2.4
          * @platform Web,Native
+         * @readOnly
          */
         /**
          * @language zh_CN
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
          * @version Egret 2.4
          * @platform Web,Native
+         * @readOnly
          */
         hashCode: number;
     }
@@ -4993,6 +4997,7 @@ declare module egret {
      */
     class RenderTexture extends egret.Texture {
         protected context: any;
+        private rootDisplayList;
         constructor();
         /**
          * @language en_US
@@ -5018,6 +5023,7 @@ declare module egret {
         private drawWithClip(displayObject, context);
         private drawWithScrollRect(displayObject, context);
         private createRenderContext(width, height);
+        dispose(): void;
     }
 }
 declare module egret {
@@ -9096,14 +9102,14 @@ declare module egret {
         /**
          * @language en_US
          * Should play the video in fullscreen mode (default = true).
-         * Some browsers only support full-screen, such as ios.
+         * Currently only supports full-screen mobile terminal web.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 是否全屏播放这个视频（默认值是 true）。
-         * 一些浏览器只支持全屏，比如 ios。
+         * 目前移动端 web 只支持全屏。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -9164,6 +9170,21 @@ declare module egret {
          * @platform Web,Native
          */
         bitmapData: BitmapData;
+        /**
+         * @language en_US
+         * Whether current video is paused.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        /**
+         * @language zh_CN
+         * 当前视频是否在暂停状态。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        paused: boolean;
     }
     /**
      * @copy egret.Video
@@ -14204,7 +14225,6 @@ declare module egret {
      */
     function $callAsync(method: Function, thisObject: any, ...args: any[]): void;
 }
-declare function __extends(d: any, b: any): void;
 declare module egret {
     /**
      * @language en_US

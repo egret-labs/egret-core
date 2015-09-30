@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 this["DEBUG"] = true;
 this["RELEASE"] = false;
 var egret;
@@ -233,6 +232,19 @@ var egret;
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="registerclass.ts" />
+function __extends(d, b) {
+    for (var p in b)
+        if (b.hasOwnProperty(p))
+            d[p] = b[p];
+    function __() {
+        this.constructor = d;
+    }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+}
+var __define = this.__define || function (o, p, g, s) {
+    Object.defineProperty(o, p, { configurable: true, enumerable: true, get: g, set: s });
+};
 var egret;
 (function (egret) {
     /**
@@ -323,12 +335,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var egret;
 (function (egret) {
     var ONCE_EVENT_LIST = [];
@@ -7997,6 +8003,7 @@ var egret;
          */
         p.drawToTexture = function (displayObject, clipBounds, scale) {
             if (scale === void 0) { scale = 1; }
+            this.dispose();
             scale /= egret.$TextureScaleFactor;
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
@@ -8007,11 +8014,10 @@ var egret;
                 c1.scrollRect = scrollRect;
             }
             var root = new egret.DisplayObjectContainer();
-            var displayList = egret.sys.DisplayList.create(root);
-            root.$displayList = displayList;
+            this.rootDisplayList = egret.sys.DisplayList.create(root);
+            root.$displayList = this.rootDisplayList;
             root.addChild(c1);
             this.$update(displayObject);
-            egret.sys.DisplayList.release(displayList);
             root.$displayList = null;
             var bounds = displayObject.getBounds();
             this.context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
@@ -8216,6 +8222,13 @@ var egret;
             surface.width = Math.max(257, width);
             surface.height = Math.max(257, height);
             return surface.renderContext;
+        };
+        p.dispose = function () {
+            _super.prototype.dispose.call(this);
+            if (this.rootDisplayList) {
+                egret.sys.DisplayList.release(this.rootDisplayList);
+                this.rootDisplayList = null;
+            }
         };
         return RenderTexture;
     })(egret.Texture);
@@ -14152,7 +14165,7 @@ var egret;
                     var textField = new egret.TextField();
                     this.infoText = textField;
                     this.addChild(textField);
-                    textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0xb0b0b0 : parseInt(this.styles["textColor"]);
+                    textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
                     textField.fontFamily = "monospace";
                     textField.x = 10;
                     textField.size = egret.sys.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
@@ -14216,7 +14229,7 @@ var egret;
                     }
                     var g = this.shape.$graphics.$renderContext;
                     g.clear();
-                    g.fillStyle = "rgba(68,68,68,1)";
+                    g.fillStyle = "rgba(68,68,68," + (this.styles["bgAlpha"] || 0.9) + ")";
                     g.fillRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
                 };
                 return FPSImpl;
@@ -20670,16 +20683,15 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-function __extends(d, b) {
-    for (var p in b)
-        if (b.hasOwnProperty(p))
-            d[p] = b[p];
-    function __() {
-        this.constructor = d;
-    }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-}
+//function __extends(d, b) {
+//    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+//    function __() {
+//        this.constructor = d;
+//    }
+//
+//    __.prototype = b.prototype;
+//    d.prototype = new __();
+//}
 var egret;
 (function (egret) {
     /**

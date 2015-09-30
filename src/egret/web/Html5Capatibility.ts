@@ -250,7 +250,7 @@ module egret.web {
     /**
      * @private
      */
-    function getPrefix(name:string, element:any):string {
+    export function getPrefix(name:string, element:any):string {
         if (name in element) {
             return "";
         }

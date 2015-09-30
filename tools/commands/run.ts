@@ -58,7 +58,7 @@ class Run implements egret.Command {
         if (egret.args.autoCompile) {
             console.log('    ' + utils.tr(10010));
             this.watchFiles(egret.args.srcDir);
-            this.watchFiles(egret.args.templateDir);
+            //this.watchFiles(egret.args.templateDir);
         }
         else if (!egret.args.serverOnly) {
             console.log('    ' + utils.tr(10012));
