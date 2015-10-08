@@ -4948,6 +4948,11 @@ var egret;
             else if (fillMode == egret.BitmapFillMode.SCALE) {
                 context.drawImage(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
             }
+            else if (fillMode == egret.BitmapFillMode.CLIP) {
+                var tempW = Math.min(textureWidth, destW);
+                var tempH = Math.min(textureHeight, destH);
+                context.drawImage(image, clipX, clipY, tempW / egret.$TextureScaleFactor, tempH / egret.$TextureScaleFactor, offsetX, offsetY, tempW, tempH);
+            }
             else {
                 var tempImage = image;
                 var tempCanvas;
@@ -5125,6 +5130,19 @@ var egret;
          * @platform Web,Native
          */
         BitmapFillMode.SCALE = "scale";
+        /**
+         * @language en_US
+         * The bitmap ends at the edge of the region.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在区域的边缘处截断不显示位图。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        BitmapFillMode.CLIP = "clip";
         return BitmapFillMode;
     })();
     egret.BitmapFillMode = BitmapFillMode;

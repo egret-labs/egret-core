@@ -2949,6 +2949,19 @@ declare module egret {
          * @platform Web,Native
          */
         static SCALE: string;
+        /**
+         * @language en_US
+         * The bitmap ends at the edge of the region.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在区域的边缘处截断不显示位图。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static CLIP: string;
     }
 }
 declare module egret {
