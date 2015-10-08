@@ -29,3 +29,4 @@ obj/
 *.ide/
 npm-debug.log
 src/tsc_config_temp.txt
+/bin

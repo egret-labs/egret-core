@@ -49,7 +49,8 @@ module egret {
     }
     egret.getString = _getString;
 
-    function _error():void {
+    function _error(code): void {
+        throw new Error("#" + code );//使用这种方式报错能够终止后续代码继续运行
     }
 
     egret.$error = _error;
