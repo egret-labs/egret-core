@@ -121,7 +121,7 @@ declare module egret {
      * @event egret.Event.CONNECT 连接服务器成功。
      * @event egret.ProgressEvent.SOCKET_DATA 接收服务器数据。
      * @event egret.Event.CLOSE 在服务器关闭连接时调度。
-     * @event egret.ProgressEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
+     * @event egret.IOErrorEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
      * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
