@@ -83,18 +83,18 @@ module egret {
         /**
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData|Texture object.
-         * @param bitmapData The BitmapData object being referenced.
+         * @param value The BitmapData|Texture object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData|Texture 实例的 Bitmap 对象
-         * @param bitmapData 被引用的 BitmapData 实例
+         * @param value 被引用的 BitmapData|Texture 实例
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public constructor(bitmapData?:BitmapData|Texture) {
+        public constructor(value?:BitmapData|Texture) {
             super();
             this.$renderRegion = new sys.Region();
             this.$Bitmap = {
@@ -113,7 +113,7 @@ module egret {
                 12: NaN  //explicitBitmapHeight,
             };
 
-            this.$setBitmapData(bitmapData);
+            this.$setBitmapData(value);
         }
 
         /**
@@ -159,34 +159,57 @@ module egret {
 
         /**
          * @language en_US
-         * The BitmapData|Texture object being referenced.
+         * The BitmapData object being referenced.
+         * If you pass the constructor of type Texture or last set for texture, this value returns null.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 被引用的 BitmapData|Texture 对象。
+         * 被引用的 BitmapData 对象。
+         * 如果传入构造函数的类型为 Texture 或者最后设置的为 texture，则此值返回 null。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get bitmapData():BitmapData|Texture {
-            return this.$Bitmap[sys.BitmapKeys.bitmapData];
+        public get bitmapData():BitmapData {
+            var value = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            if (value instanceof Texture) {
+                return null;
+            }
+            else {
+                return value;
+            }
         }
 
-        public set bitmapData(value:BitmapData|Texture) {
+        public set bitmapData(value:BitmapData) {
             this.$setBitmapData(value);
         }
 
         /**
-         * @copy #bitmapData
+         * @language en_US
+         * The Texture object being referenced.
+         * If you pass the constructor of type BitmapData or last set for bitmapData, this value returns null.
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get texture():BitmapData|Texture {
-            return this.$Bitmap[sys.BitmapKeys.bitmapData];
+        /**
+         * @language zh_CN
+         * 被引用的 Texture 对象。
+         * 如果传入构造函数的类型为 BitmapData 或者最后设置的为 bitmapData，则此值返回 null。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get texture():Texture {
+            var value = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            if (value instanceof Texture) {
+                return value;
+            }
+            else {
+                return null;
+            }
         }
 
-        public set texture(value:BitmapData|Texture) {
+        public set texture(value:Texture) {
             this.$setBitmapData(value);
         }
 
