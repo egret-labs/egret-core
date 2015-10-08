@@ -533,6 +533,12 @@ module egret {
                 context.drawImage(image, clipX, clipY,
                     clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
             }
+            else if (fillMode == egret.BitmapFillMode.CLIP) {
+                var tempW:number = Math.min(textureWidth, destW);
+                var tempH:number = Math.min(textureHeight, destH);
+                context.drawImage(image, clipX, clipY,
+                    tempW / $TextureScaleFactor, tempH / $TextureScaleFactor, offsetX, offsetY, tempW, tempH);
+            }
             else {
                 var tempImage:egret.BitmapData = image;
                 var tempCanvas;

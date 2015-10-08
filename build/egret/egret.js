@@ -4948,6 +4948,11 @@ var egret;
             else if (fillMode == egret.BitmapFillMode.SCALE) {
                 context.drawImage(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
             }
+            else if (fillMode == egret.BitmapFillMode.CLIP) {
+                var tempW = Math.min(textureWidth, destW);
+                var tempH = Math.min(textureHeight, destH);
+                context.drawImage(image, clipX, clipY, tempW / egret.$TextureScaleFactor, tempH / egret.$TextureScaleFactor, offsetX, offsetY, tempW, tempH);
+            }
             else {
                 var tempImage = image;
                 var tempCanvas;
@@ -5125,6 +5130,19 @@ var egret;
          * @platform Web,Native
          */
         BitmapFillMode.SCALE = "scale";
+        /**
+         * @language en_US
+         * The bitmap ends at the edge of the region.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在区域的边缘处截断不显示位图。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        BitmapFillMode.CLIP = "clip";
         return BitmapFillMode;
     })();
     egret.BitmapFillMode = BitmapFillMode;
@@ -6520,6 +6538,7 @@ var egret;
             if (this.fillStyle != null || this.strokeStyleColor != null) {
                 this._fill();
                 this.fillStyle = null;
+                this.$renderContext.fillStyle = null;
             }
         };
         /**
@@ -7490,6 +7509,14 @@ var egret;
                     map[command.type].apply(context, command.arguments);
                 }
             }
+            if (this._fillStyle) {
+                map[9 /* fill */].apply(context, []);
+                map[10 /* closePath */].apply(context, []);
+            }
+            if (this._strokeStyle) {
+                map[15 /* stroke */].apply(context, []);
+                map[10 /* closePath */].apply(context, []);
+            }
             context.restore();
         };
         return GraphicsRenderContext;
@@ -8017,23 +8044,33 @@ var egret;
             this.rootDisplayList = egret.sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
+            var bounds = displayObject.$getOriginalBounds();
+            var width = (bounds.x + bounds.width) * scale;
+            var height = (bounds.y + bounds.height) * scale;
             this.$update(displayObject);
+            //保存绘制矩阵
+            var renderMatrix = displayObject.$renderMatrix;
+            var renderMatrixA = renderMatrix.a;
+            var renderMatrixB = renderMatrix.b;
+            var renderMatrixC = renderMatrix.c;
+            var renderMatrixD = renderMatrix.d;
+            var renderMatrixTx = renderMatrix.tx;
+            var renderMatrixTy = renderMatrix.ty;
+            renderMatrix.identity();
             root.$displayList = null;
-            var bounds = displayObject.getBounds();
-            this.context = this.createRenderContext(bounds.width * scale, bounds.height * scale);
-            this.context.clearRect(0, 0, bounds.width * scale, bounds.height * scale);
-            this._offsetX = bounds.x * scale;
-            this._offsetY = bounds.y * scale;
+            this.context = this.createRenderContext(width, height);
+            this.context.clearRect(0, 0, width, height);
             if (!this.context) {
                 return false;
             }
             var drawCalls = this.drawDisplayObject(root, this.context);
+            renderMatrix.setTo(renderMatrixA, renderMatrixB, renderMatrixC, renderMatrixD, renderMatrixTx, renderMatrixTy);
             if (drawCalls == 0) {
                 return false;
             }
             this._setBitmapData(this.context.surface);
-            this._offsetX = bounds.x * scale;
-            this._offsetY = bounds.y * scale;
+            //设置纹理参数
+            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
             return true;
         };
         p.$update = function (displayObject) {
