@@ -8289,6 +8289,9 @@ var egret;
                 egret.sys.DisplayList.release(this.rootDisplayList);
                 this.rootDisplayList = null;
             }
+            if (this.context) {
+                egret.sys.surfaceFactory.release(this.context.surface);
+            }
         };
         return RenderTexture;
     })(egret.Texture);
