@@ -6538,6 +6538,7 @@ var egret;
             if (this.fillStyle != null || this.strokeStyleColor != null) {
                 this._fill();
                 this.fillStyle = null;
+                this.$renderContext.fillStyle = null;
             }
         };
         /**
@@ -7507,6 +7508,14 @@ var egret;
                     var command = commands[i];
                     map[command.type].apply(context, command.arguments);
                 }
+            }
+            if (this._fillStyle) {
+                map[9 /* fill */].apply(context, []);
+                map[10 /* closePath */].apply(context, []);
+            }
+            if (this._strokeStyle) {
+                map[15 /* stroke */].apply(context, []);
+                map[10 /* closePath */].apply(context, []);
             }
             context.restore();
         };
