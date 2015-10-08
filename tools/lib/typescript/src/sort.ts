@@ -167,7 +167,6 @@ module ts {
                         node.kind == SyntaxKind.Identifier ){
                             
                         var name = "callExpression" + ++functionId;
-                        console.log(node);
                         self.findUsedClasses(node,name,functionCallToClassMap,0);
                     }
                     else

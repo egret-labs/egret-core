@@ -20941,7 +20941,6 @@ var ts;
                         node.kind == 146 /* NewExpression */ ||
                         node.kind == 63 /* Identifier */) {
                         var name = "callExpression" + ++functionId;
-                        console.log(node);
                         self.findUsedClasses(node, name, functionCallToClassMap, 0);
                     }
                     else
