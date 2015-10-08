@@ -49,7 +49,7 @@ module egret {
      */
     export class RenderTexture extends egret.Texture {
 
-        protected context;
+        protected context:sys.RenderContext;
 
         private rootDisplayList:sys.DisplayList;
 
@@ -318,7 +318,7 @@ module egret {
             return drawCalls;
         }
 
-        private createRenderContext(width:number, height:number):sys.RenderContext {
+        protected createRenderContext(width:number, height:number):sys.RenderContext {
             var surface = sys.surfaceFactory.create(true);
             if (!surface) {
                 return null;
@@ -333,6 +333,9 @@ module egret {
             if(this.rootDisplayList) {
                 sys.DisplayList.release(this.rootDisplayList);
                 this.rootDisplayList = null;
+            }
+            if(this.context) {
+                sys.surfaceFactory.release(this.context.surface);
             }
         }
     }

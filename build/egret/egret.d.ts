@@ -5020,7 +5020,7 @@ declare module egret {
      * @includeExample egret/display/RenderTexture.ts
      */
     class RenderTexture extends egret.Texture {
-        protected context: any;
+        protected context: sys.RenderContext;
         private rootDisplayList;
         constructor();
         /**
@@ -5046,7 +5046,7 @@ declare module egret {
         protected drawDisplayObject(displayObject: DisplayObject, context: sys.RenderContext, rootMatrix?: Matrix): number;
         private drawWithClip(displayObject, context);
         private drawWithScrollRect(displayObject, context);
-        private createRenderContext(width, height);
+        protected createRenderContext(width: number, height: number): sys.RenderContext;
         dispose(): void;
     }
 }
