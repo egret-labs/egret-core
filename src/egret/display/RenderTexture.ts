@@ -27,208 +27,313 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 module egret {
+    var blendModes = ["source-over", "lighter", "destination-out"];
+    var defaultCompositeOp = "source-over";
+
     /**
-     * @class egret.RenderTexture
-     * @classdesc
-     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+     * @language en_US
+     * RenderTexture is a dynamic texture
      * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/display/RenderTexture.ts
      */
-    export class RenderTexture extends Texture {
-        /**
-         * @private
-         */
-        public renderContext;
+    /**
+     * @language zh_CN
+     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+     * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     */
+    export class RenderTexture extends egret.Texture {
 
-        /**
-         * 创建一个 egret.RenderTexture 对象
-         */
+        protected context;
+
+        private rootDisplayList:sys.DisplayList;
+
         constructor() {
             super();
         }
 
         /**
-         * @private
+         * @language en_US
+         * The specified display object is drawn as a texture
+         * @param displayObject {egret.DisplayObject} the display to draw
+         * @param clipBounds {egret.Rectangle} clip rect
+         * @param scale {number} scale factor
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public init():void {
-            this._bitmapData = document.createElement("canvas");
-            this._bitmapData["avaliable"] = true;
-            this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
-        }
-
         /**
-         * @private
-         */
-        public static identityRectangle:egret.Rectangle = new egret.Rectangle();
-
-        /**
+         * @language zh_CN
          * 将指定显示对象绘制为一个纹理
-         * @method egret.RenderTexture#drawToTexture
          * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
          * @param clipBounds {egret.Rectangle} 绘制矩形区域
          * @param scale {number} 缩放比例
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
-            var bounds = clipBounds || displayObject.getBounds(Rectangle.identity);
-            if (bounds.width == 0 || bounds.height == 0) {
+        public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
+            this.dispose();
+            scale /= $TextureScaleFactor;
+            var c1 = new egret.DisplayObjectContainer();
+            c1.$children.push(displayObject);
+            c1.scaleX = c1.scaleY = scale;
+
+            if (clipBounds) {
+                var scrollRect = new egret.Rectangle();
+                scrollRect.setTo(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
+                c1.scrollRect = scrollRect;
+            }
+
+            var root = new egret.DisplayObjectContainer();
+            this.rootDisplayList = sys.DisplayList.create(root);
+            root.$displayList = this.rootDisplayList;
+            root.addChild(c1);
+
+            var bounds = displayObject.$getOriginalBounds();
+            var width = (bounds.x + bounds.width) * scale;
+            var height = (bounds.y + bounds.height) * scale;
+
+            this.$update(displayObject);
+
+            //保存绘制矩阵
+            var renderMatrix = displayObject.$renderMatrix;
+            var renderMatrixA = renderMatrix.a;
+            var renderMatrixB = renderMatrix.b;
+            var renderMatrixC = renderMatrix.c;
+            var renderMatrixD = renderMatrix.d;
+            var renderMatrixTx = renderMatrix.tx;
+            var renderMatrixTy = renderMatrix.ty;
+            renderMatrix.identity();
+
+            root.$displayList = null;
+
+            this.context = this.createRenderContext(width, height);
+            this.context.clearRect(0, 0, width, height);
+            if (!this.context) {
                 return false;
             }
-
-            if (!this._bitmapData) {
-                this.init();
+            var drawCalls = this.drawDisplayObject(root, this.context);
+            renderMatrix.setTo(renderMatrixA,renderMatrixB,renderMatrixC,renderMatrixD,renderMatrixTx,renderMatrixTy);
+            if (drawCalls == 0) {
+                return false;
             }
-
-            var x = bounds.x;
-            var y = bounds.y;
-            var originalWidth = bounds.width;
-            var originalHeight = bounds.height;
-            var width = originalWidth;
-            var height = originalHeight;
-
-            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
-            width /= texture_scale_factor;
-            height /= texture_scale_factor;
-
-            width = Math.round(width);
-            height = Math.round(height);
-
-            this.setSize(width, height);
-            this.begin();
-
-            displayObject._worldTransform.identity();
-            displayObject._worldTransform.a = 1 / texture_scale_factor;
-            displayObject._worldTransform.d = 1 / texture_scale_factor;
-            if (scale) {
-                displayObject._worldTransform.a *= scale;
-                displayObject._worldTransform.d *= scale;
-            }
-            var anchorOffsetX:number = displayObject._DO_Props_._anchorOffsetX;
-            var anchorOffsetY:number = displayObject._DO_Props_._anchorOffsetY;
-            if (displayObject._DO_Props_._anchorX != 0 || displayObject._DO_Props_._anchorY != 0) {
-                anchorOffsetX = displayObject._DO_Props_._anchorX * width;
-                anchorOffsetY = displayObject._DO_Props_._anchorY * height;
-            }
-            this._offsetX = x + anchorOffsetX;
-            this._offsetY = y + anchorOffsetY;
-            displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
-            if (clipBounds) {
-                this._offsetX -= x;
-                this._offsetY -= y;
-            }
-            displayObject.worldAlpha = 1;
-            if (displayObject instanceof egret.DisplayObjectContainer) {
-                var list = (<egret.DisplayObjectContainer>displayObject)._children;
-                for (var i = 0, length = list.length; i < length; i++) {
-                    var child:DisplayObject = list[i];
-                    child._updateTransform();
-                }
-            }
-            this.renderContext.setTransform(displayObject._worldTransform);
-
-            var renderFilter = egret.RenderFilter.getInstance();
-            var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
-            renderFilter._drawAreaList.length = 0;
-            this.renderContext.clearScreen();
-            this.renderContext.onRenderStart();
-            Texture.deleteWebGLTexture(this);
-            if (displayObject._hasFilters()) {
-                displayObject._setGlobalFilters(this.renderContext);
-            }
-            var mask = displayObject.mask || displayObject._DO_Props_._scrollRect;
-            if (mask) {
-                this.renderContext.pushMask(mask);
-            }
-            var __use_new_draw = MainContext.__use_new_draw;
-            MainContext.__use_new_draw = false;
-            displayObject._render(this.renderContext);
-            MainContext.__use_new_draw = __use_new_draw;
-            if (mask) {
-                this.renderContext.popMask();
-            }
-            if (displayObject._hasFilters()) {
-                displayObject._removeGlobalFilters(this.renderContext);
-            }
-            RenderTexture.identityRectangle.width = width;
-            RenderTexture.identityRectangle.height = height;
-            renderFilter.addDrawArea(RenderTexture.identityRectangle);
-            this.renderContext.onRenderFinish();
-            renderFilter._drawAreaList = drawAreaList;
-            this._sourceWidth = width;
-            this._sourceHeight = height;
-            this._textureWidth = Math.round(originalWidth);
-            this._textureHeight = Math.round(originalHeight);
-
-            this.end();
-
-            //测试代码
-//            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
-//            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-//            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
-//            document.documentElement.appendChild(cacheCanvas);
-
+            this._setBitmapData(this.context.surface);
+            //设置纹理参数
+            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
             return true;
         }
 
-        /**
-         * @private
-         */
-        public setSize(width:number, height:number):void {
-            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
-            cacheCanvas.width = width;
-            cacheCanvas.height = height;
-            cacheCanvas.style.width = width + "px";
-            cacheCanvas.style.height = height + "px";
-
-            if (this.renderContext._cacheCanvas) {
-                this.renderContext._cacheCanvas.width = width;
-                this.renderContext._cacheCanvas.height = height;
+        private $update(displayObject:DisplayObject):void {
+            if (displayObject.$renderRegion) {
+                displayObject.$renderRegion.moved = true;
+                displayObject.$update();
+            }
+            else if (displayObject instanceof DisplayObjectContainer) {
+                var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
+                var length:number = children.length;
+                for (var i:number = 0; i < length; i++) {
+                    var child:DisplayObject = children[i];
+                    this.$update(child);
+                }
             }
         }
 
-        /**
-         * @private
-         */
-        public begin():void {
-
+        protected drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix?:Matrix):number {
+            var drawCalls = 0;
+            var node:sys.Renderable;
+            var globalAlpha:number;
+            if (displayObject.$renderRegion) {
+                node = displayObject;
+                globalAlpha = displayObject.$renderAlpha;
+            }
+            if (node) {
+                drawCalls++;
+                context.globalAlpha = globalAlpha;
+                var m = node.$renderMatrix;
+                if (rootMatrix) {
+                    context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    node.$render(context);
+                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                }
+                else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                    node.$render(context);
+                }
+            }
+            var children = displayObject.$children;
+            if (children) {
+                var length = children.length;
+                for (var i = 0; i < length; i++) {
+                    var child = children[i];
+                    if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
+                        continue;
+                    }
+                    if (child.$blendMode !== 0 || child.$mask) {
+                        drawCalls += this.drawWithClip(child, context);
+                    }
+                    else if (child.$scrollRect) {
+                        drawCalls += this.drawWithScrollRect(child, context);
+                    }
+                    else {
+                        drawCalls += this.drawDisplayObject(child, context);
+                    }
+                }
+            }
+            return drawCalls;
         }
 
-        /**
-         * @private
-         */
-        public end():void {
+        private drawWithClip(displayObject:DisplayObject, context:sys.RenderContext):number {
+            var drawCalls = 0;
+            var hasBlendMode = (displayObject.$blendMode !== 0);
+            if (hasBlendMode) {
+                var compositeOp = blendModes[displayObject.$blendMode];
+                if (!compositeOp) {
+                    compositeOp = defaultCompositeOp;
+                }
+            }
 
+            var scrollRect = displayObject.$scrollRect;
+            var mask = displayObject.$mask;
+
+            //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
+            var maskRegion:sys.Region;
+            var displayMatrix = displayObject.$getConcatenatedMatrix();
+            if (mask) {
+                var bounds = mask.$getOriginalBounds();
+                maskRegion = sys.Region.create();
+                maskRegion.updateRegion(bounds, mask.$getConcatenatedMatrix());
+            }
+            var region:sys.Region;
+            if (scrollRect) {
+                region = sys.Region.create();
+                region.updateRegion(scrollRect, displayMatrix);
+            }
+            if (region && maskRegion) {
+                region.intersect(maskRegion);
+                sys.Region.release(maskRegion);
+            }
+            else if (!region && maskRegion) {
+                region = maskRegion;
+            }
+            if (region) {
+                if (region.isEmpty()) {
+                    sys.Region.release(region);
+                    return drawCalls;
+                }
+            }
+            else {
+                region = sys.Region.create();
+                bounds = displayObject.$getOriginalBounds();
+                region.updateRegion(bounds, displayObject.$getConcatenatedMatrix());
+            }
+
+            //绘制显示对象自身，若有scrollRect，应用clip
+            var displayContext = this.createRenderContext(region.width, region.height);
+            if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
+                drawCalls += this.drawDisplayObject(displayObject, context);
+                sys.Region.release(region);
+                return drawCalls;
+            }
+            if (scrollRect) {
+                var m = displayMatrix;
+                displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                displayContext.beginPath();
+                displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                displayContext.clip();
+            }
+            displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+            var rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, rootM);
+            Matrix.release(rootM);
+            //绘制遮罩
+            if (mask) {
+                var maskContext = this.createRenderContext(region.width, region.height);
+                if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
+                    drawCalls += this.drawDisplayObject(displayObject, context);
+                    sys.surfaceFactory.release(displayContext.surface);
+                    sys.Region.release(region);
+                    return drawCalls;
+                }
+                maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                var calls = this.drawDisplayObject(mask, maskContext);
+                Matrix.release(rootM);
+                if (calls > 0) {
+                    drawCalls += calls;
+                    displayContext.globalCompositeOperation = "destination-in";
+                    displayContext.setTransform(1, 0, 0, 1, 0, 0);
+                    displayContext.globalAlpha = 1;
+                    displayContext.drawImage(maskContext.surface, 0, 0);
+                }
+                sys.surfaceFactory.release(maskContext.surface);
+            }
+
+
+            //绘制结果到屏幕
+            if (drawCalls > 0) {
+                drawCalls++;
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = compositeOp;
+                }
+                context.setTransform(1, 0, 0, 1, region.minX, region.minY);
+                context.drawImage(displayContext.surface, 0, 0);
+
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
+            }
+            sys.surfaceFactory.release(displayContext.surface);
+            sys.Region.release(region);
+            return drawCalls;
         }
 
-        /**
-         * 销毁 RenderTexture 对象
-         * @method egret.RenderTexture#dispose
-         */
+        private drawWithScrollRect(displayObject:DisplayObject, context:sys.RenderContext):number {
+            var drawCalls = 0;
+            var scrollRect = displayObject.$scrollRect;
+
+            var m = displayObject.$getConcatenatedMatrix();
+            var region:sys.Region = sys.Region.create();
+            if (!scrollRect.isEmpty()) {
+                region.updateRegion(scrollRect, m);
+            }
+            if (region.isEmpty()) {
+                sys.Region.release(region);
+                return drawCalls;
+            }
+
+            //绘制显示对象自身
+            context.save();
+            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            context.beginPath();
+            context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+            context.clip();
+            drawCalls += this.drawDisplayObject(displayObject, context);
+            context.restore();
+
+            sys.Region.release(region);
+            return drawCalls;
+        }
+
+        private createRenderContext(width:number, height:number):sys.RenderContext {
+            var surface = sys.surfaceFactory.create(true);
+            if (!surface) {
+                return null;
+            }
+            surface.width = Math.max(257, width);
+            surface.height = Math.max(257, height);
+            return surface.renderContext;
+        }
+
         public dispose():void {
-            if (this._bitmapData) {
-                this._bitmapData = null;
-                this.renderContext = null;
+            super.dispose();
+            if(this.rootDisplayList) {
+                sys.DisplayList.release(this.rootDisplayList);
+                this.rootDisplayList = null;
             }
-        }
-
-        private static _pool:Array<RenderTexture> = [];
-
-        /**
-         * @private
-         */
-        public static create():RenderTexture {
-            if (RenderTexture._pool.length) {
-                return RenderTexture._pool.pop();
-            }
-            return new RenderTexture();
-        }
-
-        /**
-         * @private
-         */
-        public static release(value:RenderTexture):void {
-            RenderTexture._pool.push(value);
         }
     }
 }

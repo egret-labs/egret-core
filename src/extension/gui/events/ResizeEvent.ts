@@ -50,12 +50,9 @@ module egret.gui {
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
 		 */
-		public constructor(type:string,oldWidth:number = NaN, oldHeight:number = NaN,
+		public constructor(type:string,
 									bubbles:boolean = false, cancelable:boolean = false){
 			super(type, bubbles, cancelable);
-			
-			this.oldWidth = oldWidth;
-			this.oldHeight = oldHeight;
 		}
 		
 		/**
@@ -74,12 +71,13 @@ module egret.gui {
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method egret.gui.ResizeEvent.dispatchResizeEvent
          */
-        public static dispatchResizeEvent(target:IEventDispatcher,oldWidth:number = NaN, oldHeight:number = NaN):void {
-            var eventClass:any = ResizeEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.oldWidth = oldWidth;
-            props.oldHeight = oldHeight;
-            Event._dispatchByTarget(eventClass, target, ResizeEvent.RESIZE, props);
+        public static dispatchResizeEvent(target:IEventDispatcher,oldWidth:number = NaN, oldHeight:number = NaN):boolean {
+			var event:ResizeEvent = Event.create(ResizeEvent, ResizeEvent.RESIZE);
+			event.oldWidth = oldWidth;
+			event.oldHeight = oldHeight;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 }

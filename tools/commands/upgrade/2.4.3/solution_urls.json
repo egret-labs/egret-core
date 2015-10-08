@@ -1,0 +1,22 @@
+{
+    "willsupport_md" : "http://edn.egret.com/cn/index.php/article/index/id/628#暂未实现的api",
+    "browser_md" : "http://edn.egret.com/cn/index.php/article/index/id/628#Browser",
+    "xml_md" : "http://edn.egret.com/cn/index.php/article/index/id/628",
+    "movieclip_md" : "http://edn.egret.com/cn/index.php/article/index/id/628",
+    "sound_md" : "http://edn.egret.com/cn/index.php/article/index/id/628#Egret%202.5版本声音说明",
+    "scalemode_md" : "http://edn.egret.com/cn/index.php/article/index/id/628#Egret%202.5版本缩放模式和旋转模式说明",
+    "profiler_md" : "http://edn.egret.com/cn/index.php/article/index/id/628#Profiler",
+    "bitmap_md" : "http://edn.egret.com/cn/index.php/article/index/id/628",
+    "changed_md" : "http://edn.egret.com/cn/index.php/article/index/id/628",
+    "mainloop" : "http://edn.egret.com/cn/index.php/article/index/id/628",
+    "draw_md" : "http://edn.egret.com/cn/index.php/article/index/id/628",
+    "matrix_md" : "http://edn.egret.com/cn/index.php/article/index/id/628",
+    "anchor":"http://edn.egret.com/cn/index.php/article/index/id/628#AnchorX%20API调整",
+    "logger":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#LoggerAPI",
+    "injector":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#Injector",
+    "events":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#事件相关调整",
+    "blendmode":"http://edn.egret.com/cn/index.php/portal/article/index/id/628#BlendMode",
+    "deprecated-display":"http://edn.egret.com/cn/index.php/article/index/id/628#内部%20API%20调整",
+    "ticker":"http://edn.egret.com/cn/index.php/article/index/id/628#Ticker",
+    "MainContext":"http://edn.egret.com/cn/index.php/article/index/id/628#MainContext"
+}

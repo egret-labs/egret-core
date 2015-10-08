@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v2.0.4
+Current Version: v2.5.0
 
 
 Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
@@ -40,15 +40,9 @@ Tools
 
 Release Notes
 --------------------
-[Egret 2.0.4 Release Notes 2015-8-13](/docs/en/2.0.4_ReleaseNotes.md)
+[Egret 2.5.0 Release Notes 2015-9-25](/docs/en/2.5.0_ReleaseNotes.md)
 
-[Egret 2.0.3 Release Notes 2015-7-30](/docs/en/2.0.3_ReleaseNotes.md)
-
-[Egret 2.0 Final Release Notes 2015-7-16](/docs/en/2.0_Final_ReleaseNotes.md)
-
-[Egret 2.0 Release Candidate 2 Release Notes 2015-7-2](/docs/en/2.0_ReleaseCandidate_2_ReleaseNotes.md)
-
-[Egret 2.0 Release Candidate 1 Release Notes 2015-6-18](/docs/en/2.0_ReleaseCandidate_1_ReleaseNotes.md)
+[Egret 2.4.0 Release Notes 2015-7-31](/docs/en/2.4.0_ReleaseNotes.md)
 
 [Egret 1.7.3 Release Notes 2015-6-4](/docs/en/1.7.3_ReleaseNotes.md)
 
@@ -70,7 +64,7 @@ Release Notes
 简介
 -------------------
 
-白鹭引擎 ( Egret Engine ) 是一款使用 TypeScript 编写的HTML5开源免费游戏引擎，支持 TypeScript / JavaScript / JavaScript ES6 进行开发。白鹭引擎的核心定位是开放，高效，优雅。基于它，你可以快速轻松地构建HTML5移动游戏或原生游戏。
+Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游戏引擎。Egret 引擎的核心定位是开放，高效，优雅。基于它，你可以快速轻松地构建HTML5移动游戏或原生游戏。
 
 
 支持平台
@@ -89,46 +83,36 @@ Release Notes
 #### Mobile App
 * Android 2.3+
 * iOS 7.0+
-* Windows Phone 8
+* Windows Phone 8 ( 已支持，参见[这里](http://docs.egret-labs.org/post/tools/native/winphone.html) ）
 
 
 文档与教程
 -------------------------
-
-* 访问 [白鹭开发者中心](http://edn.egret.com) 获取 Egret 的文档、教程与 API 文档
-* 访问 [Egret Examples](https://github.com/egret-team/egret-examples) 获取示例项目
+* 访问 Egret 的[文档](http://docs.egret-labs.org/)和[教程](http://bbs.egret-labs.org/plugin.php?id=webpage&identifier=Egret)
+* 访问 [这里](http://docs.egret-labs.org/apis/) 获取 API 文档
+* 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
 第三方库
 -------------------------
-* 白鹭团队针对引擎封装维护了一些功能强大的第三方库，包括Google Adsense广告,MD5，手势，DOM元素渲染支持，粒子系统，物理系统等。访问[这里](https://github.com/egret-labs/egret-game-library)
+* Egret 团队针对引擎封装维护了一些功能强大的第三方库，包括Google Adsense广告,MD5，手势，DOM元素渲染支持，粒子系统，物理系统等。访问[这里](https://github.com/egret-labs/egret-game-library)
 
 工具
 -------------------------
+* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE
+* [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3到TS的代码转换工具
+* [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,RES资源模块配置文件管理工具
+* [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet工具
+* StarlingSWF
+    * StarlingSWF 是一款将 FlashPro创作的 SWF 文件生成 Starling/Features 支持格式的工具，被广泛用于 Flash 移动项目开发中。
+    * StarlingSWF 目前已经可以导出为 Egret 支持的格式 。 [官方下载地址](http://www.zmliu.com/?p=271)
 
-* 白鹭引擎提供了一系列开发工具帮助开发者更快速的进行产品开发，其中主要包括
-   * Egret Wing， 可视化集成开发环境，支持可视化创建、编辑和管理项目GUI，以及TS代码编写和断点调试。
-   * DragonBones，开源免费的移动游戏骨骼动画解决方案
-   * Egret Conversion，项目转换工具，支持Flash项目到Egret项目的一键高效转换
-   * EgretVS，Visual Studio插件，致力于提高Egret引擎在Visual Studio中的使用体验
-   * Egret Lakeshore，免费无需编程的游戏创作工具，通过Lakeshore可以轻松实现自己的游戏创作梦想
-   * Egret Feather，粒子编辑器，各个参数的组合塑造千变万化的效果
-   * Egret Inspector，Chrome开发者工具插件，能够帮助开发者可视化的调试Egret项目
-   * Texture Merger，纹理集打包工具，能批量将零散碎图合并为大图纹理集
-   * Res Depot，Egret游戏的可视化资源管理工具，能够轻松高效地管理海量游戏素材和配置文件资源
-   * Egret-Android-Support，将基于Egret引擎开发的游戏转换为Android APP的工具。
-   * Egret-iOS-Support，将基于Egret引擎开发的游戏转换为iOS APP的工具。
+
 
 发布说明
 --------------------
-[Egret 2.0.4 Release Notes 2015-8-13](/docs/cn/2.0.4_ReleaseNotes.md)
+[Egret 2.5.0 Release Notes 2015-9-25](/docs/cn/2.5.0_ReleaseNotes.md)
 
-[Egret 2.0.3 Release Notes 2015-7-30](/docs/cn/2.0.3_ReleaseNotes.md)
-
-[Egret 2.0 Final Release Notes 2015-7-16](/docs/cn/2.0_Final_ReleaseNotes.md)
-
-[Egret 2.0 Release Candidate 2 Release Notes 2015-7-2](/docs/cn/2.0_ReleaseCandidate_2_ReleaseNotes.md)
-
-[Egret 2.0 Release Candidate 1 Release Notes 2015-6-18](/docs/cn/2.0_ReleaseCandidate_1_ReleaseNotes.md)
+[Egret 2.4.0 Release Notes 2015-7-31](/docs/cn/2.4.0_ReleaseNotes.md)
 
 [Egret 1.7.3 Release Notes 2015-6-4](/docs/cn/1.7.3_ReleaseNotes.md)
 
@@ -193,5 +177,5 @@ Release Notes
 * 开发者论坛: http://bbs.egret-labs.org
 * 开发者群:
   * 1群：141578440 (2000 members capacity / Full)
-  * 2群：397297607 (1000 members capacity / Full)
+  * 2群：397297607 (1000 members capacity / avaliable)
   * 3群：399919028 (1000 members capacity / avaliable)

@@ -30,21 +30,44 @@
 module egret {
 
 	/**
-	 * @class egret.TextFieldType
-	 * @classdesc
+     * @language en_US
+     * TextFieldType class is an enumeration of constant value used in setting the type property of the TextField class.
+     * @version Egret 2.4
+     * @platform Web,Native
+	 */
+	/**
+     * @language zh_CN
      * TextFieldType 类是在设置 TextField 类的 type 属性时使用的常数值的枚举。
+     * @version Egret 2.4
+     * @platform Web,Native
 	 */
     export class TextFieldType{
 
 		/**
+         * @language en_US
+         * Used to specify dynamic text
+         * @version Egret 2.4
+         * @platform Web,Native
+		 */
+		/**
+         * @language zh_CN
          * 用于指定动态文本
-		 * @constant {string} egret.TextFieldType.DYNAMIC
+         * @version Egret 2.4
+         * @platform Web,Native
 		 */
         public static DYNAMIC:string = "dynamic";
 
 		/**
+         * @language en_US
+         * Used to specify the input text
+         * @version Egret 2.4
+         * @platform Web,Native
+		 */
+		/**
+         * @language zh_CN
          * 用于指定输入文本
-		 * @constant {string} egret.TextFieldType.INPUT
+         * @version Egret 2.4
+         * @platform Web,Native
 		 */
         public static INPUT:string = "input";
 

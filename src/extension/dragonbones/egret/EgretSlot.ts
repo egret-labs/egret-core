@@ -103,9 +103,8 @@ module dragonBones {
 
         /** @private */
         public _updateTransform():void{
-            if(this._egretDisplay)
-            {
-                this._egretDisplay.__hack_local_matrix = this._globalTransformMatrix;
+            if(this._egretDisplay) {
+                this._egretDisplay.$setMatrix(<egret.Matrix><any>this._globalTransformMatrix, false);
             }
         }
 

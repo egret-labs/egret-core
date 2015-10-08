@@ -83,12 +83,13 @@ module egret.gui {
          * @method egret.gui.SkinPartEvent.dispatchSkinPartEvent
          */
         public static dispatchSkinPartEvent(target:IEventDispatcher,type:string,
-                                            partName:string = null,instance:any = null):void{
-            var eventClass:any = SkinPartEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.partName = partName;
-            props.instance = instance;
-            Event._dispatchByTarget(eventClass,target,type,props);
+                                            partName:string = null,instance:any = null):boolean{
+			var event:SkinPartEvent = Event.create(SkinPartEvent, type);
+			event.partName = partName;
+			event.instance = instance;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 }

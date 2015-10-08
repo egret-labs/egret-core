@@ -27,40 +27,122 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * @namespace egret
- */
+/// <reference path="registerclass.ts" />
 
+function __extends(d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() {
+        this.constructor = d;
+    }
+
+    __.prototype = b.prototype;
+    d.prototype = new __();
+}
+var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 
 module egret {
+    /**
+     * @language en_US
+     * The HashObject class is the base class for all objects in the Egret framework.The HashObject
+     * class includes a hashCode property, which is a unique identification number of the instance.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Egret顶级对象。框架内所有对象的基类，为对象实例提供唯一的hashCode值。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    export interface IHashObject {
+        /**
+         * @language en_US
+         * a unique identification number assigned to this instance.
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        /**
+         * @language zh_CN
+         * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        hashCode:number;
+    }
 
-	/**
-	 * @class egret.HashObject
-     * @classdesc 哈希对象。引擎内所有对象的基类，为对象实例提供唯一的hashCode值,提高对象比较的性能。
-     * @implements egret.IHashObject
-	 */
+    /**
+     * @private
+     * 哈希计数
+     */
+    export var $hashCount:number = 1;
+
+    /**
+     * @language en_US
+     * The HashObject class is the base class for all objects in the Egret framework.The HashObject
+     * class includes a hashCode property, which is a unique identification number of the instance.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Egret顶级对象。框架内所有对象的基类，为对象实例提供唯一的hashCode值。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
     export class HashObject implements IHashObject{
 
         /**
-         * 创建一个 egret.HashObject 对象
-		 * @method egret.HashObject#constructor
+         * @language en_US
+         * Initializes a HashObject
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 HashObject 对象
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public constructor() {
-            this._hashCode = HashObject.hashCount++;
+            this.$hashCode = $hashCount++;
         }
 
         /**
-         * 哈希计数
+         * @private
          */
-        private static hashCount:number = 1;
-
-        private _hashCode:number;
+        $hashCode:number;
         /**
+         * @language en_US
+         * a unique identification number assigned to this instance.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 返回此对象唯一的哈希值,用于唯一确定一个对象。hashCode为大于等于1的整数。
-		 * @member {number} egret.HashObject#hashCode
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public get hashCode():number {
-            return this._hashCode;
+            return this.$hashCode;
         }
+    }
+
+    if(DEBUG){
+        egret.$markReadOnly(HashObject, "hashCode");
+    }
+
+
+    /**
+     * @private
+     */
+    export interface AsyncCallback {
+
+        onSuccess: (data:any) => any;
+
+        onFail: (error:number,data:any) => any;
+
     }
 }

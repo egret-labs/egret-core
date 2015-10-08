@@ -106,7 +106,6 @@ module egret.gui {
         /**
          * 字符之间的距离
          * @default 0
-         * @version 1.7.2
          * @param value
          */
         public set letterSpacing(value:number) {
@@ -131,7 +130,6 @@ module egret.gui {
         /**
          * 行与行之间的距离
          * @default 0
-         * @version 1.7.2
          * @param value
          */
         public set lineSpacing(value:number) {
@@ -195,7 +193,7 @@ module egret.gui {
         private getAdapter():IAssetAdapter {
             var adapter:IAssetAdapter;
             try {
-                adapter = Injector.getInstance("egret.gui.IAssetAdapter");
+                adapter = $getAdapter("egret.gui.IAssetAdapter");
             }
             catch (e) {
                 adapter = new DefaultAssetAdapter();
@@ -347,8 +345,9 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if (!isNaN(this.explicitWidth))
-                availableWidth = this.explicitWidth;
+            if (!isNaN(this.$getExplicitWidth())) {
+                availableWidth = this.$getExplicitWidth();
+            }
             else if (this.maxWidth != 10000)
                 availableWidth = this.maxWidth;
 
@@ -360,7 +359,7 @@ module egret.gui {
          */
         private isSpecialCase():boolean {
             return (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                isNaN(this.explicitHeight) &&
+                isNaN(this.$getExplicitWidth()) &&
                 isNaN(this.percentHeight);
         }
 
@@ -389,12 +388,12 @@ module egret.gui {
             this._bitmapText.height = NaN;
             if (!isNaN(w)) {
                 this._bitmapText.width = w - paddingL - paddingR;
-                this.measuredWidth = Math.ceil(this._bitmapText.measuredWidth);
-                this.measuredHeight = Math.ceil(this._bitmapText.measuredHeight);
+                this.measuredWidth = Math.ceil(this._bitmapText.width);
+                this.measuredHeight = Math.ceil(this._bitmapText.height);
             }
             else {
-                this.measuredWidth = Math.ceil(this._bitmapText.measuredWidth);
-                this.measuredHeight = Math.ceil(this._bitmapText.measuredHeight);
+                this.measuredWidth = Math.ceil(this._bitmapText.width);
+                this.measuredHeight = Math.ceil(this._bitmapText.height);
             }
             this.measuredWidth += paddingL + paddingR;
             this.measuredHeight += paddingT + paddingB;

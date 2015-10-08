@@ -1,0 +1,167 @@
+[
+  {
+    "desc":"class localStorage{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class ExternalInterface{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class StageText{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ mask: Rectangle; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ localToGlobal(x?: number, y?: number, resultPoint?: Point): Point; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ globalToLocal(x?: number, y?: number, resultPoint?: Point): Point; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ $setText(value: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ $setFont(value: BitmapFont): void; }",
+    "solved":true
+  },
+
+  {
+    "desc":"class TextField{ appendText(newText: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ appendElement(newElement: egret.ITextElement): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class EventPhase{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class EventDispatcher{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class Tween{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class Ease{ * }",
+    "solved":true
+  },
+  {
+    "desc":"interface IHashObject{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ constructor(texture?: Texture); }",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ texture: Texture; }",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ scale9Grid: Rectangle; }",
+    "solved":true
+  },
+  {
+    "desc":"function getString(id: number, ...args: any[]): string;",
+    "solved":true
+  },
+  {
+    "desc":"function $error(code: number, ...args: any[]): void;",
+    "solved":true
+  },
+  {
+    "desc":"function $warn(code: number, ...args: any[]): void;",
+    "solved":true
+  },
+  {
+    "desc":"function getOption(key: string): string;",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ constructor(type: string, bubbles?: boolean, cancelable?: boolean); }",
+    "solved":true
+  },
+  {
+    "desc":"class IOErrorEvent{ static dispatchIOErrorEvent(target: IEventDispatcher): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class ProgressEvent{ static dispatchProgressEvent(target: IEventDispatcher, type: string, bytesLoaded?: number, bytesTotal?: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TimerEvent{ static dispatchTimerEvent(target: IEventDispatcher, type: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Recycler{ _checkFrame(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Point{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class Rectangle{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollViewProperties{ _hScrollTween: Tween; }",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollViewProperties{ _vScrollTween: Tween; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ static dispatchEvent(target: IEventDispatcher, type: string, bubbles?: boolean, data?: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextEvent{ static dispatchTextEvent(target: IEventDispatcher, type: string, text: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class FrameLabel{ constructor(name: string, frame: number); }",
+    "solved":true
+  },
+  {
+    "desc":"class HTTPStatusEvent{ static dispatchHTTPStatusEvent(target: IEventDispatcher, status: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Sound{ play(loop?: boolean, position?: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Sound{ static MUSIC: string; }",
+    "solved":true
+  },
+  {
+    "desc":"class Sound{ static EFFECT: string; }",
+    "solved":true
+  },
+  {
+    "desc":"class Sound{ type: string; }",
+    "solved":true
+  },
+  {
+    "desc": "class XML{ static parse(value: string): any; }",
+    "solved":true
+  }
+]

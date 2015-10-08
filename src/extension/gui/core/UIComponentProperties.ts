@@ -41,8 +41,8 @@ module egret.gui {
         public _initialized:boolean = false;
         public _nestLevel:number = 0;
         public _enabled:boolean = true;
-        public _width:number = 0;
-        public _height:number = 0;
+        public _uiWidth:number = 0;
+        public _uiHeight:number = 0;
         public _minWidth:number = 0;
         public _maxWidth:number = 10000;
         public _minHeight:number = 0;
