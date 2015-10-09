@@ -446,7 +446,10 @@ module egret {
                 bounds.setTo(0, 0, w, h);
             }
             else {
-                bounds.setEmpty();
+                w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
+                h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
+
+                bounds.setTo(0, 0, w, h);
             }
         }
 
