@@ -438,18 +438,20 @@ module egret {
          */
         $measureContentBounds(bounds:Rectangle):void {
             var values = this.$Bitmap;
+            var x:number = values[sys.BitmapKeys.offsetX];
+            var y:number = values[sys.BitmapKeys.offsetY];
             if (values[sys.BitmapKeys.image]) {
                 var values = this.$Bitmap;
                 var w:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
                 var h:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.height];
 
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
             else {
                 w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
                 h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
 
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
         }
 
