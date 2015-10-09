@@ -52,24 +52,23 @@ module egret.gui {
         private _configURL:string;
         private loadConfig(configURL:string):void{
             this._configURL = configURL;
-
-            var loader:egret.HttpRequest = new HttpRequest();
-            loader.addEventListener(Event.COMPLETE,this.onLoadComplete,this);
-            loader.addEventListener(IOErrorEvent.IO_ERROR,this.onLoadError,this);
-            loader.responseType = egret.HttpResponseType.TEXT;
-            loader.open(configURL);
-            loader.send();
+            var adapter:IAssetAdapter;
+            try{
+                adapter = $getAdapter("egret.gui.IAssetAdapter");
+            }
+            catch(e){
+                adapter = new DefaultAssetAdapter();
+            }
+            adapter.getTheme(configURL, this.onLoadComplete, this.onLoadError, this);
         }
 
-        private onLoadComplete(event:Event):void{
-            var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+        private onLoadComplete(text:string):void{
             try{
-                var str:string = <string> loader.response;
-                var data:any = JSON.parse(str);
+                var data:any = JSON.parse(text);
                 this.skinMap = data.skins;
             }
             catch (e){
-                egret.$warn(1017, this._configURL, loader.response);
+                egret.$warn(1017, this._configURL, text);
             }
             this.handleDelyList();
         }

@@ -19074,7 +19074,6 @@ var egret;
             var d = __define,c=DefaultAssetAdapter;p=c.prototype;
             /**
              * 解析素材
-             * @method egret.gui.DefaultAssetAdapter#getAsset
              * @param source {any} 待解析的新素材标识符
              * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
              * 回调参数content接受两种类型：DisplayObject或Texture。
@@ -19103,6 +19102,25 @@ var egret;
                 else {
                     compFunc.call(thisObject, content, source);
                 }
+            };
+            /**
+             * 解析主题
+             * @param url 待解析的主题url
+             * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+             * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+             * @param thisObject 回调的this引用
+             */
+            p.getTheme = function (url, compFunc, errorFunc, thisObject) {
+                function onGet(event) {
+                    var loader = (event.target);
+                    compFunc.call(thisObject, loader.response);
+                }
+                var loader = new egret.HttpRequest();
+                loader.addEventListener(egret.Event.COMPLETE, onGet, thisObject);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, errorFunc, thisObject);
+                loader.responseType = egret.HttpResponseType.TEXT;
+                loader.open(url);
+                loader.send();
             };
             return DefaultAssetAdapter;
         })();
@@ -19816,22 +19834,23 @@ var egret;
             };
             p.loadConfig = function (configURL) {
                 this._configURL = configURL;
-                var loader = new egret.HttpRequest();
-                loader.addEventListener(egret.Event.COMPLETE, this.onLoadComplete, this);
-                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadError, this);
-                loader.responseType = egret.HttpResponseType.TEXT;
-                loader.open(configURL);
-                loader.send();
-            };
-            p.onLoadComplete = function (event) {
-                var loader = (event.target);
+                var adapter;
                 try {
-                    var str = loader.response;
-                    var data = JSON.parse(str);
+                    adapter = gui.$getAdapter("egret.gui.IAssetAdapter");
+                }
+                catch (e) {
+                    adapter = new gui.DefaultAssetAdapter();
+                }
+                adapter.getTheme(configURL, this.onLoadComplete, this.onLoadError, this);
+            };
+            p.onLoadComplete = function (text) {
+                console.log("Theme onLoadComplete");
+                try {
+                    var data = JSON.parse(text);
                     this.skinMap = data.skins;
                 }
                 catch (e) {
-                    egret.$warn(1017, this._configURL, loader.response);
+                    egret.$warn(1017, this._configURL, text);
                 }
                 this.handleDelyList();
             };
