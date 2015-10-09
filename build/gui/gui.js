@@ -2328,7 +2328,12 @@ var egret;
              */
             p.getSkinAdapter = function () {
                 var adapter;
-                adapter = new gui.DefaultSkinAdapter();
+                try {
+                    adapter = gui.$getAdapter("egret.gui.ISkinAdapter");
+                }
+                catch (e) {
+                    adapter = new gui.DefaultSkinAdapter();
+                }
                 SkinnableComponent.skinAdapter = adapter;
                 return adapter;
             };
