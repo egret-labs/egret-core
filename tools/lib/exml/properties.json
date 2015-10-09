@@ -872,6 +872,7 @@
 		"autoScale":"boolean",
 		"fillMode":"string",
 		"scale9Grid":"egret.Rectangle",
+		"smoothing":"boolean",
 		"source":"any",
 		"super":"egret.gui.UIComponent"
 	},

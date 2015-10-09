@@ -1,4 +1,4 @@
-<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret-labs.org/eui" xmlns="http://ns.egret-labs.org/eui" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://ns.egret-labs.org/manifest">
+<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret.com/eui" xmlns="http://ns.egret.com/eui" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://ns.egret-labs.org/manifest">
   <xs:simpleType name="egret.BitmapFillMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="repeat"/>

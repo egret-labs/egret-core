@@ -3319,6 +3319,7 @@
     <xs:attribute name="autoScale" type="xs:boolean"/>
     <xs:attribute name="fillMode" type="egret.BitmapFillMode"/>
     <xs:attribute name="scale9Grid" type="xs:string"/>
+    <xs:attribute name="smoothing" type="xs:boolean"/>
     <xs:attribute name="source" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="UIAsset_attributeElement">
@@ -3327,6 +3328,7 @@
       <xs:element name="autoScale" type="boolean"/>
       <xs:element name="fillMode" type="string"/>
       <xs:element name="scale9Grid" type="egret.Rectangle"/>
+      <xs:element name="smoothing" type="boolean"/>
       <xs:element name="source" type="any"/>
     </xs:choice>
   </xs:group>
