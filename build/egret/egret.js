@@ -4869,16 +4869,18 @@ var egret;
          */
         p.$measureContentBounds = function (bounds) {
             var values = this.$Bitmap;
+            var x = values[6 /* offsetX */];
+            var y = values[7 /* offsetY */];
             if (values[1 /* image */]) {
                 var values = this.$Bitmap;
                 var w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
                 var h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
             else {
                 w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : 0;
                 h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : 0;
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
         };
         /**
@@ -6564,6 +6566,7 @@ var egret;
                 this._fill();
                 this.fillStyle = null;
                 this.$renderContext.fillStyle = null;
+                this.$renderContext.strokeStyle = null;
             }
         };
         /**

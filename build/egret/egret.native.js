@@ -127,15 +127,16 @@ var egret;
                     return this.$strokeStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("strokeStyle::" + value);
                     this.$strokeStyle = value;
-                    egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.checkSurface();
                     this.$nativeGraphicsContext.strokeStyle = value;
                 }
@@ -152,15 +153,16 @@ var egret;
                     return this.$fillStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("fillStyle::" + value);
                     this.$fillStyle = value;
-                    egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.checkSurface();
                     this.$nativeGraphicsContext.fillStyle = value;
                 }
