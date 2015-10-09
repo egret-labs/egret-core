@@ -462,7 +462,7 @@ module egret {
                 Bitmap.$drawImage(context, values[sys.BitmapKeys.image],
                     values[sys.BitmapKeys.clipX], values[sys.BitmapKeys.clipY], values[sys.BitmapKeys.clipWidth], values[sys.BitmapKeys.clipHeight],
                     values[sys.BitmapKeys.offsetX], values[sys.BitmapKeys.offsetY], values[sys.BitmapKeys.width], values[sys.BitmapKeys.height],
-                    destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
+                    destW, destH, this.scale9Grid || values[sys.BitmapKeys.bitmapData]["scale9Grid"], this.fillMode, this.$smoothing);
             }
         }
 

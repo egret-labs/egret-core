@@ -2328,7 +2328,12 @@ var egret;
              */
             p.getSkinAdapter = function () {
                 var adapter;
-                adapter = new gui.DefaultSkinAdapter();
+                try {
+                    adapter = gui.$getAdapter("egret.gui.ISkinAdapter");
+                }
+                catch (e) {
+                    adapter = new gui.DefaultSkinAdapter();
+                }
                 SkinnableComponent.skinAdapter = adapter;
                 return adapter;
             };
@@ -17345,6 +17350,10 @@ var egret;
                  * 是自动否缩放content对象，以符合UIAsset的尺寸。默认值true。
                  */
                 this.autoScale = true;
+                /**
+                 * @private
+                 */
+                this.$smoothing = true;
                 this.touchChildren = false;
                 if (source) {
                     this.source = source;
@@ -17507,6 +17516,33 @@ var egret;
                 }
                 this.$invalidateContentBounds();
             };
+            d(p, "smoothing"
+                /**
+                 * @language en_US
+                 * Whether or not the bitmap is smoothed when scaled.
+                 * @default true。
+                 * @version Egret 2.4
+                 * @platform Web
+                 */
+                /**
+                 * @language zh_CN
+                 * 控制在缩放时是否对位图进行平滑处理。
+                 * @default true。
+                 * @version Egret 2.4
+                 * @platform Web
+                 */
+                ,function () {
+                    return this.$smoothing;
+                }
+                ,function (value) {
+                    value = !!value;
+                    if (value == this.$smoothing) {
+                        return;
+                    }
+                    this.$smoothing = value;
+                    this.$invalidate();
+                }
+            );
             /**
              * @private
              */
@@ -17524,7 +17560,7 @@ var egret;
                         destW = bitmapData.$getTextureWidth();
                         destH = bitmapData.$getTextureHeight();
                     }
-                    egret.Bitmap.$drawImage(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(), destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
+                    egret.Bitmap.$drawImage(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(), destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
                 }
                 _super.prototype.$render.call(this, context);
             };

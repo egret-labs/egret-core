@@ -4887,7 +4887,7 @@ var egret;
             if (values[1 /* image */]) {
                 var destW = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
                 var destH = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
+                Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], destW, destH, this.scale9Grid || values[0 /* bitmapData */]["scale9Grid"], this.fillMode, this.$smoothing);
             }
         };
         d(p, "pixelHitTest"
@@ -8080,13 +8080,17 @@ var egret;
             var renderMatrixTx = renderMatrix.tx;
             var renderMatrixTy = renderMatrix.ty;
             renderMatrix.identity();
+            //应用裁切
+            if (clipBounds) {
+                renderMatrix.translate(-clipBounds.x, -clipBounds.y);
+            }
             root.$displayList = null;
             this.context = this.createRenderContext(width, height);
             this.context.clearRect(0, 0, width, height);
             if (!this.context) {
                 return false;
             }
-            var drawCalls = this.drawDisplayObject(root, this.context);
+            var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA, renderMatrixB, renderMatrixC, renderMatrixD, renderMatrixTx, renderMatrixTy);
             if (drawCalls == 0) {
                 return false;
@@ -8141,19 +8145,19 @@ var egret;
                         continue;
                     }
                     if (child.$blendMode !== 0 || child.$mask) {
-                        drawCalls += this.drawWithClip(child, context);
+                        drawCalls += this.drawWithClip(child, context, rootMatrix);
                     }
                     else if (child.$scrollRect) {
-                        drawCalls += this.drawWithScrollRect(child, context);
+                        drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
                     }
                     else {
-                        drawCalls += this.drawDisplayObject(child, context);
+                        drawCalls += this.drawDisplayObject(child, context, rootMatrix);
                     }
                 }
             }
             return drawCalls;
         };
-        p.drawWithClip = function (displayObject, context) {
+        p.drawWithClip = function (displayObject, context, rootMatrix) {
             var drawCalls = 0;
             var hasBlendMode = (displayObject.$blendMode !== 0);
             if (hasBlendMode) {
@@ -8198,7 +8202,7 @@ var egret;
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayContext = this.createRenderContext(region.width, region.height);
             if (!displayContext) {
-                drawCalls += this.drawDisplayObject(displayObject, context);
+                drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
                 egret.sys.Region.release(region);
                 return drawCalls;
             }
@@ -8217,14 +8221,14 @@ var egret;
             if (mask) {
                 var maskContext = this.createRenderContext(region.width, region.height);
                 if (!maskContext) {
-                    drawCalls += this.drawDisplayObject(displayObject, context);
+                    drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
                     egret.sys.surfaceFactory.release(displayContext.surface);
                     egret.sys.Region.release(region);
                     return drawCalls;
                 }
                 maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                 rootM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                var calls = this.drawDisplayObject(mask, maskContext);
+                var calls = this.drawDisplayObject(mask, maskContext, rootM);
                 egret.Matrix.release(rootM);
                 if (calls > 0) {
                     drawCalls += calls;
@@ -8251,7 +8255,7 @@ var egret;
             egret.sys.Region.release(region);
             return drawCalls;
         };
-        p.drawWithScrollRect = function (displayObject, context) {
+        p.drawWithScrollRect = function (displayObject, context, rootMatrix) {
             var drawCalls = 0;
             var scrollRect = displayObject.$scrollRect;
             var m = displayObject.$getConcatenatedMatrix();
@@ -8265,11 +8269,20 @@ var egret;
             }
             //绘制显示对象自身
             context.save();
-            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            else {
+                context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
             context.beginPath();
             context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
             context.clip();
-            drawCalls += this.drawDisplayObject(displayObject, context);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+            }
+            drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
             context.restore();
             egret.sys.Region.release(region);
             return drawCalls;
