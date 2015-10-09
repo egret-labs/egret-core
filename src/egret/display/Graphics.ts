@@ -617,6 +617,7 @@ module egret {
                 this._fill();
                 this.fillStyle = null;
                 this.$renderContext.fillStyle = null;
+                this.$renderContext.strokeStyle = null;
             }
         }
 
