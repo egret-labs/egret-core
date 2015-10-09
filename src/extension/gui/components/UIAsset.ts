@@ -244,6 +244,37 @@ module egret.gui {
 		/**
 		 * @private
 		 */
+		$smoothing:boolean = true;
+		/**
+		 * @language en_US
+		 * Whether or not the bitmap is smoothed when scaled.
+		 * @default true。
+		 * @version Egret 2.4
+		 * @platform Web
+		 */
+		/**
+		 * @language zh_CN
+		 * 控制在缩放时是否对位图进行平滑处理。
+		 * @default true。
+		 * @version Egret 2.4
+		 * @platform Web
+		 */
+		public get smoothing():boolean {
+			return this.$smoothing;
+		}
+
+		public set smoothing(value:boolean) {
+			value = !!value;
+			if (value == this.$smoothing) {
+				return;
+			}
+			this.$smoothing = value;
+			this.$invalidate();
+		}
+
+		/**
+		 * @private
+		 */
 		$render(context:sys.RenderContext):void{
 			if (this._contentIsTexture) {
 				var bitmapData = <Texture> this._content;
@@ -261,7 +292,7 @@ module egret.gui {
 
                 Bitmap.$drawImage(context, bitmapData._bitmapData,
                     bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(),
-                    destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
+                    destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
 
 				//var offsetX:number = Math.round(bitmapData._offsetX);
 				//var offsetY:number = Math.round(bitmapData._offsetY);

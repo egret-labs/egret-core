@@ -6715,6 +6715,25 @@ declare module egret.gui {
         /**
          * @private
          */
+        $smoothing: boolean;
+        /**
+         * @language en_US
+         * Whether or not the bitmap is smoothed when scaled.
+         * @default true。
+         * @version Egret 2.4
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否对位图进行平滑处理。
+         * @default true。
+         * @version Egret 2.4
+         * @platform Web
+         */
+        smoothing: boolean;
+        /**
+         * @private
+         */
         $render(context: sys.RenderContext): void;
         /**
          * @private
