@@ -4876,7 +4876,9 @@ var egret;
                 bounds.setTo(0, 0, w, h);
             }
             else {
-                bounds.setEmpty();
+                w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : 0;
+                h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : 0;
+                bounds.setTo(0, 0, w, h);
             }
         };
         /**
