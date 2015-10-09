@@ -215,7 +215,7 @@ module dragonBones {
 		
 		/**
 		 * This DBObject instance global transform instance.
-		 * @see dragonBones.objects.DBTransform
+		 * @see dragonBones.DBTransform
 		 */
 		public get global():DBTransform{
 			return this._global;
@@ -228,7 +228,7 @@ module dragonBones {
 		
 		/**
 		 * This DBObject instance related to parent transform instance.
-		 * @see dragonBones.objects.DBTransform
+		 * @see dragonBones.DBTransform
 		 */
 		public get origin():DBTransform{
 			return this._origin;
