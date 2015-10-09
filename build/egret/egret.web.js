@@ -4076,6 +4076,7 @@ var egret;
                     continue;
                 }
                 attributes[name] = attributeNode.value;
+                xml["$" + name] = attributeNode.value;
             }
             var childNodes = node.childNodes;
             length = childNodes.length;
