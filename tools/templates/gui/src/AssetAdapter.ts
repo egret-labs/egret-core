@@ -83,8 +83,8 @@ class AssetAdapter implements egret.gui.IAssetAdapter {
         function onGetRes(e:string):void {
             compFunc.call(thisObject, e);
         }
-        function onError(e:egret.Event):void {
-            if((<egret.URLLoader>e.target)._request.url == url) {
+        function onError(e:RES.ResourceEvent):void {
+            if(e.resItem.url == url) {
                 RES.removeEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onError, null);
                 errorFunc.call(thisObject);
             }

@@ -7895,6 +7895,28 @@ var eui;
                 arr[0].call(arr[1], data, source);
             }
         };
+        /**
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         */
+        p.getTheme = function (url, compFunc, errorFunc, thisObject) {
+            function onGet(event) {
+                var loader = (event.target);
+                compFunc.call(thisObject, loader.response);
+            }
+            function onError(event) {
+                errorFunc.call(thisObject);
+            }
+            var loader = new egret.HttpRequest();
+            loader.addEventListener(egret.Event.COMPLETE, onGet, thisObject);
+            loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, thisObject);
+            loader.responseType = egret.HttpResponseType.TEXT;
+            loader.open(url);
+            loader.send();
+        };
         return DefaultAssetAdapter;
     })();
     eui.DefaultAssetAdapter = DefaultAssetAdapter;
@@ -14530,8 +14552,10 @@ var eui;
             this.skinMap = {};
             this.initialized = !configURL;
             if (stage) {
+                this.$stage = stage;
                 stage.registerImplementation("eui.Theme", this);
             }
+            this.$configURL = configURL;
             this.load(configURL);
         }
         var d = __define,c=Theme;p=c.prototype;
@@ -14541,26 +14565,30 @@ var eui;
          * @param url
          */
         p.load = function (url) {
-            var request = new egret.HttpRequest();
-            request.addEventListener(egret.Event.COMPLETE, this.onConfigLoaded, this);
-            request.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onConfigLoaded, this);
-            request.open(url);
-            request.send();
+            var adapter = this.$stage ? this.$stage.getImplementation("eui.IAssetAdapter") : null;
+            if (!adapter) {
+                adapter = new eui.DefaultAssetAdapter();
+            }
+            adapter.getTheme(url, this.onConfigLoaded, this.onConfigLoaded, this);
         };
         /**
          * @private
          *
-         * @param event
+         * @param str
          */
-        p.onConfigLoaded = function (event) {
-            var request = event.target;
-            try {
-                var data = JSON.parse(request.response);
-            }
-            catch (e) {
-                if (DEBUG) {
-                    egret.error(e.message);
+        p.onConfigLoaded = function (str) {
+            if (str) {
+                try {
+                    var data = JSON.parse(str);
                 }
+                catch (e) {
+                    if (DEBUG) {
+                        egret.$error(3000);
+                    }
+                }
+            }
+            else if (DEBUG) {
+                egret.$error(3000, this.$configURL);
             }
             if (data && data.skins) {
                 var skinMap = this.skinMap;

@@ -19844,7 +19844,6 @@ var egret;
                 adapter.getTheme(configURL, this.onLoadComplete, this.onLoadError, this);
             };
             p.onLoadComplete = function (text) {
-                console.log("Theme onLoadComplete");
                 try {
                     var data = JSON.parse(text);
                     this.skinMap = data.skins;
