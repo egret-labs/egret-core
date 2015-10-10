@@ -1176,6 +1176,10 @@ declare module egret.gui {
          */
         layout: LayoutBase;
         /**
+         * @copy egret.gui.GroupBase#autoLayout
+         */
+        autoLayout: boolean;
+        /**
          * [覆盖] 添加外观部件时调用
          * @param partName {string}
          * @param instance {any}
@@ -2503,6 +2507,13 @@ declare module egret.gui {
          * @member egret.gui.GroupBase#clipAndEnableScrolling
          */
         clipAndEnableScrolling: boolean;
+        private _autoLayout;
+        /**
+         * 如果为 true，则子项的位置和大小改变时，重新测量和布局。
+         * 如果为 false，则仅当子项添加或者删除时，重新测量和布局。
+         * @member egret.gui.GroupBase#autoLayout
+         */
+        autoLayout: boolean;
         private _horizontalScrollPosition;
         /**
          * 可视区域水平方向起始点
@@ -3031,6 +3042,10 @@ declare module egret.gui {
          */
         layout: LayoutBase;
         _setLayout(value: LayoutBase): void;
+        /**
+         * @copy egret.gui.GroupBase#autoLayout
+         */
+        autoLayout: boolean;
         /**
          * [覆盖] 添加外观部件时调用
          * @method egret.gui.SkinnableDataContainer#partAdded
@@ -10215,6 +10230,7 @@ declare module egret.gui {
          * 缓存所有布局属性
          */
         private cacheConstraints();
+        private setupParentLayout(enable);
         _setupStyleMapEntry(property: string): void;
         setValue(property: string, value: any): void;
         getCurrentValue(property: string): any;

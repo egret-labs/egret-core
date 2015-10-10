@@ -2907,6 +2907,26 @@ var egret;
                     }
                 }
             );
+            d(p, "autoLayout"
+                /**
+                 * @copy egret.gui.GroupBase#autoLayout
+                 */
+                ,function () {
+                    if (this.contentGroup)
+                        return this.contentGroup.autoLayout;
+                    else {
+                        var v = this.contentGroupProperties.autoLayout;
+                        return (v === undefined) ? true : v;
+                    }
+                }
+                ,function (value) {
+                    if (this.contentGroup) {
+                        this.contentGroup.autoLayout = value;
+                    }
+                    else
+                        this.contentGroupProperties.autoLayout = value;
+                }
+            );
             /**
              * [覆盖] 添加外观部件时调用
              * @param partName {string}
@@ -2917,8 +2937,11 @@ var egret;
                 if (instance == this.contentGroup) {
                     if (this.contentGroupProperties.layout !== undefined) {
                         this.contentGroup.layout = this.contentGroupProperties.layout;
-                        this.contentGroupProperties = {};
                     }
+                    if (this.contentGroupProperties.autoLayout !== undefined) {
+                        this.contentGroup.autoLayout = this.contentGroupProperties.autoLayout;
+                    }
+                    this.contentGroupProperties = {};
                     if (this._placeHolderGroup) {
                         this._placeHolderGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                         this._placeHolderGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
@@ -2950,6 +2973,7 @@ var egret;
                     this.contentGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                     this.contentGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
                     this.contentGroupProperties.layout = this.contentGroup.layout;
+                    this.contentGroupProperties.autoLayout = this.contentGroup.autoLayout;
                     this.contentGroup.layout = null;
                     if (this.contentGroup.numElements > 0) {
                         this._placeHolderGroup = new gui.Group;
@@ -6276,6 +6300,7 @@ var egret;
                 this._contentHeight = 0;
                 this._layout = null;
                 this._clipAndEnableScrolling = false;
+                this._autoLayout = true;
                 this._horizontalScrollPosition = 0;
                 this._verticalScrollPosition = 0;
                 /**
@@ -6401,6 +6426,26 @@ var egret;
                     }
                 }
             );
+            d(p, "autoLayout"
+                /**
+                 * 如果为 true，则子项的位置和大小改变时，重新测量和布局。
+                 * 如果为 false，则仅当子项添加或者删除时，重新测量和布局。
+                 * @member egret.gui.GroupBase#autoLayout
+                 */
+                ,function () {
+                    return this._autoLayout;
+                }
+                ,function (value) {
+                    if (this._autoLayout == value)
+                        return;
+                    this._autoLayout = value;
+                    if (value) {
+                        this.invalidateSize();
+                        this.invalidateDisplayList();
+                        this.invalidateParentSizeAndDisplayList();
+                    }
+                }
+            );
             d(p, "horizontalScrollPosition"
                 /**
                  * 可视区域水平方向起始点
@@ -6496,8 +6541,10 @@ var egret;
                 this._layoutInvalidateDisplayListFlag = true;
             };
             p._childXYChanged = function () {
-                this.invalidateSize();
-                this.invalidateDisplayList();
+                if (this.autoLayout) {
+                    this.invalidateSize();
+                    this.invalidateDisplayList();
+                }
             };
             /**
              * 标记需要更新显示列表但不需要更新布局
@@ -6520,10 +6567,12 @@ var egret;
              */
             p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
                 _super.prototype.updateDisplayList.call(this, unscaledWidth, unscaledHeight);
-                if (this._layoutInvalidateDisplayListFlag && this._layout) {
+                if (this._layoutInvalidateDisplayListFlag) {
                     this._layoutInvalidateDisplayListFlag = false;
-                    this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
-                    this.updateScrollRect(unscaledWidth, unscaledHeight);
+                    if (this.autoLayout && this._layout)
+                        this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
+                    if (this._layout)
+                        this.updateScrollRect(unscaledWidth, unscaledHeight);
                 }
             };
             d(p, "numElements"
@@ -7643,7 +7692,6 @@ var egret;
                 }
                 else {
                     this.dataGroup.dataProvider = value;
-                    this._dataGroupProperties.dataProvider = true;
                 }
             };
             d(p, "itemRenderer"
@@ -7661,7 +7709,6 @@ var egret;
                     }
                     else {
                         this.dataGroup.itemRenderer = value;
-                        this._dataGroupProperties.itemRenderer = true;
                     }
                 }
             );
@@ -7680,7 +7727,6 @@ var egret;
                     }
                     else {
                         this.dataGroup.itemRendererSkinName = value;
-                        this._dataGroupProperties.itemRendererSkinName = true;
                     }
                 }
             );
@@ -7701,7 +7747,6 @@ var egret;
                     }
                     else {
                         this.dataGroup.itemRendererFunction = value;
-                        this._dataGroupProperties.itemRendererFunction = true;
                     }
                 }
             );
@@ -7723,9 +7768,29 @@ var egret;
                 }
                 else {
                     this.dataGroup.layout = value;
-                    this._dataGroupProperties.layout = true;
                 }
             };
+            d(p, "autoLayout"
+                /**
+                 * @copy egret.gui.GroupBase#autoLayout
+                 */
+                ,function () {
+                    if (this.dataGroup)
+                        return this.dataGroup.autoLayout;
+                    else {
+                        var v = this._dataGroupProperties.autoLayout;
+                        return (v === undefined) ? true : v;
+                    }
+                }
+                ,function (value) {
+                    if (this.dataGroup == null) {
+                        this._dataGroupProperties.autoLayout = value;
+                    }
+                    else {
+                        this.dataGroup.autoLayout = value;
+                    }
+                }
+            );
             /**
              * [覆盖] 添加外观部件时调用
              * @method egret.gui.SkinnableDataContainer#partAdded
@@ -7735,29 +7800,26 @@ var egret;
             p.partAdded = function (partName, instance) {
                 _super.prototype.partAdded.call(this, partName, instance);
                 if (instance == this.dataGroup) {
-                    var newDataGroupProperties = {};
                     if (this._dataGroupProperties.layout !== undefined) {
                         this.dataGroup.layout = this._dataGroupProperties.layout;
-                        newDataGroupProperties.layout = true;
+                    }
+                    if (this._dataGroupProperties.autoLayout !== undefined) {
+                        this.dataGroup.autoLayout = this._dataGroupProperties.autoLayout;
                     }
                     if (this._dataGroupProperties.dataProvider !== undefined) {
                         this.dataGroup.dataProvider = this._dataGroupProperties.dataProvider;
-                        newDataGroupProperties.dataProvider = true;
                     }
                     if (this._dataGroupProperties.itemRenderer !== undefined) {
                         this.dataGroup.itemRenderer = this._dataGroupProperties.itemRenderer;
-                        newDataGroupProperties.itemRenderer = true;
                     }
                     if (this._dataGroupProperties.itemRendererSkinName !== undefined) {
                         this.dataGroup.itemRendererSkinName = this._dataGroupProperties.itemRendererSkinName;
-                        newDataGroupProperties.itemRendererSkinName = true;
                     }
                     if (this._dataGroupProperties.itemRendererFunction !== undefined) {
                         this.dataGroup.itemRendererFunction = this._dataGroupProperties.itemRendererFunction;
-                        newDataGroupProperties.itemRendererFunction = true;
                     }
                     this.dataGroup._rendererOwner = this;
-                    this._dataGroupProperties = newDataGroupProperties;
+                    this._dataGroupProperties = {};
                     if (this.hasEventListener(gui.RendererExistenceEvent.RENDERER_ADD)) {
                         this.dataGroup.addEventListener(gui.RendererExistenceEvent.RENDERER_ADD, this.dispatchEvent, this);
                     }
@@ -7778,16 +7840,12 @@ var egret;
                     this.dataGroup.removeEventListener(gui.RendererExistenceEvent.RENDERER_ADD, this.dispatchEvent, this);
                     this.dataGroup.removeEventListener(gui.RendererExistenceEvent.RENDERER_REMOVE, this.dispatchEvent, this);
                     var newDataGroupProperties = {};
-                    if (this._dataGroupProperties.layout)
-                        newDataGroupProperties.layout = this.dataGroup.layout;
-                    if (this._dataGroupProperties.dataProvider)
-                        newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
-                    if (this._dataGroupProperties.itemRenderer)
-                        newDataGroupProperties.itemRenderer = this.dataGroup.itemRenderer;
-                    if (this._dataGroupProperties.itemRendererSkinName)
-                        newDataGroupProperties.itemRendererSkinName = this.dataGroup.itemRendererSkinName;
-                    if (this._dataGroupProperties.itemRendererFunction)
-                        newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
+                    newDataGroupProperties.layout = this.dataGroup.layout;
+                    newDataGroupProperties.autoLayout = this.dataGroup.autoLayout;
+                    newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
+                    newDataGroupProperties.itemRenderer = this.dataGroup.itemRenderer;
+                    newDataGroupProperties.itemRendererSkinName = this.dataGroup.itemRendererSkinName;
+                    newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
                     this._dataGroupProperties = newDataGroupProperties;
                     this.dataGroup._rendererOwner = null;
                     this.dataGroup.dataProvider = null;
@@ -24909,6 +24967,7 @@ var egret;
             };
             p.animationStart = function (animation) {
                 if (this.disableLayout) {
+                    this.setupParentLayout(false);
                     this.cacheConstraints();
                 }
                 else if (this.disabledConstraintsMap) {
@@ -24934,6 +24993,7 @@ var egret;
             p.animationCleanup = function () {
                 if (this.disableLayout) {
                     this.reenableConstraints();
+                    this.setupParentLayout(true);
                 }
             };
             p.animationEnd = function (animation) {
@@ -25032,6 +25092,14 @@ var egret;
                     this.oldHeight = this.target.explicitHeight;
                     this.target.height = h;
                 }
+            };
+            p.setupParentLayout = function (enable) {
+                var parent = null;
+                if ("parent" in this.target && this.target.parent) {
+                    parent = this.target.parent;
+                }
+                if (parent && ("autoLayout" in parent))
+                    parent.autoLayout = enable;
             };
             p._setupStyleMapEntry = function (property) {
                 if (this.isStyleMap[property] == undefined) {
