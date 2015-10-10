@@ -4541,18 +4541,18 @@ var egret;
         /**
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData|Texture object.
-         * @param bitmapData The BitmapData object being referenced.
+         * @param value The BitmapData|Texture object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData|Texture 实例的 Bitmap 对象
-         * @param bitmapData 被引用的 BitmapData 实例
+         * @param value 被引用的 BitmapData|Texture 实例
          * @version Egret 2.4
          * @platform Web,Native
          */
-        function Bitmap(bitmapData) {
+        function Bitmap(value) {
             _super.call(this);
             /**
              * @private
@@ -4583,7 +4583,7 @@ var egret;
                 11: NaN,
                 12: NaN //explicitBitmapHeight,
             };
-            this.$setBitmapData(bitmapData);
+            this.$setBitmapData(value);
         }
         var d = __define,c=Bitmap;p=c.prototype;
         /**
@@ -4621,18 +4621,26 @@ var egret;
         d(p, "bitmapData"
             /**
              * @language en_US
-             * The BitmapData|Texture object being referenced.
+             * The BitmapData object being referenced.
+             * If you pass the constructor of type Texture or last set for texture, this value returns null.
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 被引用的 BitmapData|Texture 对象。
+             * 被引用的 BitmapData 对象。
+             * 如果传入构造函数的类型为 Texture 或者最后设置的为 texture，则此值返回 null。
              * @version Egret 2.4
              * @platform Web,Native
              */
             ,function () {
-                return this.$Bitmap[0 /* bitmapData */];
+                var value = this.$Bitmap[0 /* bitmapData */];
+                if (value instanceof egret.Texture) {
+                    return null;
+                }
+                else {
+                    return value;
+                }
             }
             ,function (value) {
                 this.$setBitmapData(value);
@@ -4640,12 +4648,27 @@ var egret;
         );
         d(p, "texture"
             /**
-             * @copy #bitmapData
+             * @language en_US
+             * The Texture object being referenced.
+             * If you pass the constructor of type BitmapData or last set for bitmapData, this value returns null.
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 被引用的 Texture 对象。
+             * 如果传入构造函数的类型为 BitmapData 或者最后设置的为 bitmapData，则此值返回 null。
              * @version Egret 2.4
              * @platform Web,Native
              */
             ,function () {
-                return this.$Bitmap[0 /* bitmapData */];
+                var value = this.$Bitmap[0 /* bitmapData */];
+                if (value instanceof egret.Texture) {
+                    return value;
+                }
+                else {
+                    return null;
+                }
             }
             ,function (value) {
                 this.$setBitmapData(value);
@@ -4846,14 +4869,18 @@ var egret;
          */
         p.$measureContentBounds = function (bounds) {
             var values = this.$Bitmap;
+            var x = values[6 /* offsetX */];
+            var y = values[7 /* offsetY */];
             if (values[1 /* image */]) {
                 var values = this.$Bitmap;
                 var w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
                 var h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
             else {
-                bounds.setEmpty();
+                w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : 0;
+                h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : 0;
+                bounds.setTo(x, y, w, h);
             }
         };
         /**
@@ -4864,7 +4891,7 @@ var egret;
             if (values[1 /* image */]) {
                 var destW = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
                 var destH = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
+                Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], destW, destH, this.scale9Grid || values[0 /* bitmapData */]["scale9Grid"], this.fillMode, this.$smoothing);
             }
         };
         d(p, "pixelHitTest"
@@ -6538,6 +6565,8 @@ var egret;
             if (this.fillStyle != null || this.strokeStyleColor != null) {
                 this._fill();
                 this.fillStyle = null;
+                this.$renderContext.fillStyle = null;
+                this.$renderContext.strokeStyle = null;
             }
         };
         /**
@@ -7508,6 +7537,14 @@ var egret;
                     map[command.type].apply(context, command.arguments);
                 }
             }
+            if (this._fillStyle) {
+                map[9 /* fill */].apply(context, []);
+                map[10 /* closePath */].apply(context, []);
+            }
+            if (this._strokeStyle) {
+                map[15 /* stroke */].apply(context, []);
+                map[10 /* closePath */].apply(context, []);
+            }
             context.restore();
         };
         return GraphicsRenderContext;
@@ -8048,13 +8085,17 @@ var egret;
             var renderMatrixTx = renderMatrix.tx;
             var renderMatrixTy = renderMatrix.ty;
             renderMatrix.identity();
+            //应用裁切
+            if (clipBounds) {
+                renderMatrix.translate(-clipBounds.x, -clipBounds.y);
+            }
             root.$displayList = null;
             this.context = this.createRenderContext(width, height);
             this.context.clearRect(0, 0, width, height);
             if (!this.context) {
                 return false;
             }
-            var drawCalls = this.drawDisplayObject(root, this.context);
+            var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA, renderMatrixB, renderMatrixC, renderMatrixD, renderMatrixTx, renderMatrixTy);
             if (drawCalls == 0) {
                 return false;
@@ -8109,19 +8150,19 @@ var egret;
                         continue;
                     }
                     if (child.$blendMode !== 0 || child.$mask) {
-                        drawCalls += this.drawWithClip(child, context);
+                        drawCalls += this.drawWithClip(child, context, rootMatrix);
                     }
                     else if (child.$scrollRect) {
-                        drawCalls += this.drawWithScrollRect(child, context);
+                        drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
                     }
                     else {
-                        drawCalls += this.drawDisplayObject(child, context);
+                        drawCalls += this.drawDisplayObject(child, context, rootMatrix);
                     }
                 }
             }
             return drawCalls;
         };
-        p.drawWithClip = function (displayObject, context) {
+        p.drawWithClip = function (displayObject, context, rootMatrix) {
             var drawCalls = 0;
             var hasBlendMode = (displayObject.$blendMode !== 0);
             if (hasBlendMode) {
@@ -8166,7 +8207,7 @@ var egret;
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayContext = this.createRenderContext(region.width, region.height);
             if (!displayContext) {
-                drawCalls += this.drawDisplayObject(displayObject, context);
+                drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
                 egret.sys.Region.release(region);
                 return drawCalls;
             }
@@ -8185,14 +8226,14 @@ var egret;
             if (mask) {
                 var maskContext = this.createRenderContext(region.width, region.height);
                 if (!maskContext) {
-                    drawCalls += this.drawDisplayObject(displayObject, context);
+                    drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
                     egret.sys.surfaceFactory.release(displayContext.surface);
                     egret.sys.Region.release(region);
                     return drawCalls;
                 }
                 maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                 rootM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                var calls = this.drawDisplayObject(mask, maskContext);
+                var calls = this.drawDisplayObject(mask, maskContext, rootM);
                 egret.Matrix.release(rootM);
                 if (calls > 0) {
                     drawCalls += calls;
@@ -8219,7 +8260,7 @@ var egret;
             egret.sys.Region.release(region);
             return drawCalls;
         };
-        p.drawWithScrollRect = function (displayObject, context) {
+        p.drawWithScrollRect = function (displayObject, context, rootMatrix) {
             var drawCalls = 0;
             var scrollRect = displayObject.$scrollRect;
             var m = displayObject.$getConcatenatedMatrix();
@@ -8233,11 +8274,20 @@ var egret;
             }
             //绘制显示对象自身
             context.save();
-            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            else {
+                context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
             context.beginPath();
             context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
             context.clip();
-            drawCalls += this.drawDisplayObject(displayObject, context);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+            }
+            drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
             context.restore();
             egret.sys.Region.release(region);
             return drawCalls;
@@ -8256,6 +8306,9 @@ var egret;
             if (this.rootDisplayList) {
                 egret.sys.DisplayList.release(this.rootDisplayList);
                 this.rootDisplayList = null;
+            }
+            if (this.context) {
+                egret.sys.surfaceFactory.release(this.context.surface);
             }
         };
         return RenderTexture;
@@ -12790,6 +12843,9 @@ var egret;
     locale_strings[1012] = "The type of parameter {0} must be Class.";
     locale_strings[1013] = "Variable assignment is NaN, please see the code!";
     locale_strings[1014] = "the constant \"{1}\" of the Class \"{0}\" is read-only";
+    locale_strings[1015] = "xml not found!";
+    locale_strings[1016] = "{0}has been obsoleted";
+    locale_strings[1017] = "The format of JSON file is incorrect: {0}\ndata: {1}";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "This method is not available in the ScrollView!";
     locale_strings[1025] = "end of the file";
@@ -12915,6 +12971,9 @@ var egret;
     locale_strings[1012] = "参数 {0} 的类型必须为 Class。";
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
     locale_strings[1014] = "类 {0} 常量 {1} 是只读的";
+    locale_strings[1015] = "xml not found!";
+    locale_strings[1016] = "{0}已经废弃";
+    locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
     locale_strings[1025] = "遇到文件尾";

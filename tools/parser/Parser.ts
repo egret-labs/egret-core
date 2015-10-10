@@ -186,42 +186,45 @@ export function parseCommandLine(commandLine: string[]) {
         if (commands.length > 0) {
             options.commands = commands.concat();
             options.command = commands[0];
-            if (file.isDirectory(commands[1]) || options.command=="create") {
+            if (file.isDirectory(commands[1]) || options.command == "create"
+                                              || options.command == "create_app"
+                                              || options.command == "create_lib"
+                                              || options.command == "apitest") {
                 options.projectDir = commands[1];
                 commands.splice(1, 1);
             }
-            else if (file.isDirectory(commands[1]) || options.command=="create_app") {
-                options.projectDir = commands[1];
-                commands.splice(1, 1);
-            }
-            else if (file.isDirectory(commands[1]) || options.command=="create_lib") {
-                options.projectDir = commands[1];
-                commands.splice(1, 1);
-            }
-            else if (file.isDirectory(commands[1]) || options.command == "apitest") {
-                options.projectDir = commands[1];
-                commands.splice(1, 1);
-            }
-            
-            
+            //else if (file.isDirectory(commands[1]) && !file.exists(commands[1]) || options.command=="create_app") {
+            //    options.projectDir = commands[1];
+            //    commands.splice(1, 1);
+            //}
+            //else if (file.isDirectory(commands[1]) || options.command=="create_lib") {
+            //    options.projectDir = commands[1];
+            //    commands.splice(1, 1);
+            //}
+            //else if (file.isDirectory(commands[1]) || options.command == "apitest") {
+            //    options.projectDir = commands[1];
+            //    commands.splice(1, 1);
+            //}
         }
 
-
-
-        if (options.projectDir == null)
-            options.projectDir = process.cwd()
-        else {
-            var absPath = file.joinPath(process.cwd(), options.projectDir);
-            if(file.isDirectory(absPath)){
-                options.projectDir = absPath;
+        //create_app命令不强制设置projectDir属性
+        if(options.projectDir == null && options.command == "create_app"){
+        }else{
+            if (options.projectDir == null)
+                options.projectDir = process.cwd();
+            else {
+                var absPath = file.joinPath(process.cwd(), options.projectDir);
+                if(file.isDirectory(absPath)){
+                    options.projectDir = absPath;
+                }
+                else if(file.isDirectory(options.projectDir)){
+                }
             }
-            else if(file.isDirectory(options.projectDir)){
-            }
+            options.projectDir = file.joinPath(options.projectDir, "/");
+
+            properties.init(options.projectDir);
+            options.properties = properties;
         }
-        options.projectDir = file.joinPath(options.projectDir, "/");
-
-        properties.init(options.projectDir);
-        options.properties = properties;
 
         var packagePath = file.joinPath(egret.root, "package.json");
 

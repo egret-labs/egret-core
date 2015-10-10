@@ -49,7 +49,7 @@ module egret {
      */
     export class RenderTexture extends egret.Texture {
 
-        protected context;
+        protected context:sys.RenderContext;
 
         private rootDisplayList:sys.DisplayList;
 
@@ -108,6 +108,10 @@ module egret {
             var renderMatrixTx = renderMatrix.tx;
             var renderMatrixTy = renderMatrix.ty;
             renderMatrix.identity();
+            //应用裁切
+            if(clipBounds) {
+                renderMatrix.translate(-clipBounds.x, -clipBounds.y);
+            }
 
             root.$displayList = null;
 
@@ -116,7 +120,7 @@ module egret {
             if (!this.context) {
                 return false;
             }
-            var drawCalls = this.drawDisplayObject(root, this.context);
+            var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA,renderMatrixB,renderMatrixC,renderMatrixD,renderMatrixTx,renderMatrixTy);
             if (drawCalls == 0) {
                 return false;
@@ -142,7 +146,7 @@ module egret {
             }
         }
 
-        protected drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix?:Matrix):number {
+        protected drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix:Matrix):number {
             var drawCalls = 0;
             var node:sys.Renderable;
             var globalAlpha:number;
@@ -173,20 +177,20 @@ module egret {
                         continue;
                     }
                     if (child.$blendMode !== 0 || child.$mask) {
-                        drawCalls += this.drawWithClip(child, context);
+                        drawCalls += this.drawWithClip(child, context, rootMatrix);
                     }
                     else if (child.$scrollRect) {
-                        drawCalls += this.drawWithScrollRect(child, context);
+                        drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
                     }
                     else {
-                        drawCalls += this.drawDisplayObject(child, context);
+                        drawCalls += this.drawDisplayObject(child, context, rootMatrix);
                     }
                 }
             }
             return drawCalls;
         }
 
-        private drawWithClip(displayObject:DisplayObject, context:sys.RenderContext):number {
+        private drawWithClip(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix:Matrix):number {
             var drawCalls = 0;
             var hasBlendMode = (displayObject.$blendMode !== 0);
             if (hasBlendMode) {
@@ -234,7 +238,7 @@ module egret {
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayContext = this.createRenderContext(region.width, region.height);
             if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
-                drawCalls += this.drawDisplayObject(displayObject, context);
+                drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
                 sys.Region.release(region);
                 return drawCalls;
             }
@@ -253,14 +257,14 @@ module egret {
             if (mask) {
                 var maskContext = this.createRenderContext(region.width, region.height);
                 if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
-                    drawCalls += this.drawDisplayObject(displayObject, context);
+                    drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
                     sys.surfaceFactory.release(displayContext.surface);
                     sys.Region.release(region);
                     return drawCalls;
                 }
                 maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                 rootM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                var calls = this.drawDisplayObject(mask, maskContext);
+                var calls = this.drawDisplayObject(mask, maskContext, rootM);
                 Matrix.release(rootM);
                 if (calls > 0) {
                     drawCalls += calls;
@@ -291,7 +295,7 @@ module egret {
             return drawCalls;
         }
 
-        private drawWithScrollRect(displayObject:DisplayObject, context:sys.RenderContext):number {
+        private drawWithScrollRect(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix:Matrix):number {
             var drawCalls = 0;
             var scrollRect = displayObject.$scrollRect;
 
@@ -307,18 +311,27 @@ module egret {
 
             //绘制显示对象自身
             context.save();
-            context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            else {
+                context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
             context.beginPath();
             context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
             context.clip();
-            drawCalls += this.drawDisplayObject(displayObject, context);
+            if (rootMatrix) {
+                context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+            }
+            drawCalls += this.drawDisplayObject(displayObject, context, rootMatrix);
             context.restore();
 
             sys.Region.release(region);
             return drawCalls;
         }
 
-        private createRenderContext(width:number, height:number):sys.RenderContext {
+        protected createRenderContext(width:number, height:number):sys.RenderContext {
             var surface = sys.surfaceFactory.create(true);
             if (!surface) {
                 return null;
@@ -333,6 +346,9 @@ module egret {
             if(this.rootDisplayList) {
                 sys.DisplayList.release(this.rootDisplayList);
                 this.rootDisplayList = null;
+            }
+            if(this.context) {
+                sys.surfaceFactory.release(this.context.surface);
             }
         }
     }

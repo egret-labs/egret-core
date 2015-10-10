@@ -2702,18 +2702,18 @@ declare module egret {
         /**
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData|Texture object.
-         * @param bitmapData The BitmapData object being referenced.
+         * @param value The BitmapData|Texture object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData|Texture 实例的 Bitmap 对象
-         * @param bitmapData 被引用的 BitmapData 实例
+         * @param value 被引用的 BitmapData|Texture 实例
          * @version Egret 2.4
          * @platform Web,Native
          */
-        constructor(bitmapData?: BitmapData | Texture);
+        constructor(value?: BitmapData | Texture);
         /**
          * @private
          */
@@ -2730,23 +2730,34 @@ declare module egret {
         $onRemoveFromStage(): void;
         /**
          * @language en_US
-         * The BitmapData|Texture object being referenced.
+         * The BitmapData object being referenced.
+         * If you pass the constructor of type Texture or last set for texture, this value returns null.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 被引用的 BitmapData|Texture 对象。
+         * 被引用的 BitmapData 对象。
+         * 如果传入构造函数的类型为 Texture 或者最后设置的为 texture，则此值返回 null。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        bitmapData: BitmapData | Texture;
+        bitmapData: BitmapData;
         /**
-         * @copy #bitmapData
+         * @language en_US
+         * The Texture object being referenced.
+         * If you pass the constructor of type BitmapData or last set for bitmapData, this value returns null.
          * @version Egret 2.4
          * @platform Web,Native
          */
-        texture: BitmapData | Texture;
+        /**
+         * @language zh_CN
+         * 被引用的 Texture 对象。
+         * 如果传入构造函数的类型为 BitmapData 或者最后设置的为 bitmapData，则此值返回 null。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        texture: Texture;
         /**
          * @private
          */
@@ -5009,7 +5020,7 @@ declare module egret {
      * @includeExample egret/display/RenderTexture.ts
      */
     class RenderTexture extends egret.Texture {
-        protected context: any;
+        protected context: sys.RenderContext;
         private rootDisplayList;
         constructor();
         /**
@@ -5032,10 +5043,10 @@ declare module egret {
          */
         drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
         private $update(displayObject);
-        protected drawDisplayObject(displayObject: DisplayObject, context: sys.RenderContext, rootMatrix?: Matrix): number;
-        private drawWithClip(displayObject, context);
-        private drawWithScrollRect(displayObject, context);
-        private createRenderContext(width, height);
+        protected drawDisplayObject(displayObject: DisplayObject, context: sys.RenderContext, rootMatrix: Matrix): number;
+        private drawWithClip(displayObject, context, rootMatrix);
+        private drawWithScrollRect(displayObject, context, rootMatrix);
+        protected createRenderContext(width: number, height: number): sys.RenderContext;
         dispose(): void;
     }
 }
@@ -9744,7 +9755,7 @@ declare module egret {
      * The Loader class is used to load image (JPG, PNG, or GIF) files. Use the load() method to initiate loading.
      * The loaded image data is in the data property of ImageLoader.
      * @event egret.Event.COMPLETE Dispatched when the net request is complete.
-     * @event egret.Event.IO_ERROR Dispatched when the net request is failed.
+     * @event egret.IOErrorEvent.IO_ERROR Dispatched when the net request is failed.
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native
@@ -9754,7 +9765,7 @@ declare module egret {
      * @language zh_CN
      * ImageLoader 类可用于加载图像（JPG、PNG 或 GIF）文件。使用 load() 方法来启动加载。被加载的图像对象数据将存储在 ImageLoader.data 属性上 。
      * @event egret.Event.COMPLETE 加载完成
-     * @event egret.Event.IO_ERROR 加载失败
+     * @event egret.IOErrorEvent.IO_ERROR 加载失败
      * @see egret.HttpRequest
      * @version Egret 2.4
      * @platform Web,Native

@@ -124,7 +124,12 @@ module egret.gui {
          */
         private getSkinAdapter():ISkinAdapter{
             var adapter:ISkinAdapter;
-            adapter = new DefaultSkinAdapter();
+            try{
+                adapter = $getAdapter("egret.gui.ISkinAdapter");
+            }
+            catch(e){
+                adapter = new DefaultSkinAdapter();
+            }
             SkinnableComponent.skinAdapter = adapter;
             return adapter;
         }
