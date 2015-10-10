@@ -14,6 +14,7 @@ var AutoCompileCommand = (function () {
         this.messages = [[], []];
         this._request = null;
         this._lastBuildTime = Date.now();
+        this.sourceMapStateChanged = false;
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
@@ -93,7 +94,8 @@ var AutoCompileCommand = (function () {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
-        if (codes.length) {
+        if (codes.length || this.sourceMapStateChanged) {
+            this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
             console.log("result.files:", result.files);
             if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
@@ -168,6 +170,7 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
         if (msg.command == 'build' && msg.option) {
+            this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
             var props = egret.args.properties;
             egret.args = parser.parseJSON(msg.option);
             egret.args.properties = props;
@@ -204,5 +207,4 @@ var AutoCompileCommand = (function () {
     return AutoCompileCommand;
 })();
 module.exports = AutoCompileCommand;
-
-//# sourceMappingURL=../commands/compileservice.js.map
+//# sourceMappingURL=compileservice.js.map
