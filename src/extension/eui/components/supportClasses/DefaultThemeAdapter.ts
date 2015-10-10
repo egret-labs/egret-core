@@ -27,55 +27,45 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+
 module eui {
+
     /**
      * @language en_US
-     * Interface of asset adapter.
-     * If your project need to custom the resource parsing rule, you need to implement the <code>IAssetAdapter</code>.
-     * And use the following code to inject it to the system:
-     * <pre>
-     *      var assetAdapter = new YourAssetAdapter();
-     *      Stage.registerImplementation("eui.IAssetAdapter",assetAdapter)
-     * </pre>
-     *
+     * Default instance of interface <code>IThemeAdapter</code>.
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      */
     /**
      * @language zh_CN
-     * 素材适配器接口。
-     * 若项目需要自定义 Image.source的解析规则，需要实现这个接口，
-     * 然后调用如下代码注入自定义实现到框架即可：
-     * <pre>
-     *      var assetAdapter = new YourAssetAdapter();
-     *      Stage.registerImplementation("eui.IAssetAdapter",assetAdapter)
-     * </pre>
+     * 默认的IThemeAdapter接口实现。
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
      */
-    export interface IAssetAdapter{
+    export class DefaultThemeAdapter implements IThemeAdapter {
         /**
-         * @language en_US
-         * parsing a source to asset.
-         * @param source identifier of a new asset need to be resolved.
-         * @param callBack called when complete resolving. Example：callBack(content:any,source:string):void;
-         * @param thisObject <code>this</code> object of callback.
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
          */
-        /**
-         * @language zh_CN
-         * 解析素材。
-         * @param source 待解析的新素材标识符。
-         * @param callBack 解析完成回调函数，示例：callBack(content:any,source:string):void;。
-         * @param thisObject callBack的this引用。
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        getAsset(source: string, callBack: (content: any, source: string) => void, thisObject: any): void;
+        public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
+            function onGet(event:egret.Event):void {
+                var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+                compFunc.call(thisObject, loader.response);
+            }
+            function onError(event:egret.Event):void {
+                errorFunc.call(thisObject);
+            }
+            var loader:egret.HttpRequest = new egret.HttpRequest();
+            loader.addEventListener(egret.Event.COMPLETE,onGet,thisObject);
+            loader.addEventListener(egret.IOErrorEvent.IO_ERROR,onError,thisObject);
+            loader.responseType = egret.HttpResponseType.TEXT;
+            loader.open(url);
+            loader.send();
+        }
     }
 }

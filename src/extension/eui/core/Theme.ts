@@ -165,9 +165,9 @@ module eui {
          * @param url
          */
         private load(url:string):void {
-            var adapter:IAssetAdapter = this.$stage?this.$stage.getImplementation("eui.IAssetAdapter"):null;
+            var adapter:IThemeAdapter = this.$stage?this.$stage.getImplementation("eui.IThemeAdapter"):null;
             if (!adapter) {
-                adapter = new DefaultAssetAdapter();
+                adapter = new DefaultThemeAdapter();
             }
             adapter.getTheme(url, this.onConfigLoaded, this.onConfigLoaded, this);
         }

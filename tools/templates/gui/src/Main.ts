@@ -44,6 +44,7 @@ class Main extends egret.DisplayObjectContainer {
         //inject the custom material parser
         //注入自定义的素材解析器
         egret.gui.mapClass("egret.gui.IAssetAdapter", AssetAdapter);
+        egret.gui.mapClass("egret.gui.IThemeAdapter", ThemeAdapter);
         //Config loading process interface
         //设置加载进度界面
         this.loadingView = new LoadingUI();

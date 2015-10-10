@@ -27,24 +27,27 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.gui {
+
+class ThemeAdapter implements eui.IThemeAdapter {
+
     /**
-     * @class egret.gui.IAssetAdapter
-     * @interface
-     * @classdesc
-     * 素材适配器接口。
-     * 若项目需要自定义UIAsset.source的解析规则，需要实现这个接口，
+     * 解析主题
+     * @param url 待解析的主题url
+     * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+     * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+     * @param thisObject 回调的this引用
      */
-    export interface IAssetAdapter{
-        /**
-         * 解析素材
-         * @param source {any} 待解析的新素材标识符
-         * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
-         * 回调参数content接受两种类型：DisplayObject或Texture。
-         * @param thisObject {any} compFunc的this引用
-         * @param oldContent any 旧的内容对象,传入值有可能为null。
-         * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
-         */
-        getAsset(source: any, compFunc: (content: any, source: any) => void, thisObject: any, oldContent: any): void;
+    public getTheme(url:string,compFunc:Function,errorFunc:Function,thisObject:any):void {
+        function onGetRes(e:string):void {
+            compFunc.call(thisObject, e);
+        }
+        function onError(e:RES.ResourceEvent):void {
+            if(e.resItem.url == url) {
+                RES.removeEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onError, null);
+                errorFunc.call(thisObject);
+            }
+        }
+        RES.addEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, onError, null);
+        RES.getResByUrl(url, onGetRes, this, RES.ResourceItem.TYPE_TEXT);
     }
 }

@@ -7413,6 +7413,27 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @classdesc
+     * 默认的IThemeAdapter接口实现
+     * @implements egret.gui.IThemeAdapter
+     */
+    class DefaultThemeAdapter implements IThemeAdapter {
+        /**
+         * 构造函数
+         */
+        constructor();
+        /**
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         */
+        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.DropDownController
      * @classdesc
      * 用于处理因用户交互而打开和关闭下拉列表的操作的控制器
@@ -7636,14 +7657,6 @@ declare module egret.gui {
          * 对于某些类型素材，例如MovieClip，可以重用传入的显示对象,只修改其数据再返回。
          */
         getAsset(source: any, compFunc: (content: any, source: any) => void, thisObject: any, oldContent: any): void;
-        /**
-         * 解析主题
-         * @param url 待解析的主题url
-         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
-         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
-         * @param thisObject 回调的this引用
-         */
-        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
     }
 }
 declare module egret.gui {
@@ -8171,6 +8184,23 @@ declare module egret.gui {
          * @param parentChain
          */
         regenerateStyleCache(parentChain: any): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @interface
+     * @classdesc
+     * 主题适配器接口。
+     */
+    interface IThemeAdapter {
+        /**
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         */
+        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
     }
 }
 declare module egret.gui {

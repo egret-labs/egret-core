@@ -52,12 +52,12 @@ module egret.gui {
         private _configURL:string;
         private loadConfig(configURL:string):void{
             this._configURL = configURL;
-            var adapter:IAssetAdapter;
+            var adapter:IThemeAdapter;
             try{
-                adapter = $getAdapter("egret.gui.IAssetAdapter");
+                adapter = $getAdapter("egret.gui.IThemeAdapter");
             }
             catch(e){
-                adapter = new DefaultAssetAdapter();
+                adapter = new DefaultThemeAdapter();
             }
             adapter.getTheme(configURL, this.onLoadComplete, this.onLoadError, this);
         }
