@@ -202,6 +202,8 @@ module egret {
         public start() {
             if(this._running)
                 return;
+            if(this.repeatCount!=0&&this._currentCount==this.repeatCount)
+                return;
             sys.$ticker.$startTick(this.$update,this);
             this._running = true;
         }
