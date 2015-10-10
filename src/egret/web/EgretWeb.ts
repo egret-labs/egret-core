@@ -35,6 +35,9 @@ module egret.web {
      * 当网页尺寸发生改变时此方法会自动被调用。
      */
     function updateAllScreens():void {
+        if (!isRunning) {
+            return;
+        }
         var containerList = document.querySelectorAll(".egret-player");
         var length = containerList.length;
         for (var i = 0; i < length; i++) {
@@ -44,11 +47,17 @@ module egret.web {
         }
     }
 
+    var isRunning:boolean = false;
     /**
      * @private
      * 网页加载完成，实例化页面中定义的Egretsys标签
      */
     function runEgret():void {
+        if (isRunning) {
+            return;
+        }
+        isRunning = true;
+
         if(DEBUG){
             var language = navigator.language || navigator.browserLanguage || "en_US";
             language = language.replace("-", "_");
