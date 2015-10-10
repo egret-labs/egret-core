@@ -20,6 +20,10 @@ module egret {
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
     locale_strings[1014] = "类 {0} 常量 {1} 是只读的";
 
+    locale_strings[1015] = "xml not found!";
+    locale_strings[1016] = "{0}已经废弃";
+    locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
+
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
     locale_strings[1025] = "遇到文件尾";
@@ -32,6 +36,7 @@ module egret {
     locale_strings[1035] = "Native 下暂未实现此功能！";
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
+
 
     //RES 2000-2999
 

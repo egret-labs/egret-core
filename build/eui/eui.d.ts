@@ -9249,6 +9249,32 @@ declare module eui.sys {
         private doInterval(currentTime);
     }
 }
+declare module eui {
+    /**
+     * @language en_US
+     * Default instance of interface <code>IThemeAdapter</code>.
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 默认的IThemeAdapter接口实现。
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    class DefaultThemeAdapter implements IThemeAdapter {
+        /**
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         */
+        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
+    }
+}
 declare module eui.sys {
     /**
      * @private
@@ -9617,6 +9643,60 @@ declare module eui {
 declare module eui {
     /**
      * @language en_US
+     * Interface of theme adapter.
+     * If your project need to custom the theme rule, you need to implement the <code>IThemeAdapter</code>.
+     * And use the following code to inject it to the system:
+     * <pre>
+     *      var themeAdapter = new YourThemeAdapter();
+     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
+     * </pre>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 主题适配器接口。
+     * 若项目需要自定义主题需要实现这个接口，
+     * 然后调用如下代码注入自定义实现到框架即可：
+     * <pre>
+     *      var themeAdapter = new YourThemeAdapter();
+     *      Stage.registerImplementation("eui.IThemeAdapter",themeAdapter);
+     * </pre>
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    interface IThemeAdapter {
+        /**
+         * @language en_US
+         * Resolves theme
+         * @param url theme url
+         * @param compFunc compFunc，example：compFunc(e:egret.Event):void;
+         * @param errorFunc errorFunc，example：errorFunc():void;
+         * @param thisObject thisObject
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
+    }
+}
+declare module eui {
+    /**
+     * @language en_US
      * The IViewport interface is implemented by components that support a viewport.
      *
      * If a component's children are larger than the component,
@@ -9855,6 +9935,8 @@ declare module eui {
      * @includeExample  extension/eui/core/ThemeExample.ts
      */
     class Theme extends egret.EventDispatcher {
+        private $stage;
+        private $configURL;
         /**
          * @language en_US
          * Create an instance of Theme
@@ -9892,9 +9974,9 @@ declare module eui {
         /**
          * @private
          *
-         * @param event
+         * @param str
          */
-        private onConfigLoaded(event);
+        private onConfigLoaded(str);
         private onLoaded(classes?, urls?);
         /**
          * @private

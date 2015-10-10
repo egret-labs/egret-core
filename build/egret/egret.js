@@ -4869,16 +4869,18 @@ var egret;
          */
         p.$measureContentBounds = function (bounds) {
             var values = this.$Bitmap;
+            var x = values[6 /* offsetX */];
+            var y = values[7 /* offsetY */];
             if (values[1 /* image */]) {
                 var values = this.$Bitmap;
                 var w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
                 var h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
             else {
                 w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : 0;
                 h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : 0;
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
         };
         /**
@@ -6564,6 +6566,7 @@ var egret;
                 this._fill();
                 this.fillStyle = null;
                 this.$renderContext.fillStyle = null;
+                this.$renderContext.strokeStyle = null;
             }
         };
         /**
@@ -12840,6 +12843,9 @@ var egret;
     locale_strings[1012] = "The type of parameter {0} must be Class.";
     locale_strings[1013] = "Variable assignment is NaN, please see the code!";
     locale_strings[1014] = "the constant \"{1}\" of the Class \"{0}\" is read-only";
+    locale_strings[1015] = "xml not found!";
+    locale_strings[1016] = "{0}has been obsoleted";
+    locale_strings[1017] = "The format of JSON file is incorrect: {0}\ndata: {1}";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "This method is not available in the ScrollView!";
     locale_strings[1025] = "end of the file";
@@ -12965,6 +12971,9 @@ var egret;
     locale_strings[1012] = "参数 {0} 的类型必须为 Class。";
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
     locale_strings[1014] = "类 {0} 常量 {1} 是只读的";
+    locale_strings[1015] = "xml not found!";
+    locale_strings[1016] = "{0}已经废弃";
+    locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
     locale_strings[1025] = "遇到文件尾";
