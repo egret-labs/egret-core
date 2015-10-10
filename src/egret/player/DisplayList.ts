@@ -581,7 +581,9 @@ module egret.sys {
                                    rootMatrix:Matrix, clipRegion:Region):number {
             var drawCalls = 0;
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
-
+            if (scrollRect.width == 0 || scrollRect.height == 0) {
+                return drawCalls;
+            }
             var m = Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
             var root = displayObject.$parentDisplayList.root;

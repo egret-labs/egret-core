@@ -196,10 +196,10 @@ function getAppDataEnginesRootPath() {
     var path;
     switch (process.platform) {
         case 'darwin':
-            var user = process.env.NAME || process.env.LOGNAME;
-            if (!user)
+            var home = process.env.HOME || ("/Users/" + (process.env.NAME || process.env.LOGNAME));
+            if (!home)
                 return null;
-            path = "/Users/" + user + "/Library/Application Support/Egret/engine/";
+            path = home + "/Library/Application Support/Egret/engine/";
             break;
         case 'win32':
             var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
@@ -460,5 +460,4 @@ function getLanguage() {
     }
 }
 entry();
-
 //# sourceMappingURL=selector.js.map
