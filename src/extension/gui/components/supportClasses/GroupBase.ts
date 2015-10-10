@@ -172,6 +172,28 @@ module egret.gui {
             }
         }
 
+        private _autoLayout:boolean = true;
+        /**
+         * 如果为 true，则子项的位置和大小改变时，重新测量和布局。
+         * 如果为 false，则仅当子项添加或者删除是重新测量和布局。
+         * @member egret.gui.GroupBase#clipAndEnableScrolling
+         */
+        public get autoLayout():boolean {
+            return this._autoLayout;
+        }
+
+        public set autoLayout(value:boolean)
+        {
+            if (this._autoLayout == value)
+                return;
+            this._autoLayout = value;
+            if (value)
+            {
+                this.invalidateSize();
+                this.invalidateDisplayList();
+                this.invalidateParentSizeAndDisplayList();
+            }
+        }
 
         private _horizontalScrollPosition:number = 0;
         /**
@@ -285,8 +307,10 @@ module egret.gui {
         }
 
         public _childXYChanged():void{
-            this.invalidateSize();
-            this.invalidateDisplayList();
+            if(this.autoLayout) {
+                this.invalidateSize();
+                this.invalidateDisplayList();
+            }
         }
 
         /**
@@ -317,10 +341,13 @@ module egret.gui {
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            if (this._layoutInvalidateDisplayListFlag&&this._layout){
+            if (this._layoutInvalidateDisplayListFlag) {
                 this._layoutInvalidateDisplayListFlag = false;
-                this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
-                this.updateScrollRect(unscaledWidth, unscaledHeight);
+                if (this.autoLayout && this._layout)
+                    this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
+
+                if (this._layout)
+                    this.updateScrollRect(unscaledWidth, unscaledHeight);
             }
         }
         /**
@@ -358,7 +385,7 @@ module egret.gui {
          */
         public getElementIndicesInView():Array<number>{
             var visibleIndices:Array<number> = [];
-            var index:number
+            var index:number;
             if(!this.scrollRect){
                 for(index = 0;index < this.numChildren;index++){
                     visibleIndices.push(index);
