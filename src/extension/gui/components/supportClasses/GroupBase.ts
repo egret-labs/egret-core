@@ -175,8 +175,8 @@ module egret.gui {
         private _autoLayout:boolean = true;
         /**
          * 如果为 true，则子项的位置和大小改变时，重新测量和布局。
-         * 如果为 false，则仅当子项添加或者删除是重新测量和布局。
-         * @member egret.gui.GroupBase#clipAndEnableScrolling
+         * 如果为 false，则仅当子项添加或者删除时，重新测量和布局。
+         * @member egret.gui.GroupBase#autoLayout
          */
         public get autoLayout():boolean {
             return this._autoLayout;
