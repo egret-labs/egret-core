@@ -290,6 +290,8 @@ module egret.gui {
 				var newDataGroupProperties:any = {};
 				if(this._dataGroupProperties.layout)
 					newDataGroupProperties.layout = this.dataGroup.layout;
+				if(this._dataGroupProperties.autoLayout == false)
+					newDataGroupProperties.autoLayout = false;
 				if(this._dataGroupProperties.dataProvider)
 					newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
 				if(this._dataGroupProperties.itemRenderer)
@@ -298,7 +300,7 @@ module egret.gui {
 					newDataGroupProperties.itemRendererSkinName = this.dataGroup.itemRendererSkinName;
 				if(this._dataGroupProperties.itemRendererFunction)
 					newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
-				this._dataGroupProperties = newDataGroupProperties
+				this._dataGroupProperties = newDataGroupProperties;
 				this.dataGroup._rendererOwner = null;
 				this.dataGroup.dataProvider = null;
 				this.dataGroup.layout = null;
