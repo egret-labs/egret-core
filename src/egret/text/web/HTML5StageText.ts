@@ -153,12 +153,6 @@ module egret.web {
         private onBlurHandler():void {
             this.htmlInput.clearInputElement();
             window.scrollTo(0, 0);
-
-            //如果是嵌套的iframe，对外派发 egretResetPosition 事件。
-            if (parent) {
-                parent.scrollTo(0, 0);
-                parent.dispatchEvent(new window["Event"]("egretResetPosition"));
-            }
         }
 
         /**
