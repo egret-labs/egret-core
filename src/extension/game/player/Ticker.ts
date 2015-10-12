@@ -55,6 +55,8 @@ module egret {
             }
 
             sys.$ticker.$startTick(this.update, this);
+
+            this._lastTime = egret.getTimer();
         }
 
         private _timeScale:number = 1;
