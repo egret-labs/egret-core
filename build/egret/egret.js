@@ -4440,8 +4440,8 @@ var egret;
                 var oldSurface = oldContext.surface;
                 if (!this.sizeChanged) {
                     this.sizeChanged = true;
-                    oldSurface.width = bounds.width * scaleX;
-                    oldSurface.height = bounds.height * scaleY;
+                    oldSurface.width = Math.max(bounds.width * scaleX, 257);
+                    oldSurface.height = Math.max(bounds.height * scaleY, 257);
                 }
                 else {
                     var newContext = sys.sharedRenderContext;
@@ -4449,12 +4449,12 @@ var egret;
                     sys.sharedRenderContext = oldContext;
                     this.renderContext = newContext;
                     this.surface = newSurface;
-                    newSurface.width = bounds.width * scaleX;
-                    newSurface.height = bounds.height * scaleY;
-                    if (oldSurface.width !== 0 && oldSurface.height !== 0) {
-                        newContext.setTransform(1, 0, 0, 1, 0, 0);
-                        newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
-                    }
+                    newSurface.width = Math.max(bounds.width * scaleX, 257);
+                    newSurface.height = Math.max(bounds.height * scaleY, 257);
+                    //if (bounds.width !== 0 && bounds.height !== 0) {
+                    newContext.setTransform(1, 0, 0, 1, 0, 0);
+                    newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
+                    //}
                     if (egret.Capabilities.runtimeType != egret.RuntimeType.NATIVE) {
                         oldSurface.height = 1;
                         oldSurface.width = 1;
