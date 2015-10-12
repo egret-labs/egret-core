@@ -349,7 +349,7 @@ module eui {
             var oldMaxH = Math.max(typicalHeight, this.maxElementSize);
             if (contentJustify) {
                 for (var index = this.startIndex; index <= endIndex; index++) {
-                    layoutElement = <UIComponent> (target.getElementAt(index));
+                    layoutElement = <UIComponent> (target.getVirtualElementAt(index));
                     if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                         continue;
                     }
@@ -368,7 +368,7 @@ module eui {
             //对可见区域进行布局
             for (var i = this.startIndex; i <= endIndex; i++) {
                 var exceesHeight = 0;
-                layoutElement = <UIComponent> (target.getElementAt(i));
+                layoutElement = <UIComponent> (target.getVirtualElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
                 }

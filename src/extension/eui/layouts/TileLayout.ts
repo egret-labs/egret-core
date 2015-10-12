@@ -31,7 +31,7 @@
 module eui {
 
     var UIComponentClass = "eui.UIComponent";
-    
+
     /**
      * @language en_US
      * The TileLayout class arranges layout elements in columns and rows
@@ -827,7 +827,7 @@ module eui {
             var count = numElements;
             for (var index = 0; index < count; index++) {
                 var layoutElement = <UIComponent> (target.getElementAt(index));
-                if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
+                if (layoutElement && (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout)) {
                     numElements--;
                     continue;
                 }
@@ -949,7 +949,7 @@ module eui {
             var target = this.$target;
             if ((startIndex != -1) && (endIndex != -1)) {
                 for (var index = startIndex; index <= endIndex; index++) {
-                    var elt = <UIComponent> target.getElementAt(index);
+                    var elt = <UIComponent> target.getVirtualElementAt(index);
                     if (!egret.is(elt, UIComponentClass) || !elt.$includeInLayout) {
                         continue;
                     }
@@ -1132,7 +1132,11 @@ module eui {
             var columnWidth = this._columnWidth;
             var rowHeight = this._rowHeight;
             for (var i = this.startIndex; i <= endIndex; i++) {
-                elt = <UIComponent> target.getElementAt(i);
+                if(this.$useVirtualLayout){
+                    elt = <UIComponent> (this.target.getVirtualElementAt(i));
+                }else{
+                    elt = <UIComponent> (this.target.getElementAt(i));
+                }
                 if (!egret.is(elt, UIComponentClass) || !elt.$includeInLayout) {
                     continue;
                 }

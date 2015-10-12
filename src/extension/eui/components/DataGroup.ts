@@ -212,6 +212,16 @@ module eui {
          * @platform Web,Native
          */
         public getElementAt(index:number):egret.DisplayObject {
+            return this.$indexToRenderer[index];
+        }
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public getVirtualElementAt(index:number):UIComponent {
             index = +index | 0;
             if (index < 0 || index >= this.$dataProvider.length)
                 return null;
