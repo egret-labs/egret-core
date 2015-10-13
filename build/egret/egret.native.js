@@ -831,16 +831,24 @@ var egret;
                 if (this.$nativeRenderTexture) {
                     //console.log("begin" + this.id);
                     native.$currentSurface = this;
-                    //this.$nativeRenderTexture.begin();
-                    this.$nativeRenderTexture.getIn();
+                    if (this.$nativeRenderTexture.getIn) {
+                        this.$nativeRenderTexture.getIn();
+                    }
+                    else {
+                        this.$nativeRenderTexture.begin();
+                    }
                 }
             };
             p.end = function () {
                 if (this.$nativeRenderTexture) {
                     //console.log("end" + this.id);
                     native.$currentSurface = null;
-                    //this.$nativeRenderTexture.end();
-                    this.$nativeRenderTexture.getOut();
+                    if (this.$nativeRenderTexture.getOut) {
+                        this.$nativeRenderTexture.getOut();
+                    }
+                    else {
+                        this.$nativeRenderTexture.end();
+                    }
                 }
             };
             p.$dispose = function () {
