@@ -107,6 +107,18 @@ module egret.native {
             }
         }
 
+        public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
+            if (sx != Math.floor(sx)) {
+                sx = Math.floor(sx);
+                sw++;
+            }
+            if (sy != Math.floor(sy)) {
+                sy = Math.floor(sy);
+                sh++;
+            }
+            return this.$nativeRenderTexture.getPixels(sx, sy, sw, sh);
+        }
+
         private $height:number;
         private $heightReadySet:boolean = false;
 

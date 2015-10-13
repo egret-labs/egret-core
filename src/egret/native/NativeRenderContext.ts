@@ -801,7 +801,12 @@ module egret.native {
          * @platform Web,Native
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
-            return {width: sw, height: sh, data: null};
+            if($currentSurface == this.surface) {
+                if($currentSurface != null) {
+                    $currentSurface.end();
+                }
+            }
+            return this.surface.getImageData(sx,sy,sw,sh);
         }
 
         private checkSurface():void {
