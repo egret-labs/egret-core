@@ -6,6 +6,5 @@
         <e:Label id="titleDisplay" size="20" fontFamily="Tahoma" textColor="0xFFFFFF"
                  wordWrap="false" left="15" right="5" verticalCenter="0"/>
     </e:Group>
-    <e:Group id="contentGroup" width="100%" top="50" bottom="30"/>
     <e:Button id="closeButton" label="close" bottom="5" horizontalCenter="0"/>
 </e:Skin>
