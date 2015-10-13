@@ -4649,6 +4649,9 @@ var eui;
         p.getElementAt = function (index) {
             return this.$children[index];
         };
+        p.getVirtualElementAt = function (index) {
+            return this.getElementAt(index);
+        };
         /**
          * @language en_US
          * Set the index range of the sub Visual element in container which support virtual layout.
@@ -5143,6 +5146,16 @@ var eui;
          * @platform Web,Native
          */
         p.getElementAt = function (index) {
+            return this.$indexToRenderer[index];
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.getVirtualElementAt = function (index) {
             index = +index | 0;
             if (index < 0 || index >= this.$dataProvider.length)
                 return null;
@@ -20126,7 +20139,7 @@ var eui;
             var oldMaxH = Math.max(typicalHeight, this.maxElementSize);
             if (contentJustify) {
                 for (var index = this.startIndex; index <= endIndex; index++) {
-                    layoutElement = (target.getElementAt(index));
+                    layoutElement = (target.getVirtualElementAt(index));
                     if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                         continue;
                     }
@@ -20143,7 +20156,7 @@ var eui;
             var elementSizeTable = this.elementSizeTable;
             for (var i = this.startIndex; i <= endIndex; i++) {
                 var exceesHeight = 0;
-                layoutElement = (target.getElementAt(i));
+                layoutElement = (target.getVirtualElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
                 }
@@ -21345,7 +21358,7 @@ var eui;
             var count = numElements;
             for (var index = 0; index < count; index++) {
                 var layoutElement = (target.getElementAt(index));
-                if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
+                if (layoutElement && (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout)) {
                     numElements--;
                     continue;
                 }
@@ -21445,7 +21458,7 @@ var eui;
             var target = this.$target;
             if ((startIndex != -1) && (endIndex != -1)) {
                 for (var index = startIndex; index <= endIndex; index++) {
-                    var elt = target.getElementAt(index);
+                    var elt = target.getVirtualElementAt(index);
                     if (!egret.is(elt, UIComponentClass) || !elt.$includeInLayout) {
                         continue;
                     }
@@ -21602,7 +21615,12 @@ var eui;
             var columnWidth = this._columnWidth;
             var rowHeight = this._rowHeight;
             for (var i = this.startIndex; i <= endIndex; i++) {
-                elt = target.getElementAt(i);
+                if (this.$useVirtualLayout) {
+                    elt = (this.target.getVirtualElementAt(i));
+                }
+                else {
+                    elt = (this.target.getElementAt(i));
+                }
                 if (!egret.is(elt, UIComponentClass) || !elt.$includeInLayout) {
                     continue;
                 }
@@ -22149,7 +22167,7 @@ var eui;
             var oldMaxW = Math.max(typicalWidth, this.maxElementSize);
             if (contentJustify) {
                 for (var index = this.startIndex; index <= endIndex; index++) {
-                    layoutElement = (target.getElementAt(index));
+                    layoutElement = (target.getVirtualElementAt(index));
                     if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                         continue;
                     }
@@ -22166,7 +22184,7 @@ var eui;
             var elementSizeTable = this.elementSizeTable;
             for (var i = this.startIndex; i <= endIndex; i++) {
                 var exceesWidth = 0;
-                layoutElement = (target.getElementAt(i));
+                layoutElement = (target.getVirtualElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
                 }

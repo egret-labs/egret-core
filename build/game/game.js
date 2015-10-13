@@ -3961,6 +3961,7 @@ var egret;
                 }
             }
             egret.sys.$ticker.$startTick(this.update, this);
+            this._lastTime = egret.getTimer();
         }
         var d = __define,c=Ticker;p=c.prototype;
         p.update = function (timeStamp) {

@@ -135,8 +135,12 @@ module egret.native {
             if (this.$nativeRenderTexture) {
                 //console.log("begin" + this.id);
                 $currentSurface = this;
-                //this.$nativeRenderTexture.begin();
-                this.$nativeRenderTexture.getIn();
+                if (this.$nativeRenderTexture.getIn) {
+                    this.$nativeRenderTexture.getIn();
+                }
+                else {
+                    this.$nativeRenderTexture.begin();
+                }
             }
         }
 
@@ -144,8 +148,12 @@ module egret.native {
             if (this.$nativeRenderTexture) {
                 //console.log("end" + this.id);
                 $currentSurface = null;
-                //this.$nativeRenderTexture.end();
-                this.$nativeRenderTexture.getOut();
+                if (this.$nativeRenderTexture.getOut) {
+                    this.$nativeRenderTexture.getOut();
+                }
+                else {
+                    this.$nativeRenderTexture.end();
+                }
             }
         }
 
