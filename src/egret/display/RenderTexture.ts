@@ -94,9 +94,11 @@ module egret {
             root.addChild(c1);
 
             var bounds = displayObject.$getOriginalBounds();
+            if (bounds.width == 0 || bounds.height==0){
+                return false;
+            }
             var width = (bounds.x + bounds.width) * scale;
             var height = (bounds.y + bounds.height) * scale;
-
             this.$update(displayObject);
 
             //保存绘制矩阵
@@ -116,15 +118,14 @@ module egret {
             root.$displayList = null;
 
             this.context = this.createRenderContext(width, height);
-            this.context.clearRect(0, 0, width, height);
             if (!this.context) {
                 return false;
             }
+            this.context.clearRect(0, 0, width, height);
+            
             var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA,renderMatrixB,renderMatrixC,renderMatrixD,renderMatrixTx,renderMatrixTy);
-            if (drawCalls == 0) {
-                return false;
-            }
+            
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
@@ -179,7 +180,7 @@ module egret {
                     if (child.$blendMode !== 0 || child.$mask) {
                         drawCalls += this.drawWithClip(child, context, rootMatrix);
                     }
-                    else if (child.$scrollRect) {
+                    else if (child.$scrollRect || child.$maskRect) {
                         drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
                     }
                     else {
@@ -297,8 +298,10 @@ module egret {
 
         private drawWithScrollRect(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix:Matrix):number {
             var drawCalls = 0;
-            var scrollRect = displayObject.$scrollRect;
-
+            var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
+            if (scrollRect.width == 0 || scrollRect.height == 0) {
+                return drawCalls;
+            }
             var m = displayObject.$getConcatenatedMatrix();
             var region:sys.Region = sys.Region.create();
             if (!scrollRect.isEmpty()) {

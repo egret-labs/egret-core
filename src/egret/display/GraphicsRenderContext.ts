@@ -948,11 +948,11 @@ module egret {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            if (!this.hasFill && !this.hasStroke) {
+            if (!this.hasFill && (!this.hasStroke  && this._strokeStyle == null)) {
                 bounds.setEmpty();
                 return;
             }
-            if (this.hasStroke) {
+            if (this.hasStroke || this._strokeStyle) {
                 var lineWidth = this._lineWidth;
                 var half = lineWidth * 0.5;
             }

@@ -4351,6 +4351,9 @@ var egret;
             p.drawWithScrollRect = function (displayObject, context, dirtyList, rootMatrix, clipRegion) {
                 var drawCalls = 0;
                 var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
+                if (scrollRect.width == 0 || scrollRect.height == 0) {
+                    return drawCalls;
+                }
                 var m = egret.Matrix.create();
                 m.copyFrom(displayObject.$getConcatenatedMatrix());
                 var root = displayObject.$parentDisplayList.root;
@@ -4437,8 +4440,8 @@ var egret;
                 var oldSurface = oldContext.surface;
                 if (!this.sizeChanged) {
                     this.sizeChanged = true;
-                    oldSurface.width = bounds.width * scaleX;
-                    oldSurface.height = bounds.height * scaleY;
+                    oldSurface.width = Math.max(bounds.width * scaleX, 257);
+                    oldSurface.height = Math.max(bounds.height * scaleY, 257);
                 }
                 else {
                     var newContext = sys.sharedRenderContext;
@@ -4446,12 +4449,12 @@ var egret;
                     sys.sharedRenderContext = oldContext;
                     this.renderContext = newContext;
                     this.surface = newSurface;
-                    newSurface.width = bounds.width * scaleX;
-                    newSurface.height = bounds.height * scaleY;
-                    if (oldSurface.width !== 0 && oldSurface.height !== 0) {
-                        newContext.setTransform(1, 0, 0, 1, 0, 0);
-                        newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
-                    }
+                    newSurface.width = Math.max(bounds.width * scaleX, 257);
+                    newSurface.height = Math.max(bounds.height * scaleY, 257);
+                    //if (bounds.width !== 0 && bounds.height !== 0) {
+                    newContext.setTransform(1, 0, 0, 1, 0, 0);
+                    newContext.drawImage(oldSurface, (oldOffsetX - this.offsetX) * scaleX, (oldOffsetY - this.offsetY) * scaleY);
+                    //}
                     if (egret.Capabilities.runtimeType != egret.RuntimeType.NATIVE) {
                         oldSurface.height = 1;
                         oldSurface.width = 1;
@@ -7489,11 +7492,11 @@ var egret;
          * @private
          */
         p.$measureContentBounds = function (bounds) {
-            if (!this.hasFill && !this.hasStroke) {
+            if (!this.hasFill && (!this.hasStroke && this._strokeStyle == null)) {
                 bounds.setEmpty();
                 return;
             }
-            if (this.hasStroke) {
+            if (this.hasStroke || this._strokeStyle) {
                 var lineWidth = this._lineWidth;
                 var half = lineWidth * 0.5;
             }
@@ -8073,6 +8076,9 @@ var egret;
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
             var bounds = displayObject.$getOriginalBounds();
+            if (bounds.width == 0 || bounds.height == 0) {
+                return false;
+            }
             var width = (bounds.x + bounds.width) * scale;
             var height = (bounds.y + bounds.height) * scale;
             this.$update(displayObject);
@@ -8091,15 +8097,12 @@ var egret;
             }
             root.$displayList = null;
             this.context = this.createRenderContext(width, height);
-            this.context.clearRect(0, 0, width, height);
             if (!this.context) {
                 return false;
             }
+            this.context.clearRect(0, 0, width, height);
             var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA, renderMatrixB, renderMatrixC, renderMatrixD, renderMatrixTx, renderMatrixTy);
-            if (drawCalls == 0) {
-                return false;
-            }
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
@@ -8152,7 +8155,7 @@ var egret;
                     if (child.$blendMode !== 0 || child.$mask) {
                         drawCalls += this.drawWithClip(child, context, rootMatrix);
                     }
-                    else if (child.$scrollRect) {
+                    else if (child.$scrollRect || child.$maskRect) {
                         drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
                     }
                     else {
@@ -8262,7 +8265,10 @@ var egret;
         };
         p.drawWithScrollRect = function (displayObject, context, rootMatrix) {
             var drawCalls = 0;
-            var scrollRect = displayObject.$scrollRect;
+            var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
+            if (scrollRect.width == 0 || scrollRect.height == 0) {
+                return drawCalls;
+            }
             var m = displayObject.$getConcatenatedMatrix();
             var region = egret.sys.Region.create();
             if (!scrollRect.isEmpty()) {

@@ -7,7 +7,18 @@ import file = require('../lib/FileUtil');
 import exmlc = require('../lib/exml/exmlc');
 
 export function beforeBuild() {
-
+    //todo move to upgrade
+    var oldPath = file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");
+    if (file.exists(oldPath)) {
+        var srclib = file.joinPath(egret.args.srcDir, "libs");
+        var others = file.getDirectoryListing(srclib);
+        if (others.length == 1) {
+            file.remove(srclib);
+        }
+        else {
+            file.remove(oldPath);
+        }
+    }
     var exmlDtsPath = getExmlDtsPath();
     if (file.exists(exmlDtsPath)) {
         file.save(exmlDtsPath, "");
@@ -132,5 +143,5 @@ function generateExmlDTS(): string {
 
 
 function getExmlDtsPath() {
-    return file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");
+    return file.joinPath(egret.args.projectDir, "libs", "exml.g.d.ts");
 }

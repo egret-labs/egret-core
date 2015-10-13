@@ -47,6 +47,16 @@ class ModifyProperties {
         var content = JSON.stringify(this.projectConfig, null, "\t");
         file.save(projectPath, content);
     }
+
+    hasModule(moduleName:string):boolean {
+        var modules = this.projectConfig.modules;
+        for(var i:number = 0 ; i < modules.length ; i++) {
+            if(modules[i].name == moduleName) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 var egretProjectConfig = egretProjectConfig || new ModifyProperties();

@@ -9,8 +9,6 @@ import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 
-import exmlActions = require('../actions/exml');
-
 import NativeProject = require('../actions/NativeProject');
 
 class Clean implements egret.Command {
@@ -33,6 +31,10 @@ class Clean implements egret.Command {
         //编译 bin-debug 文件
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
+
+        if (!result) {
+            return 1;
+        }
 
         //修改 html 中 modules 块
         //CopyFiles.modifyHTMLWithModules();

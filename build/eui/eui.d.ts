@@ -3210,6 +3210,7 @@ declare module eui {
          * @platform Web,Native
          */
         getElementAt(index: number): egret.DisplayObject;
+        getVirtualElementAt(index: number): egret.DisplayObject;
         /**
          * @language en_US
          * Set the index range of the sub Visual element in container which support virtual layout.
@@ -3682,6 +3683,14 @@ declare module eui {
          * @platform Web,Native
          */
         getElementAt(index: number): egret.DisplayObject;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        getVirtualElementAt(index: number): UIComponent;
         /**
          * @private
          * 释放指定索引处的项呈示器
