@@ -680,7 +680,12 @@ var egret;
              * @platform Web,Native
              */
             p.getImageData = function (sx, sy, sw, sh) {
-                return { width: sw, height: sh, data: null };
+                if (native.$currentSurface == this.surface) {
+                    if (native.$currentSurface != null) {
+                        native.$currentSurface.end();
+                    }
+                }
+                return this.surface.getImageData(sx, sy, sw, sh);
             };
             p.checkSurface = function () {
                 //todo 暂时先写这里
@@ -810,6 +815,17 @@ var egret;
                     }
                 }
             );
+            p.getImageData = function (sx, sy, sw, sh) {
+                if (sx != Math.floor(sx)) {
+                    sx = Math.floor(sx);
+                    sw++;
+                }
+                if (sy != Math.floor(sy)) {
+                    sy = Math.floor(sy);
+                    sh++;
+                }
+                return this.$nativeRenderTexture.getPixels(sx, sy, sw, sh);
+            };
             p.createRenderTexture = function () {
                 if (this.$isRoot) {
                     return;
