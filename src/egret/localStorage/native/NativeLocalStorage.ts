@@ -50,7 +50,7 @@ module egret.localStorage.native {
     function setItem(key:string, value:string):boolean {
         localStorageData[key] = value;
         try {
-            this.save();
+            save();
             return true;
         }
         catch (e) {
