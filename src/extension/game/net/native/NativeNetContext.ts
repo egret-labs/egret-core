@@ -109,7 +109,12 @@ module egret.native {
                     loader.data = content;
                     Event.dispatchEvent(loader, Event.COMPLETE);
                 };
-                egret_native.readFileAsync(virtualUrl, promise);
+                if (loader.dataFormat == URLLoaderDataFormat.BINARY) {
+                    egret_native.readFileAsync(virtualUrl, promise, "ArrayBuffer");
+                }
+                else {
+                    egret_native.readFileAsync(virtualUrl, promise);
+                }
             }
 
             function download() {
@@ -122,7 +127,13 @@ module egret.native {
             }
 
             function onLoadComplete() {
-                var content = egret_native.readFileSync(virtualUrl);
+                var content;
+                if (loader.dataFormat == URLLoaderDataFormat.BINARY) {
+                    content = egret_native.readFileSync(virtualUrl, "ArrayBuffer");
+                }
+                else {
+                    content = egret_native.readFileSync(virtualUrl);
+                }
                 loader.data = content;
                 Event.dispatchEvent(loader, Event.COMPLETE);
             }
@@ -204,7 +215,7 @@ module egret.native {
 
                 loader.data = texture;
 
-                egret.$callAsync(function() {
+                egret.$callAsync(function () {
                     loader.dispatchEventWith(Event.COMPLETE);
                 }, self);
             }
@@ -235,6 +246,7 @@ module egret.native {
         }
 
         static _instance:NativeNetContext;
+
         static getNetContext():NativeNetContext {
             if (NativeNetContext._instance == null) {
                 NativeNetContext._instance = new NativeNetContext();
