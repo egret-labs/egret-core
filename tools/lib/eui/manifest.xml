@@ -11,7 +11,7 @@
   <component id="HScrollBar" super="eui.ScrollBarBase" show="true" module="eui"/>
   <component id="HSlider" super="eui.SliderBase" show="true" module="eui"/>
   <component id="Image" super="lark.Bitmap" show="true" module="eui"/>
-  <component id="ItemRenderer" super="eui.Component" show="true" module="eui"/>
+  <component id="ItemRenderer" super="eui.Component" show="false" module="eui"/>
   <component id="Label" super="lark.TextField" show="true" module="eui"/>
   <component id="LayoutBase" super="lark.EventEmitter" show="false" module="eui"/>
   <component id="List" super="eui.ListBase" show="true" module="eui"/>
