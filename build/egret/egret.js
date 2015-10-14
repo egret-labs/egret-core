@@ -8063,11 +8063,20 @@ var egret;
          */
         p.drawToTexture = function (displayObject, clipBounds, scale) {
             if (scale === void 0) { scale = 1; }
+            if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
+                return false;
+            }
             this.dispose();
-            scale /= egret.$TextureScaleFactor;
             //todo clipBounds?
-            var bounds = displayObject.$getOriginalBounds();
+            var bounds = clipBounds || displayObject.$getOriginalBounds();
             if (bounds.width == 0 || bounds.height == 0) {
+                return false;
+            }
+            scale /= egret.$TextureScaleFactor;
+            var width = (bounds.x + bounds.width) * scale;
+            var height = (bounds.y + bounds.height) * scale;
+            this.context = this.createRenderContext(width, height);
+            if (!this.context) {
                 return false;
             }
             var parentDisplayList = displayObject.$parentDisplayList;
@@ -8083,8 +8092,6 @@ var egret;
             this.rootDisplayList = egret.sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
-            var width = (bounds.x + bounds.width) * scale;
-            var height = (bounds.y + bounds.height) * scale;
             this.$update(displayObject);
             displayObject.$removeFlagsUp(768 /* Dirty */);
             //保存绘制矩阵
@@ -8101,11 +8108,7 @@ var egret;
                 renderMatrix.translate(-clipBounds.x, -clipBounds.y);
             }
             root.$displayList = null;
-            this.context = this.createRenderContext(width, height);
-            if (!this.context) {
-                displayObject.$parentDisplayList = parentDisplayList;
-                return false;
-            }
+            displayObject.$parentDisplayList = parentDisplayList;
             this.context.clearRect(0, 0, width, height);
             var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA, renderMatrixB, renderMatrixC, renderMatrixD, renderMatrixTx, renderMatrixTy);
