@@ -4976,7 +4976,9 @@ var egret;
                 Bitmap.$drawScale9GridImage(context, image, scale9Grid, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
-                context.drawImage(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
+                var tsX = destW / textureWidth;
+                var tsY = destH / textureHeight;
+                context.drawImage(image, clipX, clipY, clipWidth, clipHeight, offsetX * tsX, offsetY * tsY, tsX * clipWidth, tsY * clipHeight);
             }
             else if (fillMode == egret.BitmapFillMode.CLIP) {
                 var tempW = Math.min(textureWidth, destW);
