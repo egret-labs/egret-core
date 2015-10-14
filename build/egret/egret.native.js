@@ -2045,7 +2045,7 @@ var egret;
             function setItem(key, value) {
                 localStorageData[key] = value;
                 try {
-                    this.save();
+                    save();
                     return true;
                 }
                 catch (e) {

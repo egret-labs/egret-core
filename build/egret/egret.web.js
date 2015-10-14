@@ -2249,7 +2249,14 @@ var egret;
                     this.setElementStyle("textAlign", textfield.textAlign);
                     this.setElementStyle("fontSize", textfield.size * this._gscaleY + "px");
                     this.setElementStyle("color", egret.toColorString(textfield.textColor));
-                    this.setElementStyle("width", textfield.width * this._gscaleX + "px");
+                    if (textfield.stage) {
+                        var tw = textfield.localToGlobal(0, 0).x;
+                        tw = Math.min(textfield.width, textfield.stage.stageWidth - tw);
+                    }
+                    else {
+                        tw = textfield.width;
+                    }
+                    this.setElementStyle("width", tw * this._gscaleX + "px");
                     this.setElementStyle("verticalAlign", textfield.verticalAlign);
                     if (textfield.multiline) {
                         this.setAreaHeight();
@@ -2271,7 +2278,7 @@ var egret;
                     }
                     this.inputDiv.style.clip = "rect(0px " + (textfield.width * this._gscaleX) + "px " + (textfield.height * this._gscaleY) + "px 0px)";
                     this.inputDiv.style.height = textfield.height * this._gscaleY + "px";
-                    this.inputDiv.style.width = textfield.width * this._gscaleX + "px";
+                    this.inputDiv.style.width = tw * this._gscaleX + "px";
                 }
             };
             return HTML5StageText;

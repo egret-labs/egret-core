@@ -558,8 +558,10 @@ module egret {
                     clipHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
+                var tsX:number = destW / textureWidth;
+                var tsY:number = destH / textureHeight;
                 context.drawImage(image, clipX, clipY,
-                    clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
+                    clipWidth, clipHeight, offsetX * tsX, offsetY * tsY, tsX * clipWidth, tsY * clipHeight);
             }
             else if (fillMode == egret.BitmapFillMode.CLIP) {
                 var tempW:number = Math.min(textureWidth, destW);
