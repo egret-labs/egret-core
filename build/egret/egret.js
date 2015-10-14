@@ -8063,6 +8063,12 @@ var egret;
             if (scale === void 0) { scale = 1; }
             this.dispose();
             scale /= egret.$TextureScaleFactor;
+            //todo clipBounds?
+            var bounds = displayObject.$getOriginalBounds();
+            if (bounds.width == 0 || bounds.height == 0) {
+                return false;
+            }
+            var parentDisplayList = displayObject.$parentDisplayList;
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
@@ -8075,13 +8081,10 @@ var egret;
             this.rootDisplayList = egret.sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
-            var bounds = displayObject.$getOriginalBounds();
-            if (bounds.width == 0 || bounds.height == 0) {
-                return false;
-            }
             var width = (bounds.x + bounds.width) * scale;
             var height = (bounds.y + bounds.height) * scale;
             this.$update(displayObject);
+            displayObject.$removeFlagsUp(768 /* Dirty */);
             //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
             var renderMatrixA = renderMatrix.a;
@@ -8098,6 +8101,7 @@ var egret;
             root.$displayList = null;
             this.context = this.createRenderContext(width, height);
             if (!this.context) {
+                displayObject.$parentDisplayList = parentDisplayList;
                 return false;
             }
             this.context.clearRect(0, 0, width, height);
@@ -8106,6 +8110,7 @@ var egret;
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+            displayObject.$parentDisplayList = parentDisplayList;
             return true;
         };
         p.$update = function (displayObject) {
@@ -8113,7 +8118,7 @@ var egret;
                 displayObject.$renderRegion.moved = true;
                 displayObject.$update();
             }
-            else if (displayObject instanceof egret.DisplayObjectContainer) {
+            if (displayObject instanceof egret.DisplayObjectContainer) {
                 var children = displayObject.$children;
                 var length = children.length;
                 for (var i = 0; i < length; i++) {

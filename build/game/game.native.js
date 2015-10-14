@@ -103,7 +103,12 @@ var egret;
                         loader.data = content;
                         egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
                     };
-                    egret_native.readFileAsync(virtualUrl, promise);
+                    if (loader.dataFormat == egret.URLLoaderDataFormat.BINARY) {
+                        egret_native.readFileAsync(virtualUrl, promise, "ArrayBuffer");
+                    }
+                    else {
+                        egret_native.readFileAsync(virtualUrl, promise);
+                    }
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();
@@ -114,7 +119,13 @@ var egret;
                     egret_native.download(virtualUrl, virtualUrl, promise);
                 }
                 function onLoadComplete() {
-                    var content = egret_native.readFileSync(virtualUrl);
+                    var content;
+                    if (loader.dataFormat == egret.URLLoaderDataFormat.BINARY) {
+                        content = egret_native.readFileSync(virtualUrl, "ArrayBuffer");
+                    }
+                    else {
+                        content = egret_native.readFileSync(virtualUrl);
+                    }
                     loader.data = content;
                     egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
                 }

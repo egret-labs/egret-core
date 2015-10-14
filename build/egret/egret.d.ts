@@ -9250,11 +9250,11 @@ declare module egret_native {
     function xmlStr2JsonStr(text: string): any;
     function isFileExists(filepath: string): boolean;
     function isRecordExists(filepath: string): boolean;
-    function readFileSync(filepath: string): any;
+    function readFileSync(filepath: string, type?: string): any;
     function readResourceFileSync(filepath: string): any;
     function readUpdateFileSync(filepath: string): any;
     function deleteUpdateFile(filepath: string): void;
-    function readFileAsync(filepath: string, promise: egret.PromiseObject): any;
+    function readFileAsync(filepath: string, promise: egret.PromiseObject, type?: string): any;
     function writeFileSync(filepath: string, fileContent: string): any;
     function requireHttpSync(url: string, callback: Function): void;
     function requireHttp(url: string, param: any, callback: Function): void;
