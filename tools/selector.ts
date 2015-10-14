@@ -298,6 +298,9 @@ function getAllEngineVersions() {
     
     if (configData) {
         for (var v in configData.egret) {
+            if (!configData.egret[v].root) {
+                continue;
+            }
             var rootInConfig = file.escapePath(configData.egret[v].root);
             var bin = getBin(rootInConfig);
             var exist = file.exists(bin);
@@ -305,7 +308,7 @@ function getAllEngineVersions() {
             if (exist) {
                 var info = getEngineVersion(rootInConfig);
                 if (!info) {
-                    return;
+                    continue;
                 }
                 engines[info.version] = info;
             }
