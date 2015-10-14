@@ -10,7 +10,8 @@
     "eui.Scroller": "resource/eui_skins/ScrollerSkin.exml",
     "eui.ToggleSwitch": "resource/eui_skins/ToggleSwitchSkin.exml",
     "eui.VScrollBar": "resource/eui_skins/VScrollBarSkin.exml",
-    "eui.VSlider": "resource/eui_skins/VSliderSkin.exml"
+    "eui.VSlider": "resource/eui_skins/VSliderSkin.exml",
+    "eui.ItemRenderer": "resource/eui_skins/ItemRendererSkin.exml"
   },
   "autoGenerateExmlsList": true,
   "exmls": [
@@ -24,6 +25,7 @@
     "resource/eui_skins/ScrollerSkin.exml",
     "resource/eui_skins/ToggleSwitchSkin.exml",
     "resource/eui_skins/VScrollBarSkin.exml",
-    "resource/eui_skins/VSliderSkin.exml"
+    "resource/eui_skins/VSliderSkin.exml",
+    "resource/eui_skins/ItemRendererSkin.exml"
   ]
 }
