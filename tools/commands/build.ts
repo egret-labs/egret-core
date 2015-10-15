@@ -70,10 +70,13 @@ class Build implements egret.Command {
 
         var options = egret.args;
         var packageJson;
-        if(packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
-            packageJson = JSON.parse(packageJson);
-            this.buildLib(packageJson);
-            return 0;
+        if(packageJson = require(FileUtil.joinPath(options.projectDir, "package.json"))) {
+            if(packageJson.name === "egret" && packageJson.author === "egret-labs"){
+                console.log("[egret-core] build lib ...");
+                packageJson = JSON.parse(packageJson);
+                this.buildLib(packageJson);
+                return 0;
+            }
         }
         if (FileUtil.exists(options.srcDir) == false ||
             FileUtil.exists(options.templateDir) == false) {
