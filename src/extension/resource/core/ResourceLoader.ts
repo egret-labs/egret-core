@@ -62,18 +62,18 @@ module RES {
 		 * @member {any} RES.ResourceLoader#resInstance
          */
         public resInstance:any = null;
-		
+
 		/**
 		 * 当前组加载的项总个数,key为groupName
-		 */		
+		 */
 		private groupTotalDic:any = {};
 		/**
 		 * 已经加载的项个数,key为groupName
-		 */		
+		 */
 		private numLoadedDic:any = {};
 		/**
 		 * 正在加载的组列表,key为groupName
-		 */		
+		 */
 		private itemListDic:any = {};
 		/**
 		 * 加载失败的组,key为groupName
@@ -86,14 +86,14 @@ module RES {
 
 		/**
 		 * 优先级队列,key为priority，value为groupName列表
-		 */		
+		 */
 		private priorityQueue:any = {};
 		/**
 		 * 检查指定的组是否正在加载中
 		 * @method RES.ResourceLoader#isGroupInLoading
-		 * @param groupName {string} 
+		 * @param groupName {string}
 		 * @returns {boolean}
-		 */		
+		 */
 		public isGroupInLoading(groupName:string):boolean{
 			return this.itemListDic[groupName]!==undefined;
 		}
@@ -103,12 +103,12 @@ module RES {
 		 * @param list {egret.Array<ResourceItem>} 加载项列表
 		 * @param groupName {string} 组名
 		 * @param priority {number} 加载优先级
-		 */			
+		 */
 		public loadGroup(list:Array<ResourceItem>,groupName:string,priority:number=0):void{
 			if(this.itemListDic[groupName]||!groupName)
 				return;
 			if(!list||list.length==0){
-                egret.$warn(2001, groupName);
+                egret.$warn(3201, groupName);
 				var event:ResourceEvent = new ResourceEvent(ResourceEvent.GROUP_LOAD_ERROR);
 				event.groupName = groupName;
 				this.dispatchEvent(event);
@@ -130,13 +130,13 @@ module RES {
 		}
 		/**
 		 * 延迟加载队列
-		 */		
+		 */
 		private lazyLoadList:Array<ResourceItem> = new Array<ResourceItem>();
 		/**
 		 * 加载一个文件
 		 * @method RES.ResourceLoader#loadItem
 		 * @param resItem {egret.ResourceItem} 要加载的项
-		 */		
+		 */
 		public loadItem(resItem:ResourceItem):void{
 			this.lazyLoadList.push(resItem);
 			resItem.groupName = "";
@@ -144,11 +144,11 @@ module RES {
 		}
 		/**
 		 * 资源解析库字典类
-		 */		
+		 */
 		private analyzerDic:any = {};
 		/**
 		 * 加载下一项
-		 */		
+		 */
 		private next():void{
             while(this.loadingCount<this.thread) {
                 var resItem:ResourceItem = this.getOneResourceItem();
@@ -164,14 +164,14 @@ module RES {
                 }
             }
 		}
-		
+
 		/**
 		 * 当前应该加载同优先级队列的第几列
-		 */		
+		 */
 		private queueIndex:number = 0;
 		/**
 		 * 获取下一个待加载项
-		 */		
+		 */
 		private getOneResourceItem():ResourceItem{
             if (this.failedList.length > 0)
                 return this.failedList.shift();
@@ -202,7 +202,7 @@ module RES {
 		}
 		/**
 		 * 加载结束
-		 */		
+		 */
 		private onItemComplete(resItem:ResourceItem):void{
             this.loadingCount--;
 			var groupName:string = resItem.groupName;
@@ -212,7 +212,7 @@ module RES {
                     delete this.retryTimesDic[resItem.name];
                     ResourceEvent.dispatchResourceEvent(this.resInstance, ResourceEvent.ITEM_LOAD_ERROR, groupName, resItem);
                 }
-                else { 
+                else {
                     this.retryTimesDic[resItem.name] = times + 1;
                     this.failedList.push(resItem);
                     this.next();
@@ -250,7 +250,7 @@ module RES {
 		}
 		/**
 		 * 从优先级队列中移除指定的组名
-		 */		
+		 */
 		private removeGroupName(groupName:string):void{
 			for(var p in this.priorityQueue){
 				var queue:Array<any> = this.priorityQueue[p];

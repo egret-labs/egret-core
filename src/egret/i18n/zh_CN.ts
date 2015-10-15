@@ -4,7 +4,10 @@ module egret {
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
     var locale_strings = $locale_strings["zh_CN"];
 
-    //core
+    //eui 2000-2999
+    //RES 3200-3299
+
+    //core  1000-1999
     locale_strings[1001] = "找不到Egret入口类: {0}。";
     locale_strings[1002] = "Egret入口类 {0} 必须继承自egret.DisplayObject。";
     locale_strings[1003] = "参数 {0} 不能为 null。";
@@ -38,9 +41,7 @@ module egret {
     locale_strings[1037] = "非正确的blob加载！";
 
 
-    //RES 2000-2999
-
-    //gui
+    //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
     locale_strings[3002] = "索引:\"{0}\"超出集合元素索引范围";
@@ -56,12 +57,12 @@ module egret {
     locale_strings[3012] = "此方法在Scroller组件内不可用!";
     locale_strings[3013] = "UIStage是GUI根容器，只能有一个此实例在显示列表中！";
 
-    //socket
+    //socket 3100-3199
     locale_strings[3100] = "当前浏览器不支持WebSocket";
     locale_strings[3101] = "请先连接WebSocket";
     locale_strings[3102] = "请先设置type为二进制类型";
 
-    //db
+    //db 4000-4299
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";

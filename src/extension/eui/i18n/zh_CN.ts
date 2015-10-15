@@ -33,6 +33,7 @@ module eui {
     egret.$locale_strings["zh_CN"] = egret.$locale_strings["zh_CN"] || {};
     var locale_strings = egret.$locale_strings["zh_CN"];
 
+    //2000-2999
     //EXML报错信息
     locale_strings[2001] = "EXML解析错误 {0}: 找不到EXML文件";
     locale_strings[2002] = "EXML解析错误: 不是有效的XML文件:\n{0}";

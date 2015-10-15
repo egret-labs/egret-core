@@ -32,6 +32,7 @@ module eui {
     egret.$locale_strings["en_US"] = egret.$locale_strings["en_US"] || {};
     var locale_strings = egret.$locale_strings["en_US"];
 
+    //2000-2999
     locale_strings[2001] = "EXML parsing error {0}: EXML file can't be found ";
     locale_strings[2002] = "EXML parsing error : invalid XML file:\n{0}";
     locale_strings[2003] = "EXML parsing error {0}: the class definitions corresponding to nodes can't be found  \n {1}";
@@ -57,7 +58,7 @@ module eui {
     locale_strings[2102] = "EXML parsing warnning {0}: no child node can be found on the property code \n {1}";
     locale_strings[2103] = "EXML parsing warnning {0}: the same property '{1}' on the node is assigned multiple times \n {2}";
     locale_strings[2104] = "Instantiate class {0} error，the parameters of its constructor method must be empty.";
-    
+
     locale_strings[2201] = "BasicLayout doesn't support virtualization.";
     locale_strings[2202] = "parse skinName error，the parsing result of skinName must be a instance of eui.Skin.";
     locale_strings[2203] = "Could not find the skin class '{0}'。";
