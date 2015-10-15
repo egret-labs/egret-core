@@ -48,6 +48,7 @@ module egret {
      * @language zh_CN
      * Video 允许您在应用程序中使用视频。使用 Video 类可以创建 Video 对象、将外部视频文件加载到该对象并播放该文件。<br/>
      * 注意: 在大多数移动设备中，视频是强制全屏播放的，所以你可以直接调用 play() 方法全屏播放视频，不用将它绘制在Stage中。
+     * @see http://edn.egret.com/cn/index.php/article/index/id/657 视频系统
      *
      * @param url 要播放的视频的URL，如果url不为空，Video会立即加载这个视频
      *
