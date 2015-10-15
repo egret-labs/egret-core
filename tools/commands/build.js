@@ -140,9 +140,6 @@ function onGotBuildCommandResult(cmd, callback) {
     if (cmd.messages) {
         cmd.messages.forEach(function (m) { return console.log(m); });
     }
-    if (cmd.exitCode > 10000) {
-        console.log(utils.tr(cmd.exitCode));
-    }
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(function () { return callback(0); }, 500);
     }
@@ -153,5 +150,4 @@ function defaultBuildCallback(code) {
     utils.exit(code);
 }
 module.exports = Build;
-
-//# sourceMappingURL=../commands/build.js.map
+//# sourceMappingURL=build.js.map

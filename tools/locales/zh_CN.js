@@ -80,6 +80,7 @@ var egret;
     locale_strings[12004] = "选择扩展模块";
     locale_strings[12005] = "请选择希望发布的平台";
     locale_strings[0] = "执行成功";
+    locale_strings[1] = "编译项目失败";
     //locale_strings[1] = "请先设置环境变量 {color_green}EGRET_PATH{color_normal}。您可以访问 {color_underline}https://github.com/egret-team/egret/wiki/Setting-environment-variables{color_normal} 获取更多细节";
     //locale_strings[2] = "TypeScript编译器尚未安装，请执行 {color_green}npm install -g typescript{color_normal} 进行安装";
     locale_strings[3] = "耗时：{0}秒";
@@ -194,7 +195,7 @@ var egret;
     locale_strings[8003] = "配置文件{0}不存在";
     locale_strings[8004] = "{color_red}请先创建Native项目再执行 --runtime native{color_normal}";
     locale_strings[2001] = "{0}: error 找不到EXML文件";
-    locale_strings[2002] = "{0}: error 不是有效的XML文件";
+    locale_strings[2002] = "{0}: error XML文件格式有误 {1}";
     locale_strings[2003] = "{0}: error 无法找到节点所对应的类定义\n{1}";
     locale_strings[2004] = "{0}: error 节点不能含有同名的id属性\n{1}";
     locale_strings[2005] = "{0}: error 节点上不存在名为'{1}'的属性或样式名:\n{2}";
@@ -266,5 +267,4 @@ var helpModule;
     };
     global["helpModule"] = global["helpModule"] || helpModule;
 })(helpModule || (helpModule = {}));
-
-//# sourceMappingURL=../locales/zh_CN.js.map
+//# sourceMappingURL=zh_CN.js.map

@@ -10,9 +10,9 @@ var CompileProject = (function () {
         //编译
         exmlActions.build();
         var result = this.compileProject(options);
+        exmlActions.afterBuild();
         if (result.exitStatus)
             return null;
-        exmlActions.afterBuild();
         return result;
     };
     CompileProject.prototype.compileProject = function (option, files) {

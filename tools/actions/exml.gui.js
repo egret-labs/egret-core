@@ -44,12 +44,15 @@ function buildChanges(exmls) {
         return state;
     }
     exmls.forEach(function (exml) {
+        if (!file.exists(exml))
+            return;
         var result = exmlc.compile(exml, egret.args.srcDir);
         if (result.exitCode != 0) {
             state.exitCode = result.exitCode;
             state.messages = state.messages.concat(result.messages);
         }
     });
+    state.messages.forEach(function (m) { return console.log(m); });
     return state;
 }
 exports.buildChanges = buildChanges;

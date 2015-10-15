@@ -154,11 +154,6 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
         cmd.messages.forEach(m=> console.log(m));
     }
 
-    if (cmd.exitCode > 10000) {
-        console.log(utils.tr(cmd.exitCode));
-    }
-
-
 
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(() => callback(0), 500);
