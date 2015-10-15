@@ -8041,6 +8041,7 @@ var egret;
         __extends(RenderTexture, _super);
         function RenderTexture() {
             _super.call(this);
+            this.$displayListMap = {};
         }
         var d = __define,c=RenderTexture;p=c.prototype;
         /**
@@ -8079,7 +8080,7 @@ var egret;
             if (!this.context) {
                 return false;
             }
-            var parentDisplayList = displayObject.$parentDisplayList;
+            this.$update(displayObject);
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
@@ -8092,8 +8093,6 @@ var egret;
             this.rootDisplayList = egret.sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
-            this.$update(displayObject);
-            displayObject.$removeFlagsUp(768 /* Dirty */);
             //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
             var renderMatrixA = renderMatrix.a;
@@ -8108,17 +8107,18 @@ var egret;
                 renderMatrix.translate(-clipBounds.x, -clipBounds.y);
             }
             root.$displayList = null;
-            displayObject.$parentDisplayList = parentDisplayList;
             this.context.clearRect(0, 0, width, height);
             var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA, renderMatrixB, renderMatrixC, renderMatrixD, renderMatrixTx, renderMatrixTy);
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
-            displayObject.$parentDisplayList = parentDisplayList;
+            this.$reset(displayObject);
+            this.$displayListMap = {};
             return true;
         };
         p.$update = function (displayObject) {
+            this.$displayListMap[displayObject.$hashCode] = displayObject.$parentDisplayList;
             if (displayObject.$renderRegion) {
                 displayObject.$renderRegion.moved = true;
                 displayObject.$update();
@@ -8129,6 +8129,18 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var child = children[i];
                     this.$update(child);
+                }
+            }
+        };
+        p.$reset = function (displayObject) {
+            displayObject.$parentDisplayList = this.$displayListMap[displayObject.$hashCode];
+            displayObject.$removeFlags(768 /* Dirty */);
+            if (displayObject instanceof egret.DisplayObjectContainer) {
+                var children = displayObject.$children;
+                var length = children.length;
+                for (var i = 0; i < length; i++) {
+                    var child = children[i];
+                    this.$reset(child);
                 }
             }
         };
