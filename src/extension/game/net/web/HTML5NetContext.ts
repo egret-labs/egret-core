@@ -164,6 +164,7 @@ module egret.web {
          * @param loader
          */
         private loadSound(loader:URLLoader):void {
+            var self = this;
             var virtualUrl:string = this.getVirtualUrl(loader._request.url);
 
             var sound:egret.Sound = new egret.Sound();
@@ -188,7 +189,7 @@ module egret.web {
 
                 window.setTimeout(function() {
                     loader.dispatchEventWith(Event.COMPLETE);
-                }, self);
+                }, 0);
             }
 
             function removeListeners():void {

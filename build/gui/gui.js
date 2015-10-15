@@ -14817,6 +14817,38 @@ var egret;
             p.swapChildrenAt = function (index1, index2) {
                 this.throwNotSupportedError();
             };
+            p.$measureContentBounds = function (bounds) {
+                bounds.setTo(0, 0, this.width, this.height);
+            };
+            /**
+             * @inheritDoc
+             */
+            p.$hitTest = function (stageX, stageY) {
+                var childTouched = _super.prototype.$hitTest.call(this, stageX, stageY);
+                if (childTouched)
+                    return childTouched;
+                //return Sprite.prototype.$hitTest.call(this, stageX, stageY);
+                if (!this.$visible) {
+                    return null;
+                }
+                var m = this.$getInvertedConcatenatedMatrix();
+                var bounds = this.$getContentBounds();
+                var localX = m.a * stageX + m.c * stageY + m.tx;
+                var localY = m.b * stageX + m.d * stageY + m.ty;
+                if (bounds.contains(localX, localY)) {
+                    if (!this.$children) {
+                        var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                        if (rect && !rect.contains(localX, localY)) {
+                            return null;
+                        }
+                        if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+                            return null;
+                        }
+                    }
+                    return this;
+                }
+                return null;
+            };
             /**
              * @private
              */

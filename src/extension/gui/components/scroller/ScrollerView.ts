@@ -1029,5 +1029,39 @@ module egret.gui {
             this.throwNotSupportedError();
         }
 
+        $measureContentBounds(bounds:Rectangle):void {
+            bounds.setTo(0, 0, this.width, this.height);
+        }
+
+        /**
+         * @inheritDoc
+         */
+        public $hitTest(stageX:number, stageY:number): DisplayObject {
+            var childTouched = super.$hitTest(stageX, stageY);
+            if (childTouched)
+                return childTouched;
+            //return Sprite.prototype.$hitTest.call(this, stageX, stageY);
+            if (!this.$visible) {
+                return null;
+            }
+            var m = this.$getInvertedConcatenatedMatrix();
+            var bounds = this.$getContentBounds();
+            var localX = m.a * stageX + m.c * stageY + m.tx;
+            var localY = m.b * stageX + m.d * stageY + m.ty;
+            if (bounds.contains(localX, localY)) {
+                if (!this.$children) {//容器已经检查过scrollRect和mask，避免重复对遮罩进行碰撞。
+
+                    var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                    if (rect && !rect.contains(localX, localY)) {
+                        return null;
+                    }
+                    if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+                        return null;
+                    }
+                }
+                return this;
+            }
+            return null;
+        }
     }
 }

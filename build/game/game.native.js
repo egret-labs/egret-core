@@ -141,33 +141,30 @@ var egret;
             };
             p.loadSound = function (loader) {
                 var self = this;
-                var request = loader._request;
-                var virtualUrl = self.getVirtualUrl(request.url);
-                if (self.isNetUrl(virtualUrl)) {
-                    download();
+                var virtualUrl = this.getVirtualUrl(loader._request.url);
+                var sound = new egret.Sound();
+                sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+                sound.load(virtualUrl);
+                function onPostProgress(event) {
+                    loader.dispatchEvent(event);
                 }
-                else if (!egret_native.isFileExists(virtualUrl)) {
-                    download();
+                function onError(event) {
+                    removeListeners();
+                    loader.dispatchEvent(event);
                 }
-                else {
-                    egret.$callAsync(onLoadComplete, self);
+                function onLoadComplete(e) {
+                    removeListeners();
+                    loader.data = sound;
+                    egret.$callAsync(function () {
+                        loader.dispatchEventWith(egret.Event.COMPLETE);
+                    }, self);
                 }
-                function download() {
-                    var promise = egret.PromiseObject.create();
-                    promise.onSuccessFunc = onLoadComplete;
-                    promise.onErrorFunc = function () {
-                        egret.IOErrorEvent.dispatchIOErrorEvent(loader);
-                    };
-                    egret_native.download(virtualUrl, virtualUrl, promise);
-                }
-                function onLoadComplete() {
-                    //var nativeAudio:NativeAudio = new NativeAudio();
-                    //nativeAudio.$setAudio(virtualUrl);
-                    //
-                    //var sound = new egret.Sound();
-                    //sound.$setAudio(nativeAudio);
-                    //loader.data = sound;
-                    egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+                function removeListeners() {
+                    sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                    sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                    sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
                 }
             };
             p.loadTexture = function (loader) {

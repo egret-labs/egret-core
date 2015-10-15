@@ -5760,6 +5760,11 @@ declare module egret.gui {
          * @platform Web,Native
          */
         swapChildrenAt(index1: number, index2: number): void;
+        $measureContentBounds(bounds: Rectangle): void;
+        /**
+         * @inheritDoc
+         */
+        $hitTest(stageX: number, stageY: number): DisplayObject;
     }
 }
 declare module egret.gui {

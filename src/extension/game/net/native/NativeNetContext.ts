@@ -151,36 +151,37 @@ module egret.native {
 
         private loadSound(loader:URLLoader) {
             var self = this;
-            var request = loader._request;
-            var virtualUrl:string = self.getVirtualUrl(request.url);
+            var virtualUrl:string = this.getVirtualUrl(loader._request.url);
 
-            if (self.isNetUrl(virtualUrl)) {//网络请求
-                download();
-            }
-            else if (!egret_native.isFileExists(virtualUrl)) {
-                download();
-            }
-            else {
-                $callAsync(onLoadComplete, self);
-            }
+            var sound:egret.Sound = new egret.Sound();
+            sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+            sound.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+            sound.addEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
+            sound.load(virtualUrl);
 
-            function download() {
-                var promise = PromiseObject.create();
-                promise.onSuccessFunc = onLoadComplete;
-                promise.onErrorFunc = function () {
-                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
-                };
-                egret_native.download(virtualUrl, virtualUrl, promise);
+            function onPostProgress(event:egret.ProgressEvent):void {
+                loader.dispatchEvent(event);
             }
 
-            function onLoadComplete() {
-                //var nativeAudio:NativeAudio = new NativeAudio();
-                //nativeAudio.$setAudio(virtualUrl);
-                //
-                //var sound = new egret.Sound();
-                //sound.$setAudio(nativeAudio);
-                //loader.data = sound;
-                Event.dispatchEvent(loader, Event.COMPLETE);
+            function onError(event:egret.IOErrorEvent) {
+                removeListeners();
+                loader.dispatchEvent(event);
+            }
+
+            function onLoadComplete(e) {
+                removeListeners();
+
+                loader.data = sound;
+
+                $callAsync(function() {
+                    loader.dispatchEventWith(Event.COMPLETE);
+                }, self);
+            }
+
+            function removeListeners():void {
+                sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
+                sound.removeEventListener(egret.IOErrorEvent.IO_ERROR, onError, self);
+                sound.removeEventListener(egret.ProgressEvent.PROGRESS, onPostProgress, self);
             }
         }
 

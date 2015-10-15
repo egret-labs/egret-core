@@ -76,11 +76,22 @@ module egret {
          * @platform Web,Native
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
+            if (clipBounds && (clipBounds.width == 0 || clipBounds.height==0)){
+                return false;
+            }
             this.dispose();
-            scale /= $TextureScaleFactor;
+
             //todo clipBounds?
-            var bounds = displayObject.$getOriginalBounds();
-            if (bounds.width == 0 || bounds.height==0){
+            var bounds = clipBounds || displayObject.$getOriginalBounds();
+            if (bounds.width == 0 || bounds.height == 0) {
+                return false;
+            }
+
+            scale /= $TextureScaleFactor;
+            var width = (bounds.x + bounds.width) * scale;
+            var height = (bounds.y + bounds.height) * scale;
+            this.context = this.createRenderContext(width, height);
+            if (!this.context) {
                 return false;
             }
 
@@ -100,9 +111,6 @@ module egret {
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
 
-
-            var width = (bounds.x + bounds.width) * scale;
-            var height = (bounds.y + bounds.height) * scale;
             this.$update(displayObject);
             displayObject.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
 
@@ -122,11 +130,9 @@ module egret {
 
             root.$displayList = null;
 
-            this.context = this.createRenderContext(width, height);
-            if (!this.context) {
-                displayObject.$parentDisplayList = parentDisplayList;
-                return false;
-            }
+
+            displayObject.$parentDisplayList = parentDisplayList;
+
             this.context.clearRect(0, 0, width, height);
             
             var drawCalls = this.drawDisplayObject(root, this.context, null);
