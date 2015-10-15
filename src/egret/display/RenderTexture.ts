@@ -95,7 +95,8 @@ module egret {
                 return false;
             }
 
-            var parentDisplayList:sys.DisplayList = displayObject.$parentDisplayList;
+            this.$update(displayObject);
+
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
@@ -110,9 +111,6 @@ module egret {
             this.rootDisplayList = sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
-
-            this.$update(displayObject);
-            displayObject.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
 
             //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
@@ -130,9 +128,6 @@ module egret {
 
             root.$displayList = null;
 
-
-            displayObject.$parentDisplayList = parentDisplayList;
-
             this.context.clearRect(0, 0, width, height);
             
             var drawCalls = this.drawDisplayObject(root, this.context, null);
@@ -141,11 +136,15 @@ module egret {
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
-            displayObject.$parentDisplayList = parentDisplayList;
+            this.$reset(displayObject);
+            this.$displayListMap = {};
             return true;
         }
 
+        private $displayListMap = {};
+
         private $update(displayObject:DisplayObject):void {
+            this.$displayListMap[displayObject.$hashCode] = displayObject.$parentDisplayList;
             if (displayObject.$renderRegion) {
                 displayObject.$renderRegion.moved = true;
                 displayObject.$update();
@@ -156,6 +155,19 @@ module egret {
                 for (var i:number = 0; i < length; i++) {
                     var child:DisplayObject = children[i];
                     this.$update(child);
+                }
+            }
+        }
+
+        private $reset(displayObject:DisplayObject):void {
+            displayObject.$parentDisplayList = this.$displayListMap[displayObject.$hashCode];
+            displayObject.$removeFlags(sys.DisplayObjectFlags.Dirty);
+            if (displayObject instanceof DisplayObjectContainer) {
+                var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
+                var length:number = children.length;
+                for (var i:number = 0; i < length; i++) {
+                    var child:DisplayObject = children[i];
+                    this.$reset(child);
                 }
             }
         }
