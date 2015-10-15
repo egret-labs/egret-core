@@ -57,13 +57,19 @@ class UpgradeCommand_2_4_3 implements egret.Command {
         var oldProperties = require('./ModifyProperties').getProperties();
         var extra_param = '';
         for(var i =0;i<oldProperties.modules.length;i++){
-            if(oldProperties.modules['name'] == 'gui'){
+            if(oldProperties.modules[i]['name'] == 'gui'){
                 extra_param = ' --type gui';
                 break;
             }
         }
+
+        var nodePath = globals.addQuotes(process.execPath);
+        //var exposeGCCommand = '--expose-gc';
+        var egretCommand = globals.addQuotes(file.joinPath(egretPath,'/tools/bin/egret'));
+        var embraceNewPath = globals.addQuotes(newPath);
         //处理命令行中的空格(用“”抱起来作为一个单独的参数)
-        CHILD_EXEC.exec('node \"'+file.joinPath(egretPath,'/tools/bin/egret')+'\" create \"'+newPath+"\""+extra_param,{
+        CHILD_EXEC.exec(
+            nodePath+' '+egretCommand+' create '+embraceNewPath+' '+extra_param,{
             encoding: 'utf8',
             timeout: 0,
             maxBuffer: 200*1024,
@@ -78,8 +84,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             }else{
                 console.log(stdout);
                 console.log(stderror);
-                self.configNewProject(newPath);
-                self.apiTest(newPath);
+                var lib_exclude = self.configNewProject(newPath);
+                self.apiTest(newPath,lib_exclude);
             }
         });
     }
@@ -88,7 +94,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
      * step2.配置新项目
      * @param newPath
      */
-    private configNewProject(newPath:string){
+    private configNewProject(newPath:string):string{
         //step 1.拷贝src工程文件
         var srcOld = file.joinPath(egret.args.srcDir);
         if(!file.exists(srcOld)){
@@ -103,7 +109,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
         var resourceOld = file.joinPath(egret.args.projectDir,'/resource/');
         //兼容处理
         if(file.exists(resourceOld)){
-            var resourceNew = file.joinPath(newPath,'/src/resource/');
+            var resourceNew = file.joinPath(newPath,'/resource/');
             if(resourceOld.toLowerCase() != resourceNew.toLowerCase()){
                 globals.log2(1707,resourceOld,resourceNew);
                 file.copy(resourceOld,resourceNew);
@@ -117,26 +123,40 @@ class UpgradeCommand_2_4_3 implements egret.Command {
         var newProperties = JSON.parse(file.read(newPropertyPath));
 
         var rplc_parram = [];
-        //step 3.1 将引用库的配置加入到index.html中
+        //step 3.1 将引用库的配置加入到index.html中 并探测第三方库
+        var lib_included = {
+            'egret':1,'eui':1,'gui':1,'game':1,
+            'res':1,'tween':1,'socket':1,'dragonBones':1,
+            'core':1,'version':1,'version_old':1};
+        var lib_exclude = '';
         if(oldProperties.modules){
-            var replaced = '<script src="libs/res/res.js" src-release="libs/res/res.min.js"></script>';
-            var added = replaced;
+            var replaced = '<script egret="lib" src="libs/modules/res/res.js" src-release="libs/modules/res/res.min.js"></script>';
+            var added = '';
             var isNeedReplace = false;
             oldProperties.modules.forEach(item =>{
                 if(item.name == 'gui'){
-                    isNeedReplace = true;
-                    added += '\n\n\t<script src="libs/gui/gui.js" src-release="libs/gui/gui.min.js"></script>';
-                    newProperties.modules.push({"name":item.name});
+                    replaced = '<script egret="lib" src="libs/modules/gui/gui.js" src-release="libs/modules/gui/gui.min.js"></script>';
+                    //isNeedReplace = true;
+                    //added += '\n\n\t<script egret="lib" src="libs/gui/gui.js" src-release="libs/gui/gui.min.js"></script>';
+                    //newProperties.modules.push({"name":item.name});
                 }else
                 if(item.name == 'dragonbones'){
                     isNeedReplace = true;
-                    added += '\n\n\t<script src="libs/dragonbones/dragonbones.js" src-release="libs/dragonbones/dragonbones.min.js"></script>';
+                    added += '\n\t<script egret="lib" src="libs/modules/dragonbones/dragonbones.js" src-release="libs/modules/dragonbones/dragonbones.min.js"></script>';
                     newProperties.modules.push({"name":item.name});
+                }else
+                if(item.name == 'socket'){
+                    isNeedReplace = true;
+                    added += '\n\t<script egret="lib" src="libs/modules/socket/socket.js" src-release="libs/modules/socket/socket.min.js"></script>';
+                    newProperties.modules.push({"name":item.name});
+                }else
+                if(!(item.name in lib_included)){
+                    lib_exclude += item.name +' ';
                 }
             });
             if(isNeedReplace) {
                 rplc_parram.push(replaced);
-                rplc_parram.push(added);
+                rplc_parram.push(replaced + added);
                 //保存新配置文件
                 var newPropertiesBody = JSON.stringify(newProperties, null, "\t");
                 file.save(newPropertyPath, newPropertiesBody);
@@ -150,7 +170,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
             rplc_parram.push('data-entry-class=\"Main\"');
             rplc_parram.push('data-entry-class=\"' + enter_class_name + '\"');
         }
-        this.replaceFileStr(file.joinPath(newPath,'template/index.html'),rplc_parram);
+        this.replaceFileStr(file.joinPath(newPath,"index.html"),rplc_parram);
+        return lib_exclude;
         //step 4.拷贝旧的库文件用于比较(引擎自带历史版本的核心库声明文件)
 
         //var libOld = file.joinPath(egret.args.projectDir,'/libs');
@@ -173,7 +194,7 @@ class UpgradeCommand_2_4_3 implements egret.Command {
      * step3.API检测
      * @param projectPath
      */
-    private apiTest(projectPath:string) {
+    private apiTest(projectPath:string,lib_exclude:string) {
         var self = this;
         new APITestTool().execute(projectPath,onAPICallBack);
         function onAPICallBack(error:boolean, total:number|string, logger?:AutoLogger){
@@ -189,6 +210,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                         }
                         //延时操作下一步
                         setTimeout(()=>{
+                            //添加第三方库提示
+                            logger._htmlBody = self.addH4ThirdPartLibrary(logger._htmlBody,lib_exclude);
                             //写入html并打开网址
                             if(logger._htmlBody != ''){
                                 var saveLogFilePath = file.joinPath(projectPath,logger.HTML_FILENAME);
@@ -238,6 +261,14 @@ class UpgradeCommand_2_4_3 implements egret.Command {
     private saveFileAndOpen(filePath:string,content:string){
         file.save(filePath,content);
         utils.open(filePath);
+    }
+
+    private addH4ThirdPartLibrary(raw:string,lib_third:string){
+        if(lib_third != ''){
+            var res = '<h4>'+utils.tr(1716,lib_third,"2.5.0")+'</h4><h4>关于第三方库请查看<a target="_blank" href="http://edn.egret.com/cn/index.php/article/index/id/172">这里</a></h4>' + raw;
+            return res;
+        }else
+            return raw;
     }
 }
 

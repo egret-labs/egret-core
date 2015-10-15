@@ -14,9 +14,9 @@ class CompileProject {
         //编译
         exmlActions.build();
         var result = this.compileProject(options);
+        exmlActions.afterBuild()
         if(result.exitStatus)
             return null;
-        exmlActions.afterBuild()
 
         return result;
     }
@@ -25,7 +25,10 @@ class CompileProject {
         var compileResult: tsclark.LarkCompileResult;
         if (files && this.recompile) {
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
-            compileResult = this.recompile(files);
+            var realCWD = process.cwd();
+            process.chdir(option.projectDir);
+            compileResult = this.recompile(files, option.sourceMap);
+            process.chdir(realCWD);
         }
         else {
             var compiler = new Compiler();
@@ -49,7 +52,7 @@ class CompileProject {
 
     }
 
-    private recompile: (files: egret.FileChanges) => tsclark.LarkCompileResult;
+    private recompile: (files: egret.FileChanges, sourceMap?: boolean) => tsclark.LarkCompileResult;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {

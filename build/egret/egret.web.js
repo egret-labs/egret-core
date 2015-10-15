@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 var egret;
 (function (egret) {
     var web;
@@ -169,12 +168,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var egret;
 (function (egret) {
     var web;
@@ -1156,6 +1149,13 @@ var egret;
                  * @private
                  */
                 this.widthSet = NaN;
+                this.isPlayed = false;
+                this.screenChanged = function (e) {
+                    var isfullscreen = !!_this.video['webkitDisplayingFullscreen'];
+                    if (!isfullscreen) {
+                        _this.checkFullScreen(false);
+                    }
+                };
                 this._fullscreen = true;
                 /**
                  * @private
@@ -1164,26 +1164,23 @@ var egret;
                 this.onVideoLoaded = function () {
                     _this.video.removeEventListener("canplay", _this.onVideoLoaded);
                     var video = _this.video;
-                    var width = _this.width;
-                    var height = _this.height;
                     _this.loaded = true;
                     video.pause();
                     if (_this.posterData) {
-                        _this.posterData.width = video.videoWidth;
-                        _this.posterData.height = video.videoHeight;
+                        _this.posterData.width = _this.getPlayWidth();
+                        _this.posterData.height = _this.getPlayHeight();
                     }
                     video.width = video.videoWidth;
                     video.height = video.videoHeight;
                     _this.$invalidateContentBounds();
-                    _this.width = isNaN(_this.widthSet) ? video.videoWidth : _this.widthSet;
-                    _this.height = isNaN(_this.heightSet) ? video.videoHeight : _this.heightSet;
                     _this.dispatchEventWith(egret.Event.COMPLETE);
                 };
                 this.$renderRegion = new egret.sys.Region();
                 this.src = url;
                 this.once(egret.Event.ADDED_TO_STAGE, this.loadPoster, this);
-                if (url)
+                if (url) {
                     this.load();
+                }
             }
             var d = __define,c=WebVideo;p=c.prototype;
             /**
@@ -1201,11 +1198,9 @@ var egret;
                 var video = document.createElement("video");
                 video.controls = null;
                 video.src = url; //
-                //video["autoplay"] = "autoplay";
                 video.setAttribute("autoplay", "autoplay");
                 video.setAttribute("webkit-playsinline", "true");
                 video.addEventListener("canplay", this.onVideoLoaded);
-                setTimeout(this.onVideoLoaded.bind(this), this, 100);
                 video.addEventListener("error", function () { return _this.onVideoError(); });
                 video.addEventListener("ended", function () { return _this.onVideoEnded(); });
                 video.load();
@@ -1216,7 +1211,6 @@ var egret;
                 video.style.left = "0px";
                 video.height = 1;
                 video.width = 1;
-                document.body.appendChild(video);
                 window.setTimeout(function () { return video.pause(); }, 16);
                 this.video = video;
             };
@@ -1231,51 +1225,113 @@ var egret;
                     this.once(egret.Event.COMPLETE, function (e) { return _this.play(startTime, loop); }, this);
                     return;
                 }
+                this.isPlayed = true;
                 var video = this.video;
                 if (startTime != undefined)
                     video.currentTime = +startTime || 0;
                 video.loop = !!loop;
-                video.style.zIndex = "9999";
+                if (egret.Capabilities.isMobile) {
+                    video.style.zIndex = "-88888"; //移动端，就算设置成最小，只要全屏，都会在最上层，而且在自动退出去后，不担心挡住canvas
+                }
+                else {
+                    video.style.zIndex = "9999";
+                }
                 video.style.position = "absolute";
                 video.style.top = "0px";
                 video.style.left = "0px";
                 video.height = this.heightSet;
                 video.width = this.widthSet;
-                document.body.appendChild(video);
-                video.play();
-                var fullscreen = false;
-                if (this._fullscreen) {
-                    fullscreen = this.goFullscreen();
+                this.checkFullScreen(this._fullscreen);
+            };
+            p.checkFullScreen = function (playFullScreen) {
+                var video = this.video;
+                if (playFullScreen) {
+                    if (video.parentElement == null) {
+                        video.removeAttribute("webkit-playsinline");
+                        document.body.appendChild(video);
+                        this.goFullscreen();
+                        egret.stopTick(this.markDirty, this);
+                    }
                 }
-                if (fullscreen == false) {
+                else {
+                    if (video.parentElement != null) {
+                        video.parentElement.removeChild(video);
+                    }
                     video.setAttribute("webkit-playsinline", "true");
+                    this.setFullScreenMonitor(false);
                     egret.startTick(this.markDirty, this);
                 }
+                video.play();
             };
             p.goFullscreen = function () {
-                var _this = this;
                 var video = this.video;
-                if (video['webkitRequestFullscreen'])
-                    video['webkitRequestFullscreen']();
-                else if (video['webkitRequestFullScreen'])
-                    video['webkitRequestFullScreen']();
-                else if (video['msRequestFullscreen'])
-                    video['msRequestFullscreen']();
-                else if (video['requestFullscreen'])
-                    video['requestFullscreen']();
-                else
-                    return false;
-                video.removeAttribute("webkit-playsinline");
-                video['onwebkitfullscreenchange'] = function (e) {
-                    var isfullscreen = !!video['webkitDisplayingFullscreen'];
-                    if (!isfullscreen) {
-                        _this.pause();
+                var fullscreenType;
+                fullscreenType = egret.web.getPrefixStyleName('requestFullscreen', video);
+                if (!video[fullscreenType]) {
+                    fullscreenType = egret.web.getPrefixStyleName('requestFullScreen', video);
+                    if (!video[fullscreenType]) {
+                        return true;
                     }
-                };
-                video['onwebkitfullscreenerror'] = function (e) {
-                    egret.$error(3003);
-                };
+                }
+                video.removeAttribute("webkit-playsinline");
+                video[fullscreenType]();
+                this.setFullScreenMonitor(true);
                 return true;
+            };
+            p.setFullScreenMonitor = function (use) {
+                var video = this.video;
+                if (use) {
+                    video.addEventListener("mozfullscreenchange", this.screenChanged);
+                    video.addEventListener("webkitfullscreenchange", this.screenChanged);
+                    video.addEventListener("webkitfullscreenerror", this.screenError);
+                    video.addEventListener("webkitfullscreenerror", this.screenError);
+                }
+                else {
+                    video.removeEventListener("mozfullscreenchange", this.screenChanged);
+                    video.removeEventListener("webkitfullscreenchange", this.screenChanged);
+                    video.removeEventListener("webkitfullscreenerror", this.screenError);
+                    video.removeEventListener("webkitfullscreenerror", this.screenError);
+                }
+            };
+            p.screenError = function () {
+                egret.$error(3003);
+            };
+            p.exitFullscreen = function () {
+                //退出全屏
+                if (document['exitFullscreen']) {
+                    document['exitFullscreen']();
+                }
+                else if (document['msExitFullscreen']) {
+                    document['msExitFullscreen']();
+                }
+                else if (document['mozCancelFullScreen']) {
+                    document['mozCancelFullScreen']();
+                }
+                else if (document['oCancelFullScreen']) {
+                    document['oCancelFullScreen']();
+                }
+                else if (document['webkitExitFullscreen']) {
+                    document['webkitExitFullscreen']();
+                }
+                else {
+                }
+            };
+            /**
+             * @private
+             *
+             */
+            p.onVideoEnded = function () {
+                this.pause();
+                this.isPlayed = false;
+                this.$invalidateContentBounds();
+                this.dispatchEventWith(egret.Event.ENDED);
+            };
+            /**
+             * @private
+             *
+             */
+            p.onVideoError = function () {
+                this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             };
             /**
              * @inheritDoc
@@ -1289,7 +1345,7 @@ var egret;
                 this.pause();
                 if (this.loaded == false && this.video)
                     this.video.src = "";
-                if (this.video) {
+                if (this.video && this.video.parentElement) {
                     this.video.parentElement.removeChild(this.video);
                     this.video = null;
                 }
@@ -1301,11 +1357,9 @@ var egret;
             p.pause = function () {
                 if (this.video) {
                     this.video.pause();
-                    if (!this.closed) {
-                        this.onVideoEnded();
-                    }
                 }
                 egret.stopTick(this.markDirty, this);
+                this.$invalidate();
             };
             d(p, "volume"
                 /**
@@ -1354,9 +1408,12 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
+                    if (egret.Capabilities.isMobile) {
+                        return;
+                    }
                     this._fullscreen = !!value;
                     if (this.video && this.video.paused == false) {
-                        this.goFullscreen();
+                        this.checkFullScreen(this._fullscreen);
                     }
                 }
             );
@@ -1384,32 +1441,11 @@ var egret;
                 imageLoader.once(egret.Event.COMPLETE, function (e) {
                     var posterData = imageLoader.data;
                     _this.posterData = imageLoader.data;
-                    if (_this.video && _this.loaded) {
-                        posterData.width = _this.video.videoWidth;
-                        posterData.height = _this.video.videoHeight;
-                    }
-                    else {
-                        posterData.width = isNaN(_this.widthSet) ? posterData.width : _this.widthSet;
-                        posterData.height = isNaN(_this.heightSet) ? posterData.height : _this.heightSet;
-                    }
+                    _this.posterData.width = _this.getPlayWidth();
+                    _this.posterData.height = _this.getPlayHeight();
                     _this.$invalidateContentBounds();
                 }, this);
                 imageLoader.load(poster);
-            };
-            /**
-             * @private
-             *
-             */
-            p.onVideoEnded = function () {
-                this.dispatchEventWith(egret.Event.ENDED);
-                this.$invalidateContentBounds();
-            };
-            /**
-             * @private
-             *
-             */
-            p.onVideoError = function () {
-                this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             };
             /**
              * @private
@@ -1418,14 +1454,38 @@ var egret;
                 var bitmapData = this.bitmapData;
                 var posterData = this.posterData;
                 if (bitmapData) {
-                    bounds.setTo(0, 0, bitmapData.width, bitmapData.height);
+                    bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
                 }
                 else if (posterData) {
-                    bounds.setTo(0, 0, posterData.width, posterData.height);
+                    bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
                 }
                 else {
                     bounds.setEmpty();
                 }
+            };
+            p.getPlayWidth = function () {
+                if (!isNaN(this.widthSet)) {
+                    return this.widthSet;
+                }
+                if (this.bitmapData) {
+                    return this.bitmapData.width;
+                }
+                if (this.posterData) {
+                    return this.posterData.width;
+                }
+                return NaN;
+            };
+            p.getPlayHeight = function () {
+                if (!isNaN(this.heightSet)) {
+                    return this.heightSet;
+                }
+                if (this.bitmapData) {
+                    return this.bitmapData.height;
+                }
+                if (this.posterData) {
+                    return this.posterData.height;
+                }
+                return NaN;
             };
             /**
              * @private
@@ -1433,15 +1493,15 @@ var egret;
             p.$render = function (context) {
                 var bitmapData = this.bitmapData;
                 var posterData = this.posterData;
-                if ((!bitmapData || this.video && this.video.paused) && posterData) {
-                    context.drawImage(posterData, 0, 0, posterData.width, posterData.height);
+                if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
+                    context.drawImage(posterData, 0, 0, this.getPlayWidth(), this.getPlayHeight());
                 }
-                if (bitmapData) {
+                else if (this.isPlayed && bitmapData) {
                     context.imageSmoothingEnabled = true;
-                    context.drawImage(bitmapData, 0, 0, bitmapData.width, bitmapData.height);
+                    context.drawImage(bitmapData, 0, 0, this.getPlayWidth(), this.getPlayHeight());
                 }
             };
-            p.markDirty = function (time) {
+            p.markDirty = function () {
                 this.$invalidate();
                 return true;
             };
@@ -1461,6 +1521,14 @@ var egret;
                 this.widthSet = +value || 0;
                 return _super.prototype.$setWidth.call(this, value);
             };
+            d(p, "paused"
+                ,function () {
+                    if (this.video) {
+                        return this.video.paused;
+                    }
+                    return true;
+                }
+            );
             return WebVideo;
         })(egret.DisplayObject);
         web.WebVideo = WebVideo;
@@ -2181,7 +2249,14 @@ var egret;
                     this.setElementStyle("textAlign", textfield.textAlign);
                     this.setElementStyle("fontSize", textfield.size * this._gscaleY + "px");
                     this.setElementStyle("color", egret.toColorString(textfield.textColor));
-                    this.setElementStyle("width", textfield.width * this._gscaleX + "px");
+                    if (textfield.stage) {
+                        var tw = textfield.localToGlobal(0, 0).x;
+                        tw = Math.min(textfield.width, textfield.stage.stageWidth - tw);
+                    }
+                    else {
+                        tw = textfield.width;
+                    }
+                    this.setElementStyle("width", tw * this._gscaleX + "px");
                     this.setElementStyle("verticalAlign", textfield.verticalAlign);
                     if (textfield.multiline) {
                         this.setAreaHeight();
@@ -2203,7 +2278,7 @@ var egret;
                     }
                     this.inputDiv.style.clip = "rect(0px " + (textfield.width * this._gscaleX) + "px " + (textfield.height * this._gscaleY) + "px 0px)";
                     this.inputDiv.style.height = textfield.height * this._gscaleY + "px";
-                    this.inputDiv.style.width = textfield.width * this._gscaleX + "px";
+                    this.inputDiv.style.width = tw * this._gscaleX + "px";
                 }
             };
             return HTML5StageText;
@@ -2579,13 +2654,6 @@ var egret;
                 canvas["renderContext"] = context;
                 context["surface"] = canvas;
                 web.toBitmapData(canvas);
-                var drawImage = context.drawImage;
-                context.drawImage = function (image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight) {
-                    if (!image || image["width"] == 0 || image["height"] == 0) {
-                        return;
-                    }
-                    drawImage.apply(context, arguments);
-                };
                 if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                     var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                     for (var i = keys.length - 1; i >= 0; i--) {
@@ -3208,6 +3276,7 @@ var egret;
             }
             return "";
         }
+        web.getPrefix = getPrefix;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3248,6 +3317,9 @@ var egret;
          * 当网页尺寸发生改变时此方法会自动被调用。
          */
         function updateAllScreens() {
+            if (!isRunning) {
+                return;
+            }
             var containerList = document.querySelectorAll(".egret-player");
             var length = containerList.length;
             for (var i = 0; i < length; i++) {
@@ -3256,11 +3328,16 @@ var egret;
                 player.updateScreenSize();
             }
         }
+        var isRunning = false;
         /**
          * @private
          * 网页加载完成，实例化页面中定义的Egretsys标签
          */
         function runEgret() {
+            if (isRunning) {
+                return;
+            }
+            isRunning = true;
             if (DEBUG) {
                 var language = navigator.language || navigator.browserLanguage || "en_US";
                 language = language.replace("-", "_");
@@ -4014,6 +4091,7 @@ var egret;
                     continue;
                 }
                 attributes[name] = attributeNode.value;
+                xml["$" + name] = attributeNode.value;
             }
             var childNodes = node.childNodes;
             length = childNodes.length;

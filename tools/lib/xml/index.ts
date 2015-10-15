@@ -23,6 +23,7 @@ export function parse(xmlString): egret.XML {
     var object:sax.Tag = null;
     var namespaces = {};
     var hasError = false;
+    saxparser.resume();
     saxparser.onerror = function (err) {
         hasError = true;
     };

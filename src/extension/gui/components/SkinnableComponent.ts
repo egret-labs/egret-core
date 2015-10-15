@@ -124,7 +124,12 @@ module egret.gui {
          */
         private getSkinAdapter():ISkinAdapter{
             var adapter:ISkinAdapter;
-            adapter = new DefaultSkinAdapter();
+            try{
+                adapter = $getAdapter("egret.gui.ISkinAdapter");
+            }
+            catch(e){
+                adapter = new DefaultSkinAdapter();
+            }
             SkinnableComponent.skinAdapter = adapter;
             return adapter;
         }
@@ -363,8 +368,8 @@ module egret.gui {
                 return false;
             this._UIC_Props_._enabled = value;
             if(this._autoMouseEnabled){
-                this.touchChildren = value ? this.explicitMouseChildren : false;
-                this.touchEnabled  = value ? this.explicitMouseEnabled  : false;
+                this.$touchChildren = value ? this.explicitMouseChildren : false;
+                this.$touchEnabled  = value ? this.explicitMouseEnabled  : false;
             }
             this.invalidateSkinState();
 

@@ -1,4 +1,6 @@
-﻿
+﻿/// <reference path="../lib/types.d.ts" />
+
+import os = require("os");
 import http = require('http');
 import cprocess = require('child_process')
 import utils = require('../lib/utils');
@@ -52,7 +54,7 @@ class Project {
         }
         if (this.timer)
             clearTimeout(this.timer);
-        this.timer = setTimeout(() => this.build(), 200);
+        this.timer = <any>setTimeout(() => this.build(), 200);
     }
 
     build() {
@@ -65,10 +67,18 @@ class Project {
         console.log('启动编译进程:' + this.path);
         this.shutdown(11);
         var larkPath = FileUtil.joinPath(utils.getEgretRoot(), 'tools/bin/egret');
-
-        var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'compileservice', (this.option.sourceMap?"-sourcemap":"")], {
+        var params = [
+            '--expose-gc',
+            larkPath,
+            'compileservice', this.path,
+            (this.option.sourceMap ? "-sourcemap" : "")
+        ];
+        if (this.option && this.option.runtime) {
+            params.push("--runtime", this.option.runtime);
+        }
+        var build = cprocess.spawn(process.execPath, params , {
             detached: true,
-            cwd: this.path
+            cwd: os.tmpdir()
         });
         build.on('exit', (code, signal) => this.onBuildServiceExit(code, signal));
         build.stdout.setEncoding("utf-8");
@@ -174,4 +184,3 @@ export = Project;
 
 
 
-/// <reference path="../lib/types.d.ts" />

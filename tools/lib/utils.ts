@@ -81,8 +81,8 @@ export function tr(code: number, ...args): string {
 
 export function format(text: string, ...args): string {
     var length = args.length;
-    for (var i = 0; i < length; i++) {
-        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]);
+    for (var i = 0; i < length || i < 5; i++) {
+        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]||"");
     }
 
     text = formatStdoutString(text);
@@ -110,8 +110,11 @@ export function inject(text: string,injector?:any):string {
 
 export function exit(code: number, ...args) {
     if (code) {
-        var message = tr.apply(this, [code].concat(args));
-        console.error(message);
+        var text: string = $locale_strings[code];
+        if (text&&text.indexOf("{0}") < 0 || args && args.length > 0) {
+            var message = tr.apply(this, [code].concat(args));
+            console.error(message);
+        }
     }
     process.exit(code);
 }

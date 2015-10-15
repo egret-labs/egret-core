@@ -83,18 +83,18 @@ module egret {
         /**
          * @language en_US
          * Initializes a Bitmap object to refer to the specified BitmapData|Texture object.
-         * @param bitmapData The BitmapData object being referenced.
+         * @param value The BitmapData|Texture object being referenced.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 创建一个引用指定 BitmapData|Texture 实例的 Bitmap 对象
-         * @param bitmapData 被引用的 BitmapData 实例
+         * @param value 被引用的 BitmapData|Texture 实例
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public constructor(bitmapData?:BitmapData|Texture) {
+        public constructor(value?:BitmapData|Texture) {
             super();
             this.$renderRegion = new sys.Region();
             this.$Bitmap = {
@@ -113,7 +113,7 @@ module egret {
                 12: NaN  //explicitBitmapHeight,
             };
 
-            this.$setBitmapData(bitmapData);
+            this.$setBitmapData(value);
         }
 
         /**
@@ -159,34 +159,57 @@ module egret {
 
         /**
          * @language en_US
-         * The BitmapData|Texture object being referenced.
+         * The BitmapData object being referenced.
+         * If you pass the constructor of type Texture or last set for texture, this value returns null.
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 被引用的 BitmapData|Texture 对象。
+         * 被引用的 BitmapData 对象。
+         * 如果传入构造函数的类型为 Texture 或者最后设置的为 texture，则此值返回 null。
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get bitmapData():BitmapData|Texture {
-            return this.$Bitmap[sys.BitmapKeys.bitmapData];
+        public get bitmapData():BitmapData {
+            var value = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            if (value instanceof Texture) {
+                return null;
+            }
+            else {
+                return value;
+            }
         }
 
-        public set bitmapData(value:BitmapData|Texture) {
+        public set bitmapData(value:BitmapData) {
             this.$setBitmapData(value);
         }
 
         /**
-         * @copy #bitmapData
+         * @language en_US
+         * The Texture object being referenced.
+         * If you pass the constructor of type BitmapData or last set for bitmapData, this value returns null.
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public get texture():BitmapData|Texture {
-            return this.$Bitmap[sys.BitmapKeys.bitmapData];
+        /**
+         * @language zh_CN
+         * 被引用的 Texture 对象。
+         * 如果传入构造函数的类型为 BitmapData 或者最后设置的为 bitmapData，则此值返回 null。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get texture():Texture {
+            var value = this.$Bitmap[sys.BitmapKeys.bitmapData];
+            if (value instanceof Texture) {
+                return value;
+            }
+            else {
+                return null;
+            }
         }
 
-        public set texture(value:BitmapData|Texture) {
+        public set texture(value:Texture) {
             this.$setBitmapData(value);
         }
 
@@ -415,15 +438,20 @@ module egret {
          */
         $measureContentBounds(bounds:Rectangle):void {
             var values = this.$Bitmap;
+            var x:number = values[sys.BitmapKeys.offsetX];
+            var y:number = values[sys.BitmapKeys.offsetY];
             if (values[sys.BitmapKeys.image]) {
                 var values = this.$Bitmap;
                 var w:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
                 var h:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.height];
 
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
             else {
-                bounds.setEmpty();
+                w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
+                h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
+
+                bounds.setTo(x, y, w, h);
             }
         }
 
@@ -439,7 +467,7 @@ module egret {
                 Bitmap.$drawImage(context, values[sys.BitmapKeys.image],
                     values[sys.BitmapKeys.clipX], values[sys.BitmapKeys.clipY], values[sys.BitmapKeys.clipWidth], values[sys.BitmapKeys.clipHeight],
                     values[sys.BitmapKeys.offsetX], values[sys.BitmapKeys.offsetY], values[sys.BitmapKeys.width], values[sys.BitmapKeys.height],
-                    destW, destH, this.scale9Grid, this.fillMode, this.$smoothing);
+                    destW, destH, this.scale9Grid || values[sys.BitmapKeys.bitmapData]["scale9Grid"], this.fillMode, this.$smoothing);
             }
         }
 
@@ -530,8 +558,16 @@ module egret {
                     clipHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
+                var tsX:number = destW / textureWidth;
+                var tsY:number = destH / textureHeight;
                 context.drawImage(image, clipX, clipY,
-                    clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
+                    clipWidth, clipHeight, offsetX * tsX, offsetY * tsY, tsX * clipWidth, tsY * clipHeight);
+            }
+            else if (fillMode == egret.BitmapFillMode.CLIP) {
+                var tempW:number = Math.min(textureWidth, destW);
+                var tempH:number = Math.min(textureHeight, destH);
+                context.drawImage(image, clipX, clipY,
+                    tempW / $TextureScaleFactor, tempH / $TextureScaleFactor, offsetX, offsetY, tempW, tempH);
             }
             else {
                 var tempImage:egret.BitmapData = image;
@@ -540,7 +576,7 @@ module egret {
                     tempCanvas = egret.sys.surfaceFactory.create(true);
                     tempCanvas.width = textureWidth;
                     tempCanvas.height = textureHeight;
-                    tempCanvas.renderContext.drawImage(tempImage, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, textureWidth, textureHeight);
+                    tempCanvas.renderContext.drawImage(tempImage, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, clipWidth * $TextureScaleFactor, clipHeight * $TextureScaleFactor);
                     tempImage = tempCanvas;
                 }
 
@@ -605,7 +641,7 @@ module egret {
             var targetH2 = sourceH2 * $TextureScaleFactor;
 
             if ((sourceW0 + sourceW2) * $TextureScaleFactor > surfaceWidth || (sourceH0 + sourceH2) * $TextureScaleFactor > surfaceHeight) {
-                context.drawImage(image, 0, 0, surfaceWidth, surfaceHeight);
+                context.drawImage(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, surfaceWidth, surfaceHeight);
                 return;
             }
 

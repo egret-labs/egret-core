@@ -9,7 +9,7 @@ import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 
-import exmlActions = require('../actions/exml');
+import NativeProject = require('../actions/NativeProject');
 
 class Clean implements egret.Command {
     execute(): number {
@@ -32,14 +32,18 @@ class Clean implements egret.Command {
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
 
+        if (!result) {
+            return 1;
+        }
+
         //修改 html 中 modules 块
         //CopyFiles.modifyHTMLWithModules();
         
         //修改 html 中 game_list 块
         CompileTemplate.modifyIndexHTML(result.files);
 
-        //根据 index.html 修改 native_require.js 文件
-        CompileTemplate.modifyNativeRequire();
+        //根据 index.html 修改 native_require.js 文件，并看情况刷新 native 工程
+        NativeProject.build();
 
         //Wait for 'shutdown' command, node will exit when there are no tasks.
         return DontExitCode;

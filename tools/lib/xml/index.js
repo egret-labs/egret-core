@@ -21,6 +21,7 @@ function parse(xmlString) {
     var object = null;
     var namespaces = {};
     var hasError = false;
+    saxparser.resume();
     saxparser.onerror = function (err) {
         hasError = true;
     };
@@ -102,5 +103,4 @@ function toString() {
 }
 ;
 //export = { parse: parse };
-
-//# sourceMappingURL=../../lib/xml/index.js.map
+//# sourceMappingURL=index.js.map

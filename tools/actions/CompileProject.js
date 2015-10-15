@@ -10,16 +10,19 @@ var CompileProject = (function () {
         //编译
         exmlActions.build();
         var result = this.compileProject(options);
+        exmlActions.afterBuild();
         if (result.exitStatus)
             return null;
-        exmlActions.afterBuild();
         return result;
     };
     CompileProject.prototype.compileProject = function (option, files) {
         var compileResult;
         if (files && this.recompile) {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
-            compileResult = this.recompile(files);
+            var realCWD = process.cwd();
+            process.chdir(option.projectDir);
+            compileResult = this.recompile(files, option.sourceMap);
+            process.chdir(realCWD);
         }
         else {
             var compiler = new Compiler();
@@ -57,5 +60,4 @@ function GetJavaScriptFileNames(tsFiles, root, prefix) {
     return files;
 }
 module.exports = CompileProject;
-
-//# sourceMappingURL=../actions/CompileProject.js.map
+//# sourceMappingURL=CompileProject.js.map

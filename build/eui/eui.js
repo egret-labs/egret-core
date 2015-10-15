@@ -26,7 +26,6 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 var eui;
 (function (eui) {
     /**
@@ -730,12 +729,6 @@ var eui;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 /// <reference path="../utils/registerproperty.ts" />
 /// <reference path="../utils/registerbindable.ts" />
 var eui;
@@ -4656,6 +4649,9 @@ var eui;
         p.getElementAt = function (index) {
             return this.$children[index];
         };
+        p.getVirtualElementAt = function (index) {
+            return this.getElementAt(index);
+        };
         /**
          * @language en_US
          * Set the index range of the sub Visual element in container which support virtual layout.
@@ -5150,6 +5146,16 @@ var eui;
          * @platform Web,Native
          */
         p.getElementAt = function (index) {
+            return this.$indexToRenderer[index];
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.getVirtualElementAt = function (index) {
             index = +index | 0;
             if (index < 0 || index >= this.$dataProvider.length)
                 return null;
@@ -12746,6 +12752,555 @@ var eui;
 //////////////////////////////////////////////////////////////////////////////////////
 var eui;
 (function (eui) {
+    var sys;
+    (function (sys) {
+        /**
+         * @private
+         *
+         * @param fraction
+         * @returns
+         */
+        function sineInOut(fraction) {
+            return -0.5 * (Math.cos(Math.PI * fraction) - 1);
+        }
+        /**
+         * @private
+         * 数值缓动工具类
+         */
+        var Animation = (function () {
+            /**
+             * @private
+             */
+            function Animation(updateFunction, thisObject) {
+                /**
+                 * @private
+                 * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为 sineInOut
+                 */
+                this.easerFunction = sineInOut;
+                /**
+                 * @private
+                 * 是否正在播放动画，不包括延迟等待和暂停的阶段
+                 */
+                this.isPlaying = false;
+                /**
+                 * @private
+                 * 动画持续时间,单位毫秒，默认值500
+                 */
+                this.duration = 500;
+                /**
+                 * @private
+                 * 动画到当前时间对应的值。
+                 */
+                this.currentValue = 0;
+                /**
+                 * @private
+                 * 起始值
+                 */
+                this.from = 0;
+                /**
+                 * @private
+                 * 终点值。
+                 */
+                this.to = 0;
+                /**
+                 * @private
+                 * 动画启动时刻
+                 */
+                this.startTime = 0;
+                /**
+                 * @private
+                 * 动画播放结束时的回调函数
+                 */
+                this.endFunction = null;
+                this.updateFunction = updateFunction;
+                this.thisObject = thisObject;
+            }
+            var d = __define,c=Animation;p=c.prototype;
+            /**
+             * @private
+             * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
+             */
+            p.play = function () {
+                this.stop();
+                this.start();
+            };
+            /**
+             * @private
+             * 开始播放动画
+             */
+            p.start = function () {
+                this.isPlaying = false;
+                this.currentValue = 0;
+                this.startTime = egret.getTimer();
+                this.doInterval(this.startTime);
+                egret.startTick(this.doInterval, this);
+            };
+            /**
+             * @private
+             * 停止播放动画
+             */
+            p.stop = function () {
+                this.isPlaying = false;
+                this.startTime = 0;
+                egret.stopTick(this.doInterval, this);
+            };
+            /**
+             * @private
+             * 计算当前值并返回动画是否结束
+             */
+            p.doInterval = function (currentTime) {
+                var runningTime = currentTime - this.startTime;
+                if (!this.isPlaying) {
+                    this.isPlaying = true;
+                }
+                var duration = this.duration;
+                var fraction = duration == 0 ? 1 : Math.min(runningTime, duration) / duration;
+                if (this.easerFunction) {
+                    fraction = this.easerFunction(fraction);
+                }
+                this.currentValue = this.from + (this.to - this.from) * fraction;
+                if (this.updateFunction)
+                    this.updateFunction.call(this.thisObject, this);
+                var isEnded = runningTime >= duration;
+                if (isEnded) {
+                    this.stop();
+                }
+                if (isEnded && this.endFunction) {
+                    this.endFunction.call(this.thisObject, this);
+                }
+                return true;
+            };
+            return Animation;
+        })();
+        sys.Animation = Animation;
+        egret.registerClass(Animation,"eui.sys.Animation");
+    })(sys = eui.sys || (eui.sys = {}));
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    /**
+     * @language en_US
+     * Default instance of interface <code>IThemeAdapter</code>.
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 默认的IThemeAdapter接口实现。
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    var DefaultThemeAdapter = (function () {
+        function DefaultThemeAdapter() {
+        }
+        var d = __define,c=DefaultThemeAdapter;p=c.prototype;
+        /**
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         */
+        p.getTheme = function (url, compFunc, errorFunc, thisObject) {
+            function onGet(event) {
+                var loader = (event.target);
+                compFunc.call(thisObject, loader.response);
+            }
+            function onError(event) {
+                errorFunc.call(thisObject);
+            }
+            var loader = new egret.HttpRequest();
+            loader.addEventListener(egret.Event.COMPLETE, onGet, thisObject);
+            loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, thisObject);
+            loader.responseType = egret.HttpResponseType.TEXT;
+            loader.open(url);
+            loader.send();
+        };
+        return DefaultThemeAdapter;
+    })();
+    eui.DefaultThemeAdapter = DefaultThemeAdapter;
+    egret.registerClass(DefaultThemeAdapter,"eui.DefaultThemeAdapter",["eui.IThemeAdapter"]);
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
+    var sys;
+    (function (sys) {
+        /**
+         * @private
+         * 需要记录的历史速度的最大次数。
+         */
+        var MAX_VELOCITY_COUNT = 4;
+        /**
+         * @private
+         * 记录的历史速度的权重列表。
+         */
+        var VELOCITY_WEIGHTS = [1, 1.33, 1.66, 2];
+        /**
+         * @private
+         * 当前速度所占的权重。
+         */
+        var CURRENT_VELOCITY_WEIGHT = 2.33;
+        /**
+         * @private
+         * 最小的改变速度，解决浮点数精度问题。
+         */
+        var MINIMUM_VELOCITY = 0.02;
+        /**
+         * @private
+         * 当容器自动滚动时要应用的摩擦系数
+         */
+        var FRICTION = 0.998;
+        /**
+         * @private
+         * 当容器自动滚动时并且滚动位置超出容器范围时要额外应用的摩擦系数
+         */
+        var EXTRA_FRICTION = 0.95;
+        /**
+         * @private
+         * 摩擦系数的自然对数
+         */
+        var FRICTION_LOG = Math.log(FRICTION);
+        /**
+         * @private
+         *
+         * @param ratio
+         * @returns
+         */
+        function easeOut(ratio) {
+            var invRatio = ratio - 1.0;
+            return invRatio * invRatio * invRatio + 1;
+        }
+        /**
+         * @private
+         * 一个工具类,用于容器的滚屏拖动操作，计算在一段时间持续滚动后释放，应该继续滚动到的值和缓动时间。
+         * 使用此工具类，您需要创建一个 ScrollThrown 实例,并在滚动发生时调用start()方法，然后在触摸移动过程中调用update()更新当前舞台坐标。
+         * 内部将会启动一个计时器定时根据当前位置计算出速度值，并缓存下来最后4个值。当停止滚动时，再调用finish()方法，
+         * 将立即停止记录位移，并将计算出的最终结果存储到 Thrown.scrollTo 和 Thrown.duration 属性上。
+         */
+        var TouchScroll = (function () {
+            /**
+             * @private
+             * 创建一个 TouchScroll 实例
+             * @param updateFunction 滚动位置更新回调函数
+             */
+            function TouchScroll(updateFunction, endFunction, target) {
+                /**
+                 * @private
+                 * 当前容器滚动外界可调节的系列
+                 */
+                this.$scrollFactor = 1.0;
+                /**
+                 * @private
+                 */
+                this.previousTime = 0;
+                /**
+                 * @private
+                 */
+                this.velocity = 0;
+                /**
+                 * @private
+                 */
+                this.previousVelocity = [];
+                /**
+                 * @private
+                 */
+                this.currentPosition = 0;
+                /**
+                 * @private
+                 */
+                this.previousPosition = 0;
+                /**
+                 * @private
+                 */
+                this.currentScrollPos = 0;
+                /**
+                 * @private
+                 */
+                this.maxScrollPos = 0;
+                /**
+                 * @private
+                 * 触摸按下时的偏移量
+                 */
+                this.offsetPoint = 0;
+                this.started = true;
+                if (DEBUG && !updateFunction) {
+                    egret.$error(1003, "updateFunction");
+                }
+                this.updateFunction = updateFunction;
+                this.endFunction = endFunction;
+                this.target = target;
+                this.animation = new sys.Animation(this.onScrollingUpdate, this);
+                this.animation.endFunction = this.finishScrolling;
+                this.animation.easerFunction = easeOut;
+            }
+            var d = __define,c=TouchScroll;p=c.prototype;
+            /**
+             * @private
+             * 正在播放缓动动画的标志。
+             */
+            p.isPlaying = function () {
+                return this.animation.isPlaying;
+            };
+            /**
+             * @private
+             * 如果正在执行缓动滚屏，停止缓动。
+             */
+            p.stop = function () {
+                this.animation.stop();
+                egret.stopTick(this.onTick, this);
+                this.started = false;
+            };
+            /**
+             * @private
+             * true表示已经调用过start方法。
+             */
+            p.isStarted = function () {
+                return this.started;
+            };
+            /**
+             * @private
+             * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
+             * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
+             */
+            p.start = function (touchPoint, scrollValue, maxScrollValue) {
+                this.started = true;
+                this.velocity = 0;
+                this.previousVelocity.length = 0;
+                this.previousTime = egret.getTimer();
+                this.previousPosition = this.currentPosition = touchPoint;
+                this.offsetPoint = scrollValue + touchPoint;
+                egret.startTick(this.onTick, this);
+            };
+            /**
+             * @private
+             * 更新当前移动到的位置
+             * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
+             */
+            p.update = function (touchPoint, maxScrollValue) {
+                maxScrollValue = Math.max(maxScrollValue, 0);
+                this.currentPosition = touchPoint;
+                this.maxScrollPos = maxScrollValue;
+                var scrollPos = this.offsetPoint - touchPoint;
+                if (scrollPos < 0) {
+                    scrollPos *= 0.5;
+                }
+                if (scrollPos > maxScrollValue) {
+                    scrollPos = (scrollPos + maxScrollValue) * 0.5;
+                }
+                this.currentScrollPos = scrollPos;
+                this.updateFunction.call(this.target, scrollPos);
+            };
+            /**
+             * @private
+             * 停止记录位移变化，并计算出目标值和继续缓动的时间。
+             * @param currentScrollPos 容器当前的滚动值。
+             * @param maxScrollPos 容器可以滚动的最大值。当目标值不在 0~maxValue之间时，将会应用更大的摩擦力，从而影响缓动时间的长度。
+             */
+            p.finish = function (currentScrollPos, maxScrollPos) {
+                egret.stopTick(this.onTick, this);
+                this.started = false;
+                var sum = this.velocity * CURRENT_VELOCITY_WEIGHT;
+                var previousVelocityX = this.previousVelocity;
+                var length = previousVelocityX.length;
+                var totalWeight = CURRENT_VELOCITY_WEIGHT;
+                for (var i = 0; i < length; i++) {
+                    var weight = VELOCITY_WEIGHTS[i];
+                    sum += previousVelocityX[0] * weight;
+                    totalWeight += weight;
+                }
+                var pixelsPerMS = sum / totalWeight;
+                var absPixelsPerMS = Math.abs(pixelsPerMS);
+                var duration = 0;
+                var posTo = 0;
+                if (absPixelsPerMS > MINIMUM_VELOCITY) {
+                    posTo = currentScrollPos + (pixelsPerMS - MINIMUM_VELOCITY) / FRICTION_LOG * 2 * this.$scrollFactor;
+                    if (posTo < 0 || posTo > maxScrollPos) {
+                        posTo = currentScrollPos;
+                        while (Math.abs(pixelsPerMS) > MINIMUM_VELOCITY) {
+                            posTo -= pixelsPerMS;
+                            if (posTo < 0 || posTo > maxScrollPos) {
+                                pixelsPerMS *= FRICTION * EXTRA_FRICTION;
+                            }
+                            else {
+                                pixelsPerMS *= FRICTION;
+                            }
+                            duration++;
+                        }
+                    }
+                    else {
+                        duration = Math.log(MINIMUM_VELOCITY / absPixelsPerMS) / FRICTION_LOG;
+                    }
+                }
+                else {
+                    posTo = currentScrollPos;
+                }
+                if (this.target["$getThrowInfo"]) {
+                    var event = this.target["$getThrowInfo"](currentScrollPos, posTo);
+                    posTo = event.toPos;
+                }
+                if (duration > 0) {
+                    this.throwTo(posTo, duration);
+                }
+                else {
+                    this.finishScrolling();
+                }
+            };
+            /**
+             * @private
+             *
+             * @param timeStamp
+             * @returns
+             */
+            p.onTick = function (timeStamp) {
+                var timeOffset = timeStamp - this.previousTime;
+                if (timeOffset > 10) {
+                    var previousVelocity = this.previousVelocity;
+                    if (previousVelocity.length >= MAX_VELOCITY_COUNT) {
+                        previousVelocity.shift();
+                    }
+                    this.velocity = (this.currentPosition - this.previousPosition) / timeOffset;
+                    previousVelocity.push(this.velocity);
+                    this.previousTime = timeStamp;
+                    this.previousPosition = this.currentPosition;
+                }
+                return true;
+            };
+            /**
+             * @private
+             *
+             * @param animation
+             */
+            p.finishScrolling = function (animation) {
+                var hsp = this.currentScrollPos;
+                var maxHsp = this.maxScrollPos;
+                var hspTo = hsp;
+                if (hsp < 0) {
+                    hspTo = 0;
+                }
+                if (hsp > maxHsp) {
+                    hspTo = maxHsp;
+                }
+                this.throwTo(hspTo, 300);
+            };
+            /**
+             * @private
+             * 缓动到水平滚动位置
+             */
+            p.throwTo = function (hspTo, duration) {
+                if (duration === void 0) { duration = 500; }
+                var hsp = this.currentScrollPos;
+                if (hsp == hspTo) {
+                    this.endFunction.call(this.target);
+                    return;
+                }
+                var animation = this.animation;
+                animation.duration = duration;
+                animation.from = hsp;
+                animation.to = hspTo;
+                animation.play();
+            };
+            /**
+             * @private
+             * 更新水平滚动位置
+             */
+            p.onScrollingUpdate = function (animation) {
+                this.currentScrollPos = animation.currentValue;
+                this.updateFunction.call(this.target, animation.currentValue);
+            };
+            return TouchScroll;
+        })();
+        sys.TouchScroll = TouchScroll;
+        egret.registerClass(TouchScroll,"eui.sys.TouchScroll");
+    })(sys = eui.sys || (eui.sys = {}));
+})(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var eui;
+(function (eui) {
     /**
      * @language en_US
      * The TabBar class displays a set of identical tabs.
@@ -13047,260 +13602,6 @@ var eui;
     })(eui.Group);
     eui.UILayer = UILayer;
     egret.registerClass(UILayer,"eui.UILayer");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * The VScrollBar (vertical scrollbar) control lets you control
-     * the portion of data that is displayed when there is too much data
-     * to fit vertically in a display area.
-     *
-     * <p>Although you can use the VScrollBar control as a stand-alone control,
-     * you usually combine it as part of another group of components to
-     * provide scrolling functionality.</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     */
-    /**
-     * @language zh_CN
-     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
-     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     */
-    var VScrollBar = (function (_super) {
-        __extends(VScrollBar, _super);
-        function VScrollBar() {
-            _super.apply(this, arguments);
-        }
-        var d = __define,c=VScrollBar;p=c.prototype;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
-            _super.prototype.updateDisplayList.call(this, unscaledWidth, unscaledHeight);
-            var thumb = this.thumb;
-            var viewport = this.$viewport;
-            if (!thumb || !viewport) {
-                return;
-            }
-            var bounds = egret.$TempRectangle;
-            thumb.getPreferredBounds(bounds);
-            var thumbHeight = bounds.height;
-            var thumbX = bounds.x;
-            var vsp = viewport.scrollV;
-            var contentHeight = viewport.contentHeight;
-            var height = viewport.height;
-            if (vsp <= 0) {
-                var scaleHeight = thumbHeight * (1 - (-vsp) / (height * 0.5));
-                scaleHeight = Math.max(5, Math.round(scaleHeight));
-                thumb.setLayoutBoundsSize(NaN, scaleHeight);
-                thumb.setLayoutBoundsPosition(thumbX, 0);
-            }
-            else if (vsp >= contentHeight - height) {
-                scaleHeight = thumbHeight * (1 - (vsp - contentHeight + height) / (height * 0.5));
-                scaleHeight = Math.max(5, Math.round(scaleHeight));
-                thumb.setLayoutBoundsSize(NaN, scaleHeight);
-                thumb.setLayoutBoundsPosition(thumbX, unscaledHeight - scaleHeight);
-            }
-            else {
-                var thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
-                thumb.setLayoutBoundsSize(NaN, NaN);
-                thumb.setLayoutBoundsPosition(thumbX, thumbY);
-            }
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.onPropertyChanged = function (event) {
-            switch (event.property) {
-                case "scrollV":
-                case "contentHeight":
-                    this.invalidateDisplayList();
-                    break;
-            }
-        };
-        return VScrollBar;
-    })(eui.ScrollBarBase);
-    eui.VScrollBar = VScrollBar;
-    egret.registerClass(VScrollBar,"eui.VScrollBar");
-})(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var eui;
-(function (eui) {
-    /**
-     * @language en_US
-     * The VSlider (vertical slider) control lets users select a value
-     * by moving a slider thumb between the end points of the slider track.
-     * The current value of the slider is determined by the relative location of the thumb between
-     * the end points of the slider, corresponding to the slider's minimum and maximum values.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     */
-    /**
-     * @language zh_CN
-     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
-     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     */
-    var VSlider = (function (_super) {
-        __extends(VSlider, _super);
-        /**
-         * @language en_US
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        function VSlider() {
-            _super.call(this);
-        }
-        var d = __define,c=VSlider;p=c.prototype;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.pointToValue = function (x, y) {
-            if (!this.thumb || !this.track)
-                return 0;
-            var values = this.$Range;
-            var range = values[0 /* maximum */] - values[2 /* minimum */];
-            var thumbRange = this.getThumbRange();
-            return values[2 /* minimum */] + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0);
-        };
-        /**
-         * @private
-         *
-         * @returns
-         */
-        p.getThumbRange = function () {
-            var bounds = egret.$TempRectangle;
-            this.track.getLayoutBounds(bounds);
-            var thumbRange = bounds.height;
-            this.thumb.getLayoutBounds(bounds);
-            return thumbRange - bounds.height;
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.updateSkinDisplayList = function () {
-            if (!this.thumb || !this.track)
-                return;
-            var values = this.$Range;
-            var thumbRange = this.getThumbRange();
-            var range = values[0 /* maximum */] - values[2 /* minimum */];
-            var thumbPosTrackY = (range > 0) ? thumbRange - (((this.pendingValue - values[2 /* minimum */]) / range) * thumbRange) : 0;
-            var thumbPos = this.track.localToGlobal(0, thumbPosTrackY, egret.$TempPoint);
-            var thumbPosX = thumbPos.x;
-            var thumbPosY = thumbPos.y;
-            var thumbPosParentY = this.thumb.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
-            var bounds = egret.$TempRectangle;
-            var thumbHeight = bounds.height;
-            this.thumb.getLayoutBounds(bounds);
-            this.thumb.setLayoutBoundsPosition(bounds.x, Math.round(thumbPosParentY));
-            if (this.trackHighlight) {
-                var trackHighlightY = this.trackHighlight.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
-                this.trackHighlight.y = Math.round(trackHighlightY + thumbHeight);
-                this.trackHighlight.height = Math.round(thumbRange - trackHighlightY);
-            }
-        };
-        return VSlider;
-    })(eui.SliderBase);
-    eui.VSlider = VSlider;
-    egret.registerClass(VSlider,"eui.VSlider");
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -13675,129 +13976,95 @@ var eui;
 //////////////////////////////////////////////////////////////////////////////////////
 var eui;
 (function (eui) {
-    var sys;
-    (function (sys) {
-        /**
-         * @private
-         *
-         * @param fraction
-         * @returns
-         */
-        function sineInOut(fraction) {
-            return -0.5 * (Math.cos(Math.PI * fraction) - 1);
+    /**
+     * @language en_US
+     * The VScrollBar (vertical scrollbar) control lets you control
+     * the portion of data that is displayed when there is too much data
+     * to fit vertically in a display area.
+     *
+     * <p>Although you can use the VScrollBar control as a stand-alone control,
+     * you usually combine it as part of another group of components to
+     * provide scrolling functionality.</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     */
+    /**
+     * @language zh_CN
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
+     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     */
+    var VScrollBar = (function (_super) {
+        __extends(VScrollBar, _super);
+        function VScrollBar() {
+            _super.apply(this, arguments);
         }
+        var d = __define,c=VScrollBar;p=c.prototype;
         /**
-         * @private
-         * 数值缓动工具类
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        var Animation = (function () {
-            /**
-             * @private
-             */
-            function Animation(updateFunction, thisObject) {
-                /**
-                 * @private
-                 * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为 sineInOut
-                 */
-                this.easerFunction = sineInOut;
-                /**
-                 * @private
-                 * 是否正在播放动画，不包括延迟等待和暂停的阶段
-                 */
-                this.isPlaying = false;
-                /**
-                 * @private
-                 * 动画持续时间,单位毫秒，默认值500
-                 */
-                this.duration = 500;
-                /**
-                 * @private
-                 * 动画到当前时间对应的值。
-                 */
-                this.currentValue = 0;
-                /**
-                 * @private
-                 * 起始值
-                 */
-                this.from = 0;
-                /**
-                 * @private
-                 * 终点值。
-                 */
-                this.to = 0;
-                /**
-                 * @private
-                 * 动画启动时刻
-                 */
-                this.startTime = 0;
-                /**
-                 * @private
-                 * 动画播放结束时的回调函数
-                 */
-                this.endFunction = null;
-                this.updateFunction = updateFunction;
-                this.thisObject = thisObject;
+        p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
+            _super.prototype.updateDisplayList.call(this, unscaledWidth, unscaledHeight);
+            var thumb = this.thumb;
+            var viewport = this.$viewport;
+            if (!thumb || !viewport) {
+                return;
             }
-            var d = __define,c=Animation;p=c.prototype;
-            /**
-             * @private
-             * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
-             */
-            p.play = function () {
-                this.stop();
-                this.start();
-            };
-            /**
-             * @private
-             * 开始播放动画
-             */
-            p.start = function () {
-                this.isPlaying = false;
-                this.currentValue = 0;
-                this.startTime = egret.getTimer();
-                this.doInterval(this.startTime);
-                egret.startTick(this.doInterval, this);
-            };
-            /**
-             * @private
-             * 停止播放动画
-             */
-            p.stop = function () {
-                this.isPlaying = false;
-                this.startTime = 0;
-                egret.stopTick(this.doInterval, this);
-            };
-            /**
-             * @private
-             * 计算当前值并返回动画是否结束
-             */
-            p.doInterval = function (currentTime) {
-                var runningTime = currentTime - this.startTime;
-                if (!this.isPlaying) {
-                    this.isPlaying = true;
-                }
-                var duration = this.duration;
-                var fraction = duration == 0 ? 1 : Math.min(runningTime, duration) / duration;
-                if (this.easerFunction) {
-                    fraction = this.easerFunction(fraction);
-                }
-                this.currentValue = this.from + (this.to - this.from) * fraction;
-                if (this.updateFunction)
-                    this.updateFunction.call(this.thisObject, this);
-                var isEnded = runningTime >= duration;
-                if (isEnded) {
-                    this.stop();
-                }
-                if (isEnded && this.endFunction) {
-                    this.endFunction.call(this.thisObject, this);
-                }
-                return true;
-            };
-            return Animation;
-        })();
-        sys.Animation = Animation;
-        egret.registerClass(Animation,"eui.sys.Animation");
-    })(sys = eui.sys || (eui.sys = {}));
+            var bounds = egret.$TempRectangle;
+            thumb.getPreferredBounds(bounds);
+            var thumbHeight = bounds.height;
+            var thumbX = bounds.x;
+            var vsp = viewport.scrollV;
+            var contentHeight = viewport.contentHeight;
+            var height = viewport.height;
+            if (vsp <= 0) {
+                var scaleHeight = thumbHeight * (1 - (-vsp) / (height * 0.5));
+                scaleHeight = Math.max(5, Math.round(scaleHeight));
+                thumb.setLayoutBoundsSize(NaN, scaleHeight);
+                thumb.setLayoutBoundsPosition(thumbX, 0);
+            }
+            else if (vsp >= contentHeight - height) {
+                scaleHeight = thumbHeight * (1 - (vsp - contentHeight + height) / (height * 0.5));
+                scaleHeight = Math.max(5, Math.round(scaleHeight));
+                thumb.setLayoutBoundsSize(NaN, scaleHeight);
+                thumb.setLayoutBoundsPosition(thumbX, unscaledHeight - scaleHeight);
+            }
+            else {
+                var thumbY = (unscaledHeight - thumbHeight) * vsp / (contentHeight - height);
+                thumb.setLayoutBoundsSize(NaN, NaN);
+                thumb.setLayoutBoundsPosition(thumbX, thumbY);
+            }
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.onPropertyChanged = function (event) {
+            switch (event.property) {
+                case "scrollV":
+                case "contentHeight":
+                    this.invalidateDisplayList();
+                    break;
+            }
+        };
+        return VScrollBar;
+    })(eui.ScrollBarBase);
+    eui.VScrollBar = VScrollBar;
+    egret.registerClass(VScrollBar,"eui.VScrollBar");
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -13829,295 +14096,109 @@ var eui;
 //////////////////////////////////////////////////////////////////////////////////////
 var eui;
 (function (eui) {
-    var sys;
-    (function (sys) {
+    /**
+     * @language en_US
+     * The VSlider (vertical slider) control lets users select a value
+     * by moving a slider thumb between the end points of the slider track.
+     * The current value of the slider is determined by the relative location of the thumb between
+     * the end points of the slider, corresponding to the slider's minimum and maximum values.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
+     */
+    /**
+     * @language zh_CN
+     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
+     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
+     */
+    var VSlider = (function (_super) {
+        __extends(VSlider, _super);
         /**
-         * @private
-         * 需要记录的历史速度的最大次数。
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        var MAX_VELOCITY_COUNT = 4;
         /**
-         * @private
-         * 记录的历史速度的权重列表。
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        var VELOCITY_WEIGHTS = [1, 1.33, 1.66, 2];
+        function VSlider() {
+            _super.call(this);
+        }
+        var d = __define,c=VSlider;p=c.prototype;
         /**
-         * @private
-         * 当前速度所占的权重。
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        var CURRENT_VELOCITY_WEIGHT = 2.33;
-        /**
-         * @private
-         * 最小的改变速度，解决浮点数精度问题。
-         */
-        var MINIMUM_VELOCITY = 0.02;
-        /**
-         * @private
-         * 当容器自动滚动时要应用的摩擦系数
-         */
-        var FRICTION = 0.998;
-        /**
-         * @private
-         * 当容器自动滚动时并且滚动位置超出容器范围时要额外应用的摩擦系数
-         */
-        var EXTRA_FRICTION = 0.95;
-        /**
-         * @private
-         * 摩擦系数的自然对数
-         */
-        var FRICTION_LOG = Math.log(FRICTION);
+        p.pointToValue = function (x, y) {
+            if (!this.thumb || !this.track)
+                return 0;
+            var values = this.$Range;
+            var range = values[0 /* maximum */] - values[2 /* minimum */];
+            var thumbRange = this.getThumbRange();
+            return values[2 /* minimum */] + ((thumbRange != 0) ? ((thumbRange - y) / thumbRange) * range : 0);
+        };
         /**
          * @private
          *
-         * @param ratio
          * @returns
          */
-        function easeOut(ratio) {
-            var invRatio = ratio - 1.0;
-            return invRatio * invRatio * invRatio + 1;
-        }
+        p.getThumbRange = function () {
+            var bounds = egret.$TempRectangle;
+            this.track.getLayoutBounds(bounds);
+            var thumbRange = bounds.height;
+            this.thumb.getLayoutBounds(bounds);
+            return thumbRange - bounds.height;
+        };
         /**
-         * @private
-         * 一个工具类,用于容器的滚屏拖动操作，计算在一段时间持续滚动后释放，应该继续滚动到的值和缓动时间。
-         * 使用此工具类，您需要创建一个 ScrollThrown 实例,并在滚动发生时调用start()方法，然后在触摸移动过程中调用update()更新当前舞台坐标。
-         * 内部将会启动一个计时器定时根据当前位置计算出速度值，并缓存下来最后4个值。当停止滚动时，再调用finish()方法，
-         * 将立即停止记录位移，并将计算出的最终结果存储到 Thrown.scrollTo 和 Thrown.duration 属性上。
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        var TouchScroll = (function () {
-            /**
-             * @private
-             * 创建一个 TouchScroll 实例
-             * @param updateFunction 滚动位置更新回调函数
-             */
-            function TouchScroll(updateFunction, endFunction, target) {
-                /**
-                 * @private
-                 * 当前容器滚动外界可调节的系列
-                 */
-                this.$scrollFactor = 1.0;
-                /**
-                 * @private
-                 */
-                this.previousTime = 0;
-                /**
-                 * @private
-                 */
-                this.velocity = 0;
-                /**
-                 * @private
-                 */
-                this.previousVelocity = [];
-                /**
-                 * @private
-                 */
-                this.currentPosition = 0;
-                /**
-                 * @private
-                 */
-                this.previousPosition = 0;
-                /**
-                 * @private
-                 */
-                this.currentScrollPos = 0;
-                /**
-                 * @private
-                 */
-                this.maxScrollPos = 0;
-                /**
-                 * @private
-                 * 触摸按下时的偏移量
-                 */
-                this.offsetPoint = 0;
-                this.started = true;
-                if (DEBUG && !updateFunction) {
-                    egret.$error(1003, "updateFunction");
-                }
-                this.updateFunction = updateFunction;
-                this.endFunction = endFunction;
-                this.target = target;
-                this.animation = new sys.Animation(this.onScrollingUpdate, this);
-                this.animation.endFunction = this.finishScrolling;
-                this.animation.easerFunction = easeOut;
+        p.updateSkinDisplayList = function () {
+            if (!this.thumb || !this.track)
+                return;
+            var values = this.$Range;
+            var thumbRange = this.getThumbRange();
+            var range = values[0 /* maximum */] - values[2 /* minimum */];
+            var thumbPosTrackY = (range > 0) ? thumbRange - (((this.pendingValue - values[2 /* minimum */]) / range) * thumbRange) : 0;
+            var thumbPos = this.track.localToGlobal(0, thumbPosTrackY, egret.$TempPoint);
+            var thumbPosX = thumbPos.x;
+            var thumbPosY = thumbPos.y;
+            var thumbPosParentY = this.thumb.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
+            var bounds = egret.$TempRectangle;
+            var thumbHeight = bounds.height;
+            this.thumb.getLayoutBounds(bounds);
+            this.thumb.setLayoutBoundsPosition(bounds.x, Math.round(thumbPosParentY));
+            if (this.trackHighlight) {
+                var trackHighlightY = this.trackHighlight.$parent.globalToLocal(thumbPosX, thumbPosY, egret.$TempPoint).y;
+                this.trackHighlight.y = Math.round(trackHighlightY + thumbHeight);
+                this.trackHighlight.height = Math.round(thumbRange - trackHighlightY);
             }
-            var d = __define,c=TouchScroll;p=c.prototype;
-            /**
-             * @private
-             * 正在播放缓动动画的标志。
-             */
-            p.isPlaying = function () {
-                return this.animation.isPlaying;
-            };
-            /**
-             * @private
-             * 如果正在执行缓动滚屏，停止缓动。
-             */
-            p.stop = function () {
-                this.animation.stop();
-                egret.stopTick(this.onTick, this);
-                this.started = false;
-            };
-            /**
-             * @private
-             * true表示已经调用过start方法。
-             */
-            p.isStarted = function () {
-                return this.started;
-            };
-            /**
-             * @private
-             * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
-             * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
-             */
-            p.start = function (touchPoint, scrollValue, maxScrollValue) {
-                this.started = true;
-                this.velocity = 0;
-                this.previousVelocity.length = 0;
-                this.previousTime = egret.getTimer();
-                this.previousPosition = this.currentPosition = touchPoint;
-                this.offsetPoint = scrollValue + touchPoint;
-                egret.startTick(this.onTick, this);
-            };
-            /**
-             * @private
-             * 更新当前移动到的位置
-             * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
-             */
-            p.update = function (touchPoint, maxScrollValue) {
-                maxScrollValue = Math.max(maxScrollValue, 0);
-                this.currentPosition = touchPoint;
-                this.maxScrollPos = maxScrollValue;
-                var scrollPos = this.offsetPoint - touchPoint;
-                if (scrollPos < 0) {
-                    scrollPos *= 0.5;
-                }
-                if (scrollPos > maxScrollValue) {
-                    scrollPos = (scrollPos + maxScrollValue) * 0.5;
-                }
-                this.currentScrollPos = scrollPos;
-                this.updateFunction.call(this.target, scrollPos);
-            };
-            /**
-             * @private
-             * 停止记录位移变化，并计算出目标值和继续缓动的时间。
-             * @param currentScrollPos 容器当前的滚动值。
-             * @param maxScrollPos 容器可以滚动的最大值。当目标值不在 0~maxValue之间时，将会应用更大的摩擦力，从而影响缓动时间的长度。
-             */
-            p.finish = function (currentScrollPos, maxScrollPos) {
-                egret.stopTick(this.onTick, this);
-                this.started = false;
-                var sum = this.velocity * CURRENT_VELOCITY_WEIGHT;
-                var previousVelocityX = this.previousVelocity;
-                var length = previousVelocityX.length;
-                var totalWeight = CURRENT_VELOCITY_WEIGHT;
-                for (var i = 0; i < length; i++) {
-                    var weight = VELOCITY_WEIGHTS[i];
-                    sum += previousVelocityX[0] * weight;
-                    totalWeight += weight;
-                }
-                var pixelsPerMS = sum / totalWeight;
-                var absPixelsPerMS = Math.abs(pixelsPerMS);
-                var duration = 0;
-                var posTo = 0;
-                if (absPixelsPerMS > MINIMUM_VELOCITY) {
-                    posTo = currentScrollPos + (pixelsPerMS - MINIMUM_VELOCITY) / FRICTION_LOG * 2 * this.$scrollFactor;
-                    if (posTo < 0 || posTo > maxScrollPos) {
-                        posTo = currentScrollPos;
-                        while (Math.abs(pixelsPerMS) > MINIMUM_VELOCITY) {
-                            posTo -= pixelsPerMS;
-                            if (posTo < 0 || posTo > maxScrollPos) {
-                                pixelsPerMS *= FRICTION * EXTRA_FRICTION;
-                            }
-                            else {
-                                pixelsPerMS *= FRICTION;
-                            }
-                            duration++;
-                        }
-                    }
-                    else {
-                        duration = Math.log(MINIMUM_VELOCITY / absPixelsPerMS) / FRICTION_LOG;
-                    }
-                }
-                else {
-                    posTo = currentScrollPos;
-                }
-                if (this.target["$getThrowInfo"]) {
-                    var event = this.target["$getThrowInfo"](currentScrollPos, posTo);
-                    posTo = event.toPos;
-                }
-                if (duration > 0) {
-                    this.throwTo(posTo, duration);
-                }
-                else {
-                    this.finishScrolling();
-                }
-            };
-            /**
-             * @private
-             *
-             * @param timeStamp
-             * @returns
-             */
-            p.onTick = function (timeStamp) {
-                var timeOffset = timeStamp - this.previousTime;
-                if (timeOffset > 10) {
-                    var previousVelocity = this.previousVelocity;
-                    if (previousVelocity.length >= MAX_VELOCITY_COUNT) {
-                        previousVelocity.shift();
-                    }
-                    this.velocity = (this.currentPosition - this.previousPosition) / timeOffset;
-                    previousVelocity.push(this.velocity);
-                    this.previousTime = timeStamp;
-                    this.previousPosition = this.currentPosition;
-                }
-                return true;
-            };
-            /**
-             * @private
-             *
-             * @param animation
-             */
-            p.finishScrolling = function (animation) {
-                var hsp = this.currentScrollPos;
-                var maxHsp = this.maxScrollPos;
-                var hspTo = hsp;
-                if (hsp < 0) {
-                    hspTo = 0;
-                }
-                if (hsp > maxHsp) {
-                    hspTo = maxHsp;
-                }
-                this.throwTo(hspTo, 300);
-            };
-            /**
-             * @private
-             * 缓动到水平滚动位置
-             */
-            p.throwTo = function (hspTo, duration) {
-                if (duration === void 0) { duration = 500; }
-                var hsp = this.currentScrollPos;
-                if (hsp == hspTo) {
-                    this.endFunction.call(this.target);
-                    return;
-                }
-                var animation = this.animation;
-                animation.duration = duration;
-                animation.from = hsp;
-                animation.to = hspTo;
-                animation.play();
-            };
-            /**
-             * @private
-             * 更新水平滚动位置
-             */
-            p.onScrollingUpdate = function (animation) {
-                this.currentScrollPos = animation.currentValue;
-                this.updateFunction.call(this.target, animation.currentValue);
-            };
-            return TouchScroll;
-        })();
-        sys.TouchScroll = TouchScroll;
-        egret.registerClass(TouchScroll,"eui.sys.TouchScroll");
-    })(sys = eui.sys || (eui.sys = {}));
+        };
+        return VSlider;
+    })(eui.SliderBase);
+    eui.VSlider = VSlider;
+    egret.registerClass(VSlider,"eui.VSlider");
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -14235,6 +14316,34 @@ var eui;
     eui.Direction = Direction;
     egret.registerClass(Direction,"eui.Direction");
 })(eui || (eui = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -14537,8 +14646,10 @@ var eui;
             this.skinMap = {};
             this.initialized = !configURL;
             if (stage) {
+                this.$stage = stage;
                 stage.registerImplementation("eui.Theme", this);
             }
+            this.$configURL = configURL;
             this.load(configURL);
         }
         var d = __define,c=Theme;p=c.prototype;
@@ -14548,26 +14659,30 @@ var eui;
          * @param url
          */
         p.load = function (url) {
-            var request = new egret.HttpRequest();
-            request.addEventListener(egret.Event.COMPLETE, this.onConfigLoaded, this);
-            request.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onConfigLoaded, this);
-            request.open(url);
-            request.send();
+            var adapter = this.$stage ? this.$stage.getImplementation("eui.IThemeAdapter") : null;
+            if (!adapter) {
+                adapter = new eui.DefaultThemeAdapter();
+            }
+            adapter.getTheme(url, this.onConfigLoaded, this.onConfigLoaded, this);
         };
         /**
          * @private
          *
-         * @param event
+         * @param str
          */
-        p.onConfigLoaded = function (event) {
-            var request = event.target;
-            try {
-                var data = JSON.parse(request.response);
-            }
-            catch (e) {
-                if (DEBUG) {
-                    egret.error(e.message);
+        p.onConfigLoaded = function (str) {
+            if (str) {
+                try {
+                    var data = JSON.parse(str);
                 }
+                catch (e) {
+                    if (DEBUG) {
+                        egret.$error(3000);
+                    }
+                }
+            }
+            else if (DEBUG) {
+                egret.$error(3000, this.$configURL);
             }
             if (data && data.skins) {
                 var skinMap = this.skinMap;
@@ -20024,7 +20139,7 @@ var eui;
             var oldMaxH = Math.max(typicalHeight, this.maxElementSize);
             if (contentJustify) {
                 for (var index = this.startIndex; index <= endIndex; index++) {
-                    layoutElement = (target.getElementAt(index));
+                    layoutElement = (target.getVirtualElementAt(index));
                     if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                         continue;
                     }
@@ -20041,7 +20156,7 @@ var eui;
             var elementSizeTable = this.elementSizeTable;
             for (var i = this.startIndex; i <= endIndex; i++) {
                 var exceesHeight = 0;
-                layoutElement = (target.getElementAt(i));
+                layoutElement = (target.getVirtualElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
                 }
@@ -21243,7 +21358,7 @@ var eui;
             var count = numElements;
             for (var index = 0; index < count; index++) {
                 var layoutElement = (target.getElementAt(index));
-                if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
+                if (layoutElement && (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout)) {
                     numElements--;
                     continue;
                 }
@@ -21343,7 +21458,7 @@ var eui;
             var target = this.$target;
             if ((startIndex != -1) && (endIndex != -1)) {
                 for (var index = startIndex; index <= endIndex; index++) {
-                    var elt = target.getElementAt(index);
+                    var elt = target.getVirtualElementAt(index);
                     if (!egret.is(elt, UIComponentClass) || !elt.$includeInLayout) {
                         continue;
                     }
@@ -21500,7 +21615,12 @@ var eui;
             var columnWidth = this._columnWidth;
             var rowHeight = this._rowHeight;
             for (var i = this.startIndex; i <= endIndex; i++) {
-                elt = target.getElementAt(i);
+                if (this.$useVirtualLayout) {
+                    elt = (this.target.getVirtualElementAt(i));
+                }
+                else {
+                    elt = (this.target.getElementAt(i));
+                }
                 if (!egret.is(elt, UIComponentClass) || !elt.$includeInLayout) {
                     continue;
                 }
@@ -22047,7 +22167,7 @@ var eui;
             var oldMaxW = Math.max(typicalWidth, this.maxElementSize);
             if (contentJustify) {
                 for (var index = this.startIndex; index <= endIndex; index++) {
-                    layoutElement = (target.getElementAt(index));
+                    layoutElement = (target.getVirtualElementAt(index));
                     if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                         continue;
                     }
@@ -22064,7 +22184,7 @@ var eui;
             var elementSizeTable = this.elementSizeTable;
             for (var i = this.startIndex; i <= endIndex; i++) {
                 var exceesWidth = 0;
-                layoutElement = (target.getElementAt(i));
+                layoutElement = (target.getVirtualElementAt(i));
                 if (!egret.is(layoutElement, UIComponentClass) || !layoutElement.$includeInLayout) {
                     continue;
                 }

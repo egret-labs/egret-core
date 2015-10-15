@@ -48,12 +48,14 @@ module RES {
 		 * Animation configuration file. Currently supports Egret MovieClip file format.
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
 		 * @version Egret 2.4
 		 * @platform Web,Native
+		 * @private
 		 */
 		public static TYPE_ANIMATION:string = "animation";
 
@@ -136,14 +138,12 @@ module RES {
 		 */
         public static TYPE_SHEET:string = "sheet";
 		/**
-		 * @private
 		 * @language en_US
 		 * BitmapTextSpriteSheet file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
 		 */
 		/**
-		 * @private
 		 * @language zh_CN
 		 * BitmapTextSpriteSheet 文件。
 		 * @version Egret 2.4

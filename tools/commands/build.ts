@@ -6,7 +6,6 @@ import server = require('../server/server');
 import service = require('../service/index');
 import FileUtil = require('../lib/FileUtil');
 import Cordova = require('../actions/Cordova');
-import Native = require('../actions/NativeProject');
 import CopyFiles = require('../actions/CopyFiles');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
@@ -80,7 +79,7 @@ class Build implements egret.Command {
             FileUtil.exists(options.templateDir) == false) {
             utils.exit(10015, options.projectDir);
         }
-        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/egret/'))) {
+        if (!FileUtil.exists(FileUtil.joinPath(options.projectDir, 'libs/modules/egret/'))) {
             CopyFiles.copyToLibs();
         }
 
@@ -122,10 +121,13 @@ class Build implements egret.Command {
             });
 
             var str = "";
+            var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"));
             for(var j:number = 0 ; j < module.files.length ; j++){
                 var file = module.files[j];
                 if(file.indexOf(".d.ts") != -1) {
-                    FileUtil.copy(FileUtil.joinPath(options.projectDir, module.root, file), FileUtil.joinPath(options.projectDir, outDir, module.name, file));
+                    //FileUtil.copy(FileUtil.joinPath(options.projectDir, module.root, file), FileUtil.joinPath(options.projectDir, outDir, module.name, file));
+                    dtsStr += "\n";
+                    dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file));
                 }
                 else if(file.indexOf(".ts") != -1) {
                     str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(".ts", ".js")));
@@ -137,6 +139,7 @@ class Build implements egret.Command {
                 }
                 //todo exml
             }
+            FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"), dtsStr);
             FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"), str);
             var minPath = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".min.js");
             FileUtil.save(minPath, str);
@@ -151,12 +154,6 @@ function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exi
         cmd.messages.forEach(m=> console.log(m));
     }
 
-    if (cmd.exitCode > 10000) {
-        console.log(utils.tr(cmd.exitCode));
-    }
-
-
-    Native.build();
 
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(() => callback(0), 500);

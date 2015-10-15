@@ -1,10 +1,3 @@
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -134,15 +127,16 @@ var egret;
                     return this.$strokeStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("strokeStyle::" + value);
                     this.$strokeStyle = value;
-                    egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.checkSurface();
                     this.$nativeGraphicsContext.strokeStyle = value;
                 }
@@ -159,15 +153,16 @@ var egret;
                     return this.$fillStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("fillStyle::" + value);
                     this.$fillStyle = value;
-                    egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.checkSurface();
                     this.$nativeGraphicsContext.fillStyle = value;
                 }
@@ -685,7 +680,12 @@ var egret;
              * @platform Web,Native
              */
             p.getImageData = function (sx, sy, sw, sh) {
-                return { width: sw, height: sh, data: null };
+                if (native.$currentSurface == this.surface) {
+                    if (native.$currentSurface != null) {
+                        native.$currentSurface.end();
+                    }
+                }
+                return this.surface.getImageData(sx, sy, sw, sh);
             };
             p.checkSurface = function () {
                 //todo 暂时先写这里
@@ -815,6 +815,17 @@ var egret;
                     }
                 }
             );
+            p.getImageData = function (sx, sy, sw, sh) {
+                if (sx != Math.floor(sx)) {
+                    sx = Math.floor(sx);
+                    sw++;
+                }
+                if (sy != Math.floor(sy)) {
+                    sy = Math.floor(sy);
+                    sh++;
+                }
+                return this.$nativeRenderTexture.getPixels(sx, sy, sw, sh);
+            };
             p.createRenderTexture = function () {
                 if (this.$isRoot) {
                     return;
@@ -836,16 +847,24 @@ var egret;
                 if (this.$nativeRenderTexture) {
                     //console.log("begin" + this.id);
                     native.$currentSurface = this;
-                    //this.$nativeRenderTexture.begin();
-                    this.$nativeRenderTexture.getIn();
+                    if (this.$nativeRenderTexture.getIn) {
+                        this.$nativeRenderTexture.getIn();
+                    }
+                    else {
+                        this.$nativeRenderTexture.begin();
+                    }
                 }
             };
             p.end = function () {
                 if (this.$nativeRenderTexture) {
                     //console.log("end" + this.id);
                     native.$currentSurface = null;
-                    //this.$nativeRenderTexture.end();
-                    this.$nativeRenderTexture.getOut();
+                    if (this.$nativeRenderTexture.getOut) {
+                        this.$nativeRenderTexture.getOut();
+                    }
+                    else {
+                        this.$nativeRenderTexture.end();
+                    }
                 }
             };
             p.$dispose = function () {
@@ -1937,7 +1956,7 @@ var egret;
                  */
                 ,function () {
                     if (this.$type == egret.Sound.EFFECT) {
-                        return egret_native.Audio.getEffectVolume();
+                        return egret_native.Audio.getEffectsVolume();
                     }
                     else {
                         return egret_native.Audio.getBackgroundMusicVolume();
@@ -1949,7 +1968,7 @@ var egret;
                  */
                 ,function (value) {
                     if (this.$type == egret.Sound.EFFECT) {
-                        egret_native.Audio.setEffectVolume(value);
+                        egret_native.Audio.setEffectsVolume(value);
                     }
                     else {
                         egret_native.Audio.setBackgroundMusicVolume(value);
@@ -2026,7 +2045,7 @@ var egret;
             function setItem(key, value) {
                 localStorageData[key] = value;
                 try {
-                    this.save();
+                    save();
                     return true;
                 }
                 catch (e) {
@@ -2772,6 +2791,153 @@ var egret;
     egret.NativeStageText = NativeStageText;
     egret.registerClass(NativeStageText,"egret.NativeStageText",["egret.StageText"]);
     egret.StageText = NativeStageText;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         * XML节点基类
+         */
+        var XMLNode = (function () {
+            /**
+             * @private
+             */
+            function XMLNode(nodeType, parent) {
+                this.nodeType = nodeType;
+                this.parent = parent;
+            }
+            var d = __define,c=XMLNode;p=c.prototype;
+            return XMLNode;
+        })();
+        web.XMLNode = XMLNode;
+        egret.registerClass(XMLNode,"egret.web.XMLNode");
+        /**
+         * @private
+         * XML节点对象
+         */
+        var XML = (function (_super) {
+            __extends(XML, _super);
+            /**
+             * @private
+             */
+            function XML(localName, parent, prefix, namespace, name) {
+                _super.call(this, 1, parent);
+                /**
+                 * @private
+                 * 当前节点上的属性列表
+                 */
+                this.attributes = {};
+                /**
+                 * @private
+                 * 当前节点的子节点列表
+                 */
+                this.children = [];
+                this.localName = localName;
+                this.prefix = prefix;
+                this.namespace = namespace;
+                this.name = name;
+            }
+            var d = __define,c=XML;p=c.prototype;
+            return XML;
+        })(XMLNode);
+        web.XML = XML;
+        egret.registerClass(XML,"egret.web.XML");
+        /**
+         * @private
+         * XML文本节点
+         */
+        var XMLText = (function (_super) {
+            __extends(XMLText, _super);
+            /**
+             * @private
+             */
+            function XMLText(text, parent) {
+                _super.call(this, 3, parent);
+                this.text = text;
+            }
+            var d = __define,c=XMLText;p=c.prototype;
+            return XMLText;
+        })(XMLNode);
+        web.XMLText = XMLText;
+        egret.registerClass(XMLText,"egret.web.XMLText");
+        /**
+         * @private
+         * 解析字符串为XML对象
+         * @param text 要解析的字符串
+         */
+        function parse(text) {
+            var xmlDocStr = egret_native.xmlStr2JsonStr(text);
+            var xmlDoc = JSON.parse(xmlDocStr);
+            return parseNode(xmlDoc, null);
+        }
+        /**
+         * @private
+         * 解析一个节点
+         */
+        function parseNode(node, parent) {
+            if (node.localName == "parsererror") {
+                throw new Error(node.textContent);
+            }
+            var xml = new XML(node.localName, parent, node.prefix, node.namespace, node.name);
+            var nodeAttributes = node.attributes;
+            var attributes = xml.attributes;
+            for (var key in nodeAttributes) {
+                attributes[key] = nodeAttributes[key];
+            }
+            var childNodes = node.children;
+            var length = childNodes.length;
+            var children = xml.children;
+            for (var i = 0; i < length; i++) {
+                var childNode = childNodes[i];
+                var nodeType = childNode.nodeType;
+                var childXML = null;
+                if (nodeType == 1) {
+                    childXML = parseNode(childNode, xml);
+                }
+                else if (nodeType == 3) {
+                    var text = childNode.text.trim();
+                    if (text) {
+                        childXML = new XMLText(text, xml);
+                    }
+                }
+                if (childXML) {
+                    children.push(childXML);
+                }
+            }
+            return xml;
+        }
+        egret.XML = { parse: parse };
+    })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

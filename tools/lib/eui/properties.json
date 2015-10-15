@@ -1,13 +1,13 @@
 {
 	"egret.Bitmap":
 	{
-		"bitmapData":"any",
+		"bitmapData":"egret.BitmapData",
 		"fillMode":"string",
 		"pixelHitTest":"boolean",
 		"scale9Grid":"egret.Rectangle",
 		"smoothing":"boolean",
 		"super":"egret.DisplayObject",
-		"texture":"any"
+		"texture":"egret.Texture"
 	},
 	"egret.BitmapFont":
 	{

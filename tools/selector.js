@@ -196,10 +196,10 @@ function getAppDataEnginesRootPath() {
     var path;
     switch (process.platform) {
         case 'darwin':
-            var user = process.env.NAME || process.env.LOGNAME;
-            if (!user)
+            var home = process.env.HOME || ("/Users/" + (process.env.NAME || process.env.LOGNAME));
+            if (!home)
                 return null;
-            path = "/Users/" + user + "/Library/Application Support/Egret/engine/";
+            path = home + "/Library/Application Support/Egret/engine/";
             break;
         case 'win32':
             var appdata = process.env.AppData || process.env.USERPROFILE + "/AppData/Roaming/";
@@ -237,13 +237,16 @@ function getAllEngineVersions() {
     engines[egret.version] = egret;
     if (configData) {
         for (var v in configData.egret) {
+            if (!configData.egret[v].root) {
+                continue;
+            }
             var rootInConfig = file.escapePath(configData.egret[v].root);
             var bin = getBin(rootInConfig);
             var exist = file.exists(bin);
             if (exist) {
                 var info = getEngineVersion(rootInConfig);
                 if (!info) {
-                    return;
+                    continue;
                 }
                 engines[info.version] = info;
             }
@@ -460,5 +463,4 @@ function getLanguage() {
     }
 }
 entry();
-
 //# sourceMappingURL=selector.js.map

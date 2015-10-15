@@ -37,7 +37,8 @@ var UpgradeCommand = (function () {
             //{"v": "2.0.2"},
             //{"v": "2.4.0"},
             //{"v": "2.4.1"},
-            { "v": "2.5.0", "command": require("./upgrade/UpgradeCommand_2_4_3") }
+            { "v": "2.5.0", "command": require("./upgrade/UpgradeCommand_2_4_3") },
+            { "v": "2.5.1", "command": require("./upgrade/UpgradeCommand_2_5_1") }
         ];
         //升级命令是一个异步命令 内含异步控制流程
         this.isAsync = true;
@@ -58,7 +59,14 @@ var UpgradeCommand = (function () {
         async.eachSeries(this.upgradeConfigArr, function (info, callback) {
             function handleCallBack(err) {
                 if (!err) {
-                    //modify.save(v);
+                    //if(globals.compressVersion("2.5.0",v) < 0){
+                    //    //2.5.0及以上 拷贝升级 不存储版本号
+                    //    modify.save(v);
+                    //}
+                    if ("2.5.0" != v) {
+                        //2.5.0 拷贝升级 不存储版本号
+                        modify.save(v);
+                    }
                     callback();
                 }
                 else {
@@ -66,12 +74,15 @@ var UpgradeCommand = (function () {
                 }
             }
             var v = info["v"];
-            var command = new info["command"]();
+            var command;
+            if (info["command"]) {
+                command = new info["command"]();
+            }
             var result = globals.compressVersion(version, v);
             if (result < 0) {
                 globals.log(1704, v);
                 if (!command) {
-                    callback();
+                    handleCallBack();
                 }
                 else if (command.isAsync) {
                     command.execute(handleCallBack);

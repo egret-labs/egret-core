@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -107,6 +107,10 @@
           },
           {
             "path": "text/native/NativeStageText.ts",
+            "platform": "native"
+          },
+          {
+            "path": "native/NativeXML.ts",
             "platform": "native"
           },
           {

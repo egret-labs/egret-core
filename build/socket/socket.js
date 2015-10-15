@@ -1,4 +1,3 @@
-var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -41,12 +40,207 @@ var egret;
      */
     egret.ISocket;
 })(egret || (egret = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var native;
+    (function (native) {
+        /**
+         * @private
+         */
+        var NativeSocket = (function () {
+            function NativeSocket() {
+                this.host = "";
+                this.port = 0;
+            }
+            var d = __define,c=NativeSocket;p=c.prototype;
+            p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
+                this.onConnect = onConnect;
+                this.onClose = onClose;
+                this.onSocketData = onSocketData;
+                this.onError = onError;
+                this.thisObject = thisObject;
+            };
+            p.connect = function (host, port) {
+                this.host = host;
+                this.port = port;
+                var socketServerUrl = "ws://" + this.host + ":" + this.port;
+                this.socket = new __global["egret_native"]["WebSocket"](socketServerUrl);
+                this._bindEvent();
+            };
+            p.connectByUrl = function (url) {
+                this.socket = new __global["egret_native"]["WebSocket"](url);
+                this._bindEvent();
+            };
+            p._bindEvent = function () {
+                var that = this;
+                var socket = this.socket;
+                socket.onOpen = function () {
+                    if (that.onConnect) {
+                        that.onConnect.call(that.thisObject);
+                    }
+                };
+                socket.onClose = function () {
+                    if (that.onClose) {
+                        that.onClose.call(that.thisObject);
+                    }
+                };
+                socket.onError = function (errorCode) {
+                    if (that.onError) {
+                        that.onError.call(that.thisObject);
+                    }
+                };
+                socket.onMessage = function (message) {
+                    if (that.onSocketData) {
+                        that.onSocketData.call(that.thisObject, message);
+                    }
+                };
+            };
+            p.send = function (message) {
+                this.socket.send(message);
+            };
+            p.close = function () {
+                this.socket.close();
+            };
+            return NativeSocket;
+        })();
+        native.NativeSocket = NativeSocket;
+        egret.registerClass(NativeSocket,"egret.native.NativeSocket",["egret.ISocket"]);
+        if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+            egret.ISocket = NativeSocket;
+        }
+    })(native = egret.native || (egret.native = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * @private
+         */
+        var HTML5WebSocket = (function () {
+            function HTML5WebSocket() {
+                this.host = "";
+                this.port = 0;
+                if (!window["WebSocket"]) {
+                    egret.$error(3100);
+                }
+            }
+            var d = __define,c=HTML5WebSocket;p=c.prototype;
+            p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
+                this.onConnect = onConnect;
+                this.onClose = onClose;
+                this.onSocketData = onSocketData;
+                this.onError = onError;
+                this.thisObject = thisObject;
+            };
+            p.connect = function (host, port) {
+                this.host = host;
+                this.port = port;
+                var socketServerUrl = "ws://" + this.host + ":" + this.port;
+                this.socket = new window["WebSocket"](socketServerUrl);
+                this.socket.binaryType = "arraybuffer";
+                this._bindEvent();
+            };
+            p.connectByUrl = function (url) {
+                this.socket = new window["WebSocket"](url);
+                this.socket.binaryType = "arraybuffer";
+                this._bindEvent();
+            };
+            p._bindEvent = function () {
+                var that = this;
+                var socket = this.socket;
+                socket.onopen = function () {
+                    if (that.onConnect) {
+                        that.onConnect.call(that.thisObject);
+                    }
+                };
+                socket.onclose = function (e) {
+                    if (that.onClose) {
+                        that.onClose.call(that.thisObject);
+                    }
+                };
+                socket.onerror = function (e) {
+                    if (that.onError) {
+                        that.onError.call(that.thisObject);
+                    }
+                };
+                socket.onmessage = function (e) {
+                    if (that.onSocketData) {
+                        that.onSocketData.call(that.thisObject, e.data);
+                    }
+                };
+            };
+            p.send = function (message) {
+                this.socket.send(message);
+            };
+            p.close = function () {
+                this.socket.close();
+            };
+            return HTML5WebSocket;
+        })();
+        web.HTML5WebSocket = HTML5WebSocket;
+        egret.registerClass(HTML5WebSocket,"egret.web.HTML5WebSocket",["egret.ISocket"]);
+        if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
+            egret.ISocket = HTML5WebSocket;
+        }
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -99,7 +293,7 @@ var egret;
      * @event egret.Event.CONNECT 连接服务器成功。
      * @event egret.ProgressEvent.SOCKET_DATA 接收服务器数据。
      * @event egret.Event.CLOSE 在服务器关闭连接时调度。
-     * @event egret.ProgressEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
+     * @event egret.IOErrorEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
      * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
@@ -460,205 +654,4 @@ var egret;
     })(egret.EventDispatcher);
     egret.WebSocket = WebSocket;
     egret.registerClass(WebSocket,"egret.WebSocket");
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var native;
-    (function (native) {
-        /**
-         * @private
-         */
-        var NativeSocket = (function () {
-            function NativeSocket() {
-                this.host = "";
-                this.port = 0;
-            }
-            var d = __define,c=NativeSocket;p=c.prototype;
-            p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
-                this.onConnect = onConnect;
-                this.onClose = onClose;
-                this.onSocketData = onSocketData;
-                this.onError = onError;
-                this.thisObject = thisObject;
-            };
-            p.connect = function (host, port) {
-                this.host = host;
-                this.port = port;
-                var socketServerUrl = "ws://" + this.host + ":" + this.port;
-                this.socket = new __global["egret_native"]["WebSocket"](socketServerUrl);
-                this._bindEvent();
-            };
-            p.connectByUrl = function (url) {
-                this.socket = new __global["egret_native"]["WebSocket"](url);
-                this._bindEvent();
-            };
-            p._bindEvent = function () {
-                var that = this;
-                var socket = this.socket;
-                socket.onOpen = function () {
-                    if (that.onConnect) {
-                        that.onConnect.call(that.thisObject);
-                    }
-                };
-                socket.onClose = function () {
-                    if (that.onClose) {
-                        that.onClose.call(that.thisObject);
-                    }
-                };
-                socket.onError = function (errorCode) {
-                    if (that.onError) {
-                        that.onError.call(that.thisObject);
-                    }
-                };
-                socket.onMessage = function (message) {
-                    if (that.onSocketData) {
-                        that.onSocketData.call(that.thisObject, message);
-                    }
-                };
-            };
-            p.send = function (message) {
-                this.socket.send(message);
-            };
-            p.close = function () {
-                this.socket.close();
-            };
-            return NativeSocket;
-        })();
-        native.NativeSocket = NativeSocket;
-        egret.registerClass(NativeSocket,"egret.native.NativeSocket",["egret.ISocket"]);
-        if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
-            egret.ISocket = NativeSocket;
-        }
-    })(native = egret.native || (egret.native = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * @private
-         */
-        var HTML5WebSocket = (function () {
-            function HTML5WebSocket() {
-                this.host = "";
-                this.port = 0;
-                if (!window["WebSocket"]) {
-                    egret.$error(3100);
-                }
-            }
-            var d = __define,c=HTML5WebSocket;p=c.prototype;
-            p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
-                this.onConnect = onConnect;
-                this.onClose = onClose;
-                this.onSocketData = onSocketData;
-                this.onError = onError;
-                this.thisObject = thisObject;
-            };
-            p.connect = function (host, port) {
-                this.host = host;
-                this.port = port;
-                var socketServerUrl = "ws://" + this.host + ":" + this.port;
-                this.socket = new window["WebSocket"](socketServerUrl);
-                this.socket.binaryType = "arraybuffer";
-                this._bindEvent();
-            };
-            p.connectByUrl = function (url) {
-                this.socket = new window["WebSocket"](url);
-                this.socket.binaryType = "arraybuffer";
-                this._bindEvent();
-            };
-            p._bindEvent = function () {
-                var that = this;
-                var socket = this.socket;
-                socket.onopen = function () {
-                    if (that.onConnect) {
-                        that.onConnect.call(that.thisObject);
-                    }
-                };
-                socket.onclose = function (e) {
-                    if (that.onClose) {
-                        that.onClose.call(that.thisObject);
-                    }
-                };
-                socket.onerror = function (e) {
-                    if (that.onError) {
-                        that.onError.call(that.thisObject);
-                    }
-                };
-                socket.onmessage = function (e) {
-                    if (that.onSocketData) {
-                        that.onSocketData.call(that.thisObject, e.data);
-                    }
-                };
-            };
-            p.send = function (message) {
-                this.socket.send(message);
-            };
-            p.close = function () {
-                this.socket.close();
-            };
-            return HTML5WebSocket;
-        })();
-        web.HTML5WebSocket = HTML5WebSocket;
-        egret.registerClass(HTML5WebSocket,"egret.web.HTML5WebSocket",["egret.ISocket"]);
-        if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
-            egret.ISocket = HTML5WebSocket;
-        }
-    })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));

@@ -162,8 +162,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setLayout(value:LayoutBase):boolean {
             if (this.$layout == value)
@@ -318,8 +318,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         private updateScrollRect():boolean {
             var values = this.$Group;
@@ -374,6 +374,9 @@ module eui {
          */
         public getElementAt(index:number):egret.DisplayObject {
             return this.$children[index];
+        }
+        public getVirtualElementAt(index:number):egret.DisplayObject{
+            return this.getElementAt(index);
         }
 
         /**

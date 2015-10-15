@@ -161,15 +161,16 @@ module egret.native {
         }
 
         public set strokeStyle(value:any) {
-            if (value.indexOf("rgba") != -1) {
-                value = this.$parseRGBA(value);
-            }
-            else if (value.indexOf("rgb") != -1) {
-                value = this.$parseRGB(value);
-            }
-            //console.log("strokeStyle::" + value);
             this.$strokeStyle = value;
-            egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+            if (value != null) {
+                if (value.indexOf("rgba") != -1) {
+                    value = this.$parseRGBA(value);
+                }
+                else if (value.indexOf("rgb") != -1) {
+                    value = this.$parseRGB(value);
+                }
+                egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+            }
             this.checkSurface();
             this.$nativeGraphicsContext.strokeStyle = value;
         }
@@ -188,15 +189,16 @@ module egret.native {
         }
 
         public set fillStyle(value:any) {
-            if (value.indexOf("rgba") != -1) {
-                value = this.$parseRGBA(value);
-            }
-            else if (value.indexOf("rgb") != -1) {
-                value = this.$parseRGB(value);
-            }
-            //console.log("fillStyle::" + value);
             this.$fillStyle = value;
-            egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+            if (value != null) {
+                if (value.indexOf("rgba") != -1) {
+                    value = this.$parseRGBA(value);
+                }
+                else if (value.indexOf("rgb") != -1) {
+                    value = this.$parseRGB(value);
+                }
+                egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+            }
             this.checkSurface();
             this.$nativeGraphicsContext.fillStyle = value;
         }
@@ -799,7 +801,12 @@ module egret.native {
          * @platform Web,Native
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
-            return {width: sw, height: sh, data: null};
+            if($currentSurface == this.surface) {
+                if($currentSurface != null) {
+                    $currentSurface.end();
+                }
+            }
+            return this.surface.getImageData(sx,sy,sw,sh);
         }
 
         private checkSurface():void {

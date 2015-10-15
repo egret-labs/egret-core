@@ -5,11 +5,14 @@ var ServiceSocket = require('./ServiceSocket');
 var file = require('../lib/FileUtil');
 var childProcess = require('child_process');
 var parser = require('../parser/Parser');
+var os = require("os");
 exports.LARK_SERVICE_PORT = 51545;
 //Lark version, use to shutdown if the version is different to the value passed by the build command
 var version = process.argv[2];
 var projects = {};
 var serviceCreated = false;
+var timer;
+var lastBuildTime = Date.now();
 /**
 * Start Lark Service
 */
@@ -46,6 +49,7 @@ function handleCommands(task, res) {
         proj.buildPort = res;
     }
     else if (task.command == 'build') {
+        autoExitTimer();
         var buildHandled = false;
         if (task.option.added && task.option.added.length) {
             task.option.added.forEach(function (file) { return proj.fileChanged(res, task, file, "added"); });
@@ -108,15 +112,26 @@ function getProject(path) {
     }
     return projects[path];
 }
+function autoExitTimer() {
+    lastBuildTime = Date.now();
+    if (timer) {
+        clearTimeout(timer);
+    }
+    timer = setTimeout(shutdown, 10 * 60 * 1000);
+}
 function startBackgroundService() {
     serviceCreated = true;
+    var cwd = os.tmpdir();
     var options = egret.args;
     var nodePath = process.execPath, service = file.joinPath(egret.root, 'tools/bin/egret');
     var startupParams = ['--expose-gc', service, 'service'];
+    if (egret.args.runtime) {
+        startupParams.push("--runtime", egret.args.runtime);
+    }
     var server = childProcess.spawn(nodePath, startupParams, {
         detached: true,
         stdio: ['ignore', 'ignore', 'ignore'],
-        cwd: process.cwd(),
+        cwd: cwd,
         silent: true
     });
     server.on("exit", function () { return serviceCreated = false; });
@@ -138,5 +153,4 @@ function getServiceURL(params) {
     return "http://127.0.0.1:" + exports.LARK_SERVICE_PORT + "/?q=" + encodeURIComponent(json);
 }
 /// <reference path="../lib/types.d.ts" />
-
-//# sourceMappingURL=../service/index.js.map
+//# sourceMappingURL=index.js.map

@@ -64,11 +64,13 @@ declare module egret_native {
 
     function readXML(filepath:string):any;
 
+    function xmlStr2JsonStr(text:string):any;
+
     function isFileExists(filepath:string):boolean;
 
     function isRecordExists(filepath:string):boolean;
 
-    function readFileSync(filepath:string):any;
+    function readFileSync(filepath:string, type?:string):any;
 
     function readResourceFileSync(filepath:string):any;
 
@@ -76,7 +78,7 @@ declare module egret_native {
 
     function deleteUpdateFile(filepath:string):void;
 
-    function readFileAsync(filepath:string, promise:egret.PromiseObject):any;
+    function readFileAsync(filepath:string, promise:egret.PromiseObject, type?:string):any;
 
     function writeFileSync(filepath:string, fileContent:string):any;
 
@@ -100,9 +102,9 @@ declare module egret_native {
         function playBackgroundMusic(path:string, loop:boolean):void;
 
         function setBackgroundMusicVolume(value:number):void;
-        function setEffectVolume(value:number):void;
+        function setEffectsVolume(value:number):void;
         function getBackgroundMusicVolume():number;
-        function getEffectVolume():number;
+        function getEffectsVolume():number;
 
 
         function stopBackgroundMusic(isRelease:boolean):void;

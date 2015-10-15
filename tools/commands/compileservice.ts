@@ -7,6 +7,7 @@ import server = require('../server/server');
 import service = require('../service/index');
 import ServiceSocket = require('../service/ServiceSocket');
 import FileUtil = require('../lib/FileUtil');
+import Native = require('../actions/NativeProject');
 import CopyFiles = require('../actions/CopyFiles');
 import exmlActions = require('../actions/exml');
 import state = require('../lib/DirectoryState');
@@ -55,6 +56,7 @@ class AutoCompileCommand implements egret.Command {
     private _request: ServiceSocket = null;
     private _scripts: string[];
     private _lastBuildTime = Date.now();
+    private sourceMapStateChanged = false;
 
     buildProject() {
         var exitCode = 0;
@@ -82,6 +84,7 @@ class AutoCompileCommand implements egret.Command {
 
         exmlActions.afterBuild();
 
+        Native.build();
         this.dirState.init();
 
         this._scripts = result.files;
@@ -121,7 +124,8 @@ class AutoCompileCommand implements egret.Command {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
-        if (codes.length) {
+        if (codes.length || this.sourceMapStateChanged) {
+            this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
             console.log("result.files:", result.files);
             if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
@@ -136,6 +140,7 @@ class AutoCompileCommand implements egret.Command {
             exmlActions.afterBuildChanges(exmls);
         }
 
+        Native.build();
         this.dirState.init();
 
         this.sendCommand();
@@ -219,6 +224,7 @@ class AutoCompileCommand implements egret.Command {
 
     private onServiceMessage(msg: egret.ServiceBuildCommand) {
         if (msg.command == 'build' && msg.option) {
+            this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
             var props = egret.args.properties;
             egret.args = parser.parseJSON(msg.option);
             egret.args.properties = props;

@@ -1,3 +1,5 @@
+/// <reference path="../lib/types.d.ts" />
+var os = require("os");
 var cprocess = require('child_process');
 var utils = require('../lib/utils');
 var FileUtil = require('../lib/FileUtil');
@@ -56,9 +58,18 @@ var Project = (function () {
         console.log('启动编译进程:' + this.path);
         this.shutdown(11);
         var larkPath = FileUtil.joinPath(utils.getEgretRoot(), 'tools/bin/egret');
-        var build = cprocess.spawn(process.execPath, ['--expose-gc', larkPath, 'compileservice', (this.option.sourceMap ? "-sourcemap" : "")], {
+        var params = [
+            '--expose-gc',
+            larkPath,
+            'compileservice', this.path,
+            (this.option.sourceMap ? "-sourcemap" : "")
+        ];
+        if (this.option && this.option.runtime) {
+            params.push("--runtime", this.option.runtime);
+        }
+        var build = cprocess.spawn(process.execPath, params, {
             detached: true,
-            cwd: this.path
+            cwd: os.tmpdir()
         });
         build.on('exit', function (code, signal) { return _this.onBuildServiceExit(code, signal); });
         build.stdout.setEncoding("utf-8");
@@ -138,6 +149,4 @@ var Project = (function () {
     return Project;
 })();
 module.exports = Project;
-/// <reference path="../lib/types.d.ts" />
-
-//# sourceMappingURL=../service/project.js.map
+//# sourceMappingURL=project.js.map

@@ -3521,6 +3521,8 @@ module ts {
 
                 // emit prologue directives prior to __extends
                 var startIndex = emitDirectivePrologues(node.statements, /*startWithNewLine*/ false);
+                // move __extends to egret source
+                extendsEmitted = true;
                 if (!extendsEmitted && resolver.getNodeCheckFlags(node) & NodeCheckFlags.EmitExtends) {
                     writeLine();
                     write("var __extends = this.__extends || function (d, b) {");
@@ -3538,6 +3540,8 @@ module ts {
                     write("};");
                     extendsEmitted = true;
                 }
+                //move define to egret source
+                defineEmitted = true;
                 if (!defineEmitted) {
                     writeLine();
                     write('var __define = this.__define || function (o, p, g, s) {   Object.defineProperty(o, p, { configurable:true, enumerable:true, get:g,set:s }) };');

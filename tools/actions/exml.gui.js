@@ -2,6 +2,18 @@
 var file = require('../lib/FileUtil');
 var exmlc = require('../lib/exml/exmlc');
 function beforeBuild() {
+    //todo move to upgrade
+    var oldPath = file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");
+    if (file.exists(oldPath)) {
+        var srclib = file.joinPath(egret.args.srcDir, "libs");
+        var others = file.getDirectoryListing(srclib);
+        if (others.length == 1) {
+            file.remove(srclib);
+        }
+        else {
+            file.remove(oldPath);
+        }
+    }
     var exmlDtsPath = getExmlDtsPath();
     if (file.exists(exmlDtsPath)) {
         file.save(exmlDtsPath, "");
@@ -32,12 +44,15 @@ function buildChanges(exmls) {
         return state;
     }
     exmls.forEach(function (exml) {
+        if (!file.exists(exml))
+            return;
         var result = exmlc.compile(exml, egret.args.srcDir);
         if (result.exitCode != 0) {
             state.exitCode = result.exitCode;
             state.messages = state.messages.concat(result.messages);
         }
     });
+    state.messages.forEach(function (m) { return console.log(m); });
     return state;
 }
 exports.buildChanges = buildChanges;
@@ -104,7 +119,6 @@ function generateExmlDTS() {
     return dts;
 }
 function getExmlDtsPath() {
-    return file.joinPath(egret.args.srcDir, "libs", "exml.g.d.ts");
+    return file.joinPath(egret.args.projectDir, "libs", "exml.g.d.ts");
 }
-
-//# sourceMappingURL=../actions/exml.gui.js.map
+//# sourceMappingURL=exml.gui.js.map

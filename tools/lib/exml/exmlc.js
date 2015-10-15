@@ -27,8 +27,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 /// <reference path="../types.d.ts" />
 /// <reference path="exml_config.ts"/>
@@ -42,47 +41,52 @@ function compile(exmlPath, srcPath) {
     var result = { exitCode: 0, messages: [] };
     exmlPath = exmlPath.split("\\").join("/");
     srcPath = srcPath.split("\\").join("/");
+    var tsPath = exmlPath.substring(0, exmlPath.length - 5) + ".g.ts";
     if (srcPath.charAt(srcPath.length - 1) != "/") {
         srcPath += "/";
     }
+    if (!compiler) {
+        compiler = new EXMLCompiler();
+    }
+    var exitCode = 0, message = "";
     if (!file.exists(exmlPath)) {
         result.messages.push(utils.tr(2001, exmlPath));
         result.exitCode = 2001;
         return result;
     }
-    var className = exmlPath.substring(srcPath.length, exmlPath.length - 5);
-    className = className.split("/").join(".");
-    var xmlString = file.read(exmlPath, true);
-    try {
-        var xmlData = xml.parse(xmlString);
+    while (true) {
+        var className = exmlPath.substring(srcPath.length, exmlPath.length - 5);
+        className = className.split("/").join(".");
+        var xmlString = file.read(exmlPath, true);
+        try {
+            var xmlData = xml.parse(xmlString);
+        }
+        catch (e) {
+            message = utils.tr(2002, exmlPath, e.message);
+            exitCode = 2002;
+            break;
+        }
+        if (!xmlData) {
+            message = utils.tr(2002, exmlPath, "");
+            exitCode = 2002;
+            break;
+        }
+        try {
+            var tsText = compiler.compile(xmlData, className, srcPath, exmlPath);
+            file.save(tsPath, tsText);
+        }
+        catch (e) {
+            message = compiler.errorMessage;
+            exitCode = compiler.errorCode || 2002;
+        }
+        break;
     }
-    catch (e) {
-        result.messages.push(utils.tr(2002, exmlPath));
-        result.exitCode = 2002;
-        return result;
+    if (exitCode) {
+        file.save(tsPath, "");
     }
-    if (!xmlData) {
-        result.messages.push(utils.tr(2002, exmlPath));
-        result.exitCode = 2002;
-        return result;
-    }
-    if (!compiler) {
-        compiler = new EXMLCompiler();
-    }
-    try {
-        var tsText = compiler.compile(xmlData, className, srcPath, exmlPath);
-        var tsPath = exmlPath.substring(0, exmlPath.length - 5) + ".g.ts";
-        file.save(tsPath, tsText);
-        return {
-            exitCode: 0,
-            messages: []
-        };
-    }
-    catch (e) {
-        result.messages.push(compiler.errorMessage);
-        result.exitCode = compiler.errorCode || 2002;
-        return result;
-    }
+    result.exitCode = exitCode;
+    result.messages.push(message);
+    return result;
 }
 exports.compile = compile;
 ;
@@ -1996,5 +2000,4 @@ var Modifiers = (function () {
     Modifiers.M_STATIC = "static";
     return Modifiers;
 })();
-
-//# sourceMappingURL=../../lib/exml/exmlc.js.map
+//# sourceMappingURL=exmlc.js.map

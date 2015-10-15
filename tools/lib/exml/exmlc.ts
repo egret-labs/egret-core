@@ -34,55 +34,64 @@ import file = require("../FileUtil");
 import CodeUtil = require("./code_util");
 import exml_config = require("./exml_config");
 
-var compiler:EXMLCompiler;
+var compiler: EXMLCompiler;
 
 
 export function compile(exmlPath: string, srcPath: string): egret.TaskResult{
     var result: egret.TaskResult = { exitCode: 0, messages:[] };
     exmlPath = exmlPath.split("\\").join("/");
     srcPath = srcPath.split("\\").join("/");
+    var tsPath: string = exmlPath.substring(0, exmlPath.length - 5) + ".g.ts";
     if(srcPath.charAt(srcPath.length-1)!="/"){
         srcPath += "/";
     }
+    if (!compiler) {
+        compiler = new EXMLCompiler();
+    }
+    var exitCode = 0, message = "";
+
     if (!file.exists(exmlPath)) {
         result.messages.push(utils.tr(2001, exmlPath));
         result.exitCode = 2001;
         return result;
     }
-    var className:string = exmlPath.substring(srcPath.length,exmlPath.length-5);
-    className = className.split("/").join(".");
-    var xmlString = file.read(exmlPath,true);
-    try{
-        var xmlData = xml.parse(xmlString);
+
+    while (true) {
+
+        var className: string = exmlPath.substring(srcPath.length, exmlPath.length - 5);
+        className = className.split("/").join(".");
+        var xmlString = file.read(exmlPath, true);
+        try {
+            var xmlData = xml.parse(xmlString);
+        }
+        catch (e) {
+            message = utils.tr(2002, exmlPath, e.message);
+            exitCode = 2002;
+            break;
+        }
+        if (!xmlData) {
+            message = utils.tr(2002, exmlPath, "");
+            exitCode = 2002;
+            break
+        }
+
+        try {
+            var tsText = compiler.compile(xmlData, className, srcPath, exmlPath);
+            file.save(tsPath, tsText);
+        }
+        catch (e) {
+            message = compiler.errorMessage;
+            exitCode = compiler.errorCode || 2002;
+        }
+        break;
     }
-    catch(e){
-        result.messages.push(utils.tr(2002, exmlPath));
-        result.exitCode = 2002;
-        return result;
-    }
-    if (!xmlData) {
-        result.messages.push(utils.tr(2002, exmlPath));
-        result.exitCode = 2002;
-        return result;
-    }
-    if(!compiler){
-        compiler = new EXMLCompiler();
+    if (exitCode) {
+        file.save(tsPath, "");
     }
 
-    try {
-        var tsText = compiler.compile(xmlData, className, srcPath, exmlPath);
-        var tsPath: string = exmlPath.substring(0, exmlPath.length - 5) + ".g.ts";
-        file.save(tsPath, tsText);
-        return {
-            exitCode: 0,
-            messages:[]
-        };
-    }
-    catch (e) {
-        result.messages.push(compiler.errorMessage);
-        result.exitCode = compiler.errorCode || 2002;
-        return result;
-    }
+    result.exitCode = exitCode;
+    result.messages.push(message);
+    return result;
 };
 
 

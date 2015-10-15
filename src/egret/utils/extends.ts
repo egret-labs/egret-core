@@ -26,15 +26,15 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-function __extends(d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() {
-        this.constructor = d;
-    }
-
-    __.prototype = b.prototype;
-    d.prototype = new __();
-}
+//function __extends(d, b) {
+//    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+//    function __() {
+//        this.constructor = d;
+//    }
+//
+//    __.prototype = b.prototype;
+//    d.prototype = new __();
+//}
 
 module egret {
 
@@ -46,7 +46,7 @@ module egret {
      * @param type Setter property names need to call
      * @param values Value passed to the parent class
      *
-     * @exmaple egret.superSetter(this, "alpha", 1);
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
      */
     /**
      * @language zh_CN
@@ -56,7 +56,7 @@ module egret {
      * @param type 需要调用的setter属性名称
      * @param values 传给父类的值
      *
-     * @exmaple egret.superSetter(this, "alpha", 1);
+     * @exmaple egret.superSetter(egret.Sprite, this, "alpha", 1);
      */
     export function superSetter(currentClass:any, thisObj:any, type:string, ...values) {
         var cla = currentClass.prototype;
@@ -95,7 +95,7 @@ module egret {
      * @param type Setter property names need to call
      * @returns {any} The value returned by the parent
      *
-     * @exmaple egret.superGetter(this, "alpha");
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
      */
     /**
      * @language zh_CN
@@ -105,7 +105,7 @@ module egret {
      * @param type 需要调用的setter属性名称
      * @returns {any} 父类返回的值
      *
-     * @exmaple egret.superGetter(this, "alpha");
+     * @exmaple egret.superGetter(egret.Sprite, this, "alpha");
      */
     export function superGetter(currentClass:any, thisObj:any, type:string):any {
         var cla = currentClass.prototype;

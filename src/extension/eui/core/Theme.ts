@@ -117,6 +117,9 @@ module eui {
      */
     export class Theme extends egret.EventDispatcher {
 
+        private $stage:egret.Stage;
+        private $configURL:string;
+
         /**
          * @language en_US
          * Create an instance of Theme
@@ -144,8 +147,10 @@ module eui {
             super();
             this.initialized = !configURL;
             if (stage) {
+                this.$stage = stage;
                 stage.registerImplementation("eui.Theme", this);
             }
+            this.$configURL = configURL;
             this.load(configURL);
         }
 
@@ -160,28 +165,33 @@ module eui {
          * @param url
          */
         private load(url:string):void {
-            var request = new egret.HttpRequest();
-            request.addEventListener(egret.Event.COMPLETE, this.onConfigLoaded, this);
-            request.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onConfigLoaded, this);
-            request.open(url);
-            request.send();
+            var adapter:IThemeAdapter = this.$stage?this.$stage.getImplementation("eui.IThemeAdapter"):null;
+            if (!adapter) {
+                adapter = new DefaultThemeAdapter();
+            }
+            adapter.getTheme(url, this.onConfigLoaded, this.onConfigLoaded, this);
         }
 
         /**
          * @private
          *
-         * @param event
+         * @param str
          */
-        private onConfigLoaded(event:egret.Event):void {
-            var request:egret.HttpRequest = event.target;
-            try {
-                var data = JSON.parse(request.response);
-            }
-            catch (e) {
-                if (DEBUG) {
-                    egret.error(e.message);
+        private onConfigLoaded(str:string):void {
+            if(str) {
+                try {
+                    var data = JSON.parse(str);
+                }
+                catch (e) {
+                    if (DEBUG) {
+                        egret.$error(3000);
+                    }
                 }
             }
+            else if (DEBUG) {
+                egret.$error(3000, this.$configURL);
+            }
+
 
             if (data && data.skins) {
                 var skinMap = this.skinMap

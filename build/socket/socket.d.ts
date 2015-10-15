@@ -98,6 +98,50 @@ declare module egret {
         new (): ISocket;
     };
 }
+declare module egret.native {
+    /**
+     * @private
+     */
+    class NativeSocket implements ISocket {
+        private socket;
+        constructor();
+        private onConnect;
+        private onClose;
+        private onSocketData;
+        private onError;
+        private thisObject;
+        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
+        private host;
+        private port;
+        connect(host: string, port: number): void;
+        connectByUrl(url: string): void;
+        private _bindEvent();
+        send(message: any): void;
+        close(): void;
+    }
+}
+declare module egret.web {
+    /**
+     * @private
+     */
+    class HTML5WebSocket implements ISocket {
+        private socket;
+        constructor();
+        private onConnect;
+        private onClose;
+        private onSocketData;
+        private onError;
+        private thisObject;
+        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
+        private host;
+        private port;
+        connect(host: string, port: number): void;
+        connectByUrl(url: string): void;
+        private _bindEvent();
+        send(message: any): void;
+        close(): void;
+    }
+}
 declare module egret {
     /**
      * @language en_US
@@ -121,7 +165,7 @@ declare module egret {
      * @event egret.Event.CONNECT 连接服务器成功。
      * @event egret.ProgressEvent.SOCKET_DATA 接收服务器数据。
      * @event egret.Event.CLOSE 在服务器关闭连接时调度。
-     * @event egret.ProgressEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
+     * @event egret.IOErrorEvent.IO_ERROR 在出现输入/输出错误并导致发送或加载操作失败时调度。。
      * @see http://edn.egret.com/cn/index.php/article/index/id/164 WebSocket
      * @version Egret 2.4
      * @platform Web,Native
@@ -372,49 +416,5 @@ declare module egret {
          * @platform Web,Native
          */
         type: string;
-    }
-}
-declare module egret.native {
-    /**
-     * @private
-     */
-    class NativeSocket implements ISocket {
-        private socket;
-        constructor();
-        private onConnect;
-        private onClose;
-        private onSocketData;
-        private onError;
-        private thisObject;
-        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
-        private host;
-        private port;
-        connect(host: string, port: number): void;
-        connectByUrl(url: string): void;
-        private _bindEvent();
-        send(message: any): void;
-        close(): void;
-    }
-}
-declare module egret.web {
-    /**
-     * @private
-     */
-    class HTML5WebSocket implements ISocket {
-        private socket;
-        constructor();
-        private onConnect;
-        private onClose;
-        private onSocketData;
-        private onError;
-        private thisObject;
-        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
-        private host;
-        private port;
-        connect(host: string, port: number): void;
-        connectByUrl(url: string): void;
-        private _bindEvent();
-        send(message: any): void;
-        close(): void;
     }
 }

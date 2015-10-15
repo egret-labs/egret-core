@@ -1,4 +1,4 @@
-<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret-labs.org/egret" xmlns="http://ns.egret-labs.org/eui" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://ns.egret-labs.org/manifest">
+<xs:schema elementFormDefault="qualified" targetNamespace="http://ns.egret.com/eui" xmlns="http://ns.egret.com/eui" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="http://ns.egret-labs.org/manifest">
   <xs:simpleType name="egret.BitmapFillMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="repeat"/>
@@ -15,13 +15,11 @@
     <xs:attribute name="smoothing" type="xs:boolean"/>
     <xs:attribute name="texture" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="any">
-    <xs:choice>
-      <xs:any/>
-    </xs:choice>
+  <xs:group name="egret.BitmapData">
+    <xs:choice/>
   </xs:group>
-  <xs:complexType name="any">
-    <xs:group ref="any"/>
+  <xs:complexType name="egret.BitmapData">
+    <xs:group ref="egret.BitmapData"/>
   </xs:complexType>
   <xs:group name="string">
     <xs:choice>
@@ -47,15 +45,24 @@
   <xs:complexType name="egret.Rectangle">
     <xs:group ref="egret.Rectangle"/>
   </xs:complexType>
+  <xs:group name="egret.Texture">
+    <xs:choice>
+      <xs:element ref="RenderTexture"/>
+      <xs:element ref="Texture"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="egret.Texture">
+    <xs:group ref="egret.Texture"/>
+  </xs:complexType>
   <xs:group name="Bitmap_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObject_attributeElement"/>
-      <xs:element name="bitmapData" type="any"/>
+      <xs:element name="bitmapData" type="egret.BitmapData"/>
       <xs:element name="fillMode" type="string"/>
       <xs:element name="pixelHitTest" type="boolean"/>
       <xs:element name="scale9Grid" type="egret.Rectangle"/>
       <xs:element name="smoothing" type="boolean"/>
-      <xs:element name="texture" type="any"/>
+      <xs:element name="texture" type="egret.Texture"/>
     </xs:choice>
   </xs:group>
   <xs:element name="Bitmap">
@@ -148,6 +155,11 @@
     <xs:attributeGroup ref="egret.Filter"/>
     <xs:attribute name="matrix" type="xs:string"/>
   </xs:attributeGroup>
+  <xs:group name="any">
+    <xs:choice>
+      <xs:any/>
+    </xs:choice>
+  </xs:group>
   <xs:complexType name="Array_any">
     <xs:group ref="any"/>
   </xs:complexType>
@@ -199,6 +211,9 @@
     <xs:attribute name="y" type="xs:decimal"/>
     <xs:anyAttribute processContents="skip"/>
   </xs:attributeGroup>
+  <xs:complexType name="any">
+    <xs:group ref="any"/>
+  </xs:complexType>
   <xs:group name="egret.Matrix">
     <xs:choice>
       <xs:element ref="Matrix"/>

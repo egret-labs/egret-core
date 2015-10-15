@@ -131,7 +131,7 @@ var CompileOptions = (function () {
         configurable: true
     });
     CompileOptions.prototype.getStartURL = function (host) {
-        var url = "http://" + host + ':' + this.port + '/bin-debug/index.html';
+        var url = "http://" + host + ':' + this.port + '/index.html';
         return url;
     };
     CompileOptions.prototype.getTmpDir = function () {
