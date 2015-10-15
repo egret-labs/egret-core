@@ -144,6 +144,7 @@ var egret;
              * @param loader
              */
             p.loadSound = function (loader) {
+                var self = this;
                 var virtualUrl = this.getVirtualUrl(loader._request.url);
                 var sound = new egret.Sound();
                 sound.addEventListener(egret.Event.COMPLETE, onLoadComplete, self);
@@ -162,7 +163,7 @@ var egret;
                     loader.data = sound;
                     window.setTimeout(function () {
                         loader.dispatchEventWith(egret.Event.COMPLETE);
-                    }, self);
+                    }, 0);
                 }
                 function removeListeners() {
                     sound.removeEventListener(egret.Event.COMPLETE, onLoadComplete, self);
