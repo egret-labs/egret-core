@@ -41,9 +41,9 @@ module egret.native {
          */
         public constructor() {
             sys.sharedRenderContext = this.create().renderContext;
-            for (var i = 0; i < 3; i++) {
-                surfacePool.push(this.create());
-            }
+            //for (var i = 0; i < 3; i++) {
+            //    surfacePool.push(this.create());
+            //}
         }
 
         /**
@@ -69,8 +69,8 @@ module egret.native {
             if (!surface) {
                 return;
             }
-            //surface.$dispose();
-            //surface.width = surface.height = 1;
+            surface.$dispose();
+            surface.width = surface.height = 1;
             surfacePool.push(surface);
         }
 
