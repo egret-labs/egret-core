@@ -1476,7 +1476,9 @@ module egret {
                 this.bgGraphics.$render(renderContext);
 
             if (this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT) {
-                this.inputUtils._updateProperties();
+                if(this.$hasFlags(sys.DisplayObjectFlags.Dirty)) {
+                    this.inputUtils._updateProperties();
+                }
                 if (this.$isTyping) {
                     return;
                 }

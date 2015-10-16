@@ -98,50 +98,6 @@ declare module egret {
         new (): ISocket;
     };
 }
-declare module egret.native {
-    /**
-     * @private
-     */
-    class NativeSocket implements ISocket {
-        private socket;
-        constructor();
-        private onConnect;
-        private onClose;
-        private onSocketData;
-        private onError;
-        private thisObject;
-        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
-        private host;
-        private port;
-        connect(host: string, port: number): void;
-        connectByUrl(url: string): void;
-        private _bindEvent();
-        send(message: any): void;
-        close(): void;
-    }
-}
-declare module egret.web {
-    /**
-     * @private
-     */
-    class HTML5WebSocket implements ISocket {
-        private socket;
-        constructor();
-        private onConnect;
-        private onClose;
-        private onSocketData;
-        private onError;
-        private thisObject;
-        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
-        private host;
-        private port;
-        connect(host: string, port: number): void;
-        connectByUrl(url: string): void;
-        private _bindEvent();
-        send(message: any): void;
-        close(): void;
-    }
-}
 declare module egret {
     /**
      * @language en_US
@@ -416,5 +372,49 @@ declare module egret {
          * @platform Web,Native
          */
         type: string;
+    }
+}
+declare module egret.native {
+    /**
+     * @private
+     */
+    class NativeSocket implements ISocket {
+        private socket;
+        constructor();
+        private onConnect;
+        private onClose;
+        private onSocketData;
+        private onError;
+        private thisObject;
+        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
+        private host;
+        private port;
+        connect(host: string, port: number): void;
+        connectByUrl(url: string): void;
+        private _bindEvent();
+        send(message: any): void;
+        close(): void;
+    }
+}
+declare module egret.web {
+    /**
+     * @private
+     */
+    class HTML5WebSocket implements ISocket {
+        private socket;
+        constructor();
+        private onConnect;
+        private onClose;
+        private onSocketData;
+        private onError;
+        private thisObject;
+        addCallBacks(onConnect: Function, onClose: Function, onSocketData: Function, onError: Function, thisObject: any): void;
+        private host;
+        private port;
+        connect(host: string, port: number): void;
+        connectByUrl(url: string): void;
+        private _bindEvent();
+        send(message: any): void;
+        close(): void;
     }
 }
