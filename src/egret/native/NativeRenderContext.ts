@@ -356,6 +356,10 @@ module egret.native {
          */
         public closePath():void {
             this.$nativeContext.closePath();
+            if(this.clipRectArray) {
+                this.$clipRectArray = this.clipRectArray;
+                this.clipRectArray = null;
+            }
         }
 
         /**
@@ -441,6 +445,7 @@ module egret.native {
             this.$nativeContext.strokeRect(x, y, w, h);
         }
 
+        private clipRectArray = null;
         /**
          * @private
          * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
@@ -449,6 +454,7 @@ module egret.native {
          */
         public beginPath():void {
             this.$nativeContext.beginPath();
+            this.clipRectArray = this.$clipRectArray.concat();
         }
 
         /**
@@ -536,6 +542,7 @@ module egret.native {
                 }
                 this.setTransformToNative();
                 this.$nativeContext.restore();
+                this.clipRectArray = null;
             }
         }
 
@@ -558,7 +565,8 @@ module egret.native {
                 strokeStyle: this.$strokeStyle,
                 fillStyle: this.$fillStyle,
                 font: this.$font,
-                $matrix: transformMatrix
+                $matrix: transformMatrix,
+                $clipRectArray: this.$clipRectArray.concat()
             });
             this.$nativeContext.save();
         }

@@ -82,7 +82,7 @@ module egret.native {
                         egret_native.setScreenCanvas(this.$nativeCanvas);
                     }
                     var context = this.$nativeCanvas.getContext("2d");
-                    context.clearScreen(255,0,0,0);
+                    context.clearScreen(0,0,0,0);
                     this.renderContext.$nativeContext = context;
                 }
                 else {

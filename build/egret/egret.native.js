@@ -53,6 +53,7 @@ var egret;
                 this.$fillStyle = "#000000";
                 this.$font = "10px sans-serif";
                 this.$fontSize = 10;
+                this.clipRectArray = null;
                 this.$saveList = [];
                 this.$clipRectArray = [];
                 this.$hasStrokeText = false;
@@ -120,15 +121,16 @@ var egret;
                     return this.$strokeStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("strokeStyle::" + value);
                     this.$strokeStyle = value;
-                    this.$nativeContext.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.$nativeContext.strokeStyle = value;
                 }
             );
@@ -144,15 +146,16 @@ var egret;
                     return this.$fillStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("fillStyle::" + value);
                     this.$fillStyle = value;
-                    this.$nativeContext.setTextColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.$nativeContext.fillStyle = value;
                 }
             );
@@ -266,6 +269,10 @@ var egret;
              */
             p.closePath = function () {
                 this.$nativeContext.closePath();
+                if (this.clipRectArray) {
+                    this.$clipRectArray = this.clipRectArray;
+                    this.clipRectArray = null;
+                }
             };
             /**
              * @private
@@ -352,6 +359,7 @@ var egret;
              */
             p.beginPath = function () {
                 this.$nativeContext.beginPath();
+                this.clipRectArray = this.$clipRectArray.concat();
             };
             /**
              * @private
@@ -433,6 +441,7 @@ var egret;
                     }
                     this.setTransformToNative();
                     this.$nativeContext.restore();
+                    this.clipRectArray = null;
                 }
             };
             /**
@@ -452,7 +461,8 @@ var egret;
                     strokeStyle: this.$strokeStyle,
                     fillStyle: this.$fillStyle,
                     font: this.$font,
-                    $matrix: transformMatrix
+                    $matrix: transformMatrix,
+                    $clipRectArray: this.$clipRectArray.concat()
                 });
                 this.$nativeContext.save();
             };
@@ -727,23 +737,20 @@ var egret;
                 ,function (value) {
                     if (value > 0) {
                         this.$width = value;
+                        //todo 性能优化
                         if (!this.$nativeCanvas) {
                             this.$nativeCanvas = new egret_native.Canvas(value, 1);
                             if (this.$isRoot) {
                                 egret_native.setScreenCanvas(this.$nativeCanvas);
                             }
                             var context = this.$nativeCanvas.getContext("2d");
-                            context.clearScreen(255, 0, 0, 0);
+                            context.clearScreen(0, 0, 0, 0);
                             this.renderContext.$nativeContext = context;
                         }
                         else {
                             this.$nativeCanvas.width = value;
                         }
                     }
-                    //if(!this.$isDispose) {
-                    //    this.$widthReadySet = true;
-                    //    this.createRenderTexture();
-                    //}
                 }
             );
             d(p, "height"
@@ -757,6 +764,7 @@ var egret;
                 ,function (value) {
                     if (value > 0) {
                         this.$height = value;
+                        //todo 性能优化
                         if (!this.$nativeCanvas) {
                             this.$nativeCanvas = new egret_native.Canvas(1, value);
                             if (this.$isRoot) {
@@ -770,10 +778,6 @@ var egret;
                             this.$nativeCanvas.height = value;
                         }
                     }
-                    //if(!this.$isDispose) {
-                    //    this.$heightReadySet = true;
-                    //    this.createRenderTexture();
-                    //}
                 }
             );
             p.setRootCanvas = function () {
