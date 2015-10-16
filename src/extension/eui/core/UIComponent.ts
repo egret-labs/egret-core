@@ -919,6 +919,8 @@ module eui.sys {
             }
             if (values[UIKeys.oldX] != this.$getX() || values[UIKeys.oldY] != this.$getY()) {
                 UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
+                values[UIKeys.oldX] = this.$getX();
+                values[UIKeys.oldY] = this.$getY();
             }
         }
 
