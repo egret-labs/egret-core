@@ -1750,9 +1750,13 @@ var eui;
                 var values = this.$UIComponent;
                 if (values[22 /* oldWidth */] != values[10 /* width */] || values[23 /* oldHeight */] != values[11 /* height */]) {
                     this.dispatchEventWith(egret.Event.RESIZE);
+                    values[22 /* oldWidth */] = values[10 /* width */];
+                    values[23 /* oldHeight */] = values[11 /* height */];
                 }
                 if (values[20 /* oldX */] != this.$getX() || values[21 /* oldY */] != this.$getY()) {
                     eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.MOVE);
+                    values[20 /* oldX */] = this.$getX();
+                    values[21 /* oldY */] = this.$getY();
                 }
             };
             /**
@@ -2839,7 +2843,18 @@ var eui;
                 values[5 /* skinNameExplicitlySet */] = true;
                 if (values[1 /* skinName */] == value)
                     return;
-                values[1 /* skinName */] = value;
+                if (value) {
+                    values[1 /* skinName */] = value;
+                }
+                else {
+                    var theme = this.$stage.getImplementation("eui.Theme");
+                    if (theme) {
+                        var skinName = theme.getSkinName(this);
+                        if (skinName) {
+                            values[1 /* skinName */] = skinName;
+                        }
+                    }
+                }
                 this.$parseSkinName();
             }
         );
