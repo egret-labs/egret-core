@@ -50,15 +50,21 @@ class Main extends eui.UILayer {
         RES.loadConfig("resource/default.res.json", "resource/");
     }
     /**
-     * 配置文件加载完成,开始预加载preload资源组。
-     * Loading of configuration file is complete, start to pre-load the preload resource group
+     * 配置文件加载完成,开始预加载皮肤主题资源。
+     * Loading of configuration file is complete, start to pre-load the theme configuration file
      */
     private onConfigComplete(event:RES.ResourceEvent):void {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        new eui.Theme("resource/default.thm.json", this.stage);
-
+        var theme = new eui.Theme("resource/default.thm.json", this.stage);
+        theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadEnd, this);
+    }
+    /**
+     * 主题文件加载完成,开始预加载preload资源组。
+     * Loading of theme configuration file is complete, start to pre-load the preload resource group
+     */
+    private onThemeLoadEnd(): void {
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
