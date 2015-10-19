@@ -95,8 +95,6 @@ module egret {
                 return false;
             }
 
-            this.$update(displayObject);
-
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
@@ -110,7 +108,13 @@ module egret {
             var root = new egret.DisplayObjectContainer();
             this.rootDisplayList = sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
-            root.addChild(c1);
+            root.$children.push(c1);
+
+            var parent = displayObject.$parent;
+            displayObject.$parent = null;
+            this.$saveParentDisplayList(displayObject);
+            this.$update(displayObject);
+            displayObject.$parent = parent;
 
             //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
@@ -125,8 +129,6 @@ module egret {
             if(clipBounds) {
                 renderMatrix.translate(-clipBounds.x, -clipBounds.y);
             }
-
-            root.$displayList = null;
 
             this.context.clearRect(0, 0, width, height);
             
@@ -143,8 +145,20 @@ module egret {
 
         private $displayListMap = {};
 
+        private $saveParentDisplayList(displayObject:DisplayObject):void {
+            this.$displayListMap[displayObject.$hashCode] = displayObject.$displayList;
+            displayObject.$displayList = this.rootDisplayList;
+            if (displayObject instanceof DisplayObjectContainer) {
+                var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
+                var length:number = children.length;
+                for (var i:number = 0; i < length; i++) {
+                    var child:DisplayObject = children[i];
+                    this.$saveParentDisplayList(child);
+                }
+            }
+        }
+
         private $update(displayObject:DisplayObject):void {
-            this.$displayListMap[displayObject.$hashCode] = displayObject.$parentDisplayList;
             if (displayObject.$renderRegion) {
                 displayObject.$renderRegion.moved = true;
                 displayObject.$update();
@@ -160,8 +174,7 @@ module egret {
         }
 
         private $reset(displayObject:DisplayObject):void {
-            displayObject.$parentDisplayList = this.$displayListMap[displayObject.$hashCode];
-            displayObject.$removeFlags(sys.DisplayObjectFlags.Dirty);
+            displayObject.$displayList = this.$displayListMap[displayObject.$hashCode];
             if (displayObject instanceof DisplayObjectContainer) {
                 var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
                 var length:number = children.length;
