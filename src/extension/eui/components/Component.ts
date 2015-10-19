@@ -225,7 +225,6 @@ module eui {
             }
             var skin = new clazz();
             this.setSkin(skin)
-            this.dispatchEventWith(egret.Event.COMPLETE);
         }
 
         /**
@@ -309,6 +308,7 @@ module eui {
             }
             this.invalidateSize();
             this.invalidateDisplayList();
+            this.dispatchEventWith(egret.Event.COMPLETE);
         }
 
 
