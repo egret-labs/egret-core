@@ -164,7 +164,7 @@ module eui {
                 return;
             if (value) {
                 values[sys.ComponentKeys.skinName] = value;
-            } else {
+            } else if(this.$stage){
                 var theme = this.$stage.getImplementation("eui.Theme");
                 if (theme) {
                     var skinName = theme.getSkinName(this);
