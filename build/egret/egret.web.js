@@ -1829,7 +1829,7 @@ var egret;
              * @param url 要加载的图像文件的地址。
              */
             p.load = function (url) {
-                if (web.Html5Capatibility._canUseBlob && url.indexOf("data:") != 0 && url.indexOf("http:") != 0 && url.indexOf("https:") != 0) {
+                if (web.Html5Capatibility._canUseBlob && url.indexOf("wxLocalResource:") != 0 && url.indexOf("data:") != 0 && url.indexOf("http:") != 0 && url.indexOf("https:") != 0) {
                     var request = this.request;
                     if (!request) {
                         request = this.request = new egret.web.WebHttpRequest();
