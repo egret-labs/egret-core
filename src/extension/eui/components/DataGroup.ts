@@ -71,6 +71,8 @@ module eui {
      * 尽管此容器可以包含可视元素，但它通常仅用于包含作为子项的数据项目。
      *
      * @see eui.Group
+     * @see http://edn.egret.com/cn/index.php/article/index/id/527 数据容器
+     * @see http://edn.egret.com/cn/index.php/article/index/id/528 数组集合 	 
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
