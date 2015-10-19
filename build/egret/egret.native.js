@@ -127,15 +127,16 @@ var egret;
                     return this.$strokeStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("strokeStyle::" + value);
                     this.$strokeStyle = value;
-                    egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.checkSurface();
                     this.$nativeGraphicsContext.strokeStyle = value;
                 }
@@ -152,15 +153,16 @@ var egret;
                     return this.$fillStyle;
                 }
                 ,function (value) {
-                    if (value.indexOf("rgba") != -1) {
-                        value = this.$parseRGBA(value);
-                    }
-                    else if (value.indexOf("rgb") != -1) {
-                        value = this.$parseRGB(value);
-                    }
-                    //console.log("fillStyle::" + value);
                     this.$fillStyle = value;
-                    egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    if (value != null) {
+                        if (value.indexOf("rgba") != -1) {
+                            value = this.$parseRGBA(value);
+                        }
+                        else if (value.indexOf("rgb") != -1) {
+                            value = this.$parseRGB(value);
+                        }
+                        egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
+                    }
                     this.checkSurface();
                     this.$nativeGraphicsContext.fillStyle = value;
                 }
@@ -678,7 +680,12 @@ var egret;
              * @platform Web,Native
              */
             p.getImageData = function (sx, sy, sw, sh) {
-                return { width: sw, height: sh, data: null };
+                if (native.$currentSurface == this.surface) {
+                    if (native.$currentSurface != null) {
+                        native.$currentSurface.end();
+                    }
+                }
+                return this.surface.getImageData(sx, sy, sw, sh);
             };
             p.checkSurface = function () {
                 //todo 暂时先写这里
@@ -808,6 +815,17 @@ var egret;
                     }
                 }
             );
+            p.getImageData = function (sx, sy, sw, sh) {
+                if (sx != Math.floor(sx)) {
+                    sx = Math.floor(sx);
+                    sw++;
+                }
+                if (sy != Math.floor(sy)) {
+                    sy = Math.floor(sy);
+                    sh++;
+                }
+                return this.$nativeRenderTexture.getPixels(sx, sy, sw, sh);
+            };
             p.createRenderTexture = function () {
                 if (this.$isRoot) {
                     return;
@@ -829,16 +847,24 @@ var egret;
                 if (this.$nativeRenderTexture) {
                     //console.log("begin" + this.id);
                     native.$currentSurface = this;
-                    //this.$nativeRenderTexture.begin();
-                    this.$nativeRenderTexture.getIn();
+                    if (this.$nativeRenderTexture.getIn) {
+                        this.$nativeRenderTexture.getIn();
+                    }
+                    else {
+                        this.$nativeRenderTexture.begin();
+                    }
                 }
             };
             p.end = function () {
                 if (this.$nativeRenderTexture) {
                     //console.log("end" + this.id);
                     native.$currentSurface = null;
-                    //this.$nativeRenderTexture.end();
-                    this.$nativeRenderTexture.getOut();
+                    if (this.$nativeRenderTexture.getOut) {
+                        this.$nativeRenderTexture.getOut();
+                    }
+                    else {
+                        this.$nativeRenderTexture.end();
+                    }
                 }
             };
             p.$dispose = function () {
@@ -2019,7 +2045,7 @@ var egret;
             function setItem(key, value) {
                 localStorageData[key] = value;
                 try {
-                    this.save();
+                    save();
                     return true;
                 }
                 catch (e) {

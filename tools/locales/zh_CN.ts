@@ -90,6 +90,7 @@ module egret {
 
 
     locale_strings[0] = "执行成功";
+    locale_strings[1] = "编译项目失败";
     //locale_strings[1] = "请先设置环境变量 {color_green}EGRET_PATH{color_normal}。您可以访问 {color_underline}https://github.com/egret-team/egret/wiki/Setting-environment-variables{color_normal} 获取更多细节";
     //locale_strings[2] = "TypeScript编译器尚未安装，请执行 {color_green}npm install -g typescript{color_normal} 进行安装";
     locale_strings[3] = "耗时：{0}秒";
@@ -153,7 +154,7 @@ module egret {
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
 
     //create_app
-    locale_strings[1601] = "请输入项目名称, h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
+    locale_strings[1601] = "请输入h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
     locale_strings[1602] = "缺少egretProperties.json或格式不正确。 \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
     locale_strings[1603] = "缺少create_app.json。\n请从以下地址下载最新手机平台支持库\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS: http://www.egret-labs.org/download/egret-ios-packager-download.html";
     locale_strings[1604] = "执行egret build命令失败";
@@ -162,6 +163,7 @@ module egret {
     locale_strings[1607] = "> copy from project template ...";
     locale_strings[1608] = "> replace all configure elements ...";
     locale_strings[1609] = "> rename project name ...";
+    locale_strings[1610] = "缺少项目名称或项目已存在。例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
 
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
@@ -208,7 +210,7 @@ module egret {
     locale_strings[8003] = "配置文件{0}不存在";
     locale_strings[8004] = "{color_red}请先创建Native项目再执行 --runtime native{color_normal}";
     locale_strings[2001] = "{0}: error 找不到EXML文件";
-    locale_strings[2002] = "{0}: error 不是有效的XML文件";
+    locale_strings[2002] = "{0}: error XML文件格式有误 {1}";
     locale_strings[2003] = "{0}: error 无法找到节点所对应的类定义\n{1}";
     locale_strings[2004] = "{0}: error 节点不能含有同名的id属性\n{1}";
     locale_strings[2005] = "{0}: error 节点上不存在名为'{1}'的属性或样式名:\n{2}";

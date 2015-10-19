@@ -76,8 +76,27 @@ module egret {
          * @platform Web,Native
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
+            if (clipBounds && (clipBounds.width == 0 || clipBounds.height==0)){
+                return false;
+            }
             this.dispose();
+
+            //todo clipBounds?
+            var bounds = clipBounds || displayObject.$getOriginalBounds();
+            if (bounds.width == 0 || bounds.height == 0) {
+                return false;
+            }
+
             scale /= $TextureScaleFactor;
+            var width = (bounds.x + bounds.width) * scale;
+            var height = (bounds.y + bounds.height) * scale;
+            this.context = this.createRenderContext(width, height);
+            if (!this.context) {
+                return false;
+            }
+
+            this.$update(displayObject);
+
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
@@ -92,12 +111,6 @@ module egret {
             this.rootDisplayList = sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.addChild(c1);
-
-            var bounds = displayObject.$getOriginalBounds();
-            var width = (bounds.x + bounds.width) * scale;
-            var height = (bounds.y + bounds.height) * scale;
-
-            this.$update(displayObject);
 
             //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
@@ -115,33 +128,46 @@ module egret {
 
             root.$displayList = null;
 
-            this.context = this.createRenderContext(width, height);
             this.context.clearRect(0, 0, width, height);
-            if (!this.context) {
-                return false;
-            }
+            
             var drawCalls = this.drawDisplayObject(root, this.context, null);
             renderMatrix.setTo(renderMatrixA,renderMatrixB,renderMatrixC,renderMatrixD,renderMatrixTx,renderMatrixTy);
-            if (drawCalls == 0) {
-                return false;
-            }
+            
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+            this.$reset(displayObject);
+            this.$displayListMap = {};
             return true;
         }
 
+        private $displayListMap = {};
+
         private $update(displayObject:DisplayObject):void {
+            this.$displayListMap[displayObject.$hashCode] = displayObject.$parentDisplayList;
             if (displayObject.$renderRegion) {
                 displayObject.$renderRegion.moved = true;
                 displayObject.$update();
             }
-            else if (displayObject instanceof DisplayObjectContainer) {
+            if (displayObject instanceof DisplayObjectContainer) {
                 var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
                 var length:number = children.length;
                 for (var i:number = 0; i < length; i++) {
                     var child:DisplayObject = children[i];
                     this.$update(child);
+                }
+            }
+        }
+
+        private $reset(displayObject:DisplayObject):void {
+            displayObject.$parentDisplayList = this.$displayListMap[displayObject.$hashCode];
+            displayObject.$removeFlags(sys.DisplayObjectFlags.Dirty);
+            if (displayObject instanceof DisplayObjectContainer) {
+                var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
+                var length:number = children.length;
+                for (var i:number = 0; i < length; i++) {
+                    var child:DisplayObject = children[i];
+                    this.$reset(child);
                 }
             }
         }
@@ -179,7 +205,7 @@ module egret {
                     if (child.$blendMode !== 0 || child.$mask) {
                         drawCalls += this.drawWithClip(child, context, rootMatrix);
                     }
-                    else if (child.$scrollRect) {
+                    else if (child.$scrollRect || child.$maskRect) {
                         drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
                     }
                     else {
@@ -297,8 +323,10 @@ module egret {
 
         private drawWithScrollRect(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix:Matrix):number {
             var drawCalls = 0;
-            var scrollRect = displayObject.$scrollRect;
-
+            var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
+            if (scrollRect.width == 0 || scrollRect.height == 0) {
+                return drawCalls;
+            }
             var m = displayObject.$getConcatenatedMatrix();
             var region:sys.Region = sys.Region.create();
             if (!scrollRect.isEmpty()) {

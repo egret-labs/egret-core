@@ -111,7 +111,6 @@ module egret.gui {
 			}
 			else{
 				this.dataGroup.dataProvider = value;
-				this._dataGroupProperties.dataProvider = true;
 			}
 		}
 
@@ -132,7 +131,6 @@ module egret.gui {
 			}
 			else{
 				this.dataGroup.itemRenderer = value;
-				this._dataGroupProperties.itemRenderer = true;
 			}
 		}
 
@@ -153,7 +151,6 @@ module egret.gui {
 			}
 			else{
 				this.dataGroup.itemRendererSkinName = value;
-				this._dataGroupProperties.itemRendererSkinName = true;
 			}
 		}
 
@@ -176,7 +173,6 @@ module egret.gui {
 			}
 			else{
 				this.dataGroup.itemRendererFunction = value;
-				this._dataGroupProperties.itemRendererFunction = true;
 			}
 		}
 
@@ -200,8 +196,32 @@ module egret.gui {
 			}
 			else{
 				this.dataGroup.layout = value;
-				this._dataGroupProperties.layout = true;
 			}
+		}
+
+		/**
+		 * @copy egret.gui.GroupBase#autoLayout
+		 */
+		public get autoLayout():boolean
+		{
+			if (this.dataGroup)
+				return this.dataGroup.autoLayout;
+			else
+			{
+				var v:any = this._dataGroupProperties.autoLayout;
+				return (v === undefined) ? true : v;
+			}
+		}
+
+		public set autoLayout(value:boolean)
+		{
+			if (this.dataGroup==null){
+				this._dataGroupProperties.autoLayout = value;
+			}
+			else{
+				this.dataGroup.autoLayout = value;
+			}
+
 		}
 
 		/**
@@ -214,34 +234,32 @@ module egret.gui {
 			super.partAdded(partName, instance);
 
 			if (instance == this.dataGroup){
-				var newDataGroupProperties:any = {};
-
 				if (this._dataGroupProperties.layout !== undefined){
 					this.dataGroup.layout = this._dataGroupProperties.layout;
-					newDataGroupProperties.layout = true;
+				}
+
+				if (this._dataGroupProperties.autoLayout !== undefined){
+					this.dataGroup.autoLayout = this._dataGroupProperties.autoLayout;
 				}
 
 				if (this._dataGroupProperties.dataProvider !== undefined){
 					this.dataGroup.dataProvider = this._dataGroupProperties.dataProvider;
-					newDataGroupProperties.dataProvider = true;
 				}
 
 				if (this._dataGroupProperties.itemRenderer !== undefined){
 					this.dataGroup.itemRenderer = this._dataGroupProperties.itemRenderer;
-					newDataGroupProperties.itemRenderer = true;
 				}
 
 				if (this._dataGroupProperties.itemRendererSkinName !== undefined){
 					this.dataGroup.itemRendererSkinName = this._dataGroupProperties.itemRendererSkinName;
-					newDataGroupProperties.itemRendererSkinName = true;
 				}
 
 				if (this._dataGroupProperties.itemRendererFunction !== undefined){
 					this.dataGroup.itemRendererFunction = this._dataGroupProperties.itemRendererFunction;
-					newDataGroupProperties.itemRendererFunction = true;
 				}
+
 				this.dataGroup._rendererOwner = this;
-				this._dataGroupProperties = newDataGroupProperties;
+				this._dataGroupProperties = {};
 
 				if (this.hasEventListener(RendererExistenceEvent.RENDERER_ADD)){
 					this.dataGroup.addEventListener(
@@ -270,17 +288,13 @@ module egret.gui {
 				this.dataGroup.removeEventListener(
 					RendererExistenceEvent.RENDERER_REMOVE, this.dispatchEvent, this);
 				var newDataGroupProperties:any = {};
-				if(this._dataGroupProperties.layout)
-					newDataGroupProperties.layout = this.dataGroup.layout;
-				if(this._dataGroupProperties.dataProvider)
-					newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
-				if(this._dataGroupProperties.itemRenderer)
-					newDataGroupProperties.itemRenderer = this.dataGroup.itemRenderer;
-				if(this._dataGroupProperties.itemRendererSkinName)
-					newDataGroupProperties.itemRendererSkinName = this.dataGroup.itemRendererSkinName;
-				if(this._dataGroupProperties.itemRendererFunction)
-					newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
-				this._dataGroupProperties = newDataGroupProperties
+				newDataGroupProperties.layout = this.dataGroup.layout;
+				newDataGroupProperties.autoLayout = this.dataGroup.autoLayout;
+				newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
+				newDataGroupProperties.itemRenderer = this.dataGroup.itemRenderer;
+				newDataGroupProperties.itemRendererSkinName = this.dataGroup.itemRendererSkinName;
+				newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
+				this._dataGroupProperties = newDataGroupProperties;
 				this.dataGroup._rendererOwner = null;
 				this.dataGroup.dataProvider = null;
 				this.dataGroup.layout = null;

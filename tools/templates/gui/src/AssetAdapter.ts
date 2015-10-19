@@ -71,6 +71,4 @@ class AssetAdapter implements egret.gui.IAssetAdapter {
             compFunc.call(thisObject, content, source);
         }
     }
-
-
 }

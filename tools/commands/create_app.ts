@@ -35,6 +35,10 @@ class CreateAppCommand implements egret.Command {
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
 
+        if(!arg_app_name || file.exists(arg_app_name)){
+            globals.exit(1610);
+        }
+
         if(!template_path || !arg_h5_path){
             globals.exit(1601);
         }

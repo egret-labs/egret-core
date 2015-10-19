@@ -72,9 +72,11 @@ module egret.web {
          * @param url 要加载的图像文件的地址。
          */
         public load(url:string):void {
-            if (Html5Capatibility._canUseBlob && url.indexOf("data:") != 0 &&
-                url.indexOf("http:") != 0 &&
-                url.indexOf("https:") != 0) {//如果是base64编码或跨域访问的图片，直接使用Image.src解析。
+            if (Html5Capatibility._canUseBlob
+                && url.indexOf("wxLocalResource:") != 0//微信专用不能使用 blob
+                && url.indexOf("data:") != 0
+                && url.indexOf("http:") != 0
+                && url.indexOf("https:") != 0) {//如果是base64编码或跨域访问的图片，直接使用Image.src解析。
                 var request = this.request;
                 if (!request) {
                     request = this.request = new egret.web.WebHttpRequest();

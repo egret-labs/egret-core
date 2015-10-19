@@ -438,15 +438,20 @@ module egret {
          */
         $measureContentBounds(bounds:Rectangle):void {
             var values = this.$Bitmap;
+            var x:number = values[sys.BitmapKeys.offsetX];
+            var y:number = values[sys.BitmapKeys.offsetY];
             if (values[sys.BitmapKeys.image]) {
                 var values = this.$Bitmap;
                 var w:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
                 var h:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.height];
 
-                bounds.setTo(0, 0, w, h);
+                bounds.setTo(x, y, w, h);
             }
             else {
-                bounds.setEmpty();
+                w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
+                h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
+
+                bounds.setTo(x, y, w, h);
             }
         }
 
@@ -553,8 +558,10 @@ module egret {
                     clipHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH);
             }
             else if (fillMode == egret.BitmapFillMode.SCALE) {
+                var tsX:number = destW / textureWidth;
+                var tsY:number = destH / textureHeight;
                 context.drawImage(image, clipX, clipY,
-                    clipWidth, clipHeight, offsetX, offsetY, clipWidth / textureWidth * destW, clipHeight / textureHeight * destH);
+                    clipWidth, clipHeight, offsetX * tsX, offsetY * tsY, tsX * clipWidth, tsY * clipHeight);
             }
             else if (fillMode == egret.BitmapFillMode.CLIP) {
                 var tempW:number = Math.min(textureWidth, destW);
@@ -634,7 +641,7 @@ module egret {
             var targetH2 = sourceH2 * $TextureScaleFactor;
 
             if ((sourceW0 + sourceW2) * $TextureScaleFactor > surfaceWidth || (sourceH0 + sourceH2) * $TextureScaleFactor > surfaceHeight) {
-                context.drawImage(image, 0, 0, surfaceWidth, surfaceHeight);
+                context.drawImage(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, surfaceWidth, surfaceHeight);
                 return;
             }
 

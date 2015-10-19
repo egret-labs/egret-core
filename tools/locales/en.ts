@@ -66,3 +66,4 @@ locale_strings[12005] = "Please select the platform";
 locale_strings[1705] = "upgrade files damaged,please check engine files and rerun";
 locale_strings[1706] = "total {0} API conflicts,please edit your project then rerun command command";
 //info
+locale_strings[1] = "Error when compile project";

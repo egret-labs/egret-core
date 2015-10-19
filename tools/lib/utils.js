@@ -83,8 +83,8 @@ function format(text) {
         args[_i - 1] = arguments[_i];
     }
     var length = args.length;
-    for (var i = 0; i < length; i++) {
-        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i]);
+    for (var i = 0; i < length || i < 5; i++) {
+        text = text.replace(new RegExp("\\{" + i + "\\}", "ig"), args[i] || "");
     }
     text = formatStdoutString(text);
     return text;
@@ -114,8 +114,11 @@ function exit(code) {
         args[_i - 1] = arguments[_i];
     }
     if (code) {
-        var message = tr.apply(this, [code].concat(args));
-        console.error(message);
+        var text = $locale_strings[code];
+        if (text && text.indexOf("{0}") < 0 || args && args.length > 0) {
+            var message = tr.apply(this, [code].concat(args));
+            console.error(message);
+        }
     }
     process.exit(code);
 }
@@ -267,5 +270,4 @@ function checkEgret() {
     }
 }
 exports.checkEgret = checkEgret;
-
-//# sourceMappingURL=../lib/utils.js.map
+//# sourceMappingURL=utils.js.map

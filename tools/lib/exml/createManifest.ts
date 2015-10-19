@@ -644,7 +644,12 @@ function checkAllClassName(classNameToPath, path, list, moduleList, orgText) {
  */
 function readClassNamesFromExml(path, srcPath) {
     var text = file.read(path);
-    var exml = xml.parse(text);
+    try {
+        var exml = xml.parse(text);
+    }
+    catch (e) {
+
+    }
     if (!exml) {
         return;
     }

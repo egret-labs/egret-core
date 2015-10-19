@@ -810,6 +810,27 @@ module egret {
 
         /**
          * @language en_US
+         * Write a 16-bit unsigned integer into the byte stream
+         * @param value An unsigned integer to be written into the byte stream
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在字节流中写入一个无符号的 16 位整数
+         * @param value 要写入字节流的无符号整数
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        public writeUnsignedShort(value: number): void{
+            this.validateBuffer(ByteArray.SIZE_OF_UINT16);
+
+            this.data.setUint16(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
+            this.position += ByteArray.SIZE_OF_UINT16;
+        }
+
+        /**
+         * @language en_US
          * Write a UTF-8 string into the byte stream. The length of the UTF-8 string in bytes is written first, as a 16-bit integer, followed by the bytes representing the characters of the string
          * @param value Character string value to be written
          * @version Egret 2.4

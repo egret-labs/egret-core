@@ -5042,7 +5042,9 @@ declare module egret {
          * @platform Web,Native
          */
         drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
+        private $displayListMap;
         private $update(displayObject);
+        private $reset(displayObject);
         protected drawDisplayObject(displayObject: DisplayObject, context: sys.RenderContext, rootMatrix: Matrix): number;
         private drawWithClip(displayObject, context, rootMatrix);
         private drawWithScrollRect(displayObject, context, rootMatrix);
@@ -8834,6 +8836,7 @@ declare module egret {
      * @language zh_CN
      * Sound 允许您在应用程序中使用声音。使用 Sound 类可以创建 Sound 对象、将外部音频文件加载到该对象并播放该文件。
      * 可通过 SoundChannel 对声音执行更精细的控制，如控制音量和监控播放进度。
+     * @see http://edn.egret.com/cn/index.php/article/index/id/156 音频系统
      *
      * @event egret.Event.COMPLETE 音频加载完成时抛出
      * @event egret.IOErrorEvent.IO_ERROR 音频加载失败时抛出
@@ -9030,7 +9033,7 @@ declare module egret {
      *
      * @event egret.Event.COMPLETE Dispatch when the video resource is loaded and ready to play
      * @event egret.Event.ENDED Dispatch when the video playback ended
-     * @event egret.Event.IO_ERROR when the video is failed to load
+     * @event egret.IOErrorEvent.IO_ERROR when the video is failed to load
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/media/Video.ts
@@ -9039,12 +9042,13 @@ declare module egret {
      * @language zh_CN
      * Video 允许您在应用程序中使用视频。使用 Video 类可以创建 Video 对象、将外部视频文件加载到该对象并播放该文件。<br/>
      * 注意: 在大多数移动设备中，视频是强制全屏播放的，所以你可以直接调用 play() 方法全屏播放视频，不用将它绘制在Stage中。
+     * @see http://edn.egret.com/cn/index.php/article/index/id/657 视频系统
      *
      * @param url 要播放的视频的URL，如果url不为空，Video会立即加载这个视频
      *
      * @event egret.Event.COMPLETE 视频加载完成时抛出
      * @event egret.Event.ENDED 视频播放完成时抛出
-     * @event egret.Event.IO_ERROR 视频加载失败市触发
+     * @event egret.IOErrorEvent.IO_ERROR 视频加载失败时触发
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/media/Video.ts
@@ -9250,11 +9254,11 @@ declare module egret_native {
     function xmlStr2JsonStr(text: string): any;
     function isFileExists(filepath: string): boolean;
     function isRecordExists(filepath: string): boolean;
-    function readFileSync(filepath: string): any;
+    function readFileSync(filepath: string, type?: string): any;
     function readResourceFileSync(filepath: string): any;
     function readUpdateFileSync(filepath: string): any;
     function deleteUpdateFile(filepath: string): void;
-    function readFileAsync(filepath: string, promise: egret.PromiseObject): any;
+    function readFileAsync(filepath: string, promise: egret.PromiseObject, type?: string): any;
     function writeFileSync(filepath: string, fileContent: string): any;
     function requireHttpSync(url: string, callback: Function): void;
     function requireHttp(url: string, param: any, callback: Function): void;
@@ -13518,6 +13522,21 @@ declare module egret {
          * @platform Web,Native
          */
         writeUnsignedInt(value: number): void;
+        /**
+         * @language en_US
+         * Write a 16-bit unsigned integer into the byte stream
+         * @param value An unsigned integer to be written into the byte stream
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在字节流中写入一个无符号的 16 位整数
+         * @param value 要写入字节流的无符号整数
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        writeUnsignedShort(value: number): void;
         /**
          * @language en_US
          * Write a UTF-8 string into the byte stream. The length of the UTF-8 string in bytes is written first, as a 16-bit integer, followed by the bytes representing the characters of the string

@@ -4,7 +4,10 @@ module egret {
     $locale_strings["zh_CN"] = $locale_strings["zh_CN"] || {};
     var locale_strings = $locale_strings["zh_CN"];
 
-    //core
+    //eui 2000-2999
+    //RES 3200-3299
+
+    //core  1000-1999
     locale_strings[1001] = "找不到Egret入口类: {0}。";
     locale_strings[1002] = "Egret入口类 {0} 必须继承自egret.DisplayObject。";
     locale_strings[1003] = "参数 {0} 不能为 null。";
@@ -20,6 +23,10 @@ module egret {
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
     locale_strings[1014] = "类 {0} 常量 {1} 是只读的";
 
+    locale_strings[1015] = "xml not found!";
+    locale_strings[1016] = "{0}已经废弃";
+    locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
+
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
     locale_strings[1025] = "遇到文件尾";
@@ -33,9 +40,8 @@ module egret {
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
 
-    //RES 2000-2999
 
-    //gui
+    //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
     locale_strings[3002] = "索引:\"{0}\"超出集合元素索引范围";
@@ -51,12 +57,12 @@ module egret {
     locale_strings[3012] = "此方法在Scroller组件内不可用!";
     locale_strings[3013] = "UIStage是GUI根容器，只能有一个此实例在显示列表中！";
 
-    //socket
+    //socket 3100-3199
     locale_strings[3100] = "当前浏览器不支持WebSocket";
     locale_strings[3101] = "请先连接WebSocket";
     locale_strings[3102] = "请先设置type为二进制类型";
 
-    //db
+    //db 4000-4299
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";

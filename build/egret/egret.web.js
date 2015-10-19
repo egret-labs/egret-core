@@ -2249,7 +2249,14 @@ var egret;
                     this.setElementStyle("textAlign", textfield.textAlign);
                     this.setElementStyle("fontSize", textfield.size * this._gscaleY + "px");
                     this.setElementStyle("color", egret.toColorString(textfield.textColor));
-                    this.setElementStyle("width", textfield.width * this._gscaleX + "px");
+                    if (textfield.stage) {
+                        var tw = textfield.localToGlobal(0, 0).x;
+                        tw = Math.min(textfield.width, textfield.stage.stageWidth - tw);
+                    }
+                    else {
+                        tw = textfield.width;
+                    }
+                    this.setElementStyle("width", tw * this._gscaleX + "px");
                     this.setElementStyle("verticalAlign", textfield.verticalAlign);
                     if (textfield.multiline) {
                         this.setAreaHeight();
@@ -2271,7 +2278,7 @@ var egret;
                     }
                     this.inputDiv.style.clip = "rect(0px " + (textfield.width * this._gscaleX) + "px " + (textfield.height * this._gscaleY) + "px 0px)";
                     this.inputDiv.style.height = textfield.height * this._gscaleY + "px";
-                    this.inputDiv.style.width = textfield.width * this._gscaleX + "px";
+                    this.inputDiv.style.width = tw * this._gscaleX + "px";
                 }
             };
             return HTML5StageText;
@@ -3310,6 +3317,9 @@ var egret;
          * 当网页尺寸发生改变时此方法会自动被调用。
          */
         function updateAllScreens() {
+            if (!isRunning) {
+                return;
+            }
             var containerList = document.querySelectorAll(".egret-player");
             var length = containerList.length;
             for (var i = 0; i < length; i++) {
@@ -3318,11 +3328,16 @@ var egret;
                 player.updateScreenSize();
             }
         }
+        var isRunning = false;
         /**
          * @private
          * 网页加载完成，实例化页面中定义的Egretsys标签
          */
         function runEgret() {
+            if (isRunning) {
+                return;
+            }
+            isRunning = true;
             if (DEBUG) {
                 var language = navigator.language || navigator.browserLanguage || "en_US";
                 language = language.replace("-", "_");
@@ -4076,6 +4091,7 @@ var egret;
                     continue;
                 }
                 attributes[name] = attributeNode.value;
+                xml["$" + name] = attributeNode.value;
             }
             var childNodes = node.childNodes;
             length = childNodes.length;

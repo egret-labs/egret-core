@@ -25,7 +25,7 @@ declare module dragonBones {
      * @see dragonBones.Bone
      * @see dragonBones.Armature
      * @see dragonBones.AnimationState
-     * @see dragonBones.AnimationData.
+     * @see dragonBones.AnimationData
      *
      * @example
        <pre>

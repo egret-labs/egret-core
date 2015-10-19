@@ -2907,6 +2907,26 @@ var egret;
                     }
                 }
             );
+            d(p, "autoLayout"
+                /**
+                 * @copy egret.gui.GroupBase#autoLayout
+                 */
+                ,function () {
+                    if (this.contentGroup)
+                        return this.contentGroup.autoLayout;
+                    else {
+                        var v = this.contentGroupProperties.autoLayout;
+                        return (v === undefined) ? true : v;
+                    }
+                }
+                ,function (value) {
+                    if (this.contentGroup) {
+                        this.contentGroup.autoLayout = value;
+                    }
+                    else
+                        this.contentGroupProperties.autoLayout = value;
+                }
+            );
             /**
              * [覆盖] 添加外观部件时调用
              * @param partName {string}
@@ -2917,8 +2937,11 @@ var egret;
                 if (instance == this.contentGroup) {
                     if (this.contentGroupProperties.layout !== undefined) {
                         this.contentGroup.layout = this.contentGroupProperties.layout;
-                        this.contentGroupProperties = {};
                     }
+                    if (this.contentGroupProperties.autoLayout !== undefined) {
+                        this.contentGroup.autoLayout = this.contentGroupProperties.autoLayout;
+                    }
+                    this.contentGroupProperties = {};
                     if (this._placeHolderGroup) {
                         this._placeHolderGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                         this._placeHolderGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
@@ -2950,6 +2973,7 @@ var egret;
                     this.contentGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
                     this.contentGroup.removeEventListener(gui.ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
                     this.contentGroupProperties.layout = this.contentGroup.layout;
+                    this.contentGroupProperties.autoLayout = this.contentGroup.autoLayout;
                     this.contentGroup.layout = null;
                     if (this.contentGroup.numElements > 0) {
                         this._placeHolderGroup = new gui.Group;
@@ -6276,6 +6300,7 @@ var egret;
                 this._contentHeight = 0;
                 this._layout = null;
                 this._clipAndEnableScrolling = false;
+                this._autoLayout = true;
                 this._horizontalScrollPosition = 0;
                 this._verticalScrollPosition = 0;
                 /**
@@ -6401,6 +6426,26 @@ var egret;
                     }
                 }
             );
+            d(p, "autoLayout"
+                /**
+                 * 如果为 true，则子项的位置和大小改变时，重新测量和布局。
+                 * 如果为 false，则仅当子项添加或者删除时，重新测量和布局。
+                 * @member egret.gui.GroupBase#autoLayout
+                 */
+                ,function () {
+                    return this._autoLayout;
+                }
+                ,function (value) {
+                    if (this._autoLayout == value)
+                        return;
+                    this._autoLayout = value;
+                    if (value) {
+                        this.invalidateSize();
+                        this.invalidateDisplayList();
+                        this.invalidateParentSizeAndDisplayList();
+                    }
+                }
+            );
             d(p, "horizontalScrollPosition"
                 /**
                  * 可视区域水平方向起始点
@@ -6496,8 +6541,10 @@ var egret;
                 this._layoutInvalidateDisplayListFlag = true;
             };
             p._childXYChanged = function () {
-                this.invalidateSize();
-                this.invalidateDisplayList();
+                if (this.autoLayout) {
+                    this.invalidateSize();
+                    this.invalidateDisplayList();
+                }
             };
             /**
              * 标记需要更新显示列表但不需要更新布局
@@ -6520,10 +6567,12 @@ var egret;
              */
             p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
                 _super.prototype.updateDisplayList.call(this, unscaledWidth, unscaledHeight);
-                if (this._layoutInvalidateDisplayListFlag && this._layout) {
+                if (this._layoutInvalidateDisplayListFlag) {
                     this._layoutInvalidateDisplayListFlag = false;
-                    this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
-                    this.updateScrollRect(unscaledWidth, unscaledHeight);
+                    if (this.autoLayout && this._layout)
+                        this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
+                    if (this._layout)
+                        this.updateScrollRect(unscaledWidth, unscaledHeight);
                 }
             };
             d(p, "numElements"
@@ -7643,7 +7692,6 @@ var egret;
                 }
                 else {
                     this.dataGroup.dataProvider = value;
-                    this._dataGroupProperties.dataProvider = true;
                 }
             };
             d(p, "itemRenderer"
@@ -7661,7 +7709,6 @@ var egret;
                     }
                     else {
                         this.dataGroup.itemRenderer = value;
-                        this._dataGroupProperties.itemRenderer = true;
                     }
                 }
             );
@@ -7680,7 +7727,6 @@ var egret;
                     }
                     else {
                         this.dataGroup.itemRendererSkinName = value;
-                        this._dataGroupProperties.itemRendererSkinName = true;
                     }
                 }
             );
@@ -7701,7 +7747,6 @@ var egret;
                     }
                     else {
                         this.dataGroup.itemRendererFunction = value;
-                        this._dataGroupProperties.itemRendererFunction = true;
                     }
                 }
             );
@@ -7723,9 +7768,29 @@ var egret;
                 }
                 else {
                     this.dataGroup.layout = value;
-                    this._dataGroupProperties.layout = true;
                 }
             };
+            d(p, "autoLayout"
+                /**
+                 * @copy egret.gui.GroupBase#autoLayout
+                 */
+                ,function () {
+                    if (this.dataGroup)
+                        return this.dataGroup.autoLayout;
+                    else {
+                        var v = this._dataGroupProperties.autoLayout;
+                        return (v === undefined) ? true : v;
+                    }
+                }
+                ,function (value) {
+                    if (this.dataGroup == null) {
+                        this._dataGroupProperties.autoLayout = value;
+                    }
+                    else {
+                        this.dataGroup.autoLayout = value;
+                    }
+                }
+            );
             /**
              * [覆盖] 添加外观部件时调用
              * @method egret.gui.SkinnableDataContainer#partAdded
@@ -7735,29 +7800,26 @@ var egret;
             p.partAdded = function (partName, instance) {
                 _super.prototype.partAdded.call(this, partName, instance);
                 if (instance == this.dataGroup) {
-                    var newDataGroupProperties = {};
                     if (this._dataGroupProperties.layout !== undefined) {
                         this.dataGroup.layout = this._dataGroupProperties.layout;
-                        newDataGroupProperties.layout = true;
+                    }
+                    if (this._dataGroupProperties.autoLayout !== undefined) {
+                        this.dataGroup.autoLayout = this._dataGroupProperties.autoLayout;
                     }
                     if (this._dataGroupProperties.dataProvider !== undefined) {
                         this.dataGroup.dataProvider = this._dataGroupProperties.dataProvider;
-                        newDataGroupProperties.dataProvider = true;
                     }
                     if (this._dataGroupProperties.itemRenderer !== undefined) {
                         this.dataGroup.itemRenderer = this._dataGroupProperties.itemRenderer;
-                        newDataGroupProperties.itemRenderer = true;
                     }
                     if (this._dataGroupProperties.itemRendererSkinName !== undefined) {
                         this.dataGroup.itemRendererSkinName = this._dataGroupProperties.itemRendererSkinName;
-                        newDataGroupProperties.itemRendererSkinName = true;
                     }
                     if (this._dataGroupProperties.itemRendererFunction !== undefined) {
                         this.dataGroup.itemRendererFunction = this._dataGroupProperties.itemRendererFunction;
-                        newDataGroupProperties.itemRendererFunction = true;
                     }
                     this.dataGroup._rendererOwner = this;
-                    this._dataGroupProperties = newDataGroupProperties;
+                    this._dataGroupProperties = {};
                     if (this.hasEventListener(gui.RendererExistenceEvent.RENDERER_ADD)) {
                         this.dataGroup.addEventListener(gui.RendererExistenceEvent.RENDERER_ADD, this.dispatchEvent, this);
                     }
@@ -7778,16 +7840,12 @@ var egret;
                     this.dataGroup.removeEventListener(gui.RendererExistenceEvent.RENDERER_ADD, this.dispatchEvent, this);
                     this.dataGroup.removeEventListener(gui.RendererExistenceEvent.RENDERER_REMOVE, this.dispatchEvent, this);
                     var newDataGroupProperties = {};
-                    if (this._dataGroupProperties.layout)
-                        newDataGroupProperties.layout = this.dataGroup.layout;
-                    if (this._dataGroupProperties.dataProvider)
-                        newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
-                    if (this._dataGroupProperties.itemRenderer)
-                        newDataGroupProperties.itemRenderer = this.dataGroup.itemRenderer;
-                    if (this._dataGroupProperties.itemRendererSkinName)
-                        newDataGroupProperties.itemRendererSkinName = this.dataGroup.itemRendererSkinName;
-                    if (this._dataGroupProperties.itemRendererFunction)
-                        newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
+                    newDataGroupProperties.layout = this.dataGroup.layout;
+                    newDataGroupProperties.autoLayout = this.dataGroup.autoLayout;
+                    newDataGroupProperties.dataProvider = this.dataGroup.dataProvider;
+                    newDataGroupProperties.itemRenderer = this.dataGroup.itemRenderer;
+                    newDataGroupProperties.itemRendererSkinName = this.dataGroup.itemRendererSkinName;
+                    newDataGroupProperties.itemRendererFunction = this.dataGroup.itemRendererFunction;
                     this._dataGroupProperties = newDataGroupProperties;
                     this.dataGroup._rendererOwner = null;
                     this.dataGroup.dataProvider = null;
@@ -14759,6 +14817,38 @@ var egret;
             p.swapChildrenAt = function (index1, index2) {
                 this.throwNotSupportedError();
             };
+            p.$measureContentBounds = function (bounds) {
+                bounds.setTo(0, 0, this.width, this.height);
+            };
+            /**
+             * @inheritDoc
+             */
+            p.$hitTest = function (stageX, stageY) {
+                var childTouched = _super.prototype.$hitTest.call(this, stageX, stageY);
+                if (childTouched)
+                    return childTouched;
+                //return Sprite.prototype.$hitTest.call(this, stageX, stageY);
+                if (!this.$visible) {
+                    return null;
+                }
+                var m = this.$getInvertedConcatenatedMatrix();
+                var bounds = this.$getContentBounds();
+                var localX = m.a * stageX + m.c * stageY + m.tx;
+                var localY = m.b * stageX + m.d * stageY + m.ty;
+                if (bounds.contains(localX, localY)) {
+                    if (!this.$children) {
+                        var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                        if (rect && !rect.contains(localX, localY)) {
+                            return null;
+                        }
+                        if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+                            return null;
+                        }
+                    }
+                    return this;
+                }
+                return null;
+            };
             /**
              * @private
              */
@@ -17350,6 +17440,10 @@ var egret;
                  * 是自动否缩放content对象，以符合UIAsset的尺寸。默认值true。
                  */
                 this.autoScale = true;
+                /**
+                 * @private
+                 */
+                this.$smoothing = true;
                 this.touchChildren = false;
                 if (source) {
                     this.source = source;
@@ -17512,6 +17606,33 @@ var egret;
                 }
                 this.$invalidateContentBounds();
             };
+            d(p, "smoothing"
+                /**
+                 * @language en_US
+                 * Whether or not the bitmap is smoothed when scaled.
+                 * @default true。
+                 * @version Egret 2.4
+                 * @platform Web
+                 */
+                /**
+                 * @language zh_CN
+                 * 控制在缩放时是否对位图进行平滑处理。
+                 * @default true。
+                 * @version Egret 2.4
+                 * @platform Web
+                 */
+                ,function () {
+                    return this.$smoothing;
+                }
+                ,function (value) {
+                    value = !!value;
+                    if (value == this.$smoothing) {
+                        return;
+                    }
+                    this.$smoothing = value;
+                    this.$invalidate();
+                }
+            );
             /**
              * @private
              */
@@ -17529,7 +17650,7 @@ var egret;
                         destW = bitmapData.$getTextureWidth();
                         destH = bitmapData.$getTextureHeight();
                     }
-                    egret.Bitmap.$drawImage(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(), destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, true);
+                    egret.Bitmap.$drawImage(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(), destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
                 }
                 _super.prototype.$render.call(this, context);
             };
@@ -19043,7 +19164,6 @@ var egret;
             var d = __define,c=DefaultAssetAdapter;p=c.prototype;
             /**
              * 解析素材
-             * @method egret.gui.DefaultAssetAdapter#getAsset
              * @param source {any} 待解析的新素材标识符
              * @param compFunc {Function} 解析完成回调函数，示例：compFunc(content:any,source:any):void;
              * 回调参数content接受两种类型：DisplayObject或Texture。
@@ -19072,6 +19192,25 @@ var egret;
                 else {
                     compFunc.call(thisObject, content, source);
                 }
+            };
+            /**
+             * 解析主题
+             * @param url 待解析的主题url
+             * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+             * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+             * @param thisObject 回调的this引用
+             */
+            p.getTheme = function (url, compFunc, errorFunc, thisObject) {
+                function onGet(event) {
+                    var loader = (event.target);
+                    compFunc.call(thisObject, loader.response);
+                }
+                var loader = new egret.HttpRequest();
+                loader.addEventListener(egret.Event.COMPLETE, onGet, thisObject);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, errorFunc, thisObject);
+                loader.responseType = egret.HttpResponseType.TEXT;
+                loader.open(url);
+                loader.send();
             };
             return DefaultAssetAdapter;
         })();
@@ -19155,6 +19294,75 @@ var egret;
         })();
         gui.DefaultSkinAdapter = DefaultSkinAdapter;
         egret.registerClass(DefaultSkinAdapter,"egret.gui.DefaultSkinAdapter",["egret.gui.ISkinAdapter"]);
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @classdesc
+         * 默认的IThemeAdapter接口实现
+         * @implements egret.gui.IThemeAdapter
+         */
+        var DefaultThemeAdapter = (function () {
+            /**
+             * 构造函数
+             */
+            function DefaultThemeAdapter() {
+            }
+            var d = __define,c=DefaultThemeAdapter;p=c.prototype;
+            /**
+             * 解析主题
+             * @param url 待解析的主题url
+             * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+             * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+             * @param thisObject 回调的this引用
+             */
+            p.getTheme = function (url, compFunc, errorFunc, thisObject) {
+                function onGet(event) {
+                    var loader = (event.target);
+                    compFunc.call(thisObject, loader.response);
+                }
+                var loader = new egret.HttpRequest();
+                loader.addEventListener(egret.Event.COMPLETE, onGet, thisObject);
+                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, errorFunc, thisObject);
+                loader.responseType = egret.HttpResponseType.TEXT;
+                loader.open(url);
+                loader.send();
+            };
+            return DefaultThemeAdapter;
+        })();
+        gui.DefaultThemeAdapter = DefaultThemeAdapter;
+        egret.registerClass(DefaultThemeAdapter,"egret.gui.DefaultThemeAdapter",["egret.gui.IThemeAdapter"]);
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -19785,22 +19993,22 @@ var egret;
             };
             p.loadConfig = function (configURL) {
                 this._configURL = configURL;
-                var loader = new egret.HttpRequest();
-                loader.addEventListener(egret.Event.COMPLETE, this.onLoadComplete, this);
-                loader.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onLoadError, this);
-                loader.responseType = egret.HttpResponseType.TEXT;
-                loader.open(configURL);
-                loader.send();
-            };
-            p.onLoadComplete = function (event) {
-                var loader = (event.target);
+                var adapter;
                 try {
-                    var str = loader.response;
-                    var data = JSON.parse(str);
+                    adapter = gui.$getAdapter("egret.gui.IThemeAdapter");
+                }
+                catch (e) {
+                    adapter = new gui.DefaultThemeAdapter();
+                }
+                adapter.getTheme(configURL, this.onLoadComplete, this.onLoadError, this);
+            };
+            p.onLoadComplete = function (text) {
+                try {
+                    var data = JSON.parse(text);
                     this.skinMap = data.skins;
                 }
                 catch (e) {
-                    egret.$warn(1017, this._configURL, loader.response);
+                    egret.$warn(1017, this._configURL, text);
                 }
                 this.handleDelyList();
             };
@@ -19867,6 +20075,34 @@ var egret;
         egret.registerClass(Theme,"egret.gui.Theme");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -24763,6 +24999,7 @@ var egret;
             };
             p.animationStart = function (animation) {
                 if (this.disableLayout) {
+                    this.setupParentLayout(false);
                     this.cacheConstraints();
                 }
                 else if (this.disabledConstraintsMap) {
@@ -24788,6 +25025,7 @@ var egret;
             p.animationCleanup = function () {
                 if (this.disableLayout) {
                     this.reenableConstraints();
+                    this.setupParentLayout(true);
                 }
             };
             p.animationEnd = function (animation) {
@@ -24886,6 +25124,14 @@ var egret;
                     this.oldHeight = this.target.explicitHeight;
                     this.target.height = h;
                 }
+            };
+            p.setupParentLayout = function (enable) {
+                var parent = null;
+                if ("parent" in this.target && this.target.parent) {
+                    parent = this.target.parent;
+                }
+                if (parent && ("autoLayout" in parent))
+                    parent.autoLayout = enable;
             };
             p._setupStyleMapEntry = function (property) {
                 if (this.isStyleMap[property] == undefined) {

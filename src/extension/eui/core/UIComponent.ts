@@ -916,9 +916,13 @@ module eui.sys {
             var values = this.$UIComponent;
             if (values[UIKeys.oldWidth] != values[UIKeys.width] || values[UIKeys.oldHeight] != values[UIKeys.height]) {
                 this.dispatchEventWith(egret.Event.RESIZE);
+                values[UIKeys.oldWidth] = values[UIKeys.width];
+                values[UIKeys.oldHeight] = values[UIKeys.height];
             }
             if (values[UIKeys.oldX] != this.$getX() || values[UIKeys.oldY] != this.$getY()) {
                 UIEvent.dispatchUIEvent(this, UIEvent.MOVE);
+                values[UIKeys.oldX] = this.$getX();
+                values[UIKeys.oldY] = this.$getY();
             }
         }
 

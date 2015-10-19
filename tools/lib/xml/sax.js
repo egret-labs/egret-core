@@ -635,9 +635,9 @@ function textopts (opt, text) {
 function error (parser, er) {
   closeText(parser)
   if (parser.trackPosition) {
-    er += "\nLine: "+parser.line+
-          "\nColumn: "+parser.column+
-          "\nChar: "+parser.c
+    er += " Line: "+parser.line+
+          " Column: "+parser.column+
+          " Char: "+parser.c
   }
   er = new Error(er)
   parser.error = er

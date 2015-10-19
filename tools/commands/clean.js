@@ -22,6 +22,9 @@ var Clean = (function () {
         //编译 bin-debug 文件
         var compileProject = new CompileProject();
         var result = compileProject.compile(options);
+        if (!result) {
+            return 1;
+        }
         //修改 html 中 modules 块
         //CopyFiles.modifyHTMLWithModules();
         //修改 html 中 game_list 块
@@ -34,5 +37,4 @@ var Clean = (function () {
     return Clean;
 })();
 module.exports = Clean;
-
-//# sourceMappingURL=../commands/clean.js.map
+//# sourceMappingURL=clean.js.map
