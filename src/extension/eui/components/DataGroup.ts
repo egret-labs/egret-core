@@ -316,8 +316,11 @@ module eui {
         private setItemRenderSkinName(renderer:IItemRenderer,skinName:any):void {
             if (renderer && renderer instanceof Component) {
                 var comp:Component = <Component> <any>renderer;
-                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet])
+                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]){
                     comp.skinName = skinName;
+                    comp.$Component[sys.ComponentKeys.skinNameExplicitlySet] = false;
+                }
+
             }
         }
 
