@@ -747,21 +747,20 @@ var egret;
              */
             p.getDirtyRegions = function () {
                 var dirtyList = this.dirtyList;
-                //if (Capabilities.runtimeType == RuntimeType.NATIVE) {
-                //    //todo 现在为全部dirty
-                //    this.clipRectChanged = true;//阻止所有的addRegion()
-                //    this.clear();
-                //    var region:Region = Region.create();
-                //    if(this.hasClipRect){
-                //        dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
-                //    }
-                //    else{
-                //        var bounds = this.displayList.root.$getOriginalBounds();
-                //        dirtyList.push(region.setTo(bounds.x, bounds.y, bounds.width, bounds.height));
-                //    }
-                //}
-                //else
-                if (this.clipRectChanged) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE && egret.native["$supportCanvas" + ""]) {
+                    //todo 现在为全部dirty
+                    this.clipRectChanged = true; //阻止所有的addRegion()
+                    this.clear();
+                    var region = sys.Region.create();
+                    if (this.hasClipRect) {
+                        dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
+                    }
+                    else {
+                        var bounds = this.displayList.root.$getOriginalBounds();
+                        dirtyList.push(region.setTo(bounds.x, bounds.y, bounds.width, bounds.height));
+                    }
+                }
+                else if (this.clipRectChanged) {
                     this.clipRectChanged = false;
                     this.clear();
                     var region = sys.Region.create();

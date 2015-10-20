@@ -42,7 +42,8 @@ module egret.native {
 
         private $matrix:Matrix = new Matrix();
 
-        public $nativeContext:any;
+        public $nativeContext:any = !egret_native.Canvas?egret_native.Graphics:null;
+        public $nativeGraphicsContext:any = !egret_native.Canvas?egret_native.rastergl:null;
 
         /**
          * @private
@@ -67,6 +68,9 @@ module egret.native {
             this.$globalCompositeOperation = value;
             var arr = blendModesForGL[value];
             if (arr) {
+                if(!egret_native.Canvas) {
+                    this.checkSurface();
+                }
                 this.$nativeContext.setBlendArg(arr[0], arr[1]);
             }
         }
@@ -85,6 +89,9 @@ module egret.native {
 
         public set globalAlpha(value:number) {
             this.$globalAlpha = value;
+            if(!egret_native.Canvas) {
+                this.checkSurface();
+            }
             this.$nativeContext.setGlobalAlpha(value);
         }
 
@@ -140,6 +147,14 @@ module egret.native {
             //console.log("set lineWidth" + value);
             this.$lineWidth = value;
             this.$nativeContext.lineWidth = value;
+
+            if(egret_native.Canvas) {
+                this.$nativeContext.lineWidth = value;
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.lineWidth = value;
+            }
+
         }
 
         private $strokeStyle:any = "#000000";
@@ -166,7 +181,12 @@ module egret.native {
                 }
                 egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
             }
-            this.$nativeContext.strokeStyle = value;
+            if(egret_native.Canvas) {
+                this.$nativeContext.strokeStyle = value;
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.strokeStyle = value;
+            }
         }
 
         private $fillStyle:any = "#000000";
@@ -193,7 +213,13 @@ module egret.native {
                 }
                 egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
             }
-            this.$nativeContext.fillStyle = value;
+            if(egret_native.Canvas) {
+                this.$nativeContext.fillStyle = value;
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.fillStyle = value;
+            }
+
         }
 
         private $fillColorStr(s:string):string {
@@ -306,7 +332,13 @@ module egret.native {
          * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            if(egret_native.Canvas) {
+                this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            }
+
         }
 
         /**
@@ -320,7 +352,13 @@ module egret.native {
          * @platform Web,Native
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
-            this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
+            if(egret_native.Canvas) {
+                this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.quadraticCurveTo(cpx, cpy, x, y);
+            }
+
         }
 
         /**
@@ -332,7 +370,13 @@ module egret.native {
          * @platform Web,Native
          */
         public lineTo(x:number, y:number):void {
-            this.$nativeContext.lineTo(x, y);
+            if(egret_native.Canvas) {
+                this.$nativeContext.lineTo(x, y);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.lineTo(x, y);
+            }
+
         }
 
         /**
@@ -345,7 +389,13 @@ module egret.native {
          * @platform Web,Native
          */
         public fill(fillRule?:string):void {
-            this.$nativeContext.fill(fillRule);
+            if(egret_native.Canvas) {
+                this.$nativeContext.fill(fillRule);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.fill(fillRule);
+            }
+
         }
 
         /**
@@ -355,11 +405,18 @@ module egret.native {
          * @platform Web,Native
          */
         public closePath():void {
-            this.$nativeContext.closePath();
-            if(this.clipRectArray) {
-                this.$clipRectArray = this.clipRectArray;
-                this.clipRectArray = null;
+            if(egret_native.Canvas) {
+                this.$nativeContext.closePath();
+                if(this.clipRectArray) {
+                    this.$clipRectArray = this.clipRectArray;
+                    this.clipRectArray = null;
+                }
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.closePath();
             }
+
+
         }
 
         /**
@@ -373,8 +430,15 @@ module egret.native {
          * @platform Web,Native
          */
         public rect(x:number, y:number, w:number, h:number):void {
-            this.$nativeContext.rect(x, y, w, h);
-            this.$clipRectArray.push({x: x, y: y, w: w, h: h});
+            if(egret_native.Canvas) {
+                this.$nativeContext.rect(x, y, w, h);
+                this.$clipRectArray.push({x: x, y: y, w: w, h: h});
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.rect(x, y, w, h);
+                this.$clipRect.setTo(x, y, w, h);
+            }
+
         }
 
         /**
@@ -386,7 +450,12 @@ module egret.native {
          * @platform Web,Native
          */
         public moveTo(x:number, y:number):void {
-            this.$nativeContext.moveTo(x, y);
+            if(egret_native.Canvas) {
+                this.$nativeContext.moveTo(x, y);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.moveTo(x, y);
+            }
         }
 
         /**
@@ -400,7 +469,12 @@ module egret.native {
          * @platform Web,Native
          */
         public fillRect(x:number, y:number, w:number, h:number):void {
-            this.$nativeContext.fillRect(x, y, w, h);
+            if(egret_native.Canvas) {
+                this.$nativeContext.fillRect(x, y, w, h);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.fillRect(x, y, w, h);
+            }
         }
 
         /**
@@ -417,7 +491,12 @@ module egret.native {
          * @platform Web,Native
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
-            this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            if(egret_native.Canvas) {
+                this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+            }
         }
 
         /**
@@ -427,7 +506,13 @@ module egret.native {
          * @platform Web,Native
          */
         public stroke():void {
-            this.$nativeContext.stroke();
+            if(egret_native.Canvas) {
+                this.$nativeContext.stroke();
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.stroke();
+            }
+
         }
 
         /**
@@ -442,7 +527,12 @@ module egret.native {
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
             //console.log("strokeRect");
-            this.$nativeContext.strokeRect(x, y, w, h);
+            if(egret_native.Canvas) {
+                this.$nativeContext.strokeRect(x, y, w, h);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.strokeRect(x, y, w, h);
+            }
         }
 
         private clipRectArray = null;
@@ -453,8 +543,13 @@ module egret.native {
          * @platform Web,Native
          */
         public beginPath():void {
-            this.$nativeContext.beginPath();
-            this.clipRectArray = this.$clipRectArray.concat();
+            if(egret_native.Canvas) {
+                this.$nativeContext.beginPath();
+                this.clipRectArray = this.$clipRectArray.concat();
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.beginPath();
+            }
         }
 
         /**
@@ -469,7 +564,12 @@ module egret.native {
          * @platform Web,Native
          */
         public arcTo(x1:number, y1:number, x2:number, y2:number, radius:number):void {
-            this.$nativeContext.arcTo(x1, y1, x2, y2, radius);
+            if(egret_native.Canvas) {
+                this.$nativeContext.arcTo(x1, y1, x2, y2, radius);
+            } else {
+                this.checkSurface();
+                this.$nativeGraphicsContext.arcTo(x1, y1, x2, y2, radius);
+            }
         }
 
         /**
@@ -535,15 +635,38 @@ module egret.native {
          */
         public restore():void {
             //console.log("restore");
-            if (this.$saveList.length) {
-                var data = this.$saveList.pop();
-                for (var key in data) {
-                    this[key] = data[key];
+            if(egret_native.Canvas) {
+                if (this.$saveList.length) {
+                    var data = this.$saveList.pop();
+                    for (var key in data) {
+                        this[key] = data[key];
+                    }
+                    this.setTransformToNative();
+                    this.$nativeContext.restore();
+                    this.clipRectArray = null;
                 }
-                this.setTransformToNative();
-                this.$nativeContext.restore();
-                this.clipRectArray = null;
+            } else {
+                if (this.$saveCount > 0) {
+                    if (this.$saveList.length) {
+                        var data = this.$saveList.pop();
+                        for (var key in data) {
+                            this[key] = data[key];
+                        }
+                        this.setTransformToNative();
+                    }
+                    var index:number = this.$clipList.indexOf(this.$saveCount);
+                    if (index != -1) {
+                        var length:number = this.$clipList.length;
+                        this.$clipList.splice(index, length - index);
+                        for (; index < length; index++) {
+                            this.checkSurface();
+                            this.$nativeContext.popClip();
+                        }
+                    }
+                    this.$saveCount--;
+                }
             }
+
         }
 
         private $saveList:Array<any> = [];
@@ -558,20 +681,41 @@ module egret.native {
             //console.log("save");
             var transformMatrix = new Matrix();
             transformMatrix.copyFrom(this.$matrix);
-            this.$saveList.push({
-                lineWidth: this.$lineWidth,
-                globalCompositeOperation: this.$globalCompositeOperation,
-                globalAlpha: this.$globalAlpha,
-                strokeStyle: this.$strokeStyle,
-                fillStyle: this.$fillStyle,
-                font: this.$font,
-                $matrix: transformMatrix,
-                $clipRectArray: this.$clipRectArray.concat()
-            });
-            this.$nativeContext.save();
+            if(egret_native.Canvas) {
+                this.$saveList.push({
+                    lineWidth: this.$lineWidth,
+                    globalCompositeOperation: this.$globalCompositeOperation,
+                    globalAlpha: this.$globalAlpha,
+                    strokeStyle: this.$strokeStyle,
+                    fillStyle: this.$fillStyle,
+                    font: this.$font,
+                    $matrix: transformMatrix,
+                    $clipRectArray: this.$clipRectArray.concat()
+                });
+                this.$nativeContext.save();
+            } else {
+                this.$saveList.push({
+                    lineWidth: this.$lineWidth,
+                    globalCompositeOperation: this.$globalCompositeOperation,
+                    globalAlpha: this.$globalAlpha,
+                    strokeStyle: this.$strokeStyle,
+                    fillStyle: this.$fillStyle,
+                    font: this.$font,
+                    $matrix: transformMatrix
+                });
+                this.$saveCount++;
+            }
+
         }
 
+
+
         private $clipRectArray:Array<any> = [];
+
+        private $clipRect:Rectangle = new Rectangle();
+        private $saveCount:number = 0;
+        private $clipList:Array<number> = [];
+
 
         /**
          * @private
@@ -580,17 +724,27 @@ module egret.native {
          * @platform Web,Native
          */
         public clip(fillRule?:string):void {
-            if (this.$clipRectArray.length > 0) {
-                var arr = [];
-                for (var i:number = 0; i < this.$clipRectArray.length; i++) {
-                    var clipRect = this.$clipRectArray[i];
-                    arr.push(clipRect.x);
-                    arr.push(clipRect.y);
-                    arr.push(clipRect.w);
-                    arr.push(clipRect.h);
+            if(egret_native.Canvas) {
+                if (this.$clipRectArray.length > 0) {
+                    var arr = [];
+                    for (var i:number = 0; i < this.$clipRectArray.length; i++) {
+                        var clipRect = this.$clipRectArray[i];
+                        arr.push(clipRect.x);
+                        arr.push(clipRect.y);
+                        arr.push(clipRect.w);
+                        arr.push(clipRect.h);
+                    }
+                    this.$nativeContext.pushRectStencils(arr);
+                    this.$clipRectArray.length = 0;
                 }
-                this.$nativeContext.pushRectStencils(arr);
-                this.$clipRectArray.length = 0;
+            } else {
+                if (this.$clipRect.width > 0 && this.$clipRect.height > 0) {
+                    //console.log("push clip" + this.$clipRect.x);
+                    this.checkSurface();
+                    this.$nativeContext.pushClip(this.$clipRect.x, this.$clipRect.y, this.$clipRect.width, this.$clipRect.height);
+                    this.$clipRect.setEmpty();
+                    this.$clipList.push(this.$saveCount);
+                }
             }
         }
 
@@ -605,8 +759,14 @@ module egret.native {
          * @platform Web,Native
          */
         public clearRect(x:number, y:number, width:number, height:number):void {
-            //console.log("clearRect");
-            this.$nativeContext.clearRect(x, y, width, height);
+            if(egret_native.Canvas) {
+                //console.log("clearRect");
+                this.$nativeContext.clearRect(x, y, width, height);
+            } else {
+                //console.log("clearScreen");
+                this.checkSurface();
+                this.$nativeContext.clearScreen(0, 0, 0);
+            }
         }
 
         /**
@@ -629,6 +789,10 @@ module egret.native {
         private setTransformToNative():void {
             var m = this.$matrix;
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
+            if(egret_native.Canvas) {
+            } else {
+                this.checkSurface();
+            }
             this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
 
@@ -643,7 +807,11 @@ module egret.native {
          * @platform Web,Native
          */
         public createLinearGradient(x0:number, y0:number, x1:number, y1:number):GraphicsGradient {
-            return this.$nativeContext.createLinearGradient(x0, y0, x1, y1);
+            if(egret_native.Canvas) {
+                return this.$nativeContext.createLinearGradient(x0, y0, x1, y1);
+            }
+            this.checkSurface();
+            return this.$nativeGraphicsContext.createLinearGradient(x0, y0, x1, y1);
         }
 
         /**
@@ -659,7 +827,11 @@ module egret.native {
          * @platform Web,Native
          */
         public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):GraphicsGradient {
-            return this.$nativeContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            if(egret_native.Canvas) {
+                return this.$nativeContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            }
+            this.checkSurface();
+            return this.$nativeGraphicsContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
         }
 
         /**
@@ -671,9 +843,15 @@ module egret.native {
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
             var font:string = TextField.default_fontFamily;
-            this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-            this.$hasStrokeText = false;
-            this.$nativeContext.drawText(text, x, y);
+            if(egret_native.Canvas) {
+                this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                this.$hasStrokeText = false;
+                this.$nativeContext.drawText(text, x, y);
+            } else {
+                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                this.$hasStrokeText = false;
+                egret_native.Label.drawText(text, x, y);
+            }
         }
 
         private $hasStrokeText:boolean = false;
@@ -704,11 +882,21 @@ module egret.native {
         public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
             var bitmapData;
-            if ((<NativeSurface>image).$nativeCanvas) {
-                bitmapData = (<NativeSurface>image).$nativeCanvas;
+            if(egret_native.Canvas) {
+                if ((<NativeSurface>image).$nativeCanvas) {
+                    bitmapData = (<NativeSurface>image).$nativeCanvas;
+                }
+                else {
+                    bitmapData = image;
+                }
             }
             else {
-                bitmapData = image;
+                if ((<NativeSurface>image).$nativeRenderTexture) {
+                    bitmapData = (<NativeSurface>image).$nativeRenderTexture;
+                }
+                else {
+                    bitmapData = image;
+                }
             }
             if (!bitmapData) {
                 return;
@@ -721,27 +909,63 @@ module egret.native {
                 width = surfaceImageWidth = image.width;
                 height = surfaceImageHeight = image.height;
             }
+            else if(arguments.length == 5) {
+                surfaceOffsetX = offsetX;
+                surfaceOffsetY = offsetY;
+                surfaceImageWidth = width;
+                surfaceImageHeight = height;
+                offsetX = 0;
+                offsetY = 0;
+                width = image.width;
+                height = image.height;
+            }
             else {
-                if (!width) {
-                    width = image.width;
-                }
-                if (!height) {
-                    height = image.height;
-                }
-                if (!surfaceOffsetX) {
-                    surfaceOffsetX = 0;
-                }
-                if (!surfaceOffsetY) {
-                    surfaceOffsetY = 0;
-                }
-                if (!surfaceImageWidth) {
-                    surfaceImageWidth = width;
-                }
-                if (!surfaceImageHeight) {
-                    surfaceImageHeight = height;
+                if(egret_native.Canvas) {
+                    if (!width) {
+                        width = image.width;
+                    }
+                    if (!height) {
+                        height = image.height;
+                    }
+                    if (!surfaceOffsetX) {
+                        surfaceOffsetX = 0;
+                    }
+                    if (!surfaceOffsetY) {
+                        surfaceOffsetY = 0;
+                    }
+                    if (!surfaceImageWidth) {
+                        surfaceImageWidth = width;
+                    }
+                    if (!surfaceImageHeight) {
+                        surfaceImageHeight = height;
+                    }
+                } else {
+                    if (width == void 0) {
+                        width = image.width;
+                    }
+                    if (height == void 0) {
+                        height = image.height;
+                    }
+                    if (surfaceOffsetX == void 0) {
+                        surfaceOffsetX = 0;
+                    }
+                    if (surfaceOffsetY == void 0) {
+                        surfaceOffsetY = 0;
+                    }
+                    if (surfaceImageWidth == void 0) {
+                        surfaceImageWidth = width;
+                    }
+                    if (surfaceImageHeight == void 0) {
+                        surfaceImageHeight = height;
+                    }
                 }
             }
             //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
+            if(egret_native.Canvas) {
+
+            } else {
+                this.checkSurface();
+            }
             this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
         }
 
@@ -765,15 +989,35 @@ module egret.native {
          * @platform Web,Native
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
-            if (sx != Math.floor(sx)) {
-                sx = Math.floor(sx);
-                sw++;
+            if(egret_native.Canvas) {
+                if (sx != Math.floor(sx)) {
+                    sx = Math.floor(sx);
+                    sw++;
+                }
+                if (sy != Math.floor(sy)) {
+                    sy = Math.floor(sy);
+                    sh++;
+                }
+                return this.$nativeContext.getPixels(sx, sy, sw, sh);
             }
-            if (sy != Math.floor(sy)) {
-                sy = Math.floor(sy);
-                sh++;
+            if($currentSurface == this.surface) {
+                if($currentSurface != null) {
+                    $currentSurface.end();
+                }
             }
-            return this.$nativeContext.getPixels(sx, sy, sw, sh);
+            return this.surface.getImageData(sx,sy,sw,sh);
+        }
+
+        private checkSurface():void {
+            //todo 暂时先写这里
+            if($currentSurface != this.surface) {
+                if($currentSurface != null) {
+                    $currentSurface.end();
+                }
+                if(this.surface) {
+                    this.surface.begin();
+                }
+            }
         }
     }
 }

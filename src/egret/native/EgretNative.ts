@@ -28,9 +28,15 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.native {
-    function runEgret () {
+
+    /**
+     * @private
+     */
+    export var $supportCanvas = egret_native.Canvas ? true : false;
+
+    function runEgret() {
         var ticker = egret.sys.$ticker;
-        var mainLoop = function (){
+        var mainLoop = function () {
             ticker.update();
         };
         egret_native.executeMainLoop(mainLoop, ticker);
@@ -42,9 +48,9 @@ module egret.native {
         new NativePlayer();
     }
 
-    function toArray(argument){
+    function toArray(argument) {
         var args = [];
-        for(var i=0;i<argument.length;i++){
+        for (var i = 0; i < argument.length; i++) {
             args.push(argument[i]);
         }
         return args;
