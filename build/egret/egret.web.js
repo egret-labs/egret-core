@@ -2345,6 +2345,9 @@ var egret;
              *
              */
             p.$updateSize = function () {
+                if (!this.canvas) {
+                    return;
+                }
                 var stageW = this.canvas.width;
                 var stageH = this.canvas.height;
                 var screenW = this.canvas.style.width.split("px")[0];
@@ -2530,13 +2533,24 @@ var egret;
     var web;
     (function (web) {
         var stageToTextLayerMap = {};
+        var stageToCanvasMap = {};
+        var stageToContainerMap = {};
         /**
          * @private
          * 获取
          */
         function $getTextAdapter(textfield) {
             var stageHash = textfield.stage ? textfield.stage.$hashCode : 0;
-            return stageToTextLayerMap[stageHash];
+            var adapter = stageToTextLayerMap[stageHash];
+            var canvas = stageToCanvasMap[stageHash];
+            var container = stageToContainerMap[stageHash];
+            if (canvas && container) {
+                //adapter._initStageDelegateDiv(container, canvas);
+                //adapter.$updateSize();
+                delete stageToCanvasMap[stageHash];
+                delete stageToContainerMap[stageHash];
+            }
+            return adapter;
         }
         web.$getTextAdapter = $getTextAdapter;
         /**
@@ -2545,6 +2559,8 @@ var egret;
         function $cacheTextAdapter(adapter, stage, container, canvas) {
             adapter._initStageDelegateDiv(container, canvas);
             stageToTextLayerMap[stage.$hashCode] = adapter;
+            stageToCanvasMap[stage.$hashCode] = canvas;
+            stageToContainerMap[stage.$hashCode] = container;
         }
         web.$cacheTextAdapter = $cacheTextAdapter;
     })(web = egret.web || (egret.web = {}));

@@ -18037,7 +18037,7 @@ var egret;
             if (this.bgGraphics)
                 this.bgGraphics.$render(renderContext);
             if (this.$TextField[24 /* type */] == egret.TextFieldType.INPUT) {
-                if (this.$hasFlags(768 /* Dirty */)) {
+                if (this.$hasAnyFlags(880 /* InitFlags */) || this.$hasAnyFlags(624 /* DownOnAddedOrRemoved */)) {
                     this.inputUtils._updateProperties();
                 }
                 if (this.$isTyping) {
