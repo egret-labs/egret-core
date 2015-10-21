@@ -76,11 +76,11 @@ module egret.native {
 
         public saveToFile(type:string, filePath:string):void {
             if(egret_native.Canvas) {
-                if(this.$nativeCanvas) {
+                if(this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
                     this.$nativeCanvas.saveToFile(type, filePath);
                 }
             } else {
-                if (this.$nativeRenderTexture) {
+                if (this.$nativeRenderTexture && this.$nativeRenderTexture.saveToFile) {
                     this.$nativeRenderTexture.saveToFile(type, filePath);
                 }
             }

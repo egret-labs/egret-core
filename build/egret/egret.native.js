@@ -875,6 +875,7 @@ var egret;
              * @platform Web,Native
              */
             p.getImageData = function (sx, sy, sw, sh) {
+                var res;
                 if (egret_native.Canvas) {
                     if (sx != Math.floor(sx)) {
                         sx = Math.floor(sx);
@@ -884,14 +885,20 @@ var egret;
                         sy = Math.floor(sy);
                         sh++;
                     }
-                    return this.$nativeContext.getPixels(sx, sy, sw, sh);
+                    res = this.$nativeContext.getPixels(sx, sy, sw, sh);
                 }
-                if (native.$currentSurface == this.surface) {
-                    if (native.$currentSurface != null) {
-                        native.$currentSurface.end();
+                else {
+                    if (native.$currentSurface == this.surface) {
+                        if (native.$currentSurface != null) {
+                            native.$currentSurface.end();
+                        }
                     }
+                    res = this.surface.getImageData(sx, sy, sw, sh);
                 }
-                return this.surface.getImageData(sx, sy, sw, sh);
+                if (res.pixelData) {
+                    res.data = res.pixelData;
+                }
+                return res;
             };
             p.checkSurface = function () {
                 //todo 暂时先写这里
@@ -994,12 +1001,12 @@ var egret;
             };
             p.saveToFile = function (type, filePath) {
                 if (egret_native.Canvas) {
-                    if (this.$nativeCanvas) {
+                    if (this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
                         this.$nativeCanvas.saveToFile(type, filePath);
                     }
                 }
                 else {
-                    if (this.$nativeRenderTexture) {
+                    if (this.$nativeRenderTexture && this.$nativeRenderTexture.saveToFile) {
                         this.$nativeRenderTexture.saveToFile(type, filePath);
                     }
                 }

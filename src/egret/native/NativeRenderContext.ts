@@ -989,6 +989,7 @@ module egret.native {
          * @platform Web,Native
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
+            var res;
             if(egret_native.Canvas) {
                 if (sx != Math.floor(sx)) {
                     sx = Math.floor(sx);
@@ -998,14 +999,20 @@ module egret.native {
                     sy = Math.floor(sy);
                     sh++;
                 }
-                return this.$nativeContext.getPixels(sx, sy, sw, sh);
+                res = this.$nativeContext.getPixels(sx, sy, sw, sh);
             }
-            if($currentSurface == this.surface) {
-                if($currentSurface != null) {
-                    $currentSurface.end();
+            else {
+                if($currentSurface == this.surface) {
+                    if($currentSurface != null) {
+                        $currentSurface.end();
+                    }
                 }
+                res = this.surface.getImageData(sx,sy,sw,sh);
             }
-            return this.surface.getImageData(sx,sy,sw,sh);
+            if(res.pixelData) {
+                res.data = res.pixelData;
+            }
+            return res;
         }
 
         private checkSurface():void {
