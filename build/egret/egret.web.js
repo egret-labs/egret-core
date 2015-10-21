@@ -3722,11 +3722,9 @@ var egret;
                 var player = new egret.sys.Player(surface.renderContext, stage, option.entryClassName);
                 var webHide = new egret.web.WebHideHandler(stage);
                 var webInput = new web.HTMLInput();
-                if (DEBUG) {
-                    player.showPaintRect(option.showPaintRect);
-                    if (option.showFPS || option.showLog) {
-                        player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
-                    }
+                player.showPaintRect(option.showPaintRect);
+                if (option.showFPS || option.showLog) {
+                    player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
                 }
                 this.playerOption = option;
                 this.container = container;
@@ -3762,20 +3760,18 @@ var egret;
                 option.orientation = container.getAttribute("data-orientation") || egret.OrientationMode.AUTO;
                 option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
                 option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
-                if (DEBUG) {
-                    option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
-                    option.showFPS = container.getAttribute("data-show-fps") == "true";
-                    var styleStr = container.getAttribute("data-show-fps-style") || "";
-                    var stylesArr = styleStr.split(",");
-                    var styles = {};
-                    for (var i = 0; i < stylesArr.length; i++) {
-                        var tempStyleArr = stylesArr[i].split(":");
-                        styles[tempStyleArr[0]] = tempStyleArr[1];
-                    }
-                    option.fpsStyles = styles;
-                    option.showLog = container.getAttribute("data-show-log") == "true";
-                    option.logFilter = container.getAttribute("data-log-filter");
+                option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
+                option.showFPS = container.getAttribute("data-show-fps") == "true";
+                var styleStr = container.getAttribute("data-show-fps-style") || "";
+                var stylesArr = styleStr.split(",");
+                var styles = {};
+                for (var i = 0; i < stylesArr.length; i++) {
+                    var tempStyleArr = stylesArr[i].split(":");
+                    styles[tempStyleArr[0]] = tempStyleArr[1];
                 }
+                option.fpsStyles = styles;
+                option.showLog = container.getAttribute("data-show-log") == "true";
+                option.logFilter = container.getAttribute("data-log-filter");
                 return option;
             };
             /**
