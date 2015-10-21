@@ -4878,12 +4878,14 @@ var egret;
                 var values = this.$Bitmap;
                 var w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
                 var h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                bounds.setTo(x, y, w, h);
+                var tsX = w / values[8 /* width */];
+                var tsY = h / values[9 /* height */];
+                bounds.setTo(0, 0, w + x * tsX, h + y * tsY);
             }
             else {
                 w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : 0;
                 h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : 0;
-                bounds.setTo(x, y, w, h);
+                bounds.setTo(0, 0, w, h);
             }
         };
         /**

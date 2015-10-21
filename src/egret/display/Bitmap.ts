@@ -444,14 +444,15 @@ module egret {
                 var values = this.$Bitmap;
                 var w:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
                 var h:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.height];
-
-                bounds.setTo(x, y, w, h);
+                var tsX:number = w / values[sys.BitmapKeys.width];
+                var tsY:number = h / values[sys.BitmapKeys.height];
+                bounds.setTo(0, 0, w + x * tsX, h + y * tsY);
             }
             else {
                 w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;
                 h = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : 0;
 
-                bounds.setTo(x, y, w, h);
+                bounds.setTo(0, 0, w, h);
             }
         }
 
