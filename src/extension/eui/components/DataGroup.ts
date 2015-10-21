@@ -314,10 +314,10 @@ module eui {
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
             }
+            this.addChild(renderer);
             if (values[Keys.itemRendererSkinName]) {
                 this.setItemRenderSkinName(renderer,values[Keys.itemRendererSkinName]);
             }
-            this.addChild(renderer);
             return renderer;
         }
 
@@ -688,7 +688,7 @@ module eui {
             if (values[Keys.itemRendererSkinName] == value)
                 return;
             values[Keys.itemRendererSkinName] = value;
-            if (value && this.$UIComponent[sys.UIKeys.initialized]) {
+            if (this.$UIComponent[sys.UIKeys.initialized]) {
                 values[Keys.itemRendererSkinNameChange] = true;
                 this.invalidateProperties();
             }
