@@ -28,7 +28,8 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 /// <reference path="../states/State.ts" />
-
+/// <reference path="../core/uicomponent.ts" />
+/// <reference path="../utils/registerproperty.ts" />
 module eui {
 
     /**

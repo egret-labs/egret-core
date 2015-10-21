@@ -812,328 +812,6 @@ declare module eui.sys {
     }
 }
 declare module eui {
-    class BitmapLabel extends egret.BitmapText implements UIComponent, IDisplayText {
-        constructor(text?: string);
-        /**
-         * @private
-         *
-         */
-        $invalidateContentBounds(): void;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setWidth(value: number): boolean;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setHeight(value: number): boolean;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        $setText(value: string): boolean;
-        private $font;
-        $setFont(value: any): boolean;
-        private $createChildrenCalled;
-        private $fontChanged;
-        /**
-         * 解析source
-         */
-        private $parseFont();
-        /**
-         * 皮肤发生改变
-         */
-        private $onFontChanged(bitmapFont, font);
-        $setFontData(value: egret.BitmapFont): boolean;
-        /**
-         * @private
-         */
-        private _widthConstraint;
-        /**
-         * @private
-         * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
-         */
-        private initializeUIValues;
-        /**
-         * @copy eui.UIComponent#createChildren
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected createChildren(): void;
-        /**
-         * @copy eui.UIComponent#childrenCreated
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected childrenCreated(): void;
-        /**
-         * @copy eui.UIComponent#commitProperties
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected commitProperties(): void;
-        /**
-         * @copy eui.UIComponent#measure
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected measure(): void;
-        /**
-         * @copy eui.UIComponent#updateDisplayList
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
-        /**
-         * @copy eui.UIComponent#invalidateParentLayout
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected invalidateParentLayout(): void;
-        /**
-         * @private
-         */
-        $UIComponent: Object;
-        /**
-         * @private
-         */
-        $includeInLayout: boolean;
-        /**
-         * @copy eui.UIComponent#includeInLayout
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        includeInLayout: boolean;
-        /**
-         * @copy eui.UIComponent#left
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        left: number;
-        /**
-         * @copy eui.UIComponent#right
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        right: number;
-        /**
-         * @copy eui.UIComponent#top
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        top: number;
-        /**
-         * @copy eui.UIComponent#bottom
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        bottom: number;
-        /**
-         * @copy eui.UIComponent#horizontalCenter
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        horizontalCenter: number;
-        /**
-         * @copy eui.UIComponent#verticalCenter
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        verticalCenter: number;
-        /**
-         * @copy eui.UIComponent#percentWidth
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        percentWidth: number;
-        /**
-         * @copy eui.UIComponent#percentHeight
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        percentHeight: number;
-        /**
-         * @copy eui.UIComponent#explicitWidth
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        explicitWidth: number;
-        /**
-         * @copy eui.UIComponent#explicitHeight
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        explicitHeight: number;
-        /**
-         * @copy eui.UIComponent#minWidth
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        minWidth: number;
-        /**
-         * @copy eui.UIComponent#maxWidth
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        maxWidth: number;
-        /**
-         * @copy eui.UIComponent#minHeight
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        minHeight: number;
-        /**
-         * @copy eui.UIComponent#maxHeight
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        maxHeight: number;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        setMeasuredSize(width: number, height: number): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        invalidateProperties(): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        validateProperties(): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        invalidateSize(): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        validateSize(recursive?: boolean): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        invalidateDisplayList(): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        validateDisplayList(): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        validateNow(): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        setLayoutBoundsSize(layoutWidth: number, layoutHeight: number): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        setLayoutBoundsPosition(x: number, y: number): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        getLayoutBounds(bounds: egret.Rectangle): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        getPreferredBounds(bounds: egret.Rectangle): void;
-    }
-}
-declare module eui {
     /**
      * @language en_US
      * The Component class defines the base class for skinnable components.
@@ -2176,6 +1854,328 @@ declare module eui.sys {
      * @param base 自定义子类继承的父类
      */
     function implementUIComponent(descendant: any, base: any, isContainer?: boolean): void;
+}
+declare module eui {
+    class BitmapLabel extends egret.BitmapText implements UIComponent, IDisplayText {
+        constructor(text?: string);
+        /**
+         * @private
+         *
+         */
+        $invalidateContentBounds(): void;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setWidth(value: number): boolean;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setHeight(value: number): boolean;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setText(value: string): boolean;
+        private $font;
+        $setFont(value: any): boolean;
+        private $createChildrenCalled;
+        private $fontChanged;
+        /**
+         * 解析source
+         */
+        private $parseFont();
+        /**
+         * 皮肤发生改变
+         */
+        private $onFontChanged(bitmapFont, font);
+        $setFontData(value: egret.BitmapFont): boolean;
+        /**
+         * @private
+         */
+        private _widthConstraint;
+        /**
+         * @private
+         * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
+         */
+        private initializeUIValues;
+        /**
+         * @copy eui.UIComponent#createChildren
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected createChildren(): void;
+        /**
+         * @copy eui.UIComponent#childrenCreated
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected childrenCreated(): void;
+        /**
+         * @copy eui.UIComponent#commitProperties
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected commitProperties(): void;
+        /**
+         * @copy eui.UIComponent#measure
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected measure(): void;
+        /**
+         * @copy eui.UIComponent#updateDisplayList
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
+        /**
+         * @copy eui.UIComponent#invalidateParentLayout
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected invalidateParentLayout(): void;
+        /**
+         * @private
+         */
+        $UIComponent: Object;
+        /**
+         * @private
+         */
+        $includeInLayout: boolean;
+        /**
+         * @copy eui.UIComponent#includeInLayout
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        includeInLayout: boolean;
+        /**
+         * @copy eui.UIComponent#left
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        left: number;
+        /**
+         * @copy eui.UIComponent#right
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        right: number;
+        /**
+         * @copy eui.UIComponent#top
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        top: number;
+        /**
+         * @copy eui.UIComponent#bottom
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        bottom: number;
+        /**
+         * @copy eui.UIComponent#horizontalCenter
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        horizontalCenter: number;
+        /**
+         * @copy eui.UIComponent#verticalCenter
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        verticalCenter: number;
+        /**
+         * @copy eui.UIComponent#percentWidth
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        percentWidth: number;
+        /**
+         * @copy eui.UIComponent#percentHeight
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        percentHeight: number;
+        /**
+         * @copy eui.UIComponent#explicitWidth
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        explicitWidth: number;
+        /**
+         * @copy eui.UIComponent#explicitHeight
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        explicitHeight: number;
+        /**
+         * @copy eui.UIComponent#minWidth
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        minWidth: number;
+        /**
+         * @copy eui.UIComponent#maxWidth
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxWidth: number;
+        /**
+         * @copy eui.UIComponent#minHeight
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        minHeight: number;
+        /**
+         * @copy eui.UIComponent#maxHeight
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxHeight: number;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        setMeasuredSize(width: number, height: number): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        invalidateProperties(): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        validateProperties(): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        invalidateSize(): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        validateSize(recursive?: boolean): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        invalidateDisplayList(): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        validateDisplayList(): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        validateNow(): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        setLayoutBoundsSize(layoutWidth: number, layoutHeight: number): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        setLayoutBoundsPosition(x: number, y: number): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        getLayoutBounds(bounds: egret.Rectangle): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        getPreferredBounds(bounds: egret.Rectangle): void;
+    }
 }
 declare module eui.sys {
     /**

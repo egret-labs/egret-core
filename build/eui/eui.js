@@ -1633,314 +1633,6 @@ var eui;
         egret.registerClass(DepthBin,"DepthBin");
     })(sys = eui.sys || (eui.sys = {}));
 })(eui || (eui = {}));
-var eui;
-(function (eui) {
-    var UIImpl = eui.sys.UIComponentImpl;
-    var BitmapLabel = (function (_super) {
-        __extends(BitmapLabel, _super);
-        function BitmapLabel(text) {
-            _super.call(this);
-            this.$createChildrenCalled = false;
-            this.$fontChanged = false;
-            /**
-             * @private
-             */
-            this._widthConstraint = NaN;
-            this.initializeUIValues();
-            this.text = text;
-        }
-        var d = __define,c=BitmapLabel;p=c.prototype;
-        /**
-         * @private
-         *
-         */
-        p.$invalidateContentBounds = function () {
-            _super.prototype.$invalidateContentBounds.call(this);
-            this.invalidateSize();
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.$setWidth = function (value) {
-            var result1 = _super.prototype.$setWidth.call(this, value);
-            var result2 = UIImpl.prototype.$setWidth.call(this, value);
-            return result1 && result2;
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.$setHeight = function (value) {
-            var result1 = _super.prototype.$setHeight.call(this, value);
-            var result2 = UIImpl.prototype.$setHeight.call(this, value);
-            return result1 && result2;
-        };
-        /**
-         * @private
-         *
-         * @param value
-         */
-        p.$setText = function (value) {
-            var result = _super.prototype.$setText.call(this, value);
-            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
-            return result;
-        };
-        p.$setFont = function (value) {
-            var values = this.$BitmapText;
-            if (this.$font == value) {
-                return false;
-            }
-            this.$font = value;
-            if (this.$createChildrenCalled) {
-                this.$parseFont();
-            }
-            else {
-                this.$fontChanged = true;
-            }
-            this.$BitmapText[6 /* fontStringChanged */] = true;
-            return true;
-        };
-        /**
-         * 解析source
-         */
-        p.$parseFont = function () {
-            this.$fontChanged = false;
-            if (this.$font && typeof this.$font == "string") {
-                var adapter = this.$stage.getImplementation("eui.IAssetAdapter");
-                if (!adapter) {
-                    adapter = new eui.DefaultAssetAdapter();
-                }
-                adapter.getAsset(this.$font, this.$onFontChanged, this);
-            }
-            else {
-                this.$setFontData(this.$font);
-            }
-        };
-        /**
-         * 皮肤发生改变
-         */
-        p.$onFontChanged = function (bitmapFont, font) {
-            if (font !== this.$font) {
-                return;
-            }
-            this.$setFontData(bitmapFont);
-        };
-        p.$setFontData = function (value) {
-            if (value == this.$BitmapText[5 /* font */]) {
-                return false;
-            }
-            this.$BitmapText[5 /* font */] = value;
-            this.$invalidateContentBounds();
-            return true;
-        };
-        /**
-         * @copy eui.UIComponent#createChildren
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.createChildren = function () {
-            if (this.$fontChanged) {
-                this.$parseFont();
-            }
-            this.$createChildrenCalled = true;
-        };
-        /**
-         * @copy eui.UIComponent#childrenCreated
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.childrenCreated = function () {
-        };
-        /**
-         * @copy eui.UIComponent#commitProperties
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.commitProperties = function () {
-        };
-        /**
-         * @copy eui.UIComponent#measure
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.measure = function () {
-            var values = this.$UIComponent;
-            var textValues = this.$BitmapText;
-            var oldWidth = textValues[0 /* textFieldWidth */];
-            var availableWidth = NaN;
-            if (!isNaN(this._widthConstraint)) {
-                availableWidth = this._widthConstraint;
-                this._widthConstraint = NaN;
-            }
-            else if (!isNaN(values[8 /* explicitWidth */])) {
-                availableWidth = values[8 /* explicitWidth */];
-            }
-            else if (values[13 /* maxWidth */] != 100000) {
-                availableWidth = values[13 /* maxWidth */];
-            }
-            _super.prototype.$setWidth.call(this, availableWidth);
-            this.setMeasuredSize(this.textWidth, this.textHeight);
-            _super.prototype.$setWidth.call(this, oldWidth);
-        };
-        /**
-         * @copy eui.UIComponent#updateDisplayList
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
-            _super.prototype.$setWidth.call(this, unscaledWidth);
-            _super.prototype.$setHeight.call(this, unscaledHeight);
-        };
-        /**
-         * @copy eui.UIComponent#invalidateParentLayout
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.invalidateParentLayout = function () {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.setMeasuredSize = function (width, height) {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.invalidateProperties = function () {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.validateProperties = function () {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.invalidateSize = function () {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.validateSize = function (recursive) {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.invalidateDisplayList = function () {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.validateDisplayList = function () {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.validateNow = function () {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.setLayoutBoundsSize = function (layoutWidth, layoutHeight) {
-            UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
-            if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
-                return;
-            }
-            var values = this.$UIComponent;
-            if (!isNaN(values[9 /* explicitHeight */])) {
-                return;
-            }
-            if (layoutWidth == values[16 /* measuredWidth */]) {
-                return;
-            }
-            this._widthConstraint = layoutWidth;
-            this.invalidateSize();
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.setLayoutBoundsPosition = function (x, y) {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.getLayoutBounds = function (bounds) {
-        };
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        p.getPreferredBounds = function (bounds) {
-        };
-        return BitmapLabel;
-    })(egret.BitmapText);
-    eui.BitmapLabel = BitmapLabel;
-    egret.registerClass(BitmapLabel,"eui.BitmapLabel",["eui.UIComponent","eui.IDisplayText"]);
-    eui.sys.implementUIComponent(BitmapLabel, egret.BitmapText);
-    eui.registerBindable(BitmapLabel.prototype, "text");
-})(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -3008,6 +2700,315 @@ var eui;
         }
         sys.implementUIComponent = implementUIComponent;
     })(sys = eui.sys || (eui.sys = {}));
+})(eui || (eui = {}));
+/// <reference path="../core/uicomponent.ts" />
+var eui;
+(function (eui) {
+    var UIImpl = eui.sys.UIComponentImpl;
+    var BitmapLabel = (function (_super) {
+        __extends(BitmapLabel, _super);
+        function BitmapLabel(text) {
+            _super.call(this);
+            this.$createChildrenCalled = false;
+            this.$fontChanged = false;
+            /**
+             * @private
+             */
+            this._widthConstraint = NaN;
+            this.initializeUIValues();
+            this.text = text;
+        }
+        var d = __define,c=BitmapLabel;p=c.prototype;
+        /**
+         * @private
+         *
+         */
+        p.$invalidateContentBounds = function () {
+            _super.prototype.$invalidateContentBounds.call(this);
+            this.invalidateSize();
+        };
+        /**
+         * @private
+         *
+         * @param value
+         */
+        p.$setWidth = function (value) {
+            var result1 = _super.prototype.$setWidth.call(this, value);
+            var result2 = UIImpl.prototype.$setWidth.call(this, value);
+            return result1 && result2;
+        };
+        /**
+         * @private
+         *
+         * @param value
+         */
+        p.$setHeight = function (value) {
+            var result1 = _super.prototype.$setHeight.call(this, value);
+            var result2 = UIImpl.prototype.$setHeight.call(this, value);
+            return result1 && result2;
+        };
+        /**
+         * @private
+         *
+         * @param value
+         */
+        p.$setText = function (value) {
+            var result = _super.prototype.$setText.call(this, value);
+            eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
+            return result;
+        };
+        p.$setFont = function (value) {
+            var values = this.$BitmapText;
+            if (this.$font == value) {
+                return false;
+            }
+            this.$font = value;
+            if (this.$createChildrenCalled) {
+                this.$parseFont();
+            }
+            else {
+                this.$fontChanged = true;
+            }
+            this.$BitmapText[6 /* fontStringChanged */] = true;
+            return true;
+        };
+        /**
+         * 解析source
+         */
+        p.$parseFont = function () {
+            this.$fontChanged = false;
+            if (this.$font && typeof this.$font == "string") {
+                var adapter = this.$stage.getImplementation("eui.IAssetAdapter");
+                if (!adapter) {
+                    adapter = new eui.DefaultAssetAdapter();
+                }
+                adapter.getAsset(this.$font, this.$onFontChanged, this);
+            }
+            else {
+                this.$setFontData(this.$font);
+            }
+        };
+        /**
+         * 皮肤发生改变
+         */
+        p.$onFontChanged = function (bitmapFont, font) {
+            if (font !== this.$font) {
+                return;
+            }
+            this.$setFontData(bitmapFont);
+        };
+        p.$setFontData = function (value) {
+            if (value == this.$BitmapText[5 /* font */]) {
+                return false;
+            }
+            this.$BitmapText[5 /* font */] = value;
+            this.$invalidateContentBounds();
+            return true;
+        };
+        /**
+         * @copy eui.UIComponent#createChildren
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.createChildren = function () {
+            if (this.$fontChanged) {
+                this.$parseFont();
+            }
+            this.$createChildrenCalled = true;
+        };
+        /**
+         * @copy eui.UIComponent#childrenCreated
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.childrenCreated = function () {
+        };
+        /**
+         * @copy eui.UIComponent#commitProperties
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.commitProperties = function () {
+        };
+        /**
+         * @copy eui.UIComponent#measure
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.measure = function () {
+            var values = this.$UIComponent;
+            var textValues = this.$BitmapText;
+            var oldWidth = textValues[0 /* textFieldWidth */];
+            var availableWidth = NaN;
+            if (!isNaN(this._widthConstraint)) {
+                availableWidth = this._widthConstraint;
+                this._widthConstraint = NaN;
+            }
+            else if (!isNaN(values[8 /* explicitWidth */])) {
+                availableWidth = values[8 /* explicitWidth */];
+            }
+            else if (values[13 /* maxWidth */] != 100000) {
+                availableWidth = values[13 /* maxWidth */];
+            }
+            _super.prototype.$setWidth.call(this, availableWidth);
+            this.setMeasuredSize(this.textWidth, this.textHeight);
+            _super.prototype.$setWidth.call(this, oldWidth);
+        };
+        /**
+         * @copy eui.UIComponent#updateDisplayList
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
+            _super.prototype.$setWidth.call(this, unscaledWidth);
+            _super.prototype.$setHeight.call(this, unscaledHeight);
+        };
+        /**
+         * @copy eui.UIComponent#invalidateParentLayout
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.invalidateParentLayout = function () {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.setMeasuredSize = function (width, height) {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.invalidateProperties = function () {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.validateProperties = function () {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.invalidateSize = function () {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.validateSize = function (recursive) {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.invalidateDisplayList = function () {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.validateDisplayList = function () {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.validateNow = function () {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.setLayoutBoundsSize = function (layoutWidth, layoutHeight) {
+            UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
+            if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
+                return;
+            }
+            var values = this.$UIComponent;
+            if (!isNaN(values[9 /* explicitHeight */])) {
+                return;
+            }
+            if (layoutWidth == values[16 /* measuredWidth */]) {
+                return;
+            }
+            this._widthConstraint = layoutWidth;
+            this.invalidateSize();
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.setLayoutBoundsPosition = function (x, y) {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.getLayoutBounds = function (bounds) {
+        };
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        p.getPreferredBounds = function (bounds) {
+        };
+        return BitmapLabel;
+    })(egret.BitmapText);
+    eui.BitmapLabel = BitmapLabel;
+    egret.registerClass(BitmapLabel,"eui.BitmapLabel",["eui.UIComponent","eui.IDisplayText"]);
+    eui.sys.implementUIComponent(BitmapLabel, egret.BitmapText);
+    eui.registerBindable(BitmapLabel.prototype, "text");
 })(eui || (eui = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4640,6 +4641,8 @@ var eui;
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="../states/State.ts" />
+/// <reference path="../core/uicomponent.ts" />
+/// <reference path="../utils/registerproperty.ts" />
 var eui;
 (function (eui) {
     /**
@@ -5582,7 +5585,7 @@ var eui;
                 var comp = renderer;
                 if (!comp.$Component[5 /* skinNameExplicitlySet */]) {
                     comp.skinName = skinName;
-                    comp.$Component[5 /* skinNameExplicitlySet */] = false;
+                    comp.$Component[5 /* skinNameExplicitlySet */] = true;
                 }
             }
         };

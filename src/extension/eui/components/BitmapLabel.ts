@@ -1,3 +1,4 @@
+/// <reference path="../core/uicomponent.ts" />
 module eui {
     var UIImpl = sys.UIComponentImpl;
     export class BitmapLabel extends egret.BitmapText implements UIComponent, IDisplayText {
