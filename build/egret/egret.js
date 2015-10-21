@@ -7496,7 +7496,7 @@ var egret;
          * @private
          */
         p.$measureContentBounds = function (bounds) {
-            if (!this.hasFill && (!this.hasStroke && this._strokeStyle == null)) {
+            if ((!this.hasFill && this._fillStyle == null) && (!this.hasStroke && this._strokeStyle == null)) {
                 bounds.setEmpty();
                 return;
             }
@@ -20605,6 +20605,7 @@ var egret;
         p.start = function () {
             if (this._running)
                 return;
+            this.lastCount = this.updateInterval;
             egret.sys.$ticker.$startTick(this.$update, this);
             this._running = true;
         };

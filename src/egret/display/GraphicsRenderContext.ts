@@ -948,7 +948,7 @@ module egret {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            if (!this.hasFill && (!this.hasStroke  && this._strokeStyle == null)) {
+            if ((!this.hasFill && this._fillStyle == null) && (!this.hasStroke && this._strokeStyle == null)) {
                 bounds.setEmpty();
                 return;
             }
