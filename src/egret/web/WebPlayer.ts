@@ -27,7 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web { 
+module egret.web {
     /**
      * @private
      */
@@ -58,11 +58,9 @@ module egret.web {
             var webHide = new egret.web.WebHideHandler(stage);
             var webInput = new HTMLInput();
 
-            if (DEBUG) {
-                player.showPaintRect(option.showPaintRect);
-                if (option.showFPS || option.showLog) {
-                    player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
-                }
+            player.showPaintRect(option.showPaintRect);
+            if (option.showFPS || option.showLog) {
+                player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
             }
             this.playerOption = option;
             this.container = container;
@@ -103,22 +101,20 @@ module egret.web {
             option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
             option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
 
-            if (DEBUG) {
-                option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
-                option.showFPS = container.getAttribute("data-show-fps") == "true";
+            option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
+            option.showFPS = container.getAttribute("data-show-fps") == "true";
 
-                var styleStr = container.getAttribute("data-show-fps-style") || "";
-                var stylesArr = styleStr.split(",");
-                var styles = {};
-                for (var i = 0; i < stylesArr.length; i++) {
-                    var tempStyleArr = stylesArr[i].split(":");
-                    styles[tempStyleArr[0]] = tempStyleArr[1];
-                }
-                option.fpsStyles = styles;
-
-                option.showLog = container.getAttribute("data-show-log") == "true";
-                option.logFilter = container.getAttribute("data-log-filter");
+            var styleStr = container.getAttribute("data-show-fps-style") || "";
+            var stylesArr = styleStr.split(",");
+            var styles = {};
+            for (var i = 0; i < stylesArr.length; i++) {
+                var tempStyleArr = stylesArr[i].split(":");
+                styles[tempStyleArr[0]] = tempStyleArr[1];
             }
+            option.fpsStyles = styles;
+
+            option.showLog = container.getAttribute("data-show-log") == "true";
+            option.logFilter = container.getAttribute("data-log-filter");
             return option;
         }
 
@@ -180,7 +176,7 @@ module egret.web {
             var orientation:string = this.stage.$orientation;
             if (orientation != OrientationMode.AUTO) {
                 shouldRotate = orientation != OrientationMode.PORTRAIT && screenRect.height > screenRect.width
-                || orientation == OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
+                    || orientation == OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
             }
             var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
             var screenHeight = shouldRotate ? screenRect.width : screenRect.height;

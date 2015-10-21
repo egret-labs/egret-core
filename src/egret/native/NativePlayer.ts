@@ -62,8 +62,8 @@ module egret.native {
             stage.frameRate = 60;
             egret_native.setFrameRate(option.frameRate > 60 ? 60 : option.frameRate);
 
-            stage.addEventListener(egret.Event.ENTER_FRAME, function (){
-                if($currentSurface) {
+            stage.addEventListener(egret.Event.ENTER_FRAME, function () {
+                if ($currentSurface) {
                     $currentSurface.end();
                 }
             }, this);
@@ -76,19 +76,17 @@ module egret.native {
             new NativeHideHandler(stage);
             //var nativeInput = new NativeInput();
 
-            if (DEBUG) {
-                player.showPaintRect(option.showPaintRect);
-                if (option.showFPS || option.showLog) {
-                    var styleStr:string = <string>option.fpsStyles || "";
-                    var stylesArr:Array<string> = styleStr.split(",");
-                    var styles = {};
-                    for (var i = 0; i < stylesArr.length; i++) {
-                        var tempStyleArr = stylesArr[i].split(":");
-                        styles[tempStyleArr[0]] = tempStyleArr[1];
-                    }
-                    option.fpsStyles = styles;
-                    player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
+            player.showPaintRect(option.showPaintRect);
+            if (option.showFPS || option.showLog) {
+                var styleStr:string = <string>option.fpsStyles || "";
+                var stylesArr:Array<string> = styleStr.split(",");
+                var styles = {};
+                for (var i = 0; i < stylesArr.length; i++) {
+                    var tempStyleArr = stylesArr[i].split(":");
+                    styles[tempStyleArr[0]] = tempStyleArr[1];
                 }
+                option.fpsStyles = styles;
+                player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
             }
             this.playerOption = option;
             this.stage = stage;

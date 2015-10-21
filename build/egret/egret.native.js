@@ -1144,19 +1144,17 @@ var egret;
                 var player = new egret.sys.Player(surface.renderContext, stage, option.entryClassName);
                 new native.NativeHideHandler(stage);
                 //var nativeInput = new NativeInput();
-                if (DEBUG) {
-                    player.showPaintRect(option.showPaintRect);
-                    if (option.showFPS || option.showLog) {
-                        var styleStr = option.fpsStyles || "";
-                        var stylesArr = styleStr.split(",");
-                        var styles = {};
-                        for (var i = 0; i < stylesArr.length; i++) {
-                            var tempStyleArr = stylesArr[i].split(":");
-                            styles[tempStyleArr[0]] = tempStyleArr[1];
-                        }
-                        option.fpsStyles = styles;
-                        player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
+                player.showPaintRect(option.showPaintRect);
+                if (option.showFPS || option.showLog) {
+                    var styleStr = option.fpsStyles || "";
+                    var stylesArr = styleStr.split(",");
+                    var styles = {};
+                    for (var i = 0; i < stylesArr.length; i++) {
+                        var tempStyleArr = stylesArr[i].split(":");
+                        styles[tempStyleArr[0]] = tempStyleArr[1];
                     }
+                    option.fpsStyles = styles;
+                    player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
                 }
                 this.playerOption = option;
                 this.stage = stage;
