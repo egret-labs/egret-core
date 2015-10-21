@@ -163,7 +163,7 @@ module egret.gui {
                 delete this.mapClassDic[requestName];
                 return instance;
             }
-            //egret.$error(1028, requestName);
+            throw new Error("#" + 1028 + ": " + requestName);
         }
     }
 
