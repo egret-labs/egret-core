@@ -211,6 +211,8 @@ var UpgradeCommand_2_4_3 = (function () {
                             }
                             //globals.log2(1711,projectPath);//工程目录已变更
                             //globals.exit(1713);//qq体验群
+                            //能让后续升级使用新目录
+                            self.changeDirToNewlyCreate(projectPath);
                             self.asyncCallback();
                         }, 200);
                     });
@@ -221,6 +223,12 @@ var UpgradeCommand_2_4_3 = (function () {
                 }
             }
         }
+    };
+    UpgradeCommand_2_4_3.prototype.changeDirToNewlyCreate = function (projectPath) {
+        egret.args.projectDir = projectPath;
+        //更新对旧目录的引用
+        var modify = require("../upgrade/ModifyProperties");
+        modify.changeProjectDir();
     };
     UpgradeCommand_2_4_3.prototype.replaceFileStr = function (filePath, mtch_rplc_str_arry) {
         var contentTxt = file.read(filePath);

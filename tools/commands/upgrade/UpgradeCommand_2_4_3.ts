@@ -234,6 +234,10 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                             }
                             //globals.log2(1711,projectPath);//工程目录已变更
                             //globals.exit(1713);//qq体验群
+
+                            //能让后续升级使用新目录
+                            self.changeDirToNewlyCreate(projectPath);
+
                             self.asyncCallback();
                         },200);
                     });
@@ -243,6 +247,13 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                 }
             }
         }
+    }
+
+    private changeDirToNewlyCreate(projectPath:string){
+        egret.args.projectDir = projectPath;
+        //更新对旧目录的引用
+        var modify = require("../upgrade/ModifyProperties");
+        modify.changeProjectDir();
     }
 
     private replaceFileStr(filePath:string,mtch_rplc_str_arry:string[]){

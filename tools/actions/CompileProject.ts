@@ -14,7 +14,7 @@ class CompileProject {
         //编译
         exmlActions.build();
         var result = this.compileProject(options);
-        exmlActions.afterBuild()
+        exmlActions.afterBuild();
         if(result.exitStatus)
             return null;
 

@@ -33,6 +33,7 @@
 
 var __global = global;
 var xml = require("../xml/index");
+var EXMLConfig = new require("./parser/EXMLConfig")();
 egret.XML = xml;
 
 
@@ -99,7 +100,7 @@ export function sort(exmlFiles: EXMLFile[]): EXMLFile[]{
 
 function parseEXML(exmlFiles: EXMLFile[]) {
 
-    exmlFiles.forEach(file=> {
+    exmlFiles.forEach((file:EXMLFile)=> {
         var xml = egret.XML.parse(file.content);
         file.className = parseClassName(xml);
         file.usedClasses = parseUsedClass(xml);
@@ -225,4 +226,15 @@ function getClassNameById(id: string, ns: string): string {
         name = ns.substring(0, ns.length - 1) + id
     }
     return name;
+}
+
+export function getDtsInfoFromExml(exmlFile:string):{className:string,extendName:string}{
+    var xml:egret.XML = egret.XML.parse(require("../FileUtil").read(exmlFile));
+    var className = EXMLConfig.getClassNameById(xml.localName, xml.namespace);
+    var extendName = "";
+    if(xml["$class"]){
+        extendName = className;
+        className = xml["$class"];
+    }
+    return{className:className,extendName:extendName};
 }

@@ -38,14 +38,14 @@ class UpgradeCommand implements egret.Command {
 
             function handleCallBack(err?:string){
                 if(!err){
-                    //if(globals.compressVersion("2.5.0",v) < 0){
-                    //    //2.5.0及以上 拷贝升级 不存储版本号
-                    //    modify.save(v);
-                    //}
-                    if("2.5.0" != v) {
-                        //2.5.0 拷贝升级 不存储版本号
+                    if(globals.compressVersion("2.5.0",v) > 0){
+                        //2.5.0及以上 拷贝升级 不存储版本号
                         modify.save(v);
                     }
+                    //if("2.5.0" != v) {
+                    //    //2.5.0 拷贝升级 不存储版本号
+                    //    modify.save(v);
+                    //}
                     callback();
                 }else{
                     callback({name:"",message:err});

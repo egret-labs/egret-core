@@ -24,7 +24,8 @@ class Build implements egret.Command {
                 globals.log2(1715);//项目检测成功
                 //成功以后再次执行build
                 var build = CHILD_EXEC.exec(
-                    'node \"' + FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"",
+                    globals.addQuotes(process.execPath)+" \""+
+                    FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"",
                     {
                         encoding: 'utf8',
                         timeout: 0,

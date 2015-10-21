@@ -38,9 +38,25 @@ class CreateAppCommand implements egret.Command {
         if(!arg_app_name || file.exists(arg_app_name)){
             globals.exit(1610);
         }
-
         if(!template_path || !arg_h5_path){
             globals.exit(1601);
+        }
+        //判断项目合法性
+        var isEgretProject = false;
+        var egretPropertiesPath = file.joinPath(arg_h5_path, "egretProperties.json");
+        if(!file.exists(egretPropertiesPath)){
+            isEgretProject = true;
+        }
+        if(isEgretProject){
+            var properties = JSON.parse(file.read(egretPropertiesPath));
+            if (properties["egret-version"]) {
+                isEgretProject = true;
+            }else{
+                isEgretProject = false;
+            }
+        }
+        if(!isEgretProject){
+            globals.exit(1602);
         }
 
         option.projectDir = arg_h5_path;
