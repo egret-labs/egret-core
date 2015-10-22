@@ -64,11 +64,11 @@ module egret.native {
         public toDataURL(type?: string, ...args: any[]): string {
             if(egret_native.Canvas) {
                 if(this.$nativeCanvas) {
-                    return this.$nativeCanvas.toDataURL.apply(this, arguments);
+                    return this.$nativeCanvas.toDataURL.apply(this.$nativeCanvas, arguments);
                 }
             } else {
                 if (this.$nativeRenderTexture) {
-                    return this.$nativeRenderTexture.toDataURL.apply(this, arguments);
+                    return this.$nativeRenderTexture.toDataURL.apply(this.$nativeRenderTexture, arguments);
                 }
             }
             return null;
