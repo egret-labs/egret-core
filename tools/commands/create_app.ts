@@ -52,7 +52,7 @@ class CreateAppCommand implements egret.Command {
         }
         if(isEgretProject){
             var properties = JSON.parse(file.read(egretPropertiesPath));
-            if (properties["egret-version"]) {
+            if (properties["egret_version"]) {
                 isEgretProject = true;
             }else{
                 isEgretProject = false;

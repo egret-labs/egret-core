@@ -45,7 +45,7 @@ var CreateAppCommand = (function () {
         }
         if (isEgretProject) {
             var properties = JSON.parse(file.read(egretPropertiesPath));
-            if (properties["egret-version"]) {
+            if (properties["egret_version"]) {
                 isEgretProject = true;
             }
             else {
