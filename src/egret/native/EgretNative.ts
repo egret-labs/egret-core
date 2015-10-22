@@ -28,9 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.native {
-    function runEgret () {
+    function runEgret() {
         var ticker = egret.sys.$ticker;
-        var mainLoop = function (){
+        var mainLoop = function () {
             ticker.update();
         };
         egret_native.executeMainLoop(mainLoop, ticker);
@@ -40,42 +40,6 @@ module egret.native {
         }
 
         new NativePlayer();
-    }
-
-    function toArray(argument){
-        var args = [];
-        for(var i=0;i<argument.length;i++){
-            args.push(argument[i]);
-        }
-        return args;
-    }
-
-    egret.warn = function () {
-        console.warn.apply(console, toArray(arguments))
-    };
-    egret.error = function () {
-        console.error.apply(console, toArray(arguments))
-    };
-    egret.assert = function () {
-        console.assert.apply(console, toArray(arguments))
-    };
-    if (DEBUG) {
-        egret.log = function () {
-            if (DEBUG) {
-                var length = arguments.length;
-                var info = "";
-                for (var i = 0; i < length; i++) {
-                    info += arguments[i] + " ";
-                }
-                sys.$logToFPS(info);
-            }
-            console.log.apply(console, toArray(arguments));
-        }
-    }
-    else {
-        egret.log = function () {
-            console.log.apply(console, toArray(arguments))
-        };
     }
 
     egret.runEgret = runEgret;

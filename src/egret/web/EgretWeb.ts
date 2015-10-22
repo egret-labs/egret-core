@@ -48,6 +48,7 @@ module egret.web {
     }
 
     var isRunning:boolean = false;
+
     /**
      * @private
      * 网页加载完成，实例化页面中定义的Egretsys标签
@@ -58,7 +59,7 @@ module egret.web {
         }
         isRunning = true;
 
-        if(DEBUG){
+        if (DEBUG) {
             var language = navigator.language || navigator.browserLanguage || "en_US";
             language = language.replace("-", "_");
 
@@ -109,55 +110,10 @@ module egret.web {
     }
 
     //覆盖原生的isNaN()方法实现，在不同浏览器上有2~10倍性能提升。
-    window["isNaN"] = function(value:number):boolean{
+    window["isNaN"] = function (value:number):boolean {
         value = +value;
         return value !== value;
     };
-
-    /**
-     * @private
-     * 
-     * @param argument 
-     */
-    function toArray(argument){
-        var args = [];
-        for(var i=0;i<argument.length;i++){
-            args.push(argument[i]);
-        }
-        return args;
-    }
-
-    egret.warn = function () {
-        console.warn.apply(console, toArray(arguments))
-    };
-    egret.error = function () {
-        console.error.apply(console, toArray(arguments))
-    };
-    egret.assert = function () {
-        console.assert.apply(console, toArray(arguments))
-    };
-    if (DEBUG) {
-        egret.log = function () {
-            if (DEBUG) {
-                var length = arguments.length;
-                var info = "";
-                for (var i = 0; i < length; i++) {
-                    info += arguments[i] + " ";
-                }
-                sys.$logToFPS(info);
-            }
-            console.log.apply(console, toArray(arguments));
-        }
-    }
-    else {
-        egret.log = function () {
-            console.log.apply(console, toArray(arguments))
-        };
-    }
-
-    //兼容runtime的RenderTexture，以后应该会废弃
-    CanvasRenderingContext2D.prototype["begin"] = function (){};
-    CanvasRenderingContext2D.prototype["end"] = function (){};
 
     var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
     CanvasRenderingContext2D.prototype.fill = function () {
@@ -183,6 +139,7 @@ module egret.web {
     egret.updateAllScreens = updateAllScreens;
 
     var resizeTimer:number = NaN;
+
     function doResize() {
         resizeTimer = NaN;
 
