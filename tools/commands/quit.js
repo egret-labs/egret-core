@@ -14,4 +14,5 @@ var Quit = (function () {
     return Quit;
 })();
 module.exports = Quit;
-//# sourceMappingURL=quit.js.map
+
+//# sourceMappingURL=../commands/quit.js.map

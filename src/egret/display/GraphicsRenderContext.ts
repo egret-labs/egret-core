@@ -948,7 +948,7 @@ module egret {
          * @private
          */
         $measureContentBounds(bounds:Rectangle):void {
-            if (!this.hasFill && (!this.hasStroke  && this._strokeStyle == null)) {
+            if ((!this.hasFill && this._fillStyle == null) && (!this.hasStroke && this._strokeStyle == null)) {
                 bounds.setEmpty();
                 return;
             }
@@ -998,16 +998,15 @@ module egret {
                 }
             }
 
-            if (this._fillStyle) {
-                map[sys.GraphicsCommandType.fill].apply(context, []);
-                map[sys.GraphicsCommandType.closePath].apply(context, []);
-            }
-
             if (this._strokeStyle) {
                 map[sys.GraphicsCommandType.stroke].apply(context, []);
                 map[sys.GraphicsCommandType.closePath].apply(context, []);
             }
 
+            if (this._fillStyle) {
+                map[sys.GraphicsCommandType.fill].apply(context, []);
+                map[sys.GraphicsCommandType.closePath].apply(context, []);
+            }
 
             context.restore();
         }

@@ -4,7 +4,7 @@ module egret {
     $locale_strings["en_US"] = $locale_strings["en_US"] || {};
     var locale_strings = $locale_strings["en_US"];
 
-    //core
+    //core  1000-1999
     locale_strings[1001] = "Could not find Egret entry class: {0}。";
     locale_strings[1002] = "Egret entry class '{0}' must inherit from egret.DisplayObject.";
     locale_strings[1003] = "Parameter {0} must be non-null.";
@@ -37,7 +37,7 @@ module egret {
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
 
-    //gui
+    //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
     locale_strings[3002] = "Index:\"{0}\" is out of the collection element index range";
@@ -53,12 +53,12 @@ module egret {
     locale_strings[3012] = "This method is not available in Scroller component!";
     locale_strings[3013] = "UIStage is GUI root container, and only one such instant is in the display list！";
 
-    //socket
+    //socket 3100-3199
     locale_strings[3100] = "Current browser does not support WebSocket";
     locale_strings[3101] = "Please connect Socket firstly";
     locale_strings[3102] = "Please set the type of binary type";
 
-    //db
+    //db 4000-4299
     locale_strings[4000] = "An Bone cannot be added as a child to itself or one of its children (or children's children, etc.)";
     locale_strings[4001] = "Abstract class can not be instantiated!";
     locale_strings[4002] = "Unnamed data!";

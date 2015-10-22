@@ -34,6 +34,24 @@ var CreateAppCommand = (function () {
         if (!template_path || !arg_h5_path) {
             globals.exit(1601);
         }
+        //判断项目合法性
+        var isEgretProject = false;
+        var egretPropertiesPath = file.joinPath(arg_h5_path, "egretProperties.json");
+        if (!file.exists(egretPropertiesPath)) {
+            isEgretProject = true;
+        }
+        if (isEgretProject) {
+            var properties = JSON.parse(file.read(egretPropertiesPath));
+            if (properties["egret-version"]) {
+                isEgretProject = true;
+            }
+            else {
+                isEgretProject = false;
+            }
+        }
+        if (!isEgretProject) {
+            globals.exit(1602);
+        }
         option.projectDir = arg_h5_path;
         var startTime = Date.now();
         var app_data = this.read_json_from(file.joinPath(template_path, "create_app.json"));

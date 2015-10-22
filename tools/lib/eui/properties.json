@@ -317,6 +317,12 @@
 		"selected":"boolean",
 		"super":"eui.Component"
 	},
+	"egret.BitmapLabel":
+	{
+		"implements":["eui.UIComponent","eui.IDisplayText"],
+		"super":"egret.BitmapText",
+		"text":"string"
+	},
 	"eui.Label":
 	{
 		"bottom":"number",

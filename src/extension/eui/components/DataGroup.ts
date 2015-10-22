@@ -71,6 +71,8 @@ module eui {
      * 尽管此容器可以包含可视元素，但它通常仅用于包含作为子项的数据项目。
      *
      * @see eui.Group
+     * @see http://edn.egret.com/cn/index.php/article/index/id/527 数据容器
+     * @see http://edn.egret.com/cn/index.php/article/index/id/528 数组集合 	 
      * @defaultProperty dataProvider
      * @includeExample  extension/eui/components/DataGroupExample.ts
      * @version Egret 2.4
@@ -312,10 +314,10 @@ module eui {
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
             }
+            this.addChild(renderer);
             if (values[Keys.itemRendererSkinName]) {
                 this.setItemRenderSkinName(renderer,values[Keys.itemRendererSkinName]);
             }
-            this.addChild(renderer);
             return renderer;
         }
 
@@ -326,8 +328,11 @@ module eui {
         private setItemRenderSkinName(renderer:IItemRenderer,skinName:any):void {
             if (renderer && renderer instanceof Component) {
                 var comp:Component = <Component> <any>renderer;
-                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet])
+                if (!comp.$Component[sys.ComponentKeys.skinNameExplicitlySet]){
                     comp.skinName = skinName;
+                    comp.$Component[sys.ComponentKeys.skinNameExplicitlySet] = false;
+                }
+
             }
         }
 
@@ -683,7 +688,7 @@ module eui {
             if (values[Keys.itemRendererSkinName] == value)
                 return;
             values[Keys.itemRendererSkinName] = value;
-            if (value && this.$UIComponent[sys.UIKeys.initialized]) {
+            if (this.$UIComponent[sys.UIKeys.initialized]) {
                 values[Keys.itemRendererSkinNameChange] = true;
                 this.invalidateProperties();
             }

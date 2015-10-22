@@ -6,8 +6,12 @@ import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
 
 export function beforeBuild() {
-
+    var exmlDtsPath = getExmlDtsPath();
+    if (file.exists(exmlDtsPath)) {
+        file.save(exmlDtsPath, "");
+    }
 }
+
 export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
 
 }
@@ -32,13 +36,11 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
 
 export function afterBuild() {
     updateSetting(egret.args.publish);
+    generateExmlDTS();
 }
 export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
     afterBuild();
 }
-
-
-
 
 function getSortedEXML(): exml.EXMLFile[] {
 
@@ -56,12 +58,12 @@ function getSortedEXML(): exml.EXMLFile[] {
 export function updateSetting(merge = false) {
 
     var themeDatas: egret.ILarkTheme[] = [];
-
+    //1.找到项目内后缀名为'.thm.json'的主题文件并返回列表
     var themes = searchTheme();
     if (themes.length == 0) {
         return;
     }
-
+    //2.将主题文件读入内存变成json对象
     themeDatas = themes.map(t=> {
         try {
             var data = JSON.parse(file.read(file.joinPath(egret.args.projectDir, t)));
@@ -73,7 +75,8 @@ export function updateSetting(merge = false) {
     });
 
     var oldEXMLS: EXMLFile[] = [];
-
+    //3.主题文件的exmls是一个列表，列表项是一个{path:string,content:string}的格式
+    //由于存在一个exml存在于多个主题的情况 把 主题1－>N文件 建立 文件1->N主题的一对多关系表oldEXMLS(数组＋快表)
     themeDatas.forEach((thm, i) => {
         thm.exmls && thm.exmls.forEach(e=> {
             var path = e.path ? e.path : e;
@@ -90,6 +93,7 @@ export function updateSetting(merge = false) {
         });
     });
 
+    //4.获得排序后的所有exml文件列表
 
     var exmls = getSortedEXML();
 
@@ -152,4 +156,53 @@ interface EXMLFile {
     path: string;
     theme?: string;
     preload?: boolean;
+}
+
+function getExmlDtsPath() {
+    return file.joinPath(egret.args.projectDir, "libs", "exml.e.d.ts");
+}
+
+function generateExmlDTS(): string {
+    var sourceList = file.search(egret.args.projectDir, "exml");
+
+    var length = sourceList.length;
+    if (length == 0)
+        return;
+    var dts = "";
+    for (var i = 0; i < length; i++) {
+        var p = sourceList[i];
+        if (!file.exists(p)) {
+            continue;
+        }
+        var ext = file.getExtension(p).toLowerCase();
+        if (ext == "exml") {
+            //解析exml并返回className和extendName继承关系
+            var ret = exml.getDtsInfoFromExml(p);
+            //var className = p.substring(srcPath.length, p.length - 5);
+            var className = ret.className;
+            //className = className.split("/").join(".");
+            var index = className.lastIndexOf(".");
+            if (index == -1) {
+                if(ret.extendName == ""){
+                    dts += "declare class "+className+"{\n}\n";
+                }else{
+                    dts += "declare class " + className + " extends "+ret.extendName +"{\n}\n";
+                }
+            }
+            else {
+                var moduleName = className.substring(0, index);
+                className = className.substring(index + 1);
+                if(ret.extendName == ""){
+                    dts += "declare module " + moduleName + "{\n\tclass "+className+"{\n}\n}\n";
+                }else{
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends "+ret.extendName +"{\n}\n}\n";
+                }
+            }
+        }
+    }
+    //保存exml
+    var exmlDtsPath = getExmlDtsPath();
+    file.save(exmlDtsPath, dts);
+
+    return dts;
 }

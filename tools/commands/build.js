@@ -18,7 +18,8 @@ var Build = (function () {
             apitest_command.execute(function () {
                 globals.log2(1715); //项目检测成功
                 //成功以后再次执行build
-                var build = CHILD_EXEC.exec('node \"' + FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"", {
+                var build = CHILD_EXEC.exec(globals.addQuotes(process.execPath) + " \"" +
+                    FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"", {
                     encoding: 'utf8',
                     timeout: 0,
                     maxBuffer: 200 * 1024,
@@ -63,8 +64,10 @@ var Build = (function () {
         var packageJson;
         if (packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
             packageJson = JSON.parse(packageJson);
-            this.buildLib(packageJson);
-            return 0;
+            if (packageJson.modules) {
+                this.buildLib(packageJson);
+                return 0;
+            }
         }
         if (FileUtil.exists(options.srcDir) == false ||
             FileUtil.exists(options.templateDir) == false) {
@@ -150,4 +153,5 @@ function defaultBuildCallback(code) {
     utils.exit(code);
 }
 module.exports = Build;
-//# sourceMappingURL=build.js.map
+
+//# sourceMappingURL=../commands/build.js.map

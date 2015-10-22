@@ -9,6 +9,10 @@ var ModifyProperties = (function () {
     ModifyProperties.prototype.getProperties = function () {
         return this.projectConfig;
     };
+    //变更目录后必须调用此方法同步配置文件的变化
+    ModifyProperties.prototype.changeProjectDir = function () {
+        this.initProperties();
+    };
     ModifyProperties.prototype.initProperties = function () {
         var projectPath = file.joinPath(egret.args.projectDir, "egretProperties.json");
         var content = file.read(projectPath);

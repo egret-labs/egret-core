@@ -267,4 +267,5 @@ var helpModule;
     };
     global["helpModule"] = global["helpModule"] || helpModule;
 })(helpModule || (helpModule = {}));
-//# sourceMappingURL=zh_CN.js.map
+
+//# sourceMappingURL=../locales/zh_CN.js.map

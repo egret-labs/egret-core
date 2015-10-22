@@ -491,7 +491,7 @@ module RES {
                 var clazz = this.analyzerClassMap[type];
                 if (!clazz) {
                     if (DEBUG) {
-                        egret.$error(2003, type);
+                        egret.$error(3203, type);
                     }
                     return null;
                 }
@@ -814,10 +814,10 @@ module RES {
         /**
          * 通过url获取资源
 		 * @method RES.getResByUrl
-		 * @param url {string} 
-		 * @param compFunc {Function} 
-		 * @param thisObject {any} 
-		 * @param type {string} 
+		 * @param url {string}
+		 * @param compFunc {Function}
+		 * @param thisObject {any}
+		 * @param type {string}
          */
         public getResByUrl(url:string,compFunc:Function,thisObject:any,type:string=""):void{
             if(!url){
@@ -828,7 +828,7 @@ module RES {
                 type = this.getTypeByUrl(url);
 
             if (this._loadedUrlTypes[url] != null && this._loadedUrlTypes[url] != type) {
-                egret.$warn(2002);
+                egret.$warn(3202);
             }
             this._loadedUrlTypes[url] = type;
 

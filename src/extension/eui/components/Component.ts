@@ -162,7 +162,17 @@ module eui {
             values[sys.ComponentKeys.skinNameExplicitlySet] = true;
             if (values[sys.ComponentKeys.skinName] == value)
                 return;
-            values[sys.ComponentKeys.skinName] = value;
+            if (value) {
+                values[sys.ComponentKeys.skinName] = value;
+            } else if(this.$stage){
+                var theme = this.$stage.getImplementation("eui.Theme");
+                if (theme) {
+                    var skinName = theme.getSkinName(this);
+                    if (skinName) {
+                        values[sys.ComponentKeys.skinName] = skinName;
+                    }
+                }
+            }
             this.$parseSkinName();
         }
 
@@ -215,7 +225,6 @@ module eui {
             }
             var skin = new clazz();
             this.setSkin(skin)
-            this.dispatchEventWith(egret.Event.COMPLETE);
         }
 
         /**
@@ -299,6 +308,7 @@ module eui {
             }
             this.invalidateSize();
             this.invalidateDisplayList();
+            this.dispatchEventWith(egret.Event.COMPLETE);
         }
 
 

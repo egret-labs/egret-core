@@ -1,5 +1,4 @@
-﻿
-/// <reference path="../lib/types.d.ts" />
+﻿/// <reference path="../lib/types.d.ts" />
 
 import utils = require('../lib/utils');
 import server = require('../server/server');
@@ -16,31 +15,32 @@ import APITestCommand = require('./apitest');
 import Compiler = require('../actions/Compiler');
 
 class Build implements egret.Command {
-    execute(callback?: (exitCode: number) => void): number {
+    execute(callback?:(exitCode:number) => void):number {
         callback = callback || defaultBuildCallback;
         //如果APITest未通过继续执行APITest
-        if(!APITestTool.isTestPass(egret.args.projectDir)){
+        if (!APITestTool.isTestPass(egret.args.projectDir)) {
             var apitest_command = new APITestCommand();
-            apitest_command.execute(()=>{
+            apitest_command.execute(()=> {
                 globals.log2(1715);//项目检测成功
                 //成功以后再次执行build
                 var build = CHILD_EXEC.exec(
-                    'node \"'+FileUtil.joinPath(egret.root,'/tools/bin/egret')+'\" build \"'+egret.args.projectDir+"\"",
+                    globals.addQuotes(process.execPath)+" \""+
+                    FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"",
                     {
                         encoding: 'utf8',
                         timeout: 0,
-                        maxBuffer: 200*1024,
+                        maxBuffer: 200 * 1024,
                         killSignal: 'SIGTERM',
                         cwd: process.cwd(),
                         env: process.env
                     });
-                build.stderr.on("data", (data) =>{
+                build.stderr.on("data", (data) => {
                     console.log(data);
                 });
-                build.stdout.on("data",(data)=>{
+                build.stdout.on("data", (data)=> {
                     console.log(data);
                 });
-                build.on("exit", (result)=>{
+                build.on("exit", (result)=> {
                     process.exit(result);
                 });
                 //返回true截断默认的exit操作
@@ -70,10 +70,12 @@ class Build implements egret.Command {
 
         var options = egret.args;
         var packageJson;
-        if(packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
+        if (packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
             packageJson = JSON.parse(packageJson);
-            this.buildLib(packageJson);
-            return 0;
+            if(packageJson.modules) {//通过有modules来识别是egret库项目
+                this.buildLib(packageJson);
+                return 0;
+            }
         }
         if (FileUtil.exists(options.srcDir) == false ||
             FileUtil.exists(options.templateDir) == false) {
@@ -96,12 +98,12 @@ class Build implements egret.Command {
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";
         var compiler = new Compiler;
-        for(var i:number = 0 ; i < packageJson.modules.length ; i++) {
+        for (var i:number = 0; i < packageJson.modules.length; i++) {
             var module = packageJson.modules[i];
             var files = [];
-            for(var j:number = 0 ; j < module.files.length ; j++){
+            for (var j:number = 0; j < module.files.length; j++) {
                 var file = module.files[j];
-                if(file.indexOf(".ts") != -1) {
+                if (file.indexOf(".ts") != -1) {
                     files.push(FileUtil.joinPath(options.projectDir, module.root, file));
                 }
             }
@@ -122,18 +124,18 @@ class Build implements egret.Command {
 
             var str = "";
             var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"));
-            for(var j:number = 0 ; j < module.files.length ; j++){
+            for (var j:number = 0; j < module.files.length; j++) {
                 var file = module.files[j];
-                if(file.indexOf(".d.ts") != -1) {
+                if (file.indexOf(".d.ts") != -1) {
                     //FileUtil.copy(FileUtil.joinPath(options.projectDir, module.root, file), FileUtil.joinPath(options.projectDir, outDir, module.name, file));
                     dtsStr += "\n";
                     dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file));
                 }
-                else if(file.indexOf(".ts") != -1) {
+                else if (file.indexOf(".ts") != -1) {
                     str += FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp", file.replace(".ts", ".js")));
                     str += "\n";
                 }
-                else if(file.indexOf(".js") != -1) {
+                else if (file.indexOf(".js") != -1) {
                     str += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file.replace(".ts", ".js")));
                     str += "\n";
                 }
@@ -143,13 +145,13 @@ class Build implements egret.Command {
             FileUtil.save(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"), str);
             var minPath = FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".min.js");
             FileUtil.save(minPath, str);
-            utils.minify(minPath,minPath);
+            utils.minify(minPath, minPath);
             FileUtil.remove(FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp"));
         }
     }
 }
 
-function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exitCode: number) => void) {
+function onGotBuildCommandResult(cmd:egret.ServiceCommandResult, callback:(exitCode:number) => void) {
     if (cmd.messages) {
         cmd.messages.forEach(m=> console.log(m));
     }
