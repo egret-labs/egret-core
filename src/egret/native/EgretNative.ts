@@ -28,7 +28,21 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.native {
+    var isRunning:boolean = false;
+
     function runEgret() {
+        if (isRunning) {
+            return;
+        }
+        isRunning = true;
+        if (DEBUG) {
+            //todo 获得系统语言版本
+            var language = "zh_CN";
+
+            if (language in egret.$locale_strings)
+                egret.$language = language;
+        }
+
         var ticker = egret.sys.$ticker;
         var mainLoop = function () {
             ticker.update();
