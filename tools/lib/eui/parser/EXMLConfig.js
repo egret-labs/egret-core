@@ -66,10 +66,10 @@ var EXMLConfig = (function () {
         //this.findStyles(properties);
     }
     EXMLConfig.getInstance = function () {
-        if (EXMLConfig.instance == null) {
-            EXMLConfig.instance = new EXMLConfig();
+        if (EXMLConfig.__instance == null) {
+            EXMLConfig.__instance = new EXMLConfig();
         }
-        return EXMLConfig.instance;
+        return EXMLConfig.__instance;
     };
     /**
      * 解析框架清单文件
@@ -122,7 +122,7 @@ var EXMLConfig = (function () {
         return name;
     };
     //added by yanjiaqi 2015.10.21
-    EXMLConfig.instance = null;
+    EXMLConfig.__instance = null;
     return EXMLConfig;
 })();
 exports.EXMLConfig = EXMLConfig;

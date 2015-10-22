@@ -65,7 +65,7 @@ class Component{
 export class EXMLConfig {
 
     //added by yanjiaqi 2015.10.21
-    static instance :EXMLConfig = null;
+    static __instance :EXMLConfig = null;
     /**
      * 组件清单列表
      */
@@ -86,10 +86,10 @@ export class EXMLConfig {
     }
 
     static getInstance():EXMLConfig{
-        if(EXMLConfig.instance == null){
-            EXMLConfig.instance = new EXMLConfig();
+        if(EXMLConfig.__instance == null){
+            EXMLConfig.__instance = new EXMLConfig();
         }
-        return EXMLConfig.instance;
+        return EXMLConfig.__instance;
     }
     /**
      * 解析框架清单文件
