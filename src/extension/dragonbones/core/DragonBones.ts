@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////
+﻿//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -44,7 +44,7 @@ module dragonBones {
 		 */
         public static PARENT_COORDINATE_DATA_VERSION:string = "3.0";
 
-        public static VERSION:string = "4.1.7";
+        public static VERSION:string = "4.1.8";
 		
 		public constructor(){
 		}
