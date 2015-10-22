@@ -7544,12 +7544,12 @@ var egret;
                     map[command.type].apply(context, command.arguments);
                 }
             }
-            if (this._fillStyle) {
-                map[9 /* fill */].apply(context, []);
-                map[10 /* closePath */].apply(context, []);
-            }
             if (this._strokeStyle) {
                 map[15 /* stroke */].apply(context, []);
+                map[10 /* closePath */].apply(context, []);
+            }
+            if (this._fillStyle) {
+                map[9 /* fill */].apply(context, []);
                 map[10 /* closePath */].apply(context, []);
             }
             context.restore();
