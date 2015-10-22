@@ -28,8 +28,11 @@ var CreateAppCommand = (function () {
         var arg_app_name = option.projectDir;
         var template_path = option.nativeTemplatePath;
         var arg_h5_path = option.fileName;
-        if (!arg_app_name || file.exists(arg_app_name)) {
+        if (!arg_app_name) {
             globals.exit(1610);
+        }
+        if (file.exists(arg_app_name)) {
+            globals.exit(1611);
         }
         if (!template_path || !arg_h5_path) {
             globals.exit(1601);

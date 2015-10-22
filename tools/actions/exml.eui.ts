@@ -193,9 +193,9 @@ function generateExmlDTS(): string {
                 var moduleName = className.substring(0, index);
                 className = className.substring(index + 1);
                 if(ret.extendName == ""){
-                    dts += "declare module " + moduleName + "{\n\tclass "+className+"{\n}\n}\n";
+                    dts += "declare module " + moduleName + "{\n\tclass "+className+"{\n\t}\n}\n";
                 }else{
-                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends "+ret.extendName +"{\n}\n}\n";
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends "+ret.extendName +"{\n\t}\n}\n";
                 }
             }
         }

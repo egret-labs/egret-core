@@ -152,7 +152,8 @@ var egret;
     locale_strings[1607] = "> copy from project template ...";
     locale_strings[1608] = "> replace all configure elements ...";
     locale_strings[1609] = "> rename project name ...";
-    locale_strings[1610] = "缺少项目名称或项目已存在。例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
+    locale_strings[1610] = "缺少项目名称 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
+    locale_strings[1611] = "项目已存在,请重新输入 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";
