@@ -6,10 +6,11 @@ import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
 
 export function beforeBuild() {
-    var exmlDtsPath = getExmlDtsPath();
-    if (file.exists(exmlDtsPath)) {
-        file.save(exmlDtsPath, "");
-    }
+    //eui生成js文件不用清空类定义
+    //var exmlDtsPath = getExmlDtsPath();
+    //if (file.exists(exmlDtsPath)) {
+    //    file.save(exmlDtsPath, "");
+    //}
 }
 
 export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {

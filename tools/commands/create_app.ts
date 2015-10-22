@@ -47,7 +47,7 @@ class CreateAppCommand implements egret.Command {
         //判断项目合法性
         var isEgretProject = false;
         var egretPropertiesPath = file.joinPath(arg_h5_path, "egretProperties.json");
-        if(!file.exists(egretPropertiesPath)){
+        if(file.exists(egretPropertiesPath)){
             isEgretProject = true;
         }
         if(isEgretProject){
