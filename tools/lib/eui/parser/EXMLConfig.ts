@@ -65,6 +65,7 @@ class Component{
 export class EXMLConfig {
 
     //added by yanjiaqi 2015.10.21
+    static instance :EXMLConfig = null;
     /**
      * 组件清单列表
      */
@@ -84,6 +85,12 @@ export class EXMLConfig {
         //this.findStyles(properties);
     }
 
+    static getInstance():EXMLConfig{
+        if(EXMLConfig.instance == null){
+            EXMLConfig.instance = new EXMLConfig();
+        }
+        return EXMLConfig.instance;
+    }
     /**
      * 解析框架清单文件
      */

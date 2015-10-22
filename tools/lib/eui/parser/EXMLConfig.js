@@ -51,7 +51,6 @@ var Component = (function () {
  */
 var EXMLConfig = (function () {
     function EXMLConfig() {
-        //added by yanjiaqi 2015.10.21
         /**
          * 组件清单列表
          */
@@ -66,6 +65,12 @@ var EXMLConfig = (function () {
         properties = JSON.parse(str);
         //this.findStyles(properties);
     }
+    EXMLConfig.getInstance = function () {
+        if (EXMLConfig.instance == null) {
+            EXMLConfig.instance = new EXMLConfig();
+        }
+        return EXMLConfig.instance;
+    };
     /**
      * 解析框架清单文件
      */
@@ -116,6 +121,8 @@ var EXMLConfig = (function () {
         }
         return name;
     };
+    //added by yanjiaqi 2015.10.21
+    EXMLConfig.instance = null;
     return EXMLConfig;
 })();
 exports.EXMLConfig = EXMLConfig;
