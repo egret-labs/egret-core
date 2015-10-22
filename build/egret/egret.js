@@ -20355,17 +20355,10 @@ var egret;
             value = value % 360;
             if (value < 0) {
                 value += 360;
-<<<<<<< HEAD
             }
             if (value < 90) {
                 return egret_sin_map[value];
             }
-=======
-            }
-            if (value < 90) {
-                return egret_sin_map[value];
-            }
->>>>>>> nativeCanvas
             if (value < 180) {
                 return egret_cos_map[value - 90];
             }
@@ -20643,10 +20636,7 @@ var egret;
         p.start = function () {
             if (this._running)
                 return;
-<<<<<<< HEAD
             this.lastCount = this.updateInterval;
-=======
->>>>>>> nativeCanvas
             egret.sys.$ticker.$startTick(this.$update, this);
             this._running = true;
         };

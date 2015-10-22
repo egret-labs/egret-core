@@ -62,13 +62,6 @@ module egret.native {
             stage.frameRate = 60;
             egret_native.setFrameRate(option.frameRate > 60 ? 60 : option.frameRate);
 
-<<<<<<< HEAD
-            stage.addEventListener(egret.Event.ENTER_FRAME, function () {
-                if ($currentSurface) {
-                    $currentSurface.end();
-                }
-            }, this);
-=======
             if(!egret_native.Canvas) {
                 stage.addEventListener(egret.Event.ENTER_FRAME, function (){
                     if($currentSurface) {
@@ -76,7 +69,6 @@ module egret.native {
                     }
                 }, this);
             }
->>>>>>> nativeCanvas
 
             var surface:NativeSurface = <NativeSurface>egret.sys.surfaceFactory.create();
             surface.$isRoot = true;

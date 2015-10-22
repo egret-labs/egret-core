@@ -28,7 +28,12 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.native {
-<<<<<<< HEAD
+
+    /**
+     * @private
+     */
+    export var $supportCanvas = egret_native.Canvas ? true : false;
+
     var isRunning:boolean = false;
 
     function runEgret() {
@@ -43,16 +48,6 @@ module egret.native {
             if (language in egret.$locale_strings)
                 egret.$language = language;
         }
-
-=======
-
-    /**
-     * @private
-     */
-    export var $supportCanvas = egret_native.Canvas ? true : false;
-
-    function runEgret() {
->>>>>>> nativeCanvas
         var ticker = egret.sys.$ticker;
         var mainLoop = function () {
             ticker.update();
@@ -66,8 +61,6 @@ module egret.native {
         new NativePlayer();
     }
 
-<<<<<<< HEAD
-=======
     function toArray(argument) {
         var args = [];
         for (var i = 0; i < argument.length; i++) {
@@ -104,6 +97,5 @@ module egret.native {
         };
     }
 
->>>>>>> nativeCanvas
     egret.runEgret = runEgret;
 }

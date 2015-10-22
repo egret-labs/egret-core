@@ -989,12 +989,12 @@ var egret;
                 }
                 if (egret_native.Canvas) {
                     if (this.$nativeCanvas) {
-                        return this.$nativeCanvas.toDataURL.apply(this, arguments);
+                        return this.$nativeCanvas.toDataURL.apply(this.$nativeCanvas, arguments);
                     }
                 }
                 else {
                     if (this.$nativeRenderTexture) {
-                        return this.$nativeRenderTexture.toDataURL.apply(this, arguments);
+                        return this.$nativeRenderTexture.toDataURL.apply(this.$nativeRenderTexture, arguments);
                     }
                 }
                 return null;
@@ -1522,7 +1522,18 @@ var egret;
          * @private
          */
         native.$supportCanvas = egret_native.Canvas ? true : false;
+        var isRunning = false;
         function runEgret() {
+            if (isRunning) {
+                return;
+            }
+            isRunning = true;
+            if (DEBUG) {
+                //todo 获得系统语言版本
+                var language = "zh_CN";
+                if (language in egret.$locale_strings)
+                    egret.$language = language;
+            }
             var ticker = egret.sys.$ticker;
             var mainLoop = function () {
                 ticker.update();
@@ -1533,6 +1544,40 @@ var egret;
                 egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
             }
             new native.NativePlayer();
+        }
+        function toArray(argument) {
+            var args = [];
+            for (var i = 0; i < argument.length; i++) {
+                args.push(argument[i]);
+            }
+            return args;
+        }
+        egret.warn = function () {
+            console.warn.apply(console, toArray(arguments));
+        };
+        egret.error = function () {
+            console.error.apply(console, toArray(arguments));
+        };
+        egret.assert = function () {
+            console.assert.apply(console, toArray(arguments));
+        };
+        if (DEBUG) {
+            egret.log = function () {
+                if (DEBUG) {
+                    var length = arguments.length;
+                    var info = "";
+                    for (var i = 0; i < length; i++) {
+                        info += arguments[i] + " ";
+                    }
+                    egret.sys.$logToFPS(info);
+                }
+                console.log.apply(console, toArray(arguments));
+            };
+        }
+        else {
+            egret.log = function () {
+                console.log.apply(console, toArray(arguments));
+            };
         }
         egret.runEgret = runEgret;
     })(native = egret.native || (egret.native = {}));

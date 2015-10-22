@@ -610,8 +610,6 @@ declare module dragonBones {
         /** @private */
         _pivot: Point;
         /** @private */
-        _blendEnabled: boolean;
-        /** @private */
         _isComplete: boolean;
         /** @private */
         _animationState: AnimationState;

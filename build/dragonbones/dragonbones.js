@@ -45,7 +45,7 @@ var dragonBones;
          *
          */
         DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.1.7";
+        DragonBones.VERSION = "4.1.8";
         return DragonBones;
     })();
     dragonBones.DragonBones = DragonBones;
@@ -1941,7 +1941,6 @@ var dragonBones;
             this._totalTime = this._timelineData.duration;
             this._rawAnimationScale = this._animationState.clip.scale;
             this._isComplete = false;
-            this._blendEnabled = false;
             this._tweenTransform = false;
             this._tweenScale = false;
             this._currentFrameIndex = -1;
@@ -2077,20 +2076,9 @@ var dragonBones;
                 }
                 if (currentFrame) {
                     this._bone._arriveAtFrame(currentFrame, this, this._animationState, false);
-                    this._blendEnabled = !isNaN(currentFrame.tweenEasing);
-                    if (this._blendEnabled) {
-                        this.updateToNextFrame(currentPlayTimes);
-                    }
-                    else {
-                        this._tweenEasing = NaN;
-                        this._tweenTransform = false;
-                        this._tweenScale = false;
-                        this._tweenColor = false;
-                    }
+                    this.updateToNextFrame(currentPlayTimes);
                 }
-                if (this._blendEnabled) {
-                    this.updateTween();
-                }
+                this.updateTween();
             }
         };
         p.updateToNextFrame = function (currentPlayTimes) {
@@ -2254,40 +2242,37 @@ var dragonBones;
             this._tweenTransform = false;
             this._tweenScale = false;
             this._tweenColor = false;
-            this._blendEnabled = currentFrame.displayIndex >= 0;
-            if (this._blendEnabled) {
-                /**
-                 * <使用绝对数据>
-                 * 单帧的timeline，第一个关键帧的transform为0
-                 * timeline.originTransform = firstFrame.transform;
-                 * eachFrame.transform = eachFrame.transform - timeline.originTransform;
-                 * firstFrame.transform == 0;
-                 *
-                 * <使用相对数据>
-                 * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
-                 */
-                if (this._animationState.additiveBlending) {
-                    this._transform.x = currentFrame.transform.x;
-                    this._transform.y = currentFrame.transform.y;
-                    this._transform.skewX = currentFrame.transform.skewX;
-                    this._transform.skewY = currentFrame.transform.skewY;
-                    this._transform.scaleX = currentFrame.transform.scaleX;
-                    this._transform.scaleY = currentFrame.transform.scaleY;
-                    this._pivot.x = currentFrame.pivot.x;
-                    this._pivot.y = currentFrame.pivot.y;
-                }
-                else {
-                    this._transform.x = this._originTransform.x + currentFrame.transform.x;
-                    this._transform.y = this._originTransform.y + currentFrame.transform.y;
-                    this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
-                    this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
-                    this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
-                    this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
-                    this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
-                    this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
-                }
-                this._bone.invalidUpdate();
+            /**
+             * <使用绝对数据>
+             * 单帧的timeline，第一个关键帧的transform为0
+             * timeline.originTransform = firstFrame.transform;
+             * eachFrame.transform = eachFrame.transform - timeline.originTransform;
+             * firstFrame.transform == 0;
+             *
+             * <使用相对数据>
+             * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
+             */
+            if (this._animationState.additiveBlending) {
+                this._transform.x = currentFrame.transform.x;
+                this._transform.y = currentFrame.transform.y;
+                this._transform.skewX = currentFrame.transform.skewX;
+                this._transform.skewY = currentFrame.transform.skewY;
+                this._transform.scaleX = currentFrame.transform.scaleX;
+                this._transform.scaleY = currentFrame.transform.scaleY;
+                this._pivot.x = currentFrame.pivot.x;
+                this._pivot.y = currentFrame.pivot.y;
             }
+            else {
+                this._transform.x = this._originTransform.x + currentFrame.transform.x;
+                this._transform.y = this._originTransform.y + currentFrame.transform.y;
+                this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
+                this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
+                this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
+                this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
+                this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
+                this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
+            }
+            this._bone.invalidUpdate();
         };
         TimelineState.HALF_PI = Math.PI * 0.5;
         TimelineState.DOUBLE_PI = Math.PI * 2;
@@ -4056,7 +4041,7 @@ var dragonBones;
                     prevLayer = currentLayer;
                     weight = timelineState._animationState.weight * timelineState._animationState.fadeWeight * weigthLeft;
                     timelineState._weight = weight;
-                    if (weight && timelineState._blendEnabled) {
+                    if (weight) {
                         transform = timelineState._transform;
                         pivot = timelineState._pivot;
                         x += transform.x * weight;
