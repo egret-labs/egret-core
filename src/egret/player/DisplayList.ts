@@ -315,6 +315,7 @@ module egret.sys {
             //绘制脏矩形区域
             context.save();
             context.beginPath();
+
             if (m) {
                 context.setTransform(1, 0, 0, 1, -this.offsetX * this.$pixelRatio, -this.offsetY* this.$pixelRatio);
             }

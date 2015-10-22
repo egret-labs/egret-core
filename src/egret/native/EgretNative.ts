@@ -28,6 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.native {
+<<<<<<< HEAD
     var isRunning:boolean = false;
 
     function runEgret() {
@@ -43,6 +44,15 @@ module egret.native {
                 egret.$language = language;
         }
 
+=======
+
+    /**
+     * @private
+     */
+    export var $supportCanvas = egret_native.Canvas ? true : false;
+
+    function runEgret() {
+>>>>>>> nativeCanvas
         var ticker = egret.sys.$ticker;
         var mainLoop = function () {
             ticker.update();
@@ -56,5 +66,44 @@ module egret.native {
         new NativePlayer();
     }
 
+<<<<<<< HEAD
+=======
+    function toArray(argument) {
+        var args = [];
+        for (var i = 0; i < argument.length; i++) {
+            args.push(argument[i]);
+        }
+        return args;
+    }
+
+    egret.warn = function () {
+        console.warn.apply(console, toArray(arguments))
+    };
+    egret.error = function () {
+        console.error.apply(console, toArray(arguments))
+    };
+    egret.assert = function () {
+        console.assert.apply(console, toArray(arguments))
+    };
+    if (DEBUG) {
+        egret.log = function () {
+            if (DEBUG) {
+                var length = arguments.length;
+                var info = "";
+                for (var i = 0; i < length; i++) {
+                    info += arguments[i] + " ";
+                }
+                sys.$logToFPS(info);
+            }
+            console.log.apply(console, toArray(arguments));
+        }
+    }
+    else {
+        egret.log = function () {
+            console.log.apply(console, toArray(arguments))
+        };
+    }
+
+>>>>>>> nativeCanvas
     egret.runEgret = runEgret;
 }

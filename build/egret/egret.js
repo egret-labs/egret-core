@@ -747,7 +747,7 @@ var egret;
              */
             p.getDirtyRegions = function () {
                 var dirtyList = this.dirtyList;
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE && !egret.native["$supportCanvas" + ""]) {
                     //todo 现在为全部dirty
                     this.clipRectChanged = true; //阻止所有的addRegion()
                     this.clear();
@@ -20355,10 +20355,17 @@ var egret;
             value = value % 360;
             if (value < 0) {
                 value += 360;
+<<<<<<< HEAD
             }
             if (value < 90) {
                 return egret_sin_map[value];
             }
+=======
+            }
+            if (value < 90) {
+                return egret_sin_map[value];
+            }
+>>>>>>> nativeCanvas
             if (value < 180) {
                 return egret_cos_map[value - 90];
             }
@@ -20636,7 +20643,10 @@ var egret;
         p.start = function () {
             if (this._running)
                 return;
+<<<<<<< HEAD
             this.lastCount = this.updateInterval;
+=======
+>>>>>>> nativeCanvas
             egret.sys.$ticker.$startTick(this.$update, this);
             this._running = true;
         };
