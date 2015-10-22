@@ -2,10 +2,11 @@
 var file = require('../lib/FileUtil');
 var exml = require("../lib/eui/EXML");
 function beforeBuild() {
-    var exmlDtsPath = getExmlDtsPath();
-    if (file.exists(exmlDtsPath)) {
-        file.save(exmlDtsPath, "");
-    }
+    //eui生成js文件不用清空类定义
+    //var exmlDtsPath = getExmlDtsPath();
+    //if (file.exists(exmlDtsPath)) {
+    //    file.save(exmlDtsPath, "");
+    //}
 }
 exports.beforeBuild = beforeBuild;
 function beforeBuildChanges(exmlsChanged) {
