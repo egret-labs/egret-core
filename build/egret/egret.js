@@ -14165,6 +14165,18 @@ var egret;
             fpsDisplay.updateInfo(info);
         };
         function displayFPS(showFPS, showLog, logFilter, styles) {
+            if (showLog) {
+                egret.log = function () {
+                    var length = arguments.length;
+                    var info = "";
+                    for (var i = 0; i < length; i++) {
+                        info += arguments[i] + " ";
+                    }
+                    console.log(123456);
+                    sys.$logToFPS(info);
+                    console.log.apply(console, toArray(arguments));
+                };
+            }
             fpsStyle = sys.isUndefined(styles) ? {} : styles;
             showLog = !!showLog;
             this.showFPS = !!showFPS;
@@ -14360,6 +14372,25 @@ var egret;
             };
             return FPSImpl;
         })(egret.Sprite);
+        function toArray(argument) {
+            var args = [];
+            for (var i = 0; i < argument.length; i++) {
+                args.push(argument[i]);
+            }
+            return args;
+        }
+        egret.warn = function () {
+            console.warn.apply(console, toArray(arguments));
+        };
+        egret.error = function () {
+            console.error.apply(console, toArray(arguments));
+        };
+        egret.assert = function () {
+            console.assert.apply(console, toArray(arguments));
+        };
+        egret.log = function () {
+            console.log.apply(console, toArray(arguments));
+        };
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

@@ -3397,50 +3397,6 @@ var egret;
             value = +value;
             return value !== value;
         };
-        /**
-         * @private
-         *
-         * @param argument
-         */
-        function toArray(argument) {
-            var args = [];
-            for (var i = 0; i < argument.length; i++) {
-                args.push(argument[i]);
-            }
-            return args;
-        }
-        egret.warn = function () {
-            console.warn.apply(console, toArray(arguments));
-        };
-        egret.error = function () {
-            console.error.apply(console, toArray(arguments));
-        };
-        egret.assert = function () {
-            console.assert.apply(console, toArray(arguments));
-        };
-        if (DEBUG) {
-            egret.log = function () {
-                if (DEBUG) {
-                    var length = arguments.length;
-                    var info = "";
-                    for (var i = 0; i < length; i++) {
-                        info += arguments[i] + " ";
-                    }
-                    egret.sys.$logToFPS(info);
-                }
-                console.log.apply(console, toArray(arguments));
-            };
-        }
-        else {
-            egret.log = function () {
-                console.log.apply(console, toArray(arguments));
-            };
-        }
-        //兼容runtime的RenderTexture，以后应该会废弃
-        CanvasRenderingContext2D.prototype["begin"] = function () {
-        };
-        CanvasRenderingContext2D.prototype["end"] = function () {
-        };
         var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
         CanvasRenderingContext2D.prototype.fill = function () {
             var style = this.fillStyle;
