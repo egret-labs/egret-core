@@ -36,6 +36,32 @@ module EXML {
     var requestPool: egret.HttpRequest[] = [];
     var callBackMap:any = {};
     var parsedClasses:any = {};
+    var $prefixURL: string = "";
+    /**
+     * @language en_US
+     * Set a prefix url.
+     * The prefix url will add to the front of the Exml file path when it’s loading.
+     * @param text the text of a EXML file.
+     *
+     * @version Egret 2.5.3
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 设置 EXML 文件加载的根路径。
+     * 设置后，再加载 EXML 文件时会自动把根路径加到文件路径前面
+     * @version Egret 2.5.3
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    export declare var prefixURL: string;
+    Object.defineProperty(EXML, "prefixURL", {
+        get: function(): string { return $prefixURL },
+        set: function(value: string) { $prefixURL = value },
+        enumerable: true,
+        configurable: true
+    });
 
     /**
      * @language en_US
@@ -210,10 +236,12 @@ module EXML {
 
         request.addEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
         request.addEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
-        request.open(url);
+        var openUrl = url;
+        if (url.indexOf("://") == -1) {
+            openUrl = $prefixURL + url;
+        }
+        request.open(openUrl);
         request.responseType = egret.HttpResponseType.TEXT;
         request.send();
-
     }
-
 }

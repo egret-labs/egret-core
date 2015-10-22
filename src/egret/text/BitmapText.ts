@@ -32,13 +32,13 @@ module egret.sys {
      */
     export const enum BitmapTextKeys {
         /**
-         * @private
+         * @private 外部设定的值
          */
         textFieldWidth,
         /**
-         * @private
+         * @private 外部设定的值
          */
-        textFieldHeight,
+        textFieldHeight,        
         /**
          * @private
          */
@@ -63,6 +63,14 @@ module egret.sys {
          * @private
          */
         textLinesChanged,
+        /**
+         * @private 测量的值
+         */
+        textWidth,
+        /**
+         * @private 测量的值
+         */
+        textHeight,
     }
 }
 module egret {
@@ -107,7 +115,9 @@ module egret {
                 4: 0,        //letterSpacing,
                 5: null,        //font,
                 6: false,        //fontStringChanged,
-                7: false        //textLinesChanged,
+                7: false,        //textLinesChanged,
+                8: false,       //textWidth,
+                9: false        //textHeight,
             };
         }
 
@@ -378,8 +388,8 @@ module egret {
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(this.textOffsetX, this.textOffsetY, this.textWidth - this.textOffsetX,
-                    this.textHeight - this.textOffsetY + (lines.length - 1) * this.$BitmapText[sys.BitmapTextKeys.lineSpacing]);
+                bounds.setTo(this.textOffsetX, this.textOffsetY, this.$BitmapText[sys.BitmapTextKeys.textWidth] - this.textOffsetX,
+                    this.$BitmapText[sys.BitmapTextKeys.textHeight] - this.textOffsetY + (lines.length - 1) * this.$BitmapText[sys.BitmapTextKeys.lineSpacing]);
             }
         }
 
@@ -397,7 +407,7 @@ module egret {
          */
         public get textWidth(): number {
             this.$getTextLines();
-            return this.$BitmapText[sys.BitmapTextKeys.textFieldWidth];
+            return this.$BitmapText[sys.BitmapTextKeys.textWidth];
         }
         /**
          * @language en_US
@@ -413,7 +423,7 @@ module egret {
          */
         public get textHeight(): number {
             this.$getTextLines();
-            return this.$BitmapText[sys.BitmapTextKeys.textFieldHeight];
+            return this.$BitmapText[sys.BitmapTextKeys.textHeight];
         }
         /**
          * @private
@@ -530,8 +540,8 @@ module egret {
                 textHeight += lineHeight;
                 textWidth = Math.max(xPos, textWidth);
             }
-            this.$BitmapText[sys.BitmapTextKeys.textFieldWidth] = textWidth;
-            this.$BitmapText[sys.BitmapTextKeys.textFieldHeight] = textHeight;
+            this.$BitmapText[sys.BitmapTextKeys.textWidth] = textWidth;
+            this.$BitmapText[sys.BitmapTextKeys.textHeight] = textHeight;
             self.textOffsetX = textStartX;
             self.textOffsetY = textStartY;
             return textLines;
