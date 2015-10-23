@@ -242,7 +242,8 @@ class UpgradeCommand_2_4_3 implements egret.Command {
                         },200);
                     });
                 }else{
-                    globals.exit(1702);
+                    globals.log(1702);
+                    self.changeDirToNewlyCreate(projectPath);
                     self.asyncCallback();
                 }
             }

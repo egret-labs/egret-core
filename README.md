@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v2.5.2
+Current Version: v2.5.3
 
 
 Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
@@ -34,12 +34,11 @@ Tools
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3-to-TS Code transformation tool
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,Resource configuration and management tool
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet tool
-* StarlingSWF
-    * StarlingSWF is an useful tool that can convert SWF file created by FlashPro to the supported format of starling/Features. It has been widely used in Flash Mobile project development.
-    * StarlingSWF already supports to export to the supported format of Egret.
 
 Release Notes
 --------------------
+[Egret 2.5.3 Release Notes 2015-10-23](/docs/en/2.5.3_ReleaseNotes.md)
+
 [Egret 2.5.2 Release Notes 2015-10-16](/docs/en/2.5.2_ReleaseNotes.md)
 
 [Egret 2.5.1 Release Notes 2015-10-10](/docs/en/2.5.1_ReleaseNotes.md)
@@ -106,14 +105,13 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3到TS的代码转换工具
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,RES资源模块配置文件管理工具
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet工具
-* StarlingSWF
-    * StarlingSWF 是一款将 FlashPro创作的 SWF 文件生成 Starling/Features 支持格式的工具，被广泛用于 Flash 移动项目开发中。
-    * StarlingSWF 目前已经可以导出为 Egret 支持的格式 。 [官方下载地址](http://www.zmliu.com/?p=271)
 
 
 
 发布说明
 --------------------
+[Egret 2.5.3 Release Notes 2015-10-23](/docs/cn/2.5.3_ReleaseNotes.md)
+
 [Egret 2.5.2 Release Notes 2015-10-16](/docs/cn/2.5.2_ReleaseNotes.md)
 
 [Egret 2.5.1 Release Notes 2015-10-10](/docs/cn/2.5.1_ReleaseNotes.md)

@@ -4327,6 +4327,7 @@ var egret;
                     if (hasBlendMode) {
                         context.globalCompositeOperation = compositeOp;
                     }
+                    context.globalAlpha = 1;
                     if (rootMatrix) {
                         context.translate(region.minX, region.minY);
                         context.drawImage(displayContext.surface, 0, 0);
