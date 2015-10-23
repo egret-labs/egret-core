@@ -34,9 +34,6 @@ Tools
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3-to-TS Code transformation tool
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,Resource configuration and management tool
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet tool
-* StarlingSWF
-    * StarlingSWF is an useful tool that can convert SWF file created by FlashPro to the supported format of starling/Features. It has been widely used in Flash Mobile project development.
-    * StarlingSWF already supports to export to the supported format of Egret.
 
 Release Notes
 --------------------
@@ -108,9 +105,6 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 * [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3到TS的代码转换工具
 * [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,RES资源模块配置文件管理工具
 * [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet工具
-* StarlingSWF
-    * StarlingSWF 是一款将 FlashPro创作的 SWF 文件生成 Starling/Features 支持格式的工具，被广泛用于 Flash 移动项目开发中。
-    * StarlingSWF 目前已经可以导出为 Egret 支持的格式 。 [官方下载地址](http://www.zmliu.com/?p=271)
 
 
 
