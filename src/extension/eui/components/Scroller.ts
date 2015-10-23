@@ -256,11 +256,11 @@ module eui {
 
         /**
          * @language en_US
-         * Indicates under what conditions the vertical scroll bar is displayed.
-         * <p><code>ScrollPolicy.ON</code> - the scroll bar is always displayed.</p>
-         * <p><code>ScrollPolicy.OFF</code> - the scroll bar is never displayed.</p>
-         * <p><code>ScrollPolicy.AUTO</code> - the scroll bar is displayed when
-         *  the viewport's contentHeight is larger than its height.
+         * Indicates under what conditions the scroller can be moved and the vertical scroll bar is displayed.
+         * <p><code>ScrollPolicy.ON</code> - the scroller can be moved, and the scroll bar is displayed when it's move.</p>
+         * <p><code>ScrollPolicy.OFF</code> - the scroller can not be moved, the scroll bar is never displayed.</p>
+         * <p><code>ScrollPolicy.AUTO</code> - the scroller can not be moved when
+         *  the viewport's contentHeight is larger than its height. the scroll bar is displayed when it's move.
          *
          * @default ScrollPolicy.AUTO
          *
@@ -270,10 +270,10 @@ module eui {
          */
         /**
          * @language zh_CN
-         * 指示在哪些条件下会显示垂直滑动条。
-         * <p><code>ScrollPolicy.ON</code> - 始终显示滚动条。</p>
-         * <p><code>ScrollPolicy.OFF</code> - 从不显示滚动条。</p>
-         * <p><code>ScrollPolicy.AUTO</code> - 当视域的 contentHeight 大于其自身的高度时显示滚动条。</p>
+         * 指示在哪些条件可以滚动并且显示垂直滑动条。
+         * <p><code>ScrollPolicy.ON</code> - 可以滚动，滚动时显示滚动条。</p>
+         * <p><code>ScrollPolicy.OFF</code> - 不可以滚动并且不显示滚动条。</p>
+         * <p><code>ScrollPolicy.AUTO</code> - 当视域的 contentHeight 大于其自身的高度时可以滚动，滚动时显示滚动条。</p>
          *
          * @default ScrollPolicy.AUTO
          *
@@ -296,11 +296,11 @@ module eui {
 
         /**
          * @language en_US
-         * Indicates under what conditions the horizontal scroll bar is displayed.
-         * <p><code>ScrollPolicy.ON</code> - the scroll bar is always displayed.</p>
-         * <p><code>ScrollPolicy.OFF</code> - the scroll bar is never displayed.</p>
-         * <p><code>ScrollPolicy.AUTO</code> - the scroll bar is displayed when
-         *  the viewport's contentWidth is larger than its width.
+         * Indicates under what conditions the scroller can be moved and the horizontal scroll bar is displayed.
+         * <p><code>ScrollPolicy.ON</code> - the scroller can be moved, and the scroll bar is displayed when it's move.</p>
+         * <p><code>ScrollPolicy.OFF</code> - the scroller can not be moved, the scroll bar is never displayed.</p>
+         * <p><code>ScrollPolicy.AUTO</code> - the can not be moved  when
+         *  the viewport's contentWidth is larger than its width. the scroll bar is displayed when it's move.
          *
          * @default ScrollPolicy.AUTO
          *
@@ -310,10 +310,10 @@ module eui {
          */
         /**
          * @language zh_CN
-         * 指示在哪些条件下会显示水平滑动条。
-         * <p><code>ScrollPolicy.ON</code> - 始终显示滚动条。</p>
-         * <p><code>ScrollPolicy.OFF</code> - 从不显示滚动条。</p>
-         * <p><code>ScrollPolicy.AUTO</code> - 当视域的 contentWidth 大于其自身的宽度时显示滚动条。</p>
+         * 指示在哪些条件下可以滚动并且显示水平滑动条。
+         * <p><code>ScrollPolicy.ON</code> - 可以滚动，滚动时显示滚动条。</p>
+         * <p><code>ScrollPolicy.OFF</code> - 不可以滚动并且不显示滚动条。</p>
+         * <p><code>ScrollPolicy.AUTO</code> - 当视域的 contentWidth 大于其自身的宽度时可以滚动，滚动时显示滚动条。</p>
          *
          * @default ScrollPolicy.AUTO
          *

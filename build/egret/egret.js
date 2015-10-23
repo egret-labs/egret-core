@@ -747,7 +747,7 @@ var egret;
              */
             p.getDirtyRegions = function () {
                 var dirtyList = this.dirtyList;
-                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE && !egret.native["$supportCanvas" + ""]) {
                     //todo 现在为全部dirty
                     this.clipRectChanged = true; //阻止所有的addRegion()
                     this.clear();
@@ -15728,7 +15728,9 @@ var egret;
                 4: 0,
                 5: null,
                 6: false,
-                7: false //textLinesChanged,
+                7: false,
+                8: false,
+                9: false //textHeight,
             };
         }
         var d = __define,c=BitmapText;p=c.prototype;
@@ -15959,7 +15961,7 @@ var egret;
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(this.textOffsetX, this.textOffsetY, this.textWidth - this.textOffsetX, this.textHeight - this.textOffsetY + (lines.length - 1) * this.$BitmapText[3 /* lineSpacing */]);
+                bounds.setTo(this.textOffsetX, this.textOffsetY, this.$BitmapText[8 /* textWidth */] - this.textOffsetX, this.$BitmapText[9 /* textHeight */] - this.textOffsetY + (lines.length - 1) * this.$BitmapText[3 /* lineSpacing */]);
             }
         };
         d(p, "textWidth"
@@ -15977,7 +15979,7 @@ var egret;
              */
             ,function () {
                 this.$getTextLines();
-                return this.$BitmapText[0 /* textFieldWidth */];
+                return this.$BitmapText[8 /* textWidth */];
             }
         );
         d(p, "textHeight"
@@ -15995,7 +15997,7 @@ var egret;
              */
             ,function () {
                 this.$getTextLines();
-                return this.$BitmapText[1 /* textFieldHeight */];
+                return this.$BitmapText[9 /* textHeight */];
             }
         );
         /**
@@ -16094,8 +16096,8 @@ var egret;
                 textHeight += lineHeight;
                 textWidth = Math.max(xPos, textWidth);
             }
-            this.$BitmapText[0 /* textFieldWidth */] = textWidth;
-            this.$BitmapText[1 /* textFieldHeight */] = textHeight;
+            this.$BitmapText[8 /* textWidth */] = textWidth;
+            this.$BitmapText[9 /* textHeight */] = textHeight;
             self.textOffsetX = textStartX;
             self.textOffsetY = textStartY;
             return textLines;
@@ -19327,10 +19329,10 @@ var egret;
                 return null;
             }
             if (bytes) {
-                bytes.validateBuffer(length);
+                bytes.validateBuffer(offset + length);
             }
             else {
-                bytes = new ByteArray(new ArrayBuffer(length));
+                bytes = new ByteArray(new ArrayBuffer(offset + length));
             }
             for (var i = 0; i < length; i++) {
                 bytes.data.setUint8(i + offset, this.data.getUint8(this.position++));

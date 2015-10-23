@@ -146,7 +146,7 @@ module egret.sys {
          */
         public getDirtyRegions():Region[] {
             var dirtyList = this.dirtyList;
-            if (Capabilities.runtimeType == RuntimeType.NATIVE) {
+            if (Capabilities.runtimeType == RuntimeType.NATIVE && !egret.native["$supportCanvas" + ""]) {
                 //todo 现在为全部dirty
                 this.clipRectChanged = true;//阻止所有的addRegion()
                 this.clear();

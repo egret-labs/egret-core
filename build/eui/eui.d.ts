@@ -11787,6 +11787,25 @@ declare module eui.sys {
 declare module EXML {
     /**
      * @language en_US
+     * Set a prefix url.
+     * The prefix url will add to the front of the Exml file path when it’s loading.
+     * @param text the text of a EXML file.
+     *
+     * @version Egret 2.5.3
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 设置 EXML 文件加载的根路径。
+     * 设置后，再加载 EXML 文件时会自动把根路径加到文件路径前面
+     * @version Egret 2.5.3
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    var prefixURL: string;
+    /**
+     * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root
      * node of the EXML to register to the global as a class name.
      *

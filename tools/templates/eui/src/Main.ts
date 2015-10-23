@@ -50,26 +50,31 @@ class Main extends eui.UILayer {
         RES.loadConfig("resource/default.res.json", "resource/");
     }
     /**
-     * 配置文件加载完成,开始预加载皮肤主题资源。
-     * Loading of configuration file is complete, start to pre-load the theme configuration file
+     * 配置文件加载完成,开始预加载皮肤主题资源和preload资源组。
+     * Loading of configuration file is complete, start to pre-load the theme configuration file and the preload resource group
      */
     private onConfigComplete(event:RES.ResourceEvent):void {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
         var theme = new eui.Theme("resource/default.thm.json", this.stage);
-        theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadEnd, this);
-    }
-    /**
-     * 主题文件加载完成,开始预加载preload资源组。
-     * Loading of theme configuration file is complete, start to pre-load the preload resource group
-     */
-    private onThemeLoadEnd(): void {
+        theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
+
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
         RES.loadGroup("preload");
     }
+    private isThemeLoadEnd: boolean = false;
+    /**
+     * 主题文件加载完成,开始预加载
+     * Loading of theme configuration file is complete, start to pre-load the 
+     */
+    private onThemeLoadComplete(): void {
+        this.isThemeLoadEnd = true;
+        this.createScene();
+    }
+    private isResourceLoadEnd: boolean = false;
     /**
      * preload资源组加载完成
      * preload resource group is loaded
@@ -80,7 +85,13 @@ class Main extends eui.UILayer {
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
             RES.removeEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
             RES.removeEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
+            this.isResourceLoadEnd = true;
             this.createScene();
+        }
+    }
+    private createScene(){
+        if(this.isThemeLoadEnd && this.isResourceLoadEnd){
+            this.startCreateScene();
         }
     }
     /**
@@ -107,7 +118,7 @@ class Main extends eui.UILayer {
      * 创建场景界面
      * Create scene interface
      */
-    protected createScene(): void {
+    protected startCreateScene(): void {
         var button = new eui.Button();
         button.label = "Click!";
         button.horizontalCenter = 0;

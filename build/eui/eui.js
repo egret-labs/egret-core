@@ -2846,7 +2846,7 @@ var eui;
         p.measure = function () {
             var values = this.$UIComponent;
             var textValues = this.$BitmapText;
-            var oldWidth = textValues[0 /* textFieldWidth */];
+            var oldWidth = textValues[8 /* textWidth */];
             var availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;
@@ -18308,6 +18308,17 @@ var EXML;
     var requestPool = [];
     var callBackMap = {};
     var parsedClasses = {};
+    var $prefixURL = "";
+    Object.defineProperty(EXML, "prefixURL", {
+        get: function () {
+            return $prefixURL;
+        },
+        set: function (value) {
+            $prefixURL = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root
@@ -18469,7 +18480,11 @@ var EXML;
         };
         request.addEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
         request.addEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
-        request.open(url);
+        var openUrl = url;
+        if (url.indexOf("://") == -1) {
+            openUrl = $prefixURL + url;
+        }
+        request.open(openUrl);
         request.responseType = egret.HttpResponseType.TEXT;
         request.send();
     }

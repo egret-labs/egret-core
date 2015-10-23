@@ -9238,6 +9238,7 @@ declare module egret_native {
     function startGame(): void;
     function loglevel(logType: any): void;
     function callRender(): void;
+    function setScreenCanvas(canvas: Canvas): void;
     function setFrameRate(frameRate: number): void;
     function onTouchesBegin(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
     function onTouchesMove(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
@@ -11147,11 +11148,11 @@ declare module egret.sys {
      */
     const enum BitmapTextKeys {
         /**
-         * @private
+         * @private 外部设定的值
          */
         textFieldWidth = 0,
         /**
-         * @private
+         * @private 外部设定的值
          */
         textFieldHeight = 1,
         /**
@@ -11178,6 +11179,14 @@ declare module egret.sys {
          * @private
          */
         textLinesChanged = 7,
+        /**
+         * @private 测量的值
+         */
+        textWidth = 8,
+        /**
+         * @private 测量的值
+         */
+        textHeight = 9,
     }
 }
 declare module egret {

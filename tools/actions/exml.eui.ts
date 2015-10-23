@@ -6,18 +6,20 @@ import file = require('../lib/FileUtil');
 import exml = require("../lib/eui/EXML");
 
 export function beforeBuild() {
-    var exmlDtsPath = getExmlDtsPath();
-    if (file.exists(exmlDtsPath)) {
-        file.save(exmlDtsPath, "");
-    }
+    //eui生成js文件不用清空类定义
+    //var exmlDtsPath = getExmlDtsPath();
+    //if (file.exists(exmlDtsPath)) {
+    //    file.save(exmlDtsPath, "");
+    //}
+    generateExmlDTS();
 }
 
 export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
-
+    generateExmlDTS();
 }
 
 export function build(): egret.TaskResult {
-    var exmls = file.search(egret.args.projectDir, 'exml');
+    var exmls = searchEXML();
     return buildChanges(exmls);
 }
 
@@ -36,7 +38,6 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
 
 export function afterBuild() {
     updateSetting(egret.args.publish);
-    generateExmlDTS();
 }
 export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
     afterBuild();
@@ -44,7 +45,7 @@ export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
 
 function getSortedEXML(): exml.EXMLFile[] {
 
-    var files = file.search(egret.args.projectDir, "exml");
+    var files = searchEXML();
     var exmls: exml.EXMLFile[] = files.map(path=> ({
         path: path,
         content: file.read(path)
@@ -128,9 +129,13 @@ export function updateSetting(merge = false) {
 }
 
 function searchTheme(): string[] {
-    var files = file.searchByFunction(egret.args.projectDir, f=> f.indexOf('.thm.json') > 0);
+    var files = file.searchByFunction(egret.args.projectDir, themeFilter);
     files = files.map(it=> file.getRelativePath(egret.args.projectDir, it));
     return files;
+}
+
+function searchEXML(): string[] {
+    return file.searchByFunction(egret.args.projectDir, exmlFilter);
 }
 
 function sort(exmls: exml.EXMLFile[]) {
@@ -140,6 +145,12 @@ function sort(exmls: exml.EXMLFile[]) {
 
 }
 
+function exmlFilter(f: string) {
+    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0)
+}
+function themeFilter(f: string) {
+    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseDir) < 0)
+}
 
 export interface SettingData {
     name: string;
@@ -163,8 +174,7 @@ function getExmlDtsPath() {
 }
 
 function generateExmlDTS(): string {
-    var sourceList = file.search(egret.args.projectDir, "exml");
-
+    var sourceList = searchEXML();
     var length = sourceList.length;
     if (length == 0)
         return;
@@ -193,9 +203,9 @@ function generateExmlDTS(): string {
                 var moduleName = className.substring(0, index);
                 className = className.substring(index + 1);
                 if(ret.extendName == ""){
-                    dts += "declare module " + moduleName + "{\n\tclass "+className+"{\n}\n}\n";
+                    dts += "declare module " + moduleName + "{\n\tclass "+className+"{\n\t}\n}\n";
                 }else{
-                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends "+ret.extendName +"{\n}\n}\n";
+                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends "+ret.extendName +"{\n\t}\n}\n";
                 }
             }
         }
