@@ -98,13 +98,13 @@
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="egret.BitmapFont">
+  <xs:group name="Object">
     <xs:choice>
-      <xs:element ref="BitmapFont"/>
+      <xs:element ref="Object"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="egret.BitmapFont">
-    <xs:group ref="egret.BitmapFont"/>
+  <xs:complexType name="Object">
+    <xs:group ref="Object"/>
   </xs:complexType>
   <xs:group name="number">
     <xs:choice>
@@ -117,7 +117,7 @@
   <xs:group name="BitmapText_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObject_attributeElement"/>
-      <xs:element name="font" type="egret.BitmapFont"/>
+      <xs:element name="font" type="Object"/>
       <xs:element name="letterSpacing" type="number"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="text" type="string"/>
@@ -719,6 +719,49 @@
       <xs:attributeGroup ref="eui.BasicLayout"/>
     </xs:complexType>
   </xs:element>
+  <xs:attributeGroup name="eui.BitmapLabel">
+    <xs:attributeGroup ref="egret.BitmapText"/>
+    <xs:attribute name="bottom" type="xs:decimal"/>
+    <xs:attribute name="horizontalCenter" type="xs:decimal"/>
+    <xs:attribute name="includeInLayout" type="xs:boolean"/>
+    <xs:attribute name="left" type="xs:decimal"/>
+    <xs:attribute name="maxHeight" type="xs:decimal"/>
+    <xs:attribute name="maxWidth" type="xs:decimal"/>
+    <xs:attribute name="minHeight" type="xs:decimal"/>
+    <xs:attribute name="minWidth" type="xs:decimal"/>
+    <xs:attribute name="percentHeight" type="xs:decimal"/>
+    <xs:attribute name="percentWidth" type="xs:decimal"/>
+    <xs:attribute name="right" type="xs:decimal"/>
+    <xs:attribute name="top" type="xs:decimal"/>
+    <xs:attribute name="verticalCenter" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="BitmapLabel_attributeElement">
+    <xs:choice>
+      <xs:group ref="BitmapText_attributeElement"/>
+      <xs:element name="bottom" type="number"/>
+      <xs:element name="horizontalCenter" type="number"/>
+      <xs:element name="includeInLayout" type="boolean"/>
+      <xs:element name="left" type="number"/>
+      <xs:element name="maxHeight" type="number"/>
+      <xs:element name="maxWidth" type="number"/>
+      <xs:element name="minHeight" type="number"/>
+      <xs:element name="minWidth" type="number"/>
+      <xs:element name="percentHeight" type="number"/>
+      <xs:element name="percentWidth" type="number"/>
+      <xs:element name="right" type="number"/>
+      <xs:element name="top" type="number"/>
+      <xs:element name="verticalCenter" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="BitmapLabel">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="BitmapLabel_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="eui.BitmapLabel"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attributeGroup name="eui.Button">
     <xs:attributeGroup ref="eui.Component"/>
     <xs:attribute name="icon" type="xs:string"/>
@@ -736,6 +779,7 @@
   </xs:complexType>
   <xs:group name="eui.IDisplayText">
     <xs:choice>
+      <xs:element ref="BitmapLabel"/>
       <xs:element ref="EditableText"/>
       <xs:element ref="Label"/>
     </xs:choice>
@@ -943,6 +987,7 @@
   <xs:group name="egret.DisplayObject">
     <xs:choice>
       <xs:element ref="Bitmap"/>
+      <xs:element ref="BitmapLabel"/>
       <xs:element ref="BitmapText"/>
       <xs:element ref="Button"/>
       <xs:element ref="CheckBox"/>
@@ -1399,6 +1444,7 @@
   </xs:complexType>
   <xs:group name="eui.UIComponent">
     <xs:choice>
+      <xs:element ref="BitmapLabel"/>
       <xs:element ref="Button"/>
       <xs:element ref="CheckBox"/>
       <xs:element ref="Component"/>

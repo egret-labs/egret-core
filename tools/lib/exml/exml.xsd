@@ -98,13 +98,13 @@
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
   </xs:attributeGroup>
-  <xs:group name="egret.BitmapFont">
+  <xs:group name="Object">
     <xs:choice>
-      <xs:element ref="BitmapFont"/>
+      <xs:element ref="Object"/>
     </xs:choice>
   </xs:group>
-  <xs:complexType name="egret.BitmapFont">
-    <xs:group ref="egret.BitmapFont"/>
+  <xs:complexType name="Object">
+    <xs:group ref="Object"/>
   </xs:complexType>
   <xs:group name="number">
     <xs:choice>
@@ -117,7 +117,7 @@
   <xs:group name="BitmapText_attributeElement">
     <xs:choice>
       <xs:group ref="DisplayObject_attributeElement"/>
-      <xs:element name="font" type="egret.BitmapFont"/>
+      <xs:element name="font" type="Object"/>
       <xs:element name="letterSpacing" type="number"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="text" type="string"/>
@@ -1641,6 +1641,7 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.GroupBase">
     <xs:attributeGroup ref="egret.gui.UIComponent"/>
+    <xs:attribute name="autoLayout" type="xs:boolean"/>
     <xs:attribute name="clipAndEnableScrolling" type="xs:boolean"/>
     <xs:attribute name="horizontalScrollPosition" type="xs:decimal"/>
     <xs:attribute name="layout" type="xs:string"/>
@@ -1661,6 +1662,7 @@
   <xs:group name="GroupBase_attributeElement">
     <xs:choice>
       <xs:group ref="UIComponent_attributeElement"/>
+      <xs:element name="autoLayout" type="boolean"/>
       <xs:element name="clipAndEnableScrolling" type="boolean"/>
       <xs:element name="horizontalScrollPosition" type="number"/>
       <xs:element name="layout" type="egret.gui.LayoutBase"/>
@@ -2718,6 +2720,7 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.SkinnableContainer">
     <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    <xs:attribute name="autoLayout" type="xs:boolean"/>
     <xs:attribute name="contentGroup" type="xs:string"/>
     <xs:attribute name="elementsContent" type="xs:string"/>
     <xs:attribute name="layout" type="xs:string"/>
@@ -2734,6 +2737,7 @@
   <xs:group name="SkinnableContainer_attributeElement">
     <xs:choice>
       <xs:group ref="SkinnableComponent_attributeElement"/>
+      <xs:element name="autoLayout" type="boolean"/>
       <xs:element name="contentGroup" type="egret.gui.Group"/>
       <xs:element name="elementsContent" type="Array_egret.gui.IVisualElement"/>
       <xs:element name="layout" type="egret.gui.LayoutBase"/>
@@ -2751,6 +2755,7 @@
   </xs:element>
   <xs:attributeGroup name="egret.gui.SkinnableDataContainer">
     <xs:attributeGroup ref="egret.gui.SkinnableComponent"/>
+    <xs:attribute name="autoLayout" type="xs:boolean"/>
     <xs:attribute name="dataGroup" type="xs:string"/>
     <xs:attribute name="dataProvider" type="xs:string"/>
     <xs:attribute name="itemRenderer" type="xs:string"/>
@@ -2769,6 +2774,7 @@
   <xs:group name="SkinnableDataContainer_attributeElement">
     <xs:choice>
       <xs:group ref="SkinnableComponent_attributeElement"/>
+      <xs:element name="autoLayout" type="boolean"/>
       <xs:element name="dataGroup" type="egret.gui.DataGroup"/>
       <xs:element name="dataProvider" type="egret.gui.ICollection"/>
       <xs:element name="itemRenderer" type="egret.gui.IFactory"/>
