@@ -2111,7 +2111,7 @@ var egret;
              * @private
              */
             this.$alpha = 1;
-            this.$touchEnabled = false;
+            this.$touchEnabled = DisplayObject.defaultTouchEnabled;
             /**
              * @private
              */
@@ -3795,6 +3795,23 @@ var egret;
             }
             return false;
         };
+        /**
+         * @private
+         * @language en_US
+         * The default touchEnabled property of DisplayObject
+         * @default false
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @private
+         * @language zh_CN
+         * 显示对象默认的 touchEnabled 属性
+         * @default false
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        DisplayObject.defaultTouchEnabled = false;
         /**
          * @private
          */

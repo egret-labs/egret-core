@@ -3249,9 +3249,6 @@ declare module dragonBones {
          * @member {string} dragonBones.FastSlot#blendMode
          */
         blendMode: string;
-        /**
-         * Indicates the Bone instance that directly contains this DBObject instance if any.
-         */
         colorTransform: ColorTransform;
         displayIndex: number;
         colorChanged: boolean;
