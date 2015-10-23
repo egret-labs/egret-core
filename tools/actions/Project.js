@@ -118,20 +118,20 @@ function parseProjectInfo(html) {
     function parseProject() {
         containers.forEach(function (s) {
             var project = {};
-            project.contentHeight = s.attribs['data-content-height'];
-            project.contentWidth = s.attribs['data-content-width'];
+            project.contentHeight = s.attribs['data-content-height'] || 800;
+            project.contentWidth = s.attribs['data-content-width'] || 480;
             project.entryClass = s.attribs['data-entry-class'];
-            project.frameRate = s.attribs['data-frame-rate'];
-            project.orientationMode = s.attribs['data-orientation-mode'];
+            project.frameRate = s.attribs['data-frame-rate'] || 60;
+            project.orientationMode = s.attribs['data-orientation-mode'] || "auto";
             project.resolutionMode = s.attribs['data-resolution-mode'];
-            project.scaleMode = s.attribs['data-scale-mode'];
-            project.showFPS = s.attribs['data-show-fps'];
-            project.showPaintRect = s.attribs['data-show-paint-rect'];
-            project.fpsStyles = s.attribs['data-show-fps-style'];
-            project.showLog = s.attribs['data-show-log'];
-            project.logFilter = s.attribs['data-log-filter'];
-            project.textureScaleFactor = s.attribs['texture-scale-factor'];
-            project.maxTouches = s.attribs['data-multi-fingered'];
+            project.scaleMode = s.attribs['data-scale-mode'] || "noScale";
+            project.showFPS = s.attribs['data-show-fps'] || false;
+            project.showPaintRect = s.attribs['data-show-paint-rect'] || false;
+            project.fpsStyles = s.attribs['data-show-fps-style'] || "";
+            project.showLog = s.attribs['data-show-log'] || false;
+            project.logFilter = s.attribs['data-log-filter'] || "";
+            project.textureScaleFactor = s.attribs['texture-scale-factor'] || 1;
+            project.maxTouches = s.attribs['data-multi-fingered'] || 2;
             project.scripts = scripts;
             project.nativeScripts = nativeScripts;
             projects.push(project);
