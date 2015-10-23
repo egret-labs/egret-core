@@ -80,7 +80,7 @@ function addDepends(file) {
     file.usedClasses && file.usedClasses.forEach(function (className) {
         var files = allClasses[className];
         if (!files) {
-            console.log("Cannot find:", className);
+            //console.log("Cannot find:", className);
             return;
         }
         files.forEach(function (it) {
@@ -182,5 +182,4 @@ function getDtsInfoFromExml(exmlFile) {
     return { className: className, extendName: extendName };
 }
 exports.getDtsInfoFromExml = getDtsInfoFromExml;
-
-//# sourceMappingURL=../../lib/eui/EXML.js.map
+//# sourceMappingURL=EXML.js.map

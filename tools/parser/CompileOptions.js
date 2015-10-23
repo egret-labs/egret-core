@@ -59,6 +59,13 @@ var CompileOptions = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(CompileOptions.prototype, "releaseRootDir", {
+        get: function () {
+            return FileUtil.joinPath(this.projectDir, "bin-release/");
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(CompileOptions.prototype, "out", {
         get: function () {
             var filename = this.publish ? FileUtil.joinPath(this.outDir, 'main.min.js') : undefined;
@@ -194,5 +201,4 @@ var CompileOptions = (function () {
     return CompileOptions;
 })();
 module.exports = CompileOptions;
-
-//# sourceMappingURL=../parser/CompileOptions.js.map
+//# sourceMappingURL=CompileOptions.js.map

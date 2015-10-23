@@ -11,14 +11,15 @@ export function beforeBuild() {
     //if (file.exists(exmlDtsPath)) {
     //    file.save(exmlDtsPath, "");
     //}
+    generateExmlDTS();
 }
 
 export function beforeBuildChanges(exmlsChanged: egret.FileChanges) {
-
+    generateExmlDTS();
 }
 
 export function build(): egret.TaskResult {
-    var exmls = file.search(egret.args.projectDir, 'exml');
+    var exmls = searchEXML();
     return buildChanges(exmls);
 }
 
@@ -37,7 +38,6 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
 
 export function afterBuild() {
     updateSetting(egret.args.publish);
-    generateExmlDTS();
 }
 export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
     afterBuild();
@@ -45,7 +45,7 @@ export function afterBuildChanges(exmlsChanged: egret.FileChanges) {
 
 function getSortedEXML(): exml.EXMLFile[] {
 
-    var files = file.search(egret.args.projectDir, "exml");
+    var files = searchEXML();
     var exmls: exml.EXMLFile[] = files.map(path=> ({
         path: path,
         content: file.read(path)
@@ -129,9 +129,13 @@ export function updateSetting(merge = false) {
 }
 
 function searchTheme(): string[] {
-    var files = file.searchByFunction(egret.args.projectDir, f=> f.indexOf('.thm.json') > 0);
+    var files = file.searchByFunction(egret.args.projectDir, themeFilter);
     files = files.map(it=> file.getRelativePath(egret.args.projectDir, it));
     return files;
+}
+
+function searchEXML(): string[] {
+    return file.searchByFunction(egret.args.projectDir, exmlFilter);
 }
 
 function sort(exmls: exml.EXMLFile[]) {
@@ -141,6 +145,12 @@ function sort(exmls: exml.EXMLFile[]) {
 
 }
 
+function exmlFilter(f: string) {
+    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0)
+}
+function themeFilter(f: string) {
+    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseDir) < 0)
+}
 
 export interface SettingData {
     name: string;
@@ -164,8 +174,7 @@ function getExmlDtsPath() {
 }
 
 function generateExmlDTS(): string {
-    var sourceList = file.search(egret.args.projectDir, "exml");
-
+    var sourceList = searchEXML();
     var length = sourceList.length;
     if (length == 0)
         return;
