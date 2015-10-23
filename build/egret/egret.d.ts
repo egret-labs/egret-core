@@ -11148,11 +11148,11 @@ declare module egret.sys {
      */
     const enum BitmapTextKeys {
         /**
-         * @private
+         * @private 外部设定的值
          */
         textFieldWidth = 0,
         /**
-         * @private
+         * @private 外部设定的值
          */
         textFieldHeight = 1,
         /**
@@ -11179,6 +11179,14 @@ declare module egret.sys {
          * @private
          */
         textLinesChanged = 7,
+        /**
+         * @private 测量的值
+         */
+        textWidth = 8,
+        /**
+         * @private 测量的值
+         */
+        textHeight = 9,
     }
 }
 declare module egret {
