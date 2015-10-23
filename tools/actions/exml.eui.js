@@ -7,13 +7,15 @@ function beforeBuild() {
     //if (file.exists(exmlDtsPath)) {
     //    file.save(exmlDtsPath, "");
     //}
+    generateExmlDTS();
 }
 exports.beforeBuild = beforeBuild;
 function beforeBuildChanges(exmlsChanged) {
+    generateExmlDTS();
 }
 exports.beforeBuildChanges = beforeBuildChanges;
 function build() {
-    var exmls = file.search(egret.args.projectDir, 'exml');
+    var exmls = searchEXML();
     return buildChanges(exmls);
 }
 exports.build = build;
@@ -29,7 +31,6 @@ function buildChanges(exmls) {
 exports.buildChanges = buildChanges;
 function afterBuild() {
     updateSetting(egret.args.publish);
-    generateExmlDTS();
 }
 exports.afterBuild = afterBuild;
 function afterBuildChanges(exmlsChanged) {
@@ -37,7 +38,7 @@ function afterBuildChanges(exmlsChanged) {
 }
 exports.afterBuildChanges = afterBuildChanges;
 function getSortedEXML() {
-    var files = file.search(egret.args.projectDir, "exml");
+    var files = searchEXML();
     var exmls = files.map(function (path) { return ({
         path: path,
         content: file.read(path)
@@ -110,18 +111,27 @@ function updateSetting(merge) {
 }
 exports.updateSetting = updateSetting;
 function searchTheme() {
-    var files = file.searchByFunction(egret.args.projectDir, function (f) { return f.indexOf('.thm.json') > 0; });
+    var files = file.searchByFunction(egret.args.projectDir, themeFilter);
     files = files.map(function (it) { return file.getRelativePath(egret.args.projectDir, it); });
     return files;
 }
+function searchEXML() {
+    return file.searchByFunction(egret.args.projectDir, exmlFilter);
+}
 function sort(exmls) {
     var preload = exmls.filter(function (e) { return e.preload; });
+}
+function exmlFilter(f) {
+    return /\.exml$/.test(f) && (f.indexOf(egret.args.releaseRootDir) < 0);
+}
+function themeFilter(f) {
+    return (f.indexOf('.thm.json') > 0) && (f.indexOf(egret.args.releaseDir) < 0);
 }
 function getExmlDtsPath() {
     return file.joinPath(egret.args.projectDir, "libs", "exml.e.d.ts");
 }
 function generateExmlDTS() {
-    var sourceList = file.search(egret.args.projectDir, "exml");
+    var sourceList = searchEXML();
     var length = sourceList.length;
     if (length == 0)
         return;
@@ -164,5 +174,4 @@ function generateExmlDTS() {
     file.save(exmlDtsPath, dts);
     return dts;
 }
-
-//# sourceMappingURL=../actions/exml.eui.js.map
+//# sourceMappingURL=exml.eui.js.map

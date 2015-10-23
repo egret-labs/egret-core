@@ -45,6 +45,9 @@ class CompileOptions implements egret.ToolArgs {
     set releaseDir(value: string) {
         this._releaseDir = value;
     }
+    get releaseRootDir(): string {
+        return FileUtil.joinPath(this.projectDir, "bin-release/");
+    }
 
 
     get out(): string {
