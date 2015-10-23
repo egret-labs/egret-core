@@ -55,6 +55,7 @@ declare module egret {
         larkPropertiesFile: string;
         debugDir: string;
         releaseDir: string;
+        releaseRootDir: string;
         templateDir: string;
         out: string;
         outDir: string;

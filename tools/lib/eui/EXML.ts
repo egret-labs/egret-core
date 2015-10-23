@@ -116,7 +116,7 @@ function addDepends(file: EXMLFile) {
     file.usedClasses && file.usedClasses.forEach(className=> {
         var files = allClasses[className];
         if (!files) {
-            console.log("Cannot find:", className);
+            //console.log("Cannot find:", className);
             return;
         }
         files.forEach(it=> {

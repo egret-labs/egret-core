@@ -384,10 +384,10 @@ module egret {
                 return null;
             }
             if (bytes) {
-                bytes.validateBuffer(length);
+                bytes.validateBuffer(offset + length);
             }
             else {
-                bytes = new ByteArray(new ArrayBuffer(length));
+                bytes = new ByteArray(new ArrayBuffer(offset + length));
             }
             //This method is expensive
             for (var i = 0; i < length; i++) {
