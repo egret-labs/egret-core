@@ -346,9 +346,6 @@ module dragonBones {
 			}
 		}
 		
-		/**
-		 * Indicates the Bone instance that directly contains this DBObject instance if any.
-		 */
 		public get colorTransform():ColorTransform{
 			return this._colorTransform;
 		}
