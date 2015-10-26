@@ -99,5 +99,12 @@ module egret.gui {
             Event.release(event);
             return result;
         }
+
+        public clean():void {
+            super.clean();
+            this.data = null;
+            this.index = NaN;
+            this.renderer = null;
+        }
     }
 }

@@ -26569,6 +26569,10 @@ var egret;
                 egret.Event.release(event);
                 return result;
             };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.detail = null;
+            };
             /**
              * @constant egret.gui.CloseEvent.CLOSE
              */
@@ -26680,6 +26684,13 @@ var egret;
                 var result = target.dispatchEvent(event);
                 egret.Event.release(event);
                 return result;
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.kind = null;
+                this.items = null;
+                this.oldItems = null;
+                this.oldLocation = null;
             };
             /**
              * 集合类数据发生改变
@@ -26905,6 +26916,11 @@ var egret;
                 egret.Event.release(event);
                 return result;
             };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.element = null;
+                this.index = NaN;
+            };
             /**
              * 元素添加
              * @constant egret.gui.ElementExistenceEvent.ELEMENT_ADD
@@ -27003,6 +27019,11 @@ var egret;
                 var result = target.dispatchEvent(event);
                 egret.Event.release(event);
                 return result;
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.oldIndex = NaN;
+                this.newIndex = NaN;
             };
             /**
              * 指示索引已更改
@@ -27123,6 +27144,12 @@ var egret;
                 var result = target.dispatchEvent(event);
                 egret.Event.release(event);
                 return result;
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.item = null;
+                this.itemRenderer = null;
+                this.itemIndex = NaN;
             };
             /**
              * 指示用户执行了将鼠标指针从控件中某个项呈示器上移开的操作
@@ -27316,6 +27343,10 @@ var egret;
                 egret.Event.release(event);
                 return result;
             };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.popUp = null;
+            };
             /**
              * 添加一个弹出框，在执行完添加之后抛出。
              * @constant egret.gui.PopUpEvent.ADD_POPUP
@@ -27449,6 +27480,14 @@ var egret;
                 var result = target.dispatchEvent(event);
                 egret.Event.release(event);
                 return result;
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.kind = null;
+                this.newValue = null;
+                this.oldValue = null;
+                this.property = null;
+                this.source = null;
             };
             /**
              * 属性改变
@@ -27609,6 +27648,12 @@ var egret;
                 var result = target.dispatchEvent(event);
                 egret.Event.release(event);
                 return result;
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.data = null;
+                this.index = NaN;
+                this.renderer = null;
             };
             /**
              * 添加了项呈示器
@@ -27795,6 +27840,11 @@ var egret;
                 var result = target.dispatchEvent(event);
                 egret.Event.release(event);
                 return result;
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.instance = null;
+                this.partName = null;
             };
             /**
              * 附加皮肤公共子部件
@@ -28098,6 +28148,11 @@ var egret;
                 var result = target.dispatchEvent(event);
                 egret.Event.release(event);
                 return result;
+            };
+            p.clean = function () {
+                _super.prototype.clean.call(this);
+                this.item = null;
+                this.itemRenderer = null;
             };
             /**
              * 节点关闭,注意：只有通过交互操作引起的节点关闭才会抛出此事件。
