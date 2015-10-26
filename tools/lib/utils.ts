@@ -275,3 +275,27 @@ export function checkEgret() {
         exit(10015, options.projectDir);
     }
 }
+
+export function isFormatString(text:string):boolean{
+    if(text){
+        if(text.indexOf("\n")!=-1){
+            return true;
+        }
+    }
+    return false;
+}
+
+export function addIndents(times:number,text:string){
+    if(times == 0)
+        return text;
+    var added = '\t';
+    for(var i=0;i<times-1;i++){
+        added+=added;
+    }
+    //开头
+    if(text != null){
+        text = added+text;
+    }
+    //替换\n
+    return text.replace(new RegExp("\\n", "ig"),'\n'+added);
+}

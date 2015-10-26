@@ -21,8 +21,13 @@ var ChangeEntranceCommand = (function () {
     ChangeEntranceCommand.prototype.init = function (url, platform) {
         switch (platform) {
             case "android":
+                //判断入口文件是否存在
+                var entranceFile = FileUtil.joinPath(url, "AndroidManifest.xml");
+                if (!FileUtil.exists(entranceFile)) {
+                    break;
+                }
                 var DOMParser = require('../lib/core/xmldom/dom-parser').DOMParser;
-                var xmlContent = FileUtil.read(FileUtil.joinPath(url, "AndroidManifest.xml"));
+                var xmlContent = FileUtil.read(entranceFile);
                 var doc = new DOMParser().parseFromString(xmlContent);
                 var filePath = doc.documentElement.getElementsByTagName('manifest')._node.getAttribute('package').replace(/\./g, "/");
                 var javaName;
