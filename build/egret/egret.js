@@ -4208,7 +4208,7 @@ var egret;
                             drawCalls += this.drawWithScrollRect(child, context, dirtyList, rootMatrix, clipRegion);
                         }
                         else {
-                            if (DEBUG && child["isFPS"]) {
+                            if (child["isFPS"]) {
                                 this.drawDisplayObject(child, context, dirtyList, rootMatrix, child.$displayList, clipRegion);
                             }
                             else {
