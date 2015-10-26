@@ -88,8 +88,8 @@ module dragonBones {
 			var subTextureFrame:Rectangle;
 
             var subTextureList:any = rawData[ConstValues.SUB_TEXTURE];
-            for(var key in subTextureList) {
-                var subTextureObject:any = subTextureList[key];
+            for(var i:number = 0, len:number = subTextureList.length; i < len; i++) {
+                var subTextureObject:any = subTextureList[i];
                 var subTextureName:string = subTextureObject[ConstValues.A_NAME];
                 var subTextureRegion:Rectangle = new Rectangle();
                 subTextureRegion.x = DataParser.getNumber(subTextureObject, ConstValues.A_X, 0) / scale;
@@ -151,9 +151,9 @@ module dragonBones {
             DataParser.tempDragonBonesData = outputDragonBonesData;
 
             var armatureList:any = rawDataToParse[ConstValues.ARMATURE];
-            for(var key in armatureList)
+            for(var i:number = 0, len:number = armatureList.length; i < len; i++) 
             {
-                var armatureObject:any = rawDataToParse[ConstValues.ARMATURE][key];
+                var armatureObject:any = armatureList[i];
                 outputDragonBonesData.addArmatureData(DataParser.parseArmatureData(armatureObject, frameRate));
             }
 
@@ -167,20 +167,25 @@ module dragonBones {
 			outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
 
             var boneList:any = armatureDataToParse[ConstValues.BONE];
-            for(var key in boneList) {
-                var boneObject:any = boneList[key];
+            var i:number;
+            var len:number;
+
+            for(i = 0, len = boneList.length; i < len; i++) 
+            {
+                var boneObject:any = boneList[i];
                 outputArmatureData.addBoneData(DataParser.parseBoneData(boneObject));
             }
 
 			var slotList:any = armatureDataToParse[ConstValues.SLOT];
-			for(var key in slotList){
-				var slotObject:any = slotList[key];
+			for(i = 0, len = slotList.length; i < len; i++) 
+			{
+				var slotObject:any = slotList[i];
 				outputArmatureData.addSlotData(DataParser.parseSlotData(slotObject));
 			}
             var skinList:any = armatureDataToParse[ConstValues.SKIN];
-            for(var key in skinList)
+            for(i = 0, len = skinList.length; i < len; i++) 
             {
-                var skinObject:any = skinList[key];
+                var skinObject:any = skinList[i];
                 outputArmatureData.addSkinData(DataParser.parseSkinData(skinObject));
             }
 			if(DataParser.tempDragonBonesData.isGlobal)
@@ -190,9 +195,9 @@ module dragonBones {
 			outputArmatureData.sortBoneDataList();
 
             var animationList:any = armatureDataToParse[ConstValues.ANIMATION];
-            for(var key in animationList)
+            for(i = 0, len = animationList.length; i < len; i++) 
             {
-                var animationObject:any = animationList[key];
+                var animationObject:any = animationList[i];
                 var animationData:AnimationData = DataParser.parseAnimationData(animationObject, frameRate);
                 DBDataUtil.addHideTimeline(animationData, outputArmatureData, true);
                 DBDataUtil.transformAnimationData(animationData, outputArmatureData, DataParser.tempDragonBonesData.isGlobal);
@@ -225,9 +230,9 @@ module dragonBones {
 			skinData.name = skinObject[ConstValues.A_NAME];
 
             var slotList:any = skinObject[ConstValues.SLOT];
-            for(var key in slotList)
+            for(var i:number = 0, len:number = slotList.length; i < len; i++) 
             {
-                var slotObject:any = slotList[key];
+                var slotObject:any = slotList[i];
                 skinData.addSlotData(DataParser.parseSlotDisplayData(slotObject));
             }
 			
@@ -251,8 +256,9 @@ module dragonBones {
 			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
             var displayList:any = slotObject[ConstValues.DISPLAY];
 
-            for(var key in displayList) {
-                var displayObject:any = displayList[key];
+            for(var i:number = 0, len:number = displayList.length; i < len; i++) 
+            {
+                var displayObject:any = displayList[i];
                 slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
             }
 			
@@ -357,9 +363,9 @@ module dragonBones {
 			outputTimeline.duration = duration;
 
             var frameList:any = timelineObject[ConstValues.FRAME];
-            for(var key in frameList)
+            for(var i:number = 0, len:number = frameList.length; i < len; i++) 
             {
-                var frameObject:any = frameList[key];
+                var frameObject:any = frameList[i];
                 var frame:TransformFrame = DataParser.parseTransformFrame(frameObject, frameRate);
                 outputTimeline.addFrame(frame);
             }
@@ -377,9 +383,9 @@ module dragonBones {
 			outputTimeline.duration = duration;
 
 			var frameList:any = timelineObject[ConstValues.FRAME];
-			for(var key in frameList)
+			for(var i:number = 0, len:number = frameList.length; i < len; i++) 
 			{
-				var frameObject:any = frameList[key];
+				var frameObject:any = frameList[i];
 				var frame:SlotFrame = DataParser.parseSlotFrame(frameObject, frameRate);
 				outputTimeline.addFrame(frame);
 			}
@@ -441,9 +447,9 @@ module dragonBones {
 			var frame:Frame;
 
             var frameList:any = outputTimeline.frameList;
-            for(var key in frameList)
+            for(var i:number = 0, len:number = frameList.length; i < len; i++) 
             {
-                frame = frameList[key];
+                frame = frameList[i];
                 frame.position = position;
                 position += frame.duration;
             }
