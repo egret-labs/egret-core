@@ -218,7 +218,8 @@ var UpgradeCommand_2_4_3 = (function () {
                     });
                 }
                 else {
-                    globals.exit(1702);
+                    globals.log(1702);
+                    self.changeDirToNewlyCreate(projectPath);
                     self.asyncCallback();
                 }
             }

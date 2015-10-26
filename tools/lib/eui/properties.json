@@ -15,7 +15,7 @@
 	},
 	"egret.BitmapText":
 	{
-		"font":"egret.BitmapFont",
+		"font":"Object",
 		"letterSpacing":"number",
 		"lineSpacing":"number",
 		"super":"egret.DisplayObject",
@@ -191,6 +191,24 @@
 	{
 		"super":"eui.LayoutBase"
 	},
+	"eui.BitmapLabel":
+	{
+		"bottom":"number",
+		"horizontalCenter":"number",
+		"implements":["eui.UIComponent","eui.IDisplayText"],
+		"includeInLayout":"boolean",
+		"left":"number",
+		"maxHeight":"number",
+		"maxWidth":"number",
+		"minHeight":"number",
+		"minWidth":"number",
+		"percentHeight":"number",
+		"percentWidth":"number",
+		"right":"number",
+		"super":"egret.BitmapText",
+		"top":"number",
+		"verticalCenter":"number"
+	},
 	"eui.Button":
 	{
 		"icon":"any",
@@ -316,12 +334,6 @@
 		"itemIndex":"number",
 		"selected":"boolean",
 		"super":"eui.Component"
-	},
-	"egret.BitmapLabel":
-	{
-		"implements":["eui.UIComponent","eui.IDisplayText"],
-		"super":"egret.BitmapText",
-		"text":"string"
 	},
 	"eui.Label":
 	{

@@ -83,7 +83,7 @@ module egret.web {
             window.addEventListener("orientationchange", function () {
                 window.setTimeout(function () {
                     egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, StageOrientationEvent.ORIENTATION_CHANGE);
-                }, 100);
+                }, 350);
             });
         }
 

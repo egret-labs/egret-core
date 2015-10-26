@@ -8011,9 +8011,6 @@ var dragonBones;
             }
         );
         d(p, "colorTransform"
-            /**
-             * Indicates the Bone instance that directly contains this DBObject instance if any.
-             */
             ,function () {
                 return this._colorTransform;
             }

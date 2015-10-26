@@ -15,7 +15,7 @@
 	},
 	"egret.BitmapText":
 	{
-		"font":"egret.BitmapFont",
+		"font":"Object",
 		"letterSpacing":"number",
 		"lineSpacing":"number",
 		"super":"egret.DisplayObject",
@@ -412,6 +412,7 @@
 	},
 	"egret.gui.GroupBase":
 	{
+		"autoLayout":"boolean",
 		"clipAndEnableScrolling":"boolean",
 		"horizontalScrollPosition":"number",
 		"implements":["egret.gui.IViewport"],
@@ -697,6 +698,7 @@
 	},
 	"egret.gui.SkinnableContainer":
 	{
+		"autoLayout":"boolean",
 		"contentGroup":"egret.gui.Group",
 		"elementsContent":"Array",
 		"implements":["egret.gui.IVisualElementContainer"],
@@ -705,6 +707,7 @@
 	},
 	"egret.gui.SkinnableDataContainer":
 	{
+		"autoLayout":"boolean",
 		"dataGroup":"egret.gui.DataGroup",
 		"dataProvider":"egret.gui.ICollection",
 		"implements":["egret.gui.IItemRendererOwner"],

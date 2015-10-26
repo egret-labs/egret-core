@@ -1,6 +1,8 @@
 <componentPackage>
   <component id="ArrayCollection" super="egret.EventEmitter" default="source" show="false" module="eui"/>
   <component id="BasicLayout" super="eui.LayoutBase" show="false" module="eui"/>
+  <component id="BitmapLabel" super="egret.BitmapText" show="true" module="eui"/>
+  <component id="BitmapText" super="egret.DisplayObject" show="false" module="egret"/>
   <component id="Button" super="eui.Component" state="up,down,disabled" show="true" module="eui"/>
   <component id="CheckBox" super="eui.ToggleButton" show="true" module="eui"/>
   <component id="Component" super="eui.DisplayObjectContainer" state="" show="true" module="eui"/>

@@ -410,7 +410,7 @@ module egret.sys {
                         drawCalls += this.drawWithScrollRect(child, context, dirtyList, rootMatrix, clipRegion);
                     }
                     else {
-                        if (DEBUG && child["isFPS"]) {
+                        if (child["isFPS"]) {
                             this.drawDisplayObject(child, context, dirtyList, rootMatrix, child.$displayList, clipRegion);
                         }
                         else {
@@ -554,9 +554,9 @@ module egret.sys {
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
-
+                context.globalAlpha = 1;
                 if (rootMatrix) {
-                    context.translate(region.minX, region.minY)
+                    context.translate(region.minX, region.minY);
                     context.drawImage(displayContext.surface, 0, 0);
                     context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx * this.$pixelRatio, rootMatrix.ty * this.$pixelRatio);
                 }

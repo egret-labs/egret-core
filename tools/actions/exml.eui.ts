@@ -174,6 +174,8 @@ function getExmlDtsPath() {
 }
 
 function generateExmlDTS(): string {
+    //去掉重复定义
+    var classDefinations = {};
     var sourceList = searchEXML();
     var length = sourceList.length;
     if (length == 0)
@@ -188,6 +190,12 @@ function generateExmlDTS(): string {
         if (ext == "exml") {
             //解析exml并返回className和extendName继承关系
             var ret = exml.getDtsInfoFromExml(p);
+            //去掉重复定义
+            if(classDefinations[ret.className]){
+                continue;
+            }else{
+                classDefinations[ret.className] = ret.extendName;
+            }
             //var className = p.substring(srcPath.length, p.length - 5);
             var className = ret.className;
             //className = className.split("/").join(".");

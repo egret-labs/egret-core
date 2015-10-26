@@ -2111,7 +2111,7 @@ var egret;
              * @private
              */
             this.$alpha = 1;
-            this.$touchEnabled = false;
+            this.$touchEnabled = DisplayObject.defaultTouchEnabled;
             /**
              * @private
              */
@@ -3797,6 +3797,23 @@ var egret;
         };
         /**
          * @private
+         * @language en_US
+         * The default touchEnabled property of DisplayObject
+         * @default false
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @private
+         * @language zh_CN
+         * 显示对象默认的 touchEnabled 属性
+         * @default false
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        DisplayObject.defaultTouchEnabled = false;
+        /**
+         * @private
          */
         DisplayObject.$enterFrameCallBackList = [];
         /**
@@ -4191,7 +4208,7 @@ var egret;
                             drawCalls += this.drawWithScrollRect(child, context, dirtyList, rootMatrix, clipRegion);
                         }
                         else {
-                            if (DEBUG && child["isFPS"]) {
+                            if (child["isFPS"]) {
                                 this.drawDisplayObject(child, context, dirtyList, rootMatrix, child.$displayList, clipRegion);
                             }
                             else {
@@ -4327,6 +4344,7 @@ var egret;
                     if (hasBlendMode) {
                         context.globalCompositeOperation = compositeOp;
                     }
+                    context.globalAlpha = 1;
                     if (rootMatrix) {
                         context.translate(region.minX, region.minY);
                         context.drawImage(displayContext.surface, 0, 0);
@@ -14172,7 +14190,6 @@ var egret;
                     for (var i = 0; i < length; i++) {
                         info += arguments[i] + " ";
                     }
-                    console.log(123456);
                     sys.$logToFPS(info);
                     console.log.apply(console, toArray(arguments));
                 };

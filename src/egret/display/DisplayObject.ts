@@ -1313,7 +1313,25 @@ module egret {
             return this.$renderAlpha;
         }
 
-        $touchEnabled:boolean = false;
+        /**
+         * @private
+         * @language en_US
+         * The default touchEnabled property of DisplayObject
+         * @default false
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @private
+         * @language zh_CN
+         * 显示对象默认的 touchEnabled 属性
+         * @default false
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static defaultTouchEnabled:boolean = false;
+
+        $touchEnabled:boolean = DisplayObject.defaultTouchEnabled;
         /**
          * @language en_US
          * Specifies whether this object receives touch or other user input. The default value is false, which means that

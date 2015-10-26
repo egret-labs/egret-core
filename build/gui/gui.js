@@ -32523,7 +32523,7 @@ var egret;
                     delete this.mapClassDic[requestName];
                     return instance;
                 }
-                throw new Error("#" + 1028 + ": " + requestName);
+                throw new Error("#" + egret.sys.tr(1028) + ": " + requestName);
             };
             return Adapter;
         })();

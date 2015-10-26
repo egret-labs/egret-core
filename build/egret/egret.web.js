@@ -3700,7 +3700,7 @@ var egret;
                 window.addEventListener("orientationchange", function () {
                     window.setTimeout(function () {
                         egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, egret.StageOrientationEvent.ORIENTATION_CHANGE);
-                    }, 100);
+                    }, 350);
                 });
             };
             /**
