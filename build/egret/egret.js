@@ -14190,7 +14190,6 @@ var egret;
                     for (var i = 0; i < length; i++) {
                         info += arguments[i] + " ";
                     }
-                    console.log(123456);
                     sys.$logToFPS(info);
                     console.log.apply(console, toArray(arguments));
                 };
