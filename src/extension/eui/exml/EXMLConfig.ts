@@ -119,8 +119,10 @@ module eui.sys {
                 }
                 info[key] = resultType;
             }
-            prototype.__hashCode__ = hashCount++;
-            properties[prototype.__hashCode__] = info;
+            if (Object.getPrototypeOf(superProto)) {
+                prototype.__hashCode__ = hashCount++;
+                properties[prototype.__hashCode__] = info;
+            }
             return info;
         }
 
