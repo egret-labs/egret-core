@@ -18368,7 +18368,7 @@ var egret;
                 data.delay -= dt;
                 if (data.delay <= 0) {
                     data.listener.apply(data.thisObject, data.params);
-                    egret.clearTimeout(key);
+                    $clearTimer(key);
                 }
             }
             return false;
