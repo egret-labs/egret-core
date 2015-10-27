@@ -245,7 +245,7 @@ module egret {
                 5: 0,              //textWidth
                 6: 0,              //textHeight
                 7: 0,              //textDrawWidth
-                8: "sans-serif",   //fontFamily
+                8: TextField.default_fontFamily,   //fontFamily
                 9: "left",         //textAlign
                 10: "top",         //verticalAlign
                 11: "#ffffff",     //textColorString
