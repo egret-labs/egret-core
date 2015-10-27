@@ -2383,7 +2383,12 @@ var egret;
             }
             if (egret_native.isRecordExists(filePath)) {
                 var str = egret_native.loadRecord(filePath);
-                localStorageData = JSON.parse(str);
+                try {
+                    localStorageData = JSON.parse(str);
+                }
+                catch (e) {
+                    localStorageData = {};
+                }
             }
             else {
                 localStorageData = {};

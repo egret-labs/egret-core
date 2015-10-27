@@ -311,10 +311,11 @@ module egret {
         }
 
         public set strokeStyle(value:any) {
-            if (typeof value == "number") {
-                value = toColorString(value);
+            var tmpValue = value;
+            if (typeof tmpValue == "number") {
+                tmpValue = toColorString(tmpValue);
             }
-            this._strokeStyle = value;
+            this._strokeStyle = tmpValue;
             this.pushCommand(sys.GraphicsCommandType.strokeStyle, arguments);
         }
 
@@ -430,11 +431,11 @@ module egret {
                 return;
             }
             if (anticlockwise) {
-                var temp = endAngle;
-                endAngle = startAngle;
-                startAngle = temp;
+                this.arcBounds(x, y, radius, endAngle, startAngle);
             }
-            this.arcBounds(x, y, radius, startAngle, endAngle);
+            else {
+                this.arcBounds(x, y, radius, startAngle, endAngle);
+            }
         }
 
         /**

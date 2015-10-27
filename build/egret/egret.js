@@ -6963,10 +6963,11 @@ var egret;
                 return this._strokeStyle;
             }
             ,function (value) {
-                if (typeof value == "number") {
-                    value = egret.toColorString(value);
+                var tmpValue = value;
+                if (typeof tmpValue == "number") {
+                    tmpValue = egret.toColorString(tmpValue);
                 }
-                this._strokeStyle = value;
+                this._strokeStyle = tmpValue;
                 this.pushCommand(4 /* strokeStyle */, arguments);
             }
         );
@@ -7070,11 +7071,11 @@ var egret;
                 return;
             }
             if (anticlockwise) {
-                var temp = endAngle;
-                endAngle = startAngle;
-                startAngle = temp;
+                this.arcBounds(x, y, radius, endAngle, startAngle);
             }
-            this.arcBounds(x, y, radius, startAngle, endAngle);
+            else {
+                this.arcBounds(x, y, radius, startAngle, endAngle);
+            }
         };
         /**
          * @private
