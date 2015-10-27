@@ -8093,6 +8093,10 @@ var egret;
             scale /= egret.$TextureScaleFactor;
             var width = (bounds.x + bounds.width) * scale;
             var height = (bounds.y + bounds.height) * scale;
+            if (clipBounds) {
+                width = bounds.width * scale;
+                height = bounds.height * scale;
+            }
             this.context = this.createRenderContext(width, height);
             if (!this.context) {
                 return false;
@@ -8340,7 +8344,12 @@ var egret;
                 context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             context.beginPath();
-            context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+            if (rootMatrix) {
+                context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+            }
+            else {
+                context.rect(0, 0, scrollRect.width, scrollRect.height);
+            }
             context.clip();
             if (rootMatrix) {
                 context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
