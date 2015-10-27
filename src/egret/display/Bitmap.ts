@@ -442,11 +442,9 @@ module egret {
             var y:number = values[sys.BitmapKeys.offsetY];
             if (values[sys.BitmapKeys.image]) {
                 var values = this.$Bitmap;
-                var w:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
-                var h:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : values[sys.BitmapKeys.height];
-                var tsX:number = w / values[sys.BitmapKeys.width];
-                var tsY:number = h / values[sys.BitmapKeys.height];
-                bounds.setTo(0, 0, w + x * tsX, h + y * tsY);
+                var w:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : x + values[sys.BitmapKeys.clipWidth];
+                var h:number = !isNaN(values[sys.BitmapKeys.explicitBitmapHeight]) ? values[sys.BitmapKeys.explicitBitmapHeight] : y + values[sys.BitmapKeys.clipHeight];
+                bounds.setTo(0, 0, w, h);
             }
             else {
                 w = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : 0;

@@ -4894,11 +4894,9 @@ var egret;
             var y = values[7 /* offsetY */];
             if (values[1 /* image */]) {
                 var values = this.$Bitmap;
-                var w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
-                var h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                var tsX = w / values[8 /* width */];
-                var tsY = h / values[9 /* height */];
-                bounds.setTo(0, 0, w + x * tsX, h + y * tsY);
+                var w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : x + values[4 /* clipWidth */];
+                var h = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : y + values[5 /* clipHeight */];
+                bounds.setTo(0, 0, w, h);
             }
             else {
                 w = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : 0;
