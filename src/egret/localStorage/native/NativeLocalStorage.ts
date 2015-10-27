@@ -30,11 +30,12 @@ module egret.localStorage.native {
     var filePath:string = "LocalStorage.local";
 
     var localStorageData = {};
+
     /**
      * @private
-     * 
-     * @param key 
-     * @returns 
+     *
+     * @param key
+     * @returns
      */
     function getItem(key:string):string {
         return localStorageData[key];
@@ -42,10 +43,10 @@ module egret.localStorage.native {
 
     /**
      * @private
-     * 
-     * @param key 
-     * @param value 
-     * @returns 
+     *
+     * @param key
+     * @param value
+     * @returns
      */
     function setItem(key:string, value:string):boolean {
         localStorageData[key] = value;
@@ -61,8 +62,8 @@ module egret.localStorage.native {
 
     /**
      * @private
-     * 
-     * @param key 
+     *
+     * @param key
      */
     function removeItem(key:string):void {
         delete localStorageData[key];
@@ -71,7 +72,7 @@ module egret.localStorage.native {
 
     /**
      * @private
-     * 
+     *
      */
     function clear():void {
         for (var key in localStorageData) {
@@ -82,7 +83,7 @@ module egret.localStorage.native {
 
     /**
      * @private
-     * 
+     *
      */
     function save() {
         egret_native.saveRecord(filePath, JSON.stringify(localStorageData));
@@ -90,7 +91,12 @@ module egret.localStorage.native {
 
     if (egret_native.isRecordExists(filePath)) {
         var str:string = egret_native.loadRecord(filePath);
-        localStorageData = JSON.parse(str);
+
+        try {
+            localStorageData = JSON.parse(str);
+        } catch (e) {
+            localStorageData = {};
+        }
     }
     else {
         localStorageData = {};
