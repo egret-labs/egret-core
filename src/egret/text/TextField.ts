@@ -2009,7 +2009,7 @@ module egret {
         var italic:boolean = style.italic == null ? textField.$TextField[sys.TextKeys.italic] : style.italic;
         var bold:boolean = style.bold == null ? textField.$TextField[sys.TextKeys.bold] : style.bold;
         var size:number = style.size == null ? textField.$TextField[sys.TextKeys.fontSize] : style.size;
-        var fontFamily:string = style.fontFamily == null ? textField.$TextField[sys.TextKeys.fontFamily] : style.fontFamily;
+        var fontFamily:string = style.fontFamily || textField.$TextField[sys.TextKeys.fontFamily] || TextField.default_fontFamily;
         var font:string = italic ? "italic " : "normal ";
         font += bold ? "bold " : "normal ";
         font += size + "px " + fontFamily;

@@ -16951,7 +16951,7 @@ var egret;
                 5: 0,
                 6: 0,
                 7: 0,
-                8: "sans-serif",
+                8: TextField.default_fontFamily,
                 9: "left",
                 10: "top",
                 11: "#ffffff",
@@ -18565,7 +18565,7 @@ var egret;
         var italic = style.italic == null ? textField.$TextField[16 /* italic */] : style.italic;
         var bold = style.bold == null ? textField.$TextField[15 /* bold */] : style.bold;
         var size = style.size == null ? textField.$TextField[0 /* fontSize */] : style.size;
-        var fontFamily = style.fontFamily == null ? textField.$TextField[8 /* fontFamily */] : style.fontFamily;
+        var fontFamily = style.fontFamily || textField.$TextField[8 /* fontFamily */] || TextField.default_fontFamily;
         var font = italic ? "italic " : "normal ";
         font += bold ? "bold " : "normal ";
         font += size + "px " + fontFamily;
