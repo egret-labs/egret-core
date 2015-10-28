@@ -7,17 +7,17 @@ var APITestTool = require('../actions/APITest');
 var CHILD_EXEC = require('child_process');
 var APITestCommand = require('./apitest');
 var Compiler = require('../actions/Compiler');
+console.log(utils.tr(1004, 0));
+var timeBuildStart = (new Date()).getTime();
 var Build = (function () {
     function Build() {
     }
     Build.prototype.execute = function (callback) {
         callback = callback || defaultBuildCallback;
-        //如果APITest未通过继续执行APITest
         if (!APITestTool.isTestPass(egret.args.projectDir)) {
             var apitest_command = new APITestCommand();
             apitest_command.execute(function () {
-                globals.log2(1715); //项目检测成功
-                //成功以后再次执行build
+                globals.log2(1715);
                 var build = CHILD_EXEC.exec(globals.addQuotes(process.execPath) + " \"" +
                     FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"", {
                     encoding: 'utf8',
@@ -36,28 +36,8 @@ var Build = (function () {
                 build.on("exit", function (result) {
                     process.exit(result);
                 });
-                //返回true截断默认的exit操作
                 return true;
             });
-            //var build = CHILD_EXEC.exec(
-            //    'node \"'+FileUtil.joinPath(egret.root,'/tools/bin/egret')+'\" apitest \"'+egret.args.projectDir+"\"",
-            //    {
-            //        encoding: 'utf8',
-            //        timeout: 0,
-            //        maxBuffer: 200*1024,
-            //        killSignal: 'SIGTERM',
-            //        cwd: process.cwd(),
-            //        env: process.env
-            //    });
-            //build.stderr.on("data", (data) =>{
-            //    console.log(data);
-            //});
-            //build.stdout.on("data",(data)=>{
-            //    console.log(data);
-            //});
-            //build.on("exit", (result)=>{
-            //    process.exit(result);
-            //});
             return DontExitCode;
         }
         var options = egret.args;
@@ -116,7 +96,6 @@ var Build = (function () {
             for (var j = 0; j < module.files.length; j++) {
                 var file = module.files[j];
                 if (file.indexOf(".d.ts") != -1) {
-                    //FileUtil.copy(FileUtil.joinPath(options.projectDir, module.root, file), FileUtil.joinPath(options.projectDir, outDir, module.name, file));
                     dtsStr += "\n";
                     dtsStr += FileUtil.read(FileUtil.joinPath(options.projectDir, module.root, file));
                 }
@@ -150,8 +129,9 @@ function onGotBuildCommandResult(cmd, callback) {
         callback(cmd.exitCode || 0);
 }
 function defaultBuildCallback(code) {
+    var timeBuildEnd = (new Date()).getTime();
+    var timeBuildUsed = (timeBuildEnd - timeBuildStart) / 1000;
+    console.log(utils.tr(1108, timeBuildUsed));
     utils.exit(code);
 }
 module.exports = Build;
-
-//# sourceMappingURL=../commands/build.js.map
