@@ -5,7 +5,7 @@ var CopyFiles = require('../actions/CopyFiles');
 var CompileProject = require('../actions/CompileProject');
 var CompileTemplate = require('../actions/CompileTemplate');
 var NativeProject = require('../actions/NativeProject');
-console.log(utils.tr(1004, 0));
+console.log(utils.tr(1106, 0));
 var timeBuildStart = (new Date()).getTime();
 var Clean = (function () {
     function Clean() {

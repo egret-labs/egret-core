@@ -10,7 +10,7 @@ import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 
 import NativeProject = require('../actions/NativeProject');
-console.log(utils.tr(1004, 0));
+console.log(utils.tr(1106, 0));
 var timeBuildStart: number = (new Date()).getTime();
 class Clean implements egret.Command {
     execute(): number {
