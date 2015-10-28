@@ -6,7 +6,7 @@ import entry = require('../entry');
 import createAction = require('../actions/Create');
 import server = require('../server/server');
 import FileUtil = require('../lib/FileUtil');
-
+console.log(utils.tr(1003, 0));
 class Create implements egret.Command {
 
     execute(): number {
@@ -19,6 +19,7 @@ class Create implements egret.Command {
             FileUtil.createDirectory(option.projectDir);
         }
         var project = option.getProject(true);
+        console.log(utils.tr(1004, 0));
         //默认使用命令行创建
         project.type = project.type || "game";
 
