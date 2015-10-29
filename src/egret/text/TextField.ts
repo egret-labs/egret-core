@@ -1463,7 +1463,12 @@ module egret {
                 w += 2;
                 h += 2;
             }
-            bounds.setTo(0, 0, w, h);
+            var _strokeDouble = this.$TextField[sys.TextKeys.stroke] * 2;
+            if (_strokeDouble > 0) {
+                w += _strokeDouble * 2;
+                h += _strokeDouble * 2;
+            }
+            bounds.setTo(-_strokeDouble, -_strokeDouble, w, h);
         }
 
         /**
