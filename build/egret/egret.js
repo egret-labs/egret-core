@@ -14976,6 +14976,11 @@ var egret;
                 if (value > 60) {
                     value = 60;
                 }
+                //todo
+                if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
+                    egret_native.setFrameRate(value);
+                    value = 60;
+                }
                 //这里用60*1000来避免浮点数计算不准确的问题。
                 this.lastCount = this.frameInterval = Math.round(60000 / value);
                 return true;

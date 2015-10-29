@@ -1418,8 +1418,7 @@ var egret;
                 stage.$maxTouches = option.maxTouches;
                 stage.textureScaleFactor = option.textureScaleFactor;
                 //设置帧频到native
-                stage.frameRate = 60;
-                egret_native.setFrameRate(option.frameRate > 60 ? 60 : option.frameRate);
+                stage.frameRate = option.frameRate;
                 if (!egret_native.Canvas) {
                     stage.addEventListener(egret.Event.ENTER_FRAME, function () {
                         if (native.$currentSurface) {
