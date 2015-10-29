@@ -30,10 +30,13 @@ Platforms:
 
 Tools
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE.
-* [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3-to-TS Code transformation tool
-* [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,Resource configuration and management tool
-* [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet tool
+* [Egret Wing](http://www.egret.com/egretwing) , Egret IDE.
+
+Document & API
+-------------------------
+* Visit [here](http://edn.egret.com/en/index.php/article/index/id/485) to get tutorials. 
+* Visit [here](http://edn.egret.com/en/index.php/apidoc/egret/) to get API.
+
 
 Release Notes
 --------------------
@@ -91,8 +94,8 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 文档与教程
 -------------------------
-* 访问 Egret 的[文档](http://docs.egret-labs.org/)和[教程](http://bbs.egret-labs.org/plugin.php?id=webpage&identifier=Egret)
-* 访问 [这里](http://docs.egret-labs.org/apis/) 获取 API 文档
+* 访问 Egret 的 [文档](http://edn.egret.com/cn/index.php/list/index/id/19)
+* 访问 [这里](http://edn.egret.com/cn/index.php/apidoc/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
 第三方库
@@ -101,10 +104,11 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 工具
 -------------------------
-* [Egret Wing](http://www.egret-labs.org/download/wing-download.html) , Egret IDE
-* [TS Conversion](http://www.egret-labs.org/download/conversion-tool-download.html) ,AS3到TS的代码转换工具
-* [Res Depot](http://www.egret-labs.org/download/restool-download.html) ,RES资源模块配置文件管理工具
-* [Texture Merger](http://www.egret-labs.org/download/egret-texturetool-download.html) ,SpriteSheet工具
+* [Egret Wing](http://www.egret.com/products-wing) , Egret IDE
+* [TS Conversion](http://www.egret.com/products-conversion) ,AS3到TS的代码转换工具
+* [Res Depot](http://www.egret.com/products-others#res-depot) ,RES资源模块配置文件管理工具
+* [Texture Merger](http://www.egret.com/products-others#texture-merger) ,SpriteSheet工具
+* [更多工具](http://www.egret.com/features)
 
 
 
@@ -180,7 +184,8 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 联系我们
 -------------------
-* 开发者论坛: http://bbs.egret-labs.org
+* 开发者中心: http://edn.egret.com
+* 开发者论坛: http://bbs.egret.com
 * 开发者群:
   * 1群：141578440 (2000 members capacity / Full)
   * 2群：397297607 (1000 members capacity / Full)
