@@ -142,7 +142,7 @@ module egret.web {
             video.style.top = "0px";
             video.style.left = "0px";
             video.height = this.heightSet;
-            video.width = this.widthSet;
+            video.width = 0;//为了解决视频返回挤压页面内容
 
             this.checkFullScreen(this._fullscreen);
         }
