@@ -40,6 +40,8 @@ Document & API
 
 Release Notes
 --------------------
+[Egret 2.5.4 Release Notes 2015-10-30](/docs/en/2.5.4_ReleaseNotes.md)
+
 [Egret 2.5.3 Release Notes 2015-10-23](/docs/en/2.5.3_ReleaseNotes.md)
 
 [Egret 2.5.2 Release Notes 2015-10-16](/docs/en/2.5.2_ReleaseNotes.md)
@@ -114,6 +116,8 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 发布说明
 --------------------
+[Egret 2.5.4 Release Notes 2015-10-30](/docs/cn/2.5.4_ReleaseNotes.md)
+
 [Egret 2.5.3 Release Notes 2015-10-23](/docs/cn/2.5.3_ReleaseNotes.md)
 
 [Egret 2.5.2 Release Notes 2015-10-16](/docs/cn/2.5.2_ReleaseNotes.md)
