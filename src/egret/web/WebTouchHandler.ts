@@ -60,14 +60,17 @@ module egret.web {
         private addListeners():void {
             if (window.navigator.msPointerEnabled) {
                 this.canvas.addEventListener("MSPointerDown", (event:any)=> {
+                    event.identifier = event.pointerId;
                     this.onTouchBegin(event);
                     this.prevent(event);
                 }, false);
                 this.canvas.addEventListener("MSPointerMove", (event:any)=> {
+                    event.identifier = event.pointerId;
                     this.onTouchMove(event);
                     this.prevent(event);
                 }, false);
                 this.canvas.addEventListener("MSPointerUp", (event:any)=> {
+                    event.identifier = event.pointerId;
                     this.onTouchEnd(event);
                     this.prevent(event);
                 }, false);
