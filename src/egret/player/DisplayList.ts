@@ -715,5 +715,10 @@ module egret.sys {
             this.$ratioMatrix.setTo(ratio, 0, 0, ratio, 0, 0);
             this.root.$invalidate(true);
         }
+
+        public setDirtyRegionPolicy(policy:string):void {
+            //todo 这里还可以做更多优化
+            this.dirtyRegion.setDirtyRegionPolicy(policy);
+        }
     }
 }

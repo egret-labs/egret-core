@@ -365,6 +365,8 @@ declare module egret.sys {
          * 合并脏矩形列表
          */
         private mergeDirtyList(dirtyList);
+        private $dirtyRegionPolicy;
+        setDirtyRegionPolicy(policy: string): void;
     }
 }
 declare module egret {
@@ -988,6 +990,48 @@ declare module egret.sys {
          * @private
          */
         updateRegion(bounds: Rectangle, matrix: Matrix): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @language en_US
+     * Values for the dirty region policy
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 脏矩形策略常量。
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    class DirtyRegionPolicy {
+        /**
+         * @language en_US
+         * Close automatic detection of dirty region
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 关闭自动脏矩形检测
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static OFF: string;
+        /**
+         * @language en_US
+         * Open automatic detection of dirty region
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 开启自动脏矩形检测
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static ON: string;
     }
 }
 declare module egret.sys {
@@ -2663,6 +2707,7 @@ declare module egret.sys {
          */
         changeSurfaceSize(): void;
         setDevicePixelRatio(ratio?: number): void;
+        setDirtyRegionPolicy(policy: string): void;
     }
 }
 declare module egret.sys {
@@ -5536,6 +5581,21 @@ declare module egret {
          * @default 99
          */
         maxTouches: number;
+        /**
+         * @language en_US
+         * Set dirty region policy
+         * @param policy One of the constants defined by egret.sys.DirtyRegionPolicy
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置脏矩形策略
+         * @param policy egret.sys.DirtyRegionPolicy定义的常量之一
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        setDirtyRegionPolicy(policy: string): void;
     }
 }
 declare module egret {
@@ -9873,64 +9933,6 @@ declare module egret {
         new (): ImageLoader;
     };
 }
-declare module egret.sys {
-    /**
-     * @language en_US
-     * Values for the dirty region policy
-     * @version Egret 2.5
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 脏矩形策略常量。
-     * @version Egret 2.5
-     * @platform Web,Native
-     */
-    class DirtyRegionPolicy {
-        /**
-         * @language en_US
-         * Close automatic detection of dirty region
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 关闭自动脏矩形检测
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static OFF: string;
-        /**
-         * @language en_US
-         * Open automatic detection of dirty region
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 开启自动脏矩形检测
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static ON: string;
-    }
-    var dirtyRegionPolicy: string;
-    /**
-     * @language en_US
-     * Set dirty region policy
-     * @param policy One of the constants defined by egret.sys.DirtyRegionPolicy
-     * @version Egret 2.5
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 设置脏矩形策略
-     * @param policy egret.sys.DirtyRegionPolicy定义的常量之一
-     * @version Egret 2.5
-     * @platform Web,Native
-     */
-    function setDirtyRegionPolicy(policy: string): void;
-}
 declare module egret {
     /**
      * @language en_US
@@ -10042,9 +10044,6 @@ declare module egret {
     }
 }
 declare module egret.sys {
-    /**
-     * @private
-     */
     var $TempStage: egret.Stage;
     /**
      * @private
