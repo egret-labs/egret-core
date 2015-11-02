@@ -1033,7 +1033,7 @@ var egret;
                 bufferSource.onended = this.onPlayEnd;
                 this._startTime = Date.now();
                 this.gain.gain.value = this._volume;
-                bufferSource.start(0, this._currentTime);
+                bufferSource.start(0, this.$startTime);
                 this._currentTime = 0;
             };
             p.stop = function () {
@@ -2792,14 +2792,17 @@ var egret;
                 var _this = this;
                 if (window.navigator.msPointerEnabled) {
                     this.canvas.addEventListener("MSPointerDown", function (event) {
+                        event.identifier = event.pointerId;
                         _this.onTouchBegin(event);
                         _this.prevent(event);
                     }, false);
                     this.canvas.addEventListener("MSPointerMove", function (event) {
+                        event.identifier = event.pointerId;
                         _this.onTouchMove(event);
                         _this.prevent(event);
                     }, false);
                     this.canvas.addEventListener("MSPointerUp", function (event) {
+                        event.identifier = event.pointerId;
                         _this.onTouchEnd(event);
                         _this.prevent(event);
                     }, false);

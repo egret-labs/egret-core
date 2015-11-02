@@ -4578,6 +4578,7 @@ var egret;
                 this.root.$invalidate(true);
             };
             p.setDirtyRegionPolicy = function (policy) {
+                //todo 这里还可以做更多优化
                 this.dirtyRegion.setDirtyRegionPolicy(policy);
             };
             return DisplayList;
