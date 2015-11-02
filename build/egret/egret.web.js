@@ -1240,7 +1240,10 @@ var egret;
                 video.style.top = "0px";
                 video.style.left = "0px";
                 video.height = this.heightSet;
-                video.width = 0; //为了解决视频返回挤压页面内容
+                video.width = this.widthSet;
+                setTimeout(function () {
+                    video.width = 0;
+                }, 1000);
                 this.checkFullScreen(this._fullscreen);
             };
             p.checkFullScreen = function (playFullScreen) {
@@ -1249,9 +1252,9 @@ var egret;
                     if (video.parentElement == null) {
                         video.removeAttribute("webkit-playsinline");
                         document.body.appendChild(video);
-                        this.goFullscreen();
-                        egret.stopTick(this.markDirty, this);
                     }
+                    egret.stopTick(this.markDirty, this);
+                    this.goFullscreen();
                 }
                 else {
                     if (video.parentElement != null) {
