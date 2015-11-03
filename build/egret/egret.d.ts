@@ -5596,6 +5596,23 @@ declare module egret {
          * @platform Web,Native
          */
         setDirtyRegionPolicy(policy: string): void;
+        /**
+         * @language en_US
+         * Set resolution size
+         * @param width width
+         * @param height height
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置分辨率尺寸
+         * @param width 宽度
+         * @param height 高度
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        setContentSize(width: number, height: number): void;
     }
 }
 declare module egret {
@@ -10282,6 +10299,11 @@ declare module egret.sys {
          * 更新触摸数量
          */
         updateMaxTouches(): any;
+        /**
+         * @private
+         * 设置分辨率尺寸
+         */
+        setContentSize(width: number, height: number): any;
     }
 }
 declare module egret.sys {

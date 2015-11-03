@@ -103,42 +103,39 @@ module egret {
             c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
 
-            if (clipBounds) {
-                var scrollRect = new egret.Rectangle();
-                scrollRect.setTo(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
-                c1.scrollRect = scrollRect;
-            }
-
             var root = new egret.DisplayObjectContainer();
             this.rootDisplayList = sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.$children.push(c1);
 
+            var hasRenderRegion = displayObject.$renderRegion;
+            if(!hasRenderRegion) {
+                displayObject.$renderRegion = sys.Region.create();
+            }
             var parent = displayObject.$parent;
             displayObject.$parent = null;
             this.$saveParentDisplayList(displayObject);
             this.$update(displayObject);
             displayObject.$parent = parent;
+            if(!hasRenderRegion) {
+                sys.Region.release(displayObject.$renderRegion);
+                displayObject.$renderRegion = null;
+            }
 
             //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
-            var renderMatrixA = renderMatrix.a;
-            var renderMatrixB = renderMatrix.b;
-            var renderMatrixC = renderMatrix.c;
-            var renderMatrixD = renderMatrix.d;
-            var renderMatrixTx = renderMatrix.tx;
-            var renderMatrixTy = renderMatrix.ty;
-            renderMatrix.identity();
+            var invertMatrix = Matrix.create();
+            renderMatrix.$invertInto(invertMatrix);
             //应用裁切
             if(clipBounds) {
-                renderMatrix.translate(-clipBounds.x, -clipBounds.y);
+                invertMatrix.translate(-clipBounds.x, -clipBounds.y);
             }
 
             this.context.clearRect(0, 0, width, height);
-            
-            var drawCalls = this.drawDisplayObject(root, this.context, null);
-            renderMatrix.setTo(renderMatrixA,renderMatrixB,renderMatrixC,renderMatrixD,renderMatrixTx,renderMatrixTy);
-            
+            this.context.setTransform(invertMatrix.a, invertMatrix.b, invertMatrix.c, invertMatrix.d, invertMatrix.tx, invertMatrix.ty);
+            var drawCalls = this.drawDisplayObject(root, this.context, invertMatrix);
+            Matrix.release(invertMatrix);
+
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
@@ -364,12 +361,7 @@ module egret {
                 context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             context.beginPath();
-            if(rootMatrix) {
-                context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
-            }
-            else {
-                context.rect(0, 0, scrollRect.width, scrollRect.height);
-            }
+            context.rect(0, 0, scrollRect.width, scrollRect.height);
             context.clip();
             if (rootMatrix) {
                 context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);

@@ -189,6 +189,9 @@ module egret.sys {
          * @private
          */
         public intersects(target:Region):boolean {
+            if(this.isEmpty()) {
+                return false;
+            }
             var max = this.minX > target.minX ? this.minX : target.minX;
             var min = this.maxX < target.maxX ? this.maxX : target.maxX;
             if (max > min) {
@@ -204,6 +207,10 @@ module egret.sys {
          * @private
          */
         public updateRegion(bounds:Rectangle, matrix:Matrix):void {
+            if(bounds.width == 0 || bounds.height == 0) {
+                this.setEmpty();
+                return;
+            }
             var m = matrix;
             var a = m.a;
             var b = m.b;

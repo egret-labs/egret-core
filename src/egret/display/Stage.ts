@@ -339,6 +339,26 @@ module egret {
         public setDirtyRegionPolicy(policy:string):void {
             this.$displayList.setDirtyRegionPolicy(policy);
         }
+
+        /**
+         * @language en_US
+         * Set resolution size
+         * @param width width
+         * @param height height
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置分辨率尺寸
+         * @param width 宽度
+         * @param height 高度
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        public setContentSize(width:number, height:number):void {
+            this.$screen.setContentSize(width, height);
+        }
     }
 
     if (DEBUG) {
