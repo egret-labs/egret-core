@@ -1833,6 +1833,9 @@ var egret;
              * @private
              */
             p.intersects = function (target) {
+                if (this.isEmpty()) {
+                    return false;
+                }
                 var max = this.minX > target.minX ? this.minX : target.minX;
                 var min = this.maxX < target.maxX ? this.maxX : target.maxX;
                 if (max > min) {
@@ -1846,6 +1849,10 @@ var egret;
              * @private
              */
             p.updateRegion = function (bounds, matrix) {
+                if (bounds.width == 0 || bounds.height == 0) {
+                    this.setEmpty();
+                    return;
+                }
                 var m = matrix;
                 var a = m.a;
                 var b = m.b;
@@ -8193,36 +8200,35 @@ var egret;
             var c1 = new egret.DisplayObjectContainer();
             c1.$children.push(displayObject);
             c1.scaleX = c1.scaleY = scale;
-            if (clipBounds) {
-                var scrollRect = new egret.Rectangle();
-                scrollRect.setTo(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
-                c1.scrollRect = scrollRect;
-            }
             var root = new egret.DisplayObjectContainer();
             this.rootDisplayList = egret.sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
             root.$children.push(c1);
+            var hasRenderRegion = displayObject.$renderRegion;
+            if (!hasRenderRegion) {
+                displayObject.$renderRegion = egret.sys.Region.create();
+            }
             var parent = displayObject.$parent;
             displayObject.$parent = null;
             this.$saveParentDisplayList(displayObject);
             this.$update(displayObject);
             displayObject.$parent = parent;
+            if (!hasRenderRegion) {
+                egret.sys.Region.release(displayObject.$renderRegion);
+                displayObject.$renderRegion = null;
+            }
             //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
-            var renderMatrixA = renderMatrix.a;
-            var renderMatrixB = renderMatrix.b;
-            var renderMatrixC = renderMatrix.c;
-            var renderMatrixD = renderMatrix.d;
-            var renderMatrixTx = renderMatrix.tx;
-            var renderMatrixTy = renderMatrix.ty;
-            renderMatrix.identity();
+            var invertMatrix = egret.Matrix.create();
+            renderMatrix.$invertInto(invertMatrix);
             //应用裁切
             if (clipBounds) {
-                renderMatrix.translate(-clipBounds.x, -clipBounds.y);
+                invertMatrix.translate(-clipBounds.x, -clipBounds.y);
             }
             this.context.clearRect(0, 0, width, height);
-            var drawCalls = this.drawDisplayObject(root, this.context, null);
-            renderMatrix.setTo(renderMatrixA, renderMatrixB, renderMatrixC, renderMatrixD, renderMatrixTx, renderMatrixTy);
+            this.context.setTransform(invertMatrix.a, invertMatrix.b, invertMatrix.c, invertMatrix.d, invertMatrix.tx, invertMatrix.ty);
+            var drawCalls = this.drawDisplayObject(root, this.context, invertMatrix);
+            egret.Matrix.release(invertMatrix);
             this._setBitmapData(this.context.surface);
             //设置纹理参数
             this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
@@ -8433,12 +8439,7 @@ var egret;
                 context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             context.beginPath();
-            if (rootMatrix) {
-                context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
-            }
-            else {
-                context.rect(0, 0, scrollRect.width, scrollRect.height);
-            }
+            context.rect(0, 0, scrollRect.width, scrollRect.height);
             context.clip();
             if (rootMatrix) {
                 context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
@@ -9240,6 +9241,25 @@ var egret;
          */
         p.setDirtyRegionPolicy = function (policy) {
             this.$displayList.setDirtyRegionPolicy(policy);
+        };
+        /**
+         * @language en_US
+         * Set resolution size
+         * @param width width
+         * @param height height
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置分辨率尺寸
+         * @param width 宽度
+         * @param height 高度
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        p.setContentSize = function (width, height) {
+            this.$screen.setContentSize(width, height);
         };
         return Stage;
     })(egret.DisplayObjectContainer);
@@ -14398,6 +14418,7 @@ var egret;
                 this.totalTick = 0;
                 this.lastTime = 0;
                 this.drawCalls = 0;
+                this.dirtyRatio = 0;
                 this._stage = stage;
                 this.showFPS = showFPS;
                 this.showLog = showLog;
@@ -14448,16 +14469,18 @@ var egret;
                 this.lastTime = current;
                 this.totalTick++;
                 this.drawCalls = Math.max(drawCalls, this.drawCalls);
+                this.dirtyRatio = Math.max(dirtyRatio, this.dirtyRatio);
                 if (this.totalTime > 500) {
                     var lastFPS = Math.round(this.totalTick * 1000 / this.totalTime);
                     this.totalTick = 0;
                     this.totalTime = 0;
-                    var text = "FPS: " + lastFPS + "\nDraw: " + this.drawCalls + "," + dirtyRatio + "%\nCost: " + args.join(",");
+                    var text = "FPS: " + lastFPS + "\nDraw: " + this.drawCalls + "," + this.dirtyRatio + "%\nCost: " + args.join(",");
                     if (this.textField.text != text) {
                         this.textField.text = text;
                         this.updateLayout();
                     }
                     this.drawCalls = 0;
+                    this.dirtyRatio = 0;
                 }
             };
             /**

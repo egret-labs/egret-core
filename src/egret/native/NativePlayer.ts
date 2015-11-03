@@ -126,6 +126,13 @@ module egret.native {
             //this.webInput.$updateSize();
         }
 
+        public setContentSize(width:number, height:number):void {
+            var option = this.playerOption;
+            option.contentWidth = width;
+            option.contentHeight = height;
+            this.updateScreenSize();
+        }
+
         /**
          * @private
          * 更新触摸数量

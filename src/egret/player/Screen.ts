@@ -44,5 +44,11 @@ module egret.sys {
          * 更新触摸数量
          */
         updateMaxTouches();
+
+        /**
+         * @private
+         * 设置分辨率尺寸
+         */
+        setContentSize(width:number, height:number);
     }
 }

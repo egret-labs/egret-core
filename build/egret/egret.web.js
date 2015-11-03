@@ -3808,6 +3808,12 @@ var egret;
                 this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
                 this.webInput.$updateSize();
             };
+            p.setContentSize = function (width, height) {
+                var option = this.playerOption;
+                option.contentWidth = width;
+                option.contentHeight = height;
+                this.updateScreenSize();
+            };
             /**
              * @private
              * 更新触摸数量
