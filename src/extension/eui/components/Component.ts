@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 /// <reference path="../core/uicomponent.ts" />
-
+/// <reference path="../utils/registerproperty.ts" />
 module eui.sys {
 
     /**

@@ -3081,6 +3081,7 @@ var eui;
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="../core/uicomponent.ts" />
+/// <reference path="../utils/registerproperty.ts" />
 var eui;
 (function (eui) {
     /**
@@ -23127,6 +23128,9 @@ var eui;
             }
             if (index == -1)
                 index = container.numChildren;
+            if (egret.is(container, "eui.Component")) {
+                container.$Component[8 /* skin */].$elementsContent.push(target);
+            }
             container.addChildAt(target, index);
         };
         /**
@@ -23143,6 +23147,13 @@ var eui;
                 return;
             if (target.$parent === container) {
                 container.removeChild(target);
+            }
+            if (egret.is(container, "eui.Component")) {
+                var arr = container.$Component[8 /* skin */].$elementsContent;
+                var idx = arr.indexOf(target);
+                if (idx > -1) {
+                    arr.splice(idx, 1);
+                }
             }
         };
         return AddItems;
