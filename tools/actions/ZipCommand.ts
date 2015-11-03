@@ -4,7 +4,7 @@
  * 打zip包
  */
 import file = require('../lib/FileUtil');
-import project = require('../actions/project');
+import project = require('../actions/Project');
 import FileUtil = require('../lib/FileUtil');
 
 class ZipCommand implements egret.Command {
