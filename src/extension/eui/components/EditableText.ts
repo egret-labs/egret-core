@@ -67,11 +67,8 @@ module eui {
         public constructor() {
             super();
             this.initializeUIValues();
-            //if egret
             this.type = egret.TextFieldType.INPUT;
-             //endif*/
         }
-
         /**
          * @private
          *
@@ -119,7 +116,64 @@ module eui {
          * @private
          */
         private _widthConstraint:number = NaN;
+        /**
+        * @private
+        *
+        * @param stage
+        * @param nestLevel
+        */
+        public $onAddToStage(stage: egret.Stage, nestLevel: number): void {
+            super.$onAddToStage(stage, nestLevel);
+            this.addEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
+            this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+        }
+        /**
+         * @private
+         *
+         */
+        public $onRemoveFromStage(): void {
+            super.$onRemoveFromStage();
+            this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
+            this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+        }
 
+        private $prompt: string = "";
+        /**
+         * @language en_US
+         * When the property of the text is empty, it will show the defalut string.
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当text属性为空字符串时要显示的文本内容。
+         * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
+         * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
+         * 对于文本控件，如果用户输入文本，但随后又将其删除，则控件失去焦点后，提示文本将重新显示。
+         * 您还可以通过编程方式将文本控件的 text 属性设置为空字符串使提示文本重新显示。
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public get prompt(): string {
+            return this.$prompt;
+        }
+        public set prompt(value: string) {
+            var oldPrompt: string = this.$prompt;
+            this.$prompt = value;
+            if (this.text == oldPrompt) {
+                this.text = value;
+            }
+        }
+        /**
+         * @private
+         */
+        private showPrompt(): void {
+            if (!this.text) {
+                this.text = this.prompt;
+            }
+        }
 
         //=======================UIComponent接口实现===========================
         /**
@@ -136,7 +190,7 @@ module eui {
          * @platform Web,Native
          */
         protected createChildren():void {
-
+            this.showPrompt();
         }
 
         /**
