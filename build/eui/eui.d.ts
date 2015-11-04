@@ -4501,6 +4501,42 @@ declare module eui {
          */
         private _widthConstraint;
         /**
+        * @private
+        *
+        * @param stage
+        * @param nestLevel
+        */
+        $onAddToStage(stage: egret.Stage, nestLevel: number): void;
+        /**
+         * @private
+         *
+         */
+        $onRemoveFromStage(): void;
+        private $prompt;
+        /**
+         * @language en_US
+         * When the property of the text is empty, it will show the defalut string.
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当text属性为空字符串时要显示的文本内容。
+         * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
+         * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
+         * 对于文本控件，如果用户输入文本，但随后又将其删除，则控件失去焦点后，提示文本将重新显示。
+         * 您还可以通过编程方式将文本控件的 text 属性设置为空字符串使提示文本重新显示。
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        prompt: string;
+        /**
+         * @private
+         */
+        private showPrompt();
+        /**
          * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
          */

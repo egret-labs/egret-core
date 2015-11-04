@@ -3086,6 +3086,7 @@ var eui;
 //
 //////////////////////////////////////////////////////////////////////////////////////
 /// <reference path="../core/uicomponent.ts" />
+/// <reference path="../utils/registerproperty.ts" />
 var eui;
 (function (eui) {
     /**
@@ -6455,10 +6456,9 @@ var eui;
              * @private
              */
             this._widthConstraint = NaN;
+            this.$prompt = "";
             this.initializeUIValues();
-            //if egret
             this.type = egret.TextFieldType.INPUT;
-            //endif*/
         }
         var d = __define,c=EditableText;p=c.prototype;
         /**
@@ -6500,6 +6500,64 @@ var eui;
             return result;
         };
         /**
+        * @private
+        *
+        * @param stage
+        * @param nestLevel
+        */
+        p.$onAddToStage = function (stage, nestLevel) {
+            _super.prototype.$onAddToStage.call(this, stage, nestLevel);
+            this.addEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
+            this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+        };
+        /**
+         * @private
+         *
+         */
+        p.$onRemoveFromStage = function () {
+            _super.prototype.$onRemoveFromStage.call(this);
+            this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
+            this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+        };
+        d(p, "prompt"
+            /**
+             * @language en_US
+             * When the property of the text is empty, it will show the defalut string.
+             * @version Egret 2.5.5
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 当text属性为空字符串时要显示的文本内容。
+             * 先创建文本控件时将显示提示文本。控件获得焦点时或控件的 text 属性为非空字符串时，提示文本将消失。
+             * 控件失去焦点时提示文本将重新显示，但仅当未输入文本时（如果文本字段的值为空字符串）。<p/>
+             * 对于文本控件，如果用户输入文本，但随后又将其删除，则控件失去焦点后，提示文本将重新显示。
+             * 您还可以通过编程方式将文本控件的 text 属性设置为空字符串使提示文本重新显示。
+             * @version Egret 2.5.5
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$prompt;
+            }
+            ,function (value) {
+                var oldPrompt = this.$prompt;
+                this.$prompt = value;
+                if (this.text == oldPrompt) {
+                    this.text = value;
+                }
+            }
+        );
+        /**
+         * @private
+         */
+        p.showPrompt = function () {
+            if (!this.text) {
+                this.text = this.prompt;
+            }
+        };
+        /**
          * @copy eui.Component#createChildren()
          *
          * @version Egret 2.4
@@ -6507,6 +6565,7 @@ var eui;
          * @platform Web,Native
          */
         p.createChildren = function () {
+            this.showPrompt();
         };
         /**
          * @copy eui.Component#childrenCreated()
@@ -23150,8 +23209,12 @@ var eui;
                     index = container.getChildIndex(relative) + 1;
                     break;
             }
-            if (index == -1)
+            if (index == -1) {
                 index = container.numChildren;
+            }
+            if (egret.is(container, "eui.Component")) {
+                container.$Component[8 /* skin */].$elementsContent.push(target);
+            }
             container.addChildAt(target, index);
         };
         /**
@@ -23168,6 +23231,13 @@ var eui;
                 return;
             if (target.$parent === container) {
                 container.removeChild(target);
+            }
+            if (egret.is(container, "eui.Component")) {
+                var arr = container.$Component[8 /* skin */].$elementsContent;
+                var idx = arr.indexOf(target);
+                if (idx > -1) {
+                    arr.splice(idx, 1);
+                }
             }
         };
         return AddItems;
