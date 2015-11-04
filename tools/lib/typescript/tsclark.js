@@ -37579,7 +37579,6 @@ var ts;
             program = prog;
             ts.forEach(files, function (file) { return _this.symbolTabelToFileMap(file, file.locals); });
             this.sortFiles();
-            console.log(orderedFileList);
             var sources = prog.getSourceFiles();
             orderedFileList.forEach(function (f) {
                 for (var i = 0; i < sources.length; i++) {

@@ -8,7 +8,7 @@
 /// <reference path="emitter.ts"/>
 /// <reference path="commandLineParser.ts"/>
 
-module ts {
+namespace ts {
     var checker: TypeChecker = null;
     var program: Program = null;
     var errors: Diagnostic[] = null;
@@ -23,15 +23,15 @@ module ts {
     var functionId = 0;
     var staticToClassNameMap: Map<string> = {};
     var fileToReferenceMap: Map<string[]> = {};
-    
+
     //sort
     var fileNodesList: FileNode[] = [];
     var fileNameToNodeMap: Map<FileNode> = {};
     var orderedFileList: string[] = [];
-    
+
 
     function addClassToFileMap(name:string,file:string) {
-        var map = classNameToFileMap[name];
+        var map:any = classNameToFileMap[name];
         if(!map || file==map){
             classNameToFileMap[name] = file;
         }
@@ -55,14 +55,14 @@ module ts {
         }
 
         static getClassNameAndProps() {
-            var names = {};
+            var names:any = {};
             var files = program.getSourceFiles().concat();
             files.forEach(f=> {
-                if (f.filename.indexOf('.d.ts') > 0)
+                if (f.fileName.indexOf('.d.ts') > 0)
                     return;
                 var symbols = checker.getSymbolsInScope(f, SymbolFlags.Module | SymbolFlags.PropertyOrAccessor | SymbolFlags.Method | SymbolFlags.Class | SymbolFlags.Export);
                 symbols.forEach(s=> {
-                    var name = s.name
+                    var name:string = s.name;
                     names[name] = true;
                 });
             });
@@ -87,7 +87,7 @@ module ts {
             fileToReferenceMap = {};
             var files = prog.getSourceFiles().concat();
             var libdts = files.shift();
-            orderedFileList = files.map(f=> f.filename);
+            orderedFileList = files.map(f=> f.fileName);
             checker = chk;
             program = prog;
             forEach(files, file=> this.symbolTabelToFileMap(file, file.locals));
@@ -96,7 +96,7 @@ module ts {
             orderedFileList.forEach(f=> {
                 for (var i = 0; i < sources.length; i++) {
                     var s = sources[i];
-                    if (s.filename == f) {
+                    if (s.fileName == f) {
                         sources.splice(i, 1);
                         sources.push(s);
                         break;
@@ -113,27 +113,34 @@ module ts {
 
             var isInterface = symbol.flags & SymbolFlags.Interface;
             if (classtype) {
-                
+
                 var fullName = getFullyQualifiedName( symbol);
-                addClassToFileMap(fullName,file.filename);
+                addClassToFileMap(fullName,file.fileName);
 
 
-                var classes = fileToClassNameMap[file.filename];
+                var classes = fileToClassNameMap[file.fileName];
                 if (!classes) {
                     classes = [];
-                    fileToClassNameMap[file.filename] = classes;
+                    fileToClassNameMap[file.fileName] = classes;
                 }
                 if (classes.indexOf(fullName) < 0)
                     classes.push(fullName);
                 if (isInterface)
                     return;
-                if (classtype.baseTypes && classtype.baseTypes.length) {
-                    forEach(classtype.baseTypes,(t: InterfaceType) => this.classNameToBaseClass(fullName, t));
+                var baseTypes:Array<InterfaceType>;
+                try {
+                    baseTypes = <Array<InterfaceType>>checker.getBaseTypes(classtype);
+                }
+                catch (e){
+
+                }
+                if (baseTypes && baseTypes.length) {
+                    forEach(baseTypes,(t: InterfaceType) => this.classNameToBaseClass(fullName, t));
                 }
                 this.constructorToClassName(file, <ClassDeclaration>symbol.valueDeclaration, 0);
                 this.addStaticDepend(file, <ClassDeclaration>symbol.valueDeclaration, 0);
             }
-            
+
 
         }
         private symbolTabelToFileMap(file: SourceFile, symbolTable: SymbolTable) {
@@ -151,13 +158,13 @@ module ts {
                     this.symbolTabelToFileMap(file, symbol.exports);
                 }
             });
-            if (file.filename.indexOf(".d.ts") > 0)
+            if (file.fileName.indexOf(".d.ts") > 0)
                 return;
             var self = this;
             findFunctionCall(file);
             function findFunctionCall(pnode:Node) {
                 forEachChild(pnode,node=>{
-                    if(node.kind == SyntaxKind.ClassDeclaration || 
+                    if(node.kind == SyntaxKind.ClassDeclaration ||
                         node.kind == SyntaxKind.InterfaceDeclaration ||
                         node.kind == SyntaxKind.FunctionDeclaration)
                         return;
@@ -165,7 +172,7 @@ module ts {
                         node.kind == SyntaxKind.CallExpression ||
                         node.kind == SyntaxKind.NewExpression ||
                         node.kind == SyntaxKind.Identifier ){
-                            
+
                         var name = "callExpression" + ++functionId;
                         self.findUsedClasses(node,name,functionCallToClassMap,0);
                     }
@@ -173,14 +180,14 @@ module ts {
                         findFunctionCall(node);
                 });
             }
-            
-            
+
+
         }
 
         private findFileRefers(file: SourceFile) {
             var refers = file.referencedFiles;
             if (refers)
-                fileToReferenceMap[file.filename] = refers.map(r=> ts.normalizePath(ts.combinePaths(ts.getDirectoryPath(file.filename), r.filename)));
+                fileToReferenceMap[file.fileName] = refers.map(r=> ts.normalizePath(ts.combinePaths(ts.getDirectoryPath(file.fileName), r.fileName)));
         }
 
         private constructorToClassName(file: SourceFile, classNode: ClassDeclaration, nest: number) {
@@ -193,14 +200,14 @@ module ts {
                     nodesToCheck.push((<ConstructorDeclaration>node).body);
                 }
 
-                if (node.kind == SyntaxKind.Property && (<PropertyDeclaration>node).initializer) {
+                if ((node.kind == SyntaxKind.PropertySignature || node.kind == SyntaxKind.PropertyDeclaration) && (<PropertyDeclaration>node).initializer) {
                     nodesToCheck.push((<PropertyDeclaration>node).initializer);
                 }
             });
             if (!nodesToCheck.length) {
                 return;
             }
-            
+
 
             nodesToCheck.forEach(node=> this.findUsedClasses(node,className,constructorToClassMap,0));
         }
@@ -243,13 +250,13 @@ module ts {
 
                     if (!(name in classNameToFileMap)) {
                         var source = <SourceFile>getAncestor(nodeToGet, SyntaxKind.SourceFile);
-                        addClassToFileMap(name, source.filename);
+                        addClassToFileMap(name, source.fileName);
                     }
 
                     if (!(targetName in classNameToFileMap) && definedSymbol.declarations && definedSymbol.declarations.length) {
                         var declareNode = definedSymbol.declarations[0];
                         var source = <SourceFile>getAncestor(declareNode, SyntaxKind.SourceFile);
-                        addClassToFileMap(targetName, source.filename);
+                        addClassToFileMap(targetName, source.fileName);
 
                         if (node.kind == SyntaxKind.NewExpression) {
                             if (!(targetName in constructorToClassMap)) {
@@ -260,17 +267,17 @@ module ts {
 
                     if (node.kind == SyntaxKind.CallExpression)
                         this.findUsedClasses(declareNode, targetName, functionCallToClassMap, nest + 1);
-                    if (node.kind == SyntaxKind.NewExpression) 
+                    if (node.kind == SyntaxKind.NewExpression)
                         constructorToClassMap[targetName] && constructorToClassMap[targetName].forEach(clazz=> {
                             classes.push(clazz)
                         });
-                    
+
                 }
             }
             else {
                 forEachChild(node, n=> this.findUsedClasses(n, name, collection, nest));
             }
-            
+
         }
 
         private staticMemberToClassName(file: SourceFile, symbol: Symbol) {
@@ -283,7 +290,7 @@ module ts {
                     return;
                 var initializerClass = checker.getFullyQualifiedName(staticMemberType.symbol);
                 staticToClassNameMap[fullName] = initializerClass;
-                
+
             }
         }
 
@@ -322,13 +329,13 @@ module ts {
             }
 
             ts.forEachChild(classNode, function (node) {
-                if (node.kind == SyntaxKind.Property && node.modifiers && (node.modifiers.flags & NodeFlags.Static) && (<PropertyDeclaration>node).initializer) {
+                if ((node.kind == SyntaxKind.PropertySignature || node.kind == SyntaxKind.PropertyDeclaration) && node.modifiers && (node.modifiers.flags & NodeFlags.Static) && (<PropertyDeclaration>node).initializer) {
                     findClass(node);
                 }
             });
         }
 
-        private classNameToBaseClass(className, baseType:InterfaceType) {
+        private classNameToBaseClass(className:any, baseType:InterfaceType) {
             var fullName = checker.getFullyQualifiedName(baseType.symbol);
             var bases = classNameToBaseClassMap[className] || [];
             if(bases.indexOf(fullName)<0)
@@ -340,7 +347,7 @@ module ts {
 
 
 
-        //todo 
+        //todo
         private getFileNode(file:string) {
             if (file in fileNameToNodeMap)
                 return fileNameToNodeMap[file];
@@ -381,7 +388,7 @@ module ts {
                 if (supers) {
                     supers.forEach(superClass=> {
                         var dependFile = classNameToFileMap[superClass];
-                        if (!dependFile || dependFile && dependFile['map'] || dependFile == fileName || dependFile[fileName])
+                        if (!dependFile || dependFile && (<any>dependFile)['map'] || dependFile == fileName || (<any>dependFile)[fileName])
                             return;
                         var dependNode = this.getFileNode(<string>dependFile);
                         fileNode.addSuper(dependNode);
@@ -394,7 +401,7 @@ module ts {
                     constructorDepends.forEach(depend=> {
                         var dependFile = classNameToFileMap[depend];
 
-                        if (dependFile && dependFile['map']==undefined && dependFile != file&& typeof(dependFile) =='string' ) {
+                        if (dependFile && (<any>dependFile)['map']==undefined && dependFile != file&& typeof(dependFile) =='string' ) {
                             var dependFileNode = this.getFileNode(<string>dependFile);
                             fileNode.addCall(dependFileNode);
                         }
@@ -405,7 +412,7 @@ module ts {
                 if(functionCallDepens){
                     functionCallDepens.forEach(depend=> {
                         var dependFile = classNameToFileMap[depend];
-                        if (!dependFile || dependFile && dependFile['map'] ||dependFile == file || typeof(dependFile)!='string')
+                        if (!dependFile || dependFile && (<any>dependFile)['map'] ||dependFile == file || typeof(dependFile)!='string')
                             return;
                         var dependNode = this.getFileNode(<string>dependFile);
                         fileNode.addCall(dependNode);
@@ -425,7 +432,7 @@ module ts {
                 t.markSoftDepends();
             });
 
-            
+
 
             orderedFileList = [];
 
@@ -456,7 +463,7 @@ module ts {
     var fileToFileMap: Map<Map<boolean>> = {};
 
     export class UsedFileResolver{
-        
+
         static mapFile(source: string, used: string) {
             var depends = fileToFileMap[source];
             if (!depends)
@@ -469,7 +476,7 @@ module ts {
 
     }
 
-    
+
 
 
     /**
@@ -494,7 +501,7 @@ module ts {
                 classNames[name] = Object.keys(classNames).length;
             }
         }
-            
+
         return name;
 
     }
