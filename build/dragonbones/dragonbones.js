@@ -949,6 +949,8 @@ var dragonBones;
                 }
             }
             else {
+                //第一次淡出
+                //The first time to fade out.
                 for (var i = 0, len = this._timelineStateList.length; i < len; i++) {
                     var timelineState = this._timelineStateList[i];
                     timelineState._fadeOut();
@@ -982,7 +984,8 @@ var dragonBones;
                 if (this._fadeCurrentTime >= this._fadeBeginTime + this._fadeTotalTime) {
                     //fade完全结束之后触发 
                     //TODO 研究明白为什么要下次再触发
-                    if (this._fadeWeight == 1 || this._fadeWeight == 0) {
+                    if (this._fadeWeight == 1 ||
+                        this._fadeWeight == 0) {
                         fadeState = 1;
                         if (this._pausePlayheadInFade) {
                             this._pausePlayheadInFade = false;
@@ -1686,7 +1689,11 @@ var dragonBones;
             var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
             var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
             var tweenEnabled = false;
-            if (nextFrameIndex == 0 && (!this._animationState.lastFrameAutoTween || (this._animationState.playTimes && this._animationState.currentPlayTimes >= this._animationState.playTimes && ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999))) {
+            if (nextFrameIndex == 0 &&
+                (!this._animationState.lastFrameAutoTween ||
+                    (this._animationState.playTimes &&
+                        this._animationState.currentPlayTimes >= this._animationState.playTimes &&
+                        ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999))) {
                 this._tweenEasing = NaN;
                 tweenEnabled = false;
             }
@@ -1738,7 +1745,14 @@ var dragonBones;
                     this._durationColor.redMultiplier = nextFrame.color.redMultiplier - currentFrame.color.redMultiplier;
                     this._durationColor.greenMultiplier = nextFrame.color.greenMultiplier - currentFrame.color.greenMultiplier;
                     this._durationColor.blueMultiplier = nextFrame.color.blueMultiplier - currentFrame.color.blueMultiplier;
-                    if (this._durationColor.alphaOffset || this._durationColor.redOffset || this._durationColor.greenOffset || this._durationColor.blueOffset || this._durationColor.alphaMultiplier || this._durationColor.redMultiplier || this._durationColor.greenMultiplier || this._durationColor.blueMultiplier) {
+                    if (this._durationColor.alphaOffset ||
+                        this._durationColor.redOffset ||
+                        this._durationColor.greenOffset ||
+                        this._durationColor.blueOffset ||
+                        this._durationColor.alphaMultiplier ||
+                        this._durationColor.redMultiplier ||
+                        this._durationColor.greenMultiplier ||
+                        this._durationColor.blueMultiplier) {
                         this._tweenColor = true;
                     }
                     else {
@@ -2090,7 +2104,11 @@ var dragonBones;
             var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
             var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
             var tweenEnabled = false;
-            if (nextFrameIndex == 0 && (!this._animationState.lastFrameAutoTween || (this._animationState.playTimes && this._animationState.currentPlayTimes >= this._animationState.playTimes && ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999))) {
+            if (nextFrameIndex == 0 &&
+                (!this._animationState.lastFrameAutoTween ||
+                    (this._animationState.playTimes &&
+                        this._animationState.currentPlayTimes >= this._animationState.playTimes &&
+                        ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999))) {
                 this._tweenEasing = NaN;
                 tweenEnabled = false;
             }
@@ -2146,7 +2164,14 @@ var dragonBones;
                 }
                 this._durationPivot.x = nextFrame.pivot.x - currentFrame.pivot.x;
                 this._durationPivot.y = nextFrame.pivot.y - currentFrame.pivot.y;
-                if (this._durationTransform.x || this._durationTransform.y || this._durationTransform.skewX || this._durationTransform.skewY || this._durationTransform.scaleX || this._durationTransform.scaleY || this._durationPivot.x || this._durationPivot.y) {
+                if (this._durationTransform.x ||
+                    this._durationTransform.y ||
+                    this._durationTransform.skewX ||
+                    this._durationTransform.skewY ||
+                    this._durationTransform.scaleX ||
+                    this._durationTransform.scaleY ||
+                    this._durationPivot.x ||
+                    this._durationPivot.y) {
                     this._tweenTransform = true;
                     this._tweenScale = currentFrame.tweenScale;
                 }
@@ -3884,7 +3909,9 @@ var dragonBones;
             var ifExistOffsetTranslation = this._offset.x != 0 || this._offset.y != 0;
             var ifExistOffsetScale = this._offset.scaleX != 0 || this._offset.scaleY != 0;
             var ifExistOffsetRotation = this._offset.skewX != 0 || this._offset.skewY != 0;
-            if ((!ifExistOffsetTranslation || this.applyOffsetTranslationToChild) && (!ifExistOffsetScale || this.applyOffsetScaleToChild) && (!ifExistOffsetRotation || this.applyOffsetRotationToChild)) {
+            if ((!ifExistOffsetTranslation || this.applyOffsetTranslationToChild) &&
+                (!ifExistOffsetScale || this.applyOffsetScaleToChild) &&
+                (!ifExistOffsetRotation || this.applyOffsetRotationToChild)) {
                 this._globalTransformForChild = this._global;
                 this._globalTransformMatrixForChild = this._globalTransformMatrix;
             }
@@ -3941,7 +3968,9 @@ var dragonBones;
         };
         /** @private When bone timeline enter a key frame, call this func*/
         p._arriveAtFrame = function (frame, timelineState, animationState, isCross) {
-            var displayControl = animationState.displayControl && (!this.displayController || this.displayController == animationState.name) && animationState.containsBoneMask(this.name);
+            var displayControl = animationState.displayControl &&
+                (!this.displayController || this.displayController == animationState.name) &&
+                animationState.containsBoneMask(this.name);
             if (displayControl) {
                 var tansformFrame = frame;
                 var displayIndex = tansformFrame.displayIndex;
@@ -4026,6 +4055,8 @@ var dragonBones;
                 var layerTotalWeight = 0;
                 var prevLayer = this._timelineStateList[i - 1]._animationState.layer;
                 var currentLayer = 0;
+                //Traversal the layer from up to down
+                //layer由高到低依次遍历
                 while (i--) {
                     timelineState = this._timelineStateList[i];
                     currentLayer = timelineState._animationState.layer;
@@ -4369,7 +4400,9 @@ var dragonBones;
         p.updateChildArmatureAnimation = function () {
             if (this.childArmature) {
                 if (this._isShowDisplay) {
-                    if (this._armature && this._armature.animation.lastAnimationState && this.childArmature.animation.hasAnimation(this._armature.animation.lastAnimationState.name)) {
+                    if (this._armature &&
+                        this._armature.animation.lastAnimationState &&
+                        this.childArmature.animation.hasAnimation(this._armature.animation.lastAnimationState.name)) {
                         this.childArmature.animation.gotoAndPlay(this._armature.animation.lastAnimationState.name);
                     }
                     else {
@@ -4402,7 +4435,9 @@ var dragonBones;
                     this._currentDisplayIndex = displayIndex;
                     this._updateSlotDisplay();
                     this.updateChildArmatureAnimation();
-                    if (this._displayDataList && this._displayDataList.length > 0 && this._currentDisplayIndex < this._displayDataList.length) {
+                    if (this._displayDataList &&
+                        this._displayDataList.length > 0 &&
+                        this._currentDisplayIndex < this._displayDataList.length) {
                         this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
                     }
                     this._needUpdate = true;
@@ -4615,6 +4650,10 @@ var dragonBones;
          * @private
          */
         p._updateDisplayVisible = function (value) {
+            /**
+             * bone.visible && slot.visible && updateVisible
+             * this._parent.visible && this._visible && value;
+             */
             throw new Error(egret.getString(4001));
         };
         /**
@@ -4651,7 +4690,8 @@ var dragonBones;
         };
         /** @private When bone timeline enter a key frame, call this func*/
         p._arriveAtFrame = function (frame, timelineState, animationState, isCross) {
-            var displayControl = animationState.displayControl && animationState.containsBoneMask(this.parent.name);
+            var displayControl = animationState.displayControl &&
+                animationState.containsBoneMask(this.parent.name);
             if (displayControl) {
                 var slotFrame = frame;
                 var displayIndex = slotFrame.displayIndex;
@@ -5030,6 +5070,10 @@ var dragonBones;
         p.bindCacheUserArmature = function (armature) {
             armature.animation.animationCacheManager = this;
             var cacheUser;
+            //			for each(cacheUser in armature._boneDic)
+            //			{
+            //				cacheUser.frameCache = boneFrameCacheDic[cacheUser.name];
+            //			}
             for (var k in armature._slotDic) {
                 cacheUser = armature._slotDic[k];
                 cacheUser.frameCache = this.slotFrameCacheDic[cacheUser.name];
@@ -5051,10 +5095,21 @@ var dragonBones;
         p.setCacheGeneratorArmature = function (armature) {
             this.cacheGeneratorArmature = armature;
             var cacheUser;
+            //			for each(cacheUser in armature._boneDic)
+            //			{
+            //				boneFrameCacheDic[cacheUser.name] = new FrameCache();
+            //			}
             for (var slot in armature._slotDic) {
                 cacheUser = armature._slotDic[slot];
                 this.slotFrameCacheDic[cacheUser.name] = new dragonBones.SlotFrameCache();
             }
+            /*
+            var length:number = armature._slotDic.length;
+            for(var i:number = 0;i < length;i++){
+                cacheUser = armature._slotDic[i];
+                this.slotFrameCacheDic[cacheUser.name] = new SlotFrameCache();
+            }
+            */
             for (var anim in this.animationCacheDic) {
                 var animationCache = this.animationCacheDic[anim];
                 animationCache.initSlotTimelineCacheDic(armature._slotDic, this.slotFrameCacheDic);
@@ -5078,6 +5133,13 @@ var dragonBones;
          * @see dragonBones.AnimationCache
          */
         p.generateAllAnimationCache = function (loop) {
+            /*
+            var length:number = this.animationCacheDic.length;
+            for(var i:number = 0;i < length;i++){
+                var animationCache:AnimationCache = this.animationCacheDic[i];
+                this.generateAnimationCache(animationCache.name);
+            }
+            */
             for (var anim in this.animationCacheDic) {
                 var animationCache = this.animationCacheDic[anim];
                 this.generateAnimationCache(animationCache.name, loop);
@@ -6733,6 +6795,8 @@ var dragonBones;
                             break;
                     }
                 }
+                //==================================================
+                //如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者
                 for (var j = 0, jLen = displayList.length; j < jLen; j++) {
                     var displayObject = displayList[j];
                     if (!displayObject) {
@@ -7205,7 +7269,8 @@ var dragonBones;
             var i = this.slotList.length;
             while (i--) {
                 var slot = this.slotList[i];
-                if ((slot._frameCache && (slot._frameCache).displayIndex >= 0) || (!slot._frameCache && slot.displayIndex >= 0)) {
+                if ((slot._frameCache && (slot._frameCache).displayIndex >= 0)
+                    || (!slot._frameCache && slot.displayIndex >= 0)) {
                     slot._addDisplayToContainer(this._display);
                 }
             }
@@ -7416,7 +7481,9 @@ var dragonBones;
             if (this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale)) {
                 var parentGlobalTransform = this._parent._global;
                 var parentGlobalTransformMatrix = this._parent._globalTransformMatrix;
-                if (!this.inheritTranslation && (parentGlobalTransform.x != 0 || parentGlobalTransform.y != 0) || !this.inheritRotation && (parentGlobalTransform.skewX != 0 || parentGlobalTransform.skewY != 0) || !this.inheritScale && (parentGlobalTransform.scaleX != 1 || parentGlobalTransform.scaleY != 1)) {
+                if (!this.inheritTranslation && (parentGlobalTransform.x != 0 || parentGlobalTransform.y != 0) ||
+                    !this.inheritRotation && (parentGlobalTransform.skewX != 0 || parentGlobalTransform.skewY != 0) ||
+                    !this.inheritScale && (parentGlobalTransform.scaleX != 1 || parentGlobalTransform.scaleY != 1)) {
                     parentGlobalTransform = FastDBObject._tempParentGlobalTransform;
                     parentGlobalTransform.copy(this._parent._global);
                     if (!this.inheritTranslation) {
@@ -7820,7 +7887,8 @@ var dragonBones;
             //颜色
             var cacheColor = (this._frameCache).colorTransform;
             var cacheColorChanged = cacheColor != null;
-            if (this.colorChanged != cacheColorChanged || (this.colorChanged && cacheColorChanged && !dragonBones.ColorTransformUtil.isEqual(this._colorTransform, cacheColor))) {
+            if (this.colorChanged != cacheColorChanged ||
+                (this.colorChanged && cacheColorChanged && !dragonBones.ColorTransformUtil.isEqual(this._colorTransform, cacheColor))) {
                 cacheColor = cacheColor || dragonBones.ColorTransformUtil.originalColor;
                 this._updateDisplayColor(cacheColor.alphaOffset, cacheColor.redOffset, cacheColor.greenOffset, cacheColor.blueOffset, cacheColor.alphaMultiplier, cacheColor.redMultiplier, cacheColor.greenMultiplier, cacheColor.blueMultiplier, cacheColorChanged);
             }
@@ -7908,7 +7976,9 @@ var dragonBones;
                 this._updateTransform();
                 if (display instanceof dragonBones.FastArmature) {
                     var targetArmature = (display);
-                    if (this.armature && this.armature.animation.animationState && targetArmature.animation.hasAnimation(this.armature.animation.animationState.name)) {
+                    if (this.armature &&
+                        this.armature.animation.animationState &&
+                        targetArmature.animation.hasAnimation(this.armature.animation.animationState.name)) {
                         targetArmature.animation.gotoAndPlay(this.armature.animation.animationState.name);
                     }
                     else {
@@ -7972,7 +8042,8 @@ var dragonBones;
              * @member {FastArmature} dragonBones.Slot#childArmature
              */
             ,function () {
-                return (this._displayList[this._currentDisplayIndex] instanceof dragonBones.Armature || this._displayList[this._currentDisplayIndex] instanceof dragonBones.FastArmature) ? this._displayList[this._currentDisplayIndex] : null;
+                return (this._displayList[this._currentDisplayIndex] instanceof dragonBones.Armature
+                    || this._displayList[this._currentDisplayIndex] instanceof dragonBones.FastArmature) ? this._displayList[this._currentDisplayIndex] : null;
             }
             ,function (value) {
                 this.display = value;
@@ -8066,6 +8137,10 @@ var dragonBones;
          * @private
          */
         p._updateDisplayVisible = function (value) {
+            /**
+             * bone.visible && slot.visible && updateVisible
+             * this._parent.visible && this._visible && value;
+             */
             throw new Error("Abstract method needs to be implemented in subclass!");
         };
         /**
@@ -8700,7 +8775,8 @@ var dragonBones;
             var isThisComplete = false;
             var currentPlayTimes = 0;
             var currentTime = this._time * 1000;
-            if (this._playTimes == 0 || currentTime < this._playTimes * this._totalTime) {
+            if (this._playTimes == 0 ||
+                currentTime < this._playTimes * this._totalTime) {
                 isThisComplete = false;
                 this._progress = currentTime / this._totalTime;
                 currentPlayTimes = Math.ceil(this.progress) || 1;
@@ -8767,12 +8843,14 @@ var dragonBones;
             var boneTimeline;
             var slotTimeline;
             if (this._isComplete) {
+                //update boneTimelie
                 while (i--) {
                     boneTimeline = this._boneTimelineStateList[i];
                     boneTimeline.update(progress);
                     this._isComplete = boneTimeline._isComplete && this._isComplete;
                 }
                 i = this._slotTimelineStateList.length;
+                //update slotTimelie
                 while (i--) {
                     slotTimeline = this._slotTimelineStateList[i];
                     slotTimeline.update(progress);
@@ -8780,11 +8858,13 @@ var dragonBones;
                 }
             }
             else {
+                //update boneTimelie
                 while (i--) {
                     boneTimeline = this._boneTimelineStateList[i];
                     boneTimeline.update(progress);
                 }
                 i = this._slotTimelineStateList.length;
+                //update slotTimelie
                 while (i--) {
                     slotTimeline = this._slotTimelineStateList[i];
                     slotTimeline.update(progress);
@@ -9188,7 +9268,9 @@ var dragonBones;
             var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
             var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
             var tweenEnabled = false;
-            if (nextFrameIndex == 0 && (this._animationState.playTimes && this._animationState.currentPlayTimes >= this._animationState.playTimes && ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
+            if (nextFrameIndex == 0 && (this._animationState.playTimes &&
+                this._animationState.currentPlayTimes >= this._animationState.playTimes &&
+                ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
                 this._tweenEasing = NaN;
                 tweenEnabled = false;
             }
@@ -9240,7 +9322,14 @@ var dragonBones;
                     this._durationTransform.skewX = dragonBones.TransformUtil.formatRadian(this._durationTransform.skewX);
                     this._durationTransform.skewY = dragonBones.TransformUtil.formatRadian(this._durationTransform.skewY);
                 }
-                if (this._durationTransform.x || this._durationTransform.y || this._durationTransform.skewX || this._durationTransform.skewY || this._durationTransform.scaleX != 1 || this._durationTransform.scaleY != 1 || this._durationPivot.x || this._durationPivot.y) {
+                if (this._durationTransform.x ||
+                    this._durationTransform.y ||
+                    this._durationTransform.skewX ||
+                    this._durationTransform.skewY ||
+                    this._durationTransform.scaleX != 1 ||
+                    this._durationTransform.scaleY != 1 ||
+                    this._durationPivot.x ||
+                    this._durationPivot.y) {
                     this._tweenTransform = true;
                 }
                 else {
@@ -9503,7 +9592,10 @@ var dragonBones;
             var currentFrame = (this._timelineData.frameList[this._currentFrameIndex]);
             var nextFrame = (this._timelineData.frameList[nextFrameIndex]);
             var tweenEnabled = false;
-            if (nextFrameIndex == 0 && (this._animationState.playTimes && this._animationState.currentPlayTimes >= this._animationState.playTimes && ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
+            if (nextFrameIndex == 0 &&
+                (this._animationState.playTimes &&
+                    this._animationState.currentPlayTimes >= this._animationState.playTimes &&
+                    ((this._currentFramePosition + this._currentFrameDuration) / this._totalTime + currentPlayTimes - this._timelineData.offset) * this._timelineData.scale > 0.999999)) {
                 this._tweenEasing = NaN;
                 tweenEnabled = false;
             }
@@ -9547,7 +9639,14 @@ var dragonBones;
             if (tweenEnabled) {
                 if (currentFrame.color || nextFrame.color) {
                     dragonBones.ColorTransformUtil.minus(nextFrame.color || dragonBones.ColorTransformUtil.originalColor, currentFrame.color || dragonBones.ColorTransformUtil.originalColor, this._durationColor);
-                    this._tweenColor = this._durationColor.alphaOffset != 0 || this._durationColor.redOffset != 0 || this._durationColor.greenOffset != 0 || this._durationColor.blueOffset != 0 || this._durationColor.alphaMultiplier != 0 || this._durationColor.redMultiplier != 0 || this._durationColor.greenMultiplier != 0 || this._durationColor.blueMultiplier != 0;
+                    this._tweenColor = this._durationColor.alphaOffset != 0 ||
+                        this._durationColor.redOffset != 0 ||
+                        this._durationColor.greenOffset != 0 ||
+                        this._durationColor.blueOffset != 0 ||
+                        this._durationColor.alphaMultiplier != 0 ||
+                        this._durationColor.redMultiplier != 0 ||
+                        this._durationColor.greenMultiplier != 0 ||
+                        this._durationColor.blueMultiplier != 0;
                 }
                 else {
                     this._tweenColor = false;
@@ -10050,7 +10149,8 @@ var dragonBones;
                 skinData = this._skinDataList[0];
             }
             else {
-                i = 0, len = this._skinDataList.length;
+                i = 0,
+                    len = this._skinDataList.length;
                 for (; i < len; i++) {
                     if (this._skinDataList[i].name == skinName) {
                         skinData = this._skinDataList[i];
@@ -11262,7 +11362,9 @@ var dragonBones;
             }
             var version = rawDataToParse[dragonBones.ConstValues.A_VERSION];
             version = version.toString();
-            if (version.toString() != dragonBones.DragonBones.DATA_VERSION && version.toString() != dragonBones.DragonBones.PARENT_COORDINATE_DATA_VERSION && version.toString() != "2.3") {
+            if (version.toString() != dragonBones.DragonBones.DATA_VERSION &&
+                version.toString() != dragonBones.DragonBones.PARENT_COORDINATE_DATA_VERSION &&
+                version.toString() != "2.3") {
                 throw new Error("Nonsupport version!");
             }
             var frameRate = Data3Parser.getNumber(rawDataToParse, dragonBones.ConstValues.A_FRAME_RATE, 0) || 0;
@@ -11746,10 +11848,13 @@ var dragonBones;
             }
             var version = rawDataToParse[dragonBones.ConstValues.A_VERSION];
             version = version.toString();
-            if (version.toString() != dragonBones.DragonBones.DATA_VERSION && version.toString() != dragonBones.DragonBones.PARENT_COORDINATE_DATA_VERSION && version.toString() != "2.3") {
+            if (version.toString() != dragonBones.DragonBones.DATA_VERSION &&
+                version.toString() != dragonBones.DragonBones.PARENT_COORDINATE_DATA_VERSION &&
+                version.toString() != "2.3") {
                 throw new Error(egret.getString(4003));
             }
-            else if (version.toString() == dragonBones.DragonBones.PARENT_COORDINATE_DATA_VERSION || version.toString() == "2.3") {
+            else if (version.toString() == dragonBones.DragonBones.PARENT_COORDINATE_DATA_VERSION ||
+                version.toString() == "2.3") {
                 return dragonBones.Data3Parser.parseDragonBonesData(rawDataToParse);
             }
             var frameRate = DataParser.getNumber(rawDataToParse, dragonBones.ConstValues.A_FRAME_RATE, 0) || 0;
@@ -12003,7 +12108,8 @@ var dragonBones;
             var curve = frameObject[dragonBones.ConstValues.A_CURVE];
             if (curve != null && curve.length == 4) {
                 outputFrame.curve = new dragonBones.CurveData();
-                outputFrame.curve.pointList = [new dragonBones.Point(curve[0], curve[1]), new dragonBones.Point(curve[2], curve[3])];
+                outputFrame.curve.pointList = [new dragonBones.Point(curve[0], curve[1]),
+                    new dragonBones.Point(curve[2], curve[3])];
             }
         };
         DataParser.parseTransform = function (transformObject, transform, pivot) {
@@ -12241,7 +12347,14 @@ var dragonBones;
             return c;
         };
         ColorTransformUtil.isEqual = function (color1, color2) {
-            return color1.alphaOffset == color2.alphaOffset && color1.redOffset == color2.redOffset && color1.greenOffset == color2.greenOffset && color1.blueOffset == color2.blueOffset && color1.alphaMultiplier == color2.alphaMultiplier && color1.redMultiplier == color2.redMultiplier && color1.greenMultiplier == color2.greenMultiplier && color1.blueMultiplier == color2.blueMultiplier;
+            return color1.alphaOffset == color2.alphaOffset &&
+                color1.redOffset == color2.redOffset &&
+                color1.greenOffset == color2.greenOffset &&
+                color1.blueOffset == color2.blueOffset &&
+                color1.alphaMultiplier == color2.alphaMultiplier &&
+                color1.redMultiplier == color2.redMultiplier &&
+                color1.greenMultiplier == color2.greenMultiplier &&
+                color1.blueMultiplier == color2.blueMultiplier;
         };
         ColorTransformUtil.minus = function (color1, color2, outputColor) {
             outputColor.alphaOffset = color1.alphaOffset - color2.alphaOffset;
@@ -12817,6 +12930,7 @@ var dragonBones;
                     var globalTransformMatrix = new dragonBones.Matrix();
                     var currentTransform = new dragonBones.DBTransform();
                     var currentTransformMatrix = new dragonBones.Matrix();
+                    //从根开始遍历
                     while (i--) {
                         parentTimeline = parentTimelineList[i];
                         parentData = parentDataList[i];
@@ -13608,7 +13722,10 @@ var dragonBones;
             this._global.skewY = this._origin.skewY + this._offset.skewY;
             this._global.x = this._origin.x + this._offset.x + this._parent._tweenPivot.x;
             this._global.y = this._origin.y + this._offset.y + this._parent._tweenPivot.y;
-            if (this._displayDataList && this._currentDisplayIndex >= 0 && this._displayDataList[this._currentDisplayIndex] && dragonBones.EgretTextureAtlas.rotatedDic[this._displayDataList[this._currentDisplayIndex].name] == 1) {
+            if (this._displayDataList &&
+                this._currentDisplayIndex >= 0 &&
+                this._displayDataList[this._currentDisplayIndex] &&
+                dragonBones.EgretTextureAtlas.rotatedDic[this._displayDataList[this._currentDisplayIndex].name] == 1) {
                 this._global.skewX -= 1.57;
                 this._global.skewY -= 1.57;
             }

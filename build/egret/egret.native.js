@@ -949,7 +949,6 @@ var egret;
 (function (egret) {
     var native;
     (function (native) {
-        native.$currentSurface;
         /**
          * @private
          * 呈现最终绘图结果的画布

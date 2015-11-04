@@ -108,6 +108,12 @@ var egret;
                         case egret.URLLoaderDataFormat.VARIABLES:
                             loader.data = new egret.URLVariables(httpLoader.response);
                             break;
+                        //case URLLoaderDataFormat.TEXT:
+                        //    loader.data = httpLoader.response;
+                        //    break;
+                        //case URLLoaderDataFormat.BINARY:
+                        //    loader.data = httpLoader.response;
+                        //    break;
                         default:
                             loader.data = httpLoader.response;
                             break;

@@ -341,14 +341,8 @@ module egret.sys {
         updateInfo(info:string):void;
     }
 
-    declare
-    var FPS:{new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string, styles:Object):FPS};
+    declare var FPS:{new (stage:Stage, showFPS:boolean, showLog:boolean, logFilter:string, styles:Object):FPS};
 
-    /**
-     * @private
-     */
-    declare
-    var $extends:Function;
     /**
      * @private
      */

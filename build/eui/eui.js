@@ -1319,7 +1319,9 @@ var eui;
                 if (this.invalidateDisplayListFlag) {
                     this.validateDisplayList();
                 }
-                if (this.invalidatePropertiesFlag || this.invalidateSizeFlag || this.invalidateDisplayListFlag) {
+                if (this.invalidatePropertiesFlag ||
+                    this.invalidateSizeFlag ||
+                    this.invalidateDisplayListFlag) {
                     this.attachListeners();
                 }
                 else {
@@ -2286,7 +2288,8 @@ var eui;
                 }
                 var preferredW = this.getPreferredUWidth();
                 var preferredH = this.getPreferredUHeight();
-                if (preferredW !== values[18 /* oldPreferWidth */] || preferredH !== values[19 /* oldPreferHeight */]) {
+                if (preferredW !== values[18 /* oldPreferWidth */] ||
+                    preferredH !== values[19 /* oldPreferHeight */]) {
                     values[18 /* oldPreferWidth */] = preferredW;
                     values[19 /* oldPreferHeight */] = preferredH;
                     changed = true;
@@ -2463,7 +2466,8 @@ var eui;
              */
             p.getPreferredUWidth = function () {
                 var values = this.$UIComponent;
-                return isNaN(values[8 /* explicitWidth */]) ? values[16 /* measuredWidth */] : values[8 /* explicitWidth */];
+                return isNaN(values[8 /* explicitWidth */]) ?
+                    values[16 /* measuredWidth */] : values[8 /* explicitWidth */];
             };
             /**
              * @private
@@ -2472,7 +2476,8 @@ var eui;
              */
             p.getPreferredUHeight = function () {
                 var values = this.$UIComponent;
-                return isNaN(values[9 /* explicitHeight */]) ? values[17 /* measuredHeight */] : values[9 /* explicitHeight */];
+                return isNaN(values[9 /* explicitHeight */]) ?
+                    values[17 /* measuredHeight */] : values[9 /* explicitHeight */];
             };
             /**
              * @private
@@ -3544,7 +3549,8 @@ var eui;
              */
             ,function () {
                 var values = this.$Component;
-                return values[2 /* explicitState */] ? values[2 /* explicitState */] : this.getCurrentState();
+                return values[2 /* explicitState */] ?
+                    values[2 /* explicitState */] : this.getCurrentState();
             }
             ,function (value) {
                 var values = this.$Component;
@@ -5440,7 +5446,8 @@ var eui;
              * @platform Web,Native
              */
             ,function () {
-                return this.$layout ? this.$layout.$useVirtualLayout : this.$DataGroup[0 /* useVirtualLayout */];
+                return this.$layout ? this.$layout.$useVirtualLayout :
+                    this.$DataGroup[0 /* useVirtualLayout */];
             }
             ,function (value) {
                 value = !!value;
@@ -7218,7 +7225,8 @@ var eui;
              */
             ,function () {
                 var values = this.$Range;
-                return values[6 /* valueChanged */] ? values[5 /* changedValue */] : values[4 /* value */];
+                return values[6 /* valueChanged */] ?
+                    values[5 /* changedValue */] : values[4 /* value */];
             }
             ,function (newValue) {
                 newValue = +newValue || 0;
@@ -7317,8 +7325,10 @@ var eui;
                 else
                     values[0 /* maximum */] = values[2 /* minimum */];
             }
-            if (values[6 /* valueChanged */] || values[1 /* maxChanged */] || values[3 /* minChanged */] || values[8 /* snapIntervalChanged */]) {
-                var currentValue = values[6 /* valueChanged */] ? values[5 /* changedValue */] : values[4 /* value */];
+            if (values[6 /* valueChanged */] || values[1 /* maxChanged */] ||
+                values[3 /* minChanged */] || values[8 /* snapIntervalChanged */]) {
+                var currentValue = values[6 /* valueChanged */] ?
+                    values[5 /* changedValue */] : values[4 /* value */];
                 values[6 /* valueChanged */] = false;
                 values[1 /* maxChanged */] = false;
                 values[3 /* minChanged */] = false;
@@ -8015,7 +8025,8 @@ var eui;
                     if (animation.isPlaying)
                         this.stopAnimation();
                     values[8 /* slideToValue */] = newValue;
-                    animation.duration = values[6 /* slideDuration */] * (Math.abs(values[7 /* pendingValue */] - values[8 /* slideToValue */]) / (rangeValues[0 /* maximum */] - rangeValues[2 /* minimum */]));
+                    animation.duration = values[6 /* slideDuration */] *
+                        (Math.abs(values[7 /* pendingValue */] - values[8 /* slideToValue */]) / (rangeValues[0 /* maximum */] - rangeValues[2 /* minimum */]));
                     animation.from = values[7 /* pendingValue */];
                     animation.to = values[8 /* slideToValue */];
                     eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_START);
@@ -9567,7 +9578,8 @@ var eui;
             }
             var values = this.$ListBase;
             if (dispatchChangeEvent)
-                values[4 /* dispatchChangeAfterSelection */] = (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
+                values[4 /* dispatchChangeAfterSelection */] =
+                    (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
             values[2 /* proposedSelectedIndex */] = value;
             this.invalidateProperties();
         };
@@ -9661,7 +9673,8 @@ var eui;
                 return;
             var values = this.$ListBase;
             if (dispatchChangeEvent)
-                values[4 /* dispatchChangeAfterSelection */] = (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
+                values[4 /* dispatchChangeAfterSelection */] =
+                    (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
             values[5 /* pendingSelectedItem */] = value;
             this.invalidateProperties();
         };
@@ -9695,13 +9708,17 @@ var eui;
             }
             if (values[1 /* requireSelectionChanged */]) {
                 values[1 /* requireSelectionChanged */] = false;
-                if (values[0 /* requireSelection */] && selectedIndex == ListBase.NO_SELECTION && dataProvider && dataProvider.length > 0) {
+                if (values[0 /* requireSelection */] &&
+                    selectedIndex == ListBase.NO_SELECTION &&
+                    dataProvider &&
+                    dataProvider.length > 0) {
                     values[2 /* proposedSelectedIndex */] = 0;
                 }
             }
             if (values[5 /* pendingSelectedItem */] !== undefined) {
                 if (dataProvider)
-                    values[2 /* proposedSelectedIndex */] = dataProvider.getItemIndex(values[5 /* pendingSelectedItem */]);
+                    values[2 /* proposedSelectedIndex */] =
+                        dataProvider.getItemIndex(values[5 /* pendingSelectedItem */]);
                 else
                     values[2 /* proposedSelectedIndex */] = ListBase.NO_SELECTION;
                 values[5 /* pendingSelectedItem */] = undefined;
@@ -9802,7 +9819,8 @@ var eui;
                 tmpProposedIndex = ListBase.NO_SELECTION;
             if (tmpProposedIndex > maxIndex)
                 tmpProposedIndex = maxIndex;
-            if (values[0 /* requireSelection */] && tmpProposedIndex == ListBase.NO_SELECTION && dataProvider && dataProvider.length > 0) {
+            if (values[0 /* requireSelection */] && tmpProposedIndex == ListBase.NO_SELECTION &&
+                dataProvider && dataProvider.length > 0) {
                 values[2 /* proposedSelectedIndex */] = ListBase.NO_PROPOSED_SELECTION;
                 values[4 /* dispatchChangeAfterSelection */] = false;
                 return false;
@@ -10341,7 +10359,8 @@ var eui;
         p.setSelectedIndices = function (value, dispatchChangeEvent) {
             var values = this.$ListBase;
             if (dispatchChangeEvent)
-                values[4 /* dispatchChangeAfterSelection */] = (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
+                values[4 /* dispatchChangeAfterSelection */] =
+                    (values[4 /* dispatchChangeAfterSelection */] || dispatchChangeEvent);
             if (value)
                 this._proposedSelectedIndices = value;
             else
@@ -11209,7 +11228,8 @@ var eui;
                 this.slideToValue = this.nearestValidValue(newValue, values[7 /* snapInterval */]);
                 if (this.slideToValue === this.animationValue)
                     return result;
-                var duration = this._slideDuration * (Math.abs(this.animationValue - this.slideToValue) / (values[0 /* maximum */] - values[2 /* minimum */]));
+                var duration = this._slideDuration *
+                    (Math.abs(this.animationValue - this.slideToValue) / (values[0 /* maximum */] - values[2 /* minimum */]));
                 animation.duration = duration === Infinity ? 0 : duration;
                 animation.from = this.animationValue;
                 animation.to = this.slideToValue;
@@ -11446,7 +11466,8 @@ var eui;
                 if (!this.$Component[3 /* enabled */]) {
                     return false;
                 }
-                return !this.$radioButtonGroup || this.$radioButtonGroup.$enabled;
+                return !this.$radioButtonGroup ||
+                    this.$radioButtonGroup.$enabled;
             }
             ,function (value) {
                 this.$setEnabled(value);
@@ -11904,7 +11925,9 @@ var eui;
              */
             ,function () {
                 if (this.selection) {
-                    return this.selection.value != null ? this.selection.value : this.selection.label;
+                    return this.selection.value != null ?
+                        this.selection.value :
+                        this.selection.label;
                 }
                 return null;
             }
@@ -11917,7 +11940,8 @@ var eui;
                 var n = this.numRadioButtons;
                 for (var i = 0; i < n; i++) {
                     var radioButton = this.radioButtons[i];
-                    if (radioButton.value == value || radioButton.label == value) {
+                    if (radioButton.value == value ||
+                        radioButton.label == value) {
                         this.changeSelection(i, false);
                         this._selectedValue = null;
                         eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "selectedValue");
@@ -12912,7 +12936,8 @@ var eui;
         p.onTouchMove = function (event) {
             var values = this.$Scroller;
             if (!values[5 /* touchMoved */]) {
-                if (Math.abs(values[3 /* touchStartX */] - event.$stageX) < Scroller.scrollThreshold && Math.abs(values[4 /* touchStartY */] - event.$stageY) < Scroller.scrollThreshold) {
+                if (Math.abs(values[3 /* touchStartX */] - event.$stageX) < Scroller.scrollThreshold &&
+                    Math.abs(values[4 /* touchStartY */] - event.$stageY) < Scroller.scrollThreshold) {
                     return;
                 }
                 values[5 /* touchMoved */] = true;
@@ -16793,7 +16818,8 @@ var eui;
                     }
                 }
                 if (this.isGet) {
-                    returnStr += indent1Str + "},\n" + indent1Str + "enumerable: true,\n" + indent1Str + "configurable: true\n" + indentStr + "});";
+                    returnStr += indent1Str + "},\n" + indent1Str + "enumerable: true,\n" +
+                        indent1Str + "configurable: true\n" + indentStr + "});";
                 }
                 else {
                     returnStr += indentStr + "};";
@@ -17027,11 +17053,6 @@ var eui;
 (function (eui) {
     var sys;
     (function (sys) {
-        /**
-         * @private
-         * EXML配置管理器实例
-         */
-        sys.exmlConfig;
         var exmlParserPool = [];
         var parsedClasses = {};
         var innerClassCount = 1;
@@ -17183,7 +17204,8 @@ var eui;
                     var length = children.length;
                     for (var i = 0; i < length; i++) {
                         var node = children[i];
-                        if (node.nodeType === 1 && node.namespace == sys.NS_W && node.localName == DECLARATIONS) {
+                        if (node.nodeType === 1 && node.namespace == sys.NS_W &&
+                            node.localName == DECLARATIONS) {
                             this.declarations = node;
                             break;
                         }
@@ -17740,7 +17762,8 @@ var eui;
                 else if (type == RECTANGLE) {
                     if (DEBUG) {
                         var rect = value.split(",");
-                        if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) || isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
+                        if (rect.length != 4 || isNaN(parseInt(rect[0])) || isNaN(parseInt(rect[1])) ||
+                            isNaN(parseInt(rect[2])) || isNaN(parseInt(rect[3]))) {
                             egret.$error(2016, this.currentClassName, toXMLString(node));
                         }
                     }
@@ -17954,7 +17977,8 @@ var eui;
                     var length = children.length;
                     for (var i = 0; i < length; i++) {
                         var item = children[i];
-                        if (item.nodeType == 1 && item.localName == "states") {
+                        if (item.nodeType == 1 &&
+                            item.localName == "states") {
                             item.namespace = sys.NS_W;
                             stateChildren = item.children;
                             break;
@@ -18640,12 +18664,8 @@ var EXML;
     var parsedClasses = {};
     var $prefixURL = "";
     Object.defineProperty(EXML, "prefixURL", {
-        get: function () {
-            return $prefixURL;
-        },
-        set: function (value) {
-            $prefixURL = value;
-        },
+        get: function () { return $prefixURL; },
+        set: function (value) { $prefixURL = value; },
         enumerable: true,
         configurable: true
     });
@@ -20391,7 +20411,8 @@ var eui;
             var done;
             do {
                 done = true;
-                var unused = spaceToDistribute - (spaceForChildren * totalPercent / 100);
+                var unused = spaceToDistribute -
+                    (spaceForChildren * totalPercent / 100);
                 if (unused > 0)
                     spaceToDistribute -= unused;
                 else
@@ -20832,6 +20853,7 @@ var eui;
             var oldElementSize;
             var needInvalidateSize = false;
             var elementSizeTable = this.elementSizeTable;
+            //对可见区域进行布局
             for (var i = this.startIndex; i <= endIndex; i++) {
                 var exceesHeight = 0;
                 layoutElement = (target.getVirtualElementAt(i));
@@ -20975,7 +20997,8 @@ var eui;
                 return false;
             }
             var numElements = target.numElements;
-            var contentWidth = this.getStartPosition(numElements - 1) + this.elementSizeTable[numElements - 1] + this.$paddingRight;
+            var contentWidth = this.getStartPosition(numElements - 1) +
+                this.elementSizeTable[numElements - 1] + this.$paddingRight;
             var minVisibleX = target.scrollH;
             if (minVisibleX > contentWidth - this.$paddingRight) {
                 this.startIndex = -1;
@@ -22860,6 +22883,7 @@ var eui;
             var oldElementSize;
             var needInvalidateSize = false;
             var elementSizeTable = this.elementSizeTable;
+            //对可见区域进行布局
             for (var i = this.startIndex; i <= endIndex; i++) {
                 var exceesWidth = 0;
                 layoutElement = (target.getVirtualElementAt(i));
@@ -23003,7 +23027,8 @@ var eui;
                 return false;
             }
             var numElements = target.numElements;
-            var contentHeight = this.getStartPosition(numElements - 1) + this.elementSizeTable[numElements - 1] + this.$paddingBottom;
+            var contentHeight = this.getStartPosition(numElements - 1) +
+                this.elementSizeTable[numElements - 1] + this.$paddingBottom;
             var minVisibleY = target.scrollV;
             if (minVisibleY > contentHeight - this.$paddingBottom) {
                 this.startIndex = -1;
@@ -23475,11 +23500,13 @@ var eui;
                 preferredX = Math.max(minX, Math.min(maxX, preferredX));
                 x = preferredX;
                 y = (h - b * x) * invD1;
-                if (minY <= y && y <= maxY && b * x + d1 * y >= 0) {
+                if (minY <= y && y <= maxY &&
+                    b * x + d1 * y >= 0) {
                     s = egret.Point.create(x, y);
                 }
                 y = (-h - b * x) * invD1;
-                if (minY <= y && y <= maxY && b * x + d1 * y < 0) {
+                if (minY <= y && y <= maxY &&
+                    b * x + d1 * y < 0) {
                     if (!s || transformSize(s.x, s.y, matrix).width > transformSize(x, y, matrix).width) {
                         egret.Point.release(s);
                         s = egret.Point.create(x, y);
@@ -23491,12 +23518,14 @@ var eui;
                 preferredY = Math.max(minY, Math.min(maxY, preferredY));
                 y = preferredY;
                 x = (h - d1 * y) * invB;
-                if (minX <= x && x <= maxX && b * x + d1 * y >= 0) {
+                if (minX <= x && x <= maxX &&
+                    b * x + d1 * y >= 0) {
                     if (!s || transformSize(s.x, s.y, matrix).width > transformSize(x, y, matrix).width)
                         s = egret.Point.create(x, y);
                 }
                 x = (-h - d1 * y) * invB;
-                if (minX <= x && x <= maxX && b * x + d1 * y < 0) {
+                if (minX <= x && x <= maxX &&
+                    b * x + d1 * y < 0) {
                     if (!s || transformSize(s.x, s.y, matrix).width > transformSize(x, y, matrix).width) {
                         egret.Point.release(s);
                         s = egret.Point.create(x, y);
@@ -23535,11 +23564,13 @@ var eui;
                 preferredX = Math.max(minX, Math.min(maxX, preferredX));
                 x = preferredX;
                 y = (w - a * x) * invC1;
-                if (minY <= y && y <= maxY && a * x + c1 * y >= 0) {
+                if (minY <= y && y <= maxY &&
+                    a * x + c1 * y >= 0) {
                     s = egret.Point.create(x, y);
                 }
                 y = (-w - a * x) * invC1;
-                if (minY <= y && y <= maxY && a * x + c1 * y < 0) {
+                if (minY <= y && y <= maxY &&
+                    a * x + c1 * y < 0) {
                     if (!s || transformSize(s.x, s.y, matrix).height > transformSize(x, y, matrix).height) {
                         egret.Point.release(s);
                         s = egret.Point.create(x, y);
@@ -23551,14 +23582,16 @@ var eui;
                 preferredY = Math.max(minY, Math.min(maxY, preferredY));
                 y = preferredY;
                 x = (w - c1 * y) * invA;
-                if (minX <= x && x <= maxX && a * x + c1 * y >= 0) {
+                if (minX <= x && x <= maxX &&
+                    a * x + c1 * y >= 0) {
                     if (!s || transformSize(s.x, s.y, matrix).height > transformSize(x, y, matrix).height) {
                         egret.Point.release(s);
                         s = egret.Point.create(x, y);
                     }
                 }
                 x = (-w - c1 * y) * invA;
-                if (minX <= x && x <= maxX && a * x + c1 * y < 0) {
+                if (minX <= x && x <= maxX &&
+                    a * x + c1 * y < 0) {
                     if (!s || transformSize(s.x, s.y, matrix).height > transformSize(x, y, matrix).height) {
                         egret.Point.release(s);
                         s = egret.Point.create(x, y);
@@ -23654,16 +23687,28 @@ var eui;
             h *= invDet;
             var s;
             s = solveSystem(a, c1, b, d1, w, h);
-            if (s && minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY && a * s.x + c1 * s.x >= 0 && b * s.x + d1 * s.y >= 0)
+            if (s &&
+                minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY &&
+                a * s.x + c1 * s.x >= 0 &&
+                b * s.x + d1 * s.y >= 0)
                 return s;
             s = solveSystem(a, c1, b, d1, w, -h);
-            if (s && minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY && a * s.x + c1 * s.x >= 0 && b * s.x + d1 * s.y < 0)
+            if (s &&
+                minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY &&
+                a * s.x + c1 * s.x >= 0 &&
+                b * s.x + d1 * s.y < 0)
                 return s;
             s = solveSystem(a, c1, b, d1, -w, h);
-            if (s && minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY && a * s.x + c1 * s.x < 0 && b * s.x + d1 * s.y >= 0)
+            if (s &&
+                minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY &&
+                a * s.x + c1 * s.x < 0 &&
+                b * s.x + d1 * s.y >= 0)
                 return s;
             s = solveSystem(a, c1, b, d1, -w, -h);
-            if (s && minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY && a * s.x + c1 * s.x < 0 && b * s.x + d1 * s.y < 0)
+            if (s &&
+                minX <= s.x && s.x <= maxX && minY <= s.y && s.y <= maxY &&
+                a * s.x + c1 * s.x < 0 &&
+                b * s.x + d1 * s.y < 0)
                 return s;
             egret.Point.release(s);
             return null;

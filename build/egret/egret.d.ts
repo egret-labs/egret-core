@@ -313,1149 +313,6 @@ declare module egret.sys {
 declare module egret.sys {
     /**
      * @private
-     * 脏矩形计算工具类
-     */
-    class DirtyRegion {
-        displayList: DisplayList;
-        /**
-         * @private
-         */
-        private dirtyList;
-        /**
-         * @private
-         */
-        private hasClipRect;
-        /**
-         * @private
-         */
-        private clipWidth;
-        /**
-         * @private
-         */
-        private clipHeight;
-        /**
-         * @private
-         */
-        private clipArea;
-        /**
-         * @private
-         */
-        private clipRectChanged;
-        /**
-         * @private
-         * 设置剪裁边界，超过边界的节点将跳过绘制。
-         */
-        setClipRect(width: number, height: number): void;
-        /**
-         * @private
-         * 添加一个脏矩形区域，返回是否添加成功，当矩形为空或者在屏幕之外时返回false。
-         */
-        addRegion(target: Region): boolean;
-        /**
-         * @private
-         */
-        clear(): void;
-        /**
-         * @private
-         * 获取最终的脏矩形列表
-         */
-        getDirtyRegions(): Region[];
-        /**
-         * @private
-         * 合并脏矩形列表
-         */
-        private mergeDirtyList(dirtyList);
-        private $dirtyRegionPolicy;
-        setDirtyRegionPolicy(policy: string): void;
-    }
-}
-declare module egret {
-    /**
-     * @language en_US
-     * The Matrix class represents a transformation matrix that determines how to map points from one coordinate space to
-     * another. You can perform various graphical transformations on a display object by setting the properties of a Matrix
-     * object, applying that Matrix object to the matrix property of a display object, These transformation functions include
-     * translation (x and y repositioning), rotation, scaling, and skewing.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/geom/Matrix.ts
-     */
-    /**
-     * @language zh_CN
-     * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。
-     * 您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix
-     * 对象应用于显示对象的 matrix 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/geom/Matrix.ts
-     */
-    class Matrix extends HashObject {
-        /**
-         * @language en_US
-         * Releases a matrix instance to the object pool
-         * @param matrix matrix that Needs to be recycled
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 释放一个Matrix实例到对象池
-         * @param matrix 需要回收的 matrix
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static release(matrix: Matrix): void;
-        /**
-         * @language en_US
-         * get a matrix instance from the object pool or create a new one.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 从对象池中取出或创建一个新的Matrix对象。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static create(): Matrix;
-        /**
-         * @language en_US
-         * Creates a new Matrix object with the specified parameters.
-         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
-         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
-         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
-         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
-         * @param tx The distance by which to translate each point along the x axis.
-         * @param ty The distance by which to translate each point along the y axis.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使用指定参数创建一个 Matrix 对象
-         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值。
-         * @param b 旋转或倾斜图像时影响像素沿 y 轴定位的值。
-         * @param c 旋转或倾斜图像时影响像素沿 x 轴定位的值。
-         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值。
-         * @param tx 沿 x 轴平移每个点的距离。
-         * @param ty 沿 y 轴平移每个点的距离。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor(a?: number, b?: number, c?: number, d?: number, tx?: number, ty?: number);
-        /**
-         * @language en_US
-         * The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
-         * @default 1
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 缩放或旋转图像时影响像素沿 x 轴定位的值
-         * @default 1
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        a: number;
-        /**
-         * @language en_US
-         * The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 旋转或倾斜图像时影响像素沿 y 轴定位的值
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        b: number;
-        /**
-         * @language en_US
-         * The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 旋转或倾斜图像时影响像素沿 x 轴定位的值
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        c: number;
-        /**
-         * @language en_US
-         * The value that affects the positioning of pixels along the y axis when scaling or rotating an image.
-         * @default 1
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 缩放或旋转图像时影响像素沿 y 轴定位的值
-         * @default 1
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        d: number;
-        /**
-         * @language en_US
-         * The distance by which to translate each point along the x axis.
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 沿 x 轴平移每个点的距离
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        tx: number;
-        /**
-         * @language en_US
-         * The distance by which to translate each point along the y axis.
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 沿 y 轴平移每个点的距离
-         * @default 0
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        ty: number;
-        /**
-         * @language en_US
-         * Returns a new Matrix object that is a clone of this matrix, with an exact copy of the contained object.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 返回一个新的 Matrix 对象，它是此矩阵的克隆，带有与所含对象完全相同的副本。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        clone(): Matrix;
-        /**
-         * @language en_US
-         * Concatenates a matrix with the current matrix, effectively combining the geometric effects of the two. In mathematical
-         * terms, concatenating two matrixes is the same as combining them using matrix multiplication.
-         * @param other The matrix to be concatenated to the source matrix.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将某个矩阵与当前矩阵连接，从而将这两个矩阵的几何效果有效地结合在一起。在数学术语中，将两个矩阵连接起来与使用矩阵乘法将它们结合起来是相同的。
-         * @param other 要连接到源矩阵的矩阵。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        concat(other: Matrix): void;
-        /**
-         * @language en_US
-         * Copies all of the matrix data from the source Point object into the calling Matrix object.
-         * @param other  The Matrix object from which to copy the data.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将源 Matrix 对象中的所有矩阵数据复制到调用方 Matrix 对象中。
-         * @param other 要拷贝的目标矩阵
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        copyFrom(other: Matrix): Matrix;
-        /**
-         * @language en_US
-         * Sets each matrix property to a value that causes a null transformation. An object transformed by applying an
-         * identity matrix will be identical to the original. After calling the identity() method, the resulting matrix
-         * has the following properties: a=1, b=0, c=0, d=1, tx=0, ty=0.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 为每个矩阵属性设置一个值，该值将导致矩阵无转换。通过应用恒等矩阵转换的对象将与原始对象完全相同。
-         * 调用 identity() 方法后，生成的矩阵具有以下属性：a=1、b=0、c=0、d=1、tx=0 和 ty=0。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        identity(): void;
-        /**
-         * @language en_US
-         * Performs the opposite transformation of the original matrix. You can apply an inverted matrix to an object to
-         * undo the transformation performed when applying the original matrix.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 执行原始矩阵的逆转换。
-         * 您可以将一个逆矩阵应用于对象来撤消在应用原始矩阵时执行的转换。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        invert(): void;
-        /**
-         * @private
-         */
-        $invertInto(target: Matrix): void;
-        /**
-         * @language en_US
-         * Applies a rotation transformation to the Matrix object.
-         * The rotate() method alters the a, b, c, and d properties of the Matrix object.
-         * @param angle The rotation angle in radians.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 对 Matrix 对象应用旋转转换。
-         * rotate() 方法将更改 Matrix 对象的 a、b、c 和 d 属性。
-         * @param angle 以弧度为单位的旋转角度。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        rotate(angle: number): void;
-        /**
-         * @language en_US
-         * Applies a scaling transformation to the matrix. The x axis is multiplied by sx, and the y axis it is multiplied by sy.
-         * The scale() method alters the a and d properties of the Matrix object.
-         * @param sx A multiplier used to scale the object along the x axis.
-         * @param sy A multiplier used to scale the object along the y axis.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 对矩阵应用缩放转换。x 轴乘以 sx，y 轴乘以 sy。
-         * scale() 方法将更改 Matrix 对象的 a 和 d 属性。
-         * @param sx 用于沿 x 轴缩放对象的乘数。
-         * @param sy 用于沿 y 轴缩放对象的乘数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        scale(sx: number, sy: number): void;
-        /**
-         * @language en_US
-         * Sets the members of Matrix to the specified values
-         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
-         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
-         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
-         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
-         * @param tx The distance by which to translate each point along the x axis.
-         * @param ty The distance by which to translate each point along the y axis.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 将 Matrix 的成员设置为指定值
-         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值。
-         * @param b 旋转或倾斜图像时影响像素沿 y 轴定位的值。
-         * @param c 旋转或倾斜图像时影响像素沿 x 轴定位的值。
-         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值。
-         * @param tx 沿 x 轴平移每个点的距离。
-         * @param ty 沿 y 轴平移每个点的距离。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        setTo(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix;
-        /**
-         * @language en_US
-         * Returns the result of applying the geometric transformation represented by the Matrix object to the specified point.
-         * @param pointX The x coordinate for which you want to get the result of the Matrix transformation.
-         * @param pointY The y coordinate for which you want to get the result of the Matrix transformation.
-         * @param resultPoint A reusable instance of Point for saving the results. Passing this parameter can reduce the
-         * number of reallocate objects, which allows you to get better code execution performance.
-         * @returns The point resulting from applying the Matrix transformation.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 返回将 Matrix 对象表示的几何转换应用于指定点所产生的结果。
-         * @param pointX 想要获得其矩阵转换结果的点的x坐标。
-         * @param pointY 想要获得其矩阵转换结果的点的y坐标。
-         * @param resultPoint 框架建议尽可能减少创建对象次数来优化性能，可以从外部传入一个复用的Point对象来存储结果，若不传入将创建一个新的Point对象返回。
-         * @returns 由应用矩阵转换所产生的点。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        transformPoint(pointX: number, pointY: number, resultPoint?: Point): Point;
-        /**
-         * @language en_US
-         * Translates the matrix along the x and y axes, as specified by the dx and dy parameters.
-         * @param dx The amount of movement along the x axis to the right, in pixels.
-         * @param dy The amount of movement down along the y axis, in pixels.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 沿 x 和 y 轴平移矩阵，由 dx 和 dy 参数指定。
-         * @param dx 沿 x 轴向右移动的量（以像素为单位）。
-         * @param dy 沿 y 轴向下移动的量（以像素为单位）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        translate(dx: number, dy: number): void;
-        /**
-         * @language en_US
-         * Determines whether two matrixes are equal.
-         * @param other The matrix to be compared.
-         * @returns A value of true if the object is equal to this Matrix object; false if it is not equal.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 是否与另一个矩阵数据相等
-         * @param other 要比较的另一个矩阵对象。
-         * @returns 是否相等，ture表示相等。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        equals(other: Matrix): boolean;
-        /**
-         * @language en_US
-         * prepend matrix
-         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
-         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
-         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
-         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
-         * @param tx The distance by which to translate each point along the x axis.
-         * @param ty The distance by which to translate each point along the y axis.
-         * @returns matrix
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 前置矩阵
-         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值
-         * @param b 缩放或旋转图像时影响像素沿 y 轴定位的值
-         * @param c 缩放或旋转图像时影响像素沿 x 轴定位的值
-         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值
-         * @param tx 沿 x 轴平移每个点的距离
-         * @param ty 沿 y 轴平移每个点的距离
-         * @returns 矩阵自身
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        prepend(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix;
-        /**
-         * @language en_US
-         * append matrix
-         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
-         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
-         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
-         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
-         * @param tx The distance by which to translate each point along the x axis.
-         * @param ty The distance by which to translate each point along the y axis.
-         * @returns matrix
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 后置矩阵
-         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值
-         * @param b 缩放或旋转图像时影响像素沿 y 轴定位的值
-         * @param c 缩放或旋转图像时影响像素沿 x 轴定位的值
-         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值
-         * @param tx 沿 x 轴平移每个点的距离
-         * @param ty 沿 y 轴平移每个点的距离
-         * @returns 矩阵自身
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        append(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix;
-        /**
-         * @language en_US
-         * Given a point in the pretransform coordinate space, returns the coordinates of that point after the transformation occurs.
-         * Unlike the standard transformation applied using the transformPoint() method, the deltaTransformPoint() method's transformation does not consider the translation parameters tx and ty.
-         * @param point The point for which you want to get the result of the matrix transformation.
-         * @returns The point resulting from applying the matrix transformation.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果给定预转换坐标空间中的点，则此方法返回发生转换后该点的坐标。
-         * 与使用 transformPoint() 方法应用的标准转换不同，deltaTransformPoint() 方法的转换不考虑转换参数 tx 和 ty。
-         * @param point 想要获得其矩阵转换结果的点
-         * @returns 由应用矩阵转换所产生的点
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        deltaTransformPoint(point: Point): Point;
-        /**
-         * @language en_US
-         * Returns a text value listing the properties of the Matrix object.
-         * @returns A string containing the values of the properties of the Matrix object: a, b, c, d, tx, and ty.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 返回将 Matrix 对象表示的几何转换应用于指定点所产生的结果。
-         * @returns 一个字符串，它包含 Matrix 对象的属性值：a、b、c、d、tx 和 ty。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        toString(): string;
-        /**
-         * @language en_US
-         * Includes parameters for scaling, rotation, and translation. When applied to a matrix it sets the matrix's values based on those parameters.
-         * @param scaleX The factor by which to scale horizontally.
-         * @param scaleY The factor by which scale vertically.
-         * @param rotation The amount to rotate, in radians.
-         * @param tx The number of pixels to translate (move) to the right along the x axis.
-         * @param ty The number of pixels to translate (move) down along the y axis.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 包括用于缩放、旋转和转换的参数。当应用于矩阵时，该方法会基于这些参数设置矩阵的值。
-         * @param scaleX 水平缩放所用的系数
-         * @param scaleY 垂直缩放所用的系数
-         * @param rotation 旋转量（以弧度为单位）
-         * @param tx 沿 x 轴向右平移（移动）的像素数
-         * @param ty 沿 y 轴向下平移（移动）的像素数
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        createBox(scaleX: number, scaleY: number, rotation?: number, tx?: number, ty?: number): void;
-        /**
-         * @language en_US
-         * Creates the specific style of matrix expected by the beginGradientFill() and lineGradientStyle() methods of the Graphics class.
-         * Width and height are scaled to a scaleX/scaleY pair and the tx/ty values are offset by half the width and height.
-         * @param width The width of the gradient box.
-         * @param height The height of the gradient box.
-         * @param rotation The amount to rotate, in radians.
-         * @param tx The distance, in pixels, to translate to the right along the x axis. This value is offset by half of the width parameter.
-         * @param ty The distance, in pixels, to translate down along the y axis. This value is offset by half of the height parameter.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 创建 Graphics 类的 beginGradientFill() 和 lineGradientStyle() 方法所需的矩阵的特定样式。
-         * 宽度和高度被缩放为 scaleX/scaleY 对，而 tx/ty 值偏移了宽度和高度的一半。
-         * @param width 渐变框的宽度
-         * @param height 渐变框的高度
-         * @param rotation 旋转量（以弧度为单位）
-         * @param tx 沿 x 轴向右平移的距离（以像素为单位）。此值将偏移 width 参数的一半
-         * @param ty 沿 y 轴向下平移的距离（以像素为单位）。此值将偏移 height 参数的一半
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        createGradientBox(width: number, height: number, rotation?: number, tx?: number, ty?: number): void;
-        /**
-         * @private
-         */
-        $transformBounds(bounds: Rectangle): void;
-        /**
-         * @private
-         */
-        private getDeterminant();
-        /**
-         * @private
-         */
-        $getScaleX(): number;
-        /**
-         * @private
-         */
-        $getScaleY(): number;
-        /**
-         * @private
-         */
-        $getSkewX(): number;
-        /**
-         * @private
-         */
-        $getSkewY(): number;
-        /**
-         * @private
-         */
-        $updateScaleAndRotation(scaleX: number, scaleY: number, skewX: number, skewY: number): void;
-        /**
-         * @private
-         * target = other * this
-         */
-        $preMultiplyInto(other: Matrix, target: Matrix): void;
-    }
-    /**
-     * @private
-     * 仅供框架内复用，要防止暴露引用到外部。
-     */
-    var $TempMatrix: Matrix;
-}
-declare module egret.sys {
-    /**
-     * @private
-     */
-    class Region {
-        /**
-         * @private
-         * 释放一个Region实例到对象池
-         */
-        static release(region: Region): void;
-        /**
-         * @private
-         * 从对象池中取出或创建一个新的Region对象。
-         * 建议对于一次性使用的对象，均使用此方法创建，而不是直接new一个。
-         * 使用完后调用对应的release()静态方法回收对象，能有效减少对象创建数量造成的性能开销。
-         */
-        static create(): Region;
-        /**
-         * @private
-         */
-        minX: number;
-        /**
-         * @private
-         */
-        minY: number;
-        /**
-         * @private
-         */
-        maxX: number;
-        /**
-         * @private
-         */
-        maxY: number;
-        /**
-         * @private
-         */
-        width: number;
-        /**
-         * @private
-         */
-        height: number;
-        /**
-         * @private
-         */
-        area: number;
-        /**
-         * @private
-         * 是否发生移动
-         */
-        moved: boolean;
-        /**
-         * @private
-         */
-        setTo(minX: number, minY: number, maxX: number, maxY: number): Region;
-        /**
-         * @private
-         */
-        updateArea(): void;
-        /**
-         * @private
-         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
-         */
-        union(target: Region): void;
-        /**
-         * @private
-         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
-         */
-        intersect(target: Region): void;
-        /**
-         * @private
-         */
-        private setEmpty();
-        /**
-         * @private
-         * 确定此 Region 对象是否为空。
-         */
-        isEmpty(): boolean;
-        /**
-         * @private
-         */
-        intersects(target: Region): boolean;
-        /**
-         * @private
-         */
-        updateRegion(bounds: Rectangle, matrix: Matrix): void;
-    }
-}
-declare module egret.sys {
-    /**
-     * @language en_US
-     * Values for the dirty region policy
-     * @version Egret 2.5
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * 脏矩形策略常量。
-     * @version Egret 2.5
-     * @platform Web,Native
-     */
-    class DirtyRegionPolicy {
-        /**
-         * @language en_US
-         * Close automatic detection of dirty region
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 关闭自动脏矩形检测
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static OFF: string;
-        /**
-         * @language en_US
-         * Open automatic detection of dirty region
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 开启自动脏矩形检测
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static ON: string;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     * 绘图上下文
-     */
-    interface RenderContext {
-        /**
-         * @private
-         * 与绘图上线文关联的画布实例
-         */
-        surface: Surface;
-        /**
-         * @private
-         * 设置新图像如何绘制到已有的图像上的规制
-         */
-        globalCompositeOperation: string;
-        /**
-         * @private
-         * 设置接下来绘图填充的整体透明度
-         */
-        globalAlpha: number;
-        /**
-         * @private
-         * 用于表示剪切斜接的极限值的数字。
-         * @default 10
-         */
-        miterLimit: number;
-        /**
-         * @private
-         * 指定如何绘制每一条线段末端的属性。有3个可能的值，分别是：<br/>
-         * <ul>
-         * <li>"butt": 线段末端以方形结束。</li>
-         * <li>"round": 线段末端以圆形结束。</li>
-         * <li>"square": 线段末端以方形结束，但是增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域。</li>
-         * </ul>
-         * @default "butt"
-         */
-        lineCap: string;
-        /**
-         * @private
-         * 指定用于拐角的连接外观的类型,有3个可能的值，分别是：<br/>
-         * <ul>
-         * <li>"round": 圆角连接</li>
-         * <li>"bevel": 斜角连接。</li>
-         * <li>"miter": 尖角连接。当使用尖角模式时，还可以同时使用 miterLimit 参数限制尖角的长度。</li>
-         * </ul>
-         * @default "miter"
-         */
-        lineJoin: string;
-        /**
-         * @private
-         * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
-         * @default 1
-         */
-        lineWidth: number;
-        /**
-         * @private
-         * 设置要在图形边线填充的颜色或样式
-         * @default "#000000"
-         */
-        strokeStyle: any;
-        /**
-         * @private
-         * 设置要在图形内部填充的颜色或样式
-         * @default "#000000"
-         */
-        fillStyle: any;
-        /**
-         * @private
-         * 控制在缩放时是否对位图进行平滑处理。
-         * @default true
-         */
-        imageSmoothingEnabled: boolean;
-        /**
-         * @private
-         * 文本的对齐方式的属性,有5个可能的值，分别是：<br/>
-         * <ul>
-         * <li>"left" 文本左对齐。</li>
-         * <li>"right" 文本右对齐。</li>
-         * <li>"center" 文本居中对齐。</li>
-         * <li>"start" 文本对齐界线开始的地方 （对于从左向右阅读的语言使用左对齐，对从右向左的阅读的语言使用右对齐）。</li>
-         * <li>"end" 文本对齐界线结束的地方 （对于从左向右阅读的语言使用右对齐，对从右向左的阅读的语言使用左对齐）。</li>
-         * </ul>
-         * @default "start"
-         */
-        textAlign: string;
-        /**
-         * @private
-         * 决定文字垂直方向的对齐方式。有6个可能的值，分别是：<br/>
-         * <ul>
-         * <li>"top" 文本基线在文本块的顶部。</li>
-         * <li>"hanging" 文本基线是悬挂基线。</li>
-         * <li>"middle" 文本基线在文本块的中间。</li>
-         * <li>"alphabetic" 文本基线是标准的字母基线。</li>
-         * <li>"ideographic" 文字基线是表意字基线；如果字符本身超出了alphabetic 基线，那么ideograhpic基线位置在字符本身的底部。</li>
-         * <li>"bottom" 文本基线在文本块的底部。 与 ideographic 基线的区别在于 ideographic 基线不需要考虑下行字母。</li>
-         * </ul>
-         * @default "alphabetic"
-         */
-        textBaseline: string;
-        /**
-         * @private
-         * 当前的字体样式
-         */
-        font: string;
-        /**
-         * @private
-         *
-         * @param text
-         * @param x
-         * @param y
-         * @param maxWidth
-         */
-        strokeText(text: any, x: any, y: any, maxWidth: any): any;
-        /**
-         * @private
-         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
-         * @param x 圆弧中心（圆心）的 x 轴坐标。
-         * @param y 圆弧中心（圆心）的 y 轴坐标。
-         * @param radius 圆弧的半径。
-         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
-         * @param endAngle 圆弧的重点， 单位以弧度表示。
-         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
-         */
-        arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
-        /**
-         * @private
-         * 绘制一段二次贝塞尔曲线路径。它需要2个点。 第一个点是控制点，第二个点是终点。 起始点是当前路径最新的点，当创建二次贝赛尔曲线之前，可以使用 moveTo() 方法进行改变。
-         * @param cpx 控制点的 x 轴坐标。
-         * @param cpy 控制点的 y 轴坐标。
-         * @param x 终点的 x 轴坐标。
-         * @param y 终点的 y 轴坐标。
-         */
-        quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
-        /**
-         * @private
-         * 使用直线连接子路径的终点到x，y坐标。
-         * @param x 直线终点的 x 轴坐标。
-         * @param y 直线终点的 y 轴坐标。
-         */
-        lineTo(x: number, y: number): void;
-        /**
-         * @private
-         * 根据当前的填充样式，填充当前或已存在的路径的方法。采取非零环绕或者奇偶环绕规则。
-         * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
-         * "nonzero": 非零环绕规则， 默认的规则。
-         * "evenodd": 奇偶环绕规则。
-         */
-        fill(fillRule?: string): void;
-        /**
-         * @private
-         * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
-         */
-        closePath(): void;
-        /**
-         * @private
-         * 创建一段矩形路径，矩形的起点位置是 (x, y) ，尺寸为 width 和 height。矩形的4个点通过直线连接，子路径做为闭合的标记，所以你可以填充或者描边矩形。
-         * @param x 矩形起点的 x 轴坐标。
-         * @param y 矩形起点的 y 轴坐标。
-         * @param width 矩形的宽度。
-         * @param height 矩形的高度。
-         */
-        rect(x: number, y: number, w: number, h: number): void;
-        /**
-         * @private
-         * 将一个新的子路径的起始点移动到(x，y)坐标
-         * @param x 点的 x 轴
-         * @param y 点的 y 轴
-         */
-        moveTo(x: number, y: number): void;
-        /**
-         * @private
-         * 绘制一个填充矩形。矩形的起点在 (x, y) 位置，矩形的尺寸是 width 和 height ，fillStyle 属性决定矩形的样式。
-         * @param x 矩形起始点的 x 轴坐标。
-         * @param y 矩形起始点的 y 轴坐标。
-         * @param width 矩形的宽度。
-         * @param height 矩形的高度。
-         */
-        fillRect(x: number, y: number, w: number, h: number): void;
-        /**
-         * @private
-         * 绘制一段三次贝赛尔曲线路径。该方法需要三个点。 第一、第二个点是控制点，第三个点是结束点。起始点是当前路径的最后一个点，
-         * 绘制贝赛尔曲线前，可以通过调用 moveTo() 进行修改。
-         * @param cp1x 第一个控制点的 x 轴坐标。
-         * @param cp1y 第一个控制点的 y 轴坐标。
-         * @param cp2x 第二个控制点的 x 轴坐标。
-         * @param cp2y 第二个控制点的 y 轴坐标。
-         * @param x 结束点的 x 轴坐标。
-         * @param y 结束点的 y 轴坐标。
-         */
-        bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
-        /**
-         * @private
-         * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
-         */
-        stroke(): void;
-        /**
-         * @private
-         * 使用当前的绘画样式，描绘一个起点在 (x, y) 、宽度为 w 、高度为 h 的矩形的方法。
-         * @param x 矩形起点的 x 轴坐标。
-         * @param y 矩形起点的 y 轴坐标。
-         * @param width 矩形的宽度。
-         * @param height 矩形的高度。
-         */
-        strokeRect(x: number, y: number, w: number, h: number): void;
-        /**
-         * @private
-         * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
-         */
-        beginPath(): void;
-        /**
-         * @private
-         * 根据控制点和半径绘制一段圆弧路径，使用直线连接前一个点。
-         * @param x1 第一个控制点的 x 轴坐标。
-         * @param y1 第一个控制点的 y 轴坐标。
-         * @param x2 第二个控制点的 x 轴坐标。
-         * @param y2 第二个控制点的 y 轴坐标。
-         * @param radius 圆弧的半径。
-         */
-        arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void;
-        /**
-         * @private
-         * 使用方法参数描述的矩阵多次叠加当前的变换矩阵。
-         * @param a 水平缩放。
-         * @param b 水平倾斜。
-         * @param c 垂直倾斜。
-         * @param d 垂直缩放。
-         * @param tx 水平移动。
-         * @param ty 垂直移动。
-         */
-        transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
-        /**
-         * @private
-         * 通过在网格中移动 surface 和 surface 原点 x 水平方向、原点 y 垂直方向，添加平移变换
-         * @param x 水平移动。
-         * @param y 垂直移动。
-         */
-        translate(x: number, y: number): void;
-        /**
-         * @private
-         * 根据 x 水平方向和 y 垂直方向，为 surface 单位添加缩放变换。
-         * @param x 水平方向的缩放因子。
-         * @param y 垂直方向的缩放因子。
-         */
-        scale(x: number, y: number): void;
-        /**
-         * @private
-         * 在变换矩阵中增加旋转，角度变量表示一个顺时针旋转角度并且用弧度表示。
-         * @param angle 顺时针旋转的弧度。
-         */
-        rotate(angle: number): void;
-        /**
-         * @private
-         * 恢复到最近的绘制样式状态，此状态是通过 save() 保存到”状态栈“中最新的元素。
-         */
-        restore(): void;
-        /**
-         * @private
-         * 使用栈保存当前的绘画样式状态，你可以使用 restore() 恢复任何改变。
-         */
-        save(): void;
-        /**
-         * @private
-         * 从当前路径创建一个剪切路径。在  clip() 调用之后，绘制的所有信息只会出现在剪切路径内部。
-         */
-        clip(fillRule?: string): void;
-        /**
-         * @private
-         * 设置指定矩形区域内（以 点 (x, y) 为起点，范围是(width, height) ）所有像素变成透明，并擦除之前绘制的所有内容。
-         * @param x 矩形起点的 x 轴坐标。
-         * @param y 矩形起点的 y 轴坐标。
-         * @param width 矩形的宽度。
-         * @param height 矩形的高度。
-         */
-        clearRect(x: number, y: number, width: number, height: number): void;
-        /**
-         * @private
-         * 重新设置当前的变换为单位矩阵，并使用同样的变量调用 transform() 方法。
-         * @param a 水平缩放。
-         * @param b 水平倾斜。
-         * @param c 垂直倾斜。
-         * @param d 垂直缩放。
-         * @param tx 水平移动。
-         * @param ty 垂直移动。
-         */
-        setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
-        /**
-         * @private
-         * 创建一个沿参数坐标指定的直线的渐变。该方法返回一个线性的 GraphicsGradient 对象。
-         * @param x0 起点的 x 轴坐标。
-         * @param y0 起点的 y 轴坐标。
-         * @param x1 终点的 x 轴坐标。
-         * @param y1 终点的 y 轴坐标。
-         */
-        createLinearGradient(x0: number, y0: number, x1: number, y1: number): GraphicsGradient;
-        /**
-         * @private
-         * 根据参数确定的两个圆的坐标，创建一个放射性渐变。该方法返回一个放射性的 GraphicsGradient。
-         * @param x0 开始圆形的 x 轴坐标。
-         * @param y0 开始圆形的 y 轴坐标。
-         * @param r0 开始圆形的半径。
-         * @param x1 结束圆形的 x 轴坐标。
-         * @param y1 结束圆形的 y 轴坐标。
-         * @param r1 结束圆形的半径。
-         */
-        createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): GraphicsGradient;
-        /**
-         * @private
-         * 在(x,y)位置绘制（填充）文本。
-         */
-        fillText(text: string, x: number, y: number, maxWidth?: number): void;
-        /**
-         * @private
-         * 测量指定文本宽度，返回 TextMetrics 对象。
-         */
-        measureText(text: string): TextMetrics;
-        /**
-         * @private
-         * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
-         * 确保 imageSmoothingEnabled 已被重置为正常的值，否则有可能沿用上个显示对象绘制过程留下的值。
-         */
-        drawImage(image: BitmapData, offsetX: number, offsetY: number, width?: number, height?: number, surfaceOffsetX?: number, surfaceOffsetY?: number, surfaceImageWidth?: number, surfaceImageHeight?: number): void;
-        /**
-         * @private
-         * 基于指定的源图象(BitmapData)创建一个模板，通过repetition参数指定源图像在什么方向上进行重复，返回一个GraphicsPattern对象。
-         * @param bitmapData 做为重复图像源的 BitmapData 对象。
-         * @param repetition 指定如何重复图像。
-         * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
-         */
-        createPattern(image: BitmapData, repetition: string): GraphicsPattern;
-        /**
-         * @private
-         * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。
-         */
-        getImageData(sx: number, sy: number, sw: number, sh: number): ImageData;
-    }
-    /**
-     * @private
-     */
-    interface TextMetrics {
-        /**
-         * @private
-         */
-        width: number;
-    }
-    /**
-     * @private
-     */
-    interface ImageData {
-        /**
-         * @private
-         */
-        width: number;
-        /**
-         * @private
-         */
-        data: Uint8Array;
-        /**
-         * @private
-         */
-        height: number;
-    }
-}
-declare module egret {
-    /**
-     * @language en_US
-     * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
-     * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
-     * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
-     * Each 32-bit integer is a combination of four 8-bit channel values (from 0 to 255) that describe the alpha transparency
-     * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
-     * alpha channel value, followed by red, green, and blue.)
-     * @see egret.Bitmap
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
-     * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
-     * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
-     * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
-     * @see egret.Bitmap
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    interface BitmapData extends HashObject {
-        /**
-         * @language en_US
-         * The width of the bitmap image in pixels.
-         * @readOnly
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 位图图像的宽度，以像素为单位。
-         * @readOnly
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        width: number;
-        /**
-         * @language en_US
-         * The height of the bitmap image in pixels.
-         * @readOnly
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 位图图像的高度，以像素为单位。
-         * @readOnly
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        height: number;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
      * 显示对象失效标志
      */
     const enum DisplayObjectFlags {
@@ -2560,159 +1417,6 @@ declare module egret {
 declare module egret.sys {
     /**
      * @private
-     * 显示列表
-     */
-    class DisplayList extends HashObject implements Renderable {
-        /**
-         * @private
-         * 释放一个DisplayList实例到对象池
-         */
-        static release(displayList: DisplayList): void;
-        /**
-         * @private
-         * 从对象池中取出或创建一个新的DisplayList对象。
-         */
-        static create(target: DisplayObject): DisplayList;
-        /**
-         * @private
-         * 创建一个DisplayList对象
-         */
-        constructor(root: DisplayObject);
-        /**
-         * @private
-         * 是否需要重绘
-         */
-        $isDirty: boolean;
-        /**
-         * @private
-         * 在舞台上的透明度
-         */
-        $renderAlpha: number;
-        /**
-         * @private
-         * 相对于显示列表根节点或位图缓存根节点的矩阵对象
-         */
-        $renderMatrix: Matrix;
-        $ratioMatrix: Matrix;
-        $ratioChanged: boolean;
-        $pixelRatio: number;
-        /**
-         * @private
-         * 在显示列表根节点或位图缓存根节点上的显示区域
-         */
-        $renderRegion: Region;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         */
-        $update(): boolean;
-        /**
-         * @private
-         * 呈现绘制结果的目标画布
-         */
-        surface: Surface;
-        /**
-         * @private
-         */
-        offsetX: number;
-        /**
-         * @private
-         */
-        offsetY: number;
-        /**
-         * @private
-         *
-         * @param context
-         */
-        $render(context: RenderContext): void;
-        /**
-         * @private
-         * 显示列表根节点
-         */
-        root: DisplayObject;
-        /**
-         * @private
-         */
-        needRedraw: boolean;
-        /**
-         * @private
-         */
-        private rootMatrix;
-        /**
-         * @private
-         * 绘图上下文
-         */
-        renderContext: RenderContext;
-        /**
-         * @private
-         * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
-         */
-        setClipRect(width: number, height: number): void;
-        /**
-         * @private
-         * 显示对象的渲染节点发生改变时，把自身的IRenderable对象注册到此列表上。
-         */
-        private dirtyNodes;
-        /**
-         * @private
-         */
-        private dirtyNodeList;
-        /**
-         * @private
-         * 标记一个节点需要重新渲染
-         */
-        markDirty(node: Renderable): void;
-        /**
-         * @private
-         */
-        private dirtyList;
-        /**
-         * @private
-         */
-        private dirtyRegion;
-        /**
-         * @private
-         * 更新节点属性并返回脏矩形列表。
-         */
-        updateDirtyRegions(): Region[];
-        /**
-         * @private
-         * 绘制根节点显示对象到目标画布，返回draw的次数。
-         */
-        drawToSurface(): number;
-        /**
-         * @private
-         * 绘制一个显示对象
-         */
-        private drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayList, clipRegion);
-        /**
-         * @private
-         */
-        private drawWithClip(displayObject, context, dirtyList, rootMatrix, clipRegion);
-        /**
-         * @private
-         */
-        private drawWithScrollRect(displayObject, context, dirtyList, rootMatrix, clipRegion);
-        /**
-         * @private
-         */
-        private createRenderContext(width, height);
-        /**
-         * @private
-         */
-        private sizeChanged;
-        /**
-         * @private
-         * 改变画布的尺寸，由于画布尺寸修改会清空原始画布。所以这里将原始画布绘制到一个新画布上，再与原始画布交换。
-         */
-        changeSurfaceSize(): void;
-        setDevicePixelRatio(ratio?: number): void;
-        setDirtyRegionPolicy(policy: string): void;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
      */
     const enum BitmapKeys {
         bitmapData = 0,
@@ -2974,6 +1678,62 @@ declare module egret {
          * 绘制九宫格位图
          */
         private static $drawScale9GridImage(context, image, scale9Grid, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, textureWidth, textureHeight, surfaceWidth, surfaceHeight);
+    }
+}
+declare module egret {
+    /**
+     * @language en_US
+     * A BitmapData object contains an array of pixel data. This data can represent either a fully opaque bitmap or a
+     * transparent bitmap that contains alpha channel data. Either type of BitmapData object is stored as a buffer of 32-bit
+     * integers. Each 32-bit integer determines the properties of a single pixel in the bitmap.<br/>
+     * Each 32-bit integer is a combination of four 8-bit channel values (from 0 to 255) that describe the alpha transparency
+     * and the red, green, and blue (ARGB) values of the pixel. (For ARGB values, the most significant byte represents the
+     * alpha channel value, followed by red, green, and blue.)
+     * @see egret.Bitmap
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * BitmapData 对象是一个包含像素数据的数组。此数据可以表示完全不透明的位图，或表示包含 Alpha 通道数据的透明位图。
+     * 以上任一类型的 BitmapData 对象都作为 32 位整数的缓冲区进行存储。每个 32 位整数确定位图中单个像素的属性。<br/>
+     * 每个 32 位整数都是四个 8 位通道值（从 0 到 255）的组合，这些值描述像素的 Alpha 透明度以及红色、绿色、蓝色 (ARGB) 值。
+     * （对于 ARGB 值，最高有效字节代表 Alpha 通道值，其后的有效字节分别代表红色、绿色和蓝色通道值。）
+     * @see egret.Bitmap
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    interface BitmapData extends HashObject {
+        /**
+         * @language en_US
+         * The width of the bitmap image in pixels.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 位图图像的宽度，以像素为单位。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        width: number;
+        /**
+         * @language en_US
+         * The height of the bitmap image in pixels.
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 位图图像的高度，以像素为单位。
+         * @readOnly
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        height: number;
     }
 }
 declare module egret {
@@ -8292,6 +7052,542 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
+     * The Matrix class represents a transformation matrix that determines how to map points from one coordinate space to
+     * another. You can perform various graphical transformations on a display object by setting the properties of a Matrix
+     * object, applying that Matrix object to the matrix property of a display object, These transformation functions include
+     * translation (x and y repositioning), rotation, scaling, and skewing.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/geom/Matrix.ts
+     */
+    /**
+     * @language zh_CN
+     * Matrix 类表示一个转换矩阵，它确定如何将点从一个坐标空间映射到另一个坐标空间。
+     * 您可以对一个显示对象执行不同的图形转换，方法是设置 Matrix 对象的属性，将该 Matrix
+     * 对象应用于显示对象的 matrix 属性。这些转换函数包括平移（x 和 y 重新定位）、旋转、缩放和倾斜。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/geom/Matrix.ts
+     */
+    class Matrix extends HashObject {
+        /**
+         * @language en_US
+         * Releases a matrix instance to the object pool
+         * @param matrix matrix that Needs to be recycled
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 释放一个Matrix实例到对象池
+         * @param matrix 需要回收的 matrix
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static release(matrix: Matrix): void;
+        /**
+         * @language en_US
+         * get a matrix instance from the object pool or create a new one.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 从对象池中取出或创建一个新的Matrix对象。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static create(): Matrix;
+        /**
+         * @language en_US
+         * Creates a new Matrix object with the specified parameters.
+         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
+         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
+         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
+         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
+         * @param tx The distance by which to translate each point along the x axis.
+         * @param ty The distance by which to translate each point along the y axis.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定参数创建一个 Matrix 对象
+         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值。
+         * @param b 旋转或倾斜图像时影响像素沿 y 轴定位的值。
+         * @param c 旋转或倾斜图像时影响像素沿 x 轴定位的值。
+         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值。
+         * @param tx 沿 x 轴平移每个点的距离。
+         * @param ty 沿 y 轴平移每个点的距离。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor(a?: number, b?: number, c?: number, d?: number, tx?: number, ty?: number);
+        /**
+         * @language en_US
+         * The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
+         * @default 1
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @default 1
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        a: number;
+        /**
+         * @language en_US
+         * The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 旋转或倾斜图像时影响像素沿 y 轴定位的值
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        b: number;
+        /**
+         * @language en_US
+         * The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 旋转或倾斜图像时影响像素沿 x 轴定位的值
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        c: number;
+        /**
+         * @language en_US
+         * The value that affects the positioning of pixels along the y axis when scaling or rotating an image.
+         * @default 1
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @default 1
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        d: number;
+        /**
+         * @language en_US
+         * The distance by which to translate each point along the x axis.
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 沿 x 轴平移每个点的距离
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        tx: number;
+        /**
+         * @language en_US
+         * The distance by which to translate each point along the y axis.
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 沿 y 轴平移每个点的距离
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        ty: number;
+        /**
+         * @language en_US
+         * Returns a new Matrix object that is a clone of this matrix, with an exact copy of the contained object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回一个新的 Matrix 对象，它是此矩阵的克隆，带有与所含对象完全相同的副本。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        clone(): Matrix;
+        /**
+         * @language en_US
+         * Concatenates a matrix with the current matrix, effectively combining the geometric effects of the two. In mathematical
+         * terms, concatenating two matrixes is the same as combining them using matrix multiplication.
+         * @param other The matrix to be concatenated to the source matrix.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将某个矩阵与当前矩阵连接，从而将这两个矩阵的几何效果有效地结合在一起。在数学术语中，将两个矩阵连接起来与使用矩阵乘法将它们结合起来是相同的。
+         * @param other 要连接到源矩阵的矩阵。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        concat(other: Matrix): void;
+        /**
+         * @language en_US
+         * Copies all of the matrix data from the source Point object into the calling Matrix object.
+         * @param other  The Matrix object from which to copy the data.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将源 Matrix 对象中的所有矩阵数据复制到调用方 Matrix 对象中。
+         * @param other 要拷贝的目标矩阵
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        copyFrom(other: Matrix): Matrix;
+        /**
+         * @language en_US
+         * Sets each matrix property to a value that causes a null transformation. An object transformed by applying an
+         * identity matrix will be identical to the original. After calling the identity() method, the resulting matrix
+         * has the following properties: a=1, b=0, c=0, d=1, tx=0, ty=0.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 为每个矩阵属性设置一个值，该值将导致矩阵无转换。通过应用恒等矩阵转换的对象将与原始对象完全相同。
+         * 调用 identity() 方法后，生成的矩阵具有以下属性：a=1、b=0、c=0、d=1、tx=0 和 ty=0。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        identity(): void;
+        /**
+         * @language en_US
+         * Performs the opposite transformation of the original matrix. You can apply an inverted matrix to an object to
+         * undo the transformation performed when applying the original matrix.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 执行原始矩阵的逆转换。
+         * 您可以将一个逆矩阵应用于对象来撤消在应用原始矩阵时执行的转换。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        invert(): void;
+        /**
+         * @private
+         */
+        $invertInto(target: Matrix): void;
+        /**
+         * @language en_US
+         * Applies a rotation transformation to the Matrix object.
+         * The rotate() method alters the a, b, c, and d properties of the Matrix object.
+         * @param angle The rotation angle in radians.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 对 Matrix 对象应用旋转转换。
+         * rotate() 方法将更改 Matrix 对象的 a、b、c 和 d 属性。
+         * @param angle 以弧度为单位的旋转角度。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        rotate(angle: number): void;
+        /**
+         * @language en_US
+         * Applies a scaling transformation to the matrix. The x axis is multiplied by sx, and the y axis it is multiplied by sy.
+         * The scale() method alters the a and d properties of the Matrix object.
+         * @param sx A multiplier used to scale the object along the x axis.
+         * @param sy A multiplier used to scale the object along the y axis.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 对矩阵应用缩放转换。x 轴乘以 sx，y 轴乘以 sy。
+         * scale() 方法将更改 Matrix 对象的 a 和 d 属性。
+         * @param sx 用于沿 x 轴缩放对象的乘数。
+         * @param sy 用于沿 y 轴缩放对象的乘数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        scale(sx: number, sy: number): void;
+        /**
+         * @language en_US
+         * Sets the members of Matrix to the specified values
+         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
+         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
+         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
+         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
+         * @param tx The distance by which to translate each point along the x axis.
+         * @param ty The distance by which to translate each point along the y axis.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将 Matrix 的成员设置为指定值
+         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值。
+         * @param b 旋转或倾斜图像时影响像素沿 y 轴定位的值。
+         * @param c 旋转或倾斜图像时影响像素沿 x 轴定位的值。
+         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值。
+         * @param tx 沿 x 轴平移每个点的距离。
+         * @param ty 沿 y 轴平移每个点的距离。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        setTo(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix;
+        /**
+         * @language en_US
+         * Returns the result of applying the geometric transformation represented by the Matrix object to the specified point.
+         * @param pointX The x coordinate for which you want to get the result of the Matrix transformation.
+         * @param pointY The y coordinate for which you want to get the result of the Matrix transformation.
+         * @param resultPoint A reusable instance of Point for saving the results. Passing this parameter can reduce the
+         * number of reallocate objects, which allows you to get better code execution performance.
+         * @returns The point resulting from applying the Matrix transformation.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回将 Matrix 对象表示的几何转换应用于指定点所产生的结果。
+         * @param pointX 想要获得其矩阵转换结果的点的x坐标。
+         * @param pointY 想要获得其矩阵转换结果的点的y坐标。
+         * @param resultPoint 框架建议尽可能减少创建对象次数来优化性能，可以从外部传入一个复用的Point对象来存储结果，若不传入将创建一个新的Point对象返回。
+         * @returns 由应用矩阵转换所产生的点。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        transformPoint(pointX: number, pointY: number, resultPoint?: Point): Point;
+        /**
+         * @language en_US
+         * Translates the matrix along the x and y axes, as specified by the dx and dy parameters.
+         * @param dx The amount of movement along the x axis to the right, in pixels.
+         * @param dy The amount of movement down along the y axis, in pixels.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 沿 x 和 y 轴平移矩阵，由 dx 和 dy 参数指定。
+         * @param dx 沿 x 轴向右移动的量（以像素为单位）。
+         * @param dy 沿 y 轴向下移动的量（以像素为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        translate(dx: number, dy: number): void;
+        /**
+         * @language en_US
+         * Determines whether two matrixes are equal.
+         * @param other The matrix to be compared.
+         * @returns A value of true if the object is equal to this Matrix object; false if it is not equal.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否与另一个矩阵数据相等
+         * @param other 要比较的另一个矩阵对象。
+         * @returns 是否相等，ture表示相等。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        equals(other: Matrix): boolean;
+        /**
+         * @language en_US
+         * prepend matrix
+         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
+         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
+         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
+         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
+         * @param tx The distance by which to translate each point along the x axis.
+         * @param ty The distance by which to translate each point along the y axis.
+         * @returns matrix
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 前置矩阵
+         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param b 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param c 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param tx 沿 x 轴平移每个点的距离
+         * @param ty 沿 y 轴平移每个点的距离
+         * @returns 矩阵自身
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        prepend(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix;
+        /**
+         * @language en_US
+         * append matrix
+         * @param a The value that affects the positioning of pixels along the x axis when scaling or rotating an image.
+         * @param b The value that affects the positioning of pixels along the y axis when rotating or skewing an image.
+         * @param c The value that affects the positioning of pixels along the x axis when rotating or skewing an image.
+         * @param d The value that affects the positioning of pixels along the y axis when scaling or rotating an image..
+         * @param tx The distance by which to translate each point along the x axis.
+         * @param ty The distance by which to translate each point along the y axis.
+         * @returns matrix
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 后置矩阵
+         * @param a 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param b 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param c 缩放或旋转图像时影响像素沿 x 轴定位的值
+         * @param d 缩放或旋转图像时影响像素沿 y 轴定位的值
+         * @param tx 沿 x 轴平移每个点的距离
+         * @param ty 沿 y 轴平移每个点的距离
+         * @returns 矩阵自身
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        append(a: number, b: number, c: number, d: number, tx: number, ty: number): Matrix;
+        /**
+         * @language en_US
+         * Given a point in the pretransform coordinate space, returns the coordinates of that point after the transformation occurs.
+         * Unlike the standard transformation applied using the transformPoint() method, the deltaTransformPoint() method's transformation does not consider the translation parameters tx and ty.
+         * @param point The point for which you want to get the result of the matrix transformation.
+         * @returns The point resulting from applying the matrix transformation.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果给定预转换坐标空间中的点，则此方法返回发生转换后该点的坐标。
+         * 与使用 transformPoint() 方法应用的标准转换不同，deltaTransformPoint() 方法的转换不考虑转换参数 tx 和 ty。
+         * @param point 想要获得其矩阵转换结果的点
+         * @returns 由应用矩阵转换所产生的点
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        deltaTransformPoint(point: Point): Point;
+        /**
+         * @language en_US
+         * Returns a text value listing the properties of the Matrix object.
+         * @returns A string containing the values of the properties of the Matrix object: a, b, c, d, tx, and ty.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回将 Matrix 对象表示的几何转换应用于指定点所产生的结果。
+         * @returns 一个字符串，它包含 Matrix 对象的属性值：a、b、c、d、tx 和 ty。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        toString(): string;
+        /**
+         * @language en_US
+         * Includes parameters for scaling, rotation, and translation. When applied to a matrix it sets the matrix's values based on those parameters.
+         * @param scaleX The factor by which to scale horizontally.
+         * @param scaleY The factor by which scale vertically.
+         * @param rotation The amount to rotate, in radians.
+         * @param tx The number of pixels to translate (move) to the right along the x axis.
+         * @param ty The number of pixels to translate (move) down along the y axis.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 包括用于缩放、旋转和转换的参数。当应用于矩阵时，该方法会基于这些参数设置矩阵的值。
+         * @param scaleX 水平缩放所用的系数
+         * @param scaleY 垂直缩放所用的系数
+         * @param rotation 旋转量（以弧度为单位）
+         * @param tx 沿 x 轴向右平移（移动）的像素数
+         * @param ty 沿 y 轴向下平移（移动）的像素数
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        createBox(scaleX: number, scaleY: number, rotation?: number, tx?: number, ty?: number): void;
+        /**
+         * @language en_US
+         * Creates the specific style of matrix expected by the beginGradientFill() and lineGradientStyle() methods of the Graphics class.
+         * Width and height are scaled to a scaleX/scaleY pair and the tx/ty values are offset by half the width and height.
+         * @param width The width of the gradient box.
+         * @param height The height of the gradient box.
+         * @param rotation The amount to rotate, in radians.
+         * @param tx The distance, in pixels, to translate to the right along the x axis. This value is offset by half of the width parameter.
+         * @param ty The distance, in pixels, to translate down along the y axis. This value is offset by half of the height parameter.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建 Graphics 类的 beginGradientFill() 和 lineGradientStyle() 方法所需的矩阵的特定样式。
+         * 宽度和高度被缩放为 scaleX/scaleY 对，而 tx/ty 值偏移了宽度和高度的一半。
+         * @param width 渐变框的宽度
+         * @param height 渐变框的高度
+         * @param rotation 旋转量（以弧度为单位）
+         * @param tx 沿 x 轴向右平移的距离（以像素为单位）。此值将偏移 width 参数的一半
+         * @param ty 沿 y 轴向下平移的距离（以像素为单位）。此值将偏移 height 参数的一半
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        createGradientBox(width: number, height: number, rotation?: number, tx?: number, ty?: number): void;
+        /**
+         * @private
+         */
+        $transformBounds(bounds: Rectangle): void;
+        /**
+         * @private
+         */
+        private getDeterminant();
+        /**
+         * @private
+         */
+        $getScaleX(): number;
+        /**
+         * @private
+         */
+        $getScaleY(): number;
+        /**
+         * @private
+         */
+        $getSkewX(): number;
+        /**
+         * @private
+         */
+        $getSkewY(): number;
+        /**
+         * @private
+         */
+        $updateScaleAndRotation(scaleX: number, scaleY: number, skewX: number, skewY: number): void;
+        /**
+         * @private
+         * target = other * this
+         */
+        $preMultiplyInto(other: Matrix, target: Matrix): void;
+    }
+    /**
+     * @private
+     * 仅供框架内复用，要防止暴露引用到外部。
+     */
+    var $TempMatrix: Matrix;
+}
+declare module egret {
+    /**
+     * @language en_US
      * A Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its
      * width and its height.<br/>
      * The x, y, width, and height properties of the Rectangle class are independent of each other; changing the value of
@@ -9950,6 +9246,260 @@ declare module egret {
         new (): ImageLoader;
     };
 }
+declare module egret.sys {
+    /**
+     * @private
+     * 脏矩形计算工具类
+     */
+    class DirtyRegion {
+        displayList: DisplayList;
+        /**
+         * @private
+         */
+        private dirtyList;
+        /**
+         * @private
+         */
+        private hasClipRect;
+        /**
+         * @private
+         */
+        private clipWidth;
+        /**
+         * @private
+         */
+        private clipHeight;
+        /**
+         * @private
+         */
+        private clipArea;
+        /**
+         * @private
+         */
+        private clipRectChanged;
+        /**
+         * @private
+         * 设置剪裁边界，超过边界的节点将跳过绘制。
+         */
+        setClipRect(width: number, height: number): void;
+        /**
+         * @private
+         * 添加一个脏矩形区域，返回是否添加成功，当矩形为空或者在屏幕之外时返回false。
+         */
+        addRegion(target: Region): boolean;
+        /**
+         * @private
+         */
+        clear(): void;
+        /**
+         * @private
+         * 获取最终的脏矩形列表
+         */
+        getDirtyRegions(): Region[];
+        /**
+         * @private
+         * 合并脏矩形列表
+         */
+        private mergeDirtyList(dirtyList);
+        private $dirtyRegionPolicy;
+        setDirtyRegionPolicy(policy: string): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @language en_US
+     * Values for the dirty region policy
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 脏矩形策略常量。
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    class DirtyRegionPolicy {
+        /**
+         * @language en_US
+         * Close automatic detection of dirty region
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 关闭自动脏矩形检测
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static OFF: string;
+        /**
+         * @language en_US
+         * Open automatic detection of dirty region
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 开启自动脏矩形检测
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static ON: string;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 显示列表
+     */
+    class DisplayList extends HashObject implements Renderable {
+        /**
+         * @private
+         * 释放一个DisplayList实例到对象池
+         */
+        static release(displayList: DisplayList): void;
+        /**
+         * @private
+         * 从对象池中取出或创建一个新的DisplayList对象。
+         */
+        static create(target: DisplayObject): DisplayList;
+        /**
+         * @private
+         * 创建一个DisplayList对象
+         */
+        constructor(root: DisplayObject);
+        /**
+         * @private
+         * 是否需要重绘
+         */
+        $isDirty: boolean;
+        /**
+         * @private
+         * 在舞台上的透明度
+         */
+        $renderAlpha: number;
+        /**
+         * @private
+         * 相对于显示列表根节点或位图缓存根节点的矩阵对象
+         */
+        $renderMatrix: Matrix;
+        $ratioMatrix: Matrix;
+        $ratioChanged: boolean;
+        $pixelRatio: number;
+        /**
+         * @private
+         * 在显示列表根节点或位图缓存根节点上的显示区域
+         */
+        $renderRegion: Region;
+        /**
+         * @private
+         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
+         */
+        $update(): boolean;
+        /**
+         * @private
+         * 呈现绘制结果的目标画布
+         */
+        surface: Surface;
+        /**
+         * @private
+         */
+        offsetX: number;
+        /**
+         * @private
+         */
+        offsetY: number;
+        /**
+         * @private
+         *
+         * @param context
+         */
+        $render(context: RenderContext): void;
+        /**
+         * @private
+         * 显示列表根节点
+         */
+        root: DisplayObject;
+        /**
+         * @private
+         */
+        needRedraw: boolean;
+        /**
+         * @private
+         */
+        private rootMatrix;
+        /**
+         * @private
+         * 绘图上下文
+         */
+        renderContext: RenderContext;
+        /**
+         * @private
+         * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
+         */
+        setClipRect(width: number, height: number): void;
+        /**
+         * @private
+         * 显示对象的渲染节点发生改变时，把自身的IRenderable对象注册到此列表上。
+         */
+        private dirtyNodes;
+        /**
+         * @private
+         */
+        private dirtyNodeList;
+        /**
+         * @private
+         * 标记一个节点需要重新渲染
+         */
+        markDirty(node: Renderable): void;
+        /**
+         * @private
+         */
+        private dirtyList;
+        /**
+         * @private
+         */
+        private dirtyRegion;
+        /**
+         * @private
+         * 更新节点属性并返回脏矩形列表。
+         */
+        updateDirtyRegions(): Region[];
+        /**
+         * @private
+         * 绘制根节点显示对象到目标画布，返回draw的次数。
+         */
+        drawToSurface(): number;
+        /**
+         * @private
+         * 绘制一个显示对象
+         */
+        private drawDisplayObject(displayObject, context, dirtyList, rootMatrix, displayList, clipRegion);
+        /**
+         * @private
+         */
+        private drawWithClip(displayObject, context, dirtyList, rootMatrix, clipRegion);
+        /**
+         * @private
+         */
+        private drawWithScrollRect(displayObject, context, dirtyList, rootMatrix, clipRegion);
+        /**
+         * @private
+         */
+        private createRenderContext(width, height);
+        /**
+         * @private
+         */
+        private sizeChanged;
+        /**
+         * @private
+         * 改变画布的尺寸，由于画布尺寸修改会清空原始画布。所以这里将原始画布绘制到一个新画布上，再与原始画布交换。
+         */
+        changeSurfaceSize(): void;
+        setDevicePixelRatio(ratio?: number): void;
+        setDirtyRegionPolicy(policy: string): void;
+    }
+}
 declare module egret {
     /**
      * @language en_US
@@ -10245,6 +9795,456 @@ interface PlayerOption {
      *
      */
     textureScaleFactor?: number;
+}
+declare module egret.sys {
+    /**
+     * @private
+     */
+    class Region {
+        /**
+         * @private
+         * 释放一个Region实例到对象池
+         */
+        static release(region: Region): void;
+        /**
+         * @private
+         * 从对象池中取出或创建一个新的Region对象。
+         * 建议对于一次性使用的对象，均使用此方法创建，而不是直接new一个。
+         * 使用完后调用对应的release()静态方法回收对象，能有效减少对象创建数量造成的性能开销。
+         */
+        static create(): Region;
+        /**
+         * @private
+         */
+        minX: number;
+        /**
+         * @private
+         */
+        minY: number;
+        /**
+         * @private
+         */
+        maxX: number;
+        /**
+         * @private
+         */
+        maxY: number;
+        /**
+         * @private
+         */
+        width: number;
+        /**
+         * @private
+         */
+        height: number;
+        /**
+         * @private
+         */
+        area: number;
+        /**
+         * @private
+         * 是否发生移动
+         */
+        moved: boolean;
+        /**
+         * @private
+         */
+        setTo(minX: number, minY: number, maxX: number, maxY: number): Region;
+        /**
+         * @private
+         */
+        updateArea(): void;
+        /**
+         * @private
+         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
+         */
+        union(target: Region): void;
+        /**
+         * @private
+         * 注意！由于性能优化，此方法不判断自身是否为空，必须在外部确认自身和目标区域都不为空再调用合并。否则结果始终从0，0点开始。
+         */
+        intersect(target: Region): void;
+        /**
+         * @private
+         */
+        private setEmpty();
+        /**
+         * @private
+         * 确定此 Region 对象是否为空。
+         */
+        isEmpty(): boolean;
+        /**
+         * @private
+         */
+        intersects(target: Region): boolean;
+        /**
+         * @private
+         */
+        updateRegion(bounds: Rectangle, matrix: Matrix): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 绘图上下文
+     */
+    interface RenderContext {
+        /**
+         * @private
+         * 与绘图上线文关联的画布实例
+         */
+        surface: Surface;
+        /**
+         * @private
+         * 设置新图像如何绘制到已有的图像上的规制
+         */
+        globalCompositeOperation: string;
+        /**
+         * @private
+         * 设置接下来绘图填充的整体透明度
+         */
+        globalAlpha: number;
+        /**
+         * @private
+         * 用于表示剪切斜接的极限值的数字。
+         * @default 10
+         */
+        miterLimit: number;
+        /**
+         * @private
+         * 指定如何绘制每一条线段末端的属性。有3个可能的值，分别是：<br/>
+         * <ul>
+         * <li>"butt": 线段末端以方形结束。</li>
+         * <li>"round": 线段末端以圆形结束。</li>
+         * <li>"square": 线段末端以方形结束，但是增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域。</li>
+         * </ul>
+         * @default "butt"
+         */
+        lineCap: string;
+        /**
+         * @private
+         * 指定用于拐角的连接外观的类型,有3个可能的值，分别是：<br/>
+         * <ul>
+         * <li>"round": 圆角连接</li>
+         * <li>"bevel": 斜角连接。</li>
+         * <li>"miter": 尖角连接。当使用尖角模式时，还可以同时使用 miterLimit 参数限制尖角的长度。</li>
+         * </ul>
+         * @default "miter"
+         */
+        lineJoin: string;
+        /**
+         * @private
+         * 设置线条粗细，以像素为单位。设置为0，负数，Infinity 或 NaN 将会被忽略。
+         * @default 1
+         */
+        lineWidth: number;
+        /**
+         * @private
+         * 设置要在图形边线填充的颜色或样式
+         * @default "#000000"
+         */
+        strokeStyle: any;
+        /**
+         * @private
+         * 设置要在图形内部填充的颜色或样式
+         * @default "#000000"
+         */
+        fillStyle: any;
+        /**
+         * @private
+         * 控制在缩放时是否对位图进行平滑处理。
+         * @default true
+         */
+        imageSmoothingEnabled: boolean;
+        /**
+         * @private
+         * 文本的对齐方式的属性,有5个可能的值，分别是：<br/>
+         * <ul>
+         * <li>"left" 文本左对齐。</li>
+         * <li>"right" 文本右对齐。</li>
+         * <li>"center" 文本居中对齐。</li>
+         * <li>"start" 文本对齐界线开始的地方 （对于从左向右阅读的语言使用左对齐，对从右向左的阅读的语言使用右对齐）。</li>
+         * <li>"end" 文本对齐界线结束的地方 （对于从左向右阅读的语言使用右对齐，对从右向左的阅读的语言使用左对齐）。</li>
+         * </ul>
+         * @default "start"
+         */
+        textAlign: string;
+        /**
+         * @private
+         * 决定文字垂直方向的对齐方式。有6个可能的值，分别是：<br/>
+         * <ul>
+         * <li>"top" 文本基线在文本块的顶部。</li>
+         * <li>"hanging" 文本基线是悬挂基线。</li>
+         * <li>"middle" 文本基线在文本块的中间。</li>
+         * <li>"alphabetic" 文本基线是标准的字母基线。</li>
+         * <li>"ideographic" 文字基线是表意字基线；如果字符本身超出了alphabetic 基线，那么ideograhpic基线位置在字符本身的底部。</li>
+         * <li>"bottom" 文本基线在文本块的底部。 与 ideographic 基线的区别在于 ideographic 基线不需要考虑下行字母。</li>
+         * </ul>
+         * @default "alphabetic"
+         */
+        textBaseline: string;
+        /**
+         * @private
+         * 当前的字体样式
+         */
+        font: string;
+        /**
+         * @private
+         *
+         * @param text
+         * @param x
+         * @param y
+         * @param maxWidth
+         */
+        strokeText(text: any, x: any, y: any, maxWidth: any): any;
+        /**
+         * @private
+         * 绘制一段圆弧路径。圆弧路径的圆心在 (x, y) 位置，半径为 r ，根据anticlockwise （默认为顺时针）指定的方向从 startAngle 开始绘制，到 endAngle 结束。
+         * @param x 圆弧中心（圆心）的 x 轴坐标。
+         * @param y 圆弧中心（圆心）的 y 轴坐标。
+         * @param radius 圆弧的半径。
+         * @param startAngle 圆弧的起始点， x轴方向开始计算，单位以弧度表示。
+         * @param endAngle 圆弧的重点， 单位以弧度表示。
+         * @param anticlockwise 如果为 true，逆时针绘制圆弧，反之，顺时针绘制。
+         */
+        arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
+        /**
+         * @private
+         * 绘制一段二次贝塞尔曲线路径。它需要2个点。 第一个点是控制点，第二个点是终点。 起始点是当前路径最新的点，当创建二次贝赛尔曲线之前，可以使用 moveTo() 方法进行改变。
+         * @param cpx 控制点的 x 轴坐标。
+         * @param cpy 控制点的 y 轴坐标。
+         * @param x 终点的 x 轴坐标。
+         * @param y 终点的 y 轴坐标。
+         */
+        quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
+        /**
+         * @private
+         * 使用直线连接子路径的终点到x，y坐标。
+         * @param x 直线终点的 x 轴坐标。
+         * @param y 直线终点的 y 轴坐标。
+         */
+        lineTo(x: number, y: number): void;
+        /**
+         * @private
+         * 根据当前的填充样式，填充当前或已存在的路径的方法。采取非零环绕或者奇偶环绕规则。
+         * @param fillRule 一种算法，决定点是在路径内还是在路径外。允许的值：
+         * "nonzero": 非零环绕规则， 默认的规则。
+         * "evenodd": 奇偶环绕规则。
+         */
+        fill(fillRule?: string): void;
+        /**
+         * @private
+         * 使笔点返回到当前子路径的起始点。它尝试从当前点到起始点绘制一条直线。如果图形已经是封闭的或者只有一个点，那么此方法不会做任何操作。
+         */
+        closePath(): void;
+        /**
+         * @private
+         * 创建一段矩形路径，矩形的起点位置是 (x, y) ，尺寸为 width 和 height。矩形的4个点通过直线连接，子路径做为闭合的标记，所以你可以填充或者描边矩形。
+         * @param x 矩形起点的 x 轴坐标。
+         * @param y 矩形起点的 y 轴坐标。
+         * @param width 矩形的宽度。
+         * @param height 矩形的高度。
+         */
+        rect(x: number, y: number, w: number, h: number): void;
+        /**
+         * @private
+         * 将一个新的子路径的起始点移动到(x，y)坐标
+         * @param x 点的 x 轴
+         * @param y 点的 y 轴
+         */
+        moveTo(x: number, y: number): void;
+        /**
+         * @private
+         * 绘制一个填充矩形。矩形的起点在 (x, y) 位置，矩形的尺寸是 width 和 height ，fillStyle 属性决定矩形的样式。
+         * @param x 矩形起始点的 x 轴坐标。
+         * @param y 矩形起始点的 y 轴坐标。
+         * @param width 矩形的宽度。
+         * @param height 矩形的高度。
+         */
+        fillRect(x: number, y: number, w: number, h: number): void;
+        /**
+         * @private
+         * 绘制一段三次贝赛尔曲线路径。该方法需要三个点。 第一、第二个点是控制点，第三个点是结束点。起始点是当前路径的最后一个点，
+         * 绘制贝赛尔曲线前，可以通过调用 moveTo() 进行修改。
+         * @param cp1x 第一个控制点的 x 轴坐标。
+         * @param cp1y 第一个控制点的 y 轴坐标。
+         * @param cp2x 第二个控制点的 x 轴坐标。
+         * @param cp2y 第二个控制点的 y 轴坐标。
+         * @param x 结束点的 x 轴坐标。
+         * @param y 结束点的 y 轴坐标。
+         */
+        bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
+        /**
+         * @private
+         * 根据当前的画线样式，绘制当前或已经存在的路径的方法。
+         */
+        stroke(): void;
+        /**
+         * @private
+         * 使用当前的绘画样式，描绘一个起点在 (x, y) 、宽度为 w 、高度为 h 的矩形的方法。
+         * @param x 矩形起点的 x 轴坐标。
+         * @param y 矩形起点的 y 轴坐标。
+         * @param width 矩形的宽度。
+         * @param height 矩形的高度。
+         */
+        strokeRect(x: number, y: number, w: number, h: number): void;
+        /**
+         * @private
+         * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
+         */
+        beginPath(): void;
+        /**
+         * @private
+         * 根据控制点和半径绘制一段圆弧路径，使用直线连接前一个点。
+         * @param x1 第一个控制点的 x 轴坐标。
+         * @param y1 第一个控制点的 y 轴坐标。
+         * @param x2 第二个控制点的 x 轴坐标。
+         * @param y2 第二个控制点的 y 轴坐标。
+         * @param radius 圆弧的半径。
+         */
+        arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void;
+        /**
+         * @private
+         * 使用方法参数描述的矩阵多次叠加当前的变换矩阵。
+         * @param a 水平缩放。
+         * @param b 水平倾斜。
+         * @param c 垂直倾斜。
+         * @param d 垂直缩放。
+         * @param tx 水平移动。
+         * @param ty 垂直移动。
+         */
+        transform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
+        /**
+         * @private
+         * 通过在网格中移动 surface 和 surface 原点 x 水平方向、原点 y 垂直方向，添加平移变换
+         * @param x 水平移动。
+         * @param y 垂直移动。
+         */
+        translate(x: number, y: number): void;
+        /**
+         * @private
+         * 根据 x 水平方向和 y 垂直方向，为 surface 单位添加缩放变换。
+         * @param x 水平方向的缩放因子。
+         * @param y 垂直方向的缩放因子。
+         */
+        scale(x: number, y: number): void;
+        /**
+         * @private
+         * 在变换矩阵中增加旋转，角度变量表示一个顺时针旋转角度并且用弧度表示。
+         * @param angle 顺时针旋转的弧度。
+         */
+        rotate(angle: number): void;
+        /**
+         * @private
+         * 恢复到最近的绘制样式状态，此状态是通过 save() 保存到”状态栈“中最新的元素。
+         */
+        restore(): void;
+        /**
+         * @private
+         * 使用栈保存当前的绘画样式状态，你可以使用 restore() 恢复任何改变。
+         */
+        save(): void;
+        /**
+         * @private
+         * 从当前路径创建一个剪切路径。在  clip() 调用之后，绘制的所有信息只会出现在剪切路径内部。
+         */
+        clip(fillRule?: string): void;
+        /**
+         * @private
+         * 设置指定矩形区域内（以 点 (x, y) 为起点，范围是(width, height) ）所有像素变成透明，并擦除之前绘制的所有内容。
+         * @param x 矩形起点的 x 轴坐标。
+         * @param y 矩形起点的 y 轴坐标。
+         * @param width 矩形的宽度。
+         * @param height 矩形的高度。
+         */
+        clearRect(x: number, y: number, width: number, height: number): void;
+        /**
+         * @private
+         * 重新设置当前的变换为单位矩阵，并使用同样的变量调用 transform() 方法。
+         * @param a 水平缩放。
+         * @param b 水平倾斜。
+         * @param c 垂直倾斜。
+         * @param d 垂直缩放。
+         * @param tx 水平移动。
+         * @param ty 垂直移动。
+         */
+        setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
+        /**
+         * @private
+         * 创建一个沿参数坐标指定的直线的渐变。该方法返回一个线性的 GraphicsGradient 对象。
+         * @param x0 起点的 x 轴坐标。
+         * @param y0 起点的 y 轴坐标。
+         * @param x1 终点的 x 轴坐标。
+         * @param y1 终点的 y 轴坐标。
+         */
+        createLinearGradient(x0: number, y0: number, x1: number, y1: number): GraphicsGradient;
+        /**
+         * @private
+         * 根据参数确定的两个圆的坐标，创建一个放射性渐变。该方法返回一个放射性的 GraphicsGradient。
+         * @param x0 开始圆形的 x 轴坐标。
+         * @param y0 开始圆形的 y 轴坐标。
+         * @param r0 开始圆形的半径。
+         * @param x1 结束圆形的 x 轴坐标。
+         * @param y1 结束圆形的 y 轴坐标。
+         * @param r1 结束圆形的半径。
+         */
+        createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): GraphicsGradient;
+        /**
+         * @private
+         * 在(x,y)位置绘制（填充）文本。
+         */
+        fillText(text: string, x: number, y: number, maxWidth?: number): void;
+        /**
+         * @private
+         * 测量指定文本宽度，返回 TextMetrics 对象。
+         */
+        measureText(text: string): TextMetrics;
+        /**
+         * @private
+         * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
+         * 确保 imageSmoothingEnabled 已被重置为正常的值，否则有可能沿用上个显示对象绘制过程留下的值。
+         */
+        drawImage(image: BitmapData, offsetX: number, offsetY: number, width?: number, height?: number, surfaceOffsetX?: number, surfaceOffsetY?: number, surfaceImageWidth?: number, surfaceImageHeight?: number): void;
+        /**
+         * @private
+         * 基于指定的源图象(BitmapData)创建一个模板，通过repetition参数指定源图像在什么方向上进行重复，返回一个GraphicsPattern对象。
+         * @param bitmapData 做为重复图像源的 BitmapData 对象。
+         * @param repetition 指定如何重复图像。
+         * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
+         */
+        createPattern(image: BitmapData, repetition: string): GraphicsPattern;
+        /**
+         * @private
+         * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。
+         */
+        getImageData(sx: number, sy: number, sw: number, sh: number): ImageData;
+    }
+    /**
+     * @private
+     */
+    interface TextMetrics {
+        /**
+         * @private
+         */
+        width: number;
+    }
+    /**
+     * @private
+     */
+    interface ImageData {
+        /**
+         * @private
+         */
+        width: number;
+        /**
+         * @private
+         */
+        data: Uint8Array;
+        /**
+         * @private
+         */
+        height: number;
+    }
 }
 declare module egret.sys {
     /**

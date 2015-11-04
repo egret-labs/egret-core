@@ -768,6 +768,7 @@ var egret;
                     this._updateTargetProps(null, 1);
                 }
                 else if (this._steps.length > 0) {
+                    // 找到新的tween
                     for (var i = 0, l = this._steps.length; i < l; i++) {
                         if (this._steps[i].t > t) {
                             break;
