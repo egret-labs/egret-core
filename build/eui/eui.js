@@ -12407,7 +12407,12 @@ var eui;
         p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
             var g = this.graphics;
             g.clear();
-            g.beginFill(this.fillColor, this.fillAlpha);
+            if (this.strokeWeight > 0) {
+                g.beginFill(this.strokeColor, this.strokeAlpha);
+            }
+            else {
+                g.beginFill(this.fillColor, this.fillAlpha);
+            }
             if (this.ellipseWidth == 0) {
                 g.drawRect(0, 0, unscaledWidth, unscaledHeight);
             }
@@ -12416,7 +12421,7 @@ var eui;
             }
             g.endFill();
             if (this.strokeWeight > 0) {
-                g.beginFill(this.strokeColor, this.strokeAlpha);
+                g.beginFill(this.fillColor, this.fillAlpha);
                 if (this.ellipseWidth == 0) {
                     g.drawRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight);
                 }
