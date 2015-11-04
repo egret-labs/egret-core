@@ -3781,7 +3781,23 @@ var egret;
          * @platform Web,Native
          */
         p.hitTestPoint = function (x, y, shapeFlag) {
-            return !!this.$hitTest(x, y);
+            if (!shapeFlag) {
+                return !!DisplayObject.prototype.$hitTest.call(this, x, y);
+            }
+            else {
+                var m = this.$getInvertedConcatenatedMatrix();
+                var localX = m.a * x + m.c * y + m.tx;
+                var localY = m.b * x + m.d * y + m.ty;
+                var context = egret.sys.sharedRenderContext;
+                context.surface.width = context.surface.height = 3;
+                context.translate(1 - localX, 1 - localY);
+                this.$render(context);
+                var data = context.getImageData(1, 1, 1, 1).data;
+                if (data[3] === 0) {
+                    return false;
+                }
+                return true;
+            }
         };
         /**
          * @private
