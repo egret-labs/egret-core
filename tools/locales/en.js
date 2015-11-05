@@ -35,7 +35,7 @@ locale_strings[10003] = "TSC is trying to exit, exit code is: {0}";
 locale_strings[10004] = "No output file name when minify flag is true";
 locale_strings[10006] = "manifest.json has been generated";
 locale_strings[10008] = "Duplicate interface or class name：‘{0}’ is defined both in these files ：\n{1}\n{2}";
-locale_strings[10009] = "manifest.json is not in the right format, you may need to reinstall Egret.";
+locale_strings[10009] = "{0} is not in the right format, you may need to reinstall Egret.";
 locale_strings[10010] = "Auto compile service is running...";
 locale_strings[10011] = "Auto compile is done.";
 locale_strings[10012] = 'If you are not using auto compile on file save, you can enable auto compile by adding "-a" after the "run" command';
@@ -60,5 +60,4 @@ locale_strings[1705] = "upgrade files damaged,please check engine files and reru
 locale_strings[1706] = "total {0} API conflicts,please edit your project then rerun command command";
 //info
 locale_strings[1] = "Error when compile project";
-
-//# sourceMappingURL=../locales/en.js.map
+//# sourceMappingURL=en.js.map

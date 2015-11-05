@@ -37,7 +37,7 @@ var egret;
     locale_strings[10004] = "没有指定输出文件的文件名";
     locale_strings[10006] = "manifest.json 生成成功";
     locale_strings[10008] = "类或接口名冲突：‘{0}’同时存在于以下两个文件内：\n{1}\n{2}";
-    locale_strings[10009] = "Egret manifest.json 文件不是标准的json文件请尝试重新安装Egret";
+    locale_strings[10009] = "{0} 不是标准的json文件请尝试重新安装Egret";
     locale_strings[10010] = "自动编译正在监视项目文件...";
     locale_strings[10011] = "自动编译完成.";
     locale_strings[10012] = "如果您没有设置 IDE 保存自动编译，可以添加参数 -a 来启动自动编译";
@@ -268,5 +268,4 @@ var helpModule;
     };
     global["helpModule"] = global["helpModule"] || helpModule;
 })(helpModule || (helpModule = {}));
-
-//# sourceMappingURL=../locales/zh_CN.js.map
+//# sourceMappingURL=zh_CN.js.map

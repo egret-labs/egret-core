@@ -196,7 +196,13 @@ function getEngineVersion(root: string): EngineVersion {
         return null;
     }
     var packageText = file.read(packagePath);
-    var packageData = JSON.parse(packageText);
+    try {
+        var packageData = JSON.parse(packageText);
+    }
+    catch (e) {
+        console.log(packagePath, "is not a egret package file");
+        return null;
+    }
     var engineInfo = {
         version: <string>packageData['version'],
         root: <string>root

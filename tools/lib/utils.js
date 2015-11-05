@@ -129,29 +129,27 @@ function _getEnv() {
 function getEgretRoot() {
     var path = require("path");
     var obj = _getEnv();
-    var larkRoot = _getEnv().EGRET_PATH;
-    if (!larkRoot) {
-        var globalpath = module['paths'].concat();
-        var existsFlag = false;
-        for (var i = 0; i < globalpath.length; i++) {
-            var prefix = globalpath[i];
-            var url = file.joinPath(prefix, '../');
-            if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
-                existsFlag = true;
-                break;
-            }
-            url = prefix;
-            if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
-                existsFlag = true;
-                break;
-            }
+    var egretRoot;
+    var globalpath = module['paths'].concat();
+    var existsFlag = false;
+    for (var i = 0; i < globalpath.length; i++) {
+        var prefix = globalpath[i];
+        var url = file.joinPath(prefix, '../');
+        if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
+            existsFlag = true;
+            break;
         }
-        if (!existsFlag) {
-            throw new Error("can't find Egret");
+        url = prefix;
+        if (file.exists(file.joinPath(url, 'tools/bin/egret'))) {
+            existsFlag = true;
+            break;
         }
-        larkRoot = url;
     }
-    return file.escapePath(file.joinPath(larkRoot, '/'));
+    if (!existsFlag) {
+        throw new Error("can't find Egret");
+    }
+    egretRoot = url;
+    return file.escapePath(file.joinPath(egretRoot, '/'));
 }
 exports.getEgretRoot = getEgretRoot;
 function open(target, appName, callback, options) {
@@ -294,5 +292,4 @@ function addIndents(times, text) {
     return text.replace(new RegExp("\\n", "ig"), '\n' + added);
 }
 exports.addIndents = addIndents;
-
-//# sourceMappingURL=../lib/utils.js.map
+//# sourceMappingURL=utils.js.map
