@@ -10625,6 +10625,7 @@ declare module egret.gui {
          * @method egret.gui.CloseEvent.dispatchCloseEvent
          */
         static dispatchCloseEvent(target: IEventDispatcher, type: string, detail?: any): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -10686,6 +10687,7 @@ declare module egret.gui {
          * @method egret.gui.CollectionEvent.dispatchCollectionEvent
          */
         static dispatchCollectionEvent(target: IEventDispatcher, type: string, kind?: string, location?: number, oldLocation?: number, items?: Array<any>, oldItems?: Array<any>): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -10812,6 +10814,7 @@ declare module egret.gui {
          * @method egret.gui.ElementExistenceEvent.dispatchElementExistenceEvent
          */
         static dispatchElementExistenceEvent(target: IEventDispatcher, type: string, element?: IVisualElement, index?: number): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -10856,6 +10859,7 @@ declare module egret.gui {
          * @method egret.gui.IndexChangeEvent.dispatchIndexChangeEvent
          */
         static dispatchIndexChangeEvent(target: IEventDispatcher, type: string, oldIndex?: number, newIndex?: number, cancelable?: boolean): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -10918,6 +10922,7 @@ declare module egret.gui {
          * @method egret.gui.ListEvent.dispatchListEvent
          */
         static dispatchListEvent(target: IEventDispatcher, type: string, touchEvent?: TouchEvent, itemIndex?: number, item?: any, itemRenderer?: IItemRenderer): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -11006,6 +11011,7 @@ declare module egret.gui {
          * @method egret.gui.PopUpEvent.dispatchPopUpEvent
          */
         static dispatchPopUpEvent(target: IEventDispatcher, type: string, popUp?: IVisualElement, modal?: boolean): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -11064,6 +11070,7 @@ declare module egret.gui {
          * @method egret.gui.PropertyChangeEvent.dispatchPropertyChangeEvent
          */
         static dispatchPropertyChangeEvent(target: IEventDispatcher, kind?: string, property?: any, oldValue?: any, newValue?: any, source?: any): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -11133,6 +11140,7 @@ declare module egret.gui {
          * @method egret.gui.RendererExistenceEvent.dispatchRendererExistenceEvent
          */
         static dispatchRendererExistenceEvent(target: IEventDispatcher, type: string, renderer?: IItemRenderer, index?: number, data?: any): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -11215,6 +11223,7 @@ declare module egret.gui {
          * @method egret.gui.SkinPartEvent.dispatchSkinPartEvent
          */
         static dispatchSkinPartEvent(target: IEventDispatcher, type: string, partName?: string, instance?: any): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {
@@ -11361,6 +11370,7 @@ declare module egret.gui {
          * @method egret.gui.TreeEvent.dispatchTreeEvent
          */
         static dispatchTreeEvent(target: IEventDispatcher, type: string, itemIndex?: number, item?: any, itemRenderer?: ITreeItemRenderer, opening?: boolean, bubbles?: boolean, cancelable?: boolean): boolean;
+        clean(): void;
     }
 }
 declare module egret.gui {

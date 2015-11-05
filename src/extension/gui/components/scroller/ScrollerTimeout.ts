@@ -81,7 +81,7 @@ module egret.gui {
             if (data.delay <= 0) {
                 data.listener.apply(data.thisObject, data.params);
 
-                clearTimeout(key);
+                $clearTimer(key);
             }
         }
 

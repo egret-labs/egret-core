@@ -245,7 +245,7 @@ module egret {
                 5: 0,              //textWidth
                 6: 0,              //textHeight
                 7: 0,              //textDrawWidth
-                8: "sans-serif",   //fontFamily
+                8: TextField.default_fontFamily,   //fontFamily
                 9: "left",         //textAlign
                 10: "top",         //verticalAlign
                 11: "#ffffff",     //textColorString
@@ -1463,7 +1463,12 @@ module egret {
                 w += 2;
                 h += 2;
             }
-            bounds.setTo(0, 0, w, h);
+            var _strokeDouble = this.$TextField[sys.TextKeys.stroke] * 2;
+            if (_strokeDouble > 0) {
+                w += _strokeDouble * 2;
+                h += _strokeDouble * 2;
+            }
+            bounds.setTo(-_strokeDouble, -_strokeDouble, w, h);
         }
 
         /**
@@ -2009,7 +2014,7 @@ module egret {
         var italic:boolean = style.italic == null ? textField.$TextField[sys.TextKeys.italic] : style.italic;
         var bold:boolean = style.bold == null ? textField.$TextField[sys.TextKeys.bold] : style.bold;
         var size:number = style.size == null ? textField.$TextField[sys.TextKeys.fontSize] : style.size;
-        var fontFamily:string = style.fontFamily == null ? textField.$TextField[sys.TextKeys.fontFamily] : style.fontFamily;
+        var fontFamily:string = style.fontFamily || textField.$TextField[sys.TextKeys.fontFamily] || TextField.default_fontFamily;
         var font:string = italic ? "italic " : "normal ";
         font += bold ? "bold " : "normal ";
         font += size + "px " + fontFamily;

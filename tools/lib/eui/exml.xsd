@@ -929,6 +929,7 @@
     <xs:attribute name="minWidth" type="xs:decimal"/>
     <xs:attribute name="percentHeight" type="xs:decimal"/>
     <xs:attribute name="percentWidth" type="xs:decimal"/>
+    <xs:attribute name="prompt" type="xs:string"/>
     <xs:attribute name="right" type="xs:decimal"/>
     <xs:attribute name="top" type="xs:decimal"/>
     <xs:attribute name="verticalCenter" type="xs:decimal"/>
@@ -946,6 +947,7 @@
       <xs:element name="minWidth" type="number"/>
       <xs:element name="percentHeight" type="number"/>
       <xs:element name="percentWidth" type="number"/>
+      <xs:element name="prompt" type="string"/>
       <xs:element name="right" type="number"/>
       <xs:element name="top" type="number"/>
       <xs:element name="verticalCenter" type="number"/>
@@ -1008,6 +1010,7 @@
       <xs:element ref="ProgressBar"/>
       <xs:element ref="RadioButton"/>
       <xs:element ref="Range"/>
+      <xs:element ref="Rect"/>
       <xs:element ref="ScrollBarBase"/>
       <xs:element ref="Scroller"/>
       <xs:element ref="Shape"/>
@@ -1458,6 +1461,7 @@
       <xs:element ref="ProgressBar"/>
       <xs:element ref="RadioButton"/>
       <xs:element ref="Range"/>
+      <xs:element ref="Rect"/>
       <xs:element ref="ScrollBarBase"/>
       <xs:element ref="Scroller"/>
       <xs:element ref="SliderBase"/>
@@ -1574,6 +1578,37 @@
         <xs:group ref="Range_attributeElement"/>
       </xs:choice>
       <xs:attributeGroup ref="eui.Range"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="eui.Rect">
+    <xs:attributeGroup ref="eui.Component"/>
+    <xs:attribute name="ellipseHeight" type="xs:decimal"/>
+    <xs:attribute name="ellipseWidth" type="xs:decimal"/>
+    <xs:attribute name="fillAlpha" type="xs:decimal"/>
+    <xs:attribute name="fillColor" type="xs:string"/>
+    <xs:attribute name="strokeAlpha" type="xs:decimal"/>
+    <xs:attribute name="strokeColor" type="xs:string"/>
+    <xs:attribute name="strokeWeight" type="xs:decimal"/>
+  </xs:attributeGroup>
+  <xs:group name="Rect_attributeElement">
+    <xs:choice>
+      <xs:group ref="Component_attributeElement"/>
+      <xs:element name="ellipseHeight" type="number"/>
+      <xs:element name="ellipseWidth" type="number"/>
+      <xs:element name="fillAlpha" type="number"/>
+      <xs:element name="fillColor" type="number"/>
+      <xs:element name="strokeAlpha" type="number"/>
+      <xs:element name="strokeColor" type="number"/>
+      <xs:element name="strokeWeight" type="number"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="Rect">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="Rect_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="eui.Rect"/>
     </xs:complexType>
   </xs:element>
   <xs:attributeGroup name="eui.ScrollBarBase">
@@ -1711,6 +1746,7 @@
       <xs:element ref="ProgressBar"/>
       <xs:element ref="RadioButton"/>
       <xs:element ref="Range"/>
+      <xs:element ref="Rect"/>
       <xs:element ref="ScrollBarBase"/>
       <xs:element ref="Scroller"/>
       <xs:element ref="SliderBase"/>

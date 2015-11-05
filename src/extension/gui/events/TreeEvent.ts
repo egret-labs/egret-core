@@ -108,5 +108,11 @@ module egret.gui {
 			Event.release(event);
 			return result;
         }
+
+		public clean():void {
+			super.clean();
+			this.item = null;
+			this.itemRenderer = null;
+		}
 	}
 }

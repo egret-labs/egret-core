@@ -40,7 +40,8 @@ var UpgradeCommand = (function () {
             { "v": "2.5.0", "command": require("./upgrade/UpgradeCommand_2_4_3") },
             { "v": "2.5.1", "command": require("./upgrade/UpgradeCommand_2_5_1") },
             { "v": "2.5.2" },
-            { "v": "2.5.3" }
+            { "v": "2.5.3" },
+            { "v": "2.5.4" }
         ];
         //升级命令是一个异步命令 内含异步控制流程
         this.isAsync = true;
@@ -61,14 +62,7 @@ var UpgradeCommand = (function () {
         async.eachSeries(this.upgradeConfigArr, function (info, callback) {
             function handleCallBack(err) {
                 if (!err) {
-                    //if (globals.compressVersion("2.5.0", v) > 0) {
-                    //    //2.5.0及以上 拷贝升级 不存储版本号
-                    //    modify.save(v);
-                    //}
-                    if("2.5.0" != v) {
-                        //2.5.0 拷贝升级 不存储版本号
-                        modify.save(v);
-                    }
+                    modify.save(v);
                     callback();
                 }
                 else {

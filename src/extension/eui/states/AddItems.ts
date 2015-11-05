@@ -186,8 +186,12 @@ module eui {
                     index = container.getChildIndex(relative) + 1;
                     break;
             }
-            if (index == -1)
+            if (index == -1){
                 index = container.numChildren;
+            }
+            if (egret.is(container, "eui.Component")) {
+                (<Skin>(<Component>container).$Component[sys.ComponentKeys.skin]).$elementsContent.push(target);
+            }
             container.addChildAt(target, index);
         }
 
@@ -205,6 +209,13 @@ module eui {
                 return;
             if (target.$parent === container) {
                 container.removeChild(target);
+            }
+            if (egret.is(container, "eui.Component")) {
+                var arr = (<Skin>(<Component>container).$Component[sys.ComponentKeys.skin]).$elementsContent;
+                var idx = arr.indexOf(target);
+                if (idx > -1) {
+                    arr.splice(idx, 1);
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-class Main extends egret.Sprite {
+class Main extends egret.DisplayObjectContainer {
 
     public constructor() {
         super();

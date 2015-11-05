@@ -5,5 +5,5 @@
              source.down="button_down_png"/>
     <e:Label id="labelDisplay" top="8" bottom="8" left="8" right="8"
              size="20" fontFamily="Tahoma 'Microsoft Yahei'"
-             textColor="0xFFFFFF" text="{data.label}" verticalAlign="middle" textAlign="center"/>
+             textColor="0xFFFFFF" text="{data}" verticalAlign="middle" textAlign="center"/>
 </e:Skin>

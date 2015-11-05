@@ -3,6 +3,7 @@ var utils = require('../lib/utils');
 var createAction = require('../actions/Create');
 var server = require('../server/server');
 var FileUtil = require('../lib/FileUtil');
+console.log(utils.tr(1003, 0));
 var Create = (function () {
     function Create() {
     }
@@ -16,6 +17,7 @@ var Create = (function () {
             FileUtil.createDirectory(option.projectDir);
         }
         var project = option.getProject(true);
+        console.log(utils.tr(1004, 0));
         //默认使用命令行创建
         project.type = project.type || "game";
         var template = egret.manifest.templates.filter(function (t) { return t.name == project.type; });

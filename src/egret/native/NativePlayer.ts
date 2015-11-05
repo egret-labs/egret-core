@@ -59,8 +59,7 @@ module egret.native {
             stage.$maxTouches = option.maxTouches;
             stage.textureScaleFactor = option.textureScaleFactor;
             //设置帧频到native
-            stage.frameRate = 60;
-            egret_native.setFrameRate(option.frameRate > 60 ? 60 : option.frameRate);
+            stage.frameRate = option.frameRate;
 
             if(!egret_native.Canvas) {
                 stage.addEventListener(egret.Event.ENTER_FRAME, function (){
@@ -125,6 +124,13 @@ module egret.native {
             //    scaley = displayHeight / stageHeight;
             //this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             //this.webInput.$updateSize();
+        }
+
+        public setContentSize(width:number, height:number):void {
+            var option = this.playerOption;
+            option.contentWidth = width;
+            option.contentHeight = height;
+            this.updateScreenSize();
         }
 
         /**

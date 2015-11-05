@@ -13,18 +13,19 @@ import CHILD_EXEC = require('child_process');
 import APITestCommand = require('./apitest');
 
 import Compiler = require('../actions/Compiler');
-
+console.log(utils.tr(1004, 0));
+var timeBuildStart: number = (new Date()).getTime();
 class Build implements egret.Command {
-    execute(callback?:(exitCode:number) => void):number {
+    execute(callback?: (exitCode: number) => void): number {
         callback = callback || defaultBuildCallback;
         //如果APITest未通过继续执行APITest
         if (!APITestTool.isTestPass(egret.args.projectDir)) {
             var apitest_command = new APITestCommand();
-            apitest_command.execute(()=> {
+            apitest_command.execute(() => {
                 globals.log2(1715);//项目检测成功
                 //成功以后再次执行build
                 var build = CHILD_EXEC.exec(
-                    globals.addQuotes(process.execPath)+" \""+
+                    globals.addQuotes(process.execPath) + " \"" +
                     FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"",
                     {
                         encoding: 'utf8',
@@ -37,10 +38,10 @@ class Build implements egret.Command {
                 build.stderr.on("data", (data) => {
                     console.log(data);
                 });
-                build.stdout.on("data", (data)=> {
+                build.stdout.on("data", (data) => {
                     console.log(data);
                 });
-                build.on("exit", (result)=> {
+                build.on("exit", (result) => {
                     process.exit(result);
                 });
                 //返回true截断默认的exit操作
@@ -72,7 +73,7 @@ class Build implements egret.Command {
         var packageJson;
         if (packageJson = FileUtil.read(FileUtil.joinPath(options.projectDir, "package.json"))) {
             packageJson = JSON.parse(packageJson);
-            if(packageJson.modules) {//通过有modules来识别是egret库项目
+            if (packageJson.modules) {//通过有modules来识别是egret库项目
                 this.buildLib(packageJson);
                 return 0;
             }
@@ -93,15 +94,15 @@ class Build implements egret.Command {
         return DontExitCode;
     }
 
-    private buildLib(packageJson):void {
+    private buildLib(packageJson): void {
         var options = egret.args;
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";
         var compiler = new Compiler;
-        for (var i:number = 0; i < packageJson.modules.length; i++) {
+        for (var i: number = 0; i < packageJson.modules.length; i++) {
             var module = packageJson.modules[i];
             var files = [];
-            for (var j:number = 0; j < module.files.length; j++) {
+            for (var j: number = 0; j < module.files.length; j++) {
                 var file = module.files[j];
                 if (file.indexOf(".ts") != -1) {
                     files.push(FileUtil.joinPath(options.projectDir, module.root, file));
@@ -124,7 +125,7 @@ class Build implements egret.Command {
 
             var str = "";
             var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"));
-            for (var j:number = 0; j < module.files.length; j++) {
+            for (var j: number = 0; j < module.files.length; j++) {
                 var file = module.files[j];
                 if (file.indexOf(".d.ts") != -1) {
                     //FileUtil.copy(FileUtil.joinPath(options.projectDir, module.root, file), FileUtil.joinPath(options.projectDir, outDir, module.name, file));
@@ -151,11 +152,10 @@ class Build implements egret.Command {
     }
 }
 
-function onGotBuildCommandResult(cmd:egret.ServiceCommandResult, callback:(exitCode:number) => void) {
+function onGotBuildCommandResult(cmd: egret.ServiceCommandResult, callback: (exitCode: number) => void) {
     if (cmd.messages) {
         cmd.messages.forEach(m=> console.log(m));
     }
-
 
     if (!cmd.exitCode && egret.args.platform) {
         setTimeout(() => callback(0), 500);
@@ -165,7 +165,9 @@ function onGotBuildCommandResult(cmd:egret.ServiceCommandResult, callback:(exitC
 }
 
 function defaultBuildCallback(code) {
+    var timeBuildEnd: number = (new Date()).getTime();
+    var timeBuildUsed:number = (timeBuildEnd - timeBuildStart)/1000;
+    console.log(utils.tr(1108, timeBuildUsed));
     utils.exit(code);
 }
-
 export = Build;

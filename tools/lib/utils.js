@@ -270,5 +270,29 @@ function checkEgret() {
     }
 }
 exports.checkEgret = checkEgret;
+function isFormatString(text) {
+    if (text) {
+        if (text.indexOf("\n") != -1) {
+            return true;
+        }
+    }
+    return false;
+}
+exports.isFormatString = isFormatString;
+function addIndents(times, text) {
+    if (times == 0)
+        return text;
+    var added = '\t';
+    for (var i = 0; i < times - 1; i++) {
+        added += added;
+    }
+    //开头
+    if (text != null) {
+        text = added + text;
+    }
+    //替换\n
+    return text.replace(new RegExp("\\n", "ig"), '\n' + added);
+}
+exports.addIndents = addIndents;
 
 //# sourceMappingURL=../lib/utils.js.map

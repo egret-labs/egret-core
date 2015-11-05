@@ -116,7 +116,7 @@ module egret.web {
 
             this._startTime = Date.now();
             this.gain.gain.value = this._volume;
-            bufferSource.start(0, this._currentTime);
+            bufferSource.start(0, this.$startTime);
             this._currentTime = 0;
         }
 

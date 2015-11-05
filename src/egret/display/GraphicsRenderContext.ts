@@ -311,10 +311,11 @@ module egret {
         }
 
         public set strokeStyle(value:any) {
-            if (typeof value == "number") {
-                value = toColorString(value);
+            var tmpValue = value;
+            if (typeof tmpValue == "number") {
+                tmpValue = toColorString(tmpValue);
             }
-            this._strokeStyle = value;
+            this._strokeStyle = tmpValue;
             this.pushCommand(sys.GraphicsCommandType.strokeStyle, arguments);
         }
 
@@ -430,11 +431,11 @@ module egret {
                 return;
             }
             if (anticlockwise) {
-                var temp = endAngle;
-                endAngle = startAngle;
-                startAngle = temp;
+                this.arcBounds(x, y, radius, endAngle, startAngle);
             }
-            this.arcBounds(x, y, radius, startAngle, endAngle);
+            else {
+                this.arcBounds(x, y, radius, startAngle, endAngle);
+            }
         }
 
         /**
@@ -449,29 +450,29 @@ module egret {
                 this.extendByPoint(x + radius, y + radius);
                 return;
             }
-            var offset = 0;
             if (startAngle > endAngle) {
-                offset = TwoPI;
-                endAngle += offset;
+                endAngle += TwoPI;
             }
             var startX = Math.cos(startAngle) * radius;
             var endX = Math.cos(endAngle) * radius;
             var xMin = Math.min(startX, endX);
             var xMax = Math.max(startX, endX);
-            if (startAngle <= (PI + offset) && endAngle >= (PI + offset)) {
-                xMin = -radius;
-            }
-            if (startAngle <= offset && endAngle >= offset) {
-                xMax = radius;
-            }
+
             var startY = Math.sin(startAngle) * radius;
             var endY = Math.sin(endAngle) * radius;
             var yMin = Math.min(startY, endY);
             var yMax = Math.max(startY, endY);
-            if (startAngle <= (PacPI + offset) && endAngle >= (PacPI + offset)) {
+
+            if (startAngle <= PI && endAngle >= PI) {
+                xMin = -radius;
+            }
+            if (startAngle <= TwoPI && endAngle >= TwoPI) {
+                xMax = radius;
+            }
+            if (startAngle <=PacPI && endAngle >= PacPI) {
                 yMin = -radius;
             }
-            if (startAngle <= (HalfPI + offset) && endAngle >= (HalfPI + offset)) {
+            if (startAngle <= HalfPI && endAngle >= HalfPI) {
                 yMax = radius;
             }
             this.extendByPoint(xMin + x, yMin + y);

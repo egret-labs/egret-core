@@ -26,84 +26,49 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-module egret.localStorage.native {
-    var filePath:string = "LocalStorage.local";
 
-    var localStorageData = {};
+module egret.sys {
 
     /**
-     * @private
-     *
-     * @param key
-     * @returns
+     * @language en_US
+     * Values for the dirty region policy
+     * @version Egret 2.5
+     * @platform Web,Native
      */
-    function getItem(key:string):string {
-        return localStorageData[key];
-    }
-
     /**
-     * @private
-     *
-     * @param key
-     * @param value
-     * @returns
+     * @language zh_CN
+     * 脏矩形策略常量。
+     * @version Egret 2.5
+     * @platform Web,Native
      */
-    function setItem(key:string, value:string):boolean {
-        localStorageData[key] = value;
-        try {
-            save();
-            return true;
-        }
-        catch (e) {
-            egret.$warn(1018, key, value);
-            return false;
-        }
-    }
+    export class DirtyRegionPolicy {
 
-    /**
-     * @private
-     *
-     * @param key
-     */
-    function removeItem(key:string):void {
-        delete localStorageData[key];
-        save();
-    }
+        /**
+         * @language en_US
+         * Close automatic detection of dirty region
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 关闭自动脏矩形检测
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        public static OFF:string = "off";
 
-    /**
-     * @private
-     *
-     */
-    function clear():void {
-        for (var key in localStorageData) {
-            delete localStorageData[key];
-        }
-        save();
+        /**
+         * @language en_US
+         * Open automatic detection of dirty region
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 开启自动脏矩形检测
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        public static ON:string = "on";
     }
-
-    /**
-     * @private
-     *
-     */
-    function save() {
-        egret_native.saveRecord(filePath, JSON.stringify(localStorageData));
-    }
-
-    if (egret_native.isRecordExists(filePath)) {
-        var str:string = egret_native.loadRecord(filePath);
-
-        try {
-            localStorageData = JSON.parse(str);
-        } catch (e) {
-            localStorageData = {};
-        }
-    }
-    else {
-        localStorageData = {};
-    }
-
-    localStorage.getItem = getItem;
-    localStorage.setItem = setItem;
-    localStorage.removeItem = removeItem;
-    localStorage.clear = clear;
 }

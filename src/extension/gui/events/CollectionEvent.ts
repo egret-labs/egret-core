@@ -113,5 +113,13 @@ module egret.gui {
             Event.release(event);
             return result;
         }
+
+        public clean():void {
+            super.clean();
+            this.kind = null;
+            this.items = null;
+            this.oldItems = null;
+            this.oldLocation = null;
+        }
     }
 }

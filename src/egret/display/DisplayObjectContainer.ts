@@ -42,7 +42,7 @@ module egret {
      * @platform Web,Native
      * @includeExample egret/display/DisplayObjectContainer.ts
      */
-    export class DisplayObjectContainer extends DisplayObject implements IDisplayObjectContainer {
+    export class DisplayObjectContainer extends DisplayObject {
 
         /**
          * @private

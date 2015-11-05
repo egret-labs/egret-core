@@ -1033,7 +1033,7 @@ var egret;
                 bufferSource.onended = this.onPlayEnd;
                 this._startTime = Date.now();
                 this.gain.gain.value = this._volume;
-                bufferSource.start(0, this._currentTime);
+                bufferSource.start(0, this.$startTime);
                 this._currentTime = 0;
             };
             p.stop = function () {
@@ -1241,6 +1241,9 @@ var egret;
                 video.style.left = "0px";
                 video.height = this.heightSet;
                 video.width = this.widthSet;
+                setTimeout(function () {
+                    video.width = 0;
+                }, 1000);
                 this.checkFullScreen(this._fullscreen);
             };
             p.checkFullScreen = function (playFullScreen) {
@@ -1249,9 +1252,9 @@ var egret;
                     if (video.parentElement == null) {
                         video.removeAttribute("webkit-playsinline");
                         document.body.appendChild(video);
-                        this.goFullscreen();
-                        egret.stopTick(this.markDirty, this);
                     }
+                    egret.stopTick(this.markDirty, this);
+                    this.goFullscreen();
                 }
                 else {
                     if (video.parentElement != null) {
@@ -2789,14 +2792,17 @@ var egret;
                 var _this = this;
                 if (window.navigator.msPointerEnabled) {
                     this.canvas.addEventListener("MSPointerDown", function (event) {
+                        event.identifier = event.pointerId;
                         _this.onTouchBegin(event);
                         _this.prevent(event);
                     }, false);
                     this.canvas.addEventListener("MSPointerMove", function (event) {
+                        event.identifier = event.pointerId;
                         _this.onTouchMove(event);
                         _this.prevent(event);
                     }, false);
                     this.canvas.addEventListener("MSPointerUp", function (event) {
+                        event.identifier = event.pointerId;
                         _this.onTouchEnd(event);
                         _this.prevent(event);
                     }, false);
@@ -3801,6 +3807,12 @@ var egret;
                 var scalex = displayWidth / stageWidth, scaley = displayHeight / stageHeight;
                 this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
                 this.webInput.$updateSize();
+            };
+            p.setContentSize = function (width, height) {
+                var option = this.playerOption;
+                option.contentWidth = width;
+                option.contentHeight = height;
+                this.updateScreenSize();
             };
             /**
              * @private

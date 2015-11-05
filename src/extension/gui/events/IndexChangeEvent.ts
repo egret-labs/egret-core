@@ -92,5 +92,11 @@ module egret.gui {
 			Event.release(event);
 			return result;
         }
+
+		public clean():void {
+			super.clean();
+			this.oldIndex = NaN;
+			this.newIndex = NaN;
+		}
 	}
 }
