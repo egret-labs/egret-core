@@ -33,3 +33,5 @@ src/tsc_config_temp.txt
 tsconfig.json
 egret
 EgretEngine
+index.html
+src/tests

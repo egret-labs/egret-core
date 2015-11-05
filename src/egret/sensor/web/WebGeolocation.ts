@@ -67,7 +67,7 @@ module egret.web {
         /**
          * @private
          */
-        private onError = (error: { code: number; message: string; PERMISSION_DENIED:number } ) => {
+        private onError = (error: { code: number; message: string; PERMISSION_DENIED:number; POSITION_UNAVAILABLE:number } ) => {
 
             var errorType = GeolocationEvent.UNAVAILABLE;
             if (error.code == error.PERMISSION_DENIED)
