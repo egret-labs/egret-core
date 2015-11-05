@@ -25,6 +25,7 @@
   <component id="RadioButton" super="eui.ToggleButton" show="true" module="eui"/>
   <component id="RadioButtonGroup" super="egret.EventDispatcher" show="false" module="eui"/>
   <component id="Range" super="eui.Component" show="false" module="eui"/>
+  <component id="Rect" super="eui.Component" show="true" module="eui"/>
   <component id="Rectangle" super="egret.HashObject" show="false" module="egret"/>
   <component id="Scroller" super="eui.Component" default="viewport" show="true" module="eui"/>
   <component id="ScrollBarBase" super="eui.Component" show="false" module="eui"/>

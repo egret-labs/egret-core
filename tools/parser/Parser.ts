@@ -231,7 +231,7 @@ export function parseCommandLine(commandLine: string[]) {
         var content = file.read(packagePath);
         var manifest: any;
         try { manifest = JSON.parse(content) }
-        catch (e) { utils.exit(10009) }
+        catch (e) { utils.exit(10009, packagePath) }
         egret.manifest = manifest["egret"];
         egret.version = manifest["version"];
     }

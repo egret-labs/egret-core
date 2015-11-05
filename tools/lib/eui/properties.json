@@ -265,6 +265,7 @@
 		"minWidth":"number",
 		"percentHeight":"number",
 		"percentWidth":"number",
+		"prompt":"string",
 		"right":"number",
 		"super":"egret.TextField",
 		"top":"number",
@@ -423,6 +424,17 @@
 		"snapInterval":"number",
 		"super":"eui.Component",
 		"value":"number"
+	},
+	"eui.Rect":
+	{
+		"ellipseHeight":"number",
+		"ellipseWidth":"number",
+		"fillAlpha":"number",
+		"fillColor":"number",
+		"strokeAlpha":"number",
+		"strokeColor":"number",
+		"strokeWeight":"number",
+		"super":"eui.Component"
 	},
 	"eui.ScrollBarBase":
 	{

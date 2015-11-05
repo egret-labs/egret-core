@@ -159,7 +159,13 @@ function getEngineVersion(root) {
         return null;
     }
     var packageText = file.read(packagePath);
-    var packageData = JSON.parse(packageText);
+    try {
+        var packageData = JSON.parse(packageText);
+    }
+    catch (e) {
+        console.log(packagePath, "is not a egret package file");
+        return null;
+    }
     var engineInfo = {
         version: packageData['version'],
         root: root
@@ -463,5 +469,4 @@ function getLanguage() {
     }
 }
 entry();
-
 //# sourceMappingURL=selector.js.map
