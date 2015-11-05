@@ -105,6 +105,10 @@ export var optionDeclarations: egret.CommandLineOption[] = [
         name: 'egretVersion',
         type: 'string',
         shortName: "ev"
+    }, {
+        name: 'exmlGenJs',
+        type: 'boolean',
+        shortName: 'gjs'
     }
 ];
 

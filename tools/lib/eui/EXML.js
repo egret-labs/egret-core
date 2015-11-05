@@ -182,4 +182,5 @@ function getDtsInfoFromExml(exmlFile) {
     return { className: className, extendName: extendName };
 }
 exports.getDtsInfoFromExml = getDtsInfoFromExml;
-//# sourceMappingURL=EXML.js.map
+
+//# sourceMappingURL=../../lib/eui/EXML.js.map
