@@ -93,7 +93,7 @@ namespace ts {
         let category = DiagnosticCategory[diagnostic.category].toLowerCase();
         output += `${ category } TS${ diagnostic.code }: ${ flattenDiagnosticMessageText(diagnostic.messageText, sys.newLine) }${ sys.newLine }`;
 
-        sys.write(output);
+        formatedMessages.push(output);
     }
 
     function reportDiagnostics(diagnostics: Diagnostic[]) {

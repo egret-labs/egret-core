@@ -38019,7 +38019,7 @@ var ts;
         }
         var category = ts.DiagnosticCategory[diagnostic.category].toLowerCase();
         output += category + " TS" + diagnostic.code + ": " + ts.flattenDiagnosticMessageText(diagnostic.messageText, ts.sys.newLine) + ts.sys.newLine;
-        ts.sys.write(output);
+        formatedMessages.push(output);
     }
     function reportDiagnostics(diagnostics) {
         for (var i = 0; i < diagnostics.length; i++) {
