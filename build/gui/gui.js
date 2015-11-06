@@ -662,8 +662,7 @@ var egret;
                     try {
                         child[parentKey] = parent;
                     }
-                    catch (e) {
-                    }
+                    catch (e) { }
                     ObjectCollection.assignParent(child, childrenKey, parentKey);
                 }
             };
@@ -671,317 +670,6 @@ var egret;
         })(egret.EventDispatcher);
         gui.ObjectCollection = ObjectCollection;
         egret.registerClass(ObjectCollection,"egret.gui.ObjectCollection",["egret.gui.ICollection","egret.IEventDispatcher","egret.gui.ITreeCollection"]);
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.DepthQueue
-         * @classdesc
-         * 显示列表嵌套深度排序队列
-         */
-        var DepthQueue = (function () {
-            /**
-             * @method egret.gui.DepthQueue#constructor
-             */
-            function DepthQueue() {
-                /**
-                 * 深度队列
-                 */
-                this.depthBins = [];
-                /**
-                 * 最小深度
-                 */
-                this.minDepth = 0;
-                /**
-                 * 最大深度
-                 */
-                this.maxDepth = -1;
-            }
-            var d = __define,c=DepthQueue;p=c.prototype;
-            /**
-             * 插入一个元素
-             * @method egret.gui.DepthQueue#insert
-             * @param client {ILayoutManagerClient}
-             */
-            p.insert = function (client) {
-                var depth = client.nestLevel;
-                var hashCode = client.hashCode;
-                if (this.maxDepth < this.minDepth) {
-                    this.minDepth = this.maxDepth = depth;
-                }
-                else {
-                    if (depth < this.minDepth)
-                        this.minDepth = depth;
-                    if (depth > this.maxDepth)
-                        this.maxDepth = depth;
-                }
-                var bin = this.depthBins[depth];
-                if (!bin) {
-                    bin = new DepthBin();
-                    this.depthBins[depth] = bin;
-                    bin.items[hashCode] = client;
-                    bin.length++;
-                }
-                else {
-                    if (bin.items[hashCode] == null) {
-                        bin.items[hashCode] = client;
-                        bin.length++;
-                    }
-                }
-            };
-            /**
-             * 从队列尾弹出深度最大的一个对象
-             * @method egret.gui.DepthQueue#pop
-             * @returns {ILayoutManagerClient}
-             */
-            p.pop = function () {
-                var client = null;
-                if (this.minDepth <= this.maxDepth) {
-                    var bin = this.depthBins[this.maxDepth];
-                    while (!bin || bin.length == 0) {
-                        this.maxDepth--;
-                        if (this.maxDepth < this.minDepth)
-                            return null;
-                        bin = this.depthBins[this.maxDepth];
-                    }
-                    var items = bin.items;
-                    for (var key in items) {
-                        client = items[key];
-                        this.remove(client, this.maxDepth);
-                        break;
-                    }
-                    while (!bin || bin.length == 0) {
-                        this.maxDepth--;
-                        if (this.maxDepth < this.minDepth)
-                            break;
-                        bin = this.depthBins[this.maxDepth];
-                    }
-                }
-                return client;
-            };
-            /**
-             * 从队列首弹出深度最小的一个对象
-             * @method egret.gui.DepthQueue#shift
-             * @returns {ILayoutManagerClient}
-             */
-            p.shift = function () {
-                var client = null;
-                if (this.minDepth <= this.maxDepth) {
-                    var bin = this.depthBins[this.minDepth];
-                    while (!bin || bin.length == 0) {
-                        this.minDepth++;
-                        if (this.minDepth > this.maxDepth)
-                            return null;
-                        bin = this.depthBins[this.minDepth];
-                    }
-                    var items = bin.items;
-                    for (var key in items) {
-                        client = items[key];
-                        this.remove(client, this.minDepth);
-                        break;
-                    }
-                    while (!bin || bin.length == 0) {
-                        this.minDepth++;
-                        if (this.minDepth > this.maxDepth)
-                            break;
-                        bin = this.depthBins[this.minDepth];
-                    }
-                }
-                return client;
-            };
-            /**
-             * 移除大于等于指定组件层级的元素中最大的元素
-             * @method egret.gui.DepthQueue#removeLargestChild
-             * @param client {ILayoutManagerClient}
-             * @returns {any}
-             */
-            p.removeLargestChild = function (client) {
-                var max = this.maxDepth;
-                var min = client.nestLevel;
-                var hashCode = client.hashCode;
-                while (min <= max) {
-                    var bin = this.depthBins[max];
-                    if (bin && bin.length > 0) {
-                        if (max == client.nestLevel) {
-                            if (bin.items[hashCode]) {
-                                this.remove(client, max);
-                                return client;
-                            }
-                        }
-                        else {
-                            var items = bin.items;
-                            for (var key in items) {
-                                var value = items[key];
-                                if ((value instanceof egret.DisplayObject) && (client instanceof egret.DisplayObjectContainer) && client.contains(value)) {
-                                    this.remove(value, max);
-                                    return value;
-                                }
-                            }
-                        }
-                        max--;
-                    }
-                    else {
-                        if (max == this.maxDepth)
-                            this.maxDepth--;
-                        max--;
-                        if (max < min)
-                            break;
-                    }
-                }
-                return null;
-            };
-            /**
-             * 移除大于等于指定组件层级的元素中最小的元素
-             * @method egret.gui.DepthQueue#removeSmallestChild
-             * @param client {ILayoutManagerClient}
-             * @returns {any}
-             */
-            p.removeSmallestChild = function (client) {
-                var min = client.nestLevel;
-                var hashCode = client.hashCode;
-                while (min <= this.maxDepth) {
-                    var bin = this.depthBins[min];
-                    if (bin && bin.length > 0) {
-                        if (min == client.nestLevel) {
-                            if (bin.items[hashCode]) {
-                                this.remove(client, min);
-                                return client;
-                            }
-                        }
-                        else {
-                            var items = bin.items;
-                            for (var key in items) {
-                                var value = items[key];
-                                if ((value instanceof egret.DisplayObject) && (client instanceof egret.DisplayObjectContainer) && client.contains(value)) {
-                                    this.remove(value, min);
-                                    return value;
-                                }
-                            }
-                        }
-                        min++;
-                    }
-                    else {
-                        if (min == this.minDepth)
-                            this.minDepth++;
-                        min++;
-                        if (min > this.maxDepth)
-                            break;
-                    }
-                }
-                return null;
-            };
-            /**
-             * 移除一个元素
-             * @method egret.gui.DepthQueue#remove
-             * @param client {ILayoutManagerClient}
-             * @param level {number}
-             * @returns {ILayoutManagerClient}
-             */
-            p.remove = function (client, level) {
-                if (level === void 0) { level = -1; }
-                var depth = (level >= 0) ? level : client.nestLevel;
-                var hashCode = client.hashCode;
-                var bin = this.depthBins[depth];
-                if (bin && bin.items[hashCode] != null) {
-                    delete bin.items[hashCode];
-                    bin.length--;
-                    return client;
-                }
-                return null;
-            };
-            /**
-             * 清空队列
-             * @method egret.gui.DepthQueue#removeAll
-             */
-            p.removeAll = function () {
-                this.depthBins.length = 0;
-                this.minDepth = 0;
-                this.maxDepth = -1;
-            };
-            /**
-             * 队列是否为空
-             * @method egret.gui.DepthQueue#isEmpty
-             * @returns {boolean}
-             */
-            p.isEmpty = function () {
-                return this.minDepth > this.maxDepth;
-            };
-            return DepthQueue;
-        })();
-        gui.DepthQueue = DepthQueue;
-        egret.registerClass(DepthQueue,"egret.gui.DepthQueue");
-        /**
-         * 列表项
-         */
-        var DepthBin = (function () {
-            function DepthBin() {
-                this.length = 0;
-                this.items = [];
-            }
-            var d = __define,c=DepthBin;p=c.prototype;
-            return DepthBin;
-        })();
-        gui.DepthBin = DepthBin;
-        egret.registerClass(DepthBin,"egret.gui.DepthBin");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -2896,7 +2584,8 @@ var egret;
                  * @member egret.gui.SkinnableContainer#layout
                  */
                 ,function () {
-                    return this.contentGroup != null ? this.contentGroup.layout : this.contentGroupProperties.layout;
+                    return this.contentGroup != null ?
+                        this.contentGroup.layout : this.contentGroupProperties.layout;
                 }
                 ,function (value) {
                     if (this.contentGroup != null) {
@@ -3446,7 +3135,8 @@ var egret;
                     this._secondButtonLabel = value;
                     if (this.secondButton) {
                         if (value == null || value == "")
-                            this.secondButton.includeInLayout = this.secondButton.visible = (this._secondButtonLabel != "" && this._secondButtonLabel != null);
+                            this.secondButton.includeInLayout = this.secondButton.visible
+                                = (this._secondButtonLabel != "" && this._secondButtonLabel != null);
                     }
                 }
             );
@@ -3517,7 +3207,8 @@ var egret;
                 }
                 else if (instance == this.secondButton) {
                     this.secondButton.label = this._secondButtonLabel;
-                    this.secondButton.includeInLayout = this.secondButton.visible = (this._secondButtonLabel != "" && this._secondButtonLabel != null);
+                    this.secondButton.includeInLayout = this.secondButton.visible
+                        = (this._secondButtonLabel != "" && this._secondButtonLabel != null);
                     this.secondButton.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onClose, this);
                 }
             };
@@ -3889,7 +3580,9 @@ var egret;
              * 特殊情况，组件尺寸由父级决定，要等到父级UpdateDisplayList的阶段才能测量
              */
             p.isSpecialCase = function () {
-                return (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) && isNaN(this.$getExplicitWidth()) && isNaN(this.percentHeight);
+                return (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
+                    isNaN(this.$getExplicitWidth()) &&
+                    isNaN(this.percentHeight);
             };
             /**
              * 使用指定的宽度进行测量
@@ -3941,7 +3634,8 @@ var egret;
                 this._bitmapText.x = paddingL;
                 this._bitmapText.y = paddingT;
                 if (this.isSpecialCase()) {
-                    var firstTime = isNaN(this.lastUnscaledWidth) || this.lastUnscaledWidth != unscaledWidth;
+                    var firstTime = isNaN(this.lastUnscaledWidth) ||
+                        this.lastUnscaledWidth != unscaledWidth;
                     this.lastUnscaledWidth = unscaledWidth;
                     if (firstTime) {
                         this._UIC_Props_._oldPreferWidth = NaN;
@@ -4282,6 +3976,17 @@ var egret;
             p.mouseEventHandler = function (event) {
                 var touchEvent = event;
                 switch (event.type) {
+                    //case TouchEvent.TOUCH_ROLL_OVER:{
+                    //	if (touchEvent.touchDown && !this.mouseCaptured)
+                    //		return;
+                    //	this.hovered = true;
+                    //	break;
+                    //}
+                    //
+                    //case TouchEvent.TOUCH_ROLL_OUT:{
+                    //	this.hovered = false;
+                    //	break;
+                    //}
                     case egret.TouchEvent.TOUCH_BEGIN: {
                         this.addStageMouseHandlers();
                         //if(InteractionMode.mode==InteractionMode.TOUCH)
@@ -5016,11 +4721,15 @@ var egret;
                         prevTransitionEffect.stop();
                     }
                     else {
-                        if (this._currentTransition.autoReverse && this.transitionFromState == this.requestedCurrentState && this.transitionToState == this._currentState) {
+                        if (this._currentTransition.autoReverse &&
+                            this.transitionFromState == this.requestedCurrentState &&
+                            this.transitionToState == this._currentState) {
                             if (this._currentTransition.effect.duration == 0)
                                 prevTransitionFraction = 0;
                             else
-                                prevTransitionFraction = this._currentTransition.effect.playheadTime / this.getTotalDuration(this._currentTransition.effect);
+                                prevTransitionFraction =
+                                    this._currentTransition.effect.playheadTime /
+                                        this.getTotalDuration(this._currentTransition.effect);
                         }
                         this._currentTransition.effect.end();
                     }
@@ -5039,7 +4748,9 @@ var egret;
                     gui.StateChangeEvent.dispatchStateChangeEvent(this, gui.StateChangeEvent.CURRENT_STATE_CHANGE, oldState, this._currentState ? this._currentState : "");
                 }
                 if (nextTransition) {
-                    var reverseTransition = nextTransition && nextTransition.autoReverse && (nextTransition.toState == oldState || nextTransition.fromState == this._currentState);
+                    var reverseTransition = nextTransition && nextTransition.autoReverse &&
+                        (nextTransition.toState == oldState ||
+                            nextTransition.fromState == this._currentState);
                     gui.UIGlobals._layoutManager.validateNow();
                     this._currentTransition = nextTransition;
                     this.transitionFromState = oldState;
@@ -5175,10 +4886,15 @@ var egret;
                 else {
                     duration = effect.duration;
                 }
-                var repeatDelay = ("repeatDelay" in effect) ? effectObj.repeatDelay : 0;
-                var repeatCount = ("repeatCount" in effect) ? effectObj.repeatCount : 0;
-                var startDelay = ("startDelay" in effect) ? effectObj.startDelay : 0;
-                duration = duration * repeatCount + (repeatDelay * (repeatCount - 1)) + startDelay;
+                var repeatDelay = ("repeatDelay" in effect) ?
+                    effectObj.repeatDelay : 0;
+                var repeatCount = ("repeatCount" in effect) ?
+                    effectObj.repeatCount : 0;
+                var startDelay = ("startDelay" in effect) ?
+                    effectObj.startDelay : 0;
+                duration = duration * repeatCount +
+                    (repeatDelay * (repeatCount - 1)) +
+                    startDelay;
                 return duration;
             };
             return Skin;
@@ -5711,542 +5427,6 @@ var egret;
         })(gui.ButtonBase);
         gui.ItemRenderer = ItemRenderer;
         egret.registerClass(ItemRenderer,"egret.gui.ItemRenderer",["egret.gui.IItemRenderer","egret.gui.ILayoutElement","egret.IEventDispatcher"]);
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @private
-         */
-        var UIComponentProperties = (function () {
-            function UIComponentProperties() {
-                this._id = null;
-                this._isPopUp = false;
-                this._owner = null;
-                this._updateCompletePendingFlag = false;
-                this._initialized = false;
-                this._nestLevel = 0;
-                this._enabled = true;
-                this._uiWidth = 0;
-                this._uiHeight = 0;
-                this._minWidth = 0;
-                this._maxWidth = 10000;
-                this._minHeight = 0;
-                this._maxHeight = 10000;
-                this._measuredWidth = 0;
-                this._measuredHeight = 0;
-                this._left = NaN;
-                this._right = NaN;
-                this._top = NaN;
-                this._bottom = NaN;
-                this._horizontalCenter = NaN;
-                this._verticalCenter = NaN;
-                this._percentWidth = NaN;
-                this._percentHeight = NaN;
-                this._includeInLayout = true;
-                /**
-                 * 属性提交前组件旧的宽度
-                 */
-                this._oldWidth = NaN;
-                /**
-                 * 属性提交前组件旧的高度
-                 */
-                this._oldHeight = NaN;
-                /**
-                 * 属性提交前组件旧的X
-                 * @member egret.gui.UIComponent#oldX
-                 */
-                this._oldX = NaN;
-                /**
-                 * 属性提交前组件旧的Y
-                 * @member egret.gui.UIComponent#oldY
-                 */
-                this._oldY = NaN;
-                /**
-                 * @member egret.gui.UIComponent#_invalidatePropertiesFlag
-                 */
-                this._invalidatePropertiesFlag = false;
-                /**
-                 * @member egret.gui.UIComponent#_invalidateSizeFlag
-                 */
-                this._invalidateSizeFlag = false;
-                /**
-                 * 上一次测量的首选宽度
-                 * @member egret.gui.UIComponent#_oldPreferWidth
-                 */
-                this._oldPreferWidth = NaN;
-                /**
-                 * 上一次测量的首选高度
-                 * @member egret.gui.UIComponent#_oldPreferHeight
-                 */
-                this._oldPreferHeight = NaN;
-                this._invalidateDisplayListFlag = false;
-                this._validateNowFlag = false;
-                /**
-                 * _initialize()方法被调用过的标志。
-                 */
-                this._initializeCalled = false;
-                /**
-                 * 是否已经创建了自身的样式原型链
-                 */
-                this._hasOwnStyleChain = false;
-                /**
-                 * 样式原型链引用
-                 */
-                this._styleProtoChain = null;
-                /**
-                 * 一个性能优化的标志变量。某些子类可以设置为true显式表明自己不含有可设置样式的子项。
-                 */
-                this._hasNoStyleChild = false;
-                /**
-                 * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-                 * @member egret.gui.UIComponent#_layoutWidthExplicitlySet
-                 */
-                this._layoutWidthExplicitlySet = false;
-                /**
-                 * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-                 * @member egret.gui.UIComponent#_layoutHeightExplicitlySet
-                 */
-                this._layoutHeightExplicitlySet = false;
-            }
-            var d = __define,c=UIComponentProperties;p=c.prototype;
-            return UIComponentProperties;
-        })();
-        gui.UIComponentProperties = UIComponentProperties;
-        egret.registerClass(UIComponentProperties,"egret.gui.UIComponentProperties");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.UIGlobals
-         * @classdesc
-         */
-        var UIGlobals = (function () {
-            function UIGlobals() {
-            }
-            var d = __define,c=UIGlobals;p=c.prototype;
-            d(UIGlobals, "stage"
-                /**
-                 * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
-                 * @member egret.gui.UIGlobals.stage
-                 */
-                ,function () {
-                    return UIGlobals._stage;
-                }
-            );
-            /**
-             * 初始化管理器
-             * @param stage {Stage}
-             */
-            UIGlobals._initlize = function (stage) {
-                if (UIGlobals.initlized)
-                    return;
-                UIGlobals._stage = stage;
-                UIGlobals._layoutManager = new gui.LayoutManager();
-                UIGlobals.initlized = true;
-            };
-            d(UIGlobals, "uiStage"
-                /**
-                 * 顶级应用容器
-                 * @member egret.gui.UIGlobals.uiStage
-                 */
-                ,function () {
-                    return UIGlobals._uiStage;
-                }
-            );
-            /**
-             * 已经初始化完成标志
-             */
-            UIGlobals.initlized = false;
-            return UIGlobals;
-        })();
-        gui.UIGlobals = UIGlobals;
-        egret.registerClass(UIGlobals,"egret.gui.UIGlobals");
-    })(gui = egret.gui || (egret.gui = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var gui;
-    (function (gui) {
-        /**
-         * @class egret.gui.LayoutManager
-         * @classdesc
-         * 布局管理器
-         * @extends egret.EventDispatcher
-         */
-        var LayoutManager = (function (_super) {
-            __extends(LayoutManager, _super);
-            /**
-             * @method egret.gui.LayoutManager#constructor
-             */
-            function LayoutManager() {
-                _super.call(this);
-                this.targetLevel = Number.MAX_VALUE;
-                /**
-                 * 需要抛出组件初始化完成事件的对象
-                 */
-                this.updateCompleteQueue = new gui.DepthQueue();
-                this.invalidatePropertiesFlag = false;
-                this.invalidateClientPropertiesFlag = false;
-                this.invalidatePropertiesQueue = new gui.DepthQueue();
-                this.invalidateSizeFlag = false;
-                this.invalidateClientSizeFlag = false;
-                this.invalidateSizeQueue = new gui.DepthQueue();
-                this.invalidateDisplayListFlag = false;
-                this.invalidateDisplayListQueue = new gui.DepthQueue();
-                /**
-                 * 是否已经添加了事件监听
-                 */
-                this.listenersAttached = false;
-            }
-            var d = __define,c=LayoutManager;p=c.prototype;
-            /**
-             * 标记组件提交过属性
-             * @method egret.gui.LayoutManager#invalidateProperties
-             * @param client {ILayoutManagerClient}
-             */
-            p.invalidateProperties = function (client) {
-                if (!this.invalidatePropertiesFlag) {
-                    this.invalidatePropertiesFlag = true;
-                    if (!this.listenersAttached)
-                        this.attachListeners();
-                }
-                if (this.targetLevel <= client.nestLevel)
-                    this.invalidateClientPropertiesFlag = true;
-                this.invalidatePropertiesQueue.insert(client);
-            };
-            /**
-             * 使提交的属性生效
-             */
-            p.validateProperties = function () {
-                var client = this.invalidatePropertiesQueue.shift();
-                while (client) {
-                    if (client.parent) {
-                        client.validateProperties();
-                        if (!client.updateCompletePendingFlag) {
-                            this.updateCompleteQueue.insert(client);
-                            client.updateCompletePendingFlag = true;
-                        }
-                    }
-                    client = this.invalidatePropertiesQueue.shift();
-                }
-                if (this.invalidatePropertiesQueue.isEmpty())
-                    this.invalidatePropertiesFlag = false;
-            };
-            /**
-             * 标记需要重新测量尺寸
-             * @method egret.gui.LayoutManager#invalidateSize
-             * @param client {ILayoutManagerClient}
-             */
-            p.invalidateSize = function (client) {
-                if (!this.invalidateSizeFlag) {
-                    this.invalidateSizeFlag = true;
-                    if (!this.listenersAttached)
-                        this.attachListeners();
-                }
-                if (this.targetLevel <= client.nestLevel)
-                    this.invalidateClientSizeFlag = true;
-                this.invalidateSizeQueue.insert(client);
-            };
-            /**
-             * 测量属性
-             */
-            p.validateSize = function () {
-                var client = this.invalidateSizeQueue.pop();
-                while (client) {
-                    if (client.parent) {
-                        client.validateSize();
-                        if (!client.updateCompletePendingFlag) {
-                            this.updateCompleteQueue.insert(client);
-                            client.updateCompletePendingFlag = true;
-                        }
-                    }
-                    client = this.invalidateSizeQueue.pop();
-                }
-                if (this.invalidateSizeQueue.isEmpty())
-                    this.invalidateSizeFlag = false;
-            };
-            /**
-             * 标记需要重新测量尺寸
-             * @method egret.gui.LayoutManager#invalidateDisplayList
-             * @param client {ILayoutManagerClient}
-             */
-            p.invalidateDisplayList = function (client) {
-                if (!this.invalidateDisplayListFlag) {
-                    this.invalidateDisplayListFlag = true;
-                    if (!this.listenersAttached)
-                        this.attachListeners();
-                }
-                this.invalidateDisplayListQueue.insert(client);
-            };
-            /**
-             * 测量属性
-             */
-            p.validateDisplayList = function () {
-                var client = this.invalidateDisplayListQueue.shift();
-                while (client) {
-                    if (client.parent) {
-                        client.validateDisplayList();
-                        if (!client.updateCompletePendingFlag) {
-                            this.updateCompleteQueue.insert(client);
-                            client.updateCompletePendingFlag = true;
-                        }
-                    }
-                    client = this.invalidateDisplayListQueue.shift();
-                }
-                if (this.invalidateDisplayListQueue.isEmpty())
-                    this.invalidateDisplayListFlag = false;
-            };
-            /**
-             * 添加事件监听
-             */
-            p.attachListeners = function () {
-                gui.UIGlobals.stage.addEventListener(egret.Event.ENTER_FRAME, this.doPhasedInstantiationCallBack, this);
-                gui.UIGlobals.stage.addEventListener(egret.Event.RENDER, this.doPhasedInstantiationCallBack, this);
-                gui.UIGlobals.stage.invalidate();
-                this.listenersAttached = true;
-            };
-            /**
-             * 执行属性应用
-             */
-            p.doPhasedInstantiationCallBack = function (event) {
-                if (event === void 0) { event = null; }
-                gui.UIGlobals.stage.removeEventListener(egret.Event.ENTER_FRAME, this.doPhasedInstantiationCallBack, this);
-                gui.UIGlobals.stage.removeEventListener(egret.Event.RENDER, this.doPhasedInstantiationCallBack, this);
-                this.doPhasedInstantiation();
-            };
-            p.doPhasedInstantiation = function () {
-                if (this.invalidatePropertiesFlag) {
-                    this.validateProperties();
-                }
-                if (this.invalidateSizeFlag) {
-                    this.validateSize();
-                }
-                if (this.invalidateDisplayListFlag) {
-                    this.validateDisplayList();
-                }
-                if (this.invalidatePropertiesFlag || this.invalidateSizeFlag || this.invalidateDisplayListFlag) {
-                    this.attachListeners();
-                }
-                else {
-                    this.listenersAttached = false;
-                    var client = this.updateCompleteQueue.pop();
-                    while (client) {
-                        if (!client.initialized)
-                            client.initialized = true;
-                        if (client.hasEventListener(gui.UIEvent.UPDATE_COMPLETE))
-                            gui.UIEvent.dispatchUIEvent(client, gui.UIEvent.UPDATE_COMPLETE);
-                        client.updateCompletePendingFlag = false;
-                        client = this.updateCompleteQueue.pop();
-                    }
-                    gui.UIEvent.dispatchUIEvent(this, gui.UIEvent.UPDATE_COMPLETE);
-                }
-            };
-            /**
-             * 立即应用所有延迟的属性
-             * @method egret.gui.LayoutManager#validateNow
-             */
-            p.validateNow = function () {
-                var infiniteLoopGuard = 0;
-                while (this.listenersAttached && infiniteLoopGuard++ < 100)
-                    this.doPhasedInstantiationCallBack();
-            };
-            /**
-             * 使大于等于指定组件层级的元素立即应用属性
-             * @method egret.gui.LayoutManager#validateClient
-             * @param target {ILayoutManagerClient} 要立即应用属性的组件
-             * @param skipDisplayList {boolean} 是否跳过更新显示列表阶段
-             */
-            p.validateClient = function (target, skipDisplayList) {
-                if (skipDisplayList === void 0) { skipDisplayList = false; }
-                var obj;
-                var i = 0;
-                var done = false;
-                var oldTargetLevel = this.targetLevel;
-                if (this.targetLevel == Number.MAX_VALUE)
-                    this.targetLevel = target.nestLevel;
-                while (!done) {
-                    done = true;
-                    obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
-                    while (obj) {
-                        if (obj.parent) {
-                            obj.validateProperties();
-                            if (!obj.updateCompletePendingFlag) {
-                                this.updateCompleteQueue.insert(obj);
-                                obj.updateCompletePendingFlag = true;
-                            }
-                        }
-                        obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
-                    }
-                    if (this.invalidatePropertiesQueue.isEmpty()) {
-                        this.invalidatePropertiesFlag = false;
-                    }
-                    this.invalidateClientPropertiesFlag = false;
-                    obj = (this.invalidateSizeQueue.removeLargestChild(target));
-                    while (obj) {
-                        if (obj.parent) {
-                            obj.validateSize();
-                            if (!obj.updateCompletePendingFlag) {
-                                this.updateCompleteQueue.insert(obj);
-                                obj.updateCompletePendingFlag = true;
-                            }
-                        }
-                        if (this.invalidateClientPropertiesFlag) {
-                            obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
-                            if (obj) {
-                                this.invalidatePropertiesQueue.insert(obj);
-                                done = false;
-                                break;
-                            }
-                        }
-                        obj = (this.invalidateSizeQueue.removeLargestChild(target));
-                    }
-                    if (this.invalidateSizeQueue.isEmpty()) {
-                        this.invalidateSizeFlag = false;
-                    }
-                    this.invalidateClientPropertiesFlag = false;
-                    this.invalidateClientSizeFlag = false;
-                    if (!skipDisplayList) {
-                        obj = (this.invalidateDisplayListQueue.removeSmallestChild(target));
-                        while (obj) {
-                            if (obj.parent) {
-                                obj.validateDisplayList();
-                                if (!obj.updateCompletePendingFlag) {
-                                    this.updateCompleteQueue.insert(obj);
-                                    obj.updateCompletePendingFlag = true;
-                                }
-                            }
-                            if (this.invalidateClientPropertiesFlag) {
-                                obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
-                                if (obj) {
-                                    this.invalidatePropertiesQueue.insert(obj);
-                                    done = false;
-                                    break;
-                                }
-                            }
-                            if (this.invalidateClientSizeFlag) {
-                                obj = (this.invalidateSizeQueue.removeLargestChild(target));
-                                if (obj) {
-                                    this.invalidateSizeQueue.insert(obj);
-                                    done = false;
-                                    break;
-                                }
-                            }
-                            obj = (this.invalidateDisplayListQueue.removeSmallestChild(target));
-                        }
-                        if (this.invalidateDisplayListQueue.isEmpty()) {
-                            this.invalidateDisplayListFlag = false;
-                        }
-                    }
-                }
-                if (oldTargetLevel == Number.MAX_VALUE) {
-                    this.targetLevel = Number.MAX_VALUE;
-                    if (!skipDisplayList) {
-                        obj = (this.updateCompleteQueue.removeLargestChild(target));
-                        while (obj) {
-                            if (!obj.initialized)
-                                obj.initialized = true;
-                            if (obj.hasEventListener(gui.UIEvent.UPDATE_COMPLETE))
-                                gui.UIEvent.dispatchUIEvent(obj, gui.UIEvent.UPDATE_COMPLETE);
-                            obj.updateCompletePendingFlag = false;
-                            obj = (this.updateCompleteQueue.removeLargestChild(target));
-                        }
-                    }
-                }
-            };
-            return LayoutManager;
-        })(egret.EventDispatcher);
-        gui.LayoutManager = LayoutManager;
-        egret.registerClass(LayoutManager,"egret.gui.LayoutManager");
     })(gui = egret.gui || (egret.gui = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -7684,7 +6864,9 @@ var egret;
                 }
             );
             p._getDataProvider = function () {
-                return this.dataGroup != null ? this.dataGroup.dataProvider : this._dataGroupProperties.dataProvider;
+                return this.dataGroup != null
+                    ? this.dataGroup.dataProvider
+                    : this._dataGroupProperties.dataProvider;
             };
             p._setDataProvider = function (value) {
                 if (this.dataGroup == null) {
@@ -7701,7 +6883,9 @@ var egret;
                  * @member egret.gui.SkinnableDataContainer#itemRenderer
                  */
                 ,function () {
-                    return (this.dataGroup) ? this.dataGroup.itemRenderer : this._dataGroupProperties.itemRenderer;
+                    return (this.dataGroup)
+                        ? this.dataGroup.itemRenderer
+                        : this._dataGroupProperties.itemRenderer;
                 }
                 ,function (value) {
                     if (this.dataGroup == null) {
@@ -7719,7 +6903,9 @@ var egret;
                  * @member egret.gui.SkinnableDataContainer#itemRendererSkinName
                  */
                 ,function () {
-                    return (this.dataGroup) ? this.dataGroup.itemRendererSkinName : this._dataGroupProperties.itemRendererSkinName;
+                    return (this.dataGroup)
+                        ? this.dataGroup.itemRendererSkinName
+                        : this._dataGroupProperties.itemRendererSkinName;
                 }
                 ,function (value) {
                     if (this.dataGroup == null) {
@@ -7739,7 +6925,9 @@ var egret;
                  * @member egret.gui.SkinnableDataContainer#itemRendererFunction
                  */
                 ,function () {
-                    return (this.dataGroup) ? this.dataGroup.itemRendererFunction : this._dataGroupProperties.itemRendererFunction;
+                    return (this.dataGroup)
+                        ? this.dataGroup.itemRendererFunction
+                        : this._dataGroupProperties.itemRendererFunction;
                 }
                 ,function (value) {
                     if (this.dataGroup == null) {
@@ -7756,7 +6944,9 @@ var egret;
                  * @member egret.gui.SkinnableDataContainer#layout
                  */
                 ,function () {
-                    return (this.dataGroup) ? this.dataGroup.layout : this._dataGroupProperties.layout;
+                    return (this.dataGroup)
+                        ? this.dataGroup.layout
+                        : this._dataGroupProperties.layout;
                 }
                 ,function (value) {
                     this._setLayout(value);
@@ -7995,7 +7185,9 @@ var egret;
                  * @member egret.gui.ListBase#layout
                  */
                 ,function () {
-                    return (this.dataGroup) ? this.dataGroup.layout : this._dataGroupProperties.layout;
+                    return (this.dataGroup)
+                        ? this.dataGroup.layout
+                        : this._dataGroupProperties.layout;
                 }
                 /**
                  * @inheritDoc
@@ -8176,7 +7368,10 @@ var egret;
                 }
                 if (this.requireSelectionChanged) {
                     this.requireSelectionChanged = false;
-                    if (this.requireSelection && this.selectedIndex == ListBase.NO_SELECTION && this.dataProvider && this.dataProvider.length > 0) {
+                    if (this.requireSelection &&
+                        this.selectedIndex == ListBase.NO_SELECTION &&
+                        this.dataProvider &&
+                        this.dataProvider.length > 0) {
                         this._proposedSelectedIndex = 0;
                     }
                 }
@@ -8334,7 +7529,8 @@ var egret;
                         this._proposedSelectedIndex = ListBase.NO_SELECTION;
                     if (this._proposedSelectedIndex > maxIndex)
                         this._proposedSelectedIndex = maxIndex;
-                    if (this.requireSelection && this._proposedSelectedIndex == ListBase.NO_SELECTION && this.dataProvider && this.dataProvider.length > 0) {
+                    if (this.requireSelection && this._proposedSelectedIndex == ListBase.NO_SELECTION &&
+                        this.dataProvider && this.dataProvider.length > 0) {
                         this._proposedSelectedIndex = ListBase.NO_PROPOSED_SELECTION;
                         this._dispatchChangeAfterSelection = false;
                         return false;
@@ -8530,7 +7726,8 @@ var egret;
              * @constant egret.gui.ListBase.CUSTOM_SELECTED_ITEM
              */
             ListBase.CUSTOM_SELECTED_ITEM = -3;
-            ListBase.TYPE_MAP = { rollOver: "itemRollOver", rollOut: "itemRollOut" };
+            ListBase.TYPE_MAP = { rollOver: "itemRollOver",
+                rollOut: "itemRollOut" };
             return ListBase;
         })(gui.SkinnableDataContainer);
         gui.ListBase = ListBase;
@@ -11670,7 +10867,8 @@ var egret;
                         if (this.animator.isPlaying)
                             this.stopAnimation();
                         this.slideToValue = newValue;
-                        this.animator.duration = this.slideDuration * (Math.abs(this.pendingValue - this.slideToValue) / (this.maximum - this.minimum));
+                        this.animator.duration = this.slideDuration *
+                            (Math.abs(this.pendingValue - this.slideToValue) / (this.maximum - this.minimum));
                         this.animator.motionPaths = [
                             new gui.SimpleMotionPath("value", this.pendingValue, this.slideToValue)
                         ];
@@ -12260,7 +11458,10 @@ var egret;
              * 特殊情况，组件尺寸由父级决定，要等到父级UpdateDisplayList的阶段才能测量
              */
             p.isSpecialCase = function () {
-                return this._maxDisplayedLines != 1 && (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) && isNaN(this.$getExplicitHeight()) && isNaN(this.percentHeight);
+                return this._maxDisplayedLines != 1 &&
+                    (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
+                    isNaN(this.$getExplicitHeight()) &&
+                    isNaN(this.percentHeight);
             };
             /**
              * 使用指定的宽度进行测量
@@ -12312,7 +11513,8 @@ var egret;
                 this._textField.x = paddingL;
                 this._textField.y = paddingT;
                 if (this.isSpecialCase()) {
-                    var firstTime = isNaN(this.lastUnscaledWidth) || this.lastUnscaledWidth != unscaledWidth;
+                    var firstTime = isNaN(this.lastUnscaledWidth) ||
+                        this.lastUnscaledWidth != unscaledWidth;
                     this.lastUnscaledWidth = unscaledWidth;
                     if (firstTime) {
                         this._UIC_Props_._oldPreferWidth = NaN;
@@ -12517,6 +11719,7 @@ var egret;
                 var registrationPoint = egret.$TempPoint;
                 switch (this._popUpPosition) {
                     case gui.PopUpPosition.SCREEN_CENTER:
+                        //由popup manager负责居中显示
                         break;
                     case gui.PopUpPosition.BELOW:
                         registrationPoint.x = 0;
@@ -12929,7 +12132,8 @@ var egret;
                         this.slideToValue = this.nearestValidValue(newValue, this.snapInterval);
                         if (this.slideToValue == this.animationValue)
                             return;
-                        var duration = this._slideDuration * (Math.abs(this.animationValue - this.slideToValue) / (this.maximum - this.minimum));
+                        var duration = this._slideDuration *
+                            (Math.abs(this.animationValue - this.slideToValue) / (this.maximum - this.minimum));
                         this.animator.duration = duration === Infinity ? 0 : duration;
                         this.animator.motionPaths = [
                             new gui.SimpleMotionPath("value", this.animationValue, this.slideToValue)
@@ -13211,7 +12415,8 @@ var egret;
                 ,function () {
                     if (!this._UIC_Props_._enabled)
                         return false;
-                    return !this._radioButtonGroup || this._radioButtonGroup.enabled;
+                    return !this._radioButtonGroup ||
+                        this._radioButtonGroup.enabled;
                 }
                 /**
                  * @inheritDoc
@@ -13449,7 +12654,9 @@ var egret;
                  */
                 ,function () {
                     if (this.selection) {
-                        return this.selection.value != null ? this.selection.value : this.selection.label;
+                        return this.selection.value != null ?
+                            this.selection.value :
+                            this.selection.label;
                     }
                     return null;
                 }
@@ -13462,7 +12669,8 @@ var egret;
                     var n = this.numRadioButtons;
                     for (var i = 0; i < n; i++) {
                         var radioButton = this.getRadioButtonAt(i);
-                        if (radioButton.value == value || radioButton.label == value) {
+                        if (radioButton.value == value ||
+                            radioButton.label == value) {
                             this.changeSelection(i, false);
                             this._selectedValue = null;
                             gui.UIEvent.dispatchUIEvent(this, gui.UIEvent.VALUE_COMMIT);
@@ -14136,7 +13344,8 @@ var egret;
                 if (isOffset === void 0) { isOffset = false; }
                 if (isOffset && top == 0 && left == 0)
                     return;
-                if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left)
+                if (!isOffset && this._ScrV_Props_._scrollTop == top
+                    && this._ScrV_Props_._scrollLeft == left)
                     return;
                 var oldTop = this._ScrV_Props_._scrollTop, oldLeft = this._ScrV_Props_._scrollLeft;
                 if (isOffset) {
@@ -15511,9 +14720,13 @@ var egret;
         })(gui.SkinnableComponent);
         gui.Scroller = Scroller;
         egret.registerClass(Scroller,"egret.gui.Scroller",["egret.gui.IVisualElementContainer","egret.gui.IVisualElement","egret.gui.ILayoutElement","egret.IEventDispatcher","egret.gui.IContainer"]);
+        //增加ScrollView方法
         for (var p in gui.ScrollerView.prototype) {
             //跳过Scroller，SkinnableComponent，UIComponent 重写的方法
-            if (gui.ScrollerView.prototype.hasOwnProperty(p) && !Scroller.prototype.hasOwnProperty(p) && !gui.SkinnableComponent.prototype.hasOwnProperty(p) && !gui.UIComponent.prototype.hasOwnProperty(p)) {
+            if (gui.ScrollerView.prototype.hasOwnProperty(p)
+                && !Scroller.prototype.hasOwnProperty(p)
+                && !gui.SkinnableComponent.prototype.hasOwnProperty(p)
+                && !gui.UIComponent.prototype.hasOwnProperty(p)) {
                 var desc = Object.getOwnPropertyDescriptor(gui.ScrollerView.prototype, p);
                 if (desc && (desc.get || desc.set))
                     Object.defineProperty(Scroller.prototype, p, desc);
@@ -17316,7 +16529,8 @@ var egret;
             p.dataProvider_collectionChangeHandler = function (event) {
                 _super.prototype.dataProvider_collectionChangeHandler.call(this, event);
                 if (event.kind == gui.CollectionEventKind.OPEN || event.kind == gui.CollectionEventKind.CLOSE) {
-                    var renderer = this.dataGroup ? (this.dataGroup.getElementAt(event.location)) : null;
+                    var renderer = this.dataGroup ?
+                        (this.dataGroup.getElementAt(event.location)) : null;
                     if (renderer) {
                         this.updateRenderer(renderer, event.location, event.items[0]);
                         if (event.kind == gui.CollectionEventKind.CLOSE && this.layout && this.layout.useVirtualLayout) {
@@ -18717,6 +17931,7 @@ var egret;
                         this._updateTargetProps(null, 1);
                     }
                     else if (this._steps.length > 0) {
+                        // 找到新的tween
                         for (var i = 0, l = this._steps.length; i < l; i++) {
                             if (this._steps[i].t > t) {
                                 break;
@@ -19573,7 +18788,8 @@ var egret;
                         return true;
                     if (this.hitAreaAdditions != null) {
                         for (var i = 0; i < this.hitAreaAdditions.length; i++) {
-                            if (this.hitAreaAdditions[i] == target || ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains(target)))
+                            if (this.hitAreaAdditions[i] == target ||
+                                ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains(target)))
                                 return true;
                         }
                     }
@@ -19680,13 +18896,18 @@ var egret;
                     this.mouseIsDown = false;
                     return;
                 }
-                if (!this.dropDown || (this.dropDown && (event.target == this.dropDown || (this.dropDown instanceof egret.DisplayObjectContainer && !(this.dropDown).contains((event.target)))))) {
+                if (!this.dropDown ||
+                    (this.dropDown &&
+                        (event.target == this.dropDown
+                            || (this.dropDown instanceof egret.DisplayObjectContainer &&
+                                !(this.dropDown).contains((event.target)))))) {
                     var target = (event.target);
                     if (this.openButton && target && this.openButton.contains(target))
                         return;
                     if (this.hitAreaAdditions != null) {
                         for (var i = 0; i < this.hitAreaAdditions.length; i++) {
-                            if (this.hitAreaAdditions[i] == event.target || ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains((event.target))))
+                            if (this.hitAreaAdditions[i] == event.target ||
+                                ((this.hitAreaAdditions[i] instanceof egret.DisplayObjectContainer) && (this.hitAreaAdditions[i]).contains((event.target))))
                                 return;
                         }
                     }
@@ -20865,6 +20086,218 @@ var egret;
     var gui;
     (function (gui) {
         /**
+         * @private
+         */
+        var UIComponentProperties = (function () {
+            function UIComponentProperties() {
+                this._id = null;
+                this._isPopUp = false;
+                this._owner = null;
+                this._updateCompletePendingFlag = false;
+                this._initialized = false;
+                this._nestLevel = 0;
+                this._enabled = true;
+                this._uiWidth = 0;
+                this._uiHeight = 0;
+                this._minWidth = 0;
+                this._maxWidth = 10000;
+                this._minHeight = 0;
+                this._maxHeight = 10000;
+                this._measuredWidth = 0;
+                this._measuredHeight = 0;
+                this._left = NaN;
+                this._right = NaN;
+                this._top = NaN;
+                this._bottom = NaN;
+                this._horizontalCenter = NaN;
+                this._verticalCenter = NaN;
+                this._percentWidth = NaN;
+                this._percentHeight = NaN;
+                this._includeInLayout = true;
+                /**
+                 * 属性提交前组件旧的宽度
+                 */
+                this._oldWidth = NaN;
+                /**
+                 * 属性提交前组件旧的高度
+                 */
+                this._oldHeight = NaN;
+                /**
+                 * 属性提交前组件旧的X
+                 * @member egret.gui.UIComponent#oldX
+                 */
+                this._oldX = NaN;
+                /**
+                 * 属性提交前组件旧的Y
+                 * @member egret.gui.UIComponent#oldY
+                 */
+                this._oldY = NaN;
+                /**
+                 * @member egret.gui.UIComponent#_invalidatePropertiesFlag
+                 */
+                this._invalidatePropertiesFlag = false;
+                /**
+                 * @member egret.gui.UIComponent#_invalidateSizeFlag
+                 */
+                this._invalidateSizeFlag = false;
+                /**
+                 * 上一次测量的首选宽度
+                 * @member egret.gui.UIComponent#_oldPreferWidth
+                 */
+                this._oldPreferWidth = NaN;
+                /**
+                 * 上一次测量的首选高度
+                 * @member egret.gui.UIComponent#_oldPreferHeight
+                 */
+                this._oldPreferHeight = NaN;
+                this._invalidateDisplayListFlag = false;
+                this._validateNowFlag = false;
+                /**
+                 * _initialize()方法被调用过的标志。
+                 */
+                this._initializeCalled = false;
+                /**
+                 * 是否已经创建了自身的样式原型链
+                 */
+                this._hasOwnStyleChain = false;
+                /**
+                 * 样式原型链引用
+                 */
+                this._styleProtoChain = null;
+                /**
+                 * 一个性能优化的标志变量。某些子类可以设置为true显式表明自己不含有可设置样式的子项。
+                 */
+                this._hasNoStyleChild = false;
+                /**
+                 * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
+                 * @member egret.gui.UIComponent#_layoutWidthExplicitlySet
+                 */
+                this._layoutWidthExplicitlySet = false;
+                /**
+                 * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
+                 * @member egret.gui.UIComponent#_layoutHeightExplicitlySet
+                 */
+                this._layoutHeightExplicitlySet = false;
+            }
+            var d = __define,c=UIComponentProperties;p=c.prototype;
+            return UIComponentProperties;
+        })();
+        gui.UIComponentProperties = UIComponentProperties;
+        egret.registerClass(UIComponentProperties,"egret.gui.UIComponentProperties");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.UIGlobals
+         * @classdesc
+         */
+        var UIGlobals = (function () {
+            function UIGlobals() {
+            }
+            var d = __define,c=UIGlobals;p=c.prototype;
+            d(UIGlobals, "stage"
+                /**
+                 * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
+                 * @member egret.gui.UIGlobals.stage
+                 */
+                ,function () {
+                    return UIGlobals._stage;
+                }
+            );
+            /**
+             * 初始化管理器
+             * @param stage {Stage}
+             */
+            UIGlobals._initlize = function (stage) {
+                if (UIGlobals.initlized)
+                    return;
+                UIGlobals._stage = stage;
+                UIGlobals._layoutManager = new gui.LayoutManager();
+                UIGlobals.initlized = true;
+            };
+            d(UIGlobals, "uiStage"
+                /**
+                 * 顶级应用容器
+                 * @member egret.gui.UIGlobals.uiStage
+                 */
+                ,function () {
+                    return UIGlobals._uiStage;
+                }
+            );
+            /**
+             * 已经初始化完成标志
+             */
+            UIGlobals.initlized = false;
+            return UIGlobals;
+        })();
+        gui.UIGlobals = UIGlobals;
+        egret.registerClass(UIGlobals,"egret.gui.UIGlobals");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
          * UIStage的虚拟子容器
          */
         var UILayer = (function () {
@@ -20945,7 +20378,8 @@ var egret;
              */
             p.removeElement = function (element) {
                 var index = this.owner[this.raw_getElementIndex](element);
-                if (this.owner[this.lowerBoundReference] <= index && index < this.owner[this.upperBoundReference]) {
+                if (this.owner[this.lowerBoundReference] <= index &&
+                    index < this.owner[this.upperBoundReference]) {
                     this.owner[this.raw_removeElement](element);
                     this.owner[this.upperBoundReference]--;
                 }
@@ -20960,7 +20394,8 @@ var egret;
             p.removeElementAt = function (index) {
                 index += this.owner[this.lowerBoundReference];
                 var element;
-                if (this.owner[this.lowerBoundReference] <= index && index < this.owner[this.upperBoundReference]) {
+                if (this.owner[this.lowerBoundReference] <= index &&
+                    index < this.owner[this.upperBoundReference]) {
                     element = this.owner[this.raw_removeElementAt](index);
                     this.owner[this.upperBoundReference]--;
                 }
@@ -21552,7 +20987,8 @@ var egret;
                  * @member egret.gui.Effect#duration
                  */
                 ,function () {
-                    if (!this.durationExplicitlySet && this._parentCompositeEffect) {
+                    if (!this.durationExplicitlySet &&
+                        this._parentCompositeEffect) {
                         return this._parentCompositeEffect.duration;
                     }
                     else {
@@ -22105,7 +21541,8 @@ var egret;
                 if (fraction > (1 - this.easeOutFraction)) {
                     var decTime = fraction - (1 - this.easeOutFraction);
                     var decProportion = decTime / this.easeOutFraction;
-                    return runRate * (1 - this.easeInFraction / 2 - this.easeOutFraction + decTime * (2 - decProportion) / 2);
+                    return runRate * (1 - this.easeInFraction / 2 - this.easeOutFraction +
+                        decTime * (2 - decProportion) / 2);
                 }
                 return runRate * (fraction - this.easeInFraction / 2);
             };
@@ -22217,8 +21654,12 @@ var egret;
                 if (valueMap === void 0) { valueMap = null; }
                 var computedTransformCenter;
                 if (this.autoCenterTransform) {
-                    var w = (valueMap != null && valueMap["width"] !== undefined) ? valueMap["width"] : target.width;
-                    var h = (valueMap != null && valueMap["height"] !== undefined) ? valueMap["height"] : target.height;
+                    var w = (valueMap != null && valueMap["width"] !== undefined) ?
+                        valueMap["width"] :
+                        target.width;
+                    var h = (valueMap != null && valueMap["height"] !== undefined) ?
+                        valueMap["height"] :
+                        target.height;
                     computedTransformCenter = new egret.Point(w / 2, h / 2);
                 }
                 else {
@@ -22306,7 +21747,8 @@ var egret;
                     return;
                 transformInstance.initialized = true;
                 if (!this.autoCenterTransform)
-                    transformInstance.transformCenter = this.computeTransformCenterForTarget(instance.target);
+                    transformInstance.transformCenter =
+                        this.computeTransformCenterForTarget(instance.target);
                 transformInstance.autoCenterTransform = this.autoCenterTransform;
                 var tmpStartDelay = this.startDelay;
                 this.startDelay = 0;
@@ -22333,7 +21775,9 @@ var egret;
                             if (child instanceof gui.CompositeEffect)
                                 globalStartTime += child.compositeDuration;
                             else
-                                globalStartTime += child.startDelay + (child.duration * child.repeatCount) + (child.repeatDelay + (child.repeatCount - 1));
+                                globalStartTime += child.startDelay +
+                                    (child.duration * child.repeatCount) +
+                                    (child.repeatDelay + (child.repeatCount - 1));
                         }
                     }
                     parent = parent._parentCompositeEffect;
@@ -22602,7 +22046,8 @@ var egret;
                 ,function () {
                     var value = NaN;
                     if (this.repeatCount > 0) {
-                        value = this.duration * this.repeatCount + (this.repeatDelay * (this.repeatCount - 1)) + this.startDelay;
+                        value = this.duration * this.repeatCount +
+                            (this.repeatDelay * (this.repeatCount - 1)) + this.startDelay;
                     }
                     return value;
                 }
@@ -22613,7 +22058,8 @@ var egret;
                  * @member egret.gui.EffectInstance#duration
                  */
                 ,function () {
-                    if (!this.durationExplicitlySet && this.parentCompositeEffectInstance) {
+                    if (!this.durationExplicitlySet &&
+                        this.parentCompositeEffectInstance) {
                         return this.parentCompositeEffectInstance.duration;
                     }
                     else {
@@ -22644,7 +22090,8 @@ var egret;
                  * @member egret.gui.EffectInstance#playheadTime
                  */
                 ,function () {
-                    return Math.max(this._playCount - 1, 0) * (this.duration + this.repeatDelay) + (this.playReversed ? 0 : this.startDelay);
+                    return Math.max(this._playCount - 1, 0) * (this.duration + this.repeatDelay) +
+                        (this.playReversed ? 0 : this.startDelay);
                 }
                 ,function (value) {
                     this._setPlayheadTime(value);
@@ -22831,7 +22278,8 @@ var egret;
              * @method egret.gui.EffectInstance#finishRepeat
              */
             p.finishRepeat = function () {
-                if (!this._stopRepeat && this._playCount != 0 && (this._playCount < this.repeatCount || this.repeatCount == 0)) {
+                if (!this._stopRepeat && this._playCount != 0 &&
+                    (this._playCount < this.repeatCount || this.repeatCount == 0)) {
                     if (this.repeatDelay > 0) {
                         this._delayTimer = new egret.Timer(this.repeatDelay, 1);
                         this.delayStartTime = egret.getTimer();
@@ -23106,7 +22554,10 @@ var egret;
                             childDuration = child.compositeDuration;
                         else
                             childDuration = child.duration;
-                        childDuration = childDuration * child.repeatCount + (child.repeatDelay * (child.repeatCount - 1)) + child.startDelay;
+                        childDuration =
+                            childDuration * child.repeatCount +
+                                (child.repeatDelay * (child.repeatCount - 1)) +
+                                child.startDelay;
                         parallelDuration = Math.max(parallelDuration, childDuration);
                     }
                     return parallelDuration;
@@ -23306,7 +22757,10 @@ var egret;
                             childDuration = child.compositeDuration;
                         else
                             childDuration = child.duration;
-                        childDuration = childDuration * child.repeatCount + (child.repeatDelay * (child.repeatCount - 1)) + child.startDelay;
+                        childDuration =
+                            childDuration * child.repeatCount +
+                                (child.repeatDelay * (child.repeatCount - 1)) +
+                                child.startDelay;
                         sequenceDuration += childDuration;
                     }
                     return sequenceDuration;
@@ -23385,7 +22839,8 @@ var egret;
                 if (fraction <= this._easeInFraction && this._easeInFraction > 0)
                     return this._easeInFraction * this._easeIn(fraction / this._easeInFraction);
                 else
-                    return this._easeInFraction + easeOutFraction * this._easeOut((fraction - this._easeInFraction) / easeOutFraction);
+                    return this._easeInFraction + easeOutFraction *
+                        this._easeOut((fraction - this._easeInFraction) / easeOutFraction);
             };
             /**
              * 在动画的缓入阶段期间计算已经缓动部分要映射到的值。
@@ -23712,7 +23167,10 @@ var egret;
              * 添加动画
              */
             Animation.addAnimation = function (animation) {
-                if (animation.motionPaths && animation.motionPaths.length > 0 && animation.motionPaths[0] && (animation.motionPaths[0].property == "width" || animation.motionPaths[0].property == "height")) {
+                if (animation.motionPaths && animation.motionPaths.length > 0 &&
+                    animation.motionPaths[0] &&
+                    (animation.motionPaths[0].property == "width" ||
+                        animation.motionPaths[0].property == "height")) {
                     Animation.activeAnimations.splice(0, 0, animation);
                     animation.id = 0;
                     for (var i = 1; i < Animation.activeAnimations.length; ++i)
@@ -23863,7 +23321,10 @@ var egret;
                 this.currentValue = {};
                 if (this.duration == 0) {
                     for (i = 0; i < this.motionPaths.length; ++i) {
-                        this.currentValue[this.motionPaths[i].property] = this._invertValues ? this.motionPaths[i].keyframes[0].value : this.motionPaths[i].keyframes[this.motionPaths[i].keyframes.length - 1].value;
+                        this.currentValue[this.motionPaths[i].property] =
+                            this._invertValues ?
+                                this.motionPaths[i].keyframes[0].value :
+                                this.motionPaths[i].keyframes[this.motionPaths[i].keyframes.length - 1].value;
                     }
                     return;
                 }
@@ -23872,7 +23333,8 @@ var egret;
                 this._cycleFraction = this.easer.ease(currentTime / this.duration);
                 if (this.motionPaths)
                     for (i = 0; i < this.motionPaths.length; ++i)
-                        this.currentValue[this.motionPaths[i].property] = this.motionPaths[i].getValue(this._cycleFraction);
+                        this.currentValue[this.motionPaths[i].property] =
+                            this.motionPaths[i].getValue(this._cycleFraction);
             };
             p.removeFromDelayedAnimations = function () {
                 if (this.delayedStartTime >= 0) {
@@ -24295,7 +23757,9 @@ var egret;
                     return null;
                 var n = this.keyframes.length;
                 if (n == 2 && this.keyframes[1]._timeFraction == 1) {
-                    var easedF = (this.keyframes[1].easer != null) ? this.keyframes[1].easer.ease(fraction) : fraction;
+                    var easedF = (this.keyframes[1].easer != null) ?
+                        this.keyframes[1].easer.ease(fraction) :
+                        fraction;
                     return this.interpolator.interpolate(easedF, this.keyframes[0].value, this.keyframes[1].value);
                 }
                 if (isNaN(this.keyframes[0]._timeFraction))
@@ -24604,7 +24068,8 @@ var egret;
                 else {
                     s = p / (2 * Math.PI) * Math.asin(c / a);
                 }
-                return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
+                return a * Math.pow(2, -10 * t) *
+                    Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
             };
             return Elastic;
         })();
@@ -24957,7 +24422,8 @@ var egret;
                 }
             };
             p._isValidValue = function (value) {
-                return (typeof (value) == "number" && !isNaN(value)) || (!(typeof (value) == "number") && value !== null);
+                return (typeof (value) == "number" && !isNaN(value)) ||
+                    (!(typeof (value) == "number") && value !== null);
             };
             /**
              * 遍历motionPaths，用计算的值替换null。
@@ -24971,7 +24437,9 @@ var egret;
                     if (!keyframes || keyframes.length == 0)
                         continue;
                     if (!this._isValidValue(keyframes[0].value)) {
-                        if (keyframes.length > 0 && this._isValidValue(keyframes[1].valueBy) && this._isValidValue(keyframes[1].value)) {
+                        if (keyframes.length > 0 &&
+                            this._isValidValue(keyframes[1].valueBy) &&
+                            this._isValidValue(keyframes[1].value)) {
                             keyframes[0].value = motionPath.interpolator.decrement(keyframes[1].value, keyframes[1].valueBy);
                         }
                         else {
@@ -24985,7 +24453,9 @@ var egret;
                             if (this._isValidValue(kf.valueBy))
                                 kf.value = motionPath.interpolator.increment(prevValue, kf.valueBy);
                             else {
-                                if (j <= (keyframes.length - 2) && this._isValidValue(keyframes[j + 1].value) && this._isValidValue(keyframes[j + 1].valueBy)) {
+                                if (j <= (keyframes.length - 2) &&
+                                    this._isValidValue(keyframes[j + 1].value) &&
+                                    this._isValidValue(keyframes[j + 1].valueBy)) {
                                     kf.value = motionPath.interpolator.decrement(keyframes[j + 1].value, keyframes[j + 1].valueBy);
                                 }
                                 else {
@@ -25224,11 +24694,8 @@ var egret;
                  */
                 this.currentValues = {
                     rotation: NaN,
-                    scaleX: NaN,
-                    scaleY: NaN,
-                    translationX: NaN,
-                    translationY: NaN
-                };
+                    scaleX: NaN, scaleY: NaN,
+                    translationX: NaN, translationY: NaN };
                 /**
                  * 如果为 true，则已经初始化与该转换相关的效果的此单一实例。
                  * 此属性供 AnimateTransform 使用，以防止在将多个转换效果集成到此单一实例中时重复初始化该实例。
@@ -25307,7 +24774,8 @@ var egret;
                 if (!added) {
                     if (newEffectStartTime > this.instanceStartTime) {
                         for (j = 0; j < newMotionPath.keyframes.length; j++)
-                            newMotionPath.keyframes[j].time += (newEffectStartTime - this.instanceStartTime);
+                            newMotionPath.keyframes[j].time +=
+                                (newEffectStartTime - this.instanceStartTime);
                     }
                     this.motionPaths.push(newMotionPath);
                 }
@@ -25327,7 +24795,9 @@ var egret;
                     var adjustXY = (this.transformCenter.x != 0 || this.transformCenter.y != 0);
                     for (i = 0; i < this.motionPaths.length; ++i) {
                         var animProp = this.motionPaths[i];
-                        if (adjustXY && (animProp.property == "translationX" || animProp.property == "translationY")) {
+                        if (adjustXY &&
+                            (animProp.property == "translationX" ||
+                                animProp.property == "translationY")) {
                             for (j = 0; j < animProp.keyframes.length; ++j) {
                                 var kf = animProp.keyframes[j];
                                 if (this._isValidValue(kf.value)) {
@@ -25382,15 +24852,23 @@ var egret;
                 var tmpRotation;
                 for (var i = 0; i < this.motionPaths.length; ++i) {
                     if (this.currentValues[this.motionPaths[i].property] !== undefined)
-                        this.currentValues[this.motionPaths[i].property] = anim.currentValue[this.motionPaths[i].property];
+                        this.currentValues[this.motionPaths[i].property] =
+                            anim.currentValue[this.motionPaths[i].property];
                     else
                         this.setValue(this.motionPaths[i].property, anim.currentValue[this.motionPaths[i].property]);
                 }
-                tmpRotation = !isNaN(this.currentValues.rotation) ? this.currentValues.rotation : this.getCurrentValue("rotation");
-                tmpScaleX = !isNaN(this.currentValues.scaleX) ? this.currentValues.scaleX : this.getCurrentValue("scaleX");
-                tmpScaleY = !isNaN(this.currentValues.scaleY) ? this.currentValues.scaleY : this.getCurrentValue("scaleY");
-                AnimateTransformInstance.position.x = !isNaN(this.currentValues.translationX) ? this.currentValues.translationX : this.getCurrentValue("translationX");
-                AnimateTransformInstance.position.y = !isNaN(this.currentValues.translationY) ? this.currentValues.translationY : this.getCurrentValue("translationY");
+                tmpRotation = !isNaN(this.currentValues.rotation) ?
+                    this.currentValues.rotation : this.getCurrentValue("rotation");
+                tmpScaleX = !isNaN(this.currentValues.scaleX) ?
+                    this.currentValues.scaleX : this.getCurrentValue("scaleX");
+                tmpScaleY = !isNaN(this.currentValues.scaleY) ?
+                    this.currentValues.scaleY : this.getCurrentValue("scaleY");
+                AnimateTransformInstance.position.x = !isNaN(this.currentValues.translationX) ?
+                    this.currentValues.translationX :
+                    this.getCurrentValue("translationX");
+                AnimateTransformInstance.position.y = !isNaN(this.currentValues.translationY) ?
+                    this.currentValues.translationY :
+                    this.getCurrentValue("translationY");
                 if (!this.lastTranslationPoint)
                     this.lastTranslationPoint = AnimateTransformInstance.position.clone();
                 if (isNaN(this.currentValues.translationX) && Math.abs(AnimateTransformInstance.position.x - this.lastTranslationPoint.x) < 0.1)
@@ -25469,7 +24947,8 @@ var egret;
                 ,function () {
                     var value = NaN;
                     if (this.repeatCount > 0) {
-                        value = this._durationWithoutRepeat * this.repeatCount + (this.repeatDelay * (this.repeatCount - 1)) + this.startDelay;
+                        value = this._durationWithoutRepeat * this.repeatCount +
+                            (this.repeatDelay * (this.repeatCount - 1)) + this.startDelay;
                     }
                     return value;
                 }
@@ -25584,10 +25063,14 @@ var egret;
                 this.end();
             };
             p.animationUpdate = function (animation) {
-                this._playheadTime = this._timerAnimation ? this._timerAnimation.playheadTime : this._playheadTime;
+                this._playheadTime = this._timerAnimation ?
+                    this._timerAnimation.playheadTime :
+                    this._playheadTime;
             };
             p.animationEnd = function (animation) {
-                this._playheadTime = this._timerAnimation ? this._timerAnimation.playheadTime : this._playheadTime;
+                this._playheadTime = this._timerAnimation ?
+                    this._timerAnimation.playheadTime :
+                    this._playheadTime;
             };
             /**
              * 在每个子效果完成播放时调用。子类必须实现此函数。
@@ -25664,7 +25147,8 @@ var egret;
                     }
                 }
                 this.motionPaths = [new gui.MotionPath("alpha")];
-                this.motionPaths[0].keyframes = [new gui.Keyframe(0, this.alphaFrom), new gui.Keyframe(this.duration, this.alphaTo)];
+                this.motionPaths[0].keyframes = [new gui.Keyframe(0, this.alphaFrom),
+                    new gui.Keyframe(this.duration, this.alphaTo)];
                 _super.prototype.play.call(this);
             };
             return FadeInstance;
@@ -25764,7 +25248,10 @@ var egret;
                     var instances = this._childSets[i];
                     var m = instances.length;
                     for (var j = 0; j < m; j++)
-                        instances[j].playheadTime = this.playReversed ? Math.max(0, (childPlayheadTime - (this._durationWithoutRepeat - instances[j]._actualDuration))) : childPlayheadTime;
+                        instances[j].playheadTime = this.playReversed ?
+                            Math.max(0, (childPlayheadTime -
+                                (this._durationWithoutRepeat - instances[j]._actualDuration))) :
+                            childPlayheadTime;
                 }
                 if (this.playReversed && this.replayEffectQueue != null && this.replayEffectQueue.length > 0) {
                     var position = this._durationWithoutRepeat - this.playheadTime;
@@ -26279,7 +25766,8 @@ var egret;
             p.playNextChildSet = function (offset) {
                 if (offset === void 0) { offset = 0; }
                 if (!this.playReversed) {
-                    if (!this._activeEffectQueue || this.currentSetIndex++ >= this._activeEffectQueue.length - 1) {
+                    if (!this._activeEffectQueue ||
+                        this.currentSetIndex++ >= this._activeEffectQueue.length - 1) {
                         return false;
                     }
                 }
@@ -29187,7 +28675,8 @@ var egret;
                 var paddingT = isNaN(this._paddingTop) ? padding : this._paddingTop;
                 var paddingB = isNaN(this._paddingBottom) ? padding : this._paddingBottom;
                 var numElements = this.target.numElements;
-                var contentWidth = this.getStartPosition(numElements - 1) + this.elementSizeTable[numElements - 1] + paddingR;
+                var contentWidth = this.getStartPosition(numElements - 1) +
+                    this.elementSizeTable[numElements - 1] + paddingR;
                 var minVisibleX = this.target.horizontalScrollPosition;
                 if (minVisibleX > contentWidth - paddingR) {
                     this.startIndex = -1;
@@ -29263,6 +28752,7 @@ var egret;
                 var contentHeight = 0;
                 var oldElementSize;
                 var needInvalidateSize = false;
+                //对可见区域进行布局
                 for (var i = this.startIndex; i <= this.endIndex; i++) {
                     var exceesHeight = 0;
                     layoutElement = (this.target.getVirtualElementAt(i));
@@ -29474,7 +28964,8 @@ var egret;
                 var done;
                 do {
                     done = true;
-                    var unused = spaceToDistribute - (spaceForChildren * totalPercent / 100);
+                    var unused = spaceToDistribute -
+                        (spaceForChildren * totalPercent / 100);
                     if (unused > 0)
                         spaceToDistribute -= unused;
                     else
@@ -30939,7 +30430,8 @@ var egret;
                 var paddingT = isNaN(this._paddingTop) ? padding : this._paddingTop;
                 var paddingB = isNaN(this._paddingBottom) ? padding : this._paddingBottom;
                 var numElements = this.target.numElements;
-                var contentHeight = this.getStartPosition(numElements - 1) + this.elementSizeTable[numElements - 1] + paddingB;
+                var contentHeight = this.getStartPosition(numElements - 1) +
+                    this.elementSizeTable[numElements - 1] + paddingB;
                 var minVisibleY = this.target.verticalScrollPosition;
                 if (minVisibleY > contentHeight - paddingB) {
                     this.startIndex = -1;
@@ -31015,6 +30507,7 @@ var egret;
                 var contentWidth = 0;
                 var oldElementSize;
                 var needInvalidateSize = false;
+                //对可见区域进行布局
                 for (var i = this.startIndex; i <= this.endIndex; i++) {
                     var exceesWidth = 0;
                     layoutElement = (this.target.getVirtualElementAt(i));
@@ -31229,7 +30722,8 @@ var egret;
                 var done;
                 do {
                     done = true;
-                    var unused = spaceToDistribute - (spaceForChildren * totalPercent / 100);
+                    var unused = spaceToDistribute -
+                        (spaceForChildren * totalPercent / 100);
                     if (unused > 0)
                         spaceToDistribute -= unused;
                     else
@@ -31337,6 +30831,360 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
+         * @class egret.gui.LayoutManager
+         * @classdesc
+         * 布局管理器
+         * @extends egret.EventDispatcher
+         */
+        var LayoutManager = (function (_super) {
+            __extends(LayoutManager, _super);
+            /**
+             * @method egret.gui.LayoutManager#constructor
+             */
+            function LayoutManager() {
+                _super.call(this);
+                this.targetLevel = Number.MAX_VALUE;
+                /**
+                 * 需要抛出组件初始化完成事件的对象
+                 */
+                this.updateCompleteQueue = new gui.DepthQueue();
+                this.invalidatePropertiesFlag = false;
+                this.invalidateClientPropertiesFlag = false;
+                this.invalidatePropertiesQueue = new gui.DepthQueue();
+                this.invalidateSizeFlag = false;
+                this.invalidateClientSizeFlag = false;
+                this.invalidateSizeQueue = new gui.DepthQueue();
+                this.invalidateDisplayListFlag = false;
+                this.invalidateDisplayListQueue = new gui.DepthQueue();
+                /**
+                 * 是否已经添加了事件监听
+                 */
+                this.listenersAttached = false;
+            }
+            var d = __define,c=LayoutManager;p=c.prototype;
+            /**
+             * 标记组件提交过属性
+             * @method egret.gui.LayoutManager#invalidateProperties
+             * @param client {ILayoutManagerClient}
+             */
+            p.invalidateProperties = function (client) {
+                if (!this.invalidatePropertiesFlag) {
+                    this.invalidatePropertiesFlag = true;
+                    if (!this.listenersAttached)
+                        this.attachListeners();
+                }
+                if (this.targetLevel <= client.nestLevel)
+                    this.invalidateClientPropertiesFlag = true;
+                this.invalidatePropertiesQueue.insert(client);
+            };
+            /**
+             * 使提交的属性生效
+             */
+            p.validateProperties = function () {
+                var client = this.invalidatePropertiesQueue.shift();
+                while (client) {
+                    if (client.parent) {
+                        client.validateProperties();
+                        if (!client.updateCompletePendingFlag) {
+                            this.updateCompleteQueue.insert(client);
+                            client.updateCompletePendingFlag = true;
+                        }
+                    }
+                    client = this.invalidatePropertiesQueue.shift();
+                }
+                if (this.invalidatePropertiesQueue.isEmpty())
+                    this.invalidatePropertiesFlag = false;
+            };
+            /**
+             * 标记需要重新测量尺寸
+             * @method egret.gui.LayoutManager#invalidateSize
+             * @param client {ILayoutManagerClient}
+             */
+            p.invalidateSize = function (client) {
+                if (!this.invalidateSizeFlag) {
+                    this.invalidateSizeFlag = true;
+                    if (!this.listenersAttached)
+                        this.attachListeners();
+                }
+                if (this.targetLevel <= client.nestLevel)
+                    this.invalidateClientSizeFlag = true;
+                this.invalidateSizeQueue.insert(client);
+            };
+            /**
+             * 测量属性
+             */
+            p.validateSize = function () {
+                var client = this.invalidateSizeQueue.pop();
+                while (client) {
+                    if (client.parent) {
+                        client.validateSize();
+                        if (!client.updateCompletePendingFlag) {
+                            this.updateCompleteQueue.insert(client);
+                            client.updateCompletePendingFlag = true;
+                        }
+                    }
+                    client = this.invalidateSizeQueue.pop();
+                }
+                if (this.invalidateSizeQueue.isEmpty())
+                    this.invalidateSizeFlag = false;
+            };
+            /**
+             * 标记需要重新测量尺寸
+             * @method egret.gui.LayoutManager#invalidateDisplayList
+             * @param client {ILayoutManagerClient}
+             */
+            p.invalidateDisplayList = function (client) {
+                if (!this.invalidateDisplayListFlag) {
+                    this.invalidateDisplayListFlag = true;
+                    if (!this.listenersAttached)
+                        this.attachListeners();
+                }
+                this.invalidateDisplayListQueue.insert(client);
+            };
+            /**
+             * 测量属性
+             */
+            p.validateDisplayList = function () {
+                var client = this.invalidateDisplayListQueue.shift();
+                while (client) {
+                    if (client.parent) {
+                        client.validateDisplayList();
+                        if (!client.updateCompletePendingFlag) {
+                            this.updateCompleteQueue.insert(client);
+                            client.updateCompletePendingFlag = true;
+                        }
+                    }
+                    client = this.invalidateDisplayListQueue.shift();
+                }
+                if (this.invalidateDisplayListQueue.isEmpty())
+                    this.invalidateDisplayListFlag = false;
+            };
+            /**
+             * 添加事件监听
+             */
+            p.attachListeners = function () {
+                gui.UIGlobals.stage.addEventListener(egret.Event.ENTER_FRAME, this.doPhasedInstantiationCallBack, this);
+                gui.UIGlobals.stage.addEventListener(egret.Event.RENDER, this.doPhasedInstantiationCallBack, this);
+                gui.UIGlobals.stage.invalidate();
+                this.listenersAttached = true;
+            };
+            /**
+             * 执行属性应用
+             */
+            p.doPhasedInstantiationCallBack = function (event) {
+                if (event === void 0) { event = null; }
+                gui.UIGlobals.stage.removeEventListener(egret.Event.ENTER_FRAME, this.doPhasedInstantiationCallBack, this);
+                gui.UIGlobals.stage.removeEventListener(egret.Event.RENDER, this.doPhasedInstantiationCallBack, this);
+                this.doPhasedInstantiation();
+            };
+            p.doPhasedInstantiation = function () {
+                if (this.invalidatePropertiesFlag) {
+                    this.validateProperties();
+                }
+                if (this.invalidateSizeFlag) {
+                    this.validateSize();
+                }
+                if (this.invalidateDisplayListFlag) {
+                    this.validateDisplayList();
+                }
+                if (this.invalidatePropertiesFlag ||
+                    this.invalidateSizeFlag ||
+                    this.invalidateDisplayListFlag) {
+                    this.attachListeners();
+                }
+                else {
+                    this.listenersAttached = false;
+                    var client = this.updateCompleteQueue.pop();
+                    while (client) {
+                        if (!client.initialized)
+                            client.initialized = true;
+                        if (client.hasEventListener(gui.UIEvent.UPDATE_COMPLETE))
+                            gui.UIEvent.dispatchUIEvent(client, gui.UIEvent.UPDATE_COMPLETE);
+                        client.updateCompletePendingFlag = false;
+                        client = this.updateCompleteQueue.pop();
+                    }
+                    gui.UIEvent.dispatchUIEvent(this, gui.UIEvent.UPDATE_COMPLETE);
+                }
+            };
+            /**
+             * 立即应用所有延迟的属性
+             * @method egret.gui.LayoutManager#validateNow
+             */
+            p.validateNow = function () {
+                var infiniteLoopGuard = 0;
+                while (this.listenersAttached && infiniteLoopGuard++ < 100)
+                    this.doPhasedInstantiationCallBack();
+            };
+            /**
+             * 使大于等于指定组件层级的元素立即应用属性
+             * @method egret.gui.LayoutManager#validateClient
+             * @param target {ILayoutManagerClient} 要立即应用属性的组件
+             * @param skipDisplayList {boolean} 是否跳过更新显示列表阶段
+             */
+            p.validateClient = function (target, skipDisplayList) {
+                if (skipDisplayList === void 0) { skipDisplayList = false; }
+                var obj;
+                var i = 0;
+                var done = false;
+                var oldTargetLevel = this.targetLevel;
+                if (this.targetLevel == Number.MAX_VALUE)
+                    this.targetLevel = target.nestLevel;
+                while (!done) {
+                    done = true;
+                    obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
+                    while (obj) {
+                        if (obj.parent) {
+                            obj.validateProperties();
+                            if (!obj.updateCompletePendingFlag) {
+                                this.updateCompleteQueue.insert(obj);
+                                obj.updateCompletePendingFlag = true;
+                            }
+                        }
+                        obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
+                    }
+                    if (this.invalidatePropertiesQueue.isEmpty()) {
+                        this.invalidatePropertiesFlag = false;
+                    }
+                    this.invalidateClientPropertiesFlag = false;
+                    obj = (this.invalidateSizeQueue.removeLargestChild(target));
+                    while (obj) {
+                        if (obj.parent) {
+                            obj.validateSize();
+                            if (!obj.updateCompletePendingFlag) {
+                                this.updateCompleteQueue.insert(obj);
+                                obj.updateCompletePendingFlag = true;
+                            }
+                        }
+                        if (this.invalidateClientPropertiesFlag) {
+                            obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
+                            if (obj) {
+                                this.invalidatePropertiesQueue.insert(obj);
+                                done = false;
+                                break;
+                            }
+                        }
+                        obj = (this.invalidateSizeQueue.removeLargestChild(target));
+                    }
+                    if (this.invalidateSizeQueue.isEmpty()) {
+                        this.invalidateSizeFlag = false;
+                    }
+                    this.invalidateClientPropertiesFlag = false;
+                    this.invalidateClientSizeFlag = false;
+                    if (!skipDisplayList) {
+                        obj = (this.invalidateDisplayListQueue.removeSmallestChild(target));
+                        while (obj) {
+                            if (obj.parent) {
+                                obj.validateDisplayList();
+                                if (!obj.updateCompletePendingFlag) {
+                                    this.updateCompleteQueue.insert(obj);
+                                    obj.updateCompletePendingFlag = true;
+                                }
+                            }
+                            if (this.invalidateClientPropertiesFlag) {
+                                obj = (this.invalidatePropertiesQueue.removeSmallestChild(target));
+                                if (obj) {
+                                    this.invalidatePropertiesQueue.insert(obj);
+                                    done = false;
+                                    break;
+                                }
+                            }
+                            if (this.invalidateClientSizeFlag) {
+                                obj = (this.invalidateSizeQueue.removeLargestChild(target));
+                                if (obj) {
+                                    this.invalidateSizeQueue.insert(obj);
+                                    done = false;
+                                    break;
+                                }
+                            }
+                            obj = (this.invalidateDisplayListQueue.removeSmallestChild(target));
+                        }
+                        if (this.invalidateDisplayListQueue.isEmpty()) {
+                            this.invalidateDisplayListFlag = false;
+                        }
+                    }
+                }
+                if (oldTargetLevel == Number.MAX_VALUE) {
+                    this.targetLevel = Number.MAX_VALUE;
+                    if (!skipDisplayList) {
+                        obj = (this.updateCompleteQueue.removeLargestChild(target));
+                        while (obj) {
+                            if (!obj.initialized)
+                                obj.initialized = true;
+                            if (obj.hasEventListener(gui.UIEvent.UPDATE_COMPLETE))
+                                gui.UIEvent.dispatchUIEvent(obj, gui.UIEvent.UPDATE_COMPLETE);
+                            obj.updateCompletePendingFlag = false;
+                            obj = (this.updateCompleteQueue.removeLargestChild(target));
+                        }
+                    }
+                }
+            };
+            return LayoutManager;
+        })(egret.EventDispatcher);
+        gui.LayoutManager = LayoutManager;
+        egret.registerClass(LayoutManager,"egret.gui.LayoutManager");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -31821,6 +31669,291 @@ var egret;
     var gui;
     (function (gui) {
         /**
+         * @class egret.gui.DepthQueue
+         * @classdesc
+         * 显示列表嵌套深度排序队列
+         */
+        var DepthQueue = (function () {
+            /**
+             * @method egret.gui.DepthQueue#constructor
+             */
+            function DepthQueue() {
+                /**
+                 * 深度队列
+                 */
+                this.depthBins = [];
+                /**
+                 * 最小深度
+                 */
+                this.minDepth = 0;
+                /**
+                 * 最大深度
+                 */
+                this.maxDepth = -1;
+            }
+            var d = __define,c=DepthQueue;p=c.prototype;
+            /**
+             * 插入一个元素
+             * @method egret.gui.DepthQueue#insert
+             * @param client {ILayoutManagerClient}
+             */
+            p.insert = function (client) {
+                var depth = client.nestLevel;
+                var hashCode = client.hashCode;
+                if (this.maxDepth < this.minDepth) {
+                    this.minDepth = this.maxDepth = depth;
+                }
+                else {
+                    if (depth < this.minDepth)
+                        this.minDepth = depth;
+                    if (depth > this.maxDepth)
+                        this.maxDepth = depth;
+                }
+                var bin = this.depthBins[depth];
+                if (!bin) {
+                    bin = new DepthBin();
+                    this.depthBins[depth] = bin;
+                    bin.items[hashCode] = client;
+                    bin.length++;
+                }
+                else {
+                    if (bin.items[hashCode] == null) {
+                        bin.items[hashCode] = client;
+                        bin.length++;
+                    }
+                }
+            };
+            /**
+             * 从队列尾弹出深度最大的一个对象
+             * @method egret.gui.DepthQueue#pop
+             * @returns {ILayoutManagerClient}
+             */
+            p.pop = function () {
+                var client = null;
+                if (this.minDepth <= this.maxDepth) {
+                    var bin = this.depthBins[this.maxDepth];
+                    while (!bin || bin.length == 0) {
+                        this.maxDepth--;
+                        if (this.maxDepth < this.minDepth)
+                            return null;
+                        bin = this.depthBins[this.maxDepth];
+                    }
+                    var items = bin.items;
+                    for (var key in items) {
+                        client = items[key];
+                        this.remove(client, this.maxDepth);
+                        break;
+                    }
+                    while (!bin || bin.length == 0) {
+                        this.maxDepth--;
+                        if (this.maxDepth < this.minDepth)
+                            break;
+                        bin = this.depthBins[this.maxDepth];
+                    }
+                }
+                return client;
+            };
+            /**
+             * 从队列首弹出深度最小的一个对象
+             * @method egret.gui.DepthQueue#shift
+             * @returns {ILayoutManagerClient}
+             */
+            p.shift = function () {
+                var client = null;
+                if (this.minDepth <= this.maxDepth) {
+                    var bin = this.depthBins[this.minDepth];
+                    while (!bin || bin.length == 0) {
+                        this.minDepth++;
+                        if (this.minDepth > this.maxDepth)
+                            return null;
+                        bin = this.depthBins[this.minDepth];
+                    }
+                    var items = bin.items;
+                    for (var key in items) {
+                        client = items[key];
+                        this.remove(client, this.minDepth);
+                        break;
+                    }
+                    while (!bin || bin.length == 0) {
+                        this.minDepth++;
+                        if (this.minDepth > this.maxDepth)
+                            break;
+                        bin = this.depthBins[this.minDepth];
+                    }
+                }
+                return client;
+            };
+            /**
+             * 移除大于等于指定组件层级的元素中最大的元素
+             * @method egret.gui.DepthQueue#removeLargestChild
+             * @param client {ILayoutManagerClient}
+             * @returns {any}
+             */
+            p.removeLargestChild = function (client) {
+                var max = this.maxDepth;
+                var min = client.nestLevel;
+                var hashCode = client.hashCode;
+                while (min <= max) {
+                    var bin = this.depthBins[max];
+                    if (bin && bin.length > 0) {
+                        if (max == client.nestLevel) {
+                            if (bin.items[hashCode]) {
+                                this.remove(client, max);
+                                return client;
+                            }
+                        }
+                        else {
+                            var items = bin.items;
+                            for (var key in items) {
+                                var value = items[key];
+                                if ((value instanceof egret.DisplayObject) && (client instanceof egret.DisplayObjectContainer)
+                                    && client.contains(value)) {
+                                    this.remove(value, max);
+                                    return value;
+                                }
+                            }
+                        }
+                        max--;
+                    }
+                    else {
+                        if (max == this.maxDepth)
+                            this.maxDepth--;
+                        max--;
+                        if (max < min)
+                            break;
+                    }
+                }
+                return null;
+            };
+            /**
+             * 移除大于等于指定组件层级的元素中最小的元素
+             * @method egret.gui.DepthQueue#removeSmallestChild
+             * @param client {ILayoutManagerClient}
+             * @returns {any}
+             */
+            p.removeSmallestChild = function (client) {
+                var min = client.nestLevel;
+                var hashCode = client.hashCode;
+                while (min <= this.maxDepth) {
+                    var bin = this.depthBins[min];
+                    if (bin && bin.length > 0) {
+                        if (min == client.nestLevel) {
+                            if (bin.items[hashCode]) {
+                                this.remove(client, min);
+                                return client;
+                            }
+                        }
+                        else {
+                            var items = bin.items;
+                            for (var key in items) {
+                                var value = items[key];
+                                if ((value instanceof egret.DisplayObject) && (client instanceof egret.DisplayObjectContainer)
+                                    && client.contains(value)) {
+                                    this.remove(value, min);
+                                    return value;
+                                }
+                            }
+                        }
+                        min++;
+                    }
+                    else {
+                        if (min == this.minDepth)
+                            this.minDepth++;
+                        min++;
+                        if (min > this.maxDepth)
+                            break;
+                    }
+                }
+                return null;
+            };
+            /**
+             * 移除一个元素
+             * @method egret.gui.DepthQueue#remove
+             * @param client {ILayoutManagerClient}
+             * @param level {number}
+             * @returns {ILayoutManagerClient}
+             */
+            p.remove = function (client, level) {
+                if (level === void 0) { level = -1; }
+                var depth = (level >= 0) ? level : client.nestLevel;
+                var hashCode = client.hashCode;
+                var bin = this.depthBins[depth];
+                if (bin && bin.items[hashCode] != null) {
+                    delete bin.items[hashCode];
+                    bin.length--;
+                    return client;
+                }
+                return null;
+            };
+            /**
+             * 清空队列
+             * @method egret.gui.DepthQueue#removeAll
+             */
+            p.removeAll = function () {
+                this.depthBins.length = 0;
+                this.minDepth = 0;
+                this.maxDepth = -1;
+            };
+            /**
+             * 队列是否为空
+             * @method egret.gui.DepthQueue#isEmpty
+             * @returns {boolean}
+             */
+            p.isEmpty = function () {
+                return this.minDepth > this.maxDepth;
+            };
+            return DepthQueue;
+        })();
+        gui.DepthQueue = DepthQueue;
+        egret.registerClass(DepthQueue,"egret.gui.DepthQueue");
+        /**
+         * 列表项
+         */
+        var DepthBin = (function () {
+            function DepthBin() {
+                this.length = 0;
+                this.items = [];
+            }
+            var d = __define,c=DepthBin;p=c.prototype;
+            return DepthBin;
+        })();
+        gui.DepthBin = DepthBin;
+        egret.registerClass(DepthBin,"egret.gui.DepthBin");
+    })(gui = egret.gui || (egret.gui = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var gui;
+    (function (gui) {
+        /**
          * @class egret.gui.OverrideBase
          * @classdesc
          * OverrideBase 类是视图状态所用的 override 类的基类。
@@ -31987,7 +32120,8 @@ var egret;
              * @param parent {IContainer}
              */
             p.remove = function (parent) {
-                var dest = this.propertyName == null || this.propertyName == "" ? parent : parent[this.propertyName];
+                var dest = this.propertyName == null || this.propertyName == "" ?
+                    parent : parent[this.propertyName];
                 var targetElement = (parent[this.target]);
                 if (!targetElement || !dest)
                     return;
