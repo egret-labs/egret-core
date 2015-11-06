@@ -45,7 +45,7 @@ var dragonBones;
          *
          */
         DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.1.9";
+        DragonBones.VERSION = "4.1.10";
         return DragonBones;
     })();
     dragonBones.DragonBones = DragonBones;
@@ -8767,7 +8767,9 @@ var dragonBones;
             }
         };
         p.advanceTimelinesTime = function (passedTime) {
-            this._time += passedTime;
+            if (this._isPlaying) {
+                this._time += passedTime;
+            }
             //计算是否已经播放完成isThisComplete
             var startFlg = false;
             var loopCompleteFlg = false;
