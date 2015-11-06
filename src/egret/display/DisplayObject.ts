@@ -1906,7 +1906,8 @@ module egret {
          * @private
          */
         $hitTest(stageX:number, stageY:number):DisplayObject {
-            if (!this.$renderRegion || !this.$visible) {
+            var values = this.$DisplayObject;
+            if (!this.$renderRegion || !this.$visible || values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                 return null;
             }
             var m = this.$getInvertedConcatenatedMatrix();

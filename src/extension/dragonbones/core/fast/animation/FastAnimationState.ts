@@ -274,7 +274,10 @@ module dragonBones {
 		}
 		
 		private advanceTimelinesTime(passedTime:number):void{
-			this._time += passedTime;
+			if(this._isPlaying)
+			{
+				this._time += passedTime;
+			}
 			
 			//计算是否已经播放完成isThisComplete
 
