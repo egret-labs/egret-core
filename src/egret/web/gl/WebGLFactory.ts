@@ -142,4 +142,26 @@ module egret.web {
         }
 
     }
+
+    var proto = HTMLCanvasElement.prototype;
+    var data = Object.getOwnPropertyDescriptor(proto,"width");
+    var widthSet = data.set;
+    data.set = function(value:number):void{
+        widthSet.call(this,value);
+        var onResize:Function = this["onResize"];
+        if(onResize!=null){
+            onResize.call(this);
+        }
+    };
+    Object.defineProperty(proto,"width",data);
+
+    data = Object.getOwnPropertyDescriptor(proto,"height");
+    var heightSet = data.set;
+    data.set = function(value:number):void{
+        heightSet.call(this,value);
+        var onResize:Function = this["onResize"];
+        if(onResize!=null){
+            onResize.call(this);
+        }
+    }
 }
