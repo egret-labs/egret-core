@@ -228,13 +228,16 @@ module eui {
          */
         protected getCurrentState():string {
             var state = "up";
-            if (this._selected || this.touchCaptured) {
+            if (this.touchCaptured) {
                 state = "down";
             }
-            var selectedState = state + "AndSelected";
-            var skin = this.skin;
-            if (skin&&skin.hasState(selectedState)) {
-                return selectedState;
+            if (this._selected) {
+                var selectedState = state + "AndSelected";
+                var skin = this.skin;
+                if (skin && skin.hasState(selectedState)) {
+                    return selectedState;
+                }
+                return state == "disabled" ? "disabled" : "down";
             }
             return state;
         }

@@ -168,7 +168,7 @@ var FileAutoChangeCommand = (function () {
     FileAutoChangeCommand.prototype.getNativeProjectInfo = function (html) {
         if (!FileUtil.exists(html))
             return;
-        var content = FileUtil.read(html);
+        var content = FileUtil.read(html, true);
         var projs = project.parseProjectInfo(content);
         var proj;
         if (projs.length == 0) {

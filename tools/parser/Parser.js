@@ -198,7 +198,7 @@ function parseCommandLine(commandLine) {
             manifest = JSON.parse(content);
         }
         catch (e) {
-            utils.exit(10009);
+            utils.exit(10009, packagePath);
         }
         egret.manifest = manifest["egret"];
         egret.version = manifest["version"];
@@ -226,5 +226,4 @@ function parseJSON(json) {
     return options;
 }
 exports.parseJSON = parseJSON;
-
-//# sourceMappingURL=../parser/Parser.js.map
+//# sourceMappingURL=Parser.js.map

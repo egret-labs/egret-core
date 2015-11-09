@@ -1877,7 +1877,7 @@ module egret {
         $getConcatenatedMatrixAt(root:DisplayObject, matrix:Matrix):void {
             var invertMatrix = root.$getInvertedConcatenatedMatrix();
             if (invertMatrix.a === 0 || invertMatrix.d === 0) {//缩放值为0，逆矩阵无效
-                var target = this;
+                var target:DisplayObject = this;
                 var rootLevel = root.$nestLevel;
                 matrix.identity();
                 while (target.$nestLevel > rootLevel) {
@@ -1906,7 +1906,8 @@ module egret {
          * @private
          */
         $hitTest(stageX:number, stageY:number):DisplayObject {
-            if (!this.$renderRegion || !this.$visible) {
+            var values = this.$DisplayObject;
+            if (!this.$renderRegion || !this.$visible || values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                 return null;
             }
             var m = this.$getInvertedConcatenatedMatrix();
@@ -2082,7 +2083,7 @@ module egret {
          * @platform Web,Native
          */
         public willTrigger(type:string):boolean {
-            var parent = this;
+            var parent:DisplayObject = this;
             while (parent) {
                 if (parent.hasEventListener(type))
                     return true;
