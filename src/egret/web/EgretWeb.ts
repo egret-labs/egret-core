@@ -69,8 +69,10 @@ module egret.web {
 
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
-        var surfaceFactory = new CanvasFactory();
-        sys.surfaceFactory = surfaceFactory;
+        //var surfaceFactory = new CanvasFactory();
+        //sys.surfaceFactory = surfaceFactory;
+        var webglFactory = new WebGLFactory();
+        sys.surfaceFactory = webglFactory;
         if (!egret.sys.screenAdapter) {
             egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
         }
