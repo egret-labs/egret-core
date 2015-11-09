@@ -28,17 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    /**
-     * @language en_US
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    egret.ISocket;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

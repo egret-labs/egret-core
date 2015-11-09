@@ -346,10 +346,6 @@ module egret.sys {
     /**
      * @private
      */
-    declare var $extends:Function;
-    /**
-     * @private
-     */
     export var $logToFPS:(info:string)=>void;
 
 

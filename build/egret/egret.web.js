@@ -1832,7 +1832,11 @@ var egret;
              * @param url 要加载的图像文件的地址。
              */
             p.load = function (url) {
-                if (web.Html5Capatibility._canUseBlob && url.indexOf("wxLocalResource:") != 0 && url.indexOf("data:") != 0 && url.indexOf("http:") != 0 && url.indexOf("https:") != 0) {
+                if (web.Html5Capatibility._canUseBlob
+                    && url.indexOf("wxLocalResource:") != 0 //微信专用不能使用 blob
+                    && url.indexOf("data:") != 0
+                    && url.indexOf("http:") != 0
+                    && url.indexOf("https:") != 0) {
                     var request = this.request;
                     if (!request) {
                         request = this.request = new egret.web.WebHttpRequest();
@@ -3386,7 +3390,11 @@ var egret;
          * 启动心跳计时器。
          */
         function startTicker(ticker) {
-            var requestAnimationFrame = window["requestAnimationFrame"] || window["webkitRequestAnimationFrame"] || window["mozRequestAnimationFrame"] || window["oRequestAnimationFrame"] || window["msRequestAnimationFrame"];
+            var requestAnimationFrame = window["requestAnimationFrame"] ||
+                window["webkitRequestAnimationFrame"] ||
+                window["mozRequestAnimationFrame"] ||
+                window["oRequestAnimationFrame"] ||
+                window["msRequestAnimationFrame"];
             if (!requestAnimationFrame) {
                 requestAnimationFrame = function (callback) {
                     return window.setTimeout(callback, 1000 / 60);
@@ -3766,7 +3774,8 @@ var egret;
                 var shouldRotate = false;
                 var orientation = this.stage.$orientation;
                 if (orientation != egret.OrientationMode.AUTO) {
-                    shouldRotate = orientation != egret.OrientationMode.PORTRAIT && screenRect.height > screenRect.width || orientation == egret.OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
+                    shouldRotate = orientation != egret.OrientationMode.PORTRAIT && screenRect.height > screenRect.width
+                        || orientation == egret.OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
                 }
                 var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
                 var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
