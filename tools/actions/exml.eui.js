@@ -29,9 +29,11 @@ function buildChanges(exmls) {
     };
     if (!exmls || exmls.length == 0)
         return state;
-    exmls.forEach(function (exmlFile) {
-        parse(exmlFile);
-    });
+    if (egret.args.exmlGenJs) {
+        exmls.forEach(function (exmlFile) {
+            parse(exmlFile);
+        });
+    }
     return state;
 }
 exports.buildChanges = buildChanges;

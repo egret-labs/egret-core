@@ -133,6 +133,7 @@ class CompileOptions implements egret.ToolArgs {
     nativeTemplatePath: string;
     all: boolean;
     template: string;
+    exmlGenJs:boolean;
 
     private _tmpDir = null;
     private _tmpProj: egret.ILarkProject;

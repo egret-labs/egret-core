@@ -100,6 +100,10 @@ exports.optionDeclarations = [
         name: 'egretVersion',
         type: 'string',
         shortName: "ev"
+    }, {
+        name: 'exmlGenJs',
+        type: 'boolean',
+        shortName: 'gjs'
     }
 ];
 var shortOptionNames = {};

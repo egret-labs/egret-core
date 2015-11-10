@@ -33,9 +33,11 @@ export function buildChanges(exmls: string[]): egret.TaskResult {
     };
     if (!exmls || exmls.length == 0)
         return state;
-    exmls.forEach(exmlFile=>{
-        parse(exmlFile);
-    });
+    if(egret.args.exmlGenJs){
+        exmls.forEach(exmlFile=>{
+            parse(exmlFile);
+        });
+    }
     return state;
 }
 

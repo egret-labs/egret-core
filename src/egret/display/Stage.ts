@@ -321,23 +321,29 @@ module egret {
             this.$maxTouches = value;
             this.$screen.updateMaxTouches();
         }
-
+        private $dirtyRegionPolicy:string = DirtyRegionPolicy.ON;
         /**
          * @language en_US
          * Set dirty region policy
-         * @param policy One of the constants defined by egret.sys.DirtyRegionPolicy
+         * One of the constants defined by egret.DirtyRegionPolicy
          * @version Egret 2.5
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置脏矩形策略
-         * @param policy egret.sys.DirtyRegionPolicy定义的常量之一
+         * egret.DirtyRegionPolicy 定义的常量之一
          * @version Egret 2.5
          * @platform Web,Native
          */
-        public setDirtyRegionPolicy(policy:string):void {
-            this.$displayList.setDirtyRegionPolicy(policy);
+        public set dirtyRegionPolicy(policy:string) {
+            if(this.$dirtyRegionPolicy != policy){
+                this.$dirtyRegionPolicy = policy;
+                this.$displayList.setDirtyRegionPolicy(policy);
+            }
+        }
+        public get dirtyRegionPolicy():string{
+            return this.$dirtyRegionPolicy;
         }
 
         /**
