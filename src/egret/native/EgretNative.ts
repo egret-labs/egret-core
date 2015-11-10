@@ -48,6 +48,11 @@ module egret.native {
             if (language in egret.$locale_strings)
                 egret.$language = language;
         }
+        try{
+            Capabilities.$setNativeCapabilities(egret_native.getVersion());
+        }catch(e){
+
+        }
         var ticker = egret.sys.$ticker;
         var mainLoop = function () {
             ticker.update();
