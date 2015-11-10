@@ -6891,6 +6891,7 @@ var egret;
             this.$scaleMode = egret.StageScaleMode.SHOW_ALL;
             this.$orientation = egret.OrientationMode.AUTO;
             this.$maxTouches = 99;
+            this.$dirtyRegionPolicy = egret.DirtyRegionPolicy.ON;
             this.$stage = this;
             this.$nestLevel = 1;
         }
@@ -7125,7 +7126,10 @@ var egret;
                 this.$screen.updateMaxTouches();
             }
         );
-        d(p, "dirtyRegionPolicy",undefined
+        d(p, "dirtyRegionPolicy"
+            ,function () {
+                return this.$dirtyRegionPolicy;
+            }
             /**
              * @language en_US
              * Set dirty region policy
@@ -7141,7 +7145,10 @@ var egret;
              * @platform Web,Native
              */
             ,function (policy) {
-                this.$displayList.setDirtyRegionPolicy(policy);
+                if (this.$dirtyRegionPolicy != policy) {
+                    this.$dirtyRegionPolicy = policy;
+                    this.$displayList.setDirtyRegionPolicy(policy);
+                }
             }
         );
         /**
