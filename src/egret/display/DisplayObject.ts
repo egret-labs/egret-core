@@ -131,7 +131,7 @@ module egret {
     const enum Keys {
         scaleX,
         scaleY,
-        skewX,
+        skewX,//弧度 radian
         skewY,
         rotation,
         name,
@@ -145,6 +145,8 @@ module egret {
         anchorOffsetY,
         explicitWidth,
         explicitHeight,
+        skewXdeg,//角度 degree
+        skewYdeg,
     }
 
     /**
@@ -235,7 +237,9 @@ module egret {
                 12: 0,               //anchorOffsetX,
                 13: 0,                //anchorOffsetY,
                 14: NaN,           //explicitWidth,
-                15: NaN            //explicitHeight,
+                15: NaN,           //explicitHeight,
+                16: 0,               //skewXdeg,
+                17: 0                //skewYdeg,
             };
         }
 
@@ -837,7 +841,7 @@ module egret {
          * @platform Web,Native
          */
         public get skewX():number {
-            return this.$DisplayObject[Keys.skewX];
+            return this.$DisplayObject[Keys.skewXdeg];
         }
 
         public set skewX(value:number) {
@@ -851,14 +855,15 @@ module egret {
          */
         $setSkewX(value:number):boolean {
             value = egret.sys.getNumber(value);
+            var values = this.$DisplayObject;
+            if(value == values[Keys.skewXdeg]){
+                return false;
+            }
+            values[Keys.skewXdeg] = value;
 
             value = clampRotation(value);
             value = value / 180 * Math.PI;
 
-            var values = this.$DisplayObject;
-            if (value == values[Keys.skewX]) {
-                return false;
-            }
             values[Keys.skewX] = value;
             this.invalidateMatrix();
 
@@ -873,7 +878,7 @@ module egret {
          * @platform Web,Native
          */
         public get skewY():number {
-            return this.$DisplayObject[Keys.skewY];
+            return this.$DisplayObject[Keys.skewYdeg];
         }
 
         public set skewY(value:number) {
@@ -887,14 +892,15 @@ module egret {
          */
         $setSkewY(value:number):boolean {
             value = egret.sys.getNumber(value);
+            var values = this.$DisplayObject;
+            if (value == values[Keys.skewYdeg]) {
+                return false;
+            }
+            values[Keys.skewYdeg] = value;
 
             value = clampRotation(value);
             value = value / 180 * Math.PI;
 
-            var values = this.$DisplayObject;
-            if (value == values[Keys.skewY]) {
-                return false;
-            }
             values[Keys.skewY] = value;
             this.invalidateMatrix();
 
