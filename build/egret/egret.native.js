@@ -1444,7 +1444,7 @@ var egret;
                     player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
                 }
                 this.playerOption = option;
-                this.stage = stage;
+                this.$stage = stage;
                 this.player = player;
                 this.nativeTouch = touch;
                 //this.nativeInput = nativeInput;
@@ -1456,7 +1456,7 @@ var egret;
                 var option = this.playerOption;
                 var screenWidth = egret_native.EGTView.getFrameWidth();
                 var screenHeight = egret_native.EGTView.getFrameHeight();
-                var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
+                var stageSize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
                 var stageWidth = stageSize.stageWidth;
                 var stageHeight = stageSize.stageHeight;
                 var displayWidth = stageSize.displayWidth;
@@ -1552,7 +1552,13 @@ var egret;
             if (!egret.sys.screenAdapter) {
                 egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
             }
-            new native.NativePlayer();
+            //todo
+            var player = new native.NativePlayer();
+            //老版本runtime不支持canvas,关闭脏矩形
+            if (!native.$supportCanvas) {
+                player.$stage.dirtyRegionPolicy = egret.DirtyRegionPolicy.OFF;
+                egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () { };
+            }
         }
         function toArray(argument) {
             var args = [];

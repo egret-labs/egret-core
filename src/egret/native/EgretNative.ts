@@ -63,7 +63,13 @@ module egret.native {
             egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
         }
 
-        new NativePlayer();
+        //todo
+        var player = new NativePlayer();
+        //老版本runtime不支持canvas,关闭脏矩形
+        if(!$supportCanvas) {
+            player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
+            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function(){};
+        }
     }
 
     function toArray(argument) {
