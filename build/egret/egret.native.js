@@ -1538,6 +1538,11 @@ var egret;
                 if (language in egret.$locale_strings)
                     egret.$language = language;
             }
+            try {
+                egret.Capabilities.$setNativeCapabilities(egret_native.getVersion());
+            }
+            catch (e) {
+            }
             var ticker = egret.sys.$ticker;
             var mainLoop = function () {
                 ticker.update();

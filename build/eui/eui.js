@@ -4463,6 +4463,7 @@ var eui;
          * @platform Web,Native
          */
         function State(name, overrides) {
+            if (overrides === void 0) { overrides = []; }
             _super.call(this);
             this.name = name;
             this.overrides = overrides;

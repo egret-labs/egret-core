@@ -805,7 +805,9 @@ var egret;
                 12: 0,
                 13: 0,
                 14: NaN,
-                15: NaN //explicitHeight,
+                15: NaN,
+                16: 0,
+                17: 0 //skewYdeg,
             };
         }
         var d = __define,c=DisplayObject;p=c.prototype;
@@ -1346,7 +1348,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return this.$DisplayObject[2 /* skewX */];
+                return this.$DisplayObject[16 /* skewXdeg */];
             }
             ,function (value) {
                 this.$setSkewX(value);
@@ -1359,12 +1361,13 @@ var egret;
          */
         p.$setSkewX = function (value) {
             value = egret.sys.getNumber(value);
-            value = clampRotation(value);
-            value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
-            if (value == values[2 /* skewX */]) {
+            if (value == values[16 /* skewXdeg */]) {
                 return false;
             }
+            values[16 /* skewXdeg */] = value;
+            value = clampRotation(value);
+            value = value / 180 * Math.PI;
             values[2 /* skewX */] = value;
             this.invalidateMatrix();
             return true;
@@ -1378,7 +1381,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return this.$DisplayObject[3 /* skewY */];
+                return this.$DisplayObject[17 /* skewYdeg */];
             }
             ,function (value) {
                 this.$setSkewY(value);
@@ -1391,12 +1394,13 @@ var egret;
          */
         p.$setSkewY = function (value) {
             value = egret.sys.getNumber(value);
-            value = clampRotation(value);
-            value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
-            if (value == values[3 /* skewY */]) {
+            if (value == values[17 /* skewYdeg */]) {
                 return false;
             }
+            values[17 /* skewYdeg */] = value;
+            value = clampRotation(value);
+            value = value / 180 * Math.PI;
             values[3 /* skewY */] = value;
             this.invalidateMatrix();
             return true;
@@ -15468,6 +15472,35 @@ var egret;
             }
         );
         /**
+         * 设置系统信息
+         */
+        Capabilities.$setNativeCapabilities = function (value) {
+            var arr = value.split("-");
+            if (arr.length == 4) {
+                //todo 未来去掉大于4个的容错处理，2.5.4版本之前的参数有错误
+                var osType = arr[0];
+                switch (osType) {
+                    case "android":
+                        osType = "Android";
+                        break;
+                    case "ios":
+                        osType = 'iOS';
+                        break;
+                }
+                Capabilities.$os = osType;
+                switch (arr[1]) {
+                    case "support":
+                        Capabilities.isNative = true;
+                        break;
+                    case "runtime":
+                        Capabilities.isRuntime = true;
+                        break;
+                }
+                var version = arr[2].substring(1, arr[2].length);
+                Capabilities.supportVersion = version;
+            }
+        };
+        /**
          * @private
          */
         Capabilities.$language = "zh-CN";
@@ -15479,6 +15512,51 @@ var egret;
          * @private
          */
         Capabilities.$runtimeType = "Unknown";
+        /***
+         * @language en_US
+         * version of the navie support
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * navie support 的版本号
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        Capabilities.supportVersion = "Unknown";
+        /***
+         * @language zh_CN
+         * the current type of operation is native or not
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 运行类型是否是 native
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        Capabilities.isNative = false;
+        /***
+         * @language zh_CN
+         * the current type of operation is runtime or not
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 运行类型是否是 runtime
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        Capabilities.isRuntime = false;
         return Capabilities;
     })();
     egret.Capabilities = Capabilities;

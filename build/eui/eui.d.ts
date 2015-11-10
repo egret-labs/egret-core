@@ -3200,7 +3200,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        constructor(name: string, overrides: IOverride[]);
+        constructor(name: string, overrides?: IOverride[]);
         /**
          * @language en_US
          * The name of the view state.

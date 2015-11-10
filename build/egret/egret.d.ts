@@ -8318,6 +8318,7 @@ declare module egret_native {
     function startGame(): void;
     function loglevel(logType: any): void;
     function callRender(): void;
+    function getVersion(): any;
     function setScreenCanvas(canvas: Canvas): void;
     function setFrameRate(frameRate: number): void;
     function onTouchesBegin(num: number, ids: Array<any>, xs_array: Array<any>, ys_array: Array<any>): any;
@@ -10786,6 +10787,55 @@ declare module egret {
          * @platform Web,Native
          */
         static runtimeType: string;
+        /***
+         * @language en_US
+         * version of the navie support
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * navie support 的版本号
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static supportVersion: string;
+        /***
+         * @language zh_CN
+         * the current type of operation is native or not
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 运行类型是否是 native
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static isNative: boolean;
+        /***
+         * @language zh_CN
+         * the current type of operation is runtime or not
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 运行类型是否是 runtime
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        static isRuntime: boolean;
+        /**
+         * 设置系统信息
+         */
+        static $setNativeCapabilities(value: string): void;
     }
 }
 declare var testDeviceType: () => boolean;
