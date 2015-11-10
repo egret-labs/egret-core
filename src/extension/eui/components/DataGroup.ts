@@ -444,7 +444,7 @@ module eui {
                         var indexToRenderer = this.$indexToRenderer;
                         var keys = Object.keys(indexToRenderer);
                         var length = keys.length;
-                        for (var i = 0; i < length; i++) {
+                        for (var i = 0; i < length; i) {
                             var index = +keys[i];
                             this.freeRendererByIndex(index);
                         }

@@ -321,7 +321,7 @@ module egret {
             this.$maxTouches = value;
             this.$screen.updateMaxTouches();
         }
-        private $dirtyRegionPolicy:string;
+
         /**
          * @language en_US
          * Set dirty region policy
@@ -337,13 +337,7 @@ module egret {
          * @platform Web,Native
          */
         public set dirtyRegionPolicy(policy:string) {
-            if(this.$dirtyRegionPolicy!=policy){
-                this.$dirtyRegionPolicy = policy;
-                this.$displayList.setDirtyRegionPolicy(policy);
-            }
-        }
-        public get dirtyRegionPolicy():string {
-            return this.$dirtyRegionPolicy;
+            this.$displayList.setDirtyRegionPolicy(policy);
         }
 
         /**

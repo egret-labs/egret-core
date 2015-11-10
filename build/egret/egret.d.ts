@@ -4030,7 +4030,6 @@ declare module egret {
          * @default 99
          */
         maxTouches: number;
-        private $dirtyRegionPolicy;
         /**
          * @language en_US
          * Set dirty region policy
