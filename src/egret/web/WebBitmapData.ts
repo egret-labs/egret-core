@@ -38,12 +38,4 @@ module egret.web {
     registerClass(HTMLCanvasElement, className);
     registerClass(HTMLVideoElement, className);
 
-    /**
-     * @private
-     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
-     */
-    export function toBitmapData(data:HTMLImageElement|HTMLCanvasElement|HTMLVideoElement):BitmapData {
-        data["hashCode"] = data["$hashCode"] = $hashCount++
-        return <BitmapData><any>data;
-    }
 }
