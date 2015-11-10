@@ -1430,7 +1430,7 @@ var egret;
                     if (!this._bitmapData) {
                         this.video.width = this.video.videoWidth;
                         this.video.height = this.video.videoHeight;
-                        this._bitmapData = egret.web['toBitmapData'](this.video);
+                        this._bitmapData = egret.toBitmapData(this.video);
                     }
                     return this._bitmapData;
                 }
@@ -1894,7 +1894,7 @@ var egret;
                 if (!image) {
                     return;
                 }
-                this.data = web.toBitmapData(image);
+                this.data = egret.toBitmapData(image);
                 var self = this;
                 window.setTimeout(function () {
                     self.dispatchEventWith(egret.Event.COMPLETE);
@@ -2676,7 +2676,7 @@ var egret;
                 var context = canvas.getContext("2d");
                 canvas["renderContext"] = context;
                 context["surface"] = canvas;
-                web.toBitmapData(canvas);
+                egret.toBitmapData(canvas);
                 if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                     var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                     for (var i = keys.length - 1; i >= 0; i--) {
@@ -3484,15 +3484,6 @@ var egret;
         egret.registerClass(HTMLImageElement, className);
         egret.registerClass(HTMLCanvasElement, className);
         egret.registerClass(HTMLVideoElement, className);
-        /**
-         * @private
-         * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
-         */
-        function toBitmapData(data) {
-            data["hashCode"] = data["$hashCode"] = egret.$hashCount++;
-            return data;
-        }
-        web.toBitmapData = toBitmapData;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
