@@ -37,8 +37,9 @@ module egret.web {
 
         public constructor(canvas:HTMLCanvasElement) {
             this.canvas = canvas;
-            canvas.addEventListener("webglcontextlost",()=>{
+            canvas.addEventListener("webglcontextlost",(event)=>{
                 this.onContextLost();
+                event.preventDefault();
             },false);
             canvas.addEventListener("webglcontextrestored",()=>{
                 this.reset();
@@ -52,7 +53,7 @@ module egret.web {
         private onContextLost():void{
 
         }
-
+ 
         /**
          * webgl上下文重新获取
          */
