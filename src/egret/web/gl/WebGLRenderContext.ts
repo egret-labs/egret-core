@@ -53,7 +53,7 @@ module egret.web {
         private onContextLost():void{
 
         }
- 
+
         /**
          * webgl上下文重新获取
          */
@@ -480,6 +480,9 @@ module egret.web {
             return context2d.measureText(text);
         }
 
+        private drawList:any = {};
+        private textureList:any = {};
+        private textureID:number[] = [];
         /**
          * @private
          * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
@@ -489,36 +492,61 @@ module egret.web {
                          targetX:number, targetY:number, targetWidth:number, targetHeight:number):void {
             var a = this.a, b = this.b, c = this.c, d = this.d, tx = this.tx, ty = this.ty;
             var alpha = this.globalAlpha;
-            var vertices = [
+            var hashCode = image.$hashCode;
+            var list = this.drawList[hashCode];
+            if(!list){
+                list = this.drawList[hashCode] = [];
+                this.textureID.push(hashCode);
+            }
+            list.push(
                 sourceX, sourceY + sourceHeight, targetX, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
                 sourceX, sourceY, targetX, targetY, alpha, a, b, c, d, tx, ty,
                 sourceX + sourceWidth, sourceY + sourceHeight, targetX + targetWidth, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
+                sourceX, sourceY, targetX, targetY, alpha, a, b, c, d, tx, ty,
+                sourceX + sourceWidth, sourceY + sourceHeight, targetX + targetWidth, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
                 sourceX + sourceWidth, sourceY, targetX + targetWidth, targetY, alpha, a, b, c, d, tx, ty
-            ];
-
-            var texture = this.getTexture(image);
-            this.texture2DProgram.drawTexture(texture, image.width, image.height, new Float32Array(vertices));
+            );
+            if(!this.textureList[hashCode]){
+                this.textureList[hashCode] = this.createTexture(image);
+            }
         }
 
-        private getTexture(image:any):WebGLTexture {
-            var texture:WebGLTexture = image.texture;
-            if (texture) {
-                return texture;
+        /**
+         * 结束绘制，提交渲染结果到GPU
+         */
+        public finish():void{
+            var drawList = this.drawList;
+            this.drawList = {};
+            var textureID = this.textureID;
+            this.textureID = []
+            var textureList = this.textureList;
+            var program = this.texture2DProgram;
+            var length = textureID.length;
+            for(var i=0;i<length;i++){
+                var hashCode = textureID[i];
+                var list = drawList[hashCode];
+                var texture = textureList[hashCode];
+                program.drawTexture(texture, texture.width, texture.height, new Float32Array(list));
             }
+
+        }
+
+        private createTexture(image:any):WebGLTexture {
             var gl = this.gl;
-            texture = gl.createTexture();
+            var texture:any = gl.createTexture();
             if (!texture) {
-                console.log("failed to create the texture object!");
+                log("failed to create the texture object!");
                 return null;
             }
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            texture.width = image.width;
+            texture.height = image.height;
             gl.bindTexture(gl.TEXTURE_2D, null);
-            image.texture = texture;
             return texture;
         }
 

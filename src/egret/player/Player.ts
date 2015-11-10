@@ -492,6 +492,7 @@ module egret.sys {
                     return logFilterRegExp.test(message);
                 return !logFilter || message.indexOf(logFilter) == 0;
             }
+            this.fpsElement = document.getElementById("FPS");
         }
 
         FPSImpl.prototype.createDisplay = function () {
@@ -531,8 +532,12 @@ module egret.sys {
                 this.totalTime = 0;
                 var text = "FPS: " + lastFPS + "\nDraw: " + this.drawCalls + "," + this.dirtyRatio + "%\nCost: " + args.join(",");
                 if (this.textField.text != text) {
-                    this.textField.text = text;
-                    this.updateLayout();
+                    if(this.fpsElement){
+                        this.fpsElement.innerHTML = text.split("\n").join("<br>");
+                    }
+
+                    //this.textField.text = text;
+                    //this.updateLayout();
                 }
                 this.drawCalls = 0;
                 this.dirtyRatio = 0;

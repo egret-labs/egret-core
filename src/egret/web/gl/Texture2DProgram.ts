@@ -73,7 +73,7 @@ module egret.web {
             gl.attachShader(program, fragmentShader);
             gl.linkProgram(program);
             if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-                console.log("Unable to initialize the shader program.");
+                log("Unable to initialize the shader program.");
             }
             gl.useProgram(program);
             var u_Sampler = gl.getUniformLocation(program, "u_Sampler");
@@ -105,7 +105,7 @@ module egret.web {
             gl.shaderSource(shader, source);
             gl.compileShader(shader);
             if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                console.log("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader) + "\n" + source);
+                log("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader) + "\n" + source);
                 return null;
             }
             return shader;
@@ -122,7 +122,7 @@ module egret.web {
             gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / VERTEX_SIZE);
+            gl.drawArrays(gl.TRIANGLES, 0, vertices.length / VERTEX_SIZE);
         }
 
     }

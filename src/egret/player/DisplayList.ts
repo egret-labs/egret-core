@@ -334,6 +334,9 @@ module egret.sys {
             var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
             //清除脏矩形区域
             context.restore();
+            if(context["finish"]){
+                context["finish"]();
+            }
             this.dirtyList = null;
             this.dirtyRegion.clear();
             this.needRedraw = false;
