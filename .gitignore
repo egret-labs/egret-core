@@ -30,8 +30,8 @@ obj/
 npm-debug.log
 src/tsc_config_temp.txt
 /bin
-tsconfig.json
+/tsconfig.json
 /egret
-EgretEngine
-index.html
-src/tests
+/EgretEngine
+/index.html
+/src/tests
