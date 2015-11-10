@@ -58,8 +58,9 @@ module egret.web {
             var gl = this.gl;
             var program = this.program;
             gl.useProgram(program);
-            var u_resolution = gl.getUniformLocation(program, "u_ScreenSize");
-            gl.uniform2f(u_resolution, screenWidth, screenHeight);
+            gl.viewport(0,0,screenWidth,screenHeight);
+            var u_ScreenSize = gl.getUniformLocation(program, "u_ScreenSize");
+            gl.uniform2f(u_ScreenSize, screenWidth, screenHeight);
         }
 
         public reset(gl:WebGLRenderingContext):void {
@@ -121,7 +122,7 @@ module egret.web {
             gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.drawArrays(gl.TRIANGLES, 0, vertices.length / VERTEX_SIZE);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / VERTEX_SIZE);
         }
 
     }

@@ -110,10 +110,8 @@ module egret.web {
             context["surface"] = canvas;
             toBitmapData(canvas);
 
-            canvas["resize"] = function(width:number, height:number):void{
-                canvas.width = width;
-                canvas.height = height;
-                context.resize(width,height);
+            canvas["onResize"] = function():void{
+                context.resize(canvas.width,canvas.height);
             };
 
             if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {

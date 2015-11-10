@@ -29,29 +29,56 @@
 
 module egret.web {
 
+    var canvas = <HTMLCanvasElement>document.createElement("canvas");
+    var context2d = canvas.getContext("2d");
+
     export class WebGLRenderContext implements sys.RenderContext {
 
 
         public constructor(canvas:HTMLCanvasElement) {
-            this.context2d = canvas.getContext("2d");
-            try {
-                var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-            }
-            catch (e) {
-
-            }
-            this.gl = <WebGLRenderingContext>gl;
-            this.texture2DProgram = new Texture2DProgram(this.gl,canvas.width,canvas.height);
+            this.canvas = canvas;
+            canvas.addEventListener("webglcontextlost",()=>{
+                this.onContextLost();
+            },false);
+            canvas.addEventListener("webglcontextrestored",()=>{
+                this.reset();
+            },false);
+            this.reset();
         }
 
-        private context2d:CanvasRenderingContext2D;
+        /**
+         * webgl上下文丢失
+         */
+        private onContextLost():void{
+
+        }
+
+        /**
+         * webgl上下文重新获取
+         */
+        private reset():void{
+            var canvas = this.canvas;
+            var gl = <WebGLRenderingContext>(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+            gl.enable(gl.BLEND);
+            gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            this.gl = gl;
+            this.texture2DProgram = new Texture2DProgram(gl, canvas.width, canvas.height);
+        }
+
         private gl:WebGLRenderingContext;
         private texture2DProgram:Texture2DProgram;
+        private a:number = 1;
+        private b:number = 0;
+        private c:number = 0;
+        private d:number = 1;
+        private tx:number = 0;
+        private ty:number = 0;
 
-        public resize(screenWidth:number, screenHeight:number):void{
-            this.texture2DProgram.resize(screenWidth,screenHeight);
+        public resize(screenWidth:number, screenHeight:number):void {
+            this.texture2DProgram.resize(screenWidth, screenHeight);
         }
 
+        private canvas:HTMLCanvasElement;
         /**
          * @private
          * 与绘图上线文关联的画布实例
@@ -67,7 +94,7 @@ module egret.web {
          * @private
          * 设置接下来绘图填充的整体透明度
          */
-        public globalAlpha:number;
+        public globalAlpha:number = 1;
         /**
          * @private
          * 用于表示剪切斜接的极限值的数字。
@@ -386,7 +413,9 @@ module egret.web {
          * @param height 矩形的高度。
          */
         public clearRect(x:number, y:number, width:number, height:number):void {
-
+            var gl = this.gl;
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
         /**
@@ -400,7 +429,12 @@ module egret.web {
          * @param ty 垂直移动。
          */
         public setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
-
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.d = d;
+            this.tx = tx;
+            this.ty = ty;
         }
 
         /**
@@ -412,7 +446,7 @@ module egret.web {
          * @param y1 终点的 y 轴坐标。
          */
         public createLinearGradient(x0:number, y0:number, x1:number, y1:number):GraphicsGradient {
-            return this.context2d.createLinearGradient(x0, y0, x1, y1);
+            return context2d.createLinearGradient(x0, y0, x1, y1);
         }
 
         /**
@@ -426,7 +460,7 @@ module egret.web {
          * @param r1 结束圆形的半径。
          */
         public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):GraphicsGradient {
-            return this.context2d.createRadialGradient(x0, y0, r0, x1, y1, r1);
+            return context2d.createRadialGradient(x0, y0, r0, x1, y1, r1);
         }
 
         /**
@@ -442,7 +476,7 @@ module egret.web {
          * 测量指定文本宽度，返回 TextMetrics 对象。
          */
         public measureText(text:string):TextMetrics {
-            return this.context2d.measureText(text);
+            return context2d.measureText(text);
         }
 
         /**
@@ -450,9 +484,41 @@ module egret.web {
          * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
          * 确保 imageSmoothingEnabled 已被重置为正常的值，否则有可能沿用上个显示对象绘制过程留下的值。
          */
-        public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
-                         surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
+        public drawImage(image:BitmapData, sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
+                         targetX:number, targetY:number, targetWidth:number, targetHeight:number):void {
+            var a = this.a, b = this.b, c = this.c, d = this.d, tx = this.tx, ty = this.ty;
+            var alpha = this.globalAlpha;
+            var vertices = [
+                sourceX, sourceY + sourceHeight, targetX, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
+                sourceX, sourceY, targetX, targetY, alpha, a, b, c, d, tx, ty,
+                sourceX + sourceWidth, sourceY + sourceHeight, targetX + targetWidth, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
+                sourceX + sourceWidth, sourceY, targetX + targetWidth, targetY, alpha, a, b, c, d, tx, ty
+            ];
 
+            var texture = this.getTexture(image);
+            this.texture2DProgram.drawTexture(texture, image.width, image.height, new Float32Array(vertices));
+        }
+
+        private getTexture(image:any):WebGLTexture {
+            var texture:WebGLTexture = image.texture;
+            if (texture) {
+                return texture;
+            }
+            var gl = this.gl;
+            texture = gl.createTexture();
+            if (!texture) {
+                console.log("failed to create the texture object!");
+                return null;
+            }
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+            image.texture = texture;
+            return texture;
         }
 
         /**
@@ -463,7 +529,7 @@ module egret.web {
          * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
          */
         public createPattern(image:BitmapData, repetition:string):GraphicsPattern {
-            return this.context2d.createPattern(<HTMLImageElement><any>image, repetition);
+            return context2d.createPattern(<HTMLImageElement><any>image, repetition);
         }
 
         /**
@@ -471,7 +537,7 @@ module egret.web {
          * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
-            return <sys.ImageData><any>this.context2d.getImageData(sx, sy, sw, sh);
+            return <sys.ImageData><any>context2d.getImageData(sx, sy, sw, sh);
         }
     }
 }
