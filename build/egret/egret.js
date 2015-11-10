@@ -7125,7 +7125,10 @@ var egret;
                 this.$screen.updateMaxTouches();
             }
         );
-        d(p, "dirtyRegionPolicy",undefined
+        d(p, "dirtyRegionPolicy"
+            ,function () {
+                return this.$dirtyRegionPolicy;
+            }
             /**
              * @language en_US
              * Set dirty region policy
@@ -7141,7 +7144,10 @@ var egret;
              * @platform Web,Native
              */
             ,function (policy) {
-                this.$displayList.setDirtyRegionPolicy(policy);
+                if (this.$dirtyRegionPolicy != policy) {
+                    this.$dirtyRegionPolicy = policy;
+                    this.$displayList.setDirtyRegionPolicy(policy);
+                }
             }
         );
         /**
