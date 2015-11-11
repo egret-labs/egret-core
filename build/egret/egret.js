@@ -805,7 +805,9 @@ var egret;
                 12: 0,
                 13: 0,
                 14: NaN,
-                15: NaN //explicitHeight,
+                15: NaN,
+                16: 0,
+                17: 0 //skewYdeg,
             };
         }
         var d = __define,c=DisplayObject;p=c.prototype;
@@ -1346,7 +1348,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return this.$DisplayObject[2 /* skewX */];
+                return this.$DisplayObject[16 /* skewXdeg */];
             }
             ,function (value) {
                 this.$setSkewX(value);
@@ -1359,12 +1361,13 @@ var egret;
          */
         p.$setSkewX = function (value) {
             value = egret.sys.getNumber(value);
-            value = clampRotation(value);
-            value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
-            if (value == values[2 /* skewX */]) {
+            if (value == values[16 /* skewXdeg */]) {
                 return false;
             }
+            values[16 /* skewXdeg */] = value;
+            value = clampRotation(value);
+            value = value / 180 * Math.PI;
             values[2 /* skewX */] = value;
             this.invalidateMatrix();
             return true;
@@ -1378,7 +1381,7 @@ var egret;
              * @platform Web,Native
              */
             ,function () {
-                return this.$DisplayObject[3 /* skewY */];
+                return this.$DisplayObject[17 /* skewYdeg */];
             }
             ,function (value) {
                 this.$setSkewY(value);
@@ -1391,12 +1394,13 @@ var egret;
          */
         p.$setSkewY = function (value) {
             value = egret.sys.getNumber(value);
-            value = clampRotation(value);
-            value = value / 180 * Math.PI;
             var values = this.$DisplayObject;
-            if (value == values[3 /* skewY */]) {
+            if (value == values[17 /* skewYdeg */]) {
                 return false;
             }
+            values[17 /* skewYdeg */] = value;
+            value = clampRotation(value);
+            value = value / 180 * Math.PI;
             values[3 /* skewY */] = value;
             this.invalidateMatrix();
             return true;
@@ -3629,7 +3633,8 @@ var egret;
             this.assignParentDisplayList(child, displayList, null);
             child.$propagateFlagsDown(624 /* DownOnAddedOrRemoved */);
             child.$setParent(null);
-            children.splice(index, 1);
+            var indexNow = children.indexOf(child);
+            children.splice(indexNow, 1);
             this.$propagateFlagsUp(4 /* InvalidBounds */);
             return child;
         };
@@ -12111,50 +12116,6 @@ var egret;
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var native;
-    (function (native) {
-        var className = "egret.BitmapData";
-        /**
-         * @private
-         * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
-         */
-        function toBitmapData(data) {
-            data["hashCode"] = data["$hashCode"] = egret.$hashCount++;
-            return data;
-        }
-        native.toBitmapData = toBitmapData;
-    })(native = egret.native || (egret.native = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -12676,7 +12637,7 @@ var egret;
              */
             p.getDirtyRegions = function () {
                 var dirtyList = this.dirtyList;
-                if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF || (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE && !egret.native["$supportCanvas" + ""])) {
+                if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF || (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE && !egret["native"]["$supportCanvas" + ""])) {
                     this.clipRectChanged = true; //阻止所有的addRegion()
                     this.clear();
                     var region = sys.Region.create();
@@ -15468,6 +15429,35 @@ var egret;
             }
         );
         /**
+         * 设置系统信息
+         */
+        Capabilities.$setNativeCapabilities = function (value) {
+            var arr = value.split("-");
+            if (arr.length == 4) {
+                //todo 未来去掉大于4个的容错处理，2.5.4版本之前的参数有错误
+                var osType = arr[0];
+                switch (osType) {
+                    case "android":
+                        osType = "Android";
+                        break;
+                    case "ios":
+                        osType = 'iOS';
+                        break;
+                }
+                Capabilities.$os = osType;
+                switch (arr[1]) {
+                    case "support":
+                        Capabilities.isNative = true;
+                        break;
+                    case "runtime":
+                        Capabilities.isRuntime = true;
+                        break;
+                }
+                var version = arr[2].substring(1, arr[2].length);
+                Capabilities.supportVersion = version;
+            }
+        };
+        /**
          * @private
          */
         Capabilities.$language = "zh-CN";
@@ -15479,6 +15469,51 @@ var egret;
          * @private
          */
         Capabilities.$runtimeType = "Unknown";
+        /***
+         * @language en_US
+         * version of the navie support
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * navie support 的版本号
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        Capabilities.supportVersion = "Unknown";
+        /***
+         * @language zh_CN
+         * the current type of operation is native or not
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 运行类型是否是 native
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        Capabilities.isNative = false;
+        /***
+         * @language zh_CN
+         * the current type of operation is runtime or not
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 运行类型是否是 runtime
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        Capabilities.isRuntime = false;
         return Capabilities;
     })();
     egret.Capabilities = Capabilities;
@@ -21540,6 +21575,56 @@ var egret;
         egret.$markReadOnly(Timer, "currentCount");
         egret.$markReadOnly(Timer, "running");
     }
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    /**
+     * @language zh_CN
+     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
+     * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language en_US
+     * Image, Canvas, BitmapData, Video, Egret.
+     * @param data Objects that need to be converted include HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    function toBitmapData(data) {
+        data["hashCode"] = data["$hashCode"] = egret.$hashCount++;
+        return data;
+    }
+    egret.toBitmapData = toBitmapData;
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //

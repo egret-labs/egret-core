@@ -363,7 +363,7 @@ module egret.web {
             if (!this._bitmapData) {
                 this.video.width = this.video.videoWidth;
                 this.video.height = this.video.videoHeight;
-                this._bitmapData = egret.web['toBitmapData'](this.video);
+                this._bitmapData = toBitmapData(this.video);
             }
             return this._bitmapData;
         }

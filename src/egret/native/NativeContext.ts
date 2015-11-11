@@ -41,6 +41,8 @@ declare module egret_native {
 
     function callRender():void;
 
+    function getVersion():any;
+
     function setScreenCanvas(canvas:Canvas):void;
 
     function setFrameRate(frameRate:number):void;
