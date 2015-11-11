@@ -110,10 +110,6 @@ module egret.web {
             context["surface"] = canvas;
             toBitmapData(canvas);
 
-            canvas["onResize"] = function():void{
-                context.resize(canvas.width,canvas.height);
-            };
-
             if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                 for (var i = keys.length - 1; i >= 0; i--) {
@@ -141,25 +137,4 @@ module egret.web {
 
     }
 
-    var proto = HTMLCanvasElement.prototype;
-    var data = Object.getOwnPropertyDescriptor(proto,"width");
-    var widthSet = data.set;
-    data.set = function(value:number):void{
-        widthSet.call(this,value);
-        var onResize:Function = this["onResize"];
-        if(onResize!=null){
-            onResize.call(this);
-        }
-    };
-    Object.defineProperty(proto,"width",data);
-
-    data = Object.getOwnPropertyDescriptor(proto,"height");
-    var heightSet = data.set;
-    data.set = function(value:number):void{
-        heightSet.call(this,value);
-        var onResize:Function = this["onResize"];
-        if(onResize!=null){
-            onResize.call(this);
-        }
-    }
 }

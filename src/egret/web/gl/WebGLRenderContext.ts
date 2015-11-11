@@ -498,14 +498,24 @@ module egret.web {
                 list = this.drawList[hashCode] = [];
                 this.textureID.push(hashCode);
             }
+            var index = list.length;
             list.push(
-                sourceX, sourceY + sourceHeight, targetX, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
-                sourceX, sourceY, targetX, targetY, alpha, a, b, c, d, tx, ty,
-                sourceX + sourceWidth, sourceY + sourceHeight, targetX + targetWidth, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
-                sourceX, sourceY, targetX, targetY, alpha, a, b, c, d, tx, ty,
-                sourceX + sourceWidth, sourceY + sourceHeight, targetX + targetWidth, targetY + targetHeight, alpha, a, b, c, d, tx, ty,
-                sourceX + sourceWidth, sourceY, targetX + targetWidth, targetY, alpha, a, b, c, d, tx, ty
+                sourceX, sourceY + sourceHeight, targetX, targetY + targetHeight, alpha,
+                sourceX, sourceY, targetX, targetY, alpha,
+                sourceX + sourceWidth, sourceY + sourceHeight, targetX + targetWidth, targetY + targetHeight, alpha,
+                sourceX, sourceY, targetX, targetY, alpha,
+                sourceX + sourceWidth, sourceY + sourceHeight, targetX + targetWidth, targetY + targetHeight, alpha,
+                sourceX + sourceWidth, sourceY, targetX + targetWidth, targetY, alpha
             );
+
+            for(var i=0;i<6;i++){
+                var x = list[index+2];
+                var y = list[index+3];
+                list[index+2] = a*x + c*y + tx;
+                list[index+3] = b*x + d*y + ty;
+                index += 5;
+            }
+
             if(!this.textureList[hashCode]){
                 this.textureList[hashCode] = this.createTexture(image);
             }

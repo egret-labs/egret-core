@@ -29,7 +29,7 @@
 
 module egret.web {
 
-    var VERTEX_SIZE = 11;
+    var VERTEX_SIZE = 5;
 
     function enableAttribute(gl:WebGLRenderingContext, program:WebGLProgram, name:string, size:number,
                              length:number, offset:number):void {
@@ -92,12 +92,6 @@ module egret.web {
             enableAttribute(gl, program, "a_TexCoord", 2, length, 0);
             enableAttribute(gl, program, "a_Position", 2, length, size * 2);
             enableAttribute(gl, program, "a_Alpha", 1, length, size * 4);
-            enableAttribute(gl, program, "a", 1, length, size * 5);
-            enableAttribute(gl, program, "b", 1, length, size * 6);
-            enableAttribute(gl, program, "c", 1, length, size * 7);
-            enableAttribute(gl, program, "d", 1, length, size * 8);
-            enableAttribute(gl, program, "tx", 1, length, size * 9);
-            enableAttribute(gl, program, "ty", 1, length, size * 10);
         }
 
         private createShader(gl:WebGLRenderingContext, type:number, source:string):WebGLShader {
@@ -145,11 +139,9 @@ module egret.web {
     varying vec2 v_TexCoord;
     varying float v_Alpha;
     void main(){
-        float x = a * a_Position.x + c * a_Position.y + tx;
-        float y = b * a_Position.x + d * a_Position.y + ty;
-        vec2 clipSpace = vec2(x,y);
         //转换坐标到（-1，1）
-        clipSpace = (clipSpace / u_ScreenSize) * 2.0 - 1.0;
+        //clipSpace = (clipSpace / u_ScreenSize) * 2.0 - 1.0;
+        vec2 clipSpace = (a_Position / u_ScreenSize) * 2.0 - 1.0;
         //反转Y轴
         clipSpace = clipSpace * vec2(1, -1);
 
@@ -165,5 +157,8 @@ module egret.web {
     varying float v_Alpha;
     void main() {
         gl_FragColor = texture2D(u_Sampler,v_TexCoord)*v_Alpha;
+        if(gl_FragColor[3] == 0.0) {
+             discard;
+        }
     }`;
 }

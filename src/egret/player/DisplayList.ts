@@ -229,6 +229,9 @@ module egret.sys {
             var surface = this.renderContext.surface;
             surface.width = width;
             surface.height = height;
+            if(this.renderContext["resize"]){
+                this.renderContext["resize"](width,height);
+            }
             this.surface = surface;
         }
 
