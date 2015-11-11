@@ -105,12 +105,20 @@ module egret.web {
             return shader;
         }
 
-        public drawTexture(texture:WebGLTexture, width:number, height:number, vertices:Float32Array):void {
+        public drawTexture(texture:WebGLTexture, width:number, height:number, vertices:Float32Array,drawToScreen?:boolean):void {
             var gl = this.gl;
             var program = this.program;
             gl.useProgram(program);
             var u_TextureSize = gl.getUniformLocation(program, "u_TextureSize");
             gl.uniform2f(u_TextureSize, width, height);
+            var u_FlipY = gl.getUniformLocation(program, "u_FlipY");
+            if(drawToScreen){
+                gl.uniform2f(u_FlipY, 1, -1);
+            }
+            else{
+                gl.uniform2f(u_FlipY, 1, 1);
+            }
+
             var vertexBuffer = this.vertexBuffer;
             gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
@@ -127,6 +135,7 @@ module egret.web {
     uniform vec2 u_ScreenSize;
     //纹理尺寸
     uniform vec2 u_TextureSize;
+    uniform vec2 u_FlipY;
     attribute vec2 a_Position;
     attribute vec2 a_TexCoord;
     attribute float a_Alpha;
@@ -143,7 +152,7 @@ module egret.web {
         //clipSpace = (clipSpace / u_ScreenSize) * 2.0 - 1.0;
         vec2 clipSpace = (a_Position / u_ScreenSize) * 2.0 - 1.0;
         //反转Y轴
-        clipSpace = clipSpace * vec2(1, -1);
+        clipSpace = clipSpace * u_FlipY;
 
         gl_Position = vec4(clipSpace, 0, 1);
         v_TexCoord = a_TexCoord / u_TextureSize;

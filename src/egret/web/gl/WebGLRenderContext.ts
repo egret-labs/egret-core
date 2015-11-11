@@ -37,33 +37,58 @@ module egret.web {
 
         public constructor(canvas:HTMLCanvasElement) {
             this.canvas = canvas;
-            canvas.addEventListener("webglcontextlost",(event)=>{
+            canvas.addEventListener("webglcontextlost", (event)=> {
                 this.onContextLost();
                 event.preventDefault();
-            },false);
-            canvas.addEventListener("webglcontextrestored",()=>{
+            }, false);
+            canvas.addEventListener("webglcontextrestored", ()=> {
                 this.reset();
-            },false);
+            }, false);
             this.reset();
         }
 
         /**
          * webgl上下文丢失
          */
-        private onContextLost():void{
+        private onContextLost():void {
 
         }
 
         /**
          * webgl上下文重新获取
          */
-        private reset():void{
+        private reset():void {
             var canvas = this.canvas;
             var gl = <WebGLRenderingContext>(canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+            //gl.enable(gl.DEPTH_TEST);
             gl.enable(gl.BLEND);
             gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
             this.gl = gl;
             this.texture2DProgram = new Texture2DProgram(gl, canvas.width, canvas.height);
+            this.initFramebuffer(canvas.width, canvas.height);
+        }
+
+        public resize(screenWidth:number, screenHeight:number):void {
+            this.texture2DProgram.resize(screenWidth, screenHeight);
+            var gl = this.gl;
+            gl.viewport(0,0,screenWidth,screenHeight);
+
+            var frameBuffer = this.frameBuffer;
+            var renderBuffer = this.renderBuffer;
+            var texture = this.fboTexture;
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, renderBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.STENCIL_INDEX8, screenWidth, screenHeight);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.STENCIL_ATTACHMENT, gl.RENDERBUFFER, renderBuffer);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, screenWidth, screenHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+            this.createFBOVertices(screenWidth,screenHeight);
         }
 
         private gl:WebGLRenderingContext;
@@ -74,10 +99,52 @@ module egret.web {
         private d:number = 1;
         private tx:number = 0;
         private ty:number = 0;
+        private frameBuffer:WebGLFramebuffer;
+        private fboTexture:WebGLTexture;
+        private renderBuffer:WebGLRenderbuffer;
+        private fboVertices:Float32Array;
 
-        public resize(screenWidth:number, screenHeight:number):void {
-            this.texture2DProgram.resize(screenWidth, screenHeight);
+        private initFramebuffer(width:number, height:number):void {
+            var gl = this.gl;
+            //创建帧缓冲区对象
+            var frameBuffer = gl.createFramebuffer();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
+            //设置模板缓冲区
+            var renderBuffer = gl.createRenderbuffer();
+            gl.bindRenderbuffer(gl.RENDERBUFFER, renderBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.STENCIL_INDEX8, width, height);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.STENCIL_ATTACHMENT, gl.RENDERBUFFER, renderBuffer);
+            //设置颜色缓冲区纹理
+            var texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+            this.frameBuffer = frameBuffer;
+            this.fboTexture = texture;
+            this.renderBuffer = renderBuffer;
+            this.createFBOVertices(width,height);
         }
+
+        private createFBOVertices(width:number,height:number):void {
+            var list = [
+                0, height, 0, height, 1,
+                0, 0, 0, 0, 1,
+                width, height, width, height, 1,
+                0, 0, 0, 0, 1,
+                width, height, width, height, 1,
+                width, 0, width, 0, 1
+            ];
+            this.fboVertices = new Float32Array(list);
+        }
+
 
         private canvas:HTMLCanvasElement;
         /**
@@ -416,7 +483,7 @@ module egret.web {
         public clearRect(x:number, y:number, width:number, height:number):void {
             var gl = this.gl;
             gl.clearColor(0.0, 0.0, 0.0, 1.0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         }
 
         /**
@@ -483,6 +550,7 @@ module egret.web {
         private drawList:any = {};
         private textureList:any = {};
         private textureID:number[] = [];
+
         /**
          * @private
          * 注意：如果要对绘制的图片进行缩放，出于性能优化考虑，系统不会主动去每次重置imageSmoothingEnabled属性，因此您在调用drawImage()方法前请务必
@@ -494,7 +562,7 @@ module egret.web {
             var alpha = this.globalAlpha;
             var hashCode = image.$hashCode;
             var list = this.drawList[hashCode];
-            if(!list){
+            if (!list) {
                 list = this.drawList[hashCode] = [];
                 this.textureID.push(hashCode);
             }
@@ -508,15 +576,15 @@ module egret.web {
                 sourceX + sourceWidth, sourceY, targetX + targetWidth, targetY, alpha
             );
 
-            for(var i=0;i<6;i++){
-                var x = list[index+2];
-                var y = list[index+3];
-                list[index+2] = a*x + c*y + tx;
-                list[index+3] = b*x + d*y + ty;
+            for (var i = 0; i < 6; i++) {
+                var x = list[index + 2];
+                var y = list[index + 3];
+                list[index + 2] = a * x + c * y + tx;
+                list[index + 3] = b * x + d * y + ty;
                 index += 5;
             }
 
-            if(!this.textureList[hashCode]){
+            if (!this.textureList[hashCode]) {
                 this.textureList[hashCode] = this.createTexture(image);
             }
         }
@@ -524,7 +592,12 @@ module egret.web {
         /**
          * 结束绘制，提交渲染结果到GPU
          */
-        public finish():void{
+        public finish():void {
+            var gl = this.gl;
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+            gl.clearColor(0, 0, 0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
             var drawList = this.drawList;
             this.drawList = {};
             var textureID = this.textureID;
@@ -532,13 +605,19 @@ module egret.web {
             var textureList = this.textureList;
             var program = this.texture2DProgram;
             var length = textureID.length;
-            for(var i=0;i<length;i++){
+            for (var i = 0; i < length; i++) {
                 var hashCode = textureID[i];
                 var list = drawList[hashCode];
                 var texture = textureList[hashCode];
                 program.drawTexture(texture, texture.width, texture.height, new Float32Array(list));
             }
 
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.fboTexture);
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
+            var surface = this.surface;
+            program.drawTexture(this.fboTexture, surface.width, surface.height, this.fboVertices,true);
         }
 
         private createTexture(image:any):WebGLTexture {
