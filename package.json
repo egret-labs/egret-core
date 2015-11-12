@@ -12,6 +12,7 @@
   "i18n": "cn",
   "egret": {
     "registerClass": "egret",
+    "typeScriptVersion": "1.7",
     "modules": [
       {
         "name": "egret",
