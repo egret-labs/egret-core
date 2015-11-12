@@ -82,5 +82,11 @@ module egret.gui {
             props.oldY = oldY;
             Event._dispatchByTarget(eventClass,target,MoveEvent.MOVE,props);
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.oldX = NaN;
+			this.oldY = NaN;
+		}
 	}
 }

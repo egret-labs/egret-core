@@ -110,6 +110,17 @@ module egret.gui {
             props.items = items;
             props.oldItems = oldItems;
             Event._dispatchByTarget(eventClass,target,type,props);
+            props.items = null;
+            props.oldItems = null;
+        }
+
+        public __recycle():void {
+            super.__recycle();
+            this.kind = null;
+            this.location = null;
+            this.oldLocation = null;
+            this.items = null;
+            this.oldItems = null;
         }
     }
 }

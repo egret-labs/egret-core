@@ -71,6 +71,11 @@ module egret.gui {
             props.detail = detail;
             Event._dispatchByTarget(eventClass,target,type,props);
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.detail = null;
+		}
 	}
 	
 }

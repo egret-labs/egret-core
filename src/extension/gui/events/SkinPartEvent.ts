@@ -89,6 +89,13 @@ module egret.gui {
             props.partName = partName;
             props.instance = instance;
             Event._dispatchByTarget(eventClass,target,type,props);
+			props.instance = null;
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.partName = null;
+			this.instance = null;
+		}
 	}
 }
