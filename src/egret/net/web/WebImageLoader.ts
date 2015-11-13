@@ -138,7 +138,7 @@ module egret.web {
             if (!image) {
                 return;
             }
-            this.data = toBitmapData(image);
+            this.data = $toBitmapData(image);
             var self = this;
             window.setTimeout(function ():void {
                 self.dispatchEventWith(Event.COMPLETE);

@@ -668,7 +668,7 @@ module egret {
             //             +------+------+------+
             //                w0     w1     w2
             //
-            if (sourceH0 <= 0 || sourceH1 <= 0 || sourceH2 <= 0 || sourceW0 <= 0 || sourceW1 <= 0 || sourceW2 <= 0 || (sourceW0 + sourceW1 + sourceW2) > imageWidth || (sourceH0 + sourceH1 + sourceH2) > imageWidth) {
+            if (sourceH0 <= 0 || sourceH1 <= 0 || sourceH2 <= 0 || sourceW0 <= 0 || sourceW1 <= 0 || sourceW2 <= 0 || (sourceW0 + sourceW1 + sourceW2) > imageWidth || (sourceH0 + sourceH1 + sourceH2) > imageHeight) {
                 if (DEBUG)$warn(1018);
                 return;
             }
