@@ -23,6 +23,7 @@ module egret {
     locale_strings[1015] = "xml not found!";
     locale_strings[1016] = "{0}has been obsoleted";
     locale_strings[1017] = "The format of JSON file is incorrect: {0}\ndata: {1}";
+    locale_strings[1018] = "the scale9Grid is not correct";
 
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "This method is not available in the ScrollView!";

@@ -26,6 +26,7 @@ module egret {
     locale_strings[1015] = "xml not found!";
     locale_strings[1016] = "{0}已经废弃";
     locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
+    locale_strings[1018] = "9宫格设置错误";
 
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
