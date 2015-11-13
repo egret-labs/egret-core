@@ -41,7 +41,8 @@ var UpgradeCommand = (function () {
             { "v": "2.5.1", "command": require("./upgrade/UpgradeCommand_2_5_1") },
             { "v": "2.5.2" },
             { "v": "2.5.3" },
-            { "v": "2.5.4" }
+            { "v": "2.5.4" },
+            { "v": "2.5.5" }
         ];
         //升级命令是一个异步命令 内含异步控制流程
         this.isAsync = true;
