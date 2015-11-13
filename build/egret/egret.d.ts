@@ -9357,7 +9357,7 @@ declare module egret.sys {
          * @private
          * 渲染屏幕
          */
-        $render(triggerByFrame: boolean): void;
+        $render(triggerByFrame: boolean, costTicker: number): void;
         /**
          * @private
          *
@@ -10227,6 +10227,11 @@ declare module egret.sys {
         private lastCount;
         /**
          * @private
+         * ticker 花销的时间
+         */
+        private costEnterFrame;
+        /**
+         * @private
          * 执行一次刷新
          */
         update(): void;
@@ -10234,7 +10239,7 @@ declare module egret.sys {
          * @private
          * 执行一次屏幕渲染
          */
-        private render(triggerByFrame);
+        private render(triggerByFrame, costTicker);
         /**
          * @private
          * 广播EnterFrame事件。
@@ -10782,49 +10787,19 @@ declare module egret {
         static runtimeType: string;
         /***
          * @language en_US
-         * version of the navie support
+         * version of the native support
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         /***
          * @language zh_CN
-         * navie support 的版本号
+         * native support 的版本号
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         static supportVersion: string;
-        /***
-         * @language zh_CN
-         * the current type of operation is native or not
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * 运行类型是否是 native
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static isNative: boolean;
-        /***
-         * @language zh_CN
-         * the current type of operation is runtime or not
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * 运行类型是否是 runtime
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static isRuntime: boolean;
         /**
          * 设置系统信息
          */
@@ -14457,7 +14432,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    function toBitmapData(data: any): BitmapData;
+    function $toBitmapData(data: any): BitmapData;
 }
 declare module egret {
     /**
