@@ -807,7 +807,7 @@ var egret;
                 14: NaN,
                 15: NaN,
                 16: 0,
-                17: 0 //skewYdeg,
+                17: 0 //skewYdeg
             };
         }
         var d = __define,c=DisplayObject;p=c.prototype;
@@ -1048,6 +1048,8 @@ var egret;
                 values[1 /* scaleY */] = m.$getScaleY();
                 values[2 /* skewX */] = matrix.$getSkewX();
                 values[3 /* skewY */] = matrix.$getSkewY();
+                values[16 /* skewXdeg */] = clampRotation(values[2 /* skewX */] * 180 / Math.PI);
+                values[17 /* skewYdeg */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);
                 values[4 /* rotation */] = clampRotation(values[3 /* skewY */] * 180 / Math.PI);
             }
             this.$removeFlags(8 /* InvalidMatrix */);
@@ -1760,7 +1762,7 @@ var egret;
             }
             this.$alpha = value;
             this.$propagateFlagsDown(64 /* InvalidConcatenatedAlpha */);
-            this.$invalidate(true);
+            this.$invalidate();
             return true;
         };
         /**
@@ -2189,7 +2191,7 @@ var egret;
         /**
          * @private
          * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
-         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
+         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         p.$invalidate = function (notifyChildren) {
             if (!this.$renderRegion || this.$hasFlags(256 /* DirtyRender */)) {
@@ -3953,6 +3955,29 @@ var egret;
                 return this;
             }
             return _super.prototype.$hitTest.call(this, stageX, stageY);
+        };
+        p.$setAlpha = function (value) {
+            value = egret.sys.getNumber(value);
+            if (value == this.$alpha) {
+                return false;
+            }
+            this.$alpha = value;
+            this.$propagateFlagsDown(64 /* InvalidConcatenatedAlpha */);
+            this.$invalidate();
+            this.$invalidateAllChildren();
+            return true;
+        };
+        p.$invalidateAllChildren = function () {
+            var children = this.$children;
+            if (children) {
+                for (var i = children.length - 1; i >= 0; i--) {
+                    var child = children[i];
+                    child.$invalidate();
+                    if (egret.is(child, "egret.DisplayObjectContainer")) {
+                        child.$invalidateAllChildren();
+                    }
+                }
+            }
         };
         /**
          * @private
@@ -7128,14 +7153,14 @@ var egret;
              * @language en_US
              * Set dirty region policy
              * One of the constants defined by egret.DirtyRegionPolicy
-             * @version Egret 2.5
+             * @version Egret 2.5.5
              * @platform Web,Native
              */
             /**
              * @language zh_CN
              * 设置脏矩形策略
              * egret.DirtyRegionPolicy 定义的常量之一
-             * @version Egret 2.5
+             * @version Egret 2.5.5
              * @platform Web,Native
              */
             ,function (policy) {
@@ -7150,7 +7175,7 @@ var egret;
          * Set resolution size
          * @param width width
          * @param height height
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         /**
@@ -7158,7 +7183,7 @@ var egret;
          * 设置分辨率尺寸
          * @param width 宽度
          * @param height 高度
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         p.setContentSize = function (width, height) {

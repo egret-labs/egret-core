@@ -649,6 +649,34 @@ module egret {
             return super.$hitTest(stageX, stageY);
         }
 
+        /**
+         * @private
+         * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
+         */
+        $setAlpha(value:number):boolean {
+            value = egret.sys.getNumber(value);
+            if (value == this.$alpha) {
+                return false;
+            }
+            this.$alpha = value;
+            this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedAlpha);
+            this.$invalidate();
+            this.$invalidateAllChildren();
+            return true;
+        }
+
+        private $invalidateAllChildren():void {
+            var children = this.$children;
+            if (children) {
+                for (var i = children.length - 1; i >= 0; i--) {
+                    var child = children[i];
+                    child.$invalidate();
+                    if((<DisplayObjectContainer>child).$children) {
+                        (<DisplayObjectContainer>child).$invalidateAllChildren();
+                    }
+                }
+            }
+        }
     }
 
     if (DEBUG) {

@@ -1290,7 +1290,7 @@ declare module egret {
         /**
          * @private
          * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
-         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
+         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         $invalidate(notifyChildren?: boolean): void;
         /**
@@ -2081,6 +2081,8 @@ declare module egret {
          * @private
          */
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        $setAlpha(value: number): boolean;
+        private $invalidateAllChildren();
     }
 }
 declare module egret {
@@ -4035,14 +4037,14 @@ declare module egret {
          * @language en_US
          * Set dirty region policy
          * One of the constants defined by egret.DirtyRegionPolicy
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置脏矩形策略
          * egret.DirtyRegionPolicy 定义的常量之一
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         dirtyRegionPolicy: string;
@@ -4051,7 +4053,7 @@ declare module egret {
          * Set resolution size
          * @param width width
          * @param height height
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         /**
@@ -4059,7 +4061,7 @@ declare module egret {
          * 设置分辨率尺寸
          * @param width 宽度
          * @param height 高度
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         setContentSize(width: number, height: number): void;
@@ -8043,7 +8045,7 @@ declare module egret {
      * The SoundChannel class contains a stop() method, properties for
      * set the volume of the channel
      *
-     * @event egret.Event.SOUND_COMPLETE Dispatch when a sound has finished playing
+     * @event egret.Event.SOUND_COMPLETE Dispatch when a sound has finished playing at last time
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/media/Sound.ts
@@ -8053,7 +8055,7 @@ declare module egret {
      * SoundChannel 类控制应用程序中的声音。每个声音均分配给一个声道，而且应用程序可以具有混合在一起的多个声道。
      * SoundChannel 类包含 stop() 方法、用于设置音量和监视播放进度的属性。
      *
-     * @event egret.Event.SOUND_COMPLETE 音频播放完成时抛出
+     * @event egret.Event.SOUND_COMPLETE 音频最后一次播放完成时抛出
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/media/Sound.ts

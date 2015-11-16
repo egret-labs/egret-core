@@ -1298,7 +1298,7 @@ module egret {
             }
             this.$alpha = value;
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedAlpha);
-            this.$invalidate(true);
+            this.$invalidate();
 
             return true;
         }
@@ -1794,7 +1794,7 @@ module egret {
         /**
          * @private
          * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
-         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
+         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         $invalidate(notifyChildren?:boolean):void {
             if (!this.$renderRegion || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender)) {
