@@ -216,12 +216,13 @@ module egret.web {
 
             var transform = `rotate(${ rotation }deg)`;
             canvas.style[egret.web.getPrefixStyleName("transform")] = transform;
-            this.player.updateStageSize(stageWidth, stageHeight);
             var scalex = displayWidth / stageWidth,
                 scaley = displayHeight / stageHeight;
 
             this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
             this.webInput.$updateSize();
+            this.player.updateStageSize(stageWidth, stageHeight);//不要在这个方法后面修改属性
+
         }
 
         public setContentSize(width:number, height:number):void {
