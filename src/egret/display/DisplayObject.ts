@@ -523,8 +523,8 @@ module egret {
                 values[Keys.scaleY] = m.$getScaleY();
                 values[Keys.skewX] = matrix.$getSkewX();
                 values[Keys.skewY] = matrix.$getSkewY();
-                values[Keys.skewXdeg] = clampRotation([Keys.skewX] * 180 / Math.PI);
-                values[Keys.skewYdeg] = clampRotation([Keys.skewY] * 180 / Math.PI);
+                values[Keys.skewXdeg] = clampRotation(values[Keys.skewX] * 180 / Math.PI);
+                values[Keys.skewYdeg] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
                 values[Keys.rotation] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
             }
             this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
