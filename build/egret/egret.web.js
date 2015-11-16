@@ -1430,7 +1430,7 @@ var egret;
                     if (!this._bitmapData) {
                         this.video.width = this.video.videoWidth;
                         this.video.height = this.video.videoHeight;
-                        this._bitmapData = egret.toBitmapData(this.video);
+                        this._bitmapData = egret.$toBitmapData(this.video);
                     }
                     return this._bitmapData;
                 }
@@ -1894,7 +1894,7 @@ var egret;
                 if (!image) {
                     return;
                 }
-                this.data = egret.toBitmapData(image);
+                this.data = egret.$toBitmapData(image);
                 var self = this;
                 window.setTimeout(function () {
                     self.dispatchEventWith(egret.Event.COMPLETE);
@@ -2676,7 +2676,7 @@ var egret;
                 var context = canvas.getContext("2d");
                 canvas["renderContext"] = context;
                 context["surface"] = canvas;
-                egret.toBitmapData(canvas);
+                egret.$toBitmapData(canvas);
                 if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                     var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                     for (var i = keys.length - 1; i >= 0; i--) {
@@ -3751,6 +3751,7 @@ var egret;
                 style = container.style;
                 style.overflow = "hidden";
                 style.position = "relative";
+                style["webkitTransform"] = "translateZ(0)";
             };
             /**
              * @private

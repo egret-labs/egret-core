@@ -1,4 +1,4 @@
-# 如何构建 Egret命令行工具
+# 如何构建 Egret 命令行工具
 
 * 全局安装 gulp ```npm install gulp -g```  
 * 本地安装 gulp，在 egret目录下执行 ``` npm install gulp ```

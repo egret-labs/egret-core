@@ -214,14 +214,14 @@ module egret {
 
         /***
          * @language en_US
-         * version of the navie support
+         * version of the native support
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         /***
          * @language zh_CN
-         * navie support 的版本号
+         * native support 的版本号
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
