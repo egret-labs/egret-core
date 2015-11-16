@@ -146,7 +146,7 @@ module egret {
         explicitWidth,
         explicitHeight,
         skewXdeg,//角度 degree
-        skewYdeg,
+        skewYdeg
     }
 
     /**
@@ -239,7 +239,7 @@ module egret {
                 14: NaN,           //explicitWidth,
                 15: NaN,           //explicitHeight,
                 16: 0,               //skewXdeg,
-                17: 0                //skewYdeg,
+                17: 0                //skewYdeg
             };
         }
 
@@ -523,6 +523,8 @@ module egret {
                 values[Keys.scaleY] = m.$getScaleY();
                 values[Keys.skewX] = matrix.$getSkewX();
                 values[Keys.skewY] = matrix.$getSkewY();
+                values[Keys.skewXdeg] = clampRotation([Keys.skewX] * 180 / Math.PI);
+                values[Keys.skewYdeg] = clampRotation([Keys.skewY] * 180 / Math.PI);
                 values[Keys.rotation] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
             }
             this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
@@ -856,7 +858,7 @@ module egret {
         $setSkewX(value:number):boolean {
             value = egret.sys.getNumber(value);
             var values = this.$DisplayObject;
-            if(value == values[Keys.skewXdeg]){
+            if (value == values[Keys.skewXdeg]) {
                 return false;
             }
             values[Keys.skewXdeg] = value;
@@ -1959,7 +1961,7 @@ module egret {
          * @platform Web,Native
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
-            if(!shapeFlag) {
+            if (!shapeFlag) {
                 return !!DisplayObject.prototype.$hitTest.call(this, x, y);
             }
             else {
