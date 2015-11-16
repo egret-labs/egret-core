@@ -35,6 +35,7 @@ module egret.native {
     export var $supportCanvas = egret_native.Canvas ? true : false;
 
     var isRunning:boolean = false;
+    var playerList:Array<NativePlayer> = [];
 
     function runEgret() {
         if (isRunning) {
@@ -48,9 +49,9 @@ module egret.native {
             if (language in egret.$locale_strings)
                 egret.$language = language;
         }
-        try{
+        try {
             Capabilities.$setNativeCapabilities(egret_native.getVersion());
-        }catch(e){
+        } catch (e) {
 
         }
         var ticker = egret.sys.$ticker;
@@ -65,10 +66,19 @@ module egret.native {
 
         //todo
         var player = new NativePlayer();
+        playerList.push(player);
         //老版本runtime不支持canvas,关闭脏矩形
-        if(!$supportCanvas) {
+        if (!$supportCanvas) {
             player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
-            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function(){};
+            egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
+            };
+        }
+    }
+
+    function updateAllScreens():void {
+        var length:number = playerList.length;
+        for (var i:number = 0; i < length; i++) {
+            playerList[i].updateScreenSize();
         }
     }
 
@@ -109,4 +119,5 @@ module egret.native {
     }
 
     egret.runEgret = runEgret;
+    egret.updateAllScreens = updateAllScreens;
 }

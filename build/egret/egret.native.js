@@ -1527,6 +1527,7 @@ var egret;
          */
         native.$supportCanvas = egret_native.Canvas ? true : false;
         var isRunning = false;
+        var playerList = [];
         function runEgret() {
             if (isRunning) {
                 return;
@@ -1554,10 +1555,18 @@ var egret;
             }
             //todo
             var player = new native.NativePlayer();
+            playerList.push(player);
             //老版本runtime不支持canvas,关闭脏矩形
             if (!native.$supportCanvas) {
                 player.$stage.dirtyRegionPolicy = egret.DirtyRegionPolicy.OFF;
-                egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () { };
+                egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
+                };
+            }
+        }
+        function updateAllScreens() {
+            var length = playerList.length;
+            for (var i = 0; i < length; i++) {
+                playerList[i].updateScreenSize();
             }
         }
         function toArray(argument) {
@@ -1595,6 +1604,7 @@ var egret;
             };
         }
         egret.runEgret = runEgret;
+        egret.updateAllScreens = updateAllScreens;
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
