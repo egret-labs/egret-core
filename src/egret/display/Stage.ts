@@ -326,14 +326,14 @@ module egret {
          * @language en_US
          * Set dirty region policy
          * One of the constants defined by egret.DirtyRegionPolicy
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置脏矩形策略
          * egret.DirtyRegionPolicy 定义的常量之一
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         public set dirtyRegionPolicy(policy:string) {
@@ -351,7 +351,7 @@ module egret {
          * Set resolution size
          * @param width width
          * @param height height
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         /**
@@ -359,7 +359,7 @@ module egret {
          * 设置分辨率尺寸
          * @param width 宽度
          * @param height 高度
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         public setContentSize(width:number, height:number):void {
