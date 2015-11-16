@@ -433,6 +433,7 @@ namespace ts {
             formatedMessages = formatedMessages.concat(sortErrors.map((e:any)=> e.messageText));
         }
         var result = { program:program, exitStatus:emitReturnStatus, files: ts.SortHelper.getOrderedFiles(), messages: formatedMessages.concat() };
+        formatedMessages = [];
         return result;
 
         function compileProgram(): ExitStatus {
