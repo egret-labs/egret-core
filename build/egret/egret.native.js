@@ -1975,7 +1975,7 @@ var egret;
                         _this.$loops--;
                     }
                     /////////////
-                    _this.audio.load();
+                    //this.audio.load();
                     _this.$play();
                 };
                 audio.addEventListener("ended", this.onPlayEnd);
@@ -3018,6 +3018,10 @@ var egret;
             /**
              * @private
              */
+            this.colorValue = 0xffffff;
+            /**
+             * @private
+             */
             this.isFinishDown = false;
             this.textValue = "";
         }
@@ -3042,6 +3046,10 @@ var egret;
             this.textValue = value;
             return true;
         };
+        p.$setColor = function (value) {
+            this.colorValue = value;
+            return true;
+        };
         /**
          * @private
          *
@@ -3059,6 +3067,7 @@ var egret;
                         self.isFinishDown = false;
                         self.textValue = appendText;
                         self.dispatchEvent(new egret.Event("updateText"));
+                        self.dispatchEvent(new egret.Event("blur"));
                     }
                 }
                 else {
@@ -3074,7 +3083,6 @@ var egret;
                 if (self.$textfield.multiline) {
                     self.isFinishDown = true;
                 }
-                self.dispatchEvent(new egret.Event("blur"));
             };
         };
         /**

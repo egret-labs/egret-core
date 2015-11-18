@@ -2081,6 +2081,10 @@ declare module egret {
          * @private
          */
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
+         */
         $setAlpha(value: number): boolean;
         private $invalidateAllChildren();
     }
@@ -11679,6 +11683,10 @@ declare module egret {
         _setText(value: string): void;
         /**
          * @private
+         */
+        _setColor(value: number): void;
+        /**
+         * @private
          *
          * @param event
          */
@@ -11753,6 +11761,12 @@ declare module egret {
          * @param value
          */
         $setText(value: string): boolean;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setColor(value: number): boolean;
         /**
          * @private
          *

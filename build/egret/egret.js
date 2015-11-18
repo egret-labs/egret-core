@@ -3956,6 +3956,10 @@ var egret;
             }
             return _super.prototype.$hitTest.call(this, stageX, stageY);
         };
+        /**
+         * @private
+         * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
+         */
         p.$setAlpha = function (value) {
             value = egret.sys.getNumber(value);
             if (value == this.$alpha) {
@@ -3973,7 +3977,7 @@ var egret;
                 for (var i = children.length - 1; i >= 0; i--) {
                     var child = children[i];
                     child.$invalidate();
-                    if (egret.is(child, "egret.DisplayObjectContainer")) {
+                    if (child.$children) {
                         child.$invalidateAllChildren();
                     }
                 }
@@ -16728,6 +16732,12 @@ var egret;
         };
         /**
          * @private
+         */
+        p._setColor = function (value) {
+            this.stageText.$setColor(value);
+        };
+        /**
+         * @private
          *
          * @param event
          */
@@ -17345,6 +17355,9 @@ var egret;
             }
             values[2 /* textColor */] = value;
             values[11 /* textColorString */] = egret.toColorString(value);
+            if (this.inputUtils) {
+                this.inputUtils._setColor(this.$TextField[2 /* textColor */]);
+            }
             this.$invalidate();
             return true;
         };

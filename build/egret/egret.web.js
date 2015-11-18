@@ -2023,6 +2023,10 @@ var egret;
                 /**
                  * @private
                  */
+                this.colorValue = 0xffffff;
+                /**
+                 * @private
+                 */
                 this._styleInfoes = {};
             }
             var d = __define,c=HTML5StageText;p=c.prototype;
@@ -2153,6 +2157,20 @@ var egret;
             p.resetText = function () {
                 if (this.inputElement) {
                     this.inputElement.value = this.textValue;
+                }
+            };
+            p.$setColor = function (value) {
+                this.colorValue = value;
+                this.resetColor();
+                return true;
+            };
+            /**
+             * @private
+             *
+             */
+            p.resetColor = function () {
+                if (this.inputElement) {
+                    this.setElementStyle("color", egret.toColorString(this.colorValue));
                 }
             };
             p.$onBlur = function () {

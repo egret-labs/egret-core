@@ -4439,6 +4439,13 @@ declare module eui {
         protected rendererRemoved(renderer: IItemRenderer, index: number, item: any): void;
     }
 }
+declare module eui.sys {
+    const enum EditableTextKeys {
+        promptText = 0,
+        textColorUser = 1,
+        asPassword = 2,
+    }
+}
 declare module eui {
     /**
      * @language en_US
@@ -4473,6 +4480,7 @@ declare module eui {
          * @platform Web,Native
          */
         constructor();
+        $EditableText: Object;
         /**
          * @private
          *
@@ -4501,18 +4509,21 @@ declare module eui {
          */
         private _widthConstraint;
         /**
-        * @private
-        *
-        * @param stage
-        * @param nestLevel
-        */
+         * @private
+         *
+         * @param stage
+         * @param nestLevel
+         */
         $onAddToStage(stage: egret.Stage, nestLevel: number): void;
         /**
          * @private
          *
          */
         $onRemoveFromStage(): void;
-        private $prompt;
+        /**
+         * @private
+         */
+        private $isShowPrompt;
         /**
          * @language en_US
          * When the property of the text is empty, it will show the defalut string.
@@ -4532,10 +4543,36 @@ declare module eui {
          * @platform Web,Native
          */
         prompt: string;
+        private $promptColor;
+        /**
+         * @language en_US
+         * The color of the defalut string.
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本的颜色
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        promptColor: number;
         /**
          * @private
          */
-        private showPrompt();
+        private onfocusOut();
+        /**
+         * @private
+         */
+        private onfocusIn();
+        /**
+         * @private
+         */
+        private showPromptText();
+        $setTextColor(value: number): boolean;
+        $setDisplayAsPassword(value: boolean): boolean;
         /**
          * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
