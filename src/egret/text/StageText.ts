@@ -64,7 +64,12 @@ module egret {
          * @param value 
          */
         $setText(value:string):boolean;
-
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setColor(value:number):boolean;
         /**
          * @private
          * 

@@ -122,6 +122,12 @@ module egret {
         public _setText(value:string) {
             this.stageText.$setText(value);
         }
+        /**
+         * @private
+         */
+         public _setColor(value:number){
+            this.stageText.$setColor(value);
+        }
 
         /**
          * @private

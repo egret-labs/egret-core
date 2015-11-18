@@ -75,6 +75,14 @@ module egret {
 
             return true;
         }
+        /**
+         * @private
+         */
+        private colorValue:number = 0xffffff;
+        $setColor(value:number):boolean{
+            this.colorValue = value;
+            return true;
+        }
 
         /**
          * @private
@@ -98,10 +106,9 @@ module egret {
                 if (self.$textfield.multiline) {//多行文本
                     if (self.isFinishDown) {
                         self.isFinishDown = false;
-
                         self.textValue = appendText;
-
                         self.dispatchEvent(new egret.Event("updateText"));
+                        self.dispatchEvent(new egret.Event("blur"));
                     }
                 }
                 else {//单行文本
@@ -120,7 +127,6 @@ module egret {
                 if (self.$textfield.multiline) {//多行文本
                     self.isFinishDown = true;
                 }
-                self.dispatchEvent(new egret.Event("blur"));
             };
         }
 

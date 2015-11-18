@@ -613,6 +613,9 @@ module egret {
             }
             values[sys.TextKeys.textColor] = value;
             values[sys.TextKeys.textColorString] = toColorString(value);
+            if (this.inputUtils) {
+                this.inputUtils._setColor(this.$TextField[sys.TextKeys.textColor]);
+            }
             this.$invalidate();
 
             return true;
