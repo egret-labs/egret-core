@@ -1665,7 +1665,8 @@ var egret;
          * @param actionsMode
          * @returns
          */
-        p.setPosition = function (value) {
+        p.setPosition = function (value, actionsMode) {
+            if (actionsMode === void 0) { actionsMode = 1; }
             if (value < 0) {
                 value = 0;
             }
@@ -1684,6 +1685,7 @@ var egret;
             if (t == this._prevPos) {
                 return end;
             }
+            var prevPos = this._prevPos;
             this.position = this._prevPos = t;
             this._prevPosition = value;
             if (this._target) {
@@ -1704,6 +1706,21 @@ var egret;
             }
             if (end) {
                 this.setPaused(true);
+            }
+            //执行actions
+            if (actionsMode != 0 && this._actions.length > 0) {
+                if (this._useTicks) {
+                    this._runActions(t, t);
+                }
+                else if (actionsMode == 1 && t < prevPos) {
+                    if (prevPos != this.duration) {
+                        this._runActions(prevPos, this.duration);
+                    }
+                    this._runActions(0, t, true);
+                }
+                else {
+                    this._runActions(prevPos, t);
+                }
             }
             this.dispatchEventWith("change");
             return end;

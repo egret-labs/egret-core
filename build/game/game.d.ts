@@ -888,7 +888,7 @@ declare module egret {
          * @param actionsMode
          * @returns
          */
-        private setPosition(value);
+        private setPosition(value, actionsMode?);
         /**
          * @private
          *
