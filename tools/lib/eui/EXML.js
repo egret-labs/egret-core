@@ -84,20 +84,24 @@ function addDepends(file) {
             return;
         }
         files.forEach(function (it) {
+            if (it) {
+                if (!it.depends)
+                    addDepends(it);
+                for (var i in it.depends)
+                    depends[i] = true;
+                depends[it.path] = true;
+            }
+        });
+    });
+    file.usedEXML && file.usedEXML.forEach(function (path) {
+        var it = allEXMLs[path];
+        if (it) {
             if (!it.depends)
                 addDepends(it);
             for (var i in it.depends)
                 depends[i] = true;
             depends[it.path] = true;
-        });
-    });
-    file.usedEXML && file.usedEXML.forEach(function (path) {
-        var it = allEXMLs[path];
-        if (!it.depends)
-            addDepends(it);
-        for (var i in it.depends)
-            depends[i] = true;
-        depends[it.path] = true;
+        }
     });
     file.depends = depends;
 }
