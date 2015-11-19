@@ -343,7 +343,7 @@ module egret.gui {
          * @param actionsMode 
          * @returns 
          */
-        private setPosition(value:number):boolean {
+        private setPosition(value:number, actionsMode:number = 1):boolean {
             if (value < 0) {
                 value = 0;
             }
@@ -364,7 +364,7 @@ module egret.gui {
                 return end;
             }
 
-
+            var prevPos = this._prevPos;
             this.position = this._prevPos = t;
             this._prevPosition = value;
 
@@ -386,6 +386,20 @@ module egret.gui {
 
             if (end) {
                 this.setPaused(true);
+            }
+
+            //执行actions
+            if (actionsMode != 0 && this._actions.length > 0) {
+                if (this._useTicks) {
+                    this._runActions(t, t);
+                } else if (actionsMode == 1 && t < prevPos) {
+                    if (prevPos != this.duration) {
+                        this._runActions(prevPos, this.duration);
+                    }
+                    this._runActions(0, t, true);
+                } else {
+                    this._runActions(prevPos, t);
+                }
             }
 
             this.dispatchEventWith("change");
