@@ -14230,7 +14230,6 @@ declare module egret {
      * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
      * @method egret.getOption
      * @param key {string} Parameters key
-     * @private
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -14240,7 +14239,6 @@ declare module egret {
      * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
      * @method egret.getOption
      * @param key {string} 参数key
-     * @private
      * @version Egret 2.4
      * @platform Web,Native
      */

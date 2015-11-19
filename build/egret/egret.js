@@ -6025,6 +6025,10 @@ var egret;
     })(egret.HashObject);
     egret.Texture = Texture;
     egret.registerClass(Texture,"egret.Texture");
+    if (DEBUG) {
+        egret.$markReadOnly(Texture, "textureWidth");
+        egret.$markReadOnly(Texture, "textureHeight");
+    }
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
