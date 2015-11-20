@@ -123,7 +123,12 @@ module egret.native {
                     self._response = content;
                     Event.dispatchEvent(self, Event.COMPLETE);
                 };
-                egret_native.readFileAsync(self._url, promise);
+                if (self._responseType == HttpResponseType.ARRAY_BUFFER) {
+                    egret_native.readFileAsync(self._url, promise, "ArrayBuffer");
+                }
+                else {
+                    egret_native.readFileAsync(self._url, promise);
+                }
             }
 
             function download() {

@@ -2797,7 +2797,12 @@ var egret;
                         self._response = content;
                         egret.Event.dispatchEvent(self, egret.Event.COMPLETE);
                     };
-                    egret_native.readFileAsync(self._url, promise);
+                    if (self._responseType == egret.HttpResponseType.ARRAY_BUFFER) {
+                        egret_native.readFileAsync(self._url, promise, "ArrayBuffer");
+                    }
+                    else {
+                        egret_native.readFileAsync(self._url, promise);
+                    }
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();
