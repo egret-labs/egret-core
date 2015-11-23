@@ -12267,10 +12267,10 @@ var eui;
         __extends(Rect, _super);
         function Rect(width, height, fillColor) {
             _super.call(this);
-            this._fillColor = 0x000000;
+            this.$fillColor = 0x000000;
             this.$fillAlpha = 1;
             this.$strokeColor = 0x444444;
-            this._strokeAlpha = 1;
+            this.$strokeAlpha = 1;
             this.$strokeWeight = 0;
             this.$ellipseWidth = 0;
             this.$ellipseHeight = 0;
@@ -12318,12 +12318,12 @@ var eui;
              * @platform Web,Native
              */
             ,function () {
-                return this._fillColor;
+                return this.$fillColor;
             }
             ,function (value) {
-                if (!value || this._fillColor == value)
+                if (!value || this.$fillColor == value)
                     return;
-                this._fillColor = value;
+                this.$fillColor = value;
                 this.invalidateDisplayList();
             }
         );
@@ -12393,12 +12393,12 @@ var eui;
              * @platform Web,Native
              */
             ,function () {
-                return this._strokeAlpha;
+                return this.$strokeAlpha;
             }
             ,function (value) {
-                if (this._strokeAlpha == value)
+                if (this.$strokeAlpha == value)
                     return;
-                this._strokeAlpha = value;
+                this.$strokeAlpha = value;
                 this.invalidateDisplayList();
             }
         );
@@ -12487,29 +12487,26 @@ var eui;
         p.updateDisplayList = function (unscaledWidth, unscaledHeight) {
             var g = this.graphics;
             g.clear();
-            if (this.strokeWeight > 0) {
-                g.beginFill(this.strokeColor, this.strokeAlpha);
-            }
-            else {
-                g.beginFill(this.fillColor, this.fillAlpha);
-            }
-            if (this.ellipseWidth == 0) {
-                g.drawRect(0, 0, unscaledWidth, unscaledHeight);
-            }
-            else {
-                g.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, this.ellipseWidth, 0);
-            }
-            g.endFill();
-            if (this.strokeWeight > 0) {
-                g.beginFill(this.fillColor, this.fillAlpha);
-                if (this.ellipseWidth == 0) {
+            if (this.$strokeWeight > 0) {
+                g.beginFill(this.$fillColor, 0);
+                g.lineStyle(this.$strokeWeight, this.$strokeColor, this.$strokeAlpha, true, "normal", "square", "miter");
+                if (this.$ellipseWidth == 0) {
                     g.drawRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight);
                 }
                 else {
-                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.ellipseWidth, 0);
+                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.$ellipseWidth, 0);
                 }
                 g.endFill();
             }
+            g.beginFill(this.$fillColor, this.$fillAlpha);
+            g.lineStyle(this.$strokeWeight, this.$strokeColor, 0, true, "normal", "square", "miter");
+            if (this.$ellipseWidth == 0) {
+                g.drawRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2);
+            }
+            else {
+                g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, 0);
+            }
+            g.endFill();
             this.$invalidateContentBounds();
         };
         return Rect;
@@ -12620,6 +12617,7 @@ var eui;
          */
         function Scroller() {
             _super.call(this);
+            this.$bounces = true;
             /**
              * @language en_US
              * the horizontal scroll bar
@@ -12682,6 +12680,34 @@ var eui;
             };
         }
         var d = __define,c=Scroller;p=c.prototype;
+        d(p, "bounces"
+            /**
+             * @language en_US
+             * Whether to enable rebound, rebound When enabled, ScrollView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
+             * @default true
+             * @version Egret 2.5.6
+             */
+            /**
+             * @language zh_CN
+             * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+             * @default true
+             * @version Egret 2.5.6
+             */
+            ,function () {
+                return this.$bounces;
+            }
+            ,function (value) {
+                this.$bounces = !!value;
+                var touchScrollH = this.$Scroller[8 /* touchScrollH */];
+                if (touchScrollH) {
+                    touchScrollH.$bounces = this.$bounces;
+                }
+                var touchScrollV = this.$Scroller[9 /* touchScrollV */];
+                if (touchScrollV) {
+                    touchScrollV.$bounces = this.$bounces;
+                }
+            }
+        );
         d(p, "throwSpeed"
             ,function () {
                 return this.$Scroller[8 /* touchScrollH */].$scrollFactor;
@@ -14820,6 +14846,7 @@ var eui;
                  * 触摸按下时的偏移量
                  */
                 this.offsetPoint = 0;
+                this.$bounces = true;
                 this.started = true;
                 if (DEBUG && !updateFunction) {
                     egret.$error(1003, "updateFunction");
@@ -14880,10 +14907,20 @@ var eui;
                 this.maxScrollPos = maxScrollValue;
                 var scrollPos = this.offsetPoint - touchPoint;
                 if (scrollPos < 0) {
-                    scrollPos *= 0.5;
+                    if (!this.$bounces) {
+                        scrollPos = 0;
+                    }
+                    else {
+                        scrollPos *= 0.5;
+                    }
                 }
                 if (scrollPos > maxScrollValue) {
-                    scrollPos = (scrollPos + maxScrollValue) * 0.5;
+                    if (!this.$bounces) {
+                        scrollPos = maxScrollValue;
+                    }
+                    else {
+                        scrollPos = (scrollPos + maxScrollValue) * 0.5;
+                    }
                 }
                 this.currentScrollPos = scrollPos;
                 this.updateFunction.call(this.target, scrollPos);
@@ -14937,6 +14974,15 @@ var eui;
                     posTo = event.toPos;
                 }
                 if (duration > 0) {
+                    //如果取消了回弹,保证动画之后不会超出边界
+                    if (!this.$bounces) {
+                        if (posTo < 0) {
+                            posTo = 0;
+                        }
+                        else if (posTo > maxScrollPos) {
+                            posTo = maxScrollPos;
+                        }
+                    }
                     this.throwTo(posTo, duration);
                 }
                 else {

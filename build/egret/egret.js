@@ -2323,7 +2323,7 @@ var egret;
          * 注意，不要在大量物体中使用精确碰撞像素检测，这回带来巨大的性能开销
          * @param x {number}  要测试的此对象的 x 坐标。
          * @param y {number}  要测试的此对象的 y 坐标。
-         * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。暂未实现。
+         * @param shapeFlag {boolean} 是检查对象 (true) 的实际像素，还是检查边框 (false) 的实际像素。
          * @returns {boolean} 如果显示对象与指定的点重叠或相交，则为 true；否则为 false。
          * @version Egret 2.4
          * @platform Web,Native
@@ -4461,6 +4461,9 @@ var egret;
             }
             this.strokeStyleColor = this._parseColor(color, alpha);
             this.moveTo(this.lineX, this.lineY);
+            if (thickness <= 0) {
+                thickness = 1;
+            }
             this.$renderContext.lineWidth = thickness;
             this.$renderContext.strokeStyle = this.strokeStyleColor;
             this.$renderContext.beginPath();
@@ -4821,6 +4824,10 @@ var egret;
             _super.call(this);
             /**
              * @private
+             */
+            this._maxLineWidth = 1;
+            /**
+             * @private
              * 绘图命令列表
              */
             this.$commands = [];
@@ -4956,6 +4963,7 @@ var egret;
             }
             ,function (value) {
                 this._lineWidth = value;
+                this._maxLineWidth = Math.max(this._maxLineWidth, value);
                 this.pushCommand(3 /* lineWidth */, arguments);
             }
         );
@@ -5510,6 +5518,7 @@ var egret;
             this._lineCap = "butt";
             this._lineJoin = "miter";
             this._lineWidth = 1;
+            this._maxLineWidth = 1;
             this._miterLimit = 10;
             this._strokeStyle = null;
             this.hasMoved = false;
@@ -5564,7 +5573,7 @@ var egret;
                 return;
             }
             if (this.hasStroke || this._strokeStyle) {
-                var lineWidth = this._lineWidth;
+                var lineWidth = this._maxLineWidth;
                 var half = lineWidth * 0.5;
             }
             else {
@@ -13182,6 +13191,7 @@ var egret;
                     for (var i = 0; i < length; i++) {
                         var child = children[i];
                         if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
+                            child.$isDirty = false;
                             continue;
                         }
                         if (child.$blendMode !== 0 ||

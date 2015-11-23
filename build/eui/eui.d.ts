@@ -8495,7 +8495,7 @@ declare module eui {
          * @private
          */
         $render(context: egret.sys.RenderContext): void;
-        private _fillColor;
+        private $fillColor;
         /**
          * @language en_US
          * Fill color
@@ -8543,7 +8543,7 @@ declare module eui {
          * @platform Web,Native
          */
         strokeColor: number;
-        private _strokeAlpha;
+        private $strokeAlpha;
         /**
          * @language en_US
          * The line's alpha inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
@@ -8710,6 +8710,20 @@ declare module eui {
          * @platform Web,Native
          */
         constructor();
+        private $bounces;
+        /**
+         * @language en_US
+         * Whether to enable rebound, rebound When enabled, ScrollView contents allowed to continue to drag the border after arriving at the end user drag operation, and then bounce back boundary position
+         * @default true
+         * @version Egret 2.5.6
+         */
+        /**
+         * @language zh_CN
+         * 是否启用回弹，当启用回弹后，ScrollView中内容在到达边界后允许继续拖动，在用户拖动操作结束后，再反弹回边界位置
+         * @default true
+         * @version Egret 2.5.6
+         */
+        bounces: boolean;
         /**
          * @language en_US
          * Adjust the speed to get out of the slide end.
@@ -9918,6 +9932,7 @@ declare module eui.sys {
          * 停止触摸时继续滚动的动画实例
          */
         private animation;
+        $bounces: boolean;
         /**
          * @private
          * 正在播放缓动动画的标志。
