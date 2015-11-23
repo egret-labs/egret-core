@@ -76,7 +76,7 @@ module eui {
             this.$graphics.$render(context);
         }
 
-        private _fillColor: number = 0x000000;
+        private $fillColor: number = 0x000000;
         /**
          * @language en_US
          * Fill color
@@ -92,13 +92,13 @@ module eui {
          * @platform Web,Native
          */
         public get fillColor(): number {
-            return this._fillColor;
+            return this.$fillColor;
         }
 
         public set fillColor(value: number) {
-            if (!value || this._fillColor == value)
+            if (!value || this.$fillColor == value)
                 return;
-            this._fillColor = value;
+            this.$fillColor = value;
             this.invalidateDisplayList();
         }
 
@@ -153,7 +153,7 @@ module eui {
             this.$strokeColor = value;
             this.invalidateDisplayList();
         }
-        private _strokeAlpha: number = 1;
+        private $strokeAlpha: number = 1;
         /**
          * @language en_US
          * The line's alpha inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
@@ -161,21 +161,21 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-         /**
-          * @language zh_CN
-          * 边框透明度,注意：当 strokeWeight 为0时，不显示边框。
-          * @version Egret 2.5.5
-          * @version eui 1.0
-          * @platform Web,Native
-          */
+        /**
+         * @language zh_CN
+         * 边框透明度,注意：当 strokeWeight 为0时，不显示边框。
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
         public get strokeAlpha(): number {
-            return this._strokeAlpha;
+            return this.$strokeAlpha;
         }
 
         public set strokeAlpha(value: number) {
-            if (this._strokeAlpha == value)
+            if (this.$strokeAlpha == value)
                 return;
-            this._strokeAlpha = value;
+            this.$strokeAlpha = value;
             this.invalidateDisplayList();
         }
 
