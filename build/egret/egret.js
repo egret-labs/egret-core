@@ -11827,6 +11827,7 @@ var egret;
     locale_strings[1035] = "Native does not support this feature!";
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
+    locale_strings[1038] = "XML format error!";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -11958,6 +11959,7 @@ var egret;
     locale_strings[1035] = "Native 下暂未实现此功能！";
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
+    locale_strings[1038] = "XML 格式错误!";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
@@ -16453,7 +16455,11 @@ var egret;
                 else {
                     this.addToResultArr(htmltext.substring(firstIdx, starIdx));
                     var fontEnd = htmltext.indexOf(">", starIdx);
-                    if (htmltext.charAt(starIdx + 1) == "\/") {
+                    if (fontEnd == -1) {
+                        egret.$error(1038);
+                        fontEnd = starIdx;
+                    }
+                    else if (htmltext.charAt(starIdx + 1) == "\/") {
                         this.stackArray.pop();
                     }
                     else {
