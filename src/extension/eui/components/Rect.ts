@@ -264,26 +264,24 @@ module eui {
         protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             var g = this.graphics;
             g.clear();
-            if (this.strokeWeight > 0) {
-                g.beginFill(this.strokeColor, this.strokeAlpha);
-            } else {
-                g.beginFill(this.fillColor, this.fillAlpha);
-            }
-            if (this.ellipseWidth == 0) {
-                g.drawRect(0, 0, unscaledWidth, unscaledHeight);
-            } else {
-                g.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, this.ellipseWidth, 0);
-            }
-            g.endFill();
-            if (this.strokeWeight > 0) {
-                g.beginFill(this.fillColor, this.fillAlpha);
-                if (this.ellipseWidth == 0) {
+            if (this.$strokeWeight > 0) {
+                g.beginFill(this.$fillColor, 0);
+                g.lineStyle(this.$strokeWeight, this.$strokeColor, this.$strokeAlpha, true, "normal", "square", "miter");
+                if (this.$ellipseWidth == 0) {
                     g.drawRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight);
                 } else {
-                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.ellipseWidth, 0);
+                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.$ellipseWidth, 0);
                 }
                 g.endFill();
             }
+            g.beginFill(this.$fillColor, this.$fillAlpha);
+            g.lineStyle(this.$strokeWeight, this.$strokeColor, 0, true, "normal", "square", "miter");
+            if (this.$ellipseWidth == 0) {
+                g.drawRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2);
+            } else {
+                g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, 0);
+            }
+            g.endFill();
             this.$invalidateContentBounds();
         }
     }
