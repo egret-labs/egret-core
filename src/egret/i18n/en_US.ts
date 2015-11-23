@@ -37,6 +37,7 @@ module egret {
     locale_strings[1035] = "Native does not support this feature!";
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
+    locale_strings[1038] = "XML format error!";
 
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";

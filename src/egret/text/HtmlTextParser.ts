@@ -116,7 +116,11 @@ module egret {
                     this.addToResultArr(htmltext.substring(firstIdx, starIdx));
 
                     var fontEnd = htmltext.indexOf(">", starIdx);
-                    if (htmltext.charAt(starIdx + 1) == "\/") {//关闭
+                    if (fontEnd == -1) {
+                        egret.$error(1038);
+                        fontEnd = starIdx;
+                    }
+                    else if (htmltext.charAt(starIdx + 1) == "\/") {//关闭
                         this.stackArray.pop();
                     }
                     else {
