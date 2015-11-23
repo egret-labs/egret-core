@@ -1962,7 +1962,23 @@ module egret {
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
             if (!shapeFlag) {
-                return !!DisplayObject.prototype.$hitTest.call(this, x, y);
+                var values = this.$DisplayObject;
+                if (values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
+                    return false;
+                }
+                var m = this.$getInvertedConcatenatedMatrix();
+                var bounds = this.getBounds();
+                var localX = m.a * x + m.c * y + m.tx;
+                var localY = m.b * x + m.d * y + m.ty;
+                if (bounds.contains(localX, localY)) {
+                    //这里不考虑设置mask的情况
+                    var rect = this.$scrollRect ? this.$scrollRect : this.$maskRect;
+                    if (rect && !rect.contains(localX, localY)) {
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
             }
             else {
                 var m = this.$getInvertedConcatenatedMatrix();
