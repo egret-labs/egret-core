@@ -159,6 +159,8 @@ module eui.sys {
          */
         private animation:sys.Animation;
 
+        public $bounces:boolean = true;
+
         /**
          * @private
          * 正在播放缓动动画的标志。
@@ -213,10 +215,20 @@ module eui.sys {
             this.maxScrollPos = maxScrollValue;
             var scrollPos = this.offsetPoint - touchPoint;
             if (scrollPos < 0) {
-                scrollPos *= 0.5;
+                if(!this.$bounces) {
+                    scrollPos = 0;
+                }
+                else {
+                    scrollPos *= 0.5;
+                }
             }
             if (scrollPos > maxScrollValue) {
-                scrollPos = (scrollPos + maxScrollValue) * 0.5
+                if(!this.$bounces) {
+                    scrollPos = maxScrollValue;
+                }
+                else {
+                    scrollPos = (scrollPos + maxScrollValue) * 0.5
+                }
             }
             this.currentScrollPos = scrollPos;
             this.updateFunction.call(this.target, scrollPos);
@@ -272,6 +284,15 @@ module eui.sys {
                 posTo = event.toPos;
             }
             if (duration > 0) {
+                //如果取消了回弹,保证动画之后不会超出边界
+                if(!this.$bounces) {
+                    if(posTo < 0) {
+                        posTo = 0;
+                    }
+                    else if(posTo > maxScrollPos) {
+                        posTo = maxScrollPos;
+                    }
+                }
                 this.throwTo(posTo, duration);
             }
             else {
