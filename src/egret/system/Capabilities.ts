@@ -214,57 +214,27 @@ module egret {
 
         /***
          * @language en_US
-         * version of the navie support
+         * version of the native support
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         /***
          * @language zh_CN
-         * navie support 的版本号
+         * native support 的版本号
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         public static supportVersion:string = "Unknown";
-        /***
-         * @language zh_CN
-         * the current type of operation is native or not
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * 运行类型是否是 native
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        public static isNative:boolean = false;
-        /***
-         * @language zh_CN
-         * the current type of operation is runtime or not
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * 运行类型是否是 runtime
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        public static isRuntime:boolean = false;
 
         /**
          * 设置系统信息
          */
         public static $setNativeCapabilities(value:string):void {
             var arr = value.split("-");
-            if (arr.length == 4) {
-                //todo 未来去掉大于4个的容错处理，2.5.4版本之前的参数有错误
+            if (arr.length <= 4) {
+                //todo 未来去掉数量判断，2.5.4版本之前的参数大于4个
                 var osType:string = arr[0];
                 switch (osType) {
                     case "android":
@@ -275,14 +245,6 @@ module egret {
                         break;
                 }
                 Capabilities.$os = osType;
-                switch (arr[1]) {
-                    case "support":
-                        Capabilities.isNative = true;
-                        break;
-                    case "runtime":
-                        Capabilities.isRuntime = true;
-                        break;
-                }
                 var version = arr[2].substring(1,arr[2].length);
                 Capabilities.supportVersion = version;
             }

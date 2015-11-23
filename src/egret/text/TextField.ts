@@ -613,6 +613,9 @@ module egret {
             }
             values[sys.TextKeys.textColor] = value;
             values[sys.TextKeys.textColorString] = toColorString(value);
+            if (this.inputUtils) {
+                this.inputUtils._setColor(this.$TextField[sys.TextKeys.textColor]);
+            }
             this.$invalidate();
 
             return true;
@@ -1449,6 +1452,27 @@ module egret {
             this.$invalidateContentBounds();
             this.$TextField[sys.TextKeys.textLinesChanged] = true;
         }
+
+        $update(bounds?:Rectangle):boolean {
+            var self = this;
+            var bounds = self.$getContentBounds();
+            var tmpBounds = Rectangle.create();
+            tmpBounds.copyFrom(bounds);
+            if (self.$TextField[sys.TextKeys.border]) {
+                tmpBounds.width += 2;
+                tmpBounds.height += 2;
+            }
+            var _strokeDouble = self.$TextField[sys.TextKeys.stroke] * 2;
+            if (_strokeDouble > 0) {
+                tmpBounds.width += _strokeDouble * 2;
+                tmpBounds.height += _strokeDouble * 2;
+            }
+            tmpBounds.x -= _strokeDouble;
+            tmpBounds.y -= _strokeDouble;
+            var result = super.$update(tmpBounds);
+            Rectangle.release(tmpBounds);
+            return result;
+        }
         
         /**
          * @private
@@ -1459,16 +1483,8 @@ module egret {
 
             var w:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
             var h:number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils.$getTextHeight(self);
-            if (self.border) {
-                w += 2;
-                h += 2;
-            }
-            var _strokeDouble = this.$TextField[sys.TextKeys.stroke] * 2;
-            if (_strokeDouble > 0) {
-                w += _strokeDouble * 2;
-                h += _strokeDouble * 2;
-            }
-            bounds.setTo(-_strokeDouble, -_strokeDouble, w, h);
+
+            bounds.setTo(0, 0, w, h);
         }
 
         /**

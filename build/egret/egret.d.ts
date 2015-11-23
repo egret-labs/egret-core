@@ -1290,7 +1290,7 @@ declare module egret {
         /**
          * @private
          * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
-         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
+         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         $invalidate(notifyChildren?: boolean): void;
         /**
@@ -1323,7 +1323,7 @@ declare module egret {
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
-        $update(): boolean;
+        $update(bounds?: Rectangle): boolean;
         /**
          * @private
          * 获取相对于指定根节点的连接矩阵。
@@ -2081,6 +2081,12 @@ declare module egret {
          * @private
          */
         $hitTest(stageX: number, stageY: number): DisplayObject;
+        /**
+         * @private
+         * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
+         */
+        $setAlpha(value: number): boolean;
+        private $invalidateAllChildren();
     }
 }
 declare module egret {
@@ -4035,14 +4041,14 @@ declare module egret {
          * @language en_US
          * Set dirty region policy
          * One of the constants defined by egret.DirtyRegionPolicy
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         /**
          * @language zh_CN
          * 设置脏矩形策略
          * egret.DirtyRegionPolicy 定义的常量之一
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         dirtyRegionPolicy: string;
@@ -4051,7 +4057,7 @@ declare module egret {
          * Set resolution size
          * @param width width
          * @param height height
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         /**
@@ -4059,7 +4065,7 @@ declare module egret {
          * 设置分辨率尺寸
          * @param width 宽度
          * @param height 高度
-         * @version Egret 2.5
+         * @version Egret 2.5.5
          * @platform Web,Native
          */
         setContentSize(width: number, height: number): void;
@@ -8043,7 +8049,7 @@ declare module egret {
      * The SoundChannel class contains a stop() method, properties for
      * set the volume of the channel
      *
-     * @event egret.Event.SOUND_COMPLETE Dispatch when a sound has finished playing
+     * @event egret.Event.SOUND_COMPLETE Dispatch when a sound has finished playing at last time
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/media/Sound.ts
@@ -8053,7 +8059,7 @@ declare module egret {
      * SoundChannel 类控制应用程序中的声音。每个声音均分配给一个声道，而且应用程序可以具有混合在一起的多个声道。
      * SoundChannel 类包含 stop() 方法、用于设置音量和监视播放进度的属性。
      *
-     * @event egret.Event.SOUND_COMPLETE 音频播放完成时抛出
+     * @event egret.Event.SOUND_COMPLETE 音频最后一次播放完成时抛出
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample egret/media/Sound.ts
@@ -9357,7 +9363,7 @@ declare module egret.sys {
          * @private
          * 渲染屏幕
          */
-        $render(triggerByFrame: boolean): void;
+        $render(triggerByFrame: boolean, costTicker: number): void;
         /**
          * @private
          *
@@ -10227,6 +10233,11 @@ declare module egret.sys {
         private lastCount;
         /**
          * @private
+         * ticker 花销的时间
+         */
+        private costEnterFrame;
+        /**
+         * @private
          * 执行一次刷新
          */
         update(): void;
@@ -10234,7 +10245,7 @@ declare module egret.sys {
          * @private
          * 执行一次屏幕渲染
          */
-        private render(triggerByFrame);
+        private render(triggerByFrame, costTicker);
         /**
          * @private
          * 广播EnterFrame事件。
@@ -10782,49 +10793,19 @@ declare module egret {
         static runtimeType: string;
         /***
          * @language en_US
-         * version of the navie support
+         * version of the native support
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         /***
          * @language zh_CN
-         * navie support 的版本号
+         * native support 的版本号
          * @type {string}
          * @version Egret 2.5
          * @platform Web,Native
          */
         static supportVersion: string;
-        /***
-         * @language zh_CN
-         * the current type of operation is native or not
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * 运行类型是否是 native
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static isNative: boolean;
-        /***
-         * @language zh_CN
-         * the current type of operation is runtime or not
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        /***
-         * @language zh_CN
-         * 运行类型是否是 runtime
-         * @type {string}
-         * @version Egret 2.5
-         * @platform Web,Native
-         */
-        static isRuntime: boolean;
         /**
          * 设置系统信息
          */
@@ -11702,6 +11683,10 @@ declare module egret {
         _setText(value: string): void;
         /**
          * @private
+         */
+        _setColor(value: number): void;
+        /**
+         * @private
          *
          * @param event
          */
@@ -11776,6 +11761,12 @@ declare module egret {
          * @param value
          */
         $setText(value: string): boolean;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $setColor(value: number): boolean;
         /**
          * @private
          *
@@ -12569,6 +12560,7 @@ declare module egret {
          * 不能重写$invalidateContentBounds，因为内部graphics调用clear时会触发$invalidateContentBounds这狗方法，从而导致死循环。
          */
         $invalidateTextField(): void;
+        $update(bounds?: Rectangle): boolean;
         /**
          * @private
          */
@@ -14239,7 +14231,6 @@ declare module egret {
      * Get the url parameter corresponds to the browser, access to the corresponding parameter in the Runtime setOption
      * @method egret.getOption
      * @param key {string} Parameters key
-     * @private
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -14249,7 +14240,6 @@ declare module egret {
      * 在浏览器中相当于获取url中参数，在Runtime获取对应setOption参数
      * @method egret.getOption
      * @param key {string} 参数key
-     * @private
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -14457,7 +14447,7 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    function toBitmapData(data: any): BitmapData;
+    function $toBitmapData(data: any): BitmapData;
 }
 declare module egret {
     /**

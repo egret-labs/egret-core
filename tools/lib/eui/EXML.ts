@@ -120,21 +120,25 @@ function addDepends(file: EXMLFile) {
             return;
         }
         files.forEach(it=> {
-            if (!it.depends)
-                addDepends(it);
-            for (var i in it.depends)
-                depends[i] = true;
-            depends[it.path] = true;
+            if(it){
+                if (!it.depends)
+                    addDepends(it);
+                for (var i in it.depends)
+                    depends[i] = true;
+                depends[it.path] = true;
+            }
         })
     });
 
     file.usedEXML && file.usedEXML.forEach(path=> {
         var it = allEXMLs[path];
-        if (!it.depends)
-            addDepends(it);
-        for (var i in it.depends)
-            depends[i] = true;
-        depends[it.path] = true;
+        if(it){
+            if (!it.depends)
+                addDepends(it);
+            for (var i in it.depends)
+                depends[i] = true;
+            depends[it.path] = true;
+        }
     });
 
     file.depends = depends;

@@ -6387,34 +6387,6 @@ var eui;
         egret.$markReadOnly(DataGroup, "numElements");
     }
 })(eui || (eui = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
 var eui;
 (function (eui) {
     var UIImpl = eui.sys.UIComponentImpl;
@@ -6457,9 +6429,18 @@ var eui;
              * @private
              */
             this._widthConstraint = NaN;
-            this.$prompt = "";
+            /**
+             * @private
+             */
+            this.$isShowPrompt = false;
+            this.$promptColor = 0x666666;
             this.initializeUIValues();
             this.type = egret.TextFieldType.INPUT;
+            this.$EditableText = {
+                0: null,
+                1: 0xffffff,
+                2: false //asPassword
+            };
         }
         var d = __define,c=EditableText;p=c.prototype;
         /**
@@ -6501,15 +6482,15 @@ var eui;
             return result;
         };
         /**
-        * @private
-        *
-        * @param stage
-        * @param nestLevel
-        */
+         * @private
+         *
+         * @param stage
+         * @param nestLevel
+         */
         p.$onAddToStage = function (stage, nestLevel) {
             _super.prototype.$onAddToStage.call(this, stage, nestLevel);
-            this.addEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
-            this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+            this.addEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
+            this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         };
         /**
          * @private
@@ -6517,8 +6498,8 @@ var eui;
          */
         p.$onRemoveFromStage = function () {
             _super.prototype.$onRemoveFromStage.call(this);
-            this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
-            this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+            this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
+            this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         };
         d(p, "prompt"
             /**
@@ -6540,23 +6521,94 @@ var eui;
              * @platform Web,Native
              */
             ,function () {
-                return this.$prompt;
+                return this.$EditableText[0 /* promptText */];
             }
             ,function (value) {
-                var oldPrompt = this.$prompt;
-                this.$prompt = value;
-                if (this.text == oldPrompt) {
-                    this.text = value;
+                var values = this.$EditableText;
+                var promptText = values[0 /* promptText */];
+                if (promptText == value)
+                    return;
+                values[0 /* promptText */] = value;
+                var text = this.text;
+                if (!text || text == promptText) {
+                    this.showPromptText();
+                }
+            }
+        );
+        d(p, "promptColor"
+            ,function () {
+                return this.$promptColor;
+            }
+            /**
+             * @language en_US
+             * The color of the defalut string.
+             * @version Egret 2.5.5
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 默认文本的颜色
+             * @version Egret 2.5.5
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            ,function (value) {
+                value = +value | 0;
+                if (this.$promptColor != value) {
+                    this.$promptColor = value;
+                    var text = this.text;
+                    if (!text || text == this.$EditableText[0 /* promptText */]) {
+                        this.showPromptText();
+                    }
                 }
             }
         );
         /**
          * @private
          */
-        p.showPrompt = function () {
+        p.onfocusOut = function () {
             if (!this.text) {
-                this.text = this.prompt;
+                this.showPromptText();
             }
+        };
+        /**
+         * @private
+         */
+        p.onfocusIn = function () {
+            this.$isShowPrompt = false;
+            this.displayAsPassword = this.$EditableText[2 /* asPassword */];
+            var values = this.$EditableText;
+            var text = this.text;
+            if (!text || text == values[0 /* promptText */]) {
+                this.textColor = values[1 /* textColorUser */];
+                this.text = "";
+            }
+        };
+        /**
+         * @private
+         */
+        p.showPromptText = function () {
+            var values = this.$EditableText;
+            this.$isShowPrompt = true;
+            _super.prototype.$setTextColor.call(this, this.$promptColor);
+            _super.prototype.$setDisplayAsPassword.call(this, false);
+            this.text = values[0 /* promptText */];
+        };
+        p.$setTextColor = function (value) {
+            value = +value | 0;
+            this.$EditableText[1 /* textColorUser */] = value;
+            if (!this.$isShowPrompt) {
+                _super.prototype.$setTextColor.call(this, value);
+            }
+            return true;
+        };
+        p.$setDisplayAsPassword = function (value) {
+            this.$EditableText[2 /* asPassword */] = value;
+            if (!this.$isShowPrompt) {
+                _super.prototype.$setDisplayAsPassword.call(this, value);
+            }
+            return true;
         };
         /**
          * @copy eui.Component#createChildren()
@@ -6566,7 +6618,7 @@ var eui;
          * @platform Web,Native
          */
         p.createChildren = function () {
-            this.showPrompt();
+            this.onfocusOut();
         };
         /**
          * @copy eui.Component#childrenCreated()

@@ -43,7 +43,7 @@ module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export function toBitmapData(data:any):BitmapData {
+    export function $toBitmapData(data:any):BitmapData {
         data["hashCode"] = data["$hashCode"] = $hashCount++;
         return <BitmapData>data;
     }

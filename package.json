@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -12,6 +12,7 @@
   "i18n": "cn",
   "egret": {
     "registerClass": "egret",
+    "typeScriptVersion": "1.7",
     "modules": [
       {
         "name": "egret",

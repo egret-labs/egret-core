@@ -26,6 +26,7 @@ module egret {
     locale_strings[1015] = "xml not found!";
     locale_strings[1016] = "{0}已经废弃";
     locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
+    locale_strings[1018] = "9宫格设置错误";
 
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
@@ -39,6 +40,7 @@ module egret {
     locale_strings[1035] = "Native 下暂未实现此功能！";
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
+    locale_strings[1038] = "XML 格式错误!";
 
 
     //gui  3000-3099

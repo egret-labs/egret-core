@@ -98,7 +98,7 @@ module egret.native {
             }
 
             /////////////
-            this.audio.load();
+            //this.audio.load();
             this.$play();
         };
 

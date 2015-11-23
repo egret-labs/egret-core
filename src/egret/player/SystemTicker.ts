@@ -183,7 +183,7 @@ module egret.sys {
                 value = 60;
             }
             //todo
-            if(Capabilities.runtimeType == RuntimeType.NATIVE) {
+            if (Capabilities.runtimeType == RuntimeType.NATIVE) {
                 egret_native.setFrameRate(value);
                 value = 60;
             }
@@ -196,12 +196,18 @@ module egret.sys {
          * @private
          */
         private lastCount:number = 2000;
+        /**
+         * @private
+         * ticker 花销的时间
+         */
+        private costEnterFrame:number = 0;
 
         /**
          * @private
          * 执行一次刷新
          */
         public update():void {
+            var t1 = egret.getTimer();
             var callBackList = this.callBackList;
             var thisObjectList = this.thisObjectList;
             var length = callBackList.length;
@@ -214,22 +220,26 @@ module egret.sys {
                 }
             }
             this.lastCount -= 1000;
+            var t2 = egret.getTimer();
             if (this.lastCount > 0) {
                 if (requestRenderingFlag) {
-                    this.render(false);
+                    this.render(false, this.costEnterFrame+t2-t1);
                 }
                 return;
             }
             this.lastCount += this.frameInterval;
-            this.render(true);
+            this.render(true, this.costEnterFrame+t2-t1);
+            var t3 = egret.getTimer();
             this.broadcastEnterFrame();
+            var t4 = egret.getTimer();
+            this.costEnterFrame = t4 - t3;
         }
 
         /**
          * @private
          * 执行一次屏幕渲染
          */
-        private render(triggerByFrame:boolean):void {
+        private render(triggerByFrame:boolean, costTicker:number):void {
             var playerList = this.playerList;
             var length = playerList.length;
             if (length == 0) {
@@ -240,7 +250,7 @@ module egret.sys {
                 $invalidateRenderFlag = false;
             }
             for (var i = 0; i < length; i++) {
-                playerList[i].$render(triggerByFrame);
+                playerList[i].$render(triggerByFrame, costTicker);
             }
             $requestRenderingFlag = false;
         }

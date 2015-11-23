@@ -1665,7 +1665,8 @@ var egret;
          * @param actionsMode
          * @returns
          */
-        p.setPosition = function (value) {
+        p.setPosition = function (value, actionsMode) {
+            if (actionsMode === void 0) { actionsMode = 1; }
             if (value < 0) {
                 value = 0;
             }
@@ -1684,6 +1685,7 @@ var egret;
             if (t == this._prevPos) {
                 return end;
             }
+            var prevPos = this._prevPos;
             this.position = this._prevPos = t;
             this._prevPosition = value;
             if (this._target) {
@@ -1704,6 +1706,21 @@ var egret;
             }
             if (end) {
                 this.setPaused(true);
+            }
+            //执行actions
+            if (actionsMode != 0 && this._actions.length > 0) {
+                if (this._useTicks) {
+                    this._runActions(t, t);
+                }
+                else if (actionsMode == 1 && t < prevPos) {
+                    if (prevPos != this.duration) {
+                        this._runActions(prevPos, this.duration);
+                    }
+                    this._runActions(0, t, true);
+                }
+                else {
+                    this._runActions(prevPos, t);
+                }
             }
             this.dispatchEventWith("change");
             return end;
@@ -3978,7 +3995,7 @@ var egret;
             return false;
         };
         /**
-         * 注册帧回调事件，同一函数的重复监听会被忽略。
+         * 注册帧回调事件，同一函数的重复监听会被忽略。推荐使用 egret.startTick 替代此方法。
          * @method egret.Ticker#register
          * @param listener {Function} 帧回调函数,参数返回上一帧和这帧的间隔时间。示例：onEnterFrame(frameTime:number):void
          * @param thisObject {any} 帧回调函数的this对象
@@ -3992,7 +4009,7 @@ var egret;
             this.$insertEventBin(this.callBackList, "", listener, thisObject, false, priority, false);
         };
         /**
-         * 取消侦听enterFrame事件
+         * 取消侦听enterFrame事件。推荐使用 egret.stopTick 替代此方法。
          * @method egret.Ticker#unregister
          * @param listener {Function} 事件侦听函数
          * @param thisObject {any} 侦听函数的this对象

@@ -146,7 +146,7 @@ module egret {
         explicitWidth,
         explicitHeight,
         skewXdeg,//角度 degree
-        skewYdeg,
+        skewYdeg
     }
 
     /**
@@ -239,7 +239,7 @@ module egret {
                 14: NaN,           //explicitWidth,
                 15: NaN,           //explicitHeight,
                 16: 0,               //skewXdeg,
-                17: 0                //skewYdeg,
+                17: 0                //skewYdeg
             };
         }
 
@@ -523,6 +523,8 @@ module egret {
                 values[Keys.scaleY] = m.$getScaleY();
                 values[Keys.skewX] = matrix.$getSkewX();
                 values[Keys.skewY] = matrix.$getSkewY();
+                values[Keys.skewXdeg] = clampRotation(values[Keys.skewX] * 180 / Math.PI);
+                values[Keys.skewYdeg] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
                 values[Keys.rotation] = clampRotation(values[Keys.skewY] * 180 / Math.PI);
             }
             this.$removeFlags(sys.DisplayObjectFlags.InvalidMatrix);
@@ -856,7 +858,7 @@ module egret {
         $setSkewX(value:number):boolean {
             value = egret.sys.getNumber(value);
             var values = this.$DisplayObject;
-            if(value == values[Keys.skewXdeg]){
+            if (value == values[Keys.skewXdeg]) {
                 return false;
             }
             values[Keys.skewXdeg] = value;
@@ -1296,7 +1298,7 @@ module egret {
             }
             this.$alpha = value;
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedAlpha);
-            this.$invalidate(true);
+            this.$invalidate();
 
             return true;
         }
@@ -1792,7 +1794,7 @@ module egret {
         /**
          * @private
          * 标记此显示对象需要重绘。此方法会触发自身的cacheAsBitmap重绘。如果只是矩阵改变，自身显示内容并不改变，应该调用$invalidateTransform().
-         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。通常只有alpha属性改变会需要通知子项重绘。
+         * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         $invalidate(notifyChildren?:boolean):void {
             if (!this.$renderRegion || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender)) {
@@ -1846,12 +1848,12 @@ module egret {
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
-        $update():boolean {
+        $update(bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             this.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
-            var bounds = this.$getContentBounds();
+            var renderBounds = bounds || this.$getContentBounds();
             var displayList = this.$displayList || this.$parentDisplayList;
             var region = this.$renderRegion;
             if (!displayList) {
@@ -1870,7 +1872,7 @@ module egret {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
             displayList.$ratioMatrix.$preMultiplyInto(matrix, matrix);
-            region.updateRegion(bounds, matrix);
+            region.updateRegion(renderBounds, matrix);
             return true;
         }
 
@@ -1959,7 +1961,7 @@ module egret {
          * @platform Web,Native
          */
         public hitTestPoint(x:number, y:number, shapeFlag?:boolean):boolean {
-            if(!shapeFlag) {
+            if (!shapeFlag) {
                 return !!DisplayObject.prototype.$hitTest.call(this, x, y);
             }
             else {
