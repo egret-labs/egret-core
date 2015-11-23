@@ -1323,7 +1323,7 @@ declare module egret {
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
-        $update(): boolean;
+        $update(bounds?: Rectangle): boolean;
         /**
          * @private
          * 获取相对于指定根节点的连接矩阵。
@@ -12560,6 +12560,7 @@ declare module egret {
          * 不能重写$invalidateContentBounds，因为内部graphics调用clear时会触发$invalidateContentBounds这狗方法，从而导致死循环。
          */
         $invalidateTextField(): void;
+        $update(bounds?: Rectangle): boolean;
         /**
          * @private
          */

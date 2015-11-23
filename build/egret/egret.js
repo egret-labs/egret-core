@@ -2222,12 +2222,12 @@ var egret;
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
-        p.$update = function () {
+        p.$update = function (bounds) {
             this.$removeFlagsUp(768 /* Dirty */);
             this.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
-            var bounds = this.$getContentBounds();
+            var renderBounds = bounds || this.$getContentBounds();
             var displayList = this.$displayList || this.$parentDisplayList;
             var region = this.$renderRegion;
             if (!displayList) {
@@ -2246,7 +2246,7 @@ var egret;
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
             displayList.$ratioMatrix.$preMultiplyInto(matrix, matrix);
-            region.updateRegion(bounds, matrix);
+            region.updateRegion(renderBounds, matrix);
             return true;
         };
         /**
@@ -18138,6 +18138,26 @@ var egret;
             this.$invalidateContentBounds();
             this.$TextField[18 /* textLinesChanged */] = true;
         };
+        p.$update = function (bounds) {
+            var self = this;
+            var bounds = self.$getContentBounds();
+            var tmpBounds = egret.Rectangle.create();
+            tmpBounds.copyFrom(bounds);
+            if (self.$TextField[31 /* border */]) {
+                tmpBounds.width += 2;
+                tmpBounds.height += 2;
+            }
+            var _strokeDouble = self.$TextField[27 /* stroke */] * 2;
+            if (_strokeDouble > 0) {
+                tmpBounds.width += _strokeDouble * 2;
+                tmpBounds.height += _strokeDouble * 2;
+            }
+            tmpBounds.x -= _strokeDouble;
+            tmpBounds.y -= _strokeDouble;
+            var result = _super.prototype.$update.call(this, tmpBounds);
+            egret.Rectangle.release(tmpBounds);
+            return result;
+        };
         /**
          * @private
          */
@@ -18146,16 +18166,7 @@ var egret;
             this.$getLinesArr();
             var w = !isNaN(this.$TextField[3 /* textFieldWidth */]) ? this.$TextField[3 /* textFieldWidth */] : this.$TextField[5 /* textWidth */];
             var h = !isNaN(this.$TextField[4 /* textFieldHeight */]) ? this.$TextField[4 /* textFieldHeight */] : egret.TextFieldUtils.$getTextHeight(self);
-            if (self.border) {
-                w += 2;
-                h += 2;
-            }
-            var _strokeDouble = this.$TextField[27 /* stroke */] * 2;
-            if (_strokeDouble > 0) {
-                w += _strokeDouble * 2;
-                h += _strokeDouble * 2;
-            }
-            bounds.setTo(-_strokeDouble, -_strokeDouble, w, h);
+            bounds.setTo(0, 0, w, h);
         };
         /**
          * @private

@@ -1848,12 +1848,12 @@ module egret {
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
-        $update():boolean {
+        $update(bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             this.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
-            var bounds = this.$getContentBounds();
+            var renderBounds = bounds || this.$getContentBounds();
             var displayList = this.$displayList || this.$parentDisplayList;
             var region = this.$renderRegion;
             if (!displayList) {
@@ -1872,7 +1872,7 @@ module egret {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
             displayList.$ratioMatrix.$preMultiplyInto(matrix, matrix);
-            region.updateRegion(bounds, matrix);
+            region.updateRegion(renderBounds, matrix);
             return true;
         }
 
