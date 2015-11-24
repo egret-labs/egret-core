@@ -108,7 +108,7 @@ module egret.web {
             var context:any = new WebGLRenderContext(canvas);
             canvas["renderContext"] = context;
             context["surface"] = canvas;
-            toBitmapData(canvas);
+            $toBitmapData(canvas);
 
             if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];

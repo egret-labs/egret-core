@@ -52,6 +52,6 @@ module egret.sys {
                 egret.sys.tr(1013);
             }
         }
-        return +value || 0;;
+        return +value || 0;
     }
 }
