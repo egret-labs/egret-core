@@ -76,7 +76,7 @@ module eui {
             this.$graphics.$render(context);
         }
 
-        private _fillColor: number = 0x000000;
+        private $fillColor: number = 0x000000;
         /**
          * @language en_US
          * Fill color
@@ -92,13 +92,13 @@ module eui {
          * @platform Web,Native
          */
         public get fillColor(): number {
-            return this._fillColor;
+            return this.$fillColor;
         }
 
         public set fillColor(value: number) {
-            if (!value || this._fillColor == value)
+            if (!value || this.$fillColor == value)
                 return;
-            this._fillColor = value;
+            this.$fillColor = value;
             this.invalidateDisplayList();
         }
 
@@ -153,7 +153,7 @@ module eui {
             this.$strokeColor = value;
             this.invalidateDisplayList();
         }
-        private _strokeAlpha: number = 1;
+        private $strokeAlpha: number = 1;
         /**
          * @language en_US
          * The line's alpha inside the rect border. Caution: when the strokeWeight is 0, a line is not drawn
@@ -161,21 +161,21 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-         /**
-          * @language zh_CN
-          * 边框透明度,注意：当 strokeWeight 为0时，不显示边框。
-          * @version Egret 2.5.5
-          * @version eui 1.0
-          * @platform Web,Native
-          */
+        /**
+         * @language zh_CN
+         * 边框透明度,注意：当 strokeWeight 为0时，不显示边框。
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
         public get strokeAlpha(): number {
-            return this._strokeAlpha;
+            return this.$strokeAlpha;
         }
 
         public set strokeAlpha(value: number) {
-            if (this._strokeAlpha == value)
+            if (this.$strokeAlpha == value)
                 return;
-            this._strokeAlpha = value;
+            this.$strokeAlpha = value;
             this.invalidateDisplayList();
         }
 
@@ -264,26 +264,24 @@ module eui {
         protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             var g = this.graphics;
             g.clear();
-            if (this.strokeWeight > 0) {
-                g.beginFill(this.strokeColor, this.strokeAlpha);
-            } else {
-                g.beginFill(this.fillColor, this.fillAlpha);
-            }
-            if (this.ellipseWidth == 0) {
-                g.drawRect(0, 0, unscaledWidth, unscaledHeight);
-            } else {
-                g.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, this.ellipseWidth, 0);
-            }
-            g.endFill();
-            if (this.strokeWeight > 0) {
-                g.beginFill(this.fillColor, this.fillAlpha);
-                if (this.ellipseWidth == 0) {
+            if (this.$strokeWeight > 0) {
+                g.beginFill(this.$fillColor, 0);
+                g.lineStyle(this.$strokeWeight, this.$strokeColor, this.$strokeAlpha, true, "normal", "square", "miter");
+                if (this.$ellipseWidth == 0) {
                     g.drawRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight);
                 } else {
-                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.ellipseWidth, 0);
+                    g.drawRoundRect(this.$strokeWeight / 2, this.$strokeWeight / 2, unscaledWidth - this.$strokeWeight, unscaledHeight - this.$strokeWeight, this.$ellipseWidth, 0);
                 }
                 g.endFill();
             }
+            g.beginFill(this.$fillColor, this.$fillAlpha);
+            g.lineStyle(this.$strokeWeight, this.$strokeColor, 0, true, "normal", "square", "miter");
+            if (this.$ellipseWidth == 0) {
+                g.drawRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2);
+            } else {
+                g.drawRoundRect(this.$strokeWeight, this.$strokeWeight, unscaledWidth - this.$strokeWeight * 2, unscaledHeight - this.$strokeWeight * 2, this.$ellipseWidth, 0);
+            }
+            g.endFill();
             this.$invalidateContentBounds();
         }
     }

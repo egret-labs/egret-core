@@ -528,7 +528,7 @@ var EXMLCompiler = (function () {
                 }
                 var type = this.exmlConfig.getPropertyType(child.localName, className);
                 if (!type) {
-                    this.exit(2005, this.exmlPath, child.localName, this.getPropertyStr(child));
+                    globals.warn(2005, this.exmlPath, child.localName, this.getPropertyStr(child));
                 }
                 if (!child.children || child.children.length == 0) {
                     globals.warn(2102, this.exmlPath, this.getPropertyStr(child));
@@ -671,7 +671,7 @@ var EXMLCompiler = (function () {
         var className = this.exmlConfig.getClassNameById(node.localName, node.namespace);
         var type = this.exmlConfig.getPropertyType(key, className);
         if (!type) {
-            this.exit(2005, this.exmlPath, key, this.toXMLString(node));
+            globals.warn(2005, this.exmlPath, key, this.toXMLString(node));
         }
         if (type != "string" && value.charAt(0) == "{" && value.charAt(value.length - 1) == "}") {
             value = value.substr(1, value.length - 2);

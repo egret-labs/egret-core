@@ -406,6 +406,7 @@ module egret.sys {
                 for (var i = 0; i < length; i++) {
                     var child = children[i];
                     if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
+                        child.$isDirty = false;
                         continue;
                     }
                     if (child.$blendMode !== 0 ||

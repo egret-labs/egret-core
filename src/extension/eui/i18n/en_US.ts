@@ -37,7 +37,7 @@ module eui {
     locale_strings[2002] = "EXML parsing error : invalid XML file:\n{0}";
     locale_strings[2003] = "EXML parsing error {0}: the class definitions corresponding to nodes can't be found  \n {1}";
     locale_strings[2004] = "EXML parsing error {0}: nodes cannot contain id property with the same name \n {1}";
-    locale_strings[2005] = "EXML parsing error {0}: property with the name of '{1}' does not exist on the node: \n {2}";
+    locale_strings[2005] = "EXML parsing error {0}: property with the name of '{1}' does not exist on the node, or the property does not have a default value: \n {2}";
     locale_strings[2006] = "EXML parsing error {0}: undefined view state name: '{1}' \n {2}";
     locale_strings[2007] = "EXML parsing error {0}: only UIComponent objects within the container can use the includeIn and excludeFrom properties\n {1}";
     locale_strings[2008] = "EXML parsing error {0}: fail to assign values of '{1}' class to property: '{2}' \n {3}";

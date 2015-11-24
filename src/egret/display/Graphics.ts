@@ -429,6 +429,10 @@ module egret {
 
             this.moveTo(this.lineX, this.lineY);
 
+            if(thickness <= 0) {
+                thickness = 1;
+            }
+
             this.$renderContext.lineWidth = thickness;
             this.$renderContext.strokeStyle = this.strokeStyleColor;
             this.$renderContext.beginPath();
