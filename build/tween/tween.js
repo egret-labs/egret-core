@@ -31,14 +31,14 @@ var egret;
     /**
      * @language en_US
      * Easing function set. Different easing functions are used to make an animation proceed according to the corresponding equation
-     * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween and Ease
+     * @see http://edn.egret.com/cn/index.php/article/index/id/53 Easing effect Demo
      * @version Egret 2.4
      * @platform Web,Native
      */
     /**
      * @language zh_CN
      * 缓动函数集合，使用不同的缓动函数使得动画按照对应的方程进行
-     * @see http://bbs.egret-labs.org/thread-392-1-1.html Tween和Ease
+     * @see http://edn.egret.com/cn/index.php/article/index/id/53 缓动效果演示
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -52,9 +52,14 @@ var egret;
         }
         var d = __define,c=Ease;p=c.prototype;
         /**
-         *
-         * @param amount
-         * @returns
+         * @language en_US
+         * get.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -76,9 +81,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param pow
-         * @returns
+         * @language en_US
+         * get pow in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get pow in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -88,9 +98,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param pow
-         * @returns
+         * @language en_US
+         * get pow out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get pow out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -100,9 +115,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param pow
-         * @returns
+         * @language en_US
+         * get pow in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get pow in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -114,9 +134,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * sine in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * sine in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -124,9 +149,14 @@ var egret;
             return 1 - Math.cos(t * Math.PI / 2);
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * sine out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * sine out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -134,9 +164,14 @@ var egret;
             return Math.sin(t * Math.PI / 2);
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * sine in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * sine in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -144,9 +179,14 @@ var egret;
             return -0.5 * (Math.cos(Math.PI * t) - 1);
         };
         /**
-         *
-         * @param amount
-         * @returns
+         * @language en_US
+         * get back in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get back in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -156,9 +196,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param amount
-         * @returns
+         * @language en_US
+         * get back out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get back out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -168,9 +213,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param amount
-         * @returns
+         * @language en_US
+         * get back in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get back in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -183,9 +233,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * circ in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * circ in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -193,9 +248,14 @@ var egret;
             return -(Math.sqrt(1 - t * t) - 1);
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * circ out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * circ out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -203,9 +263,14 @@ var egret;
             return Math.sqrt(1 - (--t) * t);
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * circ in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * circ in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -216,9 +281,14 @@ var egret;
             return 0.5 * (Math.sqrt(1 - (t -= 2) * t) + 1);
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * bounce in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * bounce in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -226,9 +296,14 @@ var egret;
             return 1 - Ease.bounceOut(1 - t);
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * bounce out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * bounce out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -247,9 +322,14 @@ var egret;
             }
         };
         /**
-         *
-         * @param t
-         * @returns
+         * @language en_US
+         * bounce in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * bounce in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -259,10 +339,14 @@ var egret;
             return Ease.bounceOut(t * 2 - 1) * 0.5 + 0.5;
         };
         /**
-         *
-         * @param amplitude
-         * @param period
-         * @returns
+         * @language en_US
+         * get elastic in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get elastic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -276,10 +360,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param amplitude
-         * @param period
-         * @returns
+         * @language en_US
+         * get elastic out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get elastic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -293,10 +381,14 @@ var egret;
             };
         };
         /**
-         *
-         * @param amplitude
-         * @param period
-         * @returns
+         * @language en_US
+         * get elastic in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * get elastic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -310,91 +402,235 @@ var egret;
             };
         };
         /**
+         * @language en_US
+         * quad in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quad in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quadIn = Ease.getPowIn(2);
         /**
+         * @language en_US
+         * quad out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quad out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quadOut = Ease.getPowOut(2);
         /**
+         * @language en_US
+         * quad in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quad in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quadInOut = Ease.getPowInOut(2);
         /**
+         * @language en_US
+         * cubic in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * cubic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.cubicIn = Ease.getPowIn(3);
         /**
+         * @language en_US
+         * cubic out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * cubic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.cubicOut = Ease.getPowOut(3);
         /**
+         * @language en_US
+         * cubic in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * cubic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.cubicInOut = Ease.getPowInOut(3);
         /**
+         * @language en_US
+         * quart in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quart in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quartIn = Ease.getPowIn(4);
         /**
+         * @language en_US
+         * quart out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quart out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quartOut = Ease.getPowOut(4);
         /**
+         * @language en_US
+         * quart in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quart in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quartInOut = Ease.getPowInOut(4);
         /**
+         * @language en_US
+         * quint in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quint in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quintIn = Ease.getPowIn(5);
         /**
+         * @language en_US
+         * quint out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quint out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quintOut = Ease.getPowOut(5);
         /**
+         * @language en_US
+         * quint in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * quint in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.quintInOut = Ease.getPowInOut(5);
         /**
+         * @language en_US
+         * back in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * back in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.backIn = Ease.getBackIn(1.7);
         /**
+         * @language en_US
+         * back out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * back out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.backOut = Ease.getBackOut(1.7);
         /**
+         * @language en_US
+         * back in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * back in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.backInOut = Ease.getBackInOut(1.7);
         /**
+         * @language en_US
+         * elastic in.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * elastic in。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.elasticIn = Ease.getElasticIn(1, 0.3);
         /**
+         * @language en_US
+         * elastic out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * elastic out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */
         Ease.elasticOut = Ease.getElasticOut(1, 0.3);
         /**
+         * @language en_US
+         * elastic in out.See example.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * elastic in out。请查看示例
          * @version Egret 2.4
          * @platform Web,Native
          */

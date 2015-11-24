@@ -1241,9 +1241,11 @@ var egret;
                 video.style.left = "0px";
                 video.height = this.heightSet;
                 video.width = this.widthSet;
-                setTimeout(function () {
-                    video.width = 0;
-                }, 1000);
+                if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
+                    setTimeout(function () {
+                        video.width = 0;
+                    }, 1000);
+                }
                 this.checkFullScreen(this._fullscreen);
             };
             p.checkFullScreen = function (playFullScreen) {
