@@ -646,11 +646,10 @@ module egret {
                     break;
             }
             function setLineData(str:string):boolean {
-                textHeight += lineHeight + lineSpacing;
                 if (textFieldHeight && textLines.length > 0 && textHeight > textFieldHeight) {
-                    textHeight -= lineHeight + lineSpacing;
                     return false;
                 }
+                textHeight += lineHeight + lineSpacing;
                 if(!isFirstChar && !isLastChar){
                     xPos -= letterSpacing;
                 }
