@@ -15866,11 +15866,19 @@ var egret;
             /**
              * @private
              */
-            this.textOffsetX = 0;
+            this.$textOffsetX = 0;
             /**
              * @private
              */
-            this.textOffsetY = 0;
+            this.$textOffsetY = 0;
+            /**
+             * @private
+             */
+            this.$textStartX = 0;
+            /**
+             * @private
+             */
+            this.$textStartY = 0;
             /**
              * @private
              */
@@ -15887,7 +15895,9 @@ var egret;
                 6: false,
                 7: false,
                 8: false,
-                9: false //textHeight,
+                9: false,
+                10: "left",
+                11: "top" //verticalAlign
             };
         }
         var d = __define,c=BitmapText;p=c.prototype;
@@ -16003,7 +16013,7 @@ var egret;
         };
         d(p, "lineSpacing"
             /**
-            /**
+             /**
              * @language en_US
              * An integer representing the amount of vertical space between lines.
              * @default 0
@@ -16064,22 +16074,87 @@ var egret;
             this.$invalidateContentBounds();
             return true;
         };
+        d(p, "textAlign"
+            /**
+             * @language en_US
+             * Horizontal alignment of text.
+             * @default：egret.HorizontalAlign.LEFT
+             * @version Egret 2.5.6
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 文本的水平对齐方式。
+             * @default：egret.HorizontalAlign.LEFT
+             * @version Egret 2.5.6
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$BitmapText[10 /* textAlign */];
+            }
+            ,function (value) {
+                this.$setTextAlign(value);
+            }
+        );
+        p.$setTextAlign = function (value) {
+            var values = this.$BitmapText;
+            if (values[10 /* textAlign */] == value)
+                return false;
+            values[10 /* textAlign */] = value;
+            this.$invalidateContentBounds();
+            return true;
+        };
+        d(p, "verticalAlign"
+            /**
+             * @language en_US
+             * Vertical alignment of text.
+             * @default：egret.VerticalAlign.TOP
+             * @version Egret 2.5.6
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 文字的垂直对齐方式。
+             * @default：egret.VerticalAlign.TOP
+             * @version Egret 2.5.6
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$BitmapText[11 /* verticalAlign */];
+            }
+            ,function (value) {
+                this.$setVerticalAlign(value);
+            }
+        );
+        p.$setVerticalAlign = function (value) {
+            var values = this.$BitmapText;
+            if (values[11 /* verticalAlign */] == value)
+                return false;
+            values[11 /* verticalAlign */] = value;
+            this.$invalidateContentBounds();
+            return true;
+        };
         /**
          * @private
          */
         p.$render = function (context) {
             var self = this;
+            var values = self.$BitmapText;
             var textLines = self.$getTextLines();
             var length = textLines.length;
             if (length == 0) {
                 return;
             }
-            var bitmapFont = self.$BitmapText[5 /* font */];
+            var textLinesWidth = self.$textLinesWidth;
+            var bitmapFont = values[5 /* font */];
             var emptyHeight = bitmapFont._getFirstCharHeight();
             var emptyWidth = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
-            var yPos = 0;
-            var hasSetHeight = !isNaN(self.$BitmapText[1 /* textFieldHeight */]);
-            var textFieldHeight = self.$BitmapText[1 /* textFieldHeight */];
+            var hasSetHeight = !isNaN(values[1 /* textFieldHeight */]);
+            var textWidth = values[8 /* textWidth */];
+            var textFieldWidth = values[0 /* textFieldWidth */];
+            var textFieldHeight = values[1 /* textFieldHeight */];
+            var align = values[10 /* textAlign */];
+            var yPos = self.$textOffsetY + self.$textStartY;
             var lineHeights = self.$lineHeights;
             for (var i = 0; i < length; i++) {
                 var lineHeight = lineHeights[i];
@@ -16088,7 +16163,16 @@ var egret;
                 }
                 var line = textLines[i];
                 var len = line.length;
-                var xPos = 0;
+                var xPos = self.$textOffsetX;
+                if (align != egret.HorizontalAlign.LEFT) {
+                    var countWidth = textFieldWidth > textWidth ? textFieldWidth : textWidth;
+                    if (align == egret.HorizontalAlign.RIGHT) {
+                        xPos += countWidth - textLinesWidth[i];
+                    }
+                    else if (align == egret.HorizontalAlign.CENTER) {
+                        xPos += Math.floor((countWidth - textLinesWidth[i]) / 2);
+                    }
+                }
                 for (var j = 0; j < len; j++) {
                     var character = line.charAt(j);
                     var texture = bitmapFont.getTexture(character);
@@ -16104,9 +16188,9 @@ var egret;
                     var bitmapWidth = texture._bitmapWidth;
                     var bitmapHeight = texture._bitmapHeight;
                     context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
-                    xPos += texture.$getTextureWidth() + self.$BitmapText[4 /* letterSpacing */];
+                    xPos += texture.$getTextureWidth() + values[4 /* letterSpacing */];
                 }
-                yPos += lineHeight + self.$BitmapText[3 /* lineSpacing */];
+                yPos += lineHeight + values[3 /* lineSpacing */];
             }
         };
         /**
@@ -16118,7 +16202,7 @@ var egret;
                 bounds.setEmpty();
             }
             else {
-                bounds.setTo(this.textOffsetX, this.textOffsetY, this.$BitmapText[8 /* textWidth */] - this.textOffsetX, this.$BitmapText[9 /* textHeight */] - this.textOffsetY + (lines.length - 1) * this.$BitmapText[3 /* lineSpacing */]);
+                bounds.setTo(this.$textOffsetX + this.$textStartX, this.$textOffsetY + this.$textStartY, this.$BitmapText[8 /* textWidth */] - this.$textOffsetX, this.$BitmapText[9 /* textHeight */] - this.$textOffsetY);
             }
         };
         d(p, "textWidth"
@@ -16164,27 +16248,33 @@ var egret;
          */
         p.$getTextLines = function () {
             var self = this;
-            if (!this.$BitmapText[7 /* textLinesChanged */]) {
+            var values = this.$BitmapText;
+            if (!values[7 /* textLinesChanged */]) {
                 return self.textLines;
             }
             var textLines = [];
             self.textLines = textLines;
-            this.$BitmapText[7 /* textLinesChanged */] = false;
+            var textLinesWidth = [];
+            self.$textLinesWidth = textLinesWidth;
+            values[7 /* textLinesChanged */] = false;
             var lineHeights = [];
             self.$lineHeights = lineHeights;
-            if (!self.$BitmapText[2 /* text */] || !self.$BitmapText[5 /* font */]) {
+            if (!values[2 /* text */] || !values[5 /* font */]) {
                 return textLines;
             }
+            var lineSpacing = values[3 /* lineSpacing */];
+            var letterSpacing = values[4 /* letterSpacing */];
             var textWidth = 0;
             var textHeight = 0;
-            var textStartX = 0;
-            var textStartY = 0;
-            var hasWidthSet = !isNaN(self.$BitmapText[0 /* textFieldWidth */]);
-            var textFieldWidth = self.$BitmapText[0 /* textFieldWidth */];
-            var bitmapFont = self.$BitmapText[5 /* font */];
+            var textOffsetX = 0;
+            var textOffsetY = 0;
+            var hasWidthSet = !isNaN(values[0 /* textFieldWidth */]);
+            var textFieldWidth = values[0 /* textFieldWidth */];
+            var textFieldHeight = values[1 /* textFieldHeight */];
+            var bitmapFont = values[5 /* font */];
             var emptyHeight = bitmapFont._getFirstCharHeight();
             var emptyWidth = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
-            var text = self.$BitmapText[2 /* text */];
+            var text = values[2 /* text */];
             var textArr = text.split(/(?:\r\n|\r|\n)/);
             var length = textArr.length;
             var isFirstLine = true;
@@ -16194,9 +16284,10 @@ var egret;
                 var lineHeight = 0;
                 var xPos = 0;
                 var isFirstChar = true;
+                var isLastChar = false;
                 for (var j = 0; j < len; j++) {
                     if (!isFirstChar) {
-                        xPos += self.$BitmapText[4 /* letterSpacing */];
+                        xPos += letterSpacing;
                     }
                     var character = line.charAt(j);
                     var texureWidth;
@@ -16225,16 +16316,15 @@ var egret;
                     }
                     if (isFirstChar) {
                         isFirstChar = false;
-                        textStartX = Math.min(offsetX, textStartX);
+                        textOffsetX = Math.min(offsetX, textOffsetX);
                     }
                     if (isFirstLine) {
-                        textStartY = Math.min(offsetY, textStartY);
+                        isFirstLine = false;
+                        textOffsetY = Math.min(offsetY, textOffsetY);
                     }
                     if (hasWidthSet && j > 0 && xPos + texureWidth > textFieldWidth) {
-                        textLines.push(line.substring(0, j));
-                        lineHeights.push(lineHeight);
-                        textHeight += lineHeight;
-                        textWidth = Math.max(xPos, textWidth);
+                        if (!setLineData(line.substring(0, j)))
+                            break;
                         line = line.substring(j);
                         len = line.length;
                         j = 0;
@@ -16245,18 +16335,53 @@ var egret;
                     xPos += texureWidth;
                     lineHeight = Math.max(textureHeight, lineHeight);
                 }
-                if (isFirstLine) {
-                    isFirstLine = false;
+                if (textFieldHeight && i > 0 && textHeight > textFieldHeight) {
+                    break;
                 }
-                textLines.push(line);
-                lineHeights.push(lineHeight);
-                textHeight += lineHeight;
-                textWidth = Math.max(xPos, textWidth);
+                isLastChar = true;
+                if (!setLineData(line))
+                    break;
             }
-            this.$BitmapText[8 /* textWidth */] = textWidth;
-            this.$BitmapText[9 /* textHeight */] = textHeight;
-            self.textOffsetX = textStartX;
-            self.textOffsetY = textStartY;
+            function setLineData(str) {
+                if (textFieldHeight && textLines.length > 0 && textHeight > textFieldHeight) {
+                    return false;
+                }
+                textHeight += lineHeight + lineSpacing;
+                if (!isFirstChar && !isLastChar) {
+                    xPos -= letterSpacing;
+                }
+                textLines.push(str);
+                lineHeights.push(lineHeight);
+                textLinesWidth.push(xPos);
+                textWidth = Math.max(xPos, textWidth);
+                return true;
+            }
+            textHeight -= lineSpacing;
+            values[8 /* textWidth */] = textWidth;
+            values[9 /* textHeight */] = textHeight;
+            self.$textOffsetX = textOffsetX;
+            self.$textOffsetY = textOffsetY;
+            self.$textStartX = 0;
+            self.$textStartY = 0;
+            var alignType;
+            if (textFieldWidth > textWidth) {
+                alignType = values[10 /* textAlign */];
+                if (alignType == egret.HorizontalAlign.RIGHT) {
+                    self.$textStartX = textFieldWidth - textWidth;
+                }
+                else if (alignType == egret.HorizontalAlign.CENTER) {
+                    self.$textStartX = Math.floor((textFieldWidth - textWidth) / 2);
+                }
+            }
+            if (textFieldHeight > textHeight) {
+                alignType = values[11 /* verticalAlign */];
+                if (alignType == egret.VerticalAlign.BOTTOM) {
+                    self.$textStartY = textFieldHeight - textHeight;
+                }
+                else if (alignType == egret.VerticalAlign.MIDDLE) {
+                    self.$textStartY = Math.floor((textFieldHeight - textHeight) / 2);
+                }
+            }
             return textLines;
         };
         /**
