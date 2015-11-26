@@ -34,7 +34,7 @@ class FileAutoChangeCommand implements egret.Command {
         var reg = /<!--modules_files_start-->[\s\S]*<!--modules_files_end-->/;
         var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
 
-        var htmlContent = FileUtil.read(htmlPath);
+        var htmlContent = FileUtil.read(htmlPath, true);
 
         htmlContent = htmlContent.replace(reg, replaceStr);
 
