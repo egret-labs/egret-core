@@ -97,6 +97,8 @@
     <xs:attribute name="letterSpacing" type="xs:decimal"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="textAlign" type="xs:string"/>
+    <xs:attribute name="verticalAlign" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Object">
     <xs:choice>
@@ -121,6 +123,8 @@
       <xs:element name="letterSpacing" type="number"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="text" type="string"/>
+      <xs:element name="textAlign" type="string"/>
+      <xs:element name="verticalAlign" type="string"/>
     </xs:choice>
   </xs:group>
   <xs:element name="BitmapText">
