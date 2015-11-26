@@ -11026,6 +11026,14 @@ declare module egret.sys {
          * @private 测量的值
          */
         textHeight = 9,
+        /**
+         * @private
+         */
+        textAlign = 10,
+        /**
+         * @private
+         */
+        verticalAlign = 11,
     }
 }
 declare module egret {
@@ -11115,7 +11123,7 @@ declare module egret {
         font: Object;
         $setFont(value: any): boolean;
         /**
-        /**
+         /**
          * @language en_US
          * An integer representing the amount of vertical space between lines.
          * @default 0
@@ -11147,6 +11155,38 @@ declare module egret {
          */
         letterSpacing: number;
         $setLetterSpacing(value: number): boolean;
+        /**
+         * @language en_US
+         * Horizontal alignment of text.
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本的水平对齐方式。
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        textAlign: string;
+        $setTextAlign(value: string): boolean;
+        /**
+         * @language en_US
+         * Vertical alignment of text.
+         * @default：egret.VerticalAlign.TOP
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文字的垂直对齐方式。
+         * @default：egret.VerticalAlign.TOP
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        verticalAlign: string;
+        $setVerticalAlign(value: string): boolean;
         /**
          * @language en_US
          * A ratio of the width of the space character. This value is multiplied by the height of the first character is the space character width.
@@ -11199,15 +11239,27 @@ declare module egret {
         /**
          * @private
          */
-        private textOffsetX;
+        private $textOffsetX;
         /**
          * @private
          */
-        private textOffsetY;
+        private $textOffsetY;
+        /**
+         * @private
+         */
+        private $textStartX;
+        /**
+         * @private
+         */
+        private $textStartY;
         /**
          * @private
          */
         private textLines;
+        /**
+         * @private 每一行文字的宽度
+         */
+        private $textLinesWidth;
         /**
          * @private
          */
