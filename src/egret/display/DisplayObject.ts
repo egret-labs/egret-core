@@ -1231,7 +1231,6 @@ module egret {
                 if (displayList) {
                     this.$displayList = displayList;
                     if (this.$parentDisplayList) {
-                        displayList.setDevicePixelRatio(this.$parentDisplayList.$ratioMatrix.a);
                         this.$parentDisplayList.markDirty(displayList);
                     }
                     this.$cacheAsBitmapChanged();
@@ -1861,7 +1860,7 @@ module egret {
                 region.moved = false;
                 return false;
             }
-            if (!region.moved && !displayList.$ratioChanged) {
+            if (!region.moved) {
                 return false;
             }
             region.moved = false;
@@ -1871,7 +1870,6 @@ module egret {
             if (root !== this.$stage) {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
-            displayList.$ratioMatrix.$preMultiplyInto(matrix, matrix);
             region.updateRegion(renderBounds, matrix);
             return true;
         }
