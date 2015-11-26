@@ -90,6 +90,22 @@ module egret.sys {
                         displayHeight = Math.round(stageHeight * scaleX);
                     }
                     break;
+                case StageScaleMode.FIXED_NARROW:
+                    if (scaleX > scaleY) {
+                        stageWidth = Math.round(screenWidth / scaleY);
+                    }
+                    else {
+                        stageHeight = Math.round(screenHeight / scaleX);
+                    }
+                    break;
+                case StageScaleMode.FIXED_WIDE:
+                    if (scaleX > scaleY) {
+                        stageHeight = Math.round(screenHeight / scaleX);
+                    }
+                    else {
+                        stageWidth = Math.round(screenWidth / scaleY);
+                    }
+                    break;
                 default :
                     stageWidth = screenWidth;
                     stageHeight = screenHeight;

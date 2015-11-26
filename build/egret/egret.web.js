@@ -1078,7 +1078,7 @@ var egret;
                  */
                 ,function () {
                     if (this.bufferSource) {
-                        return Math.floor((Date.now() - this._startTime));
+                        return Math.floor((Date.now() - this._startTime) / 1000);
                     }
                     return 0;
                 }

@@ -200,7 +200,7 @@ module eui {
                     else{
                         clazz = egret.getDefinitionByName(skinName);
                         if(!clazz) {
-                            DEBUG && egret.$error(2203,skinName);
+                            DEBUG && egret.$warn(2203,skinName);
                         }
                     }
                     if (clazz) {
