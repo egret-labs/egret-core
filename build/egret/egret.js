@@ -2777,7 +2777,6 @@ var egret;
             /**
              * @language en_US
              * Determines how the bitmap fills in the dimensions.
-             * ends at the edge of the region.</p>
              * <p>When set to <code>BitmapFillMode.REPEAT</code>, the bitmap
              * repeats to fill the region.</p>
              * <p>When set to <code>BitmapFillMode.SCALE</code>, the bitmap
@@ -16894,7 +16893,6 @@ var egret;
             this.stageText.$addToStage();
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
         };
@@ -16960,6 +16958,7 @@ var egret;
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
+                this._text.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
                 this._text.$isTyping = false;
                 this._text.$invalidateContentBounds();
                 //失去焦点后调用
@@ -16977,6 +16976,7 @@ var egret;
             if (this._isFocus) {
                 return;
             }
+            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             //强制更新输入框位置
             this.stageText.$show();
         };
