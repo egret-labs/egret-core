@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module egret {
+module egret.native {
 
     /**
      * @classdesc
@@ -104,10 +104,10 @@ module egret {
 
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self.$textfield.multiline) {//多行文本
+                    self.textValue = appendText;
+                    self.dispatchEvent(new egret.Event("updateText"));
                     if (self.isFinishDown) {
                         self.isFinishDown = false;
-                        self.textValue = appendText;
-                        self.dispatchEvent(new egret.Event("updateText"));
                         self.dispatchEvent(new egret.Event("blur"));
                     }
                 }
@@ -136,6 +136,9 @@ module egret {
          */
         public $show():void {
             var self = this;
+
+            egret_native.TextInputOp.setKeybordOpen(false);
+
             egret_native.EGT_getTextEditerContentText = function () {
                 return self.$getText();
             };
@@ -147,6 +150,12 @@ module egret {
 
                 egret_native.EGT_keyboardDidShow = function () {
                 }
+            };
+
+            egret_native.EGT_keyboardDidHide = function () {
+            };
+
+            egret_native.EGT_deleteBackward = function () {
             };
 
             var textfield:egret.TextField = this.$textfield;
