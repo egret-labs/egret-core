@@ -97,6 +97,15 @@ module egret.gui {
             props.index = index;
             props.data = data;
             Event._dispatchByTarget(eventClass,target,type,props);
+			props.renderer = null;
+			props.data = null;
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.renderer = null;
+			this.index = NaN;
+			this.data = null;
+		}
 	}
 }

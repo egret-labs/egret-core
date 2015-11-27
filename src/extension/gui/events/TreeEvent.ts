@@ -106,6 +106,16 @@ module egret.gui {
             props.itemRenderer = itemRenderer;
             props.opening = opening;
             Event._dispatchByTarget(eventClass,target,type,props,bubbles,cancelable);
+			props.item = null;
+			props.itemRenderer = null;
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.itemIndex = NaN;
+			this.item = null;
+			this.itemRenderer = null;
+			this.opening = false;
+		}
 	}
 }

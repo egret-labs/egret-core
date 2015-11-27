@@ -93,6 +93,12 @@ module egret.gui {
             props.newState = newState;
             Event._dispatchByTarget(eventClass,target,type,props);
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.oldState = null;
+			this.newState = null;
+		}
 	}
 	
 }

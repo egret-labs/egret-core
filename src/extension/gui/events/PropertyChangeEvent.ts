@@ -116,6 +116,19 @@ module egret.gui {
             props.newValue = newValue;
             props.source = source;
             Event._dispatchByTarget(eventClass,target,PropertyChangeEvent.PROPERTY_CHANGE,props);
+			props.property = null;
+			props.oldValue = null;
+			props.newValue = null;
+			props.source = null;
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.kind = null;
+			this.property = null;
+			this.oldValue = null;
+			this.newValue = null;
+			this.source = null;
+		}
 	}
 }

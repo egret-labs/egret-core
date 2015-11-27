@@ -90,6 +90,13 @@ module egret.gui {
             props.popUp = popUp;
             props.modal = modal;
             Event._dispatchByTarget(eventClass,target,type,props);
+			props.popUp = null;
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.popUp = null;
+			this.modal = false;
+		}
 	}
 }

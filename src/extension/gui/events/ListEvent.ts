@@ -121,6 +121,15 @@ module egret.gui {
             props.item = item;
             props.itemRenderer = itemRenderer;
             Event._dispatchByTarget(eventClass,target,type,props);
+			props.item = null;
+			props.itemRenderer = null;
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.item = null;
+			this.itemRenderer = null;
+			this.itemIndex = NaN;
+		}
 	}
 }

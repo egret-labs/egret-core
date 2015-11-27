@@ -91,5 +91,11 @@ module egret.gui {
             props.newIndex = newIndex;
             return Event._dispatchByTarget(eventClass,target,type,props,false,cancelable);
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.oldIndex = null;
+			this.newIndex = null;
+		}
 	}
 }

@@ -81,5 +81,11 @@ module egret.gui {
             props.oldHeight = oldHeight;
             Event._dispatchByTarget(eventClass, target, ResizeEvent.RESIZE, props);
         }
+
+		public __recycle():void {
+			super.__recycle();
+			this.oldWidth = NaN;
+			this.oldHeight = NaN;
+		}
 	}
 }
