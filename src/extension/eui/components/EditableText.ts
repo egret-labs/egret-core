@@ -27,6 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module eui.sys {
+    /**
+     * @private
+     */
     export const enum EditableTextKeys {
         promptText,
         textColorUser,
