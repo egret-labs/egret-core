@@ -81,32 +81,27 @@ module egret {
             }
             this.dispose();
 
-            //todo clipBounds?
             var bounds = clipBounds || displayObject.$getOriginalBounds();
             if (bounds.width == 0 || bounds.height == 0) {
                 return false;
             }
 
             scale /= $TextureScaleFactor;
-            var width = (bounds.x + bounds.width) * scale;
-            var height = (bounds.y + bounds.height) * scale;
+            var width = (bounds.x + bounds.width);
+            var height = (bounds.y + bounds.height);
             if(clipBounds) {
-                width = bounds.width * scale;
-                height = bounds.height * scale;
+                width = bounds.width;
+                height = bounds.height;
             }
             this.context = this.createRenderContext(width, height);
             if (!this.context) {
                 return false;
             }
 
-            var c1 = new egret.DisplayObjectContainer();
-            c1.$children.push(displayObject);
-            c1.scaleX = c1.scaleY = scale;
-
             var root = new egret.DisplayObjectContainer();
             this.rootDisplayList = sys.DisplayList.create(root);
             root.$displayList = this.rootDisplayList;
-            root.$children.push(c1);
+            root.$children.push(displayObject);
 
             var hasRenderRegion = displayObject.$renderRegion;
             if(!hasRenderRegion) {
@@ -122,13 +117,16 @@ module egret {
                 displayObject.$renderRegion = null;
             }
 
-            //保存绘制矩阵
             var renderMatrix = displayObject.$renderMatrix;
             var invertMatrix = Matrix.create();
             renderMatrix.$invertInto(invertMatrix);
             //应用裁切
             if(clipBounds) {
                 invertMatrix.translate(-clipBounds.x, -clipBounds.y);
+            }
+            //应用缩放
+            if(scale) {
+                invertMatrix.scale(scale, scale);
             }
 
             this.context.clearRect(0, 0, width, height);

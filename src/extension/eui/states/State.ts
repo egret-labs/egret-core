@@ -80,7 +80,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public constructor(name:string, overrides:IOverride[]) {
+        public constructor(name:string, overrides:IOverride[]=[]) {
             super();
             this.name = name;
             this.overrides = overrides;

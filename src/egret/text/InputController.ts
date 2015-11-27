@@ -80,7 +80,6 @@ module egret {
 
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
@@ -122,6 +121,12 @@ module egret {
         public _setText(value:string) {
             this.stageText.$setText(value);
         }
+        /**
+         * @private
+         */
+         public _setColor(value:number){
+            this.stageText.$setColor(value);
+        }
 
         /**
          * @private
@@ -150,6 +155,8 @@ module egret {
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
+                this._text.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+
                 this._text.$isTyping = false;
                 this._text.$invalidateContentBounds();
 
@@ -172,6 +179,7 @@ module egret {
             if (this._isFocus) {
                 return;
             }
+            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
             //强制更新输入框位置
             this.stageText.$show();

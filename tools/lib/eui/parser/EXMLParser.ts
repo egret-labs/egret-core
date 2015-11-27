@@ -659,7 +659,7 @@ var DEBUG = false;
                             cb.addAssignment(varName, innerClassName, SKIN_NAME);
                         }
                         else {
-                            egret.$error(2005, this.currentClassName, SKIN_NAME, getPropertyStr(child));
+                            egret.$warn(2005, this.currentClassName, SKIN_NAME, getPropertyStr(child));
                         }
                     }
                     continue;
@@ -673,7 +673,7 @@ var DEBUG = false;
                     var type = exmlConfig.getPropertyType(child.localName, className);
                     if (!type) {
                         if (DEBUG) {
-                            egret.$error(2005, this.currentClassName, child.localName, getPropertyStr(child));
+                            egret.$warn(2005, this.currentClassName, child.localName, getPropertyStr(child));
                         }
                         continue;
                     }
@@ -883,7 +883,7 @@ var DEBUG = false;
             var className = this.getClassNameOfNode(node);
             var type:string = exmlConfig.getPropertyType(key, className);
             if (DEBUG && !type) {
-                egret.$error(2005, this.currentClassName, key, toXMLString(node));
+                egret.$warn(2005, this.currentClassName, key, toXMLString(node));
             }
             if (value.charAt(0) == "{" && value.charAt(value.length - 1) == "}") {
                 value = value.substr(1, value.length - 2).trim();

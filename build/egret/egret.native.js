@@ -949,7 +949,6 @@ var egret;
 (function (egret) {
     var native;
     (function (native) {
-        native.$currentSurface;
         /**
          * @private
          * 呈现最终绘图结果的画布
@@ -1445,7 +1444,7 @@ var egret;
                     player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
                 }
                 this.playerOption = option;
-                this.stage = stage;
+                this.$stage = stage;
                 this.player = player;
                 this.nativeTouch = touch;
                 //this.nativeInput = nativeInput;
@@ -1457,7 +1456,7 @@ var egret;
                 var option = this.playerOption;
                 var screenWidth = egret_native.EGTView.getFrameWidth();
                 var screenHeight = egret_native.EGTView.getFrameHeight();
-                var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
+                var stageSize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
                 var stageWidth = stageSize.stageWidth;
                 var stageHeight = stageSize.stageHeight;
                 var displayWidth = stageSize.displayWidth;
@@ -1528,6 +1527,7 @@ var egret;
          */
         native.$supportCanvas = egret_native.Canvas ? true : false;
         var isRunning = false;
+        var playerList = [];
         function runEgret() {
             if (isRunning) {
                 return;
@@ -1539,6 +1539,11 @@ var egret;
                 if (language in egret.$locale_strings)
                     egret.$language = language;
             }
+            try {
+                egret.Capabilities.$setNativeCapabilities(egret_native.getVersion());
+            }
+            catch (e) {
+            }
             var ticker = egret.sys.$ticker;
             var mainLoop = function () {
                 ticker.update();
@@ -1548,7 +1553,21 @@ var egret;
             if (!egret.sys.screenAdapter) {
                 egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
             }
-            new native.NativePlayer();
+            //todo
+            var player = new native.NativePlayer();
+            playerList.push(player);
+            //老版本runtime不支持canvas,关闭脏矩形
+            if (!native.$supportCanvas) {
+                player.$stage.dirtyRegionPolicy = egret.DirtyRegionPolicy.OFF;
+                egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
+                };
+            }
+        }
+        function updateAllScreens() {
+            var length = playerList.length;
+            for (var i = 0; i < length; i++) {
+                playerList[i].updateScreenSize();
+            }
         }
         function toArray(argument) {
             var args = [];
@@ -1585,6 +1604,7 @@ var egret;
             };
         }
         egret.runEgret = runEgret;
+        egret.updateAllScreens = updateAllScreens;
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -1955,7 +1975,7 @@ var egret;
                         _this.$loops--;
                     }
                     /////////////
-                    _this.audio.load();
+                    //this.audio.load();
                     _this.$play();
                 };
                 audio.addEventListener("ended", this.onPlayEnd);
@@ -2777,7 +2797,12 @@ var egret;
                         self._response = content;
                         egret.Event.dispatchEvent(self, egret.Event.COMPLETE);
                     };
-                    egret_native.readFileAsync(self._url, promise);
+                    if (self._responseType == egret.HttpResponseType.ARRAY_BUFFER) {
+                        egret_native.readFileAsync(self._url, promise, "ArrayBuffer");
+                    }
+                    else {
+                        egret_native.readFileAsync(self._url, promise);
+                    }
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();
@@ -2923,7 +2948,7 @@ var egret;
                 var self = this;
                 var promise = new egret.PromiseObject();
                 promise.onSuccessFunc = function (bitmapData) {
-                    self.data = native.toBitmapData(bitmapData);
+                    self.data = egret.$toBitmapData(bitmapData);
                     self.dispatchEventWith(egret.Event.COMPLETE);
                 };
                 promise.onErrorFunc = function () {
@@ -2998,6 +3023,10 @@ var egret;
             /**
              * @private
              */
+            this.colorValue = 0xffffff;
+            /**
+             * @private
+             */
             this.isFinishDown = false;
             this.textValue = "";
         }
@@ -3022,6 +3051,10 @@ var egret;
             this.textValue = value;
             return true;
         };
+        p.$setColor = function (value) {
+            this.colorValue = value;
+            return true;
+        };
         /**
          * @private
          *
@@ -3039,6 +3072,7 @@ var egret;
                         self.isFinishDown = false;
                         self.textValue = appendText;
                         self.dispatchEvent(new egret.Event("updateText"));
+                        self.dispatchEvent(new egret.Event("blur"));
                     }
                 }
                 else {
@@ -3054,7 +3088,6 @@ var egret;
                 if (self.$textfield.multiline) {
                     self.isFinishDown = true;
                 }
-                self.dispatchEvent(new egret.Event("blur"));
             };
         };
         /**

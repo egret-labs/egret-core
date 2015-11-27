@@ -193,7 +193,7 @@ module eui {
         protected measure(): void {
             var values = this.$UIComponent;
             var textValues = this.$BitmapText;
-            var oldWidth = textValues[egret.sys.BitmapTextKeys.textWidth];
+            var oldWidth = textValues[egret.sys.BitmapTextKeys.textFieldWidth];
             var availableWidth = NaN;
             if (!isNaN(this._widthConstraint)) {
                 availableWidth = this._widthConstraint;

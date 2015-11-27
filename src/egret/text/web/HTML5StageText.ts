@@ -229,7 +229,6 @@ module egret.web {
 
             return true;
         }
-
         /**
          * @private
          * 
@@ -239,6 +238,25 @@ module egret.web {
                 this.inputElement.value = this.textValue;
             }
         }
+        /**
+         * @private
+         */
+        private colorValue:number = 0xffffff;
+        $setColor(value:number):boolean{
+            this.colorValue = value;
+            this.resetColor();
+            return true;
+        }
+        /**
+         * @private
+         *
+         */
+        private resetColor():void {
+            if (this.inputElement) {
+                this.setElementStyle("color", toColorString(this.colorValue));
+            }
+        }
+
 
         $onBlur():void {
             if (Html5Capatibility._System_OS == SystemOSType.WPHONE) {

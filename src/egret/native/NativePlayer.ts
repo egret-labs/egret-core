@@ -37,7 +37,7 @@ module egret.native {
          * @private
          * 舞台引用
          */
-        private stage:Stage;
+        public $stage:Stage;
 
         private playerOption:PlayerOption;
 
@@ -90,7 +90,7 @@ module egret.native {
                 player.displayFPS(option.showFPS, option.showLog, option.logFilter, option.fpsStyles);
             }
             this.playerOption = option;
-            this.stage = stage;
+            this.$stage = stage;
             this.player = player;
 
             this.nativeTouch = touch;
@@ -105,7 +105,7 @@ module egret.native {
             var option = this.playerOption;
             var screenWidth:number = egret_native.EGTView.getFrameWidth();
             var screenHeight:number = egret_native.EGTView.getFrameHeight();
-            var stageSize:sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
+            var stageSize:sys.StageDisplaySize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             var stageWidth:number = stageSize.stageWidth;
             var stageHeight:number = stageSize.stageHeight;

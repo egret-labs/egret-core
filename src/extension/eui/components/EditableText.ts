@@ -26,7 +26,16 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
+module eui.sys {
+    /**
+     * @private
+     */
+    export const enum EditableTextKeys {
+        promptText,
+        textColorUser,
+        asPassword
+    }
+}
 module eui {
 
     var UIImpl = sys.UIComponentImpl;
@@ -48,7 +57,7 @@ module eui {
      * @version eui 1.0
      * @platform Web,Native
      */
-    export class EditableText extends egret.TextField implements UIComponent,IDisplayText {
+    export class EditableText extends egret.TextField implements UIComponent, IDisplayText {
 
         /**
          * @language en_US
@@ -68,12 +77,18 @@ module eui {
             super();
             this.initializeUIValues();
             this.type = egret.TextFieldType.INPUT;
+            this.$EditableText = {
+                0: null,         //promptText,
+                1: 0xffffff,     //textColorUser,
+                2: false         //asPassword
+            }
         }
+        $EditableText: Object;
         /**
          * @private
          *
          */
-        $invalidateContentBounds():void {
+        $invalidateContentBounds(): void {
             super.$invalidateContentBounds();
             this.invalidateSize();
         }
@@ -83,9 +98,9 @@ module eui {
          *
          * @param value
          */
-        $setWidth(value:number):boolean {
-            var result1:boolean = super.$setWidth(value);
-            var result2:boolean = UIImpl.prototype.$setWidth.call(this, value);
+        $setWidth(value: number): boolean {
+            var result1: boolean = super.$setWidth(value);
+            var result2: boolean = UIImpl.prototype.$setWidth.call(this, value);
             return result1 && result2;
         }
 
@@ -94,9 +109,9 @@ module eui {
          *
          * @param value
          */
-        $setHeight(value:number):boolean {
-            var result1:boolean = super.$setHeight(value);
-            var result2:boolean = UIImpl.prototype.$setHeight.call(this, value);
+        $setHeight(value: number): boolean {
+            var result1: boolean = super.$setHeight(value);
+            var result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
 
@@ -105,8 +120,8 @@ module eui {
          *
          * @param value
          */
-        $setText(value:string):boolean {
-            var result:boolean = super.$setText(value);
+        $setText(value: string): boolean {
+            var result: boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
 
             return result;
@@ -115,17 +130,17 @@ module eui {
         /**
          * @private
          */
-        private _widthConstraint:number = NaN;
+        private _widthConstraint: number = NaN;
         /**
-        * @private
-        *
-        * @param stage
-        * @param nestLevel
-        */
+         * @private
+         *
+         * @param stage
+         * @param nestLevel
+         */
         public $onAddToStage(stage: egret.Stage, nestLevel: number): void {
             super.$onAddToStage(stage, nestLevel);
-            this.addEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
-            this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+            this.addEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
+            this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }
         /**
          * @private
@@ -133,11 +148,13 @@ module eui {
          */
         public $onRemoveFromStage(): void {
             super.$onRemoveFromStage();
-            this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.showPrompt, this);
-            this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.showPrompt, this);
+            this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
+            this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }
-
-        private $prompt: string = "";
+        /**
+         * @private
+         */
+        private $isShowPrompt: boolean = false;
         /**
          * @language en_US
          * When the property of the text is empty, it will show the defalut string.
@@ -157,30 +174,100 @@ module eui {
          * @platform Web,Native
          */
         public get prompt(): string {
-            return this.$prompt;
+            return this.$EditableText[sys.EditableTextKeys.promptText];
         }
         public set prompt(value: string) {
-            var oldPrompt: string = this.$prompt;
-            this.$prompt = value;
-            if (this.text == oldPrompt) {
-                this.text = value;
+            var values = this.$EditableText;
+            var promptText = values[sys.EditableTextKeys.promptText];
+            if (promptText == value)
+                return;
+            values[sys.EditableTextKeys.promptText] = value;
+            var text = this.text;
+            if (!text || text == promptText) {
+                this.showPromptText();
+            }
+        }
+
+        private $promptColor: number = 0x666666;
+        /**
+         * @language en_US
+         * The color of the defalut string.
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 默认文本的颜色
+         * @version Egret 2.5.5
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public set promptColor(value: number) {
+            value = +value | 0;
+            if (this.$promptColor != value) {
+                this.$promptColor = value;
+                var text = this.text;
+                if (!text || text == this.$EditableText[sys.EditableTextKeys.promptText]) {
+                    this.showPromptText();
+                }
+            }
+        }
+        public get promptColor(): number {
+            return this.$promptColor;
+        }
+        /**
+         * @private
+         */
+        private onfocusOut(): void {
+            if (!this.text) {
+                this.showPromptText();
             }
         }
         /**
          * @private
          */
-        private showPrompt(): void {
-            if (!this.text) {
-                this.text = this.prompt;
+        private onfocusIn(): void {
+            this.$isShowPrompt = false;
+            this.displayAsPassword = this.$EditableText[sys.EditableTextKeys.asPassword];
+            var values = this.$EditableText;
+            var text = this.text;
+            if (!text || text == values[sys.EditableTextKeys.promptText]) {
+                this.textColor = values[sys.EditableTextKeys.textColorUser];
+                this.text = "";
             }
         }
-
+        /**
+         * @private
+         */
+        private showPromptText(): void {
+            var values = this.$EditableText;
+            this.$isShowPrompt = true;
+            super.$setTextColor(this.$promptColor);
+            super.$setDisplayAsPassword(false);
+            this.text = values[sys.EditableTextKeys.promptText];
+        }
+        $setTextColor(value: number): boolean {
+            value = +value | 0;
+            this.$EditableText[sys.EditableTextKeys.textColorUser] = value;
+            if (!this.$isShowPrompt) {
+                super.$setTextColor(value);
+            }
+            return true;
+        }
+        $setDisplayAsPassword(value: boolean): boolean {
+            this.$EditableText[sys.EditableTextKeys.asPassword] = value;
+            if (!this.$isShowPrompt) {
+                super.$setDisplayAsPassword(value);
+            }
+            return true;
+        }
         //=======================UIComponent接口实现===========================
         /**
          * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
          */
-        private initializeUIValues:()=>void;
+        private initializeUIValues: () => void;
 
         /**
          * @copy eui.Component#createChildren()
@@ -189,8 +276,8 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected createChildren():void {
-            this.showPrompt();
+        protected createChildren(): void {
+            this.onfocusOut();
         }
 
         /**
@@ -200,7 +287,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected childrenCreated():void {
+        protected childrenCreated(): void {
 
         }
 
@@ -211,7 +298,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected commitProperties():void {
+        protected commitProperties(): void {
 
         }
 
@@ -222,7 +309,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected measure():void {
+        protected measure(): void {
             var values = this.$UIComponent;
             var textValues = this.$TextField;
             var oldWidth = textValues[egret.sys.TextKeys.textFieldWidth];
@@ -250,7 +337,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected updateDisplayList(unscaledWidth:number, unscaledHeight:number):void {
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void {
             super.$setWidth(unscaledWidth);
             super.$setHeight(unscaledHeight);
         }
@@ -262,18 +349,18 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        protected invalidateParentLayout():void {
+        protected invalidateParentLayout(): void {
         }
 
         /**
          * @private
          */
-        $UIComponent:Object;
+        $UIComponent: Object;
 
         /**
          * @private
          */
-        $includeInLayout:boolean;
+        $includeInLayout: boolean;
 
         /**
          * @inheritDoc
@@ -282,7 +369,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public includeInLayout:boolean;
+        public includeInLayout: boolean;
         /**
          * @inheritDoc
          *
@@ -290,7 +377,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public left:number;
+        public left: number;
 
         /**
          * @inheritDoc
@@ -299,7 +386,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public right:number;
+        public right: number;
 
         /**
          * @inheritDoc
@@ -308,7 +395,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public top:number;
+        public top: number;
 
         /**
          * @inheritDoc
@@ -317,7 +404,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public bottom:number;
+        public bottom: number;
 
         /**
          * @inheritDoc
@@ -326,7 +413,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public horizontalCenter:number;
+        public horizontalCenter: number;
 
         /**
          * @inheritDoc
@@ -335,7 +422,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public verticalCenter:number;
+        public verticalCenter: number;
 
         /**
          * @inheritDoc
@@ -344,7 +431,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public percentWidth:number;
+        public percentWidth: number;
 
         /**
          * @inheritDoc
@@ -353,7 +440,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public percentHeight:number;
+        public percentHeight: number;
 
         /**
          * @inheritDoc
@@ -362,7 +449,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public explicitWidth:number;
+        public explicitWidth: number;
 
         /**
          * @inheritDoc
@@ -371,7 +458,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public explicitHeight:number;
+        public explicitHeight: number;
 
         /**
          * @inheritDoc
@@ -380,7 +467,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public minWidth:number;
+        public minWidth: number;
 
         /**
          * @inheritDoc
@@ -389,7 +476,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public maxWidth:number;
+        public maxWidth: number;
 
         /**
          * @inheritDoc
@@ -398,7 +485,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public minHeight:number;
+        public minHeight: number;
 
         /**
          * @inheritDoc
@@ -407,7 +494,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public maxHeight:number;
+        public maxHeight: number;
 
         /**
          * @inheritDoc
@@ -416,7 +503,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setMeasuredSize(width:number, height:number):void {
+        public setMeasuredSize(width: number, height: number): void {
         }
 
         /**
@@ -426,7 +513,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateProperties():void {
+        public invalidateProperties(): void {
         }
 
         /**
@@ -436,7 +523,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateProperties():void {
+        public validateProperties(): void {
         }
 
         /**
@@ -446,7 +533,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateSize():void {
+        public invalidateSize(): void {
         }
 
         /**
@@ -456,7 +543,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateSize(recursive?:boolean):void {
+        public validateSize(recursive?: boolean): void {
         }
 
         /**
@@ -466,7 +553,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public invalidateDisplayList():void {
+        public invalidateDisplayList(): void {
         }
 
         /**
@@ -476,7 +563,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateDisplayList():void {
+        public validateDisplayList(): void {
         }
 
         /**
@@ -486,7 +573,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public validateNow():void {
+        public validateNow(): void {
         }
 
         /**
@@ -496,7 +583,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
+        public setLayoutBoundsSize(layoutWidth: number, layoutHeight: number): void {
             UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
                 return;
@@ -519,7 +606,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public setLayoutBoundsPosition(x:number, y:number):void {
+        public setLayoutBoundsPosition(x: number, y: number): void {
         }
 
         /**
@@ -529,7 +616,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getLayoutBounds(bounds:egret.Rectangle):void {
+        public getLayoutBounds(bounds: egret.Rectangle): void {
         }
 
         /**
@@ -539,7 +626,7 @@ module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        public getPreferredBounds(bounds:egret.Rectangle):void {
+        public getPreferredBounds(bounds: egret.Rectangle): void {
         }
     }
 

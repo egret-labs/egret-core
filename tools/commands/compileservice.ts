@@ -128,10 +128,10 @@ class AutoCompileCommand implements egret.Command {
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
             console.log("result.files:", result.files);
-            if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
+            //if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
                 this._scripts = result.files;
                 this.onTemplateIndexChanged();
-            }
+            //}
             this.exitCode[1] = result.exitStatus;
             this.messages[1] = result.messages;
 

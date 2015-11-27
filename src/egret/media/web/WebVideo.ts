@@ -143,9 +143,12 @@ module egret.web {
             video.style.left = "0px";
             video.height = this.heightSet;
             video.width = this.widthSet;
-            setTimeout(function() {//为了解决视频返回挤压页面内容
-                video.width = 0;
-            }, 1000);
+            if(egret.Capabilities.os != "Windows PC" &&  egret.Capabilities.os != "Mac OS"){
+                setTimeout(function() {//为了解决视频返回挤压页面内容
+                    video.width = 0;
+                }, 1000);
+            }
+
 
             this.checkFullScreen(this._fullscreen);
         }
@@ -363,7 +366,7 @@ module egret.web {
             if (!this._bitmapData) {
                 this.video.width = this.video.videoWidth;
                 this.video.height = this.video.videoHeight;
-                this._bitmapData = egret.web['toBitmapData'](this.video);
+                this._bitmapData = $toBitmapData(this.video);
             }
             return this._bitmapData;
         }

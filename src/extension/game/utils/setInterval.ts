@@ -7,7 +7,7 @@ module egret {
 
     /**
      * @language en_US
-     * Specified function after a specified delay run (in milliseconds).
+     * To specify a delay (in milliseconds) calls the function specified interval loop.
      * @param listener {Function} Listener function
      * @param thisObject {any} this object
      * @param delay {number} Delay time, in milliseconds
@@ -19,7 +19,7 @@ module egret {
      */
     /**
      * @language zh_CN
-     * 在指定的延迟（以毫秒为单位）后运行指定的函数。
+     * 以指定的延迟（以毫秒为单位）间隔循环调用指定的函数。
      * @param listener {Function} 侦听函数
      * @param thisObject {any} this对象
      * @param delay {number} 延迟时间，以毫秒为单位

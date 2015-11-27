@@ -121,7 +121,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static get language():string{
+        public static get language():string {
             return Capabilities.$language;
         }
 
@@ -142,7 +142,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static get isMobile():boolean{
+        public static get isMobile():boolean {
             return Capabilities.$isMobile;
         }
 
@@ -179,7 +179,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static get os():string{
+        public static get os():string {
             return Capabilities.$os;
         }
 
@@ -211,13 +211,50 @@ module egret {
         public static get runtimeType():string {
             return Capabilities.$runtimeType;
         }
-        
+
+        /***
+         * @language en_US
+         * version of the native support
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * native support 的版本号
+         * @type {string}
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        public static supportVersion:string = "Unknown";
+
+        /**
+         * 设置系统信息
+         */
+        public static $setNativeCapabilities(value:string):void {
+            var arr = value.split("-");
+            if (arr.length <= 4) {
+                //todo 未来去掉数量判断，2.5.4版本之前的参数大于4个
+                var osType:string = arr[0];
+                switch (osType) {
+                    case "android":
+                        osType = "Android";
+                        break;
+                    case "ios":
+                        osType = 'iOS';
+                        break;
+                }
+                Capabilities.$os = osType;
+                var version = arr[2].substring(1,arr[2].length);
+                Capabilities.supportVersion = version;
+            }
+        }
     }
 
-    if(DEBUG){
-        egret.$markReadOnly(Capabilities,"language", false);
-        egret.$markReadOnly(Capabilities,"isMobile", false);
-        egret.$markReadOnly(Capabilities,"os", false);
+    if (DEBUG) {
+        egret.$markReadOnly(Capabilities, "language", false);
+        egret.$markReadOnly(Capabilities, "isMobile", false);
+        egret.$markReadOnly(Capabilities, "os", false);
     }
 
 }

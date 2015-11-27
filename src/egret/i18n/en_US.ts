@@ -23,6 +23,7 @@ module egret {
     locale_strings[1015] = "xml not found!";
     locale_strings[1016] = "{0}has been obsoleted";
     locale_strings[1017] = "The format of JSON file is incorrect: {0}\ndata: {1}";
+    locale_strings[1018] = "the scale9Grid is not correct";
 
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "This method is not available in the ScrollView!";
@@ -36,6 +37,7 @@ module egret {
     locale_strings[1035] = "Native does not support this feature!";
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
+    locale_strings[1038] = "XML format error!";
 
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";

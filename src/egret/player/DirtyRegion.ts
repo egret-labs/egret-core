@@ -124,7 +124,7 @@ module egret.sys {
             var dirtyList = this.dirtyList;
             var region:Region = Region.create();
             dirtyList.push(region.setTo(minX, minY, maxX, maxY));
-            if (this.$dirtyRegionPolicy != DirtyRegionPolicy.OFF) {
+            if (this.$dirtyRegionPolicy != egret.DirtyRegionPolicy.OFF) {
                 this.mergeDirtyList(dirtyList);
             }
             return true;
@@ -148,7 +148,7 @@ module egret.sys {
          */
         public getDirtyRegions():Region[] {
             var dirtyList = this.dirtyList;
-            if (this.$dirtyRegionPolicy == DirtyRegionPolicy.OFF || (Capabilities.runtimeType == RuntimeType.NATIVE && !egret.native["$supportCanvas" + ""])) {
+            if (this.$dirtyRegionPolicy == egret.DirtyRegionPolicy.OFF || (Capabilities.runtimeType == RuntimeType.NATIVE && !egret["native"]["$supportCanvas" + ""])) {
                 this.clipRectChanged = true;//阻止所有的addRegion()
                 this.clear();
                 var region:Region = Region.create();
@@ -213,7 +213,7 @@ module egret.sys {
             return false;
         }
 
-        private $dirtyRegionPolicy:string = sys.DirtyRegionPolicy.ON;
+        private $dirtyRegionPolicy:string = egret.DirtyRegionPolicy.ON;
 
         public setDirtyRegionPolicy(policy:string):void {
             this.$dirtyRegionPolicy = policy;

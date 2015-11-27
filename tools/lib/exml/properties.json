@@ -19,7 +19,9 @@
 		"letterSpacing":"number",
 		"lineSpacing":"number",
 		"super":"egret.DisplayObject",
-		"text":"string"
+		"text":"string",
+		"textAlign":"string",
+		"verticalAlign":"string"
 	},
 	"egret.BlurFilter":
 	{
@@ -58,7 +60,6 @@
 	},
 	"egret.DisplayObjectContainer":
 	{
-		"implements":["egret.IDisplayObjectContainer"],
 		"super":"egret.DisplayObject",
 		"touchChildren":"boolean"
 	},
@@ -135,7 +136,6 @@
 	},
 	"egret.Sprite":
 	{
-		"implements":["egret.IDisplayObjectContainer"],
 		"super":"egret.DisplayObjectContainer"
 	},
 	"egret.SpriteSheet":

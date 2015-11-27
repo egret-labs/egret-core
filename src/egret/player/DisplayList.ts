@@ -320,7 +320,6 @@ module egret.sys {
                 context.setTransform(1, 0, 0, 1, -this.offsetX * this.$pixelRatio, -this.offsetY* this.$pixelRatio);
             }
             var dirtyList = this.dirtyList;
-            this.dirtyList = null;
             var length = dirtyList.length;
             for (var i = 0; i < length; i++) {
                 var region = dirtyList[i];
@@ -335,6 +334,7 @@ module egret.sys {
             var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
             //清除脏矩形区域
             context.restore();
+            this.dirtyList = null;
             this.dirtyRegion.clear();
             this.needRedraw = false;
             this.$ratioChanged = false;
@@ -400,6 +400,7 @@ module egret.sys {
                 for (var i = 0; i < length; i++) {
                     var child = children[i];
                     if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
+                        child.$isDirty = false;
                         continue;
                     }
                     if (child.$blendMode !== 0 ||

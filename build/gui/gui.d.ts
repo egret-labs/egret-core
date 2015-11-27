@@ -324,136 +324,6 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
-     * @class egret.gui.ILayoutManagerClient
-     * @interface
-     * @classdesc
-     * 使用布局管理器的组件接口
-     * @extends egret.IEventDispatcher
-     */
-    interface ILayoutManagerClient extends IEventDispatcher {
-        /**
-         * 验证组件的属性
-         * @method egret.gui.ILayoutManagerClient#validateProperties
-         */
-        validateProperties(): void;
-        /**
-         * 验证组件的尺寸
-         * @method egret.gui.ILayoutManagerClient#validateSize
-         * @param recursive? {boolean}
-         */
-        validateSize(recursive?: boolean): void;
-        /**
-         * 验证子项的位置和大小，并绘制其他可视内容
-         * @method egret.gui.ILayoutManagerClient#validateDisplayList
-         */
-        validateDisplayList(): void;
-        /**
-         * 在显示列表的嵌套深度
-         * @member egret.gui.ILayoutManagerClient#nestLevel
-         */
-        nestLevel: number;
-        /**
-         * 是否完成初始化。此标志只能由 LayoutManager 修改。
-         * @member egret.gui.ILayoutManagerClient#initialized
-         */
-        initialized: boolean;
-        /**
-         * 一个标志，用于确定某个对象是否正在等待分派其updateComplete事件。此标志只能由 LayoutManager 修改。
-         * @member egret.gui.ILayoutManagerClient#updateCompletePendingFlag
-         */
-        updateCompletePendingFlag: boolean;
-        /**
-         * 父级显示对象
-         * @member egret.gui.ILayoutManagerClient#parent
-         */
-        parent: DisplayObjectContainer;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.DepthQueue
-     * @classdesc
-     * 显示列表嵌套深度排序队列
-     */
-    class DepthQueue {
-        /**
-         * @method egret.gui.DepthQueue#constructor
-         */
-        constructor();
-        /**
-         * 深度队列
-         */
-        private depthBins;
-        /**
-         * 最小深度
-         */
-        private minDepth;
-        /**
-         * 最大深度
-         */
-        private maxDepth;
-        /**
-         * 插入一个元素
-         * @method egret.gui.DepthQueue#insert
-         * @param client {ILayoutManagerClient}
-         */
-        insert(client: ILayoutManagerClient): void;
-        /**
-         * 从队列尾弹出深度最大的一个对象
-         * @method egret.gui.DepthQueue#pop
-         * @returns {ILayoutManagerClient}
-         */
-        pop(): ILayoutManagerClient;
-        /**
-         * 从队列首弹出深度最小的一个对象
-         * @method egret.gui.DepthQueue#shift
-         * @returns {ILayoutManagerClient}
-         */
-        shift(): ILayoutManagerClient;
-        /**
-         * 移除大于等于指定组件层级的元素中最大的元素
-         * @method egret.gui.DepthQueue#removeLargestChild
-         * @param client {ILayoutManagerClient}
-         * @returns {any}
-         */
-        removeLargestChild(client: ILayoutManagerClient): any;
-        /**
-         * 移除大于等于指定组件层级的元素中最小的元素
-         * @method egret.gui.DepthQueue#removeSmallestChild
-         * @param client {ILayoutManagerClient}
-         * @returns {any}
-         */
-        removeSmallestChild(client: ILayoutManagerClient): any;
-        /**
-         * 移除一个元素
-         * @method egret.gui.DepthQueue#remove
-         * @param client {ILayoutManagerClient}
-         * @param level {number}
-         * @returns {ILayoutManagerClient}
-         */
-        remove(client: ILayoutManagerClient, level?: number): ILayoutManagerClient;
-        /**
-         * 清空队列
-         * @method egret.gui.DepthQueue#removeAll
-         */
-        removeAll(): void;
-        /**
-         * 队列是否为空
-         * @method egret.gui.DepthQueue#isEmpty
-         * @returns {boolean}
-         */
-        isEmpty(): boolean;
-    }
-    /**
-     * 列表项
-     */
-    class DepthBin {
-        length: number;
-        items: any;
-    }
-}
-declare module egret.gui {
-    /**
      * @class egret.gui.UIComponent
      * @classdesc
      * 显示对象基类
@@ -2229,219 +2099,6 @@ declare module egret.gui {
          * @returns {string}
          */
         getCurrentSkinState(): string;
-    }
-}
-declare module egret.gui {
-    /**
-     * @private
-     */
-    class UIComponentProperties {
-        _id: string;
-        _isPopUp: boolean;
-        _owner: any;
-        _updateCompletePendingFlag: boolean;
-        _initialized: boolean;
-        _nestLevel: number;
-        _enabled: boolean;
-        _uiWidth: number;
-        _uiHeight: number;
-        _minWidth: number;
-        _maxWidth: number;
-        _minHeight: number;
-        _maxHeight: number;
-        _measuredWidth: number;
-        _measuredHeight: number;
-        _left: number;
-        _right: number;
-        _top: number;
-        _bottom: number;
-        _horizontalCenter: number;
-        _verticalCenter: number;
-        _percentWidth: number;
-        _percentHeight: number;
-        _includeInLayout: boolean;
-        /**
-         * 属性提交前组件旧的宽度
-         */
-        _oldWidth: number;
-        /**
-         * 属性提交前组件旧的高度
-         */
-        _oldHeight: number;
-        /**
-         * 属性提交前组件旧的X
-         * @member egret.gui.UIComponent#oldX
-         */
-        _oldX: number;
-        /**
-         * 属性提交前组件旧的Y
-         * @member egret.gui.UIComponent#oldY
-         */
-        _oldY: number;
-        /**
-         * @member egret.gui.UIComponent#_invalidatePropertiesFlag
-         */
-        _invalidatePropertiesFlag: boolean;
-        /**
-         * @member egret.gui.UIComponent#_invalidateSizeFlag
-         */
-        _invalidateSizeFlag: boolean;
-        /**
-         * 上一次测量的首选宽度
-         * @member egret.gui.UIComponent#_oldPreferWidth
-         */
-        _oldPreferWidth: number;
-        /**
-         * 上一次测量的首选高度
-         * @member egret.gui.UIComponent#_oldPreferHeight
-         */
-        _oldPreferHeight: number;
-        _invalidateDisplayListFlag: boolean;
-        _validateNowFlag: boolean;
-        /**
-         * _initialize()方法被调用过的标志。
-         */
-        _initializeCalled: boolean;
-        /**
-         * 是否已经创建了自身的样式原型链
-         */
-        _hasOwnStyleChain: boolean;
-        /**
-         * 样式原型链引用
-         */
-        _styleProtoChain: any;
-        /**
-         * 一个性能优化的标志变量。某些子类可以设置为true显式表明自己不含有可设置样式的子项。
-         */
-        _hasNoStyleChild: boolean;
-        /**
-         * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-         * @member egret.gui.UIComponent#_layoutWidthExplicitlySet
-         */
-        _layoutWidthExplicitlySet: boolean;
-        /**
-         * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
-         * @member egret.gui.UIComponent#_layoutHeightExplicitlySet
-         */
-        _layoutHeightExplicitlySet: boolean;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.UIGlobals
-     * @classdesc
-     */
-    class UIGlobals {
-        private static _stage;
-        /**
-         * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
-         * @member egret.gui.UIGlobals.stage
-         */
-        static stage: Stage;
-        /**
-         * 已经初始化完成标志
-         */
-        private static initlized;
-        /**
-         * 初始化管理器
-         * @param stage {Stage}
-         */
-        static _initlize(stage: Stage): void;
-        /**
-         * 延迟渲染布局管理器
-         */
-        static _layoutManager: LayoutManager;
-        /**
-         * 系统管理器列表
-         */
-        static _uiStage: IUIStage;
-        /**
-         * 顶级应用容器
-         * @member egret.gui.UIGlobals.uiStage
-         */
-        static uiStage: IUIStage;
-    }
-}
-declare module egret.gui {
-    /**
-     * @class egret.gui.LayoutManager
-     * @classdesc
-     * 布局管理器
-     * @extends egret.EventDispatcher
-     */
-    class LayoutManager extends EventDispatcher {
-        /**
-         * @method egret.gui.LayoutManager#constructor
-         */
-        constructor();
-        private targetLevel;
-        /**
-         * 需要抛出组件初始化完成事件的对象
-         */
-        private updateCompleteQueue;
-        private invalidatePropertiesFlag;
-        private invalidateClientPropertiesFlag;
-        private invalidatePropertiesQueue;
-        /**
-         * 标记组件提交过属性
-         * @method egret.gui.LayoutManager#invalidateProperties
-         * @param client {ILayoutManagerClient}
-         */
-        invalidateProperties(client: ILayoutManagerClient): void;
-        /**
-         * 使提交的属性生效
-         */
-        private validateProperties();
-        private invalidateSizeFlag;
-        private invalidateClientSizeFlag;
-        private invalidateSizeQueue;
-        /**
-         * 标记需要重新测量尺寸
-         * @method egret.gui.LayoutManager#invalidateSize
-         * @param client {ILayoutManagerClient}
-         */
-        invalidateSize(client: ILayoutManagerClient): void;
-        /**
-         * 测量属性
-         */
-        private validateSize();
-        private invalidateDisplayListFlag;
-        private invalidateDisplayListQueue;
-        /**
-         * 标记需要重新测量尺寸
-         * @method egret.gui.LayoutManager#invalidateDisplayList
-         * @param client {ILayoutManagerClient}
-         */
-        invalidateDisplayList(client: ILayoutManagerClient): void;
-        /**
-         * 测量属性
-         */
-        private validateDisplayList();
-        /**
-         * 是否已经添加了事件监听
-         */
-        private listenersAttached;
-        /**
-         * 添加事件监听
-         */
-        private attachListeners();
-        /**
-         * 执行属性应用
-         */
-        private doPhasedInstantiationCallBack(event?);
-        private doPhasedInstantiation();
-        /**
-         * 立即应用所有延迟的属性
-         * @method egret.gui.LayoutManager#validateNow
-         */
-        validateNow(): void;
-        /**
-         * 使大于等于指定组件层级的元素立即应用属性
-         * @method egret.gui.LayoutManager#validateClient
-         * @param target {ILayoutManagerClient} 要立即应用属性的组件
-         * @param skipDisplayList {boolean} 是否跳过更新显示列表阶段
-         */
-        validateClient(target: ILayoutManagerClient, skipDisplayList?: boolean): void;
     }
 }
 declare module egret.gui {
@@ -7184,7 +6841,7 @@ declare module egret.gui {
          * @param actionsMode
          * @returns
          */
-        private setPosition(value);
+        private setPosition(value, actionsMode?);
         /**
          * @private
          *
@@ -8544,6 +8201,137 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @private
+     */
+    class UIComponentProperties {
+        _id: string;
+        _isPopUp: boolean;
+        _owner: any;
+        _updateCompletePendingFlag: boolean;
+        _initialized: boolean;
+        _nestLevel: number;
+        _enabled: boolean;
+        _uiWidth: number;
+        _uiHeight: number;
+        _minWidth: number;
+        _maxWidth: number;
+        _minHeight: number;
+        _maxHeight: number;
+        _measuredWidth: number;
+        _measuredHeight: number;
+        _left: number;
+        _right: number;
+        _top: number;
+        _bottom: number;
+        _horizontalCenter: number;
+        _verticalCenter: number;
+        _percentWidth: number;
+        _percentHeight: number;
+        _includeInLayout: boolean;
+        /**
+         * 属性提交前组件旧的宽度
+         */
+        _oldWidth: number;
+        /**
+         * 属性提交前组件旧的高度
+         */
+        _oldHeight: number;
+        /**
+         * 属性提交前组件旧的X
+         * @member egret.gui.UIComponent#oldX
+         */
+        _oldX: number;
+        /**
+         * 属性提交前组件旧的Y
+         * @member egret.gui.UIComponent#oldY
+         */
+        _oldY: number;
+        /**
+         * @member egret.gui.UIComponent#_invalidatePropertiesFlag
+         */
+        _invalidatePropertiesFlag: boolean;
+        /**
+         * @member egret.gui.UIComponent#_invalidateSizeFlag
+         */
+        _invalidateSizeFlag: boolean;
+        /**
+         * 上一次测量的首选宽度
+         * @member egret.gui.UIComponent#_oldPreferWidth
+         */
+        _oldPreferWidth: number;
+        /**
+         * 上一次测量的首选高度
+         * @member egret.gui.UIComponent#_oldPreferHeight
+         */
+        _oldPreferHeight: number;
+        _invalidateDisplayListFlag: boolean;
+        _validateNowFlag: boolean;
+        /**
+         * _initialize()方法被调用过的标志。
+         */
+        _initializeCalled: boolean;
+        /**
+         * 是否已经创建了自身的样式原型链
+         */
+        _hasOwnStyleChain: boolean;
+        /**
+         * 样式原型链引用
+         */
+        _styleProtoChain: any;
+        /**
+         * 一个性能优化的标志变量。某些子类可以设置为true显式表明自己不含有可设置样式的子项。
+         */
+        _hasNoStyleChild: boolean;
+        /**
+         * 父级布局管理器设置了组件的宽度标志，尺寸设置优先级：自动布局>显式设置>自动测量
+         * @member egret.gui.UIComponent#_layoutWidthExplicitlySet
+         */
+        _layoutWidthExplicitlySet: boolean;
+        /**
+         * 父级布局管理器设置了组件的高度标志，尺寸设置优先级：自动布局>显式设置>自动测量
+         * @member egret.gui.UIComponent#_layoutHeightExplicitlySet
+         */
+        _layoutHeightExplicitlySet: boolean;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.UIGlobals
+     * @classdesc
+     */
+    class UIGlobals {
+        private static _stage;
+        /**
+         * 舞台引用，当第一个UIComponent添加到舞台时此属性被自动赋值
+         * @member egret.gui.UIGlobals.stage
+         */
+        static stage: Stage;
+        /**
+         * 已经初始化完成标志
+         */
+        private static initlized;
+        /**
+         * 初始化管理器
+         * @param stage {Stage}
+         */
+        static _initlize(stage: Stage): void;
+        /**
+         * 延迟渲染布局管理器
+         */
+        static _layoutManager: LayoutManager;
+        /**
+         * 系统管理器列表
+         */
+        static _uiStage: IUIStage;
+        /**
+         * 顶级应用容器
+         * @member egret.gui.UIGlobals.uiStage
+         */
+        static uiStage: IUIStage;
+    }
+}
+declare module egret.gui {
+    /**
      * UIStage的虚拟子容器
      */
     class UILayer implements IContainer {
@@ -8733,9 +8521,25 @@ declare module egret.gui {
          */
         cursorContainer: IContainer;
         private _noTopMostIndex;
+        /**
+         * 弹出窗口层的起始索引(包括)
+         */
+        private noTopMostIndex;
         private _topMostIndex;
+        /**
+         * 弹出窗口层结束索引(不包括)
+         */
+        private topMostIndex;
         private _toolTipIndex;
+        /**
+         * 工具提示层结束索引(不包括)
+         */
+        private toolTipIndex;
         private _cursorIndex;
+        /**
+         * 鼠标样式层结束索引(不包括)
+         */
+        private cursorIndex;
         /**
          * @param element {IVisualElement}
          * @returns {IVisualElement}
@@ -9903,6 +9707,7 @@ declare module egret.gui {
         private static startTime;
         private static _currentTime;
         private static pulse();
+        private static currentTime;
     }
 }
 declare module egret.gui {
@@ -12196,6 +12001,53 @@ declare module egret.gui {
 }
 declare module egret.gui {
     /**
+     * @class egret.gui.ILayoutManagerClient
+     * @interface
+     * @classdesc
+     * 使用布局管理器的组件接口
+     * @extends egret.IEventDispatcher
+     */
+    interface ILayoutManagerClient extends IEventDispatcher {
+        /**
+         * 验证组件的属性
+         * @method egret.gui.ILayoutManagerClient#validateProperties
+         */
+        validateProperties(): void;
+        /**
+         * 验证组件的尺寸
+         * @method egret.gui.ILayoutManagerClient#validateSize
+         * @param recursive? {boolean}
+         */
+        validateSize(recursive?: boolean): void;
+        /**
+         * 验证子项的位置和大小，并绘制其他可视内容
+         * @method egret.gui.ILayoutManagerClient#validateDisplayList
+         */
+        validateDisplayList(): void;
+        /**
+         * 在显示列表的嵌套深度
+         * @member egret.gui.ILayoutManagerClient#nestLevel
+         */
+        nestLevel: number;
+        /**
+         * 是否完成初始化。此标志只能由 LayoutManager 修改。
+         * @member egret.gui.ILayoutManagerClient#initialized
+         */
+        initialized: boolean;
+        /**
+         * 一个标志，用于确定某个对象是否正在等待分派其updateComplete事件。此标志只能由 LayoutManager 修改。
+         * @member egret.gui.ILayoutManagerClient#updateCompletePendingFlag
+         */
+        updateCompletePendingFlag: boolean;
+        /**
+         * 父级显示对象
+         * @member egret.gui.ILayoutManagerClient#parent
+         */
+        parent: DisplayObjectContainer;
+    }
+}
+declare module egret.gui {
+    /**
      * @class egret.gui.IPopUpManager
      * @interface
      * @classdesc
@@ -12243,6 +12095,88 @@ declare module egret.gui {
          * @member egret.gui.IPopUpManager#popUpList
          */
         popUpList: Array<any>;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.LayoutManager
+     * @classdesc
+     * 布局管理器
+     * @extends egret.EventDispatcher
+     */
+    class LayoutManager extends EventDispatcher {
+        /**
+         * @method egret.gui.LayoutManager#constructor
+         */
+        constructor();
+        private targetLevel;
+        /**
+         * 需要抛出组件初始化完成事件的对象
+         */
+        private updateCompleteQueue;
+        private invalidatePropertiesFlag;
+        private invalidateClientPropertiesFlag;
+        private invalidatePropertiesQueue;
+        /**
+         * 标记组件提交过属性
+         * @method egret.gui.LayoutManager#invalidateProperties
+         * @param client {ILayoutManagerClient}
+         */
+        invalidateProperties(client: ILayoutManagerClient): void;
+        /**
+         * 使提交的属性生效
+         */
+        private validateProperties();
+        private invalidateSizeFlag;
+        private invalidateClientSizeFlag;
+        private invalidateSizeQueue;
+        /**
+         * 标记需要重新测量尺寸
+         * @method egret.gui.LayoutManager#invalidateSize
+         * @param client {ILayoutManagerClient}
+         */
+        invalidateSize(client: ILayoutManagerClient): void;
+        /**
+         * 测量属性
+         */
+        private validateSize();
+        private invalidateDisplayListFlag;
+        private invalidateDisplayListQueue;
+        /**
+         * 标记需要重新测量尺寸
+         * @method egret.gui.LayoutManager#invalidateDisplayList
+         * @param client {ILayoutManagerClient}
+         */
+        invalidateDisplayList(client: ILayoutManagerClient): void;
+        /**
+         * 测量属性
+         */
+        private validateDisplayList();
+        /**
+         * 是否已经添加了事件监听
+         */
+        private listenersAttached;
+        /**
+         * 添加事件监听
+         */
+        private attachListeners();
+        /**
+         * 执行属性应用
+         */
+        private doPhasedInstantiationCallBack(event?);
+        private doPhasedInstantiation();
+        /**
+         * 立即应用所有延迟的属性
+         * @method egret.gui.LayoutManager#validateNow
+         */
+        validateNow(): void;
+        /**
+         * 使大于等于指定组件层级的元素立即应用属性
+         * @method egret.gui.LayoutManager#validateClient
+         * @param target {ILayoutManagerClient} 要立即应用属性的组件
+         * @param skipDisplayList {boolean} 是否跳过更新显示列表阶段
+         */
+        validateClient(target: ILayoutManagerClient, skipDisplayList?: boolean): void;
     }
 }
 declare module egret.gui {
@@ -12407,6 +12341,89 @@ declare module egret.gui {
          * @param popUp {IVisualElement} 要最前显示的窗口
          */
         bringToFront(popUp: IVisualElement): void;
+    }
+}
+declare module egret.gui {
+    /**
+     * @class egret.gui.DepthQueue
+     * @classdesc
+     * 显示列表嵌套深度排序队列
+     */
+    class DepthQueue {
+        /**
+         * @method egret.gui.DepthQueue#constructor
+         */
+        constructor();
+        /**
+         * 深度队列
+         */
+        private depthBins;
+        /**
+         * 最小深度
+         */
+        private minDepth;
+        /**
+         * 最大深度
+         */
+        private maxDepth;
+        /**
+         * 插入一个元素
+         * @method egret.gui.DepthQueue#insert
+         * @param client {ILayoutManagerClient}
+         */
+        insert(client: ILayoutManagerClient): void;
+        /**
+         * 从队列尾弹出深度最大的一个对象
+         * @method egret.gui.DepthQueue#pop
+         * @returns {ILayoutManagerClient}
+         */
+        pop(): ILayoutManagerClient;
+        /**
+         * 从队列首弹出深度最小的一个对象
+         * @method egret.gui.DepthQueue#shift
+         * @returns {ILayoutManagerClient}
+         */
+        shift(): ILayoutManagerClient;
+        /**
+         * 移除大于等于指定组件层级的元素中最大的元素
+         * @method egret.gui.DepthQueue#removeLargestChild
+         * @param client {ILayoutManagerClient}
+         * @returns {any}
+         */
+        removeLargestChild(client: ILayoutManagerClient): any;
+        /**
+         * 移除大于等于指定组件层级的元素中最小的元素
+         * @method egret.gui.DepthQueue#removeSmallestChild
+         * @param client {ILayoutManagerClient}
+         * @returns {any}
+         */
+        removeSmallestChild(client: ILayoutManagerClient): any;
+        /**
+         * 移除一个元素
+         * @method egret.gui.DepthQueue#remove
+         * @param client {ILayoutManagerClient}
+         * @param level {number}
+         * @returns {ILayoutManagerClient}
+         */
+        remove(client: ILayoutManagerClient, level?: number): ILayoutManagerClient;
+        /**
+         * 清空队列
+         * @method egret.gui.DepthQueue#removeAll
+         */
+        removeAll(): void;
+        /**
+         * 队列是否为空
+         * @method egret.gui.DepthQueue#isEmpty
+         * @returns {boolean}
+         */
+        isEmpty(): boolean;
+    }
+    /**
+     * 列表项
+     */
+    class DepthBin {
+        length: number;
+        items: any;
     }
 }
 declare module egret.gui {

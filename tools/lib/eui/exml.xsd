@@ -97,6 +97,8 @@
     <xs:attribute name="letterSpacing" type="xs:decimal"/>
     <xs:attribute name="lineSpacing" type="xs:decimal"/>
     <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="textAlign" type="xs:string"/>
+    <xs:attribute name="verticalAlign" type="xs:string"/>
   </xs:attributeGroup>
   <xs:group name="Object">
     <xs:choice>
@@ -121,6 +123,8 @@
       <xs:element name="letterSpacing" type="number"/>
       <xs:element name="lineSpacing" type="number"/>
       <xs:element name="text" type="string"/>
+      <xs:element name="textAlign" type="string"/>
+      <xs:element name="verticalAlign" type="string"/>
     </xs:choice>
   </xs:group>
   <xs:element name="BitmapText">
@@ -930,6 +934,7 @@
     <xs:attribute name="percentHeight" type="xs:decimal"/>
     <xs:attribute name="percentWidth" type="xs:decimal"/>
     <xs:attribute name="prompt" type="xs:string"/>
+    <xs:attribute name="promptColor" type="xs:string"/>
     <xs:attribute name="right" type="xs:decimal"/>
     <xs:attribute name="top" type="xs:decimal"/>
     <xs:attribute name="verticalCenter" type="xs:decimal"/>
@@ -948,6 +953,7 @@
       <xs:element name="percentHeight" type="number"/>
       <xs:element name="percentWidth" type="number"/>
       <xs:element name="prompt" type="string"/>
+      <xs:element name="promptColor" type="number"/>
       <xs:element name="right" type="number"/>
       <xs:element name="top" type="number"/>
       <xs:element name="verticalCenter" type="number"/>
@@ -1654,6 +1660,7 @@
   </xs:simpleType>
   <xs:attributeGroup name="eui.Scroller">
     <xs:attributeGroup ref="eui.Component"/>
+    <xs:attribute name="bounces" type="xs:boolean"/>
     <xs:attribute name="horizontalScrollBar" type="xs:string"/>
     <xs:attribute name="scrollPolicyH" type="eui.ScrollPolicy"/>
     <xs:attribute name="scrollPolicyV" type="eui.ScrollPolicy"/>
@@ -1680,6 +1687,7 @@
   <xs:group name="Scroller_attributeElement">
     <xs:choice>
       <xs:group ref="Component_attributeElement"/>
+      <xs:element name="bounces" type="boolean"/>
       <xs:element name="horizontalScrollBar" type="eui.HScrollBar"/>
       <xs:element name="scrollPolicyH" type="string"/>
       <xs:element name="scrollPolicyV" type="string"/>

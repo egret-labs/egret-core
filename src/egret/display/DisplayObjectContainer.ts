@@ -267,7 +267,7 @@ module egret {
         /**
          * @private
          */
-         $doRemoveChild(index:number, notifyListeners:boolean = true):DisplayObject {
+        $doRemoveChild(index:number, notifyListeners:boolean = true):DisplayObject {
             index = +index | 0;
             var children = this.$children;
             var child:DisplayObject = children[index];
@@ -275,7 +275,6 @@ module egret {
             if (notifyListeners) {
                 child.dispatchEventWith(Event.REMOVED, true);
             }
-
             if (this.$stage) {//在舞台上
                 child.$onRemoveFromStage();
                 var list = DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST
@@ -291,7 +290,8 @@ module egret {
             this.assignParentDisplayList(child, displayList, null);
             child.$propagateFlagsDown(sys.DisplayObjectFlags.DownOnAddedOrRemoved);
             child.$setParent(null);
-            children.splice(index, 1);
+            var indexNow = children.indexOf(child);
+            children.splice(indexNow, 1);
             this.$propagateFlagsUp(sys.DisplayObjectFlags.InvalidBounds);
             return child;
         }
@@ -482,6 +482,7 @@ module egret {
         }
 
         $touchChildren:boolean = true;
+
         /**
          * @inheritDoc
          * @version Egret 2.4
@@ -493,8 +494,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getTouchChildren():boolean {
             return this.$touchChildren;
@@ -628,10 +629,10 @@ module egret {
                 var target = child.$hitTest(stageX, stageY);
                 if (target) {
                     found = true;
-                    if(target.$touchEnabled){
+                    if (target.$touchEnabled) {
                         break;
                     }
-                    else{
+                    else {
                         target = null;
                     }
                 }
@@ -648,9 +649,37 @@ module egret {
             return super.$hitTest(stageX, stageY);
         }
 
+        /**
+         * @private
+         * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
+         */
+        $setAlpha(value:number):boolean {
+            value = egret.sys.getNumber(value);
+            if (value == this.$alpha) {
+                return false;
+            }
+            this.$alpha = value;
+            this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedAlpha);
+            this.$invalidate();
+            this.$invalidateAllChildren();
+            return true;
+        }
+
+        private $invalidateAllChildren():void {
+            var children = this.$children;
+            if (children) {
+                for (var i = children.length - 1; i >= 0; i--) {
+                    var child = children[i];
+                    child.$invalidate();
+                    if((<DisplayObjectContainer>child).$children) {
+                        (<DisplayObjectContainer>child).$invalidateAllChildren();
+                    }
+                }
+            }
+        }
     }
 
-    if(DEBUG){
-        egret.$markReadOnly(DisplayObjectContainer,"numChildren");
+    if (DEBUG) {
+        egret.$markReadOnly(DisplayObjectContainer, "numChildren");
     }
 }

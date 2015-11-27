@@ -45,6 +45,7 @@ declare module egret {
         compile?: boolean;
         password?: string;
         keepEXMLTS: boolean;
+        exmlGenJs:boolean;
         log: boolean;
         nativeTemplatePath: string;
         all: boolean;

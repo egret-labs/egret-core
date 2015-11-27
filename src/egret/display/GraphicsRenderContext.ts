@@ -223,6 +223,11 @@ module egret {
         /**
          * @private
          */
+        private _maxLineWidth:number = 1;
+
+        /**
+         * @private
+         */
         private _lineWidth:number;
 
         /**
@@ -246,6 +251,7 @@ module egret {
 
         public set lineWidth(value:number) {
             this._lineWidth = value;
+            this._maxLineWidth = Math.max(this._maxLineWidth, value);
             this.pushCommand(sys.GraphicsCommandType.lineWidth, arguments);
         }
 
@@ -885,6 +891,7 @@ module egret {
             this._lineCap = "butt";
             this._lineJoin = "miter";
             this._lineWidth = 1;
+            this._maxLineWidth = 1;
             this._miterLimit = 10;
             this._strokeStyle = null;
             this.hasMoved = false;
@@ -954,7 +961,7 @@ module egret {
                 return;
             }
             if (this.hasStroke || this._strokeStyle) {
-                var lineWidth = this._lineWidth;
+                var lineWidth = this._maxLineWidth;
                 var half = lineWidth * 0.5;
             }
             else {
