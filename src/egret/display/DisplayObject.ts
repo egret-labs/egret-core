@@ -1919,6 +1919,9 @@ module egret {
                 return null;
             }
             var m = this.$getInvertedConcatenatedMatrix();
+            if(m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0){//防止父类影响子类
+                return null;
+            }
             var bounds = this.$getContentBounds();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
