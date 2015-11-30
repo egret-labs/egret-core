@@ -134,7 +134,8 @@ class UpgradeCommand implements egret.Command {
         {"v": "2.5.2"},
         {"v": "2.5.3"},
         {"v": "2.5.4"},
-        {"v": "2.5.5"}
+        {"v": "2.5.5"},
+        {"v": "2.5.6"}
     ];
 }
 

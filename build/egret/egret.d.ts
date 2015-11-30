@@ -1561,7 +1561,6 @@ declare module egret {
         /**
          * @language en_US
          * Determines how the bitmap fills in the dimensions.
-         * ends at the edge of the region.</p>
          * <p>When set to <code>BitmapFillMode.REPEAT</code>, the bitmap
          * repeats to fill the region.</p>
          * <p>When set to <code>BitmapFillMode.SCALE</code>, the bitmap

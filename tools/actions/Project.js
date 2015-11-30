@@ -19,7 +19,7 @@ function normalize(project) {
     project.fpsStyles = project.fpsStyles || "";
     project.scripts = project.scripts || [];
     project.nativeScripts = project.nativeScripts || [];
-    project.resolutionMode = project.resolutionMode || "retina";
+    //project.resolutionMode = project.resolutionMode || "retina";
 }
 exports.normalize = normalize;
 function getLibsList(html, isNative, isDebug) {
@@ -123,7 +123,7 @@ function parseProjectInfo(html) {
             project.entryClass = s.attribs['data-entry-class'];
             project.frameRate = s.attribs['data-frame-rate'] || 60;
             project.orientationMode = s.attribs['data-orientation-mode'] || "auto";
-            project.resolutionMode = s.attribs['data-resolution-mode'];
+            //project.resolutionMode = s.attribs['data-resolution-mode'];
             project.scaleMode = s.attribs['data-scale-mode'] || "noScale";
             project.showFPS = s.attribs['data-show-fps'] || false;
             project.showPaintRect = s.attribs['data-show-paint-rect'] || false;
