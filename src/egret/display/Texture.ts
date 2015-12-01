@@ -112,13 +112,13 @@ module egret {
 
         /**
          * @language en_US
-         * Texture width
+         * Texture width, read only
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 纹理宽度
+         * 纹理宽度，只读属性，不可以设置
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -138,13 +138,13 @@ module egret {
 
         /**
          * @language en_US
-         * Texture height
+         * Texture height, read only
          * @version Egret 2.4
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 纹理高度
+         * 纹理高度，只读属性，不可以设置
          * @version Egret 2.4
          * @platform Web,Native
          */
