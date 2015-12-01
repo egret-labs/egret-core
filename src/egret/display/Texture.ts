@@ -323,7 +323,7 @@ module egret {
             if (this._bitmapData) {
                 Texture.$dispose(this._bitmapData.hashCode);
 
-                console.log("dispose Texture");
+                //console.log("dispose Texture");
                 this._bitmapData = null;
             }
         }
