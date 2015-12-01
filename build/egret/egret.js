@@ -5825,13 +5825,13 @@ var egret;
         d(p, "textureWidth"
             /**
              * @language en_US
-             * Texture width
+             * Texture width, read only
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 纹理宽度
+             * 纹理宽度，只读属性，不可以设置
              * @version Egret 2.4
              * @platform Web,Native
              */
@@ -5845,13 +5845,13 @@ var egret;
         d(p, "textureHeight"
             /**
              * @language en_US
-             * Texture height
+             * Texture height, read only
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 纹理高度
+             * 纹理高度，只读属性，不可以设置
              * @version Egret 2.4
              * @platform Web,Native
              */
@@ -21204,10 +21204,11 @@ var egret;
             values[_i - 3] = arguments[_i];
         }
         var cla = currentClass.prototype;
-        var seters = cla["__sets__"];
-        if (seters == null) {
-            seters = cla["__sets__"] = {};
+        var seters;
+        if (!currentClass.hasOwnProperty("__sets__")) {
+            Object.defineProperty(currentClass, "__sets__", { "value": {} });
         }
+        seters = currentClass["__sets__"];
         var setF = seters[type];
         if (setF) {
             return setF.apply(thisObj, values);
@@ -21249,10 +21250,11 @@ var egret;
      */
     function superGetter(currentClass, thisObj, type) {
         var cla = currentClass.prototype;
-        var geters = cla["__gets__"];
-        if (geters == null) {
-            geters = cla["__gets__"] = {};
+        var geters;
+        if (!currentClass.hasOwnProperty("__gets__")) {
+            Object.defineProperty(currentClass, "__gets__", { "value": {} });
         }
+        geters = currentClass["__gets__"];
         var getF = geters[type];
         if (getF) {
             return getF.call(thisObj);
