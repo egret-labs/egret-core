@@ -48,21 +48,11 @@ module egret.sys {
          */
         public smoothing:boolean = true;
         /**
-         * 绘制数据
-         */
-        $drawData:any[] = [];
-        /**
          * 绘制一次位图
          */
-        public draw(sourceX:number, sourceY:number, sourceW:number, sourceH:number,
+        public drawImage(sourceX:number, sourceY:number, sourceW:number, sourceH:number,
                          drawX:number, drawY:number, drawW:number, drawH:number):void {
             this.$drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
-        }
-        /**
-         * 清空所有缓存的绘制数据
-         */
-        public clean():void{
-            this.$drawData.length = 0;
         }
     }
 }

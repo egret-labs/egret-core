@@ -55,18 +55,12 @@ module egret.sys {
          */
         public fontFamily:string = "Arial";
 
-        $drawData:any[] = [];
         /**
          * 绘制一行文本
          */
-        public draw(x:number,y:number,text:string):void{
+        public drawText(x:number,y:number,text:string):void{
             this.$drawData.push(x,y,text);
         }
-        /**
-         * 清空所有缓存的绘制数据
-         */
-        public clean():void{
-            this.$drawData.length = 0;
-        }
+
     }
 }

@@ -38,5 +38,9 @@ module egret.sys {
             super();
             this.type = RenderNodeType.GraphicsNode;
         }
+
+        public drawShape():void{
+
+        }
     }
 }

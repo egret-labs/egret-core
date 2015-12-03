@@ -75,6 +75,17 @@ module egret.sys {
          */
         public maxY:number = 0;
 
+        /**
+         * 绘制数据
+         */
+        $drawData:any[] = [];
+
+        /**
+         * 清空所有缓存的绘制数据
+         */
+        public clean():void{
+            this.$drawData.length = 0;
+        }
 
     }
 }

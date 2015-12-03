@@ -39,14 +39,8 @@ module egret.sys {
             this.type = RenderNodeType.GroupNode;
         }
 
-        $children:RenderNode[] = [];
-
         public addNode(node:RenderNode):void{
-            this.$children.push(node);
-        }
-
-        public clean():void{
-            this.$children.length = 0;
+            this.$drawData.push(node);
         }
     }
 }
