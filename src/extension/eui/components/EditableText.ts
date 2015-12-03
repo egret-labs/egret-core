@@ -126,9 +126,15 @@ module eui {
                 this.$isShowPrompt = false;
                 this.textColor = this.$EditableText[sys.EditableTextKeys.textColorUser];
             }
+            if (!this.$isFocusIn) {
+                if (value == "" || value == null) {
+                    value = promptText;
+                    this.$isShowPrompt = true;
+                    super.$setTextColor(this.$promptColor);
+                }
+            }
             var result: boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
-
             return result;
         }
 
@@ -192,8 +198,14 @@ module eui {
                 this.showPromptText();
             }
         }
-
+        /**
+         * @private
+         */
         private $promptColor: number = 0x666666;
+        /**
+         * @private
+         */
+        private $isFocusIn: boolean = false;
         /**
          * @language en_US
          * The color of the defalut string.
@@ -225,6 +237,7 @@ module eui {
          * @private
          */
         private onfocusOut(): void {
+            this.$isFocusIn = false;
             if (!this.text) {
                 this.showPromptText();
             }
@@ -233,6 +246,7 @@ module eui {
          * @private
          */
         private onfocusIn(): void {
+            this.$isFocusIn = true;
             this.$isShowPrompt = false;
             this.displayAsPassword = this.$EditableText[sys.EditableTextKeys.asPassword];
             var values = this.$EditableText;
