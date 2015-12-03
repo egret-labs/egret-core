@@ -100,8 +100,9 @@ module egret.web {
             var point = this.$textfield.localToGlobal(0, 0);
             var x = point.x;
             var y = point.y;
-            var cX = this.$textfield.$renderMatrix.a;
-            var cY = this.$textfield.$renderMatrix.d;
+            var m = this.$textfield.$renderNode.renderMatrix;
+            var cX = m.a;
+            var cY = m.d;
 
             var scaleX = this.htmlInput.$scaleX;
             var scaleY = this.htmlInput.$scaleY;

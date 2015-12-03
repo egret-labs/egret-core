@@ -59,7 +59,7 @@ module egret.sys {
          * 绘制一行文本
          */
         public drawText(x:number,y:number,text:string):void{
-            this.$drawData.push(x,y,text);
+            this.drawData.push(x,y,text);
         }
 
     }

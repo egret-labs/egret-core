@@ -96,7 +96,6 @@ module egret {
          */
         public constructor(value?:BitmapData|Texture) {
             super();
-            this.$renderRegion = new sys.Region();
             this.$renderNode = new sys.BitmapNode();
             this.$Bitmap = {
                 0: null,     // bitmapData,

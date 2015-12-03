@@ -40,7 +40,7 @@ module egret.sys {
         }
 
         public addNode(node:RenderNode):void{
-            this.$drawData.push(node);
+            this.drawData.push(node);
         }
     }
 }

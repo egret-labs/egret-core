@@ -33,27 +33,6 @@ module egret.sys {
      * @private
      */
     export interface Renderable extends HashObject{
-
-        /**
-         * @private
-         * 是否需要重绘的标志
-         */
-        $isDirty:boolean;
-        /**
-         * @private
-         * 在舞台上的透明度
-         */
-        $renderAlpha:number;
-        /**
-         * @private
-         * 在舞台上的矩阵对象
-         */
-        $renderMatrix:Matrix;
-        /**
-         * @private
-         * 在屏幕上的显示区域
-         */
-        $renderRegion:Region;
         /**
          * 渲染节点
          */

@@ -554,7 +554,7 @@ module egret {
             }
             child.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
             var displayList = child.$displayList;
-            if ((displayList || child.$renderRegion) && parentCache) {
+            if ((displayList || child.$renderNode) && parentCache) {
                 parentCache.markDirty(displayList || child);
             }
             if (displayList) {
@@ -587,7 +587,7 @@ module egret {
             child.$parentDisplayList = newParent;
             child.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
             var displayList = child.$displayList;
-            if ((child.$renderRegion || displayList) && parentCache) {
+            if ((child.$renderNode || displayList) && parentCache) {
                 parentCache.markDirty(displayList || child);
             }
             if (displayList) {

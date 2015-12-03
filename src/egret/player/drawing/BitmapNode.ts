@@ -52,7 +52,7 @@ module egret.sys {
          */
         public drawImage(sourceX:number, sourceY:number, sourceW:number, sourceH:number,
                          drawX:number, drawY:number, drawW:number, drawH:number):void {
-            this.$drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
+            this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
         }
     }
 }

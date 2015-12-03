@@ -74,7 +74,7 @@ module egret.web {
          */
         constructor(url?: string) {
             super();
-            this.$renderRegion = new sys.Region();
+            this.$renderNode = new sys.BitmapNode();
             this.src = url;
             this.once(egret.Event.ADDED_TO_STAGE, this.loadPoster, this);
             if (url) {

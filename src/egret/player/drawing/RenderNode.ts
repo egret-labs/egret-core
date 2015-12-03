@@ -57,35 +57,33 @@ module egret.sys {
      */
     export class RenderNode {
 
+        /**
+         * 节点类型
+         */
         public type:number = 0;
         /**
-         * @private
+         * 是否需要重绘的标志.
          */
-        public minX:number = 0;
+        public needRedraw:boolean = false;
         /**
-         * @private
+         * 这个对象在舞台上的整体透明度
          */
-        public minY:number = 0;
+        public renderAlpha:number = 1;
         /**
-         * @private
+         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
          */
-        public maxX:number = 0;
+        public renderMatrix:Matrix = new egret.Matrix();
         /**
-         * @private
+         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
          */
-        public maxY:number = 0;
-
+        public renderRegion:sys.Region = new sys.Region();
+        /**
+         * 是否发生移动
+         */
+        public moved:boolean = false;
         /**
          * 绘制数据
          */
-        $drawData:any[] = [];
-
-        /**
-         * 清空所有缓存的绘制数据
-         */
-        public clean():void{
-            this.$drawData.length = 0;
-        }
-
+        public drawData:any[] = [];
     }
 }

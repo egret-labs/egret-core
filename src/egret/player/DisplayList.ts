@@ -37,7 +37,7 @@ module egret.sys {
      * @private
      * 显示列表
      */
-    export class DisplayList extends HashObject implements Renderable {
+    export class DisplayList extends HashObject implements sys.Renderable {
 
         /**
          * @private
@@ -45,13 +45,12 @@ module egret.sys {
          */
         public static release(displayList:DisplayList):void {
             surfaceFactory.release(displayList.surface);
-            Matrix.release(displayList.$renderMatrix);
             displayList.surface = null;
             displayList.renderContext = null;
             displayList.root = null;
-            displayList.$renderMatrix = null;
-            displayList.needRedraw = false;
-            displayList.$isDirty = false;
+            displayList.isDirty = false;
+            displayList.$renderNode.renderMatrix.setTo(1, 0, 0, 1, 0, 0);
+            displayList.$renderNode.needRedraw = false;
             displayListPool.push(displayList);
         }
 
@@ -71,10 +70,6 @@ module egret.sys {
             displayList.surface = surface;
             displayList.renderContext = surface.renderContext;
             displayList.root = target;
-            displayList.$renderMatrix = Matrix.create();
-            displayList.$renderMatrix.setTo(1, 0, 0, 1, 0, 0);
-            displayList.needRedraw = true;
-            displayList.$isDirty = true;
             return displayList;
         }
 
@@ -89,27 +84,6 @@ module egret.sys {
             this.dirtyRegion.displayList = this;
         }
 
-        /**
-         * @private
-         * 是否需要重绘
-         */
-        $isDirty:boolean = false;
-        /**
-         * @private
-         * 在舞台上的透明度
-         */
-        $renderAlpha:number = 1;
-        /**
-         * @private
-         * 相对于显示列表根节点或位图缓存根节点的矩阵对象
-         */
-        $renderMatrix:Matrix = new Matrix();
-
-        /**
-         * @private
-         * 在显示列表根节点或位图缓存根节点上的显示区域
-         */
-        $renderRegion:Region = new Region();
         /**
          * 位图渲染节点
          */
@@ -126,32 +100,33 @@ module egret.sys {
                 return false;
             }
             target.$removeFlagsUp(DisplayObjectFlags.Dirty);
-            this.$renderAlpha = target.$getConcatenatedAlpha();
+            var node = target.$renderNode;
+            node.renderAlpha = target.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = target.$getConcatenatedMatrix();
             var bounds = target.$getOriginalBounds();
             var displayList = target.$parentDisplayList;
-            var region = this.$renderRegion;
-            if (this.needRedraw) {
+            var region = node.renderRegion;
+            if (this.isDirty) {
                 this.updateDirtyRegions();
             }
             if (!displayList) {
                 region.setTo(0, 0, 0, 0);
-                region.moved = false;
+                node.moved = false;
                 return false;
             }
 
-            if (!region.moved) {
+            if (!node.moved) {
                 return false;
             }
-            region.moved = false;
-            var matrix = this.$renderMatrix;
-            matrix.copyFrom(concatenatedMatrix);
+            node.moved = false;
+            var renderMatrix = node.renderMatrix;
+            renderMatrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
             if (root !== target.$stage) {
-                target.$getConcatenatedMatrixAt(root, matrix);
+                target.$getConcatenatedMatrixAt(root, renderMatrix);
             }
-            region.updateRegion(bounds, matrix);
+            region.updateRegion(bounds, renderMatrix);
             return true;
         }
 
@@ -178,7 +153,7 @@ module egret.sys {
         /**
          * @private
          */
-        public needRedraw:boolean = false;
+        public isDirty:boolean = false;
 
         /**
          * @private
@@ -229,8 +204,8 @@ module egret.sys {
             }
             this.dirtyNodes[key] = true;
             this.dirtyNodeList.push(node);
-            if (!this.needRedraw) {
-                this.needRedraw = true;
+            if (!this.isDirty) {
+                this.isDirty = true;
                 var parentCache = this.root.$parentDisplayList;
                 if (parentCache) {
                     parentCache.markDirty(this);
@@ -253,23 +228,24 @@ module egret.sys {
          * 更新节点属性并返回脏矩形列表。
          */
         public updateDirtyRegions():Region[] {
-            var nodeList = this.dirtyNodeList;
+            var dirtyNodeList = this.dirtyNodeList;
             this.dirtyNodeList = [];
             this.dirtyNodes = {};
             var dirtyRegion = this.dirtyRegion;
-            var length = nodeList.length;
+            var length = dirtyNodeList.length;
             for (var i = 0; i < length; i++) {
-                var node = nodeList[i];
-                var region = node.$renderRegion;
-                if (node.$renderAlpha > 0) {
-                    if (dirtyRegion.addRegion(region)) {
-                        node.$isDirty = true;
+                var display = dirtyNodeList[i];
+                var node = display.$renderNode;
+                node.needRedraw = false;//先清空上次缓存的标记,防止上次没遍历到的节点needRedraw始终为true.
+                if (node.renderAlpha > 0) {
+                    if (dirtyRegion.addRegion(node.renderRegion)) {
+                        node.needRedraw = true;
                     }
                 }
-                var moved = node.$update();
-                if (node.$renderAlpha > 0 && (moved || !node.$isDirty)) {
-                    if (dirtyRegion.addRegion(region)) {
-                        node.$isDirty = true;
+                var moved = display.$update();
+                if (node.renderAlpha > 0 && (moved || !node.needRedraw)) {//若不判断needRedraw,从0设置为1的情况将会不显示
+                    if (dirtyRegion.addRegion(node.renderRegion)) {
+                        node.needRedraw = true;
                     }
                 }
             }
@@ -314,12 +290,12 @@ module egret.sys {
             }
             var surface = this.surface;
             var renderNode = <BitmapNode>this.$renderNode;
-            renderNode.clean();
+            renderNode.drawData.length = 0;
             renderNode.image = surface;
             renderNode.drawImage(0, 0, surface.width, surface.height, this.offsetX, this.offsetY, surface.width, surface.height);
             this.dirtyList = null;
             this.dirtyRegion.clear();
-            this.needRedraw = false;
+            this.isDirty = false;
             return drawCalls;
         }
 
@@ -330,47 +306,47 @@ module egret.sys {
         private drawDisplayObject(displayObject:DisplayObject, context:RenderContext, dirtyList:egret.sys.Region[],
                                   rootMatrix:Matrix, displayList:DisplayList, clipRegion:Region):number {
             var drawCalls = 0;
-            var node:Renderable;
+            var node:RenderNode;
             var globalAlpha:number;
             if (displayList) {
-                if (displayList.needRedraw) {
+                if (displayList.isDirty) {
                     drawCalls += displayList.drawToSurface();
                 }
-                node = displayList;
-                globalAlpha = 1;//这里不用读取displayList.$renderAlpha,因为它已经绘制到了displayList.surface的内部。
+                node = displayList.$renderNode;
+                globalAlpha = 1;//这里不用读取node.renderAlpha,因为它已经绘制到了displayList.surface的内部。
             }
-            else if (displayObject.$renderRegion) {
-                node = displayObject;
-                globalAlpha = displayObject.$renderAlpha;
+            else if (displayObject.$renderNode) {
+                node = displayObject.$renderNode;
+                globalAlpha = node.renderAlpha;
             }
             if (node) {
-                var renderRegion = node.$renderRegion;
+                var renderRegion = node.renderRegion;
                 if (clipRegion && !clipRegion.intersects(renderRegion)) {
-                    node.$isDirty = false;
+                    node.needRedraw = false;
                 }
-                else if (!node.$isDirty) {
+                else if (!node.needRedraw) {
                     var l = dirtyList.length;
                     for (var j = 0; j < l; j++) {
                         if (renderRegion.intersects(dirtyList[j])) {
-                            node.$isDirty = true;
+                            node.needRedraw = true;
                             break;
                         }
                     }
                 }
-                if (node.$isDirty) {
+                if (node.needRedraw) {
                     drawCalls++;
                     context.globalAlpha = globalAlpha;
-                    var m = node.$renderMatrix;
+                    var m = node.renderMatrix;
                     if (rootMatrix) {
                         context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        this.render(context, node.$renderNode);
+                        this.render(context, node);
                         context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
                     }
                     else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        this.render(context, node.$renderNode);
+                        this.render(context, node);
                     }
-                    node.$isDirty = false;
+                    node.needRedraw = false;
                 }
             }
             if (displayList) {
@@ -382,7 +358,6 @@ module egret.sys {
                 for (var i = 0; i < length; i++) {
                     var child = children[i];
                     if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
-                        child.$isDirty = false;
                         continue;
                     }
                     if (child.$blendMode !== 0 ||
@@ -694,7 +669,7 @@ module egret.sys {
                     var bitmapNode = <BitmapNode>node;
                     var image = bitmapNode.image;
                     context.imageSmoothingEnabled = bitmapNode.smoothing;
-                    var data = bitmapNode.$drawData;
+                    var data = bitmapNode.drawData;
                     var length = data.length;
                     for(var i=0;i<length;i+=8){
                         context.drawImage(image, data[i], data[i+1], data[i+2], data[i+3], data[i+4], data[i+5], data[i+6], data[i+7]);

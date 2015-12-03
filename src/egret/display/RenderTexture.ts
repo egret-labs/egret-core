@@ -76,69 +76,69 @@ module egret {
          * @platform Web,Native
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
-            if (clipBounds && (clipBounds.width == 0 || clipBounds.height==0)){
-                return false;
-            }
-            this.dispose();
-
-            var bounds = clipBounds || displayObject.$getOriginalBounds();
-            if (bounds.width == 0 || bounds.height == 0) {
-                return false;
-            }
-
-            scale /= $TextureScaleFactor;
-            var width = (bounds.x + bounds.width);
-            var height = (bounds.y + bounds.height);
-            if(clipBounds) {
-                width = bounds.width;
-                height = bounds.height;
-            }
-            this.context = this.createRenderContext(width, height);
-            if (!this.context) {
-                return false;
-            }
-
-            var root = new egret.DisplayObjectContainer();
-            this.rootDisplayList = sys.DisplayList.create(root);
-            root.$displayList = this.rootDisplayList;
-            root.$children.push(displayObject);
-
-            var hasRenderRegion = displayObject.$renderRegion;
-            if(!hasRenderRegion) {
-                displayObject.$renderRegion = sys.Region.create();
-            }
-            var parent = displayObject.$parent;
-            displayObject.$parent = null;
-            this.$saveParentDisplayList(displayObject);
-            this.$update(displayObject);
-            displayObject.$parent = parent;
-            if(!hasRenderRegion) {
-                sys.Region.release(displayObject.$renderRegion);
-                displayObject.$renderRegion = null;
-            }
-
-            var renderMatrix = displayObject.$renderMatrix;
-            var invertMatrix = Matrix.create();
-            renderMatrix.$invertInto(invertMatrix);
-            //应用裁切
-            if(clipBounds) {
-                invertMatrix.translate(-clipBounds.x, -clipBounds.y);
-            }
-            //应用缩放
-            if(scale) {
-                invertMatrix.scale(scale, scale);
-            }
-
-            this.context.clearRect(0, 0, width, height);
-            this.context.setTransform(invertMatrix.a, invertMatrix.b, invertMatrix.c, invertMatrix.d, invertMatrix.tx, invertMatrix.ty);
-            var drawCalls = this.drawDisplayObject(root, this.context, invertMatrix);
-            Matrix.release(invertMatrix);
-
-            this._setBitmapData(this.context.surface);
-            //设置纹理参数
-            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
-            this.$reset(displayObject);
-            this.$displayListMap = {};
+            //if (clipBounds && (clipBounds.width == 0 || clipBounds.height==0)){
+            //    return false;
+            //}
+            //this.dispose();
+            //
+            //var bounds = clipBounds || displayObject.$getOriginalBounds();
+            //if (bounds.width == 0 || bounds.height == 0) {
+            //    return false;
+            //}
+            //
+            //scale /= $TextureScaleFactor;
+            //var width = (bounds.x + bounds.width);
+            //var height = (bounds.y + bounds.height);
+            //if(clipBounds) {
+            //    width = bounds.width;
+            //    height = bounds.height;
+            //}
+            //this.context = this.createRenderContext(width, height);
+            //if (!this.context) {
+            //    return false;
+            //}
+            //
+            //var root = new egret.DisplayObjectContainer();
+            //this.rootDisplayList = sys.DisplayList.create(root);
+            //root.$displayList = this.rootDisplayList;
+            //root.$children.push(displayObject);
+            //
+            //var hasRenderRegion = displayObject.$renderRegion;
+            //if(!hasRenderRegion) {
+            //    displayObject.$renderRegion = sys.Region.create();
+            //}
+            //var parent = displayObject.$parent;
+            //displayObject.$parent = null;
+            //this.$saveParentDisplayList(displayObject);
+            //this.$update(displayObject);
+            //displayObject.$parent = parent;
+            //if(!hasRenderRegion) {
+            //    sys.Region.release(displayObject.$renderRegion);
+            //    displayObject.$renderRegion = null;
+            //}
+            //
+            //var renderMatrix = displayObject.$renderMatrix;
+            //var invertMatrix = Matrix.create();
+            //renderMatrix.$invertInto(invertMatrix);
+            ////应用裁切
+            //if(clipBounds) {
+            //    invertMatrix.translate(-clipBounds.x, -clipBounds.y);
+            //}
+            ////应用缩放
+            //if(scale) {
+            //    invertMatrix.scale(scale, scale);
+            //}
+            //
+            //this.context.clearRect(0, 0, width, height);
+            //this.context.setTransform(invertMatrix.a, invertMatrix.b, invertMatrix.c, invertMatrix.d, invertMatrix.tx, invertMatrix.ty);
+            //var drawCalls = this.drawDisplayObject(root, this.context, invertMatrix);
+            //Matrix.release(invertMatrix);
+            //
+            //this._setBitmapData(this.context.surface);
+            ////设置纹理参数
+            //this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
+            //this.$reset(displayObject);
+            //this.$displayListMap = {};
             return true;
         }
 
@@ -158,18 +158,18 @@ module egret {
         }
 
         private $update(displayObject:DisplayObject):void {
-            if (displayObject.$renderRegion) {
-                displayObject.$renderRegion.moved = true;
-                displayObject.$update();
-            }
-            if (displayObject instanceof DisplayObjectContainer) {
-                var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
-                var length:number = children.length;
-                for (var i:number = 0; i < length; i++) {
-                    var child:DisplayObject = children[i];
-                    this.$update(child);
-                }
-            }
+            //if (displayObject.$renderRegion) {
+            //    displayObject.$renderRegion.moved = true;
+            //    displayObject.$update();
+            //}
+            //if (displayObject instanceof DisplayObjectContainer) {
+            //    var children:DisplayObject[] = (<DisplayObjectContainer>displayObject).$children;
+            //    var length:number = children.length;
+            //    for (var i:number = 0; i < length; i++) {
+            //        var child:DisplayObject = children[i];
+            //        this.$update(child);
+            //    }
+            //}
         }
 
         private $reset(displayObject:DisplayObject):void {
@@ -186,45 +186,45 @@ module egret {
 
         protected drawDisplayObject(displayObject:DisplayObject, context:sys.RenderContext, rootMatrix:Matrix):number {
             var drawCalls = 0;
-            var node:sys.Renderable;
-            var globalAlpha:number;
-            if (displayObject.$renderRegion) {
-                node = displayObject;
-                globalAlpha = displayObject.$renderAlpha;
-            }
-            if (node) {
-                drawCalls++;
-                context.globalAlpha = globalAlpha;
-                var m = node.$renderMatrix;
-                if (rootMatrix) {
-                    context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    //node.$render(context);
-                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
-                }
-                else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
-                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    //node.$render(context);
-                }
-            }
-            var children = displayObject.$children;
-            if (children) {
-                var length = children.length;
-                for (var i = 0; i < length; i++) {
-                    var child = children[i];
-                    if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
-                        continue;
-                    }
-                    if (child.$blendMode !== 0 || child.$mask) {
-                        drawCalls += this.drawWithClip(child, context, rootMatrix);
-                    }
-                    else if (child.$scrollRect || child.$maskRect) {
-                        drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
-                    }
-                    else {
-                        drawCalls += this.drawDisplayObject(child, context, rootMatrix);
-                    }
-                }
-            }
+            //var node:sys.Renderable;
+            //var globalAlpha:number;
+            //if (displayObject.$renderRegion) {
+            //    node = displayObject;
+            //    globalAlpha = displayObject.$renderAlpha;
+            //}
+            //if (node) {
+            //    drawCalls++;
+            //    context.globalAlpha = globalAlpha;
+            //    var m = node.$renderMatrix;
+            //    if (rootMatrix) {
+            //        context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            //        //node.$render(context);
+            //        context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+            //    }
+            //    else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
+            //        context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            //        //node.$render(context);
+            //    }
+            //}
+            //var children = displayObject.$children;
+            //if (children) {
+            //    var length = children.length;
+            //    for (var i = 0; i < length; i++) {
+            //        var child = children[i];
+            //        if (!child.$visible || child.$alpha <= 0 || child.$maskedObject) {
+            //            continue;
+            //        }
+            //        if (child.$blendMode !== 0 || child.$mask) {
+            //            drawCalls += this.drawWithClip(child, context, rootMatrix);
+            //        }
+            //        else if (child.$scrollRect || child.$maskRect) {
+            //            drawCalls += this.drawWithScrollRect(child, context, rootMatrix);
+            //        }
+            //        else {
+            //            drawCalls += this.drawDisplayObject(child, context, rootMatrix);
+            //        }
+            //    }
+            //}
             return drawCalls;
         }
 

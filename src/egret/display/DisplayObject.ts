@@ -153,7 +153,8 @@ module egret {
         explicitWidth,
         explicitHeight,
         skewXdeg,//角度 degree
-        skewYdeg
+        skewYdeg,
+        concatenatedAlpha
     }
 
     /**
@@ -239,14 +240,15 @@ module egret {
                 7: new Matrix(),     //concatenatedMatrix,
                 8: new Matrix(),     //invertedConcatenatedMatrix,
                 9: new Rectangle(),  //bounds,
-                10: new Rectangle(),  //contentBounds
-                11: false,  //cacheAsBitmap
+                10: new Rectangle(), //contentBounds
+                11: false,           //cacheAsBitmap
                 12: 0,               //anchorOffsetX,
-                13: 0,                //anchorOffsetY,
-                14: NaN,           //explicitWidth,
-                15: NaN,           //explicitHeight,
+                13: 0,               //anchorOffsetY,
+                14: NaN,             //explicitWidth,
+                15: NaN,             //explicitHeight,
                 16: 0,               //skewXdeg,
-                17: 0                //skewYdeg
+                17: 0,               //skewYdeg,
+                18: 0                //concatenatedAlpha
             };
         }
 
@@ -567,10 +569,10 @@ module egret {
                     matrix.copyFrom(this.$getMatrix());
                 }
                 if (this.$displayList) {
-                    this.$displayList.$renderRegion.moved = true;
+                    this.$displayList.$renderNode.moved = true;
                 }
-                if (this.$renderRegion) {
-                    this.$renderRegion.moved = true;
+                if (this.$renderNode) {
+                    this.$renderNode.moved = true;
                 }
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidConcatenatedMatrix);
             }
@@ -1256,7 +1258,7 @@ module egret {
          */
         $cacheAsBitmapChanged():void {
             var parentCache = this.$displayList || this.$parentDisplayList;
-            if (this.$renderRegion) {
+            if (this.$renderNode) {
                 parentCache.markDirty(this);
             }
             this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedMatrix |
@@ -1314,17 +1316,18 @@ module egret {
          * 获取这个显示对象跟它所有父级透明度的乘积
          */
         $getConcatenatedAlpha():number {
+            var values = this.$DisplayObject;
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedAlpha)) {
                 if (this.$parent) {
                     var parentAlpha = this.$parent.$getConcatenatedAlpha();
-                    this.$renderAlpha = parentAlpha * this.$alpha;
+                    values[Keys.concatenatedAlpha] = parentAlpha * this.$alpha;
                 }
                 else {
-                    this.$renderAlpha = this.$alpha;
+                    values[Keys.concatenatedAlpha] = this.$alpha;
                 }
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidConcatenatedAlpha);
             }
-            return this.$renderAlpha;
+            return values[Keys.concatenatedAlpha];
         }
 
         /**
@@ -1754,7 +1757,7 @@ module egret {
                 this.$measureChildBounds(bounds);
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidBounds);
                 if (this.$displayList) {
-                    this.$displayList.$renderRegion.moved = true;
+                    this.$displayList.$renderNode.moved = true;
                 }
             }
             return bounds;
@@ -1776,8 +1779,8 @@ module egret {
             var bounds = this.$DisplayObject[Keys.contentBounds];
             if (this.$hasFlags(sys.DisplayObjectFlags.InvalidContentBounds)) {
                 this.$measureContentBounds(bounds);
-                if (this.$renderRegion) {
-                    this.$renderRegion.moved = true;
+                if (this.$renderNode) {
+                    this.$renderNode.moved = true;
                 }
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidContentBounds);
             }
@@ -1803,7 +1806,7 @@ module egret {
          * @param notiryChildren 是否标记子项也需要重绘。传入false或不传入，将只标记自身需要重绘。注意:当子项cache时不会继续向下标记
          */
         $invalidate(notifyChildren?:boolean):void {
-            if (!this.$renderRegion || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender)) {
+            if (!this.$renderNode || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender)) {
                 return;
             }
             this.$setFlags(sys.DisplayObjectFlags.DirtyRender|sys.DisplayObjectFlags.InvalidRenderNodes);
@@ -1824,31 +1827,12 @@ module egret {
             }
             this.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
             var displayList = this.$displayList;
-            if ((displayList || this.$renderRegion) && this.$parentDisplayList) {
+            if ((displayList || this.$renderNode) && this.$parentDisplayList) {
                 this.$parentDisplayList.markDirty(displayList || this);
             }
         }
 
-        /**
-         * @private
-         * 是否需要重绘的标志，此属性在渲染时会被访问，所以单独声明一个直接的变量。
-         */
-        $isDirty:boolean = false;
-        /**
-         * @private
-         * 这个对象在舞台上的整体透明度
-         */
-        $renderAlpha:number = 1;
-        /**
-         * @private
-         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
-         */
-        $renderMatrix:Matrix = new egret.Matrix();
-        /**
-         * @private
-         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
-         */
-        $renderRegion:sys.Region = null;
+
         /**
          * @private
          * 渲染节点,不为空表示自身有绘制到屏幕的内容
@@ -1861,33 +1845,34 @@ module egret {
          */
         $update(bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
+            var node = this.$renderNode;
             if(this.$hasFlags(sys.DisplayObjectFlags.InvalidRenderNodes)){
-                this.$renderNode.$drawData.length = 0;
+                node.drawData.length = 0;
                 this.$render(sys.sharedRenderContext);
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidRenderNodes);
             }
-            this.$getConcatenatedAlpha();
+            node.renderAlpha = this.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
             var renderBounds = bounds || this.$getContentBounds();
             var displayList = this.$displayList || this.$parentDisplayList;
-            var region = this.$renderRegion;
+            var region = node.renderRegion;
             if (!displayList) {
                 region.setTo(0, 0, 0, 0);
-                region.moved = false;
+                node.moved = false;
                 return false;
             }
-            if (!region.moved) {
+            if (!node.moved) {
                 return false;
             }
-            region.moved = false;
-            var matrix = this.$renderMatrix;
-            matrix.copyFrom(concatenatedMatrix);
+            node.moved = false;
+            var renderMatrix = node.renderMatrix;
+            renderMatrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
             if (root !== this.$stage) {
-                this.$getConcatenatedMatrixAt(root, matrix);
+                this.$getConcatenatedMatrixAt(root, renderMatrix);
             }
-            region.updateRegion(renderBounds, matrix);
+            region.updateRegion(renderBounds, renderMatrix);
             return true;
         }
 
@@ -1930,7 +1915,7 @@ module egret {
          */
         $hitTest(stageX:number, stageY:number):DisplayObject {
             var values = this.$DisplayObject;
-            if (!this.$renderRegion || !this.$visible || values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
+            if (!this.$renderNode || !this.$visible || values[Keys.scaleX] == 0 || values[Keys.scaleY] == 0) {
                 return null;
             }
             var m = this.$getInvertedConcatenatedMatrix();

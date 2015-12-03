@@ -112,9 +112,7 @@ module egret {
          */
         public constructor() {
             super();
-            //this.cacheAsBitmap = true;
-
-            this.$renderRegion = new sys.Region();
+            this.$renderNode = new sys.BitmapNode();
             this.$BitmapText = {
                 0: NaN,    //textFieldWidth,
                 1: NaN,    //textFieldHeight,
