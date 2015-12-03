@@ -34,6 +34,11 @@ module egret.sys {
      */
     export class GroupNode extends RenderNode{
 
+        public constructor(){
+            super();
+            this.type = RenderNodeType.GroupNode;
+        }
+
         $children:RenderNode[] = [];
 
         public addNode(node:RenderNode):void{

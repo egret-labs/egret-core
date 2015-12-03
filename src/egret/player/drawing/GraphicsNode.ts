@@ -34,5 +34,9 @@ module egret.sys {
      */
     export class GraphicsNode extends RenderNode {
 
+        public constructor(){
+            super();
+            this.type = RenderNodeType.GraphicsNode;
+        }
     }
 }

@@ -33,6 +33,11 @@ module egret.sys {
      * 文本渲染节点
      */
     export class TextNode extends RenderNode {
+
+        public constructor(){
+            super();
+            this.type = RenderNodeType.TextNode;
+        }
         /**
          * 文本是否显示为斜体。
          */

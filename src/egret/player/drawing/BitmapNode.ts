@@ -35,6 +35,10 @@ module egret.sys {
      */
     export class BitmapNode extends RenderNode {
 
+        public constructor(){
+            super();
+            this.type = RenderNodeType.BitmapNode;
+        }
         /**
          * 要绘制的位图
          */
