@@ -2739,7 +2739,6 @@ declare module dragonBones {
         /**
          * 构建骨架
          * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
-         * TO DO 以后会支持一对多的情况
          * @param armatureName 骨架的名字
          * @param fromDragonBonesDataName 骨架数据的名字 可选参数
          * @param fromTextureAtlasName 纹理集的名字 可选参数
@@ -2750,7 +2749,6 @@ declare module dragonBones {
         /**
          * 构建fast骨架
          * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
-         * TO DO 以后会支持一对多的情况
          * @param armatureName 骨架的名字
          * @param fromDragonBonesDataName 骨架数据的名字 可选参数
          * @param fromTextureAtlasName 纹理集的名字 可选参数
@@ -2766,7 +2764,7 @@ declare module dragonBones {
          * @param skinName 皮肤名称 可选参数
          * @returns {Armature}
          */
-        buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData: DragonBonesData, armatureData: ArmatureData, textureAtlas: any, skinName?: string): Armature;
+        buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData: DragonBonesData, armatureData: ArmatureData, textureAtlasName: string, skinName?: string): Armature;
         /**
          * 用dragonBones数据，骨架数据，纹理集数据来构建骨架
          * @param dragonBonesData dragonBones数据
@@ -2775,7 +2773,7 @@ declare module dragonBones {
          * @param skinName 皮肤名称 可选参数
          * @returns {Armature}
          */
-        buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData: DragonBonesData, armatureData: ArmatureData, textureAtlas: any, skinName?: string): FastArmature;
+        buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData: DragonBonesData, armatureData: ArmatureData, textureAtlasName: string, skinName?: string): FastArmature;
         /**
          * 拷贝动画到骨架中
          * 暂时不支持ifRemoveOriginalAnimationList为false的情况
@@ -2791,9 +2789,9 @@ declare module dragonBones {
         private findFirstDragonBonesData();
         private findFirstTextureAtlas();
         _buildBones(armature: Armature): void;
-        _buildSlots(armature: Armature, skinName: string, textureAtlas: any): void;
+        _buildSlots(armature: Armature, skinName: string, textureAtlasName: string): void;
         _buildFastBones(armature: FastArmature): void;
-        _buildFastSlots(armature: FastArmature, skinName: string, textureAtlas: any): void;
+        _buildFastSlots(armature: FastArmature, skinName: string, textureAtlasName: string): void;
         /**
          * @private
          * Generates an Armature instance.

@@ -60,10 +60,12 @@ module egret {
      */
     export function superSetter(currentClass:any, thisObj:any, type:string, ...values) {
         var cla = currentClass.prototype;
-        var seters = cla["__sets__"];
-        if (seters == null) {
-            seters = cla["__sets__"] = {};
+
+        var seters;
+        if (!currentClass.hasOwnProperty("__sets__")) {
+            Object.defineProperty(currentClass, "__sets__", {"value":{}});
         }
+        seters = currentClass["__sets__"];
 
         var setF = seters[type];
         if (setF) {
@@ -109,10 +111,12 @@ module egret {
      */
     export function superGetter(currentClass:any, thisObj:any, type:string):any {
         var cla = currentClass.prototype;
-        var geters = cla["__gets__"];
-        if (geters == null) {
-            geters = cla["__gets__"] = {};
+
+        var geters;
+        if (!currentClass.hasOwnProperty("__gets__")) {
+            Object.defineProperty(currentClass, "__gets__", {"value":{}});
         }
+        geters = currentClass["__gets__"];
 
         var getF = geters[type];
         if (getF) {

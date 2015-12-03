@@ -27,6 +27,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 module eui.sys {
+    /**
+     * @private
+     */
     export const enum EditableTextKeys {
         promptText,
         textColorUser,
@@ -118,9 +121,20 @@ module eui {
          * @param value
          */
         $setText(value: string): boolean {
+            var promptText = this.$EditableText[sys.EditableTextKeys.promptText];
+            if (promptText != value || promptText == null) {
+                this.$isShowPrompt = false;
+                this.textColor = this.$EditableText[sys.EditableTextKeys.textColorUser];
+            }
+            if (!this.$isFocusIn) {
+                if (value == "" || value == null) {
+                    value = promptText;
+                    this.$isShowPrompt = true;
+                    super.$setTextColor(this.$promptColor);
+                }
+            }
             var result: boolean = super.$setText(value);
             PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "text");
-
             return result;
         }
 
@@ -184,8 +198,14 @@ module eui {
                 this.showPromptText();
             }
         }
-
+        /**
+         * @private
+         */
         private $promptColor: number = 0x666666;
+        /**
+         * @private
+         */
+        private $isFocusIn: boolean = false;
         /**
          * @language en_US
          * The color of the defalut string.
@@ -217,6 +237,7 @@ module eui {
          * @private
          */
         private onfocusOut(): void {
+            this.$isFocusIn = false;
             if (!this.text) {
                 this.showPromptText();
             }
@@ -225,6 +246,7 @@ module eui {
          * @private
          */
         private onfocusIn(): void {
+            this.$isFocusIn = true;
             this.$isShowPrompt = false;
             this.displayAsPassword = this.$EditableText[sys.EditableTextKeys.asPassword];
             var values = this.$EditableText;
@@ -244,6 +266,9 @@ module eui {
             super.$setDisplayAsPassword(false);
             this.text = values[sys.EditableTextKeys.promptText];
         }
+        /**
+         * @private
+         */
         $setTextColor(value: number): boolean {
             value = +value | 0;
             this.$EditableText[sys.EditableTextKeys.textColorUser] = value;
@@ -252,6 +277,9 @@ module eui {
             }
             return true;
         }
+        /**
+         * @private
+         */
         $setDisplayAsPassword(value: boolean): boolean {
             this.$EditableText[sys.EditableTextKeys.asPassword] = value;
             if (!this.$isShowPrompt) {

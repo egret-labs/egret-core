@@ -4440,6 +4440,9 @@ declare module eui {
     }
 }
 declare module eui.sys {
+    /**
+     * @private
+     */
     const enum EditableTextKeys {
         promptText = 0,
         textColorUser = 1,
@@ -4571,7 +4574,13 @@ declare module eui {
          * @private
          */
         private showPromptText();
+        /**
+         * @private
+         */
         $setTextColor(value: number): boolean;
+        /**
+         * @private
+         */
         $setDisplayAsPassword(value: boolean): boolean;
         /**
          * @private

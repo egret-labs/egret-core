@@ -1679,8 +1679,10 @@ var egret;
                 if (this._withCredentials != null) {
                     this._xhr.withCredentials = this._withCredentials;
                 }
-                if (this.header != null) {
-                    this._xhr.setRequestHeader(this.header, this.headerValue);
+                if (this.headerObj) {
+                    for (var key in this.headerObj) {
+                        this._xhr.setRequestHeader(key, this.headerObj[key]);
+                    }
                 }
                 this._xhr.send(data);
             };
@@ -1711,8 +1713,10 @@ var egret;
              * @param value 给指定的请求头赋的值.
              */
             p.setRequestHeader = function (header, value) {
-                this.header = header;
-                this.headerValue = value;
+                if (!this.headerObj) {
+                    this.headerObj = {};
+                }
+                this.headerObj[header] = value;
             };
             /**
              * @private

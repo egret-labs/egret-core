@@ -20,7 +20,7 @@
         }
     </style>
 
-    <!--这个标签为通过egret提供的第三方库的方式生成的 javascript 文件-->
+    <!--这个标签为通过egret提供的第三方库的方式生成的 javascript 文件。删除 modules_files 标签后，库文件加载列表将不会变化，请谨慎操作！-->
     <!--modules_files_start-->
     <!--modules_files_end-->
 
@@ -28,7 +28,7 @@
     <!--other_libs_files_start-->
     <!--other_libs_files_end-->
 
-    <!--这个标签会被替换为项目中所有的 javascript 文件-->
+    <!--这个标签会被替换为项目中所有的 javascript 文件。删除 game_files 标签后，项目文件加载列表将不会变化，请谨慎操作！-->
     <!--game_files_start-->
     <!--game_files_end-->
 </head>
@@ -38,7 +38,6 @@
          data-entry-class="Main"
          data-orientation="{{=it.orientationMode}}"
          data-scale-mode="{{=it.scaleMode}}"
-         data-resolution-mode="{{=it.resolutionMode}}"
          data-frame-rate="{{=it.frameRate}}"
          data-content-width="{{=it.contentWidth}}"
          data-content-height="{{=it.contentHeight}}"

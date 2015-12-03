@@ -1934,6 +1934,9 @@ module egret {
                 return null;
             }
             var m = this.$getInvertedConcatenatedMatrix();
+            if(m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0){//防止父类影响子类
+                return null;
+            }
             var bounds = this.$getContentBounds();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
@@ -1999,15 +2002,19 @@ module egret {
                 var m = this.$getInvertedConcatenatedMatrix();
                 var localX = m.a * x + m.c * y + m.tx;
                 var localY = m.b * x + m.d * y + m.ty;
-                var context = sys.sharedRenderContext;
-                context.surface.width = context.surface.height = 3;
-                context.translate(1 - localX, 1 - localY);
-                this.$render(context);
-                var data:Uint8Array = context.getImageData(1, 1, 1, 1).data;
+                var rectangle = Rectangle.create();
+                rectangle.setTo(localX, localY, 3, 3);
+                var renderTexture = new RenderTexture();
+                renderTexture.drawToTexture(this, rectangle);
+                var context = renderTexture["context"];
+                var data:Uint8Array = context.getImageData(0, 0, 1, 1).data;
+                var result = true;
                 if (data[3] === 0) {
-                    return false;
+                    result = false;
                 }
-                return true;
+                Rectangle.release(rectangle);
+                renderTexture.dispose();
+                return result;
             }
         }
 

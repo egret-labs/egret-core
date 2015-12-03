@@ -24,7 +24,7 @@ export function normalize(project: egret.ILarkProject) {
     project.fpsStyles = project.fpsStyles || "";
     project.scripts = project.scripts || [];
     project.nativeScripts = project.nativeScripts || [];
-    project.resolutionMode = project.resolutionMode || "retina";
+    //project.resolutionMode = project.resolutionMode || "retina";
 }
 
 export function getLibsList(html:string, isNative:boolean, isDebug:boolean):string[] {
@@ -138,7 +138,7 @@ export function parseProjectInfo(html: string): egret.ILarkProject[] {
             project.entryClass = s.attribs['data-entry-class'];
             project.frameRate = s.attribs['data-frame-rate'] || 60;
             project.orientationMode = s.attribs['data-orientation-mode'] || "auto";
-            project.resolutionMode = s.attribs['data-resolution-mode'];
+            //project.resolutionMode = s.attribs['data-resolution-mode'];
             project.scaleMode = s.attribs['data-scale-mode'] || "noScale";
             project.showFPS = s.attribs['data-show-fps'] || false;
             project.showPaintRect = s.attribs['data-show-paint-rect'] || false;

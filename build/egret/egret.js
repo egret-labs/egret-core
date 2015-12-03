@@ -2289,6 +2289,9 @@ var egret;
                 return null;
             }
             var m = this.$getInvertedConcatenatedMatrix();
+            if (m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0) {
+                return null;
+            }
             var bounds = this.$getContentBounds();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
@@ -2352,15 +2355,19 @@ var egret;
                 var m = this.$getInvertedConcatenatedMatrix();
                 var localX = m.a * x + m.c * y + m.tx;
                 var localY = m.b * x + m.d * y + m.ty;
-                var context = egret.sys.sharedRenderContext;
-                context.surface.width = context.surface.height = 3;
-                context.translate(1 - localX, 1 - localY);
-                this.$render(context);
-                var data = context.getImageData(1, 1, 1, 1).data;
+                var rectangle = egret.Rectangle.create();
+                rectangle.setTo(localX, localY, 3, 3);
+                var renderTexture = new egret.RenderTexture();
+                renderTexture.drawToTexture(this, rectangle);
+                var context = renderTexture["context"];
+                var data = context.getImageData(0, 0, 1, 1).data;
+                var result = true;
                 if (data[3] === 0) {
-                    return false;
+                    result = false;
                 }
-                return true;
+                egret.Rectangle.release(rectangle);
+                renderTexture.dispose();
+                return result;
             }
         };
         /**
@@ -2777,7 +2784,6 @@ var egret;
             /**
              * @language en_US
              * Determines how the bitmap fills in the dimensions.
-             * ends at the edge of the region.</p>
              * <p>When set to <code>BitmapFillMode.REPEAT</code>, the bitmap
              * repeats to fill the region.</p>
              * <p>When set to <code>BitmapFillMode.SCALE</code>, the bitmap
@@ -5819,13 +5825,13 @@ var egret;
         d(p, "textureWidth"
             /**
              * @language en_US
-             * Texture width
+             * Texture width, read only
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 纹理宽度
+             * 纹理宽度，只读属性，不可以设置
              * @version Egret 2.4
              * @platform Web,Native
              */
@@ -5839,13 +5845,13 @@ var egret;
         d(p, "textureHeight"
             /**
              * @language en_US
-             * Texture height
+             * Texture height, read only
              * @version Egret 2.4
              * @platform Web,Native
              */
             /**
              * @language zh_CN
-             * 纹理高度
+             * 纹理高度，只读属性，不可以设置
              * @version Egret 2.4
              * @platform Web,Native
              */
@@ -5996,7 +6002,7 @@ var egret;
         p.dispose = function () {
             if (this._bitmapData) {
                 Texture.$dispose(this._bitmapData.hashCode);
-                console.log("dispose Texture");
+                //console.log("dispose Texture");
                 this._bitmapData = null;
             }
         };
@@ -14803,12 +14809,12 @@ var egret;
         StageScaleMode.FIXED_HEIGHT = "fixedHeight";
         /**
          * @language en_US
-         * Keep the original aspect ratio scaling application content, after scaling a wide directions application content to fill the viewport players on both sides in the other direction may not be wide enough and left black bars.<br/>
+         * Keep the original aspect ratio scaling application content, after scaling application content in the horizontal and vertical directions to fill the viewport player,a narrow direction may not be wide enough and fill.<br/>
          * In this mode, the stage height (Stage.stageHeight) and the stage width (Stage.stageWidth) by the current scale with the player viewport size.
          */
         /**
          * @language zh_CN
-         * 保持原始宽高比缩放应用程序内容，缩放后应用程序内容的较宽方向填满播放器视口，另一个方向的两侧可能会不够宽而留有黑边。<br/>
+         * 保持原始宽高比缩放应用程序内容，缩放后应用程序内容在水平和垂直方向都填满播放器视口，应用程序内容的较窄方向可能会不够宽而填充。<br/>
          * 在此模式下，舞台高度(Stage.stageHeight)和舞台宽度(Stage.stageWidth)由当前的缩放比例与播放器视口宽高决定。
          */
         StageScaleMode.FIXED_NARROW = "fixedNarrow";
@@ -16894,7 +16900,6 @@ var egret;
             this.stageText.$addToStage();
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
             this._text.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             this.stageText.addEventListener("blur", this.blurHandler, this);
             this.stageText.addEventListener("focus", this.focusHandler, this);
         };
@@ -16960,6 +16965,7 @@ var egret;
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
+                this._text.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
                 this._text.$isTyping = false;
                 this._text.$invalidateContentBounds();
                 //失去焦点后调用
@@ -16977,6 +16983,7 @@ var egret;
             if (this._isFocus) {
                 return;
             }
+            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
             //强制更新输入框位置
             this.stageText.$show();
         };
@@ -21197,10 +21204,11 @@ var egret;
             values[_i - 3] = arguments[_i];
         }
         var cla = currentClass.prototype;
-        var seters = cla["__sets__"];
-        if (seters == null) {
-            seters = cla["__sets__"] = {};
+        var seters;
+        if (!currentClass.hasOwnProperty("__sets__")) {
+            Object.defineProperty(currentClass, "__sets__", { "value": {} });
         }
+        seters = currentClass["__sets__"];
         var setF = seters[type];
         if (setF) {
             return setF.apply(thisObj, values);
@@ -21242,10 +21250,11 @@ var egret;
      */
     function superGetter(currentClass, thisObj, type) {
         var cla = currentClass.prototype;
-        var geters = cla["__gets__"];
-        if (geters == null) {
-            geters = cla["__gets__"] = {};
+        var geters;
+        if (!currentClass.hasOwnProperty("__gets__")) {
+            Object.defineProperty(currentClass, "__gets__", { "value": {} });
         }
+        geters = currentClass["__gets__"];
         var getF = geters[type];
         if (getF) {
             return getF.call(thisObj);
