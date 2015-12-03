@@ -35,8 +35,10 @@ module egret.sys {
      */
     export const enum DisplayObjectFlags {
 
-        //DisplayObject剩余可用的：0x1000,0x2000,0x4000,0x8000,0x10000
-
+        // 0x1,0x2,0x4,0x8,0x10,0x20,0x40,0x80,0x100,0x200,0x400,0x800,0x1000,0x2000,0x4000,0x8000,0x10000
+        // 0x20000,0x40000,0x80000,0x100000,0x200000,0x400000,0x800000,0x1000000,0x2000000,0x4000000,0x8000000,0x10000000,
+        // 0x20000000,0x40000000,0x80000000,0x100000000,0x200000000,0x400000000,0x800000000,0x1000000000,0x2000000000,
+        // 0x4000000000,0x8000000000,0x10000000000,0x20000000000,0x40000000000,0x80000000000,0x100000000000,0x200000000000
         /**
          * @private
          * 显示对象自身的绘制区域尺寸失效
@@ -72,7 +74,11 @@ module egret.sys {
          * 显示对象祖代的透明度属性失效。
          */
         InvalidConcatenatedAlpha = 0x0040,
-
+        /**
+         * @private
+         * DrawData失效,需要重新出发render方法.
+         */
+        InvalidRenderNodes = 0x0080,
         /**
          * @private
          * 显示对象自身需要重绘的标志
@@ -104,6 +110,7 @@ module egret.sys {
             DisplayObjectFlags.InvalidConcatenatedMatrix |
             DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
             DisplayObjectFlags.InvalidConcatenatedAlpha |
+            DisplayObjectFlags.InvalidRenderNodes |
             DisplayObjectFlags.Dirty
 
     }
@@ -1799,7 +1806,7 @@ module egret {
             if (!this.$renderRegion || this.$hasFlags(sys.DisplayObjectFlags.DirtyRender)) {
                 return;
             }
-            this.$setFlags(sys.DisplayObjectFlags.DirtyRender);
+            this.$setFlags(sys.DisplayObjectFlags.DirtyRender|sys.DisplayObjectFlags.InvalidRenderNodes);
             var displayList = this.$displayList ? this.$displayList : this.$parentDisplayList;
             if (displayList) {
                 displayList.markDirty(this);
@@ -1842,6 +1849,11 @@ module egret {
          * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
          */
         $renderRegion:sys.Region = null;
+        /**
+         * @private
+         * 渲染节点,不为空表示自身有绘制到屏幕的内容
+         */
+        $renderNode:sys.RenderNode = null;
 
         /**
          * @private
@@ -1849,6 +1861,11 @@ module egret {
          */
         $update(bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
+            if(this.$hasFlags(sys.DisplayObjectFlags.InvalidRenderNodes)){
+                this.$renderNode.$drawData.length = 0;
+                this.$render(sys.sharedRenderContext);
+                this.$removeFlags(sys.DisplayObjectFlags.InvalidRenderNodes);
+            }
             this.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();

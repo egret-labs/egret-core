@@ -103,13 +103,17 @@ module egret.sys {
          * @private
          * 相对于显示列表根节点或位图缓存根节点的矩阵对象
          */
-        $renderMatrix: Matrix = new Matrix();
+        $renderMatrix:Matrix = new Matrix();
 
         /**
          * @private
          * 在显示列表根节点或位图缓存根节点上的显示区域
          */
         $renderRegion:Region = new Region();
+        /**
+         * 位图渲染节点
+         */
+        $renderNode:RenderNode = new BitmapNode();
 
         /**
          * @private
@@ -131,8 +135,8 @@ module egret.sys {
             if (this.needRedraw) {
                 this.updateDirtyRegions();
             }
-            if(!displayList){
-                region.setTo(0,0,0,0);
+            if (!displayList) {
+                region.setTo(0, 0, 0, 0);
                 region.moved = false;
                 return false;
             }
@@ -144,8 +148,8 @@ module egret.sys {
             var matrix = this.$renderMatrix;
             matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
-            if(root!==target.$stage){
-                target.$getConcatenatedMatrixAt(root,matrix);
+            if (root !== target.$stage) {
+                target.$getConcatenatedMatrixAt(root, matrix);
             }
             region.updateRegion(bounds, matrix);
             return true;
@@ -164,18 +168,6 @@ module egret.sys {
          * @private
          */
         public offsetY:number = 0;
-
-        /**
-         * @private
-         *
-         * @param context
-         */
-        $render(context:RenderContext):void {
-            var data = this.surface;
-            if (data) {
-                context.drawImage(data, this.offsetX, this.offsetY, data.width, data.height);
-            }
-        }
 
         /**
          * @private
@@ -203,14 +195,14 @@ module egret.sys {
          * @private
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
          */
-        public setClipRect(width: number, height: number): void {
+        public setClipRect(width:number, height:number):void {
             this.dirtyRegion.setClipRect(width, height);
             this.rootMatrix = null;//只有舞台画布才能设置ClipRect
             var surface = this.renderContext.surface;
             surface.width = width;
             surface.height = height;
-            if(this.renderContext["resize"]){
-                this.renderContext["resize"](width,height);
+            if (this.renderContext["resize"]) {
+                this.renderContext["resize"](width, height);
             }
             this.surface = surface;
         }
@@ -310,16 +302,21 @@ module egret.sys {
                 context.rect(region.minX, region.minY, region.width, region.height);
             }
             context.clip();
-            if(m){
+            if (m) {
                 context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
             //绘制显示对象
             var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
             //清除脏矩形区域
             context.restore();
-            if(context["finish"]){
+            if (context["finish"]) {
                 context["finish"]();
             }
+            var surface = this.surface;
+            var renderNode = <BitmapNode>this.$renderNode;
+            renderNode.clean();
+            renderNode.image = surface;
+            renderNode.drawImage(0, 0, surface.width, surface.height, this.offsetX, this.offsetY, surface.width, surface.height);
             this.dirtyList = null;
             this.dirtyRegion.clear();
             this.needRedraw = false;
@@ -366,12 +363,12 @@ module egret.sys {
                     var m = node.$renderMatrix;
                     if (rootMatrix) {
                         context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        node.$render(context);
+                        this.render(context, node.$renderNode);
                         context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
                     }
                     else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                        node.$render(context);
+                        this.render(context, node.$renderNode);
                     }
                     node.$isDirty = false;
                 }
@@ -389,7 +386,7 @@ module egret.sys {
                         continue;
                     }
                     if (child.$blendMode !== 0 ||
-                        (child.$mask&&child.$mask.$parentDisplayList)) {//若遮罩不在显示列表中，放弃绘制遮罩。
+                        (child.$mask && child.$mask.$parentDisplayList)) {//若遮罩不在显示列表中，放弃绘制遮罩。
                         drawCalls += this.drawWithClip(child, context, dirtyList, rootMatrix, clipRegion);
                     }
                     else if (child.$scrollRect || child.$maskRect) {
@@ -424,7 +421,7 @@ module egret.sys {
 
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
-            if(mask&&!mask.$parentDisplayList){
+            if (mask && !mask.$parentDisplayList) {
                 mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
             }
 
@@ -434,9 +431,9 @@ module egret.sys {
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
             var root = displayObject.$parentDisplayList.root;
             var invertedMatrix:Matrix;
-            if(root!==displayObject.$stage){
+            if (root !== displayObject.$stage) {
                 invertedMatrix = root.$getInvertedConcatenatedMatrix();
-                invertedMatrix.$preMultiplyInto(displayMatrix,displayMatrix);
+                invertedMatrix.$preMultiplyInto(displayMatrix, displayMatrix);
             }
 
             if (mask) {
@@ -444,8 +441,8 @@ module egret.sys {
                 maskRegion = Region.create();
                 var m = Matrix.create();
                 m.copyFrom(mask.$getConcatenatedMatrix());
-                if(invertedMatrix){
-                    invertedMatrix.$preMultiplyInto(m,m);
+                if (invertedMatrix) {
+                    invertedMatrix.$preMultiplyInto(m, m);
                 }
                 maskRegion.updateRegion(bounds, m);
                 Matrix.release(m);
@@ -463,13 +460,13 @@ module egret.sys {
                 region = maskRegion;
             }
             if (region) {
-                if(region.isEmpty() || (clipRegion && !clipRegion.intersects(region))){
+                if (region.isEmpty() || (clipRegion && !clipRegion.intersects(region))) {
                     Region.release(region);
                     Matrix.release(displayMatrix);
                     return drawCalls;
                 }
             }
-            else{
+            else {
                 region = Region.create();
                 bounds = displayObject.$getOriginalBounds();
                 region.updateRegion(bounds, displayMatrix);
@@ -572,8 +569,8 @@ module egret.sys {
             var m = Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
             var root = displayObject.$parentDisplayList.root;
-            if(root!==displayObject.$stage){
-                root.$getInvertedConcatenatedMatrix().$preMultiplyInto(m,m)
+            if (root !== displayObject.$stage) {
+                root.$getInvertedConcatenatedMatrix().$preMultiplyInto(m, m)
             }
             var region:Region = Region.create();
             if (!scrollRect.isEmpty()) {
@@ -629,7 +626,7 @@ module egret.sys {
             if (!surface) {
                 return null;
             }
-            if(Capabilities.runtimeType == RuntimeType.WEB) {
+            if (Capabilities.runtimeType == RuntimeType.WEB) {
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。
                 surface.width = Math.max(257, width);
                 surface.height = Math.max(257, height);
@@ -650,7 +647,7 @@ module egret.sys {
          * @private
          * 改变画布的尺寸，由于画布尺寸修改会清空原始画布。所以这里将原始画布绘制到一个新画布上，再与原始画布交换。
          */
-        public changeSurfaceSize(): void {
+        public changeSurfaceSize():void {
             var root = this.root;
             var oldOffsetX = this.offsetX;
             var oldOffsetY = this.offsetY;
@@ -673,8 +670,8 @@ module egret.sys {
                 newSurface.width = Math.max(bounds.width, 257);
                 newSurface.height = Math.max(bounds.height, 257);
                 //if (bounds.width !== 0 && bounds.height !== 0) {
-                    newContext.setTransform(1, 0, 0, 1, 0, 0);
-                    newContext.drawImage(oldSurface, oldOffsetX - this.offsetX, oldOffsetY - this.offsetY);
+                newContext.setTransform(1, 0, 0, 1, 0, 0);
+                newContext.drawImage(oldSurface, oldOffsetX - this.offsetX, oldOffsetY - this.offsetY);
                 //}
                 if (Capabilities.runtimeType != RuntimeType.NATIVE) {
                     oldSurface.height = 1;
@@ -682,13 +679,29 @@ module egret.sys {
                 }
             }
 
-            this.rootMatrix.setTo(1, 0, 0, 1, - this.offsetX, - this.offsetY);
-            this.renderContext.setTransform(1, 0, 0, 1, - bounds.x, - bounds.y);
+            this.rootMatrix.setTo(1, 0, 0, 1, -this.offsetX, -this.offsetY);
+            this.renderContext.setTransform(1, 0, 0, 1, -bounds.x, -bounds.y);
         }
 
         public setDirtyRegionPolicy(policy:string):void {
             //todo 这里还可以做更多优化
             this.dirtyRegion.setDirtyRegionPolicy(policy);
         }
+
+        private render(context:RenderContext, node:RenderNode):void {
+            switch (node.type){
+                case RenderNodeType.BitmapNode:
+                    var bitmapNode = <BitmapNode>node;
+                    var image = bitmapNode.image;
+                    context.imageSmoothingEnabled = bitmapNode.smoothing;
+                    var data = bitmapNode.$drawData;
+                    var length = data.length;
+                    for(var i=0;i<length;i+=8){
+                        context.drawImage(image, data[i], data[i+1], data[i+2], data[i+3], data[i+4], data[i+5], data[i+6], data[i+7]);
+                    }
+                    break;
+            }
+        }
+
     }
 }

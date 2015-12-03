@@ -236,6 +236,7 @@ module egret {
         constructor() {
             super();
             this.$renderRegion = new sys.Region();
+            this.$renderNode = new sys.TextNode();
             this.$TextField = {
                 0: 30,             //fontSize
                 1: 0,              //lineSpacing

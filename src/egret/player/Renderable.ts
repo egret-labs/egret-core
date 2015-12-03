@@ -54,16 +54,14 @@ module egret.sys {
          * 在屏幕上的显示区域
          */
         $renderRegion:Region;
-
+        /**
+         * 渲染节点
+         */
+        $renderNode:RenderNode;
         /**
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
         $update():boolean;
-        /**
-         * @private
-         * 执行绘制
-         */
-        $render(context:RenderContext):void;
     }
 }

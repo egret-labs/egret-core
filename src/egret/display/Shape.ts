@@ -66,6 +66,7 @@ module egret {
             this.$graphics = new Graphics();
             this.$graphics.$renderContext.$targetDisplay = this;
             this.$renderRegion = new sys.Region();
+            this.$renderNode = new sys.GraphicsNode();
         }
 
         /**

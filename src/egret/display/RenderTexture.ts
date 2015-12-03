@@ -198,12 +198,12 @@ module egret {
                 var m = node.$renderMatrix;
                 if (rootMatrix) {
                     context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    node.$render(context);
+                    //node.$render(context);
                     context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
                 }
                 else {//绘制到舞台上时，所有矩阵都是绝对的，不需要调用transform()叠加。
                     context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-                    node.$render(context);
+                    //node.$render(context);
                 }
             }
             var children = displayObject.$children;
