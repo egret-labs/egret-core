@@ -104,13 +104,50 @@ module egret.native {
 
         /**
          * @private
+         */
+        private urlData:any = {};
+
+        /**
+         * @private
          * 发送请求.
          * @param data 需要发送的数据
          */
         public send(data?:any):void {
             var self = this;
-
-            if (!egret_native.isFileExists(self._url)) {
+            if (self.isNetUrl(self._url)) {//网络请求
+                self.urlData.type = self._method;
+                //写入POST数据
+                if (self._method == HttpMethod.POST && data) {
+                    self.urlData.data = data.toString();
+                }
+                else {
+                    delete self.urlData["data"];
+                }
+                if (self._responseType == HttpResponseType.ARRAY_BUFFER) {
+                    self.urlData.binary = true;
+                }
+                else {
+                    self.urlData.header = false;
+                }
+                //写入header信息
+                if (this.headerObj) {
+                    self.urlData.header = JSON.stringify(this.headerObj);
+                }
+                else {
+                    delete self.urlData.header;
+                }
+                var promise = PromiseObject.create();
+                promise.onSuccessFunc = function (getted_str) {
+                    self._response = getted_str;
+                    callLater(Event.dispatchEvent, Event, self, Event.COMPLETE);
+                };
+                promise.onErrorFunc = function (error_code) {
+                    $warn(1019, error_code);
+                    Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
+                };
+                egret_native.requireHttp(self._url, self.urlData, promise);
+            }
+            else if (!egret_native.isFileExists(self._url)) {
                 download();
             }
             else {
@@ -148,6 +185,15 @@ module egret.native {
         }
 
         /**
+         * 是否是网络地址
+         * @param url
+         * @returns {boolean}
+         */
+        private isNetUrl(url:string):boolean {
+            return url.indexOf("http://") != -1;
+        }
+
+        /**
          * @private
          * 如果请求已经被发送,则立刻中止请求.
          */
@@ -163,8 +209,7 @@ module egret.native {
             return "";
         }
 
-        private header:string;
-        private headerValue:string;
+        private headerObj:any;
         /**
          * @private
          * 给指定的HTTP请求头赋值.在这之前,您必须确认已经调用 open() 方法打开了一个url.
@@ -172,8 +217,10 @@ module egret.native {
          * @param value 给指定的请求头赋的值.
          */
         public setRequestHeader(header:string, value:string):void {
-            this.header = header;
-            this.headerValue = value;
+            if(!this.headerObj) {
+                this.headerObj = {};
+            }
+            this.headerObj[header] = value;
         }
 
         /**
@@ -184,8 +231,6 @@ module egret.native {
         public getResponseHeader(header:string):string {
             return "";
         }
-
-
     }
     HttpRequest = NativeHttpRequest;
 

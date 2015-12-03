@@ -56,88 +56,22 @@ var egret;
                 }
                 var request = loader._request;
                 var virtualUrl = self.getVirtualUrl(egret.$getUrl(request));
-                if (self.isNetUrl(virtualUrl)) {
-                    self.urlData.type = request.method;
-                    //写入POST数据
-                    if (request.method == egret.URLRequestMethod.POST && request.data) {
-                        var urlVars = request.data;
-                        self.urlData.data = urlVars.toString();
-                    }
-                    else {
-                        delete self.urlData["data"];
-                    }
-                    //写入header信息
-                    if (request.requestHeaders) {
-                        self.urlData.header = self.getHeaderString(request);
-                    }
-                    else {
-                        delete self.urlData.header;
-                    }
-                    var promise = egret.PromiseObject.create();
-                    promise.onSuccessFunc = function (getted_str) {
-                        loader.data = getted_str;
-                        egret.callLater(egret.Event.dispatchEvent, egret.Event, loader, egret.Event.COMPLETE);
-                    };
-                    promise.onErrorFunc = function (error_code) {
-                        egret.$warn(1019, error_code);
-                        egret.IOErrorEvent.dispatchIOErrorEvent(loader);
-                    };
-                    egret_native.requireHttp(virtualUrl, self.urlData, promise);
-                }
-                else if (!egret_native.isFileExists(virtualUrl)) {
-                    download();
-                }
-                else {
-                    if (NativeNetContext.__use_asyn) {
-                        //异步读取
-                        readFileAsync();
-                    }
-                    else {
-                        //同步读取
-                        egret.$callAsync(onLoadComplete, self);
-                    }
-                }
-                function readFileAsync() {
-                    var promise = new egret.PromiseObject();
-                    promise.onSuccessFunc = function (content) {
-                        loader.data = content;
-                        egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
-                    };
-                    if (loader.dataFormat == egret.URLLoaderDataFormat.BINARY) {
-                        egret_native.readFileAsync(virtualUrl, promise, "ArrayBuffer");
-                    }
-                    else {
-                        egret_native.readFileAsync(virtualUrl, promise);
-                    }
-                }
-                function download() {
-                    var promise = egret.PromiseObject.create();
-                    promise.onSuccessFunc = onLoadComplete;
-                    promise.onErrorFunc = function () {
-                        egret.Event.dispatchEvent(loader, egret.IOErrorEvent.IO_ERROR);
-                    };
-                    egret_native.download(virtualUrl, virtualUrl, promise);
-                }
-                function onLoadComplete() {
-                    var content;
-                    if (loader.dataFormat == egret.URLLoaderDataFormat.BINARY) {
-                        content = egret_native.readFileSync(virtualUrl, "ArrayBuffer");
-                    }
-                    else {
-                        content = egret_native.readFileSync(virtualUrl);
-                    }
-                    loader.data = content;
-                    egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
-                }
-            };
-            p.getHeaderString = function (request) {
-                var headerObj = {};
+                var httpRequest = new egret.HttpRequest();
+                httpRequest.open(virtualUrl, request.method == egret.URLRequestMethod.POST ? egret.HttpMethod.POST : egret.HttpMethod.GET);
                 var length = request.requestHeaders.length;
                 for (var i = 0; i < length; i++) {
                     var urlRequestHeader = request.requestHeaders[i];
-                    headerObj[urlRequestHeader.name] = urlRequestHeader.value;
+                    httpRequest.setRequestHeader(urlRequestHeader.name, urlRequestHeader.value);
                 }
-                return JSON.stringify(headerObj);
+                httpRequest.addEventListener(egret.Event.COMPLETE, function () {
+                    loader.data = httpRequest.response;
+                    egret.Event.dispatchEvent(loader, egret.Event.COMPLETE);
+                }, this);
+                httpRequest.addEventListener(egret.IOErrorEvent.IO_ERROR, function () {
+                    egret.IOErrorEvent.dispatchIOErrorEvent(loader);
+                }, this);
+                httpRequest.responseType = loader.dataFormat == egret.URLLoaderDataFormat.BINARY ? egret.HttpResponseType.ARRAY_BUFFER : egret.HttpResponseType.TEXT;
+                httpRequest.send(request.data);
             };
             p.loadSound = function (loader) {
                 var self = this;

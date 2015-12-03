@@ -6477,6 +6477,11 @@ var eui;
          * @param value
          */
         p.$setText = function (value) {
+            var promptText = this.$EditableText[0 /* promptText */];
+            if (promptText != value || promptText == null) {
+                this.$isShowPrompt = false;
+                this.textColor = this.$EditableText[1 /* textColorUser */];
+            }
             var result = _super.prototype.$setText.call(this, value);
             eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
             return result;
@@ -6595,6 +6600,9 @@ var eui;
             _super.prototype.$setDisplayAsPassword.call(this, false);
             this.text = values[0 /* promptText */];
         };
+        /**
+         * @private
+         */
         p.$setTextColor = function (value) {
             value = +value | 0;
             this.$EditableText[1 /* textColorUser */] = value;
@@ -6603,6 +6611,9 @@ var eui;
             }
             return true;
         };
+        /**
+         * @private
+         */
         p.$setDisplayAsPassword = function (value) {
             this.$EditableText[2 /* asPassword */] = value;
             if (!this.$isShowPrompt) {
