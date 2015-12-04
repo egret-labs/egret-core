@@ -187,7 +187,7 @@ module egret.web {
          */
         public get position():number {
             if (this.bufferSource) {
-                return Math.floor((Date.now() - this._startTime) / 1000);
+                return Date.now() - this._startTime) / 1000;
             }
             return 0;
         }
