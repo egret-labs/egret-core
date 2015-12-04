@@ -1065,19 +1065,19 @@ var egret;
             if (this.$hasFlags(16 /* InvalidConcatenatedMatrix */)) {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(), matrix);
-                    var values = this.$DisplayObject;
-                    var offsetX = values[12 /* anchorOffsetX */];
-                    var offsetY = values[13 /* anchorOffsetY */];
-                    var rect = this.$scrollRect;
-                    if (rect) {
-                        matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
-                    }
-                    else if (offsetX != 0 || offsetY != 0) {
-                        matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
-                    }
                 }
                 else {
                     matrix.copyFrom(this.$getMatrix());
+                }
+                var values = this.$DisplayObject;
+                var offsetX = values[12 /* anchorOffsetX */];
+                var offsetY = values[13 /* anchorOffsetY */];
+                var rect = this.$scrollRect;
+                if (rect) {
+                    matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
+                }
+                else if (offsetX != 0 || offsetY != 0) {
+                    matrix.$preMultiplyInto(egret.$TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
                 }
                 if (this.$displayList) {
                     this.$displayList.$renderRegion.moved = true;
@@ -11991,6 +11991,7 @@ var egret;
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
     locale_strings[1038] = "XML 格式错误!";
+    locale_strings[1039] = "跨域图片不能获取像素信息!";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";

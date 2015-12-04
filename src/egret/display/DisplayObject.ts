@@ -544,21 +544,22 @@ module egret {
                 if (this.$parent) {
                     this.$parent.$getConcatenatedMatrix().$preMultiplyInto(this.$getMatrix(),
                         matrix);
-                    var values = this.$DisplayObject;
-                    var offsetX = values[Keys.anchorOffsetX];
-                    var offsetY = values[Keys.anchorOffsetY];
-                    var rect = this.$scrollRect;
-                    if (rect) {
-                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
-
-                    }
-                    else if (offsetX != 0 || offsetY != 0) {
-                        matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
-                    }
-
                 } else {
                     matrix.copyFrom(this.$getMatrix());
                 }
+
+                var values = this.$DisplayObject;
+                var offsetX = values[Keys.anchorOffsetX];
+                var offsetY = values[Keys.anchorOffsetY];
+                var rect = this.$scrollRect;
+                if (rect) {
+                    matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -rect.x - offsetX, -rect.y - offsetY), matrix);
+
+                }
+                else if (offsetX != 0 || offsetY != 0) {
+                    matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
+                }
+                
                 if (this.$displayList) {
                     this.$displayList.$renderRegion.moved = true;
                 }
