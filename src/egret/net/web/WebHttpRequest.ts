@@ -150,8 +150,10 @@ module egret.web {
             if (this._withCredentials != null) {
                 this._xhr.withCredentials = this._withCredentials;
             }
-            if (this.header != null) {
-                this._xhr.setRequestHeader(this.header, this.headerValue);
+            if (this.headerObj) {
+                for(var key in this.headerObj) {
+                    this._xhr.setRequestHeader(key, this.headerObj[key]);
+                }
             }
             this._xhr.send(data);
         }
@@ -178,9 +180,7 @@ module egret.web {
             return result ? result : "";
         }
 
-        private header:string;
-        private headerValue:string;
-
+        private headerObj:any;
         /**
          * @private
          * 给指定的HTTP请求头赋值.在这之前,您必须确认已经调用 open() 方法打开了一个url.
@@ -188,8 +188,10 @@ module egret.web {
          * @param value 给指定的请求头赋的值.
          */
         public setRequestHeader(header:string, value:string):void {
-            this.header = header;
-            this.headerValue = value;
+            if(!this.headerObj) {
+                this.headerObj = {};
+            }
+            this.headerObj[header] = value;
         }
 
         /**

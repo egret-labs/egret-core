@@ -314,7 +314,10 @@ module dragonBones {
 		public buildArmature(armatureName:string, fromDragonBonesDataName:string = null, fromTextureAtlasName:string = null, skinName:string = null):Armature{
 			var buildArmatureDataPackage:any = {};
 			this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage);
-			
+			if(fromTextureAtlasName == null)
+			{
+				fromTextureAtlasName = buildArmatureDataPackage.dragonBonesDataName;
+			}
 			var dragonBonesData:DragonBonesData = buildArmatureDataPackage.dragonBonesData;
 			var armatureData:ArmatureData = buildArmatureDataPackage.armatureData;
 			
@@ -337,7 +340,10 @@ module dragonBones {
 		public buildFastArmature(armatureName:string, fromDragonBonesDataName:string = null, fromTextureAtlasName:string = null, skinName:string = null):FastArmature{
 			var buildArmatureDataPackage:BuildArmatureDataPackage = new BuildArmatureDataPackage();
 			this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage);
-			
+			if(fromTextureAtlasName == null)
+			{
+				fromTextureAtlasName = buildArmatureDataPackage.dragonBonesDataName;
+			}
 			var dragonBonesData:DragonBonesData = buildArmatureDataPackage.dragonBonesData;
 			var armatureData:ArmatureData = buildArmatureDataPackage.armatureData;
 			
