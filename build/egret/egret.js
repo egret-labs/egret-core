@@ -2360,7 +2360,13 @@ var egret;
                 var renderTexture = new egret.RenderTexture();
                 renderTexture.drawToTexture(this, rectangle);
                 var context = renderTexture["context"];
-                var data = context.getImageData(0, 0, 1, 1).data;
+                var data;
+                try {
+                    data = context.getImageData(0, 0, 1, 1).data;
+                }
+                catch (e) {
+                    throw new Error(egret.sys.tr(1040));
+                }
                 var result = true;
                 if (data[3] === 0) {
                     result = false;
@@ -2988,14 +2994,26 @@ var egret;
             var displayList = this.$displayList;
             if (displayList) {
                 context = displayList.renderContext;
-                data = context.getImageData(localX - displayList.offsetX, localY - displayList.offsetY, 1, 1).data;
+                try {
+                    data = context.getImageData(localX - displayList.offsetX, localY - displayList.offsetY, 1, 1).data;
+                }
+                catch (e) {
+                    console.log(this.$Bitmap[0 /* bitmapData */]);
+                    throw new Error(egret.sys.tr(1039));
+                }
             }
             else {
-                context = egret.sys.sharedRenderContext;
+                context = egret.sys.hitTestRenderContext;
                 context.surface.width = context.surface.height = 3;
                 context.translate(1 - localX, 1 - localY);
                 this.$render(context);
-                data = context.getImageData(1, 1, 1, 1).data;
+                try {
+                    data = context.getImageData(1, 1, 1, 1).data;
+                }
+                catch (e) {
+                    console.log(this.$Bitmap[0 /* bitmapData */]);
+                    throw new Error(egret.sys.tr(1039));
+                }
             }
             if (data[3] === 0) {
                 return null;
@@ -4180,7 +4198,7 @@ var egret;
             var m = target.$getInvertedConcatenatedMatrix();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
-            var context = egret.sys.sharedRenderContext;
+            var context = egret.sys.hitTestRenderContext;
             context.surface.width = context.surface.height = 3;
             context.translate(1 - localX, 1 - localY);
             this.$renderContext.$render(context, true);
@@ -11889,6 +11907,8 @@ var egret;
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
     locale_strings[1038] = "XML format error!";
+    locale_strings[1039] = "crossOrigin images can not set pixelHitTest  property!";
+    locale_strings[1040] = "hitTestPoint can not detect crossOrigin images! Please check if the display object has crossOrigin elements.";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -12021,6 +12041,8 @@ var egret;
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
     locale_strings[1038] = "XML 格式错误!";
+    locale_strings[1039] = "跨域图片不能设置 pixelHitTest 属性!";
+    locale_strings[1040] = "hitTestPoint 不能对跨域图片进行检测! 请检查该显示对象内是否含有跨域元素";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";

@@ -1993,7 +1993,13 @@ module egret {
                 var renderTexture = new RenderTexture();
                 renderTexture.drawToTexture(this, rectangle);
                 var context = renderTexture["context"];
-                var data:Uint8Array = context.getImageData(0, 0, 1, 1).data;
+                var data:Uint8Array;
+                try {
+                    data = context.getImageData(0, 0, 1, 1).data;
+                }
+                catch (e) {
+                    throw new Error(sys.tr(1040));
+                }
                 var result = true;
                 if (data[3] === 0) {
                     result = false;

@@ -10158,6 +10158,11 @@ declare module egret.sys {
     var sharedRenderContext: sys.RenderContext;
     /**
      * @private
+     * 全局共享的供精确像素检测使用的RenderContext。
+     */
+    var hitTestRenderContext: sys.RenderContext;
+    /**
+     * @private
      * surfaceFactory实例
      */
     var surfaceFactory: SurfaceFactory;

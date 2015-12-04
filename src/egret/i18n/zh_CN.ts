@@ -41,6 +41,8 @@ module egret {
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
     locale_strings[1038] = "XML 格式错误!";
+    locale_strings[1039] = "跨域图片不能设置 pixelHitTest 属性!";
+    locale_strings[1040] = "hitTestPoint 不能对跨域图片进行检测! 请检查该显示对象内是否含有跨域元素";
 
 
     //gui  3000-3099

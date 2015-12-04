@@ -536,14 +536,26 @@ module egret {
             var displayList = this.$displayList;
             if (displayList) {
                 context = displayList.renderContext;
-                data = context.getImageData(localX - displayList.offsetX, localY - displayList.offsetY, 1, 1).data;
+                try {
+                    data = context.getImageData(localX - displayList.offsetX, localY - displayList.offsetY, 1, 1).data;
+                }
+                catch (e) {
+                    console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);
+                    throw new Error(sys.tr(1039));
+                }
             }
             else {
-                context = sys.sharedRenderContext;
+                context = sys.hitTestRenderContext;
                 context.surface.width = context.surface.height = 3;
                 context.translate(1 - localX, 1 - localY);
                 this.$render(context);
-                data = context.getImageData(1, 1, 1, 1).data;
+                try {
+                    data = context.getImageData(1, 1, 1, 1).data;
+                }
+                catch (e) {
+                    console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);
+                    throw new Error(sys.tr(1039));
+                }
             }
             if (data[3] === 0) {
                 return null;

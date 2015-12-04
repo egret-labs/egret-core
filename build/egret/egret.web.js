@@ -2639,6 +2639,7 @@ var egret;
              */
             function CanvasFactory() {
                 egret.sys.sharedRenderContext = this.create().renderContext;
+                egret.sys.hitTestRenderContext = this.create().renderContext;
                 for (var i = 0; i < 3; i++) {
                     surfacePool.push(this.create());
                 }
