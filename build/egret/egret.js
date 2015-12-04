@@ -2710,18 +2710,13 @@ var egret;
          */
         p.$setBitmapData = function (value) {
             var values = this.$Bitmap;
-            if (value == values[0 /* bitmapData */]) {
+            var oldBitmapData = values[0 /* bitmapData */];
+            if (value == oldBitmapData) {
                 return false;
             }
             values[0 /* bitmapData */] = value;
             if (value) {
-                if (value instanceof egret.Texture) {
-                    var texture = value;
-                    this.setImageData(texture._bitmapData, texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.$getTextureWidth(), texture.$getTextureHeight());
-                }
-                else {
-                    this.setImageData(value, 0, 0, value.width, value.height, 0, 0, value.width, value.height);
-                }
+                this.$refreshImageData();
             }
             else {
                 this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -2729,6 +2724,14 @@ var egret;
                 return true;
             }
             if (this.$stage) {
+                if (oldBitmapData) {
+                    if (oldBitmapData instanceof egret.Texture) {
+                        egret.Texture.$addDisplayObject(this, oldBitmapData._bitmapData.hashCode);
+                    }
+                    else {
+                        egret.Texture.$addDisplayObject(this, oldBitmapData.hashCode);
+                    }
+                }
                 if (value instanceof egret.Texture) {
                     egret.Texture.$addDisplayObject(this, value._bitmapData.hashCode);
                 }
@@ -2738,6 +2741,22 @@ var egret;
             }
             this.$invalidateContentBounds();
             return true;
+        };
+        /**
+         * @private
+         */
+        p.$refreshImageData = function () {
+            var values = this.$Bitmap;
+            var bitmapData = values[0 /* bitmapData */];
+            if (bitmapData) {
+                if (bitmapData instanceof egret.Texture) {
+                    var texture = bitmapData;
+                    this.setImageData(texture._bitmapData, texture._bitmapX, texture._bitmapY, texture._bitmapWidth, texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.$getTextureWidth(), texture.$getTextureHeight());
+                }
+                else {
+                    this.setImageData(bitmapData, 0, 0, bitmapData.width, bitmapData.height, 0, 0, bitmapData.width, bitmapData.height);
+                }
+            }
         };
         /**
          * @private
@@ -5922,6 +5941,10 @@ var egret;
             this._textureHeight = textureHeight;
             this._sourceWidth = sourceWidth;
             this._sourceHeight = sourceHeight;
+            //tudo
+            if (this._bitmapData) {
+                Texture.$invalidate(this._bitmapData.hashCode);
+            }
         };
         /**
          * @language en_US
@@ -6035,6 +6058,9 @@ var egret;
             }
             var tempList = Texture._displayList[hashCode];
             for (var i = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    tempList[i].$refreshImageData();
+                }
                 tempList[i].$invalidateContentBounds();
             }
         };
@@ -6139,7 +6165,13 @@ var egret;
             if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                 return false;
             }
-            this.dispose();
+            if (this.rootDisplayList) {
+                egret.sys.DisplayList.release(this.rootDisplayList);
+                this.rootDisplayList = null;
+            }
+            if (this.context) {
+                egret.sys.surfaceFactory.release(this.context.surface);
+            }
             var bounds = clipBounds || displayObject.$getOriginalBounds();
             if (bounds.width == 0 || bounds.height == 0) {
                 return false;
@@ -6188,8 +6220,6 @@ var egret;
             var drawCalls = this.drawDisplayObject(root, this.context, invertMatrix);
             egret.Matrix.release(invertMatrix);
             this._setBitmapData(this.context.surface);
-            //设置纹理参数
-            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
             this.$reset(displayObject);
             this.$displayListMap = {};
             return true;
@@ -11991,7 +12021,6 @@ var egret;
     locale_strings[1036] = "声音已停止，请重新调用 Sound.play() 来播放声音！";
     locale_strings[1037] = "非正确的blob加载！";
     locale_strings[1038] = "XML 格式错误!";
-    locale_strings[1039] = "跨域图片不能获取像素信息!";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";

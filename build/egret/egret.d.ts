@@ -1531,6 +1531,10 @@ declare module egret {
         /**
          * @private
          */
+        $refreshImageData(): void;
+        /**
+         * @private
+         */
         private setImageData(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, width, height);
         /**
          * @private

@@ -4546,7 +4546,14 @@ declare module eui {
          * @platform Web,Native
          */
         prompt: string;
+        /**
+         * @private
+         */
         private $promptColor;
+        /**
+         * @private
+         */
+        private $isFocusIn;
         /**
          * @language en_US
          * The color of the defalut string.
