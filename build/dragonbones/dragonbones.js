@@ -45,7 +45,7 @@ var dragonBones;
          *
          */
         DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.3.0";
+        DragonBones.VERSION = "4.3.3";
         return DragonBones;
     })();
     dragonBones.DragonBones = DragonBones;
@@ -6600,6 +6600,9 @@ var dragonBones;
             if (skinName === void 0) { skinName = null; }
             var buildArmatureDataPackage = {};
             this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage);
+            if (fromTextureAtlasName == null) {
+                fromTextureAtlasName = buildArmatureDataPackage.dragonBonesDataName;
+            }
             var dragonBonesData = buildArmatureDataPackage.dragonBonesData;
             var armatureData = buildArmatureDataPackage.armatureData;
             if (!armatureData) {
@@ -6622,6 +6625,9 @@ var dragonBones;
             if (skinName === void 0) { skinName = null; }
             var buildArmatureDataPackage = new BuildArmatureDataPackage();
             this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage);
+            if (fromTextureAtlasName == null) {
+                fromTextureAtlasName = buildArmatureDataPackage.dragonBonesDataName;
+            }
             var dragonBonesData = buildArmatureDataPackage.dragonBonesData;
             var armatureData = buildArmatureDataPackage.armatureData;
             if (!armatureData) {
@@ -11982,7 +11988,7 @@ var dragonBones;
             var animationData = new dragonBones.AnimationData();
             animationData.name = animationObject[dragonBones.ConstValues.A_NAME];
             animationData.frameRate = frameRate;
-            animationData.duration = Math.round((DataParser.getNumber(animationObject, dragonBones.ConstValues.A_DURATION, 1) || 1) * 1000 / frameRate);
+            animationData.duration = Math.ceil((DataParser.getNumber(animationObject, dragonBones.ConstValues.A_DURATION, 1) || 1) * 1000 / frameRate);
             animationData.playTimes = DataParser.getNumber(animationObject, dragonBones.ConstValues.A_PLAY_TIMES, 1);
             animationData.playTimes = animationData.playTimes != NaN ? animationData.playTimes : 1;
             animationData.fadeTime = DataParser.getNumber(animationObject, dragonBones.ConstValues.A_FADE_IN_TIME, 0) || 0;
@@ -13366,18 +13372,12 @@ var dragonBones;
             if (isNaN(pivotX) || isNaN(pivotY)) {
                 var subTextureFrame = (textureAtlas).getFrame(fullName);
                 if (subTextureFrame != null) {
-                    pivotX = subTextureFrame.width / 2 + subTextureFrame.x;
-                    pivotY = subTextureFrame.height / 2 + subTextureFrame.y;
+                    pivotX = subTextureFrame.width / 2;
+                    pivotY = subTextureFrame.height / 2;
                 }
                 else {
                     pivotX = bitmap.width / 2;
                     pivotY = bitmap.height / 2;
-                }
-            }
-            else {
-                if (subTextureFrame != null) {
-                    pivotX += subTextureFrame.x;
-                    pivotY += subTextureFrame.y;
                 }
             }
             bitmap.anchorOffsetX = pivotX;
@@ -13815,7 +13815,13 @@ var dragonBones;
             if (!result) {
                 var data = this._textureDatas[fullName];
                 if (data) {
-                    result = this.spriteSheet.createTexture(fullName, data.region.x, data.region.y, data.region.width, data.region.height);
+                    var frame = data.frame;
+                    if (frame) {
+                        result = this.spriteSheet.createTexture(fullName, data.region.x, data.region.y, data.region.width, data.region.height, -frame.x, -frame.y, frame.width, frame.height);
+                    }
+                    else {
+                        result = this.spriteSheet.createTexture(fullName, data.region.x, data.region.y, data.region.width, data.region.height);
+                    }
                     if (data.rotated) {
                         EgretTextureAtlas.rotatedDic[fullName] = 1;
                     }

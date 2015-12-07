@@ -16,7 +16,6 @@ module helpModule1 {
         "configs": []
 
     };
-
     export var startserver =
     {
         "command": "startserver",
@@ -69,7 +68,18 @@ module helpModule1 {
         "configs": []
 
     };
-
+    export var clean = {
+        "command": "clean",
+        "desc": help_dict.clean,
+        "parameters": [
+            {
+                "placeholder": "project_name",
+                "optional": "true",
+                "desc": help_dict.clean
+            }
+        ],
+        "configs": []
+    };
     export var create_app =
     {
         "command": "create_app",

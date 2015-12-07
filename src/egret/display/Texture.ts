@@ -238,6 +238,11 @@ module egret {
 
             this._sourceWidth = sourceWidth;
             this._sourceHeight = sourceHeight;
+
+            //tudo
+            if(this._bitmapData) {
+                Texture.$invalidate(this._bitmapData.hashCode);
+            }
         }
 
         /**
@@ -364,6 +369,9 @@ module egret {
             }
             var tempList:Array<DisplayObject> = Texture._displayList[hashCode];
             for (var i:number = 0; i < tempList.length; i++) {
+                if (tempList[i] instanceof egret.Bitmap) {
+                    (<egret.Bitmap>tempList[i]).$refreshImageData();
+                }
                 tempList[i].$invalidateContentBounds();
             }
         }

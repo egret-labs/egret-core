@@ -1531,6 +1531,10 @@ declare module egret {
         /**
          * @private
          */
+        $refreshImageData(): void;
+        /**
+         * @private
+         */
         private setImageData(image, clipX, clipY, clipWidth, clipHeight, offsetX, offsetY, width, height);
         /**
          * @private
@@ -10152,6 +10156,11 @@ declare module egret.sys {
      * 全局共享的RenderContext。通常用于交换缓存，测量文本或创建填充对象。
      */
     var sharedRenderContext: sys.RenderContext;
+    /**
+     * @private
+     * 全局共享的供精确像素检测使用的RenderContext。
+     */
+    var hitTestRenderContext: sys.RenderContext;
     /**
      * @private
      * surfaceFactory实例

@@ -34,6 +34,12 @@ module egret.sys {
      * 全局共享的RenderContext。通常用于交换缓存，测量文本或创建填充对象。
      */
     export var sharedRenderContext:sys.RenderContext;
+
+    /**
+     * @private
+     * 全局共享的供精确像素检测使用的RenderContext。
+     */
+    export var hitTestRenderContext:sys.RenderContext;
     /**
      * @private
      * surfaceFactory实例

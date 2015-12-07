@@ -6433,7 +6433,14 @@ var eui;
              * @private
              */
             this.$isShowPrompt = false;
+            /**
+             * @private
+             */
             this.$promptColor = 0x666666;
+            /**
+             * @private
+             */
+            this.$isFocusIn = false;
             this.initializeUIValues();
             this.type = egret.TextFieldType.INPUT;
             this.$EditableText = {
@@ -6481,6 +6488,13 @@ var eui;
             if (promptText != value || promptText == null) {
                 this.$isShowPrompt = false;
                 this.textColor = this.$EditableText[1 /* textColorUser */];
+            }
+            if (!this.$isFocusIn) {
+                if (value == "" || value == null) {
+                    value = promptText;
+                    this.$isShowPrompt = true;
+                    _super.prototype.$setTextColor.call(this, this.$promptColor);
+                }
             }
             var result = _super.prototype.$setText.call(this, value);
             eui.PropertyEvent.dispatchPropertyEvent(this, eui.PropertyEvent.PROPERTY_CHANGE, "text");
@@ -6573,6 +6587,7 @@ var eui;
          * @private
          */
         p.onfocusOut = function () {
+            this.$isFocusIn = false;
             if (!this.text) {
                 this.showPromptText();
             }
@@ -6581,6 +6596,7 @@ var eui;
          * @private
          */
         p.onfocusIn = function () {
+            this.$isFocusIn = true;
             this.$isShowPrompt = false;
             this.displayAsPassword = this.$EditableText[2 /* asPassword */];
             var values = this.$EditableText;
@@ -12332,7 +12348,7 @@ var eui;
                 return this.$fillColor;
             }
             ,function (value) {
-                if (!value || this.$fillColor == value)
+                if (value == undefined || this.$fillColor == value)
                     return;
                 this.$fillColor = value;
                 this.invalidateDisplayList();

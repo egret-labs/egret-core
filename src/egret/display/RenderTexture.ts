@@ -79,7 +79,13 @@ module egret {
             if (clipBounds && (clipBounds.width == 0 || clipBounds.height==0)){
                 return false;
             }
-            this.dispose();
+            if(this.rootDisplayList) {
+                sys.DisplayList.release(this.rootDisplayList);
+                this.rootDisplayList = null;
+            }
+            if(this.context) {
+                sys.surfaceFactory.release(this.context.surface);
+            }
 
             var bounds = clipBounds || displayObject.$getOriginalBounds();
             if (bounds.width == 0 || bounds.height == 0) {
@@ -135,8 +141,6 @@ module egret {
             Matrix.release(invertMatrix);
 
             this._setBitmapData(this.context.surface);
-            //设置纹理参数
-            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
             this.$reset(displayObject);
             this.$displayListMap = {};
             return true;
