@@ -550,9 +550,14 @@ var egret;
             if (num < 1) {
                 return false;
             }
+            var event;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
+                event = this.frameEvents[self.$nextFrameNum];
+                if (event && event != "") {
+                    egret.MovieClipEvent.dispatchMovieClipEvent(self, egret.MovieClipEvent.FRAME_LABEL, event);
+                }
                 if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(egret.Event.LOOP_COMPLETE);
@@ -596,10 +601,6 @@ var egret;
             var currentFrameNum = this.$currentFrameNum;
             if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
-            }
-            var event = this.frameEvents[currentFrameNum];
-            if (event && event != "") {
-                egret.MovieClipEvent.dispatchMovieClipEvent(this, egret.MovieClipEvent.FRAME_LABEL, event);
             }
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
             this.$invalidateContentBounds();

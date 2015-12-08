@@ -13985,7 +13985,7 @@ var egret;
                     stage.$stageHeight = stageHeight;
                     this.screenDisplayList.setDevicePixelRatio(pixelRatio);
                     this.screenDisplayList.setClipRect(stageWidth, stageHeight);
-                    if (DEBUG && this.stageDisplayList) {
+                    if (this.stageDisplayList) {
                         this.stageDisplayList.setDevicePixelRatio(pixelRatio);
                         this.stageDisplayList.setClipRect(stageWidth, stageHeight);
                     }
