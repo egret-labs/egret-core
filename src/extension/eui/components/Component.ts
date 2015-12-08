@@ -193,14 +193,11 @@ module eui {
                     if (text.charAt(0) == "<") {
                         clazz = EXML.parse(text);
                     }
-                    else if (text.substr(text.length - 5, 5).toLowerCase() == ".exml") {
-                        EXML.load(skinName, this.onExmlLoaded, this, true);
-                        return;
-                    }
                     else{
                         clazz = egret.getDefinitionByName(skinName);
-                        if(!clazz) {
-                            DEBUG && egret.$warn(2203,skinName);
+                        if(!clazz){
+                            EXML.load(skinName, this.onExmlLoaded, this, true);
+                            return;
                         }
                     }
                     if (clazz) {
