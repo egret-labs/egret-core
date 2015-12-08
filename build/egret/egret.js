@@ -5022,7 +5022,12 @@ var egret;
             }
             ,function (value) {
                 this._lineWidth = value;
-                this._maxLineWidth = Math.max(this._maxLineWidth, value);
+                if (!isNaN(value)) {
+                    this._maxLineWidth = Math.max(this._maxLineWidth, value);
+                }
+                else {
+                    this._maxLineWidth = 0;
+                }
                 this.pushCommand(3 /* lineWidth */, arguments);
             }
         );
@@ -5675,7 +5680,7 @@ var egret;
                     map[command.type].apply(context, command.arguments);
                 }
             }
-            if (this._strokeStyle) {
+            if (this._strokeStyle && this._maxLineWidth > 0) {
                 map[15 /* stroke */].apply(context, []);
                 map[10 /* closePath */].apply(context, []);
             }
