@@ -31,49 +31,67 @@ module egret.sys {
 
     /**
      * @private
-     * 文本渲染节点
+     * 圆角矩形
      */
-    export class TextNode extends RenderNode {
-
-        public constructor() {
+    export class RoundedRect implements ShapeData {
+        /**
+         * 构造函数
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         * @param radius 圆角的半径（以像素为单位）。
+         */
+        public constructor(x:number, y:number, width:number, height:number, radius:number) {
             super();
-            this.type = RenderNodeType.TextNode;
+            this.type = ShapeType.RoundedRect;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.radius = radius;
         }
 
         /**
-         * 颜色值
+         * 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
          */
-        public textColor:number = 0xFFFFFF;
-        /**
-         * 描边颜色值
-         */
-        public strokeColor:number = 0x000000;
-        /**
-         * 字号
-         */
-        public size:number = 30;
-        /**
-         * 描边大小
-         */
-        public stroke:number = 0;
-        /**
-         * 是否加粗
-         */
-        public bold:boolean = false;
-        /**
-         * 是否倾斜
-         */
-        public italic:boolean = false;
-        /**
-         * 字体名称
-         */
-        public fontFamily:string = "Arial";
+        public x;
 
         /**
-         * 绘制一行文本
+         * 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
          */
-        public drawText(x:number, y:number, text:string, format:TextFormat):void {
-            this.drawData.push(x, y, text, format);
+        public y;
+
+        /**
+         * 矩形的宽度（以像素为单位）。
+         */
+        public width;
+
+        /**
+         * 矩形的高度（以像素为单位）。
+         */
+        public height;
+
+        /**
+         * 圆角的半径（以像素为单位）。
+         */
+        public radius;
+
+        /**
+         * 图形是否包含指定的坐标点
+         */
+        public contains(x:number, y:number):boolean {
+            if (this.width <= 0 || this.height <= 0) {
+                return false;
+            }
+
+            if (x >= this.x && x <= this.x + this.width) {
+                if (y >= this.y && y <= this.y + this.height) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

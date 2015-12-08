@@ -28,19 +28,47 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
+
     /**
      * @private
-     * 矢量渲染节点
+     * 矢量图样式
      */
-    export class GraphicsNode extends RenderNode {
+    export class GraphicsStyle extends HashObject {
 
-        public constructor() {
+        public constructor(lineWidth:number, lineColor:number, lineAlpha:number,
+                           fillColor:number, fillAlpha:number, fill:boolean) {
             super();
-            this.type = RenderNodeType.GraphicsNode;
+            this.lineWidth = lineWidth;
+            this.lineColor = lineColor;
+            this.lineAlpha = lineAlpha;
+            this.fillColor = fillColor;
+            this.fillAlpha = fillAlpha;
+            this.fill = fill;
         }
 
-        public drawShape(shape:ShapeData, style:GraphicsStyle):void {
-            this.drawData.push(shape, style);
-        }
+        /**
+         * 线条宽度
+         */
+        public lineWidth:number;
+        /**
+         * 线条颜色
+         */
+        public lineColor:number;
+        /**
+         * 线条透明度
+         */
+        public lineAlpha:number;
+        /**
+         * 填充颜色
+         */
+        public fillColor:number;
+        /**
+         * 填充透明度
+         */
+        public fillAlpha:number;
+        /**
+         * 是否填充
+         */
+        public fill:boolean;
     }
 }

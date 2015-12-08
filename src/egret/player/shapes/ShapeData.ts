@@ -30,17 +30,39 @@
 module egret.sys {
     /**
      * @private
-     * 矢量渲染节点
+     * 形状类型
      */
-    export class GraphicsNode extends RenderNode {
+    export const enum ShapeType {
+        /**
+         * 圆形
+         */
+        Circle = 1,
+        /**
+         * 椭圆
+         */
+        Ellipse,
+        /**
+         * 多边形
+         */
+        Polygon,
+        /**
+         * 矩形
+         */
+        Rect,
+        /**
+         * 圆角矩形
+         */
+        RoundedRect
+    }
 
-        public constructor() {
-            super();
-            this.type = RenderNodeType.GraphicsNode;
-        }
-
-        public drawShape(shape:ShapeData, style:GraphicsStyle):void {
-            this.drawData.push(shape, style);
-        }
+    /**
+     * @private
+     * 图形基类
+     */
+    export interface ShapeData {
+        /**
+         * 图形类型
+         */
+        type:number;
     }
 }

@@ -58,11 +58,11 @@ module egret.sys {
     export class RenderNode {
 
         /**
-         * 节点类型
+         * 节点类型..
          */
         public type:number = 0;
         /**
-         * 是否需要重绘的标志.
+         * 是否需要重绘的标志。
          */
         public needRedraw:boolean = false;
         /**

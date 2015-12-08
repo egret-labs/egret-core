@@ -28,19 +28,44 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
+
     /**
      * @private
-     * 矢量渲染节点
+     * 多边形
      */
-    export class GraphicsNode extends RenderNode {
+    export class Polygon implements ShapeData {
 
-        public constructor() {
+        public constructor(points:number[]) {
             super();
-            this.type = RenderNodeType.GraphicsNode;
+            this.type = ShapeType.Polygon;
+            this.points = points;
         }
 
-        public drawShape(shape:ShapeData, style:GraphicsStyle):void {
-            this.drawData.push(shape, style);
+        /**
+         * 多边形路径数据
+         */
+        public points:number[];
+
+        /**
+         * 图形是否包含指定的坐标点
+         */
+        public contains(x:number, y:number):boolean {
+            var inside = false;
+            var points = this.points;
+            var length = points.length / 2;
+            for (var i = 0, j = length - 1; i < length; j = i++) {
+                var xi = points[i * 2];
+                var yi = points[i * 2 + 1];
+                var xj = points[j * 2];
+                var yj = points[j * 2 + 1];
+                var intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+                if (intersect) {
+                    inside = !inside;
+                }
+            }
+
+            return inside;
         }
     }
 }

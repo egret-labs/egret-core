@@ -28,19 +28,51 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
+
     /**
      * @private
-     * 矢量渲染节点
+     * 圆形
      */
-    export class GraphicsNode extends RenderNode {
+    export class Circle implements ShapeData {
 
-        public constructor() {
+        public constructor(x:number, y:number, radius:number) {
             super();
-            this.type = RenderNodeType.GraphicsNode;
+            this.type = ShapeType.Circle;
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
         }
 
-        public drawShape(shape:ShapeData, style:GraphicsStyle):void {
-            this.drawData.push(shape, style);
+        /**
+         * 圆心相对于父显示对象注册点的 x 位置（以像素为单位）。
+         */
+        public x;
+
+        /**
+         * 圆心相对于父显示对象注册点的 y 位置（以像素为单位）。
+         */
+        public y;
+
+        /**
+         * 圆的半径（以像素为单位）。
+         */
+        public radius;
+
+        /**
+         * 图形是否包含指定的坐标点
+         */
+        public contains(x:number, y:number):boolean {
+            var radius = this.radius;
+            if (radius <= 0) {
+                return false;
+            }
+
+            var dx = this.x - x;
+            var dy = this.y - y;
+            var r2 = radius * radius;
+            dx *= dx;
+            dy *= dy;
+            return (dx + dy <= r2);
         }
     }
 }

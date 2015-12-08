@@ -28,19 +28,66 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
+
     /**
      * @private
-     * 矢量渲染节点
+     * 矩形
      */
-    export class GraphicsNode extends RenderNode {
-
-        public constructor() {
+    export class Rect implements ShapeData {
+        /**
+         * 构造函数
+         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * @param width 矩形的宽度（以像素为单位）。
+         * @param height 矩形的高度（以像素为单位）。
+         */
+        public constructor(x:number, y:number, width:number, height:number) {
             super();
-            this.type = RenderNodeType.GraphicsNode;
+            this.type = ShpaeType.Rect;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
         }
 
-        public drawShape(shape:ShapeData, style:GraphicsStyle):void {
-            this.drawData.push(shape, style);
+        /**
+         * 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         */
+        public x;
+
+        /**
+         * 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         */
+        public y;
+
+        /**
+         * 矩形的宽度（以像素为单位）。
+         */
+        public width;
+
+        /**
+         * 矩形的高度（以像素为单位）。
+         */
+        public height;
+
+        /**
+         * 图形是否包含指定的坐标点
+         */
+        public contains(x:number, y:number):boolean {
+            if (this.width <= 0 || this.height <= 0) {
+                return false;
+            }
+
+            if (x >= this.x && x < this.x + this.width) {
+                if (y >= this.y && y < this.y + this.height) {
+                    return true;
+                }
+            }
+
+            return false;
         }
+
     }
+
+
 }
