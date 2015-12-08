@@ -465,9 +465,14 @@ module egret {
             if (num < 1) {
                 return false;
             }
+            var event;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
+                event = this.frameEvents[self.$nextFrameNum];
+                if(event && event!=""){
+                    MovieClipEvent.dispatchMovieClipEvent(self,MovieClipEvent.FRAME_LABEL,event);
+                }
                 if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart>0 && self.$nextFrameNum>self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(Event.LOOP_COMPLETE);
@@ -514,11 +519,6 @@ module egret {
             var currentFrameNum:number = this.$currentFrameNum;
             if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
-            }
-
-            var event = this.frameEvents[currentFrameNum];
-            if(event && event!=""){
-                MovieClipEvent.dispatchMovieClipEvent(this,MovieClipEvent.FRAME_LABEL,event);
             }
 
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
