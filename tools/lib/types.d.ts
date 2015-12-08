@@ -172,8 +172,6 @@ declare module egret {
 
         getModuleReferenceInfo()
 
-        getResourceName()
-
         getPublishType(runtime:string):number;
         getResources():Array<string>;
     }
