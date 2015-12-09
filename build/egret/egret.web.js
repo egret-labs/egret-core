@@ -1821,7 +1821,12 @@ var egret;
                  * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。
                  * 可以设置为"anonymous","use-credentials"或null,设置为其他值将等同于"anonymous"。
                  */
-                this.crossOrigin = null;
+                this._crossOrigin = null;
+                /**
+                 * @private
+                 * 标记crossOrigin有没有被设置过,设置过之后使用设置的属性
+                 */
+                this._hasCrossOriginSet = false;
                 /**
                  * @private
                  */
@@ -1832,6 +1837,15 @@ var egret;
                 this.request = null;
             }
             var d = __define,c=WebImageLoader;p=c.prototype;
+            d(p, "crossOrigin"
+                ,function () {
+                    return this._crossOrigin;
+                }
+                ,function (value) {
+                    this._hasCrossOriginSet = true;
+                    this._crossOrigin = value;
+                }
+            );
             /**
              * @private
              * 启动一次图像加载。注意：若之前已经调用过加载请求，重新调用 load() 将终止先前的请求，并开始新的加载。
@@ -1880,8 +1894,13 @@ var egret;
                 var image = new Image();
                 this.data = null;
                 this.currentImage = image;
-                if (this.crossOrigin) {
-                    image.crossOrigin = this.crossOrigin;
+                if (this._hasCrossOriginSet) {
+                    if (this._crossOrigin) {
+                        image.crossOrigin = this._crossOrigin;
+                    }
+                }
+                else {
+                    image.crossOrigin = WebImageLoader.crossOrigin;
                 }
                 /*else {
                     if (image.hasAttribute("crossOrigin")) {//兼容猎豹
@@ -1947,6 +1966,11 @@ var egret;
                 this.currentImage = null;
                 return image;
             };
+            /**
+             * @private
+             * 指定是否启用跨域资源共享,如果ImageLoader实例有设置过crossOrigin属性将使用设置的属性
+             */
+            WebImageLoader.crossOrigin = null;
             return WebImageLoader;
         })(egret.EventDispatcher);
         web.WebImageLoader = WebImageLoader;

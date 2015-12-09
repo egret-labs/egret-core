@@ -2844,16 +2844,11 @@ var egret;
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();
-                    promise.onSuccessFunc = onLoadComplete;
+                    promise.onSuccessFunc = readFileAsync;
                     promise.onErrorFunc = function () {
                         egret.Event.dispatchEvent(self, egret.IOErrorEvent.IO_ERROR);
                     };
                     egret_native.download(self._url, self._url, promise);
-                }
-                function onLoadComplete() {
-                    var content = egret_native.readFileSync(self._url);
-                    self._response = content;
-                    egret.Event.dispatchEvent(self, egret.Event.COMPLETE);
                 }
             };
             /**
@@ -2957,9 +2952,17 @@ var egret;
                  * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。
                  * 可以设置为"anonymous","use-credentials"或null,设置为其他值将等同于"anonymous"。
                  */
-                this.crossOrigin = null;
+                this._crossOrigin = null;
             }
             var d = __define,c=NativeImageLoader;p=c.prototype;
+            d(p, "crossOrigin"
+                ,function () {
+                    return this._crossOrigin;
+                }
+                ,function (value) {
+                    this._crossOrigin = value;
+                }
+            );
             /**
              * @private
              *
@@ -3012,6 +3015,11 @@ var egret;
             p.isNetUrl = function (url) {
                 return url.indexOf("http://") != -1;
             };
+            /**
+             * @private
+             * 指定是否启用跨域资源共享,如果ImageLoader实例有设置过crossOrigin属性将使用设置的属性
+             */
+            NativeImageLoader.crossOrigin = null;
             return NativeImageLoader;
         })(egret.EventDispatcher);
         native.NativeImageLoader = NativeImageLoader;
