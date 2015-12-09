@@ -163,14 +163,16 @@ module egret {
                 }
             }
             else {
-                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                    self.textValue = self.inputElement.value;
+                window.setTimeout(function () {
+                    if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                        self.textValue = self.inputElement.value;
 
-                    egret.Event.dispatchEvent(self, "updateText", false);
+                        egret.Event.dispatchEvent(self, "updateText", false);
 
-                    this._textfield._getLinesArr();
-                    this.setAreaHeight();
-                }
+                        self._textfield._getLinesArr();
+                        self.setAreaHeight();
+                    }
+                }, 0);
             }
         }
 
