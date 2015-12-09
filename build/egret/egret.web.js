@@ -1900,7 +1900,9 @@ var egret;
                     }
                 }
                 else {
-                    image.crossOrigin = WebImageLoader.crossOrigin;
+                    if (WebImageLoader.crossOrigin) {
+                        image.crossOrigin = WebImageLoader.crossOrigin;
+                    }
                 }
                 /*else {
                     if (image.hasAttribute("crossOrigin")) {//兼容猎豹
