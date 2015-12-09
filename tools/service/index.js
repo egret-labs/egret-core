@@ -84,7 +84,7 @@ function execCommand(command, callback, startServer) {
     if (startServer === void 0) { startServer = true; }
     var options = egret.args;
     var requestUrl = getServiceURL(command);
-    var client = net.connect(exports.LARK_SERVICE_PORT);
+    var client = net.connect(exports.LARK_SERVICE_PORT,"127.0.0.1");
     var ss = new ServiceSocket(client);
     client.on('error', function (e) {
         if (!startServer)
