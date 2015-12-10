@@ -101,11 +101,6 @@
 		"tx":"number",
 		"ty":"number"
 	},
-	"egret.NativeStageText":
-	{
-		"implements":["egret.StageText"],
-		"super":"egret.EventDispatcher"
-	},
 	"egret.Point":
 	{
 		"super":"egret.HashObject",

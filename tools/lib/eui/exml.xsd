@@ -418,23 +418,6 @@
       <xs:attributeGroup ref="egret.Matrix"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.NativeStageText">
-    <xs:attributeGroup ref="egret.EventDispatcher"/>
-  </xs:attributeGroup>
-  <xs:group name="NativeStageText_attributeElement">
-    <xs:choice>
-      <xs:group ref="EventDispatcher_attributeElement"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="NativeStageText">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="NativeStageText_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.NativeStageText"/>
-    </xs:complexType>
-  </xs:element>
   <xs:attributeGroup name="egret.Point">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="x" type="xs:decimal"/>
@@ -1024,6 +1007,7 @@
       <xs:element ref="Sprite"/>
       <xs:element ref="TabBar"/>
       <xs:element ref="TextField"/>
+      <xs:element ref="TextInput"/>
       <xs:element ref="ToggleButton"/>
       <xs:element ref="ToggleSwitch"/>
       <xs:element ref="VScrollBar"/>
@@ -1471,6 +1455,7 @@
       <xs:element ref="ScrollBarBase"/>
       <xs:element ref="Scroller"/>
       <xs:element ref="SliderBase"/>
+      <xs:element ref="TextInput"/>
       <xs:element ref="ToggleButton"/>
       <xs:element ref="ToggleSwitch"/>
       <xs:element ref="VScrollBar"/>
@@ -1758,6 +1743,7 @@
       <xs:element ref="ScrollBarBase"/>
       <xs:element ref="Scroller"/>
       <xs:element ref="SliderBase"/>
+      <xs:element ref="TextInput"/>
       <xs:element ref="ToggleButton"/>
       <xs:element ref="ToggleSwitch"/>
       <xs:element ref="VScrollBar"/>
@@ -1863,6 +1849,47 @@
         <xs:group ref="eui.ICollection"/>
       </xs:choice>
       <xs:attributeGroup ref="eui.TabBar"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="eui.TextInput">
+    <xs:attributeGroup ref="eui.Component"/>
+    <xs:attribute name="displayAsPassword" type="xs:boolean"/>
+    <xs:attribute name="maxChars" type="xs:decimal"/>
+    <xs:attribute name="prompt" type="xs:string"/>
+    <xs:attribute name="promptDisplay" type="xs:string"/>
+    <xs:attribute name="restrict" type="xs:string"/>
+    <xs:attribute name="text" type="xs:string"/>
+    <xs:attribute name="textColor" type="xs:string"/>
+    <xs:attribute name="textDisplay" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:group name="eui.EditableText">
+    <xs:choice>
+      <xs:element ref="EditableText"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="eui.EditableText">
+    <xs:group ref="eui.EditableText"/>
+  </xs:complexType>
+  <xs:group name="TextInput_attributeElement">
+    <xs:choice>
+      <xs:group ref="Component_attributeElement"/>
+      <xs:element name="displayAsPassword" type="boolean"/>
+      <xs:element name="maxChars" type="number"/>
+      <xs:element name="prompt" type="string"/>
+      <xs:element name="promptDisplay" type="eui.Label"/>
+      <xs:element name="restrict" type="string"/>
+      <xs:element name="text" type="string"/>
+      <xs:element name="textColor" type="number"/>
+      <xs:element name="textDisplay" type="eui.EditableText"/>
+    </xs:choice>
+  </xs:group>
+  <xs:element name="TextInput">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:any namespace="##other"/>
+        <xs:group ref="TextInput_attributeElement"/>
+      </xs:choice>
+      <xs:attributeGroup ref="eui.TextInput"/>
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="eui.ColumnAlign">
