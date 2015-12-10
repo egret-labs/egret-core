@@ -255,8 +255,8 @@ module egret {
         /**
          * @language en_US
          * The length of the ByteArray object (in bytes).
-         * If the length is set to be larger than the current length, the right-side zero padding byte array.
-         * If the length is set smaller than the current length, the byte array is truncated.
+                  * If the length is set to be larger than the current length, the right-side zero padding byte array.
+                  * If the length is set smaller than the current length, the byte array is truncated.
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -276,7 +276,7 @@ module egret {
             this.write_position = value;
             var tmp:Uint8Array = new Uint8Array(new ArrayBuffer(value));
             var byteLength:number = this.data.buffer.byteLength;
-            if(byteLength > value) {
+            if (byteLength > value) {
                 this._position = value;
             }
             var length:number = Math.min(byteLength, value);
@@ -697,8 +697,13 @@ module egret {
                 this.validateBuffer(writeLength);
 
                 var tmp_data = new DataView(bytes.buffer);
-                for (var i = offset; i < writeLength + offset; i++) {
-                    this.data.setUint8(this.position++, tmp_data.getUint8(i));
+                var length = writeLength;
+                for (var i = 0; 8 < length; length -= 8, i += 8) {
+                    this.data.setFloat64(this._position, tmp_data.getFloat64(i + offset));
+                    this.position += 8;
+                }
+                for (var j = 0; 0 < length; length--, j++) {
+                    this.data.setUint8(this.position++, tmp_data.getUint8(i + j + offset));
                 }
             }
         }
@@ -822,7 +827,7 @@ module egret {
          * @version Egret 2.5
          * @platform Web,Native
          */
-        public writeUnsignedShort(value: number): void{
+        public writeUnsignedShort(value:number):void {
             this.validateBuffer(ByteArray.SIZE_OF_UINT16);
 
             this.data.setUint16(this.position, value, this.endian == Endian.LITTLE_ENDIAN);
@@ -874,8 +879,8 @@ module egret {
 
 
         /**
-         * 
-         * @returns 
+         *
+         * @returns
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -901,7 +906,7 @@ module egret {
 
         /**
          * @param len
-         * @returns 
+         * @returns
          * @version Egret 2.4
          * @platform Web,Native
          * @private
@@ -978,9 +983,9 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param data 
-         * @returns 
+         *
+         * @param data
+         * @returns
          */
         private decodeUTF8(data:Uint8Array):string {
             var fatal:boolean = false;
@@ -1073,8 +1078,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param code_point 
+         *
+         * @param code_point
          */
         private encoderError(code_point) {
             egret.$error(1026, code_point);
@@ -1082,10 +1087,10 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param fatal 
-         * @param opt_code_point 
-         * @returns 
+         *
+         * @param fatal
+         * @param opt_code_point
+         * @returns
          */
         private decoderError(fatal, opt_code_point?):number {
             if (fatal) {
@@ -1105,10 +1110,10 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param a 
-         * @param min 
-         * @param max 
+         *
+         * @param a
+         * @param min
+         * @param max
          */
         private inRange(a, min, max) {
             return min <= a && a <= max;
@@ -1116,9 +1121,9 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param n 
-         * @param d 
+         *
+         * @param n
+         * @param d
          */
         private div(n, d) {
             return Math.floor(n / d);
@@ -1126,8 +1131,8 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param string 
+         *
+         * @param string
          */
         private stringToCodePoints(string) {
             /** @type {Array.<number>} */

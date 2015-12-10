@@ -107,11 +107,20 @@ module egret {
          */
         public static DEVICE_MOBILE:string = "native";
 
+
+        /**
+         * @private
+         */
+        public static _runtimeType:string;
+
         /**
          * @version Egret 2.4
          * @platform Web,Native
          */
-        public static runtimeType:string;
+        public static get runtimeType():string {
+            egret.$warn(1041);
+            return MainContext._runtimeType;
+        }
         /**
          * @version Egret 2.4
          * @platform Web,Native
@@ -171,7 +180,7 @@ var testRuntimeType1 = function () {
 };
 
 egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext.runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
+egret.MainContext._runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 
 
 delete testDeviceType1;

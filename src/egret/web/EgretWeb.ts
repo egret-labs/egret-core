@@ -59,14 +59,6 @@ module egret.web {
         }
         isRunning = true;
 
-        if (DEBUG) {
-            var language = navigator.language || navigator.browserLanguage || "en_US";
-            language = language.replace("-", "_");
-
-            if (language in egret.$locale_strings)
-                egret.$language = language;
-        }
-
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
         var surfaceFactory = new CanvasFactory();
@@ -151,4 +143,12 @@ module egret.web {
             resizeTimer = window.setTimeout(doResize, 300);
         }
     });
+}
+
+if (DEBUG) {
+    var language = navigator.language || navigator.browserLanguage || "en_US";
+    language = language.replace("-", "_");
+
+    if (language in egret.$locale_strings)
+        egret.$language = language;
 }
