@@ -141,6 +141,8 @@ module egret {
             Matrix.release(invertMatrix);
 
             this._setBitmapData(this.context.surface);
+            //设置纹理参数,todo 优化性能
+            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
             this.$reset(displayObject);
             this.$displayListMap = {};
             return true;

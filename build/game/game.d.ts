@@ -2264,6 +2264,10 @@ declare module egret {
          */
         static DEVICE_MOBILE: string;
         /**
+         * @private
+         */
+        static _runtimeType: string;
+        /**
          * @version Egret 2.4
          * @platform Web,Native
          */

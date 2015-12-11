@@ -137,7 +137,7 @@ var egret;
             this.socket = new egret.ISocket();
             this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
-        var d = __define,c=WebSocket;p=c.prototype;
+        var d = __define,c=WebSocket,p=c.prototype;
         /**
          * @language en_US
          * Connect the socket to the specified host and port number
@@ -441,7 +441,7 @@ var egret;
         return WebSocket;
     })(egret.EventDispatcher);
     egret.WebSocket = WebSocket;
-    egret.registerClass(WebSocket,"egret.WebSocket");
+    egret.registerClass(WebSocket,'egret.WebSocket');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -483,7 +483,7 @@ var egret;
                 this.host = "";
                 this.port = 0;
             }
-            var d = __define,c=NativeSocket;p=c.prototype;
+            var d = __define,c=NativeSocket,p=c.prototype;
             p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
                 this.onConnect = onConnect;
                 this.onClose = onClose;
@@ -535,7 +535,7 @@ var egret;
             return NativeSocket;
         })();
         native.NativeSocket = NativeSocket;
-        egret.registerClass(NativeSocket,"egret.native.NativeSocket",["egret.ISocket"]);
+        egret.registerClass(NativeSocket,'egret.native.NativeSocket',["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
             egret.ISocket = NativeSocket;
         }
@@ -584,7 +584,7 @@ var egret;
                     egret.$error(3100);
                 }
             }
-            var d = __define,c=HTML5WebSocket;p=c.prototype;
+            var d = __define,c=HTML5WebSocket,p=c.prototype;
             p.addCallBacks = function (onConnect, onClose, onSocketData, onError, thisObject) {
                 this.onConnect = onConnect;
                 this.onClose = onClose;
@@ -638,7 +638,7 @@ var egret;
             return HTML5WebSocket;
         })();
         web.HTML5WebSocket = HTML5WebSocket;
-        egret.registerClass(HTML5WebSocket,"egret.web.HTML5WebSocket",["egret.ISocket"]);
+        egret.registerClass(HTML5WebSocket,'egret.web.HTML5WebSocket',["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
             egret.ISocket = HTML5WebSocket;
         }

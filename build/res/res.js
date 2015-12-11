@@ -97,7 +97,7 @@ var RES;
             this.url = url;
             this.type = type;
         }
-        var d = __define,c=ResourceItem;p=c.prototype;
+        var d = __define,c=ResourceItem,p=c.prototype;
         d(p, "loaded"
             /**
              * @language en_US
@@ -261,7 +261,7 @@ var RES;
         return ResourceItem;
     })();
     RES.ResourceItem = ResourceItem;
-    egret.registerClass(ResourceItem,"RES.ResourceItem");
+    egret.registerClass(ResourceItem,'RES.ResourceItem');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -310,7 +310,7 @@ var RES;
             this.groupDic = {};
             RES["configInstance"] = this;
         }
-        var d = __define,c=ResourceConfig;p=c.prototype;
+        var d = __define,c=ResourceConfig,p=c.prototype;
         /**
          * 根据组名获取组加载项列表
          * @method RES.ResourceConfig#getGroupByName
@@ -498,7 +498,7 @@ var RES;
         return ResourceConfig;
     })();
     RES.ResourceConfig = ResourceConfig;
-    egret.registerClass(ResourceConfig,"RES.ResourceConfig");
+    egret.registerClass(ResourceConfig,'RES.ResourceConfig');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -598,7 +598,7 @@ var RES;
              */
             this.queueIndex = 0;
         }
-        var d = __define,c=ResourceLoader;p=c.prototype;
+        var d = __define,c=ResourceLoader,p=c.prototype;
         /**
          * 检查指定的组是否正在加载中
          * @method RES.ResourceLoader#isGroupInLoading
@@ -776,7 +776,7 @@ var RES;
         return ResourceLoader;
     })(egret.EventDispatcher);
     RES.ResourceLoader = ResourceLoader;
-    egret.registerClass(ResourceLoader,"RES.ResourceLoader");
+    egret.registerClass(ResourceLoader,'RES.ResourceLoader');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -899,7 +899,7 @@ var RES;
              */
             this.resItem = null;
         }
-        var d = __define,c=ResourceEvent;p=c.prototype;
+        var d = __define,c=ResourceEvent,p=c.prototype;
         /**
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method RES.ResourceEvent.dispatchResourceEvent
@@ -1006,7 +1006,7 @@ var RES;
         return ResourceEvent;
     })(egret.Event);
     RES.ResourceEvent = ResourceEvent;
-    egret.registerClass(ResourceEvent,"RES.ResourceEvent");
+    egret.registerClass(ResourceEvent,'RES.ResourceEvent');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1049,7 +1049,7 @@ var RES;
             this.resourceConfig = null;
             this.resourceConfig = (RES["configInstance"]);
         }
-        var d = __define,c=AnalyzerBase;p=c.prototype;
+        var d = __define,c=AnalyzerBase,p=c.prototype;
         /**
          * 添加一个二级键名到配置列表。
          * @method RES.ResourceConfig#addSubkey
@@ -1111,7 +1111,7 @@ var RES;
         return AnalyzerBase;
     })(egret.HashObject);
     RES.AnalyzerBase = AnalyzerBase;
-    egret.registerClass(AnalyzerBase,"RES.AnalyzerBase");
+    egret.registerClass(AnalyzerBase,'RES.AnalyzerBase');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1167,7 +1167,7 @@ var RES;
              */
             this.recycler = [];
         }
-        var d = __define,c=BinAnalyzer;p=c.prototype;
+        var d = __define,c=BinAnalyzer,p=c.prototype;
         /**
          * @inheritDoc
          */
@@ -1249,7 +1249,7 @@ var RES;
         return BinAnalyzer;
     })(RES.AnalyzerBase);
     RES.BinAnalyzer = BinAnalyzer;
-    egret.registerClass(BinAnalyzer,"RES.BinAnalyzer");
+    egret.registerClass(BinAnalyzer,'RES.BinAnalyzer');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1304,7 +1304,7 @@ var RES;
              */
             this.recycler = [];
         }
-        var d = __define,c=ImageAnalyzer;p=c.prototype;
+        var d = __define,c=ImageAnalyzer,p=c.prototype;
         /**
          * @inheritDoc
          */
@@ -1393,7 +1393,7 @@ var RES;
         return ImageAnalyzer;
     })(RES.AnalyzerBase);
     RES.ImageAnalyzer = ImageAnalyzer;
-    egret.registerClass(ImageAnalyzer,"RES.ImageAnalyzer");
+    egret.registerClass(ImageAnalyzer,'RES.ImageAnalyzer');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1434,11 +1434,11 @@ var RES;
             _super.call(this);
             this._dataFormat = egret.HttpResponseType.TEXT;
         }
-        var d = __define,c=TextAnalyzer;p=c.prototype;
+        var d = __define,c=TextAnalyzer,p=c.prototype;
         return TextAnalyzer;
     })(RES.BinAnalyzer);
     RES.TextAnalyzer = TextAnalyzer;
-    egret.registerClass(TextAnalyzer,"RES.TextAnalyzer");
+    egret.registerClass(TextAnalyzer,'RES.TextAnalyzer');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1479,7 +1479,7 @@ var RES;
             _super.call(this);
             this._dataFormat = egret.HttpResponseType.TEXT;
         }
-        var d = __define,c=JsonAnalyzer;p=c.prototype;
+        var d = __define,c=JsonAnalyzer,p=c.prototype;
         /**
          * 解析并缓存加载成功的数据
          */
@@ -1499,7 +1499,7 @@ var RES;
         return JsonAnalyzer;
     })(RES.BinAnalyzer);
     RES.JsonAnalyzer = JsonAnalyzer;
-    egret.registerClass(JsonAnalyzer,"RES.JsonAnalyzer");
+    egret.registerClass(JsonAnalyzer,'RES.JsonAnalyzer');
 })(RES || (RES = {}));
 ////////////////////////////////////////////////////////////////////////////////////////
 ////
@@ -1547,7 +1547,7 @@ var RES;
             this.recyclerIamge = [];
             this._dataFormat = egret.HttpResponseType.TEXT;
         }
-        var d = __define,c=SheetAnalyzer;p=c.prototype;
+        var d = __define,c=SheetAnalyzer,p=c.prototype;
         p.getRes = function (name) {
             var res = this.fileDic[name];
             if (!res) {
@@ -1708,7 +1708,7 @@ var RES;
         return SheetAnalyzer;
     })(RES.BinAnalyzer);
     RES.SheetAnalyzer = SheetAnalyzer;
-    egret.registerClass(SheetAnalyzer,"RES.SheetAnalyzer");
+    egret.registerClass(SheetAnalyzer,'RES.SheetAnalyzer');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1748,7 +1748,7 @@ var RES;
         function FontAnalyzer() {
             _super.call(this);
         }
-        var d = __define,c=FontAnalyzer;p=c.prototype;
+        var d = __define,c=FontAnalyzer,p=c.prototype;
         p.analyzeConfig = function (resItem, data) {
             var name = resItem.name;
             var config;
@@ -1807,7 +1807,7 @@ var RES;
         return FontAnalyzer;
     })(RES.SheetAnalyzer);
     RES.FontAnalyzer = FontAnalyzer;
-    egret.registerClass(FontAnalyzer,"RES.FontAnalyzer");
+    egret.registerClass(FontAnalyzer,'RES.FontAnalyzer');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1858,7 +1858,7 @@ var RES;
              */
             this.resItemDic = [];
         }
-        var d = __define,c=SoundAnalyzer;p=c.prototype;
+        var d = __define,c=SoundAnalyzer,p=c.prototype;
         /**
          * @inheritDoc
          */
@@ -1928,7 +1928,7 @@ var RES;
         return SoundAnalyzer;
     })(RES.AnalyzerBase);
     RES.SoundAnalyzer = SoundAnalyzer;
-    egret.registerClass(SoundAnalyzer,"RES.SoundAnalyzer");
+    egret.registerClass(SoundAnalyzer,'RES.SoundAnalyzer');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1969,7 +1969,7 @@ var RES;
             _super.call(this);
             this._dataFormat = egret.HttpResponseType.TEXT;
         }
-        var d = __define,c=XMLAnalyzer;p=c.prototype;
+        var d = __define,c=XMLAnalyzer,p=c.prototype;
         /**
          * 解析并缓存加载成功的数据
          */
@@ -1989,7 +1989,7 @@ var RES;
         return XMLAnalyzer;
     })(RES.BinAnalyzer);
     RES.XMLAnalyzer = XMLAnalyzer;
-    egret.registerClass(XMLAnalyzer,"RES.XMLAnalyzer");
+    egret.registerClass(XMLAnalyzer,'RES.XMLAnalyzer');
 })(RES || (RES = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2063,7 +2063,7 @@ var RES;
                 _super.call(this);
                 this._versionInfo = {};
             }
-            var d = __define,c=Html5VersionController;p=c.prototype;
+            var d = __define,c=Html5VersionController,p=c.prototype;
             p.fetchVersion = function (callback) {
                 callback.onSuccess(null);
                 return;
@@ -2132,7 +2132,7 @@ var RES;
             return Html5VersionController;
         })(egret.EventDispatcher);
         web.Html5VersionController = Html5VersionController;
-        egret.registerClass(Html5VersionController,"RES.web.Html5VersionController",["RES.VersionController","RES.IVersionController"]);
+        egret.registerClass(Html5VersionController,'RES.web.Html5VersionController',["RES.VersionController","RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {
             RES.VersionController = Html5VersionController;
         }
@@ -2179,7 +2179,7 @@ var RES;
                 this._versionPath = "";
                 this._localFileArr = [];
             }
-            var d = __define,c=NativeVersionController;p=c.prototype;
+            var d = __define,c=NativeVersionController,p=c.prototype;
             p.fetchVersion = function (callback) {
                 if (DEBUG) {
                     callback.onSuccess(null);
@@ -2270,7 +2270,7 @@ var RES;
             return NativeVersionController;
         })();
         native.NativeVersionController = NativeVersionController;
-        egret.registerClass(NativeVersionController,"RES.native.NativeVersionController",["RES.VersionController","RES.IVersionController"]);
+        egret.registerClass(NativeVersionController,'RES.native.NativeVersionController',["RES.VersionController","RES.IVersionController"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
             RES.VersionController = NativeVersionController;
         }
@@ -2790,7 +2790,7 @@ var RES;
             this._loadedUrlTypes = {};
             this.init();
         }
-        var d = __define,c=Resource;p=c.prototype;
+        var d = __define,c=Resource,p=c.prototype;
         /**
          * 根据type获取对应的文件解析库
          */
@@ -3274,7 +3274,7 @@ var RES;
         Resource.GROUP_CONFIG = "RES__CONFIG";
         return Resource;
     })(egret.EventDispatcher);
-    egret.registerClass(Resource,"Resource");
+    egret.registerClass(Resource,'Resource');
     /**
      * Resource单例
      */
@@ -3325,7 +3325,7 @@ var RES;
             this.recyclerIamge = [];
             this._dataFormat = egret.HttpResponseType.TEXT;
         }
-        var d = __define,c=AnimationAnalyzer;p=c.prototype;
+        var d = __define,c=AnimationAnalyzer,p=c.prototype;
         /**
          * 一项加载结束
          */
@@ -3458,7 +3458,7 @@ var RES;
         return AnimationAnalyzer;
     })(RES.BinAnalyzer);
     RES.AnimationAnalyzer = AnimationAnalyzer;
-    egret.registerClass(AnimationAnalyzer,"RES.AnimationAnalyzer");
+    egret.registerClass(AnimationAnalyzer,'RES.AnimationAnalyzer');
 })(RES || (RES = {}));
 var egret;
 (function (egret) {
