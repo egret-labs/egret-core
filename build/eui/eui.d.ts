@@ -9431,14 +9431,14 @@ declare module eui {
          */
         promptDisplay: Label;
         /**
-         * @inheritDoc
+         * @copy eui.EditableText#prompt
          *
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
-         * @inheritDoc
+         * @copy eui.EditableText#prompt
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -9446,14 +9446,14 @@ declare module eui {
          */
         prompt: string;
         /**
-         * @inheritDoc
+         * @copy egret.TextField#displayAsPassword
          *
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
-         * @inheritDoc
+         * @copy egret.TextField#displayAsPassword
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -9461,14 +9461,14 @@ declare module eui {
          */
         displayAsPassword: boolean;
         /**
-         * @inheritDoc
+         * @copy egret.TextField#textColor
          *
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
-         * @inheritDoc
+         * @copy egret.TextField#textColor
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -9476,14 +9476,14 @@ declare module eui {
          */
         textColor: number;
         /**
-         * @inheritDoc
+         * @copy egret.TextField#maxChars
          *
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
-         * @inheritDoc
+         * @copy egret.TextField#maxChars
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -9521,14 +9521,14 @@ declare module eui {
          */
         maxHeight: number;
         /**
-         * @inheritDoc
+         * @copy egret.TextField#text
          *
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
-         * @inheritDoc
+         * @copy egret.TextField#text
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -9536,14 +9536,14 @@ declare module eui {
          */
         text: string;
         /**
-         * @inheritDoc
+         * @copy egret.TextField#restrict
          *
          * @version Egret 2.5.7
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
-         * @inheritDoc
+         * @copy egret.TextField#restrict
          *
          * @version Egret 2.5.7
          * @version eui 1.0

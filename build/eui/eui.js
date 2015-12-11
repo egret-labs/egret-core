@@ -13768,7 +13768,7 @@ var eui;
         var d = __define,c=TextInput,p=c.prototype;
         d(p, "prompt"
             /**
-             * @inheritDoc
+             * @copy eui.EditableText#prompt
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13781,7 +13781,7 @@ var eui;
                 return this.$TextInput[0 /* prompt */];
             }
             /**
-             * @inheritDoc
+             * @copy eui.EditableText#prompt
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13798,7 +13798,7 @@ var eui;
         );
         d(p, "displayAsPassword"
             /**
-             * @inheritDoc
+             * @copy egret.TextField#displayAsPassword
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13812,7 +13812,7 @@ var eui;
                 return v ? v : false;
             }
             /**
-             * @inheritDoc
+             * @copy egret.TextField#displayAsPassword
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13828,7 +13828,7 @@ var eui;
         );
         d(p, "textColor"
             /**
-             * @inheritDoc
+             * @copy egret.TextField#textColor
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13841,7 +13841,7 @@ var eui;
                 return this.$TextInput[2 /* textColor */];
             }
             /**
-             * @inheritDoc
+             * @copy egret.TextField#textColor
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13857,7 +13857,7 @@ var eui;
         );
         d(p, "maxChars"
             /**
-             * @inheritDoc
+             * @copy egret.TextField#maxChars
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13871,7 +13871,7 @@ var eui;
                 return v ? v : 0;
             }
             /**
-             * @inheritDoc
+             * @copy egret.TextField#maxChars
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13946,7 +13946,7 @@ var eui;
         );
         d(p, "text"
             /**
-             * @inheritDoc
+             * @copy egret.TextField#text
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13959,7 +13959,7 @@ var eui;
                 return this.$TextInput[6 /* text */];
             }
             /**
-             * @inheritDoc
+             * @copy egret.TextField#text
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13976,7 +13976,7 @@ var eui;
         );
         d(p, "restrict"
             /**
-             * @inheritDoc
+             * @copy egret.TextField#restrict
              *
              * @version Egret 2.5.7
              * @version eui 1.0
@@ -13989,7 +13989,7 @@ var eui;
                 return this.$TextInput[7 /* restrict */];
             }
             /**
-             * @inheritDoc
+             * @copy egret.TextField#restrict
              *
              * @version Egret 2.5.7
              * @version eui 1.0

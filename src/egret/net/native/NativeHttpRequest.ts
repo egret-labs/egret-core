@@ -160,6 +160,9 @@ module egret.native {
                     self._response = content;
                     Event.dispatchEvent(self, Event.COMPLETE);
                 };
+                promise.onErrorFunc = function () {
+                    Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
+                };
                 if (self._responseType == HttpResponseType.ARRAY_BUFFER) {
                     egret_native.readFileAsync(self._url, promise, "ArrayBuffer");
                 }

@@ -2835,6 +2835,9 @@ var egret;
                         self._response = content;
                         egret.Event.dispatchEvent(self, egret.Event.COMPLETE);
                     };
+                    promise.onErrorFunc = function () {
+                        egret.Event.dispatchEvent(self, egret.IOErrorEvent.IO_ERROR);
+                    };
                     if (self._responseType == egret.HttpResponseType.ARRAY_BUFFER) {
                         egret_native.readFileAsync(self._url, promise, "ArrayBuffer");
                     }
