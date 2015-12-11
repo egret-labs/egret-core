@@ -73,7 +73,7 @@ module eui {
         public promptDisplay:Label;
 
         /**
-         * @inheritDoc
+         * @copy eui.EditableText#prompt
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -87,7 +87,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy eui.EditableText#prompt
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -103,7 +103,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#displayAsPassword
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -118,7 +118,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#displayAsPassword
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -133,7 +133,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#textColor
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -147,7 +147,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#textColor
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -162,7 +162,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#maxChars
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -177,7 +177,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#maxChars
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -252,7 +252,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#text
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -266,7 +266,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#text
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -282,7 +282,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#restrict
          *
          * @version Egret 2.5.7
          * @version eui 1.0
@@ -296,7 +296,7 @@ module eui {
         }
 
         /**
-         * @inheritDoc
+         * @copy egret.TextField#restrict
          *
          * @version Egret 2.5.7
          * @version eui 1.0
