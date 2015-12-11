@@ -177,13 +177,14 @@ module egret {
 
             egret_native.EGT_TextInput = function (appendText:string) {
                 if (self._multiline) {//多行文本
+                    self.textValue = appendText;
+                    self.dispatchEvent(new egret.Event("updateText"));
                     if (self.isFinishDown) {
                         self.isFinishDown = false;
-
-                        self.textValue = appendText;
                         self.resetText();
+                        self.dispatchEvent(new egret.Event("blur"));
 
-                        self.dispatchEvent(new egret.Event("updateText"));
+
                     }
                 }
                 else {//单行文本
@@ -203,7 +204,6 @@ module egret {
                 if (self._multiline) {//多行文本
                     self.isFinishDown = true;
                 }
-                self.dispatchEvent(new egret.Event("blur"));
             };
         }
 
