@@ -1,14 +1,45 @@
 module egret {
+    /**
+     * @language en_US
+     * The GradientType class provides values for the type parameter in the beginGradientFill() methods of the egret.Graphics class.
+     *
+     * @see egret.Graphics#beginGradientFill()
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * GradientType 类为 egret.Graphics 类的 beginGradientFill() 方法中的 type 参数提供值。
+     *
+     * @see egret.Graphics#beginGradientFill()
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
     export class GradientType {
         /**
+         * @language en_US
+         * Value used to specify a linear gradient fill.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 用于指定线性渐变填充的值
-         * @method egret.GradientType.LINEAR
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public static LINEAR:string = "linear";
-
         /**
+         * @language en_US
+         * Value used to specify a radial gradient fill.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 用于指定放射状渐变填充的值
-         * @method egret.GradientType.RADIAL
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public static RADIAL:string = "radial";
     }
