@@ -314,10 +314,10 @@ module eui {
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
             }
-            this.addChild(renderer);
             if (values[Keys.itemRendererSkinName]) {
                 this.setItemRenderSkinName(renderer,values[Keys.itemRendererSkinName]);
             }
+            this.addChild(renderer);
             return renderer;
         }
 
