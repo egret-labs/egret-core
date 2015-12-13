@@ -5618,10 +5618,10 @@ var eui;
             if (!egret.is(renderer, "eui.IItemRenderer")) {
                 return null;
             }
-            this.addChild(renderer);
             if (values[13 /* itemRendererSkinName */]) {
                 this.setItemRenderSkinName(renderer, values[13 /* itemRendererSkinName */]);
             }
+            this.addChild(renderer);
             return renderer;
         };
         /**
@@ -8636,8 +8636,13 @@ var eui;
                     return;
                 }
                 this._source = value;
-                this.sourceChanged = true;
-                this.invalidateProperties();
+                if (this.$stage) {
+                    this.parseSource();
+                }
+                else {
+                    this.sourceChanged = true;
+                    this.invalidateProperties();
+                }
             }
         );
         p.$setBitmapData = function (value) {
@@ -8738,6 +8743,9 @@ var eui;
          * @platform Web,Native
          */
         p.createChildren = function () {
+            if (this.sourceChanged) {
+                this.parseSource();
+            }
         };
         /**
          * @copy eui.UIComponent#childrenCreated
