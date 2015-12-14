@@ -266,7 +266,7 @@ module egret.sys {
                 stage.$stageWidth = stageWidth;
                 stage.$stageHeight = stageHeight;
                 this.screenDisplayList.setClipRect(stageWidth, stageHeight);
-                if (DEBUG && this.stageDisplayList) {
+                if (this.stageDisplayList) {
                     this.stageDisplayList.setClipRect(stageWidth, stageHeight);
                 }
                 stage.dispatchEventWith(Event.RESIZE);

@@ -32,6 +32,7 @@ module eui.sys {
     var STATE = "eui.State";
     var ADD_ITEMS = "eui.AddItems";
     var SET_PROPERTY = "eui.SetProperty";
+    var SET_STATEPROPERTY = "eui.SetStateProperty";
     var BINDING_PROPERTY = "eui.Binding.bindProperty";
 
     /**
@@ -42,8 +43,8 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             return "";
@@ -174,8 +175,8 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
 
@@ -390,8 +391,8 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             return this.lines.join("\n");
@@ -422,8 +423,8 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             var indentStr:string = this.getIndent();
@@ -488,8 +489,8 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             if (!this.defaultValue) {
@@ -549,8 +550,8 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             var indentStr:string = this.getIndent(1);
@@ -619,8 +620,8 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             var returnStr:string = "new " + ADD_ITEMS + "(\"" + this.target + "\",\"" + this.property + "\"," + this.position + ",\"" + this.relativeTo + "\")";
@@ -662,15 +663,49 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             return "new " + SET_PROPERTY + "(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
         }
     }
+    export class EXSetStateProperty extends CodeBase {
+        /**
+         * @private
+         */
+        public constructor(target:string, property:string, expression:string) {
+            super();
+            this.target = target;
+            this.property = property;
+            this.expression = expression;
+        }
+        /**
+         * @private
+         * 目标实例名
+         */
+        public target:string;
+        /**
+         * @private
+         * 目标属性名
+         */
+        public property:string;
 
-
+        /**
+         * @private
+         * 绑定表达式
+         */
+        public expression:string;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        public toCode():string {
+            var chain = this.expression.split(".").join("\",\"");
+            return "new " + SET_STATEPROPERTY + "(this, ["+chain+"], this."+this.target+",\""+this.property+"\")";
+        }
+    }
     /**
      * @private
      */
@@ -704,13 +739,12 @@ module eui.sys {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         public toCode():string {
             var chain = this.expression.split(".").join("\",\"");
-            return BINDING_PROPERTY+"(this, [\""+chain+"\"], this."+this.target+",\""+this.property+"\");";
+            return BINDING_PROPERTY+"(this, [\""+chain+"\"], this."+this.target+",\""+this.property+"\")";
         }
     }
-
 }

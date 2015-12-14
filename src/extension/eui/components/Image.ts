@@ -205,8 +205,13 @@ module eui {
                 return;
             }
             this._source = value;
-            this.sourceChanged = true;
-            this.invalidateProperties();
+            if(this.$stage){
+                this.parseSource();
+            }
+            else{
+                this.sourceChanged = true;
+                this.invalidateProperties();
+            }
         }
 
         $setBitmapData(value:egret.Texture):boolean {
@@ -326,7 +331,9 @@ module eui {
          * @platform Web,Native
          */
         protected createChildren():void {
-
+            if (this.sourceChanged) {
+                this.parseSource();
+            }
         }
 
         /**

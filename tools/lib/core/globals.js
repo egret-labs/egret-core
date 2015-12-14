@@ -43,17 +43,18 @@ function getPackageJsonConfig() {
 
 function getLanguageInfo() {
     var i18n = getPackageJsonConfig().i18n;
-    if(!i18n) {
-        i18n = "zh_CN";
-    }
-    else if(i18n == "en") {
-        i18n = "en-US";
+    if(i18n == "en") {
+        i18n = "en_US";
+        require('../../locales/en_US');
     }
     else {
         i18n = "zh_CN";
+        require('../../locales/zh_CN');
     }
     return i18n;
 }
+getLanguageInfo();//引用语言包
+
 
 function compressVersion(v1, v2) {
     var version1Arr = v1.split(".");

@@ -281,11 +281,13 @@ module egret.web {
                 }
             }
             else {
-                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                    self.textValue = self.inputElement.value;
+                window.setTimeout(function () {
+                    if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                        self.textValue = self.inputElement.value;
 
-                    egret.Event.dispatchEvent(self, "updateText", false);
-                }
+                        egret.Event.dispatchEvent(self, "updateText", false);
+                    }
+                }, 0);
             }
         }
 

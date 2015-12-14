@@ -4506,6 +4506,12 @@ declare module eui {
          *
          * @param value
          */
+        $getText(): string;
+        /**
+         * @private
+         *
+         * @param value
+         */
         $setText(value: string): boolean;
         /**
          * @private
@@ -4546,7 +4552,14 @@ declare module eui {
          * @platform Web,Native
          */
         prompt: string;
+        /**
+         * @private
+         */
         private $promptColor;
+        /**
+         * @private
+         */
+        private $isFocusIn;
         /**
          * @language en_US
          * The color of the defalut string.
@@ -9364,6 +9377,233 @@ declare module eui {
         private onViewStackIndexChange(event);
     }
 }
+declare module eui.sys {
+    /**
+     * @private
+     */
+    const enum TextInputKeys {
+        prompt = 0,
+        displayAsPassword = 1,
+        textColor = 2,
+        maxChars = 3,
+        maxWidth = 4,
+        maxHeight = 5,
+        text = 6,
+        restrict = 7,
+    }
+}
+declare module eui {
+    /**
+     * TextInput 是一个文本输入控件，供用户输入和编辑单行统一格式文本
+     */
+    class TextInput extends Component {
+        constructor();
+        /**
+         * @private
+         */
+        $TextInput: Object;
+        /**
+         * @language en_US
+         * [SkinPart] The TextInput display
+         * @skinPart
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * [SkinPart] 实体文本输入组件
+         * @skinPart
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        textDisplay: EditableText;
+        /**
+         * @language zh_CN
+         * [SkinPart] When the property of the text is empty, it will show the defalut string.
+         * @skinPart
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * [SkinPart] 当text属性为空字符串时要显示的文本。
+         * @skinPart
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        promptDisplay: Label;
+        /**
+         * @copy eui.EditableText#prompt
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy eui.EditableText#prompt
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        prompt: string;
+        /**
+         * @copy egret.TextField#displayAsPassword
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#displayAsPassword
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        displayAsPassword: boolean;
+        /**
+         * @copy egret.TextField#textColor
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#textColor
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        textColor: number;
+        /**
+         * @copy egret.TextField#maxChars
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#maxChars
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxChars: number;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxWidth: number;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        maxHeight: number;
+        /**
+         * @copy egret.TextField#text
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#text
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        text: string;
+        /**
+         * @copy egret.TextField#restrict
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#restrict
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        restrict: string;
+        /**
+         * @private
+         */
+        private isFocus;
+        /**
+         * @private
+         * 焦点移入
+         */
+        private focusInHandler(event);
+        /**
+         * @private
+         * 焦点移出
+         */
+        private focusOutHandler(event);
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected getCurrentState(): string;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected partAdded(partName: string, instance: any): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.7
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected partRemoved(partName: string, instance: any): void;
+        /**
+         * @private
+         */
+        private textDisplayAdded();
+        /**
+         * @private
+         */
+        private textDisplayRemoved();
+    }
+}
 declare module eui {
     /**
      * @language en_US
@@ -11730,6 +11970,33 @@ declare module eui.sys {
          */
         toCode(): string;
     }
+    class EXSetStateProperty extends CodeBase {
+        /**
+         * @private
+         */
+        constructor(target: string, property: string, expression: string);
+        /**
+         * @private
+         * 目标实例名
+         */
+        target: string;
+        /**
+         * @private
+         * 目标属性名
+         */
+        property: string;
+        /**
+         * @private
+         * 绑定表达式
+         */
+        expression: string;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        toCode(): string;
+    }
     /**
      * @private
      */
@@ -11950,7 +12217,7 @@ declare module eui.sys {
          * @private
          * 格式化值
          */
-        private formatValue(key, value, node);
+        private formatValue(key, value, node, haveState?, stateCallBack?);
         /**
          * @private
          * 格式化字符串
@@ -14488,6 +14755,105 @@ declare module eui {
          * @inheritDoc
          *
          * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        remove(host: Skin, parent: egret.DisplayObjectContainer): void;
+        /**
+         * @private
+         * 设置属性值
+         */
+        private setPropertyValue(obj, name, value, valueForType);
+        /**
+         * @private
+         * 转成Boolean值
+         */
+        private toBoolean(value);
+    }
+}
+declare module eui {
+    /**
+     * @language en_US
+     * The SetProperty class specifies a property value that is in effect only
+     * during the parent view state.
+     * You use this class in the <code>overrides</code> property of the State class.
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * SetProperty 类指定只在父视图状态期间有效的属性值。可以在 State 类的 overrides 属性中使用该类。
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    class SetStateProperty implements IOverride {
+        /**
+         * @language en_US
+         * Constructor.
+         *
+         * @param target The object whose property is being set.
+         * By default, EUI uses the immediate parent of the State object.
+         * @param name The property to set.
+         * @param value The value of the property in the view state.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个SetProperty实例。
+         *
+         * @param target 要设置其属性的对象。默认情况下，EUI 使用 State 对象的直接父级。
+         * @param name 要设置的属性。
+         * @param value 视图状态中的属性值。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        constructor(host: any, chain: string[], target: any, prop: string);
+        /**
+         * 皮肤对象
+         * @private
+         */
+        private host;
+        /**
+         * 绑定链
+         * @private
+         */
+        private chain;
+        /**
+         * 要绑定的对象
+         * @private
+         */
+        private target;
+        /**
+         * 要绑定对象的属性
+         * @private
+         */
+        private prop;
+        /**
+         * 上一次的数据
+         * @private
+         */
+        private oldValue;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.8
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        apply(host: Skin, parent: egret.DisplayObjectContainer): void;
+        /**
+         * @inheritDoc
+         *
+         * @version Egret 2.5.8
          * @version eui 1.0
          * @platform Web,Native
          */

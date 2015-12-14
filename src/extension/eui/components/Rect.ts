@@ -96,7 +96,7 @@ module eui {
         }
 
         public set fillColor(value: number) {
-            if (!value || this.$fillColor == value)
+            if (value == undefined || this.$fillColor == value)
                 return;
             this.$fillColor = value;
             this.invalidateDisplayList();

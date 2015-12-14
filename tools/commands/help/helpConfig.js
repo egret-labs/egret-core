@@ -62,6 +62,18 @@ var helpModule1;
         "parameters": [],
         "configs": []
     };
+    helpModule1.clean = {
+        "command": "clean",
+        "desc": help_dict.clean,
+        "parameters": [
+            {
+                "placeholder": "project_name",
+                "optional": "true",
+                "desc": help_dict.clean
+            }
+        ],
+        "configs": []
+    };
     helpModule1.create_app = {
         "command": "create_app",
         "desc": help_dict.build0,

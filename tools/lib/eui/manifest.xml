@@ -33,6 +33,7 @@
   <component id="SliderBase" super="eui.Range" show="false" module="eui"/>
   <component id="State" super="egret.HashObject" default="overrides" show="false" module="eui"/>
   <component id="TabBar" super="eui.ListBase" show="true" module="eui"/>
+  <component id="TextInput" super="eui.Component" show="true" module="eui"/>
   <component id="TileLayout" super="eui.LayoutBase" show="false" module="eui"/>
   <component id="ToggleButton" super="eui.Button" state="up,down,disabled,upAndSelected,downAndSelected,disabledAndSelected" show="true" module="eui"/>
   <component id="ToggleSwitch" super="eui.ToggleButton" show="true" module="eui"/>

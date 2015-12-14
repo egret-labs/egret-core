@@ -162,7 +162,7 @@ module egret.web {
          * @inheritDoc
          */
         public get position():number {
-            return Math.floor((Date.now() - this._startTime));
+            return (Date.now() - this._startTime) / 1000;
         }
     }
 }

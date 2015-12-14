@@ -73,6 +73,7 @@ module egret.native {
                 NaSoundChannel.currentPath = this.$url;
                 egret_native.Audio.playBackgroundMusic(this.$url, this.$loops != 1);
             }
+            this._startTime = Date.now();
         }
 
         /**
@@ -122,10 +123,15 @@ module egret.native {
 
         /**
          * @private
+         */
+        private _startTime:number = 0;
+
+        /**
+         * @private
          * @inheritDoc
          */
         public get position():number {
-            return 0;
+            return (Date.now() - this._startTime) / 1000;
         }
     }
 }

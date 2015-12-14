@@ -160,6 +160,9 @@ module egret.native {
                     self._response = content;
                     Event.dispatchEvent(self, Event.COMPLETE);
                 };
+                promise.onErrorFunc = function () {
+                    Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
+                };
                 if (self._responseType == HttpResponseType.ARRAY_BUFFER) {
                     egret_native.readFileAsync(self._url, promise, "ArrayBuffer");
                 }
@@ -170,17 +173,11 @@ module egret.native {
 
             function download() {
                 var promise = PromiseObject.create();
-                promise.onSuccessFunc = onLoadComplete;
+                promise.onSuccessFunc = readFileAsync;
                 promise.onErrorFunc = function () {
                     Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
                 };
                 egret_native.download(self._url, self._url, promise);
-            }
-
-            function onLoadComplete() {
-                var content = egret_native.readFileSync(self._url);
-                self._response = content;
-                Event.dispatchEvent(self, Event.COMPLETE);
             }
         }
 

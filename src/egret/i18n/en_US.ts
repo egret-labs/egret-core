@@ -38,6 +38,9 @@ module egret {
     locale_strings[1036] = "Sound has stopped, please recall Sound.play () to play the sound!";
     locale_strings[1037] = "Non-load the correct blob!";
     locale_strings[1038] = "XML format error!";
+    locale_strings[1039] = "crossOrigin images can not set pixelHitTest  property!";
+    locale_strings[1040] = "hitTestPoint can not detect crossOrigin images! Please check if the display object has crossOrigin elements.";
+    locale_strings[1041] = "egret.MainContext.runtimeType is deprecated, please use egret.Capabilities.runtimeType replace";
 
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";

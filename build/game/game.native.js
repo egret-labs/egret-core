@@ -39,7 +39,7 @@ var egret;
                 _super.call(this);
                 this.urlData = {};
             }
-            var d = __define,c=NativeNetContext;p=c.prototype;
+            var d = __define,c=NativeNetContext,p=c.prototype;
             /**
              * @method egret.HTML5NetContext#proceed
              * @param loader {URLLoader}
@@ -160,7 +160,7 @@ var egret;
             return NativeNetContext;
         })(egret.HashObject);
         native.NativeNetContext = NativeNetContext;
-        egret.registerClass(NativeNetContext,"egret.native.NativeNetContext",["egret.NetContext"]);
+        egret.registerClass(NativeNetContext,'egret.native.NativeNetContext',["egret.NetContext"]);
         egret.NetContext = NativeNetContext;
     })(native = egret.native || (egret.native = {}));
 })(egret || (egret = {}));
