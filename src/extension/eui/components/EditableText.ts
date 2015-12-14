@@ -114,7 +114,18 @@ module eui {
             var result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
-
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $getText():string {
+            var value = super.$getText();
+            if(value == this.$EditableText[sys.EditableTextKeys.promptText]){
+                value = "";
+            }
+            return value;
+        }
         /**
          * @private
          *
