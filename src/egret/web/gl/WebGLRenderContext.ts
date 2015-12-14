@@ -513,7 +513,7 @@ module egret.web {
          * @param x1 终点的 x 轴坐标。
          * @param y1 终点的 y 轴坐标。
          */
-        public createLinearGradient(x0:number, y0:number, x1:number, y1:number):GraphicsGradient {
+        public createLinearGradient(x0:number, y0:number, x1:number, y1:number):CanvasGradient {
             return context2d.createLinearGradient(x0, y0, x1, y1);
         }
 
@@ -527,7 +527,7 @@ module egret.web {
          * @param y1 结束圆形的 y 轴坐标。
          * @param r1 结束圆形的半径。
          */
-        public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):GraphicsGradient {
+        public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient {
             return context2d.createRadialGradient(x0, y0, r0, x1, y1, r1);
         }
 
@@ -646,7 +646,7 @@ module egret.web {
          * @param repetition 指定如何重复图像。
          * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
          */
-        public createPattern(image:BitmapData, repetition:string):GraphicsPattern {
+        public createPattern(image:BitmapData, repetition:string):CanvasPattern {
             return context2d.createPattern(<HTMLImageElement><any>image, repetition);
         }
 

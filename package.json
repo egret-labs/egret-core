@@ -163,6 +163,10 @@
             "platform": "web"
           },
           {
+            "path": "text/web/WebTextMeasurer.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/CanvasFactory.ts",
             "platform": "web"
           },

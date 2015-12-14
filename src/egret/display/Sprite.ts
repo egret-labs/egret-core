@@ -59,8 +59,7 @@ module egret {
         public constructor() {
             super();
             this.$graphics = new Graphics();
-            this.$graphics.$renderContext.$targetDisplay = this;
-            this.$renderNode = new sys.GraphicsNode();
+            this.$graphics.$setTarget(this);
         }
 
         /**
@@ -143,11 +142,5 @@ module egret {
             this.$graphics.$measureContentBounds(bounds);
         }
 
-        /**
-         * @private
-         */
-        $render(context:sys.RenderContext):void {
-            this.$graphics.$render(context);
-        }
     }
 }

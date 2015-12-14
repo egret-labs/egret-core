@@ -327,7 +327,7 @@ module egret.sys {
          * @param x1 终点的 x 轴坐标。
          * @param y1 终点的 y 轴坐标。
          */
-        createLinearGradient(x0:number, y0:number, x1:number, y1:number): GraphicsGradient;
+        createLinearGradient(x0:number, y0:number, x1:number, y1:number): CanvasGradient;
         /**
          * @private
          * 根据参数确定的两个圆的坐标，创建一个放射性渐变。该方法返回一个放射性的 GraphicsGradient。
@@ -338,7 +338,7 @@ module egret.sys {
          * @param y1 结束圆形的 y 轴坐标。
          * @param r1 结束圆形的半径。
          */
-        createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number): GraphicsGradient;
+        createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number): CanvasGradient;
 
         /**
          * @private
@@ -364,7 +364,7 @@ module egret.sys {
          * @param repetition 指定如何重复图像。
          * 可能的值有："repeat" (两个方向重复),"repeat-x" (仅水平方向重复),"repeat-y" (仅垂直方向重复),"no-repeat" (不重复).
          */
-        createPattern(image:BitmapData, repetition:string): GraphicsPattern;
+        createPattern(image:BitmapData, repetition:string): CanvasPattern;
         /**
          * @private
          * 返回一个 ImageData 对象，用来描述canvas区域隐含的像素数据，这个区域通过矩形表示，起始点为(sx, sy)、宽为sw、高为sh。

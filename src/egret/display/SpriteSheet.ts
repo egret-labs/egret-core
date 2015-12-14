@@ -72,7 +72,7 @@ module egret {
          */
         public constructor(texture:Texture) {
             super();
-            this.texture = texture;
+            this.$texture = texture;
 
             this._bitmapX = texture._bitmapX - texture._offsetX;
             this._bitmapY = texture._bitmapY - texture._offsetY;
@@ -92,7 +92,7 @@ module egret {
          * @private
          * 共享的位图数据
          */
-        private texture:Texture;
+        $texture:Texture;
         /**
          * @private
          * 纹理缓存字典
@@ -159,8 +159,8 @@ module egret {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture:Texture = new egret.Texture();
-            texture._bitmapData = this.texture._bitmapData;
-            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.texture._sourceWidth, this.texture._sourceHeight);
+            texture._bitmapData = this.$texture._bitmapData;
+            texture.$initData(this._bitmapX + bitmapX, this._bitmapY + bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, this.$texture._sourceWidth, this.$texture._sourceHeight);
 
             this._textureMap[name] = texture;
             return texture;
@@ -179,8 +179,8 @@ module egret {
          * @platform Web,Native
          */
         public dispose():void {
-            if (this.texture) {
-                this.texture.dispose();
+            if (this.$texture) {
+                this.$texture.dispose();
             }
         }
     }

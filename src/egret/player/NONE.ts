@@ -47,11 +47,6 @@ module egret.sys {
      * @platform Web,Native
      */
     export function getNumber(value:number):number {
-        if (DEBUG) {
-            if (isNaN(value)) {
-                egret.sys.tr(1013);
-            }
-        }
         return +value || 0;
     }
 }

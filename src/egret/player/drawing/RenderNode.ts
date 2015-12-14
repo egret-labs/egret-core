@@ -85,5 +85,11 @@ module egret.sys {
          * 绘制数据
          */
         public drawData:any[] = [];
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        public cleanBeforeRender():void{
+            this.drawData.length = 0;
+        }
     }
 }

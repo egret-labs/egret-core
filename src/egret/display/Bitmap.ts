@@ -456,7 +456,7 @@ module egret {
         /**
          * @private
          */
-        $render(context:sys.RenderContext):void {
+        $render():void {
             var values = this.$Bitmap;
             if (values[sys.BitmapKeys.image]) {
                 var destW:number = !isNaN(values[sys.BitmapKeys.explicitBitmapWidth]) ? values[sys.BitmapKeys.explicitBitmapWidth] : values[sys.BitmapKeys.width];
@@ -522,7 +522,7 @@ module egret {
                 context = sys.sharedRenderContext;
                 context.surface.width = context.surface.height = 3;
                 context.translate(1 - localX, 1 - localY);
-                this.$render(context);
+                this.$render();
                 data = context.getImageData(1, 1, 1, 1).data;
             }
             if (data[3] === 0) {

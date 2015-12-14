@@ -1846,9 +1846,9 @@ module egret {
         $update(bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             var node = this.$renderNode;
-            if(this.$hasFlags(sys.DisplayObjectFlags.InvalidRenderNodes)){
-                node.drawData.length = 0;
-                this.$render(sys.sharedRenderContext);
+            if(this.$displayFlags & sys.DisplayObjectFlags.InvalidRenderNodes){
+                node.cleanBeforeRender();
+                this.$render();
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidRenderNodes);
             }
             node.renderAlpha = this.$getConcatenatedAlpha();
@@ -1906,7 +1906,7 @@ module egret {
          * @private
          * 执行渲染,绘制自身到屏幕
          */
-        $render(context:sys.RenderContext):void {
+        $render():void {
 
         }
 

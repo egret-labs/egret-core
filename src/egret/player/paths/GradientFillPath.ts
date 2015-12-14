@@ -28,62 +28,25 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
-
     /**
      * @private
-     * 椭圆
+     * 渐变填充路径
      */
-    export class Ellipse implements ShapeData {
-        /**
-         * 构造函数
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         * @param width 椭圆的宽度（以像素为单位）。
-         * @param height 椭圆的高度（以像素为单位）。
-         */
-        public constructor(x:number, y:number, width:number, height:number) {
+    export class GradientFillPath extends Path2D {
+
+        public constructor(){
             super();
-            this.type = ShapeType.Ellipse;
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
+            this.type = PathType.GradientFill;
         }
 
-        /**
-         * 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         */
-        public x;
+        public gradientType:string;
 
-        /**
-         * 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         */
-        public y;
+        public colors:number[];
 
-        /**
-         * 椭圆的宽度（以像素为单位）。
-         */
-        public width;
+        public alphas:number[];
 
-        /**
-         * 椭圆的高度（以像素为单位）。
-         */
-        public height;
+        public ratios:number[];
 
-        /**
-         * 图形是否包含指定的坐标点
-         */
-        public contains(x:number, y:number):boolean {
-            if (this.width <= 0 || this.height <= 0) {
-                return false;
-            }
-
-            var normalX = ((x - this.x) / this.width);
-            var normalY = ((y - this.y) / this.height);
-            normalX *= normalX;
-            normalY *= normalY;
-            return (normalX + normalY <= 1);
-        }
-
+        public matrix:Matrix;
     }
 }

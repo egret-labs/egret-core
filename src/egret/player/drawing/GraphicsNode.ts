@@ -39,8 +39,89 @@ module egret.sys {
             this.type = RenderNodeType.GraphicsNode;
         }
 
-        public drawShape(shape:ShapeData, style:GraphicsStyle):void {
-            this.drawData.push(shape, style);
+        /**
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * @param color 填充的颜色
+         * @param alpha 填充的 Alpha 值
+         * @param startX 路径起始点 X
+         * @param startY 路径起始点 Y
+         * @param beforePath 插入在指定的路径命令之前绘制，通常是插入到当前正在绘制的线条路径之前，以确保线条总在填充的上方。
+         */
+        public beginFill(color:number, alpha:number = 1, beforePath?:Path2D):Path2D {
+            var path = new sys.FillPath();
+            path.fillColor = +color || 0;
+            path.fillAlpha = +alpha || 0;
+            if (beforePath) {
+                var index = this.drawData.lastIndexOf(beforePath);
+                this.drawData.splice(index, 0, path);
+            }
+            else {
+                this.drawData.push(path);
+            }
+            return path;
+        }
+
+        /**
+         * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
+         * 调用 clear() 方法会清除填充。
+         * @param type 用于指定要使用哪种渐变类型的 GradientType 类的值：GradientType.LINEAR 或 GradientType.RADIAL。
+         * @param colors 渐变中使用的 RGB 十六进制颜色值的数组（例如，红色为 0xFF0000，蓝色为 0x0000FF，等等）。对于每种颜色，请在 alphas 和 ratios 参数中指定对应值。
+         * @param alphas colors 数组中对应颜色的 alpha 值数组。
+         * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
+         * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         */
+        public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[],
+                                 matrix?:egret.Matrix, beforePath?:Path2D):Path2D {
+            var path = new sys.GradientFillPath();
+            path.gradientType = type;
+            path.colors = colors;
+            path.alphas = alphas;
+            path.ratios = ratios;
+            path.matrix = matrix;
+            if (beforePath) {
+                var index = this.drawData.lastIndexOf(beforePath);
+                this.drawData.splice(index, 0, path);
+            }
+            else {
+                this.drawData.push(path);
+            }
+            return path;
+        }
+
+        /**
+         * 指定一种线条样式以用于随后对 lineTo() 或 drawCircle() 等 Graphics 方法的调用。
+         * @param thickness 一个整数，以点为单位表示线条的粗细，有效值为 0 到 255。如果未指定数字，或者未定义该参数，则不绘制线条。如果传递的值小于 0，则默认值为 0。值 0 表示极细的粗细；最大粗细为 255。如果传递的值大于 255，则默认值为 255。
+         * @param color 线条的十六进制颜色值（例如，红色为 0xFF0000，蓝色为 0x0000FF 等）。如果未指明值，则默认值为 0x000000（黑色）。可选。
+         * @param alpha 表示线条颜色的 Alpha 值的数字；有效值为 0 到 1。如果未指明值，则默认值为 1（纯色）。如果值小于 0，则默认值为 0。如果值大于 1，则默认值为 1。
+         * @param caps 用于指定线条末端处端点类型的 CapsStyle 类的值。默认值：CapsStyle.ROUND
+         * @param joints 指定用于拐角的连接外观的类型。默认值：JointStyle.ROUND
+         * @param miterLimit 用于表示剪切斜接的极限值的数字。
+         */
+        public lineStyle(thickness?:number, color?:number, alpha:number = 1, caps?:string,
+                         joints?:string, miterLimit:number = 3):Path2D {
+            var path = new StrokePath();
+            path.lineWidth = +thickness || 0;
+            path.lineColor = +color || 0;
+            path.lineAlpha = +alpha || 0;
+            path.caps = caps;
+            path.joints = joints;
+            path.miterLimit = +miterLimit || 0;
+            this.drawData.push(path);
+            return path;
+        }
+
+        /**
+         * 清空所有缓存的绘制数据
+         */
+        public clear():void {
+            this.drawData.length = 0;
+        }
+
+        /**
+         * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
+         */
+        public cleanBeforeRender():void {
+
         }
     }
 }

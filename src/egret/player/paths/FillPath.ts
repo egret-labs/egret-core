@@ -31,67 +31,22 @@ module egret.sys {
 
     /**
      * @private
-     * 圆角矩形
+     * 填充路径
      */
-    export class RoundedRect implements ShapeData {
-        /**
-         * 构造函数
-         * @param x 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
-         * @param y 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
-         * @param width 矩形的宽度（以像素为单位）。
-         * @param height 矩形的高度（以像素为单位）。
-         * @param radius 圆角的半径（以像素为单位）。
-         */
-        public constructor(x:number, y:number, width:number, height:number, radius:number) {
+    export class FillPath extends Path2D {
+
+        public constructor(){
             super();
-            this.type = ShapeType.RoundedRect;
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            this.radius = radius;
+            this.type = PathType.Fill;
         }
 
         /**
-         * 一个表示相对于父显示对象注册点的水平位置的数字（以像素为单位）。
+         * 填充颜色
          */
-        public x;
-
+        public fillColor:number;
         /**
-         * 一个表示相对于父显示对象注册点的垂直位置的数字（以像素为单位）。
+         * 填充透明度
          */
-        public y;
-
-        /**
-         * 矩形的宽度（以像素为单位）。
-         */
-        public width;
-
-        /**
-         * 矩形的高度（以像素为单位）。
-         */
-        public height;
-
-        /**
-         * 圆角的半径（以像素为单位）。
-         */
-        public radius;
-
-        /**
-         * 图形是否包含指定的坐标点
-         */
-        public contains(x:number, y:number):boolean {
-            if (this.width <= 0 || this.height <= 0) {
-                return false;
-            }
-
-            if (x >= this.x && x <= this.x + this.width) {
-                if (y >= this.y && y <= this.y + this.height) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        public fillAlpha:number;
     }
 }
