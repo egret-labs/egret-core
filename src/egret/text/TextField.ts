@@ -465,19 +465,6 @@ module egret {
         }
 
         /**
-         * @private
-         * 获取字体信息的字符串形式。
-         */
-        private getFontString():string {
-            var values = this.$TextField;
-            if (values[sys.TextKeys.fontStringChanged]) {
-                values[sys.TextKeys.fontStringChanged] = false;
-                values[sys.TextKeys.fontString] = sys.toFontString(this);
-            }
-            return values[sys.TextKeys.fontString];
-        }
-
-        /**
          * @language en_US
          * Horizontal alignment of text.
          * @default：egret.HorizontalAlign.LEFT
@@ -606,7 +593,6 @@ module egret {
                 return false;
             }
             values[sys.TextKeys.textColor] = value;
-            values[sys.TextKeys.textColorString] = toColorString(value);
             if (this.inputUtils) {
                 this.inputUtils._setColor(this.$TextField[sys.TextKeys.textColor]);
             }
@@ -1974,25 +1960,3 @@ module egret {
         egret.$markReadOnly(TextField, "textHeight");
     }
 }
-
-
-module egret.sys {
-
-    /**
-     * @private
-     * 返回格式化的字体样式文本
-     */
-    export function toFontString(style:{fontFamily?:string;fontSize?:number;bold?:boolean;italic?:boolean}):string {
-        var font = "";
-        if (style.italic)
-            font += "italic ";
-        if (style.bold)
-            font += "bold ";
-        font += (style.fontSize || 12) + "px ";
-        font += (style.fontFamily || "sans-serif");
-        return font;
-    }
-
-
-}
-
