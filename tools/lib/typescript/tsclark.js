@@ -33215,7 +33215,7 @@ var ts;
                 writeLine();
                 write('var d = __define,c=');
                 emitJavaScriptWorker(node.name);
-                write(';p=c.prototype;');
+                write(',p=c.prototype;');
                 ts.forEach(node.members, function (member) {
                     if (member.kind === 191 /* SemicolonClassElement */) {
                         writeLine();
@@ -33706,7 +33706,7 @@ var ts;
                 writeLine();
                 write('egret.registerClass(');
                 emit(node.name);
-                write(',"' + fullName + '"');
+                write(',\'' + fullName + '\'');
                 var interfacesArray = Object.keys(interfaces);
                 if (interfacesArray.length > 0) {
                     write(',');

@@ -50,7 +50,7 @@ var egret;
         function Ease() {
             egret.$error(1014);
         }
-        var d = __define,c=Ease;p=c.prototype;
+        var d = __define,c=Ease,p=c.prototype;
         /**
          * @language en_US
          * get.See example.
@@ -638,7 +638,7 @@ var egret;
         return Ease;
     })();
     egret.Ease = Ease;
-    egret.registerClass(Ease,"egret.Ease");
+    egret.registerClass(Ease,'egret.Ease');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -754,7 +754,7 @@ var egret;
             this.passive = false;
             this.initialize(target, props, pluginData);
         }
-        var d = __define,c=Tween;p=c.prototype;
+        var d = __define,c=Tween,p=c.prototype;
         /**
          * @language en_US
          * Activate an object and add a Tween animation to the object
@@ -1421,5 +1421,5 @@ var egret;
         return Tween;
     })(egret.EventDispatcher);
     egret.Tween = Tween;
-    egret.registerClass(Tween,"egret.Tween");
+    egret.registerClass(Tween,'egret.Tween');
 })(egret || (egret = {}));

@@ -114,7 +114,18 @@ module eui {
             var result2: boolean = UIImpl.prototype.$setHeight.call(this, value);
             return result1 && result2;
         }
-
+        /**
+         * @private
+         *
+         * @param value
+         */
+        $getText():string {
+            var value = super.$getText();
+            if(value == this.$EditableText[sys.EditableTextKeys.promptText]){
+                value = "";
+            }
+            return value;
+        }
         /**
          * @private
          *
@@ -149,7 +160,7 @@ module eui {
          * @param nestLevel
          */
         public $onAddToStage(stage: egret.Stage, nestLevel: number): void {
-            super.$onAddToStage(stage, nestLevel);
+            sys.UIComponentImpl.prototype["$onAddToStage"].call(this,stage, nestLevel);
             this.addEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.addEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }
@@ -158,7 +169,7 @@ module eui {
          *
          */
         public $onRemoveFromStage(): void {
-            super.$onRemoveFromStage();
+            sys.UIComponentImpl.prototype["$onRemoveFromStage"].call(this);
             this.removeEventListener(egret.FocusEvent.FOCUS_IN, this.onfocusIn, this);
             this.removeEventListener(egret.FocusEvent.FOCUS_OUT, this.onfocusOut, this);
         }

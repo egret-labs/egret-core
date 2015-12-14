@@ -414,23 +414,6 @@
       <xs:attributeGroup ref="egret.Matrix"/>
     </xs:complexType>
   </xs:element>
-  <xs:attributeGroup name="egret.NativeStageText">
-    <xs:attributeGroup ref="egret.EventDispatcher"/>
-  </xs:attributeGroup>
-  <xs:group name="NativeStageText_attributeElement">
-    <xs:choice>
-      <xs:group ref="EventDispatcher_attributeElement"/>
-    </xs:choice>
-  </xs:group>
-  <xs:element name="NativeStageText">
-    <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:any namespace="##other"/>
-        <xs:group ref="NativeStageText_attributeElement"/>
-      </xs:choice>
-      <xs:attributeGroup ref="egret.NativeStageText"/>
-    </xs:complexType>
-  </xs:element>
   <xs:attributeGroup name="egret.Point">
     <xs:attributeGroup ref="egret.HashObject"/>
     <xs:attribute name="x" type="xs:decimal"/>
