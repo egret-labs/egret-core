@@ -130,12 +130,7 @@ module egret {
 
             var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
-                if (bitmapData instanceof Texture) {
-                    Texture.$addDisplayObject(this, bitmapData._bitmapData.hashCode);
-                }
-                else {
-                    Texture.$addDisplayObject(this, bitmapData.hashCode);
-                }
+                Texture.$addDisplayObject(this, bitmapData);
             }
         }
 
@@ -148,12 +143,7 @@ module egret {
 
             var bitmapData = this.$Bitmap[sys.BitmapKeys.bitmapData];
             if (bitmapData) {
-                if (bitmapData instanceof Texture) {
-                    Texture.$removeDisplayObject(this, bitmapData._bitmapData.hashCode);
-                }
-                else {
-                    Texture.$removeDisplayObject(this, bitmapData.hashCode);
-                }
+                Texture.$removeDisplayObject(this, bitmapData);
             }
         }
 
@@ -234,19 +224,9 @@ module egret {
 
             if (this.$stage) {
                 if(oldBitmapData) {
-                    if (oldBitmapData instanceof Texture) {
-                        Texture.$addDisplayObject(this, oldBitmapData._bitmapData.hashCode);
-                    }
-                    else {
-                        Texture.$addDisplayObject(this, oldBitmapData.hashCode);
-                    }
+                    Texture.$removeDisplayObject(this, oldBitmapData);
                 }
-                if (value instanceof Texture) {
-                    Texture.$addDisplayObject(this, value._bitmapData.hashCode);
-                }
-                else {
-                    Texture.$addDisplayObject(this, value.hashCode);
-                }
+                Texture.$addDisplayObject(this, value);
             }
 
             this.$invalidateContentBounds();

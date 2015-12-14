@@ -719,7 +719,7 @@ var egret;
                  * @inheritDoc
                  */
                 ,function () {
-                    return Math.floor((Date.now() - this._startTime));
+                    return (Date.now() - this._startTime) / 1000;
                 }
             );
             return QQSoundChannel;
@@ -1078,7 +1078,7 @@ var egret;
                  */
                 ,function () {
                     if (this.bufferSource) {
-                        return (Date.now() - this._startTime) / 1000;
+                        return (Date.now() - this._startTime) / 1000 + this.$startTime;
                     }
                     return 0;
                 }

@@ -2247,6 +2247,10 @@ var egret;
                 this.$startTime = 0;
                 //声音是否已经播放完成
                 this.isStopped = false;
+                /**
+                 * @private
+                 */
+                this._startTime = 0;
             }
             var d = __define,c=NaSoundChannel,p=c.prototype;
             p.$play = function () {
@@ -2258,6 +2262,7 @@ var egret;
                     NaSoundChannel.currentPath = this.$url;
                     egret_native.Audio.playBackgroundMusic(this.$url, this.$loops != 1);
                 }
+                this._startTime = Date.now();
             };
             /**
              * @private
@@ -2309,7 +2314,7 @@ var egret;
                  * @inheritDoc
                  */
                 ,function () {
-                    return 0;
+                    return (Date.now() - this._startTime) / 1000;
                 }
             );
             return NaSoundChannel;

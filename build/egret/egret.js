@@ -2631,12 +2631,7 @@ var egret;
             _super.prototype.$onAddToStage.call(this, stage, nestLevel);
             var bitmapData = this.$Bitmap[0 /* bitmapData */];
             if (bitmapData) {
-                if (bitmapData instanceof egret.Texture) {
-                    egret.Texture.$addDisplayObject(this, bitmapData._bitmapData.hashCode);
-                }
-                else {
-                    egret.Texture.$addDisplayObject(this, bitmapData.hashCode);
-                }
+                egret.Texture.$addDisplayObject(this, bitmapData);
             }
         };
         /**
@@ -2647,12 +2642,7 @@ var egret;
             _super.prototype.$onRemoveFromStage.call(this);
             var bitmapData = this.$Bitmap[0 /* bitmapData */];
             if (bitmapData) {
-                if (bitmapData instanceof egret.Texture) {
-                    egret.Texture.$removeDisplayObject(this, bitmapData._bitmapData.hashCode);
-                }
-                else {
-                    egret.Texture.$removeDisplayObject(this, bitmapData.hashCode);
-                }
+                egret.Texture.$removeDisplayObject(this, bitmapData);
             }
         };
         d(p, "bitmapData"
@@ -2731,19 +2721,9 @@ var egret;
             }
             if (this.$stage) {
                 if (oldBitmapData) {
-                    if (oldBitmapData instanceof egret.Texture) {
-                        egret.Texture.$addDisplayObject(this, oldBitmapData._bitmapData.hashCode);
-                    }
-                    else {
-                        egret.Texture.$addDisplayObject(this, oldBitmapData.hashCode);
-                    }
+                    egret.Texture.$removeDisplayObject(this, oldBitmapData);
                 }
-                if (value instanceof egret.Texture) {
-                    egret.Texture.$addDisplayObject(this, value._bitmapData.hashCode);
-                }
-                else {
-                    egret.Texture.$addDisplayObject(this, value.hashCode);
-                }
+                egret.Texture.$addDisplayObject(this, value);
             }
             this.$invalidateContentBounds();
             return true;
@@ -5962,10 +5942,8 @@ var egret;
             this._textureHeight = textureHeight;
             this._sourceWidth = sourceWidth;
             this._sourceHeight = sourceHeight;
-            //tudo
-            if (this._bitmapData) {
-                Texture.$invalidate(this._bitmapData.hashCode);
-            }
+            //todo
+            Texture.$invalidate(this);
         };
         /**
          * @language en_US
@@ -6045,13 +6023,24 @@ var egret;
          */
         p.dispose = function () {
             if (this._bitmapData) {
-                Texture.$dispose(this._bitmapData.hashCode);
+                Texture.$dispose(this);
                 //console.log("dispose Texture");
                 this._bitmapData = null;
             }
         };
-        Texture.$addDisplayObject = function (displayObject, bitmapDataHashCode) {
-            var hashCode = bitmapDataHashCode;
+        Texture.$addDisplayObject = function (displayObject, bitmapData) {
+            var hashCode;
+            if (bitmapData instanceof Texture) {
+                if (bitmapData._bitmapData) {
+                    hashCode = bitmapData._bitmapData.hashCode;
+                }
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
             if (!Texture._displayList[hashCode]) {
                 Texture._displayList[hashCode] = [displayObject];
                 return;
@@ -6061,8 +6050,19 @@ var egret;
                 tempList.push(displayObject);
             }
         };
-        Texture.$removeDisplayObject = function (displayObject, bitmapDataHashCode) {
-            var hashCode = bitmapDataHashCode;
+        Texture.$removeDisplayObject = function (displayObject, bitmapData) {
+            var hashCode;
+            if (bitmapData instanceof Texture) {
+                if (bitmapData._bitmapData) {
+                    hashCode = bitmapData._bitmapData.hashCode;
+                }
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
             if (!Texture._displayList[hashCode]) {
                 return;
             }
@@ -6072,8 +6072,19 @@ var egret;
                 tempList.splice(index);
             }
         };
-        Texture.$invalidate = function (bitmapDataHashCode) {
-            var hashCode = bitmapDataHashCode;
+        Texture.$invalidate = function (bitmapData) {
+            var hashCode;
+            if (bitmapData instanceof Texture) {
+                if (bitmapData._bitmapData) {
+                    hashCode = bitmapData._bitmapData.hashCode;
+                }
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
             if (!Texture._displayList[hashCode]) {
                 return;
             }
@@ -6085,8 +6096,19 @@ var egret;
                 tempList[i].$invalidateContentBounds();
             }
         };
-        Texture.$dispose = function (bitmapDataHashCode) {
-            var hashCode = bitmapDataHashCode;
+        Texture.$dispose = function (bitmapData) {
+            var hashCode;
+            if (bitmapData instanceof Texture) {
+                if (bitmapData._bitmapData) {
+                    hashCode = bitmapData._bitmapData.hashCode;
+                }
+            }
+            else {
+                hashCode = bitmapData.hashCode;
+            }
+            if (!hashCode) {
+                return;
+            }
             if (!Texture._displayList[hashCode]) {
                 return;
             }

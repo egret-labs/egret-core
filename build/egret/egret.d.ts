@@ -3520,10 +3520,10 @@ declare module egret {
          */
         dispose(): void;
         private static _displayList;
-        static $addDisplayObject(displayObject: DisplayObject, bitmapDataHashCode: number): void;
-        static $removeDisplayObject(displayObject: DisplayObject, bitmapDataHashCode: number): void;
-        static $invalidate(bitmapDataHashCode: number): void;
-        static $dispose(bitmapDataHashCode: number): void;
+        static $addDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void;
+        static $removeDisplayObject(displayObject: DisplayObject, bitmapData: BitmapData | Texture): void;
+        static $invalidate(bitmapData: BitmapData | Texture): void;
+        static $dispose(bitmapData: BitmapData | Texture): void;
     }
 }
 declare module egret {
