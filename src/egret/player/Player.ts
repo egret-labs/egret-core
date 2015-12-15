@@ -526,7 +526,7 @@ module egret.sys {
             this.costDirty += costDirty;
             this.costRender += costRender;
             this.costTicker += costTicker;
-            if (this.totalTime > 500) {
+            if (this.totalTime >= 1000) {
 
                 var lastFPS = Math.round(this.totalTick * 1000 / this.totalTime);
                 var lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
