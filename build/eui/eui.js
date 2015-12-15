@@ -3443,11 +3443,12 @@ var eui;
         p.$setTouchChildren = function (value) {
             value = !!value;
             var values = this.$Component;
+            values[6 /* explicitTouchChildren */] = value;
             if (values[3 /* enabled */]) {
+                values[6 /* explicitTouchChildren */] = value;
                 return _super.prototype.$setTouchChildren.call(this, value);
             }
             else {
-                values[6 /* explicitTouchChildren */] = value;
                 return true;
             }
         };
@@ -3459,11 +3460,11 @@ var eui;
         p.$setTouchEnabled = function (value) {
             value = !!value;
             var values = this.$Component;
+            values[7 /* explicitTouchEnabled */] = value;
             if (values[3 /* enabled */]) {
                 return _super.prototype.$setTouchEnabled.call(this, value);
             }
             else {
-                values[7 /* explicitTouchEnabled */] = value;
                 return true;
             }
         };
