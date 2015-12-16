@@ -3299,6 +3299,7 @@ var egret;
                 this.fontChanged = false;
                 this._isLetterSpacingChanged = false;
                 this._letterSpacing = 0;
+                this._isSmoothingChanged = false;
                 this._isLineSpacingChanged = false;
                 this._lineSpacing = 0;
                 this.createChildrenCalled = false;
@@ -3326,6 +3327,7 @@ var egret;
                  * @private
                  */
                 this._paddingBottom = NaN;
+                this._smoothing = egret.Bitmap.defaultSmoothing;
                 this.addEventListener(gui.UIEvent.UPDATE_COMPLETE, this.updateCompleteHandler, this);
             }
             var d = __define,c=BitmapLabel,p=c.prototype;
@@ -3392,6 +3394,24 @@ var egret;
             p._setLetterSpacing = function (value) {
                 this._letterSpacing = value;
                 this._isLetterSpacingChanged = true;
+                this.invalidateProperties();
+                this.invalidateSize();
+                this.invalidateDisplayList();
+            };
+            d(p, "smoothing"
+                ,function () {
+                    return this._smoothing;
+                }
+                /**
+                 * 字符之间的距离
+                 */
+                ,function (value) {
+                    this._setSmoothing(value);
+                }
+            );
+            p._setSmoothing = function (value) {
+                this._smoothing = value;
+                this._isSmoothingChanged = true;
                 this.invalidateProperties();
                 this.invalidateSize();
                 this.invalidateDisplayList();
@@ -3661,9 +3681,11 @@ var egret;
                 this._bitmapText.text = this._text;
                 this._bitmapText.letterSpacing = this._letterSpacing;
                 this._bitmapText.lineSpacing = this._lineSpacing;
+                this._bitmapText.smoothing = this._smoothing;
                 this._textChanged = false;
                 this._isLetterSpacingChanged = false;
                 this._isLineSpacingChanged = false;
+                this._isSmoothingChanged = false;
                 this._addToDisplayList(this._bitmapText);
             };
             /**
@@ -3685,6 +3707,10 @@ var egret;
                 if (this._isLineSpacingChanged) {
                     this._bitmapText.lineSpacing = this._lineSpacing;
                     this._isLineSpacingChanged = false;
+                }
+                if (this._isSmoothingChanged) {
+                    this._bitmapText.smoothing = this._smoothing;
+                    this._isSmoothingChanged = false;
                 }
             };
             return BitmapLabel;
@@ -16654,10 +16680,7 @@ var egret;
                  * 是自动否缩放content对象，以符合UIAsset的尺寸。默认值true。
                  */
                 this.autoScale = true;
-                /**
-                 * @private
-                 */
-                this.$smoothing = true;
+                this.$smoothing = egret.Bitmap.defaultSmoothing;
                 this.touchChildren = false;
                 if (source) {
                     this.source = source;
@@ -16824,14 +16847,12 @@ var egret;
                 /**
                  * @language en_US
                  * Whether or not the bitmap is smoothed when scaled.
-                 * @default true。
                  * @version Egret 2.4
                  * @platform Web
                  */
                 /**
                  * @language zh_CN
                  * 控制在缩放时是否对位图进行平滑处理。
-                 * @default true。
                  * @version Egret 2.4
                  * @platform Web
                  */

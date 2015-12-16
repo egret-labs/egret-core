@@ -1591,20 +1591,31 @@ declare module egret {
         fillMode: string;
         $setFillMode(value: string): boolean;
         /**
-         * @private
+         * @language en_US
+         * The default value of whether or not is smoothed when scaled.
+         * When object such as Bitmap is created,smoothing property will be set to this value.
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
          */
-        $smoothing: boolean;
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理的默认值。
+         * 在 Bitmap 等对象创建时,smoothing 属性会被设置为该值。
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        static defaultSmoothing: boolean;
         /**
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
-         * @default true。
          * @version Egret 2.4
          * @platform Web
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
-         * @default true。
          * @version Egret 2.4
          * @platform Web
          */
@@ -11055,6 +11066,10 @@ declare module egret.sys {
          * @private
          */
         verticalAlign = 11,
+        /**
+         * @private
+         */
+        smoothing = 12,
     }
 }
 declare module egret {
@@ -11086,6 +11101,21 @@ declare module egret {
          * @platform Web,Native
          */
         constructor();
+        /**
+         * @language en_US
+         * Whether or not is smoothed when scaled.
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理。
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        smoothing: boolean;
         /**
          * @private
          */

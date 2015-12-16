@@ -2599,10 +2599,6 @@ var egret;
              * @private
              */
             this.$fillMode = "scale";
-            /**
-             * @private
-             */
-            this.$smoothing = true;
             this._pixelHitTest = false;
             this.$renderRegion = new egret.sys.Region();
             this.$Bitmap = {
@@ -2616,7 +2612,7 @@ var egret;
                 7: 0,
                 8: 0,
                 9: 0,
-                10: true,
+                10: Bitmap.defaultSmoothing,
                 11: NaN,
                 12: NaN //explicitBitmapHeight,
             };
@@ -2830,26 +2826,26 @@ var egret;
             /**
              * @language en_US
              * Whether or not the bitmap is smoothed when scaled.
-             * @default true。
              * @version Egret 2.4
              * @platform Web
              */
             /**
              * @language zh_CN
              * 控制在缩放时是否对位图进行平滑处理。
-             * @default true。
              * @version Egret 2.4
              * @platform Web
              */
             ,function () {
-                return this.$smoothing;
+                var values = this.$Bitmap;
+                return values[10 /* smoothing */];
             }
             ,function (value) {
                 value = !!value;
-                if (value == this.$smoothing) {
+                var values = this.$Bitmap;
+                if (value == values[10 /* smoothing */]) {
                     return;
                 }
-                this.$smoothing = value;
+                values[10 /* smoothing */] = value;
                 this.$invalidate();
             }
         );
@@ -2924,7 +2920,7 @@ var egret;
             if (values[1 /* image */]) {
                 var destW = !isNaN(values[11 /* explicitBitmapWidth */]) ? values[11 /* explicitBitmapWidth */] : values[8 /* width */];
                 var destH = !isNaN(values[12 /* explicitBitmapHeight */]) ? values[12 /* explicitBitmapHeight */] : values[9 /* height */];
-                Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], destW, destH, this.scale9Grid || values[0 /* bitmapData */]["scale9Grid"], this.fillMode, this.$smoothing);
+                Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], destW, destH, this.scale9Grid || values[0 /* bitmapData */]["scale9Grid"], this.fillMode, values[10 /* smoothing */]);
             }
         };
         d(p, "pixelHitTest"
@@ -3126,6 +3122,23 @@ var egret;
             context.drawImage(image, sourceX1, sourceY2, sourceW1, sourceH2, targetX1, targetY2, targetW1, targetH2);
             context.drawImage(image, sourceX2, sourceY2, sourceW2, sourceH2, targetX2, targetY2, targetW2, targetH2);
         };
+        /**
+         * @language en_US
+         * The default value of whether or not is smoothed when scaled.
+         * When object such as Bitmap is created,smoothing property will be set to this value.
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理的默认值。
+         * 在 Bitmap 等对象创建时,smoothing 属性会被设置为该值。
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        Bitmap.defaultSmoothing = true;
         return Bitmap;
     })(egret.DisplayObject);
     egret.Bitmap = Bitmap;
@@ -15991,10 +16004,40 @@ var egret;
                 8: false,
                 9: false,
                 10: "left",
-                11: "top" //verticalAlign
+                11: "top",
+                12: egret.Bitmap.defaultSmoothing //smoothing
             };
         }
         var d = __define,c=BitmapText,p=c.prototype;
+        d(p, "smoothing"
+            /**
+             * @language en_US
+             * Whether or not is smoothed when scaled.
+             * @default true。
+             * @version Egret 2.5.8
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 控制在缩放时是否进行平滑处理。
+             * @default true。
+             * @version Egret 2.5.8
+             * @platform Web
+             */
+            ,function () {
+                var values = this.$BitmapText;
+                return values[12 /* smoothing */];
+            }
+            ,function (value) {
+                value = !!value;
+                var values = this.$BitmapText;
+                if (value == values[12 /* smoothing */]) {
+                    return;
+                }
+                values[12 /* smoothing */] = value;
+                this.$invalidate();
+            }
+        );
         d(p, "text"
             /**
              * @language en_US
@@ -16267,6 +16310,7 @@ var egret;
                         xPos += Math.floor((countWidth - textLinesWidth[i]) / 2);
                     }
                 }
+                context.imageSmoothingEnabled = values[12 /* smoothing */];
                 for (var j = 0; j < len; j++) {
                     var character = line.charAt(j);
                     var texture = bitmapFont.getTexture(character);

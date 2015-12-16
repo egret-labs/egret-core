@@ -246,10 +246,36 @@ var egret;
              * @private
              */
             this.lastTime = 0;
+            this.$smoothing = egret.Bitmap.defaultSmoothing;
             this.$renderRegion = new egret.sys.Region();
             this.setMovieClipData(movieClipData);
         }
         var d = __define,c=MovieClip,p=c.prototype;
+        d(p, "smoothing"
+            /**
+             * @language en_US
+             * Whether or not is smoothed when scaled.
+             * @version Egret 2.5.8
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 控制在缩放时是否进行平滑处理。
+             * @version Egret 2.5.8
+             * @platform Web
+             */
+            ,function () {
+                return this.$smoothing;
+            }
+            ,function (value) {
+                value = !!value;
+                if (value == this.$smoothing) {
+                    return;
+                }
+                this.$smoothing = value;
+                this.$invalidate();
+            }
+        );
         /**
          * @private
          *
