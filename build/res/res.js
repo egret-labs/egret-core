@@ -2344,13 +2344,39 @@ var RES;
     }
     RES.registerAnalyzer = registerAnalyzer;
     /**
-     * 根据url返回实际加载url地址
-     * @param call
+     * @language en_US
+     * Register the VersionController
+     * @param vcs The VersionController to register.
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 注册版本控制器,通过RES模块加载资源时会从版本控制器获取真实url
+     * @param vcs 注入的版本控制器。
+     * @version Egret 2.5
+     * @platform Web,Native
      */
     function registerVersionController(vcs) {
         instance.$registerVersionController(vcs);
     }
     RES.registerVersionController = registerVersionController;
+    /**
+     * @language en_US
+     * Returns the VersionController
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 获得版本控制器.
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    function getVersionController() {
+        return instance.vcs;
+    }
+    RES.getVersionController = getVersionController;
     /**
      * @language en_US
      * Load configuration file and parse.
