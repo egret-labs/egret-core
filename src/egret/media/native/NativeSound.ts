@@ -159,7 +159,7 @@ module egret.native {
                 audio = new Audio(this.url);
             }
             else {
-                audio.load();
+                //audio.load();
             }
             audio.autoplay = true;
 
