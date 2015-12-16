@@ -138,7 +138,7 @@ module egret.native {
             }
 
             function removeListeners():void {
-                audio.removeEventListener("canplaythrough", onAudioLoaded);
+                audio.removeEventListener("canplaythrough", onCanPlay);
                 audio.removeEventListener("error", onAudioError);
             }
         }
