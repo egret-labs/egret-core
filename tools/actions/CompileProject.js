@@ -1,13 +1,12 @@
-/// <reference path="../lib/types.d.ts" />
 var Compiler = require('./Compiler');
 var FileUtil = require('../lib/FileUtil');
 var exmlActions = require('../actions/exml');
+var LoadConfig = require('./LoadConfig');
 var CompileProject = (function () {
     function CompileProject() {
     }
     CompileProject.prototype.compile = function (options) {
         exmlActions.beforeBuild();
-        //编译
         exmlActions.build();
         var result = this.compileProject(options);
         exmlActions.afterBuild();
@@ -28,12 +27,21 @@ var CompileProject = (function () {
             var compiler = new Compiler();
             var tsList = FileUtil.search(option.srcDir, "ts");
             var libsList = FileUtil.search(option.libsDir, "ts");
+            var urlConfig = option.projectDir + "tsconfig.json";
+            var arr = LoadConfig.loadTsConfig(urlConfig);
+            option.tsconfig = arr[0];
+            option.tsconfigerr = arr[1];
             var compileOptions = {
                 args: option,
                 files: tsList.concat(libsList),
                 out: option.out,
                 outDir: option.outDir
             };
+            if (arr[1].length > 0) {
+                for (var i = 0, len = arr[1].length; i < len; i++) {
+                    console.log(arr[1][i]);
+                }
+            }
             compileResult = compiler.compile(compileOptions);
             this.recompile = compileResult.compileWithChanges;
         }
@@ -60,5 +68,3 @@ function GetJavaScriptFileNames(tsFiles, root, prefix) {
     return files;
 }
 module.exports = CompileProject;
-
-//# sourceMappingURL=../actions/CompileProject.js.map

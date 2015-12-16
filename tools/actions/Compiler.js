@@ -1,4 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
 var file = require('../lib/FileUtil');
 var tsclark = require("../lib/typescript/tsclark");
@@ -33,5 +32,3 @@ tsclark.Compiler.exit = function (exitCode) {
     return exitCode;
 };
 module.exports = Compiler;
-
-//# sourceMappingURL=../actions/Compiler.js.map

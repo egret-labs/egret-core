@@ -15,6 +15,7 @@ interface CompileOption {
 
 class Compiler {
     public compile(option: CompileOption): tsclark.LarkCompileResult {
+        //console.log('---Compiler.compile---')
         var args = option.args,def = option.def, files = option.files,
                    out = option.out, outDir = option.outDir;
         var defTemp = args.declaration;

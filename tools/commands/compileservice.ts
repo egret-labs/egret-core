@@ -14,6 +14,7 @@ import state = require('../lib/DirectoryState');
 import CompileProject = require('../actions/CompileProject');
 import CompileTemplate = require('../actions/CompileTemplate');
 import parser = require('../parser/Parser');
+import LoadConfig = require('../actions/LoadConfig');
 
 class AutoCompileCommand implements egret.Command {
     private compileProject: CompileProject;
@@ -59,6 +60,9 @@ class AutoCompileCommand implements egret.Command {
     private sourceMapStateChanged = false;
 
     buildProject() {
+        //console.log('-------compileservice.buildProject------')
+
+
         var exitCode = 0;
         var options = egret.args;
         var compileProject = new CompileProject();
@@ -68,6 +72,9 @@ class AutoCompileCommand implements egret.Command {
         //预处理
         utils.clean(options.debugDir);
         exmlActions.beforeBuild();
+
+        //第一次运行，拷贝项目文件
+        this.copyLibs();
 
         //编译
         var exmlresult = exmlActions.build();
@@ -90,12 +97,22 @@ class AutoCompileCommand implements egret.Command {
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
         this.messages[1] = result.messages;
+
+        var tsconfigerr = options.tsconfigerr;
+        if(tsconfigerr.length>0){
+            var message = result.messages;
+            for(var i=0,len=tsconfigerr.length;i<len;i++){
+                message.push(tsconfigerr[i])
+            }
+            this.messages[1] = message;
+        }
         this.sendCommand();
         global.gc && global.gc();
         return exitCode;
     }
 
     buildChanges(filesChanged: egret.FileChanges) {
+        //console.log('-------compileservice.buildChanges------')
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
             return this.buildProject();
@@ -124,6 +141,7 @@ class AutoCompileCommand implements egret.Command {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
+        var messages1IsChange = false;
         if (codes.length || this.sourceMapStateChanged) {
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
@@ -134,18 +152,47 @@ class AutoCompileCommand implements egret.Command {
             //}
             this.exitCode[1] = result.exitStatus;
             this.messages[1] = result.messages;
-
+            messages1IsChange = true;
+        }
+        if(others.length>0){
+            var fileName;
+            for(var i=0,len = others.length;i<len;i++){
+                fileName = others[i].fileName;
+                if(fileName.indexOf("egretProperties.json")>-1){//egretProperties 改变了，重新加载
+                    egret.args.properties = LoadConfig.loadProperties(fileName);
+                    this.copyLibs();
+                }else if(fileName.indexOf("tsconfig.json")>-1){//tsconfig 改变了，重新加载
+                    var message1=[];
+                    if(messages1IsChange){
+                        message1 = this.messages[1];
+                    }
+                    message1.push(utils.tr(1118))
+                    var arr = LoadConfig.loadTsConfig(fileName);
+                    if(arr[1].length>0){
+                        for(var j=0,len=arr[1].length;j<len;j++){
+                            message1.push(arr[1][j]);
+                        }
+                    }
+                    this.messages[1] = message1;
+                }
+            }
         }
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
         }
-
         Native.build();
         this.dirState.init();
 
         this.sendCommand();
         global.gc && global.gc();
         return this.exitCode[0] || this.exitCode[1];
+    }
+    //拷贝lib文件
+    private copyLibs(){
+        //刷新libs 中 modules 文件
+        CopyFiles.copyToLibs();
+        //修改 html 中 modules 块
+        CopyFiles.modifyHTMLWithModules();
     }
 
     private buildChangedTS(filesChanged: egret.FileChanges) {
@@ -154,7 +201,6 @@ class AutoCompileCommand implements egret.Command {
     }
 
     private buildChangedEXML(filesChanges: egret.FileChanges): egret.FileChanges{
-
         if (!filesChanges || filesChanges.length == 0)
             return [];
 

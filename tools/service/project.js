@@ -1,4 +1,3 @@
-/// <reference path="../lib/types.d.ts" />
 var os = require("os");
 var cprocess = require('child_process');
 var utils = require('../lib/utils');
@@ -87,8 +86,7 @@ var Project = (function () {
             this.buildWholeProject();
             return;
         }
-        console.log("项目文件改变:");
-        console.log(this.changes);
+        console.log("项目文件改变:", this.changes);
         this.sendCommand({
             command: "build",
             changes: this.changes,
@@ -97,9 +95,7 @@ var Project = (function () {
         global.gc && global.gc();
     };
     Project.prototype.sendCommand = function (cmd) {
-        //this.buildProcess.stdin.write(JSON.stringify(cmd), 'utf8');
         this.buildPort && this.buildPort.send(cmd);
-        //this.buildProcess.send(cmd);
     };
     Project.prototype.shutdown = function (retry) {
         var _this = this;
@@ -149,5 +145,3 @@ var Project = (function () {
     return Project;
 })();
 module.exports = Project;
-
-//# sourceMappingURL=../service/project.js.map

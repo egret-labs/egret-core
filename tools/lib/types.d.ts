@@ -88,6 +88,8 @@ declare module egret {
         added: string[];
         removed: string[];
         modified: string[];
+        tsconfig: any;//tsconfig 配置文件
+        tsconfigerr: string[];//tsconfig 配置文件的错误
 
         toJSON: () => any;
         getProject(empty?:boolean): egret.ILarkProject;
