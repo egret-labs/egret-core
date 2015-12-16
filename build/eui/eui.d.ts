@@ -9394,7 +9394,25 @@ declare module eui.sys {
 }
 declare module eui {
     /**
-     * TextInput 是一个文本输入控件，供用户输入和编辑单行统一格式文本
+     *
+     */
+    /**
+     * @language en_US
+     * The TextInput is a textfield input component, the user can input and edit the text.
+     *
+     * @version Egret 2.5.7
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TextInputExample.ts
+     */
+    /**
+     * @language zh_CN
+     * TextInput 是一个文本输入控件，供用户输入和编辑统一格式文本
+     *
+     * @version Egret 2.5.7
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TextInputExample.ts
      */
     class TextInput extends Component {
         constructor();

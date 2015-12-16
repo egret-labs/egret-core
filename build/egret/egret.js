@@ -6437,8 +6437,15 @@ var egret;
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
-                context.setTransform(1, 0, 0, 1, region.minX, region.minY);
-                context.drawImage(displayContext.surface, 0, 0);
+                if (rootMatrix) {
+                    context.translate(region.minX, region.minY);
+                    context.drawImage(displayContext.surface, 0, 0);
+                    context.setTransform(rootMatrix.a, rootMatrix.b, rootMatrix.c, rootMatrix.d, rootMatrix.tx, rootMatrix.ty);
+                }
+                else {
+                    context.setTransform(1, 0, 0, 1, region.minX, region.minY);
+                    context.drawImage(displayContext.surface, 0, 0);
+                }
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
