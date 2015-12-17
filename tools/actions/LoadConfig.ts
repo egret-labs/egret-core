@@ -5,12 +5,16 @@ export function loadTsConfig(url): [any, string[]] {
     var errLog = [];
     try {
         tsconfig = JSON.parse(fs.readFileSync(url).toString()).compilerOptions;
-        if (tsconfig["target"] && tsconfig["target"] != "ES5" && tsconfig["target"] != "es5") {
-            errLog.push(utils.tr(1116));
+        if (tsconfig["target"]) {
+            if(tsconfig["target"] != "ES5" && tsconfig["target"] != "es5"){
+                errLog.push(utils.tr(1116));
+            }
             delete tsconfig["target"];
         }
-        if (tsconfig["module"] && tsconfig["module"] != "commonjs") {
-            errLog.push(utils.tr(1117));
+        if (tsconfig["module"]) {
+            if(tsconfig["module"] != "commonjs"){
+                errLog.push(utils.tr(1117));
+            }
             delete tsconfig["module"];
         }
     } catch (e) {
