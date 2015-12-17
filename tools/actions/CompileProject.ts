@@ -25,32 +25,27 @@ class CompileProject {
     public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
         var compileResult: tsclark.LarkCompileResult;
-        if (files && this.recompile) {// console.log("----compileProject.compileProject.A-----")
+        if (files && this.recompile) {// console.log("----compileProject.compileProject.B-----")
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
-            compileResult = this.recompile(files, option.sourceMap);
+            compileResult = this.recompile(files, option);
             process.chdir(realCWD);
         }
-        else {// console.log("----compileProject.compileProject.B-----")
+        else {// console.log("----compileProject.compileProject.A-----")
             var compiler = new Compiler();
             var tsList: string[] = FileUtil.search(option.srcDir, "ts");
             var libsList:string[] = FileUtil.search(option.libsDir, "ts");
+
             var urlConfig = option.projectDir + "tsconfig.json";
-            var arr = LoadConfig.loadTsConfig(urlConfig);//加载配置文件
-            option.tsconfig = arr[0];
-            option.tsconfigerr = arr[1];
+            LoadConfig.loadTsConfig(urlConfig,option);//加载配置文件
+
             var compileOptions = {
                 args: option,
                 files: tsList.concat(libsList),
                 out: option.out,
                 outDir: option.outDir
             };
-            if(arr[1].length>0){
-                for(var i=0,len=arr[1].length;i<len;i++){
-                    console.log(arr[1][i]);//builde -e 的时候输出信息
-                }
-            }
             compileResult = compiler.compile(compileOptions);
             this.recompile = compileResult.compileWithChanges;
         }
@@ -62,7 +57,7 @@ class CompileProject {
 
     }
 
-    private recompile: (files: egret.FileChanges, sourceMap?: boolean) => tsclark.LarkCompileResult;
+    private recompile: (files: egret.FileChanges, options?:any ) => tsclark.LarkCompileResult;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {

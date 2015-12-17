@@ -20,7 +20,7 @@ var CompileProject = (function () {
             files.forEach(function (f) { return f.fileName = f.fileName.replace(option.projectDir, ""); });
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
-            compileResult = this.recompile(files, option.sourceMap);
+            compileResult = this.recompile(files, option);
             process.chdir(realCWD);
         }
         else {
@@ -28,20 +28,13 @@ var CompileProject = (function () {
             var tsList = FileUtil.search(option.srcDir, "ts");
             var libsList = FileUtil.search(option.libsDir, "ts");
             var urlConfig = option.projectDir + "tsconfig.json";
-            var arr = LoadConfig.loadTsConfig(urlConfig);
-            option.tsconfig = arr[0];
-            option.tsconfigerr = arr[1];
+            LoadConfig.loadTsConfig(urlConfig, option);
             var compileOptions = {
                 args: option,
                 files: tsList.concat(libsList),
                 out: option.out,
                 outDir: option.outDir
             };
-            if (arr[1].length > 0) {
-                for (var i = 0, len = arr[1].length; i < len; i++) {
-                    console.log(arr[1][i]);
-                }
-            }
             compileResult = compiler.compile(compileOptions);
             this.recompile = compileResult.compileWithChanges;
         }

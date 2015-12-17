@@ -1,30 +1,48 @@
 import fs = require('fs');
 import utils = require('../lib/utils');
-export function loadTsConfig(url): [any, string[]] {
-    var tsconfig;
+import file = require('../lib/FileUtil');
+/// <reference path="../lib/typescript/typescriptServices.d.ts" />
+export function loadTsConfig(url, compilerOptions: egret.ToolArgs): void {
+    var configStr: string = file.read(url);
+    var configObj: Object;
     var errLog = [];
-    try {
-        tsconfig = JSON.parse(fs.readFileSync(url).toString()).compilerOptions;
-        if (tsconfig["target"]) {
-            if(tsconfig["target"] != "ES5" && tsconfig["target"] != "es5"){
-                errLog.push(utils.tr(1116));
-            }
-            delete tsconfig["target"];
+    if (configStr) {
+        try {
+            configObj = JSON.parse(configStr);
+        } catch (e) {
+            errLog.push(utils.tr(1117));//不是有效的 json 文件
         }
-        if (tsconfig["module"]) {
-            if(tsconfig["module"] != "commonjs"){
-                errLog.push(utils.tr(1117));
-            }
-            delete tsconfig["module"];
-        }
-    } catch (e) {
-        //console.log(e);
     }
-
-    return [tsconfig, errLog]
+    if (configObj) {
+        var options = configObj["compilerOptions"];
+        if (options) {
+            for (var i in options) {
+                switch (i) {
+                    case "sourceMap":
+                        compilerOptions.sourceMap = options[i];
+                        break;
+                    case "removeComments":
+                        compilerOptions.removeComments = options[i];
+                        break;
+                    case "declaration":
+                        compilerOptions.declaration = options[i];
+                        break;
+                    case "diagnostics":
+                        compilerOptions.debug = options[i];
+                        break;
+                    default:
+                        var error = utils.tr(1116, i)
+                        errLog.push(error);//这个编译选项目前不支持修改
+                        console.log(error);//build -e的时候输出
+                        break;
+                }
+            }
+        }
+    }
+    compilerOptions.tsconfigError = errLog;
 }
 export function loadProperties(url): any {
-    console.log("url:", url);
+    //console.log("url:", url);
     var obj = new ClassProperties();
     try {
         var properties = JSON.parse(fs.readFileSync(url).toString());
@@ -53,7 +71,7 @@ class ClassProperties {
         }
         return arr;
     }
-    public getModulePath(name:string):string{
+    public getModulePath(name: string): string {
         return this.modulesConfig[name]["path"];
     }
 }

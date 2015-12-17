@@ -38523,8 +38523,14 @@ var ts;
         var program = result.program;
         result.compileWithChanges = compileWithChanges;
         return result;
-        function compileWithChanges(filesChanged, sourceMap) {
-            commandLine.options.sourceMap = !!sourceMap;
+        function compileWithChanges(filesChanged, options) {
+            console.log("compileWithChanges:",options);
+            if(options){
+                setOption(options,commandLine.options);
+            }
+            //setOption(options,parsedCmd.options);
+            //console.log("compileWithChanges:",sourceMap);
+            //commandLine.options.sourceMap = !!sourceMap;
             filesChanged.forEach(function (file) {
                 if (file.type == "added") {
                     commandLine.fileNames.push(file.fileName);
@@ -38544,6 +38550,7 @@ var ts;
             return recompile(changedFiles);
         }
         function recompile(changedFiles,option) {
+            //console.log("recompile")
             // Reuse source files from the last compilation so long as they weren't changed.
             var oldSourceFiles = ts.arrayToMap(ts.filter(program.getSourceFiles(), function (file) { return !ts.hasProperty(changedFiles, getCanonicalName(file.fileName)); }), function (file) { return getCanonicalName(file.fileName); });
             // We create a new compiler host for this compilation cycle.
@@ -38580,25 +38587,23 @@ var Compiler = (function () {
         var parsedCmd = {
             fileNames: files,
             options: {
-                sourceMap: options.sourceMap,
-                target: targetEnum,
-                removeComments: options.removeComments,
-                declaration: options.declaration,
-                diagnostics: options.debug
+                target: targetEnum
             },
             errors: []
         };        
+        setOption(options,parsedCmd.options);
+        console.log(parsedCmd.options);
         if (out) {
             parsedCmd.options.out = out;
         }
         else {
             parsedCmd.options.outDir = outDir;
         }
-        if(options.tsconfig){
-            for(var i in options.tsconfig){
-                parsedCmd.options[i] = options.tsconfig[i];
-            }
-        }
+        // if(options.tsconfig){
+        //     for(var i in options.tsconfig){
+        //         parsedCmd.options[i] = options.tsconfig[i];
+        //     }
+        // }
         //console.log("options.tsconfig:",options.tsconfig)
         return ts.executeWithOption(parsedCmd);
     };
@@ -38614,4 +38619,10 @@ ts.sys.exit = function (code) {
 ts.sys.write = function (msg) {
     return Compiler.write(msg);
 };
+function setOption(optionIn,optionOut){
+    optionOut.sourceMap = optionIn.sourceMap;
+    optionOut.removeComments = optionIn.removeComments;
+    optionOut.declaration = optionIn.declaration;
+    optionOut.diagnostics = optionIn.debug;
+}
 //# sourceMappingURL=file:////Library/WebServer/Documents/egret/ts/TypeScript-1.7.2/built/local/tsc.js.map

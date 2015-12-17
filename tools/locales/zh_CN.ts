@@ -63,9 +63,9 @@ module egret {
     locale_strings[1113] = "{0} tsc编译生成 '.d.ts'";
     locale_strings[1114] = "{0} 拷贝其他文件";
     locale_strings[1115] = "第三方库共计耗时：{0}秒";
-    locale_strings[1116] = "警告! tsconfig.json 中的编译选项 'target' 只支持 'ES5'";
-    locale_strings[1117] = "警告! tsconfig.json 中的编译选项 'module' 只支持 'commonjs'";
-    locale_strings[1118] = "配置文件 tsconfig.json 发生变化，请使用: egret build -e 命令重新编译";
+    locale_strings[1116] = "目前不支持修改 tsconfig.json 中的编译选项: '{0}'.";
+    locale_strings[1117] = "警告! tsconfig.json 不是有效的 json 文件";
+
     //compile
     locale_strings[1301] = "在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确";
     locale_strings[1302] = "请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";

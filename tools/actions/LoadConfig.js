@@ -1,30 +1,48 @@
 var fs = require('fs');
 var utils = require('../lib/utils');
-function loadTsConfig(url) {
-    var tsconfig;
+var file = require('../lib/FileUtil');
+function loadTsConfig(url, compilerOptions) {
+    var configStr = file.read(url);
+    var configObj;
     var errLog = [];
-    try {
-        tsconfig = JSON.parse(fs.readFileSync(url).toString()).compilerOptions;
-        if (tsconfig["target"]) {
-            if(tsconfig["target"] != "ES5" && tsconfig["target"] != "es5"){
-                errLog.push(utils.tr(1116));
-            }
-            delete tsconfig["target"];
+    if (configStr) {
+        try {
+            configObj = JSON.parse(configStr);
         }
-        if (tsconfig["module"]) {
-            if(tsconfig["module"] != "commonjs"){
-                errLog.push(utils.tr(1117));
-            }
-            delete tsconfig["module"];
+        catch (e) {
+            errLog.push(utils.tr(1117));
         }
     }
-    catch (e) {
+    if (configObj) {
+        var options = configObj["compilerOptions"];
+        if (options) {
+            for (var i in options) {
+                switch (i) {
+                    case "sourceMap":
+                        compilerOptions.sourceMap = options[i];
+                        break;
+                    case "removeComments":
+                        compilerOptions.removeComments = options[i];
+                        break;
+                    case "declaration":
+                        compilerOptions.declaration = options[i];
+                        break;
+                    case "diagnostics":
+                        compilerOptions.debug = options[i];
+                        break;
+                    default:
+                        var error = utils.tr(1116, i);
+                        errLog.push(error);
+                        console.log(error);
+                        break;
+                }
+            }
+        }
     }
-    return [tsconfig, errLog];
+    compilerOptions.tsconfigError = errLog;
 }
 exports.loadTsConfig = loadTsConfig;
 function loadProperties(url) {
-    console.log("url:", url);
     var obj = new ClassProperties();
     try {
         var properties = JSON.parse(fs.readFileSync(url).toString());

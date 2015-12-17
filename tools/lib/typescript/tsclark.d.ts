@@ -3756,7 +3756,7 @@ export interface LarkCompileResult {
     program: ts.Program;
     files?: string[];
     exitStatus: ts.EmitReturnStatus;
-    compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => LarkCompileResult;
+    compileWithChanges?: (filesChanged: egret.FileChanges, options?:any) => LarkCompileResult;
     messages?: string[];
 }
 

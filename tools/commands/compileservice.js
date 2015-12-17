@@ -63,11 +63,11 @@ var AutoCompileCommand = (function () {
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
         this.messages[1] = result.messages;
-        var tsconfigerr = options.tsconfigerr;
-        if (tsconfigerr.length > 0) {
+        var error = options.tsconfigError;
+        if (error && error.length > 0) {
             var message = result.messages;
-            for (var i = 0, len = tsconfigerr.length; i < len; i++) {
-                message.push(tsconfigerr[i]);
+            for (var i = 0, len = error.length; i < len; i++) {
+                message.push(error[i]);
             }
             this.messages[1] = message;
         }
@@ -95,13 +95,22 @@ var AutoCompileCommand = (function () {
             else
                 others.push(f);
         });
+        if (others.length > 0) {
+            var fileName;
+            for (var i = 0, len = others.length; i < len; i++) {
+                fileName = others[i].fileName;
+                if (fileName.indexOf("tsconfig.json") > -1) {
+                    LoadConfig.loadTsConfig(fileName, egret.args);
+                    this.messages[1] = egret.args.tsconfigError;
+                }
+            }
+        }
         if (exmls.length) {
             exmlActions.beforeBuildChanges(exmls);
         }
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
-        var messages1IsChange = false;
         if (codes.length || this.sourceMapStateChanged) {
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
@@ -110,31 +119,6 @@ var AutoCompileCommand = (function () {
             this.onTemplateIndexChanged();
             this.exitCode[1] = result.exitStatus;
             this.messages[1] = result.messages;
-            messages1IsChange = true;
-        }
-        if (others.length > 0) {
-            var fileName;
-            for (var i = 0, len = others.length; i < len; i++) {
-                fileName = others[i].fileName;
-                if (fileName.indexOf("egretProperties.json") > -1) {
-                    egret.args.properties = LoadConfig.loadProperties(fileName);
-                    this.copyLibs();
-                }
-                else if (fileName.indexOf("tsconfig.json") > -1) {
-                    var message1 = [];
-                    if (messages1IsChange) {
-                        message1 = this.messages[1];
-                    }
-                    message1.push(utils.tr(1118));
-                    var arr = LoadConfig.loadTsConfig(fileName);
-                    if (arr[1].length > 0) {
-                        for (var j = 0, len = arr[1].length; j < len; j++) {
-                            message1.push(arr[1][j]);
-                        }
-                    }
-                    this.messages[1] = message1;
-                }
-            }
         }
         if (exmls.length) {
             exmlActions.afterBuildChanges(exmls);
