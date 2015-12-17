@@ -31,8 +31,16 @@ module egret.sys {
 
     export class WebGLRenderer implements SystemRenderer {
 
-        public render(displayObject:DisplayObject,target:RenderTarget):void{
+        /**
+         * 渲染一个显示对象
+         * @param displayObject 要渲染的显示对象
+         * @param target 渲染目标
+         * @returns drawCall触发绘制的次数
+         */
+        public render(displayObject:DisplayObject,target:RenderTarget):number{
+            var drawCall = 0;
 
+            return drawCall;
         }
     }
 }

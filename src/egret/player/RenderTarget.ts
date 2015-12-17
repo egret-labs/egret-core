@@ -30,20 +30,20 @@
 module egret.sys {
     /**
      * @private
-     * 可绘制对象
+     * 渲染目标
      */
     export interface RenderTarget {
         /**
-         * true表示绘制对象无效。当创建失败或调用过destroy()方法后此属性置为true。
+         * true表示渲染目标无效。当创建失败或调用过destroy()方法后此属性置为true。
          * @readOnly
          */
         invalid:boolean;
         /**
-         * 改变绘制对象的大小
+         * 改变渲染目标的大小
          */
         resize(width:number,height:number):void;
         /**
-         * 销毁绘制对象
+         * 销毁渲染目标
          */
         destroy():void;
     }

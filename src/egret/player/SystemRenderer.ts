@@ -33,6 +33,12 @@ module egret.sys {
 
     export interface SystemRenderer {
 
-        render(displayObject:DisplayObject,target:RenderTarget):void;
+        /**
+         * 渲染一个显示对象
+         * @param displayObject 要渲染的显示对象
+         * @param target 渲染目标
+         * @returns drawCall触发绘制的次数
+         */
+        render(displayObject:DisplayObject,target:RenderTarget):number;
     }
 }
