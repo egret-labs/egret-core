@@ -171,6 +171,14 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/CanvasRenderer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/CanvasRenderTarget.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/WebTouchHandler.ts",
             "platform": "web"
           },

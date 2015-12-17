@@ -27,26 +27,16 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
-    /**
-     * @language en_US
-     * egret project entry function
-     * @param options An object containing the initialization properties for egret engine.
-     */
-    /**
-     * @language zh_CN
-     * egret工程入口函数
-     * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
-     */
-    export declare function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}):void;
-    /**
-     * @language en_US
-     * Refresh the screen display
-     */
-    /**
-     * @language zh_CN
-     * 刷新屏幕显示
-     */
-    export declare function updateAllScreens():void;
+module egret.web {
 
+    export class CanvasRenderer implements sys.SystemRenderer {
+
+        public constructor() {
+
+        }
+
+        public render(displayObject:DisplayObject, target:CanvasRenderTarget):void {
+
+        }
+    }
 }

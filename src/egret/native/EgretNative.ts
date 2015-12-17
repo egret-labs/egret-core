@@ -37,11 +37,15 @@ module egret.native {
     var isRunning:boolean = false;
     var playerList:Array<NativePlayer> = [];
 
-    function runEgret() {
+    function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}) {
         if (isRunning) {
             return;
         }
         isRunning = true;
+        if(!options){
+            options = {};
+        }
+        setRenderMode(options.renderMode);
         if (DEBUG) {
             //todo 获得系统语言版本
             var language = "zh_CN";
@@ -61,7 +65,12 @@ module egret.native {
         egret_native.executeMainLoop(mainLoop, ticker);
         sys.surfaceFactory = new OpenGLFactory();
         if (!egret.sys.screenAdapter) {
-            egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+            if(options.screenAdapter){
+                egret.sys.screenAdapter = options.screenAdapter;
+            }
+            else{
+                egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+            }
         }
 
         //todo
@@ -73,6 +82,17 @@ module egret.native {
             egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
             };
         }
+    }
+
+    /**
+     * 设置渲染模式。"auto","webgl","canvas"
+     * @param renderMode
+     */
+    function setRenderMode(renderMode:string):void{
+
+        sys.RenderTarget = sys.WebGLRenderTarget;
+        sys.systemRenderer = new sys.WebGLRenderer();
+
     }
 
     function updateAllScreens():void {

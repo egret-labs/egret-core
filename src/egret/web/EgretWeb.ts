@@ -53,12 +53,15 @@ module egret.web {
      * @private
      * 网页加载完成，实例化页面中定义的Egretsys标签
      */
-    function runEgret():void {
+    function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}):void {
         if (isRunning) {
             return;
         }
         isRunning = true;
-
+        if(!options){
+            options = {};
+        }
+        setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
         var surfaceFactory = new CanvasFactory();
@@ -66,7 +69,12 @@ module egret.web {
         //var webglFactory = new WebGLFactory();
         //sys.surfaceFactory = webglFactory;
         if (!egret.sys.screenAdapter) {
-            egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+            if(options.screenAdapter){
+                egret.sys.screenAdapter = options.screenAdapter;
+            }
+            else{
+                egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+            }
         }
 
         var list = document.querySelectorAll(".egret-player");
@@ -76,6 +84,17 @@ module egret.web {
             var player = new WebPlayer(container);
             container["egret-player"] = player;
         }
+    }
+
+    /**
+     * 设置渲染模式。"auto","webgl","canvas"
+     * @param renderMode
+     */
+    function setRenderMode(renderMode:string):void{
+
+        sys.RenderTarget = web.CanvasRenderTarget;
+        sys.systemRenderer = new web.CanvasRenderer();
+
     }
 
     /**
