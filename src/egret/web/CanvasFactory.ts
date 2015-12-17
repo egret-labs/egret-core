@@ -27,6 +27,18 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+module egret {
+
+    /**
+     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
+     * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     */
+    export function $toBitmapData(data:any):BitmapData {
+        data["hashCode"] = data["$hashCode"] = $hashCount++;
+        return <BitmapData>data;
+    }
+}
+
 module egret.web {
 
     var surfacePool:sys.Surface[] = [];
