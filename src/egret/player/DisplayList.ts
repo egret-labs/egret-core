@@ -100,7 +100,7 @@ module egret.sys {
                 return false;
             }
             target.$removeFlagsUp(DisplayObjectFlags.Dirty);
-            var node = target.$renderNode;
+            var node = this.$renderNode;
             node.renderAlpha = target.$getConcatenatedAlpha();
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = target.$getConcatenatedMatrix();
@@ -120,13 +120,17 @@ module egret.sys {
                 return false;
             }
             node.moved = false;
-            var renderMatrix = node.renderMatrix;
-            renderMatrix.copyFrom(concatenatedMatrix);
+            node.renderMatrix = concatenatedMatrix;
             var root = displayList.root;
-            if (root !== target.$stage) {
-                target.$getConcatenatedMatrixAt(root, renderMatrix);
+            if (root === target.$stage) {
+                region.updateRegion(bounds, concatenatedMatrix);
             }
-            region.updateRegion(bounds, renderMatrix);
+            else{
+                var matrix = Matrix.create().copyFrom(concatenatedMatrix);
+                target.$getConcatenatedMatrixAt(root, matrix);
+                region.updateRegion(bounds, matrix);
+                Matrix.release(matrix);
+            }
             return true;
         }
 
@@ -654,8 +658,9 @@ module egret.sys {
                 }
             }
 
-            this.rootMatrix.setTo(1, 0, 0, 1, -this.offsetX, -this.offsetY);
-            this.renderContext.setTransform(1, 0, 0, 1, -bounds.x, -bounds.y);
+            var m = root.$getInvertedConcatenatedMatrix();
+            this.rootMatrix.setTo(m.a, m.b, m.c, m.d, m.tx - bounds.x, m.ty - bounds.y);
+            this.renderContext.setTransform(m.a, m.b, m.c, m.d, m.tx - bounds.x, m.ty - bounds.y);
         }
 
         public setDirtyRegionPolicy(policy:string):void {

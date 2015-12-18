@@ -72,7 +72,7 @@ module egret.sys {
         /**
          * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
          */
-        public renderMatrix:Matrix = new egret.Matrix();
+        public renderMatrix:Matrix = null;
         /**
          * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
          */

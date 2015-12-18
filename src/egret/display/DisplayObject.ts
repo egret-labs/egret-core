@@ -1867,13 +1867,17 @@ module egret {
                 return false;
             }
             node.moved = false;
-            var renderMatrix = node.renderMatrix;
-            renderMatrix.copyFrom(concatenatedMatrix);
+            node.renderMatrix = concatenatedMatrix;
             var root = displayList.root;
-            if (root !== this.$stage) {
-                this.$getConcatenatedMatrixAt(root, renderMatrix);
+            if (root === this.$stage) {
+                region.updateRegion(renderBounds, concatenatedMatrix);
             }
-            region.updateRegion(renderBounds, renderMatrix);
+            else{
+                var matrix = Matrix.create().copyFrom(concatenatedMatrix);
+                this.$getConcatenatedMatrixAt(root, matrix);
+                region.updateRegion(renderBounds, matrix);
+                Matrix.release(matrix);
+            }
             return true;
         }
 
