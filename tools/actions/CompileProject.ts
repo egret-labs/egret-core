@@ -1,11 +1,10 @@
-
 /// <reference path="../lib/types.d.ts" />
+/// <reference path="../lib/typescript/tsclark.d.ts" />
 
 import utils = require('../lib/utils');
 import Compiler = require('./Compiler');
 import FileUtil = require('../lib/FileUtil');
 import tsclark = require("../lib/typescript/tsclark");
-import fs = require("fs");
 import exmlActions = require('../actions/exml');
 import LoadConfig = require('./LoadConfig');
 
@@ -22,6 +21,7 @@ class CompileProject {
 
         return result;
     }
+    private compilerOptions:ts.CompilerOptions;
     public compileProject(option: egret.ToolArgs, files?: egret.FileChanges) {
         //console.log("----compileProject.compileProject----")
         var compileResult: tsclark.LarkCompileResult;
@@ -29,16 +29,22 @@ class CompileProject {
             files.forEach(f=> f.fileName = f.fileName.replace(option.projectDir, ""));
             var realCWD = process.cwd();
             process.chdir(option.projectDir);
-            compileResult = this.recompile(files, option);
+
+            var sourceMap = option.sourceMap;
+            if(sourceMap == undefined){
+                sourceMap = this.compilerOptions.sourceMap;
+            }
+            compileResult = this.recompile(files, sourceMap);
             process.chdir(realCWD);
         }
-        else {// console.log("----compileProject.compileProject.A-----")
+        else { //console.log("----compileProject.compileProject.A-----")
             var compiler = new Compiler();
             var tsList: string[] = FileUtil.search(option.srcDir, "ts");
             var libsList:string[] = FileUtil.search(option.libsDir, "ts");
 
-            var urlConfig = option.projectDir + "tsconfig.json";
-            LoadConfig.loadTsConfig(urlConfig,option);//加载配置文件
+            var urlConfig = option.projectDir + "tsconfig.json";//加载配置文件
+            LoadConfig.loadTsConfig(urlConfig,option);
+            this.compilerOptions = option.compilerOptions;
 
             var compileOptions = {
                 args: option,
@@ -57,7 +63,7 @@ class CompileProject {
 
     }
 
-    private recompile: (files: egret.FileChanges, options?:any ) => tsclark.LarkCompileResult;
+    private recompile: (files: egret.FileChanges, sourceMap?: boolean ) => tsclark.LarkCompileResult;
 }
 
 function GetJavaScriptFileNames(tsFiles: string[],root:string|RegExp,prefix?:string) {

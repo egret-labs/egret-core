@@ -65,6 +65,7 @@ module egret {
     locale_strings[1115] = "第三方库共计耗时：{0}秒";
     locale_strings[1116] = "目前不支持修改 tsconfig.json 中的编译选项: '{0}'.";
     locale_strings[1117] = "警告! tsconfig.json 不是有效的 json 文件";
+    locale_strings[1118] = "警告! egretProperties.json 被修改了，请执行 {color_green}egret build [project_name] -e {color_normal} 初始化引擎";
 
     //compile
     locale_strings[1301] = "在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确";

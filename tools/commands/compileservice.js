@@ -1,3 +1,4 @@
+/// <reference path="../lib/types.d.ts" />
 var utils = require('../lib/utils');
 var service = require('../service/index');
 var FileUtil = require('../lib/FileUtil');
@@ -8,17 +9,21 @@ var state = require('../lib/DirectoryState');
 var CompileProject = require('../actions/CompileProject');
 var CompileTemplate = require('../actions/CompileTemplate');
 var parser = require('../parser/Parser');
-var LoadConfig = require('../actions/LoadConfig');
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
         this.exitCode = [0, 0];
-        this.messages = [[], []];
+        this.messages = [[], [], [], []];
         this._request = null;
         this._lastBuildTime = Date.now();
         this.sourceMapStateChanged = false;
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
+        if (JSON.stringify(egret.args.properties.modulesConfig) == "{}") {
+            console.log(utils.tr(1602)); //缺少egretProperties.json
+            process.exit(0);
+            return;
+        }
         this._request = service.execCommand({
             command: "init",
             path: egret.args.projectDir,
@@ -42,18 +47,26 @@ var AutoCompileCommand = (function () {
         return DontExitCode;
     };
     AutoCompileCommand.prototype.buildProject = function () {
+        //console.log('-------compileservice.buildProject------')
         var exitCode = 0;
         var options = egret.args;
         var compileProject = new CompileProject();
         this.compileProject = compileProject;
         var _scripts = this._scripts || [];
+        //预处理
         utils.clean(options.debugDir);
         exmlActions.beforeBuild();
-        this.copyLibs();
+        //第一次运行，拷贝项目文件
+        //刷新libs 中 modules 文件
+        CopyFiles.copyToLibs();
+        //修改 html 中 modules 块
+        CopyFiles.modifyHTMLWithModules();
+        //编译
         var exmlresult = exmlActions.build();
         this.exitCode[0] = exmlresult.exitCode;
         this.messages[0] = exmlresult.messages;
         var result = compileProject.compileProject(options);
+        //操作其他文件
         _scripts = result.files.length > 0 ? result.files : _scripts;
         CompileTemplate.modifyIndexHTML(_scripts);
         CompileTemplate.modifyNativeRequire();
@@ -63,20 +76,15 @@ var AutoCompileCommand = (function () {
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
         this.messages[1] = result.messages;
-        var error = options.tsconfigError;
-        if (error && error.length > 0) {
-            var message = result.messages;
-            for (var i = 0, len = error.length; i < len; i++) {
-                message.push(error[i]);
-            }
-            this.messages[1] = message;
-        }
+        this.messages[2] = options.tsconfigError;
         this.sendCommand();
         global.gc && global.gc();
         return exitCode;
     };
     AutoCompileCommand.prototype.buildChanges = function (filesChanged) {
         var _this = this;
+        //console.log('-------compileservice.buildChanges------')
+        //console.log("filesChanged:", filesChanged);
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
             return this.buildProject();
@@ -85,6 +93,7 @@ var AutoCompileCommand = (function () {
         var others = [];
         filesChanged = filesChanged || this.dirState.checkChanges();
         filesChanged.forEach(function (f) {
+            //console.log(7878,f.fileName);
             if (_this.shouldSkip(f.fileName)) {
                 return;
             }
@@ -100,8 +109,12 @@ var AutoCompileCommand = (function () {
             for (var i = 0, len = others.length; i < len; i++) {
                 fileName = others[i].fileName;
                 if (fileName.indexOf("tsconfig.json") > -1) {
-                    LoadConfig.loadTsConfig(fileName, egret.args);
-                    this.messages[1] = egret.args.tsconfigError;
+                    this.compileProject.compileProject(egret.args);
+                    this.messages[2] = egret.args.tsconfigError;
+                }
+                else if (fileName.indexOf("egretProperties.json") > -1) {
+                    console.log("egretProperties 改变了，请重新使用build -e重新加载");
+                    this.messages[3] = [utils.tr(1118)];
                 }
             }
         }
@@ -114,9 +127,11 @@ var AutoCompileCommand = (function () {
         if (codes.length || this.sourceMapStateChanged) {
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
-            console.log("result.files:", result.files);
+            //console.log("result.files:", result.files);
+            //if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
             this._scripts = result.files;
             this.onTemplateIndexChanged();
+            //}
             this.exitCode[1] = result.exitStatus;
             this.messages[1] = result.messages;
         }
@@ -129,12 +144,8 @@ var AutoCompileCommand = (function () {
         global.gc && global.gc();
         return this.exitCode[0] || this.exitCode[1];
     };
-    AutoCompileCommand.prototype.copyLibs = function () {
-        CopyFiles.copyToLibs();
-        CopyFiles.modifyHTMLWithModules();
-    };
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
-        console.log("changed ts:", filesChanged);
+        //console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     };
     AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
@@ -162,7 +173,7 @@ var AutoCompileCommand = (function () {
             if (fileName == proj) {
                 _this.buildProject();
             }
-            if (fileName.indexOf(src) < 0) {
+            if (fileName.indexOf(src) < 0 /* && fileName.indexOf(temp) < 0*/) {
                 return;
             }
             var relativePath = fileName.replace(src, '').replace(temp, '');
@@ -188,6 +199,7 @@ var AutoCompileCommand = (function () {
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
+        //console.log("onServiceMessage:",msg)
         if (msg.command == 'build' && msg.option) {
             this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
             var props = egret.args.properties;
@@ -201,7 +213,7 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.sendCommand = function (cmd) {
         if (!cmd) {
-            var msg = this.messages[0].concat(this.messages[1]);
+            var msg = this.messages[0].concat(this.messages[1]).concat(this.messages[2]).concat(this.messages[3]);
             cmd = {
                 command: 'buildResult',
                 exitCode: this.exitCode[0] || this.exitCode[1],
@@ -226,3 +238,4 @@ var AutoCompileCommand = (function () {
     return AutoCompileCommand;
 })();
 module.exports = AutoCompileCommand;
+//# sourceMappingURL=compileservice.js.map

@@ -1,6 +1,6 @@
 
 /// <reference path="../lib/types.d.ts" />
-
+/// <reference path="../lib/typescript/tsclark.d.ts" />
 import utils = require('../lib/utils');
 import file = require('../lib/FileUtil');
 import tsclark = require("../lib/typescript/tsclark");
@@ -28,7 +28,29 @@ class Compiler {
         if (outDir)
             outDir = file.getRelativePath(cwd, outDir);
         process.chdir(cwd);
-        var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
+
+        var parsedCmd:ts.ParsedCommandLine = {
+            fileNames: files,
+            options: {},
+            errors: []
+        };
+
+        if(out){//make 使用引擎的配置
+            parsedCmd.options={
+                target:1,
+                sourceMap: args.sourceMap,
+                removeComments: args.removeComments,
+                declaration: args.declaration,
+                out:out
+            }
+        }
+        else{
+            parsedCmd.options = args.compilerOptions;
+            parsedCmd.options.outDir = outDir;
+        }
+        //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
+        var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
+        
         args.declaration = defTemp;
         if (compileResult.messages) {
             compileResult.messages.forEach(m=> console.log(m));

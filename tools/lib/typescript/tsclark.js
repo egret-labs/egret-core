@@ -11735,8 +11735,8 @@ var ts;
         }
         function parseClassExpression() {
             return parseClassDeclarationOrExpression(
-            /*fullStart*/ scanner.getStartPos(),
-            /*decorators*/ undefined,
+            /*fullStart*/ scanner.getStartPos(), 
+            /*decorators*/ undefined, 
             /*modifiers*/ undefined, 186 /* ClassExpression */);
         }
         function parseClassDeclaration(fullStart, decorators, modifiers) {
@@ -11765,8 +11765,8 @@ var ts;
             // implements is a future reserved word so
             // 'class implements' might mean either
             // - class expression with omitted name, 'implements' starts heritage clause
-            // - class with name 'implements'
-            // 'isImplementsClause' helps to disambiguate between these two cases
+            // - class with name 'implements' 
+            // 'isImplementsClause' helps to disambiguate between these two cases 
             return isIdentifier() && !isImplementsClause()
                 ? parseIdentifier()
                 : undefined;
@@ -19102,7 +19102,7 @@ var ts;
                 if (assumeTrue) {
                     // Assumed result is true. If check was not for a primitive type, remove all primitive types
                     if (!typeInfo) {
-                        return removeTypesFromUnionType(type, /*typeKind*/ 258 /* StringLike */ | 132 /* NumberLike */ | 8 /* Boolean */ | 16777216 /* ESSymbol */,
+                        return removeTypesFromUnionType(type, /*typeKind*/ 258 /* StringLike */ | 132 /* NumberLike */ | 8 /* Boolean */ | 16777216 /* ESSymbol */, 
                         /*isOfTypeKind*/ true, /*allowEmptyUnionResult*/ false);
                     }
                     // Check was for a primitive type, return that primitive type if it is a subtype
@@ -24356,7 +24356,7 @@ var ts;
                 }
                 else {
                     var leftType = checkExpression(varExpr);
-                    checkReferenceExpression(varExpr, /*invalidReferenceMessage*/ ts.Diagnostics.Invalid_left_hand_side_in_for_of_statement,
+                    checkReferenceExpression(varExpr, /*invalidReferenceMessage*/ ts.Diagnostics.Invalid_left_hand_side_in_for_of_statement, 
                     /*constantVariableMessage*/ ts.Diagnostics.The_left_hand_side_of_a_for_of_statement_cannot_be_a_previously_defined_constant);
                     // iteratedType will be undefined if the rightType was missing properties/signatures
                     // required to get its iteratedType (like [Symbol.iterator] or next). This may be
@@ -26152,7 +26152,7 @@ var ts;
                 return getSymbolOfNode(entityName.parent);
             }
             if (entityName.parent.kind === 227 /* ExportAssignment */) {
-                return resolveEntityName(entityName,
+                return resolveEntityName(entityName, 
                 /*all meanings*/ 107455 /* Value */ | 793056 /* Type */ | 1536 /* Namespace */ | 8388608 /* Alias */);
             }
             if (entityName.kind !== 166 /* PropertyAccessExpression */) {
@@ -26627,7 +26627,7 @@ var ts;
         }
         function getReferencedValueSymbol(reference) {
             return getNodeLinks(reference).resolvedSymbol ||
-                resolveName(reference, reference.text, 107455 /* Value */ | 1048576 /* ExportValue */ | 8388608 /* Alias */,
+                resolveName(reference, reference.text, 107455 /* Value */ | 1048576 /* ExportValue */ | 8388608 /* Alias */, 
                 /*nodeNotFoundMessage*/ undefined, /*nameArg*/ undefined);
         }
         function getReferencedValueDeclaration(reference) {
@@ -28048,7 +28048,7 @@ var ts;
                 }
             }
             function emitEntityName(entityName) {
-                var visibilityResult = resolver.isEntityNameVisible(entityName,
+                var visibilityResult = resolver.isEntityNameVisible(entityName, 
                 // Aliases can be written asynchronously so use correct enclosing declaration
                 entityName.parent.kind === 221 /* ImportEqualsDeclaration */ ? entityName.parent : enclosingDeclaration);
                 handleSymbolAccessibilityError(visibilityResult);
@@ -29150,7 +29150,7 @@ var ts;
                 : ts.shouldEmitToOwnFile(referencedFile, compilerOptions)
                     ? ts.getOwnEmitOutputFilePath(referencedFile, host, ".d.ts") // Own output file so get the .d.ts file
                     : ts.removeFileExtension(compilerOptions.outFile || compilerOptions.out) + ".d.ts"; // Global out file
-            declFileName = ts.getRelativePathToDirectoryOrUrl(ts.getDirectoryPath(ts.normalizeSlashes(jsFilePath)), declFileName, host.getCurrentDirectory(), host.getCanonicalFileName,
+            declFileName = ts.getRelativePathToDirectoryOrUrl(ts.getDirectoryPath(ts.normalizeSlashes(jsFilePath)), declFileName, host.getCurrentDirectory(), host.getCanonicalFileName, 
             /*isAbsolutePathAnUrl*/ false);
             referencePathsOutput += "/// <reference path=\"" + declFileName + "\" />" + newLine;
         }
@@ -29825,7 +29825,7 @@ var ts;
                     // If sourceroot option: Use the relative path corresponding to the common directory path
                     // otherwise source locations relative to map file location
                     var sourcesDirectoryPath = compilerOptions.sourceRoot ? host.getCommonSourceDirectory() : sourceMapDir;
-                    sourceMapData.sourceMapSources.push(ts.getRelativePathToDirectoryOrUrl(sourcesDirectoryPath, node.fileName, host.getCurrentDirectory(), host.getCanonicalFileName,
+                    sourceMapData.sourceMapSources.push(ts.getRelativePathToDirectoryOrUrl(sourcesDirectoryPath, node.fileName, host.getCurrentDirectory(), host.getCanonicalFileName, 
                     /*isAbsolutePathAnUrl*/ true));
                     sourceMapSourceIndex = sourceMapData.sourceMapSources.length - 1;
                     // The one that can be used from program to get the actual source file
@@ -29978,7 +29978,7 @@ var ts;
                         sourceMapDir = ts.combinePaths(host.getCommonSourceDirectory(), sourceMapDir);
                         sourceMapData.jsSourceMappingURL = ts.getRelativePathToDirectoryOrUrl(ts.getDirectoryPath(ts.normalizePath(jsFilePath)), // get the relative sourceMapDir path based on jsFilePath
                         ts.combinePaths(sourceMapDir, sourceMapData.jsSourceMappingURL), // this is where user expects to see sourceMap
-                        host.getCurrentDirectory(), host.getCanonicalFileName,
+                        host.getCurrentDirectory(), host.getCanonicalFileName, 
                         /*isAbsolutePathAnUrl*/ true);
                     }
                     else {
@@ -30951,7 +30951,7 @@ var ts;
                     write("]");
                 }
                 else {
-                    emitListWithSpread(elements, /*needsUniqueCopy*/ true, /*multiLine*/ (node.flags & 2048 /* MultiLine */) !== 0,
+                    emitListWithSpread(elements, /*needsUniqueCopy*/ true, /*multiLine*/ (node.flags & 2048 /* MultiLine */) !== 0, 
                     /*trailingComma*/ elements.hasTrailingComma, /*useConcat*/ true);
                 }
             }
@@ -33215,7 +33215,7 @@ var ts;
                 writeLine();
                 write('var d = __define,c=');
                 emitJavaScriptWorker(node.name);
-                write(',p=c.prototype;');
+                write(';p=c.prototype;');
                 ts.forEach(node.members, function (member) {
                     if (member.kind === 191 /* SemicolonClassElement */) {
                         writeLine();
@@ -33706,7 +33706,7 @@ var ts;
                 writeLine();
                 write('egret.registerClass(');
                 emit(node.name);
-                write(',\'' + fullName + '\'');
+                write(',"' + fullName + '"');
                 var interfacesArray = Object.keys(interfaces);
                 if (interfacesArray.length > 0) {
                     write(',');
@@ -37747,7 +37747,7 @@ var ts;
                 return fileNameToNodeMap[file];
             var typeNode = new FileNode();
             if (typeof (file) != 'string') {
-                console.log(file);
+                console.log(11223,file);
             }
             typeNode.name = file;
             typeNode.calls = [];
@@ -38313,7 +38313,6 @@ var ts;
             formatedMessages = formatedMessages.concat(sortErrors.map(function (e) { return e.messageText; }));
         }
         var result = { program: program, exitStatus: emitReturnStatus, files: ts.SortHelper.getOrderedFiles(), messages: formatedMessages.concat() };
-        formatedMessages = [];
         return result;
         function compileProgram() {
             var diagnostics;
@@ -38484,6 +38483,7 @@ var ts;
     }
     var formatedMessages = [];
     function executeWithOption(commandLine) {
+        //console.log("compilerOptions:",commandLine.options)
         var compilerOptions = commandLine.options;
         formatedMessages = [];
         var result = {
@@ -38493,6 +38493,7 @@ var ts;
             files: [],
             messages: formatedMessages
         };
+
         // If there are any errors due to command line parsing and/or
         // setting up localization, report them and quit.
         if (commandLine.errors.length > 0) {
@@ -38515,7 +38516,6 @@ var ts;
      * save all files at once, and we'd like to just perform a single recompilation.
      */
     function watchProgram(commandLine, compilerHost) {
-        //console.log("watchProgram:")
         var watchers = {};
         var updatedFiles = {};
         // Compile the program the first time and watch all given/referenced files.
@@ -38523,14 +38523,9 @@ var ts;
         var program = result.program;
         result.compileWithChanges = compileWithChanges;
         return result;
-        function compileWithChanges(filesChanged, options) {
-            console.log("compileWithChanges:",options);
-            if(options){
-                setOption(options,commandLine.options);
-            }
-            //setOption(options,parsedCmd.options);
-            //console.log("compileWithChanges:",sourceMap);
-            //commandLine.options.sourceMap = !!sourceMap;
+        function compileWithChanges(filesChanged, sourceMap) {
+            commandLine.options.sourceMap = !!sourceMap;
+            //console.log("commandLine.options:",commandLine.options);
             filesChanged.forEach(function (file) {
                 if (file.type == "added") {
                     commandLine.fileNames.push(file.fileName);
@@ -38549,8 +38544,8 @@ var ts;
             updatedFiles = {};
             return recompile(changedFiles);
         }
-        function recompile(changedFiles,option) {
-            //console.log("recompile")
+        function recompile(changedFiles) {
+            console.log("recompile:",changedFiles);
             // Reuse source files from the last compilation so long as they weren't changed.
             var oldSourceFiles = ts.arrayToMap(ts.filter(program.getSourceFiles(), function (file) { return !ts.hasProperty(changedFiles, getCanonicalName(file.fileName)); }), function (file) { return getCanonicalName(file.fileName); });
             // We create a new compiler host for this compilation cycle.
@@ -38579,36 +38574,31 @@ var ts;
 var Compiler = (function () {
     function Compiler() {
     }
-    Compiler.executeWithOption = function (options, files, out, outDir) {
-        var target = options.esTarget.toLowerCase();
-        var targetEnum = 1 /* ES5 */;
-        if (target == 'es6')
-            targetEnum = 2 /* ES6 */;
-        var parsedCmd = {
-            fileNames: files,
-            options: {
-                target: targetEnum
-            },
-            errors: []
-        };        
-        setOption(options,parsedCmd.options);
-        console.log(parsedCmd.options);
-        if (out) {
-            parsedCmd.options.out = out;
-        }
-        else {
-            parsedCmd.options.outDir = outDir;
-        }
-        // if(options.tsconfig){
-        //     for(var i in options.tsconfig){
-        //         parsedCmd.options[i] = options.tsconfig[i];
-        //     }
-        // }
-        //console.log("options.tsconfig:",options.tsconfig)
+    Compiler.executeWithOption = function (parsedCmd) {
         return ts.executeWithOption(parsedCmd);
+        // var parsedCmd = {
+        //     fileNames: files,
+        //     options: {
+        //         sourceMap: options.sourceMap,
+        //         target: 1,
+        //         removeComments: options.removeComments,
+        //         declaration: options.declaration,
+        //         diagnostics: options.debug
+        //     },
+        //     errors: []
+        // };
+        // if (out) {
+        //     parsedCmd.options.out = out;
+        // }
+        // else {
+        //     parsedCmd.options = options.compilerOptions;
+        //     parsedCmd.options.outDir = outDir;
+        // }
+        // console.log("commandLine.options1:",parsedCmd.options);
+        //return ts.executeWithOption(parsedCmd);
     };
     Compiler.exit = null;
-    Compiler.write = function (msg) { return console.log(msg); };
+    Compiler.write = function (msg) { return console.log("Compiler.write:",msg); };
     return Compiler;
 })();
 module.exports.Compiler = Compiler;
@@ -38619,10 +38609,4 @@ ts.sys.exit = function (code) {
 ts.sys.write = function (msg) {
     return Compiler.write(msg);
 };
-function setOption(optionIn,optionOut){
-    optionOut.sourceMap = optionIn.sourceMap;
-    optionOut.removeComments = optionIn.removeComments;
-    optionOut.declaration = optionIn.declaration;
-    optionOut.diagnostics = optionIn.debug;
-}
 //# sourceMappingURL=file:////Library/WebServer/Documents/egret/ts/TypeScript-1.7.2/built/local/tsc.js.map

@@ -1,3 +1,5 @@
+/// <reference path="../lib/types.d.ts" />
+/// <reference path="../lib/typescript/tsclark.d.ts" />
 var utils = require('../lib/utils');
 var file = require('../lib/FileUtil');
 var tsclark = require("../lib/typescript/tsclark");
@@ -5,6 +7,7 @@ var Compiler = (function () {
     function Compiler() {
     }
     Compiler.prototype.compile = function (option) {
+        //console.log('---Compiler.compile---')
         var args = option.args, def = option.def, files = option.files, out = option.out, outDir = option.outDir;
         var defTemp = args.declaration;
         args.declaration = def;
@@ -16,7 +19,26 @@ var Compiler = (function () {
         if (outDir)
             outDir = file.getRelativePath(cwd, outDir);
         process.chdir(cwd);
-        var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
+        var parsedCmd = {
+            fileNames: files,
+            options: {},
+            errors: []
+        };
+        if (out) {
+            parsedCmd.options = {
+                target: 1,
+                sourceMap: args.sourceMap,
+                removeComments: args.removeComments,
+                declaration: args.declaration,
+                out: out
+            };
+        }
+        else {
+            parsedCmd.options = args.compilerOptions;
+            parsedCmd.options.outDir = outDir;
+        }
+        //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
+        var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
         args.declaration = defTemp;
         if (compileResult.messages) {
             compileResult.messages.forEach(function (m) { return console.log(m); });
@@ -32,3 +54,4 @@ tsclark.Compiler.exit = function (exitCode) {
     return exitCode;
 };
 module.exports = Compiler;
+//# sourceMappingURL=Compiler.js.map

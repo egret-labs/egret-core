@@ -1,3 +1,32 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+/// <reference path="../lib/types.d.ts" />
 var egret;
 (function (egret) {
     global["$locale_strings"] = global["$locale_strings"] || {};
@@ -9,11 +38,13 @@ var egret;
     locale_strings[5] = "请确定执行路径";
     locale_strings[6] = "manifest.json生成成功";
     locale_strings[7] = "native拷贝共计耗时：{0}秒";
+    //create
     locale_strings[1001] = "请输入项目名称。例: {color_green}egret create [project_name]{color_normal}";
     locale_strings[1002] = "该项目已存在";
     locale_strings[1003] = "正在创建新项目文件夹...";
     locale_strings[1004] = "正在编译项目...";
     locale_strings[1005] = "创建成功";
+    //build
     locale_strings[1101] = "请输入项目名称。例:{color_green}egret build [project_name]{color_normal}";
     locale_strings[1102] = "指定項目中不存在 bin-debug 文件夾，请执行 {color_green}egret build [project_name] -e {color_normal} 初始化引擎";
     locale_strings[1103] = "{0}: error 类文件之间存在循环依赖，请检查类的继承关系或静态变量的初始化引用。";
@@ -31,6 +62,8 @@ var egret;
     locale_strings[1115] = "第三方库共计耗时：{0}秒";
     locale_strings[1116] = "目前不支持修改 tsconfig.json 中的编译选项: '{0}'.";
     locale_strings[1117] = "警告! tsconfig.json 不是有效的 json 文件";
+    locale_strings[1118] = "警告! egretProperties.json 被修改了，请执行 {color_green}egret build [project_name] -e {color_normal} 初始化引擎";
+    //compile
     locale_strings[1301] = "在编译路径 {0} 下找不到 egret_file_list.js 或 game_file_list.js，请检查编译路径是否正确";
     locale_strings[1302] = "请输入编译路径。例:{color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
     locale_strings[1303] = "编译失败";
@@ -40,6 +73,7 @@ var egret;
     locale_strings[1307] = "模块 {0} 中不存在任何 .ts 或 .d.ts 文件，无法编译，请在模块的 file_list 字段中填写 .ts 或 .d.ts ";
     locale_strings[1308] = "类或接口名冲突：‘{0}’同时存在于以下两个文件内：\n{1}\n{2}";
     locale_strings[1309] = "编译成功";
+    //publish
     locale_strings[1401] = "找不到java或java版本过低（最低需求为 java 7 ),请安装java并执行 egret publish -testJava 命令进行测试";
     locale_strings[1402] = "开始发布 {0} 版本：{1}";
     locale_strings[1403] = "开始压缩js文件";
@@ -59,7 +93,9 @@ var egret;
     locale_strings[1417] = "检测成功";
     locale_strings[1418] = "WebP格式转换失败 : {0}";
     locale_strings[1419] = "转换WebP格式 : {0} / {1}";
+    //startserver
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
+    //create_app
     locale_strings[1601] = "请输入h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
     locale_strings[1602] = "缺少egretProperties.json或格式不正确。 \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
     locale_strings[1603] = "缺少create_app.json。\n请从以下地址下载最新手机平台支持库\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS: http://www.egret-labs.org/download/egret-ios-packager-download.html";
@@ -71,6 +107,7 @@ var egret;
     locale_strings[1609] = "> rename project name ...";
     locale_strings[1610] = "缺少项目名称 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     locale_strings[1611] = "项目已存在,请重新输入 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
+    //upgrade
     locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";
     locale_strings[1703] = "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n";
@@ -84,8 +121,10 @@ var egret;
     locale_strings[1714] = "正在更新配置文件..";
     locale_strings[1715] = "项目检测成功";
     locale_strings[1716] = "检测到你使用了旧的第三方库{0},建议手动检查这些库文件是否使用了废弃的API或使用与{1}兼容的第三方库";
+    //info
     locale_strings[1801] = "当前Egret版本：{0}";
     locale_strings[1802] = "Egret安装路径：{0}";
+    //help
     locale_strings[1901] = "无法找到{0}命令的帮助文档";
     locale_strings[1902] = "用法: {0}";
     locale_strings[1903] = "用法: egret <command> [-v]";
@@ -93,6 +132,7 @@ var egret;
     locale_strings[1905] = "参数列表:";
     locale_strings[1906] = "{0}打印详细日志";
     locale_strings[1907] = "使用 egret help <command> 了解各个 command 的细节";
+    //exml
     locale_strings[2001] = "{0}: error 找不到EXML文件";
     locale_strings[2002] = "{0}: error XML文件格式有误 {1}";
     locale_strings[2003] = "{0}: error 无法找到节点所对应的类定义\n{1}";
@@ -177,12 +217,15 @@ var helpModule;
         "build0": "构建指定项目,编译指定项目的 TypeScript 文件",
         "build1": "编译指定项目的同时拷贝引擎代码",
         "build2": "清除libs以及bin-debug文件夹，只有在-e的前提下才会生效",
+        //,"build3":"只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块",
         "build4": "编译EXML文件时保留生成的TS文件",
         "build5": "如果有native工程，则会将文件拷贝到工程里",
+        //,"build6":"编译游戏时，根据game_file_list获取编译列表",
         "build7": "显示执行过程",
         "clean": "清除libs文件夹内的引擎代码，然后再重新拷贝，编译指定项目"
     };
     helpModule.help_title = {
+        //titles,
         "create": "创建新项目",
         "build": "构建指定项目,编译指定项目的 TypeScript 文件",
         "publish": "发布项目，使用GoogleClosureCompiler压缩代码",
@@ -197,3 +240,4 @@ var helpModule;
     };
     global["helpModule"] = global["helpModule"] || helpModule;
 })(helpModule || (helpModule = {}));
+//# sourceMappingURL=zh_CN.js.map

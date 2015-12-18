@@ -64,6 +64,7 @@ locale_strings[1114] = "{0} Copy other documents";
 locale_strings[1115] = "The total elapsed time of the 3rd party libraries: {0} secs";
 locale_strings[1116] = "Not support the compiler option: '{0}' in tsconfig.json.";
 locale_strings[1117] = "Warning! The tsconfig.json is not a valid json.";
+locale_strings[1118] = "Warning! The egretProperties.json had been changed, please implement {color_green} egret build [project_name] -e {color_normal} to initialize the engine";
 
 //compile
 locale_strings[1301] = "Cannot find egret_file_list.js or game_file_list.js compiled under the path {0}, please check whether the compile path is correct";

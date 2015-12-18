@@ -764,31 +764,8 @@ declare module egret {
 }
 
 class Compiler {
-    static executeWithOption(options: egret.ToolArgs, files: string[], out?: string, outDir?: string): ts.EgretCompileResult {
-        var target = options.esTarget.toLowerCase();
-        var targetEnum = ts.ScriptTarget.ES5;
-        if (target == 'es6')
-            targetEnum = ts.ScriptTarget.ES6;
-
-        var parsedCmd: ts.ParsedCommandLine = {
-            fileNames: files,
-            options: {
-                sourceMap: options.sourceMap,
-                target: targetEnum,
-                removeComments: options.removeComments,
-                declaration: options.declaration,
-                diagnostics: options.debug
-            },
-            errors: []
-        };
-
-        if (out) {
-            parsedCmd.options.out = out;
-        }
-        else {
-            parsedCmd.options.outDir = outDir;
-        }
-        return ts.executeWithOption(parsedCmd);
+    static executeWithOption(parsedCommandLine: ts.ParsedCommandLine): ts.EgretCompileResult {
+        return ts.executeWithOption(parsedCommandLine);
     }
     static exit: (exitCode: number) => number = null;
     static write = (msg: string)=> console.log(msg);
