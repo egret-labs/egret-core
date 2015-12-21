@@ -218,7 +218,7 @@ module egret {
         $render(context:sys.RenderContext):void {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = this.$smoothing;
 
                 var offsetX:number = Math.round(texture._offsetX);
                 var offsetY:number = Math.round(texture._offsetY);

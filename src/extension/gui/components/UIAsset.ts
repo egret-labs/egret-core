@@ -277,7 +277,7 @@ module egret.gui {
 		$render(context:sys.RenderContext):void{
 			if (this._contentIsTexture) {
 				var bitmapData = <Texture> this._content;
-				context.imageSmoothingEnabled = false;
+				context.imageSmoothingEnabled = this.$smoothing;
 				var destW:number;
 				var destH:number;
 				if(this.autoScale){
