@@ -21,7 +21,7 @@ class AutoCompileCommand implements egret.Command {
 
     execute():number {
 
-        if(JSON.stringify(egret.args.properties.modulesConfig) == "{}"){
+        if (JSON.stringify(egret.args.properties.modulesConfig) == "{}") {
             console.log(utils.tr(1602));//缺少egretProperties.json
             process.exit(0);
             return;
@@ -83,10 +83,7 @@ class AutoCompileCommand implements egret.Command {
 
 
         //第一次运行，拷贝项目文件
-        //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
-        //修改 html 中 modules 块
-        CopyFiles.modifyHTMLWithModules();
+        this.copyLibs();
 
         //编译
         var exmlresult = exmlActions.build();
@@ -120,7 +117,7 @@ class AutoCompileCommand implements egret.Command {
 
     buildChanges(filesChanged?:egret.FileChanges) {
         //console.log('-------compileservice.buildChanges------')
-        //console.log("filesChanged:", filesChanged);
+
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
             return this.buildProject();
@@ -130,8 +127,9 @@ class AutoCompileCommand implements egret.Command {
 
         filesChanged = filesChanged || this.dirState.checkChanges();
 
+        //console.log("filesChanged:", this.dirState);
+
         filesChanged.forEach(f=> {
-            //console.log(7878,f.fileName);
             if (this.shouldSkip(f.fileName)) {
                 return;
             }
@@ -142,7 +140,6 @@ class AutoCompileCommand implements egret.Command {
             else
                 others.push(f);
         });
-
         if (others.length > 0) {
             var fileName:string;
             for (var i = 0, len = others.length; i < len; i++) {
@@ -151,8 +148,11 @@ class AutoCompileCommand implements egret.Command {
                     this.compileProject.compileProject(egret.args);
                     this.messages[2] = egret.args.tsconfigError;
                 }
-                else if (fileName.indexOf("egretProperties.json") > -1) {console.log("egretProperties 改变了，请重新使用build -e重新加载");
-                    this.messages[3] = [utils.tr(1118)];
+                else if (fileName.indexOf("egretProperties.json") > -1) {
+                    egret.args.properties.reload();
+                    this.copyLibs();
+                    this.compileProject.compileProject(egret.args);
+                    this.messages[2] = egret.args.tsconfigError;
                 }
             }
         }
@@ -164,7 +164,7 @@ class AutoCompileCommand implements egret.Command {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
-
+        this.messages[1] = [];
         if (codes.length || this.sourceMapStateChanged) {
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
@@ -187,6 +187,14 @@ class AutoCompileCommand implements egret.Command {
         global.gc && global.gc();
         return this.exitCode[0] || this.exitCode[1];
     }
+
+    private copyLibs(){
+        //刷新libs 中 modules 文件
+        CopyFiles.copyToLibs();
+        //修改 html 中 modules 块
+        CopyFiles.modifyHTMLWithModules();
+    }
+
 
     private buildChangedTS(filesChanged:egret.FileChanges) {
         //console.log("changed ts:", filesChanged);

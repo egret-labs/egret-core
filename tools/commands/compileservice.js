@@ -57,10 +57,7 @@ var AutoCompileCommand = (function () {
         utils.clean(options.debugDir);
         exmlActions.beforeBuild();
         //第一次运行，拷贝项目文件
-        //刷新libs 中 modules 文件
-        CopyFiles.copyToLibs();
-        //修改 html 中 modules 块
-        CopyFiles.modifyHTMLWithModules();
+        this.copyLibs();
         //编译
         var exmlresult = exmlActions.build();
         this.exitCode[0] = exmlresult.exitCode;
@@ -82,9 +79,8 @@ var AutoCompileCommand = (function () {
         return exitCode;
     };
     AutoCompileCommand.prototype.buildChanges = function (filesChanged) {
-        var _this = this;
         //console.log('-------compileservice.buildChanges------')
-        //console.log("filesChanged:", filesChanged);
+        var _this = this;
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
             return this.buildProject();
@@ -92,8 +88,8 @@ var AutoCompileCommand = (function () {
         var exmls = [];
         var others = [];
         filesChanged = filesChanged || this.dirState.checkChanges();
+        //console.log("filesChanged:", this.dirState);
         filesChanged.forEach(function (f) {
-            //console.log(7878,f.fileName);
             if (_this.shouldSkip(f.fileName)) {
                 return;
             }
@@ -113,8 +109,10 @@ var AutoCompileCommand = (function () {
                     this.messages[2] = egret.args.tsconfigError;
                 }
                 else if (fileName.indexOf("egretProperties.json") > -1) {
-                    console.log("egretProperties 改变了，请重新使用build -e重新加载");
-                    this.messages[3] = [utils.tr(1118)];
+                    egret.args.properties.reload();
+                    this.copyLibs();
+                    this.compileProject.compileProject(egret.args);
+                    this.messages[2] = egret.args.tsconfigError;
                 }
             }
         }
@@ -124,6 +122,7 @@ var AutoCompileCommand = (function () {
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
+        this.messages[1] = [];
         if (codes.length || this.sourceMapStateChanged) {
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
@@ -143,6 +142,12 @@ var AutoCompileCommand = (function () {
         this.sendCommand();
         global.gc && global.gc();
         return this.exitCode[0] || this.exitCode[1];
+    };
+    AutoCompileCommand.prototype.copyLibs = function () {
+        //刷新libs 中 modules 文件
+        CopyFiles.copyToLibs();
+        //修改 html 中 modules 块
+        CopyFiles.modifyHTMLWithModules();
     };
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
         //console.log("changed ts:", filesChanged);
