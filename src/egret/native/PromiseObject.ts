@@ -69,6 +69,16 @@ module egret {
          * @platform Web,Native
          */
         public downloadingSizeThisObject:any = null;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public onResponseHeaderFunc:Function = null;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public onResponseHeaderThisObject:any = null;
 
         /**
          * @version Egret 2.4
@@ -129,6 +139,17 @@ module egret {
 
         /**
          * @private
+         *
+         * @param args
+         */
+        private onResponseHeader(...args):void {
+            if (this.onResponseHeaderFunc) {
+                this.onResponseHeaderFunc.apply(this.onResponseHeaderThisObject, args);
+            }
+        }
+
+        /**
+         * @private
          * 
          */
         private destroy() {
@@ -138,6 +159,8 @@ module egret {
             this.onErrorThisObject = undefined;
             this.downloadingSizeFunc = undefined;
             this.downloadingSizeThisObject = undefined;
+            this.onResponseHeaderFunc = undefined;
+            this.onResponseHeaderThisObject = undefined;
             PromiseObject.promiseObjectList.push(this);
         }
     }
