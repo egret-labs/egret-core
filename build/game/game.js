@@ -323,7 +323,7 @@ var egret;
         p.$render = function (context) {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = this.$smoothing;
                 var offsetX = Math.round(texture._offsetX);
                 var offsetY = Math.round(texture._offsetY);
                 var bitmapWidth = texture._bitmapWidth;

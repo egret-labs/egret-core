@@ -8538,6 +8538,16 @@ declare module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
+        onResponseHeaderFunc: Function;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        onResponseHeaderThisObject: any;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         constructor();
         /**
          *
@@ -8563,6 +8573,12 @@ declare module egret {
          * @param args
          */
         private downloadingSize(...args);
+        /**
+         * @private
+         *
+         * @param args
+         */
+        private onResponseHeader(...args);
         /**
          * @private
          *

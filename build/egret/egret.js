@@ -12345,6 +12345,16 @@ var egret;
              * @platform Web,Native
              */
             this.downloadingSizeThisObject = null;
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            this.onResponseHeaderFunc = null;
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            this.onResponseHeaderThisObject = null;
         }
         var d = __define,c=PromiseObject,p=c.prototype;
         /**
@@ -12407,6 +12417,20 @@ var egret;
         /**
          * @private
          *
+         * @param args
+         */
+        p.onResponseHeader = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            if (this.onResponseHeaderFunc) {
+                this.onResponseHeaderFunc.apply(this.onResponseHeaderThisObject, args);
+            }
+        };
+        /**
+         * @private
+         *
          */
         p.destroy = function () {
             this.onSuccessFunc = undefined;
@@ -12415,6 +12439,8 @@ var egret;
             this.onErrorThisObject = undefined;
             this.downloadingSizeFunc = undefined;
             this.downloadingSizeThisObject = undefined;
+            this.onResponseHeaderFunc = undefined;
+            this.onResponseHeaderThisObject = undefined;
             PromiseObject.promiseObjectList.push(this);
         };
         /**

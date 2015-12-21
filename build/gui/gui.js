@@ -16874,7 +16874,7 @@ var egret;
             p.$render = function (context) {
                 if (this._contentIsTexture) {
                     var bitmapData = this._content;
-                    context.imageSmoothingEnabled = false;
+                    context.imageSmoothingEnabled = this.$smoothing;
                     var destW;
                     var destH;
                     if (this.autoScale) {
