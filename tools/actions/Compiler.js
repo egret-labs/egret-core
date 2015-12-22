@@ -34,7 +34,10 @@ var Compiler = (function () {
             };
         }
         else {
-            parsedCmd.options = args.compilerOptions;
+            //console.log("args.compilerOptions:",parsedCmd.options.outDir)
+            if (args.compilerOptions) {
+                parsedCmd.options = args.compilerOptions;
+            }
             parsedCmd.options.outDir = outDir;
         }
         //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
