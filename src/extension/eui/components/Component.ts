@@ -607,7 +607,7 @@ module eui {
          */
         protected createChildren():void {
             var values = this.$Component;
-            if (!values[sys.ComponentKeys.skinNameExplicitlySet]) {
+            if (!values[sys.ComponentKeys.skinName]) {
                 var theme = this.$stage.getImplementation("eui.Theme");
                 if(theme){
                     var skinName = theme.getSkinName(this);
