@@ -2037,6 +2037,7 @@ module egret {
         renderContext.font = font;
         renderContext.textAlign = "left";
         renderContext.textBaseline = "middle";
+        renderContext.lineJoin = "round";//确保描边样式是圆角
     }
 
 }
