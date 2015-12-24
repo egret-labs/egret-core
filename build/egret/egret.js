@@ -6132,6 +6132,7 @@ var egret;
                 }
                 tempList[i].$invalidateContentBounds();
             }
+            delete Texture._displayList[hashCode];
         };
         Texture._displayList = {};
         return Texture;
