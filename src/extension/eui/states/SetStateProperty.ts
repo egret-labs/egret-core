@@ -110,7 +110,7 @@ module eui {
         /**
          * @inheritDoc
          *
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @version eui 1.0
          * @platform Web,Native
          */
@@ -133,7 +133,7 @@ module eui {
         /**
          * @inheritDoc
          *
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @version eui 1.0
          * @platform Web,Native
          */

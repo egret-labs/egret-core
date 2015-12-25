@@ -145,13 +145,13 @@ module egret {
         /**
          * @language en_US
          * Whether or not is smoothed when scaled.
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否进行平滑处理。
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         public get smoothing():boolean {

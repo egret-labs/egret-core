@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v2.5.8
+Current Version: v3.0.0
 
 
 Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
@@ -26,7 +26,7 @@ Platforms:
 
 3rd Party Library
 -------------------------
-* Egret Team encapsulated some powerful 3rd party libraries,including Google AdSense,DOM support,Gesture,MD5,Particle,Physics. For more information,you can visit [here](https://github.com/egret-labs/egret-game-library)
+* Egret Team encapsulated some powerful 3rd party libraries,including Gesture,MD5,Particle,Physics. For more information,you can visit [here](https://github.com/egret-labs/egret-game-library)
 
 Tools
 -------------------------
@@ -40,7 +40,7 @@ Document & API
 
 Release Notes
 --------------------
-[Egret 2.5.8 Release Notes 2015-12-25](/docs/en/2.5.8_ReleaseNotes.md)
+[Egret 3.0.0 Release Notes 2015-12-25](/docs/en/3.0.0_ReleaseNotes.md)
 
 [Egret 2.5.7 Release Notes 2015-12-11](/docs/en/2.5.7_ReleaseNotes.md)
 
@@ -80,7 +80,7 @@ Release Notes
 简介
 -------------------
 
-Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游戏引擎。Egret 引擎的核心定位是开放，高效，优雅。基于它，你可以快速轻松地构建HTML5移动游戏或原生游戏。
+Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及全新打造的[3D引擎](https://github.com/egret-labs/egret-3d)，它解决了HTML5性能问题及碎片化问题，灵活地满足开发者开发2D或3D游戏的需求，并有着极强的跨平台运行能力。
 
 
 支持平台
@@ -99,7 +99,7 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 #### Mobile App
 * Android 2.3+
 * iOS 7.0+
-* Windows Phone 8 ( 已支持，参见[这里](http://docs.egret-labs.org/post/tools/native/winphone.html) ）
+* Windows Phone 8 ( 已支持，参见[这里](http://edn.egret.com/cn/docs/page/171) ）
 
 
 文档与教程
@@ -110,7 +110,7 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 第三方库
 -------------------------
-* Egret 团队针对引擎封装维护了一些功能强大的第三方库，包括Google Adsense广告,MD5，手势，DOM元素渲染支持，粒子系统，物理系统等。访问[这里](https://github.com/egret-labs/egret-game-library)
+* Egret 团队针对引擎封装维护了一些功能强大的第三方库，MD5，手势，粒子系统，物理系统等。访问[这里](https://github.com/egret-labs/egret-game-library)
 
 工具
 -------------------------
@@ -124,7 +124,7 @@ Egret Engine是一款使用JavaScript(TypeScript)编写的HTML5开源免费游�
 
 发布说明
 --------------------
-[Egret 2.5.8 Release Notes 2015-12-25](/docs/cn/2.5.8_ReleaseNotes.md)
+[Egret 3.0.0 Release Notes 2015-12-25](/docs/cn/3.0.0_ReleaseNotes.md)
 
 [Egret 2.5.7 Release Notes 2015-12-11](/docs/cn/2.5.7_ReleaseNotes.md)
 
