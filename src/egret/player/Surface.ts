@@ -38,7 +38,10 @@ module egret.sys {
          * 绘图上下文
          */
         renderContext:RenderContext;
-
+        /**
+         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
+         * @param type 转换的类型，如: "image/png","image/jpeg"
+         */
         toDataURL(type?: string, ...args: any[]): string;
     }
 }
