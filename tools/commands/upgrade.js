@@ -4,6 +4,7 @@
 /// <reference path="../lib/types.d.ts" />
 /// <reference path="../lib/async/async.d.ts" />
 var async = require('../lib/async/async');
+var service = require('../service/index');
 //import config = require('../lib/ProjectConfig');
 //import globals = require("../Globals");
 var UpgradeCommand = (function () {
@@ -104,7 +105,11 @@ var UpgradeCommand = (function () {
                 globals.exit(1705);
             }
             else {
-                globals.exit(1702);
+                service.execCommand({
+                    path: egret.args.projectDir,
+                    command: "shutdown",
+                    option: egret.args
+                }, function () { return globals.exit(1702); }, true);
             }
         });
         //for (var i = 0; i < this.upgradeConfigArr.length; i++) {
@@ -130,5 +135,4 @@ var UpgradeCommand = (function () {
     return UpgradeCommand;
 })();
 module.exports = UpgradeCommand;
-
-//# sourceMappingURL=../commands/upgrade.js.map
+//# sourceMappingURL=upgrade.js.map
