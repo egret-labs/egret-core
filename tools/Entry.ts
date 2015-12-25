@@ -36,7 +36,7 @@ global.DontExitCode = -0xF000;
 
 //require('./locales/zh_CN');
 require('./globals');
-require("./lib/core/global.js");
+require("./lib/core/globals.js");
 import Parser = require("./parser/Parser");
 import earlyParams = require("./parser/ParseEarlyVersionParams");
 import utils = require('./lib/utils');

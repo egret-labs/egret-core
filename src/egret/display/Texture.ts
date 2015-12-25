@@ -324,6 +324,9 @@ module egret {
          */
         public dispose():void {
             if (this._bitmapData) {
+                if (this._bitmapData.dispose) {
+                    this._bitmapData.dispose();
+                }
                 Texture.$dispose(this);
 
                 //console.log("dispose Texture");
@@ -430,6 +433,7 @@ module egret {
                 }
                 tempList[i].$invalidateContentBounds();
             }
+            delete Texture._displayList[hashCode];
         }
     }
 

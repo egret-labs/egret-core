@@ -3,6 +3,7 @@ var utils = require('../lib/utils');
 var service = require('../service/index');
 var FileUtil = require('../lib/FileUtil');
 var Native = require('../actions/NativeProject');
+var CopyFiles = require('../actions/CopyFiles');
 var exmlActions = require('../actions/exml');
 var state = require('../lib/DirectoryState');
 var CompileProject = require('../actions/CompileProject');
@@ -11,13 +12,18 @@ var parser = require('../parser/Parser');
 var AutoCompileCommand = (function () {
     function AutoCompileCommand() {
         this.exitCode = [0, 0];
-        this.messages = [[], []];
+        this.messages = [[], [], [], []];
         this._request = null;
         this._lastBuildTime = Date.now();
         this.sourceMapStateChanged = false;
     }
     AutoCompileCommand.prototype.execute = function () {
         var _this = this;
+        if (JSON.stringify(egret.args.properties.modulesConfig) == "{}") {
+            console.log(utils.tr(1602)); //缺少egretProperties.json
+            process.exit(0);
+            return;
+        }
         this._request = service.execCommand({
             command: "init",
             path: egret.args.projectDir,
@@ -41,6 +47,7 @@ var AutoCompileCommand = (function () {
         return DontExitCode;
     };
     AutoCompileCommand.prototype.buildProject = function () {
+        //console.log('-------compileservice.buildProject------')
         var exitCode = 0;
         var options = egret.args;
         var compileProject = new CompileProject();
@@ -49,6 +56,8 @@ var AutoCompileCommand = (function () {
         //预处理
         utils.clean(options.debugDir);
         exmlActions.beforeBuild();
+        //第一次运行，拷贝项目文件
+        this.copyLibs();
         //编译
         var exmlresult = exmlActions.build();
         this.exitCode[0] = exmlresult.exitCode;
@@ -64,11 +73,13 @@ var AutoCompileCommand = (function () {
         this._scripts = result.files;
         this.exitCode[1] = result.exitStatus;
         this.messages[1] = result.messages;
+        this.messages[2] = options.tsconfigError;
         this.sendCommand();
         global.gc && global.gc();
         return exitCode;
     };
     AutoCompileCommand.prototype.buildChanges = function (filesChanged) {
+        //console.log('-------compileservice.buildChanges------')
         var _this = this;
         this._lastBuildTime = Date.now();
         if (!this.compileProject)
@@ -77,6 +88,7 @@ var AutoCompileCommand = (function () {
         var exmls = [];
         var others = [];
         filesChanged = filesChanged || this.dirState.checkChanges();
+        //console.log("filesChanged:", this.dirState);
         filesChanged.forEach(function (f) {
             if (_this.shouldSkip(f.fileName)) {
                 return;
@@ -88,16 +100,33 @@ var AutoCompileCommand = (function () {
             else
                 others.push(f);
         });
+        if (others.length > 0) {
+            var fileName;
+            for (var i = 0, len = others.length; i < len; i++) {
+                fileName = others[i].fileName;
+                if (fileName.indexOf("tsconfig.json") > -1) {
+                    this.compileProject.compileProject(egret.args);
+                    this.messages[2] = egret.args.tsconfigError;
+                }
+                else if (fileName.indexOf("egretProperties.json") > -1) {
+                    egret.args.properties.reload();
+                    this.copyLibs();
+                    this.compileProject.compileProject(egret.args);
+                    this.messages[2] = egret.args.tsconfigError;
+                }
+            }
+        }
         if (exmls.length) {
             exmlActions.beforeBuildChanges(exmls);
         }
         var exmlTS = this.buildChangedEXML(exmls);
         this.buildChangedRes(others);
         codes = codes.concat(exmlTS);
+        this.messages[1] = [];
         if (codes.length || this.sourceMapStateChanged) {
             this.sourceMapStateChanged = false;
             var result = this.buildChangedTS(codes);
-            console.log("result.files:", result.files);
+            //console.log("result.files:", result.files);
             //if (result.files && result.files.length > 0 && this._scripts.length != result.files.length) {
             this._scripts = result.files;
             this.onTemplateIndexChanged();
@@ -114,8 +143,14 @@ var AutoCompileCommand = (function () {
         global.gc && global.gc();
         return this.exitCode[0] || this.exitCode[1];
     };
+    AutoCompileCommand.prototype.copyLibs = function () {
+        //刷新libs 中 modules 文件
+        CopyFiles.copyToLibs();
+        //修改 html 中 modules 块
+        CopyFiles.modifyHTMLWithModules();
+    };
     AutoCompileCommand.prototype.buildChangedTS = function (filesChanged) {
-        console.log("changed ts:", filesChanged);
+        //console.log("changed ts:", filesChanged);
         return this.compileProject.compileProject(egret.args, filesChanged);
     };
     AutoCompileCommand.prototype.buildChangedEXML = function (filesChanges) {
@@ -169,6 +204,7 @@ var AutoCompileCommand = (function () {
         return 0;
     };
     AutoCompileCommand.prototype.onServiceMessage = function (msg) {
+        //console.log("onServiceMessage:",msg)
         if (msg.command == 'build' && msg.option) {
             this.sourceMapStateChanged = msg.option.sourceMap != egret.args.sourceMap;
             var props = egret.args.properties;
@@ -182,7 +218,7 @@ var AutoCompileCommand = (function () {
     };
     AutoCompileCommand.prototype.sendCommand = function (cmd) {
         if (!cmd) {
-            var msg = this.messages[0].concat(this.messages[1]);
+            var msg = this.messages[0].concat(this.messages[1]).concat(this.messages[2]).concat(this.messages[3]);
             cmd = {
                 command: 'buildResult',
                 exitCode: this.exitCode[0] || this.exitCode[1],
@@ -207,5 +243,4 @@ var AutoCompileCommand = (function () {
     return AutoCompileCommand;
 })();
 module.exports = AutoCompileCommand;
-
-//# sourceMappingURL=../commands/compileservice.js.map
+//# sourceMappingURL=compileservice.js.map

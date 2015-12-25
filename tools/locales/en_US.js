@@ -1,3 +1,32 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+/// <reference path="../lib/node.d.ts" />
 global["$locale_strings"] = global["$locale_strings"] || {};
 var locale_strings = global["$locale_strings"];
 locale_strings[0] = "Successful implementation";
@@ -7,11 +36,13 @@ locale_strings[4] = "Script execution failed";
 locale_strings[5] = "Confirm the execution path";
 locale_strings[6] = "manifest.json generated successfully";
 locale_strings[7] = "Total time for native copy: {0} second",
+    //create
     locale_strings[1001] = "Enter a project name. Example:  {color_green}egret create [project_name]{color_normal}";
 locale_strings[1002] = "The project already exists";
 locale_strings[1003] = "Creating a new project folder ...";
 locale_strings[1004] = "Compiling the project ...";
 locale_strings[1005] = "Created successfully";
+//build
 locale_strings[1101] = "Enter a project name. Example: {color_green}egret build [project_name]{color_normal}";
 locale_strings[1102] = "bin-debug folder is not contained in the specified project, please implement {color_green} egret build [project_name] -e {color_normal} to initialize the engine";
 locale_strings[1103] = "There is a circular dependency amongthe {0}: error files, please check the class inheritance or static variable initialization references.";
@@ -27,6 +58,9 @@ locale_strings[1112] = "{0} uses time: {1} seconds";
 locale_strings[1113] = "{0} tsc compiles and generates '.d.ts'";
 locale_strings[1114] = "{0} Copy other documents";
 locale_strings[1115] = "The total elapsed time of the 3rd party libraries: {0} secs";
+locale_strings[1116] = "Not support the compiler option: '{0}' in tsconfig.json.";
+locale_strings[1117] = "Warning! The tsconfig.json is not a valid json.";
+//compile
 locale_strings[1301] = "Cannot find egret_file_list.js or game_file_list.js compiled under the path {0}, please check whether the compile path is correct";
 locale_strings[1302] = "Please enter the compile path. Example: {color_green}egret compile --source [your_typescript_source_dir] --output [your_output_dir]{color_normal}";
 locale_strings[1303] = "Compilation fails";
@@ -36,6 +70,7 @@ locale_strings[1306] = "Fail to  find variable definition of the document class 
 locale_strings[1307] = ".ts or .d.ts file {0} does not exist in the module, and cannot be compiled, so please fill.ts or .d.ts in file_list field of the module ";
 locale_strings[1308] = "Class or interface name conflict: '{0}' exists in both of the following two files: \n {1} \n {2}";
 locale_strings[1309] = "Compile successfully";
+//publish
 locale_strings[1401] = "java can't be found or java version is too old (at least java 7), please install the java and execute egret publish -testJava command for test";
 locale_strings[1402] = "Start to publish {0} version: {1}";
 locale_strings[1403] = "Start to compress js file";
@@ -55,7 +90,9 @@ locale_strings[1416] = "You can modify the JAVA_HOME environment variable to mod
 locale_strings[1417] = "Successful detection ";
 locale_strings[1418] = "WebP format fail : {0}";
 locale_strings[1419] = "Format WebP : {0} / {1}";
+//startserver
 locale_strings[1501] = "Unable to start the server, please check the authority or whether the port is occupied";
+//create_app
 locale_strings[1601] = "Please enter a h5 game project name, and mobile platform support library.Example: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n If you do not install the latest mobile platform support library,please download from the following address：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
 locale_strings[1602] = "EgretProperties.json missing or incorrectly formatted.  \n Please upgrade egret-core to the latest version from http://www.egret-labs.org/download/egret-download.html";
 locale_strings[1603] = "create_app.json is missing.\n Please download the latest mobile platform support library from the following address \n Android:  http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS:  http://www.egret-labs.org/download/egret-ios-packager-download.html";
@@ -67,6 +104,7 @@ locale_strings[1608] = "> replace all configure elements ...";
 locale_strings[1609] = "> rename project name ...";
 locale_strings[1610] = "Project name is missing. Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
 locale_strings[1611] = "The project is exist, please use another name.Example:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
+//upgrade
 locale_strings[1701] = "Project version is lower than egret version, please implement egret upgrade {your_project} command to upgrade your project, \n do not add braces {} in the commands";
 locale_strings[1702] = "Upgrade successful";
 locale_strings[1703] = "\n After the first step to upgrade is completed, {color_red} press {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} to complete the remaining steps to upgrade {color_normal}\n";
@@ -80,8 +118,10 @@ locale_strings[1713] = "{color_green}Egret QQ group 481169576 {color_normal}";
 locale_strings[1714] = "Updating the egretProperties.json";
 locale_strings[1715] = "Project testing sucessful";
 locale_strings[1716] = "You had use the old 3rd part library {0}.Please make sure these files not used the removed API";
+//info
 locale_strings[1801] = "Egret version：{0}";
 locale_strings[1802] = "Egret install path:{0}";
+//help
 locale_strings[1901] = "The help file for {0} command can't be found ";
 locale_strings[1902] = "How to use: {0}";
 locale_strings[1903] = "How to use: egret <command> [-v]";
@@ -89,6 +129,7 @@ locale_strings[1904] = "command list:";
 locale_strings[1905] = "Parameter list:";
 locale_strings[1906] = "{0} print a detailed log";
 locale_strings[1907] = "Use egret help <command> to understand details of each command";
+//exml
 locale_strings[2001] = "{0}: error EXML file can't be found ";
 locale_strings[2002] = "{0}: error XML file error {1}";
 locale_strings[2003] = "{0}: error the class definitions corresponding to nodes can't be found  \n {1}";
@@ -144,6 +185,7 @@ locale_strings[12002] = "Please set the default screen size";
 locale_strings[12003] = "Please select the Scale Mode";
 locale_strings[12004] = "Please select modules";
 locale_strings[12005] = "Please select the platform";
+//info
 locale_strings[1] = "Error when compile project";
 var helpModule;
 (function (helpModule) {
@@ -175,12 +217,15 @@ var helpModule;
         "build0": "Compile the TypeScript files in project.",
         "build1": "Compile the TypeScript files in project and copy the Egret engine code",
         "build2": "Clean the libs and bin-debug files, it works when use the -e parameter",
+        //,"build3":"只编译引擎中指定的部分模块，不编译项目；不填则编译全部模块",
         "build4": "Compile the exml files and create the ts files",
         "build5": "If the native project is exist, it will also be copy to the native project",
+        //,"build6":"编译游戏时，根据game_file_list获取编译列表",
         "build7": "Show the execuing procedure",
         "clean": "Clean the code in libs folder, copy these files again, and compile the project"
     };
     helpModule.help_title = {
+        //titles,
         "create": "Create a new project",
         "build": "Compile the TypeScript files in project",
         "publish": "Publish the project, ues GoogleClosureCompiler to compress the code",
@@ -195,3 +240,4 @@ var helpModule;
     };
     global["helpModule"] = global["helpModule"] || helpModule;
 })(helpModule || (helpModule = {}));
+//# sourceMappingURL=en_US.js.map

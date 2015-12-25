@@ -108,9 +108,9 @@ module egret {
                 7: 0,        // offsetY,
                 8: 0,        // width,
                 9: 0,        // height
-                10: true,    // smoothing
-                11: NaN, //explicitBitmapWidth,
-                12: NaN  //explicitBitmapHeight,
+                10: Bitmap.defaultSmoothing,    // smoothing
+                11: NaN,     //explicitBitmapWidth,
+                12: NaN      //explicitBitmapHeight,
             };
 
             this.$setBitmapData(value);
@@ -348,33 +348,47 @@ module egret {
         }
 
         /**
-         * @private
+         * @language en_US
+         * The default value of whether or not is smoothed when scaled.
+         * When object such as Bitmap is created,smoothing property will be set to this value.
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
          */
-        $smoothing:boolean = true;
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理的默认值。
+         * 在 Bitmap 等对象创建时,smoothing 属性会被设置为该值。
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        public static defaultSmoothing:boolean = true;
+
         /**
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
-         * @default true。
          * @version Egret 2.4
          * @platform Web
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
-         * @default true。
          * @version Egret 2.4
          * @platform Web
          */
         public get smoothing():boolean {
-            return this.$smoothing;
+            var values = this.$Bitmap;
+            return values[sys.BitmapKeys.smoothing];
         }
 
         public set smoothing(value:boolean) {
             value = !!value;
-            if (value == this.$smoothing) {
+            var values = this.$Bitmap;
+            if (value == values[sys.BitmapKeys.smoothing]) {
                 return;
             }
-            this.$smoothing = value;
+            values[sys.BitmapKeys.smoothing] = value;
             this.$invalidate();
         }
 
@@ -463,7 +477,7 @@ module egret {
                 Bitmap.$drawImage(<sys.BitmapNode>this.$renderNode, values[sys.BitmapKeys.image],
                     values[sys.BitmapKeys.clipX], values[sys.BitmapKeys.clipY], values[sys.BitmapKeys.clipWidth], values[sys.BitmapKeys.clipHeight],
                     values[sys.BitmapKeys.offsetX], values[sys.BitmapKeys.offsetY], values[sys.BitmapKeys.width], values[sys.BitmapKeys.height],
-                    destW, destH, this.scale9Grid || values[sys.BitmapKeys.bitmapData]["scale9Grid"], this.fillMode, this.$smoothing);
+                    destW, destH, this.scale9Grid || values[sys.BitmapKeys.bitmapData]["scale9Grid"], this.fillMode, values[sys.BitmapKeys.smoothing]);
             }
         }
 

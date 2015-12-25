@@ -37747,7 +37747,7 @@ var ts;
                 return fileNameToNodeMap[file];
             var typeNode = new FileNode();
             if (typeof (file) != 'string') {
-                console.log(file);
+                console.log(11223,file);
             }
             typeNode.name = file;
             typeNode.calls = [];
@@ -38313,7 +38313,6 @@ var ts;
             formatedMessages = formatedMessages.concat(sortErrors.map(function (e) { return e.messageText; }));
         }
         var result = { program: program, exitStatus: emitReturnStatus, files: ts.SortHelper.getOrderedFiles(), messages: formatedMessages.concat() };
-        formatedMessages = [];
         return result;
         function compileProgram() {
             var diagnostics;
@@ -38484,6 +38483,7 @@ var ts;
     }
     var formatedMessages = [];
     function executeWithOption(commandLine) {
+        //console.log("compilerOptions:",commandLine.options)
         var compilerOptions = commandLine.options;
         formatedMessages = [];
         var result = {
@@ -38493,6 +38493,7 @@ var ts;
             files: [],
             messages: formatedMessages
         };
+
         // If there are any errors due to command line parsing and/or
         // setting up localization, report them and quit.
         if (commandLine.errors.length > 0) {
@@ -38524,6 +38525,7 @@ var ts;
         return result;
         function compileWithChanges(filesChanged, sourceMap) {
             commandLine.options.sourceMap = !!sourceMap;
+            //console.log("commandLine.options:",commandLine.options);
             filesChanged.forEach(function (file) {
                 if (file.type == "added") {
                     commandLine.fileNames.push(file.fileName);
@@ -38543,7 +38545,7 @@ var ts;
             return recompile(changedFiles);
         }
         function recompile(changedFiles) {
-            console.log(changedFiles);
+            console.log("recompile:",changedFiles);
             // Reuse source files from the last compilation so long as they weren't changed.
             var oldSourceFiles = ts.arrayToMap(ts.filter(program.getSourceFiles(), function (file) { return !ts.hasProperty(changedFiles, getCanonicalName(file.fileName)); }), function (file) { return getCanonicalName(file.fileName); });
             // We create a new compiler host for this compilation cycle.
@@ -38572,32 +38574,31 @@ var ts;
 var Compiler = (function () {
     function Compiler() {
     }
-    Compiler.executeWithOption = function (options, files, out, outDir) {
-        var target = options.esTarget.toLowerCase();
-        var targetEnum = 1 /* ES5 */;
-        if (target == 'es6')
-            targetEnum = 2 /* ES6 */;
-        var parsedCmd = {
-            fileNames: files,
-            options: {
-                sourceMap: options.sourceMap,
-                target: targetEnum,
-                removeComments: options.removeComments,
-                declaration: options.declaration,
-                diagnostics: options.debug
-            },
-            errors: []
-        };
-        if (out) {
-            parsedCmd.options.out = out;
-        }
-        else {
-            parsedCmd.options.outDir = outDir;
-        }
+    Compiler.executeWithOption = function (parsedCmd) {
         return ts.executeWithOption(parsedCmd);
+        // var parsedCmd = {
+        //     fileNames: files,
+        //     options: {
+        //         sourceMap: options.sourceMap,
+        //         target: 1,
+        //         removeComments: options.removeComments,
+        //         declaration: options.declaration,
+        //         diagnostics: options.debug
+        //     },
+        //     errors: []
+        // };
+        // if (out) {
+        //     parsedCmd.options.out = out;
+        // }
+        // else {
+        //     parsedCmd.options = options.compilerOptions;
+        //     parsedCmd.options.outDir = outDir;
+        // }
+        // console.log("commandLine.options1:",parsedCmd.options);
+        //return ts.executeWithOption(parsedCmd);
     };
     Compiler.exit = null;
-    Compiler.write = function (msg) { return console.log(msg); };
+    Compiler.write = function (msg) { return console.log("Compiler.write:",msg); };
     return Compiler;
 })();
 module.exports.Compiler = Compiler;

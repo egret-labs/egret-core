@@ -79,6 +79,10 @@ module egret.sys {
          * @private
          */
         verticalAlign,
+        /**
+         * @private
+         */
+        smoothing,
     }
 }
 module egret {
@@ -113,6 +117,7 @@ module egret {
         public constructor() {
             super();
             this.$renderNode = new sys.BitmapNode();
+            //this.cacheAsBitmap = true;
             this.$BitmapText = {
                 0: NaN,    //textFieldWidth,
                 1: NaN,    //textFieldHeight,
@@ -125,8 +130,38 @@ module egret {
                 8: false,       //textWidth,
                 9: false,       //textHeight,
                 10: "left",     //textAlign,
-                11: "top"       //verticalAlign
+                11: "top",      //verticalAlign
+                12: Bitmap.defaultSmoothing       //smoothing
             };
+        }
+
+        /**
+         * @language en_US
+         * Whether or not is smoothed when scaled.
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理。
+         * @default true。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        public get smoothing():boolean {
+            var values = this.$BitmapText;
+            return values[sys.BitmapTextKeys.smoothing];
+        }
+
+        public set smoothing(value:boolean) {
+            value = !!value;
+            var values = this.$BitmapText;
+            if (value == values[sys.BitmapTextKeys.smoothing]) {
+                return;
+            }
+            values[sys.BitmapTextKeys.smoothing] = value;
+            this.$invalidate();
         }
 
         /**
@@ -415,6 +450,7 @@ module egret {
             if(bitmapFont.$texture){
                 node.image = bitmapFont.$texture._bitmapData;
             }
+            node.smoothing = values[sys.BitmapTextKeys.smoothing];
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
             var emptyWidth:number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
             var hasSetHeight:boolean = !isNaN(values[sys.BitmapTextKeys.textFieldHeight]);

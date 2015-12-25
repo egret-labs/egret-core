@@ -3443,11 +3443,12 @@ var eui;
         p.$setTouchChildren = function (value) {
             value = !!value;
             var values = this.$Component;
+            values[6 /* explicitTouchChildren */] = value;
             if (values[3 /* enabled */]) {
+                values[6 /* explicitTouchChildren */] = value;
                 return _super.prototype.$setTouchChildren.call(this, value);
             }
             else {
-                values[6 /* explicitTouchChildren */] = value;
                 return true;
             }
         };
@@ -3459,11 +3460,11 @@ var eui;
         p.$setTouchEnabled = function (value) {
             value = !!value;
             var values = this.$Component;
+            values[7 /* explicitTouchEnabled */] = value;
             if (values[3 /* enabled */]) {
                 return _super.prototype.$setTouchEnabled.call(this, value);
             }
             else {
-                values[7 /* explicitTouchEnabled */] = value;
                 return true;
             }
         };
@@ -8745,7 +8746,7 @@ var eui;
                 return;
             }
             var values = this.$Bitmap;
-            egret.Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], width, height, this.$scale9Grid, this.$fillMode, this.$smoothing);
+            egret.Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], width, height, this.$scale9Grid, this.$fillMode, values[10 /* smoothing */]);
         };
         /**
          * @copy eui.UIComponent#createChildren
@@ -13764,7 +13765,25 @@ var eui;
 (function (eui) {
     var FocusEvent = egret.FocusEvent;
     /**
-     * TextInput 是一个文本输入控件，供用户输入和编辑单行统一格式文本
+     *
+     */
+    /**
+     * @language en_US
+     * The TextInput is a textfield input component, the user can input and edit the text.
+     *
+     * @version Egret 2.5.7
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TextInputExample.ts
+     */
+    /**
+     * @language zh_CN
+     * TextInput 是一个文本输入控件，供用户输入和编辑统一格式文本
+     *
+     * @version Egret 2.5.7
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/TextInputExample.ts
      */
     var TextInput = (function (_super) {
         __extends(TextInput, _super);

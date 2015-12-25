@@ -1812,7 +1812,7 @@ var egret;
                     self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
                 }
                 function removeListeners() {
-                    audio.removeEventListener("canplaythrough", onAudioLoaded);
+                    audio.removeEventListener("canplaythrough", onCanPlay);
                     audio.removeEventListener("error", onAudioError);
                 }
             };
@@ -1830,7 +1830,6 @@ var egret;
                     audio = new Audio(this.url);
                 }
                 else {
-                    audio.load();
                 }
                 audio.autoplay = true;
                 var channel = new native.NativeSoundChannel(audio);
@@ -2742,6 +2741,7 @@ var egret;
                  * @private
                  */
                 this.urlData = {};
+                this.responseHeader = "";
             }
             var d = __define,c=NativeHttpRequest,p=c.prototype;
             d(p, "response"
@@ -2826,6 +2826,8 @@ var egret;
                         egret.$warn(1019, error_code);
                         egret.Event.dispatchEvent(self, egret.IOErrorEvent.IO_ERROR);
                     };
+                    promise.onResponseHeaderFunc = this.onResponseHeader;
+                    promise.onResponseHeaderThisObject = this;
                     egret_native.requireHttp(self._url, self.urlData, promise);
                 }
                 else if (!egret_native.isFileExists(self._url)) {
@@ -2856,6 +2858,8 @@ var egret;
                     promise.onErrorFunc = function () {
                         egret.Event.dispatchEvent(self, egret.IOErrorEvent.IO_ERROR);
                     };
+                    promise.onResponseHeaderFunc = this.onResponseHeader;
+                    promise.onResponseHeaderThisObject = this;
                     egret_native.download(self._url, self._url, promise);
                 }
             };
@@ -2873,12 +2877,19 @@ var egret;
              */
             p.abort = function () {
             };
+            p.onResponseHeader = function (headers) {
+                this.responseHeader = "";
+                var obj = JSON.parse(headers);
+                for (var key in obj) {
+                    this.responseHeader += key + ": " + obj[key] + "\r\n";
+                }
+            };
             /**
              * @private
              * 返回所有响应头信息(响应头名和值), 如果响应头还没接受,则返回"".
              */
             p.getAllResponseHeaders = function () {
-                return "";
+                return this.responseHeader;
             };
             /**
              * @private

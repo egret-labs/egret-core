@@ -132,9 +132,39 @@ module egret {
          */
         constructor(movieClipData?:MovieClipData) {
             super();
+            this.$smoothing = Bitmap.defaultSmoothing;
             this.$renderRegion = new sys.Region();
 
             this.setMovieClipData(movieClipData);
+        }
+
+        /**
+         * @private
+         */
+        $smoothing:boolean;
+        /**
+         * @language en_US
+         * Whether or not is smoothed when scaled.
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理。
+         * @version Egret 2.5.8
+         * @platform Web
+         */
+        public get smoothing():boolean {
+            return this.$smoothing;
+        }
+
+        public set smoothing(value:boolean) {
+            value = !!value;
+            if (value == this.$smoothing) {
+                return;
+            }
+            this.$smoothing = value;
+            this.$invalidate();
         }
 
         /**
@@ -188,7 +218,7 @@ module egret {
         $render(context:sys.RenderContext):void {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = this.$smoothing;
 
                 var offsetX:number = Math.round(texture._offsetX);
                 var offsetY:number = Math.round(texture._offsetY);

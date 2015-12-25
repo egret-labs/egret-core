@@ -1354,6 +1354,13 @@ declare module egret.gui {
          */
         letterSpacing: number;
         _setLetterSpacing(value: number): void;
+        private _isSmoothingChanged;
+        _smoothing: boolean;
+        /**
+         * 字符之间的距离
+         */
+        smoothing: boolean;
+        _setSmoothing(value: boolean): void;
         private _isLineSpacingChanged;
         _lineSpacing: number;
         /**
@@ -6396,14 +6403,12 @@ declare module egret.gui {
         /**
          * @language en_US
          * Whether or not the bitmap is smoothed when scaled.
-         * @default true。
          * @version Egret 2.4
          * @platform Web
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否对位图进行平滑处理。
-         * @default true。
          * @version Egret 2.4
          * @platform Web
          */

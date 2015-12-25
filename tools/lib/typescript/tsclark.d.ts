@@ -3747,7 +3747,8 @@ declare module ts {
     function executeWithOption(commandLine: ParsedCommandLine): LarkCompileResult;
 }
 export declare class Compiler {
-    static executeWithOption(options: egret.ToolArgs, files: string[], out?: string, outDir?: string): LarkCompileResult;
+    static executeWithOption(parsedCommandLine: ts.ParsedCommandLine): LarkCompileResult;
+    //static executeWithOption(options: ts.CompilerOptions, files: string[], out?: string, outDir?: string): LarkCompileResult;
     static exit: (exitCode: number) => number;
     static write: (msg: any) => void;
 }

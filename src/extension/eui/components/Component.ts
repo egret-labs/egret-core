@@ -412,11 +412,12 @@ module eui {
         $setTouchChildren(value:boolean):boolean {
             value = !!value;
             var values = this.$Component;
+            values[sys.ComponentKeys.explicitTouchChildren] = value;
             if (values[sys.ComponentKeys.enabled]) {
+                values[sys.ComponentKeys.explicitTouchChildren] = value;
                 return super.$setTouchChildren(value);
             }
             else {
-                values[sys.ComponentKeys.explicitTouchChildren] = value;
                 return true;
             }
         }
@@ -429,11 +430,11 @@ module eui {
         $setTouchEnabled(value:boolean):boolean {
             value = !!value;
             var values = this.$Component;
+            values[sys.ComponentKeys.explicitTouchEnabled] = value;
             if (values[sys.ComponentKeys.enabled]) {
                 return super.$setTouchEnabled(value);
             }
             else {
-                values[sys.ComponentKeys.explicitTouchEnabled] = value;
                 return true;
             }
         }
@@ -606,7 +607,7 @@ module eui {
          */
         protected createChildren():void {
             var values = this.$Component;
-            if (!values[sys.ComponentKeys.skinNameExplicitlySet]) {
+            if (!values[sys.ComponentKeys.skinName]) {
                 var theme = this.$stage.getImplementation("eui.Theme");
                 if(theme){
                     var skinName = theme.getSkinName(this);
