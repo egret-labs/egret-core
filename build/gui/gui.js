@@ -26862,7 +26862,7 @@ var egret;
             PopUpEvent.dispatchPopUpEvent = function (target, type, popUp, modal) {
                 if (popUp === void 0) { popUp = null; }
                 if (modal === void 0) { modal = false; }
-                var event = egret.Event.create(PopUpEvent, egret.HTTPStatusEvent.HTTP_STATUS);
+                var event = egret.Event.create(PopUpEvent, type);
                 event.popUp = popUp;
                 event.modal = modal;
                 var result = target.dispatchEvent(event);

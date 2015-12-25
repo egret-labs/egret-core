@@ -1595,7 +1595,7 @@ declare module egret {
          * The default value of whether or not is smoothed when scaled.
          * When object such as Bitmap is created,smoothing property will be set to this value.
          * @default true。
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         /**
@@ -1603,7 +1603,7 @@ declare module egret {
          * 控制在缩放时是否进行平滑处理的默认值。
          * 在 Bitmap 等对象创建时,smoothing 属性会被设置为该值。
          * @default true。
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         static defaultSmoothing: boolean;
@@ -11121,14 +11121,14 @@ declare module egret {
          * @language en_US
          * Whether or not is smoothed when scaled.
          * @default true。
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         /**
          * @language zh_CN
          * 控制在缩放时是否进行平滑处理。
          * @default true。
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         smoothing: boolean;
