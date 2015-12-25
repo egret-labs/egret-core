@@ -1842,19 +1842,31 @@ module egret {
 
         /**
          * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
+         * 获取渲染节点
          */
-        $update(bounds?:Rectangle):boolean {
-            this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
+        $getRenderNode():sys.RenderNode{
             var node = this.$renderNode;
+            if(!node){
+                return null;
+            }
+
             if(this.$displayFlags & sys.DisplayObjectFlags.InvalidRenderNodes){
                 node.cleanBeforeRender();
                 this.$render();
+                node.renderAlpha = this.$getConcatenatedAlpha();
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidRenderNodes);
             }
-            node.renderAlpha = this.$getConcatenatedAlpha();
+            node.renderMatrix = this.$getConcatenatedMatrix();
+            return node;
+        }
+        /**
+         * @private
+         * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
+         */
+        $update(bounds?:Rectangle):boolean {
+            this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
-            var concatenatedMatrix = this.$getConcatenatedMatrix();
+            var node = this.$getRenderNode();
             var renderBounds = bounds || this.$getContentBounds();
             var displayList = this.$displayList || this.$parentDisplayList;
             var region = node.renderRegion;
@@ -1867,13 +1879,12 @@ module egret {
                 return false;
             }
             node.moved = false;
-            node.renderMatrix = concatenatedMatrix;
             var root = displayList.root;
             if (root === this.$stage) {
-                region.updateRegion(renderBounds, concatenatedMatrix);
+                region.updateRegion(renderBounds, node.renderMatrix);
             }
             else{
-                var matrix = Matrix.create().copyFrom(concatenatedMatrix);
+                var matrix = Matrix.create().copyFrom(node.renderMatrix);
                 this.$getConcatenatedMatrixAt(root, matrix);
                 region.updateRegion(renderBounds, matrix);
                 Matrix.release(matrix);

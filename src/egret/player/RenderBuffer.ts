@@ -27,32 +27,36 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
-
-    export class CanvasRenderTarget implements sys.RenderTarget {
-
-        private _invalid:boolean = false;
+module egret.sys {
+    /**
+     * @private
+     * 渲染目标
+     */
+    export interface RenderBuffer {
         /**
-         * true表示绘制对象无效。当创建失败或调用过destroy()方法后此属性置为true。
+         * 呈现最终绘图结果的画布，当创建失败或调用过destroy()方法后此属性为null。
          * @readOnly
          */
-        public get invalid():boolean{
-            return this._invalid;
-        }
-
+        surface:Surface;
         /**
-         * 改变绘制对象的大小
+         * 改变渲染目标的大小
+         * @param width 要改变的宽
+         * @param height 要改变的高
+         * @param keepMax 若传入true，则将要改变的尺寸与已有尺寸对比，保留较大的尺寸。
          */
-        public resize(width:number,height:number):void{
-
-        }
-
+        resize(width:number,height:number,keepMax?:boolean):void;
         /**
-         * 销毁绘制对象
+         * 销毁渲染目标
          */
-        public destroy():void{
-
-        }
-
+        destroy():void;
     }
+
+    export var RenderBuffer:{
+        /**
+         * 创建一个RenderTarget。
+         * @param width 渲染目标的初始宽
+         * @param height 渲染目标的初始高
+         */
+        new(width:number, height:number):RenderBuffer;
+    };
 }

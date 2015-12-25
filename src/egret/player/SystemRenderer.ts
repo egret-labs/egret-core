@@ -31,14 +31,19 @@ module egret.sys {
 
     export var systemRenderer:SystemRenderer;
 
+    /**
+     * @private
+     * 显示渲染器接口
+     */
     export interface SystemRenderer {
 
         /**
          * 渲染一个显示对象
          * @param displayObject 要渲染的显示对象
          * @param target 渲染目标
+         * @param matrix 要对显示对象整体叠加的变换矩阵
          * @returns drawCall触发绘制的次数
          */
-        render(displayObject:DisplayObject,target:RenderTarget):number;
+        render(displayObject:DisplayObject, target:RenderBuffer, matrix?:Matrix):number;
     }
 }

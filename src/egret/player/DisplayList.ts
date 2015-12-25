@@ -134,6 +134,7 @@ module egret.sys {
             return true;
         }
 
+        public renderTarget:RenderBuffer = null;
         /**
          * @private
          * 呈现绘制结果的目标画布
