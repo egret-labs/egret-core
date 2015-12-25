@@ -3,8 +3,7 @@ Egret Engine
 Current Version: v3.0.0
 
 
-Egret Engine is an open source game engine written in Typescript language. The core characteristics of Egret Engine is Open, Efficient and Elegant.
-Egret game engine allows game designers to create HTML5 mobile games quickly, and also to compile the project to the native app of the target mobile device or platform.
+Developed by Egret Technology, Egret Engine 3.0 includes a newly built 3D engine and a 2D engine created based on HTML5. With its robust cross-platform operability and commitment to solving the performance and fragmentation problems of HTML5 APP and games, Egret Engine 3.0 will perfectly meet developers’ needs. We appreciate every suggestion and please send it to Egret team if you have any.
 
 Platforms:
 --------------------
