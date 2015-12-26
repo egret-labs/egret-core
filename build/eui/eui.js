@@ -3619,7 +3619,7 @@ var eui;
          */
         p.createChildren = function () {
             var values = this.$Component;
-            if (!values[5 /* skinNameExplicitlySet */]) {
+            if (!values[1 /* skinName */]) {
                 var theme = this.$stage.getImplementation("eui.Theme");
                 if (theme) {
                     var skinName = theme.getSkinName(this);
@@ -10905,7 +10905,7 @@ var eui;
         d(p, "elementsContent",undefined
             /**
              * @language en_US
-             * [write-only] This property is Usually invoked in resolving an EXML for adding multiple children quickly.
+             * write-only property,This property is Usually invoked in resolving an EXML for adding multiple children quickly.
              *
              * @version Egret 2.4
              * @version eui 1.0
@@ -10913,7 +10913,7 @@ var eui;
              */
             /**
              * @language zh_CN
-             * [只写] 此属性通常在 EXML 的解析器中调用，便于快速添加多个子项。
+             * 只写属性，此属性通常在 EXML 的解析器中调用，便于快速添加多个子项。
              * @version Egret 2.4
              * @version eui 1.0
              * @platform Web,Native
@@ -24106,7 +24106,7 @@ var eui;
         /**
          * @inheritDoc
          *
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @version eui 1.0
          * @platform Web,Native
          */
@@ -24129,7 +24129,7 @@ var eui;
         /**
          * @inheritDoc
          *
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @version eui 1.0
          * @platform Web,Native
          */

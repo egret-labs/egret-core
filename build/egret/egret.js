@@ -3127,7 +3127,7 @@ var egret;
          * The default value of whether or not is smoothed when scaled.
          * When object such as Bitmap is created,smoothing property will be set to this value.
          * @default true。
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         /**
@@ -3135,7 +3135,7 @@ var egret;
          * 控制在缩放时是否进行平滑处理的默认值。
          * 在 Bitmap 等对象创建时,smoothing 属性会被设置为该值。
          * @default true。
-         * @version Egret 2.5.8
+         * @version Egret 3.0
          * @platform Web
          */
         Bitmap.defaultSmoothing = true;
@@ -6036,6 +6036,9 @@ var egret;
          */
         p.dispose = function () {
             if (this._bitmapData) {
+                if (this._bitmapData.dispose) {
+                    this._bitmapData.dispose();
+                }
                 Texture.$dispose(this);
                 //console.log("dispose Texture");
                 this._bitmapData = null;
@@ -16041,14 +16044,14 @@ var egret;
              * @language en_US
              * Whether or not is smoothed when scaled.
              * @default true。
-             * @version Egret 2.5.8
+             * @version Egret 3.0
              * @platform Web
              */
             /**
              * @language zh_CN
              * 控制在缩放时是否进行平滑处理。
              * @default true。
-             * @version Egret 2.5.8
+             * @version Egret 3.0
              * @platform Web
              */
             ,function () {
@@ -19021,6 +19024,7 @@ var egret;
         renderContext.font = font;
         renderContext.textAlign = "left";
         renderContext.textBaseline = "middle";
+        renderContext.lineJoin = "round"; //确保描边样式是圆角
     }
 })(egret || (egret = {}));
 var egret;
