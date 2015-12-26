@@ -47,15 +47,16 @@ module egret.web {
         /**
          * 渲染一个显示对象
          * @param displayObject 要渲染的显示对象
-         * @param  渲染目标
+         * @param  buffer 渲染缓冲
          * @param matrix 要对显示对象整体叠加的变换矩阵
+         * @param dirtyList 脏矩形列表
          * @returns drawCall触发绘制的次数
          */
         public render(displayObject:DisplayObject, buffer:CanvasRenderBuffer, matrix?:Matrix, dirtyList?:egret.sys.Region[]):number {
             nestLevel++
             var context = buffer.context;
             //绘制显示对象
-            return this.drawDisplayObject(displayObject, context, dirtyList, matrix, null, null);
+            var drawCall = this.drawDisplayObject(displayObject, context, dirtyList, matrix, null, null);
             nestLevel--;
             if(nestLevel===0){
                 //最大缓存6个渲染缓冲
@@ -67,6 +68,7 @@ module egret.web {
                     renderBufferPool[i].resize(0,0);
                 }
             }
+            return drawCall;
         }
 
         /**
@@ -387,9 +389,6 @@ module egret.web {
          * @private
          */
         private createRenderBuffer(width:number, height:number):CanvasRenderBuffer {
-            //在chrome里，小等于256*256的canvas会不启用GPU加速。
-            width = Math.max(257, width);
-            height = Math.max(257, height);
             var buffer = renderBufferPool.pop();
             if(buffer){
                 buffer.resize(width,height,true);

@@ -523,13 +523,12 @@ module egret {
             var m = this.$getInvertedConcatenatedMatrix();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
-            var context:sys.RenderContext;
-            var data:Uint8Array;
+            var data:number[];
             var displayList = this.$displayList;
             if (displayList) {
-                context = displayList.renderContext;
+                var buffer = displayList.renderBuffer;
                 try {
-                    data = context.getImageData(localX - displayList.offsetX, localY - displayList.offsetY, 1, 1).data;
+                    data = buffer.getPixel(localX - displayList.offsetX, localY - displayList.offsetY);
                 }
                 catch (e) {
                     console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);
@@ -537,7 +536,7 @@ module egret {
                 }
             }
             else {
-                context = sys.hitTestRenderContext;
+                var context = sys.hitTestRenderContext;
                 context.surface.width = context.surface.height = 3;
                 context.translate(1 - localX, 1 - localY);
                 this.$render();

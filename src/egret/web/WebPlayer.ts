@@ -49,12 +49,12 @@ module egret.web {
             stage.frameRate = option.frameRate;
             stage.textureScaleFactor = option.textureScaleFactor;
 
-            var surface = egret.sys.surfaceFactory.create();
-            var canvas = <HTMLCanvasElement><any>surface;
+            var buffer = new sys.RenderBuffer(200,200);
+            var canvas = <HTMLCanvasElement>buffer.surface;
             this.attachCanvas(container, canvas);
 
             var webTouch = new WebTouchHandler(stage, canvas);
-            var player = new egret.sys.Player(surface.renderContext, stage, option.entryClassName);
+            var player = new egret.sys.Player(buffer, stage, option.entryClassName);
             var webHide = new egret.web.WebHideHandler(stage);
             var webInput = new HTMLInput();
 

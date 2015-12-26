@@ -30,23 +30,69 @@
 module egret.sys {
     /**
      * @private
-     * 渲染目标
+     * 渲染缓冲
      */
     export interface RenderBuffer {
         /**
-         * 呈现最终绘图结果的画布，当创建失败或调用过destroy()方法后此属性为null。
+         * 呈现最终绘图结果的画布。
          * @readOnly
          */
-        surface:Surface;
+        surface:any;
+
         /**
-         * 改变渲染目标的大小
-         * @param width 要改变的宽
-         * @param height 要改变的高
-         * @param keepMax 若传入true，则将要改变的尺寸与已有尺寸对比，保留较大的尺寸。
+         * 渲染缓冲的宽度，以像素为单位。
+         * @readOnly
          */
-        resize(width:number,height:number,keepMax?:boolean):void;
+        width: number;
+
         /**
-         * 销毁渲染目标
+         * 渲染缓冲的高度，以像素为单位。
+         * @readOnly
+         */
+        height: number;
+
+        /**
+         * 改变渲染缓冲的大小并清空缓冲区
+         * @param width 改变后的宽
+         * @param height 改变后的高
+         * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
+         */
+        resize(width:number,height:number,useMaxSize?:boolean):void;
+
+        /**
+         * 改变渲染缓冲为指定大小，但保留原始图像数据
+         * @param width 改变后的宽
+         * @param height 改变后的高
+         * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
+         * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
+         */
+        resizeTo(width:number,height:number,offsetX:number,offsetY:number):void;
+
+        /**
+         * 清空并设置裁切区域
+         * @param regions 矩形列表
+         * @param offsetX 矩形偏移量x
+         * @param offsetY 矩形偏移量y
+         */
+        beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void;
+        /**
+         * 取消上一次设置的clip。
+         */
+        endClip():void;
+
+        /**
+         * 获取指定坐标的像素
+         */
+        getPixel(x:number,y:number):number[];
+
+        /**
+         * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
+         * @param type 转换的类型，如: "image/png","image/jpeg"
+         */
+        toDataURL(type?: string, ...args: any[]): string;
+
+        /**
+         * 销毁渲染缓冲
          */
         destroy():void;
     }
@@ -54,8 +100,9 @@ module egret.sys {
     export var RenderBuffer:{
         /**
          * 创建一个RenderTarget。
-         * @param width 渲染目标的初始宽
-         * @param height 渲染目标的初始高
+         * 注意：若内存不足或创建缓冲区失败，将会抛出错误异常。
+         * @param width 渲染缓冲的初始宽
+         * @param height 渲染缓冲的初始高
          */
         new(width:number, height:number):RenderBuffer;
     };

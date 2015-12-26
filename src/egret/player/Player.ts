@@ -43,14 +43,14 @@ module egret.sys {
          * @private
          * 实例化一个播放器对象。
          */
-        public constructor(context:RenderContext, stage:Stage, entryClassName:string) {
+        public constructor(buffer:RenderBuffer, stage:Stage, entryClassName:string) {
             super();
-            if (DEBUG && !context) {
-                $error(1003, "context");
+            if (DEBUG && !buffer) {
+                $error(1003, "buffer");
             }
             this.entryClassName = entryClassName;
             this.stage = stage;
-            this.screenDisplayList = this.createDisplayList(stage, context);
+            this.screenDisplayList = this.createDisplayList(stage, buffer);
 
 
             this.showFPS = false;
@@ -67,9 +67,9 @@ module egret.sys {
         /**
          * @private
          */
-        private createDisplayList(stage:Stage, context:RenderContext):DisplayList {
+        private createDisplayList(stage:Stage, buffer:RenderBuffer):DisplayList {
             var displayList = new DisplayList(stage);
-            displayList.renderContext = context;
+            displayList.renderBuffer = buffer;
             stage.$displayList = displayList;
             displayList.setClipRect(stage.$stageWidth, stage.$stageHeight);
             return displayList;

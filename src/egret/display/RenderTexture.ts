@@ -391,7 +391,6 @@ module egret {
         public dispose():void {
             super.dispose();
             if(this.rootDisplayList) {
-                sys.DisplayList.release(this.rootDisplayList);
                 this.rootDisplayList = null;
             }
             if(this.context) {

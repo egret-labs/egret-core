@@ -40,10 +40,11 @@ module egret.sys {
         /**
          * 渲染一个显示对象
          * @param displayObject 要渲染的显示对象
-         * @param target 渲染目标
+         * @param buffer 渲染缓冲
          * @param matrix 要对显示对象整体叠加的变换矩阵
+         * @param dirtyList 脏矩形列表
          * @returns drawCall触发绘制的次数
          */
-        render(displayObject:DisplayObject, target:RenderBuffer, matrix?:Matrix):number;
+        render(displayObject:DisplayObject, buffer:RenderBuffer, matrix?:Matrix, dirtyList?:Region[]):number;
     }
 }

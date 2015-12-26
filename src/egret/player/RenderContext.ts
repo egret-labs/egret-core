@@ -393,7 +393,7 @@ module egret.sys {
         /**
          * @private
          */
-        data: Uint8Array;
+        data: number[];
         /**
          * @private
          */

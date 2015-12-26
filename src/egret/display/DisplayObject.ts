@@ -1247,7 +1247,6 @@ module egret {
                 }
             }
             else {
-                sys.DisplayList.release(this.$displayList);
                 this.$displayList = null;
                 this.$cacheAsBitmapChanged();
             }
@@ -2008,7 +2007,7 @@ module egret {
                 var renderTexture = new RenderTexture();
                 renderTexture.drawToTexture(this, rectangle);
                 var context = renderTexture["context"];
-                var data:Uint8Array;
+                var data:number[];
                 try {
                     data = context.getImageData(0, 0, 1, 1).data;
                 }
