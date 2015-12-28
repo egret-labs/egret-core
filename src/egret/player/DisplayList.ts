@@ -234,7 +234,7 @@ module egret.sys {
                 this.changeSurfaceSize();
             }
             var buffer = this.renderBuffer;
-            buffer.beginClip(this.dirtyList, this.offsetY, this.offsetY);
+            buffer.beginClip(this.dirtyList, -this.offsetY, -this.offsetY);
             var drawCalls = systemRenderer.render(this.root, buffer, this.rootMatrix);
             buffer.endClip();
             var surface = buffer.surface;

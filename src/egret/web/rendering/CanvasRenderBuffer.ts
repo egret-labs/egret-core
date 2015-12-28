@@ -156,8 +156,8 @@ module egret.web {
         /**
          * 清空并设置裁切
          * @param regions 矩形列表
-         * @param offsetX 矩形偏移量x
-         * @param offsetY 矩形偏移量y
+         * @param offsetX 矩形要加上的偏移量x
+         * @param offsetY 矩形要加上的偏移量y
          */
         public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
             offsetX = +offsetX || 0;
