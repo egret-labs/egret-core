@@ -198,6 +198,13 @@ module egret.web {
         }
 
         /**
+         * 清空缓冲区数据
+         */
+        public clear():void {
+            this.context.clearRect(0, 0, this.surface.width, this.surface.height);
+        }
+
+        /**
          * 销毁绘制对象
          */
         public destroy():void {

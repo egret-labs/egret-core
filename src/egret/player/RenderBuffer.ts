@@ -92,6 +92,11 @@ module egret.sys {
         toDataURL(type?: string, ...args: any[]): string;
 
         /**
+         * 清空缓冲区数据
+         */
+        clear():void;
+
+        /**
          * 销毁渲染缓冲
          */
         destroy():void;
