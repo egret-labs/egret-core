@@ -250,8 +250,8 @@ class EgretProperties implements egret.EgretPropertiesClass {
     }
 
     getResources():Array<string> {
-        if (globals.hasKeys(this.properties, ["publish", "resource"])) {
-            return this.properties["publish"]["resource"];
+        if (globals.hasKeys(this.properties, ["resources"])) {
+            return this.properties["resources"];
         }
 
         return ["resource"];
