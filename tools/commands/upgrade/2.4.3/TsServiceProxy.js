@@ -1,8 +1,6 @@
 ///<reference path="./typescriptServices.d.ts" />
 var TSS = require("./typescriptServices");
 var fs = require("fs");
-//import Logger = require("./utils/Logger");
-var path = require('path');
 var file = require('../../../lib/FileUtil');
 var Logger = {
     log: function (a, b, c, d, e) {
@@ -70,7 +68,7 @@ var TsServiceProxy = (function () {
         }
         this.scriptList = [];
         //初始化扩展库
-        this.initExtLibs(_path);
+        //this.initExtLibs(_path);
         //初始化项目内的所有ts代码
         //this.readDir(file.joinPath(_path,"libs_old"), this.scriptAdded_handler, this);
         this.readDir(file.joinPath(_path, "src"), this.scriptAdded_handler, this);
@@ -85,63 +83,57 @@ var TsServiceProxy = (function () {
      * 初始化扩展库，用于加入到排除列表内
      * @param path {string} 项目路径
      */
-    TsServiceProxy.prototype.initExtLibs = function (path) {
-        Logger.log("初始化扩展库");
-        this.extLibs = new Array();
-        var egretPropertisFs;
-        try {
-            egretPropertisFs = fs.statSync(path + "/egretProperties.json");
-        }
-        catch (e) { }
-        if (!egretPropertisFs || !egretPropertisFs.isFile)
-            return;
-        var egretPropertisContent = fs.readFileSync(path + "/egretProperties.json", "utf-8");
-        var egretPropertis = JSON.parse(egretPropertisContent);
-        var modules = egretPropertis["modules"];
-        if (!modules)
-            return;
-        for (var i = 0; i < modules.length; i++) {
-            if (modules[i]["path"]) {
-                this.parserExtLib(path, modules[i]["path"], modules[i]["name"]);
-            }
-        }
-    };
+    //private initExtLibs(path: string): void {
+    //	Logger.log("初始化扩展库");
+    //	this.extLibs = new Array<string>();
+    //	var egretPropertisFs: fs.Stats;
+    //	try {
+    //		egretPropertisFs = fs.statSync(path + "/egretProperties.json")
+    //	}catch(e){}
+    //	if (!egretPropertisFs || !egretPropertisFs.isFile) return;
+    //	var egretPropertisContent: string = fs.readFileSync(path + "/egretProperties.json", "utf-8");
+    //	var egretPropertis: any = JSON.parse(egretPropertisContent);
+    //	var modules: Array<any> = egretPropertis["modules"];
+    //	if (!modules) return;
+    //	for (var i: number = 0; i < modules.length; i++) {
+    //		if (modules[i]["path"]) {
+    //			this.parserExtLib(path,modules[i]["path"], modules[i]["name"]);
+    //		}
+    //	}
+    //}
     /**
      * 解析扩展库模块
      * @param projectPath {string} 项目路径
      * @param configPath {string} 扩展库配置路径
      * @param configPathName {string} 扩展库配置名
      */
-    TsServiceProxy.prototype.parserExtLib = function (projectPath, configPath, configPathName) {
-        var configAbsolutePath = "";
-        configAbsolutePath = path.resolve(projectPath, configPath, configPathName + ".json");
-        var configFs;
-        try {
-            configFs = fs.statSync(configPath);
-        }
-        catch (e) { }
-        if (!configFs || !configFs.isFile)
-            return;
-        var configContent = fs.readFileSync(configAbsolutePath, "utf-8");
-        var config = JSON.parse(configContent);
-        var filePath = new Array();
-        var source = config["source"];
-        var file_list = config["file_list"];
-        if (source && file_list) {
-            for (var i = 0; i < file_list.length; i++) {
-                var currentFilePath = path.resolve(projectPath, configPath, source, file_list[i]);
-                var currentFile;
-                try {
-                    currentFile = fs.statSync(currentFilePath);
-                }
-                catch (e) { }
-                if (currentFile && currentFile.isFile) {
-                    currentFilePath = currentFilePath.replace(/\\/g, "/");
-                    this.extLibs.push(currentFilePath);
-                }
-            }
-        }
-    };
+    //private parserExtLib(projectPath: string, configPath: string, configPathName: string): void {
+    //	var configAbsolutePath: string = "";
+    //	configAbsolutePath = path.resolve(projectPath,configPath,configPathName + ".json");
+    //	var configFs: fs.Stats;
+    //	try {
+    //		configFs = fs.statSync(configPath)
+    //	} catch (e) { }
+    //	if (!configFs || !configFs.isFile) return;
+    //	var configContent: string = fs.readFileSync(configAbsolutePath, "utf-8");
+    //	var config: any = JSON.parse(configContent);
+    //	var filePath: Array<string> = new Array<string>();
+    //	var source: string = config["source"];
+    //	var file_list: Array<string> = config["file_list"];
+    //	if (source && file_list) {
+    //		for (var i: number = 0; i < file_list.length; i++) {
+    //			var currentFilePath: string = path.resolve(projectPath, configPath, source, file_list[i]);
+    //			var currentFile: fs.Stats;
+    //			try {
+    //				currentFile = fs.statSync(currentFilePath)
+    //			} catch (e) { }
+    //			if (currentFile && currentFile.isFile) {
+    //				currentFilePath = currentFilePath.replace(/\\/g, "/");
+    //				this.extLibs.push(currentFilePath);
+    //			}
+    //		}
+    //	}
+    //}
     TsServiceProxy.prototype.scriptAdded_handler = function (path) {
         this.scriptList.push(path);
     };
