@@ -14,10 +14,12 @@ var Build = (function () {
     }
     Build.prototype.execute = function (callback) {
         callback = callback || defaultBuildCallback;
+        //如果APITest未通过继续执行APITest
         if (!APITestTool.isTestPass(egret.args.projectDir)) {
             var apitest_command = new APITestCommand();
             apitest_command.execute(function () {
-                globals.log2(1715);
+                globals.log2(1715); //项目检测成功
+                //成功以后再次执行build
                 var build = CHILD_EXEC.exec(globals.addQuotes(process.execPath) + " \"" +
                     FileUtil.joinPath(egret.root, '/tools/bin/egret') + '\" build \"' + egret.args.projectDir + "\"", {
                     encoding: 'utf8',
@@ -36,8 +38,28 @@ var Build = (function () {
                 build.on("exit", function (result) {
                     process.exit(result);
                 });
+                //返回true截断默认的exit操作
                 return true;
             });
+            //var build = CHILD_EXEC.exec(
+            //    'node \"'+FileUtil.joinPath(egret.root,'/tools/bin/egret')+'\" apitest \"'+egret.args.projectDir+"\"",
+            //    {
+            //        encoding: 'utf8',
+            //        timeout: 0,
+            //        maxBuffer: 200*1024,
+            //        killSignal: 'SIGTERM',
+            //        cwd: process.cwd(),
+            //        env: process.env
+            //    });
+            //build.stderr.on("data", (data) =>{
+            //    console.log(data);
+            //});
+            //build.stdout.on("data",(data)=>{
+            //    console.log(data);
+            //});
+            //build.on("exit", (result)=>{
+            //    process.exit(result);
+            //});
             return DontExitCode;
         }
         var options = egret.args;
@@ -72,7 +94,7 @@ var Build = (function () {
             var module = packageJson.modules[i];
             var files = [];
             var length = module.files.length;
-            if(length > 0) {
+            if (length > 0) {
                 for (var j = 0; j < length; j++) {
                     var file = module.files[j];
                     if (file.indexOf(".ts") != -1) {
@@ -81,8 +103,10 @@ var Build = (function () {
                 }
             }
             else {
+                //todo exml
                 files = FileUtil.search(FileUtil.joinPath(options.projectDir, module.root), "ts");
             }
+            //编译js文件到临时目录
             var result = compiler.compile({
                 args: options,
                 def: false,
@@ -90,6 +114,7 @@ var Build = (function () {
                 files: libFiles.concat(files),
                 outDir: FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp")
             });
+            //编译dts文件
             compiler.compile({
                 args: options,
                 def: true,
@@ -99,7 +124,7 @@ var Build = (function () {
             });
             var str = "";
             var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"));
-            if(length > 0) {
+            if (length > 0) {
                 for (var j = 0; j < module.files.length; j++) {
                     var file = module.files[j];
                     if (file.indexOf(".d.ts") != -1) {
@@ -152,3 +177,5 @@ function defaultBuildCallback(code) {
     utils.exit(code);
 }
 module.exports = Build;
+
+//# sourceMappingURL=build.js.map

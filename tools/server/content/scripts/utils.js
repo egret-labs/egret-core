@@ -87,4 +87,4 @@ var egret;
     })(portal = egret.portal || (egret.portal = {}));
 })(egret || (egret = {}));
 
-//# sourceMappingURL=../../../server/content/scripts/utils.js.map
+//# sourceMappingURL=utils.js.map

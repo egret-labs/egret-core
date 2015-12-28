@@ -165,7 +165,9 @@ module eui {
          *
          * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
-         * 
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
+         *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -176,16 +178,18 @@ module eui {
          *
          * @param target 事件派发目标。
          * @param eventType 事件类型；指示触发事件的动作。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
-        public static dispatchUIEvent(target:egret.IEventDispatcher, eventType:string):boolean {
+        public static dispatchUIEvent(target:egret.IEventDispatcher, eventType:string, bubbles?:boolean, cancelable?:boolean):boolean {
             if(!target.hasEventListener(eventType)){
                 return true;
             }
-            var event = egret.Event.create(UIEvent, eventType);
+            var event = egret.Event.create(UIEvent, eventType, bubbles, cancelable);
             var result = target.dispatchEvent(event);
             egret.Event.release(event);
             return result;

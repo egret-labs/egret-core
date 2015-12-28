@@ -268,4 +268,4 @@ var EXMLConfig = (function () {
 })();
 exports.EXMLConfig = EXMLConfig;
 
-//# sourceMappingURL=../../../lib/eui/parser/EXMLConfig.js.map
+//# sourceMappingURL=EXMLConfig.js.map

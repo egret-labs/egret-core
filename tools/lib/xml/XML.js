@@ -28,19 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Lark 1.0
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Lark 1.0
-     * @platform Web,Native
-     */
-    egret.XML;
 })(egret || (egret = {}));
 
-//# sourceMappingURL=../../lib/xml/XML.js.map
+//# sourceMappingURL=XML.js.map

@@ -1,3 +1,4 @@
+/// <reference path="../lib/types.d.ts" />
 var os = require("os");
 var cprocess = require('child_process');
 var utils = require('../lib/utils');
@@ -33,6 +34,7 @@ var Project = (function () {
     };
     Project.prototype.fileChanged = function (socket, task, path, changeType) {
         var _this = this;
+        //console.log("--project.fileChanged--")
         if (this.pendingRequest)
             this.pendingRequest.end({ command: "build", exitCode: 0 });
         this.pendingRequest = socket;
@@ -48,6 +50,7 @@ var Project = (function () {
         this.timer = setTimeout(function () { return _this.build(); }, 200);
     };
     Project.prototype.build = function () {
+        //console.log("--project.build--");
         this.buildProcessOutputs.length = 0;
         this.buildWithExistBuildService();
         this.changes = null;
@@ -95,7 +98,9 @@ var Project = (function () {
         global.gc && global.gc();
     };
     Project.prototype.sendCommand = function (cmd) {
+        //this.buildProcess.stdin.write(JSON.stringify(cmd), 'utf8');
         this.buildPort && this.buildPort.send(cmd);
+        //this.buildProcess.send(cmd);
     };
     Project.prototype.shutdown = function (retry) {
         var _this = this;
@@ -145,3 +150,5 @@ var Project = (function () {
     return Project;
 })();
 module.exports = Project;
+
+//# sourceMappingURL=project.js.map

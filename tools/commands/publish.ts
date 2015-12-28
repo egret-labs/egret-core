@@ -71,6 +71,8 @@ class Publish implements egret.Command {
 
         //生成 all.manifest 并拷贝资源
         (new GenerateVersion).execute();
+        //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
+        exml.updateSetting();
 
         if (egret.args.runtime == "native") {
             var rootHtmlPath = FileUtil.joinPath(options.projectDir, "index.html");
@@ -84,6 +86,7 @@ class Publish implements egret.Command {
                 FileUtil.copy(allMainfestPath, FileUtil.joinPath(options.releaseDir, "ziptemp", "all.manifest"));
             }
             FileUtil.remove(allMainfestPath);
+
 
             //先拷贝 launcher
             FileUtil.copy(FileUtil.joinPath(options.templateDir, "runtime"), FileUtil.joinPath(options.releaseDir, "ziptemp", "launcher"));
