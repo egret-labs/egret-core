@@ -34,7 +34,6 @@ class Compiler {
             options: {},
             errors: []
         };
-
         if(out){//make 使用引擎的配置
             parsedCmd.options={
                 target:1,
@@ -51,6 +50,10 @@ class Compiler {
             }
             parsedCmd.options.outDir = outDir;
         }
+        if(args.sourceMap == true){
+            parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
+        }
+
         //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
         var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
         
