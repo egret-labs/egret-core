@@ -209,8 +209,8 @@ var EgretProperties = (function () {
         return 0;
     };
     EgretProperties.prototype.getResources = function () {
-        if (globals.hasKeys(this.properties, ["publish", "resource"])) {
-            return this.properties["publish"]["resource"];
+        if (globals.hasKeys(this.properties, ["resources"])) {
+            return this.properties["resources"];
         }
         return ["resource"];
     };
@@ -218,5 +218,4 @@ var EgretProperties = (function () {
 })();
 var config = config || new EgretProperties();
 module.exports = config;
-
 //# sourceMappingURL=EgretProperties.js.map
