@@ -64,4 +64,4 @@ var ZipCommand = (function () {
 })();
 module.exports = ZipCommand;
 
-//# sourceMappingURL=../actions/ZipCommand.js.map
+//# sourceMappingURL=ZipCommand.js.map

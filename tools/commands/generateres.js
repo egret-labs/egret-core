@@ -51,4 +51,4 @@ function isResource(fileName) {
 }
 module.exports = GenerateResource;
 
-//# sourceMappingURL=../commands/generateres.js.map
+//# sourceMappingURL=generateres.js.map

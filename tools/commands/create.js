@@ -52,4 +52,4 @@ function parseProjectInfoFromTemplate(project) {
 }
 module.exports = Create;
 
-//# sourceMappingURL=../commands/create.js.map
+//# sourceMappingURL=create.js.map

@@ -15,4 +15,4 @@ var Quit = (function () {
 })();
 module.exports = Quit;
 
-//# sourceMappingURL=../commands/quit.js.map
+//# sourceMappingURL=quit.js.map

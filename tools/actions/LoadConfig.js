@@ -34,4 +34,5 @@ function loadTsConfig(url, options) {
     options.tsconfigError = errLog;
 }
 exports.loadTsConfig = loadTsConfig;
+
 //# sourceMappingURL=LoadConfig.js.map

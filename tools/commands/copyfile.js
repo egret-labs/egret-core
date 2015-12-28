@@ -25,8 +25,11 @@ var CopyFilesCommand = (function () {
         globals.log2(7, (Date.now() - startTime) / 1000);
     };
     CopyFilesCommand.prototype.copyResources = function (projectPath, outputPath, ignorePathList) {
-        if (file.exists(file.joinPath(projectPath, config.getResourceName()))) {
-            this.copyFilesWithIgnore(file.joinPath(projectPath, config.getResourceName()), file.joinPath(outputPath, config.getResourceName()), ignorePathList);
+        var resources = egret.args.properties.getResources();
+        for (var key in resources) {
+            if (file.exists(file.joinPath(projectPath, resources[key]))) {
+                this.copyFilesWithIgnore(file.joinPath(projectPath, resources[key]), file.joinPath(outputPath, resources[key]), ignorePathList);
+            }
         }
     };
     CopyFilesCommand.prototype.copyFilesWithIgnore = function (sourceRootPath, desRootPath, ignorePathList) {
@@ -55,4 +58,4 @@ var CopyFilesCommand = (function () {
 })();
 module.exports = CopyFilesCommand;
 
-//# sourceMappingURL=../commands/copyfile.js.map
+//# sourceMappingURL=copyfile.js.map

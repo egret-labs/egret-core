@@ -95,4 +95,4 @@ var CopyFiles = (function () {
 })();
 module.exports = CopyFiles;
 
-//# sourceMappingURL=../actions/CopyFiles.js.map
+//# sourceMappingURL=CopyFiles.js.map

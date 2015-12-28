@@ -11,4 +11,4 @@ var Service = (function () {
 })();
 module.exports = Service;
 
-//# sourceMappingURL=../commands/service.js.map
+//# sourceMappingURL=service.js.map

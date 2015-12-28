@@ -202,12 +202,6 @@ var EgretProperties = (function () {
         var referenceInfo = create_manifest.getModuleReferenceInfo(fileList);
         return referenceInfo;
     };
-    EgretProperties.prototype.getResourceName = function () {
-        if (this.properties["resource"]) {
-            return this.properties["resource"];
-        }
-        return "resource";
-    };
     EgretProperties.prototype.getPublishType = function (runtime) {
         if (globals.hasKeys(this.properties, ["publish", runtime])) {
             return this.properties["publish"][runtime];
@@ -225,4 +219,4 @@ var EgretProperties = (function () {
 var config = config || new EgretProperties();
 module.exports = config;
 
-//# sourceMappingURL=../parser/EgretProperties.js.map
+//# sourceMappingURL=EgretProperties.js.map
