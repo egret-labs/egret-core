@@ -255,11 +255,13 @@ module dragonBones {
 			slotData.parent = slotObject[ConstValues.A_PARENT];
 			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
             var displayList:any = slotObject[ConstValues.DISPLAY];
-
-            for(var i:number = 0, len:number = displayList.length; i < len; i++) 
+            if(displayList)
             {
-                var displayObject:any = displayList[i];
-                slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
+            	for(var i:number = 0, len:number = displayList.length; i < len; i++) 
+	            {
+	                var displayObject:any = displayList[i];
+	                slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
+	            }
             }
 			
 			return slotData;

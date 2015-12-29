@@ -161,10 +161,13 @@ module dragonBones {
 
 			var displayList:any = slotObject[ConstValues.DISPLAY];
 
-			for(var i:number = 0, len:number = displayList.length; i < len; i++) 
+			if(displayList)
 			{
-				var displayObject:any = displayList[i];
-				slotData.addDisplayData(Data3Parser.parseDisplayData(displayObject));
+				for(var i:number = 0, len:number = displayList.length; i < len; i++) 
+				{
+					var displayObject:any = displayList[i];
+					slotData.addDisplayData(Data3Parser.parseDisplayData(displayObject));
+				}
 			}
 
 			return slotData;
