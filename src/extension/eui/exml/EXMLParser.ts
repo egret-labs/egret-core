@@ -835,7 +835,7 @@ module eui.sys {
          * @private
          * 格式化值
          */
-        private formatValue(key:string, value:string, node:egret.XML):string {
+        private formatValue(key:string, value:string, node:egret.XML, haveState:boolean = false, stateCallBack:Function = null):string {
             if (!value) {
                 value = "";
             }
@@ -854,10 +854,17 @@ module eui.sys {
                 this.checkIdForState(node);
                 var firstKey = value.split(".")[0];
                 if (firstKey != HOST_COMPONENT && this.skinParts.indexOf(firstKey) == -1) {
-                    value = HOST_COMPONENT+"."+value;
+                    value = HOST_COMPONENT + "." + value;
                 }
-                this.bindings.push(new EXBinding(node.attributes["id"], key, value));
-                value = "";
+                if(!haveState){
+                    this.bindings.push(new EXBinding(node.attributes["id"], key, value));
+                    value = "";
+                }else{
+                    if(stateCallBack){
+                        stateCallBack(true);
+                    }
+                }
+
             }
             else if (type == RECTANGLE) {
                 if (DEBUG) {
@@ -1287,7 +1294,10 @@ module eui.sys {
                         if (index != -1) {
                             var key = name.substring(0, index);
                             key = this.formatKey(key, value);
-                            var value = this.formatValue(key, value, node);
+                            var isBinding:boolean = false;
+                            var value = this.formatValue(key, value, node, true,function(vl){
+                                isBinding = vl;
+                            });
                             if (!value) {
                                 continue;
                             }
@@ -1297,7 +1307,11 @@ module eui.sys {
                             if (l > 0) {
                                 for (var j = 0; j < l; j++) {
                                     state = states[j];
-                                    state.addOverride(new EXSetProperty(id, key, value));
+                                    if(!isBinding){
+                                        state.addOverride(new EXSetProperty(id, key, value));
+                                    }else{
+                                        state.addOverride(new EXSetStateProperty(id, key, "\""+value+"\""));
+                                    }
                                 }
                             }
                         }

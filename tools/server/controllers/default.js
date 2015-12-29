@@ -97,4 +97,4 @@ function getUserProjectContentFullName(req) {
 }
 module.exports = exportObject;
 
-//# sourceMappingURL=../../server/controllers/default.js.map
+//# sourceMappingURL=default.js.map

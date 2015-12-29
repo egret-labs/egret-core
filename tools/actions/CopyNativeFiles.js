@@ -64,4 +64,4 @@ var CopyNativeFiles = (function () {
 })();
 module.exports = CopyNativeFiles;
 
-//# sourceMappingURL=../actions/CopyNativeFiles.js.map
+//# sourceMappingURL=CopyNativeFiles.js.map

@@ -167,6 +167,23 @@ declare module egret {
         constructor(movieClipData?: MovieClipData);
         /**
          * @private
+         */
+        $smoothing: boolean;
+        /**
+         * @language en_US
+         * Whether or not is smoothed when scaled.
+         * @version Egret 3.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理。
+         * @version Egret 3.0
+         * @platform Web
+         */
+        smoothing: boolean;
+        /**
+         * @private
          *
          */
         $init(): void;
@@ -2263,6 +2280,10 @@ declare module egret {
          * @platform Web,Native
          */
         static DEVICE_MOBILE: string;
+        /**
+         * @private
+         */
+        static _runtimeType: string;
         /**
          * @version Egret 2.4
          * @platform Web,Native

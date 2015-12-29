@@ -241,13 +241,6 @@ class EgretProperties implements egret.EgretPropertiesClass {
         return referenceInfo;
     }
 
-    getResourceName() {
-        if (this.properties["resource"]) {
-            return this.properties["resource"];
-        }
-        return "resource";
-    }
-
     getPublishType(runtime:string):number {
         if (globals.hasKeys(this.properties, ["publish", runtime])) {
             return this.properties["publish"][runtime];
@@ -257,8 +250,8 @@ class EgretProperties implements egret.EgretPropertiesClass {
     }
 
     getResources():Array<string> {
-        if (globals.hasKeys(this.properties, ["publish", "resource"])) {
-            return this.properties["publish"]["resource"];
+        if (globals.hasKeys(this.properties, ["resources"])) {
+            return this.properties["resources"];
         }
 
         return ["resource"];

@@ -4556,7 +4556,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, Promi
                 writeLine();
                 write('var d = __define,c=');
                 emitJavaScriptWorker(node.name);
-                write(';p=c.prototype;');
+                write(',p=c.prototype;');
                 forEach(node.members, member => {
                     if (member.kind === SyntaxKind.SemicolonClassElement) {
                         writeLine();
@@ -5081,7 +5081,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, Promi
                 writeLine();
                 write('egret.registerClass(');
                 emit(node.name);
-                write(',"' + fullName + '"');
+                write(',\'' + fullName + '\'');
                 var interfacesArray = Object.keys(interfaces);
                 if (interfacesArray.length > 0) {
                     write(',');

@@ -42,6 +42,7 @@ class Project {
     }
 
     fileChanged(socket: ServiceSocket, task: egret.ServiceCommand, path?: string, changeType?: string) {
+        //console.log("--project.fileChanged--")
         if (this.pendingRequest)
             this.pendingRequest.end({ command: "build", exitCode: 0 });
         this.pendingRequest = socket;
@@ -58,6 +59,7 @@ class Project {
     }
 
     build() {
+        //console.log("--project.build--");
         this.buildProcessOutputs.length = 0;
         this.buildWithExistBuildService();
         this.changes = null;
@@ -99,8 +101,7 @@ class Project {
             return;
         }
 
-        console.log("项目文件改变:");
-        console.log(this.changes);
+        console.log("项目文件改变:",this.changes);
 
         this.sendCommand({
             command: "build",
@@ -167,20 +168,3 @@ class Project {
 }
 
 export = Project;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -251,7 +251,12 @@ module egret {
 
         public set lineWidth(value:number) {
             this._lineWidth = value;
-            this._maxLineWidth = Math.max(this._maxLineWidth, value);
+            if(!isNaN(value)) {
+                this._maxLineWidth = Math.max(this._maxLineWidth, value);
+            }
+            else {
+                this._maxLineWidth = 0;
+            }
             this.pushCommand(sys.GraphicsCommandType.lineWidth, arguments);
         }
 
@@ -1006,7 +1011,7 @@ module egret {
                 }
             }
 
-            if (this._strokeStyle) {
+            if (this._strokeStyle && this._maxLineWidth > 0) {
                 map[sys.GraphicsCommandType.stroke].apply(context, []);
                 map[sys.GraphicsCommandType.closePath].apply(context, []);
             }

@@ -4,6 +4,7 @@
 /// <reference path="../lib/types.d.ts" />
 /// <reference path="../lib/async/async.d.ts" />
 var async = require('../lib/async/async');
+var service = require('../service/index');
 //import config = require('../lib/ProjectConfig');
 //import globals = require("../Globals");
 var UpgradeCommand = (function () {
@@ -43,7 +44,9 @@ var UpgradeCommand = (function () {
             { "v": "2.5.3" },
             { "v": "2.5.4" },
             { "v": "2.5.5" },
-            { "v": "2.5.6" }
+            { "v": "2.5.6" },
+            { "v": "2.5.7" },
+            { "v": "3.0.0" }
         ];
         //升级命令是一个异步命令 内含异步控制流程
         this.isAsync = true;
@@ -103,7 +106,11 @@ var UpgradeCommand = (function () {
                 globals.exit(1705);
             }
             else {
-                globals.exit(1702);
+                service.execCommand({
+                    path: egret.args.projectDir,
+                    command: "shutdown",
+                    option: egret.args
+                }, function () { return globals.exit(1702); }, true);
             }
         });
         //for (var i = 0; i < this.upgradeConfigArr.length; i++) {
@@ -130,4 +137,4 @@ var UpgradeCommand = (function () {
 })();
 module.exports = UpgradeCommand;
 
-//# sourceMappingURL=../commands/upgrade.js.map
+//# sourceMappingURL=upgrade.js.map

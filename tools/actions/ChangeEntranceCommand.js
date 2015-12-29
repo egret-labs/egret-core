@@ -108,4 +108,4 @@ var ChangeEntranceCommand = (function () {
 })();
 module.exports = ChangeEntranceCommand;
 
-//# sourceMappingURL=../actions/ChangeEntranceCommand.js.map
+//# sourceMappingURL=ChangeEntranceCommand.js.map

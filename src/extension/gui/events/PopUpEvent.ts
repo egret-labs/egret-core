@@ -85,7 +85,7 @@ module egret.gui {
          */
         public static dispatchPopUpEvent(target:IEventDispatcher,type:string,
                                          popUp:IVisualElement=null,modal:boolean = false):boolean{
-			var event:PopUpEvent = Event.create(PopUpEvent, HTTPStatusEvent.HTTP_STATUS);
+			var event:PopUpEvent = Event.create(PopUpEvent, type);
 			event.popUp = popUp;
 			event.modal = modal;
 			var result = target.dispatchEvent(event);

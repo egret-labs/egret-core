@@ -122,4 +122,4 @@ function getExmlDtsPath() {
     return file.joinPath(egret.args.projectDir, "libs", "exml.g.d.ts");
 }
 
-//# sourceMappingURL=../actions/exml.gui.js.map
+//# sourceMappingURL=exml.gui.js.map

@@ -32,8 +32,11 @@ class CopyFilesCommand implements egret.Command {
     }
 
     copyResources(projectPath, outputPath, ignorePathList) {
-        if (file.exists(file.joinPath(projectPath, config.getResourceName()))) {
-            this.copyFilesWithIgnore(file.joinPath(projectPath, config.getResourceName()), file.joinPath(outputPath, config.getResourceName()), ignorePathList);
+        var resources = egret.args.properties.getResources();
+        for (var key in resources) {
+            if (file.exists(file.joinPath(projectPath, resources[key]))) {
+                this.copyFilesWithIgnore(file.joinPath(projectPath, resources[key]), file.joinPath(outputPath, resources[key]), ignorePathList);
+            }
         }
     }
 

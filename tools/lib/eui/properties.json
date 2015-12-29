@@ -101,11 +101,6 @@
 		"tx":"number",
 		"ty":"number"
 	},
-	"egret.NativeStageText":
-	{
-		"implements":["egret.StageText"],
-		"super":"egret.EventDispatcher"
-	},
 	"egret.Point":
 	{
 		"super":"egret.HashObject",
@@ -496,6 +491,18 @@
 	"eui.TabBar":
 	{
 		"super":"eui.ListBase"
+	},
+	"eui.TextInput":
+	{
+		"displayAsPassword":"boolean",
+		"maxChars":"number",
+		"prompt":"string",
+		"promptDisplay":"eui.Label",
+		"restrict":"string",
+		"super":"eui.Component",
+		"text":"string",
+		"textColor":"number",
+		"textDisplay":"eui.EditableText"
 	},
 	"eui.TileLayout":
 	{

@@ -67,11 +67,37 @@ module RES {
     }
 
     /**
-     * 根据url返回实际加载url地址
-     * @param call
+     * @language en_US
+     * Register the VersionController
+     * @param vcs The VersionController to register.
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 注册版本控制器,通过RES模块加载资源时会从版本控制器获取真实url
+     * @param vcs 注入的版本控制器。
+     * @version Egret 2.5
+     * @platform Web,Native
      */
     export function registerVersionController(vcs:VersionController):void {
         instance.$registerVersionController(vcs);
+    }
+
+    /**
+     * @language en_US
+     * Returns the VersionController
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 获得版本控制器.
+     * @version Egret 2.5
+     * @platform Web,Native
+     */
+    export function getVersionController():VersionController {
+        return instance.vcs;
     }
 
     /**

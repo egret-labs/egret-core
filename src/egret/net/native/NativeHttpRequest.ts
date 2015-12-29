@@ -145,6 +145,8 @@ module egret.native {
                     $warn(1019, error_code);
                     Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
                 };
+                promise.onResponseHeaderFunc = this.onResponseHeader;
+                promise.onResponseHeaderThisObject = this;
                 egret_native.requireHttp(self._url, self.urlData, promise);
             }
             else if (!egret_native.isFileExists(self._url)) {
@@ -160,6 +162,9 @@ module egret.native {
                     self._response = content;
                     Event.dispatchEvent(self, Event.COMPLETE);
                 };
+                promise.onErrorFunc = function () {
+                    Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
+                };
                 if (self._responseType == HttpResponseType.ARRAY_BUFFER) {
                     egret_native.readFileAsync(self._url, promise, "ArrayBuffer");
                 }
@@ -170,17 +175,13 @@ module egret.native {
 
             function download() {
                 var promise = PromiseObject.create();
-                promise.onSuccessFunc = onLoadComplete;
+                promise.onSuccessFunc = readFileAsync;
                 promise.onErrorFunc = function () {
                     Event.dispatchEvent(self, IOErrorEvent.IO_ERROR);
                 };
+                promise.onResponseHeaderFunc = this.onResponseHeader;
+                promise.onResponseHeaderThisObject = this;
                 egret_native.download(self._url, self._url, promise);
-            }
-
-            function onLoadComplete() {
-                var content = egret_native.readFileSync(self._url);
-                self._response = content;
-                Event.dispatchEvent(self, Event.COMPLETE);
             }
         }
 
@@ -200,13 +201,23 @@ module egret.native {
         public abort():void {
         }
 
+        private responseHeader:string = "";
+
+        private onResponseHeader(headers:string):void {
+            this.responseHeader = "";
+            var obj = JSON.parse(headers);
+            for(var key in obj) {
+                this.responseHeader += key + ": " + obj[key] + "\r\n";
+            }
+        }
+
         /**
          * @private
          * 返回所有响应头信息(响应头名和值), 如果响应头还没接受,则返回"".
          */
         public getAllResponseHeaders():string {
 
-            return "";
+            return this.responseHeader;
         }
 
         private headerObj:any;

@@ -43,6 +43,7 @@ module egret.web {
          */
         public constructor() {
             sys.sharedRenderContext = this.create().renderContext;
+            sys.hitTestRenderContext = this.create().renderContext;
             for (var i = 0; i < 3; i++) {
                 surfacePool.push(this.create());
             }

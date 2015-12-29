@@ -34,24 +34,22 @@ global.egret = global.egret || {};
 global.registerClass = "egret";
 global.DontExitCode = -0xF000;
 
-require('./locales/zh_CN');
+//require('./locales/zh_CN');
 require('./globals');
+require("./lib/core/globals.js");
 import Parser = require("./parser/Parser");
 import earlyParams = require("./parser/ParseEarlyVersionParams");
 import utils = require('./lib/utils');
 
 
-
 export function executeCommandLine(args: string[]): void {
     var options = Parser.parseCommandLine(args);
     egret.args = options;
-    
+
     earlyParams.parse(options, args);
     var exitcode = entry.executeOption(options);
     entry.exit(exitcode);
 }
-
-
 class Entry {
 
     executeOption(options: egret.ToolArgs) {
@@ -79,9 +77,8 @@ class Entry {
         if(DontExitCode == exitCode)
             return;
         utils.exit(exitCode);
-        
+
     }
 }
 
 var entry = new Entry();
-

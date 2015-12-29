@@ -45,6 +45,7 @@ module egret.gui {
          */
         public constructor() {
             super();
+            this._smoothing = Bitmap.defaultSmoothing;
             this.addEventListener(UIEvent.UPDATE_COMPLETE, this.updateCompleteHandler, this);
         }
 
@@ -123,6 +124,28 @@ module egret.gui {
 
         public get letterSpacing():number {
             return this._letterSpacing;
+        }
+
+        private _isSmoothingChanged:boolean = false;
+        public _smoothing:boolean;
+        /**
+         * 字符之间的距离
+         */
+        public set smoothing(value:boolean) {
+            this._setSmoothing(value);
+        }
+
+        public _setSmoothing(value:boolean):void {
+            this._smoothing = value;
+
+            this._isSmoothingChanged = true;
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        }
+
+        public get smoothing():boolean {
+            return this._smoothing;
         }
 
         private _isLineSpacingChanged:boolean = false;
@@ -450,9 +473,11 @@ module egret.gui {
             this._bitmapText.text = this._text;
             this._bitmapText.letterSpacing = this._letterSpacing;
             this._bitmapText.lineSpacing = this._lineSpacing;
+            this._bitmapText.smoothing = this._smoothing;
             this._textChanged = false;
             this._isLetterSpacingChanged = false;
             this._isLineSpacingChanged = false;
+            this._isSmoothingChanged = false;
             this._addToDisplayList(this._bitmapText);
         }
 
@@ -476,6 +501,10 @@ module egret.gui {
             if (this._isLineSpacingChanged) {
                 this._bitmapText.lineSpacing = this._lineSpacing;
                 this._isLineSpacingChanged = false;
+            }
+            if (this._isSmoothingChanged) {
+                this._bitmapText.smoothing = this._smoothing;
+                this._isSmoothingChanged = false;
             }
         }
 

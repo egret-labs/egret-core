@@ -8,6 +8,7 @@
 //import params = require("../ParamsParser");
 import file = require('../lib/FileUtil');
 import async = require('../lib/async/async');
+import service = require('../service/index');
 //import config = require('../lib/ProjectConfig');
 //import globals = require("../Globals");
 
@@ -75,7 +76,11 @@ class UpgradeCommand implements egret.Command {
             if(error){
                 globals.exit(1705);
             }else{
-                globals.exit(1702);
+                service.execCommand({
+                    path: egret.args.projectDir,
+                    command: "shutdown",
+                    option: egret.args
+                }, () => globals.exit(1702), true);
             }
         });
 
@@ -135,7 +140,9 @@ class UpgradeCommand implements egret.Command {
         {"v": "2.5.3"},
         {"v": "2.5.4"},
         {"v": "2.5.5"},
-        {"v": "2.5.6"}
+        {"v": "2.5.6"},
+        {"v": "2.5.7"},
+        {"v": "3.0.0"}
     ];
 }
 

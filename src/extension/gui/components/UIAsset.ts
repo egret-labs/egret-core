@@ -44,6 +44,7 @@ module egret.gui {
          */
 		public constructor(source?:any,autoScale:boolean=true){
 			super();
+			this.$smoothing = Bitmap.defaultSmoothing;
 			this.touchChildren = false;
             if(source){
                 this.source = source;
@@ -244,18 +245,16 @@ module egret.gui {
 		/**
 		 * @private
 		 */
-		$smoothing:boolean = true;
+		$smoothing:boolean;
 		/**
 		 * @language en_US
 		 * Whether or not the bitmap is smoothed when scaled.
-		 * @default true。
 		 * @version Egret 2.4
 		 * @platform Web
 		 */
 		/**
 		 * @language zh_CN
 		 * 控制在缩放时是否对位图进行平滑处理。
-		 * @default true。
 		 * @version Egret 2.4
 		 * @platform Web
 		 */
@@ -278,7 +277,7 @@ module egret.gui {
 		$render(context:sys.RenderContext):void{
 			if (this._contentIsTexture) {
 				var bitmapData = <Texture> this._content;
-				context.imageSmoothingEnabled = false;
+				context.imageSmoothingEnabled = this.$smoothing;
 				var destW:number;
 				var destH:number;
 				if(this.autoScale){

@@ -128,6 +128,20 @@ module egret {
          * @version Egret 2.4
          * @platform Web,Native
          */
-        new():ImageLoader
+        new():ImageLoader;
+
+        /**
+         * @language en_US
+         * Specifies whether to enable cross-origin resource sharing, If ImageLoader instance has been set crossOrigin property will be used to set the property.
+         * @version Egret 2.5.7
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 指定是否启用跨域资源共享,如果ImageLoader实例有设置过crossOrigin属性将使用设置的属性
+         * @version Egret 2.5.7
+         * @platform Web,Native
+         */
+        crossOrigin:string;
     };
 }

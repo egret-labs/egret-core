@@ -132,9 +132,39 @@ module egret {
          */
         constructor(movieClipData?:MovieClipData) {
             super();
+            this.$smoothing = Bitmap.defaultSmoothing;
             this.$renderRegion = new sys.Region();
 
             this.setMovieClipData(movieClipData);
+        }
+
+        /**
+         * @private
+         */
+        $smoothing:boolean;
+        /**
+         * @language en_US
+         * Whether or not is smoothed when scaled.
+         * @version Egret 3.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理。
+         * @version Egret 3.0
+         * @platform Web
+         */
+        public get smoothing():boolean {
+            return this.$smoothing;
+        }
+
+        public set smoothing(value:boolean) {
+            value = !!value;
+            if (value == this.$smoothing) {
+                return;
+            }
+            this.$smoothing = value;
+            this.$invalidate();
         }
 
         /**
@@ -188,7 +218,7 @@ module egret {
         $render(context:sys.RenderContext):void {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = this.$smoothing;
 
                 var offsetX:number = Math.round(texture._offsetX);
                 var offsetY:number = Math.round(texture._offsetY);
@@ -465,9 +495,14 @@ module egret {
             if (num < 1) {
                 return false;
             }
+            var event;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
+                event = this.frameEvents[self.$nextFrameNum];
+                if(event && event!=""){
+                    MovieClipEvent.dispatchMovieClipEvent(self,MovieClipEvent.FRAME_LABEL,event);
+                }
                 if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart>0 && self.$nextFrameNum>self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(Event.LOOP_COMPLETE);
@@ -514,11 +549,6 @@ module egret {
             var currentFrameNum:number = this.$currentFrameNum;
             if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
-            }
-
-            var event = this.frameEvents[currentFrameNum];
-            if(event && event!=""){
-                MovieClipEvent.dispatchMovieClipEvent(this,MovieClipEvent.FRAME_LABEL,event);
             }
 
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);

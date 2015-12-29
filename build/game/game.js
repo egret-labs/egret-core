@@ -46,7 +46,7 @@ var egret;
             if (end)
                 this._end = end | 0;
         }
-        var d = __define,c=FrameLabel;p=c.prototype;
+        var d = __define,c=FrameLabel,p=c.prototype;
         d(p, "name"
             /**
              * @language en_US
@@ -116,7 +116,7 @@ var egret;
         return FrameLabel;
     })(egret.EventDispatcher);
     egret.FrameLabel = FrameLabel;
-    egret.registerClass(FrameLabel,"egret.FrameLabel");
+    egret.registerClass(FrameLabel,'egret.FrameLabel');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -246,10 +246,36 @@ var egret;
              * @private
              */
             this.lastTime = 0;
+            this.$smoothing = egret.Bitmap.defaultSmoothing;
             this.$renderRegion = new egret.sys.Region();
             this.setMovieClipData(movieClipData);
         }
-        var d = __define,c=MovieClip;p=c.prototype;
+        var d = __define,c=MovieClip,p=c.prototype;
+        d(p, "smoothing"
+            /**
+             * @language en_US
+             * Whether or not is smoothed when scaled.
+             * @version Egret 3.0
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 控制在缩放时是否进行平滑处理。
+             * @version Egret 3.0
+             * @platform Web
+             */
+            ,function () {
+                return this.$smoothing;
+            }
+            ,function (value) {
+                value = !!value;
+                if (value == this.$smoothing) {
+                    return;
+                }
+                this.$smoothing = value;
+                this.$invalidate();
+            }
+        );
         /**
          * @private
          *
@@ -297,7 +323,7 @@ var egret;
         p.$render = function (context) {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = false;
+                context.imageSmoothingEnabled = this.$smoothing;
                 var offsetX = Math.round(texture._offsetX);
                 var offsetY = Math.round(texture._offsetY);
                 var bitmapWidth = texture._bitmapWidth;
@@ -550,9 +576,14 @@ var egret;
             if (num < 1) {
                 return false;
             }
+            var event;
             while (num >= 1) {
                 num--;
                 self.$nextFrameNum++;
+                event = this.frameEvents[self.$nextFrameNum];
+                if (event && event != "") {
+                    egret.MovieClipEvent.dispatchMovieClipEvent(self, egret.MovieClipEvent.FRAME_LABEL, event);
+                }
                 if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd)) {
                     if (self.playTimes == -1) {
                         self.$eventPool.push(egret.Event.LOOP_COMPLETE);
@@ -596,10 +627,6 @@ var egret;
             var currentFrameNum = this.$currentFrameNum;
             if (this.displayedKeyFrameNum == currentFrameNum) {
                 return;
-            }
-            var event = this.frameEvents[currentFrameNum];
-            if (event && event != "") {
-                egret.MovieClipEvent.dispatchMovieClipEvent(this, egret.MovieClipEvent.FRAME_LABEL, event);
             }
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
             this.$invalidateContentBounds();
@@ -766,7 +793,7 @@ var egret;
         return MovieClip;
     })(egret.DisplayObject);
     egret.MovieClip = MovieClip;
-    egret.registerClass(MovieClip,"egret.MovieClip");
+    egret.registerClass(MovieClip,'egret.MovieClip');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -861,7 +888,7 @@ var egret;
              */
             this.spriteSheet = null;
         }
-        var d = __define,c=MovieClipData;p=c.prototype;
+        var d = __define,c=MovieClipData,p=c.prototype;
         /**
          * @private
          *
@@ -1036,7 +1063,7 @@ var egret;
         return MovieClipData;
     })(egret.HashObject);
     egret.MovieClipData = MovieClipData;
-    egret.registerClass(MovieClipData,"egret.MovieClipData");
+    egret.registerClass(MovieClipData,'egret.MovieClipData');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1098,7 +1125,7 @@ var egret;
             this.$mcDataSet = movieClipDataSet;
             this.setTexture(texture);
         }
-        var d = __define,c=MovieClipDataFactory;p=c.prototype;
+        var d = __define,c=MovieClipDataFactory,p=c.prototype;
         /**
          * 清空缓存
          * @version Egret 2.4
@@ -1206,7 +1233,7 @@ var egret;
         return MovieClipDataFactory;
     })(egret.EventDispatcher);
     egret.MovieClipDataFactory = MovieClipDataFactory;
-    egret.registerClass(MovieClipDataFactory,"egret.MovieClipDataFactory");
+    egret.registerClass(MovieClipDataFactory,'egret.MovieClipDataFactory');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1292,7 +1319,7 @@ var egret;
             this.frameLabel = null;
             this.frameLabel = frameLabel;
         }
-        var d = __define,c=MovieClipEvent;p=c.prototype;
+        var d = __define,c=MovieClipEvent,p=c.prototype;
         /**
          * @language en_US
          * EventDispatcher object using the specified event object thrown MovieClipEvent. The objects will be thrown in the object cache pool for the next round robin.
@@ -1335,7 +1362,7 @@ var egret;
         return MovieClipEvent;
     })(egret.Event);
     egret.MovieClipEvent = MovieClipEvent;
-    egret.registerClass(MovieClipEvent,"egret.MovieClipEvent");
+    egret.registerClass(MovieClipEvent,'egret.MovieClipEvent');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1378,7 +1405,7 @@ var egret;
         function ScrollEase() {
             egret.$error(1014);
         }
-        var d = __define,c=ScrollEase;p=c.prototype;
+        var d = __define,c=ScrollEase,p=c.prototype;
         /**
          *
          * @param amount
@@ -1428,7 +1455,7 @@ var egret;
         return ScrollEase;
     })();
     egret.ScrollEase = ScrollEase;
-    egret.registerClass(ScrollEase,"egret.ScrollEase");
+    egret.registerClass(ScrollEase,'egret.ScrollEase');
     /**
      * @language en_US
      * ScrollTween is the animation easing class of Egret
@@ -1515,7 +1542,7 @@ var egret;
             this.passive = false;
             this.initialize(target, props, pluginData);
         }
-        var d = __define,c=ScrollTween;p=c.prototype;
+        var d = __define,c=ScrollTween,p=c.prototype;
         /**
          * @language en_US
          * Activate an object and add a ScrollTween animation to the object
@@ -1993,7 +2020,7 @@ var egret;
         return ScrollTween;
     })(egret.EventDispatcher);
     egret.ScrollTween = ScrollTween;
-    egret.registerClass(ScrollTween,"egret.ScrollTween");
+    egret.registerClass(ScrollTween,'egret.ScrollTween');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2104,7 +2131,7 @@ var egret;
                 this.setContent(content);
             }
         }
-        var d = __define,c=ScrollView;p=c.prototype;
+        var d = __define,c=ScrollView,p=c.prototype;
         d(p, "bounces"
             /**
              * @language en_US
@@ -2968,7 +2995,7 @@ var egret;
         return ScrollView;
     })(egret.DisplayObjectContainer);
     egret.ScrollView = ScrollView;
-    egret.registerClass(ScrollView,"egret.ScrollView");
+    egret.registerClass(ScrollView,'egret.ScrollView');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3076,11 +3103,11 @@ var egret;
              */
             this._bounces = true;
         }
-        var d = __define,c=ScrollViewProperties;p=c.prototype;
+        var d = __define,c=ScrollViewProperties,p=c.prototype;
         return ScrollViewProperties;
     })();
     egret.ScrollViewProperties = ScrollViewProperties;
-    egret.registerClass(ScrollViewProperties,"egret.ScrollViewProperties");
+    egret.registerClass(ScrollViewProperties,'egret.ScrollViewProperties');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3260,7 +3287,7 @@ var egret;
                 this.load(request);
             }
         }
-        var d = __define,c=URLLoader;p=c.prototype;
+        var d = __define,c=URLLoader,p=c.prototype;
         /**
          * @language en_US
          * Send and load data from the specified URL. The data can be received as text, raw binary data, or URL-encoded variables, depending on the value you set for the dataFormat property.
@@ -3293,7 +3320,7 @@ var egret;
         return URLLoader;
     })(egret.EventDispatcher);
     egret.URLLoader = URLLoader;
-    egret.registerClass(URLLoader,"egret.URLLoader");
+    egret.registerClass(URLLoader,'egret.URLLoader');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3344,7 +3371,7 @@ var egret;
     var URLLoaderDataFormat = (function () {
         function URLLoaderDataFormat() {
         }
-        var d = __define,c=URLLoaderDataFormat;p=c.prototype;
+        var d = __define,c=URLLoaderDataFormat,p=c.prototype;
         /**
          * @language en_US
          * Specify that downloaded data is received as raw binary data.
@@ -3413,7 +3440,7 @@ var egret;
         return URLLoaderDataFormat;
     })();
     egret.URLLoaderDataFormat = URLLoaderDataFormat;
-    egret.registerClass(URLLoaderDataFormat,"egret.URLLoaderDataFormat");
+    egret.registerClass(URLLoaderDataFormat,'egret.URLLoaderDataFormat');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3550,11 +3577,11 @@ var egret;
             this.requestHeaders = [];
             this.url = url;
         }
-        var d = __define,c=URLRequest;p=c.prototype;
+        var d = __define,c=URLRequest,p=c.prototype;
         return URLRequest;
     })(egret.HashObject);
     egret.URLRequest = URLRequest;
-    egret.registerClass(URLRequest,"egret.URLRequest");
+    egret.registerClass(URLRequest,'egret.URLRequest');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3645,11 +3672,11 @@ var egret;
             this.name = name;
             this.value = value;
         }
-        var d = __define,c=URLRequestHeader;p=c.prototype;
+        var d = __define,c=URLRequestHeader,p=c.prototype;
         return URLRequestHeader;
     })();
     egret.URLRequestHeader = URLRequestHeader;
-    egret.registerClass(URLRequestHeader,"egret.URLRequestHeader");
+    egret.registerClass(URLRequestHeader,'egret.URLRequestHeader');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3702,7 +3729,7 @@ var egret;
     var URLRequestMethod = (function () {
         function URLRequestMethod() {
         }
-        var d = __define,c=URLRequestMethod;p=c.prototype;
+        var d = __define,c=URLRequestMethod,p=c.prototype;
         /**
          * @language en_US
          * Specify that the URLRequest object is a GET.
@@ -3732,7 +3759,7 @@ var egret;
         return URLRequestMethod;
     })();
     egret.URLRequestMethod = URLRequestMethod;
-    egret.registerClass(URLRequestMethod,"egret.URLRequestMethod");
+    egret.registerClass(URLRequestMethod,'egret.URLRequestMethod');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3818,7 +3845,7 @@ var egret;
                 this.decode(source);
             }
         }
-        var d = __define,c=URLVariables;p=c.prototype;
+        var d = __define,c=URLVariables,p=c.prototype;
         /**
          * @language en_US
          * Convert the variable string into the property of this URLVariables.variables object.
@@ -3910,7 +3937,7 @@ var egret;
         return URLVariables;
     })(egret.HashObject);
     egret.URLVariables = URLVariables;
-    egret.registerClass(URLVariables,"egret.URLVariables");
+    egret.registerClass(URLVariables,'egret.URLVariables');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -3976,7 +4003,7 @@ var egret;
             egret.sys.$ticker.$startTick(this.update, this);
             this._lastTime = egret.getTimer();
         }
-        var d = __define,c=Ticker;p=c.prototype;
+        var d = __define,c=Ticker,p=c.prototype;
         p.update = function (timeStamp) {
             var advancedTime = timeStamp - this._lastTime;
             this._lastTime = timeStamp;
@@ -4068,7 +4095,7 @@ var egret;
         return Ticker;
     })(egret.EventDispatcher);
     egret.Ticker = Ticker;
-    egret.registerClass(Ticker,"egret.Ticker");
+    egret.registerClass(Ticker,'egret.Ticker');
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -4118,7 +4145,7 @@ var egret;
         function MainContext() {
             _super.call(this);
         }
-        var d = __define,c=MainContext;p=c.prototype;
+        var d = __define,c=MainContext,p=c.prototype;
         d(p, "stage"
             /**
              * 渲染Context
@@ -4156,6 +4183,16 @@ var egret;
              */
             ,function () {
                 return egret.sys.$TempStage;
+            }
+        );
+        d(MainContext, "runtimeType"
+            /**
+             * @version Egret 2.4
+             * @platform Web,Native
+             */
+            ,function () {
+                egret.$warn(1041);
+                return MainContext._runtimeType;
             }
         );
         /**
@@ -4208,7 +4245,7 @@ var egret;
         return MainContext;
     })(egret.EventDispatcher);
     egret.MainContext = MainContext;
-    egret.registerClass(MainContext,"egret.MainContext");
+    egret.registerClass(MainContext,'egret.MainContext');
 })(egret || (egret = {}));
 var testDeviceType1 = function () {
     if (!this["navigator"]) {
@@ -4224,7 +4261,7 @@ var testRuntimeType1 = function () {
     return false;
 };
 egret.MainContext.deviceType = testDeviceType1() ? egret.MainContext.DEVICE_MOBILE : egret.MainContext.DEVICE_PC;
-egret.MainContext.runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
+egret.MainContext._runtimeType = testRuntimeType1() ? egret.MainContext.RUNTIME_HTML5 : egret.MainContext.RUNTIME_NATIVE;
 delete testDeviceType1;
 delete testRuntimeType1;
 //////////////////////////////////////////////////////////////////////////////////////
@@ -4305,7 +4342,7 @@ var egret;
             this.autoDisposeTime = autoDisposeTime;
             this.frameCount = 0;
         }
-        var d = __define,c=Recycler;p=c.prototype;
+        var d = __define,c=Recycler,p=c.prototype;
         Recycler.$init = function () {
             egret.sys.$ticker.$startTick(Recycler.onUpdate, Recycler);
         };
@@ -4422,7 +4459,7 @@ var egret;
         return Recycler;
     })(egret.HashObject);
     egret.Recycler = Recycler;
-    egret.registerClass(Recycler,"egret.Recycler");
+    egret.registerClass(Recycler,'egret.Recycler');
     Recycler.$init();
 })(egret || (egret = {}));
 var egret;

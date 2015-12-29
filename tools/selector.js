@@ -56,13 +56,15 @@ var localsMessages = {
         1: "Can not find Egret Engine {0}, please install it with Egret Launcher.",
         2: "Can not find Egret Engine, please open Egret Launcher and press the \"Reset\" button.",
         3: "Egret Engine default version: {0}\nEgret Engine current version: {1}\nYou can upgrade your project via egret upgrade",
-        4: "Egret Engine current version: {0}"
+        4: "Egret Engine current version: {0}",
+        5: "Error! The egretProperties.json is not a valid json."
     },
     zh: {
         1: "找不到 Egret Engine {0} 请打开引擎面板并添加对应版本的引擎",
         2: "找不到默认引擎，请尝试打开引擎面板并点击“重置引擎”按钮",
         3: "您的默认引擎版本为 {0}\n当前项目使用版本为 {1}\n您可以执行 egret upgrade 命令升级项目",
-        4: "您正在使用的引擎版本为 {0}"
+        4: "您正在使用的引擎版本为 {0}",
+        5: "错误！！ egretProperties.json 不是有效的 json 文件"
     }
 };
 var commandsToSkip = {
@@ -176,7 +178,14 @@ function getProjectVersion() {
     var propsPath = file.joinPath(args.projectDir, "egretProperties.json");
     if (file.exists(propsPath)) {
         var jsonText = file.read(propsPath);
-        var props = JSON.parse(jsonText);
+        var props;
+        try {
+            props = JSON.parse(jsonText);
+        }
+        catch (e) {
+            console.log(tr(5));
+            process.exit(2);
+        }
         return props["egret_version"];
     }
     return null;
@@ -469,4 +478,5 @@ function getLanguage() {
     }
 }
 entry();
+
 //# sourceMappingURL=selector.js.map

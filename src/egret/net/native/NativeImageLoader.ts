@@ -45,7 +45,21 @@ module egret.native {
          * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。
          * 可以设置为"anonymous","use-credentials"或null,设置为其他值将等同于"anonymous"。
          */
-        public crossOrigin:string = null;
+        private _crossOrigin:string = null;
+
+        public set crossOrigin(value:string) {
+            this._crossOrigin = value;
+        }
+
+        public get crossOrigin():string {
+            return this._crossOrigin;
+        }
+
+        /**
+         * @private
+         * 指定是否启用跨域资源共享,如果ImageLoader实例有设置过crossOrigin属性将使用设置的属性
+         */
+        public static crossOrigin:string = null;
 
         /**
          * @private

@@ -27,4 +27,4 @@ var CompileTemplate = (function () {
 })();
 module.exports = CompileTemplate;
 
-//# sourceMappingURL=../actions/CompileTemplate.js.map
+//# sourceMappingURL=CompileTemplate.js.map

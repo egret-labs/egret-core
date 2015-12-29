@@ -2,7 +2,7 @@
 /// <reference path="totaljs/totaljs.d.ts" />
 /// <reference path="xml/xml.ts" />
 /// <reference path="../globals.ts" />
-
+/// <reference path="./typescript/tsclark.d.ts" />
 
 
 declare module egret {
@@ -88,6 +88,8 @@ declare module egret {
         added: string[];
         removed: string[];
         modified: string[];
+        compilerOptions:ts.CompilerOptions;
+        tsconfigError: string[];//tsconfig 配置文件的错误信息
 
         toJSON: () => any;
         getProject(empty?:boolean): egret.ILarkProject;
@@ -171,8 +173,6 @@ declare module egret {
         getModulesDts()
 
         getModuleReferenceInfo()
-
-        getResourceName()
 
         getPublishType(runtime:string):number;
         getResources():Array<string>;

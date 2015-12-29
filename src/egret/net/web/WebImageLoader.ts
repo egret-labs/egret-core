@@ -49,7 +49,28 @@ module egret.web {
          * 当从其他站点加载一个图片时，指定是否启用跨域资源共享(CORS)，默认值为null。
          * 可以设置为"anonymous","use-credentials"或null,设置为其他值将等同于"anonymous"。
          */
-        public crossOrigin:string = null;
+        private _crossOrigin:string = null;
+
+        /**
+         * @private
+         * 标记crossOrigin有没有被设置过,设置过之后使用设置的属性
+         */
+        private _hasCrossOriginSet:boolean = false;
+
+        public set crossOrigin(value:string) {
+            this._hasCrossOriginSet = true;
+            this._crossOrigin = value;
+        }
+
+        public get crossOrigin():string {
+            return this._crossOrigin;
+        }
+
+        /**
+         * @private
+         * 指定是否启用跨域资源共享,如果ImageLoader实例有设置过crossOrigin属性将使用设置的属性
+         */
+        public static crossOrigin:string = null;
 
         /**
          * @private
@@ -117,8 +138,15 @@ module egret.web {
             var image = new Image();
             this.data = null;
             this.currentImage = image;
-            if (this.crossOrigin) {
-                image.crossOrigin = this.crossOrigin;
+            if(this._hasCrossOriginSet) {
+                if (this._crossOrigin) {
+                    image.crossOrigin = this._crossOrigin;
+                }
+            }
+            else {
+                if(WebImageLoader.crossOrigin) {
+                    image.crossOrigin = WebImageLoader.crossOrigin;
+                }
             }
             /*else {
                 if (image.hasAttribute("crossOrigin")) {//兼容猎豹

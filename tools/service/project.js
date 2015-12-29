@@ -34,6 +34,7 @@ var Project = (function () {
     };
     Project.prototype.fileChanged = function (socket, task, path, changeType) {
         var _this = this;
+        //console.log("--project.fileChanged--")
         if (this.pendingRequest)
             this.pendingRequest.end({ command: "build", exitCode: 0 });
         this.pendingRequest = socket;
@@ -49,6 +50,7 @@ var Project = (function () {
         this.timer = setTimeout(function () { return _this.build(); }, 200);
     };
     Project.prototype.build = function () {
+        //console.log("--project.build--");
         this.buildProcessOutputs.length = 0;
         this.buildWithExistBuildService();
         this.changes = null;
@@ -87,8 +89,7 @@ var Project = (function () {
             this.buildWholeProject();
             return;
         }
-        console.log("项目文件改变:");
-        console.log(this.changes);
+        console.log("项目文件改变:", this.changes);
         this.sendCommand({
             command: "build",
             changes: this.changes,
@@ -150,4 +151,4 @@ var Project = (function () {
 })();
 module.exports = Project;
 
-//# sourceMappingURL=../service/project.js.map
+//# sourceMappingURL=project.js.map

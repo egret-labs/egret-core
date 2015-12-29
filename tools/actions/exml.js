@@ -5,4 +5,4 @@ var hasSwan = egret.args.properties.hasEUI();
 var exmlHandlers = hasSwan ? exmlEUI : exmlGUI;
 module.exports = exmlHandlers;
 
-//# sourceMappingURL=../actions/exml.js.map
+//# sourceMappingURL=exml.js.map
