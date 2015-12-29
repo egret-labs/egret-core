@@ -72,6 +72,7 @@ module eui {
             super();
             this.touchChildren = false;
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
         }
 
         /**
@@ -173,7 +174,29 @@ module eui {
          * 指示第一次分派 TouchEvent.TOUCH_BEGIN 时，触摸点是否在按钮上。
          */
         private touchCaptured:boolean = false;
-
+        /**
+         * @language en_US
+         * This method handles the touchCancle events
+         * @param  The <code>egret.TouchEvent</code> object.
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 解除触碰事件处理。
+         * @param event 事件 <code>egret.TouchEvent</code> 的对象。
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onTouchCancle(event:egret.TouchEvent):void {
+            if(this.$stage){
+                this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
+            }
+            this.touchCaptured = false;
+            this.invalidateState();
+        }
         /**
          * @language en_US
          * This method handles the touch events
@@ -264,5 +287,4 @@ module eui {
         protected buttonReleased():void {
         }
     }
-
 }
