@@ -245,7 +245,9 @@ declare module egret_native {
 
         function setDesignSize(w:number, h:number):number;
     }
-
+    /**
+     * @private
+     */
     class RenderTexture {
         constructor(width:number, height:number);
 
@@ -303,8 +305,17 @@ declare module egret_native {
 
         function createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):CanvasGradient;
 
+        /**
+         * @private
+         */
         export var lineWidth:number;
+        /**
+         * @private
+         */
         export var strokeStyle:any;
+        /**
+         * @private
+         */
         export var fillStyle:any;
     }
 
@@ -313,7 +324,9 @@ declare module egret_native {
 
         function listUpdate(root, promise);
     }
-
+    /**
+     * @private
+     */
     class RenderContext {
         clearScreen(r:number, g:number, b:number):void;
 
@@ -327,7 +340,9 @@ declare module egret_native {
 
         popClip():void;
     }
-
+    /**
+     * @private
+     */
     class Canvas {
         constructor(width:number, height:number);
 

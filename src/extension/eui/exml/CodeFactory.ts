@@ -670,6 +670,9 @@ module eui.sys {
             return "new " + SET_PROPERTY + "(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
         }
     }
+    /**
+     * @private
+     */
     export class EXSetStateProperty extends CodeBase {
         /**
          * @private
