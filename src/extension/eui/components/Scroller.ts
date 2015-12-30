@@ -46,10 +46,9 @@ module eui {
         verticalCanScroll,
         touchScrollH,
         touchScrollV,
-        delayTouchTimer,
-        delayTouchEvent,
         viewport,
-        viewprotRemovedEvent //表示是被移除触发的viewport设空
+        viewprotRemovedEvent, //表示是被移除触发的viewport设空
+        touchCancle
     }
     /**
      * @language en_US
@@ -159,10 +158,9 @@ module eui {
                 7: false,           //verticalCanScroll,
                 8: touchScrollH,    //touchScrollH,
                 9: touchScrollV,    //touchScrollV
-                10: null,           //delayTouchTimer,
-                11: null,           //delayTouchEvent
-                12: null,           //viewport
-                13: false,          //viewprotRemovedEvent
+                10: null,           //viewport
+                11: false,          //viewprotRemovedEvent
+                12: false           //touchCancle
             };
         }
 
@@ -233,7 +231,6 @@ module eui {
                 scrollerThrowEvent.currentPos = currentPos;
                 scrollerThrowEvent.toPos = toPos;
             }
-            //this.dispatchEvent(scrollerThrowEvent);
             return scrollerThrowEvent;
         }
 
@@ -405,6 +402,7 @@ module eui {
                 viewport.scrollEnabled = true;
                 viewport.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
                 viewport.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
+                viewport.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapCapture, this, true);
                 viewport.addEventListener(egret.Event.REMOVED,this.onViewPortRemove,this);
             }
             if (this.horizontalScrollBar) {
@@ -431,6 +429,7 @@ module eui {
                 viewport.scrollEnabled = false;
                 viewport.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBeginCapture, this, true);
                 viewport.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEndCapture, this, true);
+                viewport.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.onTouchTapCapture, this, true);
                 viewport.removeEventListener(egret.Event.REMOVED,this.onViewPortRemove,this);
                 if(this.$Scroller[Keys.viewprotRemovedEvent] == false) {
                     this.removeChild(viewport);
@@ -459,23 +458,12 @@ module eui {
                 this.addChildAt(viewport, 0);
             }
         }
-
         /**
          * @private
-         *
          * @param event
          */
-        private onTouchEndCapture(event:egret.TouchEvent):void {
-            if (this.$Scroller[Keys.delayTouchEvent]) {
-                this.delayDispatchEvent(event);
-            }
-        }
-
-        /**
-         * @private
-         * 若这个Scroller可以滚动，阻止当前事件，延迟100ms再抛出。
-         */
         private onTouchBeginCapture(event:egret.TouchEvent):void {
+            this.$Scroller[Keys.touchCancle] = false;
             var canScroll:boolean = this.checkScrollPolicy();
             if (!canScroll) {
                 return;
@@ -491,61 +479,26 @@ module eui {
                 }
                 target = target.$parent;
             }
-            this.delayDispatchEvent(event);
             this.onTouchBegin(event);
         }
-
         /**
          * @private
-         *
          * @param event
          */
-        private delayDispatchEvent(event:egret.TouchEvent):void {
-            var values = this.$Scroller;
-            if (values[Keys.delayTouchEvent]) {
-                this.onDelayTouchEventTimer();
+        private onTouchEndCapture(event:egret.TouchEvent):void {
+            if(this.$Scroller[Keys.touchCancle]){
+                event.stopPropagation();
+                this.onTouchEnd(event);
             }
-            event.stopPropagation();
-            var touchEvent = egret.Event.create(egret.TouchEvent, event.$type, event.$bubbles, event.$cancelable);
-            touchEvent.$initTo(event.$stageX, event.$stageY, event.touchPointID);
-            touchEvent.$target = event.$target;
-            values[Keys.delayTouchEvent] = touchEvent;
-            if (!values[Keys.delayTouchTimer]) {
-                values[Keys.delayTouchTimer] = new egret.Timer(100, 1);
-                values[Keys.delayTouchTimer].addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.onDelayTouchEventTimer, this);
-            }
-            values[Keys.delayTouchTimer].start();
         }
-
         /**
          * @private
-         *
-         * @param e
+         * @param event
          */
-        private onDelayTouchEventTimer(e?:egret.TimerEvent):void {
-            var values = this.$Scroller;
-            values[Keys.delayTouchTimer].stop();
-            var event = values[Keys.delayTouchEvent];
-            values[Keys.delayTouchEvent] = null;
-            var viewport = values[Keys.viewport];
-            if (!viewport) {
-                return;
+        private onTouchTapCapture(event:egret.TouchEvent):void {
+            if(this.$Scroller[Keys.touchCancle]){
+                event.stopPropagation();
             }
-            var target:egret.DisplayObject = event.$target;
-            var list = this.$getPropagationList(target);
-            var length = list.length;
-            var targetIndex = list.length * 0.5;
-            var startIndex = -1;
-            for (var i = 0; i < length; i++) {
-                if (list[i] === viewport) {
-                    startIndex = i;
-                    break;
-                }
-            }
-            list.splice(0, startIndex + 1);
-            targetIndex -= startIndex + 1;
-            this.$dispatchPropagationEvent(event, list, targetIndex);
-            egret.Event.release(event);
         }
 
         /**
@@ -631,7 +584,6 @@ module eui {
             var stage = this.$stage;
             stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
-            event.preventDefault();
         }
 
         /**
@@ -646,6 +598,10 @@ module eui {
                     Math.abs(values[Keys.touchStartY] - event.$stageY) < Scroller.scrollThreshold) {
                     return;
                 }
+
+                values[Keys.touchCancle] = true;
+                this.dispatchCancleEvent(event);
+
                 values[Keys.touchMoved] = true;
                 var horizontalBar = this.horizontalScrollBar;
                 var verticalBar = this.verticalScrollBar;
@@ -660,10 +616,7 @@ module eui {
                 }
             }
             UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
-            if (values[Keys.delayTouchEvent]) {
-                values[Keys.delayTouchEvent] = null;
-                values[Keys.delayTouchTimer].stop();
-            }
+
             var viewport = values[Keys.viewport];
             var uiValues = viewport.$UIComponent;
             if (values[Keys.horizontalCanScroll]) {
@@ -673,11 +626,38 @@ module eui {
                 values[Keys.touchScrollV].update(event.$stageY, viewport.contentHeight - uiValues[sys.UIKeys.height]);
             }
         }
+        /**
+         * @private
+         * @param event
+         */
+        private dispatchCancleEvent(event:egret.TouchEvent){
+            var viewport = this.$Scroller[Keys.viewport];
+            if(!viewport){
+                return;
+            }
+            var cancleEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL,event.bubbles,event.cancelable);
+            var target:egret.DisplayObject = event.$target;
+            var list = this.$getPropagationList(target);
+            var length = list.length;
+            var targetIndex = list.length * 0.5;
+            var startIndex = -1;
+
+            for (var i = 0; i < length; i++) {
+                if (list[i] === viewport) {
+                    startIndex = i;
+                    break;
+                }
+            }
+            list.splice(0, startIndex + 1);
+            targetIndex -= startIndex + 1;
+            console.log()
+            this.$dispatchPropagationEvent(cancleEvent, list, targetIndex);
+            egret.Event.release(cancleEvent);
+        }
 
 
         /**
          * @private
-         *
          * @param event
          */
         private onTouchEnd(event:egret.Event):void {

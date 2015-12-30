@@ -30,7 +30,7 @@
 module egret {
     /**
      * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
-     * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
      */
@@ -136,11 +136,16 @@ module egret {
             var frameData = this.getKeyFrameData(frame);
             if (frameData.res) {
                 var outputTexture:Texture = this.getTextureByResName(frameData.res);
-                outputTexture._offsetX = frameData.x | 0;
-                outputTexture._offsetY = frameData.y | 0;
                 return outputTexture;
             }
             return null;
+        }
+
+        public $getOffsetByFrame(frame:number, point:Point):void {
+            var frameData = this.getKeyFrameData(frame);
+            if (frameData.res) {
+                point.setTo(frameData.x | 0, frameData.y | 0);
+            }
         }
 
         /**

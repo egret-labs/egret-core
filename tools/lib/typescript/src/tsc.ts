@@ -712,8 +712,8 @@ namespace ts {
 
 
         function recompile(changedFiles: Map<boolean>): EgretCompileResult {
-            console.log(changedFiles);
-
+            //console.log(changedFiles);
+            formatedMessages = [];
             // Reuse source files from the last compilation so long as they weren't changed.
             var oldSourceFiles = arrayToMap(
                 filter(program.getSourceFiles(), file => !hasProperty(changedFiles, getCanonicalName(file.fileName))),

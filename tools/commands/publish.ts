@@ -72,7 +72,9 @@ class Publish implements egret.Command {
         //生成 all.manifest 并拷贝资源
         (new GenerateVersion).execute();
         //拷贝资源后还原default.thm.json bug修复 by yanjiaqi
-        exml.updateSetting();
+        if(exml.updateSetting){
+            exml.updateSetting();
+        }
 
         if (egret.args.runtime == "native") {
             var rootHtmlPath = FileUtil.joinPath(options.projectDir, "index.html");
