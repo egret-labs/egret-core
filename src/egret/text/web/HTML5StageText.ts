@@ -278,6 +278,15 @@ module egret.web {
 
                     egret.Event.dispatchEvent(self, "updateText", false);
                 }
+                else {
+                    window.setTimeout(function () {
+                        if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                            self.textValue = self.inputElement.value;
+
+                            egret.Event.dispatchEvent(self, "updateText", false);
+                        }
+                    }, 0);
+                }
             }
             else {
                 window.setTimeout(function () {
