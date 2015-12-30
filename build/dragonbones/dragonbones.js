@@ -45,7 +45,7 @@ var dragonBones;
          *
          */
         DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.3.3";
+        DragonBones.VERSION = "4.3.4";
         return DragonBones;
     })();
     dragonBones.DragonBones = DragonBones;
@@ -11471,9 +11471,11 @@ var dragonBones;
             slotData.zOrder = Data3Parser.getNumber(slotObject, dragonBones.ConstValues.A_Z_ORDER, 0) || 0;
             slotData.blendMode = slotObject[dragonBones.ConstValues.A_BLENDMODE];
             var displayList = slotObject[dragonBones.ConstValues.DISPLAY];
-            for (var i = 0, len = displayList.length; i < len; i++) {
-                var displayObject = displayList[i];
-                slotData.addDisplayData(Data3Parser.parseDisplayData(displayObject));
+            if (displayList) {
+                for (var i = 0, len = displayList.length; i < len; i++) {
+                    var displayObject = displayList[i];
+                    slotData.addDisplayData(Data3Parser.parseDisplayData(displayObject));
+                }
             }
             return slotData;
         };
@@ -11965,9 +11967,11 @@ var dragonBones;
             slotData.parent = slotObject[dragonBones.ConstValues.A_PARENT];
             slotData.zOrder = DataParser.getNumber(slotObject, dragonBones.ConstValues.A_Z_ORDER, 0) || 0;
             var displayList = slotObject[dragonBones.ConstValues.DISPLAY];
-            for (var i = 0, len = displayList.length; i < len; i++) {
-                var displayObject = displayList[i];
-                slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
+            if (displayList) {
+                for (var i = 0, len = displayList.length; i < len; i++) {
+                    var displayObject = displayList[i];
+                    slotData.addDisplayData(DataParser.parseDisplayData(displayObject));
+                }
             }
             return slotData;
         };
