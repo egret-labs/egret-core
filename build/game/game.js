@@ -178,6 +178,8 @@ var egret;
             _super.call(this);
             //Render Property
             this.$bitmapData = null;
+            //Render Property
+            this.offsetPoint = egret.Point.create(0, 0);
             //Data Property
             this.$movieClipData = null;
             /**
@@ -324,8 +326,8 @@ var egret;
             var texture = this.$bitmapData;
             if (texture) {
                 context.imageSmoothingEnabled = this.$smoothing;
-                var offsetX = Math.round(texture._offsetX);
-                var offsetY = Math.round(texture._offsetY);
+                var offsetX = Math.round(this.offsetPoint.x);
+                var offsetY = Math.round(this.offsetPoint.y);
                 var bitmapWidth = texture._bitmapWidth;
                 var bitmapHeight = texture._bitmapHeight;
                 var destW = Math.round(texture.$getScaleBitmapWidth());
@@ -339,8 +341,8 @@ var egret;
         p.$measureContentBounds = function (bounds) {
             var texture = this.$bitmapData;
             if (texture) {
-                var x = texture._offsetX;
-                var y = texture._offsetY;
+                var x = this.offsetPoint.x;
+                var y = this.offsetPoint.y;
                 var w = texture.$getTextureWidth();
                 var h = texture.$getTextureHeight();
                 bounds.setTo(x, y, w, h);
@@ -629,6 +631,7 @@ var egret;
                 return;
             }
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
+            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
             this.$invalidateContentBounds();
             this.displayedKeyFrameNum = currentFrameNum;
         };
@@ -926,11 +929,15 @@ var egret;
             var frameData = this.getKeyFrameData(frame);
             if (frameData.res) {
                 var outputTexture = this.getTextureByResName(frameData.res);
-                outputTexture._offsetX = frameData.x | 0;
-                outputTexture._offsetY = frameData.y | 0;
                 return outputTexture;
             }
             return null;
+        };
+        p.$getOffsetByFrame = function (frame, point) {
+            var frameData = this.getKeyFrameData(frame);
+            if (frameData.res) {
+                point.setTo(frameData.x | 0, frameData.y | 0);
+            }
         };
         /**
          * @private

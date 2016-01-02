@@ -261,4 +261,4 @@ function changeDefine(content, current, change) {
 }
 module.exports = CompileLark;
 
-//# sourceMappingURL=../actions/CompileLark.js.map
+//# sourceMappingURL=CompileLark.js.map

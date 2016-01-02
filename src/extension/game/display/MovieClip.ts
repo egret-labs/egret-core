@@ -42,7 +42,7 @@ module egret {
      * @extends egret.DisplayObject
      * @event egret.Event.COMPLETE 动画播放完成。
      * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/151 MovieClip序列帧动画
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/display/MovieClip.ts
@@ -51,6 +51,9 @@ module egret {
 
         //Render Property
         $bitmapData:Texture = null;
+
+        //Render Property
+        private offsetPoint:Point = Point.create(0, 0);
 
         //Data Property
         $movieClipData:MovieClipData = null;
@@ -220,8 +223,8 @@ module egret {
             if (texture) {
                 context.imageSmoothingEnabled = this.$smoothing;
 
-                var offsetX:number = Math.round(texture._offsetX);
-                var offsetY:number = Math.round(texture._offsetY);
+                var offsetX:number = Math.round(this.offsetPoint.x);
+                var offsetY:number = Math.round(this.offsetPoint.y);
                 var bitmapWidth:number = texture._bitmapWidth;
                 var bitmapHeight:number = texture._bitmapHeight;
                 var destW:number = Math.round(texture.$getScaleBitmapWidth());
@@ -238,8 +241,8 @@ module egret {
         $measureContentBounds(bounds:Rectangle):void {
             var texture = this.$bitmapData;
             if (texture) {
-                var x:number = texture._offsetX;
-                var y:number = texture._offsetY;
+                var x:number = this.offsetPoint.x;
+                var y:number = this.offsetPoint.y;
                 var w:number = texture.$getTextureWidth();
                 var h:number = texture.$getTextureHeight();
 
@@ -552,6 +555,7 @@ module egret {
             }
 
             this.$bitmapData = this.$movieClipData.getTextureByFrame(currentFrameNum);
+            this.$movieClipData.$getOffsetByFrame(currentFrameNum, this.offsetPoint);
 
             this.$invalidateContentBounds();
 

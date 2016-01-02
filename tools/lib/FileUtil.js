@@ -454,4 +454,4 @@ function getAbsolutePath(path) {
 }
 exports.getAbsolutePath = getAbsolutePath;
 
-//# sourceMappingURL=../lib/FileUtil.js.map
+//# sourceMappingURL=FileUtil.js.map

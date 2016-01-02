@@ -38546,6 +38546,7 @@ var ts;
         }
         function recompile(changedFiles) {
             console.log("recompile:",changedFiles);
+            formatedMessages = [];
             // Reuse source files from the last compilation so long as they weren't changed.
             var oldSourceFiles = ts.arrayToMap(ts.filter(program.getSourceFiles(), function (file) { return !ts.hasProperty(changedFiles, getCanonicalName(file.fileName)); }), function (file) { return getCanonicalName(file.fileName); });
             // We create a new compiler host for this compilation cycle.

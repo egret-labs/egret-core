@@ -121,7 +121,7 @@ export function parseProjectInfo(html: string): egret.ILarkProject[] {
         if (el.attribs && el.attribs['class'] == "egret-player") {
             containers.push(el);
         }
-        if (el.type == "script" && el.attribs) {
+        if (el.type == "script" && el.attribs && el.attribs['src']) {
             nativeScripts.push(el.attribs['src'].replace(".web.", ".native."));
             scripts.push(el.attribs['src']);
         }

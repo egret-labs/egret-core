@@ -76,6 +76,7 @@ module eui {
         public constructor() {
             super();
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
         }
 
         /**
@@ -184,6 +185,25 @@ module eui {
          * 指示第一次分派 TouchEvent.TOUCH_BEGIN 时，触摸点是否在按钮上。
          */
         private touchCaptured:boolean = false;
+        /**
+         * @language en_US
+         * Dispatched when an event of some kind occurred that canceled the touch.
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 由于某个事件取消了触摸时触发
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onTouchCancle(event:egret.TouchEvent):void{
+            this.touchCaptured = false;
+            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
+            this.invalidateState();
+        }
 
         /**
          * @language en_US

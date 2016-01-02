@@ -12,4 +12,4 @@ var MakeCommand = (function () {
 })();
 module.exports = MakeCommand;
 
-//# sourceMappingURL=../commands/make.js.map
+//# sourceMappingURL=make.js.map

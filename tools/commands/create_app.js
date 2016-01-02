@@ -156,4 +156,4 @@ var CreateAppCommand = (function () {
 })();
 module.exports = CreateAppCommand;
 
-//# sourceMappingURL=../commands/create_app.js.map
+//# sourceMappingURL=create_app.js.map

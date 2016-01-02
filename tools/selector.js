@@ -1,49 +1,49 @@
 /// <reference path="lib/node.d.ts" />
 /*
 
-此文件需要放在引擎安装目录
-    例如 C:\Program Files\Egret\EgretEngine\win\selector.js
-    或   /Applications/EgretEngine.app/Contents/Resources/mac/selector.js
+ 此文件需要放在引擎安装目录
+ 例如 C:\Program Files\Egret\EgretEngine\win\selector.js
+ 或   /Applications/EgretEngine.app/Contents/Resources/mac/selector.js
 
-根据命令行参数
-    --ev 2.4.3
-或项目中 egretProperties.json 中指定的引擎版本来执行对应的引擎。
+ 根据命令行参数
+ --ev 2.4.3
+ 或项目中 egretProperties.json 中指定的引擎版本来执行对应的引擎。
 
-引擎选择优先级为
-    --ev
-    egretProperties.json
-    默认引擎
-
-
-历史版本的引擎位置为：
-    Mac: /Users/${user}/Library/Application Support/Egret/engine/${version}/
-    Windows: %AppData%/Egret/engine/${version}/
-其中根目录下有 config.json（可选，默认没有） 记录默认引擎和自定义引擎目录
-    {
-        "egret":{
-            "2.0.5":{
-                "root":"D:\\Work\\egret-core\\" //自定义目录
-            },
-            "defaultEngine":"2.4.3"
-        }
-    }
+ 引擎选择优先级为
+ --ev
+ egretProperties.json
+ 默认引擎
 
 
-默认版本查找顺序
-    config.json defaultEngine 指定的版本号
-    config.json 中指定的自定义路径
-    引擎安装目录/egret
-    历史版本根目录/${version}
-EGRET_PATH环境变量仅仅作为兼容以前版本使用
+ 历史版本的引擎位置为：
+ Mac: /Users/${user}/Library/Application Support/Egret/engine/${version}/
+ Windows: %AppData%/Egret/engine/${version}/
+ 其中根目录下有 config.json（可选，默认没有） 记录默认引擎和自定义引擎目录
+ {
+ "egret":{
+ "2.0.5":{
+ "root":"D:\\Work\\egret-core\\" //自定义目录
+ },
+ "defaultEngine":"2.4.3"
+ }
+ }
+
+
+ 默认版本查找顺序
+ config.json defaultEngine 指定的版本号
+ config.json 中指定的自定义路径
+ 引擎安装目录/egret
+ 历史版本根目录/${version}
+ EGRET_PATH环境变量仅仅作为兼容以前版本使用
 
 
 
-egret versions 命令输出可用的引擎版本
-    Egret Engine 2.4.3  D:/Program Files/Egret/EgretEngine/win/egret/
-    Egret Engine 2.0.5  D:/Work/egret-core/
+ egret versions 命令输出可用的引擎版本
+ Egret Engine 2.4.3  D:/Program Files/Egret/EgretEngine/win/egret/
+ Egret Engine 2.0.5  D:/Work/egret-core/
 
 
-*/
+ */
 var FS = require("fs");
 var Path = require("path");
 var DEFAULT_ENGINE = "defaultEngine";
@@ -175,7 +175,14 @@ function getEngineVersion(root) {
     return engineInfo;
 }
 function getProjectVersion() {
-    var propsPath = file.joinPath(args.projectDir, "egretProperties.json");
+    var dir;
+    if (args.command != "create_app") {
+        dir = args.projectDir;
+    }
+    else {
+        dir = args["f"];
+    }
+    var propsPath = file.joinPath(dir, "egretProperties.json");
     if (file.exists(propsPath)) {
         var jsonText = file.read(propsPath);
         var props;
@@ -478,4 +485,3 @@ function getLanguage() {
     }
 }
 entry();
-//# sourceMappingURL=selector.js.map

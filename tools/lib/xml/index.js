@@ -104,4 +104,4 @@ function toString() {
 ;
 //export = { parse: parse };
 
-//# sourceMappingURL=../../lib/xml/index.js.map
+//# sourceMappingURL=index.js.map

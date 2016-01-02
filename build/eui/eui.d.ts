@@ -2951,6 +2951,23 @@ declare module eui {
         private touchCaptured;
         /**
          * @language en_US
+         * This method handles the touchCancle events
+         * @param  The <code>egret.TouchEvent</code> object.
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 解除触碰事件处理。
+         * @param event 事件 <code>egret.TouchEvent</code> 的对象。
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onTouchCancle(event: egret.TouchEvent): void;
+        /**
+         * @language en_US
          * This method handles the touch events
          * @param  The <code>egret.TouchEvent</code> object.
          * @version Egret 2.4
@@ -6410,6 +6427,21 @@ declare module eui {
         private touchCaptured;
         /**
          * @language en_US
+         * Dispatched when an event of some kind occurred that canceled the touch.
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 由于某个事件取消了触摸时触发
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onTouchCancle(event: egret.TouchEvent): void;
+        /**
+         * @language en_US
          * Handles <code>TouchEvent.TOUCH_BEGIN</code> events
          *
          * @version Egret 2.4
@@ -6848,6 +6880,10 @@ declare module eui.sys {
          * @private
          */
         touchDownItemRenderer = 7,
+        /**
+         * @private
+         */
+        touchCancle = 8,
     }
 }
 declare module eui {
@@ -7341,6 +7377,25 @@ declare module eui {
          * @platform Web,Native
          */
         protected onRendererTouchBegin(event: egret.TouchEvent): void;
+        /**
+         * @language en_US
+         * Handles <code>egret.TouchEvent.TOUCH_CANCLE</code> events from any of the
+         * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
+         * @param event The <code>egret.TouchEvent</code> object.
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCLE</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
+         * 和<code>egret.TouchEvent.TOUCH_TAP</code>事件的侦听。
+         * @param event 事件<code>egret.TouchEvent</code>的对象。
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onRendererTouchCancle(event: egret.TouchEvent): void;
         /**
          * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_END</code> events and dispatch <code>ItemTapEvent.ITEM_TAP</code> event.
@@ -8905,27 +8960,19 @@ declare module eui {
         protected setSkin(skin: Skin): void;
         /**
          * @private
-         *
+         * @param event
+         */
+        private onTouchBeginCapture(event);
+        /**
+         * @private
          * @param event
          */
         private onTouchEndCapture(event);
         /**
          * @private
-         * 若这个Scroller可以滚动，阻止当前事件，延迟100ms再抛出。
-         */
-        private onTouchBeginCapture(event);
-        /**
-         * @private
-         *
          * @param event
          */
-        private delayDispatchEvent(event);
-        /**
-         * @private
-         *
-         * @param e
-         */
-        private onDelayTouchEventTimer(e?);
+        private onTouchTapCapture(event);
         /**
          * @private
          * 检查当前滚动策略，若有一个方向可以滚动，返回true。
@@ -8945,7 +8992,11 @@ declare module eui {
         private onTouchMove(event);
         /**
          * @private
-         *
+         * @param event
+         */
+        private dispatchCancleEvent(event);
+        /**
+         * @private
          * @param event
          */
         private onTouchEnd(event);
@@ -11637,6 +11688,8 @@ declare module eui {
          *
          * @param target the target of event dispatcher.
          * @param eventType The event type; indicates the action that triggered the event.
+         * @param bubbles  Determines whether the Event object participates in the bubbling stage of the event flow. The default value is false.
+         * @param cancelable Determines whether the Event object can be canceled. The default values is false.
          *
          * @version Egret 2.4
          * @version eui 1.0
@@ -11648,12 +11701,14 @@ declare module eui {
          *
          * @param target 事件派发目标。
          * @param eventType 事件类型；指示触发事件的动作。
+         * @param bubbles  确定 Event 对象是否参与事件流的冒泡阶段。默认值为 false。
+         * @param cancelable 确定是否可以取消 Event 对象。默认值为 false。
          *
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
-        static dispatchUIEvent(target: egret.IEventDispatcher, eventType: string): boolean;
+        static dispatchUIEvent(target: egret.IEventDispatcher, eventType: string, bubbles?: boolean, cancelable?: boolean): boolean;
     }
 }
 declare module eui.sys {

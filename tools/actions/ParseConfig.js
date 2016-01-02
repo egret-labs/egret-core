@@ -47,4 +47,4 @@ var ParseConfigCommand = (function () {
 })();
 module.exports = ParseConfigCommand;
 
-//# sourceMappingURL=../actions/ParseConfig.js.map
+//# sourceMappingURL=ParseConfig.js.map

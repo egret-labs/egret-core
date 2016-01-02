@@ -96,6 +96,7 @@ declare module egret {
      */
     class MovieClip extends DisplayObject {
         $bitmapData: Texture;
+        private offsetPoint;
         $movieClipData: MovieClipData;
         /**
          * @private
@@ -467,6 +468,7 @@ declare module egret {
          * @platform Web,Native
          */
         getTextureByFrame(frame: number): Texture;
+        $getOffsetByFrame(frame: number, point: Point): void;
         /**
          * @private
          *

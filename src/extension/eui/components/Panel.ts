@@ -268,7 +268,7 @@ module eui {
          * @platform Web,Native
          */
         protected onCloseButtonClick(event:egret.TouchEvent):void {
-            if (UIEvent.dispatchUIEvent(this, UIEvent.CLOSING)) {
+            if (UIEvent.dispatchUIEvent(this, UIEvent.CLOSING, true, true)) {
                 this.close();
             }
         }
