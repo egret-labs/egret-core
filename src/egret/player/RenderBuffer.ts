@@ -109,6 +109,6 @@ module egret.sys {
          * @param width 渲染缓冲的初始宽
          * @param height 渲染缓冲的初始高
          */
-        new(width:number, height:number):RenderBuffer;
+        new(width?:number, height?:number):RenderBuffer;
     };
 }

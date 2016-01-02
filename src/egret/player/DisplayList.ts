@@ -45,10 +45,10 @@ module egret.sys {
          */
         public static create(target:DisplayObject):DisplayList {
             var displayList = new egret.sys.DisplayList(target);
-            try{
-                var buffer = new RenderBuffer(200,200);
+            try {
+                var buffer = new RenderBuffer();
             }
-            catch (e){
+            catch (e) {
                 return null;
             }
             displayList.renderBuffer = buffer;
@@ -65,8 +65,10 @@ module egret.sys {
             super();
             this.root = root;
             this.dirtyRegion.displayList = this;
+            this.isStage = (root instanceof Stage);
         }
 
+        private isStage:boolean = false;
         /**
          * 位图渲染节点
          */
@@ -84,7 +86,8 @@ module egret.sys {
             }
             target.$removeFlagsUp(DisplayObjectFlags.Dirty);
             var node = this.$renderNode;
-            node.renderAlpha = target.$getConcatenatedAlpha();
+            //这里不需要更新node.renderAlpha。因为alpha已经写入到缓存的内部
+
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = target.$getConcatenatedMatrix();
             var bounds = target.$getOriginalBounds();
@@ -103,20 +106,19 @@ module egret.sys {
                 return false;
             }
             node.moved = false;
-            node.renderMatrix = concatenatedMatrix;
+            var matrix = node.renderMatrix;
+            matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
-            if (root === target.$stage) {
-                region.updateRegion(bounds, concatenatedMatrix);
+            if(root!==target.$stage){
+                target.$getConcatenatedMatrixAt(root,matrix);
             }
-            else {
-                var matrix = Matrix.create().copyFrom(concatenatedMatrix);
-                target.$getConcatenatedMatrixAt(root, matrix);
-                region.updateRegion(bounds, matrix);
-                Matrix.release(matrix);
-            }
+            region.updateRegion(bounds, matrix);
             return true;
         }
 
+        /**
+         * @private
+         */
         public renderBuffer:RenderBuffer = null;
         /**
          * @private
@@ -126,7 +128,10 @@ module egret.sys {
          * @private
          */
         public offsetY:number = 0;
-
+        /**
+         * @private
+         */
+        private offsetMatrix:Matrix = new Matrix();
         /**
          * @private
          * 显示列表根节点
@@ -140,17 +145,11 @@ module egret.sys {
 
         /**
          * @private
-         */
-        private rootMatrix:Matrix = new Matrix();
-
-        /**
-         * @private
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
          */
         public setClipRect(width:number, height:number):void {
             this.dirtyRegion.setClipRect(width, height);
-            this.rootMatrix = null;//只有舞台画布才能设置ClipRect
-            this.renderBuffer.resize(width,height);
+            this.renderBuffer.resize(width, height);
         }
 
         /**
@@ -229,19 +228,18 @@ module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         public drawToSurface():number {
-            var m = this.rootMatrix;
-            if (m) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
+            if (!this.isStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
                 this.changeSurfaceSize();
             }
             var buffer = this.renderBuffer;
-            buffer.beginClip(this.dirtyList, -this.offsetY, -this.offsetY);
-            var drawCalls = systemRenderer.render(this.root, buffer, this.rootMatrix);
+            buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
+            var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix);
             buffer.endClip();
             var surface = buffer.surface;
             var renderNode = <BitmapNode>this.$renderNode;
             renderNode.drawData.length = 0;
             renderNode.image = <any>surface;
-            renderNode.drawImage(0, 0, surface.width, surface.height, this.offsetX, this.offsetY, surface.width, surface.height);
+            renderNode.drawImage(0, 0, surface.width, surface.height, -this.offsetX, -this.offsetY, surface.width, surface.height);
             this.dirtyList = null;
             this.dirtyRegion.clear();
             this.isDirty = false;
@@ -263,40 +261,23 @@ module egret.sys {
             var oldOffsetX = this.offsetX;
             var oldOffsetY = this.offsetY;
             var bounds = this.root.$getOriginalBounds();
-            this.offsetX = bounds.x;
-            this.offsetY = bounds.y;
+            this.offsetX = -bounds.x;
+            this.offsetY = -bounds.y;
+            this.offsetMatrix.setTo(1, 0, 0, 1, this.offsetX, this.offsetY);
             var buffer = this.renderBuffer;
             if (!this.sizeChanged) {
                 this.sizeChanged = true;
                 buffer.resize(bounds.width, bounds.height);
             }
             else {
-                buffer.resizeTo(bounds.width, bounds.height, oldOffsetX - this.offsetX, oldOffsetY - this.offsetY);
+                buffer.resizeTo(bounds.width, bounds.height, this.offsetX - oldOffsetX, this.offsetY - oldOffsetY);
             }
 
-            var m = root.$getInvertedConcatenatedMatrix();
-            this.rootMatrix.setTo(m.a, m.b, m.c, m.d, m.tx - bounds.x, m.ty - bounds.y);
         }
 
         public setDirtyRegionPolicy(policy:string):void {
             //todo 这里还可以做更多优化
             this.dirtyRegion.setDirtyRegionPolicy(policy);
         }
-
-        private render(context:RenderContext, node:RenderNode):void {
-            switch (node.type) {
-                case RenderNodeType.BitmapNode:
-                    var bitmapNode = <BitmapNode>node;
-                    var image = bitmapNode.image;
-                    context.imageSmoothingEnabled = bitmapNode.smoothing;
-                    var data = bitmapNode.drawData;
-                    var length = data.length;
-                    for (var i = 0; i < length; i += 8) {
-                        context.drawImage(image, data[i], data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
-                    }
-                    break;
-            }
-        }
-
     }
 }

@@ -49,6 +49,9 @@ module egret.sys {
 }
 
 module egret {
+
+    var hitTestBuffer:sys.RenderBuffer = null;
+
     /**
      * @language en_US
      * The Bitmap class represents display objects that represent bitmap images.
@@ -223,7 +226,7 @@ module egret {
             }
 
             if (this.$stage) {
-                if(oldBitmapData) {
+                if (oldBitmapData) {
                     Texture.$removeDisplayObject(this, oldBitmapData);
                 }
                 Texture.$addDisplayObject(this, value);
@@ -536,12 +539,18 @@ module egret {
                 }
             }
             else {
-                var context = sys.hitTestRenderContext;
-                context.surface.width = context.surface.height = 3;
-                context.translate(1 - localX, 1 - localY);
-                this.$render();
+                if (!hitTestBuffer) {
+                    hitTestBuffer = new sys.RenderBuffer(3, 3);
+                }
+                hitTestBuffer.clear();
+                var matrix = Matrix.create();
+                matrix.identity();
+                matrix.translate(1 - localX, 1 - localY)
+                sys.systemRenderer.render(this, hitTestBuffer, matrix, null, true);
+                Matrix.release(matrix);
+
                 try {
-                    data = context.getImageData(1, 1, 1, 1).data;
+                    data = hitTestBuffer.getPixel(1, 1);
                 }
                 catch (e) {
                     console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);

@@ -32,10 +32,12 @@ module egret.web {
     /**
      * 创建一个canvas。
      */
-    function createCanvas(width:number, height:number):HTMLCanvasElement {
+    function createCanvas(width?:number, height?:number):HTMLCanvasElement {
         var canvas:HTMLCanvasElement = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
+        if(!isNaN(width)&&!isNaN(height)){
+            canvas.width = width;
+            canvas.height = height;
+        }
         $toBitmapData(canvas);
         var context = canvas.getContext("2d");
         if (context["imageSmoothingEnabled"] === undefined) {
@@ -63,15 +65,24 @@ module egret.web {
         return canvas;
     }
 
-    var sharedCanvas:HTMLCanvasElement = createCanvas(1, 1);
+    /**
+     * @private
+     * 仅用于碰撞检测，宽高永远是3x3的canvas上下文
+     */
+    export var $hitTestRenderContext:CanvasRenderingContext2D;
+    export var $hitTestSurface:HTMLCanvasElement;
+    $hitTestSurface = createCanvas(3,3);
+    $hitTestRenderContext = $hitTestSurface.getContext("2d");
+    $hitTestRenderContext["imageSmoothingEnabled"] = false;
 
+    var sharedCanvas:HTMLCanvasElement = createCanvas();
     /**
      * @private
      * Canvas2D渲染器
      */
     export class CanvasRenderBuffer implements sys.RenderBuffer {
 
-        public constructor(width:number, height:number) {
+        public constructor(width?:number, height?:number) {
             this.surface = createCanvas(width, height);
             this.context = this.surface.getContext("2d");
         }
@@ -201,6 +212,7 @@ module egret.web {
          * 清空缓冲区数据
          */
         public clear():void {
+            this.context.setTransform(1,0,0,1,0,0);
             this.context.clearRect(0, 0, this.surface.width, this.surface.height);
         }
 

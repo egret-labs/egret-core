@@ -1852,10 +1852,8 @@ module egret {
             if(this.$displayFlags & sys.DisplayObjectFlags.InvalidRenderNodes){
                 node.cleanBeforeRender();
                 this.$render();
-                node.renderAlpha = this.$getConcatenatedAlpha();
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidRenderNodes);
             }
-            node.renderMatrix = this.$getConcatenatedMatrix();
             return node;
         }
         /**
@@ -1864,9 +1862,11 @@ module egret {
          */
         $update(bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
-            //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var node = this.$getRenderNode();
+            //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
+            var concatenatedMatrix = this.$getConcatenatedMatrix();
             var renderBounds = bounds || this.$getContentBounds();
+            node.renderAlpha = this.$getConcatenatedAlpha();
             var displayList = this.$displayList || this.$parentDisplayList;
             var region = node.renderRegion;
             if (!displayList) {
@@ -1878,16 +1878,13 @@ module egret {
                 return false;
             }
             node.moved = false;
+            var matrix = node.renderMatrix;
+            matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
-            if (root === this.$stage) {
-                region.updateRegion(renderBounds, node.renderMatrix);
-            }
-            else{
-                var matrix = Matrix.create().copyFrom(node.renderMatrix);
+            if (root !== this.$stage) {
                 this.$getConcatenatedMatrixAt(root, matrix);
-                region.updateRegion(renderBounds, matrix);
-                Matrix.release(matrix);
             }
+            region.updateRegion(renderBounds, matrix);
             return true;
         }
 
@@ -1915,6 +1912,23 @@ module egret {
             else {
                 invertMatrix.$preMultiplyInto(matrix, matrix);
             }
+        }
+
+        $getConcatenatedAlphaAt(root:DisplayObject,alpha:number):number {
+            var rootAlpha = root.$getConcatenatedAlpha();
+            if(rootAlpha===0){
+                alpha = 1;
+                var target:DisplayObject = this;
+                var rootLevel = root.$nestLevel;
+                while (target.$nestLevel > rootLevel) {
+                    alpha *= target.$alpha;
+                    target = target.$parent;
+                }
+            }
+            else{
+                alpha /= rootAlpha;
+            }
+            return alpha;
         }
 
         /**

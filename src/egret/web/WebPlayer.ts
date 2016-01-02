@@ -49,7 +49,7 @@ module egret.web {
             stage.frameRate = option.frameRate;
             stage.textureScaleFactor = option.textureScaleFactor;
 
-            var buffer = new sys.RenderBuffer(200,200);
+            var buffer = new sys.RenderBuffer();
             var canvas = <HTMLCanvasElement>buffer.surface;
             this.attachCanvas(container, canvas);
 

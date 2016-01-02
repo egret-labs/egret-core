@@ -301,7 +301,7 @@ module egret.sys {
         /**
          * @private
          */
-        private drawDirtyRect:(x:number, y:number, width:number, height:number, context:RenderContext)=>void;
+        private drawDirtyRect:(x:number, y:number, width:number, height:number, context:any)=>void;
         /**
          * @private
          */
@@ -451,7 +451,7 @@ module egret.sys {
     /**
      * 绘制一个脏矩形显示区域，在显示重绘区功能开启时调用。
      */
-    function drawDirtyRect(x:number, y:number, width:number, height:number, context:RenderContext):void {
+    function drawDirtyRect(x:number, y:number, width:number, height:number, context:any):void {
         context.strokeStyle = 'rgb(255,0,0)';
         context.lineWidth = 5;
         context.strokeRect(x - 0.5, y - 0.5, width, height);
