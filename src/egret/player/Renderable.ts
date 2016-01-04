@@ -34,9 +34,9 @@ module egret.sys {
      */
     export interface Renderable extends HashObject{
         /**
-         * 渲染节点
+         * 获取渲染节点
          */
-        $renderNode:RenderNode;
+        $getRenderNode():RenderNode;
         /**
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。

@@ -1862,7 +1862,7 @@ module egret {
          */
         $update(bounds?:Rectangle):boolean {
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
-            var node = this.$getRenderNode();
+            var node = this.$renderNode;
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
             var concatenatedMatrix = this.$getConcatenatedMatrix();
             var renderBounds = bounds || this.$getContentBounds();

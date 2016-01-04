@@ -76,6 +76,14 @@ module egret.sys {
 
         /**
          * @private
+         * 获取渲染节点
+         */
+        $getRenderNode():sys.RenderNode{
+            return this.$renderNode;
+        }
+
+        /**
+         * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
          */
         $update():boolean {
@@ -205,7 +213,7 @@ module egret.sys {
             var length = dirtyNodeList.length;
             for (var i = 0; i < length; i++) {
                 var display = dirtyNodeList[i];
-                var node = display.$renderNode;
+                var node = display.$getRenderNode();
                 node.needRedraw = false;//先清空上次缓存的标记,防止上次没遍历到的节点needRedraw始终为true.
                 if (node.renderAlpha > 0) {
                     if (dirtyRegion.addRegion(node.renderRegion)) {
