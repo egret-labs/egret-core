@@ -18126,7 +18126,7 @@ var egret;
             p._appendQueueProps = function (o) {
                 var arr, oldValue, i, l, injectProps;
                 for (var n in o) {
-                    if (egret.sys.isUndefined(this._initQueueProps[n])) {
+                    if (this._initQueueProps[n] === undefined) {
                         oldValue = this._target[n];
                         //设置plugins
                         if (arr = ScrollerTween._plugins[n]) {

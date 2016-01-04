@@ -128,13 +128,13 @@ module egret {
                     var c:any = this.charList[str];
                     if(c){
                         var sourceH:number = c.sourceH;
-                        if(egret.sys.isUndefined(sourceH)){
+                        if(sourceH === undefined){
                             var h:number = c.h;
                             if(h===undefined){
                                 h = 0;
                             }
                             var offY:number = c.offY;
-                            if(egret.sys.isUndefined(offY)){
+                            if(offY === undefined){
                                 offY = 0;
                             }
                             sourceH = h+offY;

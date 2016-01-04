@@ -35,17 +35,6 @@ module egret.sys {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export function isUndefined(value:any):boolean {
-        return typeof value === "undefined";
-    }
-
-    /**
-     * @private
-     * @param value 
-     * @returns 
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
     export function getNumber(value:number):number {
         if (DEBUG) {
             if (isNaN(value)) {

@@ -8454,6 +8454,9 @@ declare module egret_native {
         function setVisibleRect(x: number, y: number, w: number, h: number): number;
         function setDesignSize(w: number, h: number): number;
     }
+    /**
+     * @private
+     */
     class RenderTexture {
         constructor(width: number, height: number);
         begin(): any;
@@ -8484,14 +8487,26 @@ declare module egret_native {
         function restore(): void;
         function createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient;
         function createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): CanvasGradient;
+        /**
+         * @private
+         */
         var lineWidth: number;
+        /**
+         * @private
+         */
         var strokeStyle: any;
+        /**
+         * @private
+         */
         var fillStyle: any;
     }
     module Game {
         function listResource(root: any, promise: any): any;
         function listUpdate(root: any, promise: any): any;
     }
+    /**
+     * @private
+     */
     class RenderContext {
         clearScreen(r: number, g: number, b: number): void;
         drawImage(texture: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any): void;
@@ -8500,6 +8515,9 @@ declare module egret_native {
         pushClip(x: number, y: number, w: number, h: number): void;
         popClip(): void;
     }
+    /**
+     * @private
+     */
     class Canvas {
         constructor(width: number, height: number);
         width: number;
@@ -9316,14 +9334,6 @@ declare module egret.sys {
     }
 }
 declare module egret.sys {
-    /**
-     * @private
-     * @param value
-     * @returns
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    function isUndefined(value: any): boolean;
     /**
      * @private
      * @param value

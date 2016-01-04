@@ -111,7 +111,7 @@ module egret.web {
             context["surface"] = canvas;
             $toBitmapData(canvas);
 
-            if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
+            if (context["imageSmoothingEnabled"] === undefined) {
                 var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                 for (var i = keys.length - 1; i >= 0; i--) {
                     var key = keys[i];

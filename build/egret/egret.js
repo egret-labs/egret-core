@@ -3391,7 +3391,7 @@ var egret;
          */
         function blendModeToNumber(blendMode) {
             var num = blendModeNumber[blendMode];
-            return egret.sys.isUndefined(num) ? 0 : num;
+            return num === undefined ? 0 : num;
         }
         sys.blendModeToNumber = blendModeToNumber;
         /**
@@ -3400,7 +3400,7 @@ var egret;
          */
         function numberToBlendMode(blendMode) {
             var str = blendModeString[blendMode];
-            return egret.sys.isUndefined(str) ? "normal" : str;
+            return str === undefined ? "normal" : str;
         }
         sys.numberToBlendMode = numberToBlendMode;
     })(sys = egret.sys || (egret.sys = {}));
@@ -6934,10 +6934,10 @@ var egret;
         p.createTexture = function (name, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight) {
             if (offsetX === void 0) { offsetX = 0; }
             if (offsetY === void 0) { offsetY = 0; }
-            if (egret.sys.isUndefined(textureWidth)) {
+            if (textureWidth === void 0) {
                 textureWidth = offsetX + bitmapWidth;
             }
-            if (egret.sys.isUndefined(textureHeight)) {
+            if (textureHeight === void 0) {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture = new egret.Texture();
@@ -13761,17 +13761,6 @@ var egret;
          * @version Egret 2.4
          * @platform Web,Native
          */
-        function isUndefined(value) {
-            return typeof value === "undefined";
-        }
-        sys.isUndefined = isUndefined;
-        /**
-         * @private
-         * @param value
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
         function getNumber(value) {
             if (DEBUG) {
                 if (isNaN(value)) {
@@ -14107,13 +14096,13 @@ var egret;
                     console.log.apply(console, toArray(arguments));
                 };
             }
-            fpsStyle = sys.isUndefined(styles) ? {} : styles;
+            fpsStyle = styles ? {} : styles;
             showLog = !!showLog;
             this.showFPS = !!showFPS;
             this.showLog = showLog;
             if (!this.fpsDisplay) {
-                var x = sys.isUndefined(styles["x"]) ? 0 : styles["x"];
-                var y = sys.isUndefined(styles["y"]) ? 0 : styles["y"];
+                var x = styles["x"] === undefined ? 0 : styles["x"];
+                var y = styles["y"] === undefined ? 0 : styles["y"];
                 fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                 fpsDisplay.x = x;
                 fpsDisplay.y = y;
@@ -14227,20 +14216,20 @@ var egret;
                 this.shape = new egret.Shape();
                 this.addChild(this.shape);
                 var textField = new egret.TextField();
-                textField.size = egret.sys.isUndefined(this.styles["size"]) ? 24 : parseInt(this.styles["size"]);
+                textField.size = this.styles["size"] === undefined ? 24 : parseInt(this.styles["size"]);
                 this.addChild(textField);
                 this.textField = textField;
-                textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+                textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
                 textField.fontFamily = "monospace";
                 textField.x = 10;
                 textField.y = 10;
                 var textField = new egret.TextField();
                 this.infoText = textField;
                 this.addChild(textField);
-                textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+                textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
                 textField.fontFamily = "monospace";
                 textField.x = 10;
-                textField.size = egret.sys.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
+                textField.size = this.styles["size"] === undefined ? 12 : this.styles["size"] / 2;
                 textField.y = 10;
             };
             FPSImpl.prototype.update = function (drawCalls, dirtyRatio, costDirty, costRender, costTicker) {
@@ -15913,13 +15902,13 @@ var egret;
                     var c = this.charList[str];
                     if (c) {
                         var sourceH = c.sourceH;
-                        if (egret.sys.isUndefined(sourceH)) {
+                        if (sourceH === undefined) {
                             var h = c.h;
                             if (h === undefined) {
                                 h = 0;
                             }
                             var offY = c.offY;
-                            if (egret.sys.isUndefined(offY)) {
+                            if (offY === undefined) {
                                 offY = 0;
                             }
                             sourceH = h + offY;
