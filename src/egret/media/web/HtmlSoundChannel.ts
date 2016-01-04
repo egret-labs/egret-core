@@ -65,6 +65,19 @@ module egret.web {
             this.audio = audio;
         }
 
+        private canPlay():void {
+            this.audio.removeEventListener("canplay", this.canPlay.bind(this));
+
+            try {
+                this.audio.currentTime = this.$startTime;
+            }
+            catch (e) {
+            }
+            finally {
+                this.audio.play();
+            }
+        }
+
         $play():void {
             if (this.isStopped) {
                 egret.$error(1036);
@@ -72,14 +85,14 @@ module egret.web {
             }
 
             try {
+                this.audio.pause();
                 this.audio.currentTime = this.$startTime;
             }
             catch (e) {
-
+                this.audio.addEventListener("canplay", this.canPlay.bind(this));
+                return;
             }
-            finally {
-                this.audio.play();
-            }
+            this.audio.play();
         }
 
         /**
@@ -98,7 +111,7 @@ module egret.web {
             }
 
             /////////////
-            this.audio.load();
+            //this.audio.load();
             this.$play();
         };
 
