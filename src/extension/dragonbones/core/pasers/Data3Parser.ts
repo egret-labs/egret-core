@@ -220,7 +220,7 @@ module dragonBones {
 				for(i = 0,len = frameObjectList.length; i< len; i++)
 				{
 					var frameObject:any = frameObjectList[i];
-					var frame:Frame = Data3Parser.parseTransformFrame(frameObject, frameRate);
+					var frame:Frame = Data3Parser.parseTransformFrame(frameObject, null, frameRate);
 					animationData.addFrame(frame);
 				}
 			}
@@ -365,10 +365,23 @@ module dragonBones {
 			outputTimeline.duration = duration;
 
             var frameList:any = timelineObject[ConstValues.FRAME];
+            var nextFrameObject:any;
             for(var i:number = 0, len:number = frameList.length; i < len; i++) 
             {
                 var frameObject:any = frameList[i];
-                var frame:TransformFrame = Data3Parser.parseTransformFrame(frameObject, frameRate);
+                if(i < len - 1)
+                {
+                	nextFrameObject = frameList[i+1];
+                }
+                else if(i != 0)
+                {
+                	nextFrameObject = frameList[0];
+                }
+                else
+                {
+                	nextFrameObject = null;
+                }
+                var frame:TransformFrame = Data3Parser.parseTransformFrame(frameObject, nextFrameObject, frameRate);
                 outputTimeline.addFrame(frame);
             }
 
@@ -377,7 +390,7 @@ module dragonBones {
 			return outputTimeline;
 		}
 		
-		private static parseTransformFrame(frameObject:any, frameRate:number):TransformFrame{
+		private static parseTransformFrame(frameObject:any, nextFrameObject:any, frameRate:number):TransformFrame{
 			var outputFrame:TransformFrame = new TransformFrame();
             Data3Parser.parseFrame(frameObject, outputFrame, frameRate);
 			
@@ -388,6 +401,11 @@ module dragonBones {
 			outputFrame.tweenRotate = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0) || 0);
 			outputFrame.tweenScale = Data3Parser.getBoolean(frameObject, ConstValues.A_TWEEN_SCALE, true);
 			//outputFrame.displayIndex = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
+
+			if (nextFrameObject && Math.floor(Data3Parser.getNumber(nextFrameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0) == -1)
+			{
+				outputFrame.tweenEasing = NaN;
+			}
 
 			Data3Parser.parseTransform(frameObject[ConstValues.TRANSFORM], outputFrame.transform, outputFrame.pivot);
             if(Data3Parser.tempDragonBonesData.isGlobal)//绝对数据
