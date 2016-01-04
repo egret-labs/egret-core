@@ -72,6 +72,7 @@ module eui {
      *
      * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
      * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
+     * @event egret.Event.CHANGE Dispatched when the scroll position is changing
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -95,6 +96,7 @@ module eui {
      *
      * @event eui.UIEvent.CHANGE_START 滚动位置改变开始
      * @event eui.UIEvent.CHANGE_END 滚动位置改变结束
+     * @event egret.Event.CHANGE 滚动位置改变的时候
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -614,8 +616,8 @@ module eui {
                 if (values[Keys.autoHideTimer]) {
                     values[Keys.autoHideTimer].reset();
                 }
+                UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
             }
-            UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
 
             var viewport = values[Keys.viewport];
             var uiValues = viewport.$UIComponent;
@@ -683,6 +685,7 @@ module eui {
          * @param scrollPos
          */
         private horizontalUpdateHandler(scrollPos:number):void {
+            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[Keys.viewport].scrollH = scrollPos;
         }
 
@@ -692,6 +695,7 @@ module eui {
          * @param scrollPos
          */
         private verticalUpdateHandler(scrollPos:number):void {
+            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[Keys.viewport].scrollV = scrollPos;
         }
 
