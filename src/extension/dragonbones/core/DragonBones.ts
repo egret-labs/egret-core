@@ -44,7 +44,7 @@ module dragonBones {
 		 */
         public static PARENT_COORDINATE_DATA_VERSION:string = "3.0";
 
-        public static VERSION:string = "4.3.4";
+        public static VERSION:string = "4.3.5";
 		
 		public constructor(){
 		}
