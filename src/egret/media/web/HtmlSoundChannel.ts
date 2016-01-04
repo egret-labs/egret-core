@@ -85,7 +85,7 @@ module egret.web {
             }
 
             try {
-                this.audio.pause();
+                //this.audio.pause();
                 this.audio.currentTime = this.$startTime;
             }
             catch (e) {

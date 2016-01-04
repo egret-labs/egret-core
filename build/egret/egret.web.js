@@ -233,7 +233,6 @@ var egret;
                     audio = this.originAudio.cloneNode();
                 }
                 else {
-                    audio.load();
                 }
                 audio.autoplay = true;
                 var channel = new web.HtmlSoundChannel(audio);
@@ -400,7 +399,7 @@ var egret;
                     return;
                 }
                 try {
-                    this.audio.pause();
+                    //this.audio.pause();
                     this.audio.currentTime = this.$startTime;
                 }
                 catch (e) {
