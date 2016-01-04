@@ -69,7 +69,7 @@ module egret.web {
                 egret.sys.screenAdapter = options.screenAdapter;
             }
             else{
-                egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+                egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
             }
         }
 
