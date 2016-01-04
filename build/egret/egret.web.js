@@ -376,18 +376,15 @@ var egret;
                         _this.$loops--;
                     }
                     /////////////
-                    _this.audio.load();
+                    //this.audio.load();
                     _this.$play();
                 };
                 audio.addEventListener("ended", this.onPlayEnd);
                 this.audio = audio;
             }
             var d = __define,c=HtmlSoundChannel,p=c.prototype;
-            p.$play = function () {
-                if (this.isStopped) {
-                    egret.$error(1036);
-                    return;
-                }
+            p.canPlay = function () {
+                this.audio.removeEventListener("canplay", this.canPlay.bind(this));
                 try {
                     this.audio.currentTime = this.$startTime;
                 }
@@ -396,6 +393,21 @@ var egret;
                 finally {
                     this.audio.play();
                 }
+            };
+            p.$play = function () {
+                if (this.isStopped) {
+                    egret.$error(1036);
+                    return;
+                }
+                try {
+                    this.audio.pause();
+                    this.audio.currentTime = this.$startTime;
+                }
+                catch (e) {
+                    this.audio.addEventListener("canplay", this.canPlay.bind(this));
+                    return;
+                }
+                this.audio.play();
             };
             /**
              * @private
