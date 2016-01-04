@@ -40,6 +40,7 @@ module egret.sys {
         /**
          * @private
          * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
+         * 注意：此方法必须在$getRenderNode()被调用之后执行。
          */
         $update():boolean;
     }
