@@ -64,7 +64,11 @@ module eui.sys {
         /**
          * @private
          */
-        touchDownItemRenderer
+        touchDownItemRenderer,
+        /**
+         * @private
+         */
+        touchCancle
     }
 }
 
@@ -127,6 +131,7 @@ module eui {
                 5: undefined,   //pendingSelectedItem
                 6: false,       //selectedIndexAdjusted
                 7: null,        //touchDownItemRenderer
+                8: false        //touchCancle
             };
         }
 
@@ -256,8 +261,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @returns 
+         *
+         * @returns
          */
         $getSelectedIndex():number {
             var values = this.$ListBase;
@@ -461,7 +466,7 @@ module eui {
             if (values[sys.ListBaseKeys.selectedIndexAdjusted]) {
                 values[sys.ListBaseKeys.selectedIndexAdjusted] = false;
                 if (!changedSelection) {
-                    PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
+                    PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
                 }
             }
         }
@@ -587,8 +592,8 @@ module eui {
                     this.dispatchEventWith(egret.Event.CHANGE);
                     values[sys.ListBaseKeys.dispatchChangeAfterSelection] = false;
                 }
-                PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedIndex");
-                PropertyEvent.dispatchPropertyEvent(this,PropertyEvent.PROPERTY_CHANGE,"selectedItem");
+                PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "selectedIndex");
+                PropertyEvent.dispatchPropertyEvent(this, PropertyEvent.PROPERTY_CHANGE, "selectedItem");
             }
 
             return true;
@@ -774,6 +779,7 @@ module eui {
         protected rendererAdded(renderer:IItemRenderer, index:number, item:any):void {
             renderer.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onRendererTouchBegin, this);
             renderer.addEventListener(egret.TouchEvent.TOUCH_END, this.onRendererTouchEnd, this);
+            renderer.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onRendererTouchCancle, this);
         }
 
         /**
@@ -799,6 +805,7 @@ module eui {
         protected rendererRemoved(renderer:IItemRenderer, index:number, item:any):void {
             renderer.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onRendererTouchBegin, this);
             renderer.removeEventListener(egret.TouchEvent.TOUCH_END, this.onRendererTouchEnd, this);
+            renderer.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onRendererTouchCancle, this);
         }
 
         /**
@@ -820,12 +827,39 @@ module eui {
          * @platform Web,Native
          */
         protected onRendererTouchBegin(event:egret.TouchEvent):void {
+            var values = this.$ListBase;
             if (event.$isDefaultPrevented)
                 return;
-            this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer] = <IItemRenderer> (event.$currentTarget);
+            values[sys.ListBaseKeys.touchCancle] = false;
+            values[sys.ListBaseKeys.touchDownItemRenderer] = <IItemRenderer> (event.$currentTarget);
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
         }
-
+        /**
+         * @language en_US
+         * Handles <code>egret.TouchEvent.TOUCH_CANCLE</code> events from any of the
+         * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
+         * @param event The <code>egret.TouchEvent</code> object.
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCLE</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
+         * 和<code>egret.TouchEvent.TOUCH_TAP</code>事件的侦听。
+         * @param event 事件<code>egret.TouchEvent</code>的对象。
+         * @version Egret 3.0.1
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        protected onRendererTouchCancle(event:egret.TouchEvent):void {
+            var values = this.$ListBase;
+            values[sys.ListBaseKeys.touchDownItemRenderer] = null;
+            values[sys.ListBaseKeys.touchCancle] = true;
+            if(this.$stage){
+                this.$stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.stage_touchEndHandler, this);
+            }
+        }
         /**
          * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_END</code> events and dispatch <code>ItemTapEvent.ITEM_TAP</code> event.
@@ -843,12 +877,16 @@ module eui {
          * @platform Web,Native
          */
         protected onRendererTouchEnd(event:egret.TouchEvent):void {
+            var values = this.$ListBase;
             var itemRenderer = <IItemRenderer> (event.$currentTarget);
-            var touchDownItemRenderer = this.$ListBase[sys.ListBaseKeys.touchDownItemRenderer];
+            var touchDownItemRenderer = values[sys.ListBaseKeys.touchDownItemRenderer];
             if (itemRenderer != touchDownItemRenderer)
                 return;
-            this.setSelectedIndex(itemRenderer.itemIndex, true);
-            ItemTapEvent.dispatchItemTapEvent(this, ItemTapEvent.ITEM_TAP, itemRenderer);
+            if(!values[sys.ListBaseKeys.touchCancle]){
+                this.setSelectedIndex(itemRenderer.itemIndex, true);
+                ItemTapEvent.dispatchItemTapEvent(this, ItemTapEvent.ITEM_TAP, itemRenderer);
+            }
+            values[sys.ListBaseKeys.touchCancle] = false;
         }
 
         /**
@@ -862,7 +900,7 @@ module eui {
         }
     }
 
-    registerBindable(ListBase.prototype,"selectedIndex");
+    registerBindable(ListBase.prototype, "selectedIndex");
 
-    registerBindable(ListBase.prototype,"selectedItem");
+    registerBindable(ListBase.prototype, "selectedItem");
 }

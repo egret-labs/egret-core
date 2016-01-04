@@ -104,11 +104,3 @@ module eui {
 		getItemIndex(item:any):number;
 	}
 }
-
-interface ICollection extends egret.IEventDispatcher {
-	/**
-	 *  此集合中的项目数。0 表示不包含项目。
-	 *  @readOnly
-	 */
-	length:number;
-}
