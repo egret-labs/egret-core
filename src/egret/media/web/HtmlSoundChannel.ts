@@ -65,8 +65,8 @@ module egret.web {
             this.audio = audio;
         }
 
-        private canPlay():void {
-            this.audio.removeEventListener("canplay", this.canPlay.bind(this));
+        private canPlay =():void => {
+            this.audio.removeEventListener("canplay", this.canPlay);
 
             try {
                 this.audio.currentTime = this.$startTime;
@@ -76,7 +76,7 @@ module egret.web {
             finally {
                 this.audio.play();
             }
-        }
+        };
 
         $play():void {
             if (this.isStopped) {
@@ -89,7 +89,7 @@ module egret.web {
                 this.audio.currentTime = this.$startTime;
             }
             catch (e) {
-                this.audio.addEventListener("canplay", this.canPlay.bind(this));
+                this.audio.addEventListener("canplay", this.canPlay);
                 return;
             }
             this.audio.play();

@@ -363,6 +363,17 @@ var egret;
                 this.audio = null;
                 //声音是否已经播放完成
                 this.isStopped = false;
+                this.canPlay = function () {
+                    _this.audio.removeEventListener("canplay", _this.canPlay);
+                    try {
+                        _this.audio.currentTime = _this.$startTime;
+                    }
+                    catch (e) {
+                    }
+                    finally {
+                        _this.audio.play();
+                    }
+                };
                 /**
                  * @private
                  */
@@ -383,17 +394,6 @@ var egret;
                 this.audio = audio;
             }
             var d = __define,c=HtmlSoundChannel,p=c.prototype;
-            p.canPlay = function () {
-                this.audio.removeEventListener("canplay", this.canPlay.bind(this));
-                try {
-                    this.audio.currentTime = this.$startTime;
-                }
-                catch (e) {
-                }
-                finally {
-                    this.audio.play();
-                }
-            };
             p.$play = function () {
                 if (this.isStopped) {
                     egret.$error(1036);
@@ -404,7 +404,7 @@ var egret;
                     this.audio.currentTime = this.$startTime;
                 }
                 catch (e) {
-                    this.audio.addEventListener("canplay", this.canPlay.bind(this));
+                    this.audio.addEventListener("canplay", this.canPlay);
                     return;
                 }
                 this.audio.play();
