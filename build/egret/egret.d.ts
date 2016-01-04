@@ -9333,16 +9333,6 @@ declare module egret.sys {
         displayHeight: number;
     }
 }
-declare module egret.sys {
-    /**
-     * @private
-     * @param value
-     * @returns
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    function getNumber(value: number): number;
-}
 declare module egret {
     /**
      * @private
