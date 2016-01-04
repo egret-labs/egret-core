@@ -86,6 +86,7 @@ module eui {
      * This event is dispatched when the user interacts with the control.
      *
      * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
      *
      * @version Egret 2.4
      * @version eui 1.0
@@ -99,6 +100,7 @@ module eui {
      * 注意：此事件仅在索引改变是由用户触摸操作引起时才抛出。
      *
      * @event eui.ItemTapEvent.ITEM_TAP 项呈示器单击事件。
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
      *
      * @version Egret 2.4
      * @version eui 1.0

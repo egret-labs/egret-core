@@ -3904,6 +3904,9 @@ var eui;
      * The Button component is a commonly used rectangular button.
      * The Button component looks like it can be pressed.
      * The default skin has a text label and a icon display object.
+     *
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
+     *
      * @state up Button up state
      * @state down Button down state
      * @state disabled Button disabled state
@@ -3915,6 +3918,9 @@ var eui;
     /**
      * @language zh_CN
      * Button 组件是常用的矩形按钮。Button 组件看起来可以按压。默认外观具有一个文本标签和图标显示对象。
+     *
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
+     *
      * @state up 按钮弹起状态
      * @state down 按钮按下状态
      * @state disabled 按钮禁用状态
@@ -7714,6 +7720,10 @@ var eui;
      * corresponding to the slider's minimum and maximum values.
      * The SliderBase class is a base class for HSlider and VSlider.
      *
+     * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
+     * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
+     * @event egret.Event.CHANGE Dispatched when the scroll position is changing
+     *
      * @see eui.HSlider
      * @see eui.VSlider
      *
@@ -7726,6 +7736,10 @@ var eui;
      * 滑块控件基类，通过使用 SliderBase 类，用户可以在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      * SliderBase 类是 HSlider 和 VSlider 的基类。
+     *
+     * @event eui.UIEvent.CHANGE_START 滚动位置改变开始
+     * @event eui.UIEvent.CHANGE_END 滚动位置改变结束
+     * @event egret.Event.CHANGE 滚动位置改变的时候
      *
      * @see eui.HSlider
      * @see eui.VSlider
@@ -9604,6 +9618,7 @@ var eui;
      * This event is dispatched when the user interacts with the control.
      *
      * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
      *
      * @version Egret 2.4
      * @version eui 1.0
@@ -9617,6 +9632,7 @@ var eui;
      * 注意：此事件仅在索引改变是由用户触摸操作引起时才抛出。
      *
      * @event eui.ItemTapEvent.ITEM_TAP 项呈示器单击事件。
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
      *
      * @version Egret 2.4
      * @version eui 1.0
@@ -12691,6 +12707,8 @@ var eui;
      *
      * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
      * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
+     * @event egret.Event.CHANGE Dispatched when the scroll position is changing
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -12714,6 +12732,8 @@ var eui;
      *
      * @event eui.UIEvent.CHANGE_START 滚动位置改变开始
      * @event eui.UIEvent.CHANGE_END 滚动位置改变结束
+     * @event egret.Event.CHANGE 滚动位置改变的时候
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -13188,8 +13208,8 @@ var eui;
                 if (values[2 /* autoHideTimer */]) {
                     values[2 /* autoHideTimer */].reset();
                 }
+                eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_START);
             }
-            eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_START);
             var viewport = values[10 /* viewport */];
             var uiValues = viewport.$UIComponent;
             if (values[6 /* horizontalCanScroll */]) {
@@ -13251,6 +13271,7 @@ var eui;
          * @param scrollPos
          */
         p.horizontalUpdateHandler = function (scrollPos) {
+            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollH = scrollPos;
         };
         /**
@@ -13259,6 +13280,7 @@ var eui;
          * @param scrollPos
          */
         p.verticalUpdateHandler = function (scrollPos) {
+            this.dispatchEventWith(egret.Event.CHANGE);
             this.$Scroller[10 /* viewport */].scrollV = scrollPos;
         };
         /**
@@ -17685,6 +17707,9 @@ var eui;
         })(CodeBase);
         sys.EXSetProperty = EXSetProperty;
         egret.registerClass(EXSetProperty,'eui.sys.EXSetProperty');
+        /**
+         * @private
+         */
         var EXSetStateProperty = (function (_super) {
             __extends(EXSetStateProperty, _super);
             /**

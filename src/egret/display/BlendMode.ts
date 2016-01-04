@@ -119,7 +119,7 @@ module egret.sys {
      */
     export function blendModeToNumber(blendMode:string):number {
         var num = blendModeNumber[blendMode];
-        return egret.sys.isUndefined(num) ? 0 : num;
+        return num === undefined ? 0 : num;
     }
 
     /**
@@ -128,7 +128,7 @@ module egret.sys {
      */
     export function numberToBlendMode(blendMode:number):string {
         var str = blendModeString[blendMode];
-        return egret.sys.isUndefined(str) ? "normal" : str;
+        return str === undefined ? "normal" : str;
     }
 
 }

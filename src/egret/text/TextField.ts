@@ -300,8 +300,6 @@ module egret {
 
         /**
          * @private
-         *
-         * @returns
          */
         private isInput():boolean {
             return this.$TextField[sys.TextKeys.type] == TextFieldType.INPUT;
@@ -375,7 +373,7 @@ module egret {
         }
 
         $setSize(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
 
             var values = this.$TextField;
             if (values[sys.TextKeys.fontSize] == value) {
@@ -553,7 +551,7 @@ module egret {
         }
 
         $setLineSpacing(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
 
             var values = this.$TextField;
             if (values[sys.TextKeys.lineSpacing] == value)

@@ -89,7 +89,7 @@ declare module egret {
      * @extends egret.DisplayObject
      * @event egret.Event.COMPLETE 动画播放完成。
      * @event egret.Event.LOOP_COMPLETE 动画循环播放完成。
-     * @see http://edn.egret.com/cn/index.php/article/index/id/151 MovieClip序列帧动画
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
      * @includeExample extension/game/display/MovieClip.ts
@@ -386,7 +386,7 @@ declare module egret {
 declare module egret {
     /**
      * @classdesc 使用 MovieClipData 类，您可以创建 MovieClip 对象和处理 MovieClip 对象的数据。MovieClipData 一般由MovieClipDataFactory生成
-     * @see http://docs.egret-labs.org/post/manual/displaycon/movieclip.html MovieClip序列帧动画
+     * @see http://edn.egret.com/cn/docs/page/596 MovieClip序列帧动画
      * @version Egret 2.4
      * @platform Web,Native
      */

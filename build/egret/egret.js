@@ -1142,7 +1142,7 @@ var egret;
          * 设置x坐标
          */
         p.$setX = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var m = this.$DisplayObject[6 /* matrix */];
             if (value == m.tx) {
                 return false;
@@ -1192,7 +1192,7 @@ var egret;
          * 设置y坐标
          */
         p.$setY = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var m = this.$DisplayObject[6 /* matrix */];
             if (value == m.ty) {
                 return false;
@@ -1238,7 +1238,7 @@ var egret;
          * 设置水平缩放值
          */
         p.$setScaleX = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$DisplayObject;
             if (value == values[0 /* scaleX */]) {
                 return false;
@@ -1283,7 +1283,7 @@ var egret;
          * 设置垂直缩放值
          */
         p.$setScaleY = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$DisplayObject[1 /* scaleY */]) {
                 return false;
             }
@@ -1327,7 +1327,7 @@ var egret;
             return this.$DisplayObject[4 /* rotation */];
         };
         p.$setRotation = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             value = clampRotation(value);
             var values = this.$DisplayObject;
             if (value == values[4 /* rotation */]) {
@@ -1362,7 +1362,7 @@ var egret;
          * @param value
          */
         p.$setSkewX = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$DisplayObject;
             if (value == values[16 /* skewXdeg */]) {
                 return false;
@@ -1395,7 +1395,7 @@ var egret;
          * @param value
          */
         p.$setSkewY = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$DisplayObject;
             if (value == values[17 /* skewYdeg */]) {
                 return false;
@@ -1586,7 +1586,7 @@ var egret;
          * @returns
          */
         p.$setAnchorOffsetX = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$DisplayObject[12 /* anchorOffsetX */]) {
                 return false;
             }
@@ -1623,7 +1623,7 @@ var egret;
          * @returns
          */
         p.$setAnchorOffsetY = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$DisplayObject[13 /* anchorOffsetY */]) {
                 return false;
             }
@@ -1756,7 +1756,7 @@ var egret;
          * @param value
          */
         p.$setAlpha = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$alpha) {
                 return false;
             }
@@ -3391,7 +3391,7 @@ var egret;
          */
         function blendModeToNumber(blendMode) {
             var num = blendModeNumber[blendMode];
-            return egret.sys.isUndefined(num) ? 0 : num;
+            return num === undefined ? 0 : num;
         }
         sys.blendModeToNumber = blendModeToNumber;
         /**
@@ -3400,7 +3400,7 @@ var egret;
          */
         function numberToBlendMode(blendMode) {
             var str = blendModeString[blendMode];
-            return egret.sys.isUndefined(str) ? "normal" : str;
+            return str === undefined ? "normal" : str;
         }
         sys.numberToBlendMode = numberToBlendMode;
     })(sys = egret.sys || (egret.sys = {}));
@@ -4011,7 +4011,7 @@ var egret;
          * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
          */
         p.$setAlpha = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$alpha) {
                 return false;
             }
@@ -6934,10 +6934,10 @@ var egret;
         p.createTexture = function (name, bitmapX, bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight) {
             if (offsetX === void 0) { offsetX = 0; }
             if (offsetY === void 0) { offsetY = 0; }
-            if (egret.sys.isUndefined(textureWidth)) {
+            if (textureWidth === void 0) {
                 textureWidth = offsetX + bitmapWidth;
             }
-            if (egret.sys.isUndefined(textureHeight)) {
+            if (textureHeight === void 0) {
                 textureHeight = offsetY + bitmapHeight;
             }
             var texture = new egret.Texture();
@@ -13752,68 +13752,6 @@ var egret;
 //////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
-    var sys;
-    (function (sys) {
-        /**
-         * @private
-         * @param value
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        function isUndefined(value) {
-            return typeof value === "undefined";
-        }
-        sys.isUndefined = isUndefined;
-        /**
-         * @private
-         * @param value
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        function getNumber(value) {
-            if (DEBUG) {
-                if (isNaN(value)) {
-                    egret.sys.tr(1013);
-                }
-            }
-            return +value || 0;
-            ;
-        }
-        sys.getNumber = getNumber;
-    })(sys = egret.sys || (egret.sys = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
     /**
      * @private
      * OrientationMode 类为舞台初始旋转模式提供值。
@@ -14107,13 +14045,13 @@ var egret;
                     console.log.apply(console, toArray(arguments));
                 };
             }
-            fpsStyle = sys.isUndefined(styles) ? {} : styles;
+            fpsStyle = styles ? {} : styles;
             showLog = !!showLog;
             this.showFPS = !!showFPS;
             this.showLog = showLog;
             if (!this.fpsDisplay) {
-                var x = sys.isUndefined(styles["x"]) ? 0 : styles["x"];
-                var y = sys.isUndefined(styles["y"]) ? 0 : styles["y"];
+                var x = styles["x"] === undefined ? 0 : styles["x"];
+                var y = styles["y"] === undefined ? 0 : styles["y"];
                 fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
                 fpsDisplay.x = x;
                 fpsDisplay.y = y;
@@ -14227,20 +14165,20 @@ var egret;
                 this.shape = new egret.Shape();
                 this.addChild(this.shape);
                 var textField = new egret.TextField();
-                textField.size = egret.sys.isUndefined(this.styles["size"]) ? 24 : parseInt(this.styles["size"]);
+                textField.size = this.styles["size"] === undefined ? 24 : parseInt(this.styles["size"]);
                 this.addChild(textField);
                 this.textField = textField;
-                textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+                textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
                 textField.fontFamily = "monospace";
                 textField.x = 10;
                 textField.y = 10;
                 var textField = new egret.TextField();
                 this.infoText = textField;
                 this.addChild(textField);
-                textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+                textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
                 textField.fontFamily = "monospace";
                 textField.x = 10;
-                textField.size = egret.sys.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
+                textField.size = this.styles["size"] === undefined ? 12 : this.styles["size"] / 2;
                 textField.y = 10;
             };
             FPSImpl.prototype.update = function (drawCalls, dirtyRatio, costDirty, costRender, costTicker) {
@@ -15913,13 +15851,13 @@ var egret;
                     var c = this.charList[str];
                     if (c) {
                         var sourceH = c.sourceH;
-                        if (egret.sys.isUndefined(sourceH)) {
+                        if (sourceH === undefined) {
                             var h = c.h;
                             if (h === undefined) {
                                 h = 0;
                             }
                             var offY = c.offY;
-                            if (egret.sys.isUndefined(offY)) {
+                            if (offY === undefined) {
                                 offY = 0;
                             }
                             sourceH = h + offY;
@@ -17499,7 +17437,7 @@ var egret;
             }
         );
         p.$setSize = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$TextField;
             if (values[0 /* fontSize */] == value) {
                 return false;
@@ -17522,7 +17460,7 @@ var egret;
             // * @private
             // */
             //public set fontSize(value:number) {
-            //    value = egret.sys.getNumber(value);
+            //    value = +value || 0;
             //
             //    var values = this.$TextField;
             //    if (values[sys.TextKeys.fontSize] == value) {
@@ -17699,7 +17637,7 @@ var egret;
             }
         );
         p.$setLineSpacing = function (value) {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$TextField;
             if (values[1 /* lineSpacing */] == value)
                 return false;

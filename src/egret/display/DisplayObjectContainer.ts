@@ -655,7 +655,7 @@ module egret {
          * 子项有可能会被cache而导致标记失效。重写此方法,以便在赋值时对子项深度遍历标记脏区域
          */
         $setAlpha(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$alpha) {
                 return false;
             }

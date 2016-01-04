@@ -568,7 +568,7 @@ module egret {
                 else if (offsetX != 0 || offsetY != 0) {
                     matrix.$preMultiplyInto($TempMatrix.setTo(1, 0, 0, 1, -offsetX, -offsetY), matrix);
                 }
-                
+
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
@@ -635,7 +635,7 @@ module egret {
          * 设置x坐标
          */
         $setX(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var m = this.$DisplayObject[Keys.matrix];
             if (value == m.tx) {
                 return false;
@@ -687,7 +687,7 @@ module egret {
          * 设置y坐标
          */
         $setY(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var m = this.$DisplayObject[Keys.matrix];
             if (value == m.ty) {
                 return false;
@@ -736,7 +736,7 @@ module egret {
          * 设置水平缩放值
          */
         $setScaleX(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$DisplayObject;
             if (value == values[Keys.scaleX]) {
                 return false;
@@ -783,7 +783,7 @@ module egret {
          * 设置垂直缩放值
          */
         $setScaleY(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$DisplayObject[Keys.scaleY]) {
                 return false;
             }
@@ -829,7 +829,7 @@ module egret {
         }
 
         $setRotation(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             value = clampRotation(value);
             var values = this.$DisplayObject;
             if (value == values[Keys.rotation]) {
@@ -866,7 +866,7 @@ module egret {
          * @param value
          */
         $setSkewX(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$DisplayObject;
             if (value == values[Keys.skewXdeg]) {
                 return false;
@@ -903,7 +903,7 @@ module egret {
          * @param value
          */
         $setSkewY(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             var values = this.$DisplayObject;
             if (value == values[Keys.skewYdeg]) {
                 return false;
@@ -1111,7 +1111,7 @@ module egret {
          * @returns
          */
         $setAnchorOffsetX(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$DisplayObject[Keys.anchorOffsetX]) {
                 return false;
             }
@@ -1149,7 +1149,7 @@ module egret {
          * @returns
          */
         $setAnchorOffsetY(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$DisplayObject[Keys.anchorOffsetY]) {
                 return false;
             }
@@ -1300,7 +1300,7 @@ module egret {
          * @param value
          */
         $setAlpha(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
             if (value == this.$alpha) {
                 return false;
             }
@@ -1948,7 +1948,7 @@ module egret {
                 return null;
             }
             var m = this.$getInvertedConcatenatedMatrix();
-            if(m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0){//防止父类影响子类
+            if (m.a == 0 && m.b == 0 && m.c == 0 && m.d == 0) {//防止父类影响子类
                 return null;
             }
             var bounds = this.$getContentBounds();

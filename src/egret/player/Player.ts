@@ -371,13 +371,13 @@ module egret.sys {
                 console.log.apply(console, toArray(arguments));
             };
         }
-        fpsStyle = isUndefined(styles) ? {} : styles;
+        fpsStyle = styles ? {} : styles;
         showLog = !!showLog;
         this.showFPS = !!showFPS;
         this.showLog = showLog;
         if (!this.fpsDisplay) {
-            var x = isUndefined(styles["x"]) ? 0 : styles["x"];
-            var y = isUndefined(styles["y"]) ? 0 : styles["y"];
+            var x = styles["x"] === undefined ? 0 : styles["x"];
+            var y = styles["y"] === undefined ? 0 : styles["y"];
             fpsDisplay = this.fpsDisplay = new FPS(this.stage, showFPS, showLog, logFilter, styles);
             fpsDisplay.x = x;
             fpsDisplay.y = y;
@@ -500,20 +500,20 @@ module egret.sys {
             this.shape = new egret.Shape();
             this.addChild(this.shape);
             var textField = new egret.TextField();
-            textField.size = egret.sys.isUndefined(this.styles["size"]) ? 24 : parseInt(this.styles["size"]);
+            textField.size = this.styles["size"] === undefined ? 24 : parseInt(this.styles["size"]);
             this.addChild(textField);
             this.textField = textField;
-            textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+            textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
             textField.fontFamily = "monospace";
             textField.x = 10;
             textField.y = 10;
             var textField = new egret.TextField();
             this.infoText = textField;
             this.addChild(textField);
-            textField.textColor = egret.sys.isUndefined(this.styles["textColor"]) ? 0x00c200 : parseInt(this.styles["textColor"]);
+            textField.textColor = this.styles["textColor"] === undefined ? 0x00c200 : parseInt(this.styles["textColor"]);
             textField.fontFamily = "monospace";
             textField.x = 10;
-            textField.size = egret.sys.isUndefined(this.styles["size"]) ? 12 : this.styles["size"] / 2;
+            textField.size = this.styles["size"] === undefined ? 12 : this.styles["size"] / 2;
             textField.y = 10;
         };
         FPSImpl.prototype.update = function (drawCalls, dirtyRatio, costDirty, costRender, costTicker) {
