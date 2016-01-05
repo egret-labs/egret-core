@@ -147,7 +147,11 @@ module egret {
          * 设置绑定到的目标显示对象
          */
         $setTarget(target:DisplayObject):void {
+            if (this.targetDisplay) {
+                this.targetDisplay.$renderNode = null;
+            }
             target.$renderNode = this.$renderNode;
+            this.targetDisplay = target;
         }
 
         /**

@@ -118,7 +118,7 @@ module egret.web {
                         renderAlpha = displayObject.$getConcatenatedAlphaAt(root, displayObject.$getConcatenatedAlpha());
                         m = Matrix.create().copyFrom(displayObject.$getConcatenatedMatrix());
                         displayObject.$getConcatenatedMatrixAt(root, m);
-                        matrix.$preMultiplyInto(m,m);
+                        matrix.$preMultiplyInto(m, m);
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         Matrix.release(m);
                     }
@@ -128,7 +128,20 @@ module egret.web {
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
                     context.globalAlpha = renderAlpha;
-                    this.doRender(context, node);
+                    switch (node.type) {
+                        case sys.RenderNodeType.BitmapNode:
+                            this.renderBitmap(<sys.BitmapNode>node, context);
+                            break;
+                        case sys.RenderNodeType.TextNode:
+                            this.renderText(<sys.TextNode>node, context);
+                            break;
+                        case sys.RenderNodeType.GraphicsNode:
+                            this.renderGraphics(<sys.GraphicsNode>node, context);
+                            break;
+                        case sys.RenderNodeType.GroupNode:
+                            this.renderGroup(<sys.GroupNode>node, context);
+                            break;
+                    }
                     node.needRedraw = false;
                 }
             }
@@ -361,25 +374,74 @@ module egret.web {
             context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
             context.clip();
             drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, region, root);
-            context.restore()
+            context.restore();
 
             sys.Region.release(region);
             Matrix.release(m);
             return drawCalls;
         }
 
-        private doRender(context:CanvasRenderingContext2D, node:sys.RenderNode):void {
-            switch (node.type) {
-                case sys.RenderNodeType.BitmapNode:
-                    var bitmapNode = <sys.BitmapNode>node;
-                    var image = bitmapNode.image;
-                    context["imageSmoothingEnabled"] = bitmapNode.smoothing;
-                    var data = bitmapNode.drawData;
-                    var length = data.length;
-                    for (var i = 0; i < length; i += 8) {
-                        context.drawImage(<HTMLImageElement><any>image, data[i], data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
-                    }
-                    break;
+        /**
+         * @private
+         */
+        private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):void {
+            var image = node.image;
+            context["imageSmoothingEnabled"] = node.smoothing;
+            var data = node.drawData;
+            var length = data.length;
+            for (var i = 0; i < length; i += 8) {
+                context.drawImage(<HTMLImageElement><any>image, data[i], data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
+            }
+        }
+
+        private renderText(node:sys.TextNode, context:CanvasRenderingContext2D):void {
+            context.textAlign = "left";
+            context.textBaseline = "middle";
+            context.lineJoin = "round";//确保描边样式是圆角
+            var drawData = node.drawData;
+            var length = drawData.length;
+            for (var i = 0; i < length; i += 4) {
+                var x = drawData[i];
+                var y = drawData[i + 1];
+                var text = drawData[i + 2];
+                var format:sys.TextFormat = drawData[i + 3];
+                context.font = getFontString(node, format);
+                var textColor = format.textColor == null ? node.textColor : format.textColor;
+                var strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
+                var stroke = format.stroke == null ? node.stroke : format.stroke;
+                context.fillStyle = toColorString(textColor);
+                context.strokeStyle = toColorString(strokeColor);
+                if (stroke) {
+                    context.lineWidth = stroke * 2;
+                    context.strokeText(text, x, y);
+                }
+                context.fillText(text, x, y);
+            }
+        }
+
+        private renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D):void {
+
+        }
+
+        private renderGroup(groupNode:sys.GroupNode, context:CanvasRenderingContext2D):void {
+            var children = groupNode.drawData;
+            var length = children.length;
+            for (var i = 0; i < length; i++) {
+                var node:sys.RenderNode = children[i];
+                switch (node.type) {
+                    case sys.RenderNodeType.BitmapNode:
+                        this.renderBitmap(<sys.BitmapNode>node, context);
+                        break;
+                    case sys.RenderNodeType.TextNode:
+                        this.renderText(<sys.TextNode>node, context);
+                        break;
+                    case sys.RenderNodeType.GraphicsNode:
+                        this.renderGraphics(<sys.GraphicsNode>node, context);
+                        break;
+                    case sys.RenderNodeType.GroupNode:
+                        this.renderGroup(<sys.GroupNode>node, context);
+                        break;
+                }
             }
         }
 
@@ -396,5 +458,20 @@ module egret.web {
             }
             return buffer;
         }
+    }
+
+    /**
+     * @private
+     * 获取字体字符串
+     */
+    function getFontString(node:sys.TextNode, format:sys.TextFormat):string {
+        var italic:boolean = format.italic == null ? node.italic : format.italic;
+        var bold:boolean = format.bold == null ? node.bold : format.bold;
+        var size:number = format.size == null ? node.size : format.size;
+        var fontFamily:string = format.fontFamily || node.fontFamily;
+        var font:string = italic ? "italic " : "normal ";
+        font += bold ? "bold " : "normal ";
+        font += size + "px " + fontFamily;
+        return font;
     }
 }

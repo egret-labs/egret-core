@@ -493,7 +493,6 @@ module egret.sys {
                     return logFilterRegExp.test(message);
                 return !logFilter || message.indexOf(logFilter) == 0;
             }
-            this.fpsElement = document.getElementById("FPS");
         }
 
         FPSImpl.prototype.createDisplay = function () {
@@ -537,12 +536,8 @@ module egret.sys {
 
                 var text = "FPS: " + lastFPS + "\nDraw: " + lastDrawCalls + "," + lastDirtyRatio + "%\nCost: " + lastCostTicker + "," + lastCostDirty + "," + lastCostRender;
                 if (this.textField.text != text) {
-                    if(this.fpsElement){
-                        this.fpsElement.innerHTML = text.split("\n").join("<br>");
-                    }
-
-                    //this.textField.text = text;
-                    //this.updateLayout();
+                    this.textField.text = text;
+                    this.updateLayout();
                 }
                 this.totalTick = 0;
                 this.totalTime = this.totalTime % 500;
@@ -587,10 +582,11 @@ module egret.sys {
             if (egret.Capabilities.runtimeType == RuntimeType.NATIVE) {
                 return;
             }
-            var g = this.shape.$graphics.$renderContext;
+            var g = this.shape.$graphics;
             g.clear();
-            g.fillStyle = "rgba(68,68,68," + (this.styles["bgAlpha"] || 0.9) + ")";
-            g.fillRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
+            g.beginFill(0x444444, this.styles["bgAlpha"] || 0.9);
+            g.drawRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
+            g.endFill();
         };
         return <FPS><any>FPSImpl;
     })(egret.Sprite);
