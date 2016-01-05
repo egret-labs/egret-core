@@ -757,7 +757,12 @@ var egret;
              */
             p.measureText = function (text) {
                 var font = egret.TextField.default_fontFamily;
-                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                if (egret_native.Canvas) {
+                    this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                }
+                else {
+                    egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+                }
                 return { width: egret_native.Label.getTextSize(text)[0] };
             };
             /**
@@ -2869,7 +2874,7 @@ var egret;
              * @returns {boolean}
              */
             p.isNetUrl = function (url) {
-                return url.indexOf("http://") != -1;
+                return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1;
             };
             /**
              * @private
@@ -3032,7 +3037,7 @@ var egret;
              * @returns {boolean}
              */
             p.isNetUrl = function (url) {
-                return url.indexOf("http://") != -1;
+                return url.indexOf("http://") != -1 || url.indexOf("HTTP://") != -1;
             };
             /**
              * @private

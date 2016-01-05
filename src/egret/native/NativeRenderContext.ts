@@ -868,7 +868,11 @@ module egret.native {
          */
         public measureText(text:string):TextMetrics {
             var font:string = TextField.default_fontFamily;
-            egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            if(egret_native.Canvas) {
+                this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            } else {
+                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
+            }
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
 
