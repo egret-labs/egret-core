@@ -45,22 +45,6 @@ module RES {
 
 		/**
 		 * @language en_US
-		 * Animation configuration file. Currently supports Egret MovieClip file format.
-		 * @version Egret 2.4
-		 * @platform Web,Native
-		 * @private
-		 */
-		/**
-		 * @language zh_CN
-		 * Animation 配置文件。目前支持 Egret MovieClip 文件格式。
-		 * @version Egret 2.4
-		 * @platform Web,Native
-		 * @private
-		 */
-		public static TYPE_ANIMATION:string = "animation";
-
-		/**
-		 * @language en_US
 		 * XML file.
 		 * @version Egret 2.4
 		 * @platform Web,Native
@@ -172,7 +156,6 @@ module RES {
 		 * @param type Type of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
@@ -182,7 +165,6 @@ module RES {
 		 * @param type 加载项文件类型。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public constructor(name:string,url:string,type:string){
 			this.name = name;
@@ -195,14 +177,12 @@ module RES {
 		 * Name of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 加载项名称。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public name:string;
 		/**
@@ -210,14 +190,12 @@ module RES {
 		 * URL of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 要加载的文件地址。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public url:string;
 		/**
@@ -225,14 +203,12 @@ module RES {
 		 * Type of resource term.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 加载项文件类型。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public type:string;
 
@@ -241,14 +217,12 @@ module RES {
 		 * Name of the resource term group.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 资源所属的组名。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public groupName:string = "";
 		/**
@@ -256,14 +230,12 @@ module RES {
 		 * The raw data object to be referenced.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 被引用的原始数据对象。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public data:any = null;
 		
@@ -273,14 +245,12 @@ module RES {
 		 * Load complete flag.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 加载完成的标志。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public get loaded():boolean{
 			return this.data?this.data.loaded:this._loaded;
@@ -292,20 +262,17 @@ module RES {
 			this._loaded = value;
 		}
 
-
 		/**
 		 * @language en_US
 		 * Turn into a string.
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		/**
 		 * @language zh_CN
 		 * 转成字符串。
 		 * @version Egret 2.4
 		 * @platform Web,Native
-		 * @private
 		 */
 		public toString():string{
 			return "[ResourceItem name=\""+this.name+"\" url=\""+this.url+"\" type=\""+this.type+"\"]";

@@ -261,7 +261,6 @@ module RES {
      * @language en_US
      * The synchronization method for obtaining the cache has been loaded with the success of the resource.
      * <br>The type of resource and the corresponding return value types are as follows:
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript primary object
      * <br>RES.ResourceItem.TYPE_IMAGE : img Html Object，or egret.BitmapData interface。
      * <br>RES.ResourceItem.TYPE_JSON : Object
@@ -282,7 +281,6 @@ module RES {
      * @language zh_CN
      * 同步方式获取缓存的已经加载成功的资源。
      * <br>资源类型和对应的返回值类型关系如下：
-     * <br>RES.ResourceItem.TYPE_ANIMATION : (egret.Bitmap|egret.Texture)[]
      * <br>RES.ResourceItem.TYPE_BIN : ArrayBuffer JavaScript 原生对象
      * <br>RES.ResourceItem.TYPE_IMAGE : img Html 对象，或者 egret.BitmapData 接口。
      * <br>RES.ResourceItem.TYPE_JSON : Object
@@ -549,7 +547,6 @@ module RES {
         private init():void{
             this.vcs = new VersionController();
             var analyzerClassMap = this.analyzerClassMap;
-            //analyzerClassMap[ResourceItem.TYPE_ANIMATION] = AnimationAnalyzer;
             analyzerClassMap[ResourceItem.TYPE_BIN] = BinAnalyzer;
             analyzerClassMap[ResourceItem.TYPE_IMAGE] = ImageAnalyzer;
             analyzerClassMap[ResourceItem.TYPE_TEXT] = TextAnalyzer;
