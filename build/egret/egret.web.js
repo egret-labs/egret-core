@@ -233,7 +233,6 @@ var egret;
                     audio = this.originAudio.cloneNode();
                 }
                 else {
-                    audio.load();
                 }
                 audio.autoplay = true;
                 var channel = new web.HtmlSoundChannel(audio);
@@ -363,6 +362,17 @@ var egret;
                 this.audio = null;
                 //声音是否已经播放完成
                 this.isStopped = false;
+                this.canPlay = function () {
+                    _this.audio.removeEventListener("canplay", _this.canPlay);
+                    try {
+                        _this.audio.currentTime = _this.$startTime;
+                    }
+                    catch (e) {
+                    }
+                    finally {
+                        _this.audio.play();
+                    }
+                };
                 /**
                  * @private
                  */
@@ -376,7 +386,7 @@ var egret;
                         _this.$loops--;
                     }
                     /////////////
-                    _this.audio.load();
+                    //this.audio.load();
                     _this.$play();
                 };
                 audio.addEventListener("ended", this.onPlayEnd);
@@ -389,13 +399,14 @@ var egret;
                     return;
                 }
                 try {
+                    //this.audio.pause();
                     this.audio.currentTime = this.$startTime;
                 }
                 catch (e) {
+                    this.audio.addEventListener("canplay", this.canPlay);
+                    return;
                 }
-                finally {
-                    this.audio.play();
-                }
+                this.audio.play();
             };
             /**
              * @private

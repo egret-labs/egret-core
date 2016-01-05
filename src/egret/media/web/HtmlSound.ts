@@ -141,7 +141,7 @@ module egret.web {
                 audio = <HTMLAudioElement>this.originAudio.cloneNode();
             }
             else {
-                audio.load();
+                //audio.load();
             }
             audio.autoplay = true;
 
