@@ -389,8 +389,10 @@ module egret.web {
             context["imageSmoothingEnabled"] = node.smoothing;
             var data = node.drawData;
             var length = data.length;
-            for (var i = 0; i < length; i += 8) {
-                context.drawImage(<HTMLImageElement><any>image, data[i], data[i + 1], data[i + 2], data[i + 3], data[i + 4], data[i + 5], data[i + 6], data[i + 7]);
+            var pos = 0;
+            while (pos < length) {
+                context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++],
+                    data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
         }
 
@@ -400,11 +402,12 @@ module egret.web {
             context.lineJoin = "round";//确保描边样式是圆角
             var drawData = node.drawData;
             var length = drawData.length;
-            for (var i = 0; i < length; i += 4) {
-                var x = drawData[i];
-                var y = drawData[i + 1];
-                var text = drawData[i + 2];
-                var format:sys.TextFormat = drawData[i + 3];
+            var pos = 0;
+            while (pos < length) {
+                var x = drawData[pos++];
+                var y = drawData[pos++];
+                var text = drawData[pos++];
+                var format:sys.TextFormat = drawData[pos++];
                 context.font = getFontString(node, format);
                 var textColor = format.textColor == null ? node.textColor : format.textColor;
                 var strokeColor = format.strokeColor == null ? node.strokeColor : format.strokeColor;
@@ -420,8 +423,121 @@ module egret.web {
         }
 
         private renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D):void {
-
+            var drawData = node.drawData;
+            var length = drawData.length;
+            for (var i = 0; i < length; i++) {
+                var path:sys.Path2D = drawData[i];
+                switch (path.type) {
+                    case sys.PathType.Fill:
+                        var fillPath = <sys.FillPath>path;
+                        context.fillStyle = getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
+                        this.renderPath(path, context);
+                        context.fill();
+                        break;
+                    case sys.PathType.GradientFill:
+                        var g = <sys.GradientFillPath>path;
+                        context.fillStyle = getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
+                        context.save();
+                        var m = g.matrix;
+                        context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                        this.renderPath(path, context);
+                        context.fill();
+                        context.restore();
+                        break;
+                    case sys.PathType.Stroke:
+                        var strokeFill = <sys.StrokePath>path;
+                        var lineWidth = strokeFill.lineWidth;
+                        context.lineWidth = lineWidth;
+                        context.strokeStyle = getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
+                        context.lineCap = strokeFill.caps;
+                        context.lineJoin = strokeFill.joints;
+                        context.miterLimit = strokeFill.miterLimit;
+                        //对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
+                        var isSpecialCaseWidth = lineWidth === 1 || lineWidth === 3;
+                        if (isSpecialCaseWidth) {
+                            context.translate(0.5, 0.5);
+                        }
+                        this.renderPath(path, context);
+                        context.stroke();
+                        if (isSpecialCaseWidth) {
+                            context.translate(-0.5, -0.5);
+                        }
+                        break;
+                }
+            }
         }
+
+        private renderPath(path:sys.Path2D, context:CanvasRenderingContext2D):void {
+            context.beginPath();
+            var data = path.$data;
+            var commands = path.$commands;
+            var commandCount = commands.length;
+            var pos = 0;
+            for (var commandIndex = 0; commandIndex < commandCount; commandIndex++) {
+                var command = commands[commandIndex];
+                switch (command) {
+                    case sys.PathCommand.Arc:
+                        context.arc(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], !!data[pos++]);
+                        break;
+                    case sys.PathCommand.Circle:
+                        context.arc(data[pos++], data[pos++], data[pos++], 0, Math.PI * 2);
+                        break;
+                    case sys.PathCommand.CubicCurveTo:
+                        context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                        break;
+                    case sys.PathCommand.CurveTo:
+                        context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
+                        break;
+                    case sys.PathCommand.Ellipse:
+                        var x = data[pos++];
+                        var y = data[pos++];
+                        var width = data[pos++];
+                        var height = data[pos++];
+                        var rx = width / 2;
+                        var ry = height / 2;
+                        x += rx;
+                        y += ry;
+                        var currentX = x + rx;
+                        var currentY = y;
+                        context.moveTo(currentX, currentY); // 0
+                        var startAngle = 0;
+                        var u = 1;
+                        var v = 0;
+                        for (var i = 0; i < 4; i++) {
+                            var endAngle = startAngle + Math.PI / 2;
+                            var kappa = (4 / 3) * Math.tan((endAngle - startAngle) / 4);
+                            var cp1x = currentX - v * kappa * rx;
+                            var cp1y = currentY + u * kappa * ry;
+                            u = Math.cos(endAngle);
+                            v = Math.sin(endAngle);
+                            currentX = x + u * rx;
+                            currentY = y + v * ry;
+                            var cp2x = currentX + v * kappa * rx;
+                            var cp2y = currentY - u * kappa * ry;
+                            context.bezierCurveTo(
+                                cp1x,
+                                cp1y,
+                                cp2x,
+                                cp2y,
+                                currentX,
+                                currentY
+                            );
+                            startAngle = endAngle;
+                        }
+                        break;
+                    case sys.PathCommand.LineTo:
+                        context.lineTo(data[pos++], data[pos++]);
+                        break;
+                    case sys.PathCommand.MoveTo:
+                        context.moveTo(data[pos++], data[pos++]);
+                        break;
+                    case sys.PathCommand.Rect:
+                        context.rect(data[pos++], data[pos++], data[pos++], data[pos++]);
+                        break;
+                }
+            }
+        }
+
 
         private renderGroup(groupNode:sys.GroupNode, context:CanvasRenderingContext2D):void {
             var children = groupNode.drawData;
@@ -473,5 +589,37 @@ module egret.web {
         font += bold ? "bold " : "normal ";
         font += size + "px " + fontFamily;
         return font;
+    }
+
+    /**
+     * @private
+     * 获取RGBA字符串
+     */
+    function getRGBAString(color:number, alpha:number):string {
+        var red = color >> 16;
+        var green = (color >> 8) & 0xFF;
+        var blue = color & 0xFF;
+        return "rgba(" + red + "," + green + "," + blue + "," + alpha + ")";
+    }
+
+    /**
+     * @private
+     * 获取渐变填充样式对象
+     */
+    function getGradient(context:CanvasRenderingContext2D, type:string, colors:number[],
+                         alphas:number[], ratios:number[], matrix:Matrix):CanvasGradient {
+        var gradient:CanvasGradient;
+        if (type == GradientType.LINEAR) {
+            gradient = context.createLinearGradient(-1, 0, 1, 0);
+        }
+        else {
+            gradient = context.createRadialGradient(0, 0, 0, 0, 0, 1);
+        }
+        //todo colors alphas ratios数量不一致情况处理
+        var l = colors.length;
+        for (var i = 0; i < l; i++) {
+            gradient.addColorStop(ratios[i] / 255, getRGBAString(colors[i], alphas[i]));
+        }
+        return gradient;
     }
 }

@@ -251,7 +251,21 @@ module egret {
          * @version Egret 2.4
          */
         public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[], matrix:egret.Matrix = null):void {
-            this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
+            var m = new egret.Matrix();
+            if (matrix) {
+                m.a = matrix.a * 819.2;
+                m.b = matrix.b * 819.2;
+                m.c = matrix.c * 819.2;
+                m.d = matrix.d * 819.2;
+                m.tx = matrix.tx;
+                m.ty = matrix.ty;
+            }
+            else {
+                //默认值
+                m.a = 100;
+                m.d = 100;
+            }
+            this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, m, this.strokePath);
             this.fillPath.moveTo(this.lastX, this.lastY);
         }
 
