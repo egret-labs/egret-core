@@ -1483,7 +1483,8 @@ module egret {
 
             var w:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
             var h:number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils.$getTextHeight(self);
-
+            w = Math.ceil(w)+2;//+2 是为了解决脏区域的问题
+            h = Math.ceil(h)+2;
             bounds.setTo(0, 0, w, h);
         }
 
