@@ -850,6 +850,7 @@ module egret {
          * @default 0x000000
          */
         public set strokeColor(value:number) {
+            value = +value || 0;
             this.$setStrokeColor(value);
         }
 
@@ -1275,7 +1276,7 @@ module egret {
          * @default false
          */
         public set border(value:boolean) {
-            this.$TextField[sys.TextKeys.border] = value;
+            this.$TextField[sys.TextKeys.border] = !!value;
             this.$invalidate();
         }
 
@@ -1300,7 +1301,7 @@ module egret {
          * @default 0x000000
          */
         public set borderColor(value:number) {
-            this.$TextField[sys.TextKeys.borderColor] = value;
+            this.$TextField[sys.TextKeys.borderColor] = +value || 0;
             this.$invalidate();
         }
 
@@ -1387,20 +1388,20 @@ module egret {
                 //渲染背景
                 if (values[sys.TextKeys.background]) {
                     fillPath = graphics.beginFill(values[sys.TextKeys.backgroundColor]);
-                    fillPath.rect(0, 0, this.$getWidth(), this.$getHeight());
+                    fillPath.drawRect(0, 0, this.$getWidth(), this.$getHeight());
                 }
                 //渲染边框
                 if (values[sys.TextKeys.border]) {
                     strokePath = graphics.lineStyle(1, values[sys.TextKeys.borderColor]);
                     //1像素和3像素线条宽度的情况，会向右下角偏移0.5像素绘制。少画一像素宽度，正好能不超出文本测量边界。
-                    strokePath.rect(0, 0, this.$getWidth() - 1, this.$getHeight() - 1);
+                    strokePath.drawRect(0, 0, this.$getWidth() - 1, this.$getHeight() - 1);
                 }
                 //渲染下划线
                 if (lines.length > 0) {
                     var textColor = values[sys.TextKeys.textColor];
                     var lastColor = -1;
                     var length = lines.length;
-                    for (var i = 0; i < length; i+=4) {
+                    for (var i = 0; i < length; i += 4) {
                         var x:number = lines[i];
                         var y:number = lines[i + 1];
                         var w:number = lines[i + 2];

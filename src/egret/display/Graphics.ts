@@ -219,6 +219,8 @@ module egret {
          * @platform Web,Native
          */
         public beginFill(color:number, alpha:number = 1):void {
+            color = +color || 0;
+            alpha = +alpha || 0;
             this.fillPath = this.$renderNode.beginFill(color, alpha, this.strokePath);
             this.fillPath.moveTo(this.lastX, this.lastY);
         }
@@ -251,21 +253,7 @@ module egret {
          * @version Egret 2.4
          */
         public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[], matrix:egret.Matrix = null):void {
-            var m = new egret.Matrix();
-            if (matrix) {
-                m.a = matrix.a * 819.2;
-                m.b = matrix.b * 819.2;
-                m.c = matrix.c * 819.2;
-                m.d = matrix.d * 819.2;
-                m.tx = matrix.tx;
-                m.ty = matrix.ty;
-            }
-            else {
-                //默认值
-                m.a = 100;
-                m.d = 100;
-            }
-            this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, m, this.strokePath);
+            this.fillPath = this.$renderNode.beginGradientFill(type, colors, alphas, ratios, matrix, this.strokePath);
             this.fillPath.moveTo(this.lastX, this.lastY);
         }
 
@@ -320,6 +308,9 @@ module egret {
                 this.setStrokeWidth(0);
             }
             else {
+                color = +color || 0;
+                alpha = +alpha || 0;
+                miterLimit = +miterLimit || 0;
                 this.setStrokeWidth(thickness);
                 this.strokePath = this.$renderNode.lineStyle(thickness, color, alpha, caps, joints, miterLimit);
                 this.strokePath.moveTo(this.lastX, this.lastY);
@@ -347,10 +338,14 @@ module egret {
          * @platform Web,Native
          */
         public drawRect(x:number, y:number, width:number, height:number):void {
+            x = +x || 0;
+            y = +y || 0;
+            width = +width || 0;
+            height = +height || 0;
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
-            fillPath && fillPath.rect(x, y, width, height);
-            strokePath && strokePath.rect(x, y, width, height);
+            fillPath && fillPath.drawRect(x, y, width, height);
+            strokePath && strokePath.drawRect(x, y, width, height);
             this.extendBoundsByPoint(x + width, y + height);
             this.updatePosition(x, y);
         }
@@ -386,68 +381,19 @@ module egret {
             height = +height || 0;
             ellipseWidth = +ellipseWidth || 0;
             ellipseHeight = +ellipseHeight || 0;
+            var fillPath = this.fillPath;
+            var strokePath = this.strokePath;
+            fillPath && fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
+            strokePath && strokePath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
 
             var radiusX = (ellipseWidth * 0.5) | 0;
             var radiusY = ellipseHeight ? (ellipseHeight * 0.5) | 0 : radiusX;
-
-            if (!radiusX || !radiusY) {
-                this.drawRect(x, y, width, height);
-                return;
-            }
-
-            var hw = width * 0.5;
-            var hh = height * 0.5;
-            if (radiusX > hw) {
-                radiusX = hw;
-            }
-            if (radiusY > hh) {
-                radiusY = hh;
-            }
-            if (hw === radiusX && hh === radiusY) {
-                if (radiusX === radiusY) {
-                    this.drawCircle(x + radiusX, y + radiusY, radiusX);
-                } else {
-                    this.drawEllipse(x, y, radiusX * 2, radiusY * 2);
-                }
-                return;
-            }
-
-            //    A-----B
-            //  H         C
-            //  G         D
-            //    F-----E
-            //
             var right = x + width;
             var bottom = y + height;
-            var xlw = x + radiusX;
-            var xrw = right - radiusX;
-            var ytw = y + radiusY;
             var ybw = bottom - radiusY;
-            if (this.fillPath) {
-                this.drawRoundRectToPath(this.fillPath, x, y, right, bottom, xlw, xrw, ytw, ybw);
-            }
-            if (this.strokePath) {
-                this.drawRoundRectToPath(this.strokePath, x, y, right, bottom, xlw, xrw, ytw, ybw);
-            }
             this.extendBoundsByPoint(x, y);
-            this.extendBoundsByPoint(x + width, y + height);
+            this.extendBoundsByPoint(right, bottom);
             this.updatePosition(right, ybw);
-        }
-
-        /**
-         * @private
-         */
-        private drawRoundRectToPath(path:sys.Path2D, x:number, y:number, right:number, bottom:number,
-                                    xlw:number, xrw:number, ytw:number, ybw:number):void {
-            path.moveTo(right, ybw);
-            path.curveTo(right, bottom, xrw, bottom);
-            path.lineTo(xlw, bottom);
-            path.curveTo(x, bottom, x, ybw);
-            path.lineTo(x, ytw);
-            path.curveTo(x, y, xlw, y);
-            path.lineTo(xrw, y);
-            path.curveTo(right, y, right, ytw);
-            path.lineTo(right, ybw);
         }
 
         /**
@@ -469,10 +415,13 @@ module egret {
          * @platform Web,Native
          */
         public drawCircle(x:number, y:number, radius:number):void {
+            x = +x || 0;
+            y = +y || 0;
+            radius = +radius || 0;
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
-            fillPath && fillPath.circle(x, y, radius);
-            strokePath && strokePath.circle(x, y, radius);
+            fillPath && fillPath.drawCircle(x, y, radius);
+            strokePath && strokePath.drawCircle(x, y, radius);
             this.extendBoundsByPoint(x - radius, y - radius);
             this.extendBoundsByPoint(x + radius, y + radius);
             this.updatePosition(x + radius, y);
@@ -500,11 +449,15 @@ module egret {
          * @platform Web,Native
          */
         public drawEllipse(x:number, y:number, width:number, height:number):void {
+            x = +x || 0;
+            y = +y || 0;
+            width = +width || 0;
+            height = +height || 0;
 
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
-            fillPath && fillPath.ellipse(x, y, width, height);
-            strokePath && strokePath.ellipse(x, y, width, height);
+            fillPath && fillPath.drawEllipse(x, y, width, height);
+            strokePath && strokePath.drawEllipse(x, y, width, height);
 
             var radiusX = width * 0.5;
             var radiusY = height * 0.5;
@@ -530,6 +483,8 @@ module egret {
          * @platform Web,Native
          */
         public moveTo(x:number, y:number):void {
+            x = +x || 0;
+            y = +y || 0;
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
             fillPath && fillPath.moveTo(x, y);
@@ -556,6 +511,8 @@ module egret {
          * @platform Web,Native
          */
         public lineTo(x:number, y:number):void {
+            x = +x || 0;
+            y = +y || 0;
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
             fillPath && fillPath.lineTo(x, y);
@@ -588,6 +545,10 @@ module egret {
          * @platform Web,Native
          */
         public curveTo(controlX:number, controlY:number, anchorX:number, anchorY:number):void {
+            controlX = +controlX || 0;
+            controlY = +controlY || 0;
+            anchorX = +anchorX || 0;
+            anchorY = +anchorY || 0;
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
             fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
@@ -627,6 +588,12 @@ module egret {
          */
         public cubicCurveTo(controlX1:number, controlY1:number, controlX2:number,
                             controlY2:number, anchorX:number, anchorY:number):void {
+            controlX1 = +controlX1 || 0;
+            controlY1 = +controlY1 || 0;
+            controlX2 = +controlX2 || 0;
+            controlY2 = +controlY2 || 0;
+            anchorX = +anchorX || 0;
+            anchorY = +anchorY || 0;
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
             fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
@@ -676,13 +643,22 @@ module egret {
          * @platform Web,Native
          */
         public drawArc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            if (radius < 0) {
+            if (radius < 0 || startAngle === endAngle) {
                 return;
             }
+            x = +x || 0;
+            y = +y || 0;
+            radius = +radius || 0;
+            startAngle = +startAngle || 0;
+            endAngle = +endAngle || 0;
+            anticlockwise = !!anticlockwise;
+            startAngle = clampAngle(startAngle);
+            endAngle = clampAngle(endAngle);
+
             var fillPath = this.fillPath;
             var strokePath = this.strokePath;
-            fillPath && fillPath.arc(x, y, radius, startAngle, endAngle, anticlockwise);
-            strokePath && strokePath.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+            fillPath && fillPath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
+            strokePath && strokePath.drawArc(x, y, radius, startAngle, endAngle, anticlockwise);
             if (anticlockwise) {
                 this.arcBounds(x, y, radius, endAngle, startAngle);
             }
@@ -699,8 +675,6 @@ module egret {
          * 测量圆弧的矩形大小
          */
         private arcBounds(x:number, y:number, radius:number, startAngle:number, endAngle:number):void {
-            startAngle = clampAngle(startAngle);
-            endAngle = clampAngle(endAngle);
             var PI = Math.PI;
             if (Math.abs(startAngle - endAngle) < 0.01) {
                 this.extendBoundsByPoint(x - radius, y - radius);

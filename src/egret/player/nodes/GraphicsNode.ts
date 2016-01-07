@@ -49,8 +49,8 @@ module egret.sys {
          */
         public beginFill(color:number, alpha:number = 1, beforePath?:Path2D):Path2D {
             var path = new sys.FillPath();
-            path.fillColor = +color || 0;
-            path.fillAlpha = +alpha || 0;
+            path.fillColor = color;
+            path.fillAlpha = alpha;
             if (beforePath) {
                 var index = this.drawData.lastIndexOf(beforePath);
                 this.drawData.splice(index, 0, path);
@@ -72,12 +72,26 @@ module egret.sys {
          */
         public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[],
                                  matrix?:egret.Matrix, beforePath?:Path2D):Path2D {
+            var m = new egret.Matrix();
+            if (matrix) {
+                m.a = matrix.a * 819.2;
+                m.b = matrix.b * 819.2;
+                m.c = matrix.c * 819.2;
+                m.d = matrix.d * 819.2;
+                m.tx = matrix.tx;
+                m.ty = matrix.ty;
+            }
+            else {
+                //默认值
+                m.a = 100;
+                m.d = 100;
+            }
             var path = new sys.GradientFillPath();
             path.gradientType = type;
             path.colors = colors;
             path.alphas = alphas;
             path.ratios = ratios;
-            path.matrix = matrix;
+            path.matrix = m;
             if (beforePath) {
                 var index = this.drawData.lastIndexOf(beforePath);
                 this.drawData.splice(index, 0, path);
@@ -100,12 +114,12 @@ module egret.sys {
         public lineStyle(thickness?:number, color?:number, alpha:number = 1, caps?:string,
                          joints?:string, miterLimit:number = 3):Path2D {
             var path = new StrokePath();
-            path.lineWidth = +thickness || 0;
-            path.lineColor = +color || 0;
-            path.lineAlpha = +alpha || 0;
+            path.lineWidth = thickness;
+            path.lineColor = color;
+            path.lineAlpha = alpha;
             path.caps = caps;
             path.joints = joints;
-            path.miterLimit = +miterLimit || 0;
+            path.miterLimit = miterLimit;
             this.drawData.push(path);
             return path;
         }

@@ -476,63 +476,17 @@ module egret.web {
             for (var commandIndex = 0; commandIndex < commandCount; commandIndex++) {
                 var command = commands[commandIndex];
                 switch (command) {
-                    case sys.PathCommand.Arc:
-                        context.arc(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], !!data[pos++]);
-                        break;
-                    case sys.PathCommand.Circle:
-                        context.arc(data[pos++], data[pos++], data[pos++], 0, Math.PI * 2);
-                        break;
                     case sys.PathCommand.CubicCurveTo:
                         context.bezierCurveTo(data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
                         break;
                     case sys.PathCommand.CurveTo:
                         context.quadraticCurveTo(data[pos++], data[pos++], data[pos++], data[pos++]);
                         break;
-                    case sys.PathCommand.Ellipse:
-                        var x = data[pos++];
-                        var y = data[pos++];
-                        var width = data[pos++];
-                        var height = data[pos++];
-                        var rx = width / 2;
-                        var ry = height / 2;
-                        x += rx;
-                        y += ry;
-                        var currentX = x + rx;
-                        var currentY = y;
-                        context.moveTo(currentX, currentY); // 0
-                        var startAngle = 0;
-                        var u = 1;
-                        var v = 0;
-                        for (var i = 0; i < 4; i++) {
-                            var endAngle = startAngle + Math.PI / 2;
-                            var kappa = (4 / 3) * Math.tan((endAngle - startAngle) / 4);
-                            var cp1x = currentX - v * kappa * rx;
-                            var cp1y = currentY + u * kappa * ry;
-                            u = Math.cos(endAngle);
-                            v = Math.sin(endAngle);
-                            currentX = x + u * rx;
-                            currentY = y + v * ry;
-                            var cp2x = currentX + v * kappa * rx;
-                            var cp2y = currentY - u * kappa * ry;
-                            context.bezierCurveTo(
-                                cp1x,
-                                cp1y,
-                                cp2x,
-                                cp2y,
-                                currentX,
-                                currentY
-                            );
-                            startAngle = endAngle;
-                        }
-                        break;
                     case sys.PathCommand.LineTo:
                         context.lineTo(data[pos++], data[pos++]);
                         break;
                     case sys.PathCommand.MoveTo:
                         context.moveTo(data[pos++], data[pos++]);
-                        break;
-                    case sys.PathCommand.Rect:
-                        context.rect(data[pos++], data[pos++], data[pos++], data[pos++]);
                         break;
                 }
             }
