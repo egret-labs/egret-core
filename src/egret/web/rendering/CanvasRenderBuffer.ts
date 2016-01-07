@@ -34,7 +34,7 @@ module egret.web {
      */
     function createCanvas(width?:number, height?:number):HTMLCanvasElement {
         var canvas:HTMLCanvasElement = document.createElement("canvas");
-        if(!isNaN(width)&&!isNaN(height)){
+        if (!isNaN(width) && !isNaN(height)) {
             canvas.width = width;
             canvas.height = height;
         }
@@ -65,17 +65,8 @@ module egret.web {
         return canvas;
     }
 
-    /**
-     * @private
-     * 仅用于碰撞检测，宽高永远是3x3的canvas上下文
-     */
-    export var $hitTestRenderContext:CanvasRenderingContext2D;
-    export var $hitTestSurface:HTMLCanvasElement;
-    $hitTestSurface = createCanvas(3,3);
-    $hitTestRenderContext = $hitTestSurface.getContext("2d");
-    $hitTestRenderContext["imageSmoothingEnabled"] = false;
-
     var sharedCanvas:HTMLCanvasElement = createCanvas();
+
     /**
      * @private
      * Canvas2D渲染器
@@ -119,9 +110,6 @@ module egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
-            //在chrome里，小等于256*256的canvas会不启用GPU加速。
-            width = Math.max(257, width);
-            height = Math.max(257, height);
             var surface = this.surface;
             if (useMaxSize) {
                 if (surface.width < width) {
@@ -139,6 +127,7 @@ module egret.web {
                     surface.height = height;
                 }
             }
+            this.clear();
         }
 
         /**
@@ -212,7 +201,7 @@ module egret.web {
          * 清空缓冲区数据
          */
         public clear():void {
-            this.context.setTransform(1,0,0,1,0,0);
+            this.context.setTransform(1, 0, 0, 1, 0, 0);
             this.context.clearRect(0, 0, this.surface.width, this.surface.height);
         }
 
@@ -223,4 +212,6 @@ module egret.web {
             this.surface.width = this.surface.height = 0;
         }
     }
+
+    sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
 }

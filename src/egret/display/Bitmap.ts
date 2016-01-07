@@ -50,8 +50,6 @@ module egret.sys {
 
 module egret {
 
-    var hitTestBuffer:sys.RenderBuffer = null;
-
     /**
      * @language en_US
      * The Bitmap class represents display objects that represent bitmap images.
@@ -539,18 +537,17 @@ module egret {
                 }
             }
             else {
-                if (!hitTestBuffer) {
-                    hitTestBuffer = new sys.RenderBuffer(3, 3);
-                }
-                hitTestBuffer.clear();
+                var buffer = sys.hitTestBuffer;
+                buffer.resize(3, 3);
+                var node = this.$getRenderNode();
                 var matrix = Matrix.create();
                 matrix.identity();
-                matrix.translate(1 - localX, 1 - localY)
-                sys.systemRenderer.render(this, hitTestBuffer, matrix, null, true);
+                matrix.translate(1 - localX, 1 - localY);
+                sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
                 Matrix.release(matrix);
 
                 try {
-                    data = hitTestBuffer.getPixel(1, 1);
+                    data = buffer.getPixel(1, 1);
                 }
                 catch (e) {
                     console.log(this.$Bitmap[sys.BitmapKeys.bitmapData]);

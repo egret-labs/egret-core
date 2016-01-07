@@ -78,7 +78,7 @@ module egret.sys {
          * @private
          * 获取渲染节点
          */
-        $getRenderNode():sys.RenderNode{
+        $getRenderNode():sys.RenderNode {
             return this.$renderNode;
         }
 
@@ -117,8 +117,8 @@ module egret.sys {
             var matrix = node.renderMatrix;
             matrix.copyFrom(concatenatedMatrix);
             var root = displayList.root;
-            if(root!==target.$stage){
-                target.$getConcatenatedMatrixAt(root,matrix);
+            if (root !== target.$stage) {
+                target.$getConcatenatedMatrixAt(root, matrix);
             }
             region.updateRegion(bounds, matrix);
             return true;
@@ -273,14 +273,16 @@ module egret.sys {
             this.offsetY = -bounds.y;
             this.offsetMatrix.setTo(1, 0, 0, 1, this.offsetX, this.offsetY);
             var buffer = this.renderBuffer;
+            //在chrome里，小等于256*256的canvas会不启用GPU加速。
+            var width = Math.max(257, bounds.width);
+            var height = Math.max(257, bounds.height);
             if (!this.sizeChanged) {
                 this.sizeChanged = true;
-                buffer.resize(bounds.width, bounds.height);
+                buffer.resize(width, height);
             }
             else {
-                buffer.resizeTo(bounds.width, bounds.height, this.offsetX - oldOffsetX, this.offsetY - oldOffsetY);
+                buffer.resizeTo(width, height, this.offsetX - oldOffsetX, this.offsetY - oldOffsetY);
             }
-
         }
 
         public setDirtyRegionPolicy(policy:string):void {

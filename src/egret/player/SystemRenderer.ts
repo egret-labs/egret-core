@@ -43,9 +43,17 @@ module egret.sys {
          * @param buffer 渲染缓冲
          * @param matrix 要对显示对象整体叠加的变换矩阵
          * @param dirtyList 脏矩形列表
-         * @param forTexture 绘制目标是RenderTexture的标志
+         * @param forRenderTexture 绘制目标是RenderTexture的标志
          * @returns drawCall触发绘制的次数
          */
-        render(displayObject:DisplayObject, buffer:RenderBuffer, matrix:Matrix, dirtyList?:Region[], forTexture?:boolean):number;
+        render(displayObject:DisplayObject, buffer:RenderBuffer, matrix:Matrix, dirtyList?:Region[], forRenderTexture?:boolean):number;
+        /**
+         * 将一个RenderNode对象绘制到渲染缓冲
+         * @param node 要绘制的节点
+         * @param buffer 渲染缓冲
+         * @param matrix 要叠加的矩阵
+         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
+         */
+        drawNodeToBuffer(node:sys.RenderNode, buffer:RenderBuffer, matrix:Matrix, forHitTest?:boolean):void;
     }
 }

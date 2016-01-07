@@ -34,7 +34,7 @@ module egret.web {
      * @private
      */
     function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle):HTMLCanvasElement {
-        var surface = $hitTestSurface;
+        var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
         var w = texture.$getTextureWidth();
         var h = texture.$getTextureHeight();
         if (rect == null) {
@@ -52,17 +52,17 @@ module egret.web {
 
         var iWidth = rect.width;
         var iHeight = rect.height;
-        surface.width = iWidth;
-        surface.height = iHeight;
+        var surface = buffer.surface;
         surface["style"]["width"] = iWidth + "px";
         surface["style"]["height"] = iHeight + "px";
+        buffer.resize(iWidth,iHeight);
 
         var bitmapData = texture;
         var offsetX:number = Math.round(bitmapData._offsetX);
         var offsetY:number = Math.round(bitmapData._offsetY);
         var bitmapWidth:number = bitmapData._bitmapWidth;
         var bitmapHeight:number = bitmapData._bitmapHeight;
-        $hitTestRenderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+        buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
 
         return surface;
@@ -100,9 +100,9 @@ module egret.web {
     }
 
     function getPixel32(x:number, y:number):number[] {
-        var surface = $hitTestSurface;
-        surface.width = surface.height = 3;
-        var context = $hitTestRenderContext;
+        var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
+        buffer.resize(3, 3);
+        var context = buffer.context;
         context.translate(1 - x, 1 - y);
         var width = this._bitmapWidth;
         var height = this._bitmapHeight;

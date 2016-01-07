@@ -29,6 +29,10 @@
 
 module egret.sys {
     /**
+     * 共享的用于碰撞检测的渲染缓冲
+     */
+    export var hitTestBuffer:sys.RenderBuffer;
+    /**
      * @private
      * 渲染缓冲
      */

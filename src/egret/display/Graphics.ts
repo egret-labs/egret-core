@@ -32,68 +32,6 @@ module egret {
 
     /**
      * @private
-     */
-    function quadraticBezier(from:number, cp:number, to:number, t:number):number {
-        var inverseT = 1 - t;
-        return from * inverseT * inverseT + 2 * cp * inverseT * t + to * t * t;
-    }
-
-    /**
-     * @private
-     */
-    function quadraticBezierExtreme(from:number, cp:number, to:number):number {
-        var t = (from - cp) / (from - 2 * cp + to);
-        if (t < 0) {
-            return from;
-        }
-        if (t > 1) {
-            return to;
-        }
-        return quadraticBezier(from, cp, to, t);
-    }
-
-    /**
-     * @private
-     */
-    function cubicBezier(from:number, cp:number, cp2:number, to:number, t):number {
-        var tSq = t * t;
-        var inverseT = 1 - t;
-        var inverseTSq = inverseT * inverseT;
-        return from * inverseT * inverseTSq + 3 * cp * t * inverseTSq +
-            3 * cp2 * inverseT * tSq + to * t * tSq;
-    }
-
-    /**
-     * @private
-     */
-    function cubicBezierExtremes(from:number, cp:number, cp2:number, to):number[] {
-        var d1 = cp - from;
-        var d2 = cp2 - cp;
-        // We only ever need d2 * 2
-        d2 *= 2;
-        var d3 = to - cp2;
-        // Prevent division by zero by very slightly changing d3 if that would happen
-        if (d1 + d3 === d2) {
-            d3 *= 1.0001;
-        }
-        var fHead = 2 * d1 - d2;
-        var part1 = d2 - 2 * d1;
-        var fCenter = Math.sqrt(part1 * part1 - 4 * d1 * (d1 - d2 + d3));
-        var fTail = 2 * (d1 - d2 + d3);
-        var t1 = (fHead + fCenter) / fTail;
-        var t2 = (fHead - fCenter ) / fTail;
-        var result = [];
-        if (t1 >= 0 && t1 <= 1) {
-            result.push(Math.round(cubicBezier(from, cp, cp2, to, t1)));
-        }
-        if (t2 >= 0 && t2 <= 1) {
-            result.push(Math.round(cubicBezier(from, cp, cp2, to, t2)));
-        }
-        return result;
-    }
-
-    /**
-     * @private
      * 格式化弧线角度的值
      */
     function clampAngle(value):number {
@@ -103,6 +41,7 @@ module egret {
         }
         return value;
     }
+
 
     /**
      * @language en_US
@@ -553,12 +492,8 @@ module egret {
             var strokePath = this.strokePath;
             fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
             strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
-            if (controlX < this.lastX || controlX > anchorX) {
-                this.extendBoundsByX(quadraticBezierExtreme(this.lastX, controlX, anchorX) | 0);
-            }
-            if (controlY < this.lastY || controlY > anchorY) {
-                this.extendBoundsByY(quadraticBezierExtreme(this.lastY, controlY, anchorY) | 0);
-            }
+            this.extendBoundsByPoint(controlX, controlY);
+            this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
         }
 
@@ -598,22 +533,9 @@ module egret {
             var strokePath = this.strokePath;
             fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
             strokePath && strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
-            var extremes:number[];
-            var i:number;
-            var fromX = this.lastX;
-            var fromY = this.lastY;
-            if (controlX1 < fromX || controlX2 < fromX || controlX1 > anchorX || controlX2 > anchorX) {
-                extremes = cubicBezierExtremes(fromX, controlX1, controlX2, anchorX);
-                for (i = extremes.length; i--;) {
-                    this.extendBoundsByX(extremes[i] | 0);
-                }
-            }
-            if (controlY1 < fromY || controlY2 < fromY || controlY1 > anchorY || controlY2 > anchorY) {
-                extremes = cubicBezierExtremes(fromY, controlY1, controlY2, anchorY);
-                for (i = extremes.length; i--;) {
-                    this.extendBoundsByY(extremes[i] | 0);
-                }
-            }
+            this.extendBoundsByPoint(controlX1, controlY1);
+            this.extendBoundsByPoint(controlX2, controlY2);
+            this.extendBoundsByPoint(anchorX, anchorY);
             this.updatePosition(anchorX, anchorY);
         }
 
@@ -808,14 +730,28 @@ module egret {
          */
         $hitTest(stageX:number, stageY:number):DisplayObject {
             var target = this.targetDisplay;
-            var bounds = target.$getContentBounds();
             var m = target.$getInvertedConcatenatedMatrix();
             var localX = m.a * stageX + m.c * stageY + m.tx;
             var localY = m.b * stageX + m.d * stageY + m.ty;
-            if (bounds.contains(localX, localY)) {
-                return target;
+            var buffer = sys.hitTestBuffer;
+            buffer.resize(3, 3);
+            var node = this.$renderNode;
+            var matrix = Matrix.create();
+            matrix.identity();
+            matrix.translate(1 - localX, 1 - localY);
+            sys.systemRenderer.drawNodeToBuffer(node, buffer, matrix, true);
+            Matrix.release(matrix);
+
+            try {
+                var data = buffer.getPixel(1, 1);
             }
-            return null;
+            catch (e) {
+                throw new Error(sys.tr(1039));
+            }
+            if (data[3] === 0) {
+                return null;
+            }
+            return target;
         }
     }
 }

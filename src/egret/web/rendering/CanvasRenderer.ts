@@ -32,7 +32,7 @@ module egret.web {
     var blendModes = ["source-over", "lighter", "destination-out"];
     var defaultCompositeOp = "source-over";
     var renderBufferPool:CanvasRenderBuffer[] = [];//渲染缓冲区对象池
-
+    var BLACK_COLOR = "#000000";
     /**
      * @private
      * Canvas渲染器
@@ -50,13 +50,13 @@ module egret.web {
          * @param buffer 渲染缓冲
          * @param matrix 要对显示对象整体叠加的变换矩阵
          * @param dirtyList 脏矩形列表
-         * @param forTexture 绘制目标是RenderTexture的标志
+         * @param forRenderTexture 绘制目标是RenderTexture的标志
          * @returns drawCall触发绘制的次数
          */
-        public render(displayObject:DisplayObject, buffer:CanvasRenderBuffer, matrix:Matrix, dirtyList?:egret.sys.Region[], forTexture?:boolean):number {
+        public render(displayObject:DisplayObject, buffer:CanvasRenderBuffer, matrix:Matrix, dirtyList?:egret.sys.Region[], forRenderTexture?:boolean):number {
             this.nestLevel++;
             var context = buffer.context;
-            var root:DisplayObject = forTexture ? displayObject : null;
+            var root:DisplayObject = forRenderTexture ? displayObject : null;
             //绘制显示对象
             var drawCall = this.drawDisplayObject(displayObject, context, dirtyList, matrix, null, null, root);
             this.nestLevel--;
@@ -382,6 +382,32 @@ module egret.web {
         }
 
         /**
+         * 将一个RenderNode对象绘制到渲染缓冲
+         * @param node 要绘制的节点
+         * @param buffer 渲染缓冲
+         * @param matrix 要叠加的矩阵
+         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
+         */
+        public drawNodeToBuffer(node:sys.RenderNode, buffer:CanvasRenderBuffer, matrix:Matrix, forHitTest?:boolean):void {
+            var context = buffer.context;
+            context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            switch (node.type) {
+                case sys.RenderNodeType.BitmapNode:
+                    this.renderBitmap(<sys.BitmapNode>node, context);
+                    break;
+                case sys.RenderNodeType.TextNode:
+                    this.renderText(<sys.TextNode>node, context);
+                    break;
+                case sys.RenderNodeType.GraphicsNode:
+                    this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
+                    break;
+                case sys.RenderNodeType.GroupNode:
+                    this.renderGroup(<sys.GroupNode>node, context);
+                    break;
+            }
+        }
+
+        /**
          * @private
          */
         private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):void {
@@ -396,6 +422,9 @@ module egret.web {
             }
         }
 
+        /**
+         * @private
+         */
         private renderText(node:sys.TextNode, context:CanvasRenderingContext2D):void {
             context.textAlign = "left";
             context.textBaseline = "middle";
@@ -422,21 +451,25 @@ module egret.web {
             }
         }
 
-        private renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D):void {
+        /**
+         * @private
+         */
+        private renderGraphics(node:sys.GraphicsNode, context:CanvasRenderingContext2D, forHitTest?:boolean):void {
             var drawData = node.drawData;
             var length = drawData.length;
+            forHitTest = !!forHitTest;
             for (var i = 0; i < length; i++) {
                 var path:sys.Path2D = drawData[i];
                 switch (path.type) {
                     case sys.PathType.Fill:
                         var fillPath = <sys.FillPath>path;
-                        context.fillStyle = getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
+                        context.fillStyle = forHitTest ? BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                         this.renderPath(path, context);
                         context.fill();
                         break;
                     case sys.PathType.GradientFill:
                         var g = <sys.GradientFillPath>path;
-                        context.fillStyle = getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
+                        context.fillStyle = forHitTest ? BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
                         context.save();
                         var m = g.matrix;
                         context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
@@ -448,7 +481,7 @@ module egret.web {
                         var strokeFill = <sys.StrokePath>path;
                         var lineWidth = strokeFill.lineWidth;
                         context.lineWidth = lineWidth;
-                        context.strokeStyle = getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
+                        context.strokeStyle = forHitTest ? BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
                         context.lineCap = strokeFill.caps;
                         context.lineJoin = strokeFill.joints;
                         context.miterLimit = strokeFill.miterLimit;
