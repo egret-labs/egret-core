@@ -35,7 +35,7 @@ var egret;
     locale_strings[1] = "编译项目失败";
     locale_strings[3] = "耗时：{0}秒";
     locale_strings[4] = "脚本执行失败";
-    locale_strings[5] = "请确定执行路径";
+    locale_strings[5] = "tsconfig.json 中 CompilerOptions 参数错误"; //tsc报的错误 CompilerOptionsErrors
     locale_strings[6] = "manifest.json生成成功";
     locale_strings[7] = "native拷贝共计耗时：{0}秒";
     //create

@@ -48,12 +48,25 @@ function init(url, platform) {
                     break;
                 }
             }
+            //platformPath = path.join(url, projectName, 'AppDelegate.mm');
+            //if (file.exists(platformPath)) {
+            //    platformContent = file.read(platformPath);
+            //}
+            //else {
+            //    platformContent = null;
+            //}
+            //break;
             platformPath = path.join(url, projectName, 'AppDelegate.mm');
             if (file.exists(platformPath)) {
                 platformContent = file.read(platformPath);
             }
             else {
-                platformContent = null;
+                platformPath = file.join(url, projectName, 'ViewController.mm');
+                if (file.exists(platformPath)) {
+                    platformContent = file.read(platformPath);
+                }
+                else
+                    platformContent = null;
             }
             break;
     }
