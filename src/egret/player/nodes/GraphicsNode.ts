@@ -116,10 +116,10 @@ module egret.sys {
         public lineStyle(thickness?:number, color?:number, alpha:number = 1, caps?:string,
                          joints?:string, miterLimit:number = 3):Path2D {
             if (CAPS_STYLES.indexOf(caps) == -1) {
-                caps = CapsStyle.ROUND;
+                caps = "round";
             }
             if (JOINT_STYLES.indexOf(joints) == -1) {
-                joints = JointStyle.ROUND;
+                joints = "round";
             }
             var path = new StrokePath();
             path.lineWidth = thickness;
