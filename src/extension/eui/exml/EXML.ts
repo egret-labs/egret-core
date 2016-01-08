@@ -55,7 +55,7 @@ module EXML {
      * @version eui 1.0
      * @platform Web,Native
      */
-    export declare var prefixURL: string;
+    export var prefixURL: string;
     Object.defineProperty(EXML, "prefixURL", {
         get: function(): string { return $prefixURL },
         set: function(value: string) { $prefixURL = value },

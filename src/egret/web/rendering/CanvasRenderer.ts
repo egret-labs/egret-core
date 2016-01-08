@@ -31,8 +31,9 @@ module egret.web {
 
     var blendModes = ["source-over", "lighter", "destination-out"];
     var defaultCompositeOp = "source-over";
-    var renderBufferPool:CanvasRenderBuffer[] = [];//渲染缓冲区对象池
     var BLACK_COLOR = "#000000";
+    var CAPS_STYLES = {none: 'butt', square: 'square', round: 'round'};
+    var renderBufferPool:CanvasRenderBuffer[] = [];//渲染缓冲区对象池
     /**
      * @private
      * Canvas渲染器
@@ -482,7 +483,7 @@ module egret.web {
                         var lineWidth = strokeFill.lineWidth;
                         context.lineWidth = lineWidth;
                         context.strokeStyle = forHitTest ? BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
-                        context.lineCap = strokeFill.caps;
+                        context.lineCap = CAPS_STYLES[strokeFill.caps];
                         context.lineJoin = strokeFill.joints;
                         context.miterLimit = strokeFill.miterLimit;
                         //对1像素和3像素特殊处理，向右下角偏移0.5像素，以显示清晰锐利的线条。
