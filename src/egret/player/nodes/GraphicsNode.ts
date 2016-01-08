@@ -28,6 +28,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
+
+    var CAPS_STYLES = ["none", "round", "square"];
+    var JOINT_STYLES = ["bevel", "miter", "round"];
     /**
      * @private
      * 矢量渲染节点
@@ -43,8 +46,6 @@ module egret.sys {
          * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
          * @param color 填充的颜色
          * @param alpha 填充的 Alpha 值
-         * @param startX 路径起始点 X
-         * @param startY 路径起始点 Y
          * @param beforePath 插入在指定的路径命令之前绘制，通常是插入到当前正在绘制的线条路径之前，以确保线条总在填充的上方。
          */
         public beginFill(color:number, alpha:number = 1, beforePath?:Path2D):Path2D {
@@ -69,6 +70,7 @@ module egret.sys {
          * @param alphas colors 数组中对应颜色的 alpha 值数组。
          * @param ratios 颜色分布比率的数组。有效值为 0 到 255。
          * @param matrix 一个由 egret.Matrix 类定义的转换矩阵。egret.Matrix 类包括 createGradientBox() 方法，通过该方法可以方便地设置矩阵，以便与 beginGradientFill() 方法一起使用
+         * @param beforePath 插入在指定的路径命令之前绘制，通常是插入到当前正在绘制的线条路径之前，以确保线条总在填充的上方。
          */
         public beginGradientFill(type:string, colors:number[], alphas:number[], ratios:number[],
                                  matrix?:egret.Matrix, beforePath?:Path2D):Path2D {
@@ -113,11 +115,17 @@ module egret.sys {
          */
         public lineStyle(thickness?:number, color?:number, alpha:number = 1, caps?:string,
                          joints?:string, miterLimit:number = 3):Path2D {
+            if (CAPS_STYLES.indexOf(caps) == -1) {
+                caps = CapsStyle.ROUND;
+            }
+            if (JOINT_STYLES.indexOf(joints) == -1) {
+                joints = JointStyle.ROUND;
+            }
             var path = new StrokePath();
             path.lineWidth = thickness;
             path.lineColor = color;
             path.lineAlpha = alpha;
-            path.caps = caps;
+            path.caps = caps || CapsStyle.ROUND;
             path.joints = joints;
             path.miterLimit = miterLimit;
             this.drawData.push(path);
