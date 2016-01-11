@@ -7388,7 +7388,7 @@ declare module eui {
         protected onRendererTouchBegin(event: egret.TouchEvent): void;
         /**
          * @language en_US
-         * Handles <code>egret.TouchEvent.TOUCH_CANCLE</code> events from any of the
+         * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
          * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
@@ -7397,7 +7397,7 @@ declare module eui {
          */
         /**
          * @language zh_CN
-         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCLE</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
+         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCEL</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
          * 和<code>egret.TouchEvent.TOUCH_TAP</code>事件的侦听。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 3.0.1
