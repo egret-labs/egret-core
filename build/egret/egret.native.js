@@ -757,12 +757,7 @@ var egret;
              */
             p.measureText = function (text) {
                 var font = egret.TextField.default_fontFamily;
-                if (egret_native.Canvas) {
-                    this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-                }
-                else {
-                    egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-                }
+                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 return { width: egret_native.Label.getTextSize(text)[0] };
             };
             /**
