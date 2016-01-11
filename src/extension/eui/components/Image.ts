@@ -311,8 +311,8 @@ module eui {
 
             var values = this.$Bitmap;
             egret.Bitmap.$drawImage(context, values[egret.sys.BitmapKeys.image],
-                values[egret.sys.BitmapKeys.clipX], values[egret.sys.BitmapKeys.clipY], values[egret.sys.BitmapKeys.clipWidth], values[egret.sys.BitmapKeys.clipHeight],
-                values[egret.sys.BitmapKeys.offsetX], values[egret.sys.BitmapKeys.offsetY], values[egret.sys.BitmapKeys.width], values[egret.sys.BitmapKeys.height],
+                values[egret.sys.BitmapKeys.bitmapX], values[egret.sys.BitmapKeys.bitmapY], values[egret.sys.BitmapKeys.bitmapWidth], values[egret.sys.BitmapKeys.bitmapHeight],
+                values[egret.sys.BitmapKeys.offsetX], values[egret.sys.BitmapKeys.offsetY], values[egret.sys.BitmapKeys.textureWidth], values[egret.sys.BitmapKeys.textureHeight],
                 width, height, this.$scale9Grid, this.$fillMode, values[egret.sys.BitmapKeys.smoothing]);
         }
 
