@@ -654,7 +654,6 @@ module eui {
             }
             list.splice(0, startIndex + 1);
             targetIndex -= startIndex + 1;
-            console.log()
             this.$dispatchPropagationEvent(cancleEvent, list, targetIndex);
             egret.Event.release(cancleEvent);
         }
@@ -667,7 +666,7 @@ module eui {
         private onTouchEnd(event:egret.Event):void {
             var values = this.$Scroller;
             values[Keys.touchMoved] = false;
-            var stage:egret.Stage = event.$currentTarget;
+            var stage = this.$stage;
             stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
 
