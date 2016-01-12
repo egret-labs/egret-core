@@ -42,8 +42,8 @@ module egret.native {
 
         private $matrix:Matrix = new Matrix();
 
-        public $nativeContext:any = !egret_native.Canvas?egret_native.Graphics:null;
-        public $nativeGraphicsContext:any = !egret_native.Canvas?egret_native.rastergl:null;
+        public $nativeContext:any = !egret_native.Canvas ? egret_native.Graphics : null;
+        public $nativeGraphicsContext:any = !egret_native.Canvas ? egret_native.rastergl : null;
 
         /**
          * @private
@@ -68,7 +68,7 @@ module egret.native {
             this.$globalCompositeOperation = value;
             var arr = blendModesForGL[value];
             if (arr) {
-                if(!egret_native.Canvas) {
+                if (!egret_native.Canvas) {
                     this.checkSurface();
                 }
                 this.$nativeContext.setBlendArg(arr[0], arr[1]);
@@ -89,7 +89,7 @@ module egret.native {
 
         public set globalAlpha(value:number) {
             this.$globalAlpha = value;
-            if(!egret_native.Canvas) {
+            if (!egret_native.Canvas) {
                 this.checkSurface();
             }
             this.$nativeContext.setGlobalAlpha(value);
@@ -148,7 +148,7 @@ module egret.native {
             this.$lineWidth = value;
             this.$nativeContext.lineWidth = value;
 
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.lineWidth = value;
             } else {
                 this.checkSurface();
@@ -181,7 +181,7 @@ module egret.native {
                 }
                 egret_native.Label.setStrokeColor(parseInt(value.replace("#", "0x")));
             }
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.strokeStyle = value;
             } else {
                 this.checkSurface();
@@ -213,7 +213,7 @@ module egret.native {
                 }
                 egret_native.Label.setTextColor(parseInt(value.replace("#", "0x")));
             }
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.fillStyle = value;
             } else {
                 this.checkSurface();
@@ -332,7 +332,7 @@ module egret.native {
          * @platform Web,Native
          */
         public arc(x:number, y:number, radius:number, startAngle:number, endAngle:number, anticlockwise?:boolean):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.arc(x, y, radius, startAngle, endAngle, anticlockwise);
             } else {
                 this.checkSurface();
@@ -352,7 +352,7 @@ module egret.native {
          * @platform Web,Native
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
             } else {
                 this.checkSurface();
@@ -370,7 +370,7 @@ module egret.native {
          * @platform Web,Native
          */
         public lineTo(x:number, y:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.lineTo(x, y);
             } else {
                 this.checkSurface();
@@ -389,7 +389,7 @@ module egret.native {
          * @platform Web,Native
          */
         public fill(fillRule?:string):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.fill(fillRule);
             } else {
                 this.checkSurface();
@@ -405,9 +405,9 @@ module egret.native {
          * @platform Web,Native
          */
         public closePath():void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.closePath();
-                if(this.clipRectArray) {
+                if (this.clipRectArray) {
                     this.$clipRectArray = this.clipRectArray;
                     this.clipRectArray = null;
                 }
@@ -430,7 +430,7 @@ module egret.native {
          * @platform Web,Native
          */
         public rect(x:number, y:number, w:number, h:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.rect(x, y, w, h);
                 this.$clipRectArray.push({x: x, y: y, w: w, h: h});
             } else {
@@ -450,7 +450,7 @@ module egret.native {
          * @platform Web,Native
          */
         public moveTo(x:number, y:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.moveTo(x, y);
             } else {
                 this.checkSurface();
@@ -469,7 +469,7 @@ module egret.native {
          * @platform Web,Native
          */
         public fillRect(x:number, y:number, w:number, h:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.fillRect(x, y, w, h);
             } else {
                 this.checkSurface();
@@ -491,7 +491,7 @@ module egret.native {
          * @platform Web,Native
          */
         public bezierCurveTo(cp1x:number, cp1y:number, cp2x:number, cp2y:number, x:number, y:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
             } else {
                 this.checkSurface();
@@ -506,7 +506,7 @@ module egret.native {
          * @platform Web,Native
          */
         public stroke():void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.stroke();
             } else {
                 this.checkSurface();
@@ -527,7 +527,7 @@ module egret.native {
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
             //console.log("strokeRect");
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.strokeRect(x, y, w, h);
             } else {
                 this.checkSurface();
@@ -536,6 +536,7 @@ module egret.native {
         }
 
         private clipRectArray = null;
+
         /**
          * @private
          * 清空子路径列表开始一个新路径。 当你想创建一个新的路径时，调用此方法。
@@ -543,7 +544,7 @@ module egret.native {
          * @platform Web,Native
          */
         public beginPath():void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.beginPath();
                 this.clipRectArray = this.$clipRectArray.concat();
             } else {
@@ -564,7 +565,7 @@ module egret.native {
          * @platform Web,Native
          */
         public arcTo(x1:number, y1:number, x2:number, y2:number, radius:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.arcTo(x1, y1, x2, y2, radius);
             } else {
                 this.checkSurface();
@@ -635,7 +636,7 @@ module egret.native {
          */
         public restore():void {
             //console.log("restore");
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 if (this.$saveList.length) {
                     var data = this.$saveList.pop();
                     for (var key in data) {
@@ -681,7 +682,7 @@ module egret.native {
             //console.log("save");
             var transformMatrix = new Matrix();
             transformMatrix.copyFrom(this.$matrix);
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$saveList.push({
                     lineWidth: this.$lineWidth,
                     globalCompositeOperation: this.$globalCompositeOperation,
@@ -709,7 +710,6 @@ module egret.native {
         }
 
 
-
         private $clipRectArray:Array<any> = [];
 
         private $clipRect:Rectangle = new Rectangle();
@@ -724,7 +724,7 @@ module egret.native {
          * @platform Web,Native
          */
         public clip(fillRule?:string):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 if (this.$clipRectArray.length > 0) {
                     var arr = [];
                     for (var i:number = 0; i < this.$clipRectArray.length; i++) {
@@ -759,7 +759,7 @@ module egret.native {
          * @platform Web,Native
          */
         public clearRect(x:number, y:number, width:number, height:number):void {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 //console.log("clearRect");
                 this.$nativeContext.clearRect(x, y, width, height);
             } else {
@@ -789,7 +789,7 @@ module egret.native {
         private setTransformToNative():void {
             var m = this.$matrix;
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
             } else {
                 this.checkSurface();
             }
@@ -807,7 +807,7 @@ module egret.native {
          * @platform Web,Native
          */
         public createLinearGradient(x0:number, y0:number, x1:number, y1:number):GraphicsGradient {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 return this.$nativeContext.createLinearGradient(x0, y0, x1, y1);
             }
             this.checkSurface();
@@ -827,7 +827,7 @@ module egret.native {
          * @platform Web,Native
          */
         public createRadialGradient(x0:number, y0:number, r0:number, x1:number, y1:number, r1:number):GraphicsGradient {
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 return this.$nativeContext.createRadialGradient(x0, y0, r0, x1, y1, r1);
             }
             this.checkSurface();
@@ -843,7 +843,7 @@ module egret.native {
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
             //console.log("drawText" + text);
             var font:string = TextField.default_fontFamily;
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
                 this.$hasStrokeText = false;
                 this.$nativeContext.drawText(text, x, y);
@@ -868,11 +868,7 @@ module egret.native {
          */
         public measureText(text:string):TextMetrics {
             var font:string = TextField.default_fontFamily;
-            if(egret_native.Canvas) {
-                this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-            } else {
-                egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
-            }
+            egret_native.Label.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             return {width: egret_native.Label.getTextSize(text)[0]};
         }
 
@@ -886,7 +882,7 @@ module egret.native {
         public drawImage(image:BitmapData, offsetX:number, offsetY:number, width?:number, height?:number,
                          surfaceOffsetX?:number, surfaceOffsetY?:number, surfaceImageWidth?:number, surfaceImageHeight?:number):void {
             var bitmapData;
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 if ((<NativeSurface>image).$nativeCanvas) {
                     bitmapData = (<NativeSurface>image).$nativeCanvas;
                 }
@@ -913,7 +909,7 @@ module egret.native {
                 width = surfaceImageWidth = image.width;
                 height = surfaceImageHeight = image.height;
             }
-            else if(arguments.length == 5) {
+            else if (arguments.length == 5) {
                 surfaceOffsetX = offsetX;
                 surfaceOffsetY = offsetY;
                 surfaceImageWidth = width;
@@ -924,7 +920,7 @@ module egret.native {
                 height = image.height;
             }
             else {
-                if(egret_native.Canvas) {
+                if (egret_native.Canvas) {
                     if (!width) {
                         width = image.width;
                     }
@@ -965,7 +961,7 @@ module egret.native {
                 }
             }
             //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
 
             } else {
                 this.checkSurface();
@@ -994,7 +990,7 @@ module egret.native {
          */
         public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
             var res;
-            if(egret_native.Canvas) {
+            if (egret_native.Canvas) {
                 if (sx != Math.floor(sx)) {
                     sx = Math.floor(sx);
                     sw++;
@@ -1006,14 +1002,14 @@ module egret.native {
                 res = this.$nativeContext.getPixels(sx, sy, sw, sh);
             }
             else {
-                if($currentSurface == this.surface) {
-                    if($currentSurface != null) {
+                if ($currentSurface == this.surface) {
+                    if ($currentSurface != null) {
                         $currentSurface.end();
                     }
                 }
-                res = this.surface.getImageData(sx,sy,sw,sh);
+                res = this.surface.getImageData(sx, sy, sw, sh);
             }
-            if(res.pixelData) {
+            if (res.pixelData) {
                 res.data = res.pixelData;
             }
             return res;
@@ -1021,11 +1017,11 @@ module egret.native {
 
         private checkSurface():void {
             //todo 暂时先写这里
-            if($currentSurface != this.surface) {
-                if($currentSurface != null) {
+            if ($currentSurface != this.surface) {
+                if ($currentSurface != null) {
                     $currentSurface.end();
                 }
-                if(this.surface) {
+                if (this.surface) {
                     this.surface.begin();
                 }
             }
