@@ -158,8 +158,7 @@ module egret.web {
                         continue;
                     }
                     if ((child.$blendMode !== 0 ||
-                        (child.$mask && child.$mask.$parentDisplayList)) &&//若遮罩不在显示列表中，放弃绘制遮罩。
-                        child.$displayList) {//若没有开启缓存，放弃绘制遮罩和混合模式。
+                        (child.$mask && child.$mask.$parentDisplayList))) {//若遮罩不在显示列表中，放弃绘制遮罩。
                         drawCalls += this.drawWithClip(child, context, dirtyList, matrix, clipRegion, root);
                     }
                     else if (child.$scrollRect || child.$maskRect) {
@@ -203,10 +202,10 @@ module egret.web {
             var maskRegion:sys.Region;
             var displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            var root = displayObject.$parentDisplayList.root;
+            var displayRoot = displayObject.$parentDisplayList.root;
             var invertedMatrix:Matrix;
-            if (root !== displayObject.$stage) {
-                displayObject.$getConcatenatedMatrixAt(root, displayMatrix);
+            if (displayRoot !== displayObject.$stage) {
+                displayObject.$getConcatenatedMatrixAt(displayRoot, displayMatrix);
             }
 
             if (mask) {
@@ -283,29 +282,38 @@ module egret.web {
             Matrix.release(offsetM);
             //绘制遮罩
             if (mask) {
-                var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                var maskContext = maskBuffer.context;
-                if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
-                    drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
-                        displayObject.$displayList, clipRegion, root);
-                    renderBufferPool.push(displayBuffer);
-                    sys.Region.release(region);
-                    Matrix.release(displayMatrix);
-                    return drawCalls;
-                }
-                maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                var calls = this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
-                    mask.$displayList, region, root ? mask : null);
-                Matrix.release(offsetM);
-                if (calls > 0) {
-                    drawCalls += calls;
+                //如果只有一次绘制或是已经被cache直接绘制到displayContext
+                var maskRenderNode = mask.$getRenderNode();
+                if(maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
-                    displayContext.setTransform(1, 0, 0, 1, 0, 0);
-                    displayContext.globalAlpha = 1;
-                    displayContext.drawImage(<any>maskBuffer.surface, 0, 0);
+                    drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
+                        mask.$displayList, region, root ? mask : null);
                 }
-                renderBufferPool.push(maskBuffer);
+                else {
+                    var maskBuffer = this.createRenderBuffer(region.width, region.height);
+                    var maskContext = maskBuffer.context;
+                    if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
+                        drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
+                            displayObject.$displayList, clipRegion, root);
+                        renderBufferPool.push(displayBuffer);
+                        sys.Region.release(region);
+                        Matrix.release(displayMatrix);
+                        return drawCalls;
+                    }
+                    maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                    offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                    var calls = this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
+                        mask.$displayList, region, root ? mask : null);
+                    Matrix.release(offsetM);
+                    if (calls > 0) {
+                        drawCalls += calls;
+                        displayContext.globalCompositeOperation = "destination-in";
+                        displayContext.setTransform(1, 0, 0, 1, 0, 0);
+                        displayContext.globalAlpha = 1;
+                        displayContext.drawImage(<any>maskBuffer.surface, 0, 0);
+                    }
+                    renderBufferPool.push(maskBuffer);
+                }
             }
 
 

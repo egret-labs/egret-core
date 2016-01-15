@@ -241,7 +241,7 @@ module egret.sys {
             }
             var buffer = this.renderBuffer;
             buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-            var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix);
+            var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, this.dirtyList);
             buffer.endClip();
             var surface = buffer.surface;
             var renderNode = <BitmapNode>this.$renderNode;
