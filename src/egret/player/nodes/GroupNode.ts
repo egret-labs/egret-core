@@ -52,5 +52,14 @@ module egret.sys {
                 data[i].cleanBeforeRender();
             }
         }
+
+        public $getRenderCount():number {
+            var result = 0;
+            var data = this.drawData;
+            for (var i = data.length - 1; i >= 0; i--) {
+                result += data[i].$getRenderCount();
+            }
+            return result;
+        }
     }
 }

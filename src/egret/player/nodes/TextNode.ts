@@ -74,6 +74,14 @@ module egret.sys {
          */
         public drawText(x:number, y:number, text:string, format:TextFormat):void {
             this.drawData.push(x, y, text, format);
+            this.renderCount++;
+        }
+
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        public cleanBeforeRender():void{
+            super.cleanBeforeRender();
         }
     }
 }

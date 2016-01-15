@@ -86,10 +86,19 @@ module egret.sys {
          */
         public drawData:any[] = [];
         /**
+         * 绘制次数
+         */
+        protected renderCount:number = 0;
+        /**
          * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
          */
         public cleanBeforeRender():void{
             this.drawData.length = 0;
+            this.renderCount = 0;
+        }
+
+        public $getRenderCount():number {
+            return this.renderCount;
         }
     }
 }
