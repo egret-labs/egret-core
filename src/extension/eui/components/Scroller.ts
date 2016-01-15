@@ -200,21 +200,20 @@ module eui {
 
         /**
          * @language en_US
-         * Adjust the speed to get out of the slide end.
+         * Adjust the speed to get out of the slide end.When equal to 0,the scroll animation will not be play.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 调节滑动结束时滚出的速度。
+         * 调节滑动结束时滚出的速度。等于0时，没有滚动动画
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         public set throwSpeed(val:number) {
             val = +val;
-            val = val<0.01?0.01:val;
             this.$Scroller[Keys.touchScrollH].$scrollFactor = val;
             this.$Scroller[Keys.touchScrollV].$scrollFactor = val;
         }
