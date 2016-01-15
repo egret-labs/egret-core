@@ -561,8 +561,13 @@ module eui.sys {
         public shift():UIComponent {
             var client = this.items.shift();
             if (client) {
-                this.map[client.$hashCode] = false;
                 this.length--;
+                if(this.length===0){
+                    this.map = {};
+                }
+                else{
+                    this.map[client.$hashCode] = false;
+                }
             }
             return client;
         }
@@ -571,8 +576,13 @@ module eui.sys {
             var index = this.items.indexOf(client);
             if (index >= 0) {
                 this.items.splice(index, 1);
-                this.map[client.$hashCode] = false;
                 this.length--;
+                if(this.length===0){
+                    this.map = {};
+                }
+                else{
+                    this.map[client.$hashCode] = false;
+                }
             }
         }
     }
