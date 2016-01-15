@@ -214,6 +214,7 @@ module eui {
          */
         public set throwSpeed(val:number) {
             val = +val;
+            if(val < 0) val = 0;
             this.$Scroller[Keys.touchScrollH].$scrollFactor = val;
             this.$Scroller[Keys.touchScrollV].$scrollFactor = val;
         }
