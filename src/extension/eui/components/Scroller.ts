@@ -383,6 +383,8 @@ module eui {
             var values = this.$Scroller;
             values[Keys.touchScrollV].stop();
             values[Keys.touchScrollH].stop();
+            this.verticalScrollBar.visible = false;
+            this.horizontalScrollBar.visible = false;
         }
 
         /**

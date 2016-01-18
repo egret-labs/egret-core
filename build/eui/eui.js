@@ -12999,6 +12999,8 @@ var eui;
             var values = this.$Scroller;
             values[9 /* touchScrollV */].stop();
             values[8 /* touchScrollH */].stop();
+            this.verticalScrollBar.visible = false;
+            this.horizontalScrollBar.visible = false;
         };
         d(p, "viewport"
             /**
