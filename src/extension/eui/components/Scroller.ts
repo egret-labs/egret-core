@@ -364,6 +364,26 @@ module eui {
             values[Keys.scrollPolicyH] = value;
             this.checkScrollPolicy();
         }
+        /**
+         * @language en_US
+         * Stop the scroller animation
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止滚动的动画
+         *
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public stopAnimation():void{
+            var values = this.$Scroller;
+            values[Keys.touchScrollV].stop();
+            values[Keys.touchScrollH].stop();
+        }
 
         /**
          * @language en_US
@@ -558,6 +578,11 @@ module eui {
 
         /**
          * @private
+         * 记录按下的对象，touchCancle时使用
+         */
+        private downTarget:egret.DisplayObject;
+        /**
+         * @private
          *
          * @param event
          */
@@ -568,22 +593,17 @@ module eui {
             if (!this.checkScrollPolicy()) {
                 return;
             }
+            this.downTarget = event.target;
             var values = this.$Scroller;
-            values[Keys.touchScrollV].stop();
-            values[Keys.touchScrollH].stop();
-            var viewport = values[Keys.viewport];
+            this.stopAnimation();
             values[Keys.touchStartX] = event.$stageX;
             values[Keys.touchStartY] = event.$stageY;
 
-            var uiValues = viewport.$UIComponent;
-
             if (values[Keys.horizontalCanScroll]) {
-                values[Keys.touchScrollH].start(event.$stageX, viewport.scrollH,
-                    viewport.contentWidth - uiValues[sys.UIKeys.width]);
+                values[Keys.touchScrollH].start(event.$stageX);
             }
             if (values[Keys.verticalCanScroll]) {
-                values[Keys.touchScrollV].start(event.$stageY, viewport.scrollV,
-                    viewport.contentHeight - uiValues[sys.UIKeys.height]);
+                values[Keys.touchScrollV].start(event.$stageY);
             }
             var stage = this.$stage;
             stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
@@ -624,10 +644,10 @@ module eui {
             var viewport = values[Keys.viewport];
             var uiValues = viewport.$UIComponent;
             if (values[Keys.horizontalCanScroll]) {
-                values[Keys.touchScrollH].update(event.$stageX, viewport.contentWidth - uiValues[sys.UIKeys.width]);
+                values[Keys.touchScrollH].update(event.$stageX, viewport.contentWidth - uiValues[sys.UIKeys.width],viewport.scrollH);
             }
             if (values[Keys.verticalCanScroll]) {
-                values[Keys.touchScrollV].update(event.$stageY, viewport.contentHeight - uiValues[sys.UIKeys.height]);
+                values[Keys.touchScrollV].update(event.$stageY, viewport.contentHeight - uiValues[sys.UIKeys.height],viewport.scrollV);
             }
         }
         /**
@@ -640,7 +660,7 @@ module eui {
                 return;
             }
             var cancleEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL,event.bubbles,event.cancelable);
-            var target:egret.DisplayObject = event.$target;
+            var target:egret.DisplayObject = this.downTarget;
             var list = this.$getPropagationList(target);
             var length = list.length;
             var targetIndex = list.length * 0.5;
