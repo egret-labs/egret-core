@@ -381,8 +381,15 @@ module eui {
          */
         public stopAnimation():void{
             var values = this.$Scroller;
-            values[Keys.touchScrollV].stop();
-            values[Keys.touchScrollH].stop();
+            var scrollV = values[Keys.touchScrollV];
+            var scrollH = values[Keys.touchScrollH];
+            if (scrollV.animation.isPlaying) {
+                UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
+            }else if(scrollH.animation.isPlaying){
+                UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
+            }
+            scrollV.stop();
+            scrollH.stop();
             this.verticalScrollBar.visible = false;
             this.horizontalScrollBar.visible = false;
         }

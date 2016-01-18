@@ -12997,8 +12997,16 @@ var eui;
          */
         p.stopAnimation = function () {
             var values = this.$Scroller;
-            values[9 /* touchScrollV */].stop();
-            values[8 /* touchScrollH */].stop();
+            var scrollV = values[9 /* touchScrollV */];
+            var scrollH = values[8 /* touchScrollH */];
+            if (scrollV.animation.isPlaying) {
+                eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_END);
+            }
+            else if (scrollH.animation.isPlaying) {
+                eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_END);
+            }
+            scrollV.stop();
+            scrollH.stop();
             this.verticalScrollBar.visible = false;
             this.horizontalScrollBar.visible = false;
         };
