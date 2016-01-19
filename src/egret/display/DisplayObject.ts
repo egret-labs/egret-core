@@ -96,11 +96,17 @@ module egret.sys {
         Dirty = DirtyRender | DirtyChildren,
         /**
          * @private
+         * 显示对象祖代的是否可见属性失效。
+         */
+        InvalidConcatenatedVisible = 0x400,
+        /**
+         * @private
          * 添加或删除子项时，需要向子项传递的标志。
          */
         DownOnAddedOrRemoved = DisplayObjectFlags.InvalidConcatenatedMatrix |
             DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
             DisplayObjectFlags.InvalidConcatenatedAlpha |
+            DisplayObjectFlags.InvalidConcatenatedVisible |
             DisplayObjectFlags.DirtyChildren,
         /**
          * @private
@@ -110,6 +116,7 @@ module egret.sys {
             DisplayObjectFlags.InvalidConcatenatedMatrix |
             DisplayObjectFlags.InvalidInvertedConcatenatedMatrix |
             DisplayObjectFlags.InvalidConcatenatedAlpha |
+            DisplayObjectFlags.InvalidConcatenatedVisible |
             DisplayObjectFlags.InvalidRenderNodes |
             DisplayObjectFlags.Dirty
 
@@ -154,7 +161,8 @@ module egret {
         explicitHeight,
         skewXdeg,//角度 degree
         skewYdeg,
-        concatenatedAlpha
+        concatenatedAlpha,
+        concatenatedVisible
     }
 
     /**
@@ -1192,9 +1200,28 @@ module egret {
                 return false;
             }
             this.$visible = value;
+            this.$propagateFlagsDown(sys.DisplayObjectFlags.InvalidConcatenatedVisible);
             this.$invalidateTransform();
-
             return true;
+        }
+
+        /**
+         * @private
+         * 获取这个显示对象跟它所有父级透明度的乘积
+         */
+        $getConcatenatedVisible():boolean {
+            var values = this.$DisplayObject;
+            if (this.$hasFlags(sys.DisplayObjectFlags.InvalidConcatenatedVisible)) {
+                if (this.$parent) {
+                    var parentVisible = this.$parent.$getConcatenatedVisible();
+                    values[Keys.concatenatedVisible] = parentVisible && this.$visible;
+                }
+                else {
+                    values[Keys.concatenatedVisible] = this.$visible;
+                }
+                this.$removeFlags(sys.DisplayObjectFlags.InvalidConcatenatedVisible);
+            }
+            return values[Keys.concatenatedVisible];
         }
 
         /**
@@ -1867,6 +1894,7 @@ module egret {
             var concatenatedMatrix = this.$getConcatenatedMatrix();
             var renderBounds = bounds || this.$getContentBounds();
             node.renderAlpha = this.$getConcatenatedAlpha();
+            node.renderVisible = this.$getConcatenatedVisible();
             var displayList = this.$displayList || this.$parentDisplayList;
             var region = node.renderRegion;
             if (!displayList) {
