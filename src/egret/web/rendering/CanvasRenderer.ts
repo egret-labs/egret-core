@@ -349,9 +349,9 @@ module egret.web {
             }
             var m = Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
-            var root = displayObject.$parentDisplayList.root;
-            if (root !== displayObject.$stage) {
-                displayObject.$getConcatenatedMatrixAt(root, m);
+            var displayRoot = displayObject.$parentDisplayList.root;
+            if (displayRoot !== displayObject.$stage) {
+                displayObject.$getConcatenatedMatrixAt(displayRoot, m);
             }
             var region:sys.Region = sys.Region.create();
             if (!scrollRect.isEmpty()) {
