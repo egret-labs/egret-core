@@ -423,10 +423,11 @@ module egret.sys {
         if (repaintList.length > 1) {
             repaintList.shift();
         }
-        var context = this.screenDisplayList.renderContext;
+        var renderBuffer = this.screenDisplayList.renderBuffer;
+        var context = renderBuffer.context;
         context.setTransform(1, 0, 0, 1, 0, 0);
-        context.clearRect(0, 0, context.surface.width, context.surface.height);
-        context.drawImage(this.stageDisplayList.surface, 0, 0);
+        context.clearRect(0, 0, renderBuffer.surface.width, renderBuffer.surface.height);
+        context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
         length = repaintList.length;
         for (i = 0; i < length; i++) {
             list = repaintList[i];
@@ -444,7 +445,7 @@ module egret.sys {
             context.rect(region.minX, region.minY, region.width, region.height);
         }
         context.clip();
-        context.drawImage(this.stageDisplayList.surface, 0, 0);
+        context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
         context.restore();
     }
 
