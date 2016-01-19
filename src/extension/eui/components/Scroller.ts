@@ -617,6 +617,7 @@ module eui {
             var stage = this.$stage;
             stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.addEventListener(egret.Event.REMOVED_FROM_STAGE,this.onRemoveListeners,this);
         }
 
         /**
@@ -695,9 +696,8 @@ module eui {
         private onTouchEnd(event:egret.Event):void {
             var values = this.$Scroller;
             values[Keys.touchMoved] = false;
-            var stage = this.$stage;
-            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+
+            this.onRemoveListeners();
 
             var viewport:IViewport = values[Keys.viewport];
             var uiValues = viewport.$UIComponent;
@@ -707,6 +707,15 @@ module eui {
             if (values[Keys.touchScrollV].isStarted()) {
                 values[Keys.touchScrollV].finish(viewport.scrollV, viewport.contentHeight - uiValues[sys.UIKeys.height]);
             }
+        }
+        /**
+         * @private
+         */
+        private onRemoveListeners():void{
+            var stage = this.$stage;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE,this.onRemoveListeners,this);
         }
 
         /**
@@ -801,7 +810,6 @@ module eui {
                 viewport.setLayoutBoundsSize(unscaledWidth, unscaledHeight);
                 viewport.setLayoutBoundsPosition(0, 0);
             }
-
         }
 
         /**

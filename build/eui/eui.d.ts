@@ -9036,6 +9036,10 @@ declare module eui {
         private onTouchEnd(event);
         /**
          * @private
+         */
+        private onRemoveListeners();
+        /**
+         * @private
          *
          * @param scrollPos
          */

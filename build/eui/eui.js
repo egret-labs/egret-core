@@ -13220,6 +13220,7 @@ var eui;
             var stage = this.$stage;
             stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         };
         /**
          * @private
@@ -13291,9 +13292,7 @@ var eui;
         p.onTouchEnd = function (event) {
             var values = this.$Scroller;
             values[5 /* touchMoved */] = false;
-            var stage = this.$stage;
-            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.onRemoveListeners();
             var viewport = values[10 /* viewport */];
             var uiValues = viewport.$UIComponent;
             if (values[8 /* touchScrollH */].isStarted()) {
@@ -13302,6 +13301,15 @@ var eui;
             if (values[9 /* touchScrollV */].isStarted()) {
                 values[9 /* touchScrollV */].finish(viewport.scrollV, viewport.contentHeight - uiValues[11 /* height */]);
             }
+        };
+        /**
+         * @private
+         */
+        p.onRemoveListeners = function () {
+            var stage = this.$stage;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         };
         /**
          * @private
