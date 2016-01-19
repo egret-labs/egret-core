@@ -179,11 +179,8 @@ module egret.sys {
             var dirtyList = stage.$displayList.updateDirtyRegions();
 
             var t1 = egret.getTimer();
-            var drawCalls = 0;
-            if (dirtyList.length > 0) {
-                dirtyList = dirtyList.concat();
-                drawCalls = stage.$displayList.drawToSurface();
-            }
+            dirtyList = dirtyList.concat();
+            var drawCalls = stage.$displayList.drawToSurface();
 
             if (this._showPaintRect) {
                 this.drawPaintRect(dirtyList);

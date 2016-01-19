@@ -307,33 +307,36 @@ module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         public drawToSurface():number {
-            var m = this.rootMatrix;
-            if (m) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
-                this.changeSurfaceSize();
-            }
-            var context = this.renderContext;
-            //绘制脏矩形区域
-            context.save();
-            context.beginPath();
-
-            if (m) {
-                context.setTransform(1, 0, 0, 1, -this.offsetX * this.$pixelRatio, -this.offsetY* this.$pixelRatio);
-            }
+            var drawCalls = 0;
             var dirtyList = this.dirtyList;
-            var length = dirtyList.length;
-            for (var i = 0; i < length; i++) {
-                var region = dirtyList[i];
-                context.clearRect(region.minX, region.minY, region.width, region.height);
-                context.rect(region.minX, region.minY, region.width, region.height);
+            if(dirtyList&&dirtyList.length>0){
+                var m = this.rootMatrix;
+                if (m) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
+                    this.changeSurfaceSize();
+                }
+                var context = this.renderContext;
+                //绘制脏矩形区域
+                context.save();
+                context.beginPath();
+
+                if (m) {
+                    context.setTransform(1, 0, 0, 1, -this.offsetX * this.$pixelRatio, -this.offsetY* this.$pixelRatio);
+                }
+                var length = dirtyList.length;
+                for (var i = 0; i < length; i++) {
+                    var region = dirtyList[i];
+                    context.clearRect(region.minX, region.minY, region.width, region.height);
+                    context.rect(region.minX, region.minY, region.width, region.height);
+                }
+                context.clip();
+                if(m){
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+                }
+                //绘制显示对象
+                drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
+                //清除脏矩形区域
+                context.restore();
             }
-            context.clip();
-            if(m){
-                context.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-            }
-            //绘制显示对象
-            var drawCalls = this.drawDisplayObject(this.root, context, dirtyList, m, null, null);
-            //清除脏矩形区域
-            context.restore();
             this.dirtyList = null;
             this.dirtyRegion.clear();
             this.needRedraw = false;
