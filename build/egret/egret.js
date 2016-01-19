@@ -18470,6 +18470,8 @@ var egret;
             }
             tmpBounds.x -= _strokeDouble;
             tmpBounds.y -= _strokeDouble;
+            tmpBounds.width = Math.ceil(tmpBounds.width) + 2; //+2 是为了解决脏区域的问题
+            tmpBounds.height = Math.ceil(tmpBounds.height) + 2;
             var result = _super.prototype.$update.call(this, tmpBounds);
             egret.Rectangle.release(tmpBounds);
             return result;
@@ -18482,8 +18484,6 @@ var egret;
             this.$getLinesArr();
             var w = !isNaN(this.$TextField[3 /* textFieldWidth */]) ? this.$TextField[3 /* textFieldWidth */] : this.$TextField[5 /* textWidth */];
             var h = !isNaN(this.$TextField[4 /* textFieldHeight */]) ? this.$TextField[4 /* textFieldHeight */] : egret.TextFieldUtils.$getTextHeight(self);
-            w = Math.ceil(w) + 2; //+2 是为了解决脏区域的问题
-            h = Math.ceil(h) + 2;
             bounds.setTo(0, 0, w, h);
         };
         /**

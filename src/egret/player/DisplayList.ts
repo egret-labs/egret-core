@@ -236,18 +236,23 @@ module egret.sys {
          * 绘制根节点显示对象到目标画布，返回draw的次数。
          */
         public drawToSurface():number {
-            if (!this.isStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
-                this.changeSurfaceSize();
+            var drawCalls = 0;
+            var dirtyList = this.dirtyList;
+            if(dirtyList&&dirtyList.length>0){
+                if (!this.isStage) {//对非舞台画布要根据目标显示对象尺寸改变而改变。
+                    this.changeSurfaceSize();
+                }
+                var buffer = this.renderBuffer;
+                buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
+                var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, this.dirtyList);
+                buffer.endClip();
+                var surface = buffer.surface;
+                var renderNode = <BitmapNode>this.$renderNode;
+                renderNode.drawData.length = 0;
+                renderNode.image = <any>surface;
+                renderNode.drawImage(0, 0, surface.width, surface.height, -this.offsetX, -this.offsetY, surface.width, surface.height);
             }
-            var buffer = this.renderBuffer;
-            buffer.beginClip(this.dirtyList, this.offsetX, this.offsetY);
-            var drawCalls = systemRenderer.render(this.root, buffer, this.offsetMatrix, this.dirtyList);
-            buffer.endClip();
-            var surface = buffer.surface;
-            var renderNode = <BitmapNode>this.$renderNode;
-            renderNode.drawData.length = 0;
-            renderNode.image = <any>surface;
-            renderNode.drawImage(0, 0, surface.width, surface.height, -this.offsetX, -this.offsetY, surface.width, surface.height);
+
             this.dirtyList = null;
             this.dirtyRegion.clear();
             this.isDirty = false;
