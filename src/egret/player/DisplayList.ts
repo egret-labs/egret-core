@@ -145,7 +145,7 @@ module egret.sys {
                 pixelRatio = target.stage.$displayList.$pixelRatio;
             this.setDevicePixelRatio(pixelRatio);
             var region = this.$renderRegion;
-            if (this.needRedraw) {
+            if (this.needUpdateRegions) {
                 this.updateDirtyRegions();
             }
             if(!displayList){
@@ -206,6 +206,7 @@ module egret.sys {
          */
         public needRedraw:boolean = false;
 
+        public needUpdateRegions:boolean = false;
         /**
          * @private
          */
@@ -254,7 +255,8 @@ module egret.sys {
             }
             this.dirtyNodes[key] = true;
             this.dirtyNodeList.push(node);
-            if (!this.needRedraw) {
+            if (!this.needUpdateRegions) {
+                this.needUpdateRegions = true;
                 this.needRedraw = true;
                 var parentCache = this.root.$parentDisplayList;
                 if (parentCache) {
@@ -281,6 +283,7 @@ module egret.sys {
             var nodeList = this.dirtyNodeList;
             this.dirtyNodeList = [];
             this.dirtyNodes = {};
+            this.needUpdateRegions = false;
             var dirtyRegion = this.dirtyRegion;
             var length = nodeList.length;
             for (var i = 0; i < length; i++) {
