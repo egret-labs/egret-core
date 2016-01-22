@@ -212,14 +212,15 @@ module eui.sys {
             maxScrollValue = Math.max(maxScrollValue, 0);
             this.currentPosition = touchPoint;
             this.maxScrollPos = maxScrollValue;
-            var scrollPos = this.offsetPoint - touchPoint + scrollValue;
+            var disMove = this.offsetPoint - touchPoint;
+            var scrollPos = disMove + scrollValue;
             this.offsetPoint = touchPoint;
             if (scrollPos < 0) {
                 if(!this.$bounces) {
                     scrollPos = 0;
                 }
                 else {
-                    scrollPos *= 0.5;
+                    scrollPos -= disMove*0.5;
                 }
             }
             if (scrollPos > maxScrollValue) {
@@ -227,7 +228,7 @@ module eui.sys {
                     scrollPos = maxScrollValue;
                 }
                 else {
-                    scrollPos = (scrollPos + maxScrollValue) * 0.5
+                    scrollPos -= disMove*0.5;
                 }
             }
             this.currentScrollPos = scrollPos;

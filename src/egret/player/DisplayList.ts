@@ -101,7 +101,7 @@ module egret.sys {
             var bounds = target.$getOriginalBounds();
             var displayList = target.$parentDisplayList;
             var region = node.renderRegion;
-            if (this.isDirty) {
+            if (this.needUpdateRegions) {
                 this.updateDirtyRegions();
             }
             if (!displayList) {
@@ -151,6 +151,8 @@ module egret.sys {
          */
         public isDirty:boolean = false;
 
+        public needUpdateRegions:boolean = false;
+
         /**
          * @private
          * 设置剪裁边界，不再绘制完整目标对象，画布尺寸由外部决定，超过边界的节点将跳过绘制。
@@ -182,7 +184,8 @@ module egret.sys {
             }
             this.dirtyNodes[key] = true;
             this.dirtyNodeList.push(node);
-            if (!this.isDirty) {
+            if (!this.needUpdateRegions) {
+                this.needUpdateRegions = true;
                 this.isDirty = true;
                 var parentCache = this.root.$parentDisplayList;
                 if (parentCache) {
@@ -209,10 +212,11 @@ module egret.sys {
             var dirtyNodeList = this.dirtyNodeList;
             this.dirtyNodeList = [];
             this.dirtyNodes = {};
+            this.needUpdateRegions = false;
             var dirtyRegion = this.dirtyRegion;
             var length = dirtyNodeList.length;
             for (var i = 0; i < length; i++) {
-                var display = dirtyNodeList[i];
+                var display = dirtyNodeList[i]; 
                 var node = display.$getRenderNode();
                 node.needRedraw = false;//先清空上次缓存的标记,防止上次没遍历到的节点needRedraw始终为true.
                 if (node.renderAlpha > 0 && node.renderVisible) {

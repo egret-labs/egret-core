@@ -1190,7 +1190,7 @@ var RES;
          */
         p.analyzeData = function (resItem, data) {
             var name = resItem.name;
-            if (this.fileDic[name] || !data) {
+            if (this.fileDic[name] || (data != "" && !data)) {
                 return;
             }
             this.fileDic[name] = data;

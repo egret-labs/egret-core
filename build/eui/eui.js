@@ -13007,8 +13007,12 @@ var eui;
             }
             scrollV.stop();
             scrollH.stop();
-            this.verticalScrollBar.visible = false;
-            this.horizontalScrollBar.visible = false;
+            if (this.verticalScrollBar) {
+                this.verticalScrollBar.visible = false;
+            }
+            if (this.horizontalScrollBar) {
+                this.horizontalScrollBar.visible = false;
+            }
         };
         d(p, "viewport"
             /**
@@ -14149,14 +14153,15 @@ var eui;
                 maxScrollValue = Math.max(maxScrollValue, 0);
                 this.currentPosition = touchPoint;
                 this.maxScrollPos = maxScrollValue;
-                var scrollPos = this.offsetPoint - touchPoint + scrollValue;
+                var disMove = this.offsetPoint - touchPoint;
+                var scrollPos = disMove + scrollValue;
                 this.offsetPoint = touchPoint;
                 if (scrollPos < 0) {
                     if (!this.$bounces) {
                         scrollPos = 0;
                     }
                     else {
-                        scrollPos *= 0.5;
+                        scrollPos -= disMove * 0.5;
                     }
                 }
                 if (scrollPos > maxScrollValue) {
@@ -14164,7 +14169,7 @@ var eui;
                         scrollPos = maxScrollValue;
                     }
                     else {
-                        scrollPos = (scrollPos + maxScrollValue) * 0.5;
+                        scrollPos -= disMove * 0.5;
                     }
                 }
                 this.currentScrollPos = scrollPos;

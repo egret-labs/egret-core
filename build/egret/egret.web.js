@@ -1619,13 +1619,13 @@ var egret;
                     if (!this._xhr) {
                         return null;
                     }
-                    if (this._xhr.response) {
+                    if (this._xhr.response != undefined) {
                         return this._xhr.response;
                     }
                     if (this._xhr.responseXML) {
                         return this._xhr.responseXML;
                     }
-                    if (this._xhr.responseText) {
+                    if (this._xhr.responseText != undefined) {
                         return this._xhr.responseText;
                     }
                     return null;
