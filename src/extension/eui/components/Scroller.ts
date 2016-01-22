@@ -390,8 +390,12 @@ module eui {
             }
             scrollV.stop();
             scrollH.stop();
-            this.verticalScrollBar.visible = false;
-            this.horizontalScrollBar.visible = false;
+            if(this.verticalScrollBar){
+                this.verticalScrollBar.visible = false;
+            }
+            if(this.horizontalScrollBar){
+                this.horizontalScrollBar.visible = false;
+            }
         }
 
         /**
