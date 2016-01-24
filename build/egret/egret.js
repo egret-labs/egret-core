@@ -13075,6 +13075,7 @@ var egret;
                  * @private
                  */
                 this.needRedraw = false;
+                this.needUpdateRegions = false;
                 /**
                  * @private
                  */
@@ -13169,7 +13170,7 @@ var egret;
                     pixelRatio = target.stage.$displayList.$pixelRatio;
                 this.setDevicePixelRatio(pixelRatio);
                 var region = this.$renderRegion;
-                if (this.needRedraw) {
+                if (this.needUpdateRegions) {
                     this.updateDirtyRegions();
                 }
                 if (!displayList) {
@@ -13227,7 +13228,8 @@ var egret;
                 }
                 this.dirtyNodes[key] = true;
                 this.dirtyNodeList.push(node);
-                if (!this.needRedraw) {
+                if (!this.needUpdateRegions) {
+                    this.needUpdateRegions = true;
                     this.needRedraw = true;
                     var parentCache = this.root.$parentDisplayList;
                     if (parentCache) {
@@ -13243,6 +13245,7 @@ var egret;
                 var nodeList = this.dirtyNodeList;
                 this.dirtyNodeList = [];
                 this.dirtyNodes = {};
+                this.needUpdateRegions = false;
                 var dirtyRegion = this.dirtyRegion;
                 var length = nodeList.length;
                 for (var i = 0; i < length; i++) {
@@ -14499,11 +14502,11 @@ var egret;
              * @private
              */
             p.updateRegion = function (bounds, matrix) {
-                //if(bounds.width == 0 || bounds.height == 0) {
-                //    //todo 理论上应该是空
-                //    this.setEmpty();
-                //    return;
-                //}
+                if (bounds.width == 0 || bounds.height == 0) {
+                    //todo 理论上应该是空
+                    this.setEmpty();
+                    return;
+                }
                 var m = matrix;
                 var a = m.a;
                 var b = m.b;

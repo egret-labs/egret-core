@@ -9193,6 +9193,7 @@ declare module egret.sys {
          * @private
          */
         needRedraw: boolean;
+        needUpdateRegions: boolean;
         /**
          * @private
          */

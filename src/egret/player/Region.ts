@@ -207,11 +207,11 @@ module egret.sys {
          * @private
          */
         public updateRegion(bounds:Rectangle, matrix:Matrix):void {
-            //if(bounds.width == 0 || bounds.height == 0) {
-            //    //todo 理论上应该是空
-            //    this.setEmpty();
-            //    return;
-            //}
+            if(bounds.width == 0 || bounds.height == 0) {
+                //todo 理论上应该是空
+                this.setEmpty();
+                return;
+            }
             var m = matrix;
             var a = m.a;
             var b = m.b;
