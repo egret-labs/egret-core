@@ -698,12 +698,14 @@ module egret {
 
                 var tmp_data = new DataView(bytes.buffer);
                 var length = writeLength;
-                for (var i = 0; 8 < length; length -= 8, i += 8) {
-                    this.data.setFloat64(this._position, tmp_data.getFloat64(i + offset));
-                    this.position += 8;
+                var BYTES_OF_UINT32 = 4;
+                for (; length > BYTES_OF_UINT32; length -= BYTES_OF_UINT32) {
+                    this.data.setUint32(this._position, tmp_data.getUint32(offset));
+                    this.position += BYTES_OF_UINT32;
+                    offset += BYTES_OF_UINT32;
                 }
-                for (var j = 0; 0 < length; length--, j++) {
-                    this.data.setUint8(this.position++, tmp_data.getUint8(i + j + offset));
+                for (; length > 0; length--) {
+                    this.data.setUint8(this.position++, tmp_data.getUint8(offset++));
                 }
             }
         }
