@@ -200,21 +200,21 @@ module eui {
 
         /**
          * @language en_US
-         * Adjust the speed to get out of the slide end.
+         * Adjust the speed to get out of the slide end.When equal to 0,the scroll animation will not be play.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 调节滑动结束时滚出的速度。
+         * 调节滑动结束时滚出的速度。等于0时，没有滚动动画
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         public set throwSpeed(val:number) {
             val = +val;
-            val = val<0.01?0.01:val;
+            if(val < 0) val = 0;
             this.$Scroller[Keys.touchScrollH].$scrollFactor = val;
             this.$Scroller[Keys.touchScrollV].$scrollFactor = val;
         }
@@ -363,6 +363,41 @@ module eui {
             }
             values[Keys.scrollPolicyH] = value;
             this.checkScrollPolicy();
+        }
+        /**
+         * @language en_US
+         * Stop the scroller animation
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止滚动的动画
+         *
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public stopAnimation():void{
+            var values = this.$Scroller;
+            var scrollV = values[Keys.touchScrollV];
+            var scrollH = values[Keys.touchScrollH];
+            if (scrollV.animation.isPlaying) {
+                UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
+            }else if(scrollH.animation.isPlaying){
+                UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_END);
+            }
+            scrollV.stop();
+            scrollH.stop();
+            var verticalBar = this.verticalScrollBar;
+            var horizontalBar = this.horizontalScrollBar;
+            if(verticalBar && verticalBar.autoVisibility){
+                verticalBar.visible = false;
+            }
+            if(horizontalBar && horizontalBar.autoVisibility){
+                horizontalBar.visible = false;
+            }
         }
 
         /**
@@ -558,6 +593,11 @@ module eui {
 
         /**
          * @private
+         * 记录按下的对象，touchCancle时使用
+         */
+        private downTarget:egret.DisplayObject;
+        /**
+         * @private
          *
          * @param event
          */
@@ -568,26 +608,22 @@ module eui {
             if (!this.checkScrollPolicy()) {
                 return;
             }
+            this.downTarget = event.target;
             var values = this.$Scroller;
-            values[Keys.touchScrollV].stop();
-            values[Keys.touchScrollH].stop();
-            var viewport = values[Keys.viewport];
+            this.stopAnimation();
             values[Keys.touchStartX] = event.$stageX;
             values[Keys.touchStartY] = event.$stageY;
 
-            var uiValues = viewport.$UIComponent;
-
             if (values[Keys.horizontalCanScroll]) {
-                values[Keys.touchScrollH].start(event.$stageX, viewport.scrollH,
-                    viewport.contentWidth - uiValues[sys.UIKeys.width]);
+                values[Keys.touchScrollH].start(event.$stageX);
             }
             if (values[Keys.verticalCanScroll]) {
-                values[Keys.touchScrollV].start(event.$stageY, viewport.scrollV,
-                    viewport.contentHeight - uiValues[sys.UIKeys.height]);
+                values[Keys.touchScrollV].start(event.$stageY);
             }
             var stage = this.$stage;
             stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.addEventListener(egret.Event.REMOVED_FROM_STAGE,this.onRemoveListeners,this);
         }
 
         /**
@@ -609,10 +645,10 @@ module eui {
                 values[Keys.touchMoved] = true;
                 var horizontalBar = this.horizontalScrollBar;
                 var verticalBar = this.verticalScrollBar;
-                if (horizontalBar && values[Keys.horizontalCanScroll]) {
+                if (horizontalBar && horizontalBar.autoVisibility && values[Keys.horizontalCanScroll]) {
                     horizontalBar.visible = true;
                 }
-                if (verticalBar && values[Keys.verticalCanScroll]) {
+                if (verticalBar && verticalBar.autoVisibility && values[Keys.verticalCanScroll]) {
                     verticalBar.visible = true;
                 }
                 if (values[Keys.autoHideTimer]) {
@@ -624,10 +660,10 @@ module eui {
             var viewport = values[Keys.viewport];
             var uiValues = viewport.$UIComponent;
             if (values[Keys.horizontalCanScroll]) {
-                values[Keys.touchScrollH].update(event.$stageX, viewport.contentWidth - uiValues[sys.UIKeys.width]);
+                values[Keys.touchScrollH].update(event.$stageX, viewport.contentWidth - uiValues[sys.UIKeys.width],viewport.scrollH);
             }
             if (values[Keys.verticalCanScroll]) {
-                values[Keys.touchScrollV].update(event.$stageY, viewport.contentHeight - uiValues[sys.UIKeys.height]);
+                values[Keys.touchScrollV].update(event.$stageY, viewport.contentHeight - uiValues[sys.UIKeys.height],viewport.scrollV);
             }
         }
         /**
@@ -640,7 +676,7 @@ module eui {
                 return;
             }
             var cancleEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL,event.bubbles,event.cancelable);
-            var target:egret.DisplayObject = event.$target;
+            var target:egret.DisplayObject = this.downTarget;
             var list = this.$getPropagationList(target);
             var length = list.length;
             var targetIndex = list.length * 0.5;
@@ -666,9 +702,8 @@ module eui {
         private onTouchEnd(event:egret.Event):void {
             var values = this.$Scroller;
             values[Keys.touchMoved] = false;
-            var stage = this.$stage;
-            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
-            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+
+            this.onRemoveListeners();
 
             var viewport:IViewport = values[Keys.viewport];
             var uiValues = viewport.$UIComponent;
@@ -678,6 +713,15 @@ module eui {
             if (values[Keys.touchScrollV].isStarted()) {
                 values[Keys.touchScrollV].finish(viewport.scrollV, viewport.contentHeight - uiValues[sys.UIKeys.height]);
             }
+        }
+        /**
+         * @private
+         */
+        private onRemoveListeners():void{
+            var stage = this.$stage;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
+            this.removeEventListener(egret.Event.REMOVED_FROM_STAGE,this.onRemoveListeners,this);
         }
 
         /**
@@ -749,10 +793,10 @@ module eui {
         private onAutoHideTimer(event:egret.TimerEvent):void {
             var horizontalBar = this.horizontalScrollBar;
             var verticalBar = this.verticalScrollBar;
-            if (horizontalBar) {
+            if (horizontalBar && horizontalBar.autoVisibility) {
                 horizontalBar.visible = false;
             }
-            if (verticalBar) {
+            if (verticalBar && verticalBar.autoVisibility) {
                 verticalBar.visible = false;
             }
         }
@@ -772,7 +816,6 @@ module eui {
                 viewport.setLayoutBoundsSize(unscaledWidth, unscaledHeight);
                 viewport.setLayoutBoundsPosition(0, 0);
             }
-
         }
 
         /**
@@ -788,13 +831,17 @@ module eui {
                 this.horizontalScrollBar.touchChildren = false;
                 this.horizontalScrollBar.touchEnabled = false;
                 this.horizontalScrollBar.viewport = this.viewport;
-                this.horizontalScrollBar.visible = false;
+                if(this.horizontalScrollBar.autoVisibility){
+                    this.horizontalScrollBar.visible = false;
+                }
             }
             else if (instance == this.verticalScrollBar) {
                 this.verticalScrollBar.touchChildren = false;
                 this.verticalScrollBar.touchEnabled = false;
                 this.verticalScrollBar.viewport = this.viewport;
-                this.verticalScrollBar.visible = false;
+                if(this.verticalScrollBar.autoVisibility){
+                    this.verticalScrollBar.visible = false;
+                }
             }
         }
     }

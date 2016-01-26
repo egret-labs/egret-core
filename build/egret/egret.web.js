@@ -1619,13 +1619,13 @@ var egret;
                     if (!this._xhr) {
                         return null;
                     }
-                    if (this._xhr.response) {
+                    if (this._xhr.response != undefined) {
                         return this._xhr.response;
                     }
                     if (this._xhr.responseXML) {
                         return this._xhr.responseXML;
                     }
-                    if (this._xhr.responseText) {
+                    if (this._xhr.responseText != undefined) {
                         return this._xhr.responseText;
                     }
                     return null;
@@ -2114,7 +2114,7 @@ var egret;
                 this.inputDiv.style.top = y * scaleY + "px";
                 if (this.$textfield.multiline) {
                     this.inputDiv.style.top = (y) * scaleY + "px";
-                    this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) + "px";
+                    this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) * scaleY + "px";
                 }
                 else {
                     this.inputDiv.style.top = y * scaleY + "px";

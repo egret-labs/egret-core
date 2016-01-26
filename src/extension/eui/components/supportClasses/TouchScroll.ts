@@ -188,19 +188,18 @@ module eui.sys {
         public isStarted():boolean {
             return this.started;
         }
-
         /**
          * @private
          * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
          * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
          */
-        public start(touchPoint:number, scrollValue:number, maxScrollValue:number):void {
+        public start(touchPoint:number):void {
             this.started = true;
             this.velocity = 0;
             this.previousVelocity.length = 0;
             this.previousTime = egret.getTimer();
             this.previousPosition = this.currentPosition = touchPoint;
-            this.offsetPoint = scrollValue + touchPoint;
+            this.offsetPoint = touchPoint;
             egret.startTick(this.onTick, this);
         }
 
@@ -209,17 +208,19 @@ module eui.sys {
          * 更新当前移动到的位置
          * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
          */
-        public update(touchPoint:number, maxScrollValue:number):void {
+        public update(touchPoint:number, maxScrollValue:number,scrollValue):void {
             maxScrollValue = Math.max(maxScrollValue, 0);
             this.currentPosition = touchPoint;
             this.maxScrollPos = maxScrollValue;
-            var scrollPos = this.offsetPoint - touchPoint;
+            var disMove = this.offsetPoint - touchPoint;
+            var scrollPos = disMove + scrollValue;
+            this.offsetPoint = touchPoint;
             if (scrollPos < 0) {
                 if(!this.$bounces) {
                     scrollPos = 0;
                 }
                 else {
-                    scrollPos *= 0.5;
+                    scrollPos -= disMove*0.5;
                 }
             }
             if (scrollPos > maxScrollValue) {
@@ -227,7 +228,7 @@ module eui.sys {
                     scrollPos = maxScrollValue;
                 }
                 else {
-                    scrollPos = (scrollPos + maxScrollValue) * 0.5
+                    scrollPos -= disMove*0.5;
                 }
             }
             this.currentScrollPos = scrollPos;

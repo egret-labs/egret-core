@@ -762,6 +762,7 @@ var egret;
          * @param props {any} Parameters, support loop onChange onChangeObj
          * @param pluginData {any} Write realized
          * @param override {boolean} Whether to remove the object before adding a tween, the default value false
+         * Not recommended, you can use Tween.removeTweens(target) instead.
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -771,7 +772,8 @@ var egret;
          * @param target {any} 要激活 Tween 的对象
          * @param props {any} 参数，支持loop(循环播放) onChange(变化函数) onChangeObj(变化函数作用域)
          * @param pluginData {any} 暂未实现
-         * @param override {boolean} 是否移除对象之前添加的tween，默认值false
+         * @param override {boolean} 是否移除对象之前添加的tween，默认值false。
+         * 不建议使用，可使用 Tween.removeTweens(target) 代替。
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1290,6 +1292,13 @@ var egret;
          * @returns {egret.Tween} Tween object itself
          * @version Egret 2.4
          * @platform Web,Native
+         * @example
+         * <pre>
+         *  egret.Tween.get(display).call(function (a:number, b:string) {
+         *      console.log("a: " + a); // the first parameter passed 233
+         *      console.log("b: " + b); // the second parameter passed “hello”
+         *  }, this, [233, "hello"]);
+         * </pre>
          */
         /**
          * @language zh_CN
@@ -1300,6 +1309,13 @@ var egret;
          * @returns {egret.Tween} Tween对象本身
          * @version Egret 2.4
          * @platform Web,Native
+         * @example
+         * <pre>
+         *  egret.Tween.get(display).call(function (a:number, b:string) {
+         *      console.log("a: " + a); //对应传入的第一个参数 233
+         *      console.log("b: " + b); //对应传入的第二个参数 “hello”
+         *  }, this, [233, "hello"]);
+         * </pre>
          */
         p.call = function (callback, thisObj, params) {
             if (thisObj === void 0) { thisObj = undefined; }

@@ -166,8 +166,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param event 
+         *
+         * @param event
          */
         private onViewportResize(event?:egret.Event):void{
             this.invalidateDisplayList();
@@ -176,7 +176,7 @@ module eui {
         /**
          * @language en_US
          * Properties of viewport changed.
-         * @param event 
+         * @param event
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -184,7 +184,7 @@ module eui {
         /**
          * @language zh_CN
          * 视区属性发生改变。
-         * @param event 
+         * @param event
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -192,6 +192,21 @@ module eui {
         protected onPropertyChanged(event:eui.PropertyEvent):void{
 
         }
+        /**
+         * @language en_US
+         * Whether the scrollbar can be autohide.
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否自动隐藏 scrollbar
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        public autoVisibility:boolean = true;
     }
 
 }

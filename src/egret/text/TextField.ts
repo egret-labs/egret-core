@@ -1469,6 +1469,8 @@ module egret {
             }
             tmpBounds.x -= _strokeDouble;
             tmpBounds.y -= _strokeDouble;
+            tmpBounds.width = Math.ceil(tmpBounds.width)+2;//+2 是为了解决脏区域的问题
+            tmpBounds.height = Math.ceil(tmpBounds.height)+2;
             var result = super.$update(tmpBounds);
             Rectangle.release(tmpBounds);
             return result;
@@ -1483,8 +1485,6 @@ module egret {
 
             var w:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
             var h:number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils.$getTextHeight(self);
-            w = Math.ceil(w)+2;//+2 是为了解决脏区域的问题
-            h = Math.ceil(h)+2;
             bounds.setTo(0, 0, w, h);
         }
 

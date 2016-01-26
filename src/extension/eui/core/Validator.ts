@@ -395,7 +395,7 @@ module eui.sys {
                     bin = this.depthBins[this.maxDepth];
                 }
 
-                client = bin.shift();
+                client = bin.pop();
 
                 while (!bin || bin.length == 0) {
                     this.maxDepth--;
@@ -425,7 +425,7 @@ module eui.sys {
                     bin = this.depthBins[this.minDepth];
                 }
 
-                client = bin.shift();
+                client = bin.pop();
 
                 while (!bin || bin.length == 0) {
                     this.minDepth++;
@@ -558,11 +558,16 @@ module eui.sys {
             this.items.push(client);
         }
 
-        public shift():UIComponent {
-            var client = this.items.shift();
+        public pop():UIComponent {
+            var client = this.items.pop();//使用pop会比shift有更高的性能，避免索引整体重置。
             if (client) {
-                this.map[client.$hashCode] = false;
                 this.length--;
+                if(this.length===0){
+                    this.map = {};//清空所有key防止内存泄露
+                }
+                else{
+                    this.map[client.$hashCode] = false;
+                }
             }
             return client;
         }
@@ -571,8 +576,13 @@ module eui.sys {
             var index = this.items.indexOf(client);
             if (index >= 0) {
                 this.items.splice(index, 1);
-                this.map[client.$hashCode] = false;
                 this.length--;
+                if(this.length===0){
+                    this.map = {};//清空所有key防止内存泄露
+                }
+                else{
+                    this.map[client.$hashCode] = false;
+                }
             }
         }
     }
