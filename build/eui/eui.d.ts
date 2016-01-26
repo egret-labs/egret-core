@@ -5021,6 +5021,21 @@ declare module eui {
          * @platform Web,Native
          */
         protected onPropertyChanged(event: eui.PropertyEvent): void;
+        /**
+         * @language en_US
+         * Whether the scrollbar can be autohide.
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否自动隐藏 scrollbar
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        autoVisibility: boolean;
     }
 }
 declare module eui {

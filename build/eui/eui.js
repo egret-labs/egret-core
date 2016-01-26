@@ -6984,6 +6984,21 @@ var eui;
              * @private
              */
             this.$viewport = null;
+            /**
+             * @language en_US
+             * Whether the scrollbar can be autohide.
+             * @version Egret 3.0.2
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 是否自动隐藏 scrollbar
+             * @version Egret 3.0.2
+             * @version eui 1.0
+             * @platform Web,Native
+             */
+            this.autoVisibility = true;
         }
         var d = __define,c=ScrollBarBase,p=c.prototype;
         d(p, "viewport"
@@ -13007,11 +13022,13 @@ var eui;
             }
             scrollV.stop();
             scrollH.stop();
-            if (this.verticalScrollBar) {
-                this.verticalScrollBar.visible = false;
+            var verticalBar = this.verticalScrollBar;
+            var horizontalBar = this.horizontalScrollBar;
+            if (verticalBar && verticalBar.autoVisibility) {
+                verticalBar.visible = false;
             }
-            if (this.horizontalScrollBar) {
-                this.horizontalScrollBar.visible = false;
+            if (horizontalBar && horizontalBar.autoVisibility) {
+                horizontalBar.visible = false;
             }
         };
         d(p, "viewport"
@@ -13243,10 +13260,10 @@ var eui;
                 values[5 /* touchMoved */] = true;
                 var horizontalBar = this.horizontalScrollBar;
                 var verticalBar = this.verticalScrollBar;
-                if (horizontalBar && values[6 /* horizontalCanScroll */]) {
+                if (horizontalBar && horizontalBar.autoVisibility && values[6 /* horizontalCanScroll */]) {
                     horizontalBar.visible = true;
                 }
-                if (verticalBar && values[7 /* verticalCanScroll */]) {
+                if (verticalBar && verticalBar.autoVisibility && values[7 /* verticalCanScroll */]) {
                     verticalBar.visible = true;
                 }
                 if (values[2 /* autoHideTimer */]) {
@@ -13377,10 +13394,10 @@ var eui;
         p.onAutoHideTimer = function (event) {
             var horizontalBar = this.horizontalScrollBar;
             var verticalBar = this.verticalScrollBar;
-            if (horizontalBar) {
+            if (horizontalBar && horizontalBar.autoVisibility) {
                 horizontalBar.visible = false;
             }
-            if (verticalBar) {
+            if (verticalBar && verticalBar.autoVisibility) {
                 verticalBar.visible = false;
             }
         };
@@ -13413,13 +13430,17 @@ var eui;
                 this.horizontalScrollBar.touchChildren = false;
                 this.horizontalScrollBar.touchEnabled = false;
                 this.horizontalScrollBar.viewport = this.viewport;
-                this.horizontalScrollBar.visible = false;
+                if (this.horizontalScrollBar.autoVisibility) {
+                    this.horizontalScrollBar.visible = false;
+                }
             }
             else if (instance == this.verticalScrollBar) {
                 this.verticalScrollBar.touchChildren = false;
                 this.verticalScrollBar.touchEnabled = false;
                 this.verticalScrollBar.viewport = this.viewport;
-                this.verticalScrollBar.visible = false;
+                if (this.verticalScrollBar.autoVisibility) {
+                    this.verticalScrollBar.visible = false;
+                }
             }
         };
         /**

@@ -390,11 +390,13 @@ module eui {
             }
             scrollV.stop();
             scrollH.stop();
-            if(this.verticalScrollBar){
-                this.verticalScrollBar.visible = false;
+            var verticalBar = this.verticalScrollBar;
+            var horizontalBar = this.horizontalScrollBar;
+            if(verticalBar && verticalBar.autoVisibility){
+                verticalBar.visible = false;
             }
-            if(this.horizontalScrollBar){
-                this.horizontalScrollBar.visible = false;
+            if(horizontalBar && horizontalBar.autoVisibility){
+                horizontalBar.visible = false;
             }
         }
 
@@ -643,10 +645,10 @@ module eui {
                 values[Keys.touchMoved] = true;
                 var horizontalBar = this.horizontalScrollBar;
                 var verticalBar = this.verticalScrollBar;
-                if (horizontalBar && values[Keys.horizontalCanScroll]) {
+                if (horizontalBar && horizontalBar.autoVisibility && values[Keys.horizontalCanScroll]) {
                     horizontalBar.visible = true;
                 }
-                if (verticalBar && values[Keys.verticalCanScroll]) {
+                if (verticalBar && verticalBar.autoVisibility && values[Keys.verticalCanScroll]) {
                     verticalBar.visible = true;
                 }
                 if (values[Keys.autoHideTimer]) {
@@ -791,10 +793,10 @@ module eui {
         private onAutoHideTimer(event:egret.TimerEvent):void {
             var horizontalBar = this.horizontalScrollBar;
             var verticalBar = this.verticalScrollBar;
-            if (horizontalBar) {
+            if (horizontalBar && horizontalBar.autoVisibility) {
                 horizontalBar.visible = false;
             }
-            if (verticalBar) {
+            if (verticalBar && verticalBar.autoVisibility) {
                 verticalBar.visible = false;
             }
         }
@@ -829,13 +831,17 @@ module eui {
                 this.horizontalScrollBar.touchChildren = false;
                 this.horizontalScrollBar.touchEnabled = false;
                 this.horizontalScrollBar.viewport = this.viewport;
-                this.horizontalScrollBar.visible = false;
+                if(this.horizontalScrollBar.autoVisibility){
+                    this.horizontalScrollBar.visible = false;
+                }
             }
             else if (instance == this.verticalScrollBar) {
                 this.verticalScrollBar.touchChildren = false;
                 this.verticalScrollBar.touchEnabled = false;
                 this.verticalScrollBar.viewport = this.viewport;
-                this.verticalScrollBar.visible = false;
+                if(this.verticalScrollBar.autoVisibility){
+                    this.verticalScrollBar.visible = false;
+                }
             }
         }
     }
