@@ -53,6 +53,18 @@ module egret {
 
         private rootDisplayList:sys.DisplayList;
 
+        /**
+         * @language en_US
+         * Create an egret.RenderTexture object
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.RenderTexture 对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         constructor() {
             super();
         }
@@ -394,6 +406,11 @@ module egret {
             return surface.renderContext;
         }
 
+        /**
+         * @inheritDoc
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public dispose():void {
             super.dispose();
             if(this.rootDisplayList) {
