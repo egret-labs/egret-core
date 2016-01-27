@@ -122,12 +122,19 @@ module egret.web {
         public stop() {
             if (!this.audio)
                 return;
+
+            if (!this.isStopped) {
+                sys.$popSoundChannel(this);
+            }
+            this.isStopped = true;
+
             var audio = this.audio;
             audio.pause();
             audio.removeEventListener("ended", this.onPlayEnd);
             this.audio = null;
 
             HtmlSound.$recycle(this.$url, audio);
+
         }
 
         /**

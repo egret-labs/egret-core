@@ -154,6 +154,9 @@ module egret.native {
             channel.$type = this.type;
             channel.$startTime = startTime;
             channel.$play();
+
+            sys.$pushSoundChannel(channel);
+
             return channel;
         }
 
