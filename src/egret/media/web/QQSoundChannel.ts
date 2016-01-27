@@ -131,6 +131,10 @@ module egret.web {
                 QZAppExternal.stopBackSound();
             }
 
+            if (!this.isStopped) {
+                sys.$popSoundChannel(this);
+            }
+            this.isStopped = true;
         }
 
         /**
