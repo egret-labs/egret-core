@@ -249,6 +249,7 @@ var egret;
                 channel.$loops = loops;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -424,6 +425,10 @@ var egret;
             p.stop = function () {
                 if (!this.audio)
                     return;
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
+                }
+                this.isStopped = true;
                 var audio = this.audio;
                 audio.pause();
                 audio.removeEventListener("ended", this.onPlayEnd);
@@ -558,6 +563,7 @@ var egret;
                 channel.$type = this.type;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -714,6 +720,10 @@ var egret;
                 else {
                     QZAppExternal.stopBackSound();
                 }
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
+                }
+                this.isStopped = true;
             };
             d(p, "volume"
                 /**
@@ -902,6 +912,7 @@ var egret;
                 channel.$audioBuffer = this.audioBuffer;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -1068,6 +1079,9 @@ var egret;
                     this.bufferSource.disconnect();
                     this.bufferSource = null;
                     this.$audioBuffer = null;
+                }
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
                 }
                 this.isStopped = true;
             };

@@ -50,7 +50,9 @@ module egret.sys {
         var index:number = usingChannel.indexOf(channel);
         if (index < 0) {
             usingChannel.splice(index, 1);
+            return true;
         }
+        return false;
     }
 }
 

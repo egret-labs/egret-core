@@ -1837,6 +1837,7 @@ var egret;
                 channel.$loops = loops;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -2003,6 +2004,10 @@ var egret;
             p.stop = function () {
                 if (!this.audio)
                     return;
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
+                }
+                this.isStopped = true;
                 var audio = this.audio;
                 audio.pause();
                 audio.removeEventListener("ended", this.onPlayEnd);
@@ -2155,6 +2160,7 @@ var egret;
                 channel.$type = this.type;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -2268,6 +2274,9 @@ var egret;
              * @inheritDoc
              */
             p.stop = function () {
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
+                }
                 this.isStopped = true;
                 if (this.$type == egret.Sound.EFFECT) {
                     if (this._effectId) {

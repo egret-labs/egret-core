@@ -1932,19 +1932,63 @@ declare module egret {
          */
         $propagateFlagsDown(flags: sys.DisplayObjectFlags): void;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Returns the number of children of this object.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回此对象的子项数目。
          * @version Egret 2.4
          * @platform Web,Native
          */
         numChildren: number;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Adds a child DisplayObject instance to this DisplayObjectContainer instance. The child is added to the front
+         * (top) of all other children in this DisplayObjectContainer instance. (To add a child to a specific index position,
+         * use the addChildAt() method.)If you add a child object that already has a different display object container
+         * as a parent, the object is removed from the child list of the other display object container.
+         * @param child The DisplayObject instance to add as a child of this DisplayObjectContainer instance.
+         * @returns 在 child The DisplayObject instance that you pass in the child parameter.
+         * @see #addChildAt()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。子项将被添加到该 DisplayObjectContainer 实例中其他
+         * 所有子项的前（上）面。（要将某子项添加到特定索引位置，请使用 addChildAt() 方法。）
+         * @param child 要作为该 DisplayObjectContainer 实例的子项添加的 DisplayObject 实例。
+         * @returns 在 child 参数中传递的 DisplayObject 实例。
+         * @see #addChildAt()
          * @version Egret 2.4
          * @platform Web,Native
          */
         addChild(child: DisplayObject): DisplayObject;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Adds a child DisplayObject instance to this DisplayObjectContainer instance. The child is added at the index position
+         * specified. An index of 0 represents the back (bottom) of the display list for this DisplayObjectContainer object.
+         * If you add a child object that already has a different display object container as a parent, the object is removed
+         * from the child list of the other display object container.
+         * @param child The DisplayObject instance to add as a child of this DisplayObjectContainer instance.
+         * @param index The index position to which the child is added. If you specify a currently occupied index position,
+         * the child object that exists at that position and all higher positions are moved up one position in the child list.
+         * @returns The DisplayObject instance that you pass in the child parameter.
+         * @see #addChild()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 将一个 DisplayObject 子实例添加到该 DisplayObjectContainer 实例中。该子项将被添加到指定的索引位置。索引为 0 表示该
+         * DisplayObjectContainer 对象的显示列表的后（底）部。如果添加一个已将其它显示对象容器作为父项的子对象，则会从其它显示对象容器的子列表中删除该对象。
+         * @param child 要作为该 DisplayObjectContainer 实例的子项添加的 DisplayObject 实例。
+         * @param index 添加该子项的索引位置。 如果指定当前占用的索引位置，则该位置以及所有更高位置上的子对象会在子级列表中上移一个位置。
+         * @returns 在 child 参数中传递的 DisplayObject 实例。
+         * @see #addChild()
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1954,37 +1998,127 @@ declare module egret {
          */
         $doAddChild(child: DisplayObject, index: number, notifyListeners?: boolean): DisplayObject;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Determines whether the specified display object is a child of the DisplayObjectContainer instance or the instance
+         * itself. The search includes the entire display list including this DisplayObjectContainer instance. Grandchildren,
+         * great-grandchildren, and so on each return true.
+         * @param child The child object to test.
+         * @returns true if the child object is a child of the DisplayObjectContainer or the container itself; otherwise false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 确定指定显示对象是 DisplayObjectContainer 实例的子项还是该实例本身。搜索包括整个显示列表（其中包括此 DisplayObjectContainer 实例）。
+         * 孙项、曾孙项等，每项都返回 true。
+         * @param child 要测试的子对象。
+         * @returns 如果指定的显示对象为 DisplayObjectContainer 该实例本身，则返回true，如果指定的显示对象为当前实例子项，则返回false。
          * @version Egret 2.4
          * @platform Web,Native
          */
         contains(child: DisplayObject): boolean;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Returns the child display object instance that exists at the specified index.
+         * @param index The index position of the child object.
+         * @returns The child display object at the specified index position.
+         * @see #getChildByName()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回位于指定索引处的子显示对象实例。
+         * @param index 子对象的索引位置。
+         * @returns 位于指定索引位置处的子显示对象。
+         * @see #getChildByName()
          * @version Egret 2.4
          * @platform Web,Native
          */
         getChildAt(index: number): DisplayObject;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Returns the index position of a child DisplayObject instance.
+         * @param child The DisplayObject instance to identify.
+         * @returns The index position of the child display object to identify.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回 DisplayObject 的 child 实例的索引位置。
+         * @param child 要测试的子对象。
+         * @returns 要查找的子显示对象的索引位置。
          * @version Egret 2.4
          * @platform Web,Native
          */
         getChildIndex(child: egret.DisplayObject): number;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Returns the child display object that exists with the specified name. If more that one child display object has
+         * the specified name, the method returns the first object in the child list.The getChildAt() method is faster than
+         * the getChildByName() method. The getChildAt() method accesses a child from a cached array, whereas the getChildByName()
+         * method has to traverse a linked list to access a child.
+         * @param name The name of the child to return.
+         * @returns The child display object with the specified name.
+         * @see #getChildAt()
+         * @see egret.DisplayObject#name
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 返回具有指定名称的子显示对象。如果多个子显示对象具有指定名称，则该方法会返回子级列表中的第一个对象。
+         * getChildAt() 方法比 getChildByName() 方法快。getChildAt() 方法从缓存数组中访问子项，而 getChildByName() 方法则必须遍历链接的列表来访问子项。
+         * @param name 要返回的子项的名称。
+         * @returns 具有指定名称的子显示对象。
+         * @see #getChildAt()
+         * @see egret.DisplayObject#name
          * @version Egret 2.4
          * @platform Web,Native
          */
         getChildByName(name: string): DisplayObject;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Removes the specified child DisplayObject instance from the child list of the DisplayObjectContainer instance.
+         * The parent property of the removed child is set to null , and the object is garbage collected if no other references
+         * to the child exist. The index positions of any display objects above the child in the DisplayObjectContainer are
+         * decreased by 1.
+         * @param child The DisplayObject instance to remove.
+         * @returns The DisplayObject instance that you pass in the child parameter.
+         * @see #removeChildAt()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 从 DisplayObjectContainer 实例的子列表中删除指定的 child DisplayObject 实例。将已删除子项的 parent 属性设置为 null；
+         * 如果不存在对该子项的任何其它引用，则将该对象作为垃圾回收。DisplayObjectContainer 中该子项之上的任何显示对象的索引位置都减去 1。
+         * @param child 要删除的 DisplayObject 实例。
+         * @returns 在 child 参数中传递的 DisplayObject 实例。
+         * @see #removeChildAt()
          * @version Egret 2.4
          * @platform Web,Native
          */
         removeChild(child: DisplayObject): DisplayObject;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Removes a child DisplayObject from the specified index position in the child list of the DisplayObjectContainer.
+         * The parent property of the removed child is set to null, and the object is garbage collected if no other references
+         * to the child exist. The index positions of any display objects above the child in the DisplayObjectContainer are decreased by 1.
+         * @param index The child index of the DisplayObject to remove.
+         * @returns The DisplayObject instance that was removed.
+         * @see #removeChild()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 从 DisplayObjectContainer 的子列表中指定的 index 位置删除子 DisplayObject。将已删除子项的 parent 属性设置为 null；
+         * 如果没有对该子项的任何其他引用，则将该对象作为垃圾回收。DisplayObjectContainer 中该子项之上的任何显示对象的索引位置都减去 1。
+         * @param index 要删除的 DisplayObject 的子索引。
+         * @returns 已删除的 DisplayObject 实例。
+         * @see #removeChild()
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -1994,7 +2128,22 @@ declare module egret {
          */
         $doRemoveChild(index: number, notifyListeners?: boolean): DisplayObject;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Changes the position of an existing child in the display object container. This affects the layering of child objects.
+         * @param child The child DisplayObject instance for which you want to change the index number.
+         * @param index The resulting index number for the child display object.
+         * @see #addChildAt()
+         * @see #getChildAt()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 更改现有子项在显示对象容器中的位置。这会影响子对象的分层。
+         * @param child 要为其更改索引编号的 DisplayObject 子实例。
+         * @param index 生成的 child 显示对象的索引编号。当新的索引编号小于0或大于已有子元件数量时，新加入的DisplayObject对象将会放置于最上层。
+         * @see #addChildAt()
+         * @see #getChildAt()
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2004,13 +2153,41 @@ declare module egret {
          */
         private doSetChildIndex(child, index);
         /**
-         * @inheritDoc
+         * @language en_US
+         * Swaps the z-order (front-to-back order) of the child objects at the two specified index positions in the child
+         * list. All other child objects in the display object container remain in the same index positions.
+         * @param index1 The index position of the first child object.
+         * @param index2 The index position of the second child object.
+         * @see #swapChildren()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 在子级列表中两个指定的索引位置，交换子对象的 Z 轴顺序（前后顺序）。显示对象容器中所有其他子对象的索引位置保持不变。
+         * @param index1 第一个子对象的索引位置。
+         * @param index2 第二个子对象的索引位置。
+         * @see #swapChildren()
          * @version Egret 2.4
          * @platform Web,Native
          */
         swapChildrenAt(index1: number, index2: number): void;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Swaps the z-order (front-to-back order) of the two specified child objects. All other child objects in the
+         * display object container remain in the same index positions.
+         * @param child1 The first child object.
+         * @param child2 The second child object.
+         * @see #swapChildrenAt()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 交换两个指定子对象的 Z 轴顺序（从前到后顺序）。显示对象容器中所有其他子对象的索引位置保持不变。
+         * @param child1 第一个子对象。
+         * @param child2 第二个子对象。
+         * @see #swapChildrenAt()
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2020,7 +2197,19 @@ declare module egret {
          */
         private doSwapChildrenAt(index1, index2);
         /**
-         * @inheritDoc
+         * @language en_US
+         * Removes all child DisplayObject instances from the child list of the DisplayObjectContainer instance. The parent
+         * property of the removed children is set to null , and the objects are garbage collected if no other references to the children exist.
+         * @see #removeChild()
+         * @see #removeChildAt()
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 从 DisplayObjectContainer 实例的子级列表中删除所有 child DisplayObject 实例。
+         * @see #removeChild()
+         * @see #removeChildAt()
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -2052,7 +2241,17 @@ declare module egret {
         $measureChildBounds(bounds: Rectangle): void;
         $touchChildren: boolean;
         /**
-         * @inheritDoc
+         * @language en_US
+         * Determines whether or not the children of the object are touch, or user input device, enabled. If an object is
+         * enabled, a user can interact with it by using a touch or user input device.
+         * @default true
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 确定对象的子级是否支持触摸或用户输入设备。如果对象支持触摸或用户输入设备，用户可以通过使用触摸或用户输入设备与之交互。
+         * @default true
          * @version Egret 2.4
          * @platform Web,Native
          */
@@ -3557,6 +3756,18 @@ declare module egret {
     class RenderTexture extends egret.Texture {
         protected context: sys.RenderContext;
         private rootDisplayList;
+        /**
+         * @language en_US
+         * Create an egret.RenderTexture object
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.RenderTexture 对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         constructor();
         /**
          * @language en_US
@@ -3585,6 +3796,11 @@ declare module egret {
         private drawWithClip(displayObject, context, rootMatrix);
         private drawWithScrollRect(displayObject, context, rootMatrix);
         protected createRenderContext(width: number, height: number): sys.RenderContext;
+        /**
+         * @inheritDoc
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         dispose(): void;
     }
 }
@@ -7938,6 +8154,18 @@ declare module egret.localStorage {
      */
     var clear: () => void;
 }
+declare module egret.sys {
+    /**
+     * @private
+     * @param channel
+     */
+    function $pushSoundChannel(channel: SoundChannel): void;
+    /**
+     * @private
+     * @param channel
+     */
+    function $popSoundChannel(channel: SoundChannel): boolean;
+}
 declare module egret {
     /**
      * @language en_US
@@ -9193,6 +9421,7 @@ declare module egret.sys {
          * @private
          */
         needRedraw: boolean;
+        needUpdateRegions: boolean;
         /**
          * @private
          */
@@ -9637,6 +9866,43 @@ declare module egret.sys {
 declare module egret.sys {
     /**
      * @private
+     */
+    interface Renderable extends HashObject {
+        /**
+         * @private
+         * 是否需要重绘的标志
+         */
+        $isDirty: boolean;
+        /**
+         * @private
+         * 在舞台上的透明度
+         */
+        $renderAlpha: number;
+        /**
+         * @private
+         * 在舞台上的矩阵对象
+         */
+        $renderMatrix: Matrix;
+        /**
+         * @private
+         * 在屏幕上的显示区域
+         */
+        $renderRegion: Region;
+        /**
+         * @private
+         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
+         */
+        $update(): boolean;
+        /**
+         * @private
+         * 执行绘制
+         */
+        $render(context: RenderContext): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
      * 绘图上下文
      */
     interface RenderContext {
@@ -9995,43 +10261,6 @@ declare module egret.sys {
          * @private
          */
         height: number;
-    }
-}
-declare module egret.sys {
-    /**
-     * @private
-     */
-    interface Renderable extends HashObject {
-        /**
-         * @private
-         * 是否需要重绘的标志
-         */
-        $isDirty: boolean;
-        /**
-         * @private
-         * 在舞台上的透明度
-         */
-        $renderAlpha: number;
-        /**
-         * @private
-         * 在舞台上的矩阵对象
-         */
-        $renderMatrix: Matrix;
-        /**
-         * @private
-         * 在屏幕上的显示区域
-         */
-        $renderRegion: Region;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         */
-        $update(): boolean;
-        /**
-         * @private
-         * 执行绘制
-         */
-        $render(context: RenderContext): void;
     }
 }
 declare module egret.sys {
@@ -11538,6 +11767,106 @@ declare module egret {
      * @version Egret 2.4
      * @platform Web,Native
      */
+    class InputController extends HashObject {
+        /**
+         * @private
+         */
+        private stageText;
+        /**
+         * @private
+         */
+        private _text;
+        /**
+         * @private
+         */
+        private _isFocus;
+        /**
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor();
+        /**
+         *
+         * @param text
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        init(text: TextField): void;
+        /**
+         * @private
+         *
+         */
+        _addStageText(): void;
+        /**
+         * @private
+         *
+         */
+        _removeStageText(): void;
+        /**
+         * @private
+         *
+         * @returns
+         */
+        _getText(): string;
+        /**
+         * @private
+         *
+         * @param value
+         */
+        _setText(value: string): void;
+        /**
+         * @private
+         */
+        _setColor(value: number): void;
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private focusHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private blurHandler(event);
+        private tempStage;
+        private onMouseDownHandler(event);
+        private onStageDownHandler(event);
+        /**
+         * @private
+         *
+         * @param event
+         */
+        private updateTextHandler(event);
+        /**
+         * @private
+         *
+         */
+        private resetText();
+        /**
+         * @private
+         *
+         */
+        _hideInput(): void;
+        /**
+         * @private
+         *
+         */
+        private updateInput();
+        /**
+         * @private
+         *
+         */
+        _updateProperties(): void;
+    }
+}
+declare module egret {
+    /**
+     * @private
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
     interface IHitTextElement {
         /**
          * @version Egret 2.4
@@ -11785,105 +12114,6 @@ declare module egret {
          * @platform Web,Native
          */
         elements: Array<IWTextElement>;
-    }
-}
-declare module egret {
-    /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class InputController extends HashObject {
-        /**
-         * @private
-         */
-        private stageText;
-        /**
-         * @private
-         */
-        private _text;
-        /**
-         * @private
-         */
-        private _isFocus;
-        /**
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         *
-         * @param text
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        init(text: TextField): void;
-        /**
-         * @private
-         *
-         */
-        _addStageText(): void;
-        /**
-         * @private
-         *
-         */
-        _removeStageText(): void;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        _getText(): string;
-        /**
-         * @private
-         *
-         * @param value
-         */
-        _setText(value: string): void;
-        /**
-         * @private
-         */
-        _setColor(value: number): void;
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private focusHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private blurHandler(event);
-        private onMouseDownHandler(event);
-        private onStageDownHandler(event);
-        /**
-         * @private
-         *
-         * @param event
-         */
-        private updateTextHandler(event);
-        /**
-         * @private
-         *
-         */
-        private resetText();
-        /**
-         * @private
-         *
-         */
-        _hideInput(): void;
-        /**
-         * @private
-         *
-         */
-        private updateInput();
-        /**
-         * @private
-         *
-         */
-        _updateProperties(): void;
     }
 }
 declare module egret {
@@ -13706,566 +13936,6 @@ declare module egret {
 }
 declare module egret {
     /**
-     * @language en_US
-     * Logger is an entrance for the log processing module of the engine
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * Logger是引擎的日志处理模块入口
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class Logger {
-        /**
-         * @language en_US
-         * open all
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 全开
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static ALL: string;
-        /**
-         * @language en_US
-         * level: DEBUG
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 DEBUG
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static DEBUG: string;
-        /**
-         * @language en_US
-         * level: INFO
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 INFO
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static INFO: string;
-        /**
-         * @language en_US
-         * level: WARN
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 WARN
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static WARN: string;
-        /**
-         * @language en_US
-         * level: ERROR
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 等级为 ERROR
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static ERROR: string;
-        /**
-         * @language en_US
-         * close all
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 全关
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static OFF: string;
-        /**
-         * @language en_US
-         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
-         * This feature is only in DEBUG mode to take effect. <br/>
-         * <Ul>
-         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
-         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
-         * <Li> Logger.INFO - print info, log, warn, error. </ li>
-         * <Li> Logger.WARN - can print warn, error. </ li>
-         * <Li> Logger.ERROR - You can print error. </ li>
-         * <Li> Logger.OFF - all closed. </ li>
-         * </ Ul>
-         *param LogType from this level to start printing.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
-         * 此功能只在 DEBUG 模式下才生效。<br/>
-         * <ul>
-         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
-         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
-         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
-         * <li>Logger.WARN -- 可以打印warn、error。</li>
-         * <li>Logger.ERROR -- 可以打印error。</li>
-         * <li>Logger.OFF -- 全部关闭。</li>
-         * </ul>
-         * @param logType 从这个等级开始打印。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static logLevel: string;
-    }
-}
-declare module egret {
-    /**
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    class NumberUtils {
-        /**
-         * @language en_US
-         * Judge whether it is a numerical value
-         * @param value Parameter that needs to be judged
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 判断是否是数值
-         * @param value 需要判断的参数
-         * @returns
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static isNumber(value: any): boolean;
-        /**
-         * @language en_US
-         * Obtain the approximate sin value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} sin value
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 得到对应角度值的sin近似值
-         * @param value {number} 角度值
-         * @returns {number} sin值
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static sin(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static sinInt(value);
-        /**
-         * @language en_US
-         * Obtain the approximate cos value of the corresponding angle value
-         * @param value {number} Angle value
-         * @returns {number} cos value
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 得到对应角度值的cos近似值
-         * @param value {number} 角度值
-         * @returns {number} cos值
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        static cos(value: number): number;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        private static cosInt(value);
-    }
-}
-declare var egret_sin_map: {};
-declare var egret_cos_map: {};
-declare var DEG_TO_RAD: number;
-declare module egret {
-    /**
-     * @language en_US
-     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
-     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
-     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
-     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
-     * slightly offset intervals.
-     * @see egret.TimerEvent
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    /**
-     * @language zh_CN
-     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
-     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
-     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
-     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
-     * @see egret.TimerEvent
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/Timer.ts
-     */
-    class Timer extends EventDispatcher {
-        /**
-         * @language en_US
-         * Constructs a new Timer object with the specified delay and repeatCount states.
-         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
-         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
-         * the timer runs the specified number of times and then stops.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
-         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        constructor(delay: number, repeatCount?: number);
-        /**
-         * @private
-         */
-        private _delay;
-        /**
-         * @language en_US
-         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
-         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
-         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        delay: number;
-        /**
-         * @language en_US
-         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
-         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
-         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
-         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        repeatCount: number;
-        /**
-         * @private
-         */
-        private _currentCount;
-        /**
-         * @language en_US
-         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        currentCount: number;
-        /**
-         * @private
-         */
-        private _running;
-        /**
-         * @language en_US
-         * The timer's current state; true if the timer is running, otherwise false.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        running: boolean;
-        /**
-         * @language en_US
-         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
-         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        reset(): void;
-        /**
-         * @language en_US
-         * Starts the timer, if it is not already running.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 如果计时器尚未运行，则启动计时器。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        start(): void;
-        /**
-         * @language en_US
-         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
-         * repetitions, as set by the repeatCount property.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        stop(): void;
-        /**
-         * @private
-         */
-        private updateInterval;
-        /**
-         * @private
-         */
-        private lastCount;
-        /**
-         * @private
-         * Ticker以60FPS频率刷新此方法
-         */
-        $update(timeStamp: number): boolean;
-    }
-}
-declare module egret {
-    /**
-     * @language en_US
-     * The XMLNode class is the base class for all xml node.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML节点基类
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    interface XMLNode {
-        /**
-         * @language en_US
-         * a integer representing the type of the node, 1：XML，2：XMLAttribute，3：XMLText
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点类型，1：XML，2：XMLAttribute，3：XMLText
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        nodeType: number;
-        /**
-         * @language en_US
-         * the parent node of this xml node.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点所属的父级节点
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        parent: XML;
-    }
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/XML.ts
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Egret 2.4
-     * @platform Web,Native
-     * @includeExample egret/utils/XML.ts
-     */
-    interface XML extends XMLNode {
-        /**
-         * @language en_US
-         * the attributes of this xml node.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 当前节点上的属性列表
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        attributes: any;
-        /**
-         * @language en_US
-         * the children of the xml node.
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 当前节点的子节点列表
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        children: XMLNode[];
-        /**
-         * @language en_US
-         * the full name of this xml node. For example,the name of <s:Button/> is "s:Button".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点完整名称。例如节点 <s:Button/> 的 name 为："s:Button"
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        name: string;
-        /**
-         * @language en_US
-         * thie namesapce prefix of this xml node.For example,the prefix of <s:Button/> is "s".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        prefix: string;
-        /**
-         * @language en_US
-         * the local name of this xml node. For example,the local name of <s:Button/> is "Button".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        localName: string;
-        /**
-         * @language en_US
-         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/eui"/> is "http://ns.egret.com/eui".
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        namespace: string;
-    }
-    /**
-     * @language en_US
-     * The XMLText class represents a string node in the XML.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XMLText 类表示在XML中的文本节点
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    interface XMLText extends XMLNode {
-        /**
-         * @language en_US
-         * the text content
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 文本内容
-         * @version Egret 2.4
-         * @platform Web,Native
-         */
-        text: string;
-    }
-    /**
-     * @language en_US
-     * The XML class contains properties for working with XML objects.
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @language zh_CN
-     * XML 类包含用于处理 XML 对象的属性。
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    var XML: {
-        /**
-         * @language en_US
-         * parses a text to XML instance.
-         * @param text the text to be parsed.
-         */
-        /**
-         * @language zh_CN
-         * 解析字符串为XML对象
-         * @param text 要解析的XML对象。
-         */
-        parse(text: string): XML;
-    };
-}
-declare module egret {
-    /**
      * @private
      */
     var $callLaterFunctionList: Array<any>;
@@ -14549,6 +14219,209 @@ declare module egret {
 declare module egret {
     /**
      * @language en_US
+     * Logger is an entrance for the log processing module of the engine
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Logger是引擎的日志处理模块入口
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class Logger {
+        /**
+         * @language en_US
+         * open all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全开
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static ALL: string;
+        /**
+         * @language en_US
+         * level: DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static DEBUG: string;
+        /**
+         * @language en_US
+         * level: INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static INFO: string;
+        /**
+         * @language en_US
+         * level: WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static WARN: string;
+        /**
+         * @language en_US
+         * level: ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static ERROR: string;
+        /**
+         * @language en_US
+         * close all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全关
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static OFF: string;
+        /**
+         * @language en_US
+         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
+         * This feature is only in DEBUG mode to take effect. <br/>
+         * <Ul>
+         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
+         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
+         * <Li> Logger.INFO - print info, log, warn, error. </ li>
+         * <Li> Logger.WARN - can print warn, error. </ li>
+         * <Li> Logger.ERROR - You can print error. </ li>
+         * <Li> Logger.OFF - all closed. </ li>
+         * </ Ul>
+         *param LogType from this level to start printing.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
+         * 此功能只在 DEBUG 模式下才生效。<br/>
+         * <ul>
+         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
+         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
+         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
+         * <li>Logger.WARN -- 可以打印warn、error。</li>
+         * <li>Logger.ERROR -- 可以打印error。</li>
+         * <li>Logger.OFF -- 全部关闭。</li>
+         * </ul>
+         * @param logType 从这个等级开始打印。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static logLevel: string;
+    }
+}
+declare module egret {
+    /**
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    class NumberUtils {
+        /**
+         * @language en_US
+         * Judge whether it is a numerical value
+         * @param value Parameter that needs to be judged
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 判断是否是数值
+         * @param value 需要判断的参数
+         * @returns
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static isNumber(value: any): boolean;
+        /**
+         * @language en_US
+         * Obtain the approximate sin value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} sin value
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 得到对应角度值的sin近似值
+         * @param value {number} 角度值
+         * @returns {number} sin值
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static sin(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static sinInt(value);
+        /**
+         * @language en_US
+         * Obtain the approximate cos value of the corresponding angle value
+         * @param value {number} Angle value
+         * @returns {number} cos value
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 得到对应角度值的cos近似值
+         * @param value {number} 角度值
+         * @returns {number} cos值
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        static cos(value: number): number;
+        /**
+         * @private
+         *
+         * @param value
+         * @returns
+         */
+        private static cosInt(value);
+    }
+}
+declare var egret_sin_map: {};
+declare var egret_cos_map: {};
+declare var DEG_TO_RAD: number;
+declare module egret {
+    /**
+     * @language en_US
      * Register and start a timer,which will notify the callback method at a rate of 60 FPS ,and pass the current time stamp as parameters.<br/>
      * Note: After the registration,it will notify the callback method continuously,you can call the stopTick () method to stop it.
      * @param callBack the call back method. the timeStamp parameter of this method represents the number of milliseconds
@@ -14593,6 +14466,175 @@ declare module egret {
 }
 declare module egret {
     /**
+     * @language en_US
+     * The Timer class is the interface to timers, which let you run code on a specified time sequence. Use the start()
+     * method to start a timer. Add an event listener for the timer event to set up code to be run on the timer interval.<br/>
+     * You can create Timer objects to run once or repeat at specified intervals to execute code on a schedule. Depending
+     * on the framerate or the runtime environment (available memory and other factors), the runtime may dispatchEvent events at
+     * slightly offset intervals.
+     * @see egret.TimerEvent
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    /**
+     * @language zh_CN
+     * Timer 类是计时器的接口，它使您能按指定的时间序列运行代码。
+     * 使用 start() 方法来启动计时器。为 timer 事件添加事件侦听器，以便将代码设置为按计时器间隔运行。
+     * 可以创建 Timer 对象以运行一次或按指定间隔重复运行，从而按计划执行代码。
+     * 根据 Egret 的帧速率或运行时环境（可用内存和其他因素），运行时调度事件的间隔可能稍有不同。
+     * @see egret.TimerEvent
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/Timer.ts
+     */
+    class Timer extends EventDispatcher {
+        /**
+         * @language en_US
+         * Constructs a new Timer object with the specified delay and repeatCount states.
+         * @param delay The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.
+         * Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @param repeatCount Specifies the number of repetitions. If zero, the timer repeats indefinitely.If nonzero,
+         * the timer runs the specified number of times and then stops.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 使用指定的 delay 和 repeatCount 状态构造新的 Timer 对象。
+         * @param delay 计时器事件间的延迟（以毫秒为单位）。建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @param repeatCount 指定重复次数。如果为零，则计时器将持续不断重复运行。如果不为 0，则将运行计时器，运行次数为指定的次数，然后停止。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        constructor(delay: number, repeatCount?: number);
+        /**
+         * @private
+         */
+        private _delay;
+        /**
+         * @language en_US
+         * The delay between timer events, in milliseconds. A delay lower than 20 milliseconds is not recommended.<br/>
+         * Note: Timer frequency is limited to 60 frames per second, meaning a delay lower than 16.6 milliseconds causes runtime problems.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器事件间的延迟（以毫秒为单位）。如果在计时器正在运行时设置延迟间隔，则计时器将按相同的 repeatCount 迭代重新启动。<br/>
+         * 注意：建议 delay 不要低于 20 毫秒。计时器频率不得超过 60 帧/秒，这意味着低于 16.6 毫秒的延迟可导致出现运行时问题。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        delay: number;
+        /**
+         * @language en_US
+         * The total number of times the timer is set to run. If the repeat count is set to 0, the timer continues indefinitely,
+         * until the stop() method is invoked or the program stops. If the repeat count is nonzero, the timer runs the specified
+         * number of times. If repeatCount is set to a total that is the same or less then currentCount the timer stops and will not fire again.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 设置的计时器运行总次数。如果重复计数设置为 0，则计时器将持续不断运行，或直至调用了 stop() 方法或节目停止。
+         * 如果重复计数不为 0，则将运行计时器，运行次数为指定的次数。如果设置的 repeatCount 总数等于或小于 currentCount，则计时器将停止并且不会再次触发。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        repeatCount: number;
+        /**
+         * @private
+         */
+        private _currentCount;
+        /**
+         * @language en_US
+         * The total number of times the timer has fired since it started at zero. If the timer has been reset, only the fires since the reset are counted.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器从 0 开始后触发的总次数。如果已重置了计时器，则只会计入重置后的触发次数。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        currentCount: number;
+        /**
+         * @private
+         */
+        private _running;
+        /**
+         * @language en_US
+         * The timer's current state; true if the timer is running, otherwise false.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 计时器的当前状态；如果计时器正在运行，则为 true，否则为 false。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        running: boolean;
+        /**
+         * @language en_US
+         * Stops the timer, if it is running, and sets the currentCount property back to 0, like the reset button of a stopwatch.
+         * Then, when start() is called, the timer instance runs for the specified number of repetitions, as set by the repeatCount value.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器正在运行，则停止计时器，并将 currentCount 属性设回为 0，这类似于秒表的重置按钮。然后，在调用 start() 后，将运行计时器实例，运行次数为指定的重复次数（由 repeatCount 值设置）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        reset(): void;
+        /**
+         * @language en_US
+         * Starts the timer, if it is not already running.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 如果计时器尚未运行，则启动计时器。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        start(): void;
+        /**
+         * @language en_US
+         * Stops the timer. When start() is called after stop(), the timer instance runs for the remaining number of
+         * repetitions, as set by the repeatCount property.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止计时器。如果在调用 stop() 后调用 start()，则将继续运行计时器实例，运行次数为剩余的 重复次数（由 repeatCount 属性设置）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        stop(): void;
+        /**
+         * @private
+         */
+        private updateInterval;
+        /**
+         * @private
+         */
+        private lastCount;
+        /**
+         * @private
+         * Ticker以60FPS频率刷新此方法
+         */
+        $update(timeStamp: number): boolean;
+    }
+}
+declare module egret {
+    /**
      * @language zh_CN
      * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
      * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
@@ -14628,4 +14670,192 @@ declare module egret {
      * @includeExample egret/utils/toColorString.ts
      */
     function toColorString(value: number): string;
+}
+declare module egret {
+    /**
+     * @language en_US
+     * The XMLNode class is the base class for all xml node.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML节点基类
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    interface XMLNode {
+        /**
+         * @language en_US
+         * a integer representing the type of the node, 1：XML，2：XMLAttribute，3：XMLText
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点类型，1：XML，2：XMLAttribute，3：XMLText
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        nodeType: number;
+        /**
+         * @language en_US
+         * the parent node of this xml node.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点所属的父级节点
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        parent: XML;
+    }
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/XML.ts
+     */
+    interface XML extends XMLNode {
+        /**
+         * @language en_US
+         * the attributes of this xml node.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点上的属性列表
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        attributes: any;
+        /**
+         * @language en_US
+         * the children of the xml node.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 当前节点的子节点列表
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        children: XMLNode[];
+        /**
+         * @language en_US
+         * the full name of this xml node. For example,the name of <s:Button/> is "s:Button".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点完整名称。例如节点 <s:Button/> 的 name 为："s:Button"
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        name: string;
+        /**
+         * @language en_US
+         * thie namesapce prefix of this xml node.For example,the prefix of <s:Button/> is "s".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间前缀。例如节点 <s:Button/> 的 prefix 为：s
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        prefix: string;
+        /**
+         * @language en_US
+         * the local name of this xml node. For example,the local name of <s:Button/> is "Button".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的本地名称。例如节点 <s:Button/> 的 localName 为：Button
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        localName: string;
+        /**
+         * @language en_US
+         * the namesapce uri of this xml node.For example,the namespace uri of <s:Skin xmlns:s="http://ns.egret.com/eui"/> is "http://ns.egret.com/eui".
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 节点的命名空间地址。例如节点 <s:Skin xmlns:s="http://ns.egret.com/eui"/> 的 namespace 为： http://ns.egret.com/eui
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        namespace: string;
+    }
+    /**
+     * @language en_US
+     * The XMLText class represents a string node in the XML.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XMLText 类表示在XML中的文本节点
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    interface XMLText extends XMLNode {
+        /**
+         * @language en_US
+         * the text content
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本内容
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        text: string;
+    }
+    /**
+     * @language en_US
+     * The XML class contains properties for working with XML objects.
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * XML 类包含用于处理 XML 对象的属性。
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    var XML: {
+        /**
+         * @language en_US
+         * parses a text to XML instance.
+         * @param text the text to be parsed.
+         */
+        /**
+         * @language zh_CN
+         * 解析字符串为XML对象
+         * @param text 要解析的XML对象。
+         */
+        parse(text: string): XML;
+    };
 }
