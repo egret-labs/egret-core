@@ -103,9 +103,15 @@ module egret.native {
 
                 loader.data = sound;
 
-                $callAsync(function() {
+                var loadedFunc = function () {
                     loader.dispatchEventWith(Event.COMPLETE);
-                }, self);
+                };
+                if(__global.setTimeout) {
+                    __global.setTimeout(loadedFunc, 0);
+                }
+                else {
+                    $callAsync(loadedFunc, self);
+                }
             }
 
             function removeListeners():void {
@@ -146,9 +152,15 @@ module egret.native {
 
                 loader.data = texture;
 
-                egret.$callAsync(function () {
+                var loadedFunc = function () {
                     loader.dispatchEventWith(Event.COMPLETE);
-                }, self);
+                };
+                if(__global.setTimeout) {
+                    __global.setTimeout(loadedFunc, 0);
+                }
+                else {
+                    egret.$callAsync(loadedFunc, self);
+                }
             }
 
             function removeListeners():void {

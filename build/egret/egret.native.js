@@ -1782,11 +1782,15 @@ var egret;
                 if (DEBUG && !url) {
                     egret.$error(3002);
                 }
+                var audio = new Audio(url);
+                audio.addEventListener("canplaythrough", onCanPlay);
+                audio.addEventListener("error", onAudioError);
+                this.originAudio = audio;
                 if (!egret_native.isFileExists(url)) {
                     download();
                 }
                 else {
-                    egret.$callAsync(onAudioLoaded, self);
+                    onAudioLoaded();
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();
@@ -1794,13 +1798,9 @@ var egret;
                     promise.onErrorFunc = onAudioError;
                     egret_native.download(url, url, promise);
                 }
-                var audio = new Audio(url);
-                audio.addEventListener("canplaythrough", onCanPlay);
-                audio.addEventListener("error", onAudioError);
-                this.originAudio = audio;
                 function onAudioLoaded() {
                     audio.load();
-                    NativeSound.$recycle(this.url, audio);
+                    NativeSound.$recycle(url, audio);
                 }
                 function onCanPlay() {
                     removeListeners();
@@ -2117,7 +2117,7 @@ var egret;
                     download();
                 }
                 else {
-                    egret.$callAsync(onLoadComplete, self);
+                    onLoadComplete();
                 }
                 function download() {
                     var promise = egret.PromiseObject.create();

@@ -104,7 +104,7 @@ module egret.native {
                 download();
             }
             else {
-                $callAsync(onLoadComplete, self);
+                onLoadComplete();
             }
 
             function download() {
