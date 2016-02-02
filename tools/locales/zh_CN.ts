@@ -99,7 +99,7 @@ module egret {
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
     locale_strings[1601] = "请输入h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
-    locale_strings[1602] = "缺少egretProperties.json或格式不正确。 \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
+    locale_strings[1602] = "不是h5游戏目录(缺少egretProperties.json或格式不正确) \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
     locale_strings[1603] = "缺少create_app.json。\n请从以下地址下载最新手机平台支持库\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS: http://www.egret-labs.org/download/egret-ios-packager-download.html";
     locale_strings[1604] = "执行egret build命令失败";
     locale_strings[1605] = "移动平台项目目录不能与html5项目目录为同一目录，请修改移动平台项目目录。";

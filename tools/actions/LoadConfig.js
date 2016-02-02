@@ -22,19 +22,20 @@ function loadTsConfig(url, options) {
                 var optionName = notSupport[i];
                 if (compilerOptions.hasOwnProperty(optionName)) {
                     var outputError = true;
-                    if(optionName == 'target' && compilerOptions[optionName].toLowerCase() == 'es5'){
+                    //下面几种情况不输出错误信息
+                    if (optionName == 'target' && compilerOptions[optionName].toLowerCase() == 'es5') {
                         outputError = false;
-                    }else if(optionName=='outDir'){
+                    }
+                    else if (optionName == 'outDir') {
                         var outdir = compilerOptions[optionName].toLowerCase();
-                        if(outdir == 'bin-debug'||outdir=='./bin-debug'){
+                        if (outdir == 'bin-debug' || outdir == './bin-debug') {
                             outputError = false;
                         }
                     }
-
-                    if(outputError){
-                        var error = utils.tr(1116, optionName);//这个编译选项目前不支持修改
+                    if (outputError) {
+                        var error = utils.tr(1116, optionName); //这个编译选项目前不支持修改
                         errLog.push(error);
-                        console.log(error);//build -e 的时候输出
+                        console.log(error); //build -e 的时候输出
                         delete compilerOptions[optionName];
                     }
                 }

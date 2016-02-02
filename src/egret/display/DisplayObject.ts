@@ -2027,7 +2027,7 @@ module egret {
                     return false;
                 }
                 var m = this.$getInvertedConcatenatedMatrix();
-                var bounds = this.getBounds();
+                var bounds = this.getBounds(null, false);
                 var localX = m.a * x + m.c * y + m.tx;
                 var localY = m.b * x + m.d * y + m.ty;
                 if (bounds.contains(localX, localY)) {

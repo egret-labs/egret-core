@@ -1478,10 +1478,10 @@ module egret {
                 tmpBounds.width += _strokeDouble * 2;
                 tmpBounds.height += _strokeDouble * 2;
             }
-            tmpBounds.x -= _strokeDouble;
-            tmpBounds.y -= _strokeDouble;
-            tmpBounds.width = Math.ceil(tmpBounds.width)+2;//+2 是为了解决脏区域的问题
-            tmpBounds.height = Math.ceil(tmpBounds.height)+2;
+            tmpBounds.x -= _strokeDouble+2;//+2和+4 是为了解决脏区域的问题
+            tmpBounds.y -= _strokeDouble+2;
+            tmpBounds.width = Math.ceil(tmpBounds.width)+4;
+            tmpBounds.height = Math.ceil(tmpBounds.height)+4;
             var result = super.$update(tmpBounds);
             Rectangle.release(tmpBounds);
             return result;

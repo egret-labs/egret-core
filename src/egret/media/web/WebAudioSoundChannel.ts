@@ -135,6 +135,10 @@ module egret.web {
                 this.$audioBuffer = null;
             }
 
+            if (!this.isStopped) {
+                sys.$popSoundChannel(this);
+            }
+
             this.isStopped = true;
         }
 

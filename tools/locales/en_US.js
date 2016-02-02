@@ -33,7 +33,7 @@ locale_strings[0] = "Successful implementation";
 locale_strings[1] = "Compilation fails";
 locale_strings[3] = "Time: {0} second";
 locale_strings[4] = "Script execution failed";
-locale_strings[5] = "CompilerOptionsErrors in tsconfig.json";
+locale_strings[5] = "Compile failed";
 locale_strings[6] = "manifest.json generated successfully";
 locale_strings[7] = "Total time for native copy: {0} second",
     //create

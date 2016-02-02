@@ -113,7 +113,7 @@ module egret.web {
             if (this.$textfield.multiline) {
                 this.inputDiv.style.top = (y) * scaleY + "px";
 
-                this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) + "px";
+                this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) * scaleY + "px";
             }
             else {
                 this.inputDiv.style.top = y * scaleY + "px";

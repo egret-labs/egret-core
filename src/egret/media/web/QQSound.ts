@@ -146,6 +146,9 @@ module egret.web {
             channel.$type = this.type;
             channel.$startTime = startTime;
             channel.$play();
+
+            sys.$pushSoundChannel(channel);
+
             return channel;
         }
 

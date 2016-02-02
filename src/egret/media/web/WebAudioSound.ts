@@ -224,6 +224,9 @@ module egret.web {
             channel.$audioBuffer = this.audioBuffer;
             channel.$startTime = startTime;
             channel.$play();
+
+            sys.$pushSoundChannel(channel);
+
             return channel;
         }
 

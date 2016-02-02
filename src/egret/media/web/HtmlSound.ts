@@ -161,6 +161,9 @@ module egret.web {
             channel.$loops = loops;
             channel.$startTime = startTime;
             channel.$play();
+
+            sys.$pushSoundChannel(channel);
+
             return channel;
         }
 

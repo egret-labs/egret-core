@@ -41,6 +41,7 @@ module egret {
     locale_strings[1039] = "crossOrigin images can not set pixelHitTest  property!";
     locale_strings[1040] = "hitTestPoint can not detect crossOrigin images! Please check if the display object has crossOrigin elements.";
     locale_strings[1041] = "egret.MainContext.runtimeType is deprecated, please use egret.Capabilities.runtimeType replace";
+    locale_strings[1042] = "The parameters passed in the region needs is an integer in drawToTexture method. Otherwise, some browsers will draw abnormal.";
 
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
