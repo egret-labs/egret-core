@@ -39,12 +39,13 @@ module dragonBones {
 		 * DragonBones当前数据格式版本
 		 */
 		public static DATA_VERSION:string = "4.0";
+		public static DATA_VERSION_4_5:string = "4.5";
 		/**
 		 *
 		 */
         public static PARENT_COORDINATE_DATA_VERSION:string = "3.0";
 
-        public static VERSION:string = "4.3.5";
+        public static VERSION:string = "4.5.0";
 		
 		public constructor(){
 		}

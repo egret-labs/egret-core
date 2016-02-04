@@ -43,5 +43,6 @@ module dragonBones {
 		colorChanged:boolean;
 		colorTransform:ColorTransform;
 		displayIndex:number;
+        gotoAndPlay:string;
 	}
 }

@@ -112,7 +112,9 @@ module dragonBones {
 		public _offsetZOrder:number;
 		/** @private */
 		public _originDisplayIndex:number;
-		
+		/** @private */
+		public _gotoAndPlay:string;
+        
 		public _displayList:Array<any>;
 		public _currentDisplayIndex:number = 0;
 		public _colorTransform:ColorTransform;
@@ -247,14 +249,24 @@ module dragonBones {
 		private updateChildArmatureAnimation():void{
 			if(this.childArmature){
 				if(this._isShowDisplay){
-					if(
-						this._armature &&
-						this._armature.animation.lastAnimationState &&
-						this.childArmature.animation.hasAnimation(this._armature.animation.lastAnimationState.name)
-					){
-						this.childArmature.animation.gotoAndPlay(this._armature.animation.lastAnimationState.name);
+					var curAnimation:string = this._gotoAndPlay;
+					if (curAnimation == null)
+					{
+						curAnimation = this.childArmature.armatureData.defaultAnimation;
 					}
-					else{
+					if (curAnimation == null)
+					{
+						if (this._armature && this._armature.animation.lastAnimationState)
+						{
+							curAnimation = this._armature.animation.lastAnimationState.name;
+						}
+					}
+					if (curAnimation && this.childArmature.animation.hasAnimation(curAnimation))
+					{
+						this.childArmature.animation.gotoAndPlay(curAnimation);
+					}
+					else
+					{
 						this.childArmature.animation.play();
 					}
 				}
@@ -468,6 +480,19 @@ module dragonBones {
 			}
 		}
 		
+        /**
+         * 播放子骨架的动画
+         * @member {string} dragonBones.Slot#gotoAndPlay
+         */
+        public set gotoAndPlay(value:string) 
+		{
+			if (this._gotoAndPlay != value)
+			{
+				this._gotoAndPlay = value;
+				this.updateChildArmatureAnimation();
+			}
+		}
+        
 		//Abstract method
 		
 		/**
@@ -590,6 +615,10 @@ module dragonBones {
 						this.childArmature.animation.gotoAndPlay(frame.action);
 					}
 				}
+                else
+                {
+                    this.gotoAndPlay = slotFrame.gotoAndPlay;
+                }
 			}
 		}
 

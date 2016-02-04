@@ -132,6 +132,7 @@ module dragonBones {
 			var version:string = rawDataToParse[ConstValues.A_VERSION];
             version = version.toString();
             if( version.toString() != DragonBones.DATA_VERSION &&
+                version.toString() != DragonBones.DATA_VERSION_4_5 &&
                 version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION &&
 				version.toString() != "2.3")
             {
@@ -165,7 +166,8 @@ module dragonBones {
 		private static parseArmatureData(armatureDataToParse:any, frameRate:number):ArmatureData{
 			var outputArmatureData:ArmatureData = new ArmatureData();
 			outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
-
+            outputArmatureData.defaultAnimation = armatureDataToParse[ConstValues.A_DEFAULT_ANIMATION];
+               
             var boneList:any = armatureDataToParse[ConstValues.BONE];
             var i:number;
             var len:number;
@@ -431,7 +433,7 @@ module dragonBones {
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
 			outputFrame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
 			outputFrame.displayIndex = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
-
+            outputFrame.gotoAndPlay = frameObject[ConstValues.A_GOTOANDPLAY];
 			//如果为NaN，则说明没有改变过zOrder
 			outputFrame.zOrder = DataParser.getNumber(frameObject, ConstValues.A_Z_ORDER, DataParser.tempDragonBonesData.isGlobal ? NaN : 0);
 
