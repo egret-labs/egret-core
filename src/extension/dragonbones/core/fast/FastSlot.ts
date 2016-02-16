@@ -144,7 +144,11 @@ module dragonBones {
 				return;
 			}
 			
-			this._updateGlobal();
+			var result:ParentTransformObject = this._updateGlobal();
+            if(result)
+            {
+                result.release();
+            }
 			this._updateTransform();
 		}
 		

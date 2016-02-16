@@ -231,7 +231,11 @@ module dragonBones {
 				return;
 			}
 
-            this._updateGlobal();
+            var result:ParentTransformObject = this._updateGlobal();
+            if(result)
+            {
+                result.release();
+            }
             this._updateTransform();
 			this._needUpdate = false;
 		}
@@ -622,11 +626,11 @@ module dragonBones {
 			}
 		}
 
-		public _updateGlobal():any {
+		public _updateGlobal():ParentTransformObject {
             this._calculateRelativeParentTransform();
             TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
 
-            var output:any = this._calculateParentTransform();
+            var output:ParentTransformObject = this._calculateParentTransform();
             if (output) {
                 this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
                 TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);

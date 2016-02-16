@@ -157,7 +157,14 @@ module dragonBones {
 		public get animation():Animation{
 			return this._animation;
 		}
-
+        
+        private _isFading:boolean;
+ 		private _i:number;
+        private _len:number;
+ 		private _tmpBone:Bone;
+ 		private _childArmature:Armature;
+ 		private _tmpSlot:Slot;
+         
 		public constructor(display:any){
 			super();
 			this._display = display;
@@ -236,20 +243,20 @@ module dragonBones {
 			
 			passedTime *= this._animation.timeScale;    //_animation's time scale will impact childArmature
 			
-			var isFading:boolean = this._animation._isFading;
+			this._isFading = this._animation._isFading;
 
-			var i:number = this._boneList.length;
-			while(i --){
-				var bone:Bone = this._boneList[i];
-				bone._update(isFading);
+			this._i = this._boneList.length;
+			while(this._i --){
+				this._tmpBone = this._boneList[this._i];
+				this._tmpBone._update(this._isFading);
 			}
 			
-			i = this._slotList.length;
-			while(i --){
-				var slot:Slot = this._slotList[i];
-				slot._update();
-				if(slot._isShowDisplay){
-					var childArmature:Armature = slot.childArmature;
+			this._i = this._slotList.length;
+			while(this._i --){
+				this._tmpSlot = this._slotList[this._i];
+				this._tmpSlot._update();
+				if(this._tmpSlot._isShowDisplay){
+					var childArmature:Armature = this._tmpSlot.childArmature;
 					if(childArmature){
 						childArmature.advanceTime(passedTime);
 					}
@@ -265,9 +272,9 @@ module dragonBones {
 			}
 			
 			if(this._eventList.length > 0){
-                for(var i:number = 0,len:number = this._eventList.length; i< len; i++)
+                for(this._i = 0,this._len = this._eventList.length; this._i < this._len; this._i++)
                 {
-                    var event:Event = this._eventList[i];
+                    var event:Event = this._eventList[this._i];
                     this.dispatchEvent(event);
                 }
 				this._eventList.length = 0;

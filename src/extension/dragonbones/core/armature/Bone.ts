@@ -179,7 +179,7 @@ module dragonBones {
 
         private _tempGlobalTransformForChild:DBTransform;
         private _tempGlobalTransformMatrixForChild:Matrix;
-
+        
 		public constructor(){
 			super();
 			
@@ -407,9 +407,15 @@ module dragonBones {
 			this.blendingTimeline();
 
             //计算global
-            var result:any = this._updateGlobal();
-            var parentGlobalTransform:DBTransform = result ? result.parentGlobalTransform : null;
-            var parentGlobalTransformMatrix:Matrix = result ? result.parentGlobalTransformMatrix : null;
+            var result:ParentTransformObject = this._updateGlobal();
+            var parentGlobalTransform:DBTransform;
+            var parentGlobalTransformMatrix:Matrix;
+            if(result)
+            {
+                parentGlobalTransform = result.parentGlobalTransform;
+                parentGlobalTransformMatrix = result.parentGlobalTransformMatrix;
+                result.release();
+            }
 
 
             //计算globalForChild
