@@ -64,7 +64,7 @@ module egret.sys {
         public constructor(root:DisplayObject) {
             super();
             this.root = root;
-            this.dirtyRegion.displayList = this;
+            this.dirtyRegion = new DirtyRegion(root);
             this.isStage = (root instanceof Stage);
         }
 
@@ -202,7 +202,7 @@ module egret.sys {
         /**
          * @private
          */
-        private dirtyRegion:DirtyRegion = new DirtyRegion();
+        private dirtyRegion:DirtyRegion;
 
         /**
          * @private
