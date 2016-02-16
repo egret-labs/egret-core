@@ -326,5 +326,13 @@ module dragonBones {
 		 * 旋转修正
 		 */
 		public static A_FIXED_ROTATION:string = "fixedRotation";
+        /**
+         * 默认动画
+         */
+        public static A_DEFAULT_ANIMATION:string = "defaultAnimation";
+        /**
+         * 播放子骨架的动画
+         */
+		public static A_GOTOANDPLAY:string = "gotoAndPlay";
 	}
 }

@@ -49,7 +49,13 @@ module dragonBones {
 		private _skinDataList:Array<SkinData>;
 		private _slotDataList:Array<SlotData>;
 		private _animationDataList:Array<AnimationData>;
-
+        
+        /**
+         * 默认动画
+         * @member {string} dragonBones.ArmatureData#defaultAnimation
+         */
+        public defaultAnimation:string;
+        
         public static sortBoneDataHelpArray(object1:any, object2:any):number {
             return object1[0] > object2[0] ? 1 : -1;
         }

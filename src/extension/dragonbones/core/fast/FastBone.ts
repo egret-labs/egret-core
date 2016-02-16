@@ -129,7 +129,11 @@ module dragonBones {
 			}
 			this.blendingTimeline();
 			//计算global
-			this._updateGlobal();
+            var result:ParentTransformObject = this._updateGlobal();
+            if(result)
+            {
+                result.release();
+            }
 		}
 		
 		/** @private */

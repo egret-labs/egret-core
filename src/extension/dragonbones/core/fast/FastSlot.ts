@@ -51,7 +51,9 @@ module dragonBones {
 		public _offsetZOrder:number;
 		/** @private */
 		public _originDisplayIndex:number;
-
+        /** @private */
+		public _gotoAndPlay:string;
+        
 		public _displayList:Array<any>;
 		public _currentDisplayIndex:number = 0;
 		public _colorTransform:ColorTransform;
@@ -133,6 +135,7 @@ module dragonBones {
 			
 		//displayIndex
 			this._changeDisplayIndex((<SlotFrameCache><any> (this._frameCache)).displayIndex);
+			this.gotoAndPlay = (<SlotFrameCache><any> (this._frameCache)).gotoAndPlay;
 		}
 		
 		/** @private */
@@ -141,7 +144,11 @@ module dragonBones {
 				return;
 			}
 			
-			this._updateGlobal();
+			var result:ParentTransformObject = this._updateGlobal();
+            if(result)
+            {
+                result.release();
+            }
 			this._updateTransform();
 		}
 		
@@ -151,6 +158,41 @@ module dragonBones {
 			this._global.y += this._parent._tweenPivot.y;
 		}
 		
+        public updateChildArmatureAnimation():void
+		{
+			if(this.childArmature)
+			{
+				if(this._currentDisplayIndex >= 0)
+				{
+					var curAnimation:string = this._gotoAndPlay;
+					if (curAnimation == null)
+					{
+						curAnimation = this.childArmature.armatureData.defaultAnimation;
+					}
+					if (curAnimation == null)
+					{
+						if (this.armature && this.armature.animation.lastAnimationState)
+						{
+							curAnimation = this.armature.animation.lastAnimationState.name;
+						}
+					}
+					if (curAnimation && this.childArmature.animation.hasAnimation(curAnimation))
+					{
+						this.childArmature.animation.gotoAndPlay(curAnimation);
+					}
+					else
+					{
+						this.childArmature.animation.play();
+					}
+				}
+				else
+				{
+					this.childArmature.animation.stop();
+					this.childArmature.animation._lastAnimationState = null;
+				}
+			}
+		}
+        
 		public initDisplayList(newDisplayList:Array<any>):void{
 			this._displayList = newDisplayList;
 		}
@@ -346,6 +388,19 @@ module dragonBones {
 			}
 		}
 		
+        /**
+         * 播放子骨架动画
+		 * @member {string} dragonBones.FastSlot#gotoAndPlay
+         */
+        public set gotoAndPlay(value:string) 
+		{
+			if (this._gotoAndPlay != value)
+			{
+				this._gotoAndPlay = value;
+				this.updateChildArmatureAnimation();
+			}
+		}
+        
 		public get colorTransform():ColorTransform{
 			return this._colorTransform;
 		}
@@ -358,6 +413,9 @@ module dragonBones {
 			return this._isColorChanged;
 		}
 		
+        public get gotoAndPlay():string{
+            return this._gotoAndPlay;
+        }
 	//Abstract method
 		/**
 		 * @private
@@ -473,6 +531,10 @@ module dragonBones {
 					targetArmature.getAnimation().gotoAndPlay(frame.action);
 				}
 			}
+            else
+            {
+                this.gotoAndPlay = slotFrame.gotoAndPlay;
+            }
 		}
 		
 				/** @private */

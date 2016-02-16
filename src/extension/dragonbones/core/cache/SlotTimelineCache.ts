@@ -94,6 +94,7 @@ module dragonBones {
 				cache.colorTransform =  ColorTransformUtil.cloneColor(this.cacheGenerator.colorTransform);
 			}
 			cache.displayIndex = this.cacheGenerator.displayIndex;
+            cache.gotoAndPlay = this.cacheGenerator.gotoAndPlay;
 			this.frameCacheList.push(cache);
 		}
 	}

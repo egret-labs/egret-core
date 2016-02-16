@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -29,25 +29,58 @@
 
 
 module dragonBones {
-	/**
-	 * @class dragonBones.DragonBones
-	 * @classdesc
-	 * DragonBones
-	 */
-	export class DragonBones{
-		/**
-		 * DragonBones当前数据格式版本
-		 */
-		public static DATA_VERSION:string = "4.0";
-		public static DATA_VERSION_4_5:string = "4.5";
-		/**
-		 *
-		 */
-        public static PARENT_COORDINATE_DATA_VERSION:string = "3.0";
-
-        public static VERSION:string = "4.5.1";
-		
-		public constructor(){
-		}
-	}
-}
+ 	
+ 	/**
+	 * optimized by freem-trg
+ 	 * Intermediate class for store the results of the parent transformation
+ 	 */
+ 	export class ParentTransformObject 
+ 	{
+ 		
+ 		public parentGlobalTransform:DBTransform;
+ 		public parentGlobalTransformMatrix:Matrix;
+ 		
+ 		/// Object pool to reduce GC load
+ 		private static _pool:ParentTransformObject[] = [];
+ 		private static _poolSize:number = 0;
+ 		
+ 		public constructor() 
+ 		{
+ 		}
+ 		
+ 		/// Method to set properties after its creation/pooling
+ 		public setTo(parentGlobalTransform:DBTransform, parentGlobalTransformMatrix:Matrix):ParentTransformObject
+ 		{
+ 			this.parentGlobalTransform = parentGlobalTransform;
+ 			this.parentGlobalTransformMatrix = parentGlobalTransformMatrix;
+ 			return this;
+ 		}
+ 		
+ 		/// Cleanup object and return it to the object pool
+ 		public release():void
+ 		{
+ 			ParentTransformObject.dispose(this);
+ 		}
+ 		
+ 		/// Create/take new clean object from the object pool
+ 		public static create():ParentTransformObject
+ 		{
+ 			if (ParentTransformObject._poolSize > 0)
+ 			{
+ 				ParentTransformObject._poolSize--;
+ 				return ParentTransformObject._pool.pop();
+ 			}
+ 			
+ 			return new ParentTransformObject();
+ 		}
+ 		
+ 		/// Cleanup object and return it to the object pool
+ 		public static dispose(parentTransformObject:ParentTransformObject):void
+ 		{
+ 			parentTransformObject.parentGlobalTransform = null;
+ 			parentTransformObject.parentGlobalTransformMatrix = null;
+ 			ParentTransformObject._pool[ParentTransformObject._poolSize++] = parentTransformObject;
+ 		}
+ 		
+ 	}
+} 
