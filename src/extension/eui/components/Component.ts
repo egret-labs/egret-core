@@ -195,7 +195,7 @@ module eui {
                     }
                     else {
                         clazz = egret.getDefinitionByName(skinName);
-                        if (!clazz && text.lastIndexOf(".") !== -1) {
+                        if (!clazz && text.toLowerCase().indexOf(".exml") != -1) {
                             EXML.load(skinName, this.onExmlLoaded, this, true);
                             return;
                         }
