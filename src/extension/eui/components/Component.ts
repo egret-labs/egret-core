@@ -105,7 +105,7 @@ module eui {
             };
             //if egret
             this.$touchEnabled = true;
-             //endif*/
+            //endif*/
         }
 
         $Component:Object;
@@ -164,7 +164,7 @@ module eui {
                 return;
             if (value) {
                 values[sys.ComponentKeys.skinName] = value;
-            } else if(this.$stage){
+            } else if (this.$stage) {
                 var theme = this.$stage.getImplementation("eui.Theme");
                 if (theme) {
                     var skinName = theme.getSkinName(this);
@@ -193,9 +193,9 @@ module eui {
                     if (text.charAt(0) == "<") {
                         clazz = EXML.parse(text);
                     }
-                    else{
+                    else {
                         clazz = egret.getDefinitionByName(skinName);
-                        if(!clazz){
+                        if (!clazz && text.lastIndexOf(".") !== -1) {
                             EXML.load(skinName, this.onExmlLoaded, this, true);
                             return;
                         }
@@ -214,10 +214,10 @@ module eui {
         /**
          * @private
          * @param clazz
-         * @param url 
+         * @param url
          */
-        private onExmlLoaded(clazz:any,url:string):void {
-            if(this.skinName!=url){
+        private onExmlLoaded(clazz:any, url:string):void {
+            if (this.skinName != url) {
                 return;
             }
             var skin = new clazz();
@@ -257,7 +257,7 @@ module eui {
          * @platform Web,Native
          */
         protected setSkin(skin:Skin):void {
-            if (skin&&!(skin instanceof eui.Skin)) {
+            if (skin && !(skin instanceof eui.Skin)) {
                 skin = null;
                 DEBUG && egret.$error(2202);
             }
@@ -277,7 +277,7 @@ module eui {
                     length = children.length;
                     for (var i = 0; i < length; i++) {
                         var child = children[i];
-                        if(child.$parent==this){
+                        if (child.$parent == this) {
                             this.removeChild(child);
                         }
                     }
@@ -297,8 +297,8 @@ module eui {
                 }
                 children = skin.$elementsContent;
                 if (children) {
-                    for (i = children.length-1; i >= 0; i--) {
-                        this.addChildAt(children[i],0);
+                    for (i = children.length - 1; i >= 0; i--) {
+                        this.addChildAt(children[i], 0);
                     }
                 }
                 skin.hostComponent = this;
@@ -406,8 +406,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setTouchChildren(value:boolean):boolean {
             value = !!value;
@@ -424,8 +424,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setTouchEnabled(value:boolean):boolean {
             value = !!value;
@@ -475,8 +475,8 @@ module eui {
 
         /**
          * @private
-         * 
-         * @param value 
+         *
+         * @param value
          */
         $setEnabled(value:boolean):boolean {
 
@@ -609,7 +609,7 @@ module eui {
             var values = this.$Component;
             if (!values[sys.ComponentKeys.skinName]) {
                 var theme = this.$stage.getImplementation("eui.Theme");
-                if(theme){
+                if (theme) {
                     var skinName = theme.getSkinName(this);
                     if (skinName) {
                         values[sys.ComponentKeys.skinName] = skinName;
@@ -1013,7 +1013,7 @@ module eui {
     }
     registerProperty(Component, "skinName", "Class");
     sys.implementUIComponent(Component, egret.DisplayObjectContainer, true);
-    if(DEBUG){
-        egret.$markReadOnly(Component,"skin");
+    if (DEBUG) {
+        egret.$markReadOnly(Component, "skin");
     }
 }
