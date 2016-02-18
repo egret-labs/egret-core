@@ -115,6 +115,7 @@ class Build implements egret.Command {
                 //todo exml
                 files = FileUtil.search(FileUtil.joinPath(options.projectDir, module.root), "ts");
             }
+            options['compilerOptions'] = {target: 1};//ES5
             //编译js文件到临时目录
             var result = compiler.compile({
                 args: options,
