@@ -66,7 +66,7 @@ module egret {
         if (prototype.hasOwnProperty("__class__")) {
             return prototype["__class__"];
         }
-        var constructorString:string = prototype.constructor.toString();
+        var constructorString:string = prototype.constructor.toString().trim();
         var index:number = constructorString.indexOf("(");
         var className:string = constructorString.substring(9, index);
         Object.defineProperty(prototype, "__class__", {
