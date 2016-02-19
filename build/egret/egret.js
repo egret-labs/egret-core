@@ -5410,18 +5410,28 @@ var egret;
             var endY = Math.sin(endAngle) * radius;
             var yMin = Math.min(startY, endY);
             var yMax = Math.max(startY, endY);
-            if (startAngle <= PI && endAngle >= PI) {
-                xMin = -radius;
+            var startRange = startAngle / (PI * 0.5);
+            var endRange = endAngle / (PI * 0.5);
+            for (var i = Math.ceil(startRange); i <= endRange; i++) {
+                switch (i % 4) {
+                    case 0:
+                        xMax = radius;
+                        break;
+                    case 1:
+                        yMax = radius;
+                        break;
+                    case 2:
+                        xMin = -radius;
+                        break;
+                    case 3:
+                        yMin = -radius;
+                        break;
+                }
             }
-            if (startAngle <= TwoPI && endAngle >= TwoPI) {
-                xMax = radius;
-            }
-            if (startAngle <= PacPI && endAngle >= PacPI) {
-                yMin = -radius;
-            }
-            if (startAngle <= HalfPI && endAngle >= HalfPI) {
-                yMax = radius;
-            }
+            xMin = Math.floor(xMin);
+            yMin = Math.floor(yMin);
+            xMax = Math.ceil(xMax);
+            yMax = Math.ceil(yMax);
             this.extendByPoint(xMin + x, yMin + y);
             this.extendByPoint(xMax + x, yMax + y);
         };
