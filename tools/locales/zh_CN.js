@@ -171,7 +171,15 @@ var egret;
     locale_strings[10012] = "如果您没有设置 IDE 保存自动编译，可以添加参数 -a 来启动自动编译";
     locale_strings[10013] = "Egret 服务器已经启动, 您可以通过以下URL访问: {0}";
     locale_strings[10014] = "自动编译失败，请参考下面的错误信息：";
-    locale_strings[10015] = "\"{0}\" 不是一个有效的 Egret 项目目录";
+    locale_strings[10015] = "{color_red}\"{0}\" 不是一个有效的 Egret 项目目录{color_normal}" +
+        "\n\tEgret_Project\t\t\t//项目目录" +
+        "\n\t\t--template\t\t//模板配置目录" +
+        "\n\t\t--libs\t\t\t//引擎库目录" +
+        "\n\t\t--resource\t\t//资源目录" +
+        "\n\t\t--src\t\t\t//源代码目录" +
+        "\n\t\t--egretProperties.json\t//项目配置文件" +
+        "\n\t\t--index.html\t\t//启动文件"
+    ;
     locale_strings[10016] = "如果浏览器没有启动，请手动打开URL: {0}";
     locale_strings[10017] = "项目创建成功，您可以执行 egret startserver 来运行刚刚创建的应用";
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"
