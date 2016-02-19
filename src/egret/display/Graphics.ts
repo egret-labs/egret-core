@@ -616,19 +616,28 @@ module egret {
             var yMin = Math.min(startY, endY);
             var yMax = Math.max(startY, endY);
 
-
-            if (startAngle <= PI && endAngle >= PI) {
-                xMin = -radius;
+            var startRange = startAngle / (PI * 0.5);
+            var endRange = endAngle / (PI * 0.5);
+            for (var i = Math.ceil(startRange); i <= endRange; i++) {
+                switch (i % 4) {
+                    case 0:
+                        xMax = radius;
+                        break;
+                    case 1:
+                        yMax = radius;
+                        break;
+                    case 2:
+                        xMin = -radius;
+                        break;
+                    case 3:
+                        yMin = -radius;
+                        break;
+                }
             }
-            if (startAngle <= PI * 2 && endAngle >= PI * 2) {
-                xMax = radius;
-            }
-            if (startAngle <= PI * 1.5 && endAngle >= PI * 1.5) {
-                yMin = -radius;
-            }
-            if (startAngle <= PI * 0.5 && endAngle >= PI * 0.5) {
-                yMax = radius;
-            }
+            xMin = Math.floor(xMin);
+            yMin = Math.floor(yMin);
+            xMax = Math.ceil(xMax);
+            yMax = Math.ceil(yMax);
             this.extendBoundsByPoint(xMin + x, yMin + y);
             this.extendBoundsByPoint(xMax + x, yMax + y);
         }
