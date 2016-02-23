@@ -177,7 +177,15 @@ locale_strings[10011] = "Auto compile is done.";
 locale_strings[10012] = 'If you are not using auto compile on file save, you can enable auto compile by adding "-a" after the "run" command';
 locale_strings[10013] = "Egret server is running, you can access by URL: {0}";
 locale_strings[10014] = "Error occurred while compiling your code：";
-locale_strings[10015] = "\"{0}\" is not a valid Egret project folder";
+locale_strings[10015] = "{color_red}\"{0}\" is not a valid Egret project folder{color_normal}" +
+    "\n\tEgret_Project\t\t\t//project folder" +
+    "\n\t\t--template\t\t//template folder" +
+    "\n\t\t--libs\t\t\t//library folder" +
+    "\n\t\t--resource\t\t//resource folder" +
+    "\n\t\t--src\t\t\t//source code folder" +
+    "\n\t\t--egretProperties.json\t//project configuration file" +
+    "\n\t\t--index.html\t\t//launcher file"
+;
 locale_strings[10016] = "Please visit {0} if no browser open it automatically";
 locale_strings[10017] = "Egret project is created, you can execute \"Egret run\" to run the project";
 locale_strings[10018] = "Found circular dependency when try to sort the TypeScript files. "

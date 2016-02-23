@@ -1,6 +1,6 @@
 Egret Engine
 ================================================
-Current Version: v3.0.2
+Current Version: v3.0.3
 
 
 Developed by Egret Technology, Egret Engine 3.0 includes a newly built 3D engine and a 2D engine created based on HTML5. With its robust cross-platform operability and commitment to solving the performance and fragmentation problems of HTML5 APP and games, Egret Engine 3.0 will perfectly meet developers’ needs. We appreciate every suggestion and please send it to Egret team if you have any.
@@ -39,6 +39,8 @@ Document & API
 
 Release Notes
 --------------------
+[Egret 3.0.3 Release Notes 2016-2-21](/docs/en/3.0.3_ReleaseNotes.md)
+
 [Egret 3.0.2 Release Notes 2016-1-25](/docs/en/3.0.2_ReleaseNotes.md)
 
 [Egret 3.0.1 Release Notes 2016-1-11](/docs/en/3.0.1_ReleaseNotes.md)
@@ -127,6 +129,8 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 发布说明
 --------------------
+[Egret 3.0.3 Release Notes 2016-2-21](/docs/cn/3.0.3_ReleaseNotes.md)
+
 [Egret 3.0.2 Release Notes 2016-1-25](/docs/cn/3.0.2_ReleaseNotes.md)
 
 [Egret 3.0.1 Release Notes 2016-1-11](/docs/cn/3.0.1_ReleaseNotes.md)
