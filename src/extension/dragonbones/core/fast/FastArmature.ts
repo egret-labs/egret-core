@@ -114,6 +114,9 @@ module dragonBones {
 		public slotList:Array<FastSlot>;
 		public _slotDic:any;
 		
+        /** @private data version 4.5 and upper*/
+        public _skewEnable:boolean;
+        
 		public slotHasChildArmatureList:Array<FastSlot>;
 		
 		public _enableEventDispatch:boolean = true;

@@ -56,7 +56,8 @@ module dragonBones {
 		public boneList:Array<FastBone> = [];
 		/** @private */
 		public _timelineState:FastBoneTimelineState;
-		
+		/** @private */
+        public _localTransform:DBTransform;
 		/** @private */
 		public _needUpdate:number = 0;
 		public _tweenPivot:Point;
@@ -136,6 +137,59 @@ module dragonBones {
             }
 		}
 		
+        public _updateGlobal():ParentTransformObject 
+		{
+			if (!this.armature._skewEnable)
+			{
+				return super._updateGlobal();
+			}
+			this._calculateRelativeParentTransform();
+			var output:ParentTransformObject = this._calculateParentTransform();
+			if(output != null)
+			{
+				//计算父骨头绝对坐标
+				var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
+				var parentGlobalTransform:DBTransform = output.parentGlobalTransform;
+				
+				var scaleXF:boolean = this._global.scaleX * parentGlobalTransform.scaleX > 0;
+				var scaleYF:boolean = this._global.scaleY * parentGlobalTransform.scaleY > 0;
+				var relativeRotation:number = this._global.rotation;
+				var relativeScaleX:number = this._global.scaleX;
+				var relativeScaleY:number = this._global.scaleY;
+                //TODO:parentBoneRotationIK;
+				var parentRotation:number = parentGlobalTransform.rotation;
+                
+                this._localTransform = this._global;
+                
+                if (this.inheritRotation && !this.inheritScale)
+                {
+                    if (parentRotation != 0)
+					{
+						this._localTransform = this._localTransform.clone();
+						this._localTransform.rotation -= parentRotation;
+					}
+                }
+				TransformUtil.transformToMatrix(this._localTransform, this._globalTransformMatrix);
+				this._globalTransformMatrix.concat(parentMatrix);
+                
+                if(this.inheritScale)
+                {
+                    TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, scaleXF, scaleYF);
+                }
+                else
+                {
+                    TransformUtil.matrixToTransformPosition(this._globalTransformMatrix, this._global);
+
+					this._global.scaleX = this._localTransform.scaleX;
+					this._global.scaleY = this._localTransform.scaleY;
+					this._global.rotation = this._localTransform.rotation + (this.inheritRotation ? parentRotation : 0);
+					
+					TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
+                }
+			}
+			return output;
+		}
+        
 		/** @private */
 		public _hideSlots():void{
 			var length:number = this.slotList.length;
@@ -224,5 +278,6 @@ module dragonBones {
 		{
 			return this.slotList.length > 0 ? this.slotList[0] : null;
 		}
+        
 	}
 }

@@ -112,6 +112,9 @@ module dragonBones {
 		
 		/** @private Store bones based on bones' hierarchy (From root to leaf)*/
 		public _boneList:Array<Bone>;
+        
+        /** @private data version 4.5 and upper*/
+        public _skewEnable:boolean;
 		
 		private _delayDispose:boolean;
 		private _lockDispose:boolean;
