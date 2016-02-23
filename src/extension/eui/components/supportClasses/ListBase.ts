@@ -86,6 +86,7 @@ module eui {
      * This event is dispatched when the user interacts with the control.
      *
      * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
      *
      * @version Egret 2.4
      * @version eui 1.0
@@ -99,6 +100,7 @@ module eui {
      * 注意：此事件仅在索引改变是由用户触摸操作引起时才抛出。
      *
      * @event eui.ItemTapEvent.ITEM_TAP 项呈示器单击事件。
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
      *
      * @version Egret 2.4
      * @version eui 1.0
@@ -836,7 +838,7 @@ module eui {
         }
         /**
          * @language en_US
-         * Handles <code>egret.TouchEvent.TOUCH_CANCLE</code> events from any of the
+         * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
          * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
@@ -845,7 +847,7 @@ module eui {
          */
         /**
          * @language zh_CN
-         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCLE</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
+         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCEL</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
          * 和<code>egret.TouchEvent.TOUCH_TAP</code>事件的侦听。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 3.0.1

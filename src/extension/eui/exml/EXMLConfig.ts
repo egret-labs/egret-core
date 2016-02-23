@@ -243,6 +243,7 @@ module eui.sys {
             var instance = new clazz();
         }
         catch (e) {
+            egret.error(e);
             return null;
         }
         return instance;

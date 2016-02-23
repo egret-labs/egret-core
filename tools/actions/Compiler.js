@@ -40,8 +40,8 @@ var Compiler = (function () {
             }
             parsedCmd.options.outDir = outDir;
         }
-        if(args.sourceMap == true){
-            parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
+        if (args.sourceMap == true) {
+            parsedCmd.options.sourceMap = true; //引擎命令行的sourcemap属性优先
         }
         //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
         var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);

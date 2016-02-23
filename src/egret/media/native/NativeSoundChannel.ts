@@ -109,6 +109,12 @@ module egret.native {
         public stop() {
             if (!this.audio)
                 return;
+
+            if (!this.isStopped) {
+                sys.$popSoundChannel(this);
+            }
+            this.isStopped = true;
+
             var audio = this.audio;
             audio.pause();
             audio.removeEventListener("ended", this.onPlayEnd);

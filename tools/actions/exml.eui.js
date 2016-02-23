@@ -231,8 +231,13 @@ function parse(exmlPath) {
     else {
         jstext = classText;
     }
-    var jspath = exmlPath.substring(0, exmlPath.lastIndexOf(".")).concat(".js");
-    file.save(jspath, jstext);
+    var relativeEXMLPath = file.getRelativePath(egret.args.projectDir, exmlPath);
+    var relativeTSPath = relativeEXMLPath.substring(0, relativeEXMLPath.lastIndexOf(".")).concat(".ts");
+    var tspath = file.joinPath(egret.args.srcDir, "gen", relativeTSPath);
+    //console.log(tspath);
+    //var jspath = exmlPath.substring(0,exmlPath.lastIndexOf(".")).concat(".ts");
+    //file.save(jspath,jstext);
+    file.save(tspath, jstext);
 }
 
 //# sourceMappingURL=exml.eui.js.map

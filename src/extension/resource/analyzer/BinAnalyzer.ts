@@ -107,7 +107,7 @@ module RES {
          */
         public analyzeData(resItem:ResourceItem, data:any):void {
             var name:string = resItem.name;
-            if (this.fileDic[name] || !data) {
+            if (this.fileDic[name] || (data != "" && !data)) {
                 return;
             }
             this.fileDic[name] = data;

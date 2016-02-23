@@ -73,11 +73,16 @@ class ChangeEntranceCommand implements egret.Command {
                     }
                 }
                 this.platformPath = FileUtil.joinPath(url, projectName, 'AppDelegate.mm');
+
                 if (FileUtil.exists(this.platformPath)) {
                     this.platformContent = FileUtil.read(this.platformPath);
                 }
                 else {
-                    this.platformContent = null;
+                    this.platformPath = FileUtil.joinPath(url,projectName, 'ViewController.mm');
+                    if(FileUtil.exists(this.platformPath)){
+                        this.platformContent = FileUtil.read(this.platformPath);
+                    }else
+                        this.platformContent = null;
                 }
                 break;
         }

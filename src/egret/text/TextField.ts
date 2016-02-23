@@ -358,7 +358,7 @@ module egret {
         }
 
         $setSize(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
 
             var values = this.$TextField;
             if (values[sys.TextKeys.fontSize] == value) {
@@ -383,7 +383,7 @@ module egret {
         // * @private
         // */
         //public set fontSize(value:number) {
-        //    value = egret.sys.getNumber(value);
+        //    value = +value || 0;
         //
         //    var values = this.$TextField;
         //    if (values[sys.TextKeys.fontSize] == value) {
@@ -572,7 +572,7 @@ module egret {
         }
 
         $setLineSpacing(value:number):boolean {
-            value = egret.sys.getNumber(value);
+            value = +value || 0;
 
             var values = this.$TextField;
             if (values[sys.TextKeys.lineSpacing] == value)
@@ -1467,8 +1467,10 @@ module egret {
                 tmpBounds.width += _strokeDouble * 2;
                 tmpBounds.height += _strokeDouble * 2;
             }
-            tmpBounds.x -= _strokeDouble;
-            tmpBounds.y -= _strokeDouble;
+            tmpBounds.x -= _strokeDouble+2;//+2和+4 是为了解决脏区域的问题
+            tmpBounds.y -= _strokeDouble+2;
+            tmpBounds.width = Math.ceil(tmpBounds.width)+4;
+            tmpBounds.height = Math.ceil(tmpBounds.height)+4;
             var result = super.$update(tmpBounds);
             Rectangle.release(tmpBounds);
             return result;
@@ -1483,7 +1485,6 @@ module egret {
 
             var w:number = !isNaN(this.$TextField[sys.TextKeys.textFieldWidth]) ? this.$TextField[sys.TextKeys.textFieldWidth] : this.$TextField[sys.TextKeys.textWidth];
             var h:number = !isNaN(this.$TextField[sys.TextKeys.textFieldHeight]) ? this.$TextField[sys.TextKeys.textFieldHeight] : TextFieldUtils.$getTextHeight(self);
-
             bounds.setTo(0, 0, w, h);
         }
 

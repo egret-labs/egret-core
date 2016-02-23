@@ -53,6 +53,18 @@ module egret {
 
         private rootDisplayList:sys.DisplayList;
 
+        /**
+         * @language en_US
+         * Create an egret.RenderTexture object
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 egret.RenderTexture 对象
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         constructor() {
             super();
         }
@@ -76,14 +88,22 @@ module egret {
          * @platform Web,Native
          */
         public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
-            if (clipBounds && (clipBounds.width == 0 || clipBounds.height==0)){
+            if (DEBUG && clipBounds) {
+                if (clipBounds.x != parseInt((<any>clipBounds.x))
+                    || clipBounds.y != parseInt((<any>clipBounds.y))
+                    || clipBounds.width != parseInt((<any>clipBounds.width))
+                    || clipBounds.height != parseInt((<any>clipBounds.height))) {
+                    egret.$warn(1042);
+                }
+            }
+            if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
                 return false;
             }
-            if(this.rootDisplayList) {
+            if (this.rootDisplayList) {
                 sys.DisplayList.release(this.rootDisplayList);
                 this.rootDisplayList = null;
             }
-            if(this.context) {
+            if (this.context) {
                 sys.surfaceFactory.release(this.context.surface);
             }
 
@@ -95,7 +115,7 @@ module egret {
             scale /= $TextureScaleFactor;
             var width = (bounds.x + bounds.width);
             var height = (bounds.y + bounds.height);
-            if(clipBounds) {
+            if (clipBounds) {
                 width = bounds.width;
                 height = bounds.height;
             }
@@ -110,7 +130,7 @@ module egret {
             root.$children.push(displayObject);
 
             var hasRenderRegion = displayObject.$renderRegion;
-            if(!hasRenderRegion) {
+            if (!hasRenderRegion) {
                 displayObject.$renderRegion = sys.Region.create();
             }
             var parent = displayObject.$parent;
@@ -118,7 +138,7 @@ module egret {
             this.$saveParentDisplayList(displayObject);
             this.$update(displayObject);
             displayObject.$parent = parent;
-            if(!hasRenderRegion) {
+            if (!hasRenderRegion) {
                 sys.Region.release(displayObject.$renderRegion);
                 displayObject.$renderRegion = null;
             }
@@ -127,11 +147,11 @@ module egret {
             var invertMatrix = Matrix.create();
             renderMatrix.$invertInto(invertMatrix);
             //应用裁切
-            if(clipBounds) {
+            if (clipBounds) {
                 invertMatrix.translate(-clipBounds.x, -clipBounds.y);
             }
             //应用缩放
-            if(scale) {
+            if (scale) {
                 invertMatrix.scale(scale, scale);
             }
 
@@ -394,13 +414,18 @@ module egret {
             return surface.renderContext;
         }
 
+        /**
+         * @inheritDoc
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public dispose():void {
             super.dispose();
-            if(this.rootDisplayList) {
+            if (this.rootDisplayList) {
                 sys.DisplayList.release(this.rootDisplayList);
                 this.rootDisplayList = null;
             }
-            if(this.context) {
+            if (this.context) {
                 sys.surfaceFactory.release(this.context.surface);
             }
         }

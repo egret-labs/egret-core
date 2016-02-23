@@ -76,6 +76,8 @@ module egret {
                 this._text.$touchEnabled = true;
             }
 
+            this.tempStage = this._text.stage;
+
             this.stageText.$addToStage();
 
             this.stageText.addEventListener("updateText", this.updateTextHandler, this);
@@ -98,7 +100,7 @@ module egret {
 
             this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
             this._text.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
-            this._text.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+            this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
             this.stageText.removeEventListener("blur", this.blurHandler, this);
             this.stageText.removeEventListener("focus", this.focusHandler, this);
@@ -155,7 +157,7 @@ module egret {
             if (this._isFocus) {
                 //不再显示竖线，并且输入框显示最开始
                 this._isFocus = false;
-                this._text.stage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+                this.tempStage.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
                 this._text.$isTyping = false;
                 this._text.$invalidateContentBounds();
@@ -167,6 +169,7 @@ module egret {
             }
         }
 
+        private tempStage:egret.Stage;
         //点中文本
         private onMouseDownHandler(event:TouchEvent) {
             event.stopPropagation();
@@ -179,7 +182,8 @@ module egret {
             if (this._isFocus) {
                 return;
             }
-            this._text.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+
+            this.tempStage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
 
             //强制更新输入框位置
             this.stageText.$show();

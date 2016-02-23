@@ -5,7 +5,7 @@ var game_file_list = [
     //----auto game_file_list end----
 ];
 
-var window = {};
+var window = this;
 
 egret_native.setSearchPaths([""]);
 

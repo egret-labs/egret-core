@@ -52,7 +52,7 @@ var CopyNativeFiles = (function () {
         }
         if (nativePath = config.getNativePath("ios")) {
             var url1 = FileUtil.joinPath(nativePath, "proj.ios");
-            url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
+            var url2 = FileUtil.joinPath(nativePath, "Resources", "egret-game");
             CopyNativeFiles.copyProjectFiles("ios", nativePath, isDebug);
             //修改java文件
             var entrance = new ChangeEntranceCMD();

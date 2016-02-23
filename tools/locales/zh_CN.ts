@@ -38,7 +38,7 @@ module egret {
     locale_strings[1] = "编译项目失败";
     locale_strings[3] = "耗时：{0}秒";
     locale_strings[4] = "脚本执行失败";
-    locale_strings[5] = "tsconfig.json 中 CompilerOptions 参数错误";//tsc报的错误 CompilerOptionsErrors
+    locale_strings[5] = "编译错误";
     locale_strings[6] = "manifest.json生成成功";
     locale_strings[7] = "native拷贝共计耗时：{0}秒";
     //create
@@ -99,7 +99,7 @@ module egret {
     locale_strings[1501] = "无法启动服务器，请检查权限或端口是否被占用";
     //create_app
     locale_strings[1601] = "请输入h5游戏目录以及手机平台支持库。例: {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n如没有安装最新手机平台支持库，请从以下地址下载：\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html";
-    locale_strings[1602] = "缺少egretProperties.json或格式不正确。 \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
+    locale_strings[1602] = "不是h5游戏目录(缺少egretProperties.json或格式不正确) \n请从http://www.egret-labs.org/download/egret-download.html升级egret-core到最新版";
     locale_strings[1603] = "缺少create_app.json。\n请从以下地址下载最新手机平台支持库\nAndroid: http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS: http://www.egret-labs.org/download/egret-ios-packager-download.html";
     locale_strings[1604] = "执行egret build命令失败";
     locale_strings[1605] = "移动平台项目目录不能与html5项目目录为同一目录，请修改移动平台项目目录。";
@@ -178,7 +178,15 @@ module egret {
     locale_strings[10012] = "如果您没有设置 IDE 保存自动编译，可以添加参数 -a 来启动自动编译";
     locale_strings[10013] = "Egret 服务器已经启动, 您可以通过以下URL访问: {0}";
     locale_strings[10014] = "自动编译失败，请参考下面的错误信息：";
-    locale_strings[10015] = "\"{0}\" 不是一个有效的 Egret 项目目录";
+    locale_strings[10015] = "{color_red}\"{0}\" 不是一个有效的 Egret 项目目录{color_normal}" +
+        "\n\tEgret_Project\t\t\t//项目目录" +
+        "\n\t\t--template\t\t//模板配置目录" +
+        "\n\t\t--libs\t\t\t//引擎库目录" +
+        "\n\t\t--resource\t\t//资源目录" +
+        "\n\t\t--src\t\t\t//源代码目录" +
+        "\n\t\t--egretProperties.json\t//项目配置文件" +
+        "\n\t\t--index.html\t\t//启动文件"
+    ;
     locale_strings[10016] = "如果浏览器没有启动，请手动打开URL: {0}";
     locale_strings[10017] = "项目创建成功，您可以执行 egret startserver 来运行刚刚创建的应用";
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"

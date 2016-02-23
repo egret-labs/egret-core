@@ -4616,7 +4616,7 @@ declare module dragonBones {
         private static parseSlotTimeline(timelineObject, duration, frameRate);
         private static parseSlotFrame(frameObject, frameRate);
         private static parseTransformTimeline(timelineObject, duration, frameRate);
-        private static parseTransformFrame(frameObject, frameRate);
+        private static parseTransformFrame(frameObject, nextFrameObject, frameRate);
         private static parseTimeline(timelineObject, outputTimeline);
         private static parseFrame(frameObject, outputFrame, frameRate?);
         private static parseTransform(transformObject, transform, pivot?);

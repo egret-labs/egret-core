@@ -104,7 +104,7 @@ module egret.native {
                 download();
             }
             else {
-                $callAsync(onLoadComplete, self);
+                onLoadComplete();
             }
 
             function download() {
@@ -154,6 +154,9 @@ module egret.native {
             channel.$type = this.type;
             channel.$startTime = startTime;
             channel.$play();
+
+            sys.$pushSoundChannel(channel);
+
             return channel;
         }
 

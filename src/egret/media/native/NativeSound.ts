@@ -100,11 +100,16 @@ module egret.native {
                 egret.$error(3002);
             }
 
+            var audio = new Audio(url);
+            audio.addEventListener("canplaythrough", onCanPlay);
+            audio.addEventListener("error", onAudioError);
+            this.originAudio = audio;
+
             if (!egret_native.isFileExists(url)) {
                 download();
             }
             else {
-                $callAsync(onAudioLoaded, self);
+                onAudioLoaded();
             }
 
             function download() {
@@ -113,15 +118,9 @@ module egret.native {
                 promise.onErrorFunc = onAudioError;
                 egret_native.download(url, url, promise);
             }
-
-            var audio = new Audio(url);
-            audio.addEventListener("canplaythrough", onCanPlay);
-            audio.addEventListener("error", onAudioError);
-            this.originAudio = audio;
             function onAudioLoaded():void {
                 audio.load();
-
-                NativeSound.$recycle(this.url, audio);
+                NativeSound.$recycle(url, audio);
             }
 
             function onCanPlay():void {
@@ -168,6 +167,9 @@ module egret.native {
             channel.$loops = loops;
             channel.$startTime = startTime;
             channel.$play();
+
+            sys.$pushSoundChannel(channel);
+
             return channel;
         }
 

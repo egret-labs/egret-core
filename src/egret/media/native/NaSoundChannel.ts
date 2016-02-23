@@ -81,6 +81,9 @@ module egret.native {
          * @inheritDoc
          */
         public stop() {
+            if (!this.isStopped) {
+                sys.$popSoundChannel(this);
+            }
             this.isStopped = true;
             if (this.$type == egret.Sound.EFFECT) {
                 if (this._effectId) {
@@ -93,6 +96,7 @@ module egret.native {
                     egret_native.Audio.stopBackgroundMusic(false);
                 }
             }
+
         }
 
         /**

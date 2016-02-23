@@ -102,12 +102,23 @@ module egret.web {
             var audio = new Audio(url);
             audio.addEventListener("canplaythrough", onAudioLoaded);
             audio.addEventListener("error", onAudioError);
+
+            var ua:string = navigator.userAgent.toLowerCase();
+            if (ua.indexOf("firefox") >= 0) {//火狐兼容
+                audio.autoplay = !0;
+                audio.muted = true;
+            }
+
             audio.load();
             this.originAudio = audio;
             HtmlSound.$recycle(this.url, audio);
 
             function onAudioLoaded():void {
                 removeListeners();
+                if (ua.indexOf("firefox") >= 0) {//火狐兼容
+                    audio.pause();
+                    audio.muted = false;
+                }
 
                 self.loaded = true;
                 self.dispatchEventWith(egret.Event.COMPLETE);
@@ -141,7 +152,7 @@ module egret.web {
                 audio = <HTMLAudioElement>this.originAudio.cloneNode();
             }
             else {
-                audio.load();
+                //audio.load();
             }
             audio.autoplay = true;
 
@@ -150,6 +161,9 @@ module egret.web {
             channel.$loops = loops;
             channel.$startTime = startTime;
             channel.$play();
+
+            sys.$pushSoundChannel(channel);
+
             return channel;
         }
 

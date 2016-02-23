@@ -202,11 +202,20 @@ var egret;
                 var audio = new Audio(url);
                 audio.addEventListener("canplaythrough", onAudioLoaded);
                 audio.addEventListener("error", onAudioError);
+                var ua = navigator.userAgent.toLowerCase();
+                if (ua.indexOf("firefox") >= 0) {
+                    audio.autoplay = !0;
+                    audio.muted = true;
+                }
                 audio.load();
                 this.originAudio = audio;
                 HtmlSound.$recycle(this.url, audio);
                 function onAudioLoaded() {
                     removeListeners();
+                    if (ua.indexOf("firefox") >= 0) {
+                        audio.pause();
+                        audio.muted = false;
+                    }
                     self.loaded = true;
                     self.dispatchEventWith(egret.Event.COMPLETE);
                 }
@@ -233,7 +242,6 @@ var egret;
                     audio = this.originAudio.cloneNode();
                 }
                 else {
-                    audio.load();
                 }
                 audio.autoplay = true;
                 var channel = new web.HtmlSoundChannel(audio);
@@ -241,6 +249,7 @@ var egret;
                 channel.$loops = loops;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -363,6 +372,17 @@ var egret;
                 this.audio = null;
                 //声音是否已经播放完成
                 this.isStopped = false;
+                this.canPlay = function () {
+                    _this.audio.removeEventListener("canplay", _this.canPlay);
+                    try {
+                        _this.audio.currentTime = _this.$startTime;
+                    }
+                    catch (e) {
+                    }
+                    finally {
+                        _this.audio.play();
+                    }
+                };
                 /**
                  * @private
                  */
@@ -376,7 +396,7 @@ var egret;
                         _this.$loops--;
                     }
                     /////////////
-                    _this.audio.load();
+                    //this.audio.load();
                     _this.$play();
                 };
                 audio.addEventListener("ended", this.onPlayEnd);
@@ -389,13 +409,14 @@ var egret;
                     return;
                 }
                 try {
+                    //this.audio.pause();
                     this.audio.currentTime = this.$startTime;
                 }
                 catch (e) {
+                    this.audio.addEventListener("canplay", this.canPlay);
+                    return;
                 }
-                finally {
-                    this.audio.play();
-                }
+                this.audio.play();
             };
             /**
              * @private
@@ -404,6 +425,10 @@ var egret;
             p.stop = function () {
                 if (!this.audio)
                     return;
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
+                }
+                this.isStopped = true;
                 var audio = this.audio;
                 audio.pause();
                 audio.removeEventListener("ended", this.onPlayEnd);
@@ -538,6 +563,7 @@ var egret;
                 channel.$type = this.type;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -694,6 +720,10 @@ var egret;
                 else {
                     QZAppExternal.stopBackSound();
                 }
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
+                }
+                this.isStopped = true;
             };
             d(p, "volume"
                 /**
@@ -788,7 +818,7 @@ var egret;
                     WebAudioDecode.isDecoding = false;
                     WebAudioDecode.decodeAudios();
                 }, function () {
-                    alert(egret.getString(1034, decodeInfo["url"]));
+                    alert("sound decode error: " + decodeInfo["url"] + "！\nsee http://edn.egret.com/cn/docs/page/156");
                     if (decodeInfo["fail"]) {
                         decodeInfo["fail"]();
                     }
@@ -882,6 +912,7 @@ var egret;
                 channel.$audioBuffer = this.audioBuffer;
                 channel.$startTime = startTime;
                 channel.$play();
+                egret.sys.$pushSoundChannel(channel);
                 return channel;
             };
             /**
@@ -1048,6 +1079,9 @@ var egret;
                     this.bufferSource.disconnect();
                     this.bufferSource = null;
                     this.$audioBuffer = null;
+                }
+                if (!this.isStopped) {
+                    egret.sys.$popSoundChannel(this);
                 }
                 this.isStopped = true;
             };
@@ -1599,13 +1633,13 @@ var egret;
                     if (!this._xhr) {
                         return null;
                     }
-                    if (this._xhr.response) {
+                    if (this._xhr.response != undefined) {
                         return this._xhr.response;
                     }
                     if (this._xhr.responseXML) {
                         return this._xhr.responseXML;
                     }
-                    if (this._xhr.responseText) {
+                    if (this._xhr.responseText != undefined) {
                         return this._xhr.responseText;
                     }
                     return null;
@@ -2094,7 +2128,7 @@ var egret;
                 this.inputDiv.style.top = y * scaleY + "px";
                 if (this.$textfield.multiline) {
                     this.inputDiv.style.top = (y) * scaleY + "px";
-                    this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) + "px";
+                    this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) * scaleY + "px";
                 }
                 else {
                     this.inputDiv.style.top = y * scaleY + "px";
@@ -2221,6 +2255,14 @@ var egret;
                     if (values[35 /* restrictAnd */] == null && values[36 /* restrictNot */] == null) {
                         self.textValue = self.inputElement.value;
                         egret.Event.dispatchEvent(self, "updateText", false);
+                    }
+                    else {
+                        window.setTimeout(function () {
+                            if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                                self.textValue = self.inputElement.value;
+                                egret.Event.dispatchEvent(self, "updateText", false);
+                            }
+                        }, 0);
                     }
                 }
                 else {
@@ -2730,7 +2772,7 @@ var egret;
                 canvas["renderContext"] = context;
                 context["surface"] = canvas;
                 egret.$toBitmapData(canvas);
-                if (egret.sys.isUndefined(context["imageSmoothingEnabled"])) {
+                if (context["imageSmoothingEnabled"] === undefined) {
                     var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
                     for (var i = keys.length - 1; i >= 0; i--) {
                         var key = keys[i];

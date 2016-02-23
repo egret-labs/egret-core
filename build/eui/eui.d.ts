@@ -695,13 +695,6 @@ declare module eui {
         getItemIndex(item: any): number;
     }
 }
-interface ICollection extends egret.IEventDispatcher {
-    /**
-     *  此集合中的项目数。0 表示不包含项目。
-     *  @readOnly
-     */
-    length: number;
-}
 declare module eui.sys {
     /**
      * @private
@@ -2837,6 +2830,9 @@ declare module eui {
      * The Button component is a commonly used rectangular button.
      * The Button component looks like it can be pressed.
      * The default skin has a text label and a icon display object.
+     *
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
+     *
      * @state up Button up state
      * @state down Button down state
      * @state disabled Button disabled state
@@ -2848,6 +2844,9 @@ declare module eui {
     /**
      * @language zh_CN
      * Button 组件是常用的矩形按钮。Button 组件看起来可以按压。默认外观具有一个文本标签和图标显示对象。
+     *
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
+     *
      * @state up 按钮弹起状态
      * @state down 按钮按下状态
      * @state disabled 按钮禁用状态
@@ -5022,6 +5021,21 @@ declare module eui {
          * @platform Web,Native
          */
         protected onPropertyChanged(event: eui.PropertyEvent): void;
+        /**
+         * @language en_US
+         * Whether the scrollbar can be autohide.
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 是否自动隐藏 scrollbar
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        autoVisibility: boolean;
     }
 }
 declare module eui {
@@ -5432,6 +5446,10 @@ declare module eui {
      * corresponding to the slider's minimum and maximum values.
      * The SliderBase class is a base class for HSlider and VSlider.
      *
+     * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
+     * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
+     * @event egret.Event.CHANGE Dispatched when the scroll position is changing
+     *
      * @see eui.HSlider
      * @see eui.VSlider
      *
@@ -5444,6 +5462,10 @@ declare module eui {
      * 滑块控件基类，通过使用 SliderBase 类，用户可以在滑块轨道的端点之间移动滑块来选择值。
      * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
      * SliderBase 类是 HSlider 和 VSlider 的基类。
+     *
+     * @event eui.UIEvent.CHANGE_START 滚动位置改变开始
+     * @event eui.UIEvent.CHANGE_END 滚动位置改变结束
+     * @event egret.Event.CHANGE 滚动位置改变的时候
      *
      * @see eui.HSlider
      * @see eui.VSlider
@@ -6899,6 +6921,7 @@ declare module eui {
      * This event is dispatched when the user interacts with the control.
      *
      * @event eui.ItemTapEvent.ITEM_TAP dispatched when the user tap an item in the control.
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
      *
      * @version Egret 2.4
      * @version eui 1.0
@@ -6912,6 +6935,7 @@ declare module eui {
      * 注意：此事件仅在索引改变是由用户触摸操作引起时才抛出。
      *
      * @event eui.ItemTapEvent.ITEM_TAP 项呈示器单击事件。
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
      *
      * @version Egret 2.4
      * @version eui 1.0
@@ -7379,7 +7403,7 @@ declare module eui {
         protected onRendererTouchBegin(event: egret.TouchEvent): void;
         /**
          * @language en_US
-         * Handles <code>egret.TouchEvent.TOUCH_CANCLE</code> events from any of the
+         * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
          * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
@@ -7388,7 +7412,7 @@ declare module eui {
          */
         /**
          * @language zh_CN
-         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCLE</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
+         * 侦听项呈示器<code>egret.TouchEvent.TOUCH_CANCEL</code>事件的方法。触发时会取消对舞台<code>egret.TouchEvent.TOUCH_END</code>
          * 和<code>egret.TouchEvent.TOUCH_TAP</code>事件的侦听。
          * @param event 事件<code>egret.TouchEvent</code>的对象。
          * @version Egret 3.0.1
@@ -8717,6 +8741,8 @@ declare module eui {
      *
      * @event eui.UIEvent.CHANGE_START Dispatched when the scroll position is going to change
      * @event eui.UIEvent.CHANGE_END Dispatched when the scroll position changed complete
+     * @event egret.Event.CHANGE Dispatched when the scroll position is changing
+     * @event egret.TouchEvent.TOUCH_CANCEL canceled the touch
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -8740,6 +8766,8 @@ declare module eui {
      *
      * @event eui.UIEvent.CHANGE_START 滚动位置改变开始
      * @event eui.UIEvent.CHANGE_END 滚动位置改变结束
+     * @event egret.Event.CHANGE 滚动位置改变的时候
+     * @event egret.TouchEvent.TOUCH_CANCEL 取消触摸事件
      *
      * @defaultProperty viewport
      * @version Egret 2.4
@@ -8803,14 +8831,14 @@ declare module eui {
         bounces: boolean;
         /**
          * @language en_US
-         * Adjust the speed to get out of the slide end.
+         * Adjust the speed to get out of the slide end.When equal to 0,the scroll animation will not be play.
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 调节滑动结束时滚出的速度。
+         * 调节滑动结束时滚出的速度。等于0时，没有滚动动画
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -8924,6 +8952,22 @@ declare module eui {
         scrollPolicyH: string;
         /**
          * @language en_US
+         * Stop the scroller animation
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 停止滚动的动画
+         *
+         * @version Egret 3.0.2
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        stopAnimation(): void;
+        /**
+         * @language en_US
          * The viewport component to be scrolled.
          *
          * @version Egret 2.4
@@ -8980,6 +9024,11 @@ declare module eui {
         private checkScrollPolicy();
         /**
          * @private
+         * 记录按下的对象，touchCancle时使用
+         */
+        private downTarget;
+        /**
+         * @private
          *
          * @param event
          */
@@ -9000,6 +9049,10 @@ declare module eui {
          * @param event
          */
         private onTouchEnd(event);
+        /**
+         * @private
+         */
+        private onRemoveListeners();
         /**
          * @private
          *
@@ -10272,13 +10325,13 @@ declare module eui.sys {
          * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
          * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
          */
-        start(touchPoint: number, scrollValue: number, maxScrollValue: number): void;
+        start(touchPoint: number): void;
         /**
          * @private
          * 更新当前移动到的位置
          * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
          */
-        update(touchPoint: number, maxScrollValue: number): void;
+        update(touchPoint: number, maxScrollValue: number, scrollValue: any): void;
         /**
          * @private
          * 停止记录位移变化，并计算出目标值和继续缓动的时间。
@@ -12043,6 +12096,9 @@ declare module eui.sys {
          */
         toCode(): string;
     }
+    /**
+     * @private
+     */
     class EXSetStateProperty extends CodeBase {
         /**
          * @private

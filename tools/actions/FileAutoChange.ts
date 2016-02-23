@@ -22,7 +22,7 @@ class FileAutoChangeCommand implements egret.Command {
         htmlContent = htmlContent.replace(reg, "src");
 
         //替换 game_files 脚本
-        var reg = /<!--game_files_start-->[\s\S]*<!--game_files_end-->/;
+        var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
         var replaceStr = '<!--game_files_start-->\n' + '\t<script src="main.min.js"></script>\n' + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
 
@@ -31,7 +31,7 @@ class FileAutoChangeCommand implements egret.Command {
 
     refreshDebugHtml(htmlPath, gameScripts) {
         var libsScriptsStr = this.getModuleScripts();
-        var reg = /<!--modules_files_start-->[\s\S]*<!--modules_files_end-->/;
+        var reg = /<!--(\s)*modules_files_start(\s)*-->[\s\S]*<!--(\s)*modules_files_end(\s)*-->/;
         var replaceStr = '<!--modules_files_start-->\n' + libsScriptsStr + '\t<!--modules_files_end-->';
 
         var htmlContent = FileUtil.read(htmlPath, true);
@@ -47,7 +47,7 @@ class FileAutoChangeCommand implements egret.Command {
             str += '\t<script egret="game" src="' + debugJs + '"></script>\n';
         }
 
-        var reg = /<!--game_files_start-->[\s\S]*<!--game_files_end-->/;
+        var reg = /<!--(\s)*game_files_start(\s)*-->[\s\S]*<!--(\s)*game_files_end(\s)*-->/;
         var replaceStr = '<!--game_files_start-->\n' + str + '\t<!--game_files_end-->';
         htmlContent = htmlContent.replace(reg, replaceStr);
 
