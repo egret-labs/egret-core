@@ -176,7 +176,9 @@ module dragonBones {
         public _globalTransformForChild:DBTransform;
         /** @private */
         public _globalTransformMatrixForChild:Matrix;
-
+        /** @private */
+        public _localTransform:DBTransform;
+        
         private _tempGlobalTransformForChild:DBTransform;
         private _tempGlobalTransformMatrixForChild:Matrix;
         
@@ -420,7 +422,7 @@ module dragonBones {
 
             //计算globalForChild
             var ifExistOffsetTranslation:boolean = this._offset.x != 0 || this._offset.y != 0;
-            var ifExistOffsetScale:boolean = this._offset.scaleX != 0 || this._offset.scaleY != 0;
+            var ifExistOffsetScale:boolean = this._offset.scaleX != 1 || this._offset.scaleY != 1;
             var ifExistOffsetRotation:boolean = this._offset.skewX != 0 || this._offset.skewY != 0;
 
             if(	(!ifExistOffsetTranslation || this.applyOffsetTranslationToChild) &&
@@ -467,7 +469,7 @@ module dragonBones {
                     this._globalTransformForChild.skewY += this._offset.skewY;
                 }
 
-                TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild, true);
+                TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
                 if(parentGlobalTransformMatrix)
                 {
                     this._globalTransformMatrixForChild.concat(parentGlobalTransformMatrix);
@@ -551,6 +553,60 @@ module dragonBones {
 			}
 		}
 		
+        
+        public _updateGlobal():ParentTransformObject 
+		{
+			if (!this._armature._skewEnable)
+			{
+				return super._updateGlobal();
+			}
+			this._calculateRelativeParentTransform();
+			var output:ParentTransformObject = this._calculateParentTransform();
+			if(output != null)
+			{
+				//计算父骨头绝对坐标
+				var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
+				var parentGlobalTransform:DBTransform = output.parentGlobalTransform;
+				
+				var scaleXF:boolean = this._global.scaleX * parentGlobalTransform.scaleX > 0;
+				var scaleYF:boolean = this._global.scaleY * parentGlobalTransform.scaleY > 0;
+				var relativeRotation:number = this._global.rotation;
+				var relativeScaleX:number = this._global.scaleX;
+				var relativeScaleY:number = this._global.scaleY;
+                //TODO:parentBoneRotationIK;
+				var parentRotation:number = parentGlobalTransform.rotation;
+                
+                this._localTransform = this._global;
+                
+                if (this.inheritRotation && !this.inheritScale)
+                {
+                    if (parentRotation != 0)
+					{
+						this._localTransform = this._localTransform.clone();
+						this._localTransform.rotation -= parentRotation;
+					}
+                }
+				TransformUtil.transformToMatrix(this._localTransform, this._globalTransformMatrix);
+				this._globalTransformMatrix.concat(parentMatrix);
+                
+                if(this.inheritScale)
+                {
+                    TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, scaleXF, scaleYF);
+                }
+                else
+                {
+                    TransformUtil.matrixToTransformPosition(this._globalTransformMatrix, this._global);
+
+					this._global.scaleX = this._localTransform.scaleX;
+					this._global.scaleY = this._localTransform.scaleY;
+					this._global.rotation = this._localTransform.rotation + (this.inheritRotation ? parentRotation : 0);
+					
+					TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
+                }
+			}
+			return output;
+		}
+        
 		/** @private */
 		public _addState(timelineState:TimelineState):void{
 			if(this._timelineStateList.indexOf(timelineState) < 0){

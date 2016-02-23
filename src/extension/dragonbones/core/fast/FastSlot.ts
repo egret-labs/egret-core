@@ -548,7 +548,7 @@ module dragonBones {
 
 		public _updateGlobal():any {
             this._calculateRelativeParentTransform();
-            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
 
             var output:any = this._calculateParentTransform();
             if (output) {
