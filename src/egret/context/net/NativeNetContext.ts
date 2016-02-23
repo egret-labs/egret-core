@@ -108,7 +108,12 @@ module egret {
                 }
                 else {
                     //同步读取
-                    __callAsync(onLoadComplete, self);
+                    if(__global.setTimeout) {
+                        __global.setTimeout(onLoadComplete, 0);
+                    }
+                    else {
+                        __callAsync(onLoadComplete, self);
+                    }
                 }
             }
 
@@ -175,7 +180,12 @@ module egret {
                 download();
             }
             else {
-                __callAsync(onLoadComplete, self);
+                if(__global.setTimeout) {
+                    __global.setTimeout(onLoadComplete, 0);
+                }
+                else {
+                    __callAsync(onLoadComplete, self);
+                }
             }
 
             function download() {
@@ -246,13 +256,12 @@ module egret {
                 download();
             }
             else {
-                //todo
-                //if (NativeNetContext.__use_asyn) {
-                //    createBitmapData();
-                //}
-                //else {
+                if(__global.setTimeout) {
+                    __global.setTimeout(createBitmapData, 0);
+                }
+                else {
                     egret.__callAsync(createBitmapData, self);
-                //}
+                }
             }
 
             function createBitmapData() {
