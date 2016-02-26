@@ -2126,7 +2126,7 @@ var egret;
                 var scaleY = this.htmlInput.$scaleY;
                 this.inputDiv.style.left = x * scaleX + "px";
                 this.inputDiv.style.top = y * scaleY + "px";
-                if (this.$textfield.multiline) {
+                if (this.$textfield.multiline && this.$textfield.height > this.$textfield.size) {
                     this.inputDiv.style.top = (y) * scaleY + "px";
                     this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) * scaleY + "px";
                 }
@@ -2278,9 +2278,10 @@ var egret;
                 var textfield = this.$textfield;
                 if (textfield.multiline) {
                     var textheight = egret.TextFieldUtils.$getTextHeight(textfield);
-                    if (textfield.height < textheight) {
-                        this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
+                    if (textfield.height <= textfield.size || textfield.height < textheight) {
+                        this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
                         this.setElementStyle("padding", "0px");
+                        this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
                     }
                     else {
                         this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
@@ -2289,8 +2290,8 @@ var egret;
                         var top = rap * valign;
                         var bottom = rap - top;
                         this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
+                        this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                     }
-                    this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                 }
             };
             /**
@@ -2365,8 +2366,9 @@ var egret;
                     else {
                         this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
                         if (textfield.height < textfield.size) {
-                            this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
-                            this.setElementStyle("padding", "0px");
+                            this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
+                            var bottom = (textfield.size / 2) * this._gscaleY;
+                            this.setElementStyle("padding", "0px 0px " + bottom + "px 0px");
                         }
                         else {
                             this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
@@ -2374,6 +2376,9 @@ var egret;
                             var valign = egret.TextFieldUtils.$getValign(textfield);
                             var top = rap * valign;
                             var bottom = rap - top;
+                            if (bottom < textfield.size / 2 * this._gscaleY) {
+                                bottom = textfield.size / 2 * this._gscaleY;
+                            }
                             this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
                         }
                     }
