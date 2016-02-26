@@ -109,7 +109,7 @@ module egret.web {
             this.inputDiv.style.left = x * scaleX + "px";
             this.inputDiv.style.top = y * scaleY + "px";
 
-            if (this.$textfield.multiline) {
+            if (this.$textfield.multiline && this.$textfield.height > this.$textfield.size) {
                 this.inputDiv.style.top = (y) * scaleY + "px";
 
                 this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) * scaleY + "px";
@@ -303,10 +303,11 @@ module egret.web {
             var textfield:egret.TextField = this.$textfield;
             if (textfield.multiline) {
                 var textheight = TextFieldUtils.$getTextHeight(textfield);
-                if (textfield.height < textheight) {
-                    this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
+                if (textfield.height <= textfield.size || textfield.height < textheight) {
+                    this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
 
                     this.setElementStyle("padding", "0px");
+                    this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
                 }
                 else {
                     this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
@@ -316,9 +317,9 @@ module egret.web {
                     var top = rap * valign;
                     var bottom = rap - top;
                     this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
+                    this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                 }
 
-                this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
             }
         }
 
@@ -409,22 +410,23 @@ module egret.web {
                 }
                 else {
                     this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
-
                     if (textfield.height < textfield.size) {
-                        this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
+                        this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
 
-                        this.setElementStyle("padding", "0px");
+                        var bottom = (textfield.size / 2) * this._gscaleY;
+                        this.setElementStyle("padding", "0px 0px " + bottom + "px 0px");
                     }
                     else {
                         this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
-
                         var rap = (textfield.height - textfield.size) * this._gscaleY;
-                        var valign:number = TextFieldUtils.$getValign(textfield);
+                        var valign = egret.TextFieldUtils.$getValign(textfield);
                         var top = rap * valign;
                         var bottom = rap - top;
+                        if (bottom < textfield.size / 2 * this._gscaleY) {
+                            bottom = textfield.size / 2 * this._gscaleY;
+                        }
                         this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
                     }
-
                 }
 
                 this.inputDiv.style.clip = "rect(0px "+(textfield.width * this._gscaleX)+"px " +(textfield.height * this._gscaleY)+"px 0px)";
