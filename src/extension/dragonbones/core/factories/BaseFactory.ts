@@ -371,6 +371,8 @@ module dragonBones {
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildBones(outputArmature);
+            outputArmature.buildIK();
++			outputArmature.updateBoneCache();
 			this._buildSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);
@@ -394,6 +396,8 @@ module dragonBones {
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildFastBones(outputArmature);
+            outputArmature.buildIK();
++			outputArmature.updateBoneCache();
 			this._buildFastSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);

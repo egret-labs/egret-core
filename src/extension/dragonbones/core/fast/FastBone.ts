@@ -45,6 +45,7 @@ module dragonBones {
 			var outputBone:FastBone = new FastBone();
 			
 			outputBone.name = boneData.name;
+            outputBone.length = boneData.length;
 			outputBone.inheritRotation = boneData.inheritRotation;
 			outputBone.inheritScale = boneData.inheritScale;
 			outputBone.origin.copy(boneData.transform);
@@ -62,6 +63,10 @@ module dragonBones {
 		public _needUpdate:number = 0;
 		public _tweenPivot:Point;
 		
+        public rotationIK:number;
+		public length:number;
+		public isIKConstraint:boolean = false;
+        
 		public constructor(){
 			super();
 			this._needUpdate = 2;
@@ -103,6 +108,24 @@ module dragonBones {
 		 */
 		public invalidUpdate():void{
 			this._needUpdate = 2;
+            
+            var arr:Array<FastIKConstraint> = this.armature.getIKTargetData(this);
+			var i:number;
+			var len:number;
+			var j:number;
+			var jLen:number;
+			var ik:FastIKConstraint;
+			var bo:FastBone;
+			
+			for (i = 0, len = arr.length; i < len; i++)
+			{
+				ik = arr[i];
+				for (j = 0, jLen = ik.bones.length; j < jLen; j++)
+				{
+					bo = ik.bones[j];
+					bo.invalidUpdate();
+				}
+			}
 		}
 		
 		public _calculateRelativeParentTransform():void{
@@ -145,7 +168,7 @@ module dragonBones {
 			}
 			this._calculateRelativeParentTransform();
 			var output:ParentTransformObject = this._calculateParentTransform();
-			if(output != null)
+			if(output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform )
 			{
 				//计算父骨头绝对坐标
 				var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
@@ -156,8 +179,7 @@ module dragonBones {
 				var relativeRotation:number = this._global.rotation;
 				var relativeScaleX:number = this._global.scaleX;
 				var relativeScaleY:number = this._global.scaleY;
-                //TODO:parentBoneRotationIK;
-				var parentRotation:number = parentGlobalTransform.rotation;
+				var parentRotation:number = this.parentBoneRotation;
                 
                 this._localTransform = this._global;
                 
@@ -188,6 +210,17 @@ module dragonBones {
                 }
 			}
 			return output;
+		}
+        
+        public adjustGlobalTransformMatrixByIK():void
+		{
+			if(!this.parent)
+			{
+				return;
+			}
+			
+			this.global.rotation = this.rotationIK;
+			TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
 		}
         
 		/** @private */
@@ -277,6 +310,11 @@ module dragonBones {
 		public get slot():FastSlot
 		{
 			return this.slotList.length > 0 ? this.slotList[0] : null;
+		}
+        
+        public get parentBoneRotation():number
+		{
+			return this.parent ? this.parent.rotationIK : 0;
 		}
         
 	}

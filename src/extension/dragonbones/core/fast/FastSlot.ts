@@ -53,6 +53,7 @@ module dragonBones {
 		public _originDisplayIndex:number;
         /** @private */
 		public _gotoAndPlay:string;
+		public _defaultGotoAndPlay:string;
         
 		public _displayList:Array<any>;
 		public _currentDisplayIndex:number = 0;
@@ -91,6 +92,7 @@ module dragonBones {
 		public initWithSlotData(slotData:SlotData):void{
 			this.name = slotData.name;
 			this.blendMode = slotData.blendMode;
+            this._defaultGotoAndPlay = slotData.gotoAndPlay;
 			this._originZOrder = slotData.zOrder;
 			this._displayDataList = slotData.displayDataList;
 			this._originDisplayIndex = slotData.displayIndex;
@@ -167,7 +169,11 @@ module dragonBones {
 					var curAnimation:string = this._gotoAndPlay;
 					if (curAnimation == null)
 					{
-						curAnimation = this.childArmature.armatureData.defaultAnimation;
+						curAnimation = this._defaultGotoAndPlay;
+                        if(curAnimation == null)
+                        {
+                            this.childArmature.armatureData.defaultAnimation;
+                        }
 					}
 					if (curAnimation == null)
 					{
