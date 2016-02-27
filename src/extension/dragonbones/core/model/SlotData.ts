@@ -65,7 +65,8 @@ module dragonBones {
 		 */
 		public displayIndex:number
 		private _displayDataList:Array<DisplayData>;
-
+        
+        public gotoAndPlay:string;
 		/**
 		 * 构造函数，实例化一个SlotData类
 		 */
