@@ -271,6 +271,7 @@ module dragonBones {
 		private static parseSlotData(slotObject:any):SlotData{
 			var slotData:SlotData = new SlotData();
 			slotData.name = slotObject[ConstValues.A_NAME];
+            slotData.gotoAndPlay = slotObject[ConstValues.A_GOTOANDPLAY];
 			slotData.parent = slotObject[ConstValues.A_PARENT];
 			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
 			slotData.displayIndex = DataParser.getNumber(slotObject,ConstValues.A_DISPLAY_INDEX,0);
