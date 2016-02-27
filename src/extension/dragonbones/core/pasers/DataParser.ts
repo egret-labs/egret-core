@@ -178,12 +178,15 @@ module dragonBones {
                 var boneObject:any = boneList[i];
                 outputArmatureData.addBoneData(DataParser.parseBoneData(boneObject));
             }
-            var ikList:any = armatureDataToParse[ConstValues.IK]
-            for(i = 0,len = ikList.length; i < len; i++ )
-			{
-                var ikObject:any = ikList[i];
-				outputArmatureData.addIKData(DataParser.parseIKData(ikObject));
-			}
+            var ikList:any = armatureDataToParse[ConstValues.IK];
+            if(ikList)
+            {
+                for(i = 0,len = ikList.length; i < len; i++ )
+                {
+                    var ikObject:any = ikList[i];
+                    outputArmatureData.addIKData(DataParser.parseIKData(ikObject));
+                }
+            }
             
 			var slotList:any = armatureDataToParse[ConstValues.SLOT];
 			for(i = 0, len = slotList.length; i < len; i++) 
