@@ -9,6 +9,7 @@ declare module dragonBones {
          * DragonBones当前数据格式版本
          */
         static DATA_VERSION: string;
+        static DATA_VERSION_4_5: string;
         /**
          *
          */
@@ -668,6 +669,10 @@ declare module dragonBones {
         private _time;
         time: number;
         private _timeScale;
+        private _animatable;
+        private _length;
+        private _currentIndex;
+        private _i;
         /**
          * 时间缩放系数。用于实现动画的变速播放
          * @member {number} dragonBones.WorldClock#timeScale
@@ -888,6 +893,8 @@ declare module dragonBones {
         _slotList: Array<Slot>;
         /** @private Store bones based on bones' hierarchy (From root to leaf)*/
         _boneList: Array<Bone>;
+        /** @private data version 4.5 and upper*/
+        _skewEnable: boolean;
         private _delayDispose;
         private _lockDispose;
         /** @private */
@@ -916,6 +923,12 @@ declare module dragonBones {
          * @member {Animation} dragonBones.Armature#animation
          */
         animation: Animation;
+        private _isFading;
+        private _i;
+        private _len;
+        private _tmpBone;
+        private _childArmature;
+        private _tmpSlot;
         constructor(display: any);
         /**
          * 清理骨架实例
@@ -1175,6 +1188,7 @@ declare module dragonBones {
          */
         minus(transform: DBTransform): void;
         normalizeRotation(): void;
+        clone(): DBTransform;
         /**
          * 把DBTransform的所有属性转成用String类型表示
          * @return 一个字符串包含有DBTransform的所有属性
@@ -1261,8 +1275,8 @@ declare module dragonBones {
          */
         dispose(): void;
         _calculateRelativeParentTransform(): void;
-        _calculateParentTransform(): any;
-        _updateGlobal(): any;
+        _calculateParentTransform(): ParentTransformObject;
+        _updateGlobal(): ParentTransformObject;
     }
 }
 declare module dragonBones {
@@ -1389,6 +1403,8 @@ declare module dragonBones {
         _globalTransformForChild: DBTransform;
         /** @private */
         _globalTransformMatrixForChild: Matrix;
+        /** @private */
+        _localTransform: DBTransform;
         private _tempGlobalTransformForChild;
         private _tempGlobalTransformMatrixForChild;
         constructor();
@@ -1451,6 +1467,7 @@ declare module dragonBones {
         _hideSlots(): void;
         /** @private When bone timeline enter a key frame, call this func*/
         _arriveAtFrame(frame: Frame, timelineState: TimelineState, animationState: AnimationState, isCross: boolean): void;
+        _updateGlobal(): ParentTransformObject;
         /** @private */
         _addState(timelineState: TimelineState): void;
         /** @private */
@@ -1574,6 +1591,8 @@ declare module dragonBones {
         _offsetZOrder: number;
         /** @private */
         _originDisplayIndex: number;
+        /** @private */
+        _gotoAndPlay: string;
         _displayList: Array<any>;
         _currentDisplayIndex: number;
         _colorTransform: ColorTransform;
@@ -1647,6 +1666,11 @@ declare module dragonBones {
          */
         blendMode: string;
         /**
+         * 播放子骨架的动画
+         * @member {string} dragonBones.Slot#gotoAndPlay
+         */
+        gotoAndPlay: string;
+        /**
          * @private
          */
         _updateDisplay(value: any): void;
@@ -1696,7 +1720,7 @@ declare module dragonBones {
         _updateDisplayBlendMode(value: string): void;
         /** @private When bone timeline enter a key frame, call this func*/
         _arriveAtFrame(frame: Frame, timelineState: SlotTimelineState, animationState: AnimationState, isCross: boolean): void;
-        _updateGlobal(): any;
+        _updateGlobal(): ParentTransformObject;
         _resetToOrigin(): void;
     }
 }
@@ -2006,6 +2030,7 @@ declare module dragonBones {
         colorChanged: boolean;
         colorTransform: ColorTransform;
         displayIndex: number;
+        gotoAndPlay: string;
     }
 }
 declare module dragonBones {
@@ -2063,6 +2088,7 @@ declare module dragonBones {
     class SlotFrameCache extends FrameCache {
         colorTransform: ColorTransform;
         displayIndex: number;
+        gotoAndPlay: string;
         constructor();
         copy(frameCache: FrameCache): void;
         clear(): void;
@@ -2912,6 +2938,8 @@ declare module dragonBones {
         /** @private Store slots based on slots' zOrder*/
         slotList: Array<FastSlot>;
         _slotDic: any;
+        /** @private data version 4.5 and upper*/
+        _skewEnable: boolean;
         slotHasChildArmatureList: Array<FastSlot>;
         _enableEventDispatch: boolean;
         __dragonBonesData: DragonBonesData;
@@ -3076,9 +3104,8 @@ declare module dragonBones {
          * Cleans up any resources used by this DBObject instance.
          */
         dispose(): void;
-        private static tempOutputObj;
-        _calculateParentTransform(): any;
-        _updateGlobal(): any;
+        _calculateParentTransform(): ParentTransformObject;
+        _updateGlobal(): ParentTransformObject;
         _calculateRelativeParentTransform(): void;
         name: string;
         /**
@@ -3119,6 +3146,8 @@ declare module dragonBones {
         /** @private */
         _timelineState: FastBoneTimelineState;
         /** @private */
+        _localTransform: DBTransform;
+        /** @private */
         _needUpdate: number;
         _tweenPivot: Point;
         constructor();
@@ -3147,6 +3176,7 @@ declare module dragonBones {
         updateByCache(): void;
         /** @private */
         update(needUpdate?: boolean): void;
+        _updateGlobal(): ParentTransformObject;
         /** @private */
         _hideSlots(): void;
         private blendingTimeline();
@@ -3192,6 +3222,8 @@ declare module dragonBones {
         _offsetZOrder: number;
         /** @private */
         _originDisplayIndex: number;
+        /** @private */
+        _gotoAndPlay: string;
         _displayList: Array<any>;
         _currentDisplayIndex: number;
         _colorTransform: ColorTransform;
@@ -3214,6 +3246,7 @@ declare module dragonBones {
         /** @private */
         _update(): void;
         _calculateRelativeParentTransform(): void;
+        updateChildArmatureAnimation(): void;
         initDisplayList(newDisplayList: Array<any>): void;
         private clearCurrentDisplay();
         /** @private */
@@ -3247,6 +3280,11 @@ declare module dragonBones {
          * @member {string} dragonBones.FastSlot#blendMode
          */
         blendMode: string;
+        /**
+         * 播放子骨架动画
+         * @member {string} dragonBones.FastSlot#gotoAndPlay
+         */
+        gotoAndPlay: string;
         colorTransform: ColorTransform;
         displayIndex: number;
         colorChanged: boolean;
@@ -3935,6 +3973,11 @@ declare module dragonBones {
         private _skinDataList;
         private _slotDataList;
         private _animationDataList;
+        /**
+         * 默认动画
+         * @member {string} dragonBones.ArmatureData#defaultAnimation
+         */
+        defaultAnimation: string;
         static sortBoneDataHelpArray(object1: any, object2: any): number;
         static sortBoneDataHelpArrayDescending(object1: any, object2: any): number;
         /**
@@ -4185,6 +4228,10 @@ declare module dragonBones {
          * @member {boolean} dragonBones.DragonBonesData#isGlobal
          */
         isGlobal: boolean;
+        /**
+         * 数据版本
+         */
+        version: number;
         private _armatureDataList;
         private _displayDataDictionary;
         /**
@@ -4284,6 +4331,23 @@ declare module dragonBones {
          *释放资源
          */
         dispose(): void;
+    }
+}
+declare module dragonBones {
+    /**
+     * optimized by freem-trg
+     * Intermediate class for store the results of the parent transformation
+     */
+    class ParentTransformObject {
+        parentGlobalTransform: DBTransform;
+        parentGlobalTransformMatrix: Matrix;
+        private static _pool;
+        private static _poolSize;
+        constructor();
+        setTo(parentGlobalTransform: DBTransform, parentGlobalTransformMatrix: Matrix): ParentTransformObject;
+        release(): void;
+        static create(): ParentTransformObject;
+        static dispose(parentTransformObject: ParentTransformObject): void;
     }
 }
 declare module dragonBones {
@@ -4429,6 +4493,11 @@ declare module dragonBones {
          * @member {dragonBones.ColorTransform} dragonBones.SlotFrame#color
          */
         color: ColorTransform;
+        /**
+         * 播放子骨架的的动画
+         * @member {string} dragonBones.SlotFrame#gotoAndPlay
+         */
+        gotoAndPlay: string;
         /**
          *构造函数，实例化一个SlotFrame
          */
@@ -5105,6 +5174,14 @@ declare module dragonBones {
          * 旋转修正
          */
         static A_FIXED_ROTATION: string;
+        /**
+         * 默认动画
+         */
+        static A_DEFAULT_ANIMATION: string;
+        /**
+         * 播放子骨架的动画
+         */
+        static A_GOTOANDPLAY: string;
     }
 }
 declare module dragonBones {
@@ -5193,6 +5270,10 @@ declare module dragonBones {
         private static DOUBLE_PI;
         private static _helpTransformMatrix;
         private static _helpParentTransformMatrix;
+        private static tmpSkewXArray;
+        private static tmpSkewYArray;
+        private static ACCURACY;
+        private static isEqual(n1, n2);
         /**
          * 全局坐标系转成成局部坐标系
          * @param transform 全局坐标系下的变换
@@ -5205,7 +5286,7 @@ declare module dragonBones {
          * @param matrix 转换后的矩阵数据
          * @param keepScale 是否保持缩放
          */
-        static transformToMatrix(transform: DBTransform, matrix: Matrix, keepScale?: boolean): void;
+        static transformToMatrix(transform: DBTransform, matrix: Matrix): void;
         /**
          *把 矩阵数据转成成transform数据
          * @param matrix 需要转换的矩阵数据
@@ -5213,7 +5294,7 @@ declare module dragonBones {
          * @param scaleXF x方向的缩放
          * @param scaleYF y方向的缩放
          */
-        static matrixToTransform(matrix: Matrix, transform: DBTransform, scaleXF: Boolean, scaleYF: Boolean): void;
+        static matrixToTransform(matrix: Matrix, transform: DBTransform, scaleXF: boolean, scaleYF: boolean): void;
         /**
          * 标准化弧度值，把弧度制换算到[-PI，PI]之间
          * @param radian 输入一个弧度值
@@ -5224,6 +5305,9 @@ declare module dragonBones {
          *  确保角度在-180到180之间
          */
         static normalizeRotation(rotation: number): number;
+        static matrixToTransformPosition(matrix: Matrix, transform: DBTransform): void;
+        static matrixToTransformScale(matrix: Matrix, transform: DBTransform, scaleXF: boolean, scaleYF: boolean): void;
+        static matrixToTransformRotation(matrix: Matrix, transform: DBTransform, scaleX: number, scaleY: number): void;
     }
 }
 declare module dragonBones {
