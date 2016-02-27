@@ -1,4 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
 //  All rights reserved.
@@ -28,26 +28,25 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-module dragonBones {
-	/**
-	 * @class dragonBones.DragonBones
-	 * @classdesc
-	 * DragonBones
-	 */
-	export class DragonBones{
-		/**
-		 * DragonBones当前数据格式版本
-		 */
-		public static DATA_VERSION:string = "4.0";
-		public static DATA_VERSION_4_5:string = "4.5";
-		/**
-		 *
-		 */
-        public static PARENT_COORDINATE_DATA_VERSION:string = "3.0";
-
-        public static VERSION:string = "4.5.5";
+module dragonBones
+{
+    export class IKData
+	{
+		public name:string;
+		public target:string;
+		public weight:number;
+		public bones:string;
+		public chain:number;
+		public bendPositive:boolean;
 		
-		public constructor(){
+		public constructora()
+		{
+            
 		}
+		public dispose():void
+		{
+            
+		}
+		
 	}
 }

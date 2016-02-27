@@ -109,7 +109,10 @@ module dragonBones {
 		/** @private Store bones based on bones' hierarchy (From root to leaf)*/
 		public boneList:Array<FastBone>;
 		public _boneDic:any;
-		
+        
+		private _boneIKList:Array<Array<FastBone>> = [];
+        /** @private ik*/
+		public _ikList:Array<FastIKConstraint>;//Vector.<IKConstraint>;
 		/** @private Store slots based on slots' zOrder*/
 		public slotList:Array<FastSlot>;
 		public _slotDic:any;
@@ -143,7 +146,7 @@ module dragonBones {
 			this.slotHasChildArmatureList = [];
 			
 			this._eventList = [];
-			
+			this._ikList = [];
 			this._delayDispose = false;
 			this._lockDispose = false;
 			
@@ -169,7 +172,11 @@ module dragonBones {
 			while(i --){
 				this.boneList[i].dispose();
 			}
-			
+			i = this._ikList.length;
+            while (i--) {
+                this._ikList[i].dispose();
+            }
+            
 			this.slotList.length = 0;
 			this.boneList.length = 0;
 			
@@ -178,7 +185,7 @@ module dragonBones {
 			this.slotList = null;
 			this.boneList = null;
 			this._eventList = null;
-			
+			this._ikList = null;
 		}
 		
 		/**
@@ -193,6 +200,10 @@ module dragonBones {
 			var bone:FastBone;
 			var slot:FastSlot;
 			var i:number = 0;
+            var len:number = this._boneIKList.length;
+            var j:number;
+            var jLen:number;
+                
 			if(this._animation.animationState.isUseCache()){
 				if(!this.useCache){
 					this.useCache = true;
@@ -213,11 +224,22 @@ module dragonBones {
 					}
 				}
 				
-				i = this.boneList.length;
-				while(i --){
-					bone = this.boneList[i];
-					bone.update();
-				}
+				
+                
+                for (i = 0; i < len; i++) 
+                {
+                    for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++)
+                    {
+                        bone = this._boneIKList[i][j];
+                        bone.update();
+                        bone.rotationIK = bone.global.rotation;
+                        if(i != 0 && bone.isIKConstraint)
+                        {
+                            this._ikList[i-1].compute();
+                            bone.adjustGlobalTransformMatrixByIK();
+                        }
+                    }
+                }
 				
 				i = this.slotList.length;
 				while(i --){
@@ -540,6 +562,77 @@ module dragonBones {
 			{
 				this._eventList.push(event);
 			}			
+		}
+        
+        public getIKs(returnCopy:boolean = true):Array<FastIKConstraint>
+		{
+			return returnCopy ? this._ikList.concat(): this._ikList;
+		}
+		
+		public buildIK():void
+		{
+			var ikConstraintData:IKData;
+			this._ikList.length = 0;
+			for (var i:number = 0, len:number = this._armatureData.ikDataList.length; i < len; i++)
+			{
+				ikConstraintData = this._armatureData.ikDataList[i];
+				this._ikList.push(new FastIKConstraint(ikConstraintData, this));
+			}
+		}
+		
+		public updateBoneCache():void
+		{
+			this.boneList.reverse();
+			var temp:any = { };
+			var ikConstraintsCount:number = this._ikList.length;
+			var arrayCount:number = ikConstraintsCount + 1;
+			var i:number;
+			var len:number;
+			var j:number;
+			var jLen:number;
+			var bone:FastBone;
+			var currentBone:FastBone;
+			
+			this._boneIKList = [];
+			while (this._boneIKList.length < arrayCount)
+			{
+				this._boneIKList[this._boneIKList.length] = [];
+			}
+			
+			temp[this.boneList[0].name] = 0;
+			for (i = 0, len = this._ikList.length; i < len; i++) 
+			{
+				temp[this._ikList[i].bones[0].name] = i+1;
+			}
+			next:
+			for (i = 0, len = this.boneList.length; i < len; i++)
+			{
+				bone = this.boneList[i];
+				currentBone = bone;
+				while (currentBone)
+				{
+					if (temp.hasOwnProperty(currentBone.name))
+					{
+						this._boneIKList[temp[currentBone.name]].push(bone);
+						continue next;
+					}
+					currentBone = currentBone.parent;
+				}
+			}
+		}
+		
+		public getIKTargetData(bone:FastBone):Array<FastIKConstraint>
+		{
+			var target:Array<FastIKConstraint> = [];
+			var ik:FastIKConstraint; 
+			for (var i:number = 0, len:number = this._ikList.length; i < len; i++)
+			{
+				ik = this._ikList[i];
+				if(bone.name == ik.target.name){
+					target.push(ik);
+				}
+			}
+			return target;
 		}
 	}
 }

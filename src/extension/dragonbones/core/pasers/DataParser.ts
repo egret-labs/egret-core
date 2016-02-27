@@ -178,7 +178,13 @@ module dragonBones {
                 var boneObject:any = boneList[i];
                 outputArmatureData.addBoneData(DataParser.parseBoneData(boneObject));
             }
-
+            var ikList:any = armatureDataToParse[ConstValues.IK]
+            for(i = 0,len = ikList.length; i < len; i++ )
+			{
+                var ikObject:any = ikList[i];
+				outputArmatureData.addIKData(DataParser.parseIKData(ikObject));
+			}
+            
 			var slotList:any = armatureDataToParse[ConstValues.SLOT];
 			for(i = 0, len = slotList.length; i < len; i++) 
 			{
@@ -228,6 +234,26 @@ module dragonBones {
 			return boneData;
 		}
 		
+        private static parseIKData(ikObject:any):IKData
+		{
+			var ikData:IKData = new IKData();
+			ikData.name = ikObject[ConstValues.A_NAME];
+			ikData.target = ikObject[ConstValues.A_TARGET];
+			if(ikObject.hasOwnProperty(ConstValues.A_WEIGHT)){
+				ikData.weight = Number(ikObject[ConstValues.A_WEIGHT]);
+			}else{
+				ikData.weight = 1;
+			}
+			ikData.bendPositive = DataParser.getBoolean(ikObject, ConstValues.A_BENDPOSITIVE, true);
+			if(ikObject.hasOwnProperty(ConstValues.A_CHAIN)){
+				ikData.chain = ikObject[ConstValues.A_CHAIN];
+			}else{
+				ikData.chain = 0;
+			}
+			ikData.bones = ikObject[ConstValues.A_BONES];
+			return ikData;
+		}
+        
 		private static parseSkinData(skinObject:any):SkinData{
 			var skinData:SkinData = new SkinData();
 			skinData.name = skinObject[ConstValues.A_NAME];

@@ -111,6 +111,7 @@ module dragonBones {
 			var outputBone:Bone = new Bone();
 			
 			outputBone.name = boneData.name;
+            outputBone.length = boneData.length;
 			outputBone.inheritRotation = boneData.inheritRotation;
 			outputBone.inheritScale = boneData.inheritScale;
 			outputBone.origin.copy(boneData.transform);
@@ -151,6 +152,10 @@ module dragonBones {
          */
         public applyOffsetScaleToChild:boolean = false;
 
+        public rotationIK:number;
+		public length:number;
+		public isIKConstraint:boolean = false;
+        
 		/** @private */
 		public _boneList:Array<Bone>;
 		
@@ -385,6 +390,25 @@ module dragonBones {
          */
 		public invalidUpdate():void{
 			this._needUpdate = 2;
+            
+            var arr:Array<IKConstraint> = this.armature.getIKTargetData(this);
+			var i:number;
+			var len:number;
+			var j:number;
+			var jLen:number;
+			var ik:IKConstraint;
+			var bo:Bone;
+			
+			for (i = 0, len = arr.length; i < len; i++)
+			{
+				ik = arr[i];
+				for (j = 0, jLen = ik.bones.length; j < jLen; j++)
+				{
+					bo = ik.bones[j];
+					bo.invalidUpdate();
+				}
+			}
+            
 		}
 
         public _calculateRelativeParentTransform():void
@@ -398,7 +422,7 @@ module dragonBones {
         }
 		/** @private */
 		public _update(needUpdate:boolean = false):void{
-			this._needUpdate --;
+            this._needUpdate --;
 			if(needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)){
 				this._needUpdate = 1;
 			}
@@ -501,6 +525,20 @@ module dragonBones {
 
 			this._isColorChanged = colorChanged;
 		}
+        
+        public adjustGlobalTransformMatrixByIK():void
+		{
+			if(!this.parent)
+			{
+				return;
+			}
+			
+			this.global.rotation = this.rotationIK;
+			TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
+			this._globalTransformForChild.rotation = this.rotationIK;
+			TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
+		}
+        
 		/** @private */
 		public _hideSlots():void{
 			var length:number = this._slotList.length;
@@ -562,7 +600,7 @@ module dragonBones {
 			}
 			this._calculateRelativeParentTransform();
 			var output:ParentTransformObject = this._calculateParentTransform();
-			if(output != null)
+			if(output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform)
 			{
 				//计算父骨头绝对坐标
 				var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
@@ -573,8 +611,7 @@ module dragonBones {
 				var relativeRotation:number = this._global.rotation;
 				var relativeScaleX:number = this._global.scaleX;
 				var relativeScaleY:number = this._global.scaleY;
-                //TODO:parentBoneRotationIK;
-				var parentRotation:number = parentGlobalTransform.rotation;
+				var parentRotation:number = this.parentBoneRotation;
                 
                 this._localTransform = this._global;
                 
@@ -770,6 +807,11 @@ module dragonBones {
          */
 		public get slot():Slot{
 			return this._slotList.length > 0?this._slotList[0]:null;
+		}
+        
+        public get parentBoneRotation():number
+		{
+			return this.parent ? this.parent.rotationIK : 0;
 		}
 	}
 }

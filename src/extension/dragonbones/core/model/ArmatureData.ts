@@ -46,6 +46,7 @@ module dragonBones {
 		public name:string;
 		
 		private _boneDataList:Array<BoneData>;
+        private _ikDataList:Array<IKData>;
 		private _skinDataList:Array<SkinData>;
 		private _slotDataList:Array<SlotData>;
 		private _animationDataList:Array<AnimationData>;
@@ -68,6 +69,7 @@ module dragonBones {
 		 */
 		public constructor(){
 			this._boneDataList = [];
+			this._ikDataList = [];
 			this._skinDataList = [];
 			this._slotDataList = [];
 			this._animationDataList = [];
@@ -130,6 +132,10 @@ module dragonBones {
 			while(i --){
 				this._boneDataList[i].dispose();
 			}
+            i = this._ikDataList.length;
+			while(i --){
+				this._ikDataList[i].dispose();
+			}
 			i = this._skinDataList.length;
 			while(i --){
 				this._skinDataList[i].dispose();
@@ -144,6 +150,7 @@ module dragonBones {
 			}
 
 			this._boneDataList = null;
+			this._ikDataList = null;
 			this._slotDataList = null;
 			this._skinDataList = null;
 			this._animationDataList = null;
@@ -163,7 +170,20 @@ module dragonBones {
 			}
 			return null;
 		}
-
+        
+        public getIKData(ikName:string):IKData
+		{
+			var i:number = this._ikDataList.length;
+			while(i --)
+			{
+				if(this._ikDataList[i].name == ikName)
+				{
+					return this._ikDataList[i];
+				}
+			}
+			return null;
+		}
+        
 		public getSlotData(slotName:string):SlotData{
 			var i:number = this._slotDataList.length;
 			while(i --){
@@ -225,6 +245,22 @@ module dragonBones {
 			}
 		}
 
+        public addIKData(ikData:IKData):void
+		{
+			if(!ikData)
+			{
+				throw new Error();
+			}
+			if (this._ikDataList.indexOf(ikData) < 0)
+			{
+				this._ikDataList[this._ikDataList.length] = ikData;
+			}
+			else
+			{
+				throw new Error();
+			}
+		}
+        
 		public addSlotData(slotData:SlotData):void{
 			if(!slotData){
 				throw new Error();
@@ -304,6 +340,10 @@ module dragonBones {
 		 */
 		public get boneDataList():Array<BoneData>{
 			return this._boneDataList;
+		}
+        public get ikDataList():Array<IKData>
+		{
+			return this._ikDataList;
 		}
 		public get slotDataList():Array<SlotData>{
 			return this._slotDataList;
