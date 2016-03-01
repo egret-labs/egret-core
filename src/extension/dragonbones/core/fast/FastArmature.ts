@@ -381,7 +381,7 @@ module dragonBones {
 				parentBone.boneList.push(bone);
 			}
 			bone.armature = this;
-			bone.setParent(parentBone);
+			bone.parentBoneData = parentBone;
 			this.boneList.unshift(bone);
 			this._boneDic[bone.name] = bone;
 		}

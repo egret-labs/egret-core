@@ -155,6 +155,7 @@ module dragonBones {
         public rotationIK:number;
 		public length:number;
 		public isIKConstraint:boolean = false;
+		public childrenBones:Array<Bone> = [];
         
 		/** @private */
 		public _boneList:Array<Bone>;
@@ -273,6 +274,11 @@ module dragonBones {
 			this._boneList[this._boneList.length] = childBone;
 			childBone._setParent(this);
 			childBone._setArmature(this._armature);
+			var index = this.childrenBones.indexOf(childBone);
+			if (index < 0)
+			{
+				this.childrenBones.push(childBone);
+			}
 			
 			if(this._armature && !updateLater){
 				this._armature._updateAnimationAfterBoneListChanged();
@@ -297,6 +303,11 @@ module dragonBones {
 			this._boneList.splice(index, 1);
 			childBone._setParent(null);
 			childBone._setArmature(null);
+			var indexs = this.childrenBones.indexOf(childBone);
+			if (indexs >= 0)
+			{
+				this.childrenBones.splice(indexs, 1);
+			}
 			
 			if(this._armature && !updateLater){
 				this._armature._updateAnimationAfterBoneListChanged(false);
@@ -390,8 +401,17 @@ module dragonBones {
          */
 		public invalidUpdate():void{
 			this._needUpdate = 2;
-            
-            var arr:Array<IKConstraint> = this.armature.getIKTargetData(this);
+			this.operationInvalidUpdate(this);
+			var i:number;
+			var len:number;
+			for (i = 0, len = this.childrenBones.length;i<len;i++)
+			{
+				this.operationInvalidUpdate(this.childrenBones[i]);
+			}
+		}
+		private operationInvalidUpdate(bone:Bone):void
+		{
+            var arr:Array<IKConstraint> = this.armature.getIKTargetData(bone);
 			var i:number;
 			var len:number;
 			var j:number;
@@ -615,7 +635,7 @@ module dragonBones {
                 
                 this._localTransform = this._global;
                 
-                if (this.inheritRotation && !this.inheritScale)
+                if (this.inheritScale && !this.inheritRotation)
                 {
                     if (parentRotation != 0)
 					{

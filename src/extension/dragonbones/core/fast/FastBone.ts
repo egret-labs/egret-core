@@ -66,6 +66,7 @@ module dragonBones {
         public rotationIK:number;
 		public length:number;
 		public isIKConstraint:boolean = false;
+		public childrenBones:Array<FastBone> = [];
         
 		public constructor(){
 			super();
@@ -108,8 +109,17 @@ module dragonBones {
 		 */
 		public invalidUpdate():void{
 			this._needUpdate = 2;
-            
-            var arr:Array<FastIKConstraint> = this.armature.getIKTargetData(this);
+			this.operationInvalidUpdate(this);
+			var i:number;
+			var len:number;
+			for (i = 0, len = this.childrenBones.length; i < len; i++ )
+			{
+				this.operationInvalidUpdate(this.childrenBones[i]);
+			}
+		}
+		private operationInvalidUpdate(bone:FastBone):void
+		{
+            var arr:Array<FastIKConstraint> = this.armature.getIKTargetData(bone);
 			var i:number;
 			var len:number;
 			var j:number;
@@ -183,7 +193,7 @@ module dragonBones {
                 
                 this._localTransform = this._global;
                 
-                if (this.inheritRotation && !this.inheritScale)
+                if (this.inheritScale && !this.inheritRotation)
                 {
                     if (parentRotation != 0)
 					{
@@ -316,6 +326,29 @@ module dragonBones {
 		{
 			return this.parent ? this.parent.rotationIK : 0;
 		}
-        
+		public set parentBoneData(value:FastBone)
+		{
+			if (this._parent != value)
+			{
+				if (this._parent != null)
+				{
+					var index = this._parent.childrenBones.indexOf(this);
+					if (index >= 0)
+					{
+						this._parent.childrenBones.splice(index, 1);
+					}
+				}
+				this.setParent(value);
+				if (this._parent != null)
+				{
+					var indexs = this._parent.childrenBones.indexOf(this);
+					if (indexs < 0)
+					{
+						this._parent.childrenBones.push(this);
+					}
+				}
+			}
+
+		}
 	}
 }
