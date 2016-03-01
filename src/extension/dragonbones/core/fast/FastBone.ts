@@ -114,7 +114,10 @@ module dragonBones {
 			var len:number;
 			for (i = 0, len = this.childrenBones.length; i < len; i++ )
 			{
-				this.operationInvalidUpdate(this.childrenBones[i]);
+				if(this.childrenBones[i]._needUpdate != 2){
+					this.operationInvalidUpdate(this.childrenBones[i]);
+					this.childrenBones[i].invalidUpdate()
+				}
 			}
 		}
 		private operationInvalidUpdate(bone:FastBone):void
@@ -133,7 +136,9 @@ module dragonBones {
 				for (j = 0, jLen = ik.bones.length; j < jLen; j++)
 				{
 					bo = ik.bones[j];
-					bo.invalidUpdate();
+					if(bo._needUpdate != 2){
+						bo.invalidUpdate();
+					}
 				}
 			}
 		}
