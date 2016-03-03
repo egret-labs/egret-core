@@ -284,7 +284,7 @@ module egret {
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 var maskRenderNode = mask.$getRenderNode();
-                if(maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                if(maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
                         mask.$displayList, region, root ? mask : null);

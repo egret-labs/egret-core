@@ -398,11 +398,8 @@ module egret {
             fillPath && fillPath.drawEllipse(x, y, width, height);
             strokePath && strokePath.drawEllipse(x, y, width, height);
 
-            var radiusX = width * 0.5;
-            var radiusY = height * 0.5;
-            this.extendBoundsByPoint(x - radiusX, y - radiusY);
-            this.extendBoundsByPoint(x + radiusX, y + radiusY);
-            this.updatePosition(x + width * 0.5, y);
+            this.extendBoundsByPoint(x + width, y + height);
+            this.updatePosition(x, y);
         }
 
         /**

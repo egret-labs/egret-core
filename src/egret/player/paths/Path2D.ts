@@ -284,7 +284,7 @@ module egret.sys {
             var start = startAngle;
             var end = start;
             if (anticlockwise) {
-                end -= (start % halfPI);
+                end += -halfPI - (start % halfPI);
                 if (end < endAngle) {
                     end = endAngle;
                 }

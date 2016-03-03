@@ -137,7 +137,7 @@ module egret.native {
         }
 
         public set lineWidth(value:number) {
-            console.log("set lineWidth" + value);
+            //console.log("set lineWidth" + value);
             this.$lineWidth = value;
             this.$nativeContext.lineWidth = value;
         }
@@ -287,7 +287,7 @@ module egret.native {
                 var txt:string = arr[i];
                 if (txt.indexOf("px") != -1) {
                     this.$fontSize = parseInt(txt.replace("px", ""));
-                    console.log("set font" + this.$lineWidth);
+                    //console.log("set font" + this.$lineWidth);
                     return;
                 }
             }
@@ -441,7 +441,7 @@ module egret.native {
          * @platform Web,Native
          */
         public strokeRect(x:number, y:number, w:number, h:number):void {
-            console.log("strokeRect");
+            //console.log("strokeRect");
             this.$nativeContext.strokeRect(x, y, w, h);
         }
 
@@ -535,7 +535,7 @@ module egret.native {
          * @platform Web,Native
          */
         public restore():void {
-            console.log("restore");
+            //console.log("restore");
             if (this.$saveList.length) {
                 var data = this.$saveList.pop();
                 for (var key in data) {
@@ -557,7 +557,7 @@ module egret.native {
          * @platform Web,Native
          */
         public save():void {
-            console.log("save");
+            //console.log("save");
             var transformMatrix = new Matrix();
             transformMatrix.copyFrom(this.$matrix);
             this.$saveList.push({
@@ -597,7 +597,7 @@ module egret.native {
                     arr.push(clipRect.w);
                     arr.push(clipRect.h);
                 }
-                console.log("pushRectStencils " + arr.toString());
+                //console.log("pushRectStencils " + arr.toString());
                 this.$nativeContext.pushRectStencils(arr);
                 this.$clipRectArray.length = 0;
             }
@@ -614,7 +614,7 @@ module egret.native {
          * @platform Web,Native
          */
         public clearRect(x:number, y:number, width:number, height:number):void {
-            console.log("clearRect x:" + x + " y:" +  y + " width:" + width + " height:" + height);
+            //console.log("clearRect x:" + x + " y:" +  y + " width:" + width + " height:" + height);
             this.$nativeContext.clearRect(x, y, width, height);
         }
 
@@ -637,7 +637,7 @@ module egret.native {
 
         private setTransformToNative():void {
             var m = this.$matrix;
-            console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
+            //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
             this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
 
@@ -678,7 +678,7 @@ module egret.native {
          * @platform Web,Native
          */
         public fillText(text:string, x:number, y:number, maxWidth?:number):void {
-            console.log("drawText" + text);
+            //console.log("drawText" + text);
             var font:string = TextField.default_fontFamily;
             this.$nativeContext.createLabel(font, this.$fontSize, "", this.$hasStrokeText ? this.$lineWidth : 0);
             this.$hasStrokeText = false;
@@ -760,8 +760,8 @@ module egret.native {
                     surfaceImageHeight = height;
                 }
             }
-            console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
-            console.log("drawImage::" + bitmapData);
+            //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
+            //console.log("drawImage::" + bitmapData);
             this.$nativeContext.drawImage(bitmapData, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
         }
 

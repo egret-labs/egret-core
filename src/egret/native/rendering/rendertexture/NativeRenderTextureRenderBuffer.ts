@@ -188,7 +188,7 @@ module egret.native {
          * 销毁绘制对象
          */
         public destroy():void {
-            //this.surface.width = this.surface.height = 0;
+            this.surface.width = this.surface.height = 1;
         }
     }
 }
