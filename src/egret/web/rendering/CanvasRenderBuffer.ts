@@ -112,11 +112,20 @@ module egret.web {
         public resize(width:number, height:number, useMaxSize?:boolean):void {
             var surface = this.surface;
             if (useMaxSize) {
+                var change = false;
                 if (surface.width < width) {
                     surface.width = width;
+                    change = true;
                 }
                 if (surface.height < height) {
                     surface.height = height;
+                    change = true;
+                }
+                //尺寸没有变化时,将绘制属性重置
+                if(!change) {
+                    this.context.globalCompositeOperation = "source-over";
+                    this.context.setTransform(1, 0, 0, 1, 0, 0);
+                    this.context.globalAlpha = 1;
                 }
             }
             else {

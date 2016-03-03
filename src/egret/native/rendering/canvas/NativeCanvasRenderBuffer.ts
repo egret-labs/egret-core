@@ -88,22 +88,8 @@ module egret.native {
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
             var surface = this.surface;
-            if (useMaxSize) {
-                if (surface.width < width) {
-                    surface.width = width;
-                }
-                if (surface.height < height) {
-                    surface.height = height;
-                }
-            }
-            else {
-                if (surface.width != width) {
-                    surface.width = width;
-                }
-                if (surface.height != height) {
-                    surface.height = height;
-                }
-            }
+            surface.width = width;
+            surface.height = height;
             this.clear();
         }
 
