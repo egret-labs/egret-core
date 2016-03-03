@@ -44,6 +44,12 @@ module egret.sys {
         surface:any;
 
         /**
+         * 渲染上下文。
+         * @readOnly
+         */
+        context:any;
+
+        /**
          * 渲染缓冲的宽度，以像素为单位。
          * @readOnly
          */

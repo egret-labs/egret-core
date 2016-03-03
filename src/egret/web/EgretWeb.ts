@@ -89,7 +89,7 @@ module egret.web {
     function setRenderMode(renderMode:string):void{
 
         sys.RenderBuffer = web.CanvasRenderBuffer;
-        sys.systemRenderer = new web.CanvasRenderer();
+        sys.systemRenderer = new CanvasRenderer();
 
     }
 
