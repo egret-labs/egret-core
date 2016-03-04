@@ -148,6 +148,7 @@ module eui {
             this.initialized = !configURL;
             if (stage) {
                 this.$stage = stage;
+                EXML.$stage = stage;
                 stage.registerImplementation("eui.Theme", this);
             }
             this.$configURL = configURL;
