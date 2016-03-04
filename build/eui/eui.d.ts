@@ -12463,6 +12463,7 @@ declare module EXML {
      * @platform Web,Native
      */
     var prefixURL: string;
+    var $stage: egret.Stage;
     /**
      * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root

@@ -204,7 +204,7 @@ namespace ts {
         }
         else if (commandLine.fileNames.length === 0 && isJSONSupported()) {
             let searchPath = normalizePath(sys.getCurrentDirectory());
-            configFileName = findConfigFile(searchPath);
+            configFileName = findConfigFile(searchPath, sys.fileExists);
         }
 
         if (commandLine.fileNames.length === 0 && !configFileName) {
@@ -220,7 +220,7 @@ namespace ts {
                 return sys.exit(ExitStatus.DiagnosticsPresent_OutputsSkipped);
             }
             if (configFileName) {
-                configFileWatcher = sys.watchFile(configFileName, configFileChanged);
+                configFileWatcher = sys.watchFile(<Path>configFileName, configFileChanged);
             }
             if (sys.watchDirectory && configFileName) {
                 let directory = ts.getDirectoryPath(configFileName);
@@ -300,7 +300,7 @@ namespace ts {
             let sourceFile = hostGetSourceFile(fileName, languageVersion, onError);
             if (sourceFile && compilerOptions.watch) {
                 // Attach a file watcher
-                sourceFile.fileWatcher = sys.watchFile(sourceFile.fileName, (fileName: string, removed?: boolean) => sourceFileChanged(sourceFile, removed));
+                sourceFile.fileWatcher = sys.watchFile(sourceFile.path, (fileName: string, removed?: boolean) => sourceFileChanged(sourceFile, removed));
             }
             return sourceFile;
         }
@@ -394,7 +394,7 @@ namespace ts {
 
         let program = createProgram(fileNames, compilerOptions, compilerHost);
         let exitStatus = compileProgram();
-        let emitReturnStatus = exitStatus == ExitStatus.Success ? EmitReturnStatus.Succeeded : EmitReturnStatus.CompilerOptionsErrors;
+        let emitReturnStatus = exitStatus == ExitStatus.Success ? 0 : 5;
 
         if (compilerOptions.listFiles) {
             forEach(program.getSourceFiles(), file => {
@@ -646,7 +646,7 @@ namespace ts {
         var compilerOptions = commandLine.options;
         formatedMessages = [];
         var result: EgretCompileResult = {
-            exitStatus: EmitReturnStatus.Succeeded,
+            exitStatus: 0,
             program: null,
             compileWithChanges: null,
             files: [],
@@ -657,12 +657,12 @@ namespace ts {
         // setting up localization, report them and quit.
         if (commandLine.errors.length > 0) {
             reportDiagnostics(commandLine.errors);
-            result.exitStatus = EmitReturnStatus.CompilerOptionsErrors;
+            result.exitStatus = 5;
             return result;
         }
 
         if (commandLine.fileNames.length === 0) {
-            result.exitStatus = EmitReturnStatus.CompilerOptionsErrors;
+            result.exitStatus = 5;
             return result;
         }
 
@@ -717,7 +717,7 @@ namespace ts {
             // Reuse source files from the last compilation so long as they weren't changed.
             var oldSourceFiles = arrayToMap(
                 filter(program.getSourceFiles(), file => !hasProperty(changedFiles, getCanonicalName(file.fileName))),
-                    file => getCanonicalName(file.fileName));
+                file => getCanonicalName(file.fileName));
 
             // We create a new compiler host for this compilation cycle.
             // This new host is effectively the same except that 'getSourceFile'
@@ -749,7 +749,7 @@ namespace ts {
     export interface EgretCompileResult {
         program: ts.Program;
         files?: string[];
-        exitStatus: EmitReturnStatus;
+        exitStatus: number;
         compileWithChanges?: (filesChanged: egret.FileChanges, sourceMap?: boolean) => EgretCompileResult;
         messages?: string[];
     }

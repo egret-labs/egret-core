@@ -298,7 +298,7 @@ var egret;
             }
         );
         return HashObject;
-    })();
+    }());
     egret.HashObject = HashObject;
     egret.registerClass(HashObject,'egret.HashObject',["egret.IHashObject"]);
     if (DEBUG) {
@@ -592,7 +592,7 @@ var egret;
             return true;
         };
         return EventDispatcher;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.EventDispatcher = EventDispatcher;
     egret.registerClass(EventDispatcher,'egret.EventDispatcher',["egret.IEventDispatcher"]);
 })(egret || (egret = {}));
@@ -2506,7 +2506,7 @@ var egret;
          */
         DisplayObject.$renderCallBackList = [];
         return DisplayObject;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.DisplayObject = DisplayObject;
     egret.registerClass(DisplayObject,'egret.DisplayObject',["egret.sys.Renderable"]);
     if (DEBUG) {
@@ -3150,7 +3150,7 @@ var egret;
          */
         Bitmap.defaultSmoothing = true;
         return Bitmap;
-    })(egret.DisplayObject);
+    }(egret.DisplayObject));
     egret.Bitmap = Bitmap;
     egret.registerClass(Bitmap,'egret.Bitmap');
 })(egret || (egret = {}));
@@ -3274,7 +3274,7 @@ var egret;
          */
         BitmapFillMode.CLIP = "clip";
         return BitmapFillMode;
-    })();
+    }());
     egret.BitmapFillMode = BitmapFillMode;
     egret.registerClass(BitmapFillMode,'egret.BitmapFillMode');
 })(egret || (egret = {}));
@@ -3380,7 +3380,7 @@ var egret;
          */
         BlendMode.ERASE = "erase";
         return BlendMode;
-    })();
+    }());
     egret.BlendMode = BlendMode;
     egret.registerClass(BlendMode,'egret.BlendMode');
 })(egret || (egret = {}));
@@ -4251,7 +4251,7 @@ var egret;
          */
         DisplayObjectContainer.$EVENT_REMOVE_FROM_STAGE_LIST = [];
         return DisplayObjectContainer;
-    })(egret.DisplayObject);
+    }(egret.DisplayObject));
     egret.DisplayObjectContainer = DisplayObjectContainer;
     egret.registerClass(DisplayObjectContainer,'egret.DisplayObjectContainer');
     if (DEBUG) {
@@ -4275,7 +4275,7 @@ var egret;
          */
         GradientType.RADIAL = "radial";
         return GradientType;
-    })();
+    }());
     egret.GradientType = GradientType;
     egret.registerClass(GradientType,'egret.GradientType');
 })(egret || (egret = {}));
@@ -4931,7 +4931,7 @@ var egret;
             this.$renderContext.closePath();
         };
         return Graphics;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Graphics = Graphics;
     egret.registerClass(Graphics,'egret.Graphics');
 })(egret || (egret = {}));
@@ -5901,7 +5901,7 @@ var egret;
             context.restore();
         };
         return GraphicsRenderContext;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.GraphicsRenderContext = GraphicsRenderContext;
     egret.registerClass(GraphicsRenderContext,'egret.GraphicsRenderContext');
     /**
@@ -6358,7 +6358,7 @@ var egret;
         };
         Texture._displayList = {};
         return Texture;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Texture = Texture;
     egret.registerClass(Texture,'egret.Texture');
     if (DEBUG) {
@@ -6770,7 +6770,7 @@ var egret;
             }
         };
         return RenderTexture;
-    })(egret.Texture);
+    }(egret.Texture));
     egret.RenderTexture = RenderTexture;
     egret.registerClass(RenderTexture,'egret.RenderTexture');
 })(egret || (egret = {}));
@@ -6879,7 +6879,7 @@ var egret;
             this.$graphics.$render(context);
         };
         return Shape;
-    })(egret.DisplayObject);
+    }(egret.DisplayObject));
     egret.Shape = Shape;
     egret.registerClass(Shape,'egret.Shape');
     if (DEBUG) {
@@ -7028,7 +7028,7 @@ var egret;
             this.$graphics.$render(context);
         };
         return Sprite;
-    })(egret.DisplayObjectContainer);
+    }(egret.DisplayObjectContainer));
     egret.Sprite = Sprite;
     egret.registerClass(Sprite,'egret.Sprite');
 })(egret || (egret = {}));
@@ -7208,7 +7208,7 @@ var egret;
             }
         };
         return SpriteSheet;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.SpriteSheet = SpriteSheet;
     egret.registerClass(SpriteSheet,'egret.SpriteSheet');
 })(egret || (egret = {}));
@@ -7572,7 +7572,7 @@ var egret;
             this.$screen.setContentSize(width, height);
         };
         return Stage;
-    })(egret.DisplayObjectContainer);
+    }(egret.DisplayObjectContainer));
     egret.Stage = Stage;
     egret.registerClass(Stage,'egret.Stage');
     if (DEBUG) {
@@ -8326,7 +8326,7 @@ var egret;
          */
         Event.SOUND_COMPLETE = "soundComplete";
         return Event;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Event = Event;
     egret.registerClass(Event,'egret.Event');
     if (DEBUG) {
@@ -8463,7 +8463,7 @@ var egret;
          */
         FocusEvent.FOCUS_OUT = "focusOut";
         return FocusEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.FocusEvent = FocusEvent;
     egret.registerClass(FocusEvent,'egret.FocusEvent');
 })(egret || (egret = {}));
@@ -8545,7 +8545,7 @@ var egret;
          */
         GeolocationEvent.UNAVAILABLE = "unavailable";
         return GeolocationEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.GeolocationEvent = GeolocationEvent;
     egret.registerClass(GeolocationEvent,'egret.GeolocationEvent');
 })(egret || (egret = {}));
@@ -8677,7 +8677,7 @@ var egret;
          */
         HTTPStatusEvent.HTTP_STATUS = "httpStatus";
         return HTTPStatusEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.HTTPStatusEvent = HTTPStatusEvent;
     egret.registerClass(HTTPStatusEvent,'egret.HTTPStatusEvent');
 })(egret || (egret = {}));
@@ -8813,7 +8813,7 @@ var egret;
          */
         IOErrorEvent.IO_ERROR = "ioError";
         return IOErrorEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.IOErrorEvent = IOErrorEvent;
     egret.registerClass(IOErrorEvent,'egret.IOErrorEvent');
 })(egret || (egret = {}));
@@ -8872,7 +8872,7 @@ var egret;
         }
         var d = __define,c=MotionEvent,p=c.prototype;
         return MotionEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.MotionEvent = MotionEvent;
     egret.registerClass(MotionEvent,'egret.MotionEvent');
 })(egret || (egret = {}));
@@ -8931,7 +8931,7 @@ var egret;
         }
         var d = __define,c=OrientationEvent,p=c.prototype;
         return OrientationEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.OrientationEvent = OrientationEvent;
     egret.registerClass(OrientationEvent,'egret.OrientationEvent');
 })(egret || (egret = {}));
@@ -9096,7 +9096,7 @@ var egret;
          */
         ProgressEvent.SOCKET_DATA = "socketData";
         return ProgressEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.ProgressEvent = ProgressEvent;
     egret.registerClass(ProgressEvent,'egret.ProgressEvent');
 })(egret || (egret = {}));
@@ -9206,7 +9206,7 @@ var egret;
          */
         StageOrientationEvent.ORIENTATION_CHANGE = "orientationChange";
         return StageOrientationEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.StageOrientationEvent = StageOrientationEvent;
     egret.registerClass(StageOrientationEvent,'egret.StageOrientationEvent');
 })(egret || (egret = {}));
@@ -9323,7 +9323,7 @@ var egret;
          */
         TextEvent.LINK = "link";
         return TextEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.TextEvent = TextEvent;
     egret.registerClass(TextEvent,'egret.TextEvent');
 })(egret || (egret = {}));
@@ -9504,7 +9504,7 @@ var egret;
          */
         TimerEvent.TIMER_COMPLETE = "timerComplete";
         return TimerEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.TimerEvent = TimerEvent;
     egret.registerClass(TimerEvent,'egret.TimerEvent');
 })(egret || (egret = {}));
@@ -9875,7 +9875,7 @@ var egret;
             return "(x=" + this.x + ", y=" + this.y + ")";
         };
         return Point;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Point = Point;
     egret.registerClass(Point,'egret.Point');
     if (DEBUG) {
@@ -10248,7 +10248,7 @@ var egret;
          */
         TouchEvent.TOUCH_ROLL_OVER = "touchRollOver";
         return TouchEvent;
-    })(egret.Event);
+    }(egret.Event));
     egret.TouchEvent = TouchEvent;
     egret.registerClass(TouchEvent,'egret.TouchEvent');
     if (DEBUG) {
@@ -10364,7 +10364,7 @@ var egret;
         }
         var d = __define,c=Filter,p=c.prototype;
         return Filter;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Filter = Filter;
     egret.registerClass(Filter,'egret.Filter');
 })(egret || (egret = {}));
@@ -10417,7 +10417,7 @@ var egret;
         }
         var d = __define,c=BlurFilter,p=c.prototype;
         return BlurFilter;
-    })(egret.Filter);
+    }(egret.Filter));
     egret.BlurFilter = BlurFilter;
     egret.registerClass(BlurFilter,'egret.BlurFilter');
 })(egret || (egret = {}));
@@ -10503,7 +10503,7 @@ var egret;
             }
         };
         return ColorMatrixFilter;
-    })(egret.Filter);
+    }(egret.Filter));
     egret.ColorMatrixFilter = ColorMatrixFilter;
     egret.registerClass(ColorMatrixFilter,'egret.ColorMatrixFilter');
 })(egret || (egret = {}));
@@ -10587,7 +10587,7 @@ var egret;
         }
         var d = __define,c=GlowFilter,p=c.prototype;
         return GlowFilter;
-    })(egret.Filter);
+    }(egret.Filter));
     egret.GlowFilter = GlowFilter;
     egret.registerClass(GlowFilter,'egret.GlowFilter');
 })(egret || (egret = {}));
@@ -10666,7 +10666,7 @@ var egret;
         }
         var d = __define,c=DropShadowFilter,p=c.prototype;
         return DropShadowFilter;
-    })(egret.GlowFilter);
+    }(egret.GlowFilter));
     egret.DropShadowFilter = DropShadowFilter;
     egret.registerClass(DropShadowFilter,'egret.DropShadowFilter');
 })(egret || (egret = {}));
@@ -11493,7 +11493,7 @@ var egret;
             target.ty = ty;
         };
         return Matrix;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Matrix = Matrix;
     egret.registerClass(Matrix,'egret.Matrix');
     /**
@@ -12170,7 +12170,7 @@ var egret;
             return v * this.width + u * this.height;
         };
         return Rectangle;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.Rectangle = Rectangle;
     egret.registerClass(Rectangle,'egret.Rectangle');
     /**
@@ -12742,7 +12742,7 @@ var egret;
          */
         PromiseObject.promiseObjectList = [];
         return PromiseObject;
-    })();
+    }());
     egret.PromiseObject = PromiseObject;
     egret.registerClass(PromiseObject,'egret.PromiseObject');
 })(egret || (egret = {}));
@@ -12823,7 +12823,7 @@ var egret;
          */
         HttpMethod.POST = "POST";
         return HttpMethod;
-    })();
+    }());
     egret.HttpMethod = HttpMethod;
     egret.registerClass(HttpMethod,'egret.HttpMethod');
 })(egret || (egret = {}));
@@ -12933,7 +12933,7 @@ var egret;
          */
         HttpResponseType.ARRAY_BUFFER = "arraybuffer";
         return HttpResponseType;
-    })();
+    }());
     egret.HttpResponseType = HttpResponseType;
     egret.registerClass(HttpResponseType,'egret.HttpResponseType');
 })(egret || (egret = {}));
@@ -13182,7 +13182,7 @@ var egret;
                 this.$dirtyRegionPolicy = policy;
             };
             return DirtyRegion;
-        })();
+        }());
         sys.DirtyRegion = DirtyRegion;
         egret.registerClass(DirtyRegion,'egret.sys.DirtyRegion');
     })(sys = egret.sys || (egret.sys = {}));
@@ -13260,7 +13260,7 @@ var egret;
          */
         DirtyRegionPolicy.ON = "on";
         return DirtyRegionPolicy;
-    })();
+    }());
     egret.DirtyRegionPolicy = DirtyRegionPolicy;
     egret.registerClass(DirtyRegionPolicy,'egret.DirtyRegionPolicy');
 })(egret || (egret = {}));
@@ -13940,7 +13940,7 @@ var egret;
                 this.dirtyRegion.setDirtyRegionPolicy(policy);
             };
             return DisplayList;
-        })(egret.HashObject);
+        }(egret.HashObject));
         sys.DisplayList = DisplayList;
         egret.registerClass(DisplayList,'egret.sys.DisplayList',["egret.sys.Renderable"]);
     })(sys = egret.sys || (egret.sys = {}));
@@ -14063,7 +14063,7 @@ var egret;
          */
         OrientationMode.LANDSCAPE_FLIPPED = "landscapeFlipped";
         return OrientationMode;
-    })();
+    }());
     egret.OrientationMode = OrientationMode;
     egret.registerClass(OrientationMode,'egret.OrientationMode');
 })(egret || (egret = {}));
@@ -14299,7 +14299,7 @@ var egret;
                 }
             };
             return Player;
-        })(egret.HashObject);
+        }(egret.HashObject));
         sys.Player = Player;
         egret.registerClass(Player,'egret.sys.Player');
         var infoLines = [];
@@ -14846,7 +14846,7 @@ var egret;
                 this.area = this.width * this.height;
             };
             return Region;
-        })();
+        }());
         sys.Region = Region;
         egret.registerClass(Region,'egret.sys.Region');
     })(sys = egret.sys || (egret.sys = {}));
@@ -15050,7 +15050,7 @@ var egret;
                 };
             };
             return ScreenAdapter;
-        })(egret.HashObject);
+        }(egret.HashObject));
         sys.ScreenAdapter = ScreenAdapter;
         egret.registerClass(ScreenAdapter,'egret.sys.ScreenAdapter',["egret.sys.IScreenAdapter"]);
     })(sys = egret.sys || (egret.sys = {}));
@@ -15192,7 +15192,7 @@ var egret;
          */
         StageScaleMode.FIXED_WIDE = "fixedWide";
         return StageScaleMode;
-    })();
+    }());
     egret.StageScaleMode = StageScaleMode;
     egret.registerClass(StageScaleMode,'egret.StageScaleMode');
 })(egret || (egret = {}));
@@ -15530,7 +15530,7 @@ var egret;
                 }
             };
             return SystemTicker;
-        })();
+        }());
         sys.SystemTicker = SystemTicker;
         egret.registerClass(SystemTicker,'egret.sys.SystemTicker');
         /**
@@ -15684,7 +15684,7 @@ var egret;
                 return target;
             };
             return TouchHandler;
-        })(egret.HashObject);
+        }(egret.HashObject));
         sys.TouchHandler = TouchHandler;
         egret.registerClass(TouchHandler,'egret.sys.TouchHandler');
     })(sys = egret.sys || (egret.sys = {}));
@@ -15775,7 +15775,7 @@ var egret;
          */
         RuntimeType.NATIVE = "native";
         return RuntimeType;
-    })();
+    }());
     egret.RuntimeType = RuntimeType;
     egret.registerClass(RuntimeType,'egret.RuntimeType');
     /**
@@ -15956,7 +15956,7 @@ var egret;
          */
         Capabilities.supportVersion = "Unknown";
         return Capabilities;
-    })();
+    }());
     egret.Capabilities = Capabilities;
     egret.registerClass(Capabilities,'egret.Capabilities');
     if (DEBUG) {
@@ -16195,7 +16195,7 @@ var egret;
             return 0;
         };
         return BitmapFont;
-    })(egret.SpriteSheet);
+    }(egret.SpriteSheet));
     egret.BitmapFont = BitmapFont;
     egret.registerClass(BitmapFont,'egret.BitmapFont');
 })(egret || (egret = {}));
@@ -16799,7 +16799,7 @@ var egret;
          */
         BitmapText.EMPTY_FACTOR = 0.33;
         return BitmapText;
-    })(egret.DisplayObject);
+    }(egret.DisplayObject));
     egret.BitmapText = BitmapText;
     egret.registerClass(BitmapText,'egret.BitmapText');
 })(egret || (egret = {}));
@@ -16927,7 +16927,7 @@ var egret;
          */
         HorizontalAlign.CONTENT_JUSTIFY = "contentJustify";
         return HorizontalAlign;
-    })();
+    }());
     egret.HorizontalAlign = HorizontalAlign;
     egret.registerClass(HorizontalAlign,'egret.HorizontalAlign');
 })(egret || (egret = {}));
@@ -17186,7 +17186,7 @@ var egret;
             }
         };
         return HtmlTextParser;
-    })();
+    }());
     egret.HtmlTextParser = HtmlTextParser;
     egret.registerClass(HtmlTextParser,'egret.HtmlTextParser');
 })(egret || (egret = {}));
@@ -17480,7 +17480,7 @@ var egret;
             this.updateInput();
         };
         return InputController;
-    })(egret.HashObject);
+    }(egret.HashObject));
     egret.InputController = InputController;
     egret.registerClass(InputController,'egret.InputController');
 })(egret || (egret = {}));
@@ -19191,7 +19191,7 @@ var egret;
          */
         TextField.default_fontFamily = "Arial";
         return TextField;
-    })(egret.DisplayObject);
+    }(egret.DisplayObject));
     egret.TextField = TextField;
     egret.registerClass(TextField,'egret.TextField');
     /**
@@ -19360,7 +19360,7 @@ var egret;
          */
         TextFieldType.INPUT = "input";
         return TextFieldType;
-    })();
+    }());
     egret.TextFieldType = TextFieldType;
     egret.registerClass(TextFieldType,'egret.TextFieldType');
 })(egret || (egret = {}));
@@ -19581,7 +19581,7 @@ var egret;
             return scrollNum;
         };
         return TextFieldUtils;
-    })();
+    }());
     egret.TextFieldUtils = TextFieldUtils;
     egret.registerClass(TextFieldUtils,'egret.TextFieldUtils');
 })(egret || (egret = {}));
@@ -19705,7 +19705,7 @@ var egret;
          */
         VerticalAlign.CONTENT_JUSTIFY = "contentJustify";
         return VerticalAlign;
-    })();
+    }());
     egret.VerticalAlign = VerticalAlign;
     egret.registerClass(VerticalAlign,'egret.VerticalAlign');
 })(egret || (egret = {}));
@@ -19788,7 +19788,7 @@ var egret;
          */
         Endian.BIG_ENDIAN = "bigEndian";
         return Endian;
-    })();
+    }());
     egret.Endian = Endian;
     egret.registerClass(Endian,'egret.Endian');
     /**
@@ -20817,7 +20817,7 @@ var egret;
          */
         ByteArray.SIZE_OF_FLOAT64 = 8;
         return ByteArray;
-    })();
+    }());
     egret.ByteArray = ByteArray;
     egret.registerClass(ByteArray,'egret.ByteArray');
 })(egret || (egret = {}));
@@ -20982,7 +20982,7 @@ var egret;
          */
         Logger.OFF = "off";
         return Logger;
-    })();
+    }());
     egret.Logger = Logger;
     egret.registerClass(Logger,'egret.Logger');
 })(egret || (egret = {}));
@@ -21134,7 +21134,7 @@ var egret;
             return egret_sin_map[value - 270];
         };
         return NumberUtils;
-    })();
+    }());
     egret.NumberUtils = NumberUtils;
     egret.registerClass(NumberUtils,'egret.NumberUtils');
 })(egret || (egret = {}));
@@ -21402,7 +21402,7 @@ var egret;
             return false;
         };
         return Timer;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.Timer = Timer;
     egret.registerClass(Timer,'egret.Timer');
     if (DEBUG) {

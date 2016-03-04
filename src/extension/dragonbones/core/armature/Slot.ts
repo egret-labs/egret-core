@@ -131,12 +131,8 @@ module dragonBones {
 		public _needUpdate:boolean;
 		public _timelineStateList:Array<SlotTimelineState>
 
-		public constructor(self:Slot){
+		public constructor(){
 			super();
-			
-			if(self != this){
-				throw new Error(egret.getString(4001));
-			}
 			
 			this._displayList = [];
 			this._timelineStateList = [];

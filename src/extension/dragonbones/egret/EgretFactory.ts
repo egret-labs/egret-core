@@ -37,7 +37,7 @@ module dragonBones {
      */
     export class EgretFactory extends BaseFactory {
         constructor() {
-            super(this);
+            super();
         }
 
         /** @private */
