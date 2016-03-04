@@ -30,12 +30,6 @@
 /**
  * @private
  */
-interface AudioBuffer {
-    duration:number;
-}
-/**
- * @private
- */
 interface AudioBufferSourceNodeEgret {
     buffer:any;
     context:any;
