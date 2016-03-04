@@ -56,6 +56,11 @@ module dragonBones {
          * @member {string} dragonBones.ArmatureData#defaultAnimation
          */
         public defaultAnimation:string;
+        /**
+         * 帧率
+         * @member {number} dragonBones.ArmatureData#frameRate
+         */
+        public frameRate:number;
         
         public static sortBoneDataHelpArray(object1:any, object2:any):number {
             return object1[0] > object2[0] ? 1 : -1;
