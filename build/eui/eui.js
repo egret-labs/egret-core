@@ -19667,7 +19667,7 @@ var EXML;
         if (!adapter) {
             adapter = new eui.DefaultThemeAdapter();
         }
-        adapter.getTheme(url, onConfigLoaded, onConfigLoaded, this);
+        adapter.getTheme(openUrl, onConfigLoaded, onConfigLoaded, this);
     }
 })(EXML || (EXML = {}));
 //////////////////////////////////////////////////////////////////////////////////////

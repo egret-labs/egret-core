@@ -8252,6 +8252,21 @@ declare module egret {
          * @platform Web,Native
          */
         type: string;
+        /**
+         * @language en_US
+         * Length of the current sound (in seconds).
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        /**
+         * @language zh_CN
+         * 当前声音的长度（以秒为单位）。
+         * @version Egret 2.4
+         * @platform Web,Native
+         * @readOnly
+         */
+        length: number;
     }
     /**
      * @copy egret.Sound

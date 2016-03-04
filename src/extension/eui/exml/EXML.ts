@@ -232,11 +232,11 @@ module EXML {
                 str = "";
             }
             callback(url, str);
-        }
+        };
         var adapter:eui.IThemeAdapter = EXML.$stage?EXML.$stage.getImplementation("eui.IThemeAdapter"):null;
         if (!adapter) {
             adapter = new eui.DefaultThemeAdapter();
         }
-        adapter.getTheme(url, onConfigLoaded, onConfigLoaded, this);
+        adapter.getTheme(openUrl, onConfigLoaded, onConfigLoaded, this);
     }
 }

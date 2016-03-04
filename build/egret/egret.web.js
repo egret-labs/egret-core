@@ -190,6 +190,15 @@ var egret;
                 this.loaded = false;
             }
             var d = __define,c=HtmlSound,p=c.prototype;
+            d(p, "length"
+                ,function () {
+                    if (this.originAudio) {
+                        return this.originAudio.duration;
+                    }
+                    throw new Error("sound not loaded!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -548,6 +557,12 @@ var egret;
                     refresh: 1
                 });
             };
+            d(p, "length"
+                ,function () {
+                    throw new Error("qq sound not supported!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -864,6 +879,15 @@ var egret;
                 this.loaded = false;
             }
             var d = __define,c=WebAudioSound,p=c.prototype;
+            d(p, "length"
+                ,function () {
+                    if (this.audioBuffer) {
+                        return this.audioBuffer.duration;
+                    }
+                    throw new Error("sound not loaded!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */

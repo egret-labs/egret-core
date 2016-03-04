@@ -1773,6 +1773,15 @@ var egret;
                 this.loaded = false;
             }
             var d = __define,c=NativeSound,p=c.prototype;
+            d(p, "length"
+                ,function () {
+                    if (this.originAudio) {
+                        return this.originAudio.duration;
+                    }
+                    throw new Error("sound not loaded!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -2104,6 +2113,12 @@ var egret;
                 this.loaded = false;
             }
             var d = __define,c=NaSound,p=c.prototype;
+            d(p, "length"
+                ,function () {
+                    throw new Error("sound length not supported");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
