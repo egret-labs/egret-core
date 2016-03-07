@@ -168,7 +168,12 @@ module dragonBones {
 			var outputArmatureData:ArmatureData = new ArmatureData();
 			outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
             outputArmatureData.defaultAnimation = armatureDataToParse[ConstValues.A_DEFAULT_ANIMATION];
-               
+            outputArmatureData.frameRate = armatureDataToParse[ConstValues.A_FRAME_RATE];
+			if (isNaN(outputArmatureData.frameRate) || outputArmatureData.frameRate <= 0)
+			{
+				outputArmatureData.frameRate = frameRate;
+			}
+			frameRate = outputArmatureData.frameRate;
             var boneList:any = armatureDataToParse[ConstValues.BONE];
             var i:number;
             var len:number;
