@@ -44,7 +44,6 @@ module egret.gui {
         public constructor() {
             super();
             this.touchChildren = false;
-            this.$renderRegion = new sys.Region();
         }
 
         /**
@@ -55,15 +54,9 @@ module egret.gui {
         public get graphics():Graphics {
             if (!this.$graphics) {
                 this.$graphics = new Graphics();
-                this.$graphics.$renderContext.$targetDisplay = this;
+                this.$graphics.$setTarget(this);
             }
             return this.$graphics;
-        }
-
-        $render(context:egret.sys.RenderContext):void {
-            if (this.$graphics)
-                this.$graphics.$render(context);
-            super.$render(context);
         }
 
         $hitTest(stageX:number, stageY:number):DisplayObject {
