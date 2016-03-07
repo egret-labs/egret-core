@@ -63,6 +63,8 @@ module EXML {
         configurable: true
     });
 
+    export var $stage: egret.Stage;
+
     /**
      * @language en_US
      * Parsing a text of EXML file for a definition of class. You can declare the <code>class</code> property in the root
@@ -220,28 +222,21 @@ module EXML {
      * @private
      */
     function request(url:string, callback:(url:string, text:string) => void) {
-
-        var request = requestPool.pop();
-        if (!request) {
-            request = new egret.HttpRequest();
-        }
-
-        var onRequestLoaded = e => {
-            request.removeEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
-            request.removeEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
-            var text: string = e.type == egret.Event.COMPLETE ? request.response : "";
-            requestPool.push(request);
-            callback(url, text);
-        };
-
-        request.addEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
-        request.addEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
         var openUrl = url;
         if (url.indexOf("://") == -1) {
             openUrl = $prefixURL + url;
         }
-        request.open(openUrl);
-        request.responseType = egret.HttpResponseType.TEXT;
-        request.send();
+
+        var onConfigLoaded = function (str:string) {
+            if(!str) {
+                str = "";
+            }
+            callback(url, str);
+        };
+        var adapter:eui.IThemeAdapter = EXML.$stage?EXML.$stage.getImplementation("eui.IThemeAdapter"):null;
+        if (!adapter) {
+            adapter = new eui.DefaultThemeAdapter();
+        }
+        adapter.getTheme(openUrl, onConfigLoaded, onConfigLoaded, this);
     }
 }

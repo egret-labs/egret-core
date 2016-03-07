@@ -893,6 +893,9 @@ declare module dragonBones {
         _slotList: Array<Slot>;
         /** @private Store bones based on bones' hierarchy (From root to leaf)*/
         _boneList: Array<Bone>;
+        private _boneIKList;
+        /** @private ik*/
+        _ikList: Array<IKConstraint>;
         /** @private data version 4.5 and upper*/
         _skewEnable: boolean;
         private _delayDispose;
@@ -1040,6 +1043,10 @@ declare module dragonBones {
          * @returns {any} Animation实例
          */
         getAnimation(): any;
+        getIKs(returnCopy?: boolean): Array<IKConstraint>;
+        buildIK(): void;
+        updateBoneCache(): void;
+        getIKTargetData(bone: Bone): Array<IKConstraint>;
     }
 }
 declare module dragonBones {
@@ -1385,6 +1392,10 @@ declare module dragonBones {
          * @see dragonBones.Bone#offset
          */
         applyOffsetScaleToChild: boolean;
+        rotationIK: number;
+        length: number;
+        isIKConstraint: boolean;
+        childrenBones: Array<Bone>;
         /** @private */
         _boneList: Array<Bone>;
         /** @private */
@@ -1458,11 +1469,13 @@ declare module dragonBones {
          * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
          */
         invalidUpdate(): void;
+        private operationInvalidUpdate(bone);
         _calculateRelativeParentTransform(): void;
         /** @private */
         _update(needUpdate?: boolean): void;
         /** @private */
         _updateColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChanged: boolean): void;
+        adjustGlobalTransformMatrixByIK(): void;
         /** @private */
         _hideSlots(): void;
         /** @private When bone timeline enter a key frame, call this func*/
@@ -1495,6 +1508,7 @@ declare module dragonBones {
          * @member {Slot} dragonBones.Bone#slot
          */
         slot: Slot;
+        parentBoneRotation: number;
     }
 }
 declare module dragonBones {
@@ -1506,6 +1520,24 @@ declare module dragonBones {
     interface IArmature extends IAnimatable {
         getAnimation(): any;
         resetAnimation(): void;
+    }
+}
+declare module dragonBones {
+    class IKConstraint {
+        private ikdata;
+        private armature;
+        bones: Array<Bone>;
+        target: Bone;
+        bendDirection: number;
+        weight: number;
+        animationCacheBend: number;
+        animationCacheWeight: number;
+        constructor(data: IKData, armatureData: Armature);
+        dispose(): void;
+        compute(): void;
+        compute1(bone: Bone, target: Bone, weightA: number): void;
+        compute2(parent: Bone, child: Bone, targetX: number, targetY: number, bendDirection: number, weightA: number): Point;
+        private normalize(rotation);
     }
 }
 declare module dragonBones {
@@ -1593,6 +1625,7 @@ declare module dragonBones {
         _originDisplayIndex: number;
         /** @private */
         _gotoAndPlay: string;
+        _defaultGotoAndPlay: string;
         _displayList: Array<any>;
         _currentDisplayIndex: number;
         _colorTransform: ColorTransform;
@@ -1602,7 +1635,7 @@ declare module dragonBones {
         _isColorChanged: boolean;
         _needUpdate: boolean;
         _timelineStateList: Array<SlotTimelineState>;
-        constructor(self: Slot);
+        constructor();
         /**
          * 通过传入 SlotData 初始化Slot
          * @param slotData
@@ -2698,7 +2731,7 @@ declare module dragonBones {
         dragonBonesDataDic: any;
         /** @private */
         textureAtlasDic: any;
-        constructor(self: BaseFactory);
+        constructor();
         /**
          * 释放资源
          * @param  disposeData {boolean} (optional) 是否释放所有内部的引用
@@ -2935,6 +2968,9 @@ declare module dragonBones {
         /** @private Store bones based on bones' hierarchy (From root to leaf)*/
         boneList: Array<FastBone>;
         _boneDic: any;
+        private _boneIKList;
+        /** @private ik*/
+        _ikList: Array<FastIKConstraint>;
         /** @private Store slots based on slots' zOrder*/
         slotList: Array<FastSlot>;
         _slotDic: any;
@@ -3045,6 +3081,10 @@ declare module dragonBones {
         enableCache: boolean;
         enableEventDispatch: boolean;
         _addEvent(event: Event): void;
+        getIKs(returnCopy?: boolean): Array<FastIKConstraint>;
+        buildIK(): void;
+        updateBoneCache(): void;
+        getIKTargetData(bone: FastBone): Array<FastIKConstraint>;
     }
 }
 declare module dragonBones {
@@ -3150,6 +3190,10 @@ declare module dragonBones {
         /** @private */
         _needUpdate: number;
         _tweenPivot: Point;
+        rotationIK: number;
+        length: number;
+        isIKConstraint: boolean;
+        childrenBones: Array<FastBone>;
         constructor();
         /**
          * 获取当前骨头包含的所有 FastBone 实例
@@ -3171,12 +3215,14 @@ declare module dragonBones {
          * 在下一帧强制更新当前 Bone 实例及其包含的所有 Slot 的动画。
          */
         invalidUpdate(): void;
+        private operationInvalidUpdate(bone);
         _calculateRelativeParentTransform(): void;
         /** @private */
         updateByCache(): void;
         /** @private */
         update(needUpdate?: boolean): void;
         _updateGlobal(): ParentTransformObject;
+        adjustGlobalTransformMatrixByIK(): void;
         /** @private */
         _hideSlots(): void;
         private blendingTimeline();
@@ -3197,6 +3243,26 @@ declare module dragonBones {
          * @member {FastSlot} dragonBones.FastBone#slot
          */
         slot: FastSlot;
+        parentBoneRotation: number;
+        parentBoneData: FastBone;
+    }
+}
+declare module dragonBones {
+    class FastIKConstraint {
+        private ikdata;
+        private armature;
+        bones: Array<FastBone>;
+        target: FastBone;
+        bendDirection: number;
+        weight: number;
+        animationCacheBend: number;
+        animationCacheWeight: number;
+        constructor(data: IKData, armatureData: FastArmature);
+        dispose(): void;
+        compute(): void;
+        compute1(bone: FastBone, target: FastBone, weightA: number): void;
+        compute2(parent: FastBone, child: FastBone, targetX: number, targetY: number, bendDirection: number, weightA: number): Point;
+        private normalize(rotation);
     }
 }
 declare module dragonBones {
@@ -3224,6 +3290,7 @@ declare module dragonBones {
         _originDisplayIndex: number;
         /** @private */
         _gotoAndPlay: string;
+        _defaultGotoAndPlay: string;
         _displayList: Array<any>;
         _currentDisplayIndex: number;
         _colorTransform: ColorTransform;
@@ -3231,7 +3298,7 @@ declare module dragonBones {
         _currentDisplay: any;
         _blendMode: string;
         hasChildArmature: boolean;
-        constructor(self: FastSlot);
+        constructor();
         /**
          * 通过传入 SlotData 初始化FastSlot
          * @param slotData
@@ -3970,6 +4037,7 @@ declare module dragonBones {
          */
         name: string;
         private _boneDataList;
+        private _ikDataList;
         private _skinDataList;
         private _slotDataList;
         private _animationDataList;
@@ -3995,6 +4063,7 @@ declare module dragonBones {
          * @returns {*} 骨骼数据
          */
         getBoneData(boneName: string): BoneData;
+        getIKData(ikName: string): IKData;
         getSlotData(slotName: string): SlotData;
         /**
          * 根据皮肤的名字获取到皮肤数据
@@ -4013,6 +4082,7 @@ declare module dragonBones {
          * @param boneData
          */
         addBoneData(boneData: BoneData): void;
+        addIKData(ikData: IKData): void;
         addSlotData(slotData: SlotData): void;
         /**
          * 添加一个皮肤数据
@@ -4033,6 +4103,7 @@ declare module dragonBones {
          * @returns {Array<BoneData>}
          */
         boneDataList: Array<BoneData>;
+        ikDataList: Array<IKData>;
         slotDataList: Array<SlotData>;
         /**
          * 获取皮肤数据列表
@@ -4334,6 +4405,18 @@ declare module dragonBones {
     }
 }
 declare module dragonBones {
+    class IKData {
+        name: string;
+        target: string;
+        weight: number;
+        bones: string;
+        chain: number;
+        bendPositive: boolean;
+        constructora(): void;
+        dispose(): void;
+    }
+}
+declare module dragonBones {
     /**
      * optimized by freem-trg
      * Intermediate class for store the results of the parent transformation
@@ -4426,6 +4509,7 @@ declare module dragonBones {
          */
         displayIndex: number;
         private _displayDataList;
+        gotoAndPlay: string;
         /**
          * 构造函数，实例化一个SlotData类
          */
@@ -4757,6 +4841,7 @@ declare module dragonBones {
         static parseDragonBonesData(rawDataToParse: any): DragonBonesData;
         private static parseArmatureData(armatureDataToParse, frameRate);
         private static parseBoneData(boneObject);
+        private static parseIKData(ikObject);
         private static parseSkinData(skinObject);
         private static parseSlotData(slotObject);
         private static parseSlotDisplayData(slotObject);
@@ -4908,6 +4993,10 @@ declare module dragonBones {
          * 骨骼
          */
         static BONE: string;
+        /**
+         * ik
+         */
+        static IK: string;
         /**
          * 插槽
          */
@@ -5182,6 +5271,11 @@ declare module dragonBones {
          * 播放子骨架的动画
          */
         static A_GOTOANDPLAY: string;
+        static A_TARGET: string;
+        static A_WEIGHT: string;
+        static A_BONES: string;
+        static A_BENDPOSITIVE: string;
+        static A_CHAIN: string;
     }
 }
 declare module dragonBones {

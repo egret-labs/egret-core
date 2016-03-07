@@ -113,9 +113,9 @@ module egret.gui {
 				this.virtualRendererIndices.push(i);
 			}
 			for(var index in this.indexToRenderer){
-                index = parseInt(index);
-				if(this.virtualRendererIndices.indexOf(index)==-1){
-					this.freeRendererByIndex(index);
+                var index2 = parseInt(index);
+				if(this.virtualRendererIndices.indexOf(index2)==-1){
+					this.freeRendererByIndex(index2);
 				}
 			}
 		}
@@ -366,8 +366,8 @@ module egret.gui {
 				case CollectionEventKind.REFRESH:
 					if(this.layout&&this.layout.useVirtualLayout){
 						for(var index in this.indexToRenderer){
-                            index = parseInt(index);
-							this.freeRendererByIndex(<number>index);
+                            var index2 = parseInt(index);
+							this.freeRendererByIndex(index2);
 						}
 					}
 					this.dataProviderChanged = true;

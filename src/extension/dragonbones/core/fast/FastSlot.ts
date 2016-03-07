@@ -64,12 +64,8 @@ module dragonBones {
 		public _blendMode:string;
 		
 		public hasChildArmature:boolean;
-		public constructor(self:FastSlot){
+		public constructor(){
 			super();
-			
-			if(self != this){
-				throw new Error("Abstract class can not be instantiated!");
-			}
 			this.hasChildArmature = false;
 			this._currentDisplayIndex = -1;
 			

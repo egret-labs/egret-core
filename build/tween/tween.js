@@ -636,7 +636,7 @@ var egret;
          */
         Ease.elasticInOut = Ease.getElasticInOut(1, 0.3 * 1.5);
         return Ease;
-    })();
+    }());
     egret.Ease = Ease;
     egret.registerClass(Ease,'egret.Ease');
 })(egret || (egret = {}));
@@ -1435,7 +1435,7 @@ var egret;
         Tween._inited = false;
         Tween._lastTime = 0;
         return Tween;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.Tween = Tween;
     egret.registerClass(Tween,'egret.Tween');
 })(egret || (egret = {}));

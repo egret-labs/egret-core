@@ -122,7 +122,7 @@ var eui;
             return watcher;
         };
         return Binding;
-    })();
+    }());
     eui.Binding = Binding;
     egret.registerClass(Binding,'eui.Binding');
 })(eui || (eui = {}));
@@ -494,7 +494,7 @@ var eui;
             }
         };
         return Watcher;
-    })();
+    }());
     eui.Watcher = Watcher;
     egret.registerClass(Watcher,'eui.Watcher');
 })(eui || (eui = {}));
@@ -1071,7 +1071,7 @@ var eui;
             eui.CollectionEvent.dispatchCollectionEvent(this, eui.CollectionEvent.COLLECTION_CHANGE, kind, location, oldLocation, items, oldItems);
         };
         return ArrayCollection;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     eui.ArrayCollection = ArrayCollection;
     egret.registerClass(ArrayCollection,'eui.ArrayCollection',["eui.ICollection","egret.IEventDispatcher"]);
     eui.registerProperty(ArrayCollection, "source", "Array", true);
@@ -1407,7 +1407,7 @@ var eui;
                 }
             };
             return Validator;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         sys.Validator = Validator;
         egret.registerClass(Validator,'eui.sys.Validator');
         /**
@@ -1592,7 +1592,7 @@ var eui;
                 return this.minDepth > this.maxDepth;
             };
             return DepthQueue;
-        })();
+        }());
         egret.registerClass(DepthQueue,'DepthQueue');
         /**
          * @private
@@ -1641,7 +1641,7 @@ var eui;
                 }
             };
             return DepthBin;
-        })();
+        }());
         egret.registerClass(DepthBin,'DepthBin');
     })(sys = eui.sys || (eui.sys = {}));
 })(eui || (eui = {}));
@@ -2519,7 +2519,7 @@ var eui;
                 }
             };
             return UIComponentImpl;
-        })(egret.DisplayObject);
+        }(egret.DisplayObject));
         sys.UIComponentImpl = UIComponentImpl;
         egret.registerClass(UIComponentImpl,'eui.sys.UIComponentImpl',["eui.UIComponent"]);
         /**
@@ -3061,7 +3061,7 @@ var eui;
         p.getPreferredBounds = function (bounds) {
         };
         return BitmapLabel;
-    })(egret.BitmapText);
+    }(egret.BitmapText));
     eui.BitmapLabel = BitmapLabel;
     egret.registerClass(BitmapLabel,'eui.BitmapLabel',["eui.UIComponent","eui.IDisplayText"]);
     eui.sys.implementUIComponent(BitmapLabel, egret.BitmapText);
@@ -3870,7 +3870,7 @@ var eui;
         p.getPreferredBounds = function (bounds) {
         };
         return Component;
-    })(egret.DisplayObjectContainer);
+    }(egret.DisplayObjectContainer));
     eui.Component = Component;
     egret.registerClass(Component,'eui.Component',["eui.UIComponent"]);
     eui.registerProperty(Component, "skinName", "Class");
@@ -4166,7 +4166,7 @@ var eui;
         p.buttonReleased = function () {
         };
         return Button;
-    })(eui.Component);
+    }(eui.Component));
     eui.Button = Button;
     egret.registerClass(Button,'eui.Button');
 })(eui || (eui = {}));
@@ -4335,7 +4335,7 @@ var eui;
             this.dispatchEventWith(egret.Event.CHANGE);
         };
         return ToggleButton;
-    })(eui.Button);
+    }(eui.Button));
     eui.ToggleButton = ToggleButton;
     egret.registerClass(ToggleButton,'eui.ToggleButton');
     eui.registerBindable(ToggleButton.prototype, "selected");
@@ -4415,7 +4415,7 @@ var eui;
         }
         var d = __define,c=CheckBox,p=c.prototype;
         return CheckBox;
-    })(eui.ToggleButton);
+    }(eui.ToggleButton));
     eui.CheckBox = CheckBox;
     egret.registerClass(CheckBox,'eui.CheckBox');
 })(eui || (eui = {}));
@@ -4536,7 +4536,7 @@ var eui;
             }
         };
         return State;
-    })(egret.HashObject);
+    }(egret.HashObject));
     eui.State = State;
     egret.registerClass(State,'eui.State');
 })(eui || (eui = {}));
@@ -4652,7 +4652,7 @@ var eui;
                 }
             };
             return StateClient;
-        })();
+        }());
         sys.StateClient = StateClient;
         egret.registerClass(StateClient,'eui.sys.StateClient');
         /**
@@ -4695,7 +4695,7 @@ var eui;
             }
             var d = __define,c=StateValues,p=c.prototype;
             return StateValues;
-        })();
+        }());
         sys.StateValues = StateValues;
         egret.registerClass(StateValues,'eui.sys.StateValues');
     })(sys = eui.sys || (eui.sys = {}));
@@ -5354,7 +5354,7 @@ var eui;
         p.getPreferredBounds = function (bounds) {
         };
         return Group;
-    })(egret.DisplayObjectContainer);
+    }(egret.DisplayObjectContainer));
     eui.Group = Group;
     egret.registerClass(Group,'eui.Group',["eui.IViewport","eui.UIComponent"]);
     eui.sys.implementUIComponent(Group, egret.DisplayObjectContainer, true);
@@ -6415,7 +6415,7 @@ var eui;
         p.rendererRemoved = function (renderer, index, item) {
         };
         return DataGroup;
-    })(eui.Group);
+    }(eui.Group));
     eui.DataGroup = DataGroup;
     egret.registerClass(DataGroup,'eui.DataGroup');
     eui.registerProperty(DataGroup, "itemRenderer", "Class");
@@ -6883,7 +6883,7 @@ var eui;
         p.getPreferredBounds = function (bounds) {
         };
         return EditableText;
-    })(egret.TextField);
+    }(egret.TextField));
     eui.EditableText = EditableText;
     egret.registerClass(EditableText,'eui.EditableText',["eui.UIComponent","eui.IDisplayText"]);
     eui.sys.implementUIComponent(EditableText, egret.TextField);
@@ -7092,7 +7092,7 @@ var eui;
         p.onPropertyChanged = function (event) {
         };
         return ScrollBarBase;
-    })(eui.Component);
+    }(eui.Component));
     eui.ScrollBarBase = ScrollBarBase;
     egret.registerClass(ScrollBarBase,'eui.ScrollBarBase');
 })(eui || (eui = {}));
@@ -7212,7 +7212,7 @@ var eui;
             }
         };
         return HScrollBar;
-    })(eui.ScrollBarBase);
+    }(eui.ScrollBarBase));
     eui.HScrollBar = HScrollBar;
     egret.registerClass(HScrollBar,'eui.HScrollBar');
 })(eui || (eui = {}));
@@ -7701,7 +7701,7 @@ var eui;
         p.updateSkinDisplayList = function () {
         };
         return Range;
-    })(eui.Component);
+    }(eui.Component));
     eui.Range = Range;
     egret.registerClass(Range,'eui.Range');
     eui.registerBindable(Range.prototype, "value");
@@ -8251,7 +8251,7 @@ var eui;
             }
         };
         return SliderBase;
-    })(eui.Range);
+    }(eui.Range));
     eui.SliderBase = SliderBase;
     egret.registerClass(SliderBase,'eui.SliderBase');
 })(eui || (eui = {}));
@@ -8384,7 +8384,7 @@ var eui;
             }
         };
         return HSlider;
-    })(eui.SliderBase);
+    }(eui.SliderBase));
     eui.HSlider = HSlider;
     egret.registerClass(HSlider,'eui.HSlider');
 })(eui || (eui = {}));
@@ -8505,7 +8505,7 @@ var eui;
             }
         };
         return DefaultAssetAdapter;
-    })();
+    }());
     eui.DefaultAssetAdapter = DefaultAssetAdapter;
     egret.registerClass(DefaultAssetAdapter,'eui.DefaultAssetAdapter',["eui.IAssetAdapter"]);
 })(eui || (eui = {}));
@@ -8989,7 +8989,7 @@ var eui;
         p.getPreferredBounds = function (bounds) {
         };
         return Image;
-    })(egret.Bitmap);
+    }(egret.Bitmap));
     eui.Image = Image;
     egret.registerClass(Image,'eui.Image',["eui.UIComponent"]);
     eui.sys.implementUIComponent(Image, egret.Bitmap);
@@ -9252,7 +9252,7 @@ var eui;
             return state;
         };
         return ItemRenderer;
-    })(eui.Component);
+    }(eui.Component));
     eui.ItemRenderer = ItemRenderer;
     egret.registerClass(ItemRenderer,'eui.ItemRenderer',["eui.IItemRenderer","eui.UIComponent"]);
     eui.registerBindable(ItemRenderer.prototype, "data");
@@ -9595,7 +9595,7 @@ var eui;
         p.getPreferredBounds = function (bounds) {
         };
         return Label;
-    })(egret.TextField);
+    }(egret.TextField));
     eui.Label = Label;
     egret.registerClass(Label,'eui.Label',["eui.UIComponent","eui.IDisplayText"]);
     eui.sys.implementUIComponent(Label, egret.TextField);
@@ -10418,7 +10418,7 @@ var eui;
          */
         ListBase.NO_PROPOSED_SELECTION = -2;
         return ListBase;
-    })(eui.DataGroup);
+    }(eui.DataGroup));
     eui.ListBase = ListBase;
     egret.registerClass(ListBase,'eui.ListBase');
     eui.registerBindable(ListBase.prototype, "selectedIndex");
@@ -10855,7 +10855,7 @@ var eui;
             }
         };
         return List;
-    })(eui.ListBase);
+    }(eui.ListBase));
     eui.List = List;
     egret.registerClass(List,'eui.List');
 })(eui || (eui = {}));
@@ -11219,7 +11219,7 @@ var eui;
             this.$stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this);
         };
         return Panel;
-    })(eui.Component);
+    }(eui.Component));
     eui.Panel = Panel;
     egret.registerClass(Panel,'eui.Panel');
     eui.registerProperty(Panel, "elementsContent", "Array", true);
@@ -11617,7 +11617,7 @@ var eui;
             }
         };
         return ProgressBar;
-    })(eui.Range);
+    }(eui.Range));
     eui.ProgressBar = ProgressBar;
     egret.registerClass(ProgressBar,'eui.ProgressBar');
 })(eui || (eui = {}));
@@ -11941,7 +11941,7 @@ var eui;
             return g;
         };
         return RadioButton;
-    })(eui.ToggleButton);
+    }(eui.ToggleButton));
     eui.RadioButton = RadioButton;
     egret.registerClass(RadioButton,'eui.RadioButton');
 })(eui || (eui = {}));
@@ -12376,7 +12376,7 @@ var eui;
             }
         };
         return RadioButtonGroup;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     eui.RadioButtonGroup = RadioButtonGroup;
     egret.registerClass(RadioButtonGroup,'eui.RadioButtonGroup');
     eui.registerBindable(RadioButtonGroup.prototype, "selectedValue");
@@ -12675,7 +12675,7 @@ var eui;
             this.$invalidateContentBounds();
         };
         return Rect;
-    })(eui.Component);
+    }(eui.Component));
     eui.Rect = Rect;
     egret.registerClass(Rect,'eui.Rect');
 })(eui || (eui = {}));
@@ -13466,7 +13466,7 @@ var eui;
          */
         Scroller.scrollThreshold = 5;
         return Scroller;
-    })(eui.Component);
+    }(eui.Component));
     eui.Scroller = Scroller;
     egret.registerClass(Scroller,'eui.Scroller');
     eui.registerProperty(Scroller, "viewport", "eui.IViewport", true);
@@ -13749,7 +13749,7 @@ var eui;
             this.initializeStates(this._hostComponent.$stage);
         };
         return Skin;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     eui.Skin = Skin;
     egret.registerClass(Skin,'eui.Skin');
     eui.sys.mixin(Skin, eui.sys.StateClient);
@@ -13910,7 +13910,7 @@ var eui;
             }
         };
         return TabBar;
-    })(eui.ListBase);
+    }(eui.ListBase));
     eui.TabBar = TabBar;
     egret.registerClass(TabBar,'eui.TabBar');
 })(eui || (eui = {}));
@@ -14321,7 +14321,7 @@ var eui;
             values[7 /* restrict */] = this.textDisplay.restrict;
         };
         return TextInput;
-    })(eui.Component);
+    }(eui.Component));
     eui.TextInput = TextInput;
     egret.registerClass(TextInput,'eui.TextInput');
 })(eui || (eui = {}));
@@ -14396,7 +14396,7 @@ var eui;
         }
         var d = __define,c=ToggleSwitch,p=c.prototype;
         return ToggleSwitch;
-    })(eui.ToggleButton);
+    }(eui.ToggleButton));
     eui.ToggleSwitch = ToggleSwitch;
     egret.registerClass(ToggleSwitch,'eui.ToggleSwitch');
 })(eui || (eui = {}));
@@ -14496,7 +14496,7 @@ var eui;
             this.$setHeight(stage.$stageHeight);
         };
         return UILayer;
-    })(eui.Group);
+    }(eui.Group));
     eui.UILayer = UILayer;
     egret.registerClass(UILayer,'eui.UILayer');
 })(eui || (eui = {}));
@@ -14616,7 +14616,7 @@ var eui;
             }
         };
         return VScrollBar;
-    })(eui.ScrollBarBase);
+    }(eui.ScrollBarBase));
     eui.VScrollBar = VScrollBar;
     egret.registerClass(VScrollBar,'eui.VScrollBar');
 })(eui || (eui = {}));
@@ -14750,7 +14750,7 @@ var eui;
             }
         };
         return VSlider;
-    })(eui.SliderBase);
+    }(eui.SliderBase));
     eui.VSlider = VSlider;
     egret.registerClass(VSlider,'eui.VSlider');
 })(eui || (eui = {}));
@@ -15088,7 +15088,7 @@ var eui;
             return -1;
         };
         return ViewStack;
-    })(eui.Group);
+    }(eui.Group));
     eui.ViewStack = ViewStack;
     egret.registerClass(ViewStack,'eui.ViewStack',["eui.ICollection","egret.IEventDispatcher"]);
     eui.registerBindable(ViewStack.prototype, "selectedIndex");
@@ -15246,7 +15246,7 @@ var eui;
                 return true;
             };
             return Animation;
-        })();
+        }());
         sys.Animation = Animation;
         egret.registerClass(Animation,'eui.sys.Animation');
     })(sys = eui.sys || (eui.sys = {}));
@@ -15322,7 +15322,7 @@ var eui;
             loader.send();
         };
         return DefaultThemeAdapter;
-    })();
+    }());
     eui.DefaultThemeAdapter = DefaultThemeAdapter;
     egret.registerClass(DefaultThemeAdapter,'eui.DefaultThemeAdapter',["eui.IThemeAdapter"]);
 })(eui || (eui = {}));
@@ -15663,7 +15663,7 @@ var eui;
                 this.updateFunction.call(this.target, animation.currentValue);
             };
             return TouchScroll;
-        })();
+        }());
         sys.TouchScroll = TouchScroll;
         egret.registerClass(TouchScroll,'eui.sys.TouchScroll');
     })(sys = eui.sys || (eui.sys = {}));
@@ -15780,7 +15780,7 @@ var eui;
          */
         Direction.BTT = "btt";
         return Direction;
-    })();
+    }());
     eui.Direction = Direction;
     egret.registerClass(Direction,'eui.Direction');
 })(eui || (eui = {}));
@@ -16024,7 +16024,7 @@ var eui;
          */
         ScrollPolicy.ON = "on";
         return ScrollPolicy;
-    })();
+    }());
     eui.ScrollPolicy = ScrollPolicy;
     egret.registerClass(ScrollPolicy,'eui.ScrollPolicy');
 })(eui || (eui = {}));
@@ -16115,6 +16115,7 @@ var eui;
             this.initialized = !configURL;
             if (stage) {
                 this.$stage = stage;
+                EXML.$stage = stage;
                 stage.registerImplementation("eui.Theme", this);
             }
             this.$configURL = configURL;
@@ -16285,7 +16286,7 @@ var eui;
             this.skinMap[hostComponentKey] = skinName;
         };
         return Theme;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     eui.Theme = Theme;
     egret.registerClass(Theme,'eui.Theme');
 })(eui || (eui = {}));
@@ -16499,7 +16500,7 @@ var eui;
          */
         CollectionEvent.COLLECTION_CHANGE = "collectionChange";
         return CollectionEvent;
-    })(egret.Event);
+    }(egret.Event));
     eui.CollectionEvent = CollectionEvent;
     egret.registerClass(CollectionEvent,'eui.CollectionEvent');
 })(eui || (eui = {}));
@@ -16652,7 +16653,7 @@ var eui;
          */
         CollectionEventKind.UPDATE = "update";
         return CollectionEventKind;
-    })();
+    }());
     eui.CollectionEventKind = CollectionEventKind;
     egret.registerClass(CollectionEventKind,'eui.CollectionEventKind');
 })(eui || (eui = {}));
@@ -16817,7 +16818,7 @@ var eui;
          */
         ItemTapEvent.ITEM_TAP = "itemTap";
         return ItemTapEvent;
-    })(egret.Event);
+    }(egret.Event));
     eui.ItemTapEvent = ItemTapEvent;
     egret.registerClass(ItemTapEvent,'eui.ItemTapEvent');
 })(eui || (eui = {}));
@@ -16957,7 +16958,7 @@ var eui;
          */
         PropertyEvent.PROPERTY_CHANGE = "propertyChange";
         return PropertyEvent;
-    })(egret.Event);
+    }(egret.Event));
     eui.PropertyEvent = PropertyEvent;
     egret.registerClass(PropertyEvent,'eui.PropertyEvent');
 })(eui || (eui = {}));
@@ -16982,7 +16983,7 @@ var eui;
         var d = __define,c=ScrollerThrowEvent,p=c.prototype;
         ScrollerThrowEvent.THROW = "throw";
         return ScrollerThrowEvent;
-    })(egret.Event);
+    }(egret.Event));
     eui.ScrollerThrowEvent = ScrollerThrowEvent;
     egret.registerClass(ScrollerThrowEvent,'eui.ScrollerThrowEvent');
 })(eui || (eui = {}));
@@ -17177,7 +17178,7 @@ var eui;
          */
         UIEvent.MOVE = "move";
         return UIEvent;
-    })(egret.Event);
+    }(egret.Event));
     eui.UIEvent = UIEvent;
     egret.registerClass(UIEvent,'eui.UIEvent');
 })(eui || (eui = {}));
@@ -17252,7 +17253,7 @@ var eui;
                 return str;
             };
             return CodeBase;
-        })();
+        }());
         sys.CodeBase = CodeBase;
         egret.registerClass(CodeBase,'eui.sys.CodeBase');
         /**
@@ -17415,7 +17416,7 @@ var eui;
                 return returnStr;
             };
             return EXClass;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXClass = EXClass;
         egret.registerClass(EXClass,'eui.sys.EXClass');
         /**
@@ -17553,7 +17554,7 @@ var eui;
                 return this.lines.join("\n");
             };
             return EXCodeBlock;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXCodeBlock = EXCodeBlock;
         egret.registerClass(EXCodeBlock,'eui.sys.EXCodeBlock');
         /**
@@ -17616,7 +17617,7 @@ var eui;
                 return returnStr;
             };
             return EXFunction;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXFunction = EXFunction;
         egret.registerClass(EXFunction,'eui.sys.EXFunction');
         /**
@@ -17646,7 +17647,7 @@ var eui;
                 return "this." + this.name + " = " + this.defaultValue + ";";
             };
             return EXVariable;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXVariable = EXVariable;
         egret.registerClass(EXVariable,'eui.sys.EXVariable');
         /**
@@ -17721,7 +17722,7 @@ var eui;
                 return returnStr;
             };
             return EXState;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXState = EXState;
         egret.registerClass(EXState,'eui.sys.EXState');
         /**
@@ -17750,7 +17751,7 @@ var eui;
                 return returnStr;
             };
             return EXAddItems;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXAddItems = EXAddItems;
         egret.registerClass(EXAddItems,'eui.sys.EXAddItems');
         /**
@@ -17777,7 +17778,7 @@ var eui;
                 return "new " + SET_PROPERTY + "(\"" + this.target + "\",\"" + this.name + "\"," + this.value + ")";
             };
             return EXSetProperty;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXSetProperty = EXSetProperty;
         egret.registerClass(EXSetProperty,'eui.sys.EXSetProperty');
         /**
@@ -17805,7 +17806,7 @@ var eui;
                 return "new " + SET_STATEPROPERTY + "(this, [" + chain + "], this." + this.target + ",\"" + this.property + "\")";
             };
             return EXSetStateProperty;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXSetStateProperty = EXSetStateProperty;
         egret.registerClass(EXSetStateProperty,'eui.sys.EXSetStateProperty');
         /**
@@ -17833,7 +17834,7 @@ var eui;
                 return BINDING_PROPERTY + "(this, [\"" + chain + "\"], this." + this.target + ",\"" + this.property + "\")";
             };
             return EXBinding;
-        })(CodeBase);
+        }(CodeBase));
         sys.EXBinding = EXBinding;
         egret.registerClass(EXBinding,'eui.sys.EXBinding');
     })(sys = eui.sys || (eui.sys = {}));
@@ -19128,7 +19129,7 @@ var eui;
                 return className;
             };
             return EXMLParser;
-        })();
+        }());
         sys.EXMLParser = EXMLParser;
         egret.registerClass(EXMLParser,'eui.sys.EXMLParser');
         if (DEBUG) {
@@ -19422,7 +19423,7 @@ var eui;
                 return resultType;
             };
             return EXMLConfig;
-        })();
+        }());
         sys.EXMLConfig = EXMLConfig;
         egret.registerClass(EXMLConfig,'eui.sys.EXMLConfig');
         /**
@@ -19652,26 +19653,21 @@ var EXML;
      * @private
      */
     function request(url, callback) {
-        var request = requestPool.pop();
-        if (!request) {
-            request = new egret.HttpRequest();
-        }
-        var onRequestLoaded = function (e) {
-            request.removeEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
-            request.removeEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
-            var text = e.type == egret.Event.COMPLETE ? request.response : "";
-            requestPool.push(request);
-            callback(url, text);
-        };
-        request.addEventListener(egret.Event.COMPLETE, onRequestLoaded, null);
-        request.addEventListener(egret.IOErrorEvent.IO_ERROR, onRequestLoaded, null);
         var openUrl = url;
         if (url.indexOf("://") == -1) {
             openUrl = $prefixURL + url;
         }
-        request.open(openUrl);
-        request.responseType = egret.HttpResponseType.TEXT;
-        request.send();
+        var onConfigLoaded = function (str) {
+            if (!str) {
+                str = "";
+            }
+            callback(url, str);
+        };
+        var adapter = EXML.$stage ? EXML.$stage.getImplementation("eui.IThemeAdapter") : null;
+        if (!adapter) {
+            adapter = new eui.DefaultThemeAdapter();
+        }
+        adapter.getTheme(openUrl, onConfigLoaded, onConfigLoaded, this);
     }
 })(EXML || (EXML = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -20165,7 +20161,7 @@ var eui;
         p.updateDisplayList = function (width, height) {
         };
         return LayoutBase;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     eui.LayoutBase = LayoutBase;
     egret.registerClass(LayoutBase,'eui.LayoutBase');
 })(eui || (eui = {}));
@@ -20268,7 +20264,7 @@ var eui;
             target.setContentSize(Math.ceil(pos.x), Math.ceil(pos.y));
         };
         return BasicLayout;
-    })(eui.LayoutBase);
+    }(eui.LayoutBase));
     eui.BasicLayout = BasicLayout;
     egret.registerClass(BasicLayout,'eui.BasicLayout');
     if (DEBUG) {
@@ -20528,7 +20524,7 @@ var eui;
          */
         ColumnAlign.JUSTIFY_USING_WIDTH = "justifyUsingWidth";
         return ColumnAlign;
-    })();
+    }());
     eui.ColumnAlign = ColumnAlign;
     egret.registerClass(ColumnAlign,'eui.ColumnAlign');
 })(eui || (eui = {}));
@@ -21295,7 +21291,7 @@ var eui;
             } while (!done);
         };
         return LinearLayoutBase;
-    })(eui.LayoutBase);
+    }(eui.LayoutBase));
     eui.LinearLayoutBase = LinearLayoutBase;
     egret.registerClass(LinearLayoutBase,'eui.LinearLayoutBase');
 })(eui || (eui = {}));
@@ -21331,7 +21327,7 @@ var eui;
             }
             var d = __define,c=ChildInfo,p=c.prototype;
             return ChildInfo;
-        })();
+        }());
         sys.ChildInfo = ChildInfo;
         egret.registerClass(ChildInfo,'eui.sys.ChildInfo');
     })(sys = eui.sys || (eui.sys = {}));
@@ -21857,7 +21853,7 @@ var eui;
             return oldStartIndex != this.startIndex || oldEndIndex != this.endIndex;
         };
         return HorizontalLayout;
-    })(eui.LinearLayoutBase);
+    }(eui.LinearLayoutBase));
     eui.HorizontalLayout = HorizontalLayout;
     egret.registerClass(HorizontalLayout,'eui.HorizontalLayout');
 })(eui || (eui = {}));
@@ -21957,7 +21953,7 @@ var eui;
          */
         JustifyAlign.CONTENT_JUSTIFY = "contentJustify";
         return JustifyAlign;
-    })();
+    }());
     eui.JustifyAlign = JustifyAlign;
     egret.registerClass(JustifyAlign,'eui.JustifyAlign');
 })(eui || (eui = {}));
@@ -22066,7 +22062,7 @@ var eui;
          */
         RowAlign.JUSTIFY_USING_HEIGHT = "justifyUsingHeight";
         return RowAlign;
-    })();
+    }());
     eui.RowAlign = RowAlign;
     egret.registerClass(RowAlign,'eui.RowAlign');
 })(eui || (eui = {}));
@@ -23266,7 +23262,7 @@ var eui;
             }
         };
         return TileLayout;
-    })(eui.LayoutBase);
+    }(eui.LayoutBase));
     eui.TileLayout = TileLayout;
     egret.registerClass(TileLayout,'eui.TileLayout');
     if (DEBUG) {
@@ -23362,7 +23358,7 @@ var eui;
          */
         TileOrientation.COLUMNS = "columns";
         return TileOrientation;
-    })();
+    }());
     eui.TileOrientation = TileOrientation;
     egret.registerClass(TileOrientation,'eui.TileOrientation');
 })(eui || (eui = {}));
@@ -23887,7 +23883,7 @@ var eui;
             return oldStartIndex != this.startIndex || oldEndIndex != this.endIndex;
         };
         return VerticalLayout;
-    })(eui.LinearLayoutBase);
+    }(eui.LinearLayoutBase));
     eui.VerticalLayout = VerticalLayout;
     egret.registerClass(VerticalLayout,'eui.VerticalLayout');
 })(eui || (eui = {}));
@@ -24017,7 +24013,7 @@ var eui;
             }
         };
         return AddItems;
-    })();
+    }());
     eui.AddItems = AddItems;
     egret.registerClass(AddItems,'eui.AddItems',["eui.IOverride"]);
 })(eui || (eui = {}));
@@ -24181,7 +24177,7 @@ var eui;
             return value != false;
         };
         return SetProperty;
-    })();
+    }());
     eui.SetProperty = SetProperty;
     egret.registerClass(SetProperty,'eui.SetProperty',["eui.IOverride"]);
 })(eui || (eui = {}));
@@ -24332,7 +24328,7 @@ var eui;
             return value != false;
         };
         return SetStateProperty;
-    })();
+    }());
     eui.SetStateProperty = SetStateProperty;
     egret.registerClass(SetStateProperty,'eui.SetStateProperty',["eui.IOverride"]);
 })(eui || (eui = {}));
@@ -24431,7 +24427,7 @@ var eui;
                 }
             };
             return MatrixUtil;
-        })();
+        }());
         sys.MatrixUtil = MatrixUtil;
         egret.registerClass(MatrixUtil,'eui.sys.MatrixUtil');
         /**

@@ -238,7 +238,7 @@ var egret;
                 return HTML5NetContext._instance;
             };
             return HTML5NetContext;
-        })(egret.HashObject);
+        }(egret.HashObject));
         web.HTML5NetContext = HTML5NetContext;
         egret.registerClass(HTML5NetContext,'egret.web.HTML5NetContext',["egret.NetContext"]);
         egret.NetContext = HTML5NetContext;

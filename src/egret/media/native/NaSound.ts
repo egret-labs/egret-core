@@ -88,6 +88,13 @@ module egret.native {
             super();
         }
 
+        public get length():number {
+
+            throw new Error ("sound length not supported");
+
+            return 0;
+        }
+
         /**
          * @inheritDoc
          */

@@ -170,7 +170,7 @@ var egret;
             };
             NativeNetContext.__use_asyn = egret_native.readFileAsync == null ? false : true;
             return NativeNetContext;
-        })(egret.HashObject);
+        }(egret.HashObject));
         native.NativeNetContext = NativeNetContext;
         egret.registerClass(NativeNetContext,'egret.native.NativeNetContext',["egret.NetContext"]);
         egret.NetContext = NativeNetContext;
