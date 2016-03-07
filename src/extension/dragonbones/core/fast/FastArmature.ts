@@ -611,6 +611,10 @@ module dragonBones {
 				currentBone = bone;
 				while (currentBone)
 				{
+                    if(currentBone.parent == null)
+                    {
+                        temp[currentBone.name] = 0;
+                    }
 					if (temp.hasOwnProperty(currentBone.name))
 					{
 						this._boneIKList[temp[currentBone.name]].push(bone);
