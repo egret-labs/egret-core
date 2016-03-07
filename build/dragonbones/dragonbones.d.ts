@@ -4046,6 +4046,11 @@ declare module dragonBones {
          * @member {string} dragonBones.ArmatureData#defaultAnimation
          */
         defaultAnimation: string;
+        /**
+         * 帧率
+         * @member {number} dragonBones.ArmatureData#frameRate
+         */
+        frameRate: number;
         static sortBoneDataHelpArray(object1: any, object2: any): number;
         static sortBoneDataHelpArrayDescending(object1: any, object2: any): number;
         /**
