@@ -46,7 +46,7 @@ var dragonBones;
          *
          */
         DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.5.6";
+        DragonBones.VERSION = "4.5.8";
         return DragonBones;
     }());
     dragonBones.DragonBones = DragonBones;
@@ -3194,6 +3194,9 @@ var dragonBones;
                 bone = this._boneList[i];
                 currentBone = bone;
                 while (currentBone) {
+                    if (currentBone.parent == null) {
+                        temp[currentBone.name] = 0;
+                    }
                     if (temp.hasOwnProperty(currentBone.name)) {
                         this._boneIKList[temp[currentBone.name]].push(bone);
                         continue next;
@@ -7897,6 +7900,9 @@ var dragonBones;
                 bone = this.boneList[i];
                 currentBone = bone;
                 while (currentBone) {
+                    if (currentBone.parent == null) {
+                        temp[currentBone.name] = 0;
+                    }
                     if (temp.hasOwnProperty(currentBone.name)) {
                         this._boneIKList[temp[currentBone.name]].push(bone);
                         continue next;
@@ -12939,6 +12945,11 @@ var dragonBones;
             var outputArmatureData = new dragonBones.ArmatureData();
             outputArmatureData.name = armatureDataToParse[dragonBones.ConstValues.A_NAME];
             outputArmatureData.defaultAnimation = armatureDataToParse[dragonBones.ConstValues.A_DEFAULT_ANIMATION];
+            outputArmatureData.frameRate = armatureDataToParse[dragonBones.ConstValues.A_FRAME_RATE];
+            if (isNaN(outputArmatureData.frameRate) || outputArmatureData.frameRate <= 0) {
+                outputArmatureData.frameRate = frameRate;
+            }
+            frameRate = outputArmatureData.frameRate;
             var boneList = armatureDataToParse[dragonBones.ConstValues.BONE];
             var i;
             var len;
