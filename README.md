@@ -1,5 +1,7 @@
 Egret Engine
 ================================================
+
+[![Join the chat at https://gitter.im/egret-labs/egret-core](https://badges.gitter.im/egret-labs/egret-core.svg)](https://gitter.im/egret-labs/egret-core?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Current Version: v3.0.3
 
 
