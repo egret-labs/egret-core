@@ -169,7 +169,8 @@ module eui {
 
             return result;
         }
-         //endif*/
+
+        //endif*/
 
         /**
          * @private
@@ -205,10 +206,10 @@ module eui {
                 return;
             }
             this._source = value;
-            if(this.$stage){
+            if (this.$stage) {
                 this.parseSource();
             }
-            else{
+            else {
                 this.sourceChanged = true;
                 this.invalidateProperties();
             }
@@ -252,8 +253,7 @@ module eui {
         private contentChanged(data:any, source:any):void {
             if (source !== this._source)
                 return;
-            if (!egret.is(data, "egret.Texture"))
-            {
+            if (!egret.is(data, "egret.Texture")) {
                 return;
             }
             this.$setBitmapData(data);
@@ -276,8 +276,7 @@ module eui {
                     bounds.setEmpty();
                     return;
                 }
-                if (this.$fillMode == "clip")
-                {
+                if (this.$fillMode == "clip") {
                     if (width > image.$getTextureWidth()) {
                         width = image.$getTextureWidth();
                     }
@@ -297,7 +296,7 @@ module eui {
          *
          * @param context
          */
-        $render(context:egret.sys.RenderContext):void {
+        $render():void {
             var image = this.$Bitmap[egret.sys.BitmapKeys.bitmapData];
             if (!image) {
                 return;
@@ -310,10 +309,10 @@ module eui {
             }
 
             var values = this.$Bitmap;
-            egret.Bitmap.$drawImage(context, values[egret.sys.BitmapKeys.image],
+            egret.Bitmap.$drawImage(<egret.sys.BitmapNode>this.$renderNode, values[egret.sys.BitmapKeys.image],
                 values[egret.sys.BitmapKeys.bitmapX], values[egret.sys.BitmapKeys.bitmapY], values[egret.sys.BitmapKeys.bitmapWidth], values[egret.sys.BitmapKeys.bitmapHeight],
                 values[egret.sys.BitmapKeys.offsetX], values[egret.sys.BitmapKeys.offsetY], values[egret.sys.BitmapKeys.textureWidth], values[egret.sys.BitmapKeys.textureHeight],
-                width, height, this.$scale9Grid, this.$fillMode, values[egret.sys.BitmapKeys.smoothing]);
+                width, height, this.scale9Grid, this.$fillMode, values[egret.sys.BitmapKeys.smoothing]);
         }
 
         //=======================UIComponent接口实现===========================

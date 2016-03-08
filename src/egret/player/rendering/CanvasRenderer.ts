@@ -27,13 +27,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+module egret {
 
     var blendModes = ["source-over", "lighter", "destination-out"];
     var defaultCompositeOp = "source-over";
     var BLACK_COLOR = "#000000";
     var CAPS_STYLES = {none: 'butt', square: 'square', round: 'round'};
-    var renderBufferPool:CanvasRenderBuffer[] = [];//渲染缓冲区对象池
+    var renderBufferPool:sys.RenderBuffer[] = [];//渲染缓冲区对象池
     /**
      * @private
      * Canvas渲染器
@@ -54,7 +54,7 @@ module egret.web {
          * @param forRenderTexture 绘制目标是RenderTexture的标志
          * @returns drawCall触发绘制的次数
          */
-        public render(displayObject:DisplayObject, buffer:CanvasRenderBuffer, matrix:Matrix, dirtyList?:egret.sys.Region[], forRenderTexture?:boolean):number {
+        public render(displayObject:DisplayObject, buffer:sys.RenderBuffer, matrix:Matrix, dirtyList?:egret.sys.Region[], forRenderTexture?:boolean):number {
             this.nestLevel++;
             var context = buffer.context;
             var root:DisplayObject = forRenderTexture ? displayObject : null;
@@ -284,7 +284,7 @@ module egret.web {
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 var maskRenderNode = mask.$getRenderNode();
-                if(maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                if(maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
                         mask.$displayList, region, root ? mask : null);
@@ -397,7 +397,7 @@ module egret.web {
          * @param matrix 要叠加的矩阵
          * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
          */
-        public drawNodeToBuffer(node:sys.RenderNode, buffer:CanvasRenderBuffer, matrix:Matrix, forHitTest?:boolean):void {
+        public drawNodeToBuffer(node:sys.RenderNode, buffer:sys.RenderBuffer, matrix:Matrix, forHitTest?:boolean):void {
             var context = buffer.context;
             context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             switch (node.type) {
@@ -560,13 +560,13 @@ module egret.web {
         /**
          * @private
          */
-        private createRenderBuffer(width:number, height:number):CanvasRenderBuffer {
+        private createRenderBuffer(width:number, height:number):sys.RenderBuffer {
             var buffer = renderBufferPool.pop();
             if (buffer) {
                 buffer.resize(width, height, true);
             }
             else {
-                buffer = new CanvasRenderBuffer(width, height);
+                buffer = new sys.RenderBuffer(width, height);
             }
             return buffer;
         }

@@ -27,65 +27,41 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.web {
+module egret.native {
 
     /**
-     * 创建一个canvas。
+     * 创建一个RenderTexture。
      */
-    function createCanvas(width?:number, height?:number):HTMLCanvasElement {
-        var canvas:HTMLCanvasElement = document.createElement("canvas");
+    function createRenderTexture(width?:number, height?:number):NativeRenderTexture {
+        var result = new NativeRenderTexture();
         if (!isNaN(width) && !isNaN(height)) {
-            canvas.width = width;
-            canvas.height = height;
+            result.width = width;
+            result.height = height;
         }
-        $toBitmapData(canvas);
-        var context = canvas.getContext("2d");
-        if (context["imageSmoothingEnabled"] === undefined) {
-            var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
-            for (var i = keys.length - 1; i >= 0; i--) {
-                var key = keys[i];
-                if (context[key] !== void 0) {
-                    break;
-                }
-            }
-            try {
-                Object.defineProperty(context, "imageSmoothingEnabled", {
-                    get: function () {
-                        return this[key];
-                    },
-                    set: function (value) {
-                        this[key] = value;
-                    }
-                });
-            }
-            catch (e) {
-                context["imageSmoothingEnabled"] = context[key];
-            }
-        }
-        return canvas;
+        return result;
     }
 
-    var sharedCanvas:HTMLCanvasElement = createCanvas();
+    var sharedRenderTexture:NativeRenderTexture;
 
     /**
      * @private
-     * Canvas2D渲染缓冲
+     * NativeRenderTexture渲染器
      */
-    export class CanvasRenderBuffer implements sys.RenderBuffer {
+    export class NativeRenderTextureRenderBuffer implements sys.RenderBuffer {
 
         public constructor(width?:number, height?:number) {
-            this.surface = createCanvas(width, height);
+            this.surface = createRenderTexture(width, height);
             this.context = this.surface.getContext("2d");
         }
 
         /**
          * 渲染上下文
          */
-        public context:CanvasRenderingContext2D;
+        public context:any;
         /**
          * 呈现最终绘图结果的画布
          */
-        public surface:HTMLCanvasElement;
+        public surface:any;
 
         /**
          * 渲染缓冲的宽度，以像素为单位。
@@ -112,20 +88,11 @@ module egret.web {
         public resize(width:number, height:number, useMaxSize?:boolean):void {
             var surface = this.surface;
             if (useMaxSize) {
-                var change = false;
                 if (surface.width < width) {
                     surface.width = width;
-                    change = true;
                 }
                 if (surface.height < height) {
                     surface.height = height;
-                    change = true;
-                }
-                //尺寸没有变化时,将绘制属性重置
-                if(!change) {
-                    this.context.globalCompositeOperation = "source-over";
-                    this.context.setTransform(1, 0, 0, 1, 0, 0);
-                    this.context.globalAlpha = 1;
                 }
             }
             else {
@@ -147,15 +114,18 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+            if(!sharedRenderTexture) {
+                sharedRenderTexture = createRenderTexture();
+            }
             var oldContext = this.context;
             var oldSurface = this.surface;
-            var newSurface = sharedCanvas;
+            var newSurface = sharedRenderTexture;
             var newContext = newSurface.getContext("2d");
-            sharedCanvas = oldSurface;
+            sharedRenderTexture = oldSurface;
             this.context = newContext;
             this.surface = newSurface;
-            newSurface.width = Math.max(width, 257);
-            newSurface.height = Math.max(height, 257);
+            newSurface.width = Math.max(width, 1);
+            newSurface.height = Math.max(height, 1);
             newContext.setTransform(1, 0, 0, 1, 0, 0);
             newContext.drawImage(oldSurface, offsetX, offsetY);
             oldSurface.height = 1;
@@ -210,17 +180,15 @@ module egret.web {
          * 清空缓冲区数据
          */
         public clear():void {
-            this.context.setTransform(1, 0, 0, 1, 0, 0);
-            this.context.clearRect(0, 0, this.surface.width, this.surface.height);
+            //this.context.setTransform(1, 0, 0, 1, 0, 0);
+            //this.context.clearRect(0, 0, this.surface.width, this.surface.height);
         }
 
         /**
          * 销毁绘制对象
          */
         public destroy():void {
-            this.surface.width = this.surface.height = 0;
+            this.surface.width = this.surface.height = 1;
         }
     }
-
-    sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
 }

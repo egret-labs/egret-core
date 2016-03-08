@@ -29,60 +29,37 @@
 
 module egret.native {
 
-    export var $currentSurface:NativeSurface;
+    export var $currentSurface:NativeRenderTexture;
 
     /**
      * @private
      * 呈现最终绘图结果的画布
      */
-    export class NativeSurface extends egret.HashObject implements egret.sys.Surface {
+    export class NativeRenderTexture extends egret.HashObject {
         /**
          * @private
          */
         constructor() {
             super();
-            if(egret_native.Canvas) {
-                this.init();
-            } else {
-                //this.id = NativeSurface.id++;
-            }
-        }
-
-        //private id;
-        //private static id = 0;
-
-        private init():void {
-            this.renderContext = new NativeRenderContext();
+            this.renderContext = new NativeRenderTextureRenderContext();
         }
 
         /**
          * @private
          * @inheritDoc
          */
-        public renderContext = egret_native.Canvas?null:new NativeRenderContext();
+        public renderContext;
 
-        public toDataURL(type?: string, ...args: any[]): string {
-            if(egret_native.Canvas) {
-                if(this.$nativeCanvas) {
-                    return this.$nativeCanvas.toDataURL.apply(this.$nativeCanvas, arguments);
-                }
-            } else {
-                if (this.$nativeRenderTexture) {
-                    return this.$nativeRenderTexture.toDataURL.apply(this.$nativeRenderTexture, arguments);
-                }
+        public toDataURL(type?:string, ...args:any[]):string {
+            if (this.$nativeRenderTexture) {
+                return this.$nativeRenderTexture.toDataURL.apply(this.$nativeRenderTexture, arguments);
             }
             return null;
         }
 
         public saveToFile(type:string, filePath:string):void {
-            if(egret_native.Canvas) {
-                if(this.$nativeCanvas && this.$nativeCanvas.saveToFile) {
-                    this.$nativeCanvas.saveToFile(type, filePath);
-                }
-            } else {
-                if (this.$nativeRenderTexture && this.$nativeRenderTexture.saveToFile) {
-                    this.$nativeRenderTexture.saveToFile(type, filePath);
-                }
+            if (this.$nativeRenderTexture && this.$nativeRenderTexture.saveToFile) {
+                this.$nativeRenderTexture.saveToFile(type, filePath);
             }
         }
 
@@ -95,35 +72,17 @@ module egret.native {
         }
 
         public set width(value:number) {
-            if(egret_native.Canvas) {
-                if(value > 0) {
-                    this.$width = value;
-                    //todo 性能优化
-                    if(!this.$nativeCanvas) {
-                        this.$nativeCanvas = new egret_native.Canvas(value, 1);
-                        if(this.$isRoot) {
-                            egret_native.setScreenCanvas(this.$nativeCanvas);
-                        }
-                        var context = this.$nativeCanvas.getContext("2d");
-                        context.clearScreen(0,0,0,0);
-                        this.renderContext.$nativeContext = context;
-                    }
-                    else {
-                        this.$nativeCanvas.width = value;
-                    }
-                }
-            } else {
-                if (this.$width == value) {
-                    return;
-                }
-                this.$width = value;
-                if (!this.$isDispose) {
-                    this.$widthReadySet = true;
-                    this.createRenderTexture();
-                }
+            if (this.$width == value) {
+                return;
+            }
+            this.$width = value;
+            if (!this.$isDispose) {
+                this.$widthReadySet = true;
+                this.createRenderTexture();
             }
         }
-        private $width: number;
+
+        private $width:number;
         private $widthReadySet:boolean = false;
 
         /**
@@ -135,36 +94,17 @@ module egret.native {
         }
 
         public set height(value:number) {
-            if(egret_native.Canvas) {
-                if(value > 0) {
-                    this.$height = value;
-                    //todo 性能优化
-                    if(!this.$nativeCanvas) {
-                        this.$nativeCanvas = new egret_native.Canvas(1, value);
-                        if(this.$isRoot) {
-                            egret_native.setScreenCanvas(this.$nativeCanvas);
-                        }
-                        var context = this.$nativeCanvas.getContext("2d");
-                        context.clearScreen(0,0,0,0);
-                        this.renderContext.$nativeContext = context;
-                    }
-                    else {
-                        this.$nativeCanvas.height = value;
-                    }
-                }
-            } else {
-                if (this.$height == value) {
-                    return;
-                }
-                this.$height = value;
-                if (!this.$isDispose) {
-                    this.$heightReadySet = true;
-                    this.createRenderTexture();
-                }
+            if (this.$height == value) {
+                return;
+            }
+            this.$height = value;
+            if (!this.$isDispose) {
+                this.$heightReadySet = true;
+                this.createRenderTexture();
             }
         }
 
-        public getImageData(sx:number, sy:number, sw:number, sh:number):sys.ImageData {
+        public getImageData(sx:number, sy:number, sw:number, sh:number):ImageData {
             if (sx != Math.floor(sx)) {
                 sx = Math.floor(sx);
                 sw++;
@@ -226,37 +166,26 @@ module egret.native {
             }
         }
 
-        public $nativeCanvas;
-
-        public setRootCanvas():void {
-            egret_native.setScreenCanvas(this.$nativeCanvas);
-        }
-
         private $isDispose:boolean = false;
 
-        public $dispose():void {
-            if(egret_native.Canvas) {
-                //todo 销毁掉native对象
-                //if(this.$nativeRenderTexture) {
-                //    this.$nativeRenderTexture.dispose();
-                //    this.$nativeRenderTexture = null;
-                //}
-                this.$isDispose = true;
-            } else {
-                if (this.$nativeRenderTexture) {
-                    if ($currentSurface == this) {
-                        $currentSurface.end();
-                    }
-                    //console.log("dispose" + this.id);
-                    this.$nativeRenderTexture.dispose();
-                    this.$nativeRenderTexture = null;
-                }
-                this.$isDispose = true;
-            }
-        }
+        //public $dispose():void {
+        //    if (this.$nativeRenderTexture) {
+        //        if ($currentSurface == this) {
+        //            $currentSurface.end();
+        //        }
+        //        //console.log("dispose" + this.id);
+        //        this.$nativeRenderTexture.dispose();
+        //        this.$nativeRenderTexture = null;
+        //    }
+        //    this.$isDispose = true;
+        //}
+        //
+        //public $reload():void {
+        //    this.$isDispose = false;
+        //}
 
-        public $reload():void {
-            this.$isDispose = false;
+        public getContext(type:string):NativeRenderTextureRenderContext {
+            return this.renderContext;
         }
     }
 }

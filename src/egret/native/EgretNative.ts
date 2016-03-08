@@ -63,7 +63,6 @@ module egret.native {
             ticker.update();
         };
         egret_native.executeMainLoop(mainLoop, ticker);
-        sys.surfaceFactory = new OpenGLFactory();
         if (!egret.sys.screenAdapter) {
             if(options.screenAdapter){
                 egret.sys.screenAdapter = options.screenAdapter;
@@ -76,6 +75,7 @@ module egret.native {
         //todo
         var player = new NativePlayer();
         playerList.push(player);
+        sys.hitTestBuffer = new NativeCanvasRenderBuffer(3, 3);
         //老版本runtime不支持canvas,关闭脏矩形
         if (!$supportCanvas) {
             player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
@@ -89,10 +89,13 @@ module egret.native {
      * @param renderMode
      */
     function setRenderMode(renderMode:string):void{
-
-        sys.RenderTarget = sys.WebGLRenderTarget;
-        sys.systemRenderer = new sys.WebGLRenderer();
-
+        if($supportCanvas) {
+            sys.RenderBuffer = NativeCanvasRenderBuffer;
+        }
+        else {
+            sys.RenderBuffer = NativeRenderTextureRenderBuffer;
+        }
+        sys.systemRenderer = new CanvasRenderer();
     }
 
     function updateAllScreens():void {
