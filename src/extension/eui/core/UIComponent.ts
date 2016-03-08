@@ -33,12 +33,7 @@ module eui {
 
     /**
      * @language en_US
-     * The Component class defines the base class for skinnable components.
-     * The skins used by a Component class are typically child classes of
-     * the Skin class.<p/>
-     *
-     * Associate a skin class with a component class by setting the <code>skinClass</code> style property of the
-     * component class.
+     * The UIComponent class is the base class for all visual components, both skinnable and nonskinnable.
      *
      * @event egret.Event.RESIZE Dispatch when the component is resized.
      * @event eui.UIEvent.MOVE Dispatch when the object has moved.
@@ -52,9 +47,7 @@ module eui {
 
     /**
      * @language zh_CN
-     * Component 类定义可设置外观的组件的基类。Component 类所使用的外观通常是 Skin 类的子类。<p/>
-     *
-     * 通过设置 component 类的 skinClass 样式属性，将 skin 类与 component 类相关联。
+     * UIComponent 类是所有可视组件（可定制皮肤和不可定制皮肤）的基类。
      *
      * @event egret.Event.RESIZE 当UI组件的尺寸发生改变时调度
      * @event eui.UIEvent.MOVE 当UI组件在父级容器中的位置发生改变时调度
