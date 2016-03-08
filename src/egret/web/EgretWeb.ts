@@ -51,7 +51,7 @@ module egret.web {
 
     /**
      * @private
-     * 网页加载完成，实例化页面中定义的Egretsys标签
+     * 网页加载完成，实例化页面中定义的Egret标签
      */
     function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}):void {
         if (isRunning) {
@@ -64,13 +64,11 @@ module egret.web {
         setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
-        if (!egret.sys.screenAdapter) {
-            if(options.screenAdapter){
-                egret.sys.screenAdapter = options.screenAdapter;
-            }
-            else{
-                egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
-            }
+        if(options.screenAdapter){
+            egret.sys.screenAdapter = options.screenAdapter;
+        }
+        else if (!egret.sys.screenAdapter){
+            egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
 
         var list = document.querySelectorAll(".egret-player");

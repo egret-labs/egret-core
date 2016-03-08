@@ -69,7 +69,7 @@ module egret.web {
 
     /**
      * @private
-     * Canvas2D渲染器
+     * Canvas2D渲染缓冲
      */
     export class CanvasRenderBuffer implements sys.RenderBuffer {
 
