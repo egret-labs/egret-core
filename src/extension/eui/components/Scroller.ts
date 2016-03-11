@@ -640,7 +640,7 @@ module eui {
                 }
 
                 values[Keys.touchCancle] = true;
-                this.dispatchCancleEvent(event);
+                this.dispatchCancelEvent(event);
 
                 values[Keys.touchMoved] = true;
                 var horizontalBar = this.horizontalScrollBar;
@@ -670,12 +670,12 @@ module eui {
          * @private
          * @param event
          */
-        private dispatchCancleEvent(event:egret.TouchEvent){
+        private dispatchCancelEvent(event:egret.TouchEvent){
             var viewport = this.$Scroller[Keys.viewport];
             if(!viewport){
                 return;
             }
-            var cancleEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL,event.bubbles,event.cancelable);
+            var cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL,event.bubbles,event.cancelable);
             var target:egret.DisplayObject = this.downTarget;
             var list = this.$getPropagationList(target);
             var length = list.length;
@@ -690,8 +690,8 @@ module eui {
             }
             list.splice(0, startIndex + 1);
             targetIndex -= startIndex + 1;
-            this.$dispatchPropagationEvent(cancleEvent, list, targetIndex);
-            egret.Event.release(cancleEvent);
+            this.$dispatchPropagationEvent(cancelEvent, list, targetIndex);
+            egret.Event.release(cancelEvent);
         }
 
 
