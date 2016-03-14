@@ -108,6 +108,9 @@ var FileAutoChangeCommand = (function () {
         });
         var requirePath = FileUtil.joinPath(options.templateDir, "runtime", "native_require.js");
         var requireContent = FileUtil.read(requirePath);
+        if(requireContent == "") {
+            globals.exit(10021);
+        }
         var reg = /\/\/----auto game_file_list start----[\s\S]*\/\/----auto game_file_list end----/;
         var replaceStr = '\/\/----auto game_file_list start----' + listStr + '\t\/\/----auto game_file_list end----';
         requireContent = requireContent.replace(reg, replaceStr);
