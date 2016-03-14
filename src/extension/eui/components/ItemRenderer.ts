@@ -26,7 +26,7 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
+/// <reference path="../utils/registerBindable.ts" />
 module eui {
 
     /**
@@ -76,7 +76,6 @@ module eui {
         public constructor() {
             super();
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
         }
 
         /**
@@ -201,7 +200,9 @@ module eui {
          */
         protected onTouchCancle(event:egret.TouchEvent):void{
             this.touchCaptured = false;
-            this.$stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
+            var stage = event.$currentTarget;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.invalidateState();
         }
 
@@ -222,18 +223,19 @@ module eui {
          * @platform Web,Native
          */
         protected onTouchBegin(event:egret.TouchEvent):void {
+            this.$stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = true;
             this.invalidateState();
             event.updateAfterEvent();
         }
-
         /**
          * @private
          * 舞台上触摸弹起事件
          */
         private onStageTouchEnd(event:egret.Event):void {
             var stage = event.$currentTarget;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = false;
             this.invalidateState();

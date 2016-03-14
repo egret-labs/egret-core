@@ -78,7 +78,6 @@ module eui {
             super();
             this.touchChildren = false;
             this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.onTouchBegin, this);
-            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
         }
 
         /**
@@ -197,9 +196,9 @@ module eui {
          * @platform Web,Native
          */
         protected onTouchCancle(event:egret.TouchEvent):void {
-            if(this.$stage){
-                this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
-            }
+            var stage = event.$currentTarget;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = false;
             this.invalidateState();
         }
@@ -220,6 +219,7 @@ module eui {
          * @platform Web,Native
          */
         protected onTouchBegin(event:egret.TouchEvent):void {
+            this.$stage.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             this.$stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             this.touchCaptured = true;
             this.invalidateState();
@@ -232,6 +232,7 @@ module eui {
          */
         private onStageTouchEnd(event:egret.Event):void {
             var stage = event.$currentTarget;
+            stage.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancle, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onStageTouchEnd, this);
             if (this.contains(event.target)){
                 this.buttonReleased();
