@@ -3101,8 +3101,12 @@ var eui;
 (function (eui) {
     /**
      * @language en_US
+     * The Component class defines the base class for skinnable components.
+     * The skins used by a Component class are typically child classes of
+     * the Skin class.<p/>
      *
-     * @copy eui.UIComponents
+     * Associate a skin class with a component class by setting the <code>skinName</code> property of the
+     * component class.
      * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
      * @includeExample  extension/eui/components/ComponentExample.ts
@@ -3112,8 +3116,8 @@ var eui;
      */
     /**
      * @language zh_CN
-     *
-     * @copy eui.UIComponents
+     * Component 类定义可设置外观的组件的基类。Component 类所使用的外观通常是 Skin 类的子类。<p/>
+     * 通过设置 component 类的 skinName 属性，将 skin 类与 component 类相关联。
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
      * @includeExample  extension/eui/components/ComponentExample.ts
@@ -10327,7 +10331,7 @@ var eui;
         /**
          * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
-         * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
+         * item renderers. This method will cancel the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
          * @version eui 1.0
@@ -13256,7 +13260,7 @@ var eui;
                     return;
                 }
                 values[12 /* touchCancle */] = true;
-                this.dispatchCancleEvent(event);
+                this.dispatchCancelEvent(event);
                 values[5 /* touchMoved */] = true;
                 var horizontalBar = this.horizontalScrollBar;
                 var verticalBar = this.verticalScrollBar;
@@ -13284,12 +13288,12 @@ var eui;
          * @private
          * @param event
          */
-        p.dispatchCancleEvent = function (event) {
+        p.dispatchCancelEvent = function (event) {
             var viewport = this.$Scroller[10 /* viewport */];
             if (!viewport) {
                 return;
             }
-            var cancleEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable);
+            var cancelEvent = new egret.TouchEvent(egret.TouchEvent.TOUCH_CANCEL, event.bubbles, event.cancelable);
             var target = this.downTarget;
             var list = this.$getPropagationList(target);
             var length = list.length;
@@ -13303,8 +13307,8 @@ var eui;
             }
             list.splice(0, startIndex + 1);
             targetIndex -= startIndex + 1;
-            this.$dispatchPropagationEvent(cancleEvent, list, targetIndex);
-            egret.Event.release(cancleEvent);
+            this.$dispatchPropagationEvent(cancelEvent, list, targetIndex);
+            egret.Event.release(cancelEvent);
         };
         /**
          * @private

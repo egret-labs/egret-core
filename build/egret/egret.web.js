@@ -1660,12 +1660,18 @@ var egret;
                     if (this._xhr.response != undefined) {
                         return this._xhr.response;
                     }
-                    if (this._xhr.responseXML) {
+                    if (this._responseType == "text") {
+                        return this._xhr.responseText;
+                    }
+                    if (this._responseType == "document") {
+                        return this._xhr.responseXML;
+                    }
+                    /*if (this._xhr.responseXML) {
                         return this._xhr.responseXML;
                     }
                     if (this._xhr.responseText != undefined) {
                         return this._xhr.responseText;
-                    }
+                    }*/
                     return null;
                 }
             );
@@ -3865,7 +3871,7 @@ var egret;
              */
             p.attachCanvas = function (container, canvas) {
                 var style = canvas.style;
-                style.cursor = "default";
+                style.cursor = "inherit";
                 style.position = "absolute";
                 style.top = "0";
                 style.bottom = "0";

@@ -807,12 +807,7 @@ declare module eui.sys {
 declare module eui {
     /**
      * @language en_US
-     * The Component class defines the base class for skinnable components.
-     * The skins used by a Component class are typically child classes of
-     * the Skin class.<p/>
-     *
-     * Associate a skin class with a component class by setting the <code>skinClass</code> style property of the
-     * component class.
+     * The UIComponent class is the base class for all visual components, both skinnable and nonskinnable.
      *
      * @event egret.Event.RESIZE Dispatch when the component is resized.
      * @event eui.UIEvent.MOVE Dispatch when the object has moved.
@@ -825,9 +820,7 @@ declare module eui {
      */
     /**
      * @language zh_CN
-     * Component 类定义可设置外观的组件的基类。Component 类所使用的外观通常是 Skin 类的子类。<p/>
-     *
-     * 通过设置 component 类的 skinClass 样式属性，将 skin 类与 component 类相关联。
+     * UIComponent 类是所有可视组件（可定制皮肤和不可定制皮肤）的基类。
      *
      * @event egret.Event.RESIZE 当UI组件的尺寸发生改变时调度
      * @event eui.UIEvent.MOVE 当UI组件在父级容器中的位置发生改变时调度
@@ -2203,8 +2196,12 @@ declare module eui.sys {
 declare module eui {
     /**
      * @language en_US
+     * The Component class defines the base class for skinnable components.
+     * The skins used by a Component class are typically child classes of
+     * the Skin class.<p/>
      *
-     * @copy eui.UIComponents
+     * Associate a skin class with a component class by setting the <code>skinName</code> property of the
+     * component class.
      * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
      * @includeExample  extension/eui/components/ComponentExample.ts
@@ -2214,8 +2211,8 @@ declare module eui {
      */
     /**
      * @language zh_CN
-     *
-     * @copy eui.UIComponents
+     * Component 类定义可设置外观的组件的基类。Component 类所使用的外观通常是 Skin 类的子类。<p/>
+     * 通过设置 component 类的 skinName 属性，将 skin 类与 component 类相关联。
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
      * @includeExample  extension/eui/components/ComponentExample.ts
@@ -7404,7 +7401,7 @@ declare module eui {
         /**
          * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
-         * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
+         * item renderers. This method will cancel the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
          * @version eui 1.0
@@ -9043,7 +9040,7 @@ declare module eui {
          * @private
          * @param event
          */
-        private dispatchCancleEvent(event);
+        private dispatchCancelEvent(event);
         /**
          * @private
          * @param event
