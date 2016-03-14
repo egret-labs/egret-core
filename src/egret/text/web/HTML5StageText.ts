@@ -280,10 +280,14 @@ module egret.web {
                 }
                 else {
                     window.setTimeout(function () {
-                        if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                            self.textValue = self.inputElement.value;
+                        if(self.inputElement) {
+                            if(self.inputElement.selectionStart && self.inputElement.selectionEnd) {
+                                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                                    self.textValue = self.inputElement.value;
 
-                            egret.Event.dispatchEvent(self, "updateText", false);
+                                    egret.Event.dispatchEvent(self, "updateText", false);
+                                }                                
+                            }
                         }
                     }, 0);
                 }
