@@ -26,6 +26,60 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
+// There is no HTMLDivElement in webkit for air
+if (DEBUG && window['HTMLVideoElement'] == undefined) {
+    window['HTMLVideoElement'] = HTMLDivElement;
+}
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        var className = "egret.BitmapData";
+        egret.registerClass(HTMLImageElement, className);
+        egret.registerClass(HTMLCanvasElement, className);
+        egret.registerClass(HTMLVideoElement, className);
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+var egret;
+(function (egret) {
+    /**
+     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
+     * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     */
+    function $toBitmapData(data) {
+        data["hashCode"] = data["$hashCode"] = egret.$hashCount++;
+        return data;
+    }
+    egret.$toBitmapData = $toBitmapData;
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
 var egret;
 (function (egret) {
     var web;
@@ -1209,7 +1263,7 @@ var egret;
                     _this.$invalidateContentBounds();
                     _this.dispatchEventWith(egret.Event.COMPLETE);
                 };
-                this.$renderRegion = new egret.sys.Region();
+                this.$renderNode = new egret.sys.BitmapNode();
                 this.src = url;
                 this.once(egret.Event.ADDED_TO_STAGE, this.loadPoster, this);
                 if (url) {
@@ -1529,15 +1583,19 @@ var egret;
             /**
              * @private
              */
-            p.$render = function (context) {
+            p.$render = function () {
+                var node = this.$renderNode;
                 var bitmapData = this.bitmapData;
                 var posterData = this.posterData;
+                var width = this.getPlayWidth();
+                var height = this.getPlayHeight();
                 if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
-                    context.drawImage(posterData, 0, 0, this.getPlayWidth(), this.getPlayHeight());
+                    node.image = posterData;
+                    node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
                 }
                 else if (this.isPlayed && bitmapData) {
-                    context.imageSmoothingEnabled = true;
-                    context.drawImage(bitmapData, 0, 0, this.getPlayWidth(), this.getPlayHeight());
+                    node.image = bitmapData;
+                    node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
                 }
             };
             p.markDirty = function () {
@@ -2120,8 +2178,9 @@ var egret;
                 var point = this.$textfield.localToGlobal(0, 0);
                 var x = point.x;
                 var y = point.y;
-                var cX = this.$textfield.$renderMatrix.a;
-                var cY = this.$textfield.$renderMatrix.d;
+                var m = this.$textfield.$renderNode.renderMatrix;
+                var cX = m.a;
+                var cY = m.d;
                 var scaleX = this.htmlInput.$scaleX;
                 var scaleY = this.htmlInput.$scaleY;
                 this.inputDiv.style.left = x * scaleX + "px";
@@ -2698,108 +2757,265 @@ var egret;
 (function (egret) {
     var web;
     (function (web) {
-        var surfacePool = [];
-        var isQQBrowser = navigator.userAgent.indexOf("QQBrowser") != -1;
         /**
          * @private
          */
-        var CanvasFactory = (function () {
-            /**
-             * @private
-             */
-            function CanvasFactory() {
-                egret.sys.sharedRenderContext = this.create().renderContext;
-                egret.sys.hitTestRenderContext = this.create().renderContext;
-                for (var i = 0; i < 3; i++) {
-                    surfacePool.push(this.create());
+        var context = null;
+        /**
+         * @private
+         */
+        var fontCache = {};
+        /**
+         * 测量文本在指定样式下的宽度。
+         * @param text 要测量的文本内容。
+         * @param fontFamily 字体名称
+         * @param fontSize 字体大小
+         * @param bold 是否粗体
+         * @param italic 是否斜体
+         */
+        function measureText(text, fontFamily, fontSize, bold, italic) {
+            var font = "";
+            if (italic)
+                font += "italic ";
+            if (bold)
+                font += "bold ";
+            font += (fontSize || 12) + "px ";
+            font += (fontFamily || "Arial");
+            var width = 0;
+            var cache = fontCache[font] || (fontCache[font] = {});
+            context.font = font;
+            var length = text.length;
+            for (var i = 0; i < length; i++) {
+                var letter = text.charCodeAt(i);
+                var w = cache[letter] || (cache[letter] = context.measureText(text.charAt(i)).width);
+                width += w;
+            }
+            return width;
+        }
+        /**
+         * @private
+         */
+        function createContext() {
+            var canvas = document.createElement("canvas");
+            context = canvas.getContext("2d");
+            context.textAlign = "left";
+            context.textBaseline = "middle";
+        }
+        createContext();
+        egret.sys.measureText = measureText;
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * 创建一个canvas。
+         */
+        function createCanvas(width, height) {
+            var canvas = document.createElement("canvas");
+            if (!isNaN(width) && !isNaN(height)) {
+                canvas.width = width;
+                canvas.height = height;
+            }
+            egret.$toBitmapData(canvas);
+            var context = canvas.getContext("2d");
+            if (context["imageSmoothingEnabled"] === undefined) {
+                var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
+                for (var i = keys.length - 1; i >= 0; i--) {
+                    var key = keys[i];
+                    if (context[key] !== void 0) {
+                        break;
+                    }
+                }
+                try {
+                    Object.defineProperty(context, "imageSmoothingEnabled", {
+                        get: function () {
+                            return this[key];
+                        },
+                        set: function (value) {
+                            this[key] = value;
+                        }
+                    });
+                }
+                catch (e) {
+                    context["imageSmoothingEnabled"] = context[key];
                 }
             }
-            var d = __define,c=CanvasFactory,p=c.prototype;
-            /**
-             * @private
-             * 从对象池取出或创建一个新的Surface实例
-             * @param useOnce 表示对取出实例的使用是一次性的，用完后立即会释放。
-             */
-            p.create = function (useOnce) {
-                var surface = (useOnce || surfacePool.length > 3) ? surfacePool.pop() : null;
-                if (!surface) {
-                    var canvas = document.createElement("canvas");
-                    canvas.width = canvas.height = 1;
-                    if (isQQBrowser && !this.testCanvasValid(canvas)) {
-                        egret.warn("failed to create canvas!");
-                        return null;
-                    }
-                    surface = this.createSurface(canvas);
+            return canvas;
+        }
+        var sharedCanvas = createCanvas();
+        /**
+         * @private
+         * Canvas2D渲染缓冲
+         */
+        var CanvasRenderBuffer = (function () {
+            function CanvasRenderBuffer(width, height) {
+                this.surface = createCanvas(width, height);
+                this.context = this.surface.getContext("2d");
+            }
+            var d = __define,c=CanvasRenderBuffer,p=c.prototype;
+            d(p, "width"
+                /**
+                 * 渲染缓冲的宽度，以像素为单位。
+                 * @readOnly
+                 */
+                ,function () {
+                    return this.surface.width;
                 }
-                return surface;
-            };
-            /**
-             * @private
-             * 释放一个Surface实例
-             * @param surface 要释放的Surface实例
-             */
-            p.release = function (surface) {
-                if (!surface) {
-                    return;
+            );
+            d(p, "height"
+                /**
+                 * 渲染缓冲的高度，以像素为单位。
+                 * @readOnly
+                 */
+                ,function () {
+                    return this.surface.height;
                 }
-                if (!isQQBrowser) {
-                    surface.width = surface.height = 1;
-                }
-                surfacePool.push(surface);
-            };
+            );
             /**
-             * @private
-             * 检测创建的canvas是否有效，QQ浏览器对硬件内存小等于1G的手机，限制Canvas创建的数量为19个。
-             * 针对这个限制,同时满足以下两个条件就不会对显示造成任何影响：
-             * 1.不要嵌套使用BlendMode，即使用了混合模式的容器内部不要再设置另一个子项的混合模式。
-             * 2.不要嵌套使用遮罩，即遮罩对象或被遮罩对象的内部子项不要再设置另一个遮罩。
-             * cacheAsBitmap功能已经自动对这个限制做了兼容，即使设置cacheAsBitmap为true，若Canvas数量不足，将会放弃缓存，以保证渲染显示正确。
-             * 另外，如果要销毁一个开启过cacheAsBitmap的显示对象，在断开引用前建议显式将cacheAsBitmap置为false，这样可以回收一个Canvas对象。
+             * 改变渲染缓冲的大小并清空缓冲区
+             * @param width 改变后的宽
+             * @param height 改变后的高
+             * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
              */
-            p.testCanvasValid = function (canvas) {
-                canvas.height = 1;
-                canvas.width = 1;
-                var data = canvas.toDataURL("image/png");
-                if (data == 'data:,')
-                    return false;
-                return true;
-            };
-            /**
-             * @private
-             */
-            p.createSurface = function (canvas) {
-                var context = canvas.getContext("2d");
-                canvas["renderContext"] = context;
-                context["surface"] = canvas;
-                egret.$toBitmapData(canvas);
-                if (context["imageSmoothingEnabled"] === undefined) {
-                    var keys = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
-                    for (var i = keys.length - 1; i >= 0; i--) {
-                        var key = keys[i];
-                        if (context[key] !== void 0) {
-                            break;
-                        }
+            p.resize = function (width, height, useMaxSize) {
+                var surface = this.surface;
+                if (useMaxSize) {
+                    var change = false;
+                    if (surface.width < width) {
+                        surface.width = width;
+                        change = true;
                     }
-                    try {
-                        Object.defineProperty(context, "imageSmoothingEnabled", {
-                            get: function () {
-                                return this[key];
-                            },
-                            set: function (value) {
-                                this[key] = value;
-                            }
-                        });
+                    if (surface.height < height) {
+                        surface.height = height;
+                        change = true;
                     }
-                    catch (e) {
-                        context["imageSmoothingEnabled"] = context[key];
+                    //尺寸没有变化时,将绘制属性重置
+                    if (!change) {
+                        this.context.globalCompositeOperation = "source-over";
+                        this.context.setTransform(1, 0, 0, 1, 0, 0);
+                        this.context.globalAlpha = 1;
                     }
                 }
-                return canvas;
+                else {
+                    if (surface.width != width) {
+                        surface.width = width;
+                    }
+                    if (surface.height != height) {
+                        surface.height = height;
+                    }
+                }
+                this.clear();
             };
-            return CanvasFactory;
+            /**
+             * 改变渲染缓冲为指定大小，但保留原始图像数据
+             * @param width 改变后的宽
+             * @param height 改变后的高
+             * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
+             * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
+             */
+            p.resizeTo = function (width, height, offsetX, offsetY) {
+                var oldContext = this.context;
+                var oldSurface = this.surface;
+                var newSurface = sharedCanvas;
+                var newContext = newSurface.getContext("2d");
+                sharedCanvas = oldSurface;
+                this.context = newContext;
+                this.surface = newSurface;
+                newSurface.width = Math.max(width, 257);
+                newSurface.height = Math.max(height, 257);
+                newContext.setTransform(1, 0, 0, 1, 0, 0);
+                newContext.drawImage(oldSurface, offsetX, offsetY);
+                oldSurface.height = 1;
+                oldSurface.width = 1;
+            };
+            /**
+             * 清空并设置裁切
+             * @param regions 矩形列表
+             * @param offsetX 矩形要加上的偏移量x
+             * @param offsetY 矩形要加上的偏移量y
+             */
+            p.beginClip = function (regions, offsetX, offsetY) {
+                offsetX = +offsetX || 0;
+                offsetY = +offsetY || 0;
+                var context = this.context;
+                context.save();
+                context.beginPath();
+                context.setTransform(1, 0, 0, 1, offsetX, offsetY);
+                var length = regions.length;
+                for (var i = 0; i < length; i++) {
+                    var region = regions[i];
+                    context.clearRect(region.minX, region.minY, region.width, region.height);
+                    context.rect(region.minX, region.minY, region.width, region.height);
+                }
+                context.clip();
+            };
+            /**
+             * 取消上一次设置的clip。
+             */
+            p.endClip = function () {
+                this.context.restore();
+            };
+            /**
+             * 获取指定坐标的像素
+             */
+            p.getPixel = function (x, y) {
+                return this.context.getImageData(x, y, 1, 1).data;
+            };
+            /**
+             * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
+             * @param type 转换的类型，如: "image/png","image/jpeg"
+             */
+            p.toDataURL = function (type, encoderOptions) {
+                return this.surface.toDataURL(type, encoderOptions);
+            };
+            /**
+             * 清空缓冲区数据
+             */
+            p.clear = function () {
+                this.context.setTransform(1, 0, 0, 1, 0, 0);
+                this.context.clearRect(0, 0, this.surface.width, this.surface.height);
+            };
+            /**
+             * 销毁绘制对象
+             */
+            p.destroy = function () {
+                this.surface.width = this.surface.height = 0;
+            };
+            return CanvasRenderBuffer;
         })();
-        web.CanvasFactory = CanvasFactory;
-        egret.registerClass(CanvasFactory,'egret.web.CanvasFactory',["egret.sys.SurfaceFactory"]);
+        web.CanvasRenderBuffer = CanvasRenderBuffer;
+        egret.registerClass(CanvasRenderBuffer,'egret.web.CanvasRenderBuffer',["egret.sys.RenderBuffer"]);
+        egret.sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3452,19 +3668,24 @@ var egret;
         var isRunning = false;
         /**
          * @private
-         * 网页加载完成，实例化页面中定义的Egretsys标签
+         * 网页加载完成，实例化页面中定义的Egret标签
          */
-        function runEgret() {
+        function runEgret(options) {
             if (isRunning) {
                 return;
             }
             isRunning = true;
+            if (!options) {
+                options = {};
+            }
+            setRenderMode(options.renderMode);
             var ticker = egret.sys.$ticker;
             startTicker(ticker);
-            var surfaceFactory = new web.CanvasFactory();
-            egret.sys.surfaceFactory = surfaceFactory;
-            if (!egret.sys.screenAdapter) {
-                egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+            if (options.screenAdapter) {
+                egret.sys.screenAdapter = options.screenAdapter;
+            }
+            else if (!egret.sys.screenAdapter) {
+                egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
             }
             var list = document.querySelectorAll(".egret-player");
             var length = list.length;
@@ -3473,6 +3694,14 @@ var egret;
                 var player = new web.WebPlayer(container);
                 container["egret-player"] = player;
             }
+        }
+        /**
+         * 设置渲染模式。"auto","webgl","canvas"
+         * @param renderMode
+         */
+        function setRenderMode(renderMode) {
+            egret.sys.RenderBuffer = web.CanvasRenderBuffer;
+            egret.sys.systemRenderer = new egret.CanvasRenderer();
         }
         /**
          * @private
@@ -3500,25 +3729,6 @@ var egret;
             value = +value;
             return value !== value;
         };
-        var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
-        CanvasRenderingContext2D.prototype.fill = function () {
-            var style = this.fillStyle;
-            if (!(typeof style == "string")) {
-                var matrix = style["matrix"];
-                if (matrix) {
-                    this.save();
-                    this.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-                    originCanvas2DFill.call(this);
-                    this.restore();
-                }
-                else {
-                    originCanvas2DFill.call(this);
-                }
-            }
-            else {
-                originCanvas2DFill.call(this);
-            }
-        };
         egret.runEgret = runEgret;
         egret.updateAllScreens = updateAllScreens;
         var resizeTimer = NaN;
@@ -3539,48 +3749,6 @@ if (DEBUG) {
     if (language in egret.$locale_strings)
         egret.$language = language;
 }
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-// There is no HTMLDivElement in webkit for air
-if (window['HTMLVideoElement'] == undefined) {
-    window['HTMLVideoElement'] = HTMLDivElement;
-}
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        var className = "egret.BitmapData";
-        egret.registerClass(HTMLImageElement, className);
-        egret.registerClass(HTMLCanvasElement, className);
-        egret.registerClass(HTMLVideoElement, className);
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2014-2015, Egret Technology Inc.
@@ -3771,11 +3939,11 @@ var egret;
                 stage.$maxTouches = option.maxTouches;
                 stage.frameRate = option.frameRate;
                 stage.textureScaleFactor = option.textureScaleFactor;
-                var surface = egret.sys.surfaceFactory.create();
-                var canvas = surface;
+                var buffer = new egret.sys.RenderBuffer();
+                var canvas = buffer.surface;
                 this.attachCanvas(container, canvas);
                 var webTouch = new web.WebTouchHandler(stage, canvas);
-                var player = new egret.sys.Player(surface.renderContext, stage, option.entryClassName);
+                var player = new egret.sys.Player(buffer, stage, option.entryClassName);
                 var webHide = new egret.web.WebHideHandler(stage);
                 var webInput = new web.HTMLInput();
                 player.showPaintRect(option.showPaintRect);
@@ -3959,10 +4127,7 @@ var egret;
          * @private
          */
         function convertImageToCanvas(texture, rect) {
-            var surface = egret.sys.surfaceFactory.create(true);
-            if (!surface) {
-                return null;
-            }
+            var buffer = egret.sys.hitTestBuffer;
             var w = texture.$getTextureWidth();
             var h = texture.$getTextureHeight();
             if (rect == null) {
@@ -3978,17 +4143,16 @@ var egret;
             rect.height = Math.min(rect.height, h - rect.y);
             var iWidth = rect.width;
             var iHeight = rect.height;
-            surface.width = iWidth;
-            surface.height = iHeight;
+            var surface = buffer.surface;
             surface["style"]["width"] = iWidth + "px";
             surface["style"]["height"] = iHeight + "px";
+            buffer.resize(iWidth, iHeight);
             var bitmapData = texture;
-            surface.renderContext.imageSmoothingEnabled = false;
             var offsetX = Math.round(bitmapData._offsetX);
             var offsetY = Math.round(bitmapData._offsetY);
             var bitmapWidth = bitmapData._bitmapWidth;
             var bitmapHeight = bitmapData._bitmapHeight;
-            surface.renderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+            buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
             return surface;
         }
         /**
@@ -3998,7 +4162,6 @@ var egret;
             try {
                 var surface = convertImageToCanvas(this, rect);
                 var result = surface.toDataURL(type);
-                egret.sys.surfaceFactory.release(surface);
                 return result;
             }
             catch (e) {
@@ -4020,13 +4183,22 @@ var egret;
             aLink.dispatchEvent(evt);
         }
         function getPixel32(x, y) {
-            if (this._bitmapData && this._bitmapData.getContext) {
-                var result = this._bitmapData.getContext("2d").getImageData(x - this._offsetX, y - this._offsetY, 1, 1);
-                return result.data;
+            var buffer = egret.sys.hitTestBuffer;
+            buffer.resize(3, 3);
+            var context = buffer.context;
+            context.translate(1 - x, 1 - y);
+            var width = this._bitmapWidth;
+            var height = this._bitmapHeight;
+            var scale = egret.$TextureScaleFactor;
+            context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight, this._offsetX, this._offsetY, width * scale, height * scale);
+            try {
+                var data = context.getImageData(1, 1, 1, 1).data;
             }
-            var surface = convertImageToCanvas(this, new egret.Rectangle(x - 1, y - 1, 3, 3));
-            result = surface.renderContext.getImageData(1, 1, 1, 1);
-            return result.data;
+            catch (e) {
+                console.log(this);
+                throw new Error(egret.sys.tr(1039));
+            }
+            return data;
         }
         egret.Texture.prototype.toDataURL = toDataURL;
         egret.Texture.prototype.saveToFile = saveToFile;

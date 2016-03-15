@@ -8797,7 +8797,7 @@ var eui;
          *
          * @param context
          */
-        p.$render = function (context) {
+        p.$render = function () {
             var image = this.$Bitmap[0 /* bitmapData */];
             if (!image) {
                 return;
@@ -8809,7 +8809,7 @@ var eui;
                 return;
             }
             var values = this.$Bitmap;
-            egret.Bitmap.$drawImage(context, values[1 /* image */], values[2 /* clipX */], values[3 /* clipY */], values[4 /* clipWidth */], values[5 /* clipHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* width */], values[9 /* height */], width, height, this.$scale9Grid, this.$fillMode, values[10 /* smoothing */]);
+            egret.Bitmap.$drawImage(this.$renderNode, values[1 /* image */], values[2 /* bitmapX */], values[3 /* bitmapY */], values[4 /* bitmapWidth */], values[5 /* bitmapHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* textureWidth */], values[9 /* textureHeight */], width, height, this.scale9Grid, this.$fillMode, values[10 /* smoothing */]);
         };
         /**
          * @copy eui.UIComponent#createChildren
@@ -12441,8 +12441,7 @@ var eui;
             this.$ellipseHeight = 0;
             this.touchChildren = false;
             this.$graphics = new egret.Graphics();
-            this.$graphics.$renderContext.$targetDisplay = this;
-            this.$renderRegion = new egret.sys.Region();
+            this.$graphics.$setTarget(this);
             this.width = width;
             this.height = height;
             this.fillColor = fillColor;
@@ -12460,12 +12459,6 @@ var eui;
             if (this.$graphics) {
                 bounds.setTo(0, 0, this.width, this.height);
             }
-        };
-        /**
-         * @private
-         */
-        p.$render = function (context) {
-            this.$graphics.$render(context);
         };
         d(p, "fillColor"
             /**

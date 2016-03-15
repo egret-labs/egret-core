@@ -2048,10 +2048,10 @@ module egret {
                 rectangle.setTo(localX, localY, 3, 3);
                 var renderTexture = new RenderTexture();
                 renderTexture.drawToTexture(this, rectangle);
-                var context = renderTexture["context"];
+                var context = renderTexture["renderBuffer"];
                 var data:number[];
                 try {
-                    data = context.getImageData(0, 0, 1, 1).data;
+                    data = context.getPixel(0, 0);
                 }
                 catch (e) {
                     throw new Error(sys.tr(1040));

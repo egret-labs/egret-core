@@ -12933,23 +12933,17 @@ var egret;
                 this._strokeAlpha = 0;
                 this._strokeWeight = 1;
                 this.touchChildren = false;
-                this.$renderRegion = new egret.sys.Region();
             }
             var d = __define,c=Rect,p=c.prototype;
             d(p, "graphics"
                 ,function () {
                     if (!this.$graphics) {
                         this.$graphics = new egret.Graphics();
-                        this.$graphics.$renderContext.$targetDisplay = this;
+                        this.$graphics.$setTarget(this);
                     }
                     return this.$graphics;
                 }
             );
-            p.$render = function (context) {
-                if (this.$graphics)
-                    this.$graphics.$render(context);
-                _super.prototype.$render.call(this, context);
-            };
             p.$hitTest = function (stageX, stageY) {
                 var target = _super.prototype.$hitTest.call(this, stageX, stageY);
                 if (target == this) {
@@ -16685,7 +16679,7 @@ var egret;
                 if (source) {
                     this.source = source;
                 }
-                this.$renderRegion = new egret.sys.Region();
+                this.$renderNode = new egret.sys.BitmapNode();
                 this.autoScale = autoScale;
             }
             var d = __define,c=UIAsset,p=c.prototype;
@@ -16871,10 +16865,9 @@ var egret;
             /**
              * @private
              */
-            p.$render = function (context) {
+            p.$render = function () {
                 if (this._contentIsTexture) {
                     var bitmapData = this._content;
-                    context.imageSmoothingEnabled = this.$smoothing;
                     var destW;
                     var destH;
                     if (this.autoScale) {
@@ -16885,9 +16878,9 @@ var egret;
                         destW = bitmapData.$getTextureWidth();
                         destH = bitmapData.$getTextureHeight();
                     }
-                    egret.Bitmap.$drawImage(context, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(), destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
+                    egret.Bitmap.$drawImage(this.$renderNode, bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(), destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
                 }
-                _super.prototype.$render.call(this, context);
+                _super.prototype.$render.call(this);
             };
             /**
              * @private

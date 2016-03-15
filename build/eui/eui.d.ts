@@ -6039,7 +6039,7 @@ declare module eui {
          *
          * @param context
          */
-        $render(context: egret.sys.RenderContext): void;
+        $render(): void;
         /**
          * @private
          * UIComponentImpl 定义的所有变量请不要添加任何初始值，必须统一在此处初始化。
@@ -8592,10 +8592,6 @@ declare module eui {
          * @private
          */
         $measureContentBounds(bounds: egret.Rectangle): void;
-        /**
-         * @private
-         */
-        $render(context: egret.sys.RenderContext): void;
         private $fillColor;
         /**
          * @language en_US

@@ -320,6 +320,7 @@ module egret.native {
          * @platform Web,Native
          */
         public quadraticCurveTo(cpx:number, cpy:number, x:number, y:number):void {
+            //console.log("quadraticCurveTo " + cpx + " " + cpy + " " + x + " " + y);
             this.$nativeContext.quadraticCurveTo(cpx, cpy, x, y);
         }
 
@@ -332,6 +333,7 @@ module egret.native {
          * @platform Web,Native
          */
         public lineTo(x:number, y:number):void {
+            //console.log("lineTo " + x + " " + y);
             this.$nativeContext.lineTo(x, y);
         }
 
