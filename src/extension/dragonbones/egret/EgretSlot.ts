@@ -42,7 +42,7 @@ module dragonBones {
          * 创建一个新的 EgretSlot 实例
          */
         public constructor(){
-            super(this);
+            super();
 
             this._egretDisplay = null;
         }

@@ -84,12 +84,8 @@ module dragonBones {
 		
 		/** @private */
 		public textureAtlasDic:any = {};
-		public constructor(self:BaseFactory){
+		public constructor(){
 			super();
-			
-			if(self != this){ 
-				throw new Error(egret.getString(4001));
-			}
 		}
 		
 		/**
