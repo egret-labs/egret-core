@@ -19021,10 +19021,25 @@ var egret;
                                     if (lineW != 0 && lineW + w > textFieldWidth && lineW + k != 0) {
                                         break;
                                     }
-                                    charNum += words[k].length;
-                                    ww += w;
-                                    lineW += w;
-                                    lineCharNum += charNum;
+                                    if (ww + w > textFieldWidth) {
+                                        var words2 = words[k].match(/./g);
+                                        for (var k2 = 0, wl2 = words2.length; k2 < wl2; k2++) {
+                                            w = renderContext.measureText(words2[k2]).width;
+                                            if (lineW + w > textFieldWidth) {
+                                                break;
+                                            }
+                                            charNum += words2[k2].length;
+                                            ww += w;
+                                            lineW += w;
+                                            lineCharNum += charNum;
+                                        }
+                                    }
+                                    else {
+                                        charNum += words[k].length;
+                                        ww += w;
+                                        lineW += w;
+                                        lineCharNum += charNum;
+                                    }
                                 }
                                 if (k > 0) {
                                     lineElement.elements.push({

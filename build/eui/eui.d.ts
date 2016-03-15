@@ -807,12 +807,7 @@ declare module eui.sys {
 declare module eui {
     /**
      * @language en_US
-     * The Component class defines the base class for skinnable components.
-     * The skins used by a Component class are typically child classes of
-     * the Skin class.<p/>
-     *
-     * Associate a skin class with a component class by setting the <code>skinClass</code> style property of the
-     * component class.
+     * The UIComponent class is the base class for all visual components, both skinnable and nonskinnable.
      *
      * @event egret.Event.RESIZE Dispatch when the component is resized.
      * @event eui.UIEvent.MOVE Dispatch when the object has moved.
@@ -825,9 +820,7 @@ declare module eui {
      */
     /**
      * @language zh_CN
-     * Component 类定义可设置外观的组件的基类。Component 类所使用的外观通常是 Skin 类的子类。<p/>
-     *
-     * 通过设置 component 类的 skinClass 样式属性，将 skin 类与 component 类相关联。
+     * UIComponent 类是所有可视组件（可定制皮肤和不可定制皮肤）的基类。
      *
      * @event egret.Event.RESIZE 当UI组件的尺寸发生改变时调度
      * @event eui.UIEvent.MOVE 当UI组件在父级容器中的位置发生改变时调度
@@ -2203,8 +2196,12 @@ declare module eui.sys {
 declare module eui {
     /**
      * @language en_US
+     * The Component class defines the base class for skinnable components.
+     * The skins used by a Component class are typically child classes of
+     * the Skin class.<p/>
      *
-     * @copy eui.UIComponents
+     * Associate a skin class with a component class by setting the <code>skinName</code> property of the
+     * component class.
      * @event egret.Event.COMPLETE Dispatch when <code>skinName</code> property is set the path of external EXML file and the EXML file is resolved.
      *
      * @includeExample  extension/eui/components/ComponentExample.ts
@@ -2214,8 +2211,8 @@ declare module eui {
      */
     /**
      * @language zh_CN
-     *
-     * @copy eui.UIComponents
+     * Component 类定义可设置外观的组件的基类。Component 类所使用的外观通常是 Skin 类的子类。<p/>
+     * 通过设置 component 类的 skinName 属性，将 skin 类与 component 类相关联。
      * @event egret.Event.COMPLETE 当设置skinName为外部exml文件路径时，加载并完成EXML解析后调度。
      *
      * @includeExample  extension/eui/components/ComponentExample.ts
@@ -7404,7 +7401,7 @@ declare module eui {
         /**
          * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
-         * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
+         * item renderers. This method will cancel the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
          * @version eui 1.0
@@ -9043,7 +9040,7 @@ declare module eui {
          * @private
          * @param event
          */
-        private dispatchCancleEvent(event);
+        private dispatchCancelEvent(event);
         /**
          * @private
          * @param event
@@ -9388,6 +9385,244 @@ declare module eui {
          * 应用当前的视图状态。子类覆盖此方法在视图状态发生改变时执行相应更新操作。
          */
         private commitCurrentState;
+    }
+}
+declare module eui.sys {
+    /**
+     * @private
+     * 数值缓动工具类
+     */
+    class Animation {
+        /**
+         * @private
+         */
+        constructor(updateFunction: (animation: Animation) => void, thisObject: any);
+        /**
+         * @private
+         * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为 sineInOut
+         */
+        easerFunction: (fraction: number) => number;
+        /**
+         * @private
+         */
+        private thisObject;
+        /**
+         * @private
+         * 是否正在播放动画，不包括延迟等待和暂停的阶段
+         */
+        isPlaying: boolean;
+        /**
+         * @private
+         * 动画持续时间,单位毫秒，默认值500
+         */
+        duration: number;
+        /**
+         * @private
+         * 动画到当前时间对应的值。
+         */
+        currentValue: number;
+        /**
+         * @private
+         * 起始值
+         */
+        from: number;
+        /**
+         * @private
+         * 终点值。
+         */
+        to: number;
+        /**
+         * @private
+         * 动画启动时刻
+         */
+        private startTime;
+        /**
+         * @private
+         * 动画播放结束时的回调函数
+         */
+        endFunction: (animation: Animation) => void;
+        /**
+         * @private
+         * 动画更新时的回调函数
+         */
+        updateFunction: Function;
+        /**
+         * @private
+         * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
+         */
+        play(): void;
+        /**
+         * @private
+         * 开始播放动画
+         */
+        private start();
+        /**
+         * @private
+         * 停止播放动画
+         */
+        stop(): void;
+        /**
+         * @private
+         * 计算当前值并返回动画是否结束
+         */
+        private doInterval(currentTime);
+    }
+}
+declare module eui {
+    /**
+     * @language en_US
+     * Default instance of interface <code>IThemeAdapter</code>.
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * 默认的IThemeAdapter接口实现。
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     */
+    class DefaultThemeAdapter implements IThemeAdapter {
+        /**
+         * 解析主题
+         * @param url 待解析的主题url
+         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
+         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
+         * @param thisObject 回调的this引用
+         */
+        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
+    }
+}
+declare module eui.sys {
+    /**
+     * @private
+     * 一个工具类,用于容器的滚屏拖动操作，计算在一段时间持续滚动后释放，应该继续滚动到的值和缓动时间。
+     * 使用此工具类，您需要创建一个 ScrollThrown 实例,并在滚动发生时调用start()方法，然后在触摸移动过程中调用update()更新当前舞台坐标。
+     * 内部将会启动一个计时器定时根据当前位置计算出速度值，并缓存下来最后4个值。当停止滚动时，再调用finish()方法，
+     * 将立即停止记录位移，并将计算出的最终结果存储到 Thrown.scrollTo 和 Thrown.duration 属性上。
+     */
+    class TouchScroll {
+        /**
+         * @private
+         * 创建一个 TouchScroll 实例
+         * @param updateFunction 滚动位置更新回调函数
+         */
+        constructor(updateFunction: (scrollPos: number) => void, endFunction: () => void, target: egret.IEventDispatcher);
+        /**
+         * @private
+         * 当前容器滚动外界可调节的系列
+         */
+        $scrollFactor: number;
+        /**
+         * @private
+         */
+        private target;
+        /**
+         * @private
+         */
+        private updateFunction;
+        /**
+         * @private
+         */
+        private endFunction;
+        /**
+         * @private
+         */
+        private previousTime;
+        /**
+         * @private
+         */
+        private velocity;
+        /**
+         * @private
+         */
+        private previousVelocity;
+        /**
+         * @private
+         */
+        private currentPosition;
+        /**
+         * @private
+         */
+        private previousPosition;
+        /**
+         * @private
+         */
+        private currentScrollPos;
+        /**
+         * @private
+         */
+        private maxScrollPos;
+        /**
+         * @private
+         * 触摸按下时的偏移量
+         */
+        private offsetPoint;
+        /**
+         * @private
+         * 停止触摸时继续滚动的动画实例
+         */
+        private animation;
+        $bounces: boolean;
+        /**
+         * @private
+         * 正在播放缓动动画的标志。
+         */
+        isPlaying(): boolean;
+        /**
+         * @private
+         * 如果正在执行缓动滚屏，停止缓动。
+         */
+        stop(): void;
+        private started;
+        /**
+         * @private
+         * true表示已经调用过start方法。
+         */
+        isStarted(): boolean;
+        /**
+         * @private
+         * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
+         * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
+         */
+        start(touchPoint: number): void;
+        /**
+         * @private
+         * 更新当前移动到的位置
+         * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
+         */
+        update(touchPoint: number, maxScrollValue: number, scrollValue: any): void;
+        /**
+         * @private
+         * 停止记录位移变化，并计算出目标值和继续缓动的时间。
+         * @param currentScrollPos 容器当前的滚动值。
+         * @param maxScrollPos 容器可以滚动的最大值。当目标值不在 0~maxValue之间时，将会应用更大的摩擦力，从而影响缓动时间的长度。
+         */
+        finish(currentScrollPos: number, maxScrollPos: number): void;
+        /**
+         * @private
+         *
+         * @param timeStamp
+         * @returns
+         */
+        private onTick(timeStamp);
+        /**
+         * @private
+         *
+         * @param animation
+         */
+        private finishScrolling(animation?);
+        /**
+         * @private
+         * 缓动到水平滚动位置
+         */
+        private throwTo(hspTo, duration?);
+        /**
+         * @private
+         * 更新水平滚动位置
+         */
+        private onScrollingUpdate(animation);
     }
 }
 declare module eui {
@@ -9821,116 +10056,6 @@ declare module eui {
 declare module eui {
     /**
      * @language en_US
-     * The VScrollBar (vertical scrollbar) control lets you control
-     * the portion of data that is displayed when there is too much data
-     * to fit vertically in a display area.
-     *
-     * <p>Although you can use the VScrollBar control as a stand-alone control,
-     * you usually combine it as part of another group of components to
-     * provide scrolling functionality.</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     */
-    /**
-     * @language zh_CN
-     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
-     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VScrollBarExample.ts
-     */
-    class VScrollBar extends ScrollBarBase {
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected onPropertyChanged(event: eui.PropertyEvent): void;
-    }
-}
-declare module eui {
-    /**
-     * @language en_US
-     * The VSlider (vertical slider) control lets users select a value
-     * by moving a slider thumb between the end points of the slider track.
-     * The current value of the slider is determined by the relative location of the thumb between
-     * the end points of the slider, corresponding to the slider's minimum and maximum values.
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     */
-    /**
-     * @language zh_CN
-     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
-     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
-     *
-     * @version Egret 2.4
-     * @version eui 1.0
-     * @platform Web,Native
-     * @includeExample  extension/eui/components/VSliderExample.ts
-     */
-    class VSlider extends SliderBase {
-        /**
-         * @language en_US
-         * Constructor.
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        /**
-         * @language zh_CN
-         * 构造函数。
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        constructor();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        protected pointToValue(x: number, y: number): number;
-        /**
-         * @private
-         *
-         * @returns
-         */
-        private getThumbRange();
-        /**
-         * @inheritDoc
-         *
-         * @version Egret 2.4
-         * @version eui 1.0
-         * @platform Web,Native
-         */
-        updateSkinDisplayList(): void;
-    }
-}
-declare module eui {
-    /**
-     * @language en_US
      * An ViewStack navigator container consists of a collection of child
      * containers stacked on top of each other, where only one child
      * at a time is visible.
@@ -10126,242 +10251,114 @@ declare module eui {
         getItemIndex(item: any): number;
     }
 }
-declare module eui.sys {
+declare module eui {
     /**
-     * @private
-     * 数值缓动工具类
+     * @language en_US
+     * The VScrollBar (vertical scrollbar) control lets you control
+     * the portion of data that is displayed when there is too much data
+     * to fit vertically in a display area.
+     *
+     * <p>Although you can use the VScrollBar control as a stand-alone control,
+     * you usually combine it as part of another group of components to
+     * provide scrolling functionality.</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
      */
-    class Animation {
+    /**
+     * @language zh_CN
+     * VScrollBar（垂直 ScrollBar）控件可以在因数据太多而不能在显示区域中以垂直方向完全显示时控制显示的数据部分。
+     * <p>虽然 VScrollBar 控件可以单独使用，但通常将它与其他组件一起使用来提供滚动功能。</p>
+     *
+     * @version Egret 2.4
+     * @version eui 1.0
+     * @platform Web,Native
+     * @includeExample  extension/eui/components/VScrollBarExample.ts
+     */
+    class VScrollBar extends ScrollBarBase {
         /**
-         * @private
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        constructor(updateFunction: (animation: Animation) => void, thisObject: any);
+        protected updateDisplayList(unscaledWidth: number, unscaledHeight: number): void;
         /**
-         * @private
-         * 此动画的缓动行为。设置为null意味着不使用缓动，默认值为 sineInOut
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        easerFunction: (fraction: number) => number;
-        /**
-         * @private
-         */
-        private thisObject;
-        /**
-         * @private
-         * 是否正在播放动画，不包括延迟等待和暂停的阶段
-         */
-        isPlaying: boolean;
-        /**
-         * @private
-         * 动画持续时间,单位毫秒，默认值500
-         */
-        duration: number;
-        /**
-         * @private
-         * 动画到当前时间对应的值。
-         */
-        currentValue: number;
-        /**
-         * @private
-         * 起始值
-         */
-        from: number;
-        /**
-         * @private
-         * 终点值。
-         */
-        to: number;
-        /**
-         * @private
-         * 动画启动时刻
-         */
-        private startTime;
-        /**
-         * @private
-         * 动画播放结束时的回调函数
-         */
-        endFunction: (animation: Animation) => void;
-        /**
-         * @private
-         * 动画更新时的回调函数
-         */
-        updateFunction: Function;
-        /**
-         * @private
-         * 开始正向播放动画,无论何时调用都重新从零时刻开始，若设置了延迟会首先进行等待。
-         */
-        play(): void;
-        /**
-         * @private
-         * 开始播放动画
-         */
-        private start();
-        /**
-         * @private
-         * 停止播放动画
-         */
-        stop(): void;
-        /**
-         * @private
-         * 计算当前值并返回动画是否结束
-         */
-        private doInterval(currentTime);
+        protected onPropertyChanged(event: eui.PropertyEvent): void;
     }
 }
 declare module eui {
     /**
      * @language en_US
-     * Default instance of interface <code>IThemeAdapter</code>.
+     * The VSlider (vertical slider) control lets users select a value
+     * by moving a slider thumb between the end points of the slider track.
+     * The current value of the slider is determined by the relative location of the thumb between
+     * the end points of the slider, corresponding to the slider's minimum and maximum values.
+     *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
     /**
      * @language zh_CN
-     * 默认的IThemeAdapter接口实现。
+     * 使用 VSlider（垂直滑块）控件，用户可通过在滑块轨道的端点之间移动滑块来选择值。
+     * 滑块的当前值由滑块端点（对应于滑块的最小值和最大值）之间滑块的相对位置确定。
+     *
      * @version Egret 2.4
      * @version eui 1.0
      * @platform Web,Native
+     * @includeExample  extension/eui/components/VSliderExample.ts
      */
-    class DefaultThemeAdapter implements IThemeAdapter {
+    class VSlider extends SliderBase {
         /**
-         * 解析主题
-         * @param url 待解析的主题url
-         * @param compFunc 解析完成回调函数，示例：compFunc(e:egret.Event):void;
-         * @param errorFunc 解析失败回调函数，示例：errorFunc():void;
-         * @param thisObject 回调的this引用
+         * @language en_US
+         * Constructor.
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        getTheme(url: string, compFunc: Function, errorFunc: Function, thisObject: any): void;
-    }
-}
-declare module eui.sys {
-    /**
-     * @private
-     * 一个工具类,用于容器的滚屏拖动操作，计算在一段时间持续滚动后释放，应该继续滚动到的值和缓动时间。
-     * 使用此工具类，您需要创建一个 ScrollThrown 实例,并在滚动发生时调用start()方法，然后在触摸移动过程中调用update()更新当前舞台坐标。
-     * 内部将会启动一个计时器定时根据当前位置计算出速度值，并缓存下来最后4个值。当停止滚动时，再调用finish()方法，
-     * 将立即停止记录位移，并将计算出的最终结果存储到 Thrown.scrollTo 和 Thrown.duration 属性上。
-     */
-    class TouchScroll {
         /**
-         * @private
-         * 创建一个 TouchScroll 实例
-         * @param updateFunction 滚动位置更新回调函数
+         * @language zh_CN
+         * 构造函数。
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        constructor(updateFunction: (scrollPos: number) => void, endFunction: () => void, target: egret.IEventDispatcher);
+        constructor();
         /**
-         * @private
-         * 当前容器滚动外界可调节的系列
+         * @inheritDoc
+         *
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        $scrollFactor: number;
-        /**
-         * @private
-         */
-        private target;
-        /**
-         * @private
-         */
-        private updateFunction;
-        /**
-         * @private
-         */
-        private endFunction;
-        /**
-         * @private
-         */
-        private previousTime;
-        /**
-         * @private
-         */
-        private velocity;
-        /**
-         * @private
-         */
-        private previousVelocity;
-        /**
-         * @private
-         */
-        private currentPosition;
-        /**
-         * @private
-         */
-        private previousPosition;
-        /**
-         * @private
-         */
-        private currentScrollPos;
-        /**
-         * @private
-         */
-        private maxScrollPos;
-        /**
-         * @private
-         * 触摸按下时的偏移量
-         */
-        private offsetPoint;
-        /**
-         * @private
-         * 停止触摸时继续滚动的动画实例
-         */
-        private animation;
-        $bounces: boolean;
-        /**
-         * @private
-         * 正在播放缓动动画的标志。
-         */
-        isPlaying(): boolean;
-        /**
-         * @private
-         * 如果正在执行缓动滚屏，停止缓动。
-         */
-        stop(): void;
-        private started;
-        /**
-         * @private
-         * true表示已经调用过start方法。
-         */
-        isStarted(): boolean;
-        /**
-         * @private
-         * 开始记录位移变化。注意：当使用完毕后，必须调用 finish() 方法结束记录，否则该对象将无法被回收。
-         * @param touchPoint 起始触摸位置，以像素为单位，通常是stageX或stageY。
-         */
-        start(touchPoint: number): void;
-        /**
-         * @private
-         * 更新当前移动到的位置
-         * @param touchPoint 当前触摸位置，以像素为单位，通常是stageX或stageY。
-         */
-        update(touchPoint: number, maxScrollValue: number, scrollValue: any): void;
-        /**
-         * @private
-         * 停止记录位移变化，并计算出目标值和继续缓动的时间。
-         * @param currentScrollPos 容器当前的滚动值。
-         * @param maxScrollPos 容器可以滚动的最大值。当目标值不在 0~maxValue之间时，将会应用更大的摩擦力，从而影响缓动时间的长度。
-         */
-        finish(currentScrollPos: number, maxScrollPos: number): void;
+        protected pointToValue(x: number, y: number): number;
         /**
          * @private
          *
-         * @param timeStamp
          * @returns
          */
-        private onTick(timeStamp);
+        private getThumbRange();
         /**
-         * @private
+         * @inheritDoc
          *
-         * @param animation
+         * @version Egret 2.4
+         * @version eui 1.0
+         * @platform Web,Native
          */
-        private finishScrolling(animation?);
-        /**
-         * @private
-         * 缓动到水平滚动位置
-         */
-        private throwTo(hspTo, duration?);
-        /**
-         * @private
-         * 更新水平滚动位置
-         */
-        private onScrollingUpdate(animation);
+        updateSkinDisplayList(): void;
     }
 }
 declare module eui {
