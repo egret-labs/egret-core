@@ -168,22 +168,6 @@ module egret.native {
 
         private $isDispose:boolean = false;
 
-        //public $dispose():void {
-        //    if (this.$nativeRenderTexture) {
-        //        if ($currentSurface == this) {
-        //            $currentSurface.end();
-        //        }
-        //        //console.log("dispose" + this.id);
-        //        this.$nativeRenderTexture.dispose();
-        //        this.$nativeRenderTexture = null;
-        //    }
-        //    this.$isDispose = true;
-        //}
-        //
-        //public $reload():void {
-        //    this.$isDispose = false;
-        //}
-
         public getContext(type:string):NativeRenderTextureRenderContext {
             return this.renderContext;
         }

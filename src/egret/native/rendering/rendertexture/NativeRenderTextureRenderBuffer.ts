@@ -180,8 +180,12 @@ module egret.native {
          * 清空缓冲区数据
          */
         public clear():void {
-            //this.context.setTransform(1, 0, 0, 1, 0, 0);
-            //this.context.clearRect(0, 0, this.surface.width, this.surface.height);
+            var width = this.surface.width;
+            var height = this.surface.height;
+            if(width > 0 && height > 0) {
+                this.context.setTransform(1, 0, 0, 1, 0, 0);
+                this.context.clearRect(0, 0, width, height);
+            }
         }
 
         /**

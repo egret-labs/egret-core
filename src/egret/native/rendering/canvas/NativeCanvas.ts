@@ -86,7 +86,7 @@ module egret.native {
             }
         }
 
-        private $width:number = 1;
+        private $width:number = 0;
 
         /**
          * @private
@@ -114,7 +114,7 @@ module egret.native {
             }
         }
 
-        private $height:number = 1;
+        private $height:number = 0;
 
         public $nativeCanvas;
         public $isRoot:boolean;
