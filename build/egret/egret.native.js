@@ -807,45 +807,23 @@ var egret;
                     height = image.height;
                 }
                 else {
-                    if (egret_native.Canvas) {
-                        if (!width) {
-                            width = image.width;
-                        }
-                        if (!height) {
-                            height = image.height;
-                        }
-                        if (!surfaceOffsetX) {
-                            surfaceOffsetX = 0;
-                        }
-                        if (!surfaceOffsetY) {
-                            surfaceOffsetY = 0;
-                        }
-                        if (!surfaceImageWidth) {
-                            surfaceImageWidth = width;
-                        }
-                        if (!surfaceImageHeight) {
-                            surfaceImageHeight = height;
-                        }
+                    if (width == void 0) {
+                        width = image.width;
                     }
-                    else {
-                        if (width == void 0) {
-                            width = image.width;
-                        }
-                        if (height == void 0) {
-                            height = image.height;
-                        }
-                        if (surfaceOffsetX == void 0) {
-                            surfaceOffsetX = 0;
-                        }
-                        if (surfaceOffsetY == void 0) {
-                            surfaceOffsetY = 0;
-                        }
-                        if (surfaceImageWidth == void 0) {
-                            surfaceImageWidth = width;
-                        }
-                        if (surfaceImageHeight == void 0) {
-                            surfaceImageHeight = height;
-                        }
+                    if (height == void 0) {
+                        height = image.height;
+                    }
+                    if (surfaceOffsetX == void 0) {
+                        surfaceOffsetX = 0;
+                    }
+                    if (surfaceOffsetY == void 0) {
+                        surfaceOffsetY = 0;
+                    }
+                    if (surfaceImageWidth == void 0) {
+                        surfaceImageWidth = width;
+                    }
+                    if (surfaceImageHeight == void 0) {
+                        surfaceImageHeight = height;
                     }
                 }
                 //console.log("drawImage::" + offsetX + " " + offsetY + " " + width + " " + height + " " + surfaceOffsetX + " " + surfaceOffsetY + " " + surfaceImageWidth + " " + surfaceImageHeight);
