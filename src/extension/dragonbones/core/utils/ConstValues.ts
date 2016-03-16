@@ -331,9 +331,14 @@ module dragonBones {
 		 */
 		public static A_FIXED_ROTATION:string = "fixedRotation";
         /**
-         * 默认动画
+         * 默认动作
          */
-        public static A_DEFAULT_ANIMATION:string = "defaultAnimation";
+        public static A_DEFAULT_ACTIONS:string = "defaultActions";
+        /**
+         * 动作
+         */
+        public static A_ACTIONS:string = "actions";
+        
         /**
          * 播放子骨架的动画
          */
