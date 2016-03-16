@@ -44,6 +44,8 @@ module egret.gui {
         public constructor() {
             super();
             this.touchChildren = false;
+            this.$graphics = new Graphics();
+            this.$graphics.$setTarget(this);
         }
 
         /**
@@ -52,10 +54,6 @@ module egret.gui {
         $graphics:Graphics;
 
         public get graphics():Graphics {
-            if (!this.$graphics) {
-                this.$graphics = new Graphics();
-                this.$graphics.$setTarget(this);
-            }
             return this.$graphics;
         }
 

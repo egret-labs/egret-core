@@ -2406,7 +2406,6 @@ var egret;
                 else {
                     var buffer = egret.sys.hitTestBuffer;
                     buffer.resize(3, 3);
-                    var node = this.$getRenderNode();
                     var matrix = egret.Matrix.create();
                     matrix.identity();
                     matrix.translate(1 - localX, 1 - localY);
@@ -14637,6 +14636,7 @@ var egret;
             };
             /**
              * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
+             * 这里只是想清空绘制命令，因此不调用super
              */
             p.cleanBeforeRender = function () {
                 var data = this.drawData;
@@ -14656,6 +14656,124 @@ var egret;
         })(sys.RenderNode);
         sys.GroupNode = GroupNode;
         egret.registerClass(GroupNode,'egret.sys.GroupNode');
+    })(sys = egret.sys || (egret.sys = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var sys;
+    (function (sys) {
+        /**
+         * @private
+         * 位图渲染节点
+         */
+        var SetAlphaNode = (function (_super) {
+            __extends(SetAlphaNode, _super);
+            function SetAlphaNode() {
+                _super.call(this);
+                this.type = 6 /* SetAlphaNode */;
+            }
+            var d = __define,c=SetAlphaNode,p=c.prototype;
+            /**
+             * 绘制一次位图
+             */
+            p.setAlpha = function (alpha) {
+                if (this.drawData.length != 0) {
+                    this.drawData.length = 0;
+                }
+                this.drawData.push(alpha);
+                this.renderCount++;
+            };
+            return SetAlphaNode;
+        })(sys.RenderNode);
+        sys.SetAlphaNode = SetAlphaNode;
+        egret.registerClass(SetAlphaNode,'egret.sys.SetAlphaNode');
+    })(sys = egret.sys || (egret.sys = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var sys;
+    (function (sys) {
+        /**
+         * @private
+         * 位图渲染节点
+         */
+        var SetTransformNode = (function (_super) {
+            __extends(SetTransformNode, _super);
+            function SetTransformNode() {
+                _super.call(this);
+                this.type = 5 /* SetTransformNode */;
+            }
+            var d = __define,c=SetTransformNode,p=c.prototype;
+            /**
+             * 绘制一次位图
+             */
+            p.setTransform = function (a, b, c, d, tx, ty) {
+                if (this.drawData.length != 0) {
+                    this.drawData.length = 0;
+                }
+                this.drawData.push(a, b, c, d, tx, ty);
+                this.renderCount++;
+            };
+            return SetTransformNode;
+        })(sys.RenderNode);
+        sys.SetTransformNode = SetTransformNode;
+        egret.registerClass(SetTransformNode,'egret.sys.SetTransformNode');
     })(sys = egret.sys || (egret.sys = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -15343,20 +15461,7 @@ var egret;
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
                     context.globalAlpha = renderAlpha;
-                    switch (node.type) {
-                        case 1 /* BitmapNode */:
-                            this.renderBitmap(node, context);
-                            break;
-                        case 2 /* TextNode */:
-                            this.renderText(node, context);
-                            break;
-                        case 3 /* GraphicsNode */:
-                            this.renderGraphics(node, context);
-                            break;
-                        case 4 /* GroupNode */:
-                            this.renderGroup(node, context);
-                            break;
-                    }
+                    this.renderNode(node, context);
                     node.needRedraw = false;
                 }
             }
@@ -15593,6 +15698,12 @@ var egret;
         p.drawNodeToBuffer = function (node, buffer, matrix, forHitTest) {
             var context = buffer.context;
             context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            this.renderNode(node, context, forHitTest);
+        };
+        /**
+         * @private
+         */
+        p.renderNode = function (node, context, forHitTest) {
             switch (node.type) {
                 case 1 /* BitmapNode */:
                     this.renderBitmap(node, context);
@@ -15605,6 +15716,12 @@ var egret;
                     break;
                 case 4 /* GroupNode */:
                     this.renderGroup(node, context);
+                    break;
+                case 5 /* SetTransformNode */:
+                    context.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
+                    break;
+                case 6 /* SetAlphaNode */:
+                    context.globalAlpha = node.drawData[0];
                     break;
             }
         };
@@ -15726,20 +15843,7 @@ var egret;
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var node = children[i];
-                switch (node.type) {
-                    case 1 /* BitmapNode */:
-                        this.renderBitmap(node, context);
-                        break;
-                    case 2 /* TextNode */:
-                        this.renderText(node, context);
-                        break;
-                    case 3 /* GraphicsNode */:
-                        this.renderGraphics(node, context);
-                        break;
-                    case 4 /* GroupNode */:
-                        this.renderGroup(node, context);
-                        break;
-                }
+                this.renderNode(node, context);
             }
         };
         /**

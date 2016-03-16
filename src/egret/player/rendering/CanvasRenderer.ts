@@ -129,20 +129,7 @@ module egret {
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
                     context.globalAlpha = renderAlpha;
-                    switch (node.type) {
-                        case sys.RenderNodeType.BitmapNode:
-                            this.renderBitmap(<sys.BitmapNode>node, context);
-                            break;
-                        case sys.RenderNodeType.TextNode:
-                            this.renderText(<sys.TextNode>node, context);
-                            break;
-                        case sys.RenderNodeType.GraphicsNode:
-                            this.renderGraphics(<sys.GraphicsNode>node, context);
-                            break;
-                        case sys.RenderNodeType.GroupNode:
-                            this.renderGroup(<sys.GroupNode>node, context);
-                            break;
-                    }
+                    this.renderNode(node, context);
                     node.needRedraw = false;
                 }
             }
@@ -284,7 +271,7 @@ module egret {
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 var maskRenderNode = mask.$getRenderNode();
-                if(maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
                         mask.$displayList, region, root ? mask : null);
@@ -400,6 +387,13 @@ module egret {
         public drawNodeToBuffer(node:sys.RenderNode, buffer:sys.RenderBuffer, matrix:Matrix, forHitTest?:boolean):void {
             var context = buffer.context;
             context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+            this.renderNode(node, context, forHitTest);
+        }
+
+        /**
+         * @private
+         */
+        private renderNode(node:sys.RenderNode, context:any, forHitTest?:boolean):void {
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
                     this.renderBitmap(<sys.BitmapNode>node, context);
@@ -412,6 +406,12 @@ module egret {
                     break;
                 case sys.RenderNodeType.GroupNode:
                     this.renderGroup(<sys.GroupNode>node, context);
+                    break;
+                case sys.RenderNodeType.SetTransformNode:
+                    context.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
+                    break;
+                case sys.RenderNodeType.SetAlphaNode:
+                    context.globalAlpha = node.drawData[0];
                     break;
             }
         }
@@ -540,20 +540,7 @@ module egret {
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var node:sys.RenderNode = children[i];
-                switch (node.type) {
-                    case sys.RenderNodeType.BitmapNode:
-                        this.renderBitmap(<sys.BitmapNode>node, context);
-                        break;
-                    case sys.RenderNodeType.TextNode:
-                        this.renderText(<sys.TextNode>node, context);
-                        break;
-                    case sys.RenderNodeType.GraphicsNode:
-                        this.renderGraphics(<sys.GraphicsNode>node, context);
-                        break;
-                    case sys.RenderNodeType.GroupNode:
-                        this.renderGroup(<sys.GroupNode>node, context);
-                        break;
-                }
+                this.renderNode(node, context);
             }
         }
 

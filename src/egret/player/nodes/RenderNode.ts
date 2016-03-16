@@ -48,7 +48,15 @@ module egret.sys {
         /**
          * 组渲染节点
          */
-        GroupNode
+        GroupNode,
+        /**
+         * 设置矩阵节点
+         */
+        SetTransformNode,
+        /**
+         * 设置透明度节点
+         */
+        SetAlphaNode
     }
 
     /**

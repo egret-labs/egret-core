@@ -9653,6 +9653,14 @@ declare module egret.sys {
          * 组渲染节点
          */
         GroupNode = 4,
+        /**
+         * 设置矩阵节点
+         */
+        SetTransformNode = 5,
+        /**
+         * 设置透明度节点
+         */
+        SetAlphaNode = 6,
     }
     /**
      * @private
@@ -9782,9 +9790,36 @@ declare module egret.sys {
         addNode(node: RenderNode): void;
         /**
          * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
+         * 这里只是想清空绘制命令，因此不调用super
          */
         cleanBeforeRender(): void;
         $getRenderCount(): number;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 位图渲染节点
+     */
+    class SetAlphaNode extends RenderNode {
+        constructor();
+        /**
+         * 绘制一次位图
+         */
+        setAlpha(alpha: number): void;
+    }
+}
+declare module egret.sys {
+    /**
+     * @private
+     * 位图渲染节点
+     */
+    class SetTransformNode extends RenderNode {
+        constructor();
+        /**
+         * 绘制一次位图
+         */
+        setTransform(a: number, b: number, c: number, d: number, tx: number, ty: number): void;
     }
 }
 declare module egret.sys {
@@ -10107,6 +10142,10 @@ declare module egret {
          * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
          */
         drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void;
+        /**
+         * @private
+         */
+        private renderNode(node, context, forHitTest?);
         /**
          * @private
          */

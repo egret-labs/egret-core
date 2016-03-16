@@ -12933,14 +12933,12 @@ var egret;
                 this._strokeAlpha = 0;
                 this._strokeWeight = 1;
                 this.touchChildren = false;
+                this.$graphics = new egret.Graphics();
+                this.$graphics.$setTarget(this);
             }
             var d = __define,c=Rect,p=c.prototype;
             d(p, "graphics"
                 ,function () {
-                    if (!this.$graphics) {
-                        this.$graphics = new egret.Graphics();
-                        this.$graphics.$setTarget(this);
-                    }
                     return this.$graphics;
                 }
             );
