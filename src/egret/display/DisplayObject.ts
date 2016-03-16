@@ -2044,25 +2044,37 @@ module egret {
                 var m = this.$getInvertedConcatenatedMatrix();
                 var localX = m.a * x + m.c * y + m.tx;
                 var localY = m.b * x + m.d * y + m.ty;
-                var rectangle = Rectangle.create();
-                rectangle.setTo(localX, localY, 3, 3);
-                var renderTexture = new RenderTexture();
-                renderTexture.drawToTexture(this, rectangle);
-                var context = renderTexture["renderBuffer"];
                 var data:number[];
-                try {
-                    data = context.getPixel(0, 0);
+                var displayList = this.$displayList;
+                if (displayList) {
+                    var buffer = displayList.renderBuffer;
+                    try {
+                        data = buffer.getPixel(localX - displayList.offsetX, localY - displayList.offsetY);
+                    }
+                    catch (e) {
+                        throw new Error(sys.tr(1039));
+                    }
                 }
-                catch (e) {
-                    throw new Error(sys.tr(1040));
+                else {
+                    var buffer = sys.hitTestBuffer;
+                    buffer.resize(3, 3);
+                    var matrix = Matrix.create();
+                    matrix.identity();
+                    matrix.translate(1 - localX, 1 - localY);
+                    sys.systemRenderer.render(this, buffer, matrix, null, true);
+                    Matrix.release(matrix);
+
+                    try {
+                        data = buffer.getPixel(1, 1);
+                    }
+                    catch (e) {
+                        throw new Error(sys.tr(1039));
+                    }
                 }
-                var result = true;
                 if (data[3] === 0) {
-                    result = false;
+                    return false;
                 }
-                Rectangle.release(rectangle);
-                renderTexture.dispose();
-                return result;
+                return true;
             }
         }
 
