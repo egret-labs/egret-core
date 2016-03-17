@@ -507,17 +507,6 @@ module eui {
             if (!canScroll) {
                 return;
             }
-
-            var target:egret.DisplayObject = event.target;
-            while (target && target != this) {
-                if (target instanceof Scroller) {
-                    canScroll = (<Scroller><any> target).checkScrollPolicy();
-                    if (canScroll) {
-                        return;
-                    }
-                }
-                target = target.$parent;
-            }
             this.onTouchBegin(event);
         }
         /**
@@ -621,8 +610,9 @@ module eui {
                 values[Keys.touchScrollV].start(event.$stageY);
             }
             var stage = this.$stage;
-            stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
+            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL,this.onTouchCancel,this);
             this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         }
 
@@ -632,17 +622,35 @@ module eui {
          * @param event
          */
         private onTouchMove(event:egret.TouchEvent):void {
+            if (event.isDefaultPrevented()) {
+                return;
+            }
             var values = this.$Scroller;
             if (!values[Keys.touchMoved]) {
-                if (Math.abs(values[Keys.touchStartX] - event.$stageX) < Scroller.scrollThreshold &&
-                    Math.abs(values[Keys.touchStartY] - event.$stageY) < Scroller.scrollThreshold) {
+                if(Math.abs(values[Keys.touchStartX] - event.$stageX) < Scroller.scrollThreshold){
+                    var outX = false;
+                }else{
+                    outX = true;
+                }
+                if(Math.abs(values[Keys.touchStartY] - event.$stageY) < Scroller.scrollThreshold){
+                    var outY = false;
+                }else{
+                    outY = true;
+                }
+                if(!outX && !outY){
+                    return;
+                }
+                if(outX && values[Keys.scrollPolicyH] == 'off'){
+                    return;
+                }
+                if(outY && values[Keys.scrollPolicyV] == 'off') {
                     return;
                 }
 
                 values[Keys.touchCancle] = true;
+                values[Keys.touchMoved] = true;
                 this.dispatchCancelEvent(event);
 
-                values[Keys.touchMoved] = true;
                 var horizontalBar = this.horizontalScrollBar;
                 var verticalBar = this.verticalScrollBar;
                 if (horizontalBar && horizontalBar.autoVisibility && values[Keys.horizontalCanScroll]) {
@@ -655,7 +663,10 @@ module eui {
                     values[Keys.autoHideTimer].reset();
                 }
                 UIEvent.dispatchUIEvent(this, UIEvent.CHANGE_START);
+                this.$stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             }
+
+            event.preventDefault();
 
             var viewport = values[Keys.viewport];
             var uiValues = viewport.$UIComponent;
@@ -664,6 +675,15 @@ module eui {
             }
             if (values[Keys.verticalCanScroll]) {
                 values[Keys.touchScrollV].update(event.$stageY, viewport.contentHeight - uiValues[sys.UIKeys.height], viewport.scrollV);
+            }
+        }
+        /**
+         * @private
+         * @param event
+         */
+        private onTouchCancel(event:egret.TouchEvent):void{
+            if(!this.$Scroller[Keys.touchMoved]){
+                this.onRemoveListeners();
             }
         }
         /**
@@ -719,8 +739,10 @@ module eui {
          */
         private onRemoveListeners():void {
             var stage = this.$stage;
-            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL,this.onTouchCancel, true);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         }
 

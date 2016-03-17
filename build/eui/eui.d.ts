@@ -9040,6 +9040,11 @@ declare module eui {
          * @private
          * @param event
          */
+        private onTouchCancel(event);
+        /**
+         * @private
+         * @param event
+         */
         private dispatchCancelEvent(event);
         /**
          * @private
