@@ -53,7 +53,11 @@ module dragonBones {
 		}
 		
 		private _timeScale:number;
-
+        
+        private _animatable:IAnimatable;
+		private _length:number;
+		private _currentIndex:number;
+        private _i:number;
         /**
          * 时间缩放系数。用于实现动画的变速播放
          * @member {number} dragonBones.WorldClock#timeScale
@@ -129,30 +133,30 @@ module dragonBones {
 			
 			this._time += passedTime;
 			
-			var length:number = this._animatableList.length;
-			if(length == 0){
+			this._length = this._animatableList.length;
+			if(this._length == 0){
 				return;
 			}
-			var currentIndex:number = 0;
+			this._currentIndex = 0;
 			
-			for(var i:number = 0;i < length;i ++){
-				var animatable:IAnimatable = this._animatableList[i];
-				if(animatable){
-					if(currentIndex != i){
-						this._animatableList[currentIndex] = animatable;
-						this._animatableList[i] = null;
+			for(this._i = 0 ; this._i < this._length ; this._i ++){
+				this._animatable = this._animatableList[this._i];
+				if(this._animatable){
+					if(this._currentIndex != this._i){
+						this._animatableList[this._currentIndex] = this._animatable;
+						this._animatableList[this._i] = null;
 					}
-					animatable.advanceTime(passedTime);
-					currentIndex ++;
+					this._animatable.advanceTime(passedTime);
+					this._currentIndex ++;
 				}
 			}
 			
-			if (currentIndex != i){
-				length = this._animatableList.length;
-				while(i < length){
-					this._animatableList[currentIndex ++] = this._animatableList[i ++];
+			if (this._currentIndex != this._i){
+				this._length = this._animatableList.length;
+				while(this._i < this._length){
+					this._animatableList[this._currentIndex ++] = this._animatableList[this._i ++];
 				}
-				this._animatableList.length = currentIndex;
+				this._animatableList.length = this._currentIndex;
 			}
 		}
 	}

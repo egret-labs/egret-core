@@ -99,7 +99,7 @@ module egret.web {
         aLink.dispatchEvent(evt);
     }
 
-    function getPixel32(x:number, y:number):number[] {
+    function getPixel32(x:number, y:number):Uint8ClampedArray {
         var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
         buffer.resize(3, 3);
         var context = buffer.context;

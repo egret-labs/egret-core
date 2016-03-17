@@ -439,7 +439,7 @@ var egret;
          */
         WebSocket.TYPE_BINARY = "webSocketTypeBinary";
         return WebSocket;
-    })(egret.EventDispatcher);
+    }(egret.EventDispatcher));
     egret.WebSocket = WebSocket;
     egret.registerClass(WebSocket,'egret.WebSocket');
 })(egret || (egret = {}));
@@ -533,7 +533,7 @@ var egret;
                 this.socket.close();
             };
             return NativeSocket;
-        })();
+        }());
         native.NativeSocket = NativeSocket;
         egret.registerClass(NativeSocket,'egret.native.NativeSocket',["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.NATIVE) {
@@ -636,7 +636,7 @@ var egret;
                 this.socket.close();
             };
             return HTML5WebSocket;
-        })();
+        }());
         web.HTML5WebSocket = HTML5WebSocket;
         egret.registerClass(HTML5WebSocket,'egret.web.HTML5WebSocket',["egret.ISocket"]);
         if (egret.Capabilities.runtimeType == egret.RuntimeType.WEB) {

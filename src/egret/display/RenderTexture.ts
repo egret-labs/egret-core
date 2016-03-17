@@ -111,13 +111,13 @@ module egret {
             return true;
         }
 
-        public getPixel32(x:number, y:number):number[] {
-            var data:number[];
+        public getPixel32(x:number, y:number):Uint8ClampedArray {
+            var data:Uint8ClampedArray;
             if (this.renderBuffer) {
                 var scale = $TextureScaleFactor;
                 x = Math.round(x / scale);
                 y = Math.round(y / scale);
-                this.renderBuffer.getPixel(x, y);
+                data = this.renderBuffer.getPixel(x, y);
             }
             return data;
         }

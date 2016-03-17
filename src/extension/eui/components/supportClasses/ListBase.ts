@@ -839,7 +839,7 @@ module eui {
         /**
          * @language en_US
          * Handles <code>egret.TouchEvent.TOUCH_CANCEL</code> events from any of the
-         * item renderers. This method will cancle the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
+         * item renderers. This method will cancel the handles <code>egret.TouchEvent.TOUCH_END</code> and <code>egret.TouchEvent.TOUCH_TAP</code>.
          * @param event The <code>egret.TouchEvent</code> object.
          * @version Egret 3.0.1
          * @version eui 1.0

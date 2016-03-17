@@ -94,7 +94,7 @@ module egret.native {
         }
     }
 
-    function getPixel32(x:number, y:number):number[] {
+    function getPixel32(x:number, y:number):Uint8ClampedArray {
         egret.$error(1035);
         return null;
     }

@@ -269,12 +269,12 @@ module dragonBones {
                             currentTransform.scaleX *= parentTimeline.originTransform.scaleX * parentData.transform.scaleX;
                             currentTransform.scaleY *= parentTimeline.originTransform.scaleY * parentData.transform.scaleY;
 
-                            TransformUtil.transformToMatrix(currentTransform, currentTransformMatrix, true);
+                            TransformUtil.transformToMatrix(currentTransform, currentTransformMatrix);
                             currentTransformMatrix.concat(globalTransformMatrix);
                             TransformUtil.matrixToTransform(currentTransformMatrix, globalTransform, currentTransform.scaleX * globalTransform.scaleX >= 0, currentTransform.scaleY * globalTransform.scaleY >= 0);
 						}
 
-                        TransformUtil.transformToMatrix(globalTransform, globalTransformMatrix, true);
+                        TransformUtil.transformToMatrix(globalTransform, globalTransformMatrix);
 					}
                     TransformUtil.globalToLocal(frame.transform, globalTransform);
 					

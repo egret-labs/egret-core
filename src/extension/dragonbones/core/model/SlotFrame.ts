@@ -71,6 +71,11 @@ module dragonBones {
 		 * @member {dragonBones.ColorTransform} dragonBones.SlotFrame#color
 		 */
 		public color:ColorTransform;
+        /**
+         * 播放子骨架的的动画
+         * @member {string} dragonBones.SlotFrame#gotoAndPlay
+         */
+        public gotoAndPlay:string;
 		
 		/**
 		 *构造函数，实例化一个SlotFrame

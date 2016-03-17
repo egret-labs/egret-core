@@ -133,6 +133,12 @@ module dragonBones {
 			this.skewY = TransformUtil.normalizeRotation(this.skewY);	
 		}
 
+        public clone():DBTransform
+		{
+			var output:DBTransform = new DBTransform();
+			output.copy(this);
+			return output;
+		}
 		/**
 		 * 把DBTransform的所有属性转成用String类型表示
 		 * @return 一个字符串包含有DBTransform的所有属性

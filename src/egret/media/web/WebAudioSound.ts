@@ -30,11 +30,6 @@
 /**
  * @private
  */
-interface AudioBuffer {
-}
-/**
- * @private
- */
 interface AudioBufferSourceNodeEgret {
     buffer:any;
     context:any;
@@ -166,6 +161,18 @@ module egret.web {
          */
         private _arrayBuffer:ArrayBuffer;
         private audioBuffer:AudioBuffer;
+
+
+        public get length():number {
+            if (this.audioBuffer) {
+                return this.audioBuffer.duration;
+            }
+
+            throw new Error ("sound not loaded!");
+
+            return 0;
+        }
+
 
         /**
          * @inheritDoc

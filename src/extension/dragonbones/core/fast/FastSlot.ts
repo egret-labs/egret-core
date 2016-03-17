@@ -51,7 +51,10 @@ module dragonBones {
 		public _offsetZOrder:number;
 		/** @private */
 		public _originDisplayIndex:number;
-
+        /** @private */
+		public _gotoAndPlay:string;
+		public _defaultGotoAndPlay:string;
+        
 		public _displayList:Array<any>;
 		public _currentDisplayIndex:number = 0;
 		public _colorTransform:ColorTransform;
@@ -61,12 +64,8 @@ module dragonBones {
 		public _blendMode:string;
 		
 		public hasChildArmature:boolean;
-		public constructor(self:FastSlot){
+		public constructor(){
 			super();
-			
-			if(self != this){
-				throw new Error("Abstract class can not be instantiated!");
-			}
 			this.hasChildArmature = false;
 			this._currentDisplayIndex = -1;
 			
@@ -89,6 +88,7 @@ module dragonBones {
 		public initWithSlotData(slotData:SlotData):void{
 			this.name = slotData.name;
 			this.blendMode = slotData.blendMode;
+            this._defaultGotoAndPlay = slotData.gotoAndPlay;
 			this._originZOrder = slotData.zOrder;
 			this._displayDataList = slotData.displayDataList;
 			this._originDisplayIndex = slotData.displayIndex;
@@ -133,6 +133,7 @@ module dragonBones {
 			
 		//displayIndex
 			this._changeDisplayIndex((<SlotFrameCache><any> (this._frameCache)).displayIndex);
+			this.gotoAndPlay = (<SlotFrameCache><any> (this._frameCache)).gotoAndPlay;
 		}
 		
 		/** @private */
@@ -141,7 +142,11 @@ module dragonBones {
 				return;
 			}
 			
-			this._updateGlobal();
+			var result:ParentTransformObject = this._updateGlobal();
+            if(result)
+            {
+                result.release();
+            }
 			this._updateTransform();
 		}
 		
@@ -151,6 +156,45 @@ module dragonBones {
 			this._global.y += this._parent._tweenPivot.y;
 		}
 		
+        public updateChildArmatureAnimation():void
+		{
+			if(this.childArmature)
+			{
+				if(this._currentDisplayIndex >= 0)
+				{
+					var curAnimation:string = this._gotoAndPlay;
+					if (curAnimation == null)
+					{
+						curAnimation = this._defaultGotoAndPlay;
+                        if(curAnimation == null)
+                        {
+                            this.childArmature.armatureData.defaultAnimation;
+                        }
+					}
+					if (curAnimation == null)
+					{
+						if (this.armature && this.armature.animation.lastAnimationState)
+						{
+							curAnimation = this.armature.animation.lastAnimationState.name;
+						}
+					}
+					if (curAnimation && this.childArmature.animation.hasAnimation(curAnimation))
+					{
+						this.childArmature.animation.gotoAndPlay(curAnimation);
+					}
+					else
+					{
+						this.childArmature.animation.play();
+					}
+				}
+				else
+				{
+					this.childArmature.animation.stop();
+					this.childArmature.animation._lastAnimationState = null;
+				}
+			}
+		}
+        
 		public initDisplayList(newDisplayList:Array<any>):void{
 			this._displayList = newDisplayList;
 		}
@@ -346,6 +390,19 @@ module dragonBones {
 			}
 		}
 		
+        /**
+         * 播放子骨架动画
+		 * @member {string} dragonBones.FastSlot#gotoAndPlay
+         */
+        public set gotoAndPlay(value:string) 
+		{
+			if (this._gotoAndPlay != value)
+			{
+				this._gotoAndPlay = value;
+				this.updateChildArmatureAnimation();
+			}
+		}
+        
 		public get colorTransform():ColorTransform{
 			return this._colorTransform;
 		}
@@ -358,6 +415,9 @@ module dragonBones {
 			return this._isColorChanged;
 		}
 		
+        public get gotoAndPlay():string{
+            return this._gotoAndPlay;
+        }
 	//Abstract method
 		/**
 		 * @private
@@ -473,6 +533,10 @@ module dragonBones {
 					targetArmature.getAnimation().gotoAndPlay(frame.action);
 				}
 			}
+            else
+            {
+                this.gotoAndPlay = slotFrame.gotoAndPlay;
+            }
 		}
 		
 				/** @private */
@@ -486,7 +550,7 @@ module dragonBones {
 
 		public _updateGlobal():any {
             this._calculateRelativeParentTransform();
-            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
 
             var output:any = this._calculateParentTransform();
             if (output) {

@@ -125,7 +125,7 @@ module egret.web {
         private attachCanvas(container:HTMLElement, canvas:HTMLCanvasElement):void {
 
             var style = canvas.style;
-            style.cursor = "default";
+            style.cursor = "inherit";
             style.position = "absolute";
             style.top = "0";
             style.bottom = "0";

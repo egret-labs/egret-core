@@ -53,7 +53,7 @@ class Compiler {
         if(args.sourceMap == true){
             parsedCmd.options.sourceMap = true;//引擎命令行的sourcemap属性优先
         }
-
+        parsedCmd.options.allowUnreachableCode = true;
         //var compileResult = tsclark.Compiler.executeWithOption(args, files, out, outDir);
         var compileResult = tsclark.Compiler.executeWithOption(parsedCmd);
         

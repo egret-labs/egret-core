@@ -93,7 +93,7 @@ module egret.sys {
         /**
          * 获取指定坐标的像素
          */
-        getPixel(x:number,y:number):number[];
+        getPixel(x:number,y:number):Uint8ClampedArray;
 
         /**
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null

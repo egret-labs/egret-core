@@ -132,6 +132,7 @@ module dragonBones {
 			var version:string = rawDataToParse[ConstValues.A_VERSION];
             version = version.toString();
             if( version.toString() != DragonBones.DATA_VERSION &&
+                version.toString() != DragonBones.DATA_VERSION_4_5 &&
                 version.toString() != DragonBones.PARENT_COORDINATE_DATA_VERSION &&
 				version.toString() != "2.3")
             {
@@ -148,6 +149,7 @@ module dragonBones {
 			var outputDragonBonesData:DragonBonesData =  new DragonBonesData();
 			outputDragonBonesData.name = rawDataToParse[ConstValues.A_NAME];
             outputDragonBonesData.isGlobal = rawDataToParse[ConstValues.A_IS_GLOBAL] == "0" ? false : true;
+            outputDragonBonesData.version = parseFloat(version);
             DataParser.tempDragonBonesData = outputDragonBonesData;
 
             var armatureList:any = rawDataToParse[ConstValues.ARMATURE];
@@ -165,7 +167,17 @@ module dragonBones {
 		private static parseArmatureData(armatureDataToParse:any, frameRate:number):ArmatureData{
 			var outputArmatureData:ArmatureData = new ArmatureData();
 			outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
-
+            var actions = armatureDataToParse[ConstValues.A_DEFAULT_ACTIONS];
+			if (actions && actions.length == 1)
+			{
+				outputArmatureData.defaultAnimation = actions[0][ConstValues.A_GOTOANDPLAY];
+			}
+            outputArmatureData.frameRate = armatureDataToParse[ConstValues.A_FRAME_RATE];
+			if (isNaN(outputArmatureData.frameRate) || outputArmatureData.frameRate <= 0)
+			{
+				outputArmatureData.frameRate = frameRate;
+			}
+			frameRate = outputArmatureData.frameRate;
             var boneList:any = armatureDataToParse[ConstValues.BONE];
             var i:number;
             var len:number;
@@ -175,7 +187,16 @@ module dragonBones {
                 var boneObject:any = boneList[i];
                 outputArmatureData.addBoneData(DataParser.parseBoneData(boneObject));
             }
-
+            var ikList:any = armatureDataToParse[ConstValues.IK];
+            if(ikList)
+            {
+                for(i = 0,len = ikList.length; i < len; i++ )
+                {
+                    var ikObject:any = ikList[i];
+                    outputArmatureData.addIKData(DataParser.parseIKData(ikObject));
+                }
+            }
+            
 			var slotList:any = armatureDataToParse[ConstValues.SLOT];
 			for(i = 0, len = slotList.length; i < len; i++) 
 			{
@@ -225,6 +246,26 @@ module dragonBones {
 			return boneData;
 		}
 		
+        private static parseIKData(ikObject:any):IKData
+		{
+			var ikData:IKData = new IKData();
+			ikData.name = ikObject[ConstValues.A_NAME];
+			ikData.target = ikObject[ConstValues.A_TARGET];
+			if(ikObject.hasOwnProperty(ConstValues.A_WEIGHT)){
+				ikData.weight = Number(ikObject[ConstValues.A_WEIGHT]);
+			}else{
+				ikData.weight = 1;
+			}
+			ikData.bendPositive = DataParser.getBoolean(ikObject, ConstValues.A_BENDPOSITIVE, true);
+			if(ikObject.hasOwnProperty(ConstValues.A_CHAIN)){
+				ikData.chain = ikObject[ConstValues.A_CHAIN];
+			}else{
+				ikData.chain = 0;
+			}
+			ikData.bones = ikObject[ConstValues.A_BONES];
+			return ikData;
+		}
+        
 		private static parseSkinData(skinObject:any):SkinData{
 			var skinData:SkinData = new SkinData();
 			skinData.name = skinObject[ConstValues.A_NAME];
@@ -242,6 +283,11 @@ module dragonBones {
 		private static parseSlotData(slotObject:any):SlotData{
 			var slotData:SlotData = new SlotData();
 			slotData.name = slotObject[ConstValues.A_NAME];
+            var actions = slotObject[ConstValues.A_ACTIONS];
+			if (actions && actions.length == 1)
+			{
+				slotData.gotoAndPlay = actions[0][ConstValues.A_GOTOANDPLAY];
+			}
 			slotData.parent = slotObject[ConstValues.A_PARENT];
 			slotData.zOrder = DataParser.getNumber(slotObject,ConstValues.A_Z_ORDER,0)||0;
 			slotData.displayIndex = DataParser.getNumber(slotObject,ConstValues.A_DISPLAY_INDEX,0);
@@ -431,7 +477,11 @@ module dragonBones {
 			//NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
 			outputFrame.tweenEasing = DataParser.getNumber(frameObject, ConstValues.A_TWEEN_EASING, 10);
 			outputFrame.displayIndex = Math.floor(DataParser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
-
+            var actions = frameObject[ConstValues.A_ACTIONS];
+            if (actions && actions.length == 1)
+			{
+				outputFrame.gotoAndPlay = actions[0][ConstValues.A_GOTOANDPLAY];
+			}
 			//如果为NaN，则说明没有改变过zOrder
 			outputFrame.zOrder = DataParser.getNumber(frameObject, ConstValues.A_Z_ORDER, DataParser.tempDragonBonesData.isGlobal ? NaN : 0);
 

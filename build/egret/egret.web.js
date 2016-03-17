@@ -106,7 +106,7 @@ var egret;
             WebExternalInterface.addCallback = function (functionName, listener) {
             };
             return WebExternalInterface;
-        })();
+        }());
         web.WebExternalInterface = WebExternalInterface;
         egret.registerClass(WebExternalInterface,'egret.web.WebExternalInterface',["egret.ExternalInterface"]);
         egret.ExternalInterface = WebExternalInterface;
@@ -244,6 +244,15 @@ var egret;
                 this.loaded = false;
             }
             var d = __define,c=HtmlSound,p=c.prototype;
+            d(p, "length"
+                ,function () {
+                    if (this.originAudio) {
+                        return this.originAudio.duration;
+                    }
+                    throw new Error("sound not loaded!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -367,7 +376,7 @@ var egret;
              */
             HtmlSound.audios = {};
             return HtmlSound;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.HtmlSound = HtmlSound;
         egret.registerClass(HtmlSound,'egret.web.HtmlSound',["egret.Sound"]);
     })(web = egret.web || (egret.web = {}));
@@ -524,7 +533,7 @@ var egret;
                 }
             );
             return HtmlSoundChannel;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.HtmlSoundChannel = HtmlSoundChannel;
         egret.registerClass(HtmlSoundChannel,'egret.web.HtmlSoundChannel',["egret.SoundChannel","egret.IEventDispatcher"]);
     })(web = egret.web || (egret.web = {}));
@@ -602,6 +611,12 @@ var egret;
                     refresh: 1
                 });
             };
+            d(p, "length"
+                ,function () {
+                    throw new Error("qq sound not supported!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -652,7 +667,7 @@ var egret;
              */
             QQSound.EFFECT = "effect";
             return QQSound;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.QQSound = QQSound;
         egret.registerClass(QQSound,'egret.web.QQSound',["egret.Sound"]);
     })(web = egret.web || (egret.web = {}));
@@ -807,7 +822,7 @@ var egret;
                 }
             );
             return QQSoundChannel;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.QQSoundChannel = QQSoundChannel;
         egret.registerClass(QQSoundChannel,'egret.web.QQSoundChannel',["egret.SoundChannel","egret.IEventDispatcher"]);
     })(web = egret.web || (egret.web = {}));
@@ -897,7 +912,7 @@ var egret;
              */
             WebAudioDecode.isDecoding = false;
             return WebAudioDecode;
-        })();
+        }());
         web.WebAudioDecode = WebAudioDecode;
         egret.registerClass(WebAudioDecode,'egret.web.WebAudioDecode');
         /**
@@ -918,6 +933,15 @@ var egret;
                 this.loaded = false;
             }
             var d = __define,c=WebAudioSound,p=c.prototype;
+            d(p, "length"
+                ,function () {
+                    if (this.audioBuffer) {
+                        return this.audioBuffer.duration;
+                    }
+                    throw new Error("sound not loaded!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -1001,7 +1025,7 @@ var egret;
              */
             WebAudioSound.EFFECT = "effect";
             return WebAudioSound;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.WebAudioSound = WebAudioSound;
         egret.registerClass(WebAudioSound,'egret.web.WebAudioSound',["egret.Sound"]);
     })(web = egret.web || (egret.web = {}));
@@ -1172,7 +1196,7 @@ var egret;
                 }
             );
             return WebAudioSoundChannel;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.WebAudioSoundChannel = WebAudioSoundChannel;
         egret.registerClass(WebAudioSoundChannel,'egret.web.WebAudioSoundChannel',["egret.SoundChannel","egret.IEventDispatcher"]);
     })(web = egret.web || (egret.web = {}));
@@ -1627,7 +1651,7 @@ var egret;
                 }
             );
             return WebVideo;
-        })(egret.DisplayObject);
+        }(egret.DisplayObject));
         web.WebVideo = WebVideo;
         egret.registerClass(WebVideo,'egret.web.WebVideo',["egret.Video"]);
         egret.Video = WebVideo;
@@ -1694,12 +1718,18 @@ var egret;
                     if (this._xhr.response != undefined) {
                         return this._xhr.response;
                     }
-                    if (this._xhr.responseXML) {
+                    if (this._responseType == "text") {
+                        return this._xhr.responseText;
+                    }
+                    if (this._responseType == "document") {
+                        return this._xhr.responseXML;
+                    }
+                    /*if (this._xhr.responseXML) {
                         return this._xhr.responseXML;
                     }
                     if (this._xhr.responseText != undefined) {
                         return this._xhr.responseText;
-                    }
+                    }*/
                     return null;
                 }
             );
@@ -1853,7 +1883,7 @@ var egret;
                 }
             };
             return WebHttpRequest;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.WebHttpRequest = WebHttpRequest;
         egret.registerClass(WebHttpRequest,'egret.web.WebHttpRequest',["egret.HttpRequest"]);
         egret.HttpRequest = WebHttpRequest;
@@ -2066,7 +2096,7 @@ var egret;
              */
             WebImageLoader.crossOrigin = null;
             return WebImageLoader;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.WebImageLoader = WebImageLoader;
         egret.registerClass(WebImageLoader,'egret.web.WebImageLoader',["egret.ImageLoader"]);
         egret.ImageLoader = WebImageLoader;
@@ -2185,7 +2215,7 @@ var egret;
                 var scaleY = this.htmlInput.$scaleY;
                 this.inputDiv.style.left = x * scaleX + "px";
                 this.inputDiv.style.top = y * scaleY + "px";
-                if (this.$textfield.multiline) {
+                if (this.$textfield.multiline && this.$textfield.height > this.$textfield.size) {
                     this.inputDiv.style.top = (y) * scaleY + "px";
                     this.inputElement.style.top = (-this.$textfield.lineSpacing / 2) * scaleY + "px";
                 }
@@ -2317,9 +2347,13 @@ var egret;
                     }
                     else {
                         window.setTimeout(function () {
-                            if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                                self.textValue = self.inputElement.value;
-                                egret.Event.dispatchEvent(self, "updateText", false);
+                            if (self.inputElement) {
+                                if (self.inputElement.selectionStart && self.inputElement.selectionEnd) {
+                                    if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                                        self.textValue = self.inputElement.value;
+                                        egret.Event.dispatchEvent(self, "updateText", false);
+                                    }
+                                }
                             }
                         }, 0);
                     }
@@ -2337,9 +2371,10 @@ var egret;
                 var textfield = this.$textfield;
                 if (textfield.multiline) {
                     var textheight = egret.TextFieldUtils.$getTextHeight(textfield);
-                    if (textfield.height < textheight) {
-                        this.setElementStyle("height", (textfield.height + textfield.lineSpacing) * this._gscaleY + "px");
+                    if (textfield.height <= textfield.size || textfield.height < textheight) {
+                        this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
                         this.setElementStyle("padding", "0px");
+                        this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
                     }
                     else {
                         this.setElementStyle("height", (textheight + textfield.lineSpacing) * this._gscaleY + "px");
@@ -2348,8 +2383,8 @@ var egret;
                         var top = rap * valign;
                         var bottom = rap - top;
                         this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
+                        this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                     }
-                    this.setElementStyle("lineHeight", (textfield.size + textfield.lineSpacing) * this._gscaleY + "px");
                 }
             };
             /**
@@ -2424,8 +2459,9 @@ var egret;
                     else {
                         this.setElementStyle("lineHeight", (textfield.size) * this._gscaleY + "px");
                         if (textfield.height < textfield.size) {
-                            this.setElementStyle("height", (textfield.height) * this._gscaleY + "px");
-                            this.setElementStyle("padding", "0px");
+                            this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
+                            var bottom = (textfield.size / 2) * this._gscaleY;
+                            this.setElementStyle("padding", "0px 0px " + bottom + "px 0px");
                         }
                         else {
                             this.setElementStyle("height", (textfield.size) * this._gscaleY + "px");
@@ -2433,6 +2469,9 @@ var egret;
                             var valign = egret.TextFieldUtils.$getValign(textfield);
                             var top = rap * valign;
                             var bottom = rap - top;
+                            if (bottom < textfield.size / 2 * this._gscaleY) {
+                                bottom = textfield.size / 2 * this._gscaleY;
+                            }
                             this.setElementStyle("padding", top + "px 0px " + bottom + "px 0px");
                         }
                     }
@@ -2442,7 +2481,7 @@ var egret;
                 }
             };
             return HTML5StageText;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.HTML5StageText = HTML5StageText;
         egret.registerClass(HTML5StageText,'egret.web.HTML5StageText',["egret.StageText"]);
         egret.StageText = HTML5StageText;
@@ -2683,7 +2722,7 @@ var egret;
                 return self._inputElement;
             };
             return HTMLInput;
-        })();
+        }());
         web.HTMLInput = HTMLInput;
         egret.registerClass(HTMLInput,'egret.web.HTMLInput');
     })(web = egret.web || (egret.web = {}));
@@ -3012,7 +3051,7 @@ var egret;
                 this.surface.width = this.surface.height = 0;
             };
             return CanvasRenderBuffer;
-        })();
+        }());
         web.CanvasRenderBuffer = CanvasRenderBuffer;
         egret.registerClass(CanvasRenderBuffer,'egret.web.CanvasRenderBuffer',["egret.sys.RenderBuffer"]);
         egret.sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
@@ -3224,7 +3263,7 @@ var egret;
                 this.touch.$initMaxTouches();
             };
             return WebTouchHandler;
-        })(egret.HashObject);
+        }(egret.HashObject));
         web.WebTouchHandler = WebTouchHandler;
         egret.registerClass(WebTouchHandler,'egret.web.WebTouchHandler');
     })(web = egret.web || (egret.web = {}));
@@ -3362,7 +3401,7 @@ var egret;
                 }
             };
             return WebHideHandler;
-        })(egret.HashObject);
+        }(egret.HashObject));
         web.WebHideHandler = WebHideHandler;
         egret.registerClass(WebHideHandler,'egret.web.WebHideHandler');
     })(web = egret.web || (egret.web = {}));
@@ -3419,7 +3458,7 @@ var egret;
              */
             AudioType.HTML5_AUDIO = 3;
             return AudioType;
-        })();
+        }());
         web.AudioType = AudioType;
         egret.registerClass(AudioType,'egret.web.AudioType');
         /**
@@ -3442,7 +3481,7 @@ var egret;
              */
             SystemOSType.ADNROID = 3;
             return SystemOSType;
-        })();
+        }());
         web.SystemOSType = SystemOSType;
         egret.registerClass(SystemOSType,'egret.web.SystemOSType');
         /**
@@ -3567,7 +3606,7 @@ var egret;
              */
             Html5Capatibility.ua = "";
             return Html5Capatibility;
-        })(egret.HashObject);
+        }(egret.HashObject));
         web.Html5Capatibility = Html5Capatibility;
         egret.registerClass(Html5Capatibility,'egret.web.Html5Capatibility');
         Html5Capatibility._init();
@@ -3823,7 +3862,7 @@ var egret;
                 capabilities.$language = strings.join("-");
             };
             return WebCapability;
-        })();
+        }());
         web.WebCapability = WebCapability;
         egret.registerClass(WebCapability,'egret.web.WebCapability');
         WebCapability.detect();
@@ -4004,7 +4043,7 @@ var egret;
              */
             p.attachCanvas = function (container, canvas) {
                 var style = canvas.style;
-                style.cursor = "default";
+                style.cursor = "inherit";
                 style.position = "absolute";
                 style.top = "0";
                 style.bottom = "0";
@@ -4086,7 +4125,7 @@ var egret;
                 this.webTouchHandler.$updateMaxTouches();
             };
             return WebPlayer;
-        })(egret.HashObject);
+        }(egret.HashObject));
         web.WebPlayer = WebPlayer;
         egret.registerClass(WebPlayer,'egret.web.WebPlayer',["egret.sys.Screen"]);
     })(web = egret.web || (egret.web = {}));
@@ -4251,7 +4290,7 @@ var egret;
             }
             var d = __define,c=XMLNode,p=c.prototype;
             return XMLNode;
-        })();
+        }());
         web.XMLNode = XMLNode;
         egret.registerClass(XMLNode,'egret.web.XMLNode');
         /**
@@ -4282,7 +4321,7 @@ var egret;
             }
             var d = __define,c=XML,p=c.prototype;
             return XML;
-        })(XMLNode);
+        }(XMLNode));
         web.XML = XML;
         egret.registerClass(XML,'egret.web.XML');
         /**
@@ -4300,7 +4339,7 @@ var egret;
             }
             var d = __define,c=XMLText,p=c.prototype;
             return XMLText;
-        })(XMLNode);
+        }(XMLNode));
         web.XMLText = XMLText;
         egret.registerClass(XMLText,'egret.web.XMLText');
         var parser = new DOMParser();
@@ -4405,7 +4444,7 @@ var egret;
                 window.removeEventListener("deviceorientation", this.onChange);
             };
             return WebDeviceOrientation;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.WebDeviceOrientation = WebDeviceOrientation;
         egret.registerClass(WebDeviceOrientation,'egret.web.WebDeviceOrientation',["egret.DeviceOrientation"]);
     })(web = egret.web || (egret.web = {}));
@@ -4481,7 +4520,7 @@ var egret;
                 geo.clearWatch(this.watchId);
             };
             return WebGeolocation;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.WebGeolocation = WebGeolocation;
         egret.registerClass(WebGeolocation,'egret.web.WebGeolocation',["egret.Geolocation"]);
         egret.Geolocation = egret.web.WebGeolocation;
@@ -4541,7 +4580,7 @@ var egret;
                 window.removeEventListener("devicemotion", this.onChange);
             };
             return WebMotion;
-        })(egret.EventDispatcher);
+        }(egret.EventDispatcher));
         web.WebMotion = WebMotion;
         egret.registerClass(WebMotion,'egret.web.WebMotion',["egret.Motion"]);
         egret.Motion = egret.web.WebMotion;

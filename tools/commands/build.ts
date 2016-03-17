@@ -99,6 +99,7 @@ class Build implements egret.Command {
         var libFiles = FileUtil.search(FileUtil.joinPath(options.projectDir, "libs"), "d.ts");
         var outDir = "bin";
         var compiler = new Compiler;
+        utils.clean(FileUtil.joinPath(options.projectDir, outDir));
         for (var i: number = 0; i < packageJson.modules.length; i++) {
             var module = packageJson.modules[i];
             var files = [];

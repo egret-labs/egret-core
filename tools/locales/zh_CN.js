@@ -171,14 +171,22 @@ var egret;
     locale_strings[10012] = "如果您没有设置 IDE 保存自动编译，可以添加参数 -a 来启动自动编译";
     locale_strings[10013] = "Egret 服务器已经启动, 您可以通过以下URL访问: {0}";
     locale_strings[10014] = "自动编译失败，请参考下面的错误信息：";
-    locale_strings[10015] = "\"{0}\" 不是一个有效的 Egret 项目目录";
+    locale_strings[10015] = "{color_red}\"{0}\" 不是一个有效的 Egret 项目目录{color_normal}" +
+        "\n\tEgret_Project\t\t\t//项目目录" +
+        "\n\t\t--template\t\t//模板配置目录" +
+        "\n\t\t--libs\t\t\t//引擎库目录" +
+        "\n\t\t--resource\t\t//资源目录" +
+        "\n\t\t--src\t\t\t//源代码目录" +
+        "\n\t\t--egretProperties.json\t//项目配置文件" +
+        "\n\t\t--index.html\t\t//启动文件"
+    ;
     locale_strings[10016] = "如果浏览器没有启动，请手动打开URL: {0}";
     locale_strings[10017] = "项目创建成功，您可以执行 egret startserver 来运行刚刚创建的应用";
     locale_strings[10018] = "试图进行文件加载顺序排序时发现循环依赖，比如类的 static 属性直接实例化了一个继承自当前类的类，"
         + "或者当前文件中有立即执行的代码使用了依赖于当前文件的类。";
     locale_strings[10019] = "没有找到打包 App 所需要的项目文件，这些文件没有包含在 Github 中，请前往 http://www.egret.com 下载 Egret 安装包，如果您已经安装 Egret 安装包，请联系我们的工作人员";
     locale_strings[10020] = "编译服务异常退出";
-    locale_strings[10021] = "文件夹操作出现问题，请重新执行命令。由于操作系统刷新问题，请勿在操作文件后立马执行脚本。如果多次重试还不能解决，请联系我们，QQ群：{color_green}481169576{color_normal}";
+    locale_strings[10021] = "文件夹操作出现问题，请不要操作桌面文件，不要跨盘操作文件，确保其它进程没有操作文件。由于操作系统刷新问题，请勿在操作文件后立马执行脚本。请重新执行命令，如果多次重试还不能解决，请联系我们，QQ群：{color_green}481169576{color_normal}";
     locale_strings[12000] = "创建一个全新的 Egret 项目";
     locale_strings[12001] = "选择一个项目模板";
     locale_strings[12002] = "请输入默认的屏幕尺寸";

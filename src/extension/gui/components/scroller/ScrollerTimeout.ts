@@ -76,12 +76,13 @@ module egret.gui {
         lastTime = timeStamp;
 
         for (var key in setTimeoutCache) {
-            var data = setTimeoutCache[key];
+            var key2:any = key;
+            var data = setTimeoutCache[key2];
             data.delay -= dt;
             if (data.delay <= 0) {
                 data.listener.apply(data.thisObject, data.params);
 
-                $clearTimer(key);
+                $clearTimer(key2);
             }
         }
 

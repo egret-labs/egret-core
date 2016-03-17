@@ -84,12 +84,8 @@ module dragonBones {
 		
 		/** @private */
 		public textureAtlasDic:any = {};
-		public constructor(self:BaseFactory){
+		public constructor(){
 			super();
-			
-			if(self != this){ 
-				throw new Error(egret.getString(4001));
-			}
 		}
 		
 		/**
@@ -367,9 +363,12 @@ module dragonBones {
 			outputArmature.name = armatureData.name;
 			outputArmature.__dragonBonesData = dragonBonesData;
 			outputArmature._armatureData = armatureData;
+            outputArmature._skewEnable = dragonBonesData.version >= 4.5;
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildBones(outputArmature);
+            outputArmature.buildIK();
++			outputArmature.updateBoneCache();
 			this._buildSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);
@@ -389,9 +388,12 @@ module dragonBones {
 			outputArmature.name = armatureData.name;
 			outputArmature.__dragonBonesData = dragonBonesData;
 			outputArmature._armatureData = armatureData;
+            outputArmature._skewEnable = dragonBonesData.version >= 4.5;
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildFastBones(outputArmature);
+            outputArmature.buildIK();
++			outputArmature.updateBoneCache();
 			this._buildFastSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);
