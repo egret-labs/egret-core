@@ -37,11 +37,15 @@ module egret.native {
     var isRunning:boolean = false;
     var playerList:Array<NativePlayer> = [];
 
-    function runEgret() {
+    function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}) {
         if (isRunning) {
             return;
         }
         isRunning = true;
+        if(!options){
+            options = {};
+        }
+        setRenderMode(options.renderMode);
         if (DEBUG) {
             //todo 获得系统语言版本
             var language = "zh_CN";
@@ -59,20 +63,39 @@ module egret.native {
             ticker.update();
         };
         egret_native.executeMainLoop(mainLoop, ticker);
-        sys.surfaceFactory = new OpenGLFactory();
         if (!egret.sys.screenAdapter) {
-            egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+            if(options.screenAdapter){
+                egret.sys.screenAdapter = options.screenAdapter;
+            }
+            else{
+                egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
+            }
         }
 
         //todo
         var player = new NativePlayer();
         playerList.push(player);
+        sys.hitTestBuffer = new NativeCanvasRenderBuffer(3, 3);
         //老版本runtime不支持canvas,关闭脏矩形
         if (!$supportCanvas) {
             player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
             egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
             };
         }
+    }
+
+    /**
+     * 设置渲染模式。"auto","webgl","canvas"
+     * @param renderMode
+     */
+    function setRenderMode(renderMode:string):void{
+        if($supportCanvas) {
+            sys.RenderBuffer = NativeCanvasRenderBuffer;
+        }
+        else {
+            sys.RenderBuffer = NativeRenderTextureRenderBuffer;
+        }
+        sys.systemRenderer = new CanvasRenderer();
     }
 
     function updateAllScreens():void {

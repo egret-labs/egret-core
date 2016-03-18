@@ -28,17 +28,25 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
+
     /**
      * @private
-     * 呈现最终绘图结果的画布
+     * 填充路径
      */
-    export interface Surface extends BitmapData{
-        /**
-         * @private
-         * 绘图上下文
-         */
-        renderContext:RenderContext;
+    export class FillPath extends Path2D {
 
-        toDataURL(type?: string, ...args: any[]): string;
+        public constructor(){
+            super();
+            this.type = PathType.Fill;
+        }
+
+        /**
+         * 填充颜色
+         */
+        public fillColor:number;
+        /**
+         * 填充透明度
+         */
+        public fillAlpha:number;
     }
 }

@@ -31,17 +31,24 @@ module egret.sys {
 
     /**
      * @private
+     * 位图渲染节点
      */
-    export interface Renderable extends HashObject{
+    export class SetTransformNode extends RenderNode {
+
+        public constructor() {
+            super();
+            this.type = RenderNodeType.SetTransformNode;
+        }
+
         /**
-         * 获取渲染节点
+         * 绘制一次位图
          */
-        $getRenderNode():RenderNode;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         * 注意：此方法必须在$getRenderNode()被调用之后执行。
-         */
-        $update():boolean;
+        public setTransform(a:number, b:number, c:number, d:number, tx:number, ty:number):void {
+            if(this.drawData.length != 0) {
+                this.drawData.length = 0;
+            }
+            this.drawData.push(a, b, c, d, tx, ty);
+            this.renderCount++;
+        }
     }
 }

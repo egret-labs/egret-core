@@ -31,6 +31,53 @@ module egret.sys {
 
     /**
      * @private
+     * 屏幕适配器接口，当播放器视口尺寸改变时，屏幕适配器将被用于计算当前对应的舞台显示尺寸。
+     */
+    export interface IScreenAdapter{
+
+        /**
+         * @private
+         * 计算舞台显示尺寸
+         * @param scaleMode 当前的缩放模式
+         * @param screenWidth 播放器视口宽度
+         * @param screenHeight 播放器视口高度
+         * @param contentWidth 初始化内容宽度
+         * @param contentHeight 初始化内容高度
+         */
+        calculateStageSize(scaleMode:string,screenWidth:number,screenHeight:number,
+                           contentWidth:number, contentHeight:number):StageDisplaySize;
+    }
+
+    /**
+     * @private
+     * 舞台显示尺寸数据
+     */
+    export interface StageDisplaySize{
+
+        /**
+         * @private
+         * 舞台宽度
+         */
+        stageWidth:number;
+        /**
+         * @private
+         * 舞台高度
+         */
+        stageHeight:number;
+        /**
+         * @private
+         * 显示宽度，若跟舞台宽度不同，将会产生缩放。
+         */
+        displayWidth:number;
+        /**
+         * @private
+         * 显示高度，若跟舞台高度不同，将会产生缩放。
+         */
+        displayHeight:number;
+    }
+
+    /**
+     * @private
      * 屏幕适配器实例，开发者可以通过给这个变量赋值实现了IScreenAdapter接口的实例，从而注入自定义的屏幕适配器。
      */
     export var screenAdapter:IScreenAdapter;
@@ -39,7 +86,7 @@ module egret.sys {
      * @private
      * 屏幕适配器默认实现，开发者可以实现自定义规则的屏幕适配器。并在初始化加载时将适配器的实例赋值给egret.sys.screenAdapter上，从而替换掉默认适配器。
      */
-    export class ScreenAdapter extends HashObject implements IScreenAdapter {
+    export class DefaultScreenAdapter extends HashObject implements IScreenAdapter {
 
         /**
          * @private

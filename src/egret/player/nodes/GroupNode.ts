@@ -28,20 +28,39 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
-
     /**
      * @private
+     * 组渲染节点,用于组合多个渲染节点
      */
-    export interface Renderable extends HashObject{
+    export class GroupNode extends RenderNode {
+
+        public constructor() {
+            super();
+            this.type = RenderNodeType.GroupNode;
+        }
+
+        public addNode(node:RenderNode):void {
+            this.drawData.push(node);
+        }
+
         /**
-         * 获取渲染节点
+         * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
+         * 这里只是想清空绘制命令，因此不调用super
          */
-        $getRenderNode():RenderNode;
-        /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         * 注意：此方法必须在$getRenderNode()被调用之后执行。
-         */
-        $update():boolean;
+        public cleanBeforeRender():void {
+            var data = this.drawData;
+            for (var i = data.length - 1; i >= 0; i--) {
+                data[i].cleanBeforeRender();
+            }
+        }
+
+        public $getRenderCount():number {
+            var result = 0;
+            var data = this.drawData;
+            for (var i = data.length - 1; i >= 0; i--) {
+                result += data[i].$getRenderCount();
+            }
+            return result;
+        }
     }
 }

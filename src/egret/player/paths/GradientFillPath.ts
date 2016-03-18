@@ -28,40 +28,25 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
-
     /**
      * @private
-     * 全局共享的RenderContext。通常用于交换缓存，测量文本或创建填充对象。
+     * 渐变填充路径
      */
-    export var sharedRenderContext:sys.RenderContext;
+    export class GradientFillPath extends Path2D {
 
-    /**
-     * @private
-     * 全局共享的供精确像素检测使用的RenderContext。
-     */
-    export var hitTestRenderContext:sys.RenderContext;
-    /**
-     * @private
-     * surfaceFactory实例
-     */
-    export var surfaceFactory:SurfaceFactory;
+        public constructor(){
+            super();
+            this.type = PathType.GradientFill;
+        }
 
-    /**
-     * @private
-     */
-    export interface SurfaceFactory {
+        public gradientType:string;
 
-        /**
-         * @private
-         * 从对象池取出或创建一个新的Surface实例
-         * @param useOnce 表示对取出实例的使用是一次性的，用完后立即会释放。
-         */
-        create(useOnce?:boolean):Surface;
-        /**
-         * @private
-         * 释放一个Surface实例
-         * @param surface 要释放的Surface实例
-         */
-        release(surface:Surface):void;
+        public colors:number[];
+
+        public alphas:number[];
+
+        public ratios:number[];
+
+        public matrix:Matrix;
     }
 }

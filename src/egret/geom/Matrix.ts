@@ -73,6 +73,16 @@ module egret {
         }
     }
 
+    /**
+     * @private
+     */
+    export var $cos:(angle:number)=>number = cos;
+    /**
+     * @private
+     */
+    export var $sin:(angle:number)=>number = sin;
+
+
     var matrixPool:Matrix[] = [];
     /**
      * @language en_US

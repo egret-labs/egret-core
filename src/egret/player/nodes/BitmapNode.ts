@@ -27,25 +27,41 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
-    /**
-     * @private
-     * @language en_US
-     * The GraphicsPattern interface represents an opaque object describing a pattern, based on a BitmapData,
-     * created by the Graphics.createPattern() method.
-     * @see egret.Graphics#createPattern()
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    /**
-     * @private
-     * @language zh_CN
-     * GraphicsPattern 接口表示描述一个模板（基于BitmapData）的不透明对象，通过 Graphics.createPattern() 静态方法创建.
-     * @see egret.Graphics#createPattern()
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    export interface GraphicsPattern {
+module egret.sys {
 
+    /**
+     * @private
+     * 位图渲染节点
+     */
+    export class BitmapNode extends RenderNode {
+
+        public constructor(){
+            super();
+            this.type = RenderNodeType.BitmapNode;
+        }
+        /**
+         * 要绘制的位图
+         */
+        public image:BitmapData = null;
+        /**
+         * 控制在缩放时是否对位图进行平滑处理。
+         */
+        public smoothing:boolean = true;
+        /**
+         * 绘制一次位图
+         */
+        public drawImage(sourceX:number, sourceY:number, sourceW:number, sourceH:number,
+                         drawX:number, drawY:number, drawW:number, drawH:number):void {
+            this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
+            this.renderCount++;
+        }
+
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        public cleanBeforeRender():void{
+            super.cleanBeforeRender();
+            this.image = null;
+        }
     }
 }

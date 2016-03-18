@@ -49,8 +49,7 @@ module egret.gui {
             if(source){
                 this.source = source;
             }
-			this.$renderRegion = new sys.Region();
-
+			this.$renderNode = new sys.BitmapNode();
             this.autoScale = autoScale;
 		}
 
@@ -274,10 +273,9 @@ module egret.gui {
 		/**
 		 * @private
 		 */
-		$render(context:sys.RenderContext):void{
+		$render():void{
 			if (this._contentIsTexture) {
 				var bitmapData = <Texture> this._content;
-				context.imageSmoothingEnabled = this.$smoothing;
 				var destW:number;
 				var destH:number;
 				if(this.autoScale){
@@ -289,24 +287,11 @@ module egret.gui {
 					destH = bitmapData.$getTextureHeight();
 				}
 
-                Bitmap.$drawImage(context, bitmapData._bitmapData,
+                Bitmap.$drawImage(<sys.BitmapNode>this.$renderNode, bitmapData._bitmapData,
                     bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(),
                     destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
-
-				//var offsetX:number = Math.round(bitmapData._offsetX);
-				//var offsetY:number = Math.round(bitmapData._offsetY);
-				//var bitmapWidth:number = bitmapData._bitmapWidth || bitmapData._textureWidth;
-				//var bitmapHeight:number = bitmapData._bitmapHeight || bitmapData._textureHeight;
-				//var scale9Grid = this.scale9Grid || bitmapData["scale9Grid"];
-				//if (scale9Grid ) {
-				//	Bitmap.$drawScale9GridImage(context, bitmapData, scale9Grid, destW, destH);
-				//}
-				//else {
-				//	context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX, bitmapData._bitmapY,
-				//		bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
-				//}
 			}
-			super.$render(context);
+			super.$render();
 		}
 		/**
 		 * @private

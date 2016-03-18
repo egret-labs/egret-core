@@ -29,19 +29,31 @@
 
 module egret.sys {
 
+    export var systemRenderer:SystemRenderer;
+
     /**
      * @private
+     * 显示渲染器接口
      */
-    export interface Renderable extends HashObject{
+    export interface SystemRenderer {
+
         /**
-         * 获取渲染节点
+         * 渲染一个显示对象
+         * @param displayObject 要渲染的显示对象
+         * @param buffer 渲染缓冲
+         * @param matrix 要对显示对象整体叠加的变换矩阵
+         * @param dirtyList 脏矩形列表
+         * @param forRenderTexture 绘制目标是RenderTexture的标志
+         * @returns drawCall触发绘制的次数
          */
-        $getRenderNode():RenderNode;
+        render(displayObject:DisplayObject, buffer:RenderBuffer, matrix:Matrix, dirtyList?:Region[], forRenderTexture?:boolean):number;
         /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         * 注意：此方法必须在$getRenderNode()被调用之后执行。
+         * 将一个RenderNode对象绘制到渲染缓冲
+         * @param node 要绘制的节点
+         * @param buffer 渲染缓冲
+         * @param matrix 要叠加的矩阵
+         * @param forHitTest 绘制结果是用于碰撞检测。若为true，当渲染GraphicsNode时，会忽略透明度样式设置，全都绘制为不透明的。
          */
-        $update():boolean;
+        drawNodeToBuffer(node:sys.RenderNode, buffer:RenderBuffer, matrix:Matrix, forHitTest?:boolean):void;
     }
 }

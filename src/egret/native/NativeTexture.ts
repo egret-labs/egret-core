@@ -33,12 +33,8 @@ module egret.native {
     /**
      * @private
      */
-    function convertImageToRenderTexture(texture:egret.Texture, rect?:egret.Rectangle):egret.native.NativeSurface {
-        var surface = sys.surfaceFactory.create(true);
-        if (!surface) {
-            return null;
-        }
-
+    function convertImageToRenderTexture(texture:egret.Texture, rect?:egret.Rectangle):NativeCanvas {
+        var buffer = <NativeCanvasRenderBuffer><any>sys.hitTestBuffer;
         var w = texture.$getTextureWidth();
         var h = texture.$getTextureHeight();
         if (rect == null) {
@@ -56,24 +52,18 @@ module egret.native {
 
         var iWidth = rect.width;
         var iHeight = rect.height;
-        surface.width = iWidth;
-        surface.height = iHeight;
-        //surface["style"]["width"]= iWidth + "px";
-        //surface["style"]["height"] = iHeight + "px";
+        var surface = buffer.surface;
+        buffer.resize(iWidth,iHeight);
 
         var bitmapData = texture;
-        var renderContext = surface.renderContext;
-        renderContext.imageSmoothingEnabled = false;
         var offsetX:number = Math.round(bitmapData._offsetX);
         var offsetY:number = Math.round(bitmapData._offsetY);
         var bitmapWidth:number = bitmapData._bitmapWidth;
         var bitmapHeight:number = bitmapData._bitmapHeight;
-        renderContext.globalAlpha = 1;
-        renderContext.globalCompositeOperation = "source-over";
-        renderContext.setTransform(1, 0, 0, 1, 0, 0);
-        renderContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+        buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
             bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
-        return <egret.native.NativeSurface>surface;
+
+        return surface;
     }
 
     /**
@@ -83,7 +73,7 @@ module egret.native {
         try {
             var renderTexture = convertImageToRenderTexture(this, rect);
             var base64 = renderTexture.toDataURL(type);
-            renderTexture.$dispose();
+            //renderTexture.$dispose();
             return base64
         }
         catch (e) {
@@ -97,14 +87,14 @@ module egret.native {
         try {
             var renderTexture = convertImageToRenderTexture(this, rect);
             renderTexture.saveToFile(type, filePath);
-            renderTexture.$dispose();
+            //renderTexture.$dispose();
         }
         catch (e) {
             egret.$error(1033);
         }
     }
 
-    function getPixel32(x:number, y:number):number[] {
+    function getPixel32(x:number, y:number):Uint8ClampedArray {
         egret.$error(1035);
         return null;
     }

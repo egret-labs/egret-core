@@ -52,7 +52,14 @@ module egret.sys {
      */
     export class DirtyRegion {
 
-        public displayList:DisplayList;
+        public constructor(root:DisplayObject){
+            this.root = root;
+        }
+
+        /**
+         * @private
+         */
+        private root:DisplayObject;
         /**
          * @private
          */
@@ -156,7 +163,7 @@ module egret.sys {
                     dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
                 }
                 else{
-                    var bounds = this.displayList.root.$getOriginalBounds();
+                    var bounds = this.root.$getOriginalBounds();
                     dirtyList.push(region.setTo(bounds.x, bounds.y, bounds.width, bounds.height));
                 }
             }
@@ -218,6 +225,8 @@ module egret.sys {
         public setDirtyRegionPolicy(policy:string):void {
             this.$dirtyRegionPolicy = policy;
         }
+
+
     }
 
 }

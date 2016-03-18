@@ -27,21 +27,28 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.sys {
 
+module egret {
     /**
-     * @private
+     * OrientationMode 类为舞台初始旋转模式提供值。
      */
-    export interface Renderable extends HashObject{
+    export class OrientationMode {
+
         /**
-         * 获取渲染节点
+         * 适配屏幕
          */
-        $getRenderNode():RenderNode;
+        public static AUTO = "auto";
         /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         * 注意：此方法必须在$getRenderNode()被调用之后执行。
+         * 默认竖屏
          */
-        $update():boolean;
+        public static PORTRAIT = "portrait";
+        /**
+         * 默认横屏，舞台顺时针旋转90度
+         */
+        public static LANDSCAPE = "landscape";
+        /**
+         * 默认横屏，舞台逆时针旋转90度
+         */
+        public static LANDSCAPE_FLIPPED = "landscapeFlipped";
     }
 }

@@ -27,64 +27,43 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret.native {
-
-    var surfacePool:NativeSurface[] = [];
-
+module egret.sys {
     /**
      * @private
+     * 线条路径。
+     * 注意：当线条宽度（lineWidth）为1或3像素时，需要特殊处理，往右下角偏移0.5像素，以显示清晰锐利的线条。
      */
-    export class OpenGLFactory implements sys.SurfaceFactory {
+    export class StrokePath extends Path2D {
 
-        /**
-         * @private
-         */
-        public constructor() {
-            sys.sharedRenderContext = this.create().renderContext;
-            sys.hitTestRenderContext = this.create().renderContext;
-            //for (var i = 0; i < 3; i++) {
-            //    surfacePool.push(this.create());
-            //}
+        public constructor(){
+            super();
+            this.type = PathType.Stroke;
         }
 
         /**
-         * @private
-         * 从对象池取出或创建一个新的Surface实例
-         * @param useOnce 表示对取出实例的使用是一次性的，用完后立即会释放。
+         * 线条宽度。
+         * 注意：绘制时对1像素和3像素要特殊处理，整体向右下角偏移0.5像素，以显示清晰锐利的线条。
          */
-        public create(useOnce?:boolean):NativeSurface {
-            var surface:NativeSurface = (useOnce || surfacePool.length > 3) ? surfacePool.pop() : null;
-            if (!surface) {
-                surface = this.createSurface(new NativeSurface());
-            }
-            surface.$reload();
-            return surface;
-        }
-
+        public lineWidth:number;
         /**
-         * @private
-         * 释放一个Surface实例
-         * @param surface 要释放的Surface实例
+         * 线条颜色
          */
-        public release(surface:NativeSurface):void {
-            if (!surface) {
-                return;
-            }
-            surface.$dispose();
-            surface.width = surface.height = 1;
-            surfacePool.push(surface);
-
-        }
-
+        public lineColor:number;
         /**
-         * @private
+         * 线条透明度
          */
-        private createSurface(canvas:NativeSurface):NativeSurface {
-            var context = canvas.renderContext;
-            context.surface = canvas;
-
-            return <NativeSurface><any>canvas;
-        }
-
+        public lineAlpha:number;
+        /**
+         * 端点样式,"none":无端点,"round":圆头端点,"square":方头端点
+         */
+        public caps:string;
+        /**
+         * 联接点样式,"bevel":斜角连接,"miter":尖角连接,"round":圆角连接
+         */
+        public joints:string;
+        /**
+         * 用于表示剪切斜接的极限值的数字。
+         */
+        public miterLimit:number;
     }
 }

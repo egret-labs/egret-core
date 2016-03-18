@@ -27,33 +27,28 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+module egret.sys {
 
-module egret {
     /**
      * @private
-     * OrientationMode 类为舞台初始旋转模式提供值。
+     * 位图渲染节点
      */
-    export class OrientationMode {
+    export class SetAlphaNode extends RenderNode {
+
+        public constructor() {
+            super();
+            this.type = RenderNodeType.SetAlphaNode;
+        }
 
         /**
-         * @private
-         * 适配屏幕
+         * 绘制一次位图
          */
-        public static AUTO = "auto";
-        /**
-         * @private
-         * 默认竖屏
-         */
-        public static PORTRAIT = "portrait";
-        /**
-         * @private
-         * 默认横屏，舞台顺时针旋转90度
-         */
-        public static LANDSCAPE = "landscape";
-        /**
-         * @private
-         * 默认横屏，舞台逆时针旋转90度
-         */
-        public static LANDSCAPE_FLIPPED = "landscapeFlipped";
+        public setAlpha(alpha:number):void {
+            if(this.drawData.length != 0) {
+                this.drawData.length = 0;
+            }
+            this.drawData.push(alpha);
+            this.renderCount++;
+        }
     }
 }

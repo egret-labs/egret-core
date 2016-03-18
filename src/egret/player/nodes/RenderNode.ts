@@ -28,51 +28,89 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 module egret.sys {
-
     /**
      * @private
-     * 屏幕适配器接口，当播放器视口尺寸改变时，屏幕适配器将被用于计算当前对应的舞台显示尺寸。
+     * 渲染节点类型
      */
-    export interface IScreenAdapter{
-
+    export const enum RenderNodeType {
         /**
-         * @private
-         * 计算舞台显示尺寸
-         * @param scaleMode 当前的缩放模式
-         * @param screenWidth 播放器视口宽度
-         * @param screenHeight 播放器视口高度
-         * @param contentWidth 初始化内容宽度
-         * @param contentHeight 初始化内容高度
+         * 位图渲染节点
          */
-        calculateStageSize(scaleMode:string,screenWidth:number,screenHeight:number,
-                                      contentWidth:number, contentHeight:number):StageDisplaySize;
+        BitmapNode = 1,
+        /**
+         * 文本渲染节点
+         */
+        TextNode,
+        /**
+         * 矢量渲染节点
+         */
+        GraphicsNode,
+        /**
+         * 组渲染节点
+         */
+        GroupNode,
+        /**
+         * 设置矩阵节点
+         */
+        SetTransformNode,
+        /**
+         * 设置透明度节点
+         */
+        SetAlphaNode
     }
 
     /**
      * @private
-     * 舞台显示尺寸数据
+     * 渲染节点基类
      */
-    export interface StageDisplaySize{
+    export class RenderNode {
 
         /**
-         * @private
-         * 舞台宽度
+         * 节点类型..
          */
-        stageWidth:number;
+        public type:number = 0;
         /**
-         * @private
-         * 舞台高度
+         * 是否需要重绘的标志。
          */
-        stageHeight:number;
+        public needRedraw:boolean = false;
         /**
-         * @private
-         * 显示宽度，若跟舞台宽度不同，将会产生缩放。
+         * 这个对象在舞台上的整体透明度
          */
-        displayWidth:number;
+        public renderAlpha:number = 1;
         /**
-         * @private
-         * 显示高度，若跟舞台高度不同，将会产生缩放。
+         * 这个对象在舞台上的透明度
          */
-        displayHeight:number;
+        public renderVisible:boolean = true;
+        /**
+         * 相对于显示列表根节点或位图缓存根节点上的矩阵对象
+         */
+        public renderMatrix:Matrix = new Matrix();
+        /**
+         * 此显示对象自身（不包括子项）在显示列表根节点或位图缓存根节点上的显示尺寸。
+         */
+        public renderRegion:sys.Region = new sys.Region();
+        /**
+         * 是否发生移动
+         */
+        public moved:boolean = false;
+        /**
+         * 绘制数据
+         */
+        public drawData:any[] = [];
+        /**
+         * 绘制次数
+         */
+        protected renderCount:number = 0;
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        public cleanBeforeRender():void{
+            this.drawData.length = 0;
+            this.renderCount = 0;
+        }
+
+        public $getRenderCount():number {
+            return this.renderCount;
+        }
     }
 }

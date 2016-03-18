@@ -745,6 +745,7 @@ module egret {
 
         /**
          * @private
+         * 标记所有子项失效,若遇到cacheAsBitmap的节点,直接停止继续遍历其子项.
          */
         private markChildDirty(child:DisplayObject, parentCache:egret.sys.DisplayList):void {
             if (child.$hasFlags(sys.DisplayObjectFlags.DirtyChildren)) {
@@ -752,7 +753,7 @@ module egret {
             }
             child.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
             var displayList = child.$displayList;
-            if ((displayList || child.$renderRegion) && parentCache) {
+            if ((displayList || child.$renderNode) && parentCache) {
                 parentCache.markDirty(displayList || child);
             }
             if (displayList) {
@@ -785,7 +786,7 @@ module egret {
             child.$parentDisplayList = newParent;
             child.$setFlags(sys.DisplayObjectFlags.DirtyChildren);
             var displayList = child.$displayList;
-            if ((child.$renderRegion || displayList) && parentCache) {
+            if ((child.$renderNode || displayList) && parentCache) {
                 parentCache.markDirty(displayList || child);
             }
             if (displayList) {
@@ -864,6 +865,10 @@ module egret {
             return true;
         }
 
+        /**
+         * @private
+         * 标记所有子项失效,与markChildDirty不同,此方法无视子项是否启用cacheAsBitmap,必须遍历完所有子项.通常只有alpha属性改变需要采用这种操作.
+         */
         private $invalidateAllChildren():void {
             var children = this.$children;
             if (children) {

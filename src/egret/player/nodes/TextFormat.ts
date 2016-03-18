@@ -27,24 +27,39 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-module egret {
-
+module egret.sys {
     /**
-     * @language zh_CN
-     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
-     * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
-     * @version Egret 2.4
-     * @platform Web,Native
+     * @private
+     * 文本格式
      */
-    /**
-     * @language en_US
-     * Image, Canvas, BitmapData, Video, Egret.
-     * @param data Objects that need to be converted include HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
-     * @version Egret 2.4
-     * @platform Web,Native
-     */
-    export function $toBitmapData(data:any):BitmapData {
-        data["hashCode"] = data["$hashCode"] = $hashCount++;
-        return <BitmapData>data;
+    export interface TextFormat {
+        /**
+         * 颜色值
+         */
+        textColor?:number;
+        /**
+         * 描边颜色值
+         */
+        strokeColor?:number;
+        /**
+         * 字号
+         */
+        size?:number;
+        /**
+         * 描边大小
+         */
+        stroke?:number;
+        /**
+         * 是否加粗
+         */
+        bold?:boolean;
+        /**
+         * 是否倾斜
+         */
+        italic?:boolean;
+        /**
+         * 字体名称
+         */
+        fontFamily?:string;
     }
 }

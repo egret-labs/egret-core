@@ -51,20 +51,24 @@ module egret.web {
 
     /**
      * @private
-     * 网页加载完成，实例化页面中定义的Egretsys标签
+     * 网页加载完成，实例化页面中定义的Egret标签
      */
-    function runEgret():void {
+    function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}):void {
         if (isRunning) {
             return;
         }
         isRunning = true;
-
+        if(!options){
+            options = {};
+        }
+        setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
-        var surfaceFactory = new CanvasFactory();
-        sys.surfaceFactory = surfaceFactory;
-        if (!egret.sys.screenAdapter) {
-            egret.sys.screenAdapter = new egret.sys.ScreenAdapter();
+        if(options.screenAdapter){
+            egret.sys.screenAdapter = options.screenAdapter;
+        }
+        else if (!egret.sys.screenAdapter){
+            egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
 
         var list = document.querySelectorAll(".egret-player");
@@ -74,6 +78,17 @@ module egret.web {
             var player = new WebPlayer(container);
             container["egret-player"] = player;
         }
+    }
+
+    /**
+     * 设置渲染模式。"auto","webgl","canvas"
+     * @param renderMode
+     */
+    function setRenderMode(renderMode:string):void{
+
+        sys.RenderBuffer = web.CanvasRenderBuffer;
+        sys.systemRenderer = new CanvasRenderer();
+
     }
 
     /**
@@ -105,26 +120,6 @@ module egret.web {
     window["isNaN"] = function (value:number):boolean {
         value = +value;
         return value !== value;
-    };
-
-    var originCanvas2DFill = CanvasRenderingContext2D.prototype.fill;
-    CanvasRenderingContext2D.prototype.fill = function () {
-        var style = this.fillStyle;
-        if (!(typeof style == "string")) {
-            var matrix:egret.Matrix = style["matrix"];
-            if (matrix) {
-                this.save();
-                this.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
-                originCanvas2DFill.call(this);
-                this.restore();
-            }
-            else {
-                originCanvas2DFill.call(this);
-            }
-        }
-        else {
-            originCanvas2DFill.call(this);
-        }
     };
 
     egret.runEgret = runEgret;

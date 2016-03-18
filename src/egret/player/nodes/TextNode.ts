@@ -31,17 +31,57 @@ module egret.sys {
 
     /**
      * @private
+     * 文本渲染节点
      */
-    export interface Renderable extends HashObject{
+    export class TextNode extends RenderNode {
+
+        public constructor() {
+            super();
+            this.type = RenderNodeType.TextNode;
+        }
+
         /**
-         * 获取渲染节点
+         * 颜色值
          */
-        $getRenderNode():RenderNode;
+        public textColor:number = 0xFFFFFF;
         /**
-         * @private
-         * 更新对象在舞台上的显示区域和透明度,返回显示区域是否发生改变。
-         * 注意：此方法必须在$getRenderNode()被调用之后执行。
+         * 描边颜色值
          */
-        $update():boolean;
+        public strokeColor:number = 0x000000;
+        /**
+         * 字号
+         */
+        public size:number = 30;
+        /**
+         * 描边大小
+         */
+        public stroke:number = 0;
+        /**
+         * 是否加粗
+         */
+        public bold:boolean = false;
+        /**
+         * 是否倾斜
+         */
+        public italic:boolean = false;
+        /**
+         * 字体名称
+         */
+        public fontFamily:string = "Arial";
+
+        /**
+         * 绘制一行文本
+         */
+        public drawText(x:number, y:number, text:string, format:TextFormat):void {
+            this.drawData.push(x, y, text, format);
+            this.renderCount++;
+        }
+
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        public cleanBeforeRender():void{
+            super.cleanBeforeRender();
+        }
     }
 }

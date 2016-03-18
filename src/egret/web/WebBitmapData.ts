@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 // There is no HTMLDivElement in webkit for air
-if (window['HTMLVideoElement'] == undefined) {
+if (DEBUG&&window['HTMLVideoElement'] == undefined) {
     window['HTMLVideoElement'] = HTMLDivElement;
 }
 module egret.web {
@@ -38,4 +38,16 @@ module egret.web {
     registerClass(HTMLCanvasElement, className);
     registerClass(HTMLVideoElement, className);
 
+}
+
+module egret {
+
+    /**
+     * 转换 Image，Canvas，Video 为 Egret 框架内使用的 BitmapData 对象。
+     * @param data 需要转换的对象，包括HTMLImageElement|HTMLCanvasElement|HTMLVideoElement
+     */
+    export function $toBitmapData(data:any):BitmapData {
+        data["hashCode"] = data["$hashCode"] = $hashCount++;
+        return <BitmapData>data;
+    }
 }

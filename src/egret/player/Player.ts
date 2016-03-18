@@ -43,14 +43,14 @@ module egret.sys {
          * @private
          * 实例化一个播放器对象。
          */
-        public constructor(context:RenderContext, stage:Stage, entryClassName:string) {
+        public constructor(buffer:RenderBuffer, stage:Stage, entryClassName:string) {
             super();
-            if (DEBUG && !context) {
-                $error(1003, "context");
+            if (DEBUG && !buffer) {
+                $error(1003, "buffer");
             }
             this.entryClassName = entryClassName;
             this.stage = stage;
-            this.screenDisplayList = this.createDisplayList(stage, context);
+            this.screenDisplayList = this.createDisplayList(stage, buffer);
 
 
             this.showFPS = false;
@@ -67,9 +67,9 @@ module egret.sys {
         /**
          * @private
          */
-        private createDisplayList(stage:Stage, context:RenderContext):DisplayList {
+        private createDisplayList(stage:Stage, buffer:RenderBuffer):DisplayList {
             var displayList = new DisplayList(stage);
-            displayList.renderContext = context;
+            displayList.renderBuffer = buffer;
             stage.$displayList = displayList;
             displayList.setClipRect(stage.$stageWidth, stage.$stageHeight);
             return displayList;
@@ -257,15 +257,13 @@ module egret.sys {
          * @param stageWidth 舞台宽度（以像素为单位）
          * @param stageHeight 舞台高度（以像素为单位）
          */
-        public updateStageSize(stageWidth:number, stageHeight:number, pixelRatio:number = 1):void {
+        public updateStageSize(stageWidth:number, stageHeight:number):void {
             var stage = this.stage;
-            if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight || this.screenDisplayList.$pixelRatio !== pixelRatio) {
+            if (stageWidth !== stage.$stageWidth || stageHeight !== stage.$stageHeight) {
                 stage.$stageWidth = stageWidth;
                 stage.$stageHeight = stageHeight;
-                this.screenDisplayList.setDevicePixelRatio(pixelRatio);
                 this.screenDisplayList.setClipRect(stageWidth, stageHeight);
                 if (this.stageDisplayList) {
-                    this.stageDisplayList.setDevicePixelRatio(pixelRatio);
                     this.stageDisplayList.setClipRect(stageWidth, stageHeight);
                 }
                 stage.dispatchEventWith(Event.RESIZE);
@@ -300,7 +298,7 @@ module egret.sys {
         /**
          * @private
          */
-        private drawDirtyRect:(x:number, y:number, width:number, height:number, context:RenderContext)=>void;
+        private drawDirtyRect:(x:number, y:number, width:number, height:number, context:any)=>void;
         /**
          * @private
          */
@@ -422,10 +420,11 @@ module egret.sys {
         if (repaintList.length > 1) {
             repaintList.shift();
         }
-        var context = this.screenDisplayList.renderContext;
+        var renderBuffer = this.screenDisplayList.renderBuffer;
+        var context = renderBuffer.context;
         context.setTransform(1, 0, 0, 1, 0, 0);
-        context.clearRect(0, 0, context.surface.width, context.surface.height);
-        context.drawImage(this.stageDisplayList.surface, 0, 0);
+        context.clearRect(0, 0, renderBuffer.surface.width, renderBuffer.surface.height);
+        context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
         length = repaintList.length;
         for (i = 0; i < length; i++) {
             list = repaintList[i];
@@ -443,14 +442,14 @@ module egret.sys {
             context.rect(region.minX, region.minY, region.width, region.height);
         }
         context.clip();
-        context.drawImage(this.stageDisplayList.surface, 0, 0);
+        context.drawImage(this.stageDisplayList.renderBuffer.surface, 0, 0);
         context.restore();
     }
 
     /**
      * 绘制一个脏矩形显示区域，在显示重绘区功能开启时调用。
      */
-    function drawDirtyRect(x:number, y:number, width:number, height:number, context:RenderContext):void {
+    function drawDirtyRect(x:number, y:number, width:number, height:number, context:any):void {
         context.strokeStyle = 'rgb(255,0,0)';
         context.lineWidth = 5;
         context.strokeRect(x - 0.5, y - 0.5, width, height);
@@ -524,9 +523,9 @@ module egret.sys {
             this.costDirty += costDirty;
             this.costRender += costRender;
             this.costTicker += costTicker;
-            if (this.totalTime > 500) {
+            if (this.totalTime >= 1000) {
 
-                var lastFPS = Math.round(this.totalTick * 1000 / this.totalTime);
+                var lastFPS = Math.ceil(this.totalTick * 1000 / this.totalTime);
                 var lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
                 var lastDirtyRatio = Math.round(this.dirtyRatio / this.totalTick);
                 var lastCostDirty = Math.round(this.costDirty / this.totalTick);
@@ -581,10 +580,11 @@ module egret.sys {
             if (egret.Capabilities.runtimeType == RuntimeType.NATIVE) {
                 return;
             }
-            var g = this.shape.$graphics.$renderContext;
+            var g = this.shape.$graphics;
             g.clear();
-            g.fillStyle = "rgba(68,68,68," + (this.styles["bgAlpha"] || 0.9) + ")";
-            g.fillRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
+            g.beginFill(0x444444, this.styles["bgAlpha"] || 0.9);
+            g.drawRect(0, 0, Math.max(160, this.width + 20), this.height + 20);
+            g.endFill();
         };
         return <FPS><any>FPSImpl;
     })(egret.Sprite);

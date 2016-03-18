@@ -27,85 +27,61 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 module egret {
-
     /**
      * @language en_US
-     * This class is used to create lightweight shapes using the drawing application program interface (API). The Shape
-     * class includes a graphics property, which lets you access methods from the Graphics class.
-     * @see egret.Graphics
-     * @version Egret 2.4
+     * The JointStyle class is an enumeration of constant values that specify the joint style to use in drawing lines.
+     * These constants are provided for use as values in the joints parameter of the egret.Graphics.lineStyle() method.
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
      * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
      */
     /**
      * @language zh_CN
-     * 此类用于使用绘图应用程序编程接口 (API) 创建简单形状。Shape 类含有 graphics 属性，通过该属性您可以访问各种矢量绘图方法。
-     * @see egret.Graphics
-     * @version Egret 2.4
+     * JointStyle 类是指定要在绘制线条中使用的联接点样式的常量值枚举。提供的这些常量用作 egret.Graphics.lineStyle() 方法的 joints 参数中的值。
+     * @see egret.Graphics#lineStyle()
+     * @version Egret 2.5
      * @platform Web,Native
-     * @includeExample egret/display/Shape.ts
      */
-    export class Shape extends DisplayObject {
-
+    export class JointStyle {
         /**
          * @language en_US
-         * Creates a new Shape object.
-         * @version Egret 2.4
+         * Specifies beveled joints in the joints parameter of the egret.Graphics.lineStyle() method.
+         * @version Egret 2.5
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 创建一个 Shape 对象
-         * @version Egret 2.4
+         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定斜角连接。
+         * @version Egret 2.5
          * @platform Web,Native
          */
-        public constructor() {
-            super();
-            this.$graphics = new Graphics();
-            this.$graphics.$setTarget(this);
-        }
-
-        /**
-         * @private
-         */
-        $graphics:Graphics;
-
+        public static BEVEL:string = "bevel";
         /**
          * @language en_US
-         * Specifies the Graphics object belonging to this Shape object, where vector drawing commands can occur.
-         * @version Egret 2.4
+         * Specifies mitered joints in the joints parameter of the egret.Graphics.lineStyle() method.
+         * @version Egret 2.5
          * @platform Web,Native
          */
         /**
          * @language zh_CN
-         * 获取 Shape 中的 Graphics 对象。可通过此对象执行矢量绘图命令。
-         * @version Egret 2.4
+         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定尖角连接。
+         * @version Egret 2.5
          * @platform Web,Native
          */
-        public get graphics():Graphics {
-            return this.$graphics;
-        }
-
+        public static MITER:string = "miter";
         /**
-         * @private
+         * @language en_US
+         * Specifies round joints in the joints parameter of the egret.Graphics.lineStyle() method.
+         * @version Egret 2.5
+         * @platform Web,Native
          */
-        $measureContentBounds(bounds:Rectangle):void {
-            this.$graphics.$measureContentBounds(bounds);
-        }
-
-        $hitTest(stageX:number, stageY:number):DisplayObject {
-            var target = super.$hitTest(stageX, stageY);
-            if (target == this) {
-                target = this.$graphics.$hitTest(stageX, stageY);
-            }
-            return target;
-        }
-
-    }
-
-    if (DEBUG) {
-        egret.$markReadOnly(Shape, "graphics");
+        /**
+         * @language zh_CN
+         * 在 egret.Graphics.lineStyle() 方法的 joints 参数中指定圆角连接。
+         * @version Egret 2.5
+         * @platform Web,Native
+         */
+        public static ROUND:string = "round";
     }
 }
