@@ -116,13 +116,24 @@ class Build implements egret.Command {
                 //todo exml
                 files = FileUtil.search(FileUtil.joinPath(options.projectDir, module.root), "ts");
             }
+            //解决根目录没文件编译异常问题
+            var tmpFilePath = FileUtil.joinPath(options.projectDir, module.root, "tmp.ts");
+            var hasTmpTsFile = false;
+            if(!FileUtil.exists(tmpFilePath)) {
+                hasTmpTsFile = true;
+                FileUtil.save(tmpFilePath, "");
+            }
             options['compilerOptions'] = {target: 1};//ES5
+            var compileFiles = libFiles.concat(files);
+            if(hasTmpTsFile) {
+                compileFiles.push(tmpFilePath);
+            }
             //编译js文件到临时目录
             var result = compiler.compile({
                 args: options,
                 def: false,
                 out: null,
-                files: libFiles.concat(files),
+                files: compileFiles,
                 outDir: FileUtil.joinPath(options.projectDir, outDir, module.name, "tmp")
             });
             //编译dts文件
@@ -130,10 +141,12 @@ class Build implements egret.Command {
                 args: options,
                 def: true,
                 out: FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".js"),
-                files: libFiles.concat(files),
+                files: compileFiles,
                 outDir: null
             });
-
+            if(hasTmpTsFile) {
+                FileUtil.remove(tmpFilePath);
+            }
             var str = "";
             var dtsStr = FileUtil.read(FileUtil.joinPath(options.projectDir, outDir, module.name, module.name + ".d.ts"));
             if(length > 0) {
