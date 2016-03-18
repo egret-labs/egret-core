@@ -5269,9 +5269,13 @@ declare module dragonBones {
          */
         static A_FIXED_ROTATION: string;
         /**
-         * 默认动画
+         * 默认动作
          */
-        static A_DEFAULT_ANIMATION: string;
+        static A_DEFAULT_ACTIONS: string;
+        /**
+         * 动作
+         */
+        static A_ACTIONS: string;
         /**
          * 播放子骨架的动画
          */

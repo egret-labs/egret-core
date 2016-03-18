@@ -46,7 +46,7 @@ var dragonBones;
          *
          */
         DragonBones.PARENT_COORDINATE_DATA_VERSION = "3.0";
-        DragonBones.VERSION = "4.5.8";
+        DragonBones.VERSION = "4.5.10";
         return DragonBones;
     }());
     dragonBones.DragonBones = DragonBones;
@@ -3625,6 +3625,7 @@ var dragonBones;
                 */
                 return dragonBones.ParentTransformObject.create().setTo(parentGlobalTransform, parentGlobalTransformMatrix);
             }
+            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
             return null;
         };
         p._updateGlobal = function () {
@@ -8036,6 +8037,7 @@ var dragonBones;
                 */
                 return dragonBones.ParentTransformObject.create().setTo(parentGlobalTransform, parentGlobalTransformMatrix);
             }
+            dragonBones.TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
             return null;
         };
         p._updateGlobal = function () {
@@ -12944,7 +12946,10 @@ var dragonBones;
         DataParser.parseArmatureData = function (armatureDataToParse, frameRate) {
             var outputArmatureData = new dragonBones.ArmatureData();
             outputArmatureData.name = armatureDataToParse[dragonBones.ConstValues.A_NAME];
-            outputArmatureData.defaultAnimation = armatureDataToParse[dragonBones.ConstValues.A_DEFAULT_ANIMATION];
+            var actions = armatureDataToParse[dragonBones.ConstValues.A_DEFAULT_ACTIONS];
+            if (actions && actions.length == 1) {
+                outputArmatureData.defaultAnimation = actions[0][dragonBones.ConstValues.A_GOTOANDPLAY];
+            }
             outputArmatureData.frameRate = armatureDataToParse[dragonBones.ConstValues.A_FRAME_RATE];
             if (isNaN(outputArmatureData.frameRate) || outputArmatureData.frameRate <= 0) {
                 outputArmatureData.frameRate = frameRate;
@@ -13035,7 +13040,10 @@ var dragonBones;
         DataParser.parseSlotData = function (slotObject) {
             var slotData = new dragonBones.SlotData();
             slotData.name = slotObject[dragonBones.ConstValues.A_NAME];
-            slotData.gotoAndPlay = slotObject[dragonBones.ConstValues.A_GOTOANDPLAY];
+            var actions = slotObject[dragonBones.ConstValues.A_ACTIONS];
+            if (actions && actions.length == 1) {
+                slotData.gotoAndPlay = actions[0][dragonBones.ConstValues.A_GOTOANDPLAY];
+            }
             slotData.parent = slotObject[dragonBones.ConstValues.A_PARENT];
             slotData.zOrder = DataParser.getNumber(slotObject, dragonBones.ConstValues.A_Z_ORDER, 0) || 0;
             slotData.displayIndex = DataParser.getNumber(slotObject, dragonBones.ConstValues.A_DISPLAY_INDEX, 0);
@@ -13183,7 +13191,10 @@ var dragonBones;
             //NaN:no tween, 10:auto tween, [-1, 0):ease in, 0:line easing, (0, 1]:ease out, (1, 2]:ease in out
             outputFrame.tweenEasing = DataParser.getNumber(frameObject, dragonBones.ConstValues.A_TWEEN_EASING, 10);
             outputFrame.displayIndex = Math.floor(DataParser.getNumber(frameObject, dragonBones.ConstValues.A_DISPLAY_INDEX, 0) || 0);
-            outputFrame.gotoAndPlay = frameObject[dragonBones.ConstValues.A_GOTOANDPLAY];
+            var actions = frameObject[dragonBones.ConstValues.A_ACTIONS];
+            if (actions && actions.length == 1) {
+                outputFrame.gotoAndPlay = actions[0][dragonBones.ConstValues.A_GOTOANDPLAY];
+            }
             //如果为NaN，则说明没有改变过zOrder
             outputFrame.zOrder = DataParser.getNumber(frameObject, dragonBones.ConstValues.A_Z_ORDER, DataParser.tempDragonBonesData.isGlobal ? NaN : 0);
             var colorTransformObject = frameObject[dragonBones.ConstValues.COLOR];
@@ -13814,9 +13825,13 @@ var dragonBones;
          */
         ConstValues.A_FIXED_ROTATION = "fixedRotation";
         /**
-         * 默认动画
+         * 默认动作
          */
-        ConstValues.A_DEFAULT_ANIMATION = "defaultAnimation";
+        ConstValues.A_DEFAULT_ACTIONS = "defaultActions";
+        /**
+         * 动作
+         */
+        ConstValues.A_ACTIONS = "actions";
         /**
          * 播放子骨架的动画
          */

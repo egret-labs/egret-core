@@ -1197,7 +1197,7 @@ declare module RES {
     function hasRes(key: string): boolean;
     /**
      * @language en_US
-     * Run time dynamic analysis of a configuration file.
+     * parse a configuration file at run time，it will not clean the exist data.
      * @param data Configuration file data, please refer to the resource.json configuration file format. JSON object can be introduced into the corresponding.
      * @param folder Path prefix for load.
      * @see #setMaxRetryTimes
@@ -1206,7 +1206,7 @@ declare module RES {
      */
     /**
      * @language zh_CN
-     * 运行时动态解析一个配置文件。
+     * 运行时动态解析一个配置文件,此操作不会清空之前已存在的配置。
      * @param data 配置文件数据，请参考 resource.json 的配置文件格式。传入对应的 json 对象即可。
      * @param folder 加载项的路径前缀。
      * @see #setMaxRetryTimes

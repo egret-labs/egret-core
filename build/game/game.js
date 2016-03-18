@@ -249,7 +249,7 @@ var egret;
              */
             this.lastTime = 0;
             this.$smoothing = egret.Bitmap.defaultSmoothing;
-            this.$renderRegion = new egret.sys.Region();
+            this.$renderNode = new egret.sys.BitmapNode();
             this.setMovieClipData(movieClipData);
         }
         var d = __define,c=MovieClip,p=c.prototype;
@@ -322,17 +322,18 @@ var egret;
         /**
          * @private
          */
-        p.$render = function (context) {
+        p.$render = function () {
             var texture = this.$bitmapData;
             if (texture) {
-                context.imageSmoothingEnabled = this.$smoothing;
                 var offsetX = Math.round(this.offsetPoint.x);
                 var offsetY = Math.round(this.offsetPoint.y);
                 var bitmapWidth = texture._bitmapWidth;
                 var bitmapHeight = texture._bitmapHeight;
+                var textureWidth = texture.$getTextureWidth();
+                var textureHeight = texture.$getTextureHeight();
                 var destW = Math.round(texture.$getScaleBitmapWidth());
                 var destH = Math.round(texture.$getScaleBitmapHeight());
-                context.drawImage(texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, destW, destH);
+                egret.Bitmap.$drawImage(this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, null, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         };
         /**
