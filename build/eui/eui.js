@@ -13137,16 +13137,6 @@ var eui;
             if (!canScroll) {
                 return;
             }
-            var target = event.target;
-            while (target && target != this) {
-                if (target instanceof Scroller) {
-                    canScroll = target.checkScrollPolicy();
-                    if (canScroll) {
-                        return;
-                    }
-                }
-                target = target.$parent;
-            }
             this.onTouchBegin(event);
         };
         /**
@@ -13241,8 +13231,9 @@ var eui;
                 values[9 /* touchScrollV */].start(event.$stageY);
             }
             var stage = this.$stage;
-            stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
+            this.addEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, this);
             this.addEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         };
         /**
@@ -13251,15 +13242,35 @@ var eui;
          * @param event
          */
         p.onTouchMove = function (event) {
+            if (event.isDefaultPrevented()) {
+                return;
+            }
             var values = this.$Scroller;
             if (!values[5 /* touchMoved */]) {
-                if (Math.abs(values[3 /* touchStartX */] - event.$stageX) < Scroller.scrollThreshold &&
-                    Math.abs(values[4 /* touchStartY */] - event.$stageY) < Scroller.scrollThreshold) {
+                if (Math.abs(values[3 /* touchStartX */] - event.$stageX) < Scroller.scrollThreshold) {
+                    var outX = false;
+                }
+                else {
+                    outX = true;
+                }
+                if (Math.abs(values[4 /* touchStartY */] - event.$stageY) < Scroller.scrollThreshold) {
+                    var outY = false;
+                }
+                else {
+                    outY = true;
+                }
+                if (!outX && !outY) {
+                    return;
+                }
+                if (outX && values[1 /* scrollPolicyH */] == 'off') {
+                    return;
+                }
+                if (outY && values[0 /* scrollPolicyV */] == 'off') {
                     return;
                 }
                 values[12 /* touchCancle */] = true;
-                this.dispatchCancelEvent(event);
                 values[5 /* touchMoved */] = true;
+                this.dispatchCancelEvent(event);
                 var horizontalBar = this.horizontalScrollBar;
                 var verticalBar = this.verticalScrollBar;
                 if (horizontalBar && horizontalBar.autoVisibility && values[6 /* horizontalCanScroll */]) {
@@ -13272,7 +13283,9 @@ var eui;
                     values[2 /* autoHideTimer */].reset();
                 }
                 eui.UIEvent.dispatchUIEvent(this, eui.UIEvent.CHANGE_START);
+                this.$stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             }
+            event.preventDefault();
             var viewport = values[10 /* viewport */];
             var uiValues = viewport.$UIComponent;
             if (values[6 /* horizontalCanScroll */]) {
@@ -13280,6 +13293,15 @@ var eui;
             }
             if (values[7 /* verticalCanScroll */]) {
                 values[9 /* touchScrollV */].update(event.$stageY, viewport.contentHeight - uiValues[11 /* height */], viewport.scrollV);
+            }
+        };
+        /**
+         * @private
+         * @param event
+         */
+        p.onTouchCancel = function (event) {
+            if (!this.$Scroller[5 /* touchMoved */]) {
+                this.onRemoveListeners();
             }
         };
         /**
@@ -13330,8 +13352,10 @@ var eui;
          */
         p.onRemoveListeners = function () {
             var stage = this.$stage;
-            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
             stage.removeEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this, true);
+            stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this);
+            this.removeEventListener(egret.TouchEvent.TOUCH_CANCEL, this.onTouchCancel, true);
             this.removeEventListener(egret.Event.REMOVED_FROM_STAGE, this.onRemoveListeners, this);
         };
         /**

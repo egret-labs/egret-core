@@ -194,8 +194,8 @@ module egret.web {
         /**
          * 获取指定坐标的像素
          */
-        public getPixel(x:number, y:number):Uint8ClampedArray {
-            return this.context.getImageData(x, y, 1, 1).data;
+        public getPixel(x:number, y:number):number[] {
+            return <number[]><any>this.context.getImageData(x, y, 1, 1).data;
         }
 
         /**

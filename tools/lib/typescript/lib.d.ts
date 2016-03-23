@@ -5154,7 +5154,8 @@ interface CanvasRenderingContext2D {
     lineWidth: number;
     miterLimit: number;
     msFillRule: string;
-    msImageSmoothingEnabled: boolean;
+    imageSmoothingEnabled: boolean;
+    $imageSmoothingEnabled: boolean;
     shadowBlur: number;
     shadowColor: string;
     shadowOffsetX: number;

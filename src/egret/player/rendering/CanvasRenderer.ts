@@ -416,18 +416,30 @@ module egret {
             }
         }
 
+
         /**
          * @private
          */
         private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):void {
             var image = node.image;
-            context["imageSmoothingEnabled"] = node.smoothing;
+            if (context.$imageSmoothingEnabled != node.smoothing) {
+                context.imageSmoothingEnabled = node.smoothing;
+                context.$imageSmoothingEnabled = node.smoothing;
+            }
             var data = node.drawData;
             var length = data.length;
             var pos = 0;
+            var m = node.matrix;
+            if (m) {
+                context.save();
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+
+            }
             while (pos < length) {
-                context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++],
-                    data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+            }
+            if(m) {
+                context.restore();
             }
         }
 

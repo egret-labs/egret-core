@@ -47,6 +47,8 @@ module egret.sys {
          * 控制在缩放时是否对位图进行平滑处理。
          */
         public smoothing:boolean = true;
+
+        public matrix:egret.Matrix;
         /**
          * 绘制一次位图
          */
@@ -62,6 +64,7 @@ module egret.sys {
         public cleanBeforeRender():void{
             super.cleanBeforeRender();
             this.image = null;
+            this.matrix = null;
         }
     }
 }
