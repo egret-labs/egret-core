@@ -1567,6 +1567,12 @@ var egret;
         );
         /**
          * @private
+         */
+        p.$getAnchorOffsetX = function () {
+            return this.$DisplayObject[12 /* anchorOffsetX */];
+        };
+        /**
+         * @private
          *
          * @param value
          * @returns
@@ -1602,6 +1608,12 @@ var egret;
                 this.$setAnchorOffsetY(value);
             }
         );
+        /**
+         * @private
+         */
+        p.$getAnchorOffsetY = function () {
+            return this.$DisplayObject[13 /* anchorOffsetY */];
+        };
         /**
          * @private
          *
@@ -14431,6 +14443,7 @@ var egret;
             p.cleanBeforeRender = function () {
                 _super.prototype.cleanBeforeRender.call(this);
                 this.image = null;
+                this.matrix = null;
             };
             return BitmapNode;
         }(sys.RenderNode));
@@ -15730,12 +15743,23 @@ var egret;
          */
         p.renderBitmap = function (node, context) {
             var image = node.image;
-            context["imageSmoothingEnabled"] = node.smoothing;
+            if (context.$imageSmoothingEnabled != node.smoothing) {
+                context.imageSmoothingEnabled = node.smoothing;
+                context.$imageSmoothingEnabled = node.smoothing;
+            }
             var data = node.drawData;
             var length = data.length;
             var pos = 0;
+            var m = node.matrix;
+            if (m) {
+                context.save();
+                context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
             while (pos < length) {
                 context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+            }
+            if (m) {
+                context.restore();
             }
         };
         /**

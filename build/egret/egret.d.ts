@@ -901,6 +901,10 @@ declare module egret {
         anchorOffsetX: number;
         /**
          * @private
+         */
+        $getAnchorOffsetX(): boolean;
+        /**
+         * @private
          *
          * @param value
          * @returns
@@ -921,6 +925,10 @@ declare module egret {
          * @platform Web,Native
          */
         anchorOffsetY: number;
+        /**
+         * @private
+         */
+        $getAnchorOffsetY(): boolean;
         /**
          * @private
          *
@@ -9740,6 +9748,7 @@ declare module egret.sys {
          * 控制在缩放时是否对位图进行平滑处理。
          */
         smoothing: boolean;
+        matrix: egret.Matrix;
         /**
          * 绘制一次位图
          */
