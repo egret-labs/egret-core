@@ -2058,7 +2058,7 @@ module egret {
                 var m = this.$getInvertedConcatenatedMatrix();
                 var localX = m.a * x + m.c * y + m.tx;
                 var localY = m.b * x + m.d * y + m.ty;
-                var data:Uint8ClampedArray;
+                var data:number[];
                 var displayList = this.$displayList;
                 if (displayList) {
                     var buffer = displayList.renderBuffer;

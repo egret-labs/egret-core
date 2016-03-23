@@ -261,7 +261,7 @@ module egret {
          * @version Egret 2.4
          * @platform Web
          */
-        public getPixel32(x:number, y:number):Uint8ClampedArray {
+        public getPixel32(x:number, y:number):number[] {
             throw new Error();
         }
 

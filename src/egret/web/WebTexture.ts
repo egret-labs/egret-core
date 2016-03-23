@@ -99,7 +99,7 @@ module egret.web {
         aLink.dispatchEvent(evt);
     }
 
-    function getPixel32(x:number, y:number):Uint8ClampedArray {
+    function getPixel32(x:number, y:number):number[] {
         var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
         buffer.resize(3, 3);
         var context = buffer.context;
@@ -116,7 +116,7 @@ module egret.web {
             console.log(this);
             throw new Error(sys.tr(1039));
         }
-        return data;
+        return <number[]><any>data;
     }
 
     Texture.prototype.toDataURL = toDataURL;

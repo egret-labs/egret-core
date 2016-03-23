@@ -3128,7 +3128,7 @@ declare module egret {
          * @version Egret 2.4
          * @platform Web
          */
-        getPixel32(x: number, y: number): Uint8ClampedArray;
+        getPixel32(x: number, y: number): number[];
         /**
          * @language en_US
          * Convert base64 string, if the picture (or pictures included) cross-border or null
@@ -3227,7 +3227,7 @@ declare module egret {
          * @platform Web,Native
          */
         drawToTexture(displayObject: egret.DisplayObject, clipBounds?: Rectangle, scale?: number): boolean;
-        getPixel32(x: number, y: number): Uint8ClampedArray;
+        getPixel32(x: number, y: number): number[];
         dispose(): void;
     }
 }
@@ -9210,7 +9210,7 @@ declare module egret.sys {
         /**
          * 获取指定坐标的像素
          */
-        getPixel(x: number, y: number): Uint8ClampedArray;
+        getPixel(x: number, y: number): number[];
         /**
          * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
          * @param type 转换的类型，如: "image/png","image/jpeg"

@@ -111,8 +111,8 @@ module egret {
             return true;
         }
 
-        public getPixel32(x:number, y:number):Uint8ClampedArray {
-            var data:Uint8ClampedArray;
+        public getPixel32(x:number, y:number):number[] {
+            var data:number[];
             if (this.renderBuffer) {
                 var scale = $TextureScaleFactor;
                 x = Math.round(x / scale);

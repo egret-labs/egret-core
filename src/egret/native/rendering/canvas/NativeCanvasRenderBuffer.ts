@@ -151,7 +151,7 @@ module egret.native {
         /**
          * 获取指定坐标的像素
          */
-        public getPixel(x:number, y:number):Uint8ClampedArray {
+        public getPixel(x:number, y:number):number[] {
             return this.context.getImageData(x, y, 1, 1).data;
         }
 
