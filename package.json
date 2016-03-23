@@ -295,7 +295,7 @@
         "dependencies": [ "egret" ]
       },
       {
-        "name": "dragonbones",
+        "name": "dragonBones",
         "description": "dragonbones",
         "files": [ ],
         "root": "src/extension/dragonbones",

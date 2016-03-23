@@ -1108,6 +1108,13 @@ module egret {
             return this.$DisplayObject[Keys.anchorOffsetX];
         }
 
+        /**
+         * @private
+         */
+        $getAnchorOffsetX():boolean {
+            return this.$DisplayObject[Keys.anchorOffsetX];
+        }
+
         public set anchorOffsetX(value:number) {
             this.$setAnchorOffsetX(value);
         }
@@ -1143,6 +1150,13 @@ module egret {
          * @platform Web,Native
          */
         public get anchorOffsetY():number {
+            return this.$DisplayObject[Keys.anchorOffsetY];
+        }
+
+        /**
+         * @private
+         */
+        $getAnchorOffsetY():boolean {
             return this.$DisplayObject[Keys.anchorOffsetY];
         }
 
