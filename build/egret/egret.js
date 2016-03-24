@@ -15490,7 +15490,7 @@ var egret;
                         continue;
                     }
                     if ((child.$blendMode !== 0 ||
-                        (child.$mask && child.$mask.$parentDisplayList))) {
+                        (child.$mask && (child.$mask.$parentDisplayList || root)))) {
                         drawCalls += this.drawWithClip(child, context, dirtyList, matrix, clipRegion, root);
                     }
                     else if (child.$scrollRect || child.$maskRect) {
@@ -15522,17 +15522,19 @@ var egret;
             }
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
-            if (mask && !mask.$parentDisplayList) {
-                mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
-            }
+            //if (mask && !mask.$parentDisplayList) {
+            //    mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
+            //}
             //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
             var maskRegion;
             var displayMatrix = egret.Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            var displayRoot = displayObject.$parentDisplayList.root;
-            var invertedMatrix;
-            if (displayRoot !== displayObject.$stage) {
-                displayObject.$getConcatenatedMatrixAt(displayRoot, displayMatrix);
+            if (displayObject.$parentDisplayList) {
+                var displayRoot = displayObject.$parentDisplayList.root;
+                var invertedMatrix;
+                if (displayRoot !== displayObject.$stage) {
+                    displayObject.$getConcatenatedMatrixAt(displayRoot, displayMatrix);
+                }
             }
             if (mask) {
                 var bounds = mask.$getOriginalBounds();
@@ -15570,11 +15572,16 @@ var egret;
                 region.updateRegion(bounds, displayMatrix);
             }
             var found = false;
-            var l = dirtyList.length;
-            for (var j = 0; j < l; j++) {
-                if (region.intersects(dirtyList[j])) {
-                    found = true;
-                    break;
+            if (!dirtyList) {
+                found = true;
+            }
+            else {
+                var l = dirtyList.length;
+                for (var j = 0; j < l; j++) {
+                    if (region.intersects(dirtyList[j])) {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if (!found) {
@@ -15663,9 +15670,11 @@ var egret;
             }
             var m = egret.Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
-            var displayRoot = displayObject.$parentDisplayList.root;
-            if (displayRoot !== displayObject.$stage) {
-                displayObject.$getConcatenatedMatrixAt(displayRoot, m);
+            if (displayObject.$parentDisplayList) {
+                var displayRoot = displayObject.$parentDisplayList.root;
+                if (displayRoot !== displayObject.$stage) {
+                    displayObject.$getConcatenatedMatrixAt(displayRoot, m);
+                }
             }
             var region = egret.sys.Region.create();
             if (!scrollRect.isEmpty()) {
@@ -15677,11 +15686,16 @@ var egret;
                 return drawCalls;
             }
             var found = false;
-            var l = dirtyList.length;
-            for (var j = 0; j < l; j++) {
-                if (region.intersects(dirtyList[j])) {
-                    found = true;
-                    break;
+            if (!dirtyList) {
+                found = true;
+            }
+            else {
+                var l = dirtyList.length;
+                for (var j = 0; j < l; j++) {
+                    if (region.intersects(dirtyList[j])) {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if (!found) {
