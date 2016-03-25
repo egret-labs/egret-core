@@ -112,7 +112,6 @@ module egret {
                     node.needRedraw = true;
                 }
                 if (node.needRedraw) {
-                    drawCalls++;
                     var renderAlpha:number;
                     var m:Matrix;
                     if (root) {
@@ -129,7 +128,7 @@ module egret {
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
                     context.globalAlpha = renderAlpha;
-                    this.renderNode(node, context);
+                    drawCalls += this.renderNode(node, context);
                     node.needRedraw = false;
                 }
             }
@@ -407,10 +406,11 @@ module egret {
         /**
          * @private
          */
-        private renderNode(node:sys.RenderNode, context:any, forHitTest?:boolean):void {
+        private renderNode(node:sys.RenderNode, context:any, forHitTest?:boolean):number {
+            var drawCalls = 1;
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
-                    this.renderBitmap(<sys.BitmapNode>node, context);
+                    drawCalls = this.renderBitmap(<sys.BitmapNode>node, context);
                     break;
                 case sys.RenderNodeType.TextNode:
                     this.renderText(<sys.TextNode>node, context);
@@ -419,7 +419,7 @@ module egret {
                     this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
                     break;
                 case sys.RenderNodeType.GroupNode:
-                    this.renderGroup(<sys.GroupNode>node, context);
+                    drawCalls = this.renderGroup(<sys.GroupNode>node, context);
                     break;
                 case sys.RenderNodeType.SetTransformNode:
                     context.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
@@ -428,13 +428,14 @@ module egret {
                     context.globalAlpha = node.drawData[0];
                     break;
             }
+            return drawCalls;
         }
 
 
         /**
          * @private
          */
-        private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):void {
+        private renderBitmap(node:sys.BitmapNode, context:CanvasRenderingContext2D):number {
             var image = node.image;
             if (context.$imageSmoothingEnabled != node.smoothing) {
                 context.imageSmoothingEnabled = node.smoothing;
@@ -449,12 +450,15 @@ module egret {
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
 
             }
+            var drawCalls:number = 0;
             while (pos < length) {
+                drawCalls++;
                 context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
             if(m) {
                 context.restore();
             }
+            return drawCalls;
         }
 
         /**
@@ -561,13 +565,15 @@ module egret {
         }
 
 
-        private renderGroup(groupNode:sys.GroupNode, context:CanvasRenderingContext2D):void {
+        private renderGroup(groupNode:sys.GroupNode, context:CanvasRenderingContext2D):number {
+            var drawCalls:number = 0;
             var children = groupNode.drawData;
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var node:sys.RenderNode = children[i];
-                this.renderNode(node, context);
+                drawCalls += this.renderNode(node, context);
             }
+            return drawCalls;
         }
 
         /**
