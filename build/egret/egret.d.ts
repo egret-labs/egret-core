@@ -2843,6 +2843,9 @@ declare module egret {
          * @private
          */
         private maxY;
+        /**
+         * @private
+         */
         private extendBoundsByPoint(x, y);
         /**
          * @private
@@ -2853,11 +2856,16 @@ declare module egret {
          */
         private extendBoundsByY(y);
         /**
+         * @private
+         */
+        private updateNodeBounds();
+        /**
          * 是否已经包含上一次moveTo的坐标点
          */
         private includeLastPosition;
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
+         * @private
          */
         private updatePosition(x, y);
         /**
@@ -9767,6 +9775,22 @@ declare module egret.sys {
     class GraphicsNode extends RenderNode {
         constructor();
         /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
+        /**
          * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
          * @param color 填充的颜色
          * @param alpha 填充的 Alpha 值
@@ -9917,6 +9941,22 @@ declare module egret.sys {
          * 字体名称
          */
         fontFamily: string;
+        /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
         /**
          * 绘制一行文本
          */
@@ -12493,6 +12533,7 @@ declare module egret {
          */
         $invalidateTextField(): void;
         $update(bounds?: Rectangle): boolean;
+        $getRenderBounds(): Rectangle;
         /**
          * @private
          */

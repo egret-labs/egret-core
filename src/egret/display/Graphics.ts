@@ -677,6 +677,9 @@ module egret {
          */
         private maxY:number = -Infinity;
 
+        /**
+         * @private
+         */
         private extendBoundsByPoint(x:number, y:number):void {
             this.extendBoundsByX(x);
             this.extendBoundsByY(y);
@@ -700,6 +703,9 @@ module egret {
             this.updateNodeBounds();
         }
 
+        /**
+         * @private
+         */
         private updateNodeBounds():void {
             var node = this.$renderNode;
             node.x = this.minX;
@@ -715,6 +721,7 @@ module egret {
 
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
+         * @private
          */
         private updatePosition(x:number, y:number):void {
             if (!this.includeLastPosition) {

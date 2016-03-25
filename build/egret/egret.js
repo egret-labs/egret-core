@@ -5205,6 +5205,9 @@ var egret;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
         };
+        /**
+         * @private
+         */
         p.extendBoundsByPoint = function (x, y) {
             this.extendBoundsByX(x);
             this.extendBoundsByY(y);
@@ -5215,6 +5218,7 @@ var egret;
         p.extendBoundsByX = function (x) {
             this.minX = Math.min(this.minX, x - this.topLeftStrokeWidth);
             this.maxX = Math.max(this.maxX, x + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
         };
         /**
          * @private
@@ -5222,9 +5226,21 @@ var egret;
         p.extendBoundsByY = function (y) {
             this.minY = Math.min(this.minY, y - this.topLeftStrokeWidth);
             this.maxY = Math.max(this.maxY, y + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
+        };
+        /**
+         * @private
+         */
+        p.updateNodeBounds = function () {
+            var node = this.$renderNode;
+            node.x = this.minX;
+            node.y = this.minY;
+            node.width = this.maxX - this.minX;
+            node.height = this.maxY - this.minY;
         };
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
+         * @private
          */
         p.updatePosition = function (x, y) {
             if (!this.includeLastPosition) {
@@ -19006,6 +19022,12 @@ var egret;
             this.$TextField[18 /* textLinesChanged */] = true;
         };
         p.$update = function (bounds) {
+            var tmpBounds = this.$getRenderBounds();
+            var result = _super.prototype.$update.call(this, tmpBounds);
+            egret.Rectangle.release(tmpBounds);
+            return result;
+        };
+        p.$getRenderBounds = function () {
             var bounds = this.$getContentBounds();
             var tmpBounds = egret.Rectangle.create();
             tmpBounds.copyFrom(bounds);
@@ -19022,9 +19044,7 @@ var egret;
             tmpBounds.y -= _strokeDouble + 2;
             tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
             tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
-            var result = _super.prototype.$update.call(this, tmpBounds);
-            egret.Rectangle.release(tmpBounds);
-            return result;
+            return tmpBounds;
         };
         /**
          * @private
@@ -19054,6 +19074,13 @@ var egret;
             }
             var underLines = this.drawText();
             this.fillBackground(underLines);
+            var bounds = this.$getRenderBounds();
+            var node = this.textNode;
+            node.x = bounds.x;
+            node.y = bounds.y;
+            node.width = bounds.width;
+            node.height = bounds.height;
+            egret.Rectangle.release(bounds);
         };
         d(p, "textFlow"
             /**
