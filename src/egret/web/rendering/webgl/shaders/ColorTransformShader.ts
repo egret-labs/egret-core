@@ -26,79 +26,40 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
-module egret.sys {
-
+module egret.web {
     /**
      * @private
-     * 文本渲染节点
      */
-    export class TextNode extends RenderNode {
+    export class ColorTransformShader extends EgretShader {
+        public fragmentSrc =
+            "precision mediump float;\n" +
+            "varying vec2 vTextureCoord;\n" +
+            "varying vec4 vColor;\n" +
+            "uniform float invert;\n" +
+            "uniform mat4 matrix;\n" +
+            "uniform vec4 colorAdd;\n" +
+            "uniform sampler2D uSampler;\n" +
 
-        public constructor() {
-            super();
-            this.type = RenderNodeType.TextNode;
-        }
+            "void main(void) {\n" +
+                "vec4 texColor = texture2D(uSampler, vTextureCoord);\n" +
+                "vec4 locColor = texColor * matrix;\n" +
+                "if(texColor.a != 0.0){\n" +
+                    "locColor += colorAdd;\n" +
+                "}\n" +
+                "gl_FragColor = vColor*vec4(locColor.rgb*locColor.a,locColor.a);\n" +
+            "}";
 
-        /**
-         * 颜色值
-         */
-        public textColor:number = 0xFFFFFF;
-        /**
-         * 描边颜色值
-         */
-        public strokeColor:number = 0x000000;
-        /**
-         * 字号
-         */
-        public size:number = 30;
-        /**
-         * 描边大小
-         */
-        public stroke:number = 0;
-        /**
-         * 是否加粗
-         */
-        public bold:boolean = false;
-        /**
-         * 是否倾斜
-         */
-        public italic:boolean = false;
-        /**
-         * 字体名称
-         */
-        public fontFamily:string = "Arial";
+        public uniforms = {
+            matrix: {type: 'mat4', value: [1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1]},
+            colorAdd: {type: '4f', value: {x: 0, y: 0, z: 0, w: 0}}
+        };
 
-        /**
-         * 绘制x偏移
-         */
-        public x:number;
-        /**
-         * 绘制y偏移
-         */
-        public y:number;
-        /**
-         * 绘制宽度
-         */
-        public width:number;
-        /**
-         * 绘制高度
-         */
-        public height:number;
-
-        /**
-         * 绘制一行文本
-         */
-        public drawText(x:number, y:number, text:string, format:TextFormat):void {
-            this.drawData.push(x, y, text, format);
-            this.renderCount++;
-        }
-
-        /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
-         */
-        public cleanBeforeRender():void{
-            super.cleanBeforeRender();
+        constructor(gl:WebGLRenderingContext) {
+            super(gl);
+            this.init();
         }
     }
 }

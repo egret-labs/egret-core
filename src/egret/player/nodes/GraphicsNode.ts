@@ -43,6 +43,23 @@ module egret.sys {
         }
 
         /**
+         * 绘制x偏移
+         */
+        public x:number;
+        /**
+         * 绘制y偏移
+         */
+        public y:number;
+        /**
+         * 绘制宽度
+         */
+        public width:number;
+        /**
+         * 绘制高度
+         */
+        public height:number;
+
+        /**
          * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
          * @param color 填充的颜色
          * @param alpha 填充的 Alpha 值

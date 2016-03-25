@@ -85,10 +85,10 @@ module egret.web {
      * @param renderMode
      */
     function setRenderMode(renderMode:string):void{
-
-        sys.RenderBuffer = web.CanvasRenderBuffer;
-        sys.systemRenderer = new CanvasRenderer();
-
+        //sys.RenderBuffer = web.CanvasRenderBuffer;
+        //sys.systemRenderer = new CanvasRenderer();
+        sys.RenderBuffer = web.WebGLRenderBuffer;
+        sys.systemRenderer = new WebGLRenderer();
     }
 
     /**

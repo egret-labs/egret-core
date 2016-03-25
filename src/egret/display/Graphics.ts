@@ -688,6 +688,7 @@ module egret {
         private extendBoundsByX(x:number):void {
             this.minX = Math.min(this.minX, x - this.topLeftStrokeWidth);
             this.maxX = Math.max(this.maxX, x + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
         }
 
         /**
@@ -696,6 +697,15 @@ module egret {
         private extendBoundsByY(y:number):void {
             this.minY = Math.min(this.minY, y - this.topLeftStrokeWidth);
             this.maxY = Math.max(this.maxY, y + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
+        }
+
+        private updateNodeBounds():void {
+            var node = this.$renderNode;
+            node.x = this.minX;
+            node.y = this.minY;
+            node.width = this.maxX - this.minX;
+            node.height = this.maxY - this.minY;
         }
 
         /**
