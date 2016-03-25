@@ -15457,7 +15457,6 @@ var egret;
                     node.needRedraw = true;
                 }
                 if (node.needRedraw) {
-                    drawCalls++;
                     var renderAlpha;
                     var m;
                     if (root) {
@@ -15474,7 +15473,7 @@ var egret;
                         context.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
                     context.globalAlpha = renderAlpha;
-                    this.renderNode(node, context);
+                    drawCalls += this.renderNode(node, context);
                     node.needRedraw = false;
                 }
             }
@@ -15490,7 +15489,7 @@ var egret;
                         continue;
                     }
                     if ((child.$blendMode !== 0 ||
-                        (child.$mask && child.$mask.$parentDisplayList))) {
+                        (child.$mask && (child.$mask.$parentDisplayList || root)))) {
                         drawCalls += this.drawWithClip(child, context, dirtyList, matrix, clipRegion, root);
                     }
                     else if (child.$scrollRect || child.$maskRect) {
@@ -15522,17 +15521,19 @@ var egret;
             }
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
-            if (mask && !mask.$parentDisplayList) {
-                mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
-            }
+            //if (mask && !mask.$parentDisplayList) {
+            //    mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
+            //}
             //计算scrollRect和mask的clip区域是否需要绘制，不需要就直接返回，跳过所有子项的遍历。
             var maskRegion;
             var displayMatrix = egret.Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            var displayRoot = displayObject.$parentDisplayList.root;
-            var invertedMatrix;
-            if (displayRoot !== displayObject.$stage) {
-                displayObject.$getConcatenatedMatrixAt(displayRoot, displayMatrix);
+            if (displayObject.$parentDisplayList) {
+                var displayRoot = displayObject.$parentDisplayList.root;
+                var invertedMatrix;
+                if (displayRoot !== displayObject.$stage) {
+                    displayObject.$getConcatenatedMatrixAt(displayRoot, displayMatrix);
+                }
             }
             if (mask) {
                 var bounds = mask.$getOriginalBounds();
@@ -15570,11 +15571,16 @@ var egret;
                 region.updateRegion(bounds, displayMatrix);
             }
             var found = false;
-            var l = dirtyList.length;
-            for (var j = 0; j < l; j++) {
-                if (region.intersects(dirtyList[j])) {
-                    found = true;
-                    break;
+            if (!dirtyList) {
+                found = true;
+            }
+            else {
+                var l = dirtyList.length;
+                for (var j = 0; j < l; j++) {
+                    if (region.intersects(dirtyList[j])) {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if (!found) {
@@ -15663,9 +15669,11 @@ var egret;
             }
             var m = egret.Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
-            var displayRoot = displayObject.$parentDisplayList.root;
-            if (displayRoot !== displayObject.$stage) {
-                displayObject.$getConcatenatedMatrixAt(displayRoot, m);
+            if (displayObject.$parentDisplayList) {
+                var displayRoot = displayObject.$parentDisplayList.root;
+                if (displayRoot !== displayObject.$stage) {
+                    displayObject.$getConcatenatedMatrixAt(displayRoot, m);
+                }
             }
             var region = egret.sys.Region.create();
             if (!scrollRect.isEmpty()) {
@@ -15677,11 +15685,16 @@ var egret;
                 return drawCalls;
             }
             var found = false;
-            var l = dirtyList.length;
-            for (var j = 0; j < l; j++) {
-                if (region.intersects(dirtyList[j])) {
-                    found = true;
-                    break;
+            if (!dirtyList) {
+                found = true;
+            }
+            else {
+                var l = dirtyList.length;
+                for (var j = 0; j < l; j++) {
+                    if (region.intersects(dirtyList[j])) {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if (!found) {
@@ -15717,9 +15730,10 @@ var egret;
          * @private
          */
         p.renderNode = function (node, context, forHitTest) {
+            var drawCalls = 1;
             switch (node.type) {
                 case 1 /* BitmapNode */:
-                    this.renderBitmap(node, context);
+                    drawCalls = this.renderBitmap(node, context);
                     break;
                 case 2 /* TextNode */:
                     this.renderText(node, context);
@@ -15728,7 +15742,7 @@ var egret;
                     this.renderGraphics(node, context, forHitTest);
                     break;
                 case 4 /* GroupNode */:
-                    this.renderGroup(node, context);
+                    drawCalls = this.renderGroup(node, context);
                     break;
                 case 5 /* SetTransformNode */:
                     context.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
@@ -15737,6 +15751,7 @@ var egret;
                     context.globalAlpha = node.drawData[0];
                     break;
             }
+            return drawCalls;
         };
         /**
          * @private
@@ -15755,12 +15770,15 @@ var egret;
                 context.save();
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
+            var drawCalls = 0;
             while (pos < length) {
+                drawCalls++;
                 context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
             if (m) {
                 context.restore();
             }
+            return drawCalls;
         };
         /**
          * @private
@@ -15863,12 +15881,14 @@ var egret;
             }
         };
         p.renderGroup = function (groupNode, context) {
+            var drawCalls = 0;
             var children = groupNode.drawData;
             var length = children.length;
             for (var i = 0; i < length; i++) {
                 var node = children[i];
-                this.renderNode(node, context);
+                drawCalls += this.renderNode(node, context);
             }
+            return drawCalls;
         };
         /**
          * @private
