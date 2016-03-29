@@ -36,7 +36,7 @@ module egret.web {
     var renderBufferPool:WebGLRenderBuffer[] = [];//渲染缓冲区对象池
     /**
      * @private
-     * Canvas渲染器
+     * WebGL渲染器
      */
     export class WebGLRenderer implements sys.SystemRenderer {
 
@@ -130,7 +130,7 @@ module egret.web {
                         m = node.renderMatrix;
                         buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                     }
-                    buffer.globalAlpha = renderAlpha;
+                    buffer.setGlobalAlpha(renderAlpha);
                     this.renderNode(node, buffer);
                     node.needRedraw = false;
                 }
@@ -280,7 +280,7 @@ module egret.web {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 var maskRenderNode = mask.$getRenderNode();
                 if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
-                    displayBuffer.globalCompositeOperation = "destination-in";
+                    displayBuffer.setGlobalCompositeOperation("destination-in");
                     drawCalls += this.drawDisplayObject(mask, displayBuffer, dirtyList, offsetM,
                         mask.$displayList, region, root ? mask : null);
                 }
@@ -303,9 +303,11 @@ module egret.web {
                     Matrix.release(offsetM);
                     if (calls > 0) {
                         drawCalls += calls;
-                        displayBuffer.globalCompositeOperation = "destination-in";
+                        displayBuffer.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
-                        displayBuffer.globalAlpha = 1;
+                        displayBuffer.setGlobalAlpha(1);
+                        maskBuffer.onRenderFinish();
+                        WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
                         displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
                             0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
                     }
@@ -318,15 +320,16 @@ module egret.web {
             if (drawCalls > 0) {
                 drawCalls++;
                 if (hasBlendMode) {
-                    buffer.globalCompositeOperation = compositeOp;
+                    buffer.setGlobalCompositeOperation(compositeOp);
                 }
-                buffer.globalAlpha = 1;
+                buffer.setGlobalAlpha(1);
                 buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
-                buffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
-                    0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
-
+                displayBuffer.onRenderFinish();
+                WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
+                buffer.drawImage(<any>displayBuffer.surface, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height,
+                    0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
                 if (hasBlendMode) {
-                    buffer.globalCompositeOperation = defaultCompositeOp;
+                    buffer.setGlobalCompositeOperation(defaultCompositeOp);
                 }
             }
             renderBufferPool.push(displayBuffer);
@@ -426,7 +429,7 @@ module egret.web {
                     buffer.setTransform(node.drawData[0], node.drawData[1], node.drawData[2], node.drawData[3], node.drawData[4], node.drawData[5]);
                     break;
                 case sys.RenderNodeType.SetAlphaNode:
-                    buffer.globalAlpha = node.drawData[0];
+                    buffer.setGlobalAlpha(node.drawData[0]);
                     break;
             }
         }
@@ -455,61 +458,88 @@ module egret.web {
             }
         }
 
-        private canvasRenderer:CanvasRenderer;
-        private canvasRenderBuffer:CanvasRenderBuffer;
+        //private canvasRenderer:CanvasRenderer;
+        //private canvasRenderBuffer:CanvasRenderBuffer;
 
         /**
          * @private
          */
         private renderText(node:sys.TextNode, buffer:WebGLRenderBuffer):void {
+            //优化,使用同一个canvas
             var width = node.width - node.x;
             var height = node.height - node.y;
-            if (!this.canvasRenderer) {
-                this.canvasRenderer = new CanvasRenderer();
-                this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+            if(node.drawData.length == 0) {
+                return;
+            }
+            if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
+                node.$canvasRenderer = new CanvasRenderer();
+                node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
             else {
-                this.canvasRenderBuffer.resize(width, height, true);
+                node.$canvasRenderBuffer.resize(width, height, true);
             }
-            WebGLUtils.deleteWebGLTexture(this.canvasRenderBuffer.surface);
+            if(!node.$canvasRenderBuffer.context) {
+                return;
+            }
             if (node.x || node.y) {
-                this.canvasRenderBuffer.context.translate(-node.x, -node.y);
+                if(node.dirtyRender) {
+                    node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
+                }
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
-            this.canvasRenderer["renderText"](node, this.canvasRenderBuffer.context);
-            buffer.drawImage(<BitmapData><any>this.canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
+            if(node.dirtyRender) {
+                WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
+                node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
+            }
+            buffer.drawImage(<BitmapData><any>node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
             if (node.x || node.y) {
-                this.canvasRenderBuffer.context.translate(node.x, node.y);
+                if(node.dirtyRender) {
+                    node.$canvasRenderBuffer.context.translate(node.x, node.y);
+                }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
             buffer.$drawWebGL();
+            node.dirtyRender = false;
         }
 
         /**
          * @private
          */
         private renderGraphics(node:sys.GraphicsNode, buffer:WebGLRenderBuffer, forHitTest?:boolean):void {
-            var width = node.width - node.x;
-            var height = node.height - node.y;
-            if (!this.canvasRenderer) {
-                this.canvasRenderer = new CanvasRenderer();
-                this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+            var width = node.width;
+            var height = node.height;
+            if(width <= 0 || height <= 0) {
+                return;
+            }
+            if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
+                node.$canvasRenderer = new CanvasRenderer();
+                node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
             else {
-                this.canvasRenderBuffer.resize(width, height, true);
+                node.$canvasRenderBuffer.resize(width, height, true);
             }
-            WebGLUtils.deleteWebGLTexture(this.canvasRenderBuffer.surface);
+            if(!node.$canvasRenderBuffer.context) {
+                return;
+            }
             if (node.x || node.y) {
-                this.canvasRenderBuffer.context.translate(-node.x, -node.y);
+                if(node.dirtyRender) {
+                    node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
+                }
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
-            this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context, forHitTest);
-            buffer.drawImage(<BitmapData><any>this.canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
+            if(node.dirtyRender) {
+                WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
+                node.$canvasRenderer["renderGraphics"](node, node.$canvasRenderBuffer.context, forHitTest);
+            }
+            buffer.drawImage(<BitmapData><any>node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
             if (node.x || node.y) {
-                this.canvasRenderBuffer.context.translate(node.x, node.y);
+                if(node.dirtyRender) {
+                    node.$canvasRenderBuffer.context.translate(node.x, node.y);
+                }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
             buffer.$drawWebGL();
+            node.dirtyRender = false;
         }
 
         private renderGroup(groupNode:sys.GroupNode, buffer:WebGLRenderBuffer):void {

@@ -14509,6 +14509,11 @@ var egret;
             __extends(GraphicsNode, _super);
             function GraphicsNode() {
                 _super.call(this);
+                /**
+                 * 脏渲染标记
+                 * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
+                 */
+                this.dirtyRender = true;
                 this.type = 3 /* GraphicsNode */;
             }
             var d = __define,c=GraphicsNode,p=c.prototype;
@@ -14530,6 +14535,7 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
+                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -14570,6 +14576,7 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
+                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -14598,6 +14605,7 @@ var egret;
                 path.joints = joints;
                 path.miterLimit = miterLimit;
                 this.drawData.push(path);
+                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -14605,6 +14613,7 @@ var egret;
              */
             p.clear = function () {
                 this.drawData.length = 0;
+                this.dirtyRender = true;
             };
             /**
              * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
@@ -14901,6 +14910,10 @@ var egret;
                  * 字体名称
                  */
                 this.fontFamily = "Arial";
+                /**
+                 * 脏渲染标记
+                 */
+                this.dirtyRender = true;
                 this.type = 2 /* TextNode */;
             }
             var d = __define,c=TextNode,p=c.prototype;
@@ -14910,6 +14923,7 @@ var egret;
             p.drawText = function (x, y, text, format) {
                 this.drawData.push(x, y, text, format);
                 this.renderCount++;
+                this.dirtyRender = true;
             };
             /**
              * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。

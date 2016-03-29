@@ -9775,22 +9775,6 @@ declare module egret.sys {
     class GraphicsNode extends RenderNode {
         constructor();
         /**
-         * 绘制x偏移
-         */
-        x: number;
-        /**
-         * 绘制y偏移
-         */
-        y: number;
-        /**
-         * 绘制宽度
-         */
-        width: number;
-        /**
-         * 绘制高度
-         */
-        height: number;
-        /**
          * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
          * @param color 填充的颜色
          * @param alpha 填充的 Alpha 值
@@ -9826,6 +9810,29 @@ declare module egret.sys {
          * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
          */
         cleanBeforeRender(): void;
+        /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
+        /**
+         * 脏渲染标记
+         * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
+         */
+        dirtyRender: boolean;
+        $canvasRenderer: any;
+        $canvasRenderBuffer: any;
     }
 }
 declare module egret.sys {
@@ -9942,6 +9949,14 @@ declare module egret.sys {
          */
         fontFamily: string;
         /**
+         * 绘制一行文本
+         */
+        drawText(x: number, y: number, text: string, format: TextFormat): void;
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        cleanBeforeRender(): void;
+        /**
          * 绘制x偏移
          */
         x: number;
@@ -9958,13 +9973,11 @@ declare module egret.sys {
          */
         height: number;
         /**
-         * 绘制一行文本
+         * 脏渲染标记
          */
-        drawText(x: number, y: number, text: string, format: TextFormat): void;
-        /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
-         */
-        cleanBeforeRender(): void;
+        dirtyRender: boolean;
+        $canvasRenderer: any;
+        $canvasRenderBuffer: any;
     }
 }
 declare module egret.sys {

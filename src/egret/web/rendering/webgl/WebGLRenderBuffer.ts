@@ -138,26 +138,45 @@ module egret.web {
          * @param offsetY 矩形要加上的偏移量y
          */
         public beginClip(regions:sys.Region[], offsetX?:number, offsetY?:number):void {
-            offsetX = +offsetX || 0;
-            offsetY = +offsetY || 0;
-            var context = this.context;
-            //context.save();
-            //context.beginPath();
-            //context.setTransform(1, 0, 0, 1, offsetX, offsetY);
+            //offsetX = +offsetX || 0;
+            //offsetY = +offsetY || 0;
+            ////var context = this.context;
+            //this.setTransform(1, 0, 0, 1, offsetX, offsetY);
             //var length = regions.length;
+            ////只有一个区域且刚好为舞台大小时,不设置模板
+            //if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
+            //    regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
+            //    this.maskPushed = false;
+            //    return;
+            //}
             //for (var i = 0; i < length; i++) {
             //    var region = regions[i];
-            //    context.clearRect(region.minX, region.minY, region.width, region.height);
-            //    context.rect(region.minX, region.minY, region.width, region.height);
+            //    this.clearRect(region.minX, region.minY, region.width, region.height);
             //}
-            //context.clip();
+            //if (length > 0) {
+            //    this.context.viewport(0, 0, this.surface.width, this.surface.height);
+            //    this.pushMask(regions);
+            //    this.maskPushed = true;
+            //    this.offsetX = offsetX;
+            //    this.offsetY = offsetY;
+            //}
+            //else {
+            //    this.maskPushed = false;
+            //}
         }
+
+        private maskPushed:boolean;
+        private offsetX:number;
+        private offsetY:number;
 
         /**
          * 取消上一次设置的clip。
          */
         public endClip():void {
-            //this.context.restore();
+            //if (this.maskPushed) {
+            //    this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
+            //    this.popMask();
+            //}
         }
 
         /**
@@ -179,8 +198,18 @@ module egret.web {
          * 清空缓冲区数据
          */
         public clear():void {
-            //this.context.setTransform(1, 0, 0, 1, 0, 0);
-            //this.context.clearRect(0, 0, this.surface.width, this.surface.height);
+            this.clearRect(0, 0, this.surface.width, this.surface.height);
+        }
+
+        /**
+         * @private
+         */
+        private clearRect(x:number, y:number, width:number, height:number):void {
+            var gl:any = this.context;
+            gl.colorMask(true, true, true, true);
+            gl.viewport(x, y, width, height);
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
         }
 
         /**
@@ -250,12 +279,13 @@ module egret.web {
                 $error(1021);
             }
             this.setContext(gl);
-            this.globalCompositeOperation = "source-over";
+            this.setGlobalCompositeOperation("source-over");
         }
 
         private setContext(gl:any) {
             this.context = gl;
             gl.id = WebGLRenderBuffer.glContextId++;
+            this.glID = gl.id;
             this.vertexBuffer = gl.createBuffer();
             this.indexBuffer = gl.createBuffer();
 
@@ -284,7 +314,7 @@ module egret.web {
             //    for (var i = 0; i < 1; i++) {
             //        var filter:Filter = this.filters[0];
             //        if (filter.type == "glow") {
-            //            this.useGlow(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            //            this.useGlow(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
             //            return;
             //        }
             //    }
@@ -491,13 +521,13 @@ module egret.web {
 
         private _globalAlpha:number = 1;
 
-        public set globalAlpha(value:number) {
+        public setGlobalAlpha(value:number) {
             this._globalAlpha = value;
         }
 
         private currentBlendMode:string;
 
-        public set globalCompositeOperation(value:string) {
+        public setGlobalCompositeOperation(value:string) {
             if (this.currentBlendMode != value) {
                 var blendModeWebGL = WebGLRenderBuffer.blendModesForGL[value];
                 if (blendModeWebGL) {
@@ -508,12 +538,176 @@ module egret.web {
             }
         }
 
-        public pushMask(maskObject:egret.Rectangle):void {
+        private stencilList = [];
 
+        public pushMask(mask):void {
+            //todo 把绘制数据缓存提升性能
+            this.$drawWebGL();
+            var gl = this.context;
+            if (this.stencilList.length === 0) {
+                gl.enable(gl.STENCIL_TEST);
+                gl.clear(gl.STENCIL_BUFFER_BIT);
+            }
+            var level = this.stencilList.length;
+
+            this.stencilList.push(mask);
+
+            gl.colorMask(false, false, false, false);
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+            var length = mask.length;
+            if (length) {
+                for (var i = 0; i < length; i++) {
+                    var item:sys.Region = mask[i];
+                    this.renderGraphics({x: item.minX, y: item.minY, width: item.width, height: item.height});
+                }
+            }
+            else {
+                this.renderGraphics(mask);
+            }
+            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.colorMask(true, true, true, true);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
         }
 
         public popMask():void {
+            this.$drawWebGL();
+            var gl = this.context;
 
+            var mask = this.stencilList.pop();
+
+            if (this.stencilList.length === 0) {
+                gl.disable(gl.STENCIL_TEST);
+            }
+            else {
+                var level = this.stencilList.length;
+                gl.colorMask(false, false, false, false);
+                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+                var length = mask.length;
+                if (length) {
+                    for (var i = 0; i < length; i++) {
+                        var item:sys.Region = mask[i];
+                        this.renderGraphics({x: item.minX, y: item.minY, width: item.width, height: item.height});
+                    }
+                }
+                else {
+                    this.renderGraphics(mask);
+                }
+                gl.stencilFunc(gl.EQUAL, level, 0xFF);
+                gl.colorMask(true, true, true, true);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+            }
+        }
+
+        private graphicsPoints:Array<number> = null;
+        private graphicsIndices:Array<number> = null;
+        private graphicsBuffer:WebGLBuffer = null;
+        private graphicsIndexBuffer:WebGLBuffer = null;
+
+        public renderGraphics(graphics) {
+            this.$drawWebGL();
+            var gl:any = this.context;
+            var shader = this.shaderManager.primitiveShader;
+
+            if (!this.graphicsPoints) {
+                this.graphicsPoints = [];
+                this.graphicsIndices = [];
+                this.graphicsBuffer = gl.createBuffer();
+                this.graphicsIndexBuffer = gl.createBuffer();
+            }
+            else {
+                this.graphicsPoints.length = 0;
+                this.graphicsIndices.length = 0;
+            }
+
+            this.updateGraphics(graphics);
+
+            this.shaderManager.activateShader(shader);
+            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
+
+            gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
+            gl.uniform2f(shader.offsetVector, 0, 0);
+
+            gl.uniform3fv(shader.tintColor, [1, 1, 1]);
+
+            gl.uniform1f(shader.alpha, this._globalAlpha);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
+
+            gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
+            gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false, 4 * 6, 2 * 4);
+
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
+
+            gl.drawElements(gl.TRIANGLE_STRIP, this.graphicsIndices.length, gl.UNSIGNED_SHORT, 0);
+
+            this.shaderManager.activateShader(this.shaderManager.defaultShader);
+
+            this.currentBlendMode = null;
+            this.setGlobalCompositeOperation("source-over");
+        }
+
+        private matrixArray:Float32Array;
+
+        private matrixToArray(matrix:Matrix) {
+            if (!this.matrixArray) {
+                this.matrixArray = new Float32Array(9);
+            }
+            this.matrixArray[0] = matrix.a;
+            this.matrixArray[1] = matrix.b;
+            this.matrixArray[2] = 0;
+            this.matrixArray[3] = matrix.c;
+            this.matrixArray[4] = matrix.d;
+            this.matrixArray[5] = 0;
+            this.matrixArray[6] = matrix.tx;
+            this.matrixArray[7] = matrix.ty;
+            this.matrixArray[8] = 1;
+            return this.matrixArray;
+        }
+
+        private updateGraphics(graphics) {
+            var gl:any = this.context;
+
+            this.buildRectangle(graphics);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.graphicsPoints), gl.STATIC_DRAW);
+
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.graphicsIndices), gl.STATIC_DRAW);
+        }
+
+        private graphicsStyle:any = {a: 1, r: 255, g: 0, b: 0};
+
+        private buildRectangle(graphicsData:Rectangle) {
+            var x:number = graphicsData.x;
+            var y:number = graphicsData.y;
+            var width:number = graphicsData.width;
+            var height:number = graphicsData.height;
+
+            var alpha:number = this.graphicsStyle.a;
+            var r:number = this.graphicsStyle.r * alpha;
+            var g:number = this.graphicsStyle.g * alpha;
+            var b:number = this.graphicsStyle.b * alpha;
+
+            var verts:Array<any> = this.graphicsPoints;
+            var indices:Array<any> = this.graphicsIndices;
+            var vertPos:number = verts.length / 6;
+
+            verts.push(x, y);
+            verts.push(r, g, b, alpha);
+
+            verts.push(x + width, y);
+            verts.push(r, g, b, alpha);
+
+            verts.push(x, y + height);
+            verts.push(r, g, b, alpha);
+
+            verts.push(x + width, y + height);
+            verts.push(r, g, b, alpha);
+
+            indices.push(vertPos, vertPos, vertPos + 1, vertPos + 2, vertPos + 3, vertPos + 3);
         }
 
         public static blendModesForGL:any = null;

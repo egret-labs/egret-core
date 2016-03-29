@@ -43,23 +43,6 @@ module egret.sys {
         }
 
         /**
-         * 绘制x偏移
-         */
-        public x:number;
-        /**
-         * 绘制y偏移
-         */
-        public y:number;
-        /**
-         * 绘制宽度
-         */
-        public width:number;
-        /**
-         * 绘制高度
-         */
-        public height:number;
-
-        /**
          * 指定一种简单的单一颜色填充，在绘制时该填充将在随后对其他 Graphics 方法（如 lineTo() 或 drawCircle()）的调用中使用。
          * @param color 填充的颜色
          * @param alpha 填充的 Alpha 值
@@ -76,6 +59,7 @@ module egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.dirtyRender = true;
             return path;
         }
 
@@ -118,6 +102,7 @@ module egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.dirtyRender = true;
             return path;
         }
 
@@ -146,6 +131,7 @@ module egret.sys {
             path.joints = joints;
             path.miterLimit = miterLimit;
             this.drawData.push(path);
+            this.dirtyRender = true;
             return path;
         }
 
@@ -154,6 +140,7 @@ module egret.sys {
          */
         public clear():void {
             this.drawData.length = 0;
+            this.dirtyRender = true;
         }
 
         /**
@@ -162,5 +149,30 @@ module egret.sys {
         public cleanBeforeRender():void {
 
         }
+
+        //forWebGL
+        /**
+         * 绘制x偏移
+         */
+        public x:number;
+        /**
+         * 绘制y偏移
+         */
+        public y:number;
+        /**
+         * 绘制宽度
+         */
+        public width:number;
+        /**
+         * 绘制高度
+         */
+        public height:number;
+        /**
+         * 脏渲染标记
+         * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
+         */
+        public dirtyRender:boolean = true;
+        public $canvasRenderer;
+        public $canvasRenderBuffer;
     }
 }

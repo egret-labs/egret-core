@@ -70,6 +70,23 @@ module egret.sys {
         public fontFamily:string = "Arial";
 
         /**
+         * 绘制一行文本
+         */
+        public drawText(x:number, y:number, text:string, format:TextFormat):void {
+            this.drawData.push(x, y, text, format);
+            this.renderCount++;
+            this.dirtyRender = true;
+        }
+
+        /**
+         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
+         */
+        public cleanBeforeRender():void{
+            super.cleanBeforeRender();
+        }
+
+        //forWebGL
+        /**
          * 绘制x偏移
          */
         public x:number;
@@ -85,20 +102,11 @@ module egret.sys {
          * 绘制高度
          */
         public height:number;
-
         /**
-         * 绘制一行文本
+         * 脏渲染标记
          */
-        public drawText(x:number, y:number, text:string, format:TextFormat):void {
-            this.drawData.push(x, y, text, format);
-            this.renderCount++;
-        }
-
-        /**
-         * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
-         */
-        public cleanBeforeRender():void{
-            super.cleanBeforeRender();
-        }
+        public dirtyRender:boolean = true;
+        public $canvasRenderer;
+        public $canvasRenderBuffer;
     }
 }
