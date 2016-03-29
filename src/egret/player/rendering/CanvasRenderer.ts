@@ -407,15 +407,17 @@ module egret {
          * @private
          */
         private renderNode(node:sys.RenderNode, context:any, forHitTest?:boolean):number {
-            var drawCalls = 1;
+            var drawCalls = 0;
             switch (node.type) {
                 case sys.RenderNodeType.BitmapNode:
                     drawCalls = this.renderBitmap(<sys.BitmapNode>node, context);
                     break;
                 case sys.RenderNodeType.TextNode:
+                    drawCalls = 1;
                     this.renderText(<sys.TextNode>node, context);
                     break;
                 case sys.RenderNodeType.GraphicsNode:
+                    drawCalls = 1;
                     this.renderGraphics(<sys.GraphicsNode>node, context, forHitTest);
                     break;
                 case sys.RenderNodeType.GroupNode:
