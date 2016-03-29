@@ -37,7 +37,7 @@ module egret {
      * @returns A value of true if the object is a instance of the class or interface specified as the parameter.
      * @example
      * <pre>
-     *    var instance = new egret.Sprite();
+     *     var instance = new egret.Sprite();
      *     egret.log(egret.is(instance,"egret.Sprite"))  //true
      *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
      *     egret.log(egret.is(instance,"egret.Bitmap"))  //false

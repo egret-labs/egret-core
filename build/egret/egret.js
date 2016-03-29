@@ -22297,9 +22297,9 @@ var egret;
      * @example
      * <pre>
      *     var instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
-     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
-     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
+     *     egret.log(egret.is(instance,"egret.Sprite"))  //true
+     *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
+     *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
      * </pre>
      * @see egret.registerClass()
      * @version Egret 2.4
@@ -22314,9 +22314,9 @@ var egret;
      * @example
      * <pre>
      *     var instance = new egret.Sprite();
-     *     egret.log(egret.is(instance,egret.Types.Sprite))  //true
-     *     egret.log(egret.is(instance,egret.Types.DisplayObjectContainer))  //true
-     *     egret.log(egret.is(instance,egret.Types.Bitmap))  //false
+     *     egret.log(egret.is(instance,"egret.Sprite"))  //true
+     *     egret.log(egret.is(instance,"egret.DisplayObjectContainer"))  //true
+     *     egret.log(egret.is(instance,"egret.Bitmap"))  //false
      * </pre>
      * @see egret.registerClass()
      * @version Egret 2.4

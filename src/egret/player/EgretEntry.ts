@@ -38,7 +38,7 @@ module egret {
      * egret工程入口函数
      * @param options 一个可选对象，包含初始化Egret引擎需要的参数。
      */
-    export declare function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}):void;
+    export declare function runEgret(options?:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}):void;
     /**
      * @language en_US
      * Refresh the screen display
