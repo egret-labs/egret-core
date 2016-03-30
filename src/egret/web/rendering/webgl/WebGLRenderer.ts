@@ -156,6 +156,7 @@ module egret.web {
                     }
                     else {
                         if (child["isFPS"]) {
+                            buffer.$drawWebGL();
                             buffer.$computeDrawCall = false;
                             this.drawDisplayObject(child, buffer, dirtyList, matrix, child.$displayList, clipRegion, root);
                             buffer.$drawWebGL();
@@ -176,7 +177,6 @@ module egret.web {
          */
         private drawWithClip(displayObject:DisplayObject, buffer:WebGLRenderBuffer, dirtyList:egret.sys.Region[],
                              matrix:Matrix, clipRegion:sys.Region, root:DisplayObject):number {
-            //todo 可以使用stencil代替混合模式
             var drawCalls = 0;
             var hasBlendMode = (displayObject.$blendMode !== 0);
             if (hasBlendMode) {
@@ -258,88 +258,113 @@ module egret.web {
                 return drawCalls;
             }
 
-            //绘制显示对象自身，若有scrollRect，应用clip
-            var displayBuffer = this.createRenderBuffer(region.width, region.height);
-            var displayContext = displayBuffer.context;
-            if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
-                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
-                    displayObject.$displayList, clipRegion, root);
+            //没有遮罩,同时显示对象没有子项
+            if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
+                if (scrollRect) {
+                    buffer.pushMask(scrollRect);
+                }
+                var offsetM = Matrix.create().setTo(1, 0, 0, 1, 0, 0);
+
+
+                //绘制显示对象
+                if (hasBlendMode) {
+                    buffer.setGlobalCompositeOperation(compositeOp);
+                }
+                drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM,
+                    displayObject.$displayList, region, null);
+                Matrix.release(offsetM);
+                if (hasBlendMode) {
+                    buffer.setGlobalCompositeOperation(defaultCompositeOp);
+                }
                 sys.Region.release(region);
                 Matrix.release(displayMatrix);
                 return drawCalls;
             }
-            if (scrollRect) {
-                var m = displayMatrix;
-                displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                displayBuffer.pushMask(scrollRect);
-            }
-            displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-            var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-
-            drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM,
-                displayObject.$displayList, region, root ? displayObject : null);
-            Matrix.release(offsetM);
-            //绘制遮罩
-            if (mask) {
-                //如果只有一次绘制或是已经被cache直接绘制到displayContext
-                var maskRenderNode = mask.$getRenderNode();
-                if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
-                    displayBuffer.setGlobalCompositeOperation("destination-in");
-                    drawCalls += this.drawDisplayObject(mask, displayBuffer, dirtyList, offsetM,
-                        mask.$displayList, region, root ? mask : null);
+            else {
+                //绘制显示对象自身，若有scrollRect，应用clip
+                var displayBuffer = this.createRenderBuffer(region.width, region.height);
+                var displayContext = displayBuffer.context;
+                if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
+                    drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
+                        displayObject.$displayList, clipRegion, root);
+                    sys.Region.release(region);
+                    Matrix.release(displayMatrix);
+                    return drawCalls;
                 }
-                else {
-                    var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                    var maskContext = maskBuffer.context;
-                    if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
-                        drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
-                            displayObject.$displayList, clipRegion, root);
-                        displayBuffer.popMask();
-                        renderBufferPool.push(displayBuffer);
-                        sys.Region.release(region);
-                        Matrix.release(displayMatrix);
-                        return drawCalls;
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    displayBuffer.pushMask(scrollRect);
+                }
+                displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+
+                drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM,
+                    displayObject.$displayList, region, root ? displayObject : null);
+                Matrix.release(offsetM);
+                //绘制遮罩
+                if (mask) {
+                    //如果只有一次绘制或是已经被cache直接绘制到displayContext
+                    //webgl暂时无法添加,因为会有边界像素没有被擦除
+                    //var maskRenderNode = mask.$getRenderNode();
+                    //if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
+                    //    displayBuffer.setGlobalCompositeOperation("destination-in");
+                    //    drawCalls += this.drawDisplayObject(mask, displayBuffer, dirtyList, offsetM,
+                    //        mask.$displayList, region, root ? mask : null);
+                    //}
+                    //else {
+                        var maskBuffer = this.createRenderBuffer(region.width, region.height);
+                        var maskContext = maskBuffer.context;
+                        if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
+                            drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
+                                displayObject.$displayList, clipRegion, root);
+                            displayBuffer.popMask();
+                            renderBufferPool.push(displayBuffer);
+                            sys.Region.release(region);
+                            Matrix.release(displayMatrix);
+                            return drawCalls;
+                        }
+                        maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                        offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                        var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
+                            mask.$displayList, region, root ? mask : null);
+                        Matrix.release(offsetM);
+                        if (calls > 0) {
+                            drawCalls += calls;
+                            displayBuffer.setGlobalCompositeOperation("destination-in");
+                            displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
+                            displayBuffer.setGlobalAlpha(1);
+                            maskBuffer.$drawWebGL();
+                            WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
+                            displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
+                                0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
+                        }
+                        renderBufferPool.push(maskBuffer);
+                    //}
+                }
+
+                //绘制结果到屏幕
+                if (drawCalls > 0) {
+                    drawCalls++;
+                    if (hasBlendMode) {
+                        buffer.setGlobalCompositeOperation(compositeOp);
                     }
-                    maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                    offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                    var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
-                        mask.$displayList, region, root ? mask : null);
-                    Matrix.release(offsetM);
-                    if (calls > 0) {
-                        drawCalls += calls;
-                        displayBuffer.setGlobalCompositeOperation("destination-in");
-                        displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
-                        displayBuffer.setGlobalAlpha(1);
-                        maskBuffer.$drawWebGL();
-                        WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
-                        displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
-                            0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
+                    buffer.setGlobalAlpha(1);
+                    buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
+                    displayBuffer.$drawWebGL();
+                    WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
+                    buffer.drawImage(<any>displayBuffer.surface, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height,
+                        0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
+                    if (hasBlendMode) {
+                        buffer.setGlobalCompositeOperation(defaultCompositeOp);
                     }
-                    renderBufferPool.push(maskBuffer);
                 }
+                displayBuffer.setGlobalCompositeOperation(defaultCompositeOp);
+                renderBufferPool.push(displayBuffer);
+                sys.Region.release(region);
+                Matrix.release(displayMatrix);
+                return drawCalls;
             }
-
-
-            //绘制结果到屏幕
-            if (drawCalls > 0) {
-                drawCalls++;
-                if (hasBlendMode) {
-                    buffer.setGlobalCompositeOperation(compositeOp);
-                }
-                buffer.setGlobalAlpha(1);
-                buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
-                displayBuffer.$drawWebGL();
-                WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
-                buffer.drawImage(<any>displayBuffer.surface, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height,
-                    0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
-                if (hasBlendMode) {
-                    buffer.setGlobalCompositeOperation(defaultCompositeOp);
-                }
-            }
-            renderBufferPool.push(displayBuffer);
-            sys.Region.release(region);
-            Matrix.release(displayMatrix);
-            return drawCalls;
         }
 
         /**
@@ -502,7 +527,6 @@ module egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
-            buffer.$drawWebGL();
             node.dirtyRender = false;
         }
 
@@ -542,7 +566,6 @@ module egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
-            buffer.$drawWebGL();
             node.dirtyRender = false;
         }
 

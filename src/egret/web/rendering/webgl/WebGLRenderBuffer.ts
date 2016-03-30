@@ -335,8 +335,9 @@ module egret.web {
             this.createWebGLTexture(texture);
             var webGLTexture = texture["webGLTexture"][this.glID];
             if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
-                this.$drawWebGL();
+                //this.$drawWebGL();
                 this.currentBaseTexture = webGLTexture;
+                this.drawData.push({texture: this.currentBaseTexture, count: 0});
             }
 
             //计算出绘制矩阵，之后把矩阵还原回之前的
@@ -419,8 +420,10 @@ module egret.web {
             vertices[index++] = alpha;
 
             this.currentBatchSize++;
+            this.drawData[this.drawData.length - 1].count++;
         }
 
+        private drawData = [];
         public $drawCalls:number = 0;
         public $computeDrawCall:boolean = false;
 
@@ -428,16 +431,35 @@ module egret.web {
             if (this.currentBatchSize == 0 || this.contextLost) {
                 return;
             }
-            if(this.$computeDrawCall) {
-                this.$drawCalls++;
-            }
             this.start();
             var gl:any = this.context;
-            gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture);
+
             var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
             gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
-            gl.drawElements(gl.TRIANGLES, this.currentBatchSize * 6, gl.UNSIGNED_SHORT, 0);
+
+            var length = this.drawData.length;
+            var offset = 0;
+            for (var i = 0; i < length; i++) {
+                var data = this.drawData[i];
+                if (data.texture) {
+                    gl.bindTexture(gl.TEXTURE_2D, data.texture);
+                    var size = data.count * 6;
+                    gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+                    offset += size;
+                    if (this.$computeDrawCall) {
+                        this.$drawCalls++;
+                    }
+                }
+                else {
+                    var blendModeWebGL = WebGLRenderBuffer.blendModesForGL[data];
+                    if (blendModeWebGL) {
+                        this.context.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
+                    }
+                }
+            }
+            this.drawData.length = 0;
             this.currentBatchSize = 0;
+            this.currentBaseTexture = null;
         }
 
         private vertexBuffer;
@@ -531,28 +553,25 @@ module egret.web {
 
         public setGlobalCompositeOperation(value:string) {
             if (this.currentBlendMode != value) {
-                var blendModeWebGL = WebGLRenderBuffer.blendModesForGL[value];
-                if (blendModeWebGL) {
-                    this.$drawWebGL();
-                    this.context.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
-                    this.currentBlendMode = value;
-                }
+                this.drawData.push(value);
+                this.currentBlendMode = value;
+                this.currentBaseTexture = null;
             }
         }
 
-        private stencilList = [];
+        public $stencilList = [];
 
         public pushMask(mask):void {
             //todo 把绘制数据缓存提升性能
             this.$drawWebGL();
             var gl = this.context;
-            if (this.stencilList.length === 0) {
+            if (this.$stencilList.length === 0) {
                 gl.enable(gl.STENCIL_TEST);
                 gl.clear(gl.STENCIL_BUFFER_BIT);
             }
-            var level = this.stencilList.length;
+            var level = this.$stencilList.length;
 
-            this.stencilList.push(mask);
+            this.$stencilList.push(mask);
 
             gl.colorMask(false, false, false, false);
             gl.stencilFunc(gl.EQUAL, level, 0xFF);
@@ -576,13 +595,13 @@ module egret.web {
             this.$drawWebGL();
             var gl = this.context;
 
-            var mask = this.stencilList.pop();
+            var mask = this.$stencilList.pop();
 
-            if (this.stencilList.length === 0) {
+            if (this.$stencilList.length === 0) {
                 gl.disable(gl.STENCIL_TEST);
             }
             else {
-                var level = this.stencilList.length;
+                var level = this.$stencilList.length;
                 gl.colorMask(false, false, false, false);
                 gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
                 gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
