@@ -183,7 +183,7 @@ module egret.web {
          * 获取指定坐标的像素
          */
         public getPixel(x:number, y:number):number[] {
-            return null//this.context.getImageData(x, y, 1, 1).data;
+            return []//this.context.getImageData(x, y, 1, 1).data;
         }
 
         /**
@@ -422,12 +422,15 @@ module egret.web {
         }
 
         public $drawCalls:number = 0;
+        public $computeDrawCall:boolean = false;
 
         public $drawWebGL():void {
             if (this.currentBatchSize == 0 || this.contextLost) {
                 return;
             }
-            this.$drawCalls++;
+            if(this.$computeDrawCall) {
+                this.$drawCalls++;
+            }
             this.start();
             var gl:any = this.context;
             gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture);
@@ -496,7 +499,6 @@ module egret.web {
         }
 
         public onRenderFinish():void {
-            this.$drawWebGL();
             this.$drawCalls = 0;
         }
 

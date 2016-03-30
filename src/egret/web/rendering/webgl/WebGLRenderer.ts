@@ -60,6 +60,7 @@ module egret.web {
             var root:DisplayObject = forRenderTexture ? displayObject : null;
             //绘制显示对象
             this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
+            webglBuffer.$drawWebGL();
             var drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
             this.nestLevel--;
@@ -155,7 +156,10 @@ module egret.web {
                     }
                     else {
                         if (child["isFPS"]) {
+                            buffer.$computeDrawCall = false;
                             this.drawDisplayObject(child, buffer, dirtyList, matrix, child.$displayList, clipRegion, root);
+                            buffer.$drawWebGL();
+                            buffer.$computeDrawCall = true;
                         }
                         else {
                             drawCalls += this.drawDisplayObject(child, buffer, dirtyList, matrix,
@@ -306,7 +310,7 @@ module egret.web {
                         displayBuffer.setGlobalCompositeOperation("destination-in");
                         displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
                         displayBuffer.setGlobalAlpha(1);
-                        maskBuffer.onRenderFinish();
+                        maskBuffer.$drawWebGL();
                         WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
                         displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
                             0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
@@ -324,7 +328,7 @@ module egret.web {
                 }
                 buffer.setGlobalAlpha(1);
                 buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
-                displayBuffer.onRenderFinish();
+                displayBuffer.$drawWebGL();
                 WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
                 buffer.drawImage(<any>displayBuffer.surface, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height,
                     0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
@@ -468,7 +472,7 @@ module egret.web {
             //优化,使用同一个canvas
             var width = node.width - node.x;
             var height = node.height - node.y;
-            if(node.drawData.length == 0) {
+            if (node.drawData.length == 0) {
                 return;
             }
             if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
@@ -478,22 +482,22 @@ module egret.web {
             else {
                 node.$canvasRenderBuffer.resize(width, height, true);
             }
-            if(!node.$canvasRenderBuffer.context) {
+            if (!node.$canvasRenderBuffer.context) {
                 return;
             }
             if (node.x || node.y) {
-                if(node.dirtyRender) {
+                if (node.dirtyRender) {
                     node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
                 }
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
-            if(node.dirtyRender) {
+            if (node.dirtyRender) {
                 WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
                 node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
             }
             buffer.drawImage(<BitmapData><any>node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
             if (node.x || node.y) {
-                if(node.dirtyRender) {
+                if (node.dirtyRender) {
                     node.$canvasRenderBuffer.context.translate(node.x, node.y);
                 }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
@@ -508,7 +512,7 @@ module egret.web {
         private renderGraphics(node:sys.GraphicsNode, buffer:WebGLRenderBuffer, forHitTest?:boolean):void {
             var width = node.width;
             var height = node.height;
-            if(width <= 0 || height <= 0) {
+            if (width <= 0 || height <= 0) {
                 return;
             }
             if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
@@ -518,22 +522,22 @@ module egret.web {
             else {
                 node.$canvasRenderBuffer.resize(width, height, true);
             }
-            if(!node.$canvasRenderBuffer.context) {
+            if (!node.$canvasRenderBuffer.context) {
                 return;
             }
             if (node.x || node.y) {
-                if(node.dirtyRender) {
+                if (node.dirtyRender) {
                     node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
                 }
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
-            if(node.dirtyRender) {
+            if (node.dirtyRender) {
                 WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
                 node.$canvasRenderer["renderGraphics"](node, node.$canvasRenderBuffer.context, forHitTest);
             }
             buffer.drawImage(<BitmapData><any>node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
             if (node.x || node.y) {
-                if(node.dirtyRender) {
+                if (node.dirtyRender) {
                     node.$canvasRenderBuffer.context.translate(node.x, node.y);
                 }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
@@ -561,6 +565,7 @@ module egret.web {
             }
             else {
                 buffer = new WebGLRenderBuffer(width, height);
+                buffer.$computeDrawCall = false;
             }
             return buffer;
         }

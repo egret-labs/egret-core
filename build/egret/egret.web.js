@@ -5326,6 +5326,7 @@ var egret;
                 this.currentBaseTexture = null;
                 this.currentBatchSize = 0;
                 this.$drawCalls = 0;
+                this.$computeDrawCall = false;
                 this.globalMatrix = new egret.Matrix();
                 this.savedGlobalMatrix = new egret.Matrix();
                 this._globalAlpha = 1;
@@ -5647,7 +5648,9 @@ var egret;
                 if (this.currentBatchSize == 0 || this.contextLost) {
                     return;
                 }
-                this.$drawCalls++;
+                if (this.$computeDrawCall) {
+                    this.$drawCalls++;
+                }
                 this.start();
                 var gl = this.context;
                 gl.bindTexture(gl.TEXTURE_2D, this.currentBaseTexture);
@@ -5702,7 +5705,6 @@ var egret;
                 }
             };
             p.onRenderFinish = function () {
-                this.$drawWebGL();
                 this.$drawCalls = 0;
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
@@ -5938,6 +5940,7 @@ var egret;
                 var root = forRenderTexture ? displayObject : null;
                 //绘制显示对象
                 this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
+                webglBuffer.$drawWebGL();
                 var drawCall = webglBuffer.$drawCalls;
                 webglBuffer.onRenderFinish();
                 this.nestLevel--;
@@ -6030,7 +6033,10 @@ var egret;
                         }
                         else {
                             if (child["isFPS"]) {
+                                buffer.$computeDrawCall = false;
                                 this.drawDisplayObject(child, buffer, dirtyList, matrix, child.$displayList, clipRegion, root);
+                                buffer.$drawWebGL();
+                                buffer.$computeDrawCall = true;
                             }
                             else {
                                 drawCalls += this.drawDisplayObject(child, buffer, dirtyList, matrix, child.$displayList, clipRegion, root);
@@ -6168,7 +6174,7 @@ var egret;
                             displayBuffer.setGlobalCompositeOperation("destination-in");
                             displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
                             displayBuffer.setGlobalAlpha(1);
-                            maskBuffer.onRenderFinish();
+                            maskBuffer.$drawWebGL();
                             web.WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
                             displayBuffer.drawImage(maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
                         }
@@ -6183,7 +6189,7 @@ var egret;
                     }
                     buffer.setGlobalAlpha(1);
                     buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
-                    displayBuffer.onRenderFinish();
+                    displayBuffer.$drawWebGL();
                     web.WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
                     buffer.drawImage(displayBuffer.surface, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
                     if (hasBlendMode) {
@@ -6405,6 +6411,7 @@ var egret;
                 }
                 else {
                     buffer = new web.WebGLRenderBuffer(width, height);
+                    buffer.$computeDrawCall = false;
                 }
                 return buffer;
             };
