@@ -3732,6 +3732,12 @@ var egret;
                 var container = list[i];
                 var player = new web.WebPlayer(container);
                 container["egret-player"] = player;
+                //webgl模式关闭脏矩形
+                if (options.renderMode == "webgl") {
+                    player.$stage.dirtyRegionPolicy = egret.DirtyRegionPolicy.OFF;
+                    egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
+                    };
+                }
             }
         }
         /**
@@ -3998,7 +4004,7 @@ var egret;
                 this.playerOption = option;
                 this.container = container;
                 this.canvas = canvas;
-                this.stage = stage;
+                this.$stage = stage;
                 this.player = player;
                 this.webTouchHandler = webTouch;
                 this.webInput = webInput;
@@ -4012,7 +4018,7 @@ var egret;
                 var self = this;
                 window.addEventListener("orientationchange", function () {
                     window.setTimeout(function () {
-                        egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, egret.StageOrientationEvent.ORIENTATION_CHANGE);
+                        egret.StageOrientationEvent.dispatchStageOrientationEvent(self.$stage, egret.StageOrientationEvent.ORIENTATION_CHANGE);
                     }, 350);
                 });
             };
@@ -4072,14 +4078,14 @@ var egret;
                 var option = this.playerOption;
                 var screenRect = this.container.getBoundingClientRect();
                 var shouldRotate = false;
-                var orientation = this.stage.$orientation;
+                var orientation = this.$stage.$orientation;
                 if (orientation != egret.OrientationMode.AUTO) {
                     shouldRotate = orientation != egret.OrientationMode.PORTRAIT && screenRect.height > screenRect.width
                         || orientation == egret.OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
                 }
                 var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
                 var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
-                var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
+                var stageSize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
                 var stageWidth = stageSize.stageWidth;
                 var stageHeight = stageSize.stageHeight;
                 var displayWidth = stageSize.displayWidth;
