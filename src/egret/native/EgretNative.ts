@@ -37,7 +37,7 @@ module egret.native {
     var isRunning:boolean = false;
     var playerList:Array<NativePlayer> = [];
 
-    function runEgret(options?:{renderMode?:string,screenAdapter?:sys.IScreenAdapter}) {
+    function runEgret(options?:{renderMode?:string;screenAdapter?:sys.IScreenAdapter}) {
         if (isRunning) {
             return;
         }
