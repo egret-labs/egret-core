@@ -3739,10 +3739,14 @@ var egret;
          * @param renderMode
          */
         function setRenderMode(renderMode) {
-            //sys.RenderBuffer = web.CanvasRenderBuffer;
-            //sys.systemRenderer = new CanvasRenderer();
-            egret.sys.RenderBuffer = web.WebGLRenderBuffer;
-            egret.sys.systemRenderer = new web.WebGLRenderer();
+            if (renderMode == "webgl") {
+                egret.sys.RenderBuffer = web.WebGLRenderBuffer;
+                egret.sys.systemRenderer = new web.WebGLRenderer();
+            }
+            else {
+                egret.sys.RenderBuffer = web.CanvasRenderBuffer;
+                egret.sys.systemRenderer = new egret.CanvasRenderer();
+            }
         }
         /**
          * @private
