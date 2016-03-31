@@ -116,19 +116,18 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-            //var oldContext = this.context;
-            //var oldSurface = this.surface;
-            //var newSurface = sharedCanvas;
-            //var newContext = newSurface.getContext("2d");
-            //sharedCanvas = oldSurface;
-            //this.context = newContext;
-            //this.surface = newSurface;
-            //newSurface.width = Math.max(width, 257);
-            //newSurface.height = Math.max(height, 257);
-            //newContext.setTransform(1, 0, 0, 1, 0, 0);
-            //newContext.drawImage(oldSurface, offsetX, offsetY);
-            //oldSurface.height = 1;
-            //oldSurface.width = 1;
+            var newBuffer = sharedBuffer;
+            var oldSurface = this.surface;
+            var oldContext = this.context;
+            this.context = newBuffer.context;
+            this.surface = newBuffer.surface;
+            this.resize(Math.max(width, 257), Math.max(height, 257));
+            this.setTransform(1, 0, 0, 1, 0, 0);
+            this.setGlobalCompositeOperation("source-over");
+            this.drawImage(<any>oldSurface, 0, 0, oldSurface.width, oldSurface.height, offsetX, offsetY, oldSurface.width, oldSurface.height);
+            sharedBuffer.context = oldContext;
+            sharedBuffer.surface = oldSurface;
+            sharedBuffer.resize(1, 1);
         }
 
         /**
@@ -183,7 +182,13 @@ module egret.web {
          * 获取指定坐标的像素
          */
         public getPixel(x:number, y:number):number[] {
-            return []//this.context.getImageData(x, y, 1, 1).data;
+            var canvas = sharedCanvas;
+            var context = canvas.getContext("2d");
+            canvas.width = this.surface.width;
+            canvas.height = this.surface.height;
+            context.drawImage(this.surface, 0, 0);
+            //todo 宽度设置回去
+            return <number[]><any>context.getImageData(x, y, 1, 1).data;
         }
 
         /**
@@ -746,4 +751,5 @@ module egret.web {
 
     WebGLRenderBuffer.initBlendMode();
     sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
+    var sharedBuffer:WebGLRenderBuffer = new WebGLRenderBuffer();
 }

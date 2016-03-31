@@ -5404,19 +5404,18 @@ var egret;
              * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
              */
             p.resizeTo = function (width, height, offsetX, offsetY) {
-                //var oldContext = this.context;
-                //var oldSurface = this.surface;
-                //var newSurface = sharedCanvas;
-                //var newContext = newSurface.getContext("2d");
-                //sharedCanvas = oldSurface;
-                //this.context = newContext;
-                //this.surface = newSurface;
-                //newSurface.width = Math.max(width, 257);
-                //newSurface.height = Math.max(height, 257);
-                //newContext.setTransform(1, 0, 0, 1, 0, 0);
-                //newContext.drawImage(oldSurface, offsetX, offsetY);
-                //oldSurface.height = 1;
-                //oldSurface.width = 1;
+                var newBuffer = sharedBuffer;
+                var oldSurface = this.surface;
+                var oldContext = this.context;
+                this.context = newBuffer.context;
+                this.surface = newBuffer.surface;
+                this.resize(Math.max(width, 257), Math.max(height, 257));
+                this.setTransform(1, 0, 0, 1, 0, 0);
+                this.setGlobalCompositeOperation("source-over");
+                this.drawImage(oldSurface, 0, 0, oldSurface.width, oldSurface.height, offsetX, offsetY, oldSurface.width, oldSurface.height);
+                sharedBuffer.context = oldContext;
+                sharedBuffer.surface = oldSurface;
+                sharedBuffer.resize(1, 1);
             };
             /**
              * 清空并设置裁切
@@ -5464,7 +5463,12 @@ var egret;
              * 获取指定坐标的像素
              */
             p.getPixel = function (x, y) {
-                return []; //this.context.getImageData(x, y, 1, 1).data;
+                var canvas = sharedCanvas;
+                var context = canvas.getContext("2d");
+                canvas.width = this.surface.width;
+                canvas.height = this.surface.height;
+                context.drawImage(this.surface, 0, 0);
+                return context.getImageData(x, y, 1, 1).data;
             };
             /**
              * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
@@ -5904,6 +5908,7 @@ var egret;
         egret.registerClass(WebGLRenderBuffer,'egret.web.WebGLRenderBuffer',["egret.sys.RenderBuffer"]);
         WebGLRenderBuffer.initBlendMode();
         egret.sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
+        var sharedBuffer = new WebGLRenderBuffer();
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
