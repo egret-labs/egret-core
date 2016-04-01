@@ -2777,6 +2777,24 @@ var egret;
             }
             if (this.$stage) {
                 if (oldBitmapData) {
+                    var oldHashCode;
+                    if (oldBitmapData._bitmapData && oldBitmapData._bitmapData.hashCode) {
+                        oldHashCode = oldBitmapData._bitmapData.hashCode;
+                    }
+                    else {
+                        oldHashCode = oldBitmapData.hashCode;
+                    }
+                    var newHashCode;
+                    if (value._bitmapData && value._bitmapData.hashCode) {
+                        newHashCode = value._bitmapData.hashCode;
+                    }
+                    else {
+                        newHashCode = value.hashCode;
+                    }
+                    if (oldHashCode == newHashCode) {
+                        this.$invalidateContentBounds();
+                        return true;
+                    }
                     egret.Texture.$removeDisplayObject(this, oldBitmapData);
                 }
                 egret.Texture.$addDisplayObject(this, value);
@@ -5205,6 +5223,9 @@ var egret;
             this.maxX = -Infinity;
             this.maxY = -Infinity;
         };
+        /**
+         * @private
+         */
         p.extendBoundsByPoint = function (x, y) {
             this.extendBoundsByX(x);
             this.extendBoundsByY(y);
@@ -5215,6 +5236,7 @@ var egret;
         p.extendBoundsByX = function (x) {
             this.minX = Math.min(this.minX, x - this.topLeftStrokeWidth);
             this.maxX = Math.max(this.maxX, x + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
         };
         /**
          * @private
@@ -5222,9 +5244,21 @@ var egret;
         p.extendBoundsByY = function (y) {
             this.minY = Math.min(this.minY, y - this.topLeftStrokeWidth);
             this.maxY = Math.max(this.maxY, y + this.bottomRightStrokeWidth);
+            this.updateNodeBounds();
+        };
+        /**
+         * @private
+         */
+        p.updateNodeBounds = function () {
+            var node = this.$renderNode;
+            node.x = this.minX;
+            node.y = this.minY;
+            node.width = this.maxX - this.minX;
+            node.height = this.maxY - this.minY;
         };
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
+         * @private
          */
         p.updatePosition = function (x, y) {
             if (!this.includeLastPosition) {
@@ -5749,10 +5783,8 @@ var egret;
         };
         Texture.$addDisplayObject = function (displayObject, bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5771,10 +5803,8 @@ var egret;
         };
         Texture.$removeDisplayObject = function (displayObject, bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5793,10 +5823,8 @@ var egret;
         };
         Texture.$invalidate = function (bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5817,10 +5845,8 @@ var egret;
         };
         Texture.$dispose = function (bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -14493,6 +14519,11 @@ var egret;
             __extends(GraphicsNode, _super);
             function GraphicsNode() {
                 _super.call(this);
+                /**
+                 * 脏渲染标记
+                 * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
+                 */
+                this.dirtyRender = true;
                 this.type = 3 /* GraphicsNode */;
             }
             var d = __define,c=GraphicsNode,p=c.prototype;
@@ -14514,6 +14545,7 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
+                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -14554,6 +14586,7 @@ var egret;
                 else {
                     this.drawData.push(path);
                 }
+                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -14582,6 +14615,7 @@ var egret;
                 path.joints = joints;
                 path.miterLimit = miterLimit;
                 this.drawData.push(path);
+                this.dirtyRender = true;
                 return path;
             };
             /**
@@ -14589,6 +14623,7 @@ var egret;
              */
             p.clear = function () {
                 this.drawData.length = 0;
+                this.dirtyRender = true;
             };
             /**
              * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
@@ -14885,6 +14920,10 @@ var egret;
                  * 字体名称
                  */
                 this.fontFamily = "Arial";
+                /**
+                 * 脏渲染标记
+                 */
+                this.dirtyRender = true;
                 this.type = 2 /* TextNode */;
             }
             var d = __define,c=TextNode,p=c.prototype;
@@ -14894,6 +14933,7 @@ var egret;
             p.drawText = function (x, y, text, format) {
                 this.drawData.push(x, y, text, format);
                 this.renderCount++;
+                this.dirtyRender = true;
             };
             /**
              * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
@@ -19026,6 +19066,12 @@ var egret;
             this.$TextField[18 /* textLinesChanged */] = true;
         };
         p.$update = function (bounds) {
+            var tmpBounds = this.$getRenderBounds();
+            var result = _super.prototype.$update.call(this, tmpBounds);
+            egret.Rectangle.release(tmpBounds);
+            return result;
+        };
+        p.$getRenderBounds = function () {
             var bounds = this.$getContentBounds();
             var tmpBounds = egret.Rectangle.create();
             tmpBounds.copyFrom(bounds);
@@ -19042,9 +19088,7 @@ var egret;
             tmpBounds.y -= _strokeDouble + 2;
             tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
             tmpBounds.height = Math.ceil(tmpBounds.height) + 4;
-            var result = _super.prototype.$update.call(this, tmpBounds);
-            egret.Rectangle.release(tmpBounds);
-            return result;
+            return tmpBounds;
         };
         /**
          * @private
@@ -19074,6 +19118,13 @@ var egret;
             }
             var underLines = this.drawText();
             this.fillBackground(underLines);
+            var bounds = this.$getRenderBounds();
+            var node = this.textNode;
+            node.x = bounds.x;
+            node.y = bounds.y;
+            node.width = bounds.width;
+            node.height = bounds.height;
+            egret.Rectangle.release(bounds);
         };
         d(p, "textFlow"
             /**

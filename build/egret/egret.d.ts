@@ -2843,6 +2843,9 @@ declare module egret {
          * @private
          */
         private maxY;
+        /**
+         * @private
+         */
         private extendBoundsByPoint(x, y);
         /**
          * @private
@@ -2853,11 +2856,16 @@ declare module egret {
          */
         private extendBoundsByY(y);
         /**
+         * @private
+         */
+        private updateNodeBounds();
+        /**
          * 是否已经包含上一次moveTo的坐标点
          */
         private includeLastPosition;
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
+         * @private
          */
         private updatePosition(x, y);
         /**
@@ -9802,6 +9810,29 @@ declare module egret.sys {
          * 覆盖父类方法，不自动清空缓存的绘图数据，改为手动调用clear()方法清空。
          */
         cleanBeforeRender(): void;
+        /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
+        /**
+         * 脏渲染标记
+         * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
+         */
+        dirtyRender: boolean;
+        $canvasRenderer: any;
+        $canvasRenderBuffer: any;
     }
 }
 declare module egret.sys {
@@ -9925,6 +9956,28 @@ declare module egret.sys {
          * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
          */
         cleanBeforeRender(): void;
+        /**
+         * 绘制x偏移
+         */
+        x: number;
+        /**
+         * 绘制y偏移
+         */
+        y: number;
+        /**
+         * 绘制宽度
+         */
+        width: number;
+        /**
+         * 绘制高度
+         */
+        height: number;
+        /**
+         * 脏渲染标记
+         */
+        dirtyRender: boolean;
+        $canvasRenderer: any;
+        $canvasRenderBuffer: any;
     }
 }
 declare module egret.sys {
@@ -12493,6 +12546,7 @@ declare module egret {
          */
         $invalidateTextField(): void;
         $update(bounds?: Rectangle): boolean;
+        $getRenderBounds(): Rectangle;
         /**
          * @private
          */

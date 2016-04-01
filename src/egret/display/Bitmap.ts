@@ -225,6 +225,24 @@ module egret {
 
             if (this.$stage) {
                 if (oldBitmapData) {
+                    var oldHashCode:number;
+                    if((<Texture>oldBitmapData)._bitmapData && (<Texture>oldBitmapData)._bitmapData.hashCode) {
+                        oldHashCode = (<Texture>oldBitmapData)._bitmapData.hashCode;
+                    }
+                    else {
+                        oldHashCode = oldBitmapData.hashCode;
+                    }
+                    var newHashCode:number;
+                    if((<Texture>value)._bitmapData && (<Texture>value)._bitmapData.hashCode) {
+                        newHashCode = (<Texture>value)._bitmapData.hashCode;
+                    }
+                    else {
+                        newHashCode = value.hashCode;
+                    }
+                    if(oldHashCode == newHashCode) {
+                        this.$invalidateContentBounds();
+                        return true;
+                    }
                     Texture.$removeDisplayObject(this, oldBitmapData);
                 }
                 Texture.$addDisplayObject(this, value);

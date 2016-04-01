@@ -245,6 +245,38 @@
           {
             "path": "utils/web/WebLogger.ts",
             "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLUtils.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/EgretShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/PrimitiveShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/BlurShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/shaders/ColorTransformShader.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLShaderManager.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderBuffer.ts",
+            "platform": "web"
+          },
+          {
+            "path": "web/rendering/webgl/WebGLRenderer.ts",
+            "platform": "web"
           }
         ],
         "root": "src/egret",

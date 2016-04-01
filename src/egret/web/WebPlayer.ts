@@ -65,7 +65,7 @@ module egret.web {
             this.playerOption = option;
             this.container = container;
             this.canvas = canvas;
-            this.stage = stage;
+            this.$stage = stage;
             this.player = player;
             this.webTouchHandler = webTouch;
             this.webInput = webInput;
@@ -82,7 +82,7 @@ module egret.web {
             var self = this;
             window.addEventListener("orientationchange", function () {
                 window.setTimeout(function () {
-                    egret.StageOrientationEvent.dispatchStageOrientationEvent(self.stage, StageOrientationEvent.ORIENTATION_CHANGE);
+                    egret.StageOrientationEvent.dispatchStageOrientationEvent(self.$stage, StageOrientationEvent.ORIENTATION_CHANGE);
                 }, 350);
             });
         }
@@ -155,7 +155,7 @@ module egret.web {
          * @private
          * 舞台引用
          */
-        private stage:Stage;
+        public $stage:Stage;
 
         private webTouchHandler:WebTouchHandler;
         private player:egret.sys.Player;
@@ -174,14 +174,14 @@ module egret.web {
             var screenRect = this.container.getBoundingClientRect();
             var shouldRotate = false;
 
-            var orientation:string = this.stage.$orientation;
+            var orientation:string = this.$stage.$orientation;
             if (orientation != OrientationMode.AUTO) {
                 shouldRotate = orientation != OrientationMode.PORTRAIT && screenRect.height > screenRect.width
                     || orientation == OrientationMode.PORTRAIT && screenRect.width > screenRect.height;
             }
             var screenWidth = shouldRotate ? screenRect.height : screenRect.width;
             var screenHeight = shouldRotate ? screenRect.width : screenRect.height;
-            var stageSize = egret.sys.screenAdapter.calculateStageSize(this.stage.$scaleMode,
+            var stageSize = egret.sys.screenAdapter.calculateStageSize(this.$stage.$scaleMode,
                 screenWidth, screenHeight, option.contentWidth, option.contentHeight);
             var stageWidth = stageSize.stageWidth;
             var stageHeight = stageSize.stageHeight;
