@@ -2777,6 +2777,24 @@ var egret;
             }
             if (this.$stage) {
                 if (oldBitmapData) {
+                    var oldHashCode;
+                    if (oldBitmapData._bitmapData && oldBitmapData._bitmapData.hashCode) {
+                        oldHashCode = oldBitmapData._bitmapData.hashCode;
+                    }
+                    else {
+                        oldHashCode = oldBitmapData.hashCode;
+                    }
+                    var newHashCode;
+                    if (value._bitmapData && value._bitmapData.hashCode) {
+                        newHashCode = value._bitmapData.hashCode;
+                    }
+                    else {
+                        newHashCode = value.hashCode;
+                    }
+                    if (oldHashCode == newHashCode) {
+                        this.$invalidateContentBounds();
+                        return true;
+                    }
                     egret.Texture.$removeDisplayObject(this, oldBitmapData);
                 }
                 egret.Texture.$addDisplayObject(this, value);
@@ -5749,10 +5767,8 @@ var egret;
         };
         Texture.$addDisplayObject = function (displayObject, bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5771,10 +5787,8 @@ var egret;
         };
         Texture.$removeDisplayObject = function (displayObject, bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5793,10 +5807,8 @@ var egret;
         };
         Texture.$invalidate = function (bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5817,10 +5829,8 @@ var egret;
         };
         Texture.$dispose = function (bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;

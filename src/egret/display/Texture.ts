@@ -337,10 +337,8 @@ module egret {
         private static _displayList:Object = {};
         static $addDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
             var hashCode:number;
-            if (bitmapData instanceof Texture) {
-                if(bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -361,10 +359,8 @@ module egret {
 
         static $removeDisplayObject(displayObject:DisplayObject, bitmapData:BitmapData|Texture):void {
             var hashCode:number;
-            if (bitmapData instanceof Texture) {
-                if(bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -385,10 +381,8 @@ module egret {
 
         static $invalidate(bitmapData:BitmapData|Texture):void {
             var hashCode:number;
-            if (bitmapData instanceof Texture) {
-                if(bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -411,10 +405,8 @@ module egret {
 
         static $dispose(bitmapData:BitmapData|Texture):void {
             var hashCode:number;
-            if (bitmapData instanceof Texture) {
-                if(bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if((<Texture>bitmapData)._bitmapData && (<Texture>bitmapData)._bitmapData.hashCode) {
+                hashCode = (<Texture>bitmapData)._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
