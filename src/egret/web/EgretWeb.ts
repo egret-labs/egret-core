@@ -75,7 +75,7 @@ module egret.web {
         var length = list.length;
         for (var i = 0; i < length; i++) {
             var container = <HTMLDivElement>list[i];
-            var player = new WebPlayer(container);
+            var player = new WebPlayer(container, options);
             container["egret-player"] = player;
             //webgl模式关闭脏矩形
             if(options.renderMode == "webgl") {

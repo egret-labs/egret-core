@@ -3730,7 +3730,7 @@ var egret;
             var length = list.length;
             for (var i = 0; i < length; i++) {
                 var container = list[i];
-                var player = new web.WebPlayer(container);
+                var player = new web.WebPlayer(container, options);
                 container["egret-player"] = player;
                 //webgl模式关闭脏矩形
                 if (options.renderMode == "webgl") {
@@ -3975,14 +3975,14 @@ var egret;
          */
         var WebPlayer = (function (_super) {
             __extends(WebPlayer, _super);
-            function WebPlayer(container) {
+            function WebPlayer(container, options) {
                 _super.call(this);
-                this.init(container);
+                this.init(container, options);
                 this.initOrientation();
             }
             var d = __define,c=WebPlayer,p=c.prototype;
-            p.init = function (container) {
-                var option = this.readOption(container);
+            p.init = function (container, options) {
+                var option = this.readOption(container, options);
                 var stage = new egret.Stage();
                 stage.$screen = this;
                 stage.$scaleMode = option.scaleMode;
@@ -4025,7 +4025,7 @@ var egret;
             /**
              * 读取初始化参数
              */
-            p.readOption = function (container) {
+            p.readOption = function (container, options) {
                 var option = {};
                 option.entryClassName = container.getAttribute("data-entry-class");
                 option.scaleMode = container.getAttribute("data-scale-mode") || egret.StageScaleMode.NO_SCALE;
@@ -4035,7 +4035,12 @@ var egret;
                 option.orientation = container.getAttribute("data-orientation") || egret.OrientationMode.AUTO;
                 option.maxTouches = +container.getAttribute("data-multi-fingered") || 2;
                 option.textureScaleFactor = +container.getAttribute("texture-scale-factor") || 1;
-                option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
+                if (options.renderMode == "webgl") {
+                    option.showPaintRect = false;
+                }
+                else {
+                    option.showPaintRect = container.getAttribute("data-show-paint-rect") == "true";
+                }
                 option.showFPS = container.getAttribute("data-show-fps") == "true";
                 var styleStr = container.getAttribute("data-show-fps-style") || "";
                 var stylesArr = styleStr.split(",");
