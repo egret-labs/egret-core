@@ -331,20 +331,17 @@ module dragonBones {
 			group:string = null, 
 			fadeOutMode:string = Animation.ALL
 		):AnimationState{
-			var animationState:AnimationState = this.getState(animationName, layer);
-			if(!animationState){
-				animationState = this.gotoAndPlay(animationName, fadeInTime, duration, NaN, layer, group, fadeOutMode);
-			}
-			
+            var animationState: AnimationState = this.gotoAndPlay(animationName, fadeInTime, duration, NaN, layer, group, fadeOutMode);
 			if(normalizedTime >= 0){
 				animationState.setCurrentTime(animationState.totalTime * normalizedTime);
 			}
 			else{
 				animationState.setCurrentTime(time);
-			}
-			
-			animationState.stop();
-			
+            }
+
+            animationState.lastFrameAutoTween = false;
+            animationState.stop();
+
 			return animationState;
 		}
 

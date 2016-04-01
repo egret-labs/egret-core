@@ -606,8 +606,9 @@ module dragonBones {
 			}
 			armature.armatureData.setSkinData(skinName);
 			
-			var displayList:Array<any> = [];
-			var slotDataList:Array<SlotData> = armature.armatureData.slotDataList;
+            var slotDataList: Array<SlotData> = armature.armatureData.slotDataList;
+            var slotDisplayDataList: Array<[DisplayData, TextureData]> = [];
+            var displayList: Array<any> = [];
 			var slotData:SlotData;
 			var slot:FastSlot;
 			for(var i:number = 0; i < slotDataList.length; i++){
@@ -624,14 +625,20 @@ module dragonBones {
 					switch(displayData.type){
 						case DisplayData.ARMATURE:
 							var childArmature:FastArmature = this.buildFastArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlasName, skinName);
-							displayList[l] = childArmature;
+                            slotDisplayDataList[l] = [displayData, null];
+                            displayList[l] = childArmature;
 							slot.hasChildArmature = true;
 							break;
 						
 						case DisplayData.IMAGE:
-						default:
-							displayList[l] = this.getTextureDisplay(displayData.name,textureAtlasName, displayData.pivot.x, displayData.pivot.y);
-							break;
+                            slotDisplayDataList[l] = [displayData, this.getTextureData(displayData.name, textureAtlasName)];
+                            displayList[l] = slot._rawDisplay;
+                            break;
+
+                        default:
+                            slotDisplayDataList[l] = [displayData, null];
+                            displayList[l] = null;
+                            break;
 						
 					}
 				}
@@ -658,11 +665,32 @@ module dragonBones {
 					}
 				}
 				//==================================================
-				slot.initDisplayList(displayList.concat());
-				armature.addSlot(slot, slotData.parent);
-				slot._changeDisplayIndex(slotData.displayIndex);
+
+                armature.addSlot(slot, slotData.parent);
+                slot.displayDataList = slotDisplayDataList;
+                slot.displayList = displayList;
+                slot.displayIndex = slotData.displayIndex;
 			}
-		}
+        }
+
+        private getTextureData(textureName: string, textureAtlasName: string): TextureData {
+            var textureData: TextureData = null;
+            var textureAtlasData: EgretTextureAtlas = null;
+            var textureAtlasDataList: Array<EgretTextureAtlas> = this.textureAtlasDic[textureAtlasName];
+            if (textureAtlasDataList) {
+                for (var i in textureAtlasDataList)
+                {
+                    textureAtlasData = textureAtlasDataList[i];
+                    textureData = textureAtlasData.getTextureData(textureName);
+                    if (textureData) {
+                        textureData.textureAtlas = textureAtlasData;
+                        break;
+                    }
+                }
+            }
+
+			return textureData;
+        }
 
 		/**
 		 * @private

@@ -41,8 +41,8 @@ module dragonBones {
         /**
          * 创建一个新的 EgretSlot 实例
          */
-        public constructor(){
-            super();
+        public constructor(rawDisplay:any){
+            super(rawDisplay);
 
             this._egretDisplay = null;
         }
@@ -69,6 +69,26 @@ module dragonBones {
         /** @private */
         public _updateDisplay(value:any):void{
             this._egretDisplay = <egret.DisplayObject><any> value;
+        }
+
+        /** @private */
+        public _addDisplay(): void {
+            const container = this.armature.display as egret.DisplayObjectContainer;
+            container.addChild(this._egretDisplay);
+        }
+		
+        /** @private */
+        public _replaceDisplay(prevDisplay: any): void {
+            const container = this.armature.display as egret.DisplayObjectContainer;
+            const displayObject = prevDisplay as egret.DisplayObject;
+            container.addChild(this._egretDisplay);
+            container.swapChildren(this._egretDisplay, displayObject);
+            container.removeChild(displayObject);
+        }
+		
+        /** @private */
+        public _removeDisplay(): void {
+            this._egretDisplay.parent.removeChild(this._egretDisplay);
         }
 
         //Abstract method
@@ -102,10 +122,9 @@ module dragonBones {
         }
 
         /** @private */
-        public _updateTransform():void{
-            if (this._egretDisplay) {
+        public _updateTransform(): void{
+            if (this._displayIndex >= 0) {
                 this._egretDisplay.$setMatrix(<egret.Matrix><any>this._globalTransformMatrix, false);
-
             }
         }
 
@@ -132,17 +151,39 @@ module dragonBones {
             {
 
                 this._egretDisplay.alpha = aMultiplier;
+                //todo apply colorTransform after engine support it.
             }
         }
-
+        
         /** @private */
-        public _resetDisplayColor()
-        {
-            if(this._egretDisplay)
-            {
-
-                this._egretDisplay.alpha = 1;
-                //todo apply colorTransform after engine support it.
+        public _updateFrame(): void {
+            const dataLength = this._displayDataList.length;
+            const textureIndex = this._displayIndex < dataLength ? this._displayIndex : (dataLength - 1);
+            const textureData = textureIndex < 0 ? null : this._displayDataList[textureIndex][1];
+            const display = this._egretDisplay as egret.Bitmap;
+            if (textureData) {
+                const textureAtlasTexture: EgretTextureAtlas = textureData.textureAtlas as EgretTextureAtlas;
+                const displayData = this.displayDataList[this._displayIndex][0];
+                const rect = textureData.frame || textureData.region;
+                const width = textureData.rotated ? rect.height : rect.width;
+                const height = textureData.rotated ? rect.width : rect.height;
+                //const pivotX = width * displayData.pivot.x - (textureData.frame ? textureData.frame.x : 0);
+                //const pivotY = height * displayData.pivot.y - (textureData.frame ? textureData.frame.y : 0);
+                const pivotX = width * 0.5;
+                const pivotY = height * 0.5;
+                display.texture = textureAtlasTexture.getTexture(displayData.name);
+                // display.readjustSize();
+                display.anchorOffsetX = pivotX;
+                display.anchorOffsetY = pivotY;
+                display.visible = true;
+            }
+            else {
+                display.texture = null;
+                //display.readjustSize();
+                //display.anchorOffsetX = 0;
+                //display.anchorOffsetX = 0;
+                display.visible = false;
+                console.log(123);
             }
         }
 

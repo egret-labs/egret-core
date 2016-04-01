@@ -80,7 +80,7 @@ module dragonBones {
             return armature;
         }
         public _generateFastSlot():FastSlot {
-            var slot:FastSlot = new EgretFastSlot();
+            var slot: FastSlot = new EgretFastSlot(new egret.Bitmap());
             return slot;
         }
     }

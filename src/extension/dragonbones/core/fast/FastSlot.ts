@@ -40,401 +40,414 @@ module dragonBones {
 	 * @see dragonBones.FastBone
 	 * @see dragonBones.SlotData
 	 */
-	export class FastSlot extends FastDBObject implements ISlotCacheGenerator{
-		/** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
-		public _displayDataList:Array<DisplayData>;
-		/** @private */
-		public _originZOrder:number;
-		/** @private */
-		public _tweenZOrder:number;
-		/** @private */
-		public _offsetZOrder:number;
-		/** @private */
-		public _originDisplayIndex:number;
+    export class FastSlot extends FastDBObject implements ISlotCacheGenerator {
+        /** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
+        //public _displayDataList:Array<DisplayData>;
         /** @private */
-		public _gotoAndPlay:string;
-		public _defaultGotoAndPlay:string;
-        
-		public _displayList:Array<any>;
-		public _currentDisplayIndex:number = 0;
-		public _colorTransform:ColorTransform;
-		public _isColorChanged:boolean;
-		public _currentDisplay:any;
-		
-		public _blendMode:string;
-		
-		public hasChildArmature:boolean;
-		public constructor(){
-			super();
-			this.hasChildArmature = false;
-			this._currentDisplayIndex = -1;
-			
-			this._originZOrder = 0;
-			this._tweenZOrder = 0;
-			this._offsetZOrder = 0;
-			this._colorTransform = new ColorTransform();
-			this._isColorChanged = false;
-			this._displayDataList = null;
-			this._currentDisplay = null;
-			
-			this.inheritRotation = true;
-			this.inheritScale = true;
-		}
+        public _originZOrder: number;
+        /** @private */
+        public _tweenZOrder: number;
+        /** @private */
+        public _offsetZOrder: number;
+        /** @private */
+        public _originDisplayIndex: number;
+
+        /** @private */
+        public _gotoAndPlay: string;
+        public _defaultGotoAndPlay: string;
+        public hasChildArmature: boolean = false;
+
+        public _isColorChanged: boolean;
+        public _colorTransform: ColorTransform;
+        public _blendMode: string;
+
+        // modify display index change 
+        public _displayIndex: number = -1;
+        public _rawDisplay: any = null;
+        public _display: any = null;
+        public _childArmature: FastArmature = null;
+        public _displayList: Array<any> = [];
+        public _displayDataList: Array<[DisplayData, TextureData]> = [];
+
+        public timelineCache: TimelineCache;
+
+        public constructor(rawDisplay: any) {
+            super();
+            this.hasChildArmature = false;
+            this.inheritRotation = true;
+            this.inheritScale = true;
+
+            this._originZOrder = 0;
+            this._tweenZOrder = 0;
+            this._offsetZOrder = 0;
+            this._colorTransform = new ColorTransform();
+            this._isColorChanged = false;
+
+            this._rawDisplay = rawDisplay;
+        }
 
 		/**
 		 * 通过传入 SlotData 初始化FastSlot
 		 * @param slotData
 		 */
-		public initWithSlotData(slotData:SlotData):void{
-			this.name = slotData.name;
-			this.blendMode = slotData.blendMode;
+        public initWithSlotData(slotData: SlotData): void {
+            this.name = slotData.name;
+            this.blendMode = slotData.blendMode;
             this._defaultGotoAndPlay = slotData.gotoAndPlay;
-			this._originZOrder = slotData.zOrder;
-			this._displayDataList = slotData.displayDataList;
-			this._originDisplayIndex = slotData.displayIndex;
-		}
+            this._originZOrder = slotData.zOrder;
+            this._originDisplayIndex = slotData.displayIndex;
+        }
 		
 		/**
 		 * @inheritDoc
 		 */
-		public dispose():void{
-			if(!this._displayList){
-				return;
-			}
-			
-			super.dispose();
-			
-			this._displayDataList = null;
-			this._displayList = null;
-			this._currentDisplay = null;
-		}
-		
-		//动画
-		/** @private */
-		public updateByCache():void{
-			super.updateByCache();
-			this._updateTransform();
-		//颜色
-			var cacheColor:ColorTransform = (<SlotFrameCache><any> (this._frameCache)).colorTransform;
-			var cacheColorChanged:boolean = cacheColor != null;
-			if(	this.colorChanged != cacheColorChanged ||
-				(this.colorChanged && cacheColorChanged && !ColorTransformUtil.isEqual(this._colorTransform, cacheColor))){
-				cacheColor = cacheColor || ColorTransformUtil.originalColor;
-				this._updateDisplayColor(	cacheColor.alphaOffset, 
-									cacheColor.redOffset, 
-									cacheColor.greenOffset, 
-									cacheColor.blueOffset,
-									cacheColor.alphaMultiplier, 
-									cacheColor.redMultiplier, 
-									cacheColor.greenMultiplier, 
-									cacheColor.blueMultiplier,
-									cacheColorChanged);
-			}
-			
-		//displayIndex
-			this._changeDisplayIndex((<SlotFrameCache><any> (this._frameCache)).displayIndex);
-			this.gotoAndPlay = (<SlotFrameCache><any> (this._frameCache)).gotoAndPlay;
-		}
-		
-		/** @private */
-		public _update():void{
-			if(this._parent._needUpdate <= 0){
-				return;
-			}
-			
-			var result:ParentTransformObject = this._updateGlobal();
-            if(result)
-            {
-                result.release();
+        public dispose(): void {
+            if (!this._displayList) {
+                return;
             }
-			this._updateTransform();
-		}
+
+            super.dispose();
+
+            this._rawDisplay = null;
+            this._display = null;
+            this._childArmature = null;
+            this._displayDataList = null;
+            this._displayList = null;
+        }
 		
-		public _calculateRelativeParentTransform():void{
-			this._global.copy(this._origin);
-			this._global.x += this._parent._tweenPivot.x;
-			this._global.y += this._parent._tweenPivot.y;
-		}
+        //动画
+        /** @private */
+        public updateByCache(frameIndex: number = 0): void {
+            
+            this._frameCache = this.timelineCache.frameCacheList[frameIndex];
+
+            super.updateByCache();
+            this._updateTransform();
+
+            
+            //颜色
+            var cacheColor: ColorTransform = (<SlotFrameCache><any>(this._frameCache)).colorTransform;
+            var cacheColorChanged: boolean = cacheColor != null;
+            if (
+                this.colorChanged != cacheColorChanged ||
+                (this.colorChanged && cacheColorChanged && !ColorTransformUtil.isEqual(this._colorTransform, cacheColor))
+            ){
+                cacheColor = cacheColor || ColorTransformUtil.originalColor;
+                this._updateDisplayColor(
+                    cacheColor.alphaOffset,
+                    cacheColor.redOffset,
+                    cacheColor.greenOffset,
+                    cacheColor.blueOffset,
+                    cacheColor.alphaMultiplier,
+                    cacheColor.redMultiplier,
+                    cacheColor.greenMultiplier,
+                    cacheColor.blueMultiplier,
+                    cacheColorChanged
+                );
+            }
+            var cacheDisplayIndex = (<SlotFrameCache><any>(this._frameCache)).displayIndex;
+            if (cacheDisplayIndex != this._displayIndex) {
+                this.displayIndex = cacheDisplayIndex;
+            }
+            
+            this.gotoAndPlay = (<SlotFrameCache><any>(this._frameCache)).gotoAndPlay;
+        }
 		
-        public updateChildArmatureAnimation():void
-		{
-			if(this.childArmature)
-			{
-				if(this._currentDisplayIndex >= 0)
-				{
-					var curAnimation:string = this._gotoAndPlay;
-					if (curAnimation == null)
-					{
-						curAnimation = this._defaultGotoAndPlay;
-                        if(curAnimation == null)
-                        {
+        /** @private */
+        public _update(needUpdate: boolean = false): void {
+            if (this._parent && (this._parent._needUpdate > 0 || needUpdate)) {
+                var result: ParentTransformObject = this._updateGlobal();
+                if (result) {
+                    result.release();
+                }
+                this._updateTransform();
+            }
+        }
+
+        public _calculateRelativeParentTransform(): void {
+            this._global.copy(this._origin);
+            this._global.x += this._parent._tweenPivot.x;
+            this._global.y += this._parent._tweenPivot.y;
+        }
+
+        public updateChildArmatureAnimation(): void {
+            if (this.childArmature) {
+                if (this._displayIndex >= 0) {
+                    var curAnimation: string = this._gotoAndPlay;
+                    if (curAnimation == null) {
+                        curAnimation = this._defaultGotoAndPlay;
+                        if (curAnimation == null) {
                             this.childArmature.armatureData.defaultAnimation;
                         }
-					}
-					if (curAnimation == null)
-					{
-						if (this.armature && this.armature.animation.lastAnimationState)
-						{
-							curAnimation = this.armature.animation.lastAnimationState.name;
-						}
-					}
-					if (curAnimation && this.childArmature.animation.hasAnimation(curAnimation))
-					{
-						this.childArmature.animation.gotoAndPlay(curAnimation);
-					}
-					else
-					{
-						this.childArmature.animation.play();
-					}
-				}
-				else
-				{
-					this.childArmature.animation.stop();
-					this.childArmature.animation._lastAnimationState = null;
-				}
-			}
-		}
+                    }
+                    if (curAnimation == null) {
+                        if (this.armature && this.armature.animation.lastAnimationState) {
+                            curAnimation = this.armature.animation.lastAnimationState.name;
+                        }
+                    }
+                    if (curAnimation && this.childArmature.animation.hasAnimation(curAnimation)) {
+                        this.childArmature.animation.gotoAndPlay(curAnimation);
+                    }
+                    else {
+                        this.childArmature.animation.play();
+                    }
+                }
+                else {
+                    this.childArmature.animation.stop();
+                    this.childArmature.animation._lastAnimationState = null;
+                }
+            }
+        }
         
-		public initDisplayList(newDisplayList:Array<any>):void{
-			this._displayList = newDisplayList;
-		}
-		
-		private clearCurrentDisplay():number{
-			if(this.hasChildArmature){
-				var targetArmature:FastArmature = this.childArmature;
-				if(targetArmature){
-					targetArmature.resetAnimation()
-				}
-			}
-			if (this._isColorChanged)
-			{
-				this._resetDisplayColor();
-			}
-			var slotIndex:number = this._getDisplayIndex();
-			this._removeDisplayFromContainer();
-			return slotIndex;
-		}
-		
-		/** @private */
-		public _changeDisplayIndex(displayIndex:number = 0):void{
-			if(this._currentDisplayIndex == displayIndex){
-				return;
-			}
-			
-			var slotIndex:number = -1;
+        // modify changeDisplay
+        /** @private */
+        public changeDisplay(): void {
+            const prevDisplay: Object = this._display;
+            const prevChildArmature: FastArmature = this._childArmature;
+            if (this._displayIndex < 0 || this._displayIndex >= this._displayList.length) {
+                this._display = this._rawDisplay;
+            }
+            else {
+                this._display = this._displayList[this._displayIndex];
+            }
 
-			if(this._currentDisplayIndex >=0){
-				slotIndex = this.clearCurrentDisplay();
-			}
-			
-			this._currentDisplayIndex = displayIndex;
-			
-			if(this._currentDisplayIndex >=0){
-				this._origin.copy(this._displayDataList[this._currentDisplayIndex].transform);
-				this.initCurrentDisplay(slotIndex);
-			}
-		}
-		
-		//currentDisplayIndex不变，改变内容，必须currentDisplayIndex >=0
-		private changeSlotDisplay(value:any):void{
-			var slotIndex:number = this.clearCurrentDisplay();
-			this._displayList[this._currentDisplayIndex] = value;
-			this.initCurrentDisplay(slotIndex);
-		}
-		
-		private initCurrentDisplay(slotIndex:number = 0):void{
-			var display:any = this._displayList[this._currentDisplayIndex];
-			if (display){
-				if(display instanceof FastArmature){
-					this._currentDisplay = (<FastArmature><any> display).display;
-				}
-				else{
-					this._currentDisplay = display;
-				}
-			}
-			else{
-				this._currentDisplay = null;
-			}
-			
-			this._updateDisplay(this._currentDisplay);
-			if(this._currentDisplay){
-				if(slotIndex != -1){
-					this._addDisplayToContainer(this.armature.display, slotIndex);
-				}
-				else{
-					this.armature._slotsZOrderChanged = true;
-					this._addDisplayToContainer(this.armature.display);
-				}
-				
-				if(this._blendMode){
-					this._updateDisplayBlendMode(this._blendMode);
-				}
-				if(this._isColorChanged){
-					this._updateDisplayColor(	this._colorTransform.alphaOffset, 
-						this._colorTransform.redOffset, 
-						this._colorTransform.greenOffset, 
-						this._colorTransform.blueOffset,
-						this._colorTransform.alphaMultiplier, 
-						this._colorTransform.redMultiplier, 
-						this._colorTransform.greenMultiplier, 
-						this._colorTransform.blueMultiplier,
-						true);
-				}
-				this._updateTransform();
-				
-				if(display instanceof FastArmature){
-					var targetArmature:FastArmature = <FastArmature><any> (display);
-					
-					if(	this.armature &&
-						this.armature.animation.animationState &&
-						targetArmature.animation.hasAnimation(this.armature.animation.animationState.name)){
-						targetArmature.animation.gotoAndPlay(this.armature.animation.animationState.name);
-					}
-					else{
-						targetArmature.animation.play();
-					}
-				}
-			}
-		}
-		
+            if (this._display instanceof FastArmature) {
+                this._childArmature = this._display as FastArmature;
+                this._display = (this._display as FastArmature).display;
+            }
+            else {
+                this._childArmature = null;
+                if (!this._display) {
+                    this._display = this._rawDisplay;
+                }
+            }
 
-		/** @private */
-		public set visible(value:boolean)
-		{
-			if(this._visible != value)
-			{
-				this._visible = value;
-				this._updateDisplayVisible(this._visible);
-			}
-		}
+            if (this._childArmature != prevChildArmature) {
+                if (this._childArmature) {
+                    this._childArmature.animation.play();
+                }
+                else {
+                    //prevChildArmature.animation.reset();
+                }
+            }
 
-		/**
-		 * 显示对象列表(包含 display 或者 子骨架)
-		 * @member {any[]} dragonBones.FastSlot#displayList
-		 */
-		public get displayList():Array<any>{
-			return this._displayList;
-		}
-		public set displayList(value:Array<any>){
-			//todo: 考虑子骨架变化的各种情况
-			if(!value){
-				throw new Error();
-			}
-			
-			var newDisplay:any = value[this._currentDisplayIndex];
-			var displayChanged:boolean = this._currentDisplayIndex >= 0 && this._displayList[this._currentDisplayIndex] != newDisplay;
-			
-			this._displayList = value;
-			
-			if(displayChanged){
-				this.changeSlotDisplay(newDisplay);
-			}
-		}
+            if (this._display != prevDisplay) {
+                this._updateDisplay(this._display);
+                if (this.armature) {
+                    if (prevDisplay) {
+                        this._replaceDisplay(prevDisplay);
+                    }
+                    else {
+                        this._addDisplay();
+                    }
+                }
+
+                this._updateDisplayBlendMode(this._blendMode);
+                //this._updateVisible();
+                this._updateDisplayColor(
+                    this._colorTransform.alphaOffset,
+                    this._colorTransform.redOffset,
+                    this._colorTransform.greenOffset,
+                    this._colorTransform.blueOffset,
+                    this._colorTransform.alphaMultiplier,
+                    this._colorTransform.redMultiplier,
+                    this._colorTransform.greenMultiplier,
+                    this._colorTransform.blueMultiplier
+                );
+            }
+
+            if (this._display == this._rawDisplay) {
+                this._updateFrame();
+            }
+
+            if (this._displayIndex >= 0) {
+                this._origin.copy(this._displayDataList[this._displayIndex][0].transform);
+            }
+            if (this.armature && !this.armature._useCache)
+            {
+                this._update(true);
+            }
+        }
+		
+        /** @private */
+        public set visible(value: boolean) {
+            if (this._visible != value) {
+                this._visible = value;
+                this._updateDisplayVisible(this._visible);
+            }
+        }
+
+        public get displayIndex(): number {
+            return this._displayIndex;
+        }
+        public set displayIndex(value: number) {
+            if (this._displayIndex == value) {
+                return;
+            }
+            
+            this._displayIndex = value;
+            this.changeDisplay();
+        }
 
 		/**
 		 * 当前的显示对象(可能是 display 或者 子骨架)
 		 * @member {any} dragonBones.FastSlot#display
 		 */
-		public get display():any{
-			return this._currentDisplay;
-		}
-		public set display(value:any){
-			//todo: 考虑子骨架变化的各种情况
-			if (this._currentDisplayIndex < 0){
-				return;
-			}
-			if(this._displayList[this._currentDisplayIndex] == value){
-				return;
-			}
-			
-			this.changeSlotDisplay(value);
-		}
+        public get display(): any {
+            return this._display;
+        }
+        public set display(value: any) {
+            const displayListLength = this._displayList.length;
+            if (this._displayIndex >= displayListLength) {
+                if (displayListLength == 0) {
+                    this._displayList[0] = value;
+                }
+                else {
+                    this._displayList[displayListLength - 1] = value;
+                }
+            }
+            else {
+                this._displayList[this._displayIndex] = value;
+            }
+            
+            if (this._displayIndex >= 0) {
+                this.changeDisplay();
+            }
+        }
 
 		/**
 		 * 当前的子骨架
 		 * @member {FastArmature} dragonBones.Slot#childArmature
 		 */
-		public get childArmature():any{
-			return (this._displayList[this._currentDisplayIndex] instanceof Armature 
-				    || this._displayList[this._currentDisplayIndex] instanceof FastArmature) ? this._displayList[this._currentDisplayIndex] : null;
-		}
-		
-		public set childArmature(value:any)
-		{
-			this.display = value;
-		}
+        public get childArmature(): any {
+            return this._childArmature;
+        }
+
+        public set childArmature(value: any) {
+            if (this._childArmature == value) {
+                return;
+            }
+
+            this.display = value;
+        }
+
+        public get displayDataList(): Array<[DisplayData, TextureData]> {
+            return this._displayDataList;
+        }
+        public set displayDataList(value: Array<[DisplayData, TextureData]>) {
+            if (this._displayDataList != value) {
+                if (value && value.length) {
+                    this._displayDataList.length = value.length;
+                    for (var i = 0, l = this._displayDataList.length; i < l; ++i) {
+                        this._displayDataList[i] = value[i];
+                    }
+                }
+                else {
+                    this._displayDataList.length = 0;
+                }
+            }
+        }
+
+		/**
+		 * 显示对象列表(包含 display 或者 子骨架)
+		 * @member {any[]} dragonBones.FastSlot#displayList
+		 */
+        public get displayList(): Array<any> {
+            return this._displayList;
+        }
+        public set displayList(value: Array<any>) {
+            if (this._displayList != value) {
+                if (value && value.length) {
+                    this._displayList.length = value.length;
+                    for (var i = 0, l = this._displayList.length; i < l; ++i) {
+                        this._displayList[i] = value[i];
+                    }
+                }
+                else {
+                    this._displayList.length = 0;
+                }
+            }
+
+            this.changeDisplay();
+        }
+
 		/**
 		 * 显示顺序。(支持小数用于实现动态插入slot)
 		 * @member {number} dragonBones.FastSlot#zOrder
 		 */
-		public get zOrder():number{
-			return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
-		}
-		public set zOrder(value:number){
-			if(this.zOrder != value){
-				this._offsetZOrder = value - this._originZOrder - this._tweenZOrder;
-				if(this.armature){
-					this.armature._slotsZOrderChanged = true;
-				}
-			}
-		}
+        public get zOrder(): number {
+            return this._originZOrder + this._tweenZOrder + this._offsetZOrder;
+        }
+        public set zOrder(value: number) {
+            if (this.zOrder != value) {
+                this._offsetZOrder = value - this._originZOrder - this._tweenZOrder;
+                if (this.armature) {
+                    this.armature._slotsZOrderChanged = true;
+                }
+            }
+        }
 
 		/**
 		 * 混合模式
 		 * @member {string} dragonBones.FastSlot#blendMode
 		 */
-		public get blendMode():string{
-			return this._blendMode;
-		}
-		public set blendMode(value:string){
-			if(this._blendMode != value){
-				this._blendMode = value;
-				this._updateDisplayBlendMode(this._blendMode);
-			}
-		}
+        public get blendMode(): string {
+            return this._blendMode;
+        }
+        public set blendMode(value: string) {
+            if (this._blendMode != value) {
+                this._blendMode = value;
+                this._updateDisplayBlendMode(this._blendMode);
+            }
+        }
 		
         /**
          * 播放子骨架动画
 		 * @member {string} dragonBones.FastSlot#gotoAndPlay
          */
-        public set gotoAndPlay(value:string) 
-		{
-			if (this._gotoAndPlay != value)
-			{
-				this._gotoAndPlay = value;
-				this.updateChildArmatureAnimation();
-			}
-		}
-        
-		public get colorTransform():ColorTransform{
-			return this._colorTransform;
-		}
-		
-		public get displayIndex():number{
-			return this._currentDisplayIndex;
-		}
-		
-		public get colorChanged():boolean{
-			return this._isColorChanged;
-		}
-		
-        public get gotoAndPlay():string{
+        public set gotoAndPlay(value: string) {
+            if (this._gotoAndPlay != value) {
+                this._gotoAndPlay = value;
+                this.updateChildArmatureAnimation();
+            }
+        }
+
+        public get colorTransform(): ColorTransform {
+            return this._colorTransform;
+        }
+
+        public get colorChanged(): boolean {
+            return this._isColorChanged;
+        }
+
+        public get gotoAndPlay(): string {
             return this._gotoAndPlay;
         }
-	//Abstract method
-		/**
-		 * @private
-		 */
-		public _updateDisplay(value:any):void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
-		}
+        //Abstract method
+        /** @private */
+        public _updateDisplay(value: any): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
+        
+        /** @private */
+        public _addDisplay(): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
 		
-		/**
-		 * @private
-		 */
-		public _getDisplayIndex():number{
-			throw new Error("Abstract method needs to be implemented in subclass!");
-		}
+        /** @private */
+        public _replaceDisplay(prevDisplay: any): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
+		
+        /** @private */
+        public _removeDisplay(): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
+		
+        /** @private */
+        public _getDisplayIndex(): number {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
 		
 		/**
 		 * @private
@@ -442,36 +455,44 @@ module dragonBones {
 		 * @param container
 		 * @param index
 		 */
-		public _addDisplayToContainer(container:any, index:number = -1):void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
-		}
+        public _addDisplayToContainer(container: any, index: number = -1): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
 		
 		/**
 		 * @private
 		 * remove the original display object from its parent.
 		 */
-		public _removeDisplayFromContainer():void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
-		}
+        public _removeDisplayFromContainer(): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
 		
 		/**
 		 * @private
 		 * Updates the transform of the slot.
 		 */
-		public _updateTransform():void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
-		}
+        public _updateTransform(): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
+        
+		/**
+		 * @private
+		 * Updates the frame of the slot.
+		 */
+        public _updateFrame(): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
 		
 		/**
 		 * @private
 		 */
-		public _updateDisplayVisible(value:boolean):void{
+        public _updateDisplayVisible(value: boolean): void {
 			/**
 			 * bone.visible && slot.visible && updateVisible
 			 * this._parent.visible && this._visible && value;
 			 */
-			throw new Error("Abstract method needs to be implemented in subclass!");
-		}
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
 		
 		/**
 		 * @private
@@ -485,81 +506,74 @@ module dragonBones {
 		 * @param gM
 		 * @param bM
 		 */
-		public _updateDisplayColor(
-			aOffset:number, 
-			rOffset:number, 
-			gOffset:number, 
-			bOffset:number, 
-			aMultiplier:number, 
-			rMultiplier:number, 
-			gMultiplier:number, 
-			bMultiplier:number,
-			colorChanged:boolean = false
-		):void{
-			this._colorTransform.alphaOffset = aOffset;
-			this._colorTransform.redOffset = rOffset;
-			this._colorTransform.greenOffset = gOffset;
-			this._colorTransform.blueOffset = bOffset;
-			this._colorTransform.alphaMultiplier = aMultiplier;
-			this._colorTransform.redMultiplier = rMultiplier;
-			this._colorTransform.greenMultiplier = gMultiplier;
-			this._colorTransform.blueMultiplier = bMultiplier;
-			this._isColorChanged = colorChanged;
-		}
+        public _updateDisplayColor(
+            aOffset: number,
+            rOffset: number,
+            gOffset: number,
+            bOffset: number,
+            aMultiplier: number,
+            rMultiplier: number,
+            gMultiplier: number,
+            bMultiplier: number,
+            colorChanged: boolean = false
+        ): void {
+            this._colorTransform.alphaOffset = aOffset;
+            this._colorTransform.redOffset = rOffset;
+            this._colorTransform.greenOffset = gOffset;
+            this._colorTransform.blueOffset = bOffset;
+            this._colorTransform.alphaMultiplier = aMultiplier;
+            this._colorTransform.redMultiplier = rMultiplier;
+            this._colorTransform.greenMultiplier = gMultiplier;
+            this._colorTransform.blueMultiplier = bMultiplier;
+            this._isColorChanged = colorChanged;
+        }
 		
-		public _resetDisplayColor()
-		{
-
-		}
 		/**
 		 * @private
 		 * Update the blend mode of the display object.
 		 * @param value The blend mode to use. 
 		 */
-		public _updateDisplayBlendMode(value:string):void{
-			throw new Error("Abstract method needs to be implemented in subclass!");
-		}
+        public _updateDisplayBlendMode(value: string): void {
+            throw new Error("Abstract method needs to be implemented in subclass!");
+        }
 		
-		/** @private When slot timeline enter a key frame, call this func*/
-		public _arriveAtFrame(frame:Frame, animationState:FastAnimationState):void{
-			var slotFrame:SlotFrame = <SlotFrame><any> frame;
-			var displayIndex:number = slotFrame.displayIndex;
-			this._changeDisplayIndex(displayIndex);
-			this._updateDisplayVisible(slotFrame.visible);
-			if(displayIndex >= 0){
-				if(!isNaN(slotFrame.zOrder) && slotFrame.zOrder != this._tweenZOrder){
-					this._tweenZOrder = slotFrame.zOrder;
-					this.armature._slotsZOrderChanged = true;
-				}
-			}
-			//[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
-			//后续会扩展更多的action，目前只有gotoAndPlay的含义
-			if(frame.action) {
-				var targetArmature:FastArmature = this.childArmature;
-				if (targetArmature){
-					targetArmature.getAnimation().gotoAndPlay(frame.action);
-				}
-			}
-            else
-            {
+        /** @private When slot timeline enter a key frame, call this func*/
+        public _arriveAtFrame(frame: Frame, animationState: FastAnimationState): void {
+            var slotFrame: SlotFrame = <SlotFrame><any>frame;
+            this.displayIndex = slotFrame.displayIndex;
+            this._updateDisplayVisible(slotFrame.visible);
+            if (this._displayIndex >= 0) {
+                if (!isNaN(slotFrame.zOrder) && slotFrame.zOrder != this._tweenZOrder) {
+                    this._tweenZOrder = slotFrame.zOrder;
+                    this.armature._slotsZOrderChanged = true;
+                }
+            }
+            //[TODO]currently there is only gotoAndPlay belongs to frame action. In future, there will be more.  
+            //后续会扩展更多的action，目前只有gotoAndPlay的含义
+            if (frame.action) {
+                var targetArmature: FastArmature = this.childArmature;
+                if (targetArmature) {
+                    targetArmature.getAnimation().gotoAndPlay(frame.action);
+                }
+            }
+            else if (slotFrame.gotoAndPlay) {
                 this.gotoAndPlay = slotFrame.gotoAndPlay;
             }
-		}
+        }
 		
-				/** @private */
-		public hideSlots():void{
-			this._changeDisplayIndex( -1);
-			this._removeDisplayFromContainer();
-			if (this._frameCache){
-				this._frameCache.clear();
-			}
-		}
+        /** @private */
+        public hideSlots(): void {
+            this.displayIndex = -1;
+            if (this._frameCache) {
+                this._frameCache.clear();
+            }
+        }
 
-		public _updateGlobal():any {
+        public _updateGlobal(): any {
             this._calculateRelativeParentTransform();
             TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
 
-            var output:any = this._calculateParentTransform();
+            var output: any = this._calculateParentTransform();
             if (output) {
                 this._globalTransformMatrix.concat(output.parentGlobalTransformMatrix);
                 TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, this._global.scaleX * output.parentGlobalTransform.scaleX >= 0, this._global.scaleY * output.parentGlobalTransform.scaleY >= 0);
@@ -567,10 +581,9 @@ module dragonBones {
             return output;
         }
 
-        public _resetToOrigin():void
-		{
-			this._changeDisplayIndex(this._originDisplayIndex);
-			this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
-		}
-	}
+        public _resetToOrigin(): void {
+            this.displayIndex = this._originDisplayIndex;
+            this._updateDisplayColor(0, 0, 0, 0, 1, 1, 1, 1, true);
+        }
+    }
 }

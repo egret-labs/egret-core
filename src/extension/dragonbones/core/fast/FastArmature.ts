@@ -130,8 +130,9 @@ module dragonBones {
 		public _eventList:Array<any>;
 		
 		private _delayDispose:boolean;
-		private _lockDispose:boolean;
-		private useCache:boolean = true;
+        private _lockDispose: boolean;
+        /** @private*/
+        public _useCache:boolean = true;
 		public constructor(display:any){
 			super();
 			this._display = display;
@@ -203,20 +204,24 @@ module dragonBones {
             var len:number = this._boneIKList.length;
             var j:number;
             var jLen:number;
+            
+            //if(this._animation.animationState.isUseCache()){
+            var animationState: FastAnimationState = this._animation.animationState;
+            if (this._enableCache && animationState.animationCache && !animationState._fading) {
                 
-			if(this._animation.animationState.isUseCache()){
-				if(!this.useCache){
-					this.useCache = true;
+                var frameIndex: number = Math.floor(animationState.progress * (animationState.animationCache.frameNum - 1));
+				if(!this._useCache){
+					this._useCache = true;
 				}
 				i = this.slotList.length;
 				while(i --){
 					slot = this.slotList[i];
-					slot.updateByCache();
+					slot.updateByCache(frameIndex);
 				}
 			}
 			else{
-				if(this.useCache){
-					this.useCache = false;
+				if(this._useCache){
+					this._useCache = false;
 					i = this.slotList.length;
 					while(i --){
 						slot = this.slotList[i];
@@ -383,7 +388,7 @@ module dragonBones {
 			bone.armature = this;
 			bone.parentBoneData = parentBone;
 			this.boneList.unshift(bone);
-			this._boneDic[bone.name] = bone;
+            this._boneDic[bone.name] = bone;
 		}
 
 		/**
@@ -405,7 +410,6 @@ module dragonBones {
 				if(slot.hasChildArmature){
 					this.slotHasChildArmatureList.push(slot);
 				}
-				
 			}
 			else{
 				throw new Error();

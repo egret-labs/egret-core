@@ -38,7 +38,7 @@ module dragonBones {
 	 */
 	export interface ICacheUser{
 		name:string;
-		frameCache:FrameCache;
-		
+        frameCache: FrameCache;
+        timelineCache: TimelineCache;
 	}
 }

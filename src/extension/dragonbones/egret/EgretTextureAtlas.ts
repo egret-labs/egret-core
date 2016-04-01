@@ -131,6 +131,15 @@ module dragonBones {
             }
             return null;
         }
+        
+        /**
+         * 根据子纹理的名字获取子纹理数据
+         * @param subTextureName 子纹理的名字
+         * @returns {dragonBone.TextureData} 子纹理数据
+         */
+        public getTextureData(subTextureName: string): TextureData {
+            return this._textureDatas[subTextureName];
+        }
 
         private parseData(textureAtlasRawData:any):void {
             this._textureDatas = DataParser.parseTextureAtlasData(textureAtlasRawData, this.scale);

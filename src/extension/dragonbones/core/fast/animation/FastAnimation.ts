@@ -171,14 +171,25 @@ module dragonBones {
 				this.animationState.animationCache = this.animationCacheManager.getAnimationCache(animationName);
 			}
 			
+
+
 			var i:number = this._armature.slotHasChildArmatureList.length;
 			while(i--){
 				var slot:FastSlot = this._armature.slotHasChildArmatureList[i];
 				var childArmature:FastArmature = slot.childArmature;
 				if(childArmature){
 					childArmature.getAnimation().gotoAndPlay(animationName);
-				}
-			}
+                }
+            }
+
+            i = this._armature.slotList.length;
+			while(i--){
+                var slot: FastSlot = this._armature.slotList[i];
+                if (this._armature.enableCache && this.animationCacheManager) {
+                    slot.timelineCache = this.animationState.animationCache.slotTimelineCacheDic[slot.name];
+                }
+            }
+
 			return this.animationState;
 		}
 
