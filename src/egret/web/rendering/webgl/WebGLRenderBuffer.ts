@@ -341,10 +341,13 @@ module egret.web {
             var textureSourceHeight = texture.height;
             this.createWebGLTexture(texture);
             var webGLTexture = texture["webGLTexture"][this.glID];
-            if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
-                //this.$drawWebGL();
+            if(this.currentBatchSize >= this.size - 1) {
+                this.$drawWebGL();
+                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
+            }
+            else if (webGLTexture !== this.currentBaseTexture) {
                 this.currentBaseTexture = webGLTexture;
-                this.drawData.push({texture: this.currentBaseTexture, count: 0});
+                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
             }
 
             //计算出绘制矩阵，之后把矩阵还原回之前的

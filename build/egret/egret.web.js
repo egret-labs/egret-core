@@ -5597,8 +5597,11 @@ var egret;
                 var textureSourceHeight = texture.height;
                 this.createWebGLTexture(texture);
                 var webGLTexture = texture["webGLTexture"][this.glID];
-                if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
-                    //this.$drawWebGL();
+                if (this.currentBatchSize >= this.size - 1) {
+                    this.$drawWebGL();
+                    this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
+                }
+                else if (webGLTexture !== this.currentBaseTexture) {
                     this.currentBaseTexture = webGLTexture;
                     this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
                 }
