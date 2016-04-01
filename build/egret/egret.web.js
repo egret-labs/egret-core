@@ -3054,7 +3054,6 @@ var egret;
         }());
         web.CanvasRenderBuffer = CanvasRenderBuffer;
         egret.registerClass(CanvasRenderBuffer,'egret.web.CanvasRenderBuffer',["egret.sys.RenderBuffer"]);
-        egret.sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -3748,10 +3747,12 @@ var egret;
             if (renderMode == "webgl") {
                 egret.sys.RenderBuffer = web.WebGLRenderBuffer;
                 egret.sys.systemRenderer = new web.WebGLRenderer();
+                egret.sys.hitTestBuffer = new web.WebGLRenderBuffer(3, 3);
             }
             else {
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;
                 egret.sys.systemRenderer = new egret.CanvasRenderer();
+                egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
             }
         }
         /**
@@ -5917,7 +5918,6 @@ var egret;
         web.WebGLRenderBuffer = WebGLRenderBuffer;
         egret.registerClass(WebGLRenderBuffer,'egret.web.WebGLRenderBuffer',["egret.sys.RenderBuffer"]);
         WebGLRenderBuffer.initBlendMode();
-        egret.sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
         var sharedBuffer = new WebGLRenderBuffer();
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));

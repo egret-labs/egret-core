@@ -94,10 +94,12 @@ module egret.web {
         if (renderMode == "webgl") {
             sys.RenderBuffer = web.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();
+            sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
         }
         else {
             sys.RenderBuffer = web.CanvasRenderBuffer;
             sys.systemRenderer = new CanvasRenderer();
+            sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
         }
     }
 

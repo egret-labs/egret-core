@@ -751,6 +751,5 @@ module egret.web {
     }
 
     WebGLRenderBuffer.initBlendMode();
-    sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
     var sharedBuffer:WebGLRenderBuffer = new WebGLRenderBuffer();
 }
