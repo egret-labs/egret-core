@@ -34,9 +34,7 @@ module egret.gui {
 	 * @class egret.gui.PopUpManager
 	 * @classdesc
 	 * 窗口弹出管理器<p/>
-	 * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口，
-	 * 并在项目初始化前调用Injector.mapClass("egret.gui.IPopUpManager",YourPopUpManager)，
-	 * 注入自定义的弹出框管理器类。
+	 * 若项目需要自定义弹出框管理器，请实现IPopUpManager接口
 	 */	
 	export class PopUpManager{
 		/**
@@ -53,7 +51,7 @@ module egret.gui {
 		private static getImpl():IPopUpManager{
 			if (!PopUpManager._impl){
 				try{
-					PopUpManager._impl = Injector.getInstance("egret.gui.IPopUpManager");
+					PopUpManager._impl = $getAdapter("egret.gui.IPopUpManager");
 				}
 				catch(e){
 					PopUpManager._impl = new PopUpManagerImpl();

@@ -40,7 +40,24 @@ module dragonBones {
 
         private static _helpTransformMatrix:Matrix = new Matrix();
         private static _helpParentTransformMatrix:Matrix = new Matrix();
-
+        
+        //optimized by freem-trg
+		private static tmpSkewXArray:Array<number> = [];
+ 		private static tmpSkewYArray:Array<number> = [];
+ 		private static ACCURACY : Number = 0.0001;
+        
+        private static isEqual(n1:number, n2:number):boolean
+ 		{
+ 			if (n1 >= n2)
+ 			{
+ 				return (n1 - n2) <= TransformUtil.ACCURACY;
+ 			}
+ 			else
+ 			{
+ 				return (n2 - n1) <= TransformUtil.ACCURACY;
+ 			}
+ 		}
+         
         /**
          * 全局坐标系转成成局部坐标系
          * @param transform 全局坐标系下的变换
@@ -48,8 +65,8 @@ module dragonBones {
          */
         public static globalToLocal(transform:DBTransform, parent:DBTransform):void
         {
-            TransformUtil.transformToMatrix(transform, TransformUtil._helpTransformMatrix, true);
-            TransformUtil.transformToMatrix(parent, TransformUtil._helpParentTransformMatrix, true);
+            TransformUtil.transformToMatrix(transform, TransformUtil._helpTransformMatrix);
+            TransformUtil.transformToMatrix(parent, TransformUtil._helpParentTransformMatrix);
 
             TransformUtil._helpParentTransformMatrix.invert();
             TransformUtil._helpTransformMatrix.concat(TransformUtil._helpParentTransformMatrix);
@@ -63,31 +80,13 @@ module dragonBones {
          * @param matrix 转换后的矩阵数据
          * @param keepScale 是否保持缩放
          */
-		public static transformToMatrix(transform:DBTransform, matrix:Matrix, keepScale:boolean = false):void{
-			if(keepScale){
+		public static transformToMatrix(transform:DBTransform, matrix:Matrix):void{
 				matrix.a = transform.scaleX * MathUtil.cos(transform.skewY);
 				matrix.b = transform.scaleX * MathUtil.sin(transform.skewY);
 				matrix.c = -transform.scaleY * MathUtil.sin(transform.skewX);
 				matrix.d = transform.scaleY * MathUtil.cos(transform.skewX);
-//                matrix.a = transform.scaleX * Math.cos(transform.skewY);
-//                matrix.b = transform.scaleX * Math.sin(transform.skewY);
-//                matrix.c = -transform.scaleY * Math.sin(transform.skewX);
-//                matrix.d = transform.scaleY * Math.cos(transform.skewX);
 				matrix.tx = transform.x;
 				matrix.ty = transform.y;
-			}
-			else{
-				matrix.a = MathUtil.cos(transform.skewY);
-				matrix.b = MathUtil.sin(transform.skewY);
-				matrix.c = -MathUtil.sin(transform.skewX);
-				matrix.d = MathUtil.cos(transform.skewX);
-//                matrix.a = Math.cos(transform.skewY);
-//                matrix.b = Math.sin(transform.skewY);
-//                matrix.c = -Math.sin(transform.skewX);
-//                matrix.d = Math.cos(transform.skewX);
-				matrix.tx = transform.x;
-				matrix.ty = transform.y;
-			}
 		}
 
         /**
@@ -97,41 +96,38 @@ module dragonBones {
          * @param scaleXF x方向的缩放
          * @param scaleYF y方向的缩放
          */
-        public static matrixToTransform(matrix:Matrix, transform:DBTransform, scaleXF:Boolean, scaleYF:Boolean):void
+        public static matrixToTransform(matrix:Matrix, transform:DBTransform, scaleXF:boolean, scaleYF:boolean):void
         {
             transform.x = matrix.tx;
             transform.y = matrix.ty;
             transform.scaleX = Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b) * (scaleXF ? 1 : -1);
             transform.scaleY = Math.sqrt(matrix.d * matrix.d + matrix.c * matrix.c) * (scaleYF ? 1 : -1);
 
-            var skewXArray:Array<number> = [];
-            skewXArray[0] = Math.acos(matrix.d / transform.scaleY);
-            skewXArray[1] = -skewXArray[0];
-            skewXArray[2] = Math.asin(-matrix.c / transform.scaleY);
-            skewXArray[3] = skewXArray[2] >= 0 ? Math.PI - skewXArray[2] : skewXArray[2] - Math.PI;
-
-            if(Number(skewXArray[0]).toFixed(4) == Number(skewXArray[2]).toFixed(4) || Number(skewXArray[0]).toFixed(4) == Number(skewXArray[3]).toFixed(4))
+            TransformUtil.tmpSkewXArray[0] = Math.acos(matrix.d / transform.scaleY);
+            TransformUtil.tmpSkewXArray[1] = -TransformUtil.tmpSkewXArray[0];
+            TransformUtil.tmpSkewXArray[2] = Math.asin(-matrix.c / transform.scaleY);
+            TransformUtil.tmpSkewXArray[3] = TransformUtil.tmpSkewXArray[2] >= 0 ? Math.PI - TransformUtil.tmpSkewXArray[2] : TransformUtil.tmpSkewXArray[2] - Math.PI;
+            if(TransformUtil.isEqual(TransformUtil.tmpSkewXArray[0],TransformUtil.tmpSkewXArray[2]) || TransformUtil.isEqual(TransformUtil.tmpSkewXArray[0],TransformUtil.tmpSkewXArray[3]))
             {
-                transform.skewX = skewXArray[0];
+                transform.skewX = TransformUtil.tmpSkewXArray[0];
             }
             else
             {
-                transform.skewX = skewXArray[1];
+                transform.skewX = TransformUtil.tmpSkewXArray[1];
             }
 
-            var skewYArray:Array<number> = [];
-            skewYArray[0] = Math.acos(matrix.a / transform.scaleX);
-            skewYArray[1] = -skewYArray[0];
-            skewYArray[2] = Math.asin(matrix.b / transform.scaleX);
-            skewYArray[3] = skewYArray[2] >= 0 ? Math.PI - skewYArray[2] : skewYArray[2] - Math.PI;
+            TransformUtil.tmpSkewYArray[0] = Math.acos(matrix.a / transform.scaleX);
+            TransformUtil.tmpSkewYArray[1] = -TransformUtil.tmpSkewYArray[0];
+            TransformUtil.tmpSkewYArray[2] = Math.asin(matrix.b / transform.scaleX);
+            TransformUtil.tmpSkewYArray[3] = TransformUtil.tmpSkewYArray[2] >= 0 ? Math.PI - TransformUtil.tmpSkewYArray[2] : TransformUtil.tmpSkewYArray[2] - Math.PI;
 
-            if(Number(skewYArray[0]).toFixed(4) == Number(skewYArray[2]).toFixed(4) || Number(skewYArray[0]).toFixed(4) == Number(skewYArray[3]).toFixed(4))
+            if(TransformUtil.isEqual(TransformUtil.tmpSkewYArray[0],TransformUtil.tmpSkewYArray[2]) || TransformUtil.isEqual(TransformUtil.tmpSkewYArray[0],TransformUtil.tmpSkewYArray[3]))
             {
-                transform.skewY = skewYArray[0];
+                transform.skewY = TransformUtil.tmpSkewYArray[0];
             }
             else
             {
-                transform.skewY = skewYArray[1];
+                transform.skewY = TransformUtil.tmpSkewYArray[1];
             }
 
         }
@@ -160,5 +156,48 @@ module dragonBones {
             rotation = rotation > 0 ? rotation : 2*Math.PI + rotation;
             return rotation - Math.PI;
         }
+        
+		public static matrixToTransformPosition(matrix:Matrix, transform:DBTransform):void
+		{
+			transform.x = matrix.tx;
+			transform.y = matrix.ty;
+		}
+		
+		public static matrixToTransformScale(matrix:Matrix, transform:DBTransform, scaleXF:boolean, scaleYF:boolean):void
+		{
+			transform.scaleX = Math.sqrt(matrix.a * matrix.a + matrix.b * matrix.b) * (scaleXF ? 1 : -1);
+			transform.scaleY = Math.sqrt(matrix.d * matrix.d + matrix.c * matrix.c) * (scaleYF ? 1 : -1);
+		}
+		
+		public static matrixToTransformRotation(matrix:Matrix, transform:DBTransform, scaleX:number, scaleY:number):void
+		{
+			TransformUtil.tmpSkewXArray[0] = Math.acos(matrix.d / scaleY);
+			TransformUtil.tmpSkewXArray[1] = -TransformUtil.tmpSkewXArray[0];
+			TransformUtil.tmpSkewXArray[2] = Math.asin(-matrix.c / scaleY);
+			TransformUtil.tmpSkewXArray[3] = TransformUtil.tmpSkewXArray[2] >= 0 ? Math.PI - TransformUtil.tmpSkewXArray[2] : TransformUtil.tmpSkewXArray[2] - Math.PI;
+			
+			if(TransformUtil.isEqual(TransformUtil.tmpSkewXArray[0], TransformUtil.tmpSkewXArray[2]) || TransformUtil.isEqual(TransformUtil.tmpSkewXArray[0], TransformUtil.tmpSkewXArray[3]))
+			{
+				transform.skewX = TransformUtil.tmpSkewXArray[0];
+			}
+			else 
+			{
+				transform.skewX = TransformUtil.tmpSkewXArray[1];
+			}
+			
+			TransformUtil.tmpSkewYArray[0] = Math.acos(matrix.a / scaleX);
+			TransformUtil.tmpSkewYArray[1] = -TransformUtil.tmpSkewYArray[0];
+			TransformUtil.tmpSkewYArray[2] = Math.asin(matrix.b / scaleX);
+			TransformUtil.tmpSkewYArray[3] = TransformUtil.tmpSkewYArray[2] >= 0 ? Math.PI - TransformUtil.tmpSkewYArray[2] : TransformUtil.tmpSkewYArray[2] - Math.PI;
+			
+			if(TransformUtil.isEqual(TransformUtil.tmpSkewYArray[0],TransformUtil.tmpSkewYArray[2]) || TransformUtil.isEqual(TransformUtil.tmpSkewYArray[0], TransformUtil.tmpSkewYArray[3]))
+			{
+				transform.skewY = TransformUtil.tmpSkewYArray[0];
+			}
+			else 
+			{
+				transform.skewY = TransformUtil.tmpSkewYArray[1];
+			}
+		}
 	}
 }

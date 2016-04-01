@@ -27,208 +27,104 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 module egret {
+
     /**
-     * @class egret.RenderTexture
-     * @classdesc
-     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+     * @language en_US
+     * RenderTexture is a dynamic texture
      * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/display/RenderTexture.ts
      */
-    export class RenderTexture extends Texture {
-        /**
-         * @private
-         */
-        public renderContext;
+    /**
+     * @language zh_CN
+     * RenderTexture 是动态纹理类，他实现了将显示对象及其子对象绘制成为一个纹理的功能
+     * @extends egret.Texture
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/display/RenderTexture.ts
+     */
+    export class RenderTexture extends egret.Texture {
 
-        /**
-         * 创建一个 egret.RenderTexture 对象
-         */
         constructor() {
             super();
+            this.renderBuffer = new sys.RenderBuffer();
+            this._setBitmapData(this.renderBuffer.surface)
         }
 
+        private renderBuffer:sys.RenderBuffer;
         /**
-         * @private
+         * @language en_US
+         * The specified display object is drawn as a texture
+         * @param displayObject {egret.DisplayObject} the display to draw
+         * @param clipBounds {egret.Rectangle} clip rect
+         * @param scale {number} scale factor
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public init():void {
-            this._bitmapData = document.createElement("canvas");
-            this._bitmapData["avaliable"] = true;
-            this.renderContext = egret.RendererContext.createRendererContext(this._bitmapData);
-        }
-
         /**
-         * @private
-         */
-        public static identityRectangle:egret.Rectangle = new egret.Rectangle();
-
-        /**
+         * @language zh_CN
          * 将指定显示对象绘制为一个纹理
-         * @method egret.RenderTexture#drawToTexture
          * @param displayObject {egret.DisplayObject} 需要绘制的显示对象
          * @param clipBounds {egret.Rectangle} 绘制矩形区域
          * @param scale {number} 缩放比例
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale?:number):boolean {
-            var bounds = clipBounds || displayObject.getBounds(Rectangle.identity);
+        public drawToTexture(displayObject:egret.DisplayObject, clipBounds?:Rectangle, scale:number = 1):boolean {
+            if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
+                return false;
+            }
+
+            var bounds = clipBounds || displayObject.$getOriginalBounds();
             if (bounds.width == 0 || bounds.height == 0) {
                 return false;
             }
 
-            if (!this._bitmapData) {
-                this.init();
-            }
-
-            var x = bounds.x;
-            var y = bounds.y;
-            var originalWidth = bounds.width;
-            var originalHeight = bounds.height;
-            var width = originalWidth;
-            var height = originalHeight;
-
-            var texture_scale_factor = egret.MainContext.instance.rendererContext._texture_scale_factor;
-            width /= texture_scale_factor;
-            height /= texture_scale_factor;
-
-            width = Math.round(width);
-            height = Math.round(height);
-
-            this.setSize(width, height);
-            this.begin();
-
-            displayObject._worldTransform.identity();
-            displayObject._worldTransform.a = 1 / texture_scale_factor;
-            displayObject._worldTransform.d = 1 / texture_scale_factor;
-            if (scale) {
-                displayObject._worldTransform.a *= scale;
-                displayObject._worldTransform.d *= scale;
-            }
-            var anchorOffsetX:number = displayObject._DO_Props_._anchorOffsetX;
-            var anchorOffsetY:number = displayObject._DO_Props_._anchorOffsetY;
-            if (displayObject._DO_Props_._anchorX != 0 || displayObject._DO_Props_._anchorY != 0) {
-                anchorOffsetX = displayObject._DO_Props_._anchorX * width;
-                anchorOffsetY = displayObject._DO_Props_._anchorY * height;
-            }
-            this._offsetX = x + anchorOffsetX;
-            this._offsetY = y + anchorOffsetY;
-            displayObject._worldTransform.append(1, 0, 0, 1, -this._offsetX, -this._offsetY);
+            scale /= $TextureScaleFactor;
+            var width = (bounds.x + bounds.width) * scale;
+            var height = (bounds.y + bounds.height) * scale;
             if (clipBounds) {
-                this._offsetX -= x;
-                this._offsetY -= y;
+                width = bounds.width * scale;
+                height = bounds.height * scale;
             }
-            displayObject.worldAlpha = 1;
-            if (displayObject instanceof egret.DisplayObjectContainer) {
-                var list = (<egret.DisplayObjectContainer>displayObject)._children;
-                for (var i = 0, length = list.length; i < length; i++) {
-                    var child:DisplayObject = list[i];
-                    child._updateTransform();
-                }
-            }
-            this.renderContext.setTransform(displayObject._worldTransform);
 
-            var renderFilter = egret.RenderFilter.getInstance();
-            var drawAreaList:Array<Rectangle> = renderFilter._drawAreaList.concat();
-            renderFilter._drawAreaList.length = 0;
-            this.renderContext.clearScreen();
-            this.renderContext.onRenderStart();
-            Texture.deleteWebGLTexture(this);
-            if (displayObject._hasFilters()) {
-                displayObject._setGlobalFilters(this.renderContext);
+            var renderBuffer = this.renderBuffer;
+            if (!renderBuffer) {
+                return false;
             }
-            var mask = displayObject.mask || displayObject._DO_Props_._scrollRect;
-            if (mask) {
-                this.renderContext.pushMask(mask);
-            }
-            var __use_new_draw = MainContext.__use_new_draw;
-            MainContext.__use_new_draw = false;
-            displayObject._render(this.renderContext);
-            MainContext.__use_new_draw = __use_new_draw;
-            if (mask) {
-                this.renderContext.popMask();
-            }
-            if (displayObject._hasFilters()) {
-                displayObject._removeGlobalFilters(this.renderContext);
-            }
-            RenderTexture.identityRectangle.width = width;
-            RenderTexture.identityRectangle.height = height;
-            renderFilter.addDrawArea(RenderTexture.identityRectangle);
-            this.renderContext.onRenderFinish();
-            renderFilter._drawAreaList = drawAreaList;
-            this._sourceWidth = width;
-            this._sourceHeight = height;
-            this._textureWidth = Math.round(originalWidth);
-            this._textureHeight = Math.round(originalHeight);
+            renderBuffer.resize(width, height);
 
-            this.end();
+            var matrix = Matrix.create();
+            matrix.identity();
+            //应用裁切
+            if (clipBounds) {
+                matrix.translate(-clipBounds.x, -clipBounds.y);
+            }
+            matrix.scale(scale, scale);
+            sys.systemRenderer.render(displayObject, renderBuffer, matrix, null, true);
+            Matrix.release(matrix);
 
-            //测试代码
-//            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
-//            this.renderContext.canvasContext.setTransform(1, 0, 0, 1, 0, 0);
-//            this.renderContext.strokeRect(0, 0,cacheCanvas.width,cacheCanvas.height,"#ff0000");
-//            document.documentElement.appendChild(cacheCanvas);
-
+            //设置纹理参数
+            this.$initData(0, 0, width, height, 0, 0, width, height, width, height);
             return true;
         }
 
-        /**
-         * @private
-         */
-        public setSize(width:number, height:number):void {
-            var cacheCanvas:HTMLCanvasElement = this._bitmapData;
-            cacheCanvas.width = width;
-            cacheCanvas.height = height;
-            cacheCanvas.style.width = width + "px";
-            cacheCanvas.style.height = height + "px";
-
-            if (this.renderContext._cacheCanvas) {
-                this.renderContext._cacheCanvas.width = width;
-                this.renderContext._cacheCanvas.height = height;
+        public getPixel32(x:number, y:number):number[] {
+            var data:number[];
+            if (this.renderBuffer) {
+                var scale = $TextureScaleFactor;
+                x = Math.round(x / scale);
+                y = Math.round(y / scale);
+                data = this.renderBuffer.getPixel(x, y);
             }
+            return data;
         }
 
-        /**
-         * @private
-         */
-        public begin():void {
-
-        }
-
-        /**
-         * @private
-         */
-        public end():void {
-
-        }
-
-        /**
-         * 销毁 RenderTexture 对象
-         * @method egret.RenderTexture#dispose
-         */
         public dispose():void {
-            if (this._bitmapData) {
-                this._bitmapData = null;
-                this.renderContext = null;
-            }
-        }
-
-        private static _pool:Array<RenderTexture> = [];
-
-        /**
-         * @private
-         */
-        public static create():RenderTexture {
-            if (RenderTexture._pool.length) {
-                return RenderTexture._pool.pop();
-            }
-            return new RenderTexture();
-        }
-
-        /**
-         * @private
-         */
-        public static release(value:RenderTexture):void {
-            RenderTexture._pool.push(value);
+            super.dispose();
+            this.renderBuffer = null;
         }
     }
 }

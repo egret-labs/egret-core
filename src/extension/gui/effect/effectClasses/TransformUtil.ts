@@ -49,9 +49,9 @@ module egret.gui {
                                                scaleY:number = NaN,
                                                rotation:number = NaN):void{
             if (translation == null && transformCenter != null){
-                Point.identity.x = transformCenter.x;
-                Point.identity.y = transformCenter.y;
-                var xformedPt:egret.Point = TransformUtil.transformPointToParent(obj , Point.identity);
+                egret.$TempPoint.x = transformCenter.x;
+                egret.$TempPoint.y = transformCenter.y;
+                var xformedPt:egret.Point = TransformUtil.transformPointToParent(obj , egret.$TempPoint);
             }
             if (!isNaN(rotation))
                 obj.rotation = rotation;
@@ -67,9 +67,9 @@ module egret.gui {
                 }
             }
             else{
-                Point.identity.x = transformCenter.x;
-                Point.identity.y = transformCenter.y;
-                var postXFormPoint:egret.Point = TransformUtil.transformPointToParent(obj , Point.identity);
+                egret.$TempPoint.x = transformCenter.x;
+                egret.$TempPoint.y = transformCenter.y;
+                var postXFormPoint:egret.Point = TransformUtil.transformPointToParent(obj , egret.$TempPoint);
                 if (translation != null){
                     obj.x += translation.x - postXFormPoint.x;
                     obj.y += translation.y - postXFormPoint.y;

@@ -30,21 +30,36 @@
 module egret {
 
     /**
-     * 转换数字为颜色字符串
-	 * @method egret.toColorString
-	 * @param value {number} 
-	 * @returns {string} 颜色字符串，例如"#ffffff"。
+     * @language en_US
+     * Transfer number to color character string
+     * @param value {number} color value ,such as 0xffffff
+     * @returns {string} Color character string, for example, #ffffff.
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/utils/toColorString.ts
      */
-    export function toColorString(value:number):string{
-        if(isNaN(value)||value < 0)
+    /**
+     * @language zh_CN
+     * 转换数字为颜色字符串
+     * @param value {number} 颜色值，例如 0xffffff
+     * @returns {string} 颜色字符串，例如"#ffffff"。
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/utils/toColorString.ts
+     */
+    export function toColorString(value:number):string {
+        if (value < 0)
             value = 0;
-        if(value > 16777215)
+        if (value > 16777215)
             value = 16777215;
+
         var color:string = value.toString(16).toUpperCase();
-        while(color.length<6){
-            color = "0"+color;
+        while (color.length > 6) {
+            color = color.slice(1, color.length);
         }
-        return "#"+color;
+        while (color.length < 6) {
+            color = "0" + color;
+        }
+        return "#" + color;
     }
 }

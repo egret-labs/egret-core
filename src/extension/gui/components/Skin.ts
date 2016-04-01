@@ -110,7 +110,14 @@ module egret.gui {
          * 组件的默认宽度（以像素为单位）。此值由 measure() 方法设置。
          * @member egret.gui.Skin#measuredWidth
          */
-        public measuredWidth:number = 0;
+        public _measuredWidth:number = 0;
+        public set measuredWidth(value:number) {
+            this._measuredWidth = value;
+        }
+        public get measuredWidth():number {
+            return this._measuredWidth;
+        }
+
 
         /**
          * 组件的默认高度（以像素为单位）。此值由 measure() 方法设置。
@@ -251,7 +258,7 @@ module egret.gui {
                 maxIndex++;
 
             if (index < 0 || index > maxIndex)
-                $error(3011, index);
+                egret.$error(3011, index);
         }
         /**
          * 将可视元素添加到此容器中

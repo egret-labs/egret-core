@@ -104,7 +104,7 @@ module RES {
                             group.push(item);
                     }
                     else{
-                        egret.$warn(2000, key);
+                        egret.$warn(3200, key);
                     }
                 }
 

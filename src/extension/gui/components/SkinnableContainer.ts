@@ -204,6 +204,30 @@ module egret.gui {
         }
 
         /**
+         * @copy egret.gui.GroupBase#autoLayout
+         */
+        public get autoLayout():boolean
+        {
+            if (this.contentGroup)
+                return this.contentGroup.autoLayout;
+            else
+            {
+                var v:any = this.contentGroupProperties.autoLayout;
+                return (v === undefined) ? true : v;
+            }
+        }
+
+        public set autoLayout(value:boolean)
+        {
+            if (this.contentGroup)
+            {
+                this.contentGroup.autoLayout = value;
+            }
+            else
+                this.contentGroupProperties.autoLayout = value;
+        }
+
+        /**
          * [覆盖] 添加外观部件时调用
 		 * @param partName {string}
 		 * @param instance {any} 
@@ -213,8 +237,12 @@ module egret.gui {
             if (instance == this.contentGroup) {
                 if (this.contentGroupProperties.layout !== undefined) {
                     this.contentGroup.layout = this.contentGroupProperties.layout;
-                    this.contentGroupProperties = {};
                 }
+                if (this.contentGroupProperties.autoLayout !== undefined) {
+                    this.contentGroup.autoLayout = this.contentGroupProperties.autoLayout;
+                }
+                this.contentGroupProperties = {};
+
                 if (this._placeHolderGroup) {
                     this._placeHolderGroup.removeEventListener(
                         ElementExistenceEvent.ELEMENT_ADD, this._contentGroup_elementAddedHandler, this);
@@ -253,6 +281,7 @@ module egret.gui {
                 this.contentGroup.removeEventListener(
                     ElementExistenceEvent.ELEMENT_REMOVE, this._contentGroup_elementRemovedHandler, this);
                 this.contentGroupProperties.layout = this.contentGroup.layout;
+                this.contentGroupProperties.autoLayout = this.contentGroup.autoLayout;
                 this.contentGroup.layout = null;
                 if (this.contentGroup.numElements > 0) {
                     this._placeHolderGroup = new Group;

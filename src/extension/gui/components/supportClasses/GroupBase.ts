@@ -165,13 +165,35 @@ module egret.gui {
             this._clipAndEnableScrolling = value;
             if (this._clipAndEnableScrolling){
                 this.scrollRect = new Rectangle(this._horizontalScrollPosition,
-                    this._verticalScrollPosition, this.width, this.height);
+                    this._verticalScrollPosition, 400, 800);
             }
             else{
                 this.scrollRect = null;
             }
         }
 
+        private _autoLayout:boolean = true;
+        /**
+         * 如果为 true，则子项的位置和大小改变时，重新测量和布局。
+         * 如果为 false，则仅当子项添加或者删除时，重新测量和布局。
+         * @member egret.gui.GroupBase#autoLayout
+         */
+        public get autoLayout():boolean {
+            return this._autoLayout;
+        }
+
+        public set autoLayout(value:boolean)
+        {
+            if (this._autoLayout == value)
+                return;
+            this._autoLayout = value;
+            if (value)
+            {
+                this.invalidateSize();
+                this.invalidateDisplayList();
+                this.invalidateParentSizeAndDisplayList();
+            }
+        }
 
         private _horizontalScrollPosition:number = 0;
         /**
@@ -232,21 +254,22 @@ module egret.gui {
          */
         private updateScrollRect(w:number, h:number):void{
 
-            var rect:Rectangle = this._DO_Props_._scrollRect;
+            var rect:Rectangle = this.scrollRect;
             if(this._clipAndEnableScrolling){
                 if(rect){
                     rect.x = this._horizontalScrollPosition;
                     rect.y = this._verticalScrollPosition;
                     rect.width = w;
                     rect.height = h;
+                    this.scrollRect = rect;
                 }
                 else{
-                    this._DO_Props_._scrollRect = new Rectangle(this._horizontalScrollPosition,
+                    this.scrollRect = new Rectangle(this._horizontalScrollPosition,
                         this._verticalScrollPosition, w, h)
                 }
             }
             else if(rect){
-                this._DO_Props_._scrollRect = null;
+                this.scrollRect = null;
             }
 
         }
@@ -284,8 +307,10 @@ module egret.gui {
         }
 
         public _childXYChanged():void{
-            this.invalidateSize();
-            this.invalidateDisplayList();
+            if(this.autoLayout) {
+                this.invalidateSize();
+                this.invalidateDisplayList();
+            }
         }
 
         /**
@@ -316,10 +341,13 @@ module egret.gui {
          */
         public updateDisplayList(unscaledWidth:number, unscaledHeight:number):void{
             super.updateDisplayList(unscaledWidth, unscaledHeight);
-            if (this._layoutInvalidateDisplayListFlag&&this._layout){
+            if (this._layoutInvalidateDisplayListFlag) {
                 this._layoutInvalidateDisplayListFlag = false;
-                this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
-                this.updateScrollRect(unscaledWidth, unscaledHeight);
+                if (this.autoLayout && this._layout)
+                    this._layout.updateDisplayList(unscaledWidth, unscaledHeight);
+
+                if (this._layout)
+                    this.updateScrollRect(unscaledWidth, unscaledHeight);
             }
         }
         /**
@@ -334,7 +362,6 @@ module egret.gui {
          * 返回指定索引处的可视元素。
 		 * @method egret.gui.GroupBase#getElementAt
          * @param index {number} 要检索的元素的索引。
-         * @throws RangeError 如果在子列表中不存在该索引位置。
 		 * @returns {IVisualElement}
          */
         public getElementAt(index:number):IVisualElement{
@@ -358,7 +385,7 @@ module egret.gui {
          */
         public getElementIndicesInView():Array<number>{
             var visibleIndices:Array<number> = [];
-            var index:number
+            var index:number;
             if(!this.scrollRect){
                 for(index = 0;index < this.numChildren;index++){
                     visibleIndices.push(index);

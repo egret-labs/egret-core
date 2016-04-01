@@ -37,12 +37,14 @@ module egret.gui {
 	 * @class egret.gui.IFactory
 	 * @extends egret.IHashObject
      */
-    export interface IFactory extends IHashObject{
+    export interface IFactory {
         /**
          * 创建某一类（由实现 IFactory 的类确定）的实例。
 		 * @method egret.gui.IFactory#newInstance
 		 * @returns {any}
          */
         newInstance():any;
+
+        hashCode:number;
     }
 }

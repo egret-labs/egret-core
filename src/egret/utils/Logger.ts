@@ -29,149 +29,136 @@
 
 module egret {
     /**
-     * @private
+     * @language en_US
+     * Logger is an entrance for the log processing module of the engine
+     * @version Egret 2.4
+     * @platform Web,Native
+     */
+    /**
+     * @language zh_CN
+     * Logger是引擎的日志处理模块入口
+     * @version Egret 2.4
+     * @platform Web,Native
      */
     export class Logger {
+
+        /**
+         * @language en_US
+         * open all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全开
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static ALL:string = "all";
+
+        /**
+         * @language en_US
+         * level: DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 DEBUG
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static DEBUG:string = "debug";
+
+        /**
+         * @language en_US
+         * level: INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 INFO
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static INFO:string = "info";
+
+        /**
+         * @language en_US
+         * level: WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 WARN
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static WARN:string = "warn";
-        public static ERROR:string ="error";
+
+        /**
+         * @language en_US
+         * level: ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 等级为 ERROR
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public static ERROR:string = "error";
+
+        /**
+         * @language en_US
+         * close all
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 全关
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static OFF:string = "off";
 
-        private static logFuncs:Object;
         /**
-         * @private
-         * @param logType
+         * @language en_US
+         * Set the current need to open the log level. Grade level are: ALL <DEBUG <INFO <WARN <ERROR <OFF<br/>
+         * This feature is only in DEBUG mode to take effect. <br/>
+         * <Ul>
+         * <Li> Logger.ALL - all levels of log can be printed out. </ li>
+         * <Li> Logger.DEBUG - print debug, info, log, warn, error. </ li>
+         * <Li> Logger.INFO - print info, log, warn, error. </ li>
+         * <Li> Logger.WARN - can print warn, error. </ li>
+         * <Li> Logger.ERROR - You can print error. </ li>
+         * <Li> Logger.OFF - all closed. </ li>
+         * </ Ul>
+         *param LogType from this level to start printing.
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public static openLogByType(logType:string):void {
-            if (Logger.logFuncs == null) {
-                Logger.logFuncs = { "error":console.error,
-                                    "debug":console.debug,
-                                    "warn":console.warn,
-                                    "info":console.info,
-                                    "log":console.log
-                                  };
-             }
-            switch (logType) {
-                case Logger.OFF:
-                    console.error = function () {};
-                case Logger.ERROR:
-                    console.warn = function () {};
-                case Logger.WARN:
-                    console.info = function () {};
-                    console.log = function () {};
-                case Logger.INFO:
-                    console.debug = function () {};
-                default : break;
-            }
-
-            switch (logType) {
-                case Logger.ALL:
-                    console.debug = Logger.logFuncs["debug"];
-                case Logger.INFO:
-                    console.log = Logger.logFuncs["log"];
-                    console.info = Logger.logFuncs["info"];
-                case Logger.WARN:
-                    console.warn = Logger.logFuncs["warn"];
-                case Logger.ERROR:
-                    console.error = Logger.logFuncs["error"];
-                default : break;
-            }
-        }
-
         /**
-         * 表示出现了致命错误，开发者必须修复错误
-         * @method egret.Logger.fatal
-         * @param actionCode {string} 错误信息
-         * @param value {Object} 错误描述信息
+         * @language zh_CN
+         * 设置当前需要开启的log级别。级别等级分别为：ALL < DEBUG < INFO < WARN < ERROR < OFF<br/>
+         * 此功能只在 DEBUG 模式下才生效。<br/>
+         * <ul>
+         * <li>Logger.ALL -- 所有等级的log都可以打印出来。</li>
+         * <li>Logger.DEBUG -- 可以打印debug、info、log、warn、error。</li>
+         * <li>Logger.INFO -- 可以打印info、log、warn、error。</li>
+         * <li>Logger.WARN -- 可以打印warn、error。</li>
+         * <li>Logger.ERROR -- 可以打印error。</li>
+         * <li>Logger.OFF -- 全部关闭。</li>
+         * </ul>
+         * @param logType 从这个等级开始打印。
+         * @version Egret 2.4
+         * @platform Web,Native
          */
-        public static fatal(actionCode:string, value:Object = null) {
-            //egret.Logger.traceToConsole("Fatal", actionCode, value);
-            throw new Error(egret.Logger.getTraceCode("Fatal", actionCode, value));
-        }
-
-        /**
-         * 记录正常的Log信息
-         * @method egret.Logger.info
-         * @param actionCode {string} 错误信息
-         * @param value {Object} 错误描述信息
-         */
-        public static info(actionCode:string, value:Object = null) {
-            egret.Logger.traceToConsole("Info", actionCode, value);
-        }
-
-        /**
-         * 记录可能会出现问题的Log信息
-         * @method egret.Logger.warning
-         * @param actionCode {string} 错误信息
-         * @param value {Object} 错误描述信息
-         */
-        public static warning(actionCode:string, value:Object = null) {
-            egret.Logger.traceToConsole("Warning", actionCode, value);
-        }
-
-        /**
-         * @private
-         * @param type
-         * @param actionCode
-         * @param value
-         */
-        private static traceToConsole(type:string, actionCode:string, value:Object) {
-            console.log(egret.Logger.getTraceCode(type, actionCode, value));
-        }
-
-        /**
-         * @private
-         * @param type
-         * @param actionCode
-         * @param value
-         * @returns {string}
-         */
-        private static getTraceCode(type:string, actionCode:string, value:Object) {
-            return "[" + type + "]" + actionCode + (value == null ? "" : ":" + value);
-        }
-    }
-
-    /**
-     * @private
-     */
-    export function getString(id:number, ...args):string {
-        var message = egret.egret_string_code[id];
-        if (message) {
-            var length = args.length;
-            for (var i = 0; i < length; i++) {
-                message = message.replace("{" + i + "}", args[i]);
-            }
-        }
-        return message;
-    }
-
-    /**
-     * @private
-     */
-    export function $error(code:number, ...args):void {
-        args.unshift(code);
-        var actionCode = getString.apply(null, args);
-        if (actionCode) {
-            Logger.fatal(actionCode);
-        }
-        else {
-            Logger.fatal(getString(-1, code));
-        }
-    }
-
-    /**
-     * @private
-     */
-    export function $warn(code:number, ...args):void {
-        args.unshift(code);
-        var actionCode = getString.apply(null, args);
-        if (actionCode) {
-            Logger.warning(actionCode);
-        }
-        else {
-            Logger.warning(getString(-1, code));
+        public static set logLevel(logType:string) {
         }
     }
 }

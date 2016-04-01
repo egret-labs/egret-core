@@ -36,7 +36,7 @@ module RES {
 
         public constructor(){
             super();
-            this._dataFormat = egret.URLLoaderDataFormat.TEXT;
+            this._dataFormat = egret.HttpResponseType.TEXT;
         }
     }
 }

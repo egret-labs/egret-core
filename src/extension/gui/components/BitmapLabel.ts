@@ -45,6 +45,7 @@ module egret.gui {
          */
         public constructor() {
             super();
+            this._smoothing = Bitmap.defaultSmoothing;
             this.addEventListener(UIEvent.UPDATE_COMPLETE, this.updateCompleteHandler, this);
         }
 
@@ -106,7 +107,6 @@ module egret.gui {
         /**
          * 字符之间的距离
          * @default 0
-         * @version 1.7.2
          * @param value
          */
         public set letterSpacing(value:number) {
@@ -126,12 +126,33 @@ module egret.gui {
             return this._letterSpacing;
         }
 
+        private _isSmoothingChanged:boolean = false;
+        public _smoothing:boolean;
+        /**
+         * 字符之间的距离
+         */
+        public set smoothing(value:boolean) {
+            this._setSmoothing(value);
+        }
+
+        public _setSmoothing(value:boolean):void {
+            this._smoothing = value;
+
+            this._isSmoothingChanged = true;
+            this.invalidateProperties();
+            this.invalidateSize();
+            this.invalidateDisplayList();
+        }
+
+        public get smoothing():boolean {
+            return this._smoothing;
+        }
+
         private _isLineSpacingChanged:boolean = false;
         public _lineSpacing:number = 0;
         /**
          * 行与行之间的距离
          * @default 0
-         * @version 1.7.2
          * @param value
          */
         public set lineSpacing(value:number) {
@@ -195,7 +216,7 @@ module egret.gui {
         private getAdapter():IAssetAdapter {
             var adapter:IAssetAdapter;
             try {
-                adapter = Injector.getInstance("egret.gui.IAssetAdapter");
+                adapter = $getAdapter("egret.gui.IAssetAdapter");
             }
             catch (e) {
                 adapter = new DefaultAssetAdapter();
@@ -347,8 +368,9 @@ module egret.gui {
 
             var availableWidth:number;
 
-            if (!isNaN(this.explicitWidth))
-                availableWidth = this.explicitWidth;
+            if (!isNaN(this.$getExplicitWidth())) {
+                availableWidth = this.$getExplicitWidth();
+            }
             else if (this.maxWidth != 10000)
                 availableWidth = this.maxWidth;
 
@@ -360,7 +382,7 @@ module egret.gui {
          */
         private isSpecialCase():boolean {
             return (!isNaN(this.percentWidth) || (!isNaN(this.left) && !isNaN(this.right))) &&
-                isNaN(this.explicitHeight) &&
+                isNaN(this.$getExplicitWidth()) &&
                 isNaN(this.percentHeight);
         }
 
@@ -389,12 +411,12 @@ module egret.gui {
             this._bitmapText.height = NaN;
             if (!isNaN(w)) {
                 this._bitmapText.width = w - paddingL - paddingR;
-                this.measuredWidth = Math.ceil(this._bitmapText.measuredWidth);
-                this.measuredHeight = Math.ceil(this._bitmapText.measuredHeight);
+                this.measuredWidth = Math.ceil(this._bitmapText.width);
+                this.measuredHeight = Math.ceil(this._bitmapText.height);
             }
             else {
-                this.measuredWidth = Math.ceil(this._bitmapText.measuredWidth);
-                this.measuredHeight = Math.ceil(this._bitmapText.measuredHeight);
+                this.measuredWidth = Math.ceil(this._bitmapText.width);
+                this.measuredHeight = Math.ceil(this._bitmapText.height);
             }
             this.measuredWidth += paddingL + paddingR;
             this.measuredHeight += paddingT + paddingB;
@@ -451,9 +473,11 @@ module egret.gui {
             this._bitmapText.text = this._text;
             this._bitmapText.letterSpacing = this._letterSpacing;
             this._bitmapText.lineSpacing = this._lineSpacing;
+            this._bitmapText.smoothing = this._smoothing;
             this._textChanged = false;
             this._isLetterSpacingChanged = false;
             this._isLineSpacingChanged = false;
+            this._isSmoothingChanged = false;
             this._addToDisplayList(this._bitmapText);
         }
 
@@ -477,6 +501,10 @@ module egret.gui {
             if (this._isLineSpacingChanged) {
                 this._bitmapText.lineSpacing = this._lineSpacing;
                 this._isLineSpacingChanged = false;
+            }
+            if (this._isSmoothingChanged) {
+                this._bitmapText.smoothing = this._smoothing;
+                this._isSmoothingChanged = false;
             }
         }
 

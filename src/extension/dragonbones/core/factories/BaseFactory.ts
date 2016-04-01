@@ -84,12 +84,8 @@ module dragonBones {
 		
 		/** @private */
 		public textureAtlasDic:any = {};
-		public constructor(self:BaseFactory){
+		public constructor(){
 			super();
-			
-			if(self != this){ 
-				throw new Error(egret.getString(4001));
-			}
 		}
 		
 		/**
@@ -104,7 +100,15 @@ module dragonBones {
 				}
 				
 				for(var textureAtlasName in this.textureAtlasDic){
-					(<ITextureAtlas><any> (this.textureAtlasDic[textureAtlasName])).dispose();
+					
+					var textureAtlasArr:Array<any> = this.textureAtlasDic[textureAtlasName];
+					if (textureAtlasArr)
+					{
+						for (var i:number = 0, len:number = textureAtlasArr.length; i < len; i++ )
+						{
+							textureAtlasArr[i].dispose();
+						}
+					}
 					delete this.textureAtlasDic[textureAtlasName];
 				}
 			}
@@ -194,11 +198,6 @@ module dragonBones {
 			if(!textureAtlas){
 				throw new Error();
 			}
-            /*
-			if(!name && textureAtlas instanceof ITextureAtlas){
-				name = textureAtlas.name;
-			}
-			*/
             if(!name && textureAtlas.hasOwnProperty("name")){
                 name = textureAtlas.name;
             }
@@ -206,11 +205,17 @@ module dragonBones {
 			if(!name){
 				throw new Error(egret.getString(4002));
 			}
-            /*
-			if(this.textureAtlasDic[name]){
-				throw new Error();
-			}*/
-			this.textureAtlasDic[name] = textureAtlas;
+			var textureAtlasArr:Array<any> = this.textureAtlasDic[name];
+			if (textureAtlasArr == null)
+			{
+				textureAtlasArr = [];
+				this.textureAtlasDic[name] = textureAtlasArr;
+			}
+			if(textureAtlasArr.indexOf(textureAtlas) != -1)
+			{
+				return;
+			}
+			textureAtlasArr.push(textureAtlas)
 		}
 		
 		/**
@@ -231,16 +236,45 @@ module dragonBones {
 		 */
 		public getTextureDisplay(textureName:string, textureAtlasName:string = null, pivotX:number = NaN, pivotY:number = NaN):any{
 			var targetTextureAtlas:any;
-			if(textureAtlasName){
-				targetTextureAtlas = this.textureAtlasDic[textureAtlasName];
+			var textureAtlasArr:Array<any>;
+			var i:number;
+			var len:number;
+			
+			if(textureAtlasName)
+			{
+				textureAtlasArr = this.textureAtlasDic[textureAtlasName];
+				if (textureAtlasArr)
+				{
+					for (i = 0, len = textureAtlasArr.length; i < len; i++)
+					{
+						targetTextureAtlas = textureAtlasArr[i];
+						if (targetTextureAtlas.getRegion(textureName))
+						{
+							break;
+						}
+						targetTextureAtlas = null;
+					}
+				}
 			}
 			else{
 				for (textureAtlasName in this.textureAtlasDic){
-					targetTextureAtlas = this.textureAtlasDic[textureAtlasName];
-					if(targetTextureAtlas.getRegion(textureName)){
-						break;
+					textureAtlasArr = this.textureAtlasDic[textureAtlasName];
+					if (textureAtlasArr)
+					{
+						for (i = 0, len = textureAtlasArr.length; i < len; i++)
+						{
+							targetTextureAtlas = textureAtlasArr[i];
+							if (targetTextureAtlas.getRegion(textureName))
+							{
+								break;
+							}
+							targetTextureAtlas = null;
+						}
+						if (targetTextureAtlas != null)
+						{
+							break;
+						}
 					}
-					targetTextureAtlas = null;
 				}
 			}
 			
@@ -267,7 +301,6 @@ module dragonBones {
 		/**
 		 * 构建骨架
 		 * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
-		 * TO DO 以后会支持一对多的情况
 		 * @param armatureName 骨架的名字
 		 * @param fromDragonBonesDataName 骨架数据的名字 可选参数
 		 * @param fromTextureAtlasName 纹理集的名字 可选参数
@@ -276,26 +309,24 @@ module dragonBones {
 		 */
 		public buildArmature(armatureName:string, fromDragonBonesDataName:string = null, fromTextureAtlasName:string = null, skinName:string = null):Armature{
 			var buildArmatureDataPackage:any = {};
-			if(this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage)){
-				this.fillBuildArmatureDataPackageTextureInfo(fromTextureAtlasName, buildArmatureDataPackage);
+			this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage);
+			if(fromTextureAtlasName == null)
+			{
+				fromTextureAtlasName = buildArmatureDataPackage.dragonBonesDataName;
 			}
-			
 			var dragonBonesData:DragonBonesData = buildArmatureDataPackage.dragonBonesData;
 			var armatureData:ArmatureData = buildArmatureDataPackage.armatureData;
-			var textureAtlas:any = buildArmatureDataPackage.textureAtlas;
 			
-			if(!armatureData || !textureAtlas){
+			if(!armatureData){
 				return null;
 			}
 			
-			return this.buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData, armatureData, textureAtlas, skinName);
+			return this.buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData, armatureData, fromTextureAtlasName, skinName);
 		}
-
 
 		/**
 		 * 构建fast骨架
 		 * 一般情况下dragonBonesData和textureAtlas是一对一的，通过相同的key对应。
-		 * TO DO 以后会支持一对多的情况
 		 * @param armatureName 骨架的名字
 		 * @param fromDragonBonesDataName 骨架数据的名字 可选参数
 		 * @param fromTextureAtlasName 纹理集的名字 可选参数
@@ -304,19 +335,19 @@ module dragonBones {
 		 */
 		public buildFastArmature(armatureName:string, fromDragonBonesDataName:string = null, fromTextureAtlasName:string = null, skinName:string = null):FastArmature{
 			var buildArmatureDataPackage:BuildArmatureDataPackage = new BuildArmatureDataPackage();
-			if(this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage)){
-				this.fillBuildArmatureDataPackageTextureInfo(fromTextureAtlasName, buildArmatureDataPackage);
+			this.fillBuildArmatureDataPackageArmatureInfo(armatureName, fromDragonBonesDataName, buildArmatureDataPackage);
+			if(fromTextureAtlasName == null)
+			{
+				fromTextureAtlasName = buildArmatureDataPackage.dragonBonesDataName;
 			}
-			
 			var dragonBonesData:DragonBonesData = buildArmatureDataPackage.dragonBonesData;
 			var armatureData:ArmatureData = buildArmatureDataPackage.armatureData;
-			var textureAtlas:any = buildArmatureDataPackage.textureAtlas;
 			
-			if(!armatureData || !textureAtlas){
+			if(!armatureData){
 				return null;
 			}
 			
-			return this.buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData, armatureData, textureAtlas, skinName);
+			return this.buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData, armatureData, fromTextureAtlasName, skinName);
 		}
 
 		/**
@@ -327,16 +358,18 @@ module dragonBones {
 		 * @param skinName 皮肤名称 可选参数
 		 * @returns {Armature}
 		 */
-		public buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData:DragonBonesData, armatureData:ArmatureData, textureAtlas:any, skinName:string = null):Armature{
+		public buildArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData:DragonBonesData, armatureData:ArmatureData, textureAtlasName:string, skinName:string = null):Armature{
 			var outputArmature:Armature = this._generateArmature();
 			outputArmature.name = armatureData.name;
 			outputArmature.__dragonBonesData = dragonBonesData;
 			outputArmature._armatureData = armatureData;
+            outputArmature._skewEnable = dragonBonesData.version >= 4.5;
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildBones(outputArmature);
-			//TO DO: Support multi textureAtlas case in future
-			this._buildSlots(outputArmature, skinName, textureAtlas);
+            outputArmature.buildIK();
++			outputArmature.updateBoneCache();
+			this._buildSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);
 			return outputArmature;
@@ -350,16 +383,18 @@ module dragonBones {
 		 * @param skinName 皮肤名称 可选参数
 		 * @returns {Armature}
 		 */
-		public buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData:DragonBonesData, armatureData:ArmatureData, textureAtlas:any, skinName:string = null):FastArmature{
+		public buildFastArmatureUsingArmatureDataFromTextureAtlas(dragonBonesData:DragonBonesData, armatureData:ArmatureData, textureAtlasName:string, skinName:string = null):FastArmature{
 			var outputArmature:FastArmature = this._generateFastArmature();
 			outputArmature.name = armatureData.name;
 			outputArmature.__dragonBonesData = dragonBonesData;
 			outputArmature._armatureData = armatureData;
+            outputArmature._skewEnable = dragonBonesData.version >= 4.5;
 			outputArmature.animation.animationDataList = armatureData.animationDataList;
 			
 			this._buildFastBones(outputArmature);
-			//TO DO: Support multi textureAtlas case in future
-			this._buildFastSlots(outputArmature, skinName, textureAtlas);
+            outputArmature.buildIK();
++			outputArmature.updateBoneCache();
+			this._buildFastSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);
 			
@@ -483,7 +518,7 @@ module dragonBones {
             armature._updateAnimationAfterBoneListChanged();
 		}
 		
-		public _buildSlots(armature:Armature, skinName:string, textureAtlas:any):void{
+		public _buildSlots(armature:Armature, skinName:string, textureAtlasName:string):void{
 			var skinData:SkinData = armature.armatureData.getSkinData(skinName);
 			if(!skinData){
 				return;
@@ -504,20 +539,20 @@ module dragonBones {
 				slot = this._generateSlot();
 				slot.initWithSlotData(slotData);
 				bone.addSlot(slot);
-				
+				displayList.length = 0;
 				var l:number = slotData.displayDataList.length;
 				while(l--){
 					var displayData:DisplayData = slotData.displayDataList[l];
 					
 					switch(displayData.type){
 						case DisplayData.ARMATURE:
-                            var childArmature:Armature = this.buildArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlas, skinName);
+                            var childArmature:Armature = this.buildArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlasName, skinName);
                             displayList[l] = childArmature;
 							break;
 						
 						case DisplayData.IMAGE:
 						default:
-							displayList[l] = this._generateDisplay(textureAtlas, displayData.name, displayData.pivot.x, displayData.pivot.y);
+							displayList[l] = this.getTextureDisplay(displayData.name, textureAtlasName, displayData.pivot.x, displayData.pivot.y);
 							break;
 						
 					}
@@ -528,10 +563,13 @@ module dragonBones {
                 for(var j:number = 0,jLen:number = displayList.length; j < jLen; j++)
                 {
                     var displayObject:any = displayList[j];
+					if(!displayObject)
+					{
+						continue;
+					}
                     if(displayObject instanceof Armature){
                         displayObject = (<Armature><any> displayObject).display;
                     }
-
                     if(displayObject.hasOwnProperty("name")){
                         try{
                             displayObject["name"] = slot.name;
@@ -560,7 +598,7 @@ module dragonBones {
 			}
 		}
 		
-		public _buildFastSlots(armature:FastArmature, skinName:string, textureAtlas:any):void{
+		public _buildFastSlots(armature:FastArmature, skinName:string, textureAtlasName:string):void{
 		//根据皮肤初始化SlotData的DisplayDataList
 			var skinData:SkinData = armature.armatureData.getSkinData(skinName);
 			if(!skinData){
@@ -585,14 +623,14 @@ module dragonBones {
 					
 					switch(displayData.type){
 						case DisplayData.ARMATURE:
-							var childArmature:FastArmature = this.buildFastArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlas, skinName);
+							var childArmature:FastArmature = this.buildFastArmatureUsingArmatureDataFromTextureAtlas(armature.__dragonBonesData, armature.__dragonBonesData.getArmatureDataByName(displayData.name), textureAtlasName, skinName);
 							displayList[l] = childArmature;
 							slot.hasChildArmature = true;
 							break;
 						
 						case DisplayData.IMAGE:
 						default:
-							displayList[l] = this._generateDisplay(textureAtlas, displayData.name, displayData.pivot.x, displayData.pivot.y);
+							displayList[l] = this.getTextureDisplay(displayData.name,textureAtlasName, displayData.pivot.x, displayData.pivot.y);
 							break;
 						
 					}
@@ -600,8 +638,13 @@ module dragonBones {
 				//==================================================
 				//如果显示对象有name属性并且name属性可以设置的话，将name设置为与slot同名，dragonBones并不依赖这些属性，只是方便开发者
 				var length1:number = displayList.length;
-				for(var i1:number = 0;i1 < length1;i1++){
+				for(var i1:number = 0;i1 < length1;i1++)
+				{
 					var displayObject:any = displayList[i1];
+					if(!displayObject)
+					{
+						continue;
+					}
 					if(displayObject instanceof FastArmature){
 						displayObject = (<FastArmature><any> displayObject).display;
 					}
@@ -620,6 +663,7 @@ module dragonBones {
 				slot._changeDisplayIndex(slotData.displayIndex);
 			}
 		}
+
 		/**
 		 * @private
 		 * Generates an Armature instance.

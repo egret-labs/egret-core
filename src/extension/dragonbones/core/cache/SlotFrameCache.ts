@@ -84,6 +84,8 @@ module dragonBones {
 		public colorTransform:ColorTransform;
 		public displayIndex:number = -1;
 //		public var zOrder:int;
+        public gotoAndPlay:string;
+        
 		public constructor(){
 			super();
 		}
@@ -93,12 +95,14 @@ module dragonBones {
 			super.copy(frameCache);
 			this.colorTransform = (<SlotFrameCache><any> frameCache).colorTransform;
 			this.displayIndex = (<SlotFrameCache><any> frameCache).displayIndex;
+			this.gotoAndPlay = (<SlotFrameCache><any> frameCache).gotoAndPlay;
 		}
 		
 		public clear():void {
 			super.clear();
 			this.colorTransform = null;
 			this.displayIndex = -1;
+            this.gotoAndPlay = null;
 		}
 	}
 }

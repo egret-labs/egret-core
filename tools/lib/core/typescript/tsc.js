@@ -3694,6 +3694,9 @@ var ts;
     function createEmitHostFromProgram(program) {
         var compilerHost = program.getCompilerHost();
         return {
+            getProgram: function () {
+                return program;
+            },
             getCanonicalFileName: compilerHost.getCanonicalFileName,
             getCommonSourceDirectory: program.getCommonSourceDirectory,
             getCompilerOptions: program.getCompilerOptions,
@@ -17261,6 +17264,7 @@ var ts;
     }
     ts.getDeclarationDiagnostics = getDeclarationDiagnostics;
     function emitFiles(resolver, host, targetSourceFile) {
+        var program = host.getProgram();
         var compilerOptions = host.getCompilerOptions();
         var languageVersion = compilerOptions.target || 0 /* ES3 */;
         var sourceMapDataList = compilerOptions.sourceMap ? [] : undefined;
@@ -18855,7 +18859,6 @@ var ts;
                         emitStart(member);
                         emitStart(member.name);
                         if (!(member.flags & 128 /* Static */)) {
-                            //emitNode(node.name);
                             write("__egretProto__");
                         }
                         else {
@@ -18879,7 +18882,6 @@ var ts;
                             write("Object.defineProperty(");
                             emitStart(member.name);
                             if (!(member.flags & 128 /* Static */)) {
-                                //emitNode(node.name);
                                 write("__egretProto__");
                             }
                             else {
@@ -18992,6 +18994,42 @@ var ts;
                 }
                 write(node.name.text);
                 write("\";");
+                var checker = program.getTypeChecker(true);
+                var fullName = checker.getFullyQualifiedName(node.symbol);
+                var interfaces = {};
+                getImplementedInterfaces(node, interfaces, true);
+                writeLine();
+                write('egret.registerClass(');
+                emit(node.name);
+                write(',"' + fullName + '"');
+                var interfacesArray = Object.keys(interfaces);
+                if (interfacesArray.length > 0) {
+                    write(',');
+                    write(JSON.stringify(interfacesArray));
+                }
+                write(');');
+                writeLine();
+                emitTrailingComments(node);
+                function getImplementedInterfaces(node, names, isClass) {
+                    if (isClass === void 0) { isClass = true; }
+                    var superInterfaces = null;
+                    if (isClass)
+                        superInterfaces = ts.getClassImplementedTypeNodes(node);
+                    else
+                        superInterfaces = ts.getInterfaceBaseTypeNodes(node);
+                    if (superInterfaces) {
+                        superInterfaces.forEach(function (sp) {
+                            var interfaceType = checker.getTypeAtLocation(sp);
+                            if (interfaceType.flags & 2048 /* Interface */) {
+                                var fullname = checker.getFullyQualifiedName(interfaceType.symbol);
+                                names[fullname] = true;
+                                if (interfaceType.symbol.declarations) {
+                                    interfaceType.symbol.declarations.forEach(function (d) { return getImplementedInterfaces(d, names, !!(interfaceType.flags & 1024 /* Class */)); });
+                                }
+                            }
+                        });
+                    }
+                }
                 emitTrailingComments(node);
                 function emitConstructorOfClass() {
                     var saveTempCount = tempCount;
@@ -19334,20 +19372,6 @@ var ts;
                 emitDetachedComments(node);
                 var startIndex = emitDirectivePrologues(node.statements, false);
                 if (!extendsEmitted && resolver.getNodeCheckFlags(node) & 8 /* EmitExtends */) {
-                    /*writeLine();
-                     write("var __extends = this.__extends || function (d, b) {");
-                     increaseIndent();
-                     writeLine();
-                     write("for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];");
-                     writeLine();
-                     write("function __() { this.constructor = d; }");
-                     writeLine();
-                     write("__.prototype = b.prototype;");
-                     writeLine();
-                     write("d.prototype = new __();");
-                     decreaseIndent();
-                     writeLine();
-                     write("};");*/
                     extendsEmitted = true;
                 }
                 if (ts.isExternalModule(node)) {
@@ -20482,14 +20506,6 @@ var ts;
         }
         return undefined;
     }
-    function executeApi(commandArr) {
-        var commandLine = ts.parseCommandLine(["@tsc_config_temp.txt"]);
-        var compilerOptions = commandLine.options;
-        var compilerHost = ts.createCompilerHost(compilerOptions, null);
-        var program = compile(commandLine.filenames, commandLine.options, compilerHost).program;
-        return program.getSourceFiles();
-    }
-    ts.executeApi = executeApi;
     function executeCommandLine(args, defaultLibUrl) {
         var commandLine = ts.parseCommandLine(args);
         var configFilename;
@@ -20747,10 +20763,7 @@ var ts;
     }
 })(ts || (ts = {}));
 exports.executeCommandLine = ts.executeCommandLine;
-exports.executeApi = ts.executeApi;
 exports.exit = null;
 ts.sys.exit = function(code){
     exports.exit(code);
-}
-//exports.exit = ts.sys.exit;
-
+};

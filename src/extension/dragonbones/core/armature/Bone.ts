@@ -111,6 +111,7 @@ module dragonBones {
 			var outputBone:Bone = new Bone();
 			
 			outputBone.name = boneData.name;
+            outputBone.length = boneData.length;
 			outputBone.inheritRotation = boneData.inheritRotation;
 			outputBone.inheritScale = boneData.inheritScale;
 			outputBone.origin.copy(boneData.transform);
@@ -151,6 +152,11 @@ module dragonBones {
          */
         public applyOffsetScaleToChild:boolean = false;
 
+        public rotationIK:number;
+		public length:number;
+		public isIKConstraint:boolean = false;
+		public childrenBones:Array<Bone> = [];
+        
 		/** @private */
 		public _boneList:Array<Bone>;
 		
@@ -176,10 +182,12 @@ module dragonBones {
         public _globalTransformForChild:DBTransform;
         /** @private */
         public _globalTransformMatrixForChild:Matrix;
-
+        /** @private */
+        public _localTransform:DBTransform;
+        
         private _tempGlobalTransformForChild:DBTransform;
         private _tempGlobalTransformMatrixForChild:Matrix;
-
+        
 		public constructor(){
 			super();
 			
@@ -266,6 +274,11 @@ module dragonBones {
 			this._boneList[this._boneList.length] = childBone;
 			childBone._setParent(this);
 			childBone._setArmature(this._armature);
+			var index = this.childrenBones.indexOf(childBone);
+			if (index < 0)
+			{
+				this.childrenBones.push(childBone);
+			}
 			
 			if(this._armature && !updateLater){
 				this._armature._updateAnimationAfterBoneListChanged();
@@ -290,6 +303,11 @@ module dragonBones {
 			this._boneList.splice(index, 1);
 			childBone._setParent(null);
 			childBone._setArmature(null);
+			var indexs = this.childrenBones.indexOf(childBone);
+			if (indexs >= 0)
+			{
+				this.childrenBones.splice(indexs, 1);
+			}
 			
 			if(this._armature && !updateLater){
 				this._armature._updateAnimationAfterBoneListChanged(false);
@@ -383,6 +401,39 @@ module dragonBones {
          */
 		public invalidUpdate():void{
 			this._needUpdate = 2;
+			this.operationInvalidUpdate(this);
+			var i:number;
+			var len:number;
+			for (i = 0, len = this.childrenBones.length;i<len;i++)
+			{
+				if(this.childrenBones[i]._needUpdate != 2){
+					this.operationInvalidUpdate(this.childrenBones[i]);
+					this.childrenBones[i].invalidUpdate()
+				}
+			}
+		}
+		private operationInvalidUpdate(bone:Bone):void
+		{
+            var arr:Array<IKConstraint> = this.armature.getIKTargetData(bone);
+			var i:number;
+			var len:number;
+			var j:number;
+			var jLen:number;
+			var ik:IKConstraint;
+			var bo:Bone;
+			
+			for (i = 0, len = arr.length; i < len; i++)
+			{
+				ik = arr[i];
+				for (j = 0, jLen = ik.bones.length; j < jLen; j++)
+				{
+					bo = ik.bones[j];
+					if(bo._needUpdate != 2){
+						bo.invalidUpdate();
+					}
+				}
+			}
+            
 		}
 
         public _calculateRelativeParentTransform():void
@@ -396,7 +447,7 @@ module dragonBones {
         }
 		/** @private */
 		public _update(needUpdate:boolean = false):void{
-			this._needUpdate --;
+            this._needUpdate --;
 			if(needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)){
 				this._needUpdate = 1;
 			}
@@ -407,14 +458,20 @@ module dragonBones {
 			this.blendingTimeline();
 
             //计算global
-            var result:any = this._updateGlobal();
-            var parentGlobalTransform:DBTransform = result ? result.parentGlobalTransform : null;
-            var parentGlobalTransformMatrix:Matrix = result ? result.parentGlobalTransformMatrix : null;
+            var result:ParentTransformObject = this._updateGlobal();
+            var parentGlobalTransform:DBTransform;
+            var parentGlobalTransformMatrix:Matrix;
+            if(result)
+            {
+                parentGlobalTransform = result.parentGlobalTransform;
+                parentGlobalTransformMatrix = result.parentGlobalTransformMatrix;
+                result.release();
+            }
 
 
             //计算globalForChild
             var ifExistOffsetTranslation:boolean = this._offset.x != 0 || this._offset.y != 0;
-            var ifExistOffsetScale:boolean = this._offset.scaleX != 0 || this._offset.scaleY != 0;
+            var ifExistOffsetScale:boolean = this._offset.scaleX != 1 || this._offset.scaleY != 1;
             var ifExistOffsetRotation:boolean = this._offset.skewX != 0 || this._offset.skewY != 0;
 
             if(	(!ifExistOffsetTranslation || this.applyOffsetTranslationToChild) &&
@@ -461,7 +518,7 @@ module dragonBones {
                     this._globalTransformForChild.skewY += this._offset.skewY;
                 }
 
-                TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild, true);
+                TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
                 if(parentGlobalTransformMatrix)
                 {
                     this._globalTransformMatrixForChild.concat(parentGlobalTransformMatrix);
@@ -493,6 +550,20 @@ module dragonBones {
 
 			this._isColorChanged = colorChanged;
 		}
+        
+        public adjustGlobalTransformMatrixByIK():void
+		{
+			if(!this.parent)
+			{
+				return;
+			}
+			
+			this.global.rotation = this.rotationIK;
+			TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
+			this._globalTransformForChild.rotation = this.rotationIK;
+			TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
+		}
+        
 		/** @private */
 		public _hideSlots():void{
 			var length:number = this._slotList.length;
@@ -545,6 +616,59 @@ module dragonBones {
 			}
 		}
 		
+        
+        public _updateGlobal():ParentTransformObject 
+		{
+			if (!this._armature._skewEnable)
+			{
+				return super._updateGlobal();
+			}
+			this._calculateRelativeParentTransform();
+			var output:ParentTransformObject = this._calculateParentTransform();
+			if(output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform)
+			{
+				//计算父骨头绝对坐标
+				var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
+				var parentGlobalTransform:DBTransform = output.parentGlobalTransform;
+				
+				var scaleXF:boolean = this._global.scaleX * parentGlobalTransform.scaleX > 0;
+				var scaleYF:boolean = this._global.scaleY * parentGlobalTransform.scaleY > 0;
+				var relativeRotation:number = this._global.rotation;
+				var relativeScaleX:number = this._global.scaleX;
+				var relativeScaleY:number = this._global.scaleY;
+				var parentRotation:number = this.parentBoneRotation;
+                
+                this._localTransform = this._global;
+                
+                if (this.inheritScale && !this.inheritRotation)
+                {
+                    if (parentRotation != 0)
+					{
+						this._localTransform = this._localTransform.clone();
+						this._localTransform.rotation -= parentRotation;
+					}
+                }
+				TransformUtil.transformToMatrix(this._localTransform, this._globalTransformMatrix);
+				this._globalTransformMatrix.concat(parentMatrix);
+                
+                if(this.inheritScale)
+                {
+                    TransformUtil.matrixToTransform(this._globalTransformMatrix, this._global, scaleXF, scaleYF);
+                }
+                else
+                {
+                    TransformUtil.matrixToTransformPosition(this._globalTransformMatrix, this._global);
+
+					this._global.scaleX = this._localTransform.scaleX;
+					this._global.scaleY = this._localTransform.scaleY;
+					this._global.rotation = this._localTransform.rotation + (this.inheritRotation ? parentRotation : 0);
+					
+					TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
+                }
+			}
+			return output;
+		}
+        
 		/** @private */
 		public _addState(timelineState:TimelineState):void{
 			if(this._timelineStateList.indexOf(timelineState) < 0){
@@ -626,7 +750,7 @@ module dragonBones {
 					
 					weight = timelineState._animationState.weight * timelineState._animationState.fadeWeight * weigthLeft;
 					timelineState._weight = weight;
-					if(weight && timelineState._blendEnabled){
+					if(weight){
 						transform = timelineState._transform;
 						pivot = timelineState._pivot;
 						
@@ -708,6 +832,11 @@ module dragonBones {
          */
 		public get slot():Slot{
 			return this._slotList.length > 0?this._slotList[0]:null;
+		}
+        
+        public get parentBoneRotation():number
+		{
+			return this.parent ? this.parent.rotationIK : 0;
 		}
 	}
 }

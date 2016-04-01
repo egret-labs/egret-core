@@ -36,11 +36,11 @@ var i18n = packageJsonConfig.i18n;
 var locale;
 if(i18n == "en") {
     locale = require("./en-US.js");
-    require('../../locales/en');
+    require('../../../locales/en');
 }
 else {
     locale = require("./zh-CN.js");
-    require('../../locales/zh_CN');
+    require('../../../locales/zh_CN');
 }
 
 exports.help_dict = locale.help_dict;

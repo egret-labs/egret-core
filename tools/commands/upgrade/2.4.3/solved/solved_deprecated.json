@@ -1,0 +1,270 @@
+[
+  {
+    "desc":"class InteractionMode{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectPrivateProperties{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _texture_to_render: Texture; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _worldTransform: egret.Matrix; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _worldBounds: egret.Rectangle; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ __hack_local_matrix: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _sizeChangeCallBack: Function; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _sizeChangeCallTarget: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _parentChanged(parent: DisplayObjectContainer): void; }",
+    "solved":true
+  },
+
+
+  {
+    "desc":"class DisplayObject{ _setAnchorX(value: number): void; }",
+    "solved":true
+  },
+
+  {
+    "desc":"class DisplayObject{ _setAnchorY(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ worldAlpha: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ needDraw: boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _getSize(resultRect: Rectangle): Rectangle; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ explicitWidth: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ explicitHeight: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _getOffsetPoint(): egret.Point; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ static _enterFrameCallBackList: Array<any>; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ static _renderCallBackList: Array<any>; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setGlobalFilters(renderContext: RendererContext): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _removeGlobalFilters(renderContext: RendererContext): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _hasFilters(): boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _pushMask(renderContext: RendererContext): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _popMask(renderContext: RendererContext): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _makeBitmapCache(): boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ static getTransformBounds(bounds: egret.Rectangle, mtx: egret.Matrix): egret.Rectangle; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ renderTexture: RenderTexture; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _getConcatenatedMatrix(): egret.Matrix; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ static __EVENT__ADD_TO_STAGE_LIST: Array<DisplayObject>; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ static __EVENT__REMOVE_FROM_STAGE_LIST: Array<DisplayObject>; }",
+    "solved":true
+  },
+  {
+    "desc":"class RenderCommand{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class RenderFilter{ * }",
+    "solved":true
+  },
+  {
+    "desc":"interface RenderData{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class SAXParser{ * }",
+    "solved":true
+  },
+  {
+    "desc":"interface IVersionController{ * }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ static _createBitmapDataForNative(url: string, callback: (code: number, bitmapData: any) => void): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ static _onError(url: any, bitmapData: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ static _onLoad(url: any, bitmapData: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ static _createBitmapDataForCanvasAndWebGl(url: string, callback: (code: number, bitmapData: any) => void): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ static createBitmapData(url: string, callback: (code: number, bitmapData: any) => void): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ static deleteWebGLTexture(texture: Texture): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _disposeForNative(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _clone(): Texture; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _disposeForCanvas(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ draw(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _drawRepeatImageForCanvas(context: CanvasRenderingContext2D, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, repeat: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _drawRepeatImageForNative(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, repeat: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _drawForNative(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _drawForCanvas(context: CanvasRenderingContext2D, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _TF_Props_: TextFieldProperties; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ maxWidth: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setSelection(beginIndex: number, endIndex: number): void; }",
+    "solved":true
+  },
+
+  {
+    "desc":"class BitmapText{ _font: BitmapFont; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _letterSpacing: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _lineSpacing: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ _beginDraw(renderContext: RendererContext): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ _endDraw(renderContext: RendererContext): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ _checkRect(x: number, y: number, w: number, h: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ _checkPoint(x: number, y: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ _renderContext: RenderContext; }",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ static _currentFillStyle: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class InputController{ _updateTransform(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _textureWidth: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ _textureHeight: number; }",
+    "solved":true
+  }
+]

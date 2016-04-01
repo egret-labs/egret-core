@@ -47,7 +47,6 @@ module egret.gui {
 		 * 返回指定索引处的可视元素。
 		 * @method egret.gui.IContainer#getElementAt
 		 * @param index {number} 要检索的元素的索引。
-		 * @throws RangeError 如果在子列表中不存在该索引位置。
 		 * @returns {IVisualElement}
 		 */		
 		getElementAt(index:number):IVisualElement
@@ -65,7 +64,6 @@ module egret.gui {
 		 * @method egret.gui.IContainer#addElementAt
 		 * @param element {IVisualElement} 要添加为此可视容器的子项的元素。
 		 * @param index {number} 将该元素添加到的索引位置。如果指定当前占用的索引位置，则该位置以及所有更高位置上的子对象会在子级列表中上移一个位置。
-		 * @throws RangeError 如果在子列表中不存在该索引位置。
 		 * @returns {IVisualElement}
 		 */		
 		addElementAt(element:IVisualElement, index:number):IVisualElement;
@@ -82,7 +80,6 @@ module egret.gui {
 		 * 在该可视容器中，位于该元素之上的所有元素的索引位置都减少 1。
 		 * @method egret.gui.IContainer#removeElementAt
 		 * @param index {number} 要删除的元素的索引。
-		 * @throws RangeError 如果在子列表中不存在该索引位置。
 		 * @returns {IVisualElement}
 		 */		
 		removeElementAt(index:number):IVisualElement;
@@ -98,8 +95,7 @@ module egret.gui {
 		 * @method egret.gui.IContainer#setElementIndex
 		 * @param element {IVisualElement} 要为其更改索引编号的元素。
 		 * @param index {number} 元素的最终索引编号。
-		 * @throws RangeError 如果在子列表中不存在该索引位置。
-		 */		
+		 */
 		setElementIndex(element:IVisualElement, index:number):void;
 		
 	}

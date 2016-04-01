@@ -1,0 +1,147 @@
+[
+  {
+    "desc":"class DisplayObject{ filters: Array<Filter>; }",
+    "solution-url":"willsupport_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ transform: Transform; }",
+    "solution-url":"willsupport_md",
+    "solved":true
+  },
+  {
+    "desc":"class ColorTransform{ * }",
+    "solution-url":"willsupport_md",
+    "solved":true
+  },
+  {
+    "desc":"class Transform{ * }",
+    "solution-url":"willsupport_md",
+    "solved":true
+  },
+  {
+    "desc":"class Browser{ * }",
+    "solution-url":"browser_md",
+    "solved":true
+  },
+  {
+    "desc":"class XML{ * }",
+    "solution-url":"xml_md",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClip{ * }",
+    "solution-url":"movieclip_md",
+    "solved":true
+  },
+  {
+    "desc":"interface IAudio{ * }",
+    "solution-url":"sound_md",
+    "solved":true
+  },
+  {
+    "desc":"class Sound{ * }",
+    "solution-url":"sound_md",
+    "solved":true
+  },
+  {
+    "desc":"class SoundEvent{ * }",
+    "solution-url":"sound_md",
+    "solved":true
+  },
+  {
+    "desc":"class FixedHeight{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class FixedWidth{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class FixedSize{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class NoScale{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class ShowAll{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class FullScreen{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class StageDelegate{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class ResolutionPolicy{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class ContainerStrategy{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class EqualToFrame{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class ContentStrategy{ * }",
+    "solution-url":"scalemode_md",
+    "solved":true
+  },
+  {
+    "desc":"class Profiler{ * }",
+    "solution-url":"profiler_md",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ static _drawBitmap(renderContext: RendererContext, destW: number, destH: number, thisObject: any): void; }",
+    "solution-url":"bitmap_md",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ _onTweenFinished(tw: Tween): void; }",
+    "solution-url":"changed_md",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ setScrollTop(scrollTop: number, duration?: number): egret.Tween; }",
+    "solution-url":"changed_md",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ setScrollLeft(scrollLeft: number, duration?: number): egret.Tween; }",
+    "solution-url":"changed_md",
+    "solved":true
+  },
+  {
+    "desc":"class Texture{ static crossOrigin: string; }",
+    "solution-url":"changed_md",
+    "solved":true
+  },
+  {
+    "desc":"class Matrix{ * }",
+    "solution-url":"matrix_md",
+    "solved":true
+  },
+  {
+    "desc":"class Stage{ * }",
+    "solution-url":"changed_md",
+    "solved":true
+  }
+]

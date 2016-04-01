@@ -61,7 +61,8 @@ function Compressor(options, false_by_default) {
         loops         : !false_by_default,
         unused        : !false_by_default,
         hoist_funs    : !false_by_default,
-        keep_fargs    : false,
+        keep_fargs    : true,
+        keep_fnames   : false,
         hoist_vars    : false,
         if_return     : !false_by_default,
         join_vars     : !false_by_default,
@@ -110,6 +111,7 @@ merge(Compressor.prototype, {
         node.DEFMETHOD("optimize", function(compressor){
             var self = this;
             if (self._optimized) return self;
+            if (compressor.has_directive("use asm")) return self;
             var opt = optimizer(self, compressor);
             opt._optimized = true;
             if (opt === self) return opt;
@@ -162,10 +164,10 @@ merge(Compressor.prototype, {
             return make_node(AST_Undefined, orig).optimize(compressor);
           default:
             if (val === null) {
-                return make_node(AST_Null, orig).optimize(compressor);
+                return make_node(AST_Null, orig, { value: null }).optimize(compressor);
             }
             if (val instanceof RegExp) {
-                return make_node(AST_RegExp, orig).optimize(compressor);
+                return make_node(AST_RegExp, orig, { value: val }).optimize(compressor);
             }
             throw new Error(string_template("Can't handle constant of type: {type}", {
                 type: typeof val
@@ -197,7 +199,7 @@ merge(Compressor.prototype, {
     };
 
     function tighten_body(statements, compressor) {
-        var CHANGED;
+        var CHANGED, max_iter = 10;
         do {
             CHANGED = false;
             if (compressor.option("angular")) {
@@ -216,7 +218,7 @@ merge(Compressor.prototype, {
             if (compressor.option("join_vars")) {
                 statements = join_consecutive_vars(statements, compressor);
             }
-        } while (CHANGED);
+        } while (CHANGED && max_iter-- > 0);
 
         if (compressor.option("negate_iife")) {
             negate_iifes(statements, compressor);
@@ -225,6 +227,17 @@ merge(Compressor.prototype, {
         return statements;
 
         function process_for_angular(statements) {
+            function has_inject(comment) {
+                return /@ngInject/.test(comment.value);
+            }
+            function make_arguments_names_list(func) {
+                return func.argnames.map(function(sym){
+                    return make_node(AST_String, sym, { value: sym.name });
+                });
+            }
+            function make_array(orig, elements) {
+                return make_node(AST_Array, orig, { elements: elements });
+            }
             function make_injector(func, name) {
                 return make_node(AST_SimpleStatement, func, {
                     body: make_node(AST_Assign, func, {
@@ -233,37 +246,56 @@ merge(Compressor.prototype, {
                             expression: make_node(AST_SymbolRef, name, name),
                             property: "$inject"
                         }),
-                        right: make_node(AST_Array, func, {
-                            elements: func.argnames.map(function(sym){
-                                return make_node(AST_String, sym, { value: sym.name });
-                            })
-                        })
+                        right: make_array(func, make_arguments_names_list(func))
                     })
                 });
             }
+            function check_expression(body) {
+                if (body && body.args) {
+                    // if this is a function call check all of arguments passed
+                    body.args.forEach(function(argument, index, array) {
+                        var comments = argument.start.comments_before;
+                        // if the argument is function preceded by @ngInject
+                        if (argument instanceof AST_Lambda && comments.length && has_inject(comments[0])) {
+                            // replace the function with an array of names of its parameters and function at the end
+                            array[index] = make_array(argument, make_arguments_names_list(argument).concat(argument));
+                        }
+                    });
+                    // if this is chained call check previous one recursively
+                    if (body.expression && body.expression.expression) {
+                        check_expression(body.expression.expression);
+                    }
+                }
+            }
             return statements.reduce(function(a, stat){
                 a.push(stat);
-                var token = stat.start;
-                var comments = token.comments_before;
-                if (comments && comments.length > 0) {
-                    var last = comments.pop();
-                    if (/@ngInject/.test(last.value)) {
-                        // case 1: defun
-                        if (stat instanceof AST_Defun) {
-                            a.push(make_injector(stat, stat.name));
-                        }
-                        else if (stat instanceof AST_Definitions) {
-                            stat.definitions.forEach(function(def){
-                                if (def.value && def.value instanceof AST_Lambda) {
-                                    a.push(make_injector(def.value, def.name));
-                                }
-                            });
-                        }
-                        else {
-                            compressor.warn("Unknown statement marked with @ngInject [{file}:{line},{col}]", token);
+
+                if (stat.body && stat.body.args) {
+                    check_expression(stat.body);
+                } else {
+                    var token = stat.start;
+                    var comments = token.comments_before;
+                    if (comments && comments.length > 0) {
+                        var last = comments.pop();
+                        if (has_inject(last)) {
+                            // case 1: defun
+                            if (stat instanceof AST_Defun) {
+                                a.push(make_injector(stat, stat.name));
+                            }
+                            else if (stat instanceof AST_Definitions) {
+                                stat.definitions.forEach(function(def) {
+                                    if (def.value && def.value instanceof AST_Lambda) {
+                                        a.push(make_injector(def.value, def.name));
+                                    }
+                                });
+                            }
+                            else {
+                                compressor.warn("Unknown statement marked with @ngInject [{file}:{line},{col}]", token);
+                            }
                         }
                     }
                 }
+
                 return a;
             }, []);
         }
@@ -352,7 +384,12 @@ merge(Compressor.prototype, {
                             continue loop;
                         }
                         //---
-                        if (ret.length == 1 && in_lambda && ret[0] instanceof AST_SimpleStatement
+                        // XXX: what was the intention of this case?
+                        // if sequences is not enabled, this can lead to an endless loop (issue #866).
+                        // however, with sequences on this helps producing slightly better output for
+                        // the example code.
+                        if (compressor.option("sequences")
+                            && ret.length == 1 && in_lambda && ret[0] instanceof AST_SimpleStatement
                             && (!stat.alternative || stat.alternative instanceof AST_SimpleStatement)) {
                             CHANGED = true;
                             ret.push(make_node(AST_Return, ret[0], {
@@ -458,7 +495,7 @@ merge(Compressor.prototype, {
                 seq = [];
             };
             statements.forEach(function(stat){
-                if (stat instanceof AST_SimpleStatement) seq.push(stat.body);
+                if (stat instanceof AST_SimpleStatement && seq.length < 2000) seq.push(stat.body);
                 else push_seq(), ret.push(stat);
             });
             push_seq();
@@ -865,6 +902,7 @@ merge(Compressor.prototype, {
         def(AST_Call, function(compressor){
             var pure = compressor.option("pure_funcs");
             if (!pure) return true;
+            if (typeof pure == "function") return pure(this);
             return pure.indexOf(this.expression.print_to_string()) < 0;
         });
 
@@ -949,7 +987,7 @@ merge(Compressor.prototype, {
         def(AST_BlockStatement, block_aborts);
         def(AST_SwitchBranch, block_aborts);
         def(AST_If, function(){
-            return this.alternative && aborts(this.body) && aborts(this.alternative);
+            return this.alternative && aborts(this.body) && aborts(this.alternative) && this;
         });
     })(function(node, func){
         node.DEFMETHOD("aborts", func);
@@ -958,7 +996,7 @@ merge(Compressor.prototype, {
     /* -----[ optimizers ]----- */
 
     OPT(AST_Directive, function(self, compressor){
-        if (self.scope.has_directive(self.value) !== self.scope) {
+        if (compressor.has_directive(self.value) === "up") {
             return make_node(AST_EmptyStatement, self);
         }
         return self;
@@ -994,6 +1032,7 @@ merge(Compressor.prototype, {
 
     AST_Scope.DEFMETHOD("drop_unused", function(compressor){
         var self = this;
+        if (compressor.has_directive("use asm")) return self;
         if (compressor.option("unused")
             && !(self instanceof AST_Toplevel)
             && !self.uses_eval
@@ -1137,12 +1176,12 @@ merge(Compressor.prototype, {
                             return make_node(AST_EmptyStatement, node);
                         }
                         if (def.length == 0) {
-                            return side_effects;
+                            return in_list ? MAP.splice(side_effects.body) : side_effects;
                         }
                         node.definitions = def;
                         if (side_effects) {
                             side_effects.body.unshift(node);
-                            node = side_effects;
+                            return in_list ? MAP.splice(side_effects.body) : side_effects;
                         }
                         return node;
                     }
@@ -1173,9 +1212,10 @@ merge(Compressor.prototype, {
     });
 
     AST_Scope.DEFMETHOD("hoist_declarations", function(compressor){
+        var self = this;
+        if (compressor.has_directive("use asm")) return self;
         var hoist_funs = compressor.option("hoist_funs");
         var hoist_vars = compressor.option("hoist_vars");
-        var self = this;
         if (hoist_funs || hoist_vars) {
             var dirs = [];
             var hoisted = [];
@@ -1666,7 +1706,7 @@ merge(Compressor.prototype, {
 
     OPT(AST_Function, function(self, compressor){
         self = AST_Lambda.prototype.optimize.call(self, compressor);
-        if (compressor.option("unused")) {
+        if (compressor.option("unused") && !compressor.option("keep_fnames")) {
             if (self.name && self.name.unreferenced()) {
                 self.name = null;
             }
@@ -1722,6 +1762,11 @@ merge(Compressor.prototype, {
                     }).transform(compressor);
                     break;
                   case "Function":
+                    // new Function() => function(){}
+                    if (self.args.length == 0) return make_node(AST_Function, self, {
+                        argnames: [],
+                        body: []
+                    });
                     if (all(self.args, function(x){ return x instanceof AST_String })) {
                         // quite a corner-case, but we can handle it:
                         //   https://github.com/mishoo/UglifyJS2/issues/203
@@ -1837,11 +1882,16 @@ merge(Compressor.prototype, {
             }
         }
         if (compressor.option("drop_console")) {
-            if (self.expression instanceof AST_PropAccess &&
-                self.expression.expression instanceof AST_SymbolRef &&
-                self.expression.expression.name == "console" &&
-                self.expression.expression.undeclared()) {
-                return make_node(AST_Undefined, self).transform(compressor);
+            if (self.expression instanceof AST_PropAccess) {
+                var name = self.expression.expression;
+                while (name.expression) {
+                    name = name.expression;
+                }
+                if (name instanceof AST_SymbolRef
+                    && name.name == "console"
+                    && name.undeclared()) {
+                    return make_node(AST_Undefined, self).transform(compressor);
+                }
             }
         }
         return self.evaluate(compressor)[0];
@@ -1868,15 +1918,11 @@ merge(Compressor.prototype, {
         if (!compressor.option("side_effects"))
             return self;
         if (!self.car.has_side_effects(compressor)) {
-            // we shouldn't compress (1,eval)(something) to
-            // eval(something) because that changes the meaning of
-            // eval (becomes lexical instead of global).
-            var p;
-            if (!(self.cdr instanceof AST_SymbolRef
-                  && self.cdr.name == "eval"
-                  && self.cdr.undeclared()
-                  && (p = compressor.parent()) instanceof AST_Call
-                  && p.expression === self)) {
+            // we shouldn't compress (1,func)(something) to
+            // func(something) because that changes the meaning of
+            // the func (becomes lexical instead of global).
+            var p = compressor.parent();
+            if (!(p instanceof AST_Call && p.expression === self)) {
                 return self.cdr;
             }
         }
@@ -1901,7 +1947,7 @@ merge(Compressor.prototype, {
         if (self.cdr instanceof AST_UnaryPrefix
             && self.cdr.operator == "void"
             && !self.cdr.expression.has_side_effects(compressor)) {
-            self.cdr.operator = self.car;
+            self.cdr.expression = self.car;
             return self.cdr;
         }
         if (self.cdr instanceof AST_Undefined) {
@@ -1990,15 +2036,14 @@ merge(Compressor.prototype, {
     var commutativeOperators = makePredicate("== === != !== * & | ^");
 
     OPT(AST_Binary, function(self, compressor){
-        var reverse = compressor.has_directive("use asm") ? noop
-            : function(op, force) {
-                if (force || !(self.left.has_side_effects(compressor) || self.right.has_side_effects(compressor))) {
-                    if (op) self.operator = op;
-                    var tmp = self.left;
-                    self.left = self.right;
-                    self.right = tmp;
-                }
-            };
+        function reverse(op, force) {
+            if (force || !(self.left.has_side_effects(compressor) || self.right.has_side_effects(compressor))) {
+                if (op) self.operator = op;
+                var tmp = self.left;
+                self.left = self.right;
+                self.right = tmp;
+            }
+        }
         if (commutativeOperators(self.operator)) {
             if (self.right instanceof AST_Constant
                 && !(self.left instanceof AST_Constant)) {
@@ -2063,12 +2108,46 @@ merge(Compressor.prototype, {
             }
             break;
         }
+        if (compressor.option("conditionals")) {
+            if (self.operator == "&&") {
+                var ll = self.left.evaluate(compressor);
+                if (ll.length > 1) {
+                    if (ll[1]) {
+                        compressor.warn("Condition left of && always true [{file}:{line},{col}]", self.start);
+                        var rr = self.right.evaluate(compressor);
+                        return rr[0];
+                    } else {
+                        compressor.warn("Condition left of && always false [{file}:{line},{col}]", self.start);
+                        return ll[0];
+                    }
+                }
+            }
+            else if (self.operator == "||") {
+                var ll = self.left.evaluate(compressor);
+                if (ll.length > 1) {
+                    if (ll[1]) {
+                        compressor.warn("Condition left of || always true [{file}:{line},{col}]", self.start);
+                        return ll[0];
+                    } else {
+                        compressor.warn("Condition left of || always false [{file}:{line},{col}]", self.start);
+                        var rr = self.right.evaluate(compressor);
+                        return rr[0];
+                    }
+                }
+            }
+        }
         if (compressor.option("booleans") && compressor.in_boolean_context()) switch (self.operator) {
           case "&&":
             var ll = self.left.evaluate(compressor);
             var rr = self.right.evaluate(compressor);
             if ((ll.length > 1 && !ll[1]) || (rr.length > 1 && !rr[1])) {
                 compressor.warn("Boolean && always false [{file}:{line},{col}]", self.start);
+                if (self.left.has_side_effects(compressor)) {
+                    return make_node(AST_Seq, self, {
+                        car: self.left,
+                        cdr: make_node(AST_False)
+                    }).optimize(compressor);
+                }
                 return make_node(AST_False, self);
             }
             if (ll.length > 1 && ll[1]) {
@@ -2083,6 +2162,12 @@ merge(Compressor.prototype, {
             var rr = self.right.evaluate(compressor);
             if ((ll.length > 1 && ll[1]) || (rr.length > 1 && rr[1])) {
                 compressor.warn("Boolean || always true [{file}:{line},{col}]", self.start);
+                if (self.left.has_side_effects(compressor)) {
+                    return make_node(AST_Seq, self, {
+                        car: self.left,
+                        cdr: make_node(AST_True)
+                    }).optimize(compressor);
+                }
                 return make_node(AST_True, self);
             }
             if (ll.length > 1 && !ll[1]) {
@@ -2102,7 +2187,7 @@ merge(Compressor.prototype, {
             }
             break;
         }
-        if (compressor.option("comparisons")) {
+        if (compressor.option("comparisons") && self.is_boolean()) {
             if (!(compressor.parent() instanceof AST_Binary)
                 || compressor.parent() instanceof AST_Assign) {
                 var negated = make_node(AST_UnaryPrefix, self, {
@@ -2177,10 +2262,11 @@ merge(Compressor.prototype, {
                 }
             }
         }
-        // x * (y * z)  ==>  x * y * z
+        // x && (y && z)  ==>  x && y && z
+        // x || (y || z)  ==>  x || y || z
         if (self.right instanceof AST_Binary
             && self.right.operator == self.operator
-            && (self.operator == "*" || self.operator == "&&" || self.operator == "||"))
+            && (self.operator == "&&" || self.operator == "||"))
         {
             self.left = make_node(AST_Binary, self.left, {
                 operator : self.operator,
@@ -2194,7 +2280,15 @@ merge(Compressor.prototype, {
     });
 
     OPT(AST_SymbolRef, function(self, compressor){
-        if (self.undeclared()) {
+        function isLHS(symbol, parent) {
+            return (
+                parent instanceof AST_Binary &&
+                parent.operator === '=' &&
+                parent.left === symbol
+            );
+        }
+
+        if (self.undeclared() && !isLHS(self, compressor.parent())) {
             var defines = compressor.option("global_defs");
             if (defines && defines.hasOwnProperty(self.name)) {
                 return make_node_from_constant(compressor, defines[self.name], self);
@@ -2203,12 +2297,20 @@ merge(Compressor.prototype, {
               case "undefined":
                 return make_node(AST_Undefined, self);
               case "NaN":
-                return make_node(AST_NaN, self);
+                return make_node(AST_NaN, self).transform(compressor);
               case "Infinity":
-                return make_node(AST_Infinity, self);
+                return make_node(AST_Infinity, self).transform(compressor);
             }
         }
         return self;
+    });
+
+    OPT(AST_Infinity, function (self, compressor) {
+        return make_node(AST_Binary, self, {
+            operator : '/',
+            left     : make_node(AST_Number, self, {value: 1}),
+            right    : make_node(AST_Number, self, {value: 0})
+        });
     });
 
     OPT(AST_Undefined, function(self, compressor){
@@ -2274,6 +2376,7 @@ merge(Compressor.prototype, {
             && alternative instanceof AST_Assign
             && consequent.operator == alternative.operator
             && consequent.left.equivalent_to(alternative.left)
+            && !consequent.left.has_side_effects(compressor)
            ) {
             /*
              * Stuff like this:
@@ -2294,6 +2397,7 @@ merge(Compressor.prototype, {
         if (consequent instanceof AST_Call
             && alternative.TYPE === consequent.TYPE
             && consequent.args.length == alternative.args.length
+            && !consequent.expression.has_side_effects(compressor)
             && consequent.expression.equivalent_to(alternative.expression)) {
             if (consequent.args.length == 0) {
                 return make_node(AST_Seq, self, {
@@ -2333,6 +2437,20 @@ merge(Compressor.prototype, {
                 return make_node_from_constant(compressor, consequent.value, self);
 
             }
+        }
+        // x=y?true:false --> x=!!y
+        if (consequent instanceof AST_True
+            && alternative instanceof AST_False) {
+            self.condition = self.condition.negate(compressor);
+            return make_node(AST_UnaryPrefix, self.condition, {
+                operator: "!",
+                expression: self.condition
+            });
+        }
+        // x=y?false:true --> x=!y
+        if (consequent instanceof AST_False
+            && alternative instanceof AST_True) {
+            return self.condition.negate(compressor)
         }
         return self;
     });
@@ -2397,7 +2515,7 @@ merge(Compressor.prototype, {
     });
 
     function literals_in_boolean_context(self, compressor) {
-        if (compressor.option("booleans") && compressor.in_boolean_context()) {
+        if (compressor.option("booleans") && compressor.in_boolean_context() && !self.has_side_effects(compressor)) {
             return make_node(AST_True, self);
         }
         return self;
@@ -2405,5 +2523,12 @@ merge(Compressor.prototype, {
     OPT(AST_Array, literals_in_boolean_context);
     OPT(AST_Object, literals_in_boolean_context);
     OPT(AST_RegExp, literals_in_boolean_context);
+
+    OPT(AST_Return, function(self, compressor){
+        if (self.value instanceof AST_Undefined) {
+            self.value = null;
+        }
+        return self;
+    });
 
 })();

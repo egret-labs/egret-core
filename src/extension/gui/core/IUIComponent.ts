@@ -52,12 +52,12 @@ module egret.gui {
 		 * 外部显式指定的高度
 		 * @member egret.gui.IUIComponent#explicitHeight
 		 */
-		explicitHeight:number;
+		//explicitHeight:number;
 		/**
 		 * 外部显式指定的宽度
 		 * @member egret.gui.IUIComponent#explicitWidth
 		 */
-		explicitWidth:number;
+		//explicitWidth:number;
 		/**
 		 * 设置组件的宽高，w,h均不包含scale值。此方法不同于直接设置width,height属性，
 		 * 不会影响显式标记尺寸属性widthExplicitlySet,_heightExplicitlySet

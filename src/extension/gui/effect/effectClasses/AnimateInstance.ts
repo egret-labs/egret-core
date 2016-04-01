@@ -331,6 +331,7 @@ module egret.gui {
         
         public animationStart(animation:Animation):void{
             if (this.disableLayout){
+                this.setupParentLayout(false);
                 this.cacheConstraints();
             }
             else if (this.disabledConstraintsMap){
@@ -359,6 +360,7 @@ module egret.gui {
         private animationCleanup():void{
             if (this.disableLayout){
                 this.reenableConstraints();
+                this.setupParentLayout(true);
             }
         }
         
@@ -466,6 +468,17 @@ module egret.gui {
                 this.target.height = h;
             }
         }
+
+        private setupParentLayout(enable:boolean):void{
+            var parent:any = null;
+            if ("parent" in this.target && this.target.parent)
+            {
+                parent = this.target.parent;
+            }
+
+            if (parent && ("autoLayout" in parent))
+                parent.autoLayout = enable;
+        }
         
         public _setupStyleMapEntry(property:string):void{
             if (this.isStyleMap[property] == undefined){
@@ -478,7 +491,7 @@ module egret.gui {
                         this.isStyleMap[property] = true;
                     }
                     catch (err){
-                        $error(3014);
+                        throw new Error("propNotPropOrStyle"); 
                     }
                 }            
             }

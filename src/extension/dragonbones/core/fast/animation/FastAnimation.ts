@@ -251,7 +251,7 @@ module dragonBones {
 		/**
 		 * check if contains a AnimationData by name.
 		 * @return Boolean.
-		 * @see dragonBones.animation.AnimationData.
+		 * @see dragonBones.AnimationData.
 		 */
 		public hasAnimation(animationName:string):boolean{
 			return this._animationDataObj[animationName] != null;

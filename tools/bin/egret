@@ -1,10 +1,2 @@
 #! /usr/bin/env node
-var EGRET_PATH = process.env.EGRET_PATH;
-var fs = require('fs');
-var path = require("path");
-if(!fs.existsSync(EGRET_PATH)){
-    EGRET_PATH = "../../";
-}
-var analysis = require(path.join(EGRET_PATH,"tools/lib/core/params_analyze.js"));
-var check = require(path.join(EGRET_PATH,"tools/lib/core/tool_check.js"));
-check.run(analysis.getArgv());
+require('../Entry.js').executeCommandLine(process.argv.slice(2))

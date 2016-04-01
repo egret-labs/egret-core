@@ -45,6 +45,11 @@ module dragonBones {
 		 * @member {boolean} dragonBones.DragonBonesData#isGlobal
 		 */
 		public isGlobal:boolean;
+        /**
+         * 数据版本
+         */
+        public version:number = 0;
+        
 		private _armatureDataList:Array<ArmatureData> = [];
 		private _displayDataDictionary:any = {};
 

@@ -60,6 +60,10 @@ module dragonBones {
 		 * 骨骼
 		 */
 		public static BONE:string = "bone";
+        /**
+         * ik
+         */
+        public static IK:string = "ik";
 		/**
 		 * 插槽
 		 */
@@ -326,5 +330,24 @@ module dragonBones {
 		 * 旋转修正
 		 */
 		public static A_FIXED_ROTATION:string = "fixedRotation";
+        /**
+         * 默认动作
+         */
+        public static A_DEFAULT_ACTIONS:string = "defaultActions";
+        /**
+         * 动作
+         */
+        public static A_ACTIONS:string = "actions";
+        
+        /**
+         * 播放子骨架的动画
+         */
+		public static A_GOTOANDPLAY:string = "gotoAndPlay";
+        
+        public static A_TARGET:string = "target";
+		public static A_WEIGHT:string = "weight";
+		public static A_BONES:string = "bone";
+		public static A_BENDPOSITIVE:string = "bendPositive";
+		public static A_CHAIN:string = "chain";
 	}
 }

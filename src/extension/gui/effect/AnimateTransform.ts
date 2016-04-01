@@ -27,6 +27,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+/// <reference path="easing/Linear.ts" />
 
 module egret.gui {
 
@@ -44,20 +45,20 @@ module egret.gui {
             super(target);
             this.instanceClass = AnimateTransformInstance;
         }
-        
+
         /**
          * 指定在转换效果开始播放时，该效果是否围绕目标的中心发生。
          * 如果未设置该标志，转换中心将由此效果中的 transformX, transformY属性决定。
          * @member egret.gui.AnimateTransform#autoCenterTransform
          */
         public autoCenterTransform:boolean = false;
-        
+
         /**
          * 设置转换中心的 x 坐标（由 autoCenterTransform 属性覆盖时除外）。
          * @member egret.gui.AnimateTransform#transformX
          */
         public transformX:number;
-        
+
         /**
          * 设置转换中心的 y 坐标（由 autoCenterTransform 属性覆盖时除外）。
          * @member egret.gui.AnimateTransform#transformY
@@ -82,7 +83,7 @@ module egret.gui {
         public createInstance(target:any = null):IEffectInstance{
             if (!target)
                 target = this.target;
-            
+
             var sharedInstance:IEffectInstance = null;
             var topmostParallel:Parallel = this.getOwningParallelEffect();
             if (topmostParallel != null)
@@ -98,14 +99,14 @@ module egret.gui {
                 return null;
             }
         }
-        
+
         public _effectStartHandler(event:EffectEvent):void{
             super._effectStartHandler(event);
             var topmostParallel:Parallel = this.getOwningParallelEffect();
             if (topmostParallel != null)
                 AnimateTransform.removeSharedInstance(topmostParallel, event.effectInstance.target);
         }
-        
+
         /**
          * 计算目标的转换中心
          */
@@ -123,9 +124,9 @@ module egret.gui {
             else{
                 computedTransformCenter = new egret.Point(0,0);
                 if (!isNaN(this.transformX))
-                    computedTransformCenter.x = this.transformX; 
+                    computedTransformCenter.x = this.transformX;
                 if (!isNaN(this.transformY))
-                    computedTransformCenter.y = this.transformY; 
+                    computedTransformCenter.y = this.transformY;
             }
             return computedTransformCenter;
         }
@@ -160,7 +161,7 @@ module egret.gui {
             var mp:MotionPath = new MotionPath(property);
             mp.keyframes = [new Keyframe(0, valueFrom), new Keyframe(this.duration, valueTo, valueBy)];
             mp.keyframes[1].easer = this.easer;
-            
+
             if (this.motionPaths){
                 var n:number = this.motionPaths.length;
                 for (var i:number = 0; i < n; i++){
@@ -182,11 +183,11 @@ module egret.gui {
         public _initInstance(instance:IEffectInstance):void{
             var i:number = 0;
             var adjustedDuration:number = this.duration;
-            
+
             var transformInstance:AnimateTransformInstance =
                 <AnimateTransformInstance><any> instance;
 
-            if (this.motionPaths){            
+            if (this.motionPaths){
                 var instanceAnimProps:Array<any> = [];
                 for (i = 0; i < this.motionPaths.length; ++i){
                     instanceAnimProps[i] = this.motionPaths[i].clone();
@@ -199,7 +200,7 @@ module egret.gui {
                             if (this.startDelay != 0)
                                 kf.time += this.startDelay;
                         }
-                        adjustedDuration = Math.max(adjustedDuration, 
+                        adjustedDuration = Math.max(adjustedDuration,
                             mp.keyframes[mp.keyframes.length - 1].time);
                     }
                 }
@@ -211,12 +212,12 @@ module egret.gui {
             if (transformInstance.initialized)
                 return;
             transformInstance.initialized = true;
-            
+
             if (!this.autoCenterTransform)
-                transformInstance.transformCenter = 
+                transformInstance.transformCenter =
                     this.computeTransformCenterForTarget(instance.target);
             transformInstance.autoCenterTransform = this.autoCenterTransform;
-            
+
             var tmpStartDelay:number = this.startDelay;
             this.startDelay = 0;
             var tmpAnimProps:Array<MotionPath> = this.motionPaths;
@@ -231,7 +232,7 @@ module egret.gui {
 
         /**子效果默认的缓动函数*/
         private static linearEaser:Linear = new Linear();
-        
+
         private getGlobalStartTime():number{
             var globalStartTime:number = 0;
             var parent:Effect = this._parentCompositeEffect;
@@ -246,13 +247,13 @@ module egret.gui {
                         if (child instanceof CompositeEffect)
                             globalStartTime += (<CompositeEffect><any> child).compositeDuration;
                         else
-                            globalStartTime += child.startDelay + 
+                            globalStartTime += child.startDelay +
                                 (child.duration * child.repeatCount) +
                                 (child.repeatDelay + (child.repeatCount - 1));
                     }
                 }
                 parent = parent._parentCompositeEffect;
-            }        
+            }
             return globalStartTime;
         }
 
@@ -270,7 +271,7 @@ module egret.gui {
             }
             return null;
         }
-        
+
         private static removeSharedInstance(topmostParallel:Parallel , target:any):void{
             if (topmostParallel != null){
                 var sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
@@ -286,7 +287,7 @@ module egret.gui {
                 }
             }
         }
-        
+
         private static storeSharedInstance(topmostParallel:Parallel , target:any , effectInstance:IEffectInstance):void{
             if (topmostParallel != null){
                 var sharedObjectMap:any = AnimateTransform.sharedObjectMaps[topmostParallel.hashCode];
@@ -299,10 +300,10 @@ module egret.gui {
                         AnimateTransform.sharedObjectRefcounts[topmostParallel.hashCode] = 1;
                     else
                         AnimateTransform.sharedObjectRefcounts[topmostParallel.hashCode] += 1;
-                }                
+                }
                 sharedObjectMap[target.hashCode] = effectInstance;
             }
         }
-        
+
     }
 }

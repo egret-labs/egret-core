@@ -1,0 +1,396 @@
+[
+  {
+    "desc":"class DisplayObject{ _DO_Props_: DisplayObjectProperties; }",
+    "solution-url":"deprecated-display",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectProperties{ * }",
+    "solution-url":"deprecated-display",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldProperties{ * }",
+    "solution-url":"deprecated-display",
+    "solved":true
+  },
+  {
+    "desc":"class Logger{ static fatal(actionCode: string, value?: Object): void; }",
+    "solution-url":"logger",
+    "solved":true
+  },
+  {
+    "desc":"class Logger{ static info(actionCode: string, value?: Object): void; }",
+    "solution-url":"logger",
+    "solved":true
+  },
+  {
+    "desc":"class Logger{ static warning(actionCode: string, value?: Object): void; }",
+    "solution-url":"logger",
+    "solved":true
+  },
+  {
+    "desc":"class Logger{ static openLogByType(logType: string): void; }",
+    "solution-url":"logger",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ anchorX: number; }",
+    "solution-url":"anchor",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ anchorY: number; }",
+    "solution-url":"anchor",
+    "solved":true
+  },
+  {
+    "desc": "class Injector{ static mapClass(whenAskedFor: any, instantiateClass: any, named?: string): void; }",
+    "solution-url":"injector",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ static FINISH_RENDER: string; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ static FINISH_UPDATE_TRANSFORM: string; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _reset(): void; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ __recycle(): void; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ static _dispatchByTarget(EventClass: any, target: IEventDispatcher, type: string, props?: Object, bubbles?: boolean, cancelable?: boolean): boolean; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ constructor(type: string, bubbles?: boolean, cancelable?: boolean, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean); }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ static dispatchTouchEvent(target: IEventDispatcher, type: string, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean): void; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ static TOUCH_OUT: string; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ static TOUCH_OVER: string; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ ctrlKey: boolean; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ shiftKey: boolean; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ altKey: boolean; }",
+    "solution-url":"events",
+    "solved":true
+  },
+  {
+    "desc":"class BlendMode{ static ERASE_REVERSE: string; }",
+    "solution-url":"blendmode",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _onRemoveFromStage(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _onAddToStage(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ getDirty(): boolean; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setParentSizeDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setSizeDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _clearDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _clearSizeDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _updateTransform(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _calculateWorldTransform(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setCacheDirty(dirty?: boolean): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+
+  {
+    "desc":"class DisplayObject{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _measureSize(resultRect: Rectangle): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _updateTransform(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setSizeDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setTextDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+
+  {
+    "desc":"class Graphics{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Graphics{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _onAddToStage(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _onRemoveFromStage(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+
+  {
+    "desc":"class DisplayObjectContainer{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+
+  {
+    "desc":"class BitmapText{ _setSizeDirty(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Shape{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Shape{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Shape{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Sprite{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Bitmap{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Ticker{ * }",
+    "solution-url":"ticker",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _onRemoveFromStage(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _onAddToStage(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _updateBaseTransform(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _updateTransform(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _draw(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _render(renderContext: RendererContext): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _measureBounds(): egret.Rectangle; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class Stage{ _updateTransform(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"interface RenderContext{ * }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class RendererContext{ * }",
+    "solution-url":"draw_md",
+    "solved":true
+  },
+  {
+    "desc":"class DeviceContext{ * }",
+    "solution-url":"MainContext",
+    "solved":true
+  },
+  {
+    "desc":"class MainContext{ * }",
+    "solution-url":"MainContext",
+    "solved":true
+  },
+  {
+    "desc":"class NetContext{ * }",
+    "solution-url":"MainContext",
+    "solved":true
+  },
+  {
+    "desc":"class TouchContext{ * }",
+    "solution-url":"MainContext",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClip{ _onRemoveFromStage(): void; }",
+    "solution-url":"draw_md",
+    "solved":true
+  }
+]

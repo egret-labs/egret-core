@@ -1,0 +1,30 @@
+﻿<script src="/$/content/scripts/project.js"></script>
+
+
+<div id="create-view" ng-controller="ProjectController as model">
+    <h1>
+        创建一个全新的 Lark 项目
+    </h1>
+
+
+     @{view('config')}
+</div>
+<script type="text/javascript" src="/$/content/scripts/jqColorPicker.min.js"></script>
+<script type="text/javascript">
+    var timer = NaN;
+    $('.color').colorPicker({
+        renderCallback: function ($elm, toggled) {
+            var colors = this.color.colors,
+                rgb = colors.RND.rgb;
+
+            $('.color').css({
+                backgroundColor: '#' + colors.HEX,
+                color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
+            }).val('#' + colors.HEX);
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                $('.color').trigger('change');
+            }, 500);
+        }
+    }); // that's it
+</script>

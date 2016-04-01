@@ -70,7 +70,7 @@ module egret.gui {
          * @inheritDoc
          */
         public set enabled(value:boolean){
-            this._setEnabled(value);
+            this.$setEnabled(value);
         }
 
         /**

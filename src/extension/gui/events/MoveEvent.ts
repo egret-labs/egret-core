@@ -50,13 +50,10 @@ module egret.gui {
 		 * @param bubbles {boolean} 
 		 * @param cancelable {boolean} 
 		 */
-		public constructor(type:string, oldX:number = NaN, oldY:number = NaN, 
+		public constructor(type:string,
 								  bubbles:boolean = false,
 								  cancelable:boolean = false){
 			super(type, bubbles, cancelable);
-			
-			this.oldX = oldX;
-			this.oldY = oldY;
 		}
 		
 		/**
@@ -75,12 +72,13 @@ module egret.gui {
          * 使用指定的EventDispatcher对象来抛出事件对象。抛出的对象将会缓存在对象池上，供下次循环复用。
          * @method egret.gui.MoveEvent.dispatchMoveEvent
          */
-        public static dispatchMoveEvent(target:IEventDispatcher,oldX:number = NaN, oldY:number = NaN):void{
-            var eventClass:any = MoveEvent;
-            var props:any = Event._getPropertyData(eventClass);
-            props.oldX = oldX;
-            props.oldY = oldY;
-            Event._dispatchByTarget(eventClass,target,MoveEvent.MOVE,props);
+        public static dispatchMoveEvent(target:IEventDispatcher,oldX:number = NaN, oldY:number = NaN):boolean{
+			var event:MoveEvent = Event.create(MoveEvent, MoveEvent.MOVE);
+			event.oldX = oldX;
+			event.oldY = oldY;
+			var result = target.dispatchEvent(event);
+			Event.release(event);
+			return result;
         }
 	}
 }

@@ -151,7 +151,7 @@ module egret.gui {
 		 */		
 		public moveArea_mouseDownHandler(event:TouchEvent):void{
 			if (this.enabled && this.isPopUp){
-				var offsetPoint:Point = this.globalToLocal(event.stageX, event.stageY,Point.identity);
+				var offsetPoint:Point = this.globalToLocal(event.stageX, event.stageY,egret.$TempPoint);
                 this._offsetPointX = offsetPoint.x;
                 this._offsetPointY = offsetPoint.y;
 				this._UIC_Props_._includeInLayout = false;
@@ -169,7 +169,7 @@ module egret.gui {
 		 * @param event {TouchEvent} 
 		 */		
 		public moveArea_mouseMoveHandler(event:TouchEvent):void{
-			var pos:Point = this.globalToLocal(event.stageX,event.stageY,Point.identity);
+			var pos:Point = this.globalToLocal(event.stageX,event.stageY,egret.$TempPoint);
 			this.x += pos.x - this._offsetPointX;
 			this.y += pos.y - this._offsetPointY;
 		}

@@ -1,0 +1,2102 @@
+[
+    {
+        "desc": "class Logger{ static openLogByType(logType: string): void; }"
+    },
+    {
+        "desc": "class Logger{ static fatal(actionCode: string, value?: Object): void; }"
+    },
+    {
+        "desc": "class Logger{ static info(actionCode: string, value?: Object): void; }"
+    },
+    {
+        "desc": "class Logger{ static warning(actionCode: string, value?: Object): void; }"
+    },
+    {
+        "desc": "function getString(id: number, ...args: any[]): string;"
+    },
+    {
+        "desc": "function $error(code: number, ...args: any[]): void;"
+    },
+    {
+        "desc": "function $warn(code: number, ...args: any[]): void;"
+    },
+    {
+        "desc": "interface IHashObject{ hashCode: number; }"
+    },
+    {
+        "desc": "class Recycler{ _checkFrame(): void; }"
+    },
+    {
+        "desc": "var __START_TIME: number;"
+    },
+    {
+        "desc": "var __callLaterFunctionList: Array<any>;"
+    },
+    {
+        "desc": "var __callLaterThisList: Array<any>;"
+    },
+    {
+        "desc": "var __callLaterArgsList: Array<any>;"
+    },
+    {
+        "desc": "var __callAsyncFunctionList: Array<any>;"
+    },
+    {
+        "desc": "var __callAsyncThisList: Array<any>;"
+    },
+    {
+        "desc": "var __callAsyncArgsList: Array<any>;"
+    },
+    {
+        "desc": "function __callAsync(method: Function, thisObject: any, ...args: any[]): void;"
+    },
+    {
+        "desc": "class RenderCommand{ static __freeList: Array<RenderCommand>; }"
+    },
+    {
+        "desc": "class RenderCommand{ callback: any; }"
+    },
+    {
+        "desc": "class RenderCommand{ thisObject: any; }"
+    },
+    {
+        "desc": "class RenderCommand{ call(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class RenderCommand{ dispose(): void; }"
+    },
+    {
+        "desc": "class RenderCommand{ static push(callback: Function, thisObject: any): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ lineWidth: number; }"
+    },
+    {
+        "desc": "interface RenderContext{ strokeStyle: any; }"
+    },
+    {
+        "desc": "interface RenderContext{ fillStyle: any; }"
+    },
+    {
+        "desc": "interface RenderContext{ arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ lineTo(x: number, y: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ fill(fillRule?: string): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ closePath(): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ rect(x: number, y: number, w: number, h: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ moveTo(x: number, y: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ fillRect(x: number, y: number, w: number, h: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ stroke(): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ strokeRect(x: number, y: number, w: number, h: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ beginPath(): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ arcTo(x1: number, y1: number, x2: number, y2: number, radius: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ translate(x: number, y: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ scale(x: number, y: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ rotate(angle: number): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ restore(): void; }"
+    },
+    {
+        "desc": "interface RenderContext{ save(): void; }"
+    },
+    {
+        "desc": "class Event{ constructor(type: string, bubbles?: boolean, cancelable?: boolean); }"
+    },
+    {
+        "desc": "class Event{ static FINISH_RENDER: string; }"
+    },
+    {
+        "desc": "class Event{ static FINISH_UPDATE_TRANSFORM: string; }"
+    },
+    {
+        "desc": "class Event{ _type: string; }"
+    },
+    {
+        "desc": "class Event{ _bubbles: boolean; }"
+    },
+    {
+        "desc": "class Event{ _eventPhase: number; }"
+    },
+    {
+        "desc": "class Event{ _currentTarget: any; }"
+    },
+    {
+        "desc": "class Event{ _target: any; }"
+    },
+    {
+        "desc": "class Event{ _isDefaultPrevented: boolean; }"
+    },
+    {
+        "desc": "class Event{ _isPropagationStopped: boolean; }"
+    },
+    {
+        "desc": "class Event{ _isPropagationImmediateStopped: boolean; }"
+    },
+    {
+        "desc": "class Event{ _reset(): void; }"
+    },
+    {
+        "desc": "class Event{ __recycle(): void; }"
+    },
+    {
+        "desc": "class Event{ static _dispatchByTarget(EventClass: any, target: IEventDispatcher, type: string, props?: Object, bubbles?: boolean, cancelable?: boolean): boolean; }"
+    },
+    {
+        "desc": "class Event{ static dispatchEvent(target: IEventDispatcher, type: string, bubbles?: boolean, data?: any): void; }"
+    },
+    {
+        "desc": "class HTTPStatusEvent{ static dispatchHTTPStatusEvent(target: IEventDispatcher, status: number): void; }"
+    },
+    {
+        "desc": "class SoundEvent{ static SOUND_COMPLETE: string; }"
+    },
+    {
+        "desc": "class SoundEvent{ constructor(type: string, bubbles?: boolean, cancelable?: boolean); }"
+    },
+    {
+        "desc": "class IOErrorEvent{ static dispatchIOErrorEvent(target: IEventDispatcher): void; }"
+    },
+    {
+        "desc": "class TouchEvent{ constructor(type: string, bubbles?: boolean, cancelable?: boolean, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean); }"
+    },
+    {
+        "desc": "class TouchEvent{ static TOUCH_OUT: string; }"
+    },
+    {
+        "desc": "class TouchEvent{ static TOUCH_OVER: string; }"
+    },
+    {
+        "desc": "class TouchEvent{ _stageX: number; }"
+    },
+    {
+        "desc": "class TouchEvent{ _stageY: number; }"
+    },
+    {
+        "desc": "class TouchEvent{ ctrlKey: boolean; }"
+    },
+    {
+        "desc": "class TouchEvent{ shiftKey: boolean; }"
+    },
+    {
+        "desc": "class TouchEvent{ altKey: boolean; }"
+    },
+    {
+        "desc": "class TouchEvent{ static dispatchTouchEvent(target: IEventDispatcher, type: string, touchPointID?: number, stageX?: number, stageY?: number, ctrlKey?: boolean, altKey?: boolean, shiftKey?: boolean, touchDown?: boolean): void; }"
+    },
+    {
+        "desc": "class TimerEvent{ static dispatchTimerEvent(target: IEventDispatcher, type: string): void; }"
+    },
+    {
+        "desc": "class TextEvent{ static dispatchTextEvent(target: IEventDispatcher, type: string, text: string): void; }"
+    },
+    {
+        "desc": "class ProgressEvent{ static dispatchProgressEvent(target: IEventDispatcher, type: string, bytesLoaded?: number, bytesTotal?: number): void; }"
+    },
+    {
+        "desc": "class EventPhase{ static CAPTURING_PHASE: number; }"
+    },
+    {
+        "desc": "class EventPhase{ static AT_TARGET: number; }"
+    },
+    {
+        "desc": "class EventPhase{ static BUBBLING_PHASE: number; }"
+    },
+    {
+        "desc": "class EventDispatcher{ _eventsMap: Object; }"
+    },
+    {
+        "desc": "class EventDispatcher{ _captureEventsMap: Object; }"
+    },
+    {
+        "desc": "class EventDispatcher{ _insertEventBin(list: Array<any>, listener: Function, thisObject: any, priority: number, display?: any): boolean; }"
+    },
+    {
+        "desc": "class EventDispatcher{ _removeEventBin(list: Array<any>, listener: Function, thisObject: any, display?: any, fromIdx?: number): boolean; }"
+    },
+    {
+        "desc": "class EventDispatcher{ _notifyListener(event: Event): boolean; }"
+    },
+    {
+        "desc": "class EventDispatcher{ dispatchEventWith(type: string, bubbles?: boolean, data?: Object): void; }"
+    },
+    {
+        "desc": "class MainContext{ rendererContext: RendererContext; }"
+    },
+    {
+        "desc": "class MainContext{ touchContext: TouchContext; }"
+    },
+    {
+        "desc": "class MainContext{ netContext: NetContext; }"
+    },
+    {
+        "desc": "class MainContext{ deviceContext: DeviceContext; }"
+    },
+    {
+        "desc": "class MainContext{ static __DRAW_COMMAND_LIST: Array<RenderCommand>; }"
+    },
+    {
+        "desc": "class MainContext{ static __use_new_draw: boolean; }"
+    },
+    {
+        "desc": "class MainContext{ static _renderLoopPhase: string; }"
+    },
+    {
+        "desc": "class Profiler{ static getInstance(): Profiler; }"
+    },
+    {
+        "desc": "class Profiler{ _isRunning: boolean; }"
+    },
+    {
+        "desc": "class Profiler{ stop(): void; }"
+    },
+    {
+        "desc": "class Profiler{ run(): void; }"
+    },
+    {
+        "desc": "class Profiler{ _drawProfiler(context: RendererContext): void; }"
+    },
+    {
+        "desc": "class Profiler{ _setTxtFontSize(fontSize: number): void; }"
+    },
+    {
+        "desc": "class Profiler{ onDrawImage(): void; }"
+    },
+    {
+        "desc": "class Ticker{ run(): void; }"
+    },
+    {
+        "desc": "class Ticker{ setTimeout(listener: Function, thisObject: any, delay: number, ...parameters: any[]): void; }"
+    },
+    {
+        "desc": "class Matrix{ static identity: Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ static DEG_TO_RAD: number; }"
+    },
+    {
+        "desc": "class Matrix{ prependTransform(x: number, y: number, scaleX: number, scaleY: number, rotation: number, skewX: number, skewY: number, regX: number, regY: number): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ appendTransform(x: number, y: number, scaleX: number, scaleY: number, rotation: number, skewX: number, skewY: number, regX: number, regY: number): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ rotate(angle: number): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ skew(skewX: number, skewY: number): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ scale(x: number, y: number): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ translate(x: number, y: number): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ identity(): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ identityMatrix(matrix: Matrix): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ invert(): Matrix; }"
+    },
+    {
+        "desc": "class Matrix{ static transformCoords(matrix: Matrix, x: number, y: number): Point; }"
+    },
+    {
+        "desc": "class Matrix{ toArray(transpose: any): any; }"
+    },
+    {
+        "desc": "class Matrix{ setTo(aa: number, ba: number, ca: number, da: number, txa: number, tya: number): void; }"
+    },
+    {
+        "desc": "class Matrix{ copyFrom(sourceMatrix: Matrix): void; }"
+    },
+    {
+        "desc": "class Matrix{ concat(m: Matrix): void; }"
+    },
+    {
+        "desc": "class Matrix{ deltaTransformPoint(point: egret.Point): egret.Point; }"
+    },
+    {
+        "desc": "class Matrix{ transformPoint(point: egret.Point): egret.Point; }"
+    },
+    {
+        "desc": "class Point{ static identity: Point; }"
+    },
+    {
+        "desc": "class Point{ static distance(p1: egret.Point, p2: egret.Point): number; }"
+    },
+    {
+        "desc": "class Point{ setTo(xa: number, ya: number): void; }"
+    },
+    {
+        "desc": "class Rectangle{ initialize(x: number, y: number, width: number, height: number): Rectangle; }"
+    },
+    {
+        "desc": "class Rectangle{ static identity: Rectangle; }"
+    },
+    {
+        "desc": "class Rectangle{ setTo(xa: number, ya: number, widtha: number, heighta: number): void; }"
+    },
+    {
+        "desc": "class Rectangle{ copyFrom(sourceRect: Rectangle): void; }"
+    },
+    {
+        "desc": "class ColorTransform{ constructor(redMultiplier?: number, greenMultiplier?: number, blueMultiplier?: number, alphaMultiplier?: number, redOffset?: number, greenOffset?: number, blueOffset?: number, alphaOffset?: number); }"
+    },
+    {
+        "desc": "class ColorTransform{ _alphaMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ alphaMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ _alphaOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ alphaOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ _blueMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ blueMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ _blueOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ blueOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ _greenMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ greenMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ _greenOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ greenOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ _redMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ redMultiplier: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ _redOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ redOffset: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ color: number; }"
+    },
+    {
+        "desc": "class ColorTransform{ identityColorTransform(colorTransform: ColorTransform): void; }"
+    },
+    {
+        "desc": "class ColorTransform{ concat(second: egret.ColorTransform): void; }"
+    },
+    {
+        "desc": "class ColorTransform{ toString(): string; }"
+    },
+    {
+        "desc": "class Transform{ constructor(display: DisplayObject); }"
+    },
+    {
+        "desc": "class Transform{ matrix: Matrix; }"
+    },
+    {
+        "desc": "class Transform{ _colorTransform: ColorTransform; }"
+    },
+    {
+        "desc": "class Transform{ colorTransform: ColorTransform; }"
+    },
+    {
+        "desc": "class SAXParser{ static _instance: SAXParser; }"
+    },
+    {
+        "desc": "class SAXParser{ static getInstance(): SAXParser; }"
+    },
+    {
+        "desc": "class SAXParser{ constructor(); }"
+    },
+    {
+        "desc": "class SAXParser{ parserXML(textxml: string): any; }"
+    },
+    {
+        "desc": "class StageDelegate{ static getInstance(): StageDelegate; }"
+    },
+    {
+        "desc": "class StageDelegate{ static canvas_name: string; }"
+    },
+    {
+        "desc": "class StageDelegate{ static egret_root_div: string; }"
+    },
+    {
+        "desc": "class StageDelegate{ static canvas_div_name: string; }"
+    },
+    {
+        "desc": "class StageDelegate{ _scaleX: number; }"
+    },
+    {
+        "desc": "class StageDelegate{ _scaleY: number; }"
+    },
+    {
+        "desc": "class StageDelegate{ _offSetY: number; }"
+    },
+    {
+        "desc": "class StageDelegate{ _stageWidth: number; }"
+    },
+    {
+        "desc": "class StageDelegate{ _stageHeight: number; }"
+    },
+    {
+        "desc": "class StageDelegate{ constructor(); }"
+    },
+    {
+        "desc": "class StageDelegate{ setDesignSize(width: number, height: number): void; }"
+    },
+    {
+        "desc": "class StageDelegate{ _setResolutionPolicy(resolutionPolicy: ResolutionPolicy): void; }"
+    },
+    {
+        "desc": "class StageDelegate{ getScaleX(): number; }"
+    },
+    {
+        "desc": "class StageDelegate{ getScaleY(): number; }"
+    },
+    {
+        "desc": "class StageDelegate{ getOffSetY(): number; }"
+    },
+    {
+        "desc": "class ResolutionPolicy{ constructor(containerStg: any, contentStg: any); }"
+    },
+    {
+        "desc": "class ResolutionPolicy{ init(view: StageDelegate): void; }"
+    },
+    {
+        "desc": "class ResolutionPolicy{ _apply(view: any, designedResolutionWidth: any, designedResolutionHeight: any): void; }"
+    },
+    {
+        "desc": "class ContainerStrategy{ static EQUAL_TO_FRAME: any; }"
+    },
+    {
+        "desc": "class ContainerStrategy{ static initialize(): void; }"
+    },
+    {
+        "desc": "class ContainerStrategy{ init(view: any): void; }"
+    },
+    {
+        "desc": "class ContainerStrategy{ _apply(view: any, designedWidth: any, designedHeight: any): void; }"
+    },
+    {
+        "desc": "class ContainerStrategy{ _setupContainer(): void; }"
+    },
+    {
+        "desc": "class EqualToFrame{ _apply(view: any): void; }"
+    },
+    {
+        "desc": "class ContentStrategy{ init(view: any): void; }"
+    },
+    {
+        "desc": "class ContentStrategy{ _apply(delegate: egret.StageDelegate, designedResolutionWidth: number, designedResolutionHeight: number): void; }"
+    },
+    {
+        "desc": "class ContentStrategy{ setEgretSize(w: number, h: number, styleW: number, styleH: number, left?: number, top?: number): void; }"
+    },
+    {
+        "desc": "class ContentStrategy{ _getClientWidth(): number; }"
+    },
+    {
+        "desc": "class ContentStrategy{ _getClientHeight(): number; }"
+    },
+    {
+        "desc": "class FixedHeight{ constructor(minWidth?: number); }"
+    },
+    {
+        "desc": "class FixedHeight{ _apply(delegate: StageDelegate, designedResolutionWidth: number, designedResolutionHeight: number): void; }"
+    },
+    {
+        "desc": "class FixedWidth{ constructor(minHeight?: number); }"
+    },
+    {
+        "desc": "class FixedWidth{ _apply(delegate: StageDelegate, designedResolutionWidth: number, designedResolutionHeight: number): void; }"
+    },
+    {
+        "desc": "class FixedSize{ constructor(width: any, height: any); }"
+    },
+    {
+        "desc": "class FixedSize{ _apply(delegate: StageDelegate, designedResolutionWidth: number, designedResolutionHeight: number): void; }"
+    },
+    {
+        "desc": "class NoScale{ constructor(); }"
+    },
+    {
+        "desc": "class NoScale{ _apply(delegate: StageDelegate, designedResolutionWidth: number, designedResolutionHeight: number): void; }"
+    },
+    {
+        "desc": "class ShowAll{ constructor(); }"
+    },
+    {
+        "desc": "class ShowAll{ _apply(delegate: StageDelegate, designedResolutionWidth: number, designedResolutionHeight: number): void; }"
+    },
+    {
+        "desc": "class FullScreen{ constructor(); }"
+    },
+    {
+        "desc": "class FullScreen{ _apply(delegate: StageDelegate, designedResolutionWidth: number, designedResolutionHeight: number): void; }"
+    },
+    {
+        "desc": "class RenderFilter{ constructor(); }"
+    },
+    {
+        "desc": "class RenderFilter{ static getInstance(): RenderFilter; }"
+    },
+    {
+        "desc": "class RenderFilter{ _drawAreaList: Array<Rectangle>; }"
+    },
+    {
+        "desc": "class RenderFilter{ addDrawArea(area: egret.Rectangle): void; }"
+    },
+    {
+        "desc": "class RenderFilter{ clearDrawArea(): void; }"
+    },
+    {
+        "desc": "class RenderFilter{ drawImage(renderContext: RendererContext, data: RenderData, sourceX: number, sourceY: number, sourceWidth: number, sourceHeight: number, destX: number, destY: number, destWidth: number, destHeight: number, repeat?: any): void; }"
+    },
+    {
+        "desc": "class RenderFilter{ getDrawAreaList(): Array<Rectangle>; }"
+    },
+    {
+        "desc": "interface RenderData{ _worldTransform: egret.Matrix; }"
+    },
+    {
+        "desc": "interface RenderData{ _worldBounds: egret.Rectangle; }"
+    },
+    {
+        "desc": "interface RenderData{ _texture_to_render: egret.Texture; }"
+    },
+    {
+        "desc": "interface RenderData{ _getSize(resultRect: Rectangle): egret.Rectangle; }"
+    },
+    {
+        "desc": "class Injector{ static mapClass(whenAskedFor: any, instantiateClass: any, named?: string): void; }"
+    },
+    {
+        "desc": "class Injector{ static mapValue(whenAskedFor: any, useValue: any, named?: string): void; }"
+    },
+    {
+        "desc": "class Injector{ static hasMapRule(whenAskedFor: any, named?: string): boolean; }"
+    },
+    {
+        "desc": "class Injector{ static getInstance(clazz: any, named?: string): any; }"
+    },
+    {
+        "desc": "class ColorMatrixFilter{ _matrix: Array<number>; }"
+    },
+    {
+        "desc": "class GlowFilter{ _red: number; }"
+    },
+    {
+        "desc": "class GlowFilter{ _green: number; }"
+    },
+    {
+        "desc": "class GlowFilter{ _blue: number; }"
+    },
+    {
+        "desc": "class BlendMode{ static ERASE_REVERSE: string; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _name: string; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _explicitWidth: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _explicitHeight: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _x: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _y: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _scaleX: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _scaleY: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _anchorOffsetX: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _anchorOffsetY: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _anchorX: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _anchorY: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _rotation: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _alpha: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _skewX: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _skewY: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _blendMode: string; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ static defaultTouchEnabled: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _touchEnabled: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _visible: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _worldAlpha: number; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _scrollRect: Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _cacheAsBitmap: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _parent: DisplayObjectContainer; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _stage: Stage; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _needDraw: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _filters: Array<Filter>; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _hasWidthSet: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _hasHeightSet: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _normalDirty: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _sizeDirty: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ _isContainer: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectProperties{ constructor(); }"
+    },
+    {
+        "desc": "class DisplayObjectPrivateProperties{ _cacheBounds: egret.Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObjectPrivateProperties{ _hitTestPointTexture: RenderTexture; }"
+    },
+    {
+        "desc": "class DisplayObjectPrivateProperties{ _rectW: number; }"
+    },
+    {
+        "desc": "class DisplayObjectPrivateProperties{ _rectH: number; }"
+    },
+    {
+        "desc": "class DisplayObjectPrivateProperties{ _cacheDirty: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectPrivateProperties{ constructor(); }"
+    },
+    {
+        "desc": "class DisplayObject{ _DO_Props_: DisplayObjectProperties; }"
+    },
+    {
+        "desc": "class DisplayObject{ _texture_to_render: Texture; }"
+    },
+    {
+        "desc": "class DisplayObject{ _worldTransform: egret.Matrix; }"
+    },
+    {
+        "desc": "class DisplayObject{ _worldBounds: egret.Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObject{ __hack_local_matrix: any; }"
+    },
+    {
+        "desc": "class DisplayObject{ _sizeChangeCallBack: Function; }"
+    },
+    {
+        "desc": "class DisplayObject{ _sizeChangeCallTarget: any; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setDirty(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ getDirty(): boolean; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setParentSizeDirty(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setSizeDirty(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _clearDirty(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _clearSizeDirty(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _parentChanged(parent: DisplayObjectContainer): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setX(value: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setY(value: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ anchorX: number; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setAnchorX(value: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ anchorY: number; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setAnchorY(value: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setVisible(value: boolean): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setAlpha(value: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setTouchEnabled(value: boolean): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setScrollRect(value: Rectangle): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ explicitWidth: number; }"
+    },
+    {
+        "desc": "class DisplayObject{ explicitHeight: number; }"
+    },
+    {
+        "desc": "class DisplayObject{ _getWidth(): number; }"
+    },
+    {
+        "desc": "class DisplayObject{ _getHeight(): number; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setWidth(value: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setHeight(value: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ mask: Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObject{ worldAlpha: number; }"
+    },
+    {
+        "desc": "class DisplayObject{ _draw(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setGlobalFilters(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _removeGlobalFilters(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _hasFilters(): boolean; }"
+    },
+    {
+        "desc": "class DisplayObject{ _pushMask(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _popMask(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ needDraw: boolean; }"
+    },
+    {
+        "desc": "class DisplayObject{ _updateTransform(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _calculateWorldTransform(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _getConcatenatedMatrix(): egret.Matrix; }"
+    },
+    {
+        "desc": "class DisplayObject{ localToGlobal(x?: number, y?: number, resultPoint?: Point): Point; }"
+    },
+    {
+        "desc": "class DisplayObject{ globalToLocal(x?: number, y?: number, resultPoint?: Point): Point; }"
+    },
+    {
+        "desc": "class DisplayObject{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }"
+    },
+    {
+        "desc": "class DisplayObject{ _getMatrix(parentMatrix?: Matrix): Matrix; }"
+    },
+    {
+        "desc": "class DisplayObject{ _getSize(resultRect: Rectangle): Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObject{ _measureSize(resultRect: Rectangle): egret.Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObject{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObject{ _getOffsetPoint(): egret.Point; }"
+    },
+    {
+        "desc": "class DisplayObject{ _onAddToStage(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _onRemoveFromStage(): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ static _enterFrameCallBackList: Array<any>; }"
+    },
+    {
+        "desc": "class DisplayObject{ static _renderCallBackList: Array<any>; }"
+    },
+    {
+        "desc": "class DisplayObject{ addEventListener(type: string, listener: Function, thisObject: any, useCapture?: boolean, priority?: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ renderTexture: RenderTexture; }"
+    },
+    {
+        "desc": "class DisplayObject{ _makeBitmapCache(): boolean; }"
+    },
+    {
+        "desc": "class DisplayObject{ _setCacheDirty(dirty?: boolean): void; }"
+    },
+    {
+        "desc": "class DisplayObject{ static getTransformBounds(bounds: egret.Rectangle, mtx: egret.Matrix): egret.Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObject{ filters: Array<Filter>; }"
+    },
+    {
+        "desc": "class DisplayObject{ transform: Transform; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ static __EVENT__ADD_TO_STAGE_LIST: Array<DisplayObject>; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ static __EVENT__REMOVE_FROM_STAGE_LIST: Array<DisplayObject>; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _touchChildren: boolean; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _children: Array<DisplayObject>; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _doAddChild(child: DisplayObject, index: number, notifyListeners?: boolean): DisplayObject; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _doRemoveChild(index: number, notifyListeners?: boolean): DisplayObject; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _updateTransform(): void; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _onAddToStage(): void; }"
+    },
+    {
+        "desc": "class DisplayObjectContainer{ _onRemoveFromStage(): void; }"
+    },
+    {
+        "desc": "class Stage{ static _invalidateRenderFlag: boolean; }"
+    },
+    {
+        "desc": "class Stage{ _changeSizeDispatchFlag: boolean; }"
+    },
+    {
+        "desc": "class Stage{ constructor(width?: number, height?: number); }"
+    },
+    {
+        "desc": "class Stage{ changeSize(): void; }"
+    },
+    {
+        "desc": "class Stage{ hitTest(x: any, y: any, ignoreTouchEnabled?: boolean): DisplayObject; }"
+    },
+    {
+        "desc": "class Stage{ getBounds(resultRect?: Rectangle): Rectangle; }"
+    },
+    {
+        "desc": "class Stage{ _updateTransform(): void; }"
+    },
+    {
+        "desc": "class Stage{ focus: DisplayObject; }"
+    },
+    {
+        "desc": "class Stage{ static SCALE_MODE_ENUM: any; }"
+    },
+    {
+        "desc": "class Stage{ static registerScaleMode(key: string, value: ContentStrategy, override?: boolean): void; }"
+    },
+    {
+        "desc": "class ScrollViewProperties{ _hScrollTween: Tween; }"
+    },
+    {
+        "desc": "class ScrollViewProperties{ _vScrollTween: Tween; }"
+    },
+    {
+        "desc": "class ScrollView{ _setWidth(value: number): void; }"
+    },
+    {
+        "desc": "class ScrollView{ _setHeight(value: number): void; }"
+    },
+    {
+        "desc": "class ScrollView{ _dispatchPropagationEvent(event: Event, list: Array<DisplayObject>, targetIndex?: number): void; }"
+    },
+    {
+        "desc": "class ScrollView{ _onTweenFinished(tw: Tween): void; }"
+    },
+    {
+        "desc": "class ScrollView{ setScrollTop(scrollTop: number, duration?: number): egret.Tween; }"
+    },
+    {
+        "desc": "class ScrollView{ setScrollLeft(scrollLeft: number, duration?: number): egret.Tween; }"
+    },
+    {
+        "desc": "class ScrollView{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }"
+    },
+    {
+        "desc": "class Bitmap{ constructor(texture?: Texture); }"
+    },
+    {
+        "desc": "class Bitmap{ texture: Texture; }"
+    },
+    {
+        "desc": "class Bitmap{ scale9Grid: Rectangle; }"
+    },
+    {
+        "desc": "class Bitmap{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Bitmap{ static _drawBitmap(renderContext: RendererContext, destW: number, destH: number, thisObject: any): void; }"
+    },
+    {
+        "desc": "class Bitmap{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class BitmapText{ $setText(value: string): void; }"
+    },
+    {
+        "desc": "class BitmapText{ _font: BitmapFont; }"
+    },
+    {
+        "desc": "class BitmapText{ $setFont(value: BitmapFont): void; }"
+    },
+    {
+        "desc": "class BitmapText{ _letterSpacing: number; }"
+    },
+    {
+        "desc": "class BitmapText{ _setLetterSpacing(value: number): void; }"
+    },
+    {
+        "desc": "class BitmapText{ _lineSpacing: number; }"
+    },
+    {
+        "desc": "class BitmapText{ _setLineSpacing(value: number): void; }"
+    },
+    {
+        "desc": "class BitmapText{ _setSizeDirty(): void; }"
+    },
+    {
+        "desc": "class BitmapText{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class BitmapText{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class Graphics{ static _currentFillStyle: any; }"
+    },
+    {
+        "desc": "class Graphics{ _renderContext: RenderContext; }"
+    },
+    {
+        "desc": "class Graphics{ _beginDraw(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Graphics{ _endDraw(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Graphics{ _draw(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Graphics{ _checkRect(x: number, y: number, w: number, h: number): void; }"
+    },
+    {
+        "desc": "class Graphics{ _checkPoint(x: number, y: number): void; }"
+    },
+    {
+        "desc": "class Graphics{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class Shape{ _draw(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Shape{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Shape{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class Sprite{ _draw(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Sprite{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class Sprite{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class Sprite{ hitTest(x: number, y: number, ignoreTouchEnabled?: boolean): DisplayObject; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _type: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _text: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _displayAsPassword: boolean; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _fontFamily: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _size: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _italic: boolean; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _bold: boolean; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _textColorString: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _textColor: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _strokeColorString: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _strokeColor: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _stroke: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _border: boolean; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _borderColor: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _background: boolean; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _backgroundColor: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _textAlign: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _verticalAlign: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _textMaxWidth: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _textMaxHeight: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _maxChars: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _scrollV: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _lineSpacing: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _numLines: number; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _multiline: boolean; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _wordWrap: boolean; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _restrictAnd: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ _restrictNot: string; }"
+    },
+    {
+        "desc": "class TextFieldProperties{ constructor(); }"
+    },
+    {
+        "desc": "class TextField{ _inputEnabled: boolean; }"
+    },
+    {
+        "desc": "class TextField{ _setTouchEnabled(value: boolean): void; }"
+    },
+    {
+        "desc": "class TextField{ _getText(): string; }"
+    },
+    {
+        "desc": "class TextField{ _setSizeDirty(): void; }"
+    },
+    {
+        "desc": "class TextField{ _setTextDirty(): void; }"
+    },
+    {
+        "desc": "class TextField{ _setText(value: string): void; }"
+    },
+    {
+        "desc": "class TextField{ _setFontFamily(value: string): void; }"
+    },
+    {
+        "desc": "class TextField{ _setSize(value: number): void; }"
+    },
+    {
+        "desc": "class TextField{ _setItalic(value: boolean): void; }"
+    },
+    {
+        "desc": "class TextField{ _setBold(value: boolean): void; }"
+    },
+    {
+        "desc": "class TextField{ _setTextColor(value: number): void; }"
+    },
+    {
+        "desc": "class TextField{ _setTextAlign(value: string): void; }"
+    },
+    {
+        "desc": "class TextField{ _setVerticalAlign(value: string): void; }"
+    },
+    {
+        "desc": "class TextField{ maxWidth: any; }"
+    },
+    {
+        "desc": "class TextField{ _setSelection(beginIndex: number, endIndex: number): void; }"
+    },
+    {
+        "desc": "class TextField{ _setLineSpacing(value: number): void; }"
+    },
+    {
+        "desc": "class TextField{ _getLineHeight(): number; }"
+    },
+    {
+        "desc": "class TextField{ _setWidth(value: number): void; }"
+    },
+    {
+        "desc": "class TextField{ _setHeight(value: number): void; }"
+    },
+    {
+        "desc": "class TextField{ _TF_Props_: TextFieldProperties; }"
+    },
+    {
+        "desc": "class TextField{ _onRemoveFromStage(): void; }"
+    },
+    {
+        "desc": "class TextField{ _onAddToStage(): void; }"
+    },
+    {
+        "desc": "class TextField{ _updateBaseTransform(): void; }"
+    },
+    {
+        "desc": "class TextField{ _updateTransform(): void; }"
+    },
+    {
+        "desc": "class TextField{ _draw(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class TextField{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class TextField{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class TextField{ appendText(newText: string): void; }"
+    },
+    {
+        "desc": "class TextField{ appendElement(newElement: egret.ITextElement): void; }"
+    },
+    {
+        "desc": "class InputController{ _updateTransform(): void; }"
+    },
+    {
+        "desc": "class MovieClip{ _textureToRender: Texture; }"
+    },
+    {
+        "desc": "class MovieClip{ _movieClipData: MovieClipData; }"
+    },
+    {
+        "desc": "class MovieClip{ _frameLabels: any[]; }"
+    },
+    {
+        "desc": "class MovieClip{ _eventPool: string[]; }"
+    },
+    {
+        "desc": "class MovieClip{ _currentFrameNum: number; }"
+    },
+    {
+        "desc": "class MovieClip{ _nextFrameNum: number; }"
+    },
+    {
+        "desc": "class MovieClip{ _init(): void; }"
+    },
+    {
+        "desc": "class MovieClip{ _reset(): void; }"
+    },
+    {
+        "desc": "class MovieClip{ _render(renderContext: RendererContext): void; }"
+    },
+    {
+        "desc": "class MovieClip{ _measureBounds(): egret.Rectangle; }"
+    },
+    {
+        "desc": "class MovieClip{ _onAddToStage(): void; }"
+    },
+    {
+        "desc": "class MovieClip{ _onRemoveFromStage(): void; }"
+    },
+    {
+        "desc": "class MovieClip{ _getFrameLabelByName(labelName: string, ignoreCase?: boolean): FrameLabel; }"
+    },
+    {
+        "desc": "class MovieClip{ _getFrameLabelByFrame(frame: number): FrameLabel; }"
+    },
+    {
+        "desc": "class MovieClip{ _getFrameLabelForFrame(frame: number): FrameLabel; }"
+    },
+    {
+        "desc": "class MovieClip{ _advanceFrame(): void; }"
+    },
+    {
+        "desc": "class FrameLabel{ constructor(name: string, frame: number); }"
+    },
+    {
+        "desc": "class MovieClipData{ _mcData: any; }"
+    },
+    {
+        "desc": "class MovieClipData{ _init(mcData: any, textureData: any, spriteSheet: SpriteSheet): void; }"
+    },
+    {
+        "desc": "class MovieClipData{ _isDataValid(): boolean; }"
+    },
+    {
+        "desc": "class MovieClipData{ _isTextureValid(): boolean; }"
+    },
+    {
+        "desc": "class MovieClipData{ _fillMCData(mcData: any): void; }"
+    },
+    {
+        "desc": "class MovieClipDataFactory{ _mcDataSet: any; }"
+    },
+    {
+        "desc": "class MovieClipDataFactory{ _spriteSheet: SpriteSheet; }"
+    },
+    {
+        "desc": "class MovieClipDataFactory{ _mcDataCache: any; }"
+    },
+    {
+        "desc": "class StageText{ constructor(); }"
+    },
+    {
+        "desc": "class StageText{ _textfield: egret.TextField; }"
+    },
+    {
+        "desc": "class StageText{ _setTextField(textfield: egret.TextField): void; }"
+    },
+    {
+        "desc": "class StageText{ _getText(): string; }"
+    },
+    {
+        "desc": "class StageText{ _setText(value: string): void; }"
+    },
+    {
+        "desc": "class StageText{ _setTextType(type: string): void; }"
+    },
+    {
+        "desc": "class StageText{ _getTextType(): string; }"
+    },
+    {
+        "desc": "class StageText{ _show(multiline: boolean, size: number, width: number, height: number): void; }"
+    },
+    {
+        "desc": "class StageText{ _add(): void; }"
+    },
+    {
+        "desc": "class StageText{ _remove(): void; }"
+    },
+    {
+        "desc": "class StageText{ _hide(): void; }"
+    },
+    {
+        "desc": "class StageText{ _addListeners(): void; }"
+    },
+    {
+        "desc": "class StageText{ _removeListeners(): void; }"
+    },
+    {
+        "desc": "class StageText{ _scaleX: number; }"
+    },
+    {
+        "desc": "class StageText{ _scaleY: number; }"
+    },
+    {
+        "desc": "class StageText{ _setScale(x: number, y: number): void; }"
+    },
+    {
+        "desc": "class StageText{ changePosition(x: number, y: number): void; }"
+    },
+    {
+        "desc": "class StageText{ _size: number; }"
+    },
+    {
+        "desc": "class StageText{ _setSize(value: number): void; }"
+    },
+    {
+        "desc": "class StageText{ _color: string; }"
+    },
+    {
+        "desc": "class StageText{ _setTextColor(value: string): void; }"
+    },
+    {
+        "desc": "class StageText{ _fontFamily: string; }"
+    },
+    {
+        "desc": "class StageText{ _setTextFontFamily(value: string): void; }"
+    },
+    {
+        "desc": "class StageText{ _bold: boolean; }"
+    },
+    {
+        "desc": "class StageText{ _setBold(value: boolean): void; }"
+    },
+    {
+        "desc": "class StageText{ _italic: boolean; }"
+    },
+    {
+        "desc": "class StageText{ _setItalic(value: boolean): void; }"
+    },
+    {
+        "desc": "class StageText{ _textAlign: string; }"
+    },
+    {
+        "desc": "class StageText{ _setTextAlign(value: string): void; }"
+    },
+    {
+        "desc": "class StageText{ _verticalAlign: string; }"
+    },
+    {
+        "desc": "class StageText{ _setVerticalAlign(value: string): void; }"
+    },
+    {
+        "desc": "class StageText{ _visible: boolean; }"
+    },
+    {
+        "desc": "class StageText{ _setVisible(value: boolean): void; }"
+    },
+    {
+        "desc": "class StageText{ _width: number; }"
+    },
+    {
+        "desc": "class StageText{ _setWidth(value: number): void; }"
+    },
+    {
+        "desc": "class StageText{ _height: number; }"
+    },
+    {
+        "desc": "class StageText{ _setHeight(value: number): void; }"
+    },
+    {
+        "desc": "class StageText{ _multiline: boolean; }"
+    },
+    {
+        "desc": "class StageText{ _setMultiline(value: boolean): void; }"
+    },
+    {
+        "desc": "class StageText{ _maxChars: number; }"
+    },
+    {
+        "desc": "class StageText{ _setMaxChars(value: number): void; }"
+    },
+    {
+        "desc": "class StageText{ _resetStageText(): void; }"
+    },
+    {
+        "desc": "class StageText{ _initElement(x: number, y: number, cX: number, cY: number): void; }"
+    },
+    {
+        "desc": "class StageText{ _removeInput(): void; }"
+    },
+    {
+        "desc": "class StageText{ static create(): StageText; }"
+    },
+    {
+        "desc": "class StageText{ $onBlur(): void; }"
+    },
+    {
+        "desc": "class Texture{ _textureWidth: number; }"
+    },
+    {
+        "desc": "class Texture{ _textureHeight: number; }"
+    },
+    {
+        "desc": "class Texture{ _clone(): Texture; }"
+    },
+    {
+        "desc": "class Texture{ draw(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }"
+    },
+    {
+        "desc": "class Texture{ _drawForCanvas(context: CanvasRenderingContext2D, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }"
+    },
+    {
+        "desc": "class Texture{ _drawForNative(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, renderType: any): void; }"
+    },
+    {
+        "desc": "class Texture{ _drawRepeatImageForNative(context: any, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, repeat: any): void; }"
+    },
+    {
+        "desc": "class Texture{ _drawRepeatImageForCanvas(context: CanvasRenderingContext2D, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, repeat: any): void; }"
+    },
+    {
+        "desc": "class Texture{ _disposeForCanvas(): void; }"
+    },
+    {
+        "desc": "class Texture{ _disposeForNative(): void; }"
+    },
+    {
+        "desc": "class Texture{ static deleteWebGLTexture(texture: Texture): void; }"
+    },
+    {
+        "desc": "class Texture{ static createBitmapData(url: string, callback: (code: number, bitmapData: any) => void): void; }"
+    },
+    {
+        "desc": "class Texture{ static crossOrigin: string; }"
+    },
+    {
+        "desc": "class Texture{ static _createBitmapDataForCanvasAndWebGl(url: string, callback: (code: number, bitmapData: any) => void): void; }"
+    },
+    {
+        "desc": "class Texture{ static _onLoad(url: any, bitmapData: any): void; }"
+    },
+    {
+        "desc": "class Texture{ static _onError(url: any, bitmapData: any): void; }"
+    },
+    {
+        "desc": "class Texture{ static _createBitmapDataForNative(url: string, callback: (code: number, bitmapData: any) => void): void; }"
+    },
+    {
+        "desc": "class RenderTexture{ renderContext: any; }"
+    },
+    {
+        "desc": "class RenderTexture{ init(): void; }"
+    },
+    {
+        "desc": "class RenderTexture{ static identityRectangle: egret.Rectangle; }"
+    },
+    {
+        "desc": "class RenderTexture{ setSize(width: number, height: number): void; }"
+    },
+    {
+        "desc": "class RenderTexture{ begin(): void; }"
+    },
+    {
+        "desc": "class RenderTexture{ end(): void; }"
+    },
+    {
+        "desc": "class RenderTexture{ dispose(): void; }"
+    },
+    {
+        "desc": "class RenderTexture{ static create(): RenderTexture; }"
+    },
+    {
+        "desc": "class RenderTexture{ static release(value: RenderTexture): void; }"
+    },
+    {
+        "desc": "class RendererContext{ renderCost: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _matrixA: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _matrixB: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _matrixC: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _matrixD: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _matrixTx: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _matrixTy: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _texture_scale_factor: number; }"
+    },
+    {
+        "desc": "class RendererContext{ texture_scale_factor: number; }"
+    },
+    {
+        "desc": "class RendererContext{ _setTextureScaleFactor(value: number): void; }"
+    },
+    {
+        "desc": "class RendererContext{ static imageSmoothingEnabled: boolean; }"
+    },
+    {
+        "desc": "class RendererContext{ constructor(); }"
+    },
+    {
+        "desc": "class RendererContext{ clearScreen(): void; }"
+    },
+    {
+        "desc": "class RendererContext{ clearRect(x: number, y: number, w: number, h: number): void; }"
+    },
+    {
+        "desc": "class RendererContext{ drawImage(texture: Texture, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, destX: any, destY: any, destWidth: any, destHeight: any, repeat?: string): void; }"
+    },
+    {
+        "desc": "class RendererContext{ drawImageScale9(texture: Texture, sourceX: any, sourceY: any, sourceWidth: any, sourceHeight: any, offX: any, offY: any, destWidth: any, destHeight: any, rect: any): boolean; }"
+    },
+    {
+        "desc": "class RendererContext{ _addOneDraw(): void; }"
+    },
+    {
+        "desc": "class RendererContext{ setTransform(matrix: egret.Matrix): void; }"
+    },
+    {
+        "desc": "class RendererContext{ setAlpha(value: number, blendMode: string): void; }"
+    },
+    {
+        "desc": "class RendererContext{ setupFont(textField: TextField, style?: egret.ITextStyle): void; }"
+    },
+    {
+        "desc": "class RendererContext{ measureText(text: string): number; }"
+    },
+    {
+        "desc": "class RendererContext{ drawText(textField: egret.TextField, text: string, x: number, y: number, maxWidth: number, style?: egret.ITextStyle): void; }"
+    },
+    {
+        "desc": "class RendererContext{ strokeRect(x: any, y: any, w: any, h: any, color: any): void; }"
+    },
+    {
+        "desc": "class RendererContext{ pushMask(mask: Rectangle): void; }"
+    },
+    {
+        "desc": "class RendererContext{ popMask(): void; }"
+    },
+    {
+        "desc": "class RendererContext{ onRenderStart(): void; }"
+    },
+    {
+        "desc": "class RendererContext{ onRenderFinish(): void; }"
+    },
+    {
+        "desc": "class RendererContext{ createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient; }"
+    },
+    {
+        "desc": "class RendererContext{ createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): CanvasGradient; }"
+    },
+    {
+        "desc": "class RendererContext{ setGlobalFilters(filterData: Array<Filter>): void; }"
+    },
+    {
+        "desc": "class RendererContext{ drawCursor(x1: number, y1: number, x2: number, y2: number): void; }"
+    },
+    {
+        "desc": "class RendererContext{ static createRendererContext(canvas: any): RendererContext; }"
+    },
+    {
+        "desc": "class RendererContext{ static blendModesForGL: any; }"
+    },
+    {
+        "desc": "class RendererContext{ static registerBlendModeForGL(key: string, src: number, dst: number, override?: boolean): void; }"
+    },
+    {
+        "desc": "class InteractionMode{ static MOUSE: string; }"
+    },
+    {
+        "desc": "class InteractionMode{ static TOUCH: string; }"
+    },
+    {
+        "desc": "class InteractionMode{ static mode: string; }"
+    },
+    {
+        "desc": "class TouchContext{ maxTouches: number; }"
+    },
+    {
+        "desc": "class TouchContext{ touchingIdentifiers: Array<any>; }"
+    },
+    {
+        "desc": "class TouchContext{ constructor(); }"
+    },
+    {
+        "desc": "class TouchContext{ run(): void; }"
+    },
+    {
+        "desc": "class TouchContext{ getTouchData(identifier: any, x: any, y: any): any; }"
+    },
+    {
+        "desc": "class TouchContext{ dispatchEvent(type: string, data: any): void; }"
+    },
+    {
+        "desc": "class TouchContext{ onTouchBegan(x: number, y: number, identifier: number): void; }"
+    },
+    {
+        "desc": "class TouchContext{ onTouchMove(x: number, y: number, identifier: number): void; }"
+    },
+    {
+        "desc": "class TouchContext{ onTouchEnd(x: number, y: number, identifier: number): void; }"
+    },
+    {
+        "desc": "class NetContext{ constructor(); }"
+    },
+    {
+        "desc": "class NetContext{ proceed(loader: URLLoader): void; }"
+    },
+    {
+        "desc": "class NetContext{ static _getUrl(request: URLRequest): string; }"
+    },
+    {
+        "desc": "class NetContext{ getChangeList(): Array<any>; }"
+    },
+    {
+        "desc": "class NetContext{ getVirtualUrl(url: string): string; }"
+    },
+    {
+        "desc": "class DeviceContext{ constructor(); }"
+    },
+    {
+        "desc": "class DeviceContext{ executeMainLoop(callback: Function, thisObject: any): void; }"
+    },
+    {
+        "desc": "class DeviceContext{ setFrameRate(frameRate: number): void; }"
+    },
+    {
+        "desc": "class ExternalInterface{ static call(functionName: string, value: string): void; }"
+    },
+    {
+        "desc": "class ExternalInterface{ static addCallback(functionName: string, listener: Function): void; }"
+    },
+    {
+        "desc": "class Browser{ static getInstance(): Browser; }"
+    },
+    {
+        "desc": "class Browser{ webPSupport: boolean; }"
+    },
+    {
+        "desc": "class Browser{ isMobile: boolean; }"
+    },
+    {
+        "desc": "class Browser{ isIOS(): boolean; }"
+    },
+    {
+        "desc": "class Browser{ getIOSVersion(): string; }"
+    },
+    {
+        "desc": "class Browser{ constructor(); }"
+    },
+    {
+        "desc": "class Browser{ getUserAgent(): string; }"
+    },
+    {
+        "desc": "class Browser{ getTrans(style: string, judge?: boolean): string; }"
+    },
+    {
+        "desc": "class Browser{ $new(x: any): any; }"
+    },
+    {
+        "desc": "class Browser{ $(x: any): any; }"
+    },
+    {
+        "desc": "class Browser{ translate(a: any): string; }"
+    },
+    {
+        "desc": "class Browser{ rotate(a: any): string; }"
+    },
+    {
+        "desc": "class Browser{ scale(a: any): string; }"
+    },
+    {
+        "desc": "class Browser{ skew(a: any): string; }"
+    },
+    {
+        "desc": "class localStorage{ static getItem(key: string): string; }"
+    },
+    {
+        "desc": "class localStorage{ static setItem(key: string, value: string): boolean; }"
+    },
+    {
+        "desc": "class localStorage{ static removeItem(key: string): void; }"
+    },
+    {
+        "desc": "class localStorage{ static clear(): void; }"
+    },
+    {
+        "desc": "class XML{ static parse(value: string): any; }"
+    },
+    {
+        "desc": "class XML{ static findChildren(xml: any, path: string, result?: Array<any>): Array<any>; }"
+    },
+    {
+        "desc": "class XML{ static getAttributes(xml: any, result?: Array<any>): Array<string>; }"
+    },
+    {
+        "desc": "function getOption(key: string): string;"
+    },
+    {
+        "desc": "class Tween{ static get(target: any, props?: any, pluginData?: any, override?: boolean): Tween; }"
+    },
+    {
+        "desc": "class Tween{ static removeTweens(target: any): void; }"
+    },
+    {
+        "desc": "class Tween{ static pauseTweens(target: any): void; }"
+    },
+    {
+        "desc": "class Tween{ static resumeTweens(target: any): void; }"
+    },
+    {
+        "desc": "class Tween{ static removeAllTweens(): void; }"
+    },
+    {
+        "desc": "class Tween{ constructor(target: any, props: any, pluginData: any); }"
+    },
+    {
+        "desc": "class Tween{ setPaused(value: boolean): Tween; }"
+    },
+    {
+        "desc": "class Tween{ wait(duration: number, passive?: boolean): Tween; }"
+    },
+    {
+        "desc": "class Tween{ to(props: any, duration?: number, ease?: Function): Tween; }"
+    },
+    {
+        "desc": "class Tween{ call(callback: Function, thisObj?: any, params?: Array<any>): Tween; }"
+    },
+    {
+        "desc": "class Tween{ set(props: any, target?: any): Tween; }"
+    },
+    {
+        "desc": "class Tween{ play(tween?: Tween): Tween; }"
+    },
+    {
+        "desc": "class Tween{ pause(tween?: Tween): Tween; }"
+    },
+    {
+        "desc": "class Tween{ tick(delta: number): void; }"
+    },
+    {
+        "desc": "class Ease{ constructor(); }"
+    },
+    {
+        "desc": "class Ease{ static get(amount: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static getPowIn(pow: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static getPowOut(pow: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static getPowInOut(pow: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static quadIn: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quadOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quadInOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static cubicIn: Function; }"
+    },
+    {
+        "desc": "class Ease{ static cubicOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static cubicInOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quartIn: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quartOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quartInOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quintIn: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quintOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static quintInOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static sineIn(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static sineOut(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static sineInOut(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static getBackIn(amount: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static backIn: Function; }"
+    },
+    {
+        "desc": "class Ease{ static getBackOut(amount: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static backOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static getBackInOut(amount: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static backInOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static circIn(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static circOut(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static circInOut(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static bounceIn(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static bounceOut(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static bounceInOut(t: any): number; }"
+    },
+    {
+        "desc": "class Ease{ static getElasticIn(amplitude: any, period: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static elasticIn: Function; }"
+    },
+    {
+        "desc": "class Ease{ static getElasticOut(amplitude: any, period: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static elasticOut: Function; }"
+    },
+    {
+        "desc": "class Ease{ static getElasticInOut(amplitude: any, period: any): Function; }"
+    },
+    {
+        "desc": "class Ease{ static elasticInOut: Function; }"
+    },
+    {
+        "desc": "interface IAudio{ _setCurrentTime(value: number): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _getCurrentTime(): number; }"
+    },
+    {
+        "desc": "interface IAudio{ _setVolume(value: number): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _getVolume(): number; }"
+    },
+    {
+        "desc": "interface IAudio{ _setLoop(value: boolean): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _play(type?: string): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _pause(): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _load(): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _preload(type: string, callback?: Function, thisObj?: any): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _addEventListener(type: string, listener: Function, useCapture?: boolean): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _removeEventListener(type: string, listener: Function, useCapture?: boolean): void; }"
+    },
+    {
+        "desc": "interface IAudio{ _destroy(): void; }"
+    },
+    {
+        "desc": "class Sound{ static MUSIC: string; }"
+    },
+    {
+        "desc": "class Sound{ static EFFECT: string; }"
+    },
+    {
+        "desc": "class Sound{ path: string; }"
+    },
+    {
+        "desc": "class Sound{ constructor(); }"
+    },
+    {
+        "desc": "class Sound{ type: string; }"
+    },
+    {
+        "desc": "class Sound{ position: number; }"
+    },
+    {
+        "desc": "class Sound{ play(loop?: boolean, position?: number): void; }"
+    },
+    {
+        "desc": "class Sound{ stop(): void; }"
+    },
+    {
+        "desc": "class Sound{ pause(): void; }"
+    },
+    {
+        "desc": "class Sound{ resume(): void; }"
+    },
+    {
+        "desc": "class Sound{ load(): void; }"
+    },
+    {
+        "desc": "class Sound{ addEventListener(type: string, listener: Function, thisObject: any): void; }"
+    },
+    {
+        "desc": "class Sound{ removeEventListener(type: string, listener: Function, thisObject: any): void; }"
+    },
+    {
+        "desc": "class Sound{ volume: number; }"
+    },
+    {
+        "desc": "class Sound{ setVolume(value: number): void; }"
+    },
+    {
+        "desc": "class Sound{ getVolume(): number; }"
+    },
+    {
+        "desc": "class Sound{ preload(type: string, callback?: Function, thisObj?: any): void; }"
+    },
+    {
+        "desc": "class Sound{ _setAudio(value: IAudio): void; }"
+    },
+    {
+        "desc": "class Sound{ destroy(): void; }"
+    },
+    {
+        "desc": "interface IVersionController{ fetchVersion(): void; }"
+    },
+    {
+        "desc": "interface IVersionController{ checkIsNewVersion(url: string): boolean; }"
+    },
+    {
+        "desc": "interface IVersionController{ saveVersion(url: string): void; }"
+    },
+    {
+        "desc": "interface IVersionController{ getChangeList(): Array<string>; }"
+    },
+    {
+        "desc": "interface IVersionController{ getVirtualUrl(url: string): string; }"
+    }
+]

@@ -1,0 +1,320 @@
+[
+  {
+    "desc":"class DisplayObject{ _setX(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setY(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setVisible(value: boolean): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setAlpha(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setScrollRect(value: Rectangle): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _getWidth(): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _getHeight(): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setWidth(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setHeight(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _getMatrix(parentMatrix?: Matrix): Matrix; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObject{ _setTouchEnabled(value: boolean): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _touchChildren: boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _children: Array<DisplayObject>; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _doAddChild(child: DisplayObject, index: number, notifyListeners?: boolean): DisplayObject; }",
+    "solved":true
+  },
+  {
+    "desc":"class DisplayObjectContainer{ _doRemoveChild(index: number, notifyListeners?: boolean): DisplayObject; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _setLetterSpacing(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _setLineSpacing(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _lineHeights: Array<number>; }",
+    "solved":true
+  },
+  {
+    "desc":"class BitmapText{ _getTextLines(): Array<string>; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _inputEnabled: boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setTouchEnabled(value: boolean): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _getText(): string; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setText(value: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setFontFamily(value: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setSize(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setItalic(value: boolean): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setBold(value: boolean): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setTextColor(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setTextAlign(value: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setVerticalAlign(value: string): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setLineSpacing(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _getLineHeight(): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setWidth(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setHeight(value: number): void; }",
+    "solved":true
+  },
+
+  {
+    "desc":"class ColorMatrixFilter{ _matrix: Array<number>; }",
+    "solved":true
+  },
+
+  {
+    "desc":"class GlowFilter{ _red: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class GlowFilter{ _green: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class GlowFilter{ _blue: number; }",
+    "solved":true
+  },
+  {
+    "desc":"var __START_TIME: number;",
+    "solved":true
+  },
+  {
+    "desc":"var __callLaterFunctionList: Array<any>;",
+    "solved":true
+  },
+  {
+    "desc":"var __callLaterThisList: Array<any>;",
+    "solved":true
+  },
+  {
+    "desc":"var __callLaterArgsList: Array<any>;",
+    "solved":true
+  },
+  {
+    "desc":"var __callAsyncFunctionList: Array<any>;",
+    "solved":true
+  },
+  {
+    "desc":"var __callAsyncThisList: Array<any>;",
+    "solved":true
+  },
+  {
+    "desc":"var __callAsyncArgsList: Array<any>;",
+    "solved":true
+  },
+  {
+    "desc":"function __callAsync(method: Function, thisObject: any, ...args: any[]): void;",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ _setWidth(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class ScrollView{ _setHeight(value: number): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClip{ _movieClipData: MovieClipData; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClip{ _eventPool: string[]; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClip{ _currentFrameNum: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClip{ _init(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClip{ _reset(): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipData{ _mcData: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipData{ _init(mcData: any, textureData: any, spriteSheet: SpriteSheet): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipData{ _isDataValid(): boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipData{ _isTextureValid(): boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipData{ _fillMCData(mcData: any): void; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipDataFactory{ _mcDataSet: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipDataFactory{ _spriteSheet: SpriteSheet; }",
+    "solved":true
+  },
+  {
+    "desc":"class MovieClipDataFactory{ _mcDataCache: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _type: string; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _bubbles: boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _eventPhase: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _currentTarget: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _target: any; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _isDefaultPrevented: boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _isPropagationStopped: boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class Event{ _isPropagationImmediateStopped: boolean; }",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ _stageX: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TouchEvent{ _stageY: number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getStartLine(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getHalign(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getTextHeight(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getValign(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getTextElement(textfield: egret.TextField, x: number, y: number): ITextElement; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getHit(textfield: egret.TextField, x: number, y: number): IHitTextElement; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextFieldUtils{ static _getScrollNum(textfield: egret.TextField): number; }",
+    "solved":true
+  },
+  {
+    "desc":"class TextField{ _setBaseText(value: string): void; }",
+    "solved":true
+  }
+]

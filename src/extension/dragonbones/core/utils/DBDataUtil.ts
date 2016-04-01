@@ -269,12 +269,12 @@ module dragonBones {
                             currentTransform.scaleX *= parentTimeline.originTransform.scaleX * parentData.transform.scaleX;
                             currentTransform.scaleY *= parentTimeline.originTransform.scaleY * parentData.transform.scaleY;
 
-                            TransformUtil.transformToMatrix(currentTransform, currentTransformMatrix, true);
+                            TransformUtil.transformToMatrix(currentTransform, currentTransformMatrix);
                             currentTransformMatrix.concat(globalTransformMatrix);
                             TransformUtil.matrixToTransform(currentTransformMatrix, globalTransform, currentTransform.scaleX * globalTransform.scaleX >= 0, currentTransform.scaleY * globalTransform.scaleY >= 0);
 						}
 
-                        TransformUtil.transformToMatrix(globalTransform, globalTransformMatrix, true);
+                        TransformUtil.transformToMatrix(globalTransform, globalTransformMatrix);
 					}
                     TransformUtil.globalToLocal(frame.transform, globalTransform);
 					
@@ -322,8 +322,9 @@ module dragonBones {
 		 * @param animationData
 		 * @param armatureData
 		 */
-		public static addHideTimeline(animationData:AnimationData, armatureData:ArmatureData):void{
+		public static addHideTimeline(animationData:AnimationData, armatureData:ArmatureData, addHideSlot:boolean = false):void{
 			var boneDataList:Array<BoneData> =armatureData.boneDataList;
+			var slotDataList:Array<SlotData> =armatureData.slotDataList;
 			var i:number = boneDataList.length;
 			
 			while(i --){
@@ -332,6 +333,24 @@ module dragonBones {
 				if(!animationData.getTimeline(boneName)){
 					if(animationData.hideTimelineNameMap.indexOf(boneName) < 0){
 						animationData.hideTimelineNameMap.push(boneName);
+					}
+				}
+			}
+			if(addHideSlot)
+			{
+				i = slotDataList.length;
+				var slotData:SlotData;
+				var slotName:string;
+				while (i--)
+				{
+					slotData = slotDataList[i];
+					slotName = slotData.name;
+					if (!animationData.getSlotTimeline(slotName))
+					{
+						if (animationData.hideSlotTimelineNameMap.indexOf(slotName) < 0)
+						{
+							animationData.hideSlotTimelineNameMap.push(slotName);
+						}
 					}
 				}
 			}

@@ -117,7 +117,7 @@ exports.error_code = {
     //create_app
     1601:"Please enter a project name, h5 game directory and mobile platform support library. Example:  {color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal} \n If the latest mobile platform support library is not installed, please download it from the following address: \nAndroid:  http://www.egret-labs.org/download/egret-android-packager-download.html, \niOS:http://www.egret-labs.org/download/egret-ios-packager-download.html",
     1602:"EgretProperties.json missing or incorrectly formatted.  \n Please upgrade egret-core to the latest version from http://www.egret-labs.org/download/egret-download.html",
-    1603:" create_app.json is missing.\n Please download the latest mobile platform support library from the following address \n Android:  http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS:  http://www.egret-labs.org/download/egret-ios-packager-download.html",
+    1603:"create_app.json is missing.\n Please download the latest mobile platform support library from the following address \n Android:  http://www.egret-labs.org/download/egret-android-packager-download.html, \n\tiOS:  http://www.egret-labs.org/download/egret-ios-packager-download.html",
     1604:"Egret build command execution fails",
     1605:"Mobile platform project directory cannot be the same one with html5 project directory, please modify the mobile platform project directory.",
     1606:"Created, total time: {0} second",

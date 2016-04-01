@@ -77,7 +77,16 @@ module dragonBones {
             if (!result) {
                 var data:TextureData = this._textureDatas[fullName];
                 if(data) {
-                    result = this.spriteSheet.createTexture(fullName, data.region.x, data.region.y, data.region.width, data.region.height);
+                    var frame:Rectangle = data.frame;
+                    if(frame)
+                    {
+                        result = this.spriteSheet.createTexture(fullName, data.region.x, data.region.y, data.region.width, data.region.height,-frame.x,-frame.y,frame.width,frame.height);
+                    }
+                    else
+                    {
+                        result = this.spriteSheet.createTexture(fullName, data.region.x, data.region.y, data.region.width, data.region.height);
+                    }
+                    
                     if(data.rotated)
                     {
                         EgretTextureAtlas.rotatedDic[fullName] = 1;

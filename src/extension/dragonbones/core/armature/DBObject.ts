@@ -170,13 +170,13 @@ module dragonBones {
 
         }
 
-        public _calculateParentTransform():any
+        public _calculateParentTransform():ParentTransformObject
         {
             if(this.parent && (this.inheritTranslation || this.inheritRotation || this.inheritScale))
             {
                 var parentGlobalTransform:DBTransform = this._parent._globalTransformForChild;
                 var parentGlobalTransformMatrix:Matrix = this._parent._globalTransformMatrixForChild;
-
+                /*
                 if(!this.inheritTranslation || !this.inheritRotation || !this.inheritScale)
                 {
                     parentGlobalTransform = DBObject._tempParentGlobalTransform;
@@ -200,14 +200,16 @@ module dragonBones {
                     parentGlobalTransformMatrix = DBObject._tempParentGlobalTransformMatrix;
                     TransformUtil.transformToMatrix(parentGlobalTransform, parentGlobalTransformMatrix, true);
                 }
-                return {parentGlobalTransform:parentGlobalTransform, parentGlobalTransformMatrix:parentGlobalTransformMatrix};
+                */
+                return ParentTransformObject.create().setTo(parentGlobalTransform, parentGlobalTransformMatrix);
             }
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
             return null;
         }
 
-        public _updateGlobal():any {
+        public _updateGlobal():ParentTransformObject {
             this._calculateRelativeParentTransform();
-            var output:any = this._calculateParentTransform();
+            var output:ParentTransformObject = this._calculateParentTransform();
             if(output != null){
                 //计算父骨头绝对坐标
                 var parentMatrix:Matrix = output.parentGlobalTransformMatrix;
@@ -215,7 +217,6 @@ module dragonBones {
                 //计算绝对坐标
                 var x:number = this._global.x;
                 var y:number = this._global.y;
-                
                 this._global.x = parentMatrix.a * x + parentMatrix.c * y + parentMatrix.tx;
                 this._global.y = parentMatrix.d * y + parentMatrix.b * x + parentMatrix.ty;
                 
@@ -230,7 +231,7 @@ module dragonBones {
                 }
 
             }
-            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix, true);
+            TransformUtil.transformToMatrix(this._global, this._globalTransformMatrix);
             return output;
         }
 	}

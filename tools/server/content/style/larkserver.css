@@ -1,0 +1,292 @@
+﻿html, body {
+    background: #363e45;
+    min-width: 320px;
+    font: 400 14px/1.6 "Open Sans",sans-serif;
+    margin:0;
+    height:100%;
+}
+
+
+section {
+    float: left;
+}
+
+    section label {
+        display: block;
+    }
+
+    section.half {
+        width:50%
+    }
+    section.clear {
+        clear:both;
+    }
+
+
+#main {
+    height: 100%;
+    margin:0 auto;
+    padding:0 10px;
+    max-width:700px;
+    min-width:600px;
+}
+
+#console {
+    position: fixed;
+    bottom: -225px;
+    left: 85px;
+    right: 5px;
+    overflow-y: auto;
+    height: 200px;
+    font-size: 12px;
+    line-height: 14px;
+    background-color: #222;
+    color: #DDD;
+    padding: 8px;
+    border-radius: 5px;
+    margin: 0;
+}
+
+    #console.active {
+        bottom: 5px;
+    }
+
+
+
+input, select, textarea, button {
+    border: 1px solid #444;
+    background-color: #2e353d;
+}
+
+a {
+    text-decoration: none;
+}
+
+* {
+    color: white;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+}
+
+.scaleModes {
+    width: 650px;
+}
+
+.scaleMode {
+    display: inline-block;
+    float: left;
+    background-color: rgba(21,28,33,0.20);
+    height: 170px;
+    width: 150px;
+    text-align: center;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+.orientationModes {
+    width: 650px;
+}
+
+.orientationMode {
+    display: inline-block;
+    float: left;
+    background-color: rgba(21,28,33,0.20);
+    height: 170px;
+    width: 140px;
+    text-align: center;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.scaleModeSample {
+    float: left;
+    margin-right: 20px;
+}
+
+.mode.active {
+    background-color: #161d21;
+}
+
+.mode img {
+    margin-top: 22px;
+}
+.scaleMode img {
+    margin-left: -10px;
+}
+
+.mode span {
+    display: block;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.finish {
+    width: 400px;
+    height: 60px;
+    position: absolute;
+    left: 700px;
+    top: 730px;
+    background-color: #4ea6fc;
+    border-radius: 0px;
+    font-size: x-large;
+}
+
+    .finish:hover {
+        background-color: #2b92fc;
+    }
+
+    .finish:active, .finish.active {
+        background-color: #197de3;
+    }
+
+.mask{
+    text-align:center;
+    position:fixed;
+    top:0; 
+    left:0;
+    width:100%;
+    height:100%; 
+    background-color:rgba(0, 0, 0, 0.4);
+}
+.mask #loading{
+    margin-top:100px
+}
+
+.mask #confirm {
+    width: 500px;
+    margin: 100px auto;
+    background-color: black;
+    font-size: 18px;
+    padding: 30px;
+    text-align: left;
+}
+.mask .buttons {
+    width: 500px;
+    margin: 10px auto;
+    font-size: 18px;
+    text-align: center;
+}
+    .mask .buttons button {
+        background-color: #4ea6fc;
+        border-radius: 0px;
+        font-size: 20px;
+        padding:4px 8px;
+    }
+
+    .finish {
+        position: inherit;
+        width: 624px;
+        margin:50px 0;
+    }
+
+
+input[type=number]:focus {
+    background-color: #161d21;
+}
+
+input[type=number],input[type=text] {
+    background-color: #2e353d;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 0px;
+    padding-left: 10px;
+    outline: none;
+}
+
+input[type=number] {
+    width: 60px;
+}
+
+.template {
+    width: 58px;
+    height: 83px;
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    border: solid 16px rgba(21, 28, 33, 0.20);
+    text-align: center;
+    cursor: pointer;
+}
+
+    .template:hover {
+        border: solid 16px rgba(21, 28, 33, 0.30);
+    }
+
+    .template:active, .template.active {
+        border: solid 16px rgba(21, 28, 33, 1);
+    }
+
+.pure-img-responsive {
+    max-width: 100%;
+    height: auto;
+}
+
+/*
+Add transition to containers so they can push in and out.
+*/
+#layout,
+#menu,
+#console,
+.menu-link {
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+
+/*
+This is the parent `<div>` that contains the menu and the content area.
+*/
+#layout {
+    position: relative;
+    padding-left: 0;
+    height: 100%;
+}
+
+    #layout.active #menu {
+        left: 80px;
+        width: 80px;
+    }
+
+    #layout.active .menu-link {
+        left: 80px;
+    }
+/*
+The content `<div>` is where all your content goes.
+*/
+.content {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 800px;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+}
+
+.header {
+    margin: 0;
+    color: #333;
+    text-align: center;
+    padding: 2.5em 2em 0;
+    border-bottom: 1px solid #eee;
+}
+
+    .header h1 {
+        margin: 0.2em 0;
+        font-size: 3em;
+        font-weight: 300;
+    }
+
+    .header h2 {
+        font-weight: 300;
+        color: #ccc;
+        padding: 0;
+        margin-top: 0;
+    }
+
+.content-subhead {
+    margin: 50px 0 20px 0;
+    font-weight: 300;
+    color: #888;
+}

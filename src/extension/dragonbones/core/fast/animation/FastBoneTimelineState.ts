@@ -90,12 +90,16 @@ module dragonBones {
 		public _isComplete:boolean;
 		/** @private */
 		public _transform:DBTransform;
-
+		public _durationPivot:Point;
+		public _originPivot:Point;
+		public _pivot:Point;
 		
 		public constructor(){
 			this._transform = new DBTransform();
 			this._durationTransform = new DBTransform();
 			this._transformToFadein = new DBTransform();
+			this._pivot = new Point();
+			this._durationPivot = new Point();
 		}
 		
 		private clear():void{
@@ -105,6 +109,7 @@ module dragonBones {
 			}
 			this._animationState = null;
 			this._timelineData = null;
+			this._originPivot = null;
 		}
 		
 		/** @private */
@@ -123,6 +128,12 @@ module dragonBones {
 			this._currentFrameIndex = -1;
 			this._currentTime = -1;
 			this._tweenEasing = NaN;
+
+			this._durationPivot.x = 0;
+			this._durationPivot.y = 0;
+			this._pivot.x = 0;
+			this._pivot.y = 0;
+			this._originPivot = this._timelineData.originPivot;
 
 			switch(this._timelineData.frameList.length){
 				case 0:
@@ -189,6 +200,8 @@ module dragonBones {
 			this._tweenEasing = NaN;
 			this._tweenTransform = false;
 
+			this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
+			this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
 			this._transform.copy(currentFrame.transform);
 			
 			this._bone.invalidUpdate();
@@ -351,6 +364,9 @@ module dragonBones {
 				this._durationTransform.scaleX = nextFrame.transform.scaleX - currentFrame.transform.scaleX + nextFrame.scaleOffset.x;
 				this._durationTransform.scaleY = nextFrame.transform.scaleY - currentFrame.transform.scaleY + nextFrame.scaleOffset.y;
 				
+				this._durationPivot.x = nextFrame.pivot.x - currentFrame.pivot.x;
+				this._durationPivot.y = nextFrame.pivot.y - currentFrame.pivot.y;
+
 				this._durationTransform.normalizeRotation();
 				if(nextFrameIndex == 0){
 					this._durationTransform.skewX = TransformUtil.formatRadian(this._durationTransform.skewX);
@@ -363,7 +379,9 @@ module dragonBones {
 					this._durationTransform.skewX ||
 					this._durationTransform.skewY ||
 					this._durationTransform.scaleX != 1 ||
-					this._durationTransform.scaleY != 1 //||
+					this._durationTransform.scaleY != 1 ||
+					this._durationPivot.x ||
+					this._durationPivot.y
 				){
 					this._tweenTransform = true;
 				}
@@ -378,7 +396,8 @@ module dragonBones {
 			
 			if(!this._tweenTransform){
 				this._transform.copy(currentFrame.transform);
-				
+				this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
+				this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
 				this._bone.invalidUpdate();
 			}
 		}
@@ -403,6 +422,8 @@ module dragonBones {
 			this._transform.skewY = currentTransform.skewY + this._durationTransform.skewY * progress;
 			this._transform.scaleX = currentTransform.scaleX + this._durationTransform.scaleX * progress;
 			this._transform.scaleY = currentTransform.scaleY + this._durationTransform.scaleY * progress;
+			this._pivot.x = currentPivot.x + this._durationPivot.x * progress;
+			this._pivot.y = currentPivot.y + this._durationPivot.y * progress;
 			this._bone.invalidUpdate();
 		}
 	}

@@ -310,7 +310,7 @@ module egret.gui {
 		private getScrollVByVertitcalPos(value:number):number{
 			if(this._textField.numLines==0)
 				return 1;
-            var lineHeight: number = this._textField._getLineHeight();
+            var lineHeight: number = this._textField.$getLineHeight();
 			var offsetHeight:number = (this.height-4)%lineHeight;
 			if(this._textField.height + offsetHeight-this.height==value){
                 return this._textField.maxScrollV;
@@ -323,7 +323,7 @@ module egret.gui {
 		private getVerticalPosByScrollV(scrollV:number = 0):number{
 			if(scrollV == 1||this._textField.numLines == 0)
 				return 0;
-            var lineHeight: number = this._textField._getLineHeight();
+            var lineHeight: number = this._textField.$getLineHeight();
             if (scrollV == this._textField.maxScrollV) {
 				var offsetHeight:number = (this.height-4)%lineHeight;
 				return this._textField.height + offsetHeight-this.height;
@@ -473,14 +473,13 @@ module egret.gui {
                     //todo:没有文字时的测量
 					var hInLine:number = parseInt(<any>this.heightInLines);
 					var lineHeight:number = 22;
-					var properties:egret.TextFieldProperties = this._textField._TF_Props_;
-					if(properties._text.length>0){
-                        lineHeight = this._textField._getLineHeight();
+					if(this._textField.$getText().length>0){
+                        lineHeight = this._textField.$getLineHeight();
 					}
 					else{
-						properties._text = "M";
-                        lineHeight = this._textField._getLineHeight();
-						properties._text = "";
+						this._textField.$setText("M");
+                        lineHeight = this._textField.$getLineHeight();
+						this._textField.$setText("");
 					}
 					this.defaultHeight = hInLine*lineHeight+4;
 				}
@@ -523,7 +522,7 @@ module egret.gui {
 				contentHeight = 4;
 			}
 			else{
-                var lineHeight: number = this._textField._getLineHeight();
+                var lineHeight: number = this._textField.$getLineHeight();
 				var offsetHeight:number = (this.height-4)%lineHeight;
 				contentHeight = this._textField.height + offsetHeight;
 			}
@@ -563,7 +562,7 @@ module egret.gui {
 		public setSelection(beginIndex:number,endIndex:number = 0):void{
 			this.validateProperties();
 			if(this._textField){
-				this._textField._setSelection(beginIndex,endIndex);
+				this._textField.$setSelection(beginIndex,endIndex);
 			}
 		}
 		/**
@@ -572,7 +571,7 @@ module egret.gui {
 		public selectAll():void{
 			this.validateProperties();
 			if(this._textField){
-				this._textField._setSelection(0,this._textField.text.length);
+				this._textField.$setSelection(0,this._textField.text.length);
 			}
 		}
 		

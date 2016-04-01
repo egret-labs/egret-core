@@ -26,149 +26,457 @@
 //  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
-
+module egret.sys {
+    /**
+     * @private
+     */
+    export const enum BitmapTextKeys {
+        /**
+         * @private 外部设定的值
+         */
+        textFieldWidth,
+        /**
+         * @private 外部设定的值
+         */
+        textFieldHeight,
+        /**
+         * @private
+         */
+        text,
+        /**
+         * @private
+         */
+        lineSpacing,
+        /**
+         * @private
+         */
+        letterSpacing,
+        /**
+         * @private
+         */
+        font,
+        /**
+         * @private
+         */
+        fontStringChanged,
+        /**
+         * @private
+         */
+        textLinesChanged,
+        /**
+         * @private 测量的值
+         */
+        textWidth,
+        /**
+         * @private 测量的值
+         */
+        textHeight,
+        /**
+         * @private
+         */
+        textAlign,
+        /**
+         * @private
+         */
+        verticalAlign,
+        /**
+         * @private
+         */
+        smoothing,
+    }
+}
 module egret {
     /**
-     * @classdesc
-     * @class egret.BitmapText
+     * @language en_US
+     * Bitmap font adopts the Bitmap+SpriteSheet mode to render text.
+     * @version Egret 2.4
+     * @platform Web,Native
+     * @includeExample egret/text/BitmapText.ts
+     */
+    /**
+     * @language zh_CN
      * 位图字体采用了Bitmap+SpriteSheet的方式来渲染文字。
-     * @extends egret.DisplayObject
+     * @version Egret 2.4
+     * @platform Web,Native
      * @includeExample egret/text/BitmapText.ts
      */
     export class BitmapText extends DisplayObject {
 
         /**
+         * @language en_US
+         * Create an egret.BitmapText object
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
          * 创建一个 egret.BitmapText 对象
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public constructor() {
             super();
-            this.cacheAsBitmap = true;
-            this.needDraw = true;
+            this.$renderNode = new sys.BitmapNode();
+            //this.cacheAsBitmap = true;
+            this.$BitmapText = {
+                0: NaN,    //textFieldWidth,
+                1: NaN,    //textFieldHeight,
+                2: "",      //text,
+                3: 0,       //lineSpacing,
+                4: 0,        //letterSpacing,
+                5: null,        //font,
+                6: false,        //fontStringChanged,
+                7: false,        //textLinesChanged,
+                8: false,       //textWidth,
+                9: false,       //textHeight,
+                10: "left",     //textAlign,
+                11: "top",      //verticalAlign
+                12: Bitmap.defaultSmoothing       //smoothing
+            };
         }
 
         /**
-         * 设置文本
+         * @language en_US
+         * Whether or not is smoothed when scaled.
+         * @default true。
+         * @version Egret 3.0
+         * @platform Web
          */
-        private _text:string = "";
-        private _textChanged:boolean = false;
+        /**
+         * @language zh_CN
+         * 控制在缩放时是否进行平滑处理。
+         * @default true。
+         * @version Egret 3.0
+         * @platform Web
+         */
+        public get smoothing():boolean {
+            var values = this.$BitmapText;
+            return values[sys.BitmapTextKeys.smoothing];
+        }
+
+        public set smoothing(value:boolean) {
+            value = !!value;
+            var values = this.$BitmapText;
+            if (value == values[sys.BitmapTextKeys.smoothing]) {
+                return;
+            }
+            values[sys.BitmapTextKeys.smoothing] = value;
+            this.$invalidate();
+        }
 
         /**
-         * 显示的文本内容
-         * @member {string} egret.BitmapText#text
+         * @private
+         */
+        $BitmapText:Object;
+
+        /**
+         * @language en_US
+         * A string to display in the text field.
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 要显示的文本内容
+         * @version Egret 2.4
+         * @platform Web,Native
          */
         public get text():string {
-            return this._text;
+            return this.$BitmapText[sys.BitmapTextKeys.text];
         }
 
         public set text(value:string) {
             this.$setText(value);
         }
 
-        $setText(value:string):void {
-            if (this._text == value) {
-                return;
-            }
-            this._textChanged = true;
-            this._text = value;
-
-            this._setSizeDirty();
-        }
-
-        public _font:BitmapFont = null;
-        private _fontChanged:boolean = false;
-
         /**
-         * BitmapFont对象，缓存了所有文本的位图纹理
-         * @member {egret.BitmapFont} egret.BitmapText#font
+         * @private
          */
-        public get font():BitmapFont {
-            return this._font;
-        }
+        $setText(value:string):boolean {
+            var values = this.$BitmapText;
+            if (value == values[sys.BitmapTextKeys.text])
+                return false;
+            values[sys.BitmapTextKeys.text] = value;
+            this.$invalidateContentBounds();
 
-        public set font(value:BitmapFont) {
-            this.$setFont(value);
-        }
-
-        $setFont(value:BitmapFont):void {
-            if (this._font == value)
-                return;
-            this._font = value;
-            this._fontChanged = true;
-            this._setSizeDirty();
-        }
-
-        public _letterSpacing:number = 0;
-        /**
-         * 字符之间的距离
-         * @default 0
-         * @version 1.7.2
-         * @param value
-         */
-        public set letterSpacing(value:number) {
-            this._setLetterSpacing(value);
-        }
-
-        public _setLetterSpacing(value:number):void {
-            this._letterSpacing = value;
-
-            this._setSizeDirty();
-        }
-
-        public get letterSpacing():number {
-            return this._letterSpacing;
-        }
-
-        public _lineSpacing:number = 0;
-        /**
-         * 行与行之间的距离
-         * @default 0
-         * @version 1.7.2
-         * @param value
-         */
-        public set lineSpacing(value:number) {
-            this._setLineSpacing(value);
-        }
-
-        public _setLineSpacing(value:number):void {
-            this._lineSpacing = value;
-        }
-
-        public get lineSpacing():number {
-            return this._lineSpacing;
-        }
-
-        public _setSizeDirty():void {
-            super._setSizeDirty();
-            this.textLinesChange = true;
+            return true;
         }
 
         /**
          * @private
          */
+        $getWidth():number {
+            var w = this.$BitmapText[sys.BitmapTextKeys.textFieldWidth];
+            return isNaN(w) ? this.$getContentBounds().width : w;
+        }
+
+        /**
+         * @private
+         */
+        $setWidth(value:number):boolean {
+            //value = +value || 0;
+            var values = this.$BitmapText;
+            if (value < 0 || value == values[sys.BitmapTextKeys.textFieldWidth]) {
+                return false;
+            }
+            values[sys.BitmapTextKeys.textFieldWidth] = value;
+            this.$invalidateContentBounds();
+
+            return true;
+        }
+
+        /**
+         * @private
+         */
+        $invalidateContentBounds():void {
+            super.$invalidateContentBounds();
+            this.$BitmapText[sys.BitmapTextKeys.textLinesChanged] = true;
+        }
+
+        /**
+         * @private
+         */
+        $getHeight():number {
+            var h = this.$BitmapText[sys.BitmapTextKeys.textFieldHeight];
+            return isNaN(h) ? this.$getContentBounds().height : h;
+        }
+
+        /**
+         * @private
+         */
+        $setHeight(value:number):boolean {
+            //value = +value || 0;
+            var values = this.$BitmapText;
+            if (value < 0 || value == values[sys.BitmapTextKeys.textFieldHeight]) {
+                return false;
+            }
+            values[sys.BitmapTextKeys.textFieldHeight] = value;
+            this.$invalidateContentBounds();
+            return true;
+        }
+
+        /**
+         * @language en_US
+         * The name of the font to use, or a comma-separated list of font names, the type of value must be BitmapFont.
+         * @default null
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 要使用的字体的名称或用逗号分隔的字体名称列表，类型必须是 BitmapFont。
+         * @default null
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get font():Object {
+            return this.$BitmapText[sys.BitmapTextKeys.font];
+        }
+
+        public set font(value:Object) {
+            this.$setFont(value);
+        }
+
+        $setFont(value:any):boolean {
+            var values = this.$BitmapText;
+            if (values[sys.BitmapTextKeys.font] == value) {
+                return false;
+            }
+            values[sys.BitmapTextKeys.font] = value;
+
+            this.$BitmapText[sys.BitmapTextKeys.fontStringChanged] = true;
+            this.$invalidateContentBounds();
+
+            return true;
+        }
+
+        /**
+         /**
+         * @language en_US
+         * An integer representing the amount of vertical space between lines.
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 一个整数，表示行与行之间的垂直间距量
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get lineSpacing():number {
+            return this.$BitmapText[sys.BitmapTextKeys.lineSpacing];
+        }
+
+        public set lineSpacing(value:number) {
+            this.$setLineSpacing(value);
+        }
+
+        $setLineSpacing(value:number):boolean {
+            value = +value || 0;
+            var values = this.$BitmapText;
+            if (values[sys.BitmapTextKeys.lineSpacing] == value)
+                return false;
+            values[sys.BitmapTextKeys.lineSpacing] = value;
+            this.$invalidateContentBounds();
+            return true;
+        }
+
+        /**
+         * @language en_US
+         * An integer representing the amount of distance between characters.
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 一个整数，表示字符之间的距量。
+         * @default 0
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get letterSpacing():number {
+            return this.$BitmapText[sys.BitmapTextKeys.letterSpacing];
+        }
+
+        public set letterSpacing(value:number) {
+            this.$setLetterSpacing(value);
+        }
+
+        $setLetterSpacing(value:number):boolean {
+            value = +value || 0;
+            var values = this.$BitmapText;
+            if (values[sys.BitmapTextKeys.letterSpacing] == value)
+                return false;
+            values[sys.BitmapTextKeys.letterSpacing] = value;
+            this.$invalidateContentBounds();
+
+            return true;
+        }
+
+        /**
+         * @language en_US
+         * Horizontal alignment of text.
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文本的水平对齐方式。
+         * @default：egret.HorizontalAlign.LEFT
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        public get textAlign():string {
+            return this.$BitmapText[sys.BitmapTextKeys.textAlign];
+        }
+
+        public set textAlign(value:string) {
+            this.$setTextAlign(value);
+        }
+
+        $setTextAlign(value:string):boolean {
+            var values = this.$BitmapText;
+            if (values[sys.BitmapTextKeys.textAlign] == value)
+                return false;
+            values[sys.BitmapTextKeys.textAlign] = value;
+            this.$invalidateContentBounds();
+            return true;
+        }
+
+        /**
+         * @language en_US
+         * Vertical alignment of text.
+         * @default：egret.VerticalAlign.TOP
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 文字的垂直对齐方式。
+         * @default：egret.VerticalAlign.TOP
+         * @version Egret 2.5.6
+         * @platform Web,Native
+         */
+        public get verticalAlign():string {
+            return this.$BitmapText[sys.BitmapTextKeys.verticalAlign];
+        }
+
+        public set verticalAlign(value:string) {
+            this.$setVerticalAlign(value);
+        }
+
+        $setVerticalAlign(value:string):boolean {
+            var values = this.$BitmapText;
+            if (values[sys.BitmapTextKeys.verticalAlign] == value)
+                return false;
+            values[sys.BitmapTextKeys.verticalAlign] = value;
+            this.$invalidateContentBounds();
+            return true;
+        }
+
+        /**
+         * @language en_US
+         * A ratio of the width of the space character. This value is multiplied by the height of the first character is the space character width.
+         * @default 0.33
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 一个空格字符的宽度比例。这个数值乘以第一个字符的高度即为空格字符的宽。
+         * @default 0.33
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
         public static EMPTY_FACTOR:number = 0.33;
 
-        public _render(renderContext:RendererContext):void {
-            var self = this;
-            var textLines:Array<string> = self._getTextLines();
+        /**
+         * @private
+         */
+        $render():void {
+            var values = this.$BitmapText;
+            var textLines:Array<string> = this.$getTextLines();
             var length:number = textLines.length;
             if (length == 0) {
                 return;
             }
-            var bitmapFont:BitmapFont = self._font;
+            var textLinesWidth:Array<number> = this.$textLinesWidth;
+            var bitmapFont:BitmapFont = values[sys.BitmapTextKeys.font];
+            var node = <sys.BitmapNode>this.$renderNode;
+            if(bitmapFont.$texture){
+                node.image = bitmapFont.$texture._bitmapData;
+            }
+            node.smoothing = values[sys.BitmapTextKeys.smoothing];
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
             var emptyWidth:number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
-            var yPos:number = 0;
-            var maxHeight:number = self._DO_Props_._hasHeightSet ? self._DO_Props_._explicitHeight : Number.POSITIVE_INFINITY;
-            var lineHeights:Array<number> = self._lineHeights;
+            var hasSetHeight:boolean = !isNaN(values[sys.BitmapTextKeys.textFieldHeight]);
+            var textWidth:number = values[sys.BitmapTextKeys.textWidth];
+            var textFieldWidth:number = values[sys.BitmapTextKeys.textFieldWidth];
+            var textFieldHeight:number = values[sys.BitmapTextKeys.textFieldHeight];
+            var align:string = values[sys.BitmapTextKeys.textAlign];
+            var yPos:number = this.$textOffsetY + this.$textStartY;
+            var lineHeights:Array<number> = this.$lineHeights;
             for (var i:number = 0; i < length; i++) {
                 var lineHeight:number = lineHeights[i];
-                if (i > 0 && yPos + lineHeight > maxHeight) {
+                if (hasSetHeight && i > 0 && yPos + lineHeight > textFieldHeight) {
                     break;
                 }
                 var line:string = textLines[i];
                 var len:number = line.length;
-                var xPos:number = 0;
+                var xPos:number = this.$textOffsetX;
+
+                if (align != egret.HorizontalAlign.LEFT) {
+                    var countWidth:number = textFieldWidth > textWidth ? textFieldWidth : textWidth;
+                    if (align == egret.HorizontalAlign.RIGHT) {
+                        xPos += countWidth - textLinesWidth[i];
+                    } else if (align == egret.HorizontalAlign.CENTER) {
+                        xPos += Math.floor((countWidth - textLinesWidth[i]) / 2);
+                    }
+                }
                 for (var j:number = 0; j < len; j++) {
                     var character = line.charAt(j);
                     var texture = bitmapFont.getTexture(character);
@@ -177,62 +485,134 @@ module egret {
                             xPos += emptyWidth;
                         }
                         else {
-                            $warn(1011, character);
+                            egret.$warn(1011, character);
                         }
                         continue;
                     }
-                    var bitmapWidth:number = texture._bitmapWidth || texture._textureWidth;
-                    var bitmapHeight:number = texture._bitmapHeight || texture._textureHeight;
-                    self._texture_to_render = texture;
-                    RenderFilter.getInstance().drawImage(renderContext, self, texture._bitmapX, texture._bitmapY,
-                        bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, bitmapWidth, bitmapHeight);
-                    xPos += texture._textureWidth + self._letterSpacing;
+                    var bitmapWidth:number = texture._bitmapWidth;
+                    var bitmapHeight:number = texture._bitmapHeight;
+
+                    node.drawImage(texture._bitmapX, texture._bitmapY,
+                        bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY,
+                        texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
+
+                    xPos += texture.$getTextureWidth() + values[sys.BitmapTextKeys.letterSpacing];
                 }
-                yPos += lineHeight + self._lineSpacing;
+                yPos += lineHeight + values[sys.BitmapTextKeys.lineSpacing];
             }
-            self._texture_to_render = null;
         }
 
-        public _measureBounds():egret.Rectangle {
-            var lines:Array<string> = this._getTextLines();
+        /**
+         * @private
+         */
+        $measureContentBounds(bounds:Rectangle):void {
+            var lines:Array<string> = this.$getTextLines();
             if (lines.length == 0) {
-                return Rectangle.identity.initialize(0, 0, 0, 0);
+                bounds.setEmpty();
             }
-            return Rectangle.identity.initialize(this._textOffsetX, this._textOffsetY, this._textWidth - this._textOffsetX, this._textHeight - this._textOffsetY + (lines.length - 1) * this._lineSpacing);
+            else {
+                bounds.setTo(this.$textOffsetX + this.$textStartX, this.$textOffsetY + this.$textStartY, this.$BitmapText[sys.BitmapTextKeys.textWidth] - this.$textOffsetX,
+                    this.$BitmapText[sys.BitmapTextKeys.textHeight] - this.$textOffsetY);
+            }
         }
 
-        private _textWidth:number = 0;
-        private _textHeight:number = 0;
-        private _textOffsetX:number = 0;
-        private _textOffsetY:number = 0;
+        /**
+         * @language en_US
+         * Get the BitmapText measured width
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 获取位图文本测量宽度
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get textWidth():number {
+            this.$getTextLines();
+            return this.$BitmapText[sys.BitmapTextKeys.textWidth];
+        }
 
-        private textLinesChange:boolean = true;
-        private _textLines:Array<string>;
-        public _lineHeights:Array<number> = [];
+        /**
+         * @language en_US
+         * Get Text BitmapText height
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 获取位图文本测量高度
+         * @version Egret 2.4
+         * @platform Web,Native
+         */
+        public get textHeight():number {
+            this.$getTextLines();
+            return this.$BitmapText[sys.BitmapTextKeys.textHeight];
+        }
 
-        public _getTextLines():Array<string> {
-            var self = this;
-            if (!self.textLinesChange) {
-                return self._textLines;
+        /**
+         * @private
+         */
+        private $textOffsetX:number = 0;
+        /**
+         * @private
+         */
+        private $textOffsetY:number = 0;
+        /**
+         * @private
+         */
+        private $textStartX:number = 0;
+        /**
+         * @private
+         */
+        private $textStartY:number = 0;
+
+        /**
+         * @private
+         */
+        private textLines:Array<string>;
+        /**
+         * @private 每一行文字的宽度
+         */
+        private $textLinesWidth:Array<number>;
+        /**
+         * @private
+         */
+        public $lineHeights:Array<number> = [];
+
+        /**
+         * @private
+         *
+         * @returns
+         */
+        $getTextLines():Array<string> {
+            var values = this.$BitmapText;
+            if (!values[sys.BitmapTextKeys.textLinesChanged]) {
+                return this.textLines;
             }
             var textLines:Array<string> = [];
-            self._textLines = textLines;
-            self.textLinesChange = false;
+            this.textLines = textLines;
+            var textLinesWidth:Array<number> = [];
+            this.$textLinesWidth = textLinesWidth;
+            values[sys.BitmapTextKeys.textLinesChanged] = false;
             var lineHeights:Array<number> = [];
-            self._lineHeights = lineHeights;
-            if (!self._text || !self._font) {
+            this.$lineHeights = lineHeights;
+            if (!values[sys.BitmapTextKeys.text] || !values[sys.BitmapTextKeys.font]) {
                 return textLines;
             }
+            var lineSpacing = values[egret.sys.BitmapTextKeys.lineSpacing]
+            var letterSpacing = values[sys.BitmapTextKeys.letterSpacing];
             var textWidth:number = 0;
             var textHeight:number = 0;
-            var textStartX:number = 0;
-            var textStartY:number = 0;
-            var hasWidthSet:boolean = self._DO_Props_._hasWidthSet;
-            var maxWidth:number = self._DO_Props_._hasWidthSet ? self._DO_Props_._explicitWidth : Number.POSITIVE_INFINITY;
-            var bitmapFont:BitmapFont = self._font;
+            var textOffsetX:number = 0;
+            var textOffsetY:number = 0;
+            var hasWidthSet:boolean = !isNaN(values[sys.BitmapTextKeys.textFieldWidth]);
+            var textFieldWidth:number = values[sys.BitmapTextKeys.textFieldWidth];
+            var textFieldHeight:number = values[sys.BitmapTextKeys.textFieldHeight];
+            var bitmapFont:BitmapFont = values[sys.BitmapTextKeys.font];
             var emptyHeight:number = bitmapFont._getFirstCharHeight();
             var emptyWidth:number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
-            var text:string = self._text;
+            var text:string = values[sys.BitmapTextKeys.text];
             var textArr:Array<string> = text.split(/(?:\r\n|\r|\n)/);
             var length:number = textArr.length;
             var isFirstLine:boolean = true;
@@ -242,11 +622,11 @@ module egret {
                 var lineHeight:number = 0;
                 var xPos:number = 0;
                 var isFirstChar:boolean = true;
+                var isLastChar:boolean = false;
                 for (var j = 0; j < len; j++) {
                     if (!isFirstChar) {
-                        xPos += self._letterSpacing;
+                        xPos += letterSpacing;
                     }
-
                     var character = line.charAt(j);
                     var texureWidth:number;
                     var textureHeight:number;
@@ -259,7 +639,7 @@ module egret {
                             textureHeight = emptyHeight;
                         }
                         else {
-                            $warn(1011, character);
+                            egret.$warn(1011, character);
                             if (isFirstChar) {
                                 isFirstChar = false;
                             }
@@ -267,23 +647,24 @@ module egret {
                         }
                     }
                     else {
-                        texureWidth = texture._textureWidth;
-                        textureHeight = texture._textureHeight;
+                        texureWidth = texture.$getTextureWidth();
+                        textureHeight = texture.$getTextureHeight();
                         offsetX = texture._offsetX;
                         offsetY = texture._offsetY;
                     }
+
                     if (isFirstChar) {
                         isFirstChar = false;
-                        textStartX = Math.min(offsetX, textStartX);
+                        textOffsetX = Math.min(offsetX, textOffsetX);
                     }
+
                     if (isFirstLine) {
-                        textStartY = Math.min(offsetY, textStartY);
+                        isFirstLine = false;
+                        textOffsetY = Math.min(offsetY, textOffsetY);
                     }
-                    if (hasWidthSet && j > 0 && xPos + texureWidth > maxWidth) {
-                        textLines.push(line.substring(0, j));
-                        lineHeights.push(lineHeight);
-                        textHeight += lineHeight;
-                        textWidth = Math.max(xPos, textWidth);
+                    if (hasWidthSet && j > 0 && xPos + texureWidth > textFieldWidth) {
+                        if (!setLineData(line.substring(0, j)))
+                            break;
                         line = line.substring(j);
                         len = line.length;
                         j = 0;
@@ -294,18 +675,51 @@ module egret {
                     xPos += texureWidth;
                     lineHeight = Math.max(textureHeight, lineHeight);
                 }
-                if (isFirstLine) {
-                    isFirstLine = false;
+                if (textFieldHeight && i > 0 && textHeight > textFieldHeight) {
+                    break;
                 }
-                textLines.push(line);
-                lineHeights.push(lineHeight);
-                textHeight += lineHeight;
-                textWidth = Math.max(xPos, textWidth);
+                isLastChar = true;
+                if (!setLineData(line))
+                    break;
             }
-            self._textWidth = textWidth;
-            self._textHeight = textHeight;
-            self._textOffsetX = textStartX;
-            self._textOffsetY = textStartY;
+            function setLineData(str:string):boolean {
+                if (textFieldHeight && textLines.length > 0 && textHeight > textFieldHeight) {
+                    return false;
+                }
+                textHeight += lineHeight + lineSpacing;
+                if(!isFirstChar && !isLastChar){
+                    xPos -= letterSpacing;
+                }
+                textLines.push(str);
+                lineHeights.push(lineHeight);
+                textLinesWidth.push(xPos);
+                textWidth = Math.max(xPos, textWidth);
+                return true;
+            }
+            textHeight -= lineSpacing;
+            values[sys.BitmapTextKeys.textWidth] = textWidth;
+            values[sys.BitmapTextKeys.textHeight] = textHeight;
+            this.$textOffsetX = textOffsetX;
+            this.$textOffsetY = textOffsetY;
+            this.$textStartX = 0;
+            this.$textStartY = 0;
+            var alignType;
+            if (textFieldWidth > textWidth) {
+                alignType = values[sys.BitmapTextKeys.textAlign];
+                if (alignType == egret.HorizontalAlign.RIGHT) {
+                    this.$textStartX = textFieldWidth - textWidth;
+                } else if (alignType == egret.HorizontalAlign.CENTER) {
+                    this.$textStartX = Math.floor((textFieldWidth - textWidth) / 2);
+                }
+            }
+            if (textFieldHeight > textHeight) {
+                alignType = values[sys.BitmapTextKeys.verticalAlign];
+                if (alignType == egret.VerticalAlign.BOTTOM) {
+                    this.$textStartY = textFieldHeight - textHeight;
+                } else if (alignType == egret.VerticalAlign.MIDDLE) {
+                    this.$textStartY = Math.floor((textFieldHeight - textHeight) / 2);
+                }
+            }
             return textLines;
         }
     }

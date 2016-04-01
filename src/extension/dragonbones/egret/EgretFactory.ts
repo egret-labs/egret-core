@@ -37,7 +37,7 @@ module dragonBones {
      */
     export class EgretFactory extends BaseFactory {
         constructor() {
-            super(this);
+            super();
         }
 
         /** @private */
@@ -61,21 +61,13 @@ module dragonBones {
                 var subTextureFrame:Rectangle = (textureAtlas).getFrame(fullName);
                 if(subTextureFrame != null)
                 {
-                    pivotX = subTextureFrame.width/2  + subTextureFrame.x;
-                    pivotY = subTextureFrame.height/2 + subTextureFrame.y;
+                    pivotX = subTextureFrame.width/2;
+                    pivotY = subTextureFrame.height/2;
                 }
                 else
                 {
                     pivotX = bitmap.width/2;
                     pivotY = bitmap.height/2;
-                }
-            }
-            else
-            {
-                if(subTextureFrame != null)
-                {
-                    pivotX += subTextureFrame.x;
-                    pivotY += subTextureFrame.y;
                 }
             }
             bitmap.anchorOffsetX = pivotX;

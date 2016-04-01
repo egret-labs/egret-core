@@ -56,8 +56,7 @@ module egret.gui {
 		 * @method egret.gui.IVisualElementContainer#swapElementsAt
 		 * @param index1 {number} 第一个元素的索引。
 		 * @param index2 {number} 第二个元素的索引。
-		 * @throws RangeError 如果在子列表中不存在该索引位置。
-		 */		
+		 */
 		swapElementsAt(index1:number, index2:number):void;
 	}
 	

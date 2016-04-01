@@ -80,9 +80,6 @@ module dragonBones {
 		
 		/** @private */
 		public _pivot:Point;
-
-		/** @private */
-		public _blendEnabled:boolean;
 		
 		/** @private */
 		public _isComplete:boolean;
@@ -161,7 +158,6 @@ module dragonBones {
 			this._rawAnimationScale = this._animationState.clip.scale;
 			
 			this._isComplete = false;
-			this._blendEnabled = false;
 			this._tweenTransform = false;
 			this._tweenScale = false;
 			this._currentFrameIndex = -1;
@@ -322,22 +318,9 @@ module dragonBones {
 				
 				if(currentFrame){
 					this._bone._arriveAtFrame(currentFrame, this, this._animationState, false);
-					
-					this._blendEnabled = !isNaN(currentFrame.tweenEasing);
-					if(this._blendEnabled){
-						this.updateToNextFrame(currentPlayTimes);
-					}
-					else{
-						this._tweenEasing = NaN;
-						this._tweenTransform = false;
-						this._tweenScale = false;
-						this._tweenColor = false;
-					}
+					this.updateToNextFrame(currentPlayTimes);
 				}
-				
-				if(this._blendEnabled){
-					this.updateTween();
-				}
+				this.updateTween();
 			}
 		}
 		
@@ -541,43 +524,40 @@ module dragonBones {
 			this._tweenScale = false;
 			this._tweenColor = false;
 			
-			this._blendEnabled = currentFrame.displayIndex >= 0;
-			if(this._blendEnabled){
-                /**
-                 * <使用绝对数据>
-                 * 单帧的timeline，第一个关键帧的transform为0
-                 * timeline.originTransform = firstFrame.transform;
-                 * eachFrame.transform = eachFrame.transform - timeline.originTransform;
-                 * firstFrame.transform == 0;
-                 *
-                 * <使用相对数据>
-                 * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
-                 */
-				if(this._animationState.additiveBlending){
-                    this._transform.x = currentFrame.transform.x;
-                    this._transform.y = currentFrame.transform.y;
-                    this._transform.skewX = currentFrame.transform.skewX;
-                    this._transform.skewY = currentFrame.transform.skewY;
-                    this._transform.scaleX = currentFrame.transform.scaleX;
-                    this._transform.scaleY = currentFrame.transform.scaleY;
+            /**
+             * <使用绝对数据>
+             * 单帧的timeline，第一个关键帧的transform为0
+             * timeline.originTransform = firstFrame.transform;
+             * eachFrame.transform = eachFrame.transform - timeline.originTransform;
+             * firstFrame.transform == 0;
+             *
+             * <使用相对数据>
+             * 使用相对数据时，timeline.originTransform = 0，第一个关键帧的transform有可能不为 0
+             */
+			if(this._animationState.additiveBlending){
+                this._transform.x = currentFrame.transform.x;
+                this._transform.y = currentFrame.transform.y;
+                this._transform.skewX = currentFrame.transform.skewX;
+                this._transform.skewY = currentFrame.transform.skewY;
+                this._transform.scaleX = currentFrame.transform.scaleX;
+                this._transform.scaleY = currentFrame.transform.scaleY;
 
-                    this._pivot.x = currentFrame.pivot.x;
-                    this._pivot.y = currentFrame.pivot.y;
-				}
-				else{
-                    this._transform.x = this._originTransform.x + currentFrame.transform.x;
-                    this._transform.y = this._originTransform.y + currentFrame.transform.y;
-                    this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
-                    this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
-                    this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
-                    this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
-
-                    this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
-                    this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
-				}
-				
-				this._bone.invalidUpdate();
+                this._pivot.x = currentFrame.pivot.x;
+                this._pivot.y = currentFrame.pivot.y;
 			}
+			else{
+                this._transform.x = this._originTransform.x + currentFrame.transform.x;
+                this._transform.y = this._originTransform.y + currentFrame.transform.y;
+                this._transform.skewX = this._originTransform.skewX + currentFrame.transform.skewX;
+                this._transform.skewY = this._originTransform.skewY + currentFrame.transform.skewY;
+                this._transform.scaleX = this._originTransform.scaleX * currentFrame.transform.scaleX;
+                this._transform.scaleY = this._originTransform.scaleY * currentFrame.transform.scaleY;
+
+                this._pivot.x = this._originPivot.x + currentFrame.pivot.x;
+                this._pivot.y = this._originPivot.y + currentFrame.pivot.y;
+			}
+			
+			this._bone.invalidUpdate();
 		}
 	}
 }

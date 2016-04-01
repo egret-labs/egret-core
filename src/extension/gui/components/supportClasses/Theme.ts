@@ -49,30 +49,33 @@ module egret.gui {
             SkinnableComponent._defaultTheme = new Theme(configURL);
         }
 
+        private _configURL:string;
         private loadConfig(configURL:string):void{
-            var loader:egret.URLLoader = new URLLoader();
-            loader.addEventListener(Event.COMPLETE,this.onLoadComplete,this);
-            loader.addEventListener(IOErrorEvent.IO_ERROR,this.onLoadError,this);
-            loader.dataFormat = URLLoaderDataFormat.TEXT;
-            loader.load(new URLRequest(configURL));
+            this._configURL = configURL;
+            var adapter:IThemeAdapter;
+            try{
+                adapter = $getAdapter("egret.gui.IThemeAdapter");
+            }
+            catch(e){
+                adapter = new DefaultThemeAdapter();
+            }
+            adapter.getTheme(configURL, this.onLoadComplete, this.onLoadError, this);
         }
 
-        private onLoadComplete(event:Event):void{
-            var loader:egret.URLLoader = <egret.URLLoader> (event.target);
+        private onLoadComplete(text:string):void{
             try{
-                var str:string = <string> loader.data;
-                var data:any = JSON.parse(str);
+                var data:any = JSON.parse(text);
                 this.skinMap = data.skins;
             }
             catch (e){
-                $warn(1017, loader._request.url, loader.data);
+                egret.$warn(1017, this._configURL, text);
             }
             this.handleDelyList();
         }
 
         private onLoadError(event:IOErrorEvent):void{
-            var loader:egret.URLLoader = <egret.URLLoader> (event.target);
-            $warn(3000, loader._request.url);
+            var loader:egret.HttpRequest = <egret.HttpRequest> (event.target);
+            egret.$warn(3000, this._configURL);
             this.handleDelyList();
         }
 
@@ -129,7 +132,7 @@ module egret.gui {
             }
             var skinClass:any = egret.getDefinitionByName(skinName);
             if(!skinClass){
-                $warn(3001, skinName);
+                egret.$warn(3001, skinName);
                 return null;
             }
             return new skinClass();

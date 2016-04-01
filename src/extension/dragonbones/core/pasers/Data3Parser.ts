@@ -60,9 +60,9 @@ module dragonBones {
             Data3Parser.tempDragonBonesData = outputDragonBonesData;
 
             var armatureList:any = rawDataToParse[ConstValues.ARMATURE];
-            for(var key in armatureList)
+            for(var i:number = 0, len:number = armatureList.length; i < len; i++) 
             {
-                var armatureObject:any = rawDataToParse[ConstValues.ARMATURE][key];
+                var armatureObject:any = armatureList[i];
                 outputDragonBonesData.addArmatureData(Data3Parser.parseArmatureData(armatureObject, frameRate));
             }
 
@@ -75,24 +75,29 @@ module dragonBones {
 			var outputArmatureData:ArmatureData = new ArmatureData();
 			outputArmatureData.name = armatureDataToParse[ConstValues.A_NAME];
 
+			var i:number;
+			var len:number;
             var boneList:any = armatureDataToParse[ConstValues.BONE];
-            for(var key in boneList) {
-                var boneObject:any = boneList[key];
+            for(i = 0, len = boneList.length; i < len; i++) 
+            {
+                var boneObject:any = boneList[i];
                 outputArmatureData.addBoneData(Data3Parser.parseBoneData(boneObject));
             }
 
             var skinList:any = armatureDataToParse[ConstValues.SKIN];
-			for(var skinKey in skinList){
-				var skinSlotList:any = skinList[skinKey];
+			for(i = 0, len = skinList.length; i < len; i++) 
+			{
+				var skinSlotList:any = skinList[i];
 				var skinSlotObject:any = skinSlotList[ConstValues.SLOT];
-				for(var slotKey in skinSlotObject){
-					var slotObject:any = skinSlotObject[slotKey];
+				for(var j:number = 0, jLen:number = skinSlotObject.length; j < jLen; j++)
+				{
+					var slotObject:any = skinSlotObject[j];
 					outputArmatureData.addSlotData(Data3Parser.parseSlotData(slotObject))
 				}
 			}
-            for(var key in skinList)
+            for(i = 0, len = skinList.length; i < len; i++) 
             {
-                var skinObject:any = skinList[key];
+                var skinObject:any = skinList[i];
                 outputArmatureData.addSkinData(Data3Parser.parseSkinData(skinObject));
             }
 			if(Data3Parser.tempDragonBonesData.isGlobal)
@@ -102,9 +107,9 @@ module dragonBones {
 			outputArmatureData.sortBoneDataList();
 
             var animationList:any = armatureDataToParse[ConstValues.ANIMATION];
-            for(var key in animationList)
+            for(i = 0, len = animationList.length; i < len; i++) 
             {
-                var animationObject:any = animationList[key];
+                var animationObject:any = animationList[i];
                 var animationData:AnimationData = Data3Parser.parseAnimationData(animationObject, frameRate);
                 DBDataUtil.addHideTimeline(animationData, outputArmatureData);
                 DBDataUtil.transformAnimationData(animationData, outputArmatureData, Data3Parser.tempDragonBonesData.isGlobal);
@@ -137,9 +142,9 @@ module dragonBones {
 			skinData.name = skinObject[ConstValues.A_NAME];
 
             var slotList:any = skinObject[ConstValues.SLOT];
-            for(var key in slotList)
+            for(var i:number = 0, len:number = slotList.length; i < len; i++) 
             {
-                var slotObject:any = slotList[key];
+                var slotObject:any = slotList[i];
                 skinData.addSlotData(Data3Parser.parseSkinSlotData(slotObject));
             }
 			
@@ -156,9 +161,13 @@ module dragonBones {
 
 			var displayList:any = slotObject[ConstValues.DISPLAY];
 
-			for(var key in displayList) {
-				var displayObject:any = displayList[key];
-				slotData.addDisplayData(Data3Parser.parseDisplayData(displayObject));
+			if(displayList)
+			{
+				for(var i:number = 0, len:number = displayList.length; i < len; i++) 
+				{
+					var displayObject:any = displayList[i];
+					slotData.addDisplayData(Data3Parser.parseDisplayData(displayObject));
+				}
 			}
 
 			return slotData;
@@ -211,7 +220,7 @@ module dragonBones {
 				for(i = 0,len = frameObjectList.length; i< len; i++)
 				{
 					var frameObject:any = frameObjectList[i];
-					var frame:Frame = Data3Parser.parseTransformFrame(frameObject, frameRate);
+					var frame:Frame = Data3Parser.parseTransformFrame(frameObject, null, frameRate);
 					animationData.addFrame(frame);
 				}
 			}
@@ -224,6 +233,7 @@ module dragonBones {
 			var displayIndexChangeSlotTimelines:Array<SlotTimeline> = [];
 			var displayIndexChangeTimelines:Array<TransformTimeline> = [];
             var timelineObjectList:Array<any> = animationObject[ConstValues.TIMELINE];
+            var displayIndexChange:boolean;
 			if(timelineObjectList)
 			{
 				for(i = 0,len = timelineObjectList.length; i < len; i++) {
@@ -235,11 +245,10 @@ module dragonBones {
 					var slotTimeline:SlotTimeline = Data3Parser.parseSlotTimeline(timelineObject, animationData.duration, frameRate);
 					animationData.addSlotTimeline(slotTimeline);
 
-					if(animationData.autoTween)
+					if(animationData.autoTween && !displayIndexChange)
 					{
-						var displayIndexChange:boolean;
+						
 						var slotFrame:SlotFrame;
-
 						for(var j:number = 0, jlen:number = slotTimeline.frameList.length; j < jlen; j++)
 						{
 							slotFrame = <SlotFrame>slotTimeline.frameList[j];
@@ -249,25 +258,22 @@ module dragonBones {
 								break;
 							}
 						}
-						
-						if(displayIndexChange)
-						{
-							displayIndexChangeTimelines.push(timeline);
-							displayIndexChangeSlotTimelines.push(slotTimeline);
-						}
-						
 					}
 				}
 				
-				len = displayIndexChangeSlotTimelines.length;
+				/**
+			 	 * 如果有slot的displayIndex为空的情况，那么当autoTween为ture时，它对应的bone的补间应该去掉
+			 	 * 以下就是处理这种情况，把autoTween的全局的tween应用到每一帧上，然后把autoTween变为false
+			 	 * 此时autoTween就不起任何作用了
+			 	 */
 				var animationTween:number = animationData.tweenEasing;
-				if(len > 0)
+				if(displayIndexChange)
 				{
-					
+					len = animationData.slotTimelineList.length;
 					for ( i = 0; i < len; i++)
 					{
-						slotTimeline = displayIndexChangeSlotTimelines[i];
-						timeline = displayIndexChangeTimelines[i];
+						slotTimeline = animationData.slotTimelineList[i];
+						timeline = animationData.timelineList[i];
 						var curFrame:TransformFrame;
 						var curSlotFrame:SlotFrame;
 						var nextSlotFrame:SlotFrame;
@@ -295,7 +301,6 @@ module dragonBones {
 						}
 					}
 					animationData.autoTween = false;
-					
 				}
 			}
 
@@ -316,9 +321,9 @@ module dragonBones {
 			outputTimeline.duration = duration;
 
 			var frameList:any = timelineObject[ConstValues.FRAME];
-			for(var key in frameList)
+			for(var i:number = 0, len:number = frameList.length; i < len; i++) 
 			{
-				var frameObject:any = frameList[key];
+				var frameObject:any = frameList[i];
 				var frame:SlotFrame = Data3Parser.parseSlotFrame(frameObject, frameRate);
 				outputTimeline.addFrame(frame);
 			}
@@ -360,10 +365,23 @@ module dragonBones {
 			outputTimeline.duration = duration;
 
             var frameList:any = timelineObject[ConstValues.FRAME];
-            for(var key in frameList)
+            var nextFrameObject:any;
+            for(var i:number = 0, len:number = frameList.length; i < len; i++) 
             {
-                var frameObject:any = frameList[key];
-                var frame:TransformFrame = Data3Parser.parseTransformFrame(frameObject, frameRate);
+                var frameObject:any = frameList[i];
+                if(i < len - 1)
+                {
+                	nextFrameObject = frameList[i+1];
+                }
+                else if(i != 0)
+                {
+                	nextFrameObject = frameList[0];
+                }
+                else
+                {
+                	nextFrameObject = null;
+                }
+                var frame:TransformFrame = Data3Parser.parseTransformFrame(frameObject, nextFrameObject, frameRate);
                 outputTimeline.addFrame(frame);
             }
 
@@ -372,7 +390,7 @@ module dragonBones {
 			return outputTimeline;
 		}
 		
-		private static parseTransformFrame(frameObject:any, frameRate:number):TransformFrame{
+		private static parseTransformFrame(frameObject:any, nextFrameObject:any, frameRate:number):TransformFrame{
 			var outputFrame:TransformFrame = new TransformFrame();
             Data3Parser.parseFrame(frameObject, outputFrame, frameRate);
 			
@@ -383,6 +401,11 @@ module dragonBones {
 			outputFrame.tweenRotate = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_TWEEN_ROTATE, 0) || 0);
 			outputFrame.tweenScale = Data3Parser.getBoolean(frameObject, ConstValues.A_TWEEN_SCALE, true);
 			//outputFrame.displayIndex = Math.floor(Data3Parser.getNumber(frameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0);
+
+			if (nextFrameObject && Math.floor(Data3Parser.getNumber(nextFrameObject, ConstValues.A_DISPLAY_INDEX, 0)|| 0) == -1)
+			{
+				outputFrame.tweenEasing = NaN;
+			}
 
 			Data3Parser.parseTransform(frameObject[ConstValues.TRANSFORM], outputFrame.transform, outputFrame.pivot);
             if(Data3Parser.tempDragonBonesData.isGlobal)//绝对数据
@@ -401,9 +424,9 @@ module dragonBones {
 			var frame:Frame;
 
             var frameList:any = outputTimeline.frameList;
-            for(var key in frameList)
+            for(var i:number = 0, len:number = frameList.length; i < len; i++) 
             {
-                frame = frameList[key];
+                frame = frameList[i];
                 frame.position = position;
                 position += frame.duration;
             }
