@@ -1415,6 +1415,14 @@ module egret {
                     }
                 }
             }
+            if(graphics) {
+                var bounds = this.$getRenderBounds();
+                graphics.x = bounds.x;
+                graphics.y = bounds.y;
+                graphics.width = bounds.width;
+                graphics.height = bounds.height;
+                Rectangle.release(bounds);
+            }
         }
 
         /**

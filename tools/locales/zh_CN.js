@@ -107,7 +107,7 @@ var egret;
     locale_strings[1610] = "缺少项目名称 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     locale_strings[1611] = "项目已存在,请重新输入 例:{color_green}egret create_app [app_name] -f [h5_game_path] -t [template_path] {color_normal}";
     //upgrade
-    locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令升级您的项目，\n命令中请不要加上大括号{}";
+    locale_strings[1701] = "项目版本低于 egret 版本，请执行 egret upgrade {your_project} 命令或点击wing中的升级菜单升级您的项目，\n命令中请不要加上大括号{}";
     locale_strings[1702] = "项目升级成功";
     locale_strings[1703] = "\n升级第一步完成，{color_red}请按 {color_underline}https://github.com/egret-labs/egret-core/wiki/Egret_Upgrade/upgrade/index.html{color_red} 完成剩余升级步骤{color_normal}\n";
     locale_strings[1704] = "正在更新到{0}";

@@ -79,7 +79,7 @@ module egret.web {
             container["egret-player"] = player;
             //webgl模式关闭脏矩形
             if(options.renderMode == "webgl") {
-                player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
+                player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
                 egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
                 };
             }
