@@ -1466,6 +1466,13 @@ module egret {
         }
 
         $update(bounds?:Rectangle):boolean {
+            var tmpBounds = this.$getRenderBounds();
+            var result = super.$update(tmpBounds);
+            Rectangle.release(tmpBounds);
+            return result;
+        }
+
+        $getRenderBounds():Rectangle {
             var bounds = this.$getContentBounds();
             var tmpBounds = Rectangle.create();
             tmpBounds.copyFrom(bounds);
@@ -1482,9 +1489,7 @@ module egret {
             tmpBounds.y -= _strokeDouble+2;
             tmpBounds.width = Math.ceil(tmpBounds.width)+4;
             tmpBounds.height = Math.ceil(tmpBounds.height)+4;
-            var result = super.$update(tmpBounds);
-            Rectangle.release(tmpBounds);
-            return result;
+            return tmpBounds;
         }
 
         /**
@@ -1518,6 +1523,13 @@ module egret {
 
             var underLines = this.drawText();
             this.fillBackground(underLines);
+            var bounds = this.$getRenderBounds();
+            var node = this.textNode;
+            node.x = bounds.x;
+            node.y = bounds.y;
+            node.width = bounds.width;
+            node.height = bounds.height;
+            Rectangle.release(bounds);
         }
 
         /**

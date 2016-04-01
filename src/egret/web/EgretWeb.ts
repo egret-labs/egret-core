@@ -58,16 +58,16 @@ module egret.web {
             return;
         }
         isRunning = true;
-        if(!options){
+        if (!options) {
             options = {};
         }
         setRenderMode(options.renderMode);
         var ticker = egret.sys.$ticker;
         startTicker(ticker);
-        if(options.screenAdapter){
+        if (options.screenAdapter) {
             egret.sys.screenAdapter = options.screenAdapter;
         }
-        else if (!egret.sys.screenAdapter){
+        else if (!egret.sys.screenAdapter) {
             egret.sys.screenAdapter = new egret.sys.DefaultScreenAdapter();
         }
 
@@ -77,6 +77,12 @@ module egret.web {
             var container = <HTMLDivElement>list[i];
             var player = new WebPlayer(container);
             container["egret-player"] = player;
+            //webgl模式关闭脏矩形
+            if(options.renderMode == "webgl") {
+                player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
+                egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
+                };
+            }
         }
     }
 
@@ -84,11 +90,15 @@ module egret.web {
      * 设置渲染模式。"auto","webgl","canvas"
      * @param renderMode
      */
-    function setRenderMode(renderMode:string):void{
-
-        sys.RenderBuffer = web.CanvasRenderBuffer;
-        sys.systemRenderer = new CanvasRenderer();
-
+    function setRenderMode(renderMode:string):void {
+        if (renderMode == "webgl") {
+            sys.RenderBuffer = web.WebGLRenderBuffer;
+            sys.systemRenderer = new WebGLRenderer();
+        }
+        else {
+            sys.RenderBuffer = web.CanvasRenderBuffer;
+            sys.systemRenderer = new CanvasRenderer();
+        }
     }
 
     /**

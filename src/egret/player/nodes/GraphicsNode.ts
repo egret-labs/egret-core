@@ -59,6 +59,7 @@ module egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.dirtyRender = true;
             return path;
         }
 
@@ -101,6 +102,7 @@ module egret.sys {
             else {
                 this.drawData.push(path);
             }
+            this.dirtyRender = true;
             return path;
         }
 
@@ -129,6 +131,7 @@ module egret.sys {
             path.joints = joints;
             path.miterLimit = miterLimit;
             this.drawData.push(path);
+            this.dirtyRender = true;
             return path;
         }
 
@@ -137,6 +140,7 @@ module egret.sys {
          */
         public clear():void {
             this.drawData.length = 0;
+            this.dirtyRender = true;
         }
 
         /**
@@ -145,5 +149,30 @@ module egret.sys {
         public cleanBeforeRender():void {
 
         }
+
+        //forWebGL
+        /**
+         * 绘制x偏移
+         */
+        public x:number;
+        /**
+         * 绘制y偏移
+         */
+        public y:number;
+        /**
+         * 绘制宽度
+         */
+        public width:number;
+        /**
+         * 绘制高度
+         */
+        public height:number;
+        /**
+         * 脏渲染标记
+         * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
+         */
+        public dirtyRender:boolean = true;
+        public $canvasRenderer;
+        public $canvasRenderBuffer;
     }
 }
