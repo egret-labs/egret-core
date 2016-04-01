@@ -69,8 +69,6 @@ module dragonBones {
         public _displayList: Array<any> = [];
         public _displayDataList: Array<[DisplayData, TextureData]> = [];
 
-        public timelineCache: TimelineCache;
-
         public constructor(rawDisplay: any) {
             super();
             this.hasChildArmature = false;
@@ -118,12 +116,9 @@ module dragonBones {
         //动画
         /** @private */
         public updateByCache(frameIndex: number = 0): void {
-            
-            this._frameCache = this.timelineCache.frameCacheList[frameIndex];
-
+         
             super.updateByCache();
             this._updateTransform();
-
             
             //颜色
             var cacheColor: ColorTransform = (<SlotFrameCache><any>(this._frameCache)).colorTransform;

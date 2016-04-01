@@ -169,9 +169,7 @@ module dragonBones {
 			
 			if(this._armature.enableCache && this.animationCacheManager){
 				this.animationState.animationCache = this.animationCacheManager.getAnimationCache(animationName);
-			}
-			
-
+            }
 
 			var i:number = this._armature.slotHasChildArmatureList.length;
 			while(i--){
@@ -179,14 +177,6 @@ module dragonBones {
 				var childArmature:FastArmature = slot.childArmature;
 				if(childArmature){
 					childArmature.getAnimation().gotoAndPlay(animationName);
-                }
-            }
-
-            i = this._armature.slotList.length;
-			while(i--){
-                var slot: FastSlot = this._armature.slotList[i];
-                if (this._armature.enableCache && this.animationCacheManager) {
-                    slot.timelineCache = this.animationState.animationCache.slotTimelineCacheDic[slot.name];
                 }
             }
 

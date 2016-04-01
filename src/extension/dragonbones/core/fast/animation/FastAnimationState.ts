@@ -307,7 +307,7 @@ module dragonBones {
 			this._isComplete = isThisComplete;
 
 			if(this.isUseCache()){
-				//this.animationCache.update(this.progress);
+				this.animationCache.update(this.progress);
 			}
 			else{
 				this.updateTransformTimeline(this._progress);

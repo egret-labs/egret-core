@@ -183,7 +183,6 @@ module dragonBones {
                 //display.anchorOffsetX = 0;
                 //display.anchorOffsetX = 0;
                 display.visible = false;
-                console.log(123);
             }
         }
 
