@@ -51,6 +51,7 @@ module egret.web {
     export class WebGLRenderBuffer implements sys.RenderBuffer {
 
         public constructor(width?:number, height?:number) {
+            //todo 抽取出一个WebglRenderContext
             this.surface = createCanvas(width, height);
             this.initWebGL();
         }
@@ -164,9 +165,9 @@ module egret.web {
             //}
         }
 
-        private maskPushed:boolean;
-        private offsetX:number;
-        private offsetY:number;
+        //private maskPushed:boolean;
+        //private offsetX:number;
+        //private offsetY:number;
 
         /**
          * 取消上一次设置的clip。
