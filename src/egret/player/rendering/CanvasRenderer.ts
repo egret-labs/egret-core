@@ -250,6 +250,27 @@ module egret {
                 return drawCalls;
             }
 
+            //没有遮罩,同时显示对象没有子项
+            if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    displayContext.beginPath();
+                    displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    displayContext.clip();
+                }
+
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = compositeOp;
+                }
+                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
+                    displayObject.$displayList, clipRegion, root);
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
+                return drawCalls;
+            }
+
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayBuffer = this.createRenderBuffer(region.width, region.height);
             var displayContext = displayBuffer.context;
