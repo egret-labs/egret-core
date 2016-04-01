@@ -2777,6 +2777,24 @@ var egret;
             }
             if (this.$stage) {
                 if (oldBitmapData) {
+                    var oldHashCode;
+                    if (oldBitmapData._bitmapData && oldBitmapData._bitmapData.hashCode) {
+                        oldHashCode = oldBitmapData._bitmapData.hashCode;
+                    }
+                    else {
+                        oldHashCode = oldBitmapData.hashCode;
+                    }
+                    var newHashCode;
+                    if (value._bitmapData && value._bitmapData.hashCode) {
+                        newHashCode = value._bitmapData.hashCode;
+                    }
+                    else {
+                        newHashCode = value.hashCode;
+                    }
+                    if (oldHashCode == newHashCode) {
+                        this.$invalidateContentBounds();
+                        return true;
+                    }
                     egret.Texture.$removeDisplayObject(this, oldBitmapData);
                 }
                 egret.Texture.$addDisplayObject(this, value);
@@ -5765,10 +5783,8 @@ var egret;
         };
         Texture.$addDisplayObject = function (displayObject, bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5787,10 +5803,8 @@ var egret;
         };
         Texture.$removeDisplayObject = function (displayObject, bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5809,10 +5823,8 @@ var egret;
         };
         Texture.$invalidate = function (bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -5833,10 +5845,8 @@ var egret;
         };
         Texture.$dispose = function (bitmapData) {
             var hashCode;
-            if (bitmapData instanceof Texture) {
-                if (bitmapData._bitmapData) {
-                    hashCode = bitmapData._bitmapData.hashCode;
-                }
+            if (bitmapData._bitmapData && bitmapData._bitmapData.hashCode) {
+                hashCode = bitmapData._bitmapData.hashCode;
             }
             else {
                 hashCode = bitmapData.hashCode;
@@ -15616,6 +15626,24 @@ var egret;
             if (!found) {
                 egret.sys.Region.release(region);
                 egret.Matrix.release(displayMatrix);
+                return drawCalls;
+            }
+            //没有遮罩,同时显示对象没有子项
+            if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    displayContext.beginPath();
+                    displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    displayContext.clip();
+                }
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = compositeOp;
+                }
+                drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                if (hasBlendMode) {
+                    context.globalCompositeOperation = defaultCompositeOp;
+                }
                 return drawCalls;
             }
             //绘制显示对象自身，若有scrollRect，应用clip

@@ -5347,6 +5347,7 @@ var egret;
                 this.graphicsBuffer = null;
                 this.graphicsIndexBuffer = null;
                 this.graphicsStyle = { a: 1, r: 255, g: 0, b: 0 };
+                //todo 抽取出一个WebglRenderContext
                 this.surface = createCanvas(width, height);
                 this.initWebGL();
             }
@@ -5450,6 +5451,9 @@ var egret;
                 //    this.maskPushed = false;
                 //}
             };
+            //private maskPushed:boolean;
+            //private offsetX:number;
+            //private offsetY:number;
             /**
              * 取消上一次设置的clip。
              */
@@ -5468,6 +5472,7 @@ var egret;
                 canvas.width = this.surface.width;
                 canvas.height = this.surface.height;
                 context.drawImage(this.surface, 0, 0);
+                //todo 宽度设置回去
                 return context.getImageData(x, y, 1, 1).data;
             };
             /**
