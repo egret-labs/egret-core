@@ -163,6 +163,7 @@ module egret.web {
             //else {
             //    this.maskPushed = false;
             //}
+            this.clear();
         }
 
         //private maskPushed:boolean;

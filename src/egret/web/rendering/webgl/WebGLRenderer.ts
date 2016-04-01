@@ -313,33 +313,33 @@ module egret.web {
                     //        mask.$displayList, region, root ? mask : null);
                     //}
                     //else {
-                        var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                        var maskContext = maskBuffer.context;
-                        if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
-                            drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
-                                displayObject.$displayList, clipRegion, root);
-                            displayBuffer.popMask();
-                            renderBufferPool.push(displayBuffer);
-                            sys.Region.release(region);
-                            Matrix.release(displayMatrix);
-                            return drawCalls;
-                        }
-                        maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                        offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                        var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
-                            mask.$displayList, region, root ? mask : null);
-                        Matrix.release(offsetM);
-                        if (calls > 0) {
-                            drawCalls += calls;
-                            displayBuffer.setGlobalCompositeOperation("destination-in");
-                            displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
-                            displayBuffer.setGlobalAlpha(1);
-                            maskBuffer.$drawWebGL();
-                            WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
-                            displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
-                                0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
-                        }
-                        renderBufferPool.push(maskBuffer);
+                    var maskBuffer = this.createRenderBuffer(region.width, region.height);
+                    var maskContext = maskBuffer.context;
+                    if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
+                        drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
+                            displayObject.$displayList, clipRegion, root);
+                        displayBuffer.popMask();
+                        renderBufferPool.push(displayBuffer);
+                        sys.Region.release(region);
+                        Matrix.release(displayMatrix);
+                        return drawCalls;
+                    }
+                    maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                    offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                    var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
+                        mask.$displayList, region, root ? mask : null);
+                    Matrix.release(offsetM);
+                    if (calls > 0) {
+                        drawCalls += calls;
+                        displayBuffer.setGlobalCompositeOperation("destination-in");
+                        displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
+                        displayBuffer.setGlobalAlpha(1);
+                        maskBuffer.$drawWebGL();
+                        WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
+                        displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
+                            0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
+                    }
+                    renderBufferPool.push(maskBuffer);
                     //}
                 }
 
@@ -435,6 +435,7 @@ module egret.web {
             var webglBuffer:WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
             webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, buffer, forHitTest);
+            buffer.$drawWebGL();
         }
 
         /**
@@ -543,7 +544,7 @@ module egret.web {
                 node.$canvasRenderer = new CanvasRenderer();
                 node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
-            else {
+            else if (node.dirtyRender) {
                 node.$canvasRenderBuffer.resize(width, height, true);
             }
             if (!node.$canvasRenderBuffer.context) {

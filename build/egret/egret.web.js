@@ -5456,6 +5456,7 @@ var egret;
                 //else {
                 //    this.maskPushed = false;
                 //}
+                this.clear();
             };
             //private maskPushed:boolean;
             //private offsetX:number;
@@ -6330,6 +6331,7 @@ var egret;
                 var webglBuffer = buffer;
                 webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
                 this.renderNode(node, buffer, forHitTest);
+                buffer.$drawWebGL();
             };
             /**
              * @private
@@ -6431,7 +6433,7 @@ var egret;
                     node.$canvasRenderer = new egret.CanvasRenderer();
                     node.$canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
                 }
-                else {
+                else if (node.dirtyRender) {
                     node.$canvasRenderBuffer.resize(width, height, true);
                 }
                 if (!node.$canvasRenderBuffer.context) {
