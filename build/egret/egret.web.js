@@ -5475,6 +5475,7 @@ var egret;
              * 获取指定坐标的像素
              */
             p.getPixel = function (x, y) {
+                //todo 标记脏避免每次绘制到canvas
                 var canvas = sharedCanvas;
                 var context = canvas.getContext("2d");
                 canvas.width = this.surface.width;
@@ -5521,6 +5522,8 @@ var egret;
             };
             p.initWebGL = function () {
                 this.onResize();
+                this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
+                this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
                 var numVerts = this.size * 4 * this.vertSize;
                 var numIndices = this.size * 6;
                 this.vertices = new Float32Array(numVerts);
@@ -5535,6 +5538,14 @@ var egret;
                 }
                 this.getWebGLContext();
                 this.shaderManager = new web.WebGLShaderManager(this.context);
+            };
+            p.handleContextLost = function () {
+                this.contextLost = true;
+            };
+            p.handleContextRestored = function () {
+                this.initWebGL();
+                this.shaderManager.setContext(this.context);
+                this.contextLost = false;
             };
             p.getWebGLContext = function () {
                 var options = {
@@ -5597,6 +5608,9 @@ var egret;
                 var textureSourceHeight = texture.height;
                 this.createWebGLTexture(texture);
                 var webGLTexture = texture["webGLTexture"][this.glID];
+                if (!webGLTexture) {
+                    return;
+                }
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
                     this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
@@ -5742,9 +5756,15 @@ var egret;
                 }
                 if (!bitmapData.webGLTexture[this.glID]) {
                     var gl = this.context;
-                    bitmapData.webGLTexture[this.glID] = gl.createTexture();
-                    bitmapData.webGLTexture[this.glID].glContext = gl;
-                    gl.bindTexture(gl.TEXTURE_2D, bitmapData.webGLTexture[this.glID]);
+                    var glTexture = gl.createTexture();
+                    bitmapData.webGLTexture[this.glID] = glTexture;
+                    if (!glTexture) {
+                        //先创建texture失败,然后lost事件才发出来..
+                        this.contextLost = true;
+                        return;
+                    }
+                    glTexture.glContext = gl;
+                    gl.bindTexture(gl.TEXTURE_2D, glTexture);
                     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
