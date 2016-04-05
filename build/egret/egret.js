@@ -2247,6 +2247,7 @@ var egret;
                 node.cleanBeforeRender();
                 this.$render();
                 this.$removeFlags(128 /* InvalidRenderNodes */);
+                node = this.$renderNode;
             }
             return node;
         };
