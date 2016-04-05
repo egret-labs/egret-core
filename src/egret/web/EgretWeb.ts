@@ -91,7 +91,7 @@ module egret.web {
      * @param renderMode
      */
     function setRenderMode(renderMode:string):void {
-        if (renderMode == "webgl") {
+        if (renderMode == "webgl" && WebGLUtils.checkCanUseWebGL()) {
             sys.RenderBuffer = web.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();
             sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);

@@ -286,7 +286,7 @@ module egret.web {
                 stencil: true//设置可以使用模板（用于不规则遮罩）
             };
             var gl:any;
-            var names = ["experimental-webgl", "webgl"];
+            var names = ["webgl", "experimental-webgl"];
             for (var i = 0; i < names.length; i++) {
                 try {
                     gl = this.surface.getContext(names[i], options);

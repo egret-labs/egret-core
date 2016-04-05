@@ -3744,7 +3744,7 @@ var egret;
          * @param renderMode
          */
         function setRenderMode(renderMode) {
-            if (renderMode == "webgl") {
+            if (renderMode == "webgl" && web.WebGLUtils.checkCanUseWebGL()) {
                 egret.sys.RenderBuffer = web.WebGLRenderBuffer;
                 egret.sys.systemRenderer = new web.WebGLRenderer();
                 egret.sys.hitTestBuffer = new web.WebGLRenderBuffer(3, 3);
@@ -5552,7 +5552,7 @@ var egret;
                     stencil: true //设置可以使用模板（用于不规则遮罩）
                 };
                 var gl;
-                var names = ["experimental-webgl", "webgl"];
+                var names = ["webgl", "experimental-webgl"];
                 for (var i = 0; i < names.length; i++) {
                     try {
                         gl = this.surface.getContext(names[i], options);
