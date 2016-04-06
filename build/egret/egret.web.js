@@ -5424,6 +5424,7 @@ var egret;
                 sharedBuffer.context = oldContext;
                 sharedBuffer.surface = oldSurface;
                 sharedBuffer.resize(1, 1);
+                this.initWebGL();
             };
             /**
              * 清空并设置裁切
@@ -5544,7 +5545,7 @@ var egret;
             };
             p.handleContextRestored = function () {
                 this.initWebGL();
-                this.shaderManager.setContext(this.context);
+                //this.shaderManager.setContext(this.context);
                 this.contextLost = false;
             };
             p.getWebGLContext = function () {

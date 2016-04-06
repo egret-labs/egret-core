@@ -129,6 +129,7 @@ module egret.web {
             sharedBuffer.context = oldContext;
             sharedBuffer.surface = oldSurface;
             sharedBuffer.resize(1, 1);
+            this.initWebGL();
         }
 
         /**
@@ -277,7 +278,7 @@ module egret.web {
 
         private handleContextRestored() {
             this.initWebGL();
-            this.shaderManager.setContext(this.context);
+            //this.shaderManager.setContext(this.context);
             this.contextLost = false;
         }
 
