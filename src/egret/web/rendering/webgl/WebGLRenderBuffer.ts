@@ -569,6 +569,10 @@ module egret.web {
             this.globalMatrix.append(a, b, c, d, tx, ty);
         }
 
+        public translate(dx:number, dy:number):void {
+            this.globalMatrix.translate(dx, dy);
+        }
+
         public saveTransform():void {
             this.savedGlobalMatrix.copyFrom(this.globalMatrix);
         }

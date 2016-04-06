@@ -4210,7 +4210,13 @@ var egret;
             var offsetY = Math.round(bitmapData._offsetY);
             var bitmapWidth = bitmapData._bitmapWidth;
             var bitmapHeight = bitmapData._bitmapHeight;
-            buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+            if (buffer.context.drawImage) {
+                buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+            }
+            else {
+                buffer.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+                buffer.$drawWebGL();
+            }
             return surface;
         }
         /**
@@ -4244,13 +4250,19 @@ var egret;
             var buffer = egret.sys.hitTestBuffer;
             buffer.resize(3, 3);
             var context = buffer.context;
+            if (!context.translate) {
+                context = buffer;
+            }
             context.translate(1 - x, 1 - y);
             var width = this._bitmapWidth;
             var height = this._bitmapHeight;
             var scale = egret.$TextureScaleFactor;
             context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight, this._offsetX, this._offsetY, width * scale, height * scale);
+            if (context.$drawWebGL) {
+                context.$drawWebGL();
+            }
             try {
-                var data = context.getImageData(1, 1, 1, 1).data;
+                var data = buffer.getPixel(1, 1);
             }
             catch (e) {
                 console.log(this);
@@ -5783,6 +5795,9 @@ var egret;
             };
             p.transform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.append(a, b, c, d, tx, ty);
+            };
+            p.translate = function (dx, dy) {
+                this.globalMatrix.translate(dx, dy);
             };
             p.saveTransform = function () {
                 this.savedGlobalMatrix.copyFrom(this.globalMatrix);

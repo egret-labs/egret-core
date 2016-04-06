@@ -62,8 +62,15 @@ module egret.web {
         var offsetY:number = Math.round(bitmapData._offsetY);
         var bitmapWidth:number = bitmapData._bitmapWidth;
         var bitmapHeight:number = bitmapData._bitmapHeight;
-        buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
-            bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+        if(buffer.context.drawImage) {
+            buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+                bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+        }
+        else {//webgl
+            (<WebGLRenderBuffer><any>buffer).drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+                bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+            (<WebGLRenderBuffer><any>buffer).$drawWebGL();
+        }
 
         return surface;
     }
@@ -102,21 +109,27 @@ module egret.web {
     function getPixel32(x:number, y:number):number[] {
         var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
         buffer.resize(3, 3);
-        var context = buffer.context;
+        var context:any = buffer.context;
+        if(!context.translate) {//webgl
+            context = buffer;
+        }
         context.translate(1 - x, 1 - y);
         var width = this._bitmapWidth;
         var height = this._bitmapHeight;
         var scale = $TextureScaleFactor;
         context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight,
             this._offsetX, this._offsetY, width * scale, height * scale);
+        if(context.$drawWebGL) {//webgl
+            context.$drawWebGL();
+        }
         try {
-            var data = context.getImageData(1, 1, 1, 1).data;
+            var data = buffer.getPixel(1, 1);
         }
         catch (e) {
             console.log(this);
             throw new Error(sys.tr(1039));
         }
-        return <number[]><any>data;
+        return data;
     }
 
     Texture.prototype.toDataURL = toDataURL;
