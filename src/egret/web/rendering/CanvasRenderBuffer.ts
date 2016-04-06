@@ -221,6 +221,4 @@ module egret.web {
             this.surface.width = this.surface.height = 0;
         }
     }
-
-    sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
 }

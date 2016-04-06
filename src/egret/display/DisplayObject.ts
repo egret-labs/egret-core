@@ -1894,6 +1894,7 @@ module egret {
                 node.cleanBeforeRender();
                 this.$render();
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidRenderNodes);
+                node = this.$renderNode;
             }
             return node;
         }

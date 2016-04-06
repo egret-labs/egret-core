@@ -75,11 +75,11 @@ module egret.web {
         var length = list.length;
         for (var i = 0; i < length; i++) {
             var container = <HTMLDivElement>list[i];
-            var player = new WebPlayer(container);
+            var player = new WebPlayer(container, options);
             container["egret-player"] = player;
             //webgl模式关闭脏矩形
             if(options.renderMode == "webgl") {
-                player.$stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
+                player.stage.dirtyRegionPolicy = DirtyRegionPolicy.OFF;
                 egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
                 };
             }
@@ -91,13 +91,15 @@ module egret.web {
      * @param renderMode
      */
     function setRenderMode(renderMode:string):void {
-        if (renderMode == "webgl") {
+        if (renderMode == "webgl" && WebGLUtils.checkCanUseWebGL()) {
             sys.RenderBuffer = web.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();
+            sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
         }
         else {
             sys.RenderBuffer = web.CanvasRenderBuffer;
             sys.systemRenderer = new CanvasRenderer();
+            sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
         }
     }
 

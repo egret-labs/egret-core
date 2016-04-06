@@ -163,6 +163,7 @@ module egret.web {
             //else {
             //    this.maskPushed = false;
             //}
+            this.clear();
         }
 
         //private maskPushed:boolean;
@@ -183,6 +184,7 @@ module egret.web {
          * 获取指定坐标的像素
          */
         public getPixel(x:number, y:number):number[] {
+            //todo 标记脏避免每次绘制到canvas
             var canvas = sharedCanvas;
             var context = canvas.getContext("2d");
             canvas.width = this.surface.width;
@@ -247,6 +249,9 @@ module egret.web {
         private initWebGL():void {
             this.onResize();
 
+            this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
+            this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
+
             var numVerts = this.size * 4 * this.vertSize;
             var numIndices = this.size * 6;
 
@@ -266,12 +271,22 @@ module egret.web {
             this.shaderManager = new WebGLShaderManager(this.context);
         }
 
+        private handleContextLost() {
+            this.contextLost = true;
+        }
+
+        private handleContextRestored() {
+            this.initWebGL();
+            this.shaderManager.setContext(this.context);
+            this.contextLost = false;
+        }
+
         private getWebGLContext() {
             var options = {
                 stencil: true//设置可以使用模板（用于不规则遮罩）
             };
             var gl:any;
-            var names = ["experimental-webgl", "webgl"];
+            var names = ["webgl", "experimental-webgl"];
             for (var i = 0; i < names.length; i++) {
                 try {
                     gl = this.surface.getContext(names[i], options);
@@ -340,10 +355,16 @@ module egret.web {
             var textureSourceHeight = texture.height;
             this.createWebGLTexture(texture);
             var webGLTexture = texture["webGLTexture"][this.glID];
-            if (webGLTexture !== this.currentBaseTexture || this.currentBatchSize >= this.size - 1) {
-                //this.$drawWebGL();
+            if(!webGLTexture) {
+                return;
+            }
+            if(this.currentBatchSize >= this.size - 1) {
+                this.$drawWebGL();
+                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
+            }
+            else if (webGLTexture !== this.currentBaseTexture) {
                 this.currentBaseTexture = webGLTexture;
-                this.drawData.push({texture: this.currentBaseTexture, count: 0});
+                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
             }
 
             //计算出绘制矩阵，之后把矩阵还原回之前的
@@ -510,9 +531,15 @@ module egret.web {
             }
             if (!bitmapData.webGLTexture[this.glID]) {
                 var gl:any = this.context;
-                bitmapData.webGLTexture[this.glID] = gl.createTexture();
-                bitmapData.webGLTexture[this.glID].glContext = gl;
-                gl.bindTexture(gl.TEXTURE_2D, bitmapData.webGLTexture[this.glID]);
+                var glTexture = gl.createTexture();
+                bitmapData.webGLTexture[this.glID] = glTexture;
+                if(!glTexture) {
+                    //先创建texture失败,然后lost事件才发出来..
+                    this.contextLost = true;
+                    return;
+                }
+                glTexture.glContext = gl;
+                gl.bindTexture(gl.TEXTURE_2D, glTexture);
                 gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
@@ -751,6 +778,5 @@ module egret.web {
     }
 
     WebGLRenderBuffer.initBlendMode();
-    sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
     var sharedBuffer:WebGLRenderBuffer = new WebGLRenderBuffer();
 }

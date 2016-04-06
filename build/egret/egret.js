@@ -2247,6 +2247,7 @@ var egret;
                 node.cleanBeforeRender();
                 this.$render();
                 this.$removeFlags(128 /* InvalidRenderNodes */);
+                node = this.$renderNode;
             }
             return node;
         };
@@ -11424,6 +11425,9 @@ var egret;
     locale_strings[1016] = "{0}has been obsoleted";
     locale_strings[1017] = "The format of JSON file is incorrect: {0}\ndata: {1}";
     locale_strings[1018] = "the scale9Grid is not correct";
+    locale_strings[1019] = "Network ab:{0}";
+    locale_strings[1020] = "Cannot initialize Shader";
+    locale_strings[1021] = "Current browser does not support webgl";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "This method is not available in the ScrollView!";
     locale_strings[1025] = "end of the file";
@@ -11560,6 +11564,9 @@ var egret;
     locale_strings[1016] = "{0}已经废弃";
     locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
     locale_strings[1018] = "9宫格设置错误";
+    locale_strings[1019] = "网络异常:{0}";
+    locale_strings[1020] = "无法初始化着色器";
+    locale_strings[1021] = "当前浏览器不支持webgl";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
     locale_strings[1025] = "遇到文件尾";
@@ -15889,8 +15896,8 @@ var egret;
                         context.fillStyle = forHitTest ? BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
                         context.save();
                         var m = g.matrix;
-                        context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         this.renderPath(path, context);
+                        context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         context.fill();
                         context.restore();
                         break;
@@ -19023,6 +19030,14 @@ var egret;
                         strokePath.lineTo(x + w, y);
                     }
                 }
+            }
+            if (graphics) {
+                var bounds = this.$getRenderBounds();
+                graphics.x = bounds.x;
+                graphics.y = bounds.y;
+                graphics.width = bounds.width;
+                graphics.height = bounds.height;
+                egret.Rectangle.release(bounds);
             }
         };
         /**
