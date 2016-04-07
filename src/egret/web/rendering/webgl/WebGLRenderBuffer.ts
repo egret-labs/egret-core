@@ -361,6 +361,7 @@ module egret.web {
             }
             if(this.currentBatchSize >= this.size - 1) {
                 this.$drawWebGL();
+                this.currentBaseTexture = webGLTexture;
                 this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
             }
             else if (webGLTexture !== this.currentBaseTexture) {
