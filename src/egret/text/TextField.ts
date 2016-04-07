@@ -1802,7 +1802,7 @@ module egret {
                                         var words2:Array<string> = words[k].match(/./g);
                                         for (var k2 = 0, wl2 = words2.length; k2 < wl2; k2++) {
                                             w = measureTextWidth(words2[k2], values, element.style);
-                                            if(lineW+w>textFieldWidth){
+                                            if(k2>0 && lineW+w>textFieldWidth){
                                                 break;
                                             }
                                             charNum += words2[k2].length;
