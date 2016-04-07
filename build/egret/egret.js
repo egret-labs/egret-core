@@ -1709,26 +1709,29 @@ var egret;
             ,function (value) {
                 value = !!value;
                 this.$DisplayObject[11 /* cacheAsBitmap */] = value;
-                var hasDisplayList = !!this.$displayList;
-                if (hasDisplayList == value) {
-                    return;
-                }
-                if (value) {
-                    var displayList = egret.sys.DisplayList.create(this);
-                    if (displayList) {
-                        this.$displayList = displayList;
-                        if (this.$parentDisplayList) {
-                            this.$parentDisplayList.markDirty(displayList);
-                        }
-                        this.$cacheAsBitmapChanged();
+                this.$setHasDisplayList(value);
+            }
+        );
+        p.$setHasDisplayList = function (value) {
+            var hasDisplayList = !!this.$displayList;
+            if (hasDisplayList == value) {
+                return;
+            }
+            if (value) {
+                var displayList = egret.sys.DisplayList.create(this);
+                if (displayList) {
+                    this.$displayList = displayList;
+                    if (this.$parentDisplayList) {
+                        this.$parentDisplayList.markDirty(displayList);
                     }
-                }
-                else {
-                    this.$displayList = null;
                     this.$cacheAsBitmapChanged();
                 }
             }
-        );
+            else {
+                this.$displayList = null;
+                this.$cacheAsBitmapChanged();
+            }
+        };
         /**
          * @private
          * cacheAsBitmap属性改变
