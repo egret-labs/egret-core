@@ -287,6 +287,8 @@ module egret.web {
                 stencil: true//设置可以使用模板（用于不规则遮罩）
             };
             var gl:any;
+            //todo 是否使用chrome源码names
+            //var contextNames = ["moz-webgl", "webkit-3d", "experimental-webgl", "webgl", "3d"];
             var names = ["webgl", "experimental-webgl"];
             for (var i = 0; i < names.length; i++) {
                 try {
