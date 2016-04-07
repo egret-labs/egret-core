@@ -3748,6 +3748,8 @@ var egret;
                 egret.sys.RenderBuffer = web.WebGLRenderBuffer;
                 egret.sys.systemRenderer = new web.WebGLRenderer();
                 egret.sys.hitTestBuffer = new web.WebGLRenderBuffer(3, 3);
+                //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
+                egret.DisplayObject.prototype.$setHasDisplayList = function () { };
             }
             else {
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;

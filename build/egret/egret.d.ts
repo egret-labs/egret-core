@@ -990,6 +990,7 @@ declare module egret {
          * @platform Web,Native
          */
         cacheAsBitmap: boolean;
+        $setHasDisplayList(value: boolean): void;
         /**
          * @private
          * cacheAsBitmap属性改变

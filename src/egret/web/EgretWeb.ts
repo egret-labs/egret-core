@@ -95,6 +95,8 @@ module egret.web {
             sys.RenderBuffer = web.WebGLRenderBuffer;
             sys.systemRenderer = new WebGLRenderer();
             sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
+            //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
+            DisplayObject.prototype.$setHasDisplayList = function(){};
         }
         else {
             sys.RenderBuffer = web.CanvasRenderBuffer;
