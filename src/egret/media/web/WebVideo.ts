@@ -141,14 +141,13 @@ module egret.web {
             video.style.position = "absolute";
             video.style.top = "0px";
             video.style.left = "0px";
-            video.height = this.heightSet;
-            video.width = this.widthSet;
+            video.height = video.videoHeight;
+            video.width = video.videoWidth;
             if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
                 setTimeout(function () {//为了解决视频返回挤压页面内容
                     video.width = 0;
                 }, 1000);
             }
-
 
             this.checkFullScreen(this._fullscreen);
         }
@@ -486,7 +485,8 @@ module egret.web {
          */
         $setHeight(value:number):boolean {
             this.heightSet = +value || 0;
-
+            this.$invalidate();
+            this.$invalidateContentBounds();
             return super.$setHeight(value);
         }
 
@@ -496,7 +496,8 @@ module egret.web {
          */
         $setWidth(value:number):boolean {
             this.widthSet = +value || 0;
-
+            this.$invalidate();
+            this.$invalidateContentBounds();
             return super.$setWidth(value);
         }
 

@@ -1351,8 +1351,8 @@ var egret;
                 video.style.position = "absolute";
                 video.style.top = "0px";
                 video.style.left = "0px";
-                video.height = this.heightSet;
-                video.width = this.widthSet;
+                video.height = video.videoHeight;
+                video.width = video.videoWidth;
                 if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
                     setTimeout(function () {
                         video.width = 0;
@@ -1632,6 +1632,8 @@ var egret;
              */
             p.$setHeight = function (value) {
                 this.heightSet = +value || 0;
+                this.$invalidate();
+                this.$invalidateContentBounds();
                 return _super.prototype.$setHeight.call(this, value);
             };
             /**
@@ -1640,6 +1642,8 @@ var egret;
              */
             p.$setWidth = function (value) {
                 this.widthSet = +value || 0;
+                this.$invalidate();
+                this.$invalidateContentBounds();
                 return _super.prototype.$setWidth.call(this, value);
             };
             d(p, "paused"
