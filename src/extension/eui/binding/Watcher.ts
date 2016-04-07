@@ -155,7 +155,7 @@ module eui {
                 return true;
             }
             var isEventDispatcher = egret.is(host, "egret.IEventDispatcher");
-            if(!isEventDispatcher){
+            if(!isEventDispatcher && !host[listeners]){
                 host[listeners] = [];
             }
             var data:PropertyDescriptor = getPropertyDescriptor(host, property);
