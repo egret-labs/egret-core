@@ -1725,6 +1725,10 @@ var egret;
                     if (this._responseType == "text") {
                         return this._xhr.responseText;
                     }
+                    if (this._responseType == "arraybuffer" && /msie 9.0/i.test(navigator.userAgent)) {
+                        var w = window;
+                        return w.convertResponseBodyToText(this._xhr.responseBody);
+                    }
                     if (this._responseType == "document") {
                         return this._xhr.responseXML;
                     }
@@ -3735,12 +3739,6 @@ var egret;
                 var container = list[i];
                 var player = new web.WebPlayer(container, options);
                 container["egret-player"] = player;
-                //webgl模式关闭脏矩形
-                if (options.renderMode == "webgl") {
-                    player.stage.dirtyRegionPolicy = egret.DirtyRegionPolicy.OFF;
-                    egret.sys.DisplayList.prototype.setDirtyRegionPolicy = function () {
-                    };
-                }
             }
         }
         /**
@@ -3879,6 +3877,42 @@ var egret;
                     strings[1] = strings[1].toUpperCase();
                 }
                 capabilities.$language = strings.join("-");
+                WebCapability.injectUIntFixOnIE9();
+            };
+            WebCapability.injectUIntFixOnIE9 = function () {
+                if (/msie 9.0/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
+                    var IEBinaryToArray_ByteStr_Script = "<!-- IEBinaryToArray_ByteStr -->\r\n" +
+                        "<script type='text/vbscript' language='VBScript'>\r\n" +
+                        "Function IEBinaryToArray_ByteStr(Binary)\r\n" +
+                        "   IEBinaryToArray_ByteStr = CStr(Binary)\r\n" +
+                        "End Function\r\n" +
+                        "Function IEBinaryToArray_ByteStr_Last(Binary)\r\n" +
+                        "   Dim lastIndex\r\n" +
+                        "   lastIndex = LenB(Binary)\r\n" +
+                        "   if lastIndex mod 2 Then\r\n" +
+                        "       IEBinaryToArray_ByteStr_Last = Chr( AscB( MidB( Binary, lastIndex, 1 ) ) )\r\n" +
+                        "   Else\r\n" +
+                        "       IEBinaryToArray_ByteStr_Last = " + '""' + "\r\n" +
+                        "   End If\r\n" +
+                        "End Function\r\n" + "<\/script>\r\n" +
+                        "<!-- convertResponseBodyToText -->\r\n" +
+                        "<script>\r\n" +
+                        "var convertResponseBodyToText = function (binary) {\r\n" +
+                        "   var byteMapping = {};\r\n" +
+                        "   for ( var i = 0; i < 256; i++ ) {\r\n" +
+                        "       for ( var j = 0; j < 256; j++ ) {\r\n" +
+                        "           byteMapping[ String.fromCharCode( i + j * 256 ) ] =\r\n" +
+                        "           String.fromCharCode(i) + String.fromCharCode(j);\r\n" +
+                        "       }\r\n" +
+                        "   }\r\n" +
+                        "   var rawBytes = IEBinaryToArray_ByteStr(binary);\r\n" +
+                        "   var lastChr = IEBinaryToArray_ByteStr_Last(binary);\r\n" +
+                        "   return rawBytes.replace(/[\\s\\S]/g," +
+                        "                           function( match ) { return byteMapping[match]; }) + lastChr;\r\n" +
+                        "};\r\n" +
+                        "<\/script>\r\n";
+                    document.write(IEBinaryToArray_ByteStr_Script);
+                }
             };
             return WebCapability;
         }());
@@ -5344,6 +5378,11 @@ var egret;
         }
         var sharedCanvas = createCanvas();
         /**
+         * 用来存储上一帧图像的canvas
+         * */
+        var frameCanvas = createCanvas();
+        var frameCanvasContext = null;
+        /**
          * @private
          * WebGL渲染器
          */
@@ -5375,8 +5414,41 @@ var egret;
                 //todo 抽取出一个WebglRenderContext
                 this.surface = createCanvas(width, height);
                 this.initWebGL();
+                this.initFrameBuffer();
             }
             var d = __define,c=WebGLRenderBuffer,p=c.prototype;
+            /**
+             * 初始化帧缓存配置
+             * */
+            p.initFrameBuffer = function () {
+                var gl = this.context;
+                this.texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, this.texture);
+                //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.bindTexture(gl.TEXTURE_2D, null);
+                this.frameBuffer = gl.createFramebuffer();
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            };
+            /**
+             * 启用frameBuffer
+             * */
+            p.enableFrameBuffer = function () {
+                var gl = this.context;
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+            };
+            /**
+             * 禁用frameBuffer
+             * */
+            p.disableFrameBuffer = function () {
+                var gl = this.context;
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            };
             d(p, "width"
                 /**
                  * 渲染缓冲的宽度，以像素为单位。
@@ -5450,45 +5522,54 @@ var egret;
              * @param offsetX 矩形要加上的偏移量x
              * @param offsetY 矩形要加上的偏移量y
              */
+            var _first = true;
             p.beginClip = function (regions, offsetX, offsetY) {
-                //offsetX = +offsetX || 0;
-                //offsetY = +offsetY || 0;
-                ////var context = this.context;
-                //this.setTransform(1, 0, 0, 1, offsetX, offsetY);
-                //var length = regions.length;
-                ////只有一个区域且刚好为舞台大小时,不设置模板
-                //if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
-                //    regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
-                //    this.maskPushed = false;
-                //    return;
-                //}
-                //for (var i = 0; i < length; i++) {
-                //    var region = regions[i];
-                //    this.clearRect(region.minX, region.minY, region.width, region.height);
-                //}
-                //if (length > 0) {
-                //    this.context.viewport(0, 0, this.surface.width, this.surface.height);
-                //    this.pushMask(regions);
-                //    this.maskPushed = true;
-                //    this.offsetX = offsetX;
-                //    this.offsetY = offsetY;
-                //}
-                //else {
-                //    this.maskPushed = false;
-                //}
+                offsetX = +offsetX || 0;
+                offsetY = +offsetY || 0;
+                //var context = this.context;
+                this.setTransform(1, 0, 0, 1, offsetX, offsetY);
+                var length = regions.length;
+                //只有一个区域且刚好为舞台大小时,不设置模板
+                if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
+                    regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
+                    this.maskPushed = false;
+                    return;
+                }
                 this.clear();
+                // 绘制保存有上一帧图像的frameCanvas
+                //egret.web.WebGLUtils.deleteWebGLTexture(frameCanvas);
+                //this.drawImage(<BitmapData><any>frameCanvas, 0, 0, frameCanvas.width, frameCanvas.height, 0, 0, frameCanvas.width, frameCanvas.height);
+                if(!_first) {
+                    console.log(1);
+                    egret.web.WebGLUtils.deleteWebGLTexture(this.texture);
+                    this.__drawImage(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
+                }
+                _first = false;
+
+                // 擦除脏矩形区域
+                for (var i = 0; i < length; i++) {
+                    var region = regions[i];
+                    this.clearRect({ x: region.minX, y: region.minY, width: region.width, height: region.height });
+                }
+                if (length > 0) {
+                    this.pushMask(regions);
+                    this.maskPushed = true;
+                    this.offsetX = offsetX;
+                    this.offsetY = offsetY;
+                }
+                else {
+                    this.maskPushed = false;
+                }
+                //this.clear();
             };
-            //private maskPushed:boolean;
-            //private offsetX:number;
-            //private offsetY:number;
             /**
              * 取消上一次设置的clip。
              */
             p.endClip = function () {
-                //if (this.maskPushed) {
-                //    this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
-                //    this.popMask();
-                //}
+                if (this.maskPushed) {
+                    this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
+                    this.popMask();
+                }
             };
             /**
              * 获取指定坐标的像素
@@ -5514,18 +5595,22 @@ var egret;
              * 清空缓冲区数据
              */
             p.clear = function () {
-                this.clearRect(0, 0, this.surface.width, this.surface.height);
-            };
-            /**
-             * @private
-             */
-            p.clearRect = function (x, y, width, height) {
+                //this.clearRect(0, 0, this.surface.width, this.surface.height);
                 var gl = this.context;
                 gl.colorMask(true, true, true, true);
-                gl.viewport(x, y, width, height);
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
             };
+            ///**
+            // * @private
+            // */
+            //private clearRect(x:number, y:number, width:number, height:number):void {
+            //    var gl:any = this.context;
+            //    gl.colorMask(true, true, true, true);
+            //    gl.viewport(x, y, width, height);
+            //    gl.clearColor(0, 0, 0, 0);
+            //    gl.clear(gl.COLOR_BUFFER_BIT);
+            //}
             /**
              * 销毁绘制对象
              */
@@ -5713,6 +5798,94 @@ var egret;
                 this.currentBatchSize++;
                 this.drawData[this.drawData.length - 1].count++;
             };
+            p.__drawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+                var textureSourceWidth = this.surface.width;
+                var textureSourceHeight = this.surface.height;
+                var webGLTexture = this.texture;
+                if (!webGLTexture) {
+                    return;
+                }
+                if (this.currentBatchSize >= this.size - 1) {
+                    this.$drawWebGL();
+                    this.currentBaseTexture = webGLTexture;
+                    this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
+                }
+                else if (webGLTexture !== this.currentBaseTexture) {
+                    this.currentBaseTexture = webGLTexture;
+                    this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
+                }
+                //计算出绘制矩阵，之后把矩阵还原回之前的
+                var locWorldTransform = this.globalMatrix;
+                var originalA = locWorldTransform.a;
+                var originalB = locWorldTransform.b;
+                var originalC = locWorldTransform.c;
+                var originalD = locWorldTransform.d;
+                var originalTx = locWorldTransform.tx;
+                var originalTy = locWorldTransform.ty;
+                if (destX != 0 || destY != 0) {
+                    locWorldTransform.append(1, 0, 0, 1, destX, destY);
+                }
+                if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
+                    locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
+                }
+                var a = locWorldTransform.a;
+                var b = locWorldTransform.b;
+                var c = locWorldTransform.c;
+                var d = locWorldTransform.d;
+                var tx = locWorldTransform.tx;
+                var ty = locWorldTransform.ty;
+                locWorldTransform.a = originalA;
+                locWorldTransform.b = originalB;
+                locWorldTransform.c = originalC;
+                locWorldTransform.d = originalD;
+                locWorldTransform.tx = originalTx;
+                locWorldTransform.ty = originalTy;
+                var width = textureSourceWidth;
+                var height = textureSourceHeight;
+                var w = sourceWidth;
+                var h = sourceHeight;
+                sourceX = sourceX / width;
+                sourceY = sourceY / height;
+                sourceWidth = sourceWidth / width;
+                sourceHeight = sourceHeight / height;
+                var vertices = this.vertices;
+                var index = this.currentBatchSize * 4 * this.vertSize;
+                var alpha = this._globalAlpha;
+                // xy
+                vertices[index++] = tx;
+                vertices[index++] = ty;
+                // uv
+                vertices[index++] = sourceX;
+                vertices[index++] = sourceY;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = a * w + tx;
+                vertices[index++] = b * w + ty;
+                // uv
+                vertices[index++] = sourceWidth + sourceX;
+                vertices[index++] = sourceY;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = a * w + c * h + tx;
+                vertices[index++] = d * h + b * w + ty;
+                // uv
+                vertices[index++] = sourceWidth + sourceX;
+                vertices[index++] = sourceHeight + sourceY;
+                // alpha
+                vertices[index++] = alpha;
+                // xy
+                vertices[index++] = c * h + tx;
+                vertices[index++] = d * h + ty;
+                // uv
+                vertices[index++] = sourceX;
+                vertices[index++] = sourceHeight + sourceY;
+                // alpha
+                vertices[index++] = alpha;
+                this.currentBatchSize++;
+                this.drawData[this.drawData.length - 1].count++;
+            };
             p.$drawWebGL = function () {
                 if (this.currentBatchSize == 0 || this.contextLost) {
                     return;
@@ -5798,6 +5971,19 @@ var egret;
             };
             p.onRenderFinish = function () {
                 this.$drawCalls = 0;
+                // 把当前帧的图像存储到frameCanvas中
+                //if(!frameCanvasContext) {
+                //    frameCanvasContext = frameCanvas.getContext("2d");
+                //}
+                //frameCanvas.width = this.surface.width;
+                //frameCanvas.height = this.surface.height;
+                //frameCanvasContext.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+                //frameCanvasContext.drawImage(this.surface, 0, 0);
+                this.enableFrameBuffer();
+                egret.web.WebGLUtils.deleteWebGLTexture(this.surface);
+                this.drawImage(this.surface, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
+                this.$drawWebGL();
+                this.disableFrameBuffer();
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.setTo(a, b, c, d, tx, ty);
@@ -5895,6 +6081,37 @@ var egret;
                 this.updateGraphics(graphics);
                 this.shaderManager.activateShader(shader);
                 gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+                gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
+                gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
+                gl.uniform2f(shader.offsetVector, 0, 0);
+                gl.uniform3fv(shader.tintColor, [1, 1, 1]);
+                gl.uniform1f(shader.alpha, this._globalAlpha);
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
+                gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
+                gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false, 4 * 6, 2 * 4);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
+                gl.drawElements(gl.TRIANGLE_STRIP, this.graphicsIndices.length, gl.UNSIGNED_SHORT, 0);
+                this.shaderManager.activateShader(this.shaderManager.defaultShader);
+                this.currentBlendMode = null;
+                this.setGlobalCompositeOperation("source-over");
+            };
+            p.clearRect = function (graphics) {
+                this.$drawWebGL();
+                var gl = this.context;
+                var shader = this.shaderManager.primitiveShader;
+                if (!this.graphicsPoints) {
+                    this.graphicsPoints = [];
+                    this.graphicsIndices = [];
+                    this.graphicsBuffer = gl.createBuffer();
+                    this.graphicsIndexBuffer = gl.createBuffer();
+                }
+                else {
+                    this.graphicsPoints.length = 0;
+                    this.graphicsIndices.length = 0;
+                }
+                this.updateGraphics(graphics);
+                this.shaderManager.activateShader(shader);
+                gl.blendFunc(0, 771);
                 gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
                 gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
                 gl.uniform2f(shader.offsetVector, 0, 0);
