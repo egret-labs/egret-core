@@ -5378,11 +5378,6 @@ var egret;
         }
         var sharedCanvas = createCanvas();
         /**
-         * 用来存储上一帧图像的canvas
-         * */
-        var frameCanvas = createCanvas();
-        var frameCanvasContext = null;
-        /**
          * @private
          * WebGL渲染器
          */
@@ -5421,19 +5416,32 @@ var egret;
              * 初始化帧缓存配置
              * */
             p.initFrameBuffer = function () {
+                this._initFrameTexture();
+                this._initFrameBuffer();
+            };
+            p._initFrameTexture = function () {
                 var gl = this.context;
                 this.texture = gl.createTexture();
                 gl.bindTexture(gl.TEXTURE_2D, this.texture);
-                //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.surface.width, this.surface.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 gl.bindTexture(gl.TEXTURE_2D, null);
+            };
+            p._initFrameBuffer = function () {
+                var gl = this.context;
                 this.frameBuffer = gl.createFramebuffer();
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            };
+            p.resizeFrameBuffer = function () {
+                var gl = this.context;
+                gl.bindTexture(gl.TEXTURE_2D, this.texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.surface.width, this.surface.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                gl.bindTexture(gl.TEXTURE_2D, null);
             };
             /**
              * 启用frameBuffer
@@ -5491,6 +5499,7 @@ var egret;
                         surface.height = height;
                     }
                 }
+                this.resizeFrameBuffer();
                 this.onResize();
                 this.clear();
             };
@@ -5522,11 +5531,9 @@ var egret;
              * @param offsetX 矩形要加上的偏移量x
              * @param offsetY 矩形要加上的偏移量y
              */
-            var _first = true;
             p.beginClip = function (regions, offsetX, offsetY) {
                 offsetX = +offsetX || 0;
                 offsetY = +offsetY || 0;
-                //var context = this.context;
                 this.setTransform(1, 0, 0, 1, offsetX, offsetY);
                 var length = regions.length;
                 //只有一个区域且刚好为舞台大小时,不设置模板
@@ -5535,22 +5542,12 @@ var egret;
                     this.maskPushed = false;
                     return;
                 }
-                this.clear();
-                // 绘制保存有上一帧图像的frameCanvas
-                //egret.web.WebGLUtils.deleteWebGLTexture(frameCanvas);
-                //this.drawImage(<BitmapData><any>frameCanvas, 0, 0, frameCanvas.width, frameCanvas.height, 0, 0, frameCanvas.width, frameCanvas.height);
-                if(!_first) {
-                    console.log(1);
-                    egret.web.WebGLUtils.deleteWebGLTexture(this.texture);
-                    this.__drawImage(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
-                }
-                _first = false;
-
                 // 擦除脏矩形区域
                 for (var i = 0; i < length; i++) {
                     var region = regions[i];
-                    this.clearRect({ x: region.minX, y: region.minY, width: region.width, height: region.height });
+                    this.clearRect(region.minX, region.minY, region.width, region.height);
                 }
+                // 设置模版
                 if (length > 0) {
                     this.pushMask(regions);
                     this.maskPushed = true;
@@ -5560,7 +5557,6 @@ var egret;
                 else {
                     this.maskPushed = false;
                 }
-                //this.clear();
             };
             /**
              * 取消上一次设置的clip。
@@ -5595,22 +5591,46 @@ var egret;
              * 清空缓冲区数据
              */
             p.clear = function () {
-                //this.clearRect(0, 0, this.surface.width, this.surface.height);
                 var gl = this.context;
                 gl.colorMask(true, true, true, true);
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
             };
-            ///**
-            // * @private
-            // */
-            //private clearRect(x:number, y:number, width:number, height:number):void {
-            //    var gl:any = this.context;
-            //    gl.colorMask(true, true, true, true);
-            //    gl.viewport(x, y, width, height);
-            //    gl.clearColor(0, 0, 0, 0);
-            //    gl.clear(gl.COLOR_BUFFER_BIT);
-            //}
+            /**
+             * @private
+             */
+            p.clearRect = function (x, y, width, height) {
+                this.$drawWebGL();
+                var gl = this.context;
+                var shader = this.shaderManager.primitiveShader;
+                if (!this.graphicsPoints) {
+                    this.graphicsPoints = [];
+                    this.graphicsIndices = [];
+                    this.graphicsBuffer = gl.createBuffer();
+                    this.graphicsIndexBuffer = gl.createBuffer();
+                }
+                else {
+                    this.graphicsPoints.length = 0;
+                    this.graphicsIndices.length = 0;
+                }
+                this.updateGraphics({ x: x, y: y, width: width, height: height });
+                this.shaderManager.activateShader(shader);
+                this.setGlobalCompositeOperation("destination-out");
+                this.$drawWebGL();
+                gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
+                gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
+                gl.uniform2f(shader.offsetVector, 0, 0);
+                gl.uniform3fv(shader.tintColor, [1, 1, 1]);
+                gl.uniform1f(shader.alpha, this._globalAlpha);
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
+                gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
+                gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false, 4 * 6, 2 * 4);
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
+                gl.drawElements(gl.TRIANGLE_STRIP, this.graphicsIndices.length, gl.UNSIGNED_SHORT, 0);
+                this.shaderManager.activateShader(this.shaderManager.defaultShader);
+                this.currentBlendMode = null;
+                this.setGlobalCompositeOperation("source-over");
+            };
             /**
              * 销毁绘制对象
              */
@@ -5798,10 +5818,16 @@ var egret;
                 this.currentBatchSize++;
                 this.drawData[this.drawData.length - 1].count++;
             };
-            p.__drawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+            /**
+             * 将texture放入渲染队列,此方法不会调用createWebGLTexture,所以不缓存texture
+             * */
+            p.drawTexture = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+                if (this.contextLost) {
+                    return;
+                }
                 var textureSourceWidth = this.surface.width;
                 var textureSourceHeight = this.surface.height;
-                var webGLTexture = this.texture;
+                var webGLTexture = texture;
                 if (!webGLTexture) {
                     return;
                 }
@@ -5971,19 +5997,12 @@ var egret;
             };
             p.onRenderFinish = function () {
                 this.$drawCalls = 0;
-                // 把当前帧的图像存储到frameCanvas中
-                //if(!frameCanvasContext) {
-                //    frameCanvasContext = frameCanvas.getContext("2d");
-                //}
-                //frameCanvas.width = this.surface.width;
-                //frameCanvas.height = this.surface.height;
-                //frameCanvasContext.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
-                //frameCanvasContext.drawImage(this.surface, 0, 0);
-                this.enableFrameBuffer();
-                egret.web.WebGLUtils.deleteWebGLTexture(this.surface);
-                this.drawImage(this.surface, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
-                this.$drawWebGL();
+                // 存储当前帧
                 this.disableFrameBuffer();
+                this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height); // 翻转,因为从frameBuffer中读出的图片是正的
+                this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
+                this.$drawWebGL();
+                this.enableFrameBuffer();
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.setTo(a, b, c, d, tx, ty);
@@ -6081,37 +6100,6 @@ var egret;
                 this.updateGraphics(graphics);
                 this.shaderManager.activateShader(shader);
                 gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-                gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
-                gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
-                gl.uniform2f(shader.offsetVector, 0, 0);
-                gl.uniform3fv(shader.tintColor, [1, 1, 1]);
-                gl.uniform1f(shader.alpha, this._globalAlpha);
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
-                gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
-                gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false, 4 * 6, 2 * 4);
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
-                gl.drawElements(gl.TRIANGLE_STRIP, this.graphicsIndices.length, gl.UNSIGNED_SHORT, 0);
-                this.shaderManager.activateShader(this.shaderManager.defaultShader);
-                this.currentBlendMode = null;
-                this.setGlobalCompositeOperation("source-over");
-            };
-            p.clearRect = function (graphics) {
-                this.$drawWebGL();
-                var gl = this.context;
-                var shader = this.shaderManager.primitiveShader;
-                if (!this.graphicsPoints) {
-                    this.graphicsPoints = [];
-                    this.graphicsIndices = [];
-                    this.graphicsBuffer = gl.createBuffer();
-                    this.graphicsIndexBuffer = gl.createBuffer();
-                }
-                else {
-                    this.graphicsPoints.length = 0;
-                    this.graphicsIndices.length = 0;
-                }
-                this.updateGraphics(graphics);
-                this.shaderManager.activateShader(shader);
-                gl.blendFunc(0, 771);
                 gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
                 gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
                 gl.uniform2f(shader.offsetVector, 0, 0);
