@@ -115,8 +115,8 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
 
 文档与教程
 -------------------------
-* 访问 Egret 的 [文档](http://edn.egret.com/cn/index.php/list/index/id/19)
-* 访问 [这里](http://edn.egret.com/cn/index.php/apidoc/) 获取 API 文档
+* 访问 Egret 的 [文档](http://edn.egret.com/cn/docs/)
+* 访问 [这里](http://edn.egret.com/cn/apidoc/) 获取 API 文档
 * 访问 [这里](https://github.com/egret-team/egret-examples) 获取示例项目
 
 第三方库
