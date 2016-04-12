@@ -5257,8 +5257,8 @@ var egret;
             var node = this.$renderNode;
             node.x = this.minX;
             node.y = this.minY;
-            node.width = this.maxX - this.minX;
-            node.height = this.maxY - this.minY;
+            node.width = Math.ceil(this.maxX - this.minX);
+            node.height = Math.ceil(this.maxY - this.minY);
         };
         /**
          * 更新当前的lineX和lineY值，并标记尺寸失效。
@@ -19140,8 +19140,8 @@ var egret;
             var node = this.textNode;
             node.x = bounds.x;
             node.y = bounds.y;
-            node.width = bounds.width;
-            node.height = bounds.height;
+            node.width = Math.ceil(bounds.width);
+            node.height = Math.ceil(bounds.height);
             egret.Rectangle.release(bounds);
         };
         d(p, "textFlow"

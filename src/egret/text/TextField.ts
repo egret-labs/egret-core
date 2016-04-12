@@ -1535,8 +1535,8 @@ module egret {
             var node = this.textNode;
             node.x = bounds.x;
             node.y = bounds.y;
-            node.width = bounds.width;
-            node.height = bounds.height;
+            node.width = Math.ceil(bounds.width);
+            node.height = Math.ceil(bounds.height);
             Rectangle.release(bounds);
         }
 

@@ -118,6 +118,9 @@ var Build = (function () {
                 hasTmpTsFile = true;
                 FileUtil.save(tmpFilePath, "");
             }
+            else if(FileUtil.read(tmpFilePath) == "") {
+                hasTmpTsFile = true;
+            }
             options['compilerOptions'] = {target: 1};//ES5
             var compileFiles = libFiles.concat(files);
             if(hasTmpTsFile) {
