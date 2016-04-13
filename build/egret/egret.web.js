@@ -5417,6 +5417,7 @@ var egret;
              * */
             p.initFrameBuffer = function () {
                 this._initFrameTexture();
+                this._initStencilBuffer();
                 this._initFrameBuffer();
             };
             p._initFrameTexture = function () {
@@ -5430,11 +5431,18 @@ var egret;
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                 gl.bindTexture(gl.TEXTURE_2D, null);
             };
+            p._initStencilBuffer = function () {
+                var gl = this.context;
+                this.stencilBuffer = gl.createRenderbuffer();
+                gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
+                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
+            };
             p._initFrameBuffer = function () {
                 var gl = this.context;
                 this.frameBuffer = gl.createFramebuffer();
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
+                gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             };
             p.resizeFrameBuffer = function () {
@@ -5442,6 +5450,10 @@ var egret;
                 gl.bindTexture(gl.TEXTURE_2D, this.texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.surface.width, this.surface.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
                 gl.bindTexture(gl.TEXTURE_2D, null);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+                gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
+                gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             };
             /**
              * 启用frameBuffer
@@ -5998,11 +6010,14 @@ var egret;
             p.onRenderFinish = function () {
                 this.$drawCalls = 0;
                 // 存储当前帧
+                var gl = this.context;
                 this.disableFrameBuffer();
+                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
                 this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height); // 翻转,因为从frameBuffer中读出的图片是正的
                 this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
                 this.$drawWebGL();
                 this.enableFrameBuffer();
+                gl.enable(gl.STENCIL_TEST);
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.setTo(a, b, c, d, tx, ty);

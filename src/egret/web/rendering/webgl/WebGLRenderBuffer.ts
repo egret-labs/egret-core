@@ -70,6 +70,10 @@ module egret.web {
          * */
         public frameBuffer:WebGLFramebuffer;
         /**
+         * 模版缓存(绑定在frameBuffer上,当作stencilBuffer)
+         * */
+        public stencilBuffer:WebGLRenderbuffer;
+        /**
          * 帧缓存绑定的材质
          * */
         public texture:WebGLTexture;
@@ -78,6 +82,7 @@ module egret.web {
          * */
         public initFrameBuffer():void {
             this._initFrameTexture();
+            this._initStencilBuffer();
             this._initFrameBuffer();
         }
         private _initFrameTexture() {
@@ -91,11 +96,18 @@ module egret.web {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
+        private _initStencilBuffer() {
+            var gl = this.context;
+            this.stencilBuffer = gl.createRenderbuffer();
+            gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
+        }
         private _initFrameBuffer() {
             var gl = this.context;
             this.frameBuffer = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
         public resizeFrameBuffer() {
@@ -103,6 +115,11 @@ module egret.web {
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.surface.width, this.surface.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.bindTexture(gl.TEXTURE_2D, null);
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
         /**
          * 启用frameBuffer
@@ -763,11 +780,14 @@ module egret.web {
         public onRenderFinish():void {
             this.$drawCalls = 0;
             // 存储当前帧
+            var gl = this.context;
             this.disableFrameBuffer();
+            gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
             this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
             this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
             this.$drawWebGL();
             this.enableFrameBuffer();
+            gl.enable(gl.STENCIL_TEST);
         }
 
         private globalMatrix:Matrix = new Matrix();
