@@ -446,110 +446,25 @@ module egret.web {
             if(!webGLTexture) {
                 return;
             }
-            if(this.currentBatchSize >= this.size - 1) {
-                this.$drawWebGL();
-                this.currentBaseTexture = webGLTexture;
-                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
-            }
-            else if (webGLTexture !== this.currentBaseTexture) {
-                this.currentBaseTexture = webGLTexture;
-                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
-            }
-
-            //计算出绘制矩阵，之后把矩阵还原回之前的
-            var locWorldTransform = this.globalMatrix;
-            var originalA:number = locWorldTransform.a;
-            var originalB:number = locWorldTransform.b;
-            var originalC:number = locWorldTransform.c;
-            var originalD:number = locWorldTransform.d;
-            var originalTx:number = locWorldTransform.tx;
-            var originalTy:number = locWorldTransform.ty;
-            if (destX != 0 || destY != 0) {
-                locWorldTransform.append(1, 0, 0, 1, destX, destY);
-            }
-            if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
-                locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
-            }
-            var a:number = locWorldTransform.a;
-            var b:number = locWorldTransform.b;
-            var c:number = locWorldTransform.c;
-            var d:number = locWorldTransform.d;
-            var tx:number = locWorldTransform.tx;
-            var ty:number = locWorldTransform.ty;
-
-            locWorldTransform.a = originalA;
-            locWorldTransform.b = originalB;
-            locWorldTransform.c = originalC;
-            locWorldTransform.d = originalD;
-            locWorldTransform.tx = originalTx;
-            locWorldTransform.ty = originalTy;
-
-            var width:number = textureSourceWidth;
-            var height:number = textureSourceHeight;
-
-            var w:number = sourceWidth;
-            var h:number = sourceHeight;
-
-            sourceX = sourceX / width;
-            sourceY = sourceY / height;
-            sourceWidth = sourceWidth / width;
-            sourceHeight = sourceHeight / height;
-
-            var vertices:Float32Array = this.vertices;
-            var index:number = this.currentBatchSize * 4 * this.vertSize;
-            var alpha:number = this._globalAlpha;
-
-            // xy
-            vertices[index++] = tx;
-            vertices[index++] = ty;
-            // uv
-            vertices[index++] = sourceX;
-            vertices[index++] = sourceY;
-            // alpha
-            vertices[index++] = alpha;
-
-            // xy
-            vertices[index++] = a * w + tx;
-            vertices[index++] = b * w + ty;
-            // uv
-            vertices[index++] = sourceWidth + sourceX;
-            vertices[index++] = sourceY;
-            // alpha
-            vertices[index++] = alpha;
-
-            // xy
-            vertices[index++] = a * w + c * h + tx;
-            vertices[index++] = d * h + b * w + ty;
-            // uv
-            vertices[index++] = sourceWidth + sourceX;
-            vertices[index++] = sourceHeight + sourceY;
-            // alpha
-            vertices[index++] = alpha;
-
-            // xy
-            vertices[index++] = c * h + tx;
-            vertices[index++] = d * h + ty;
-            // uv
-            vertices[index++] = sourceX;
-            vertices[index++] = sourceHeight + sourceY;
-            // alpha
-            vertices[index++] = alpha;
-
-            this.currentBatchSize++;
-            this.drawData[this.drawData.length - 1].count++;
+            this.drawTexture(webGLTexture,
+                sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight)
         }
 
         /**
-         * 将texture放入渲染队列,此方法不会调用createWebGLTexture,所以不缓存texture
+         * @private
+         * 绘制webGL纹理
          * */
         private drawTexture(texture:WebGLTexture,
                             sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                            destX:number, destY:number, destWidth:number, destHeight:number):void {
+                            destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number):void {
             if (this.contextLost) {
                 return;
             }
-            var textureSourceWidth = this.surface.width;
-            var textureSourceHeight = this.surface.height;
+            if (!texture) {
+                return;
+            }
+            var textureSourceWidth = textureWidth;
+            var textureSourceHeight = textureHeight;
             var webGLTexture = <Texture>texture;
             if(!webGLTexture) {
                 return;
@@ -758,7 +673,7 @@ module egret.web {
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
             this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
             this._globalAlpha = 1;
-            this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
+            this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, this.surface.width, this.surface.height);
             this.$drawWebGL();
             this.enableFrameBuffer();
             if(this.maskPushed) {
