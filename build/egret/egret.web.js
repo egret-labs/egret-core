@@ -5987,6 +5987,7 @@ var egret;
                 this.disableFrameBuffer();
                 gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
                 this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height); // 翻转,因为从frameBuffer中读出的图片是正的
+                this._globalAlpha = 1;
                 this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
                 this.$drawWebGL();
                 this.enableFrameBuffer();
@@ -6559,6 +6560,7 @@ var egret;
                 buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                 buffer.pushMask(scrollRect);
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
+                buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
                 buffer.popMask();
                 egret.sys.Region.release(region);
                 egret.Matrix.release(m);
