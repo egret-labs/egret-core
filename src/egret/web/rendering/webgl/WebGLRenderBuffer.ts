@@ -55,6 +55,7 @@ module egret.web {
             this.surface = createCanvas(width, height);
             this.initWebGL();
             this.initFrameBuffer();
+            this.enableFrameBuffer();// 初始化后开启frameBuffer，保证第一帧绘制在frameBuffer上
         }
 
         /**
@@ -119,14 +120,19 @@ module egret.web {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
             gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            this.frameBufferBinding || gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
+        /**
+         * frameBuffer绑定标示
+         * */
+        private frameBufferBinding:boolean = false;
         /**
          * 启用frameBuffer
          * */
         public enableFrameBuffer():void {
             var gl = this.context;
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+            this.frameBufferBinding = true;
         }
         /**
          * 禁用frameBuffer
@@ -134,6 +140,7 @@ module egret.web {
         public disableFrameBuffer():void {
             var gl = this.context;
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            this.frameBufferBinding = false;
         }
 
         /**
@@ -258,14 +265,18 @@ module egret.web {
          * 获取指定坐标的像素
          */
         public getPixel(x:number, y:number):number[] {
-            //todo 标记脏避免每次绘制到canvas
-            var canvas = sharedCanvas;
-            var context = canvas.getContext("2d");
-            canvas.width = this.surface.width;
-            canvas.height = this.surface.height;
-            context.drawImage(this.surface, 0, 0);
-            //todo 宽度设置回去
-            return <number[]><any>context.getImageData(x, y, 1, 1).data;
+            // var canvas = sharedCanvas;
+            // var context = canvas.getContext("2d");
+            // canvas.width = this.surface.width;
+            // canvas.height = this.surface.height;
+            // context.drawImage(this.surface, 0, 0);
+            // return <number[]><any>context.getImageData(x, y, 1, 1).data;
+            var gl = this.context;
+            var pixels = new Uint8Array(4);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+            gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            this.frameBufferBinding || gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            return <number[]><any>pixels;
         }
 
         /**

@@ -5383,6 +5383,10 @@ var egret;
          */
         var WebGLRenderBuffer = (function () {
             function WebGLRenderBuffer(width, height) {
+                /**
+                 * frameBuffer绑定标示
+                 * */
+                this.frameBufferBinding = false;
                 this.glID = null;
                 this.size = 2000;
                 this.vertices = null;
@@ -5410,6 +5414,7 @@ var egret;
                 this.surface = createCanvas(width, height);
                 this.initWebGL();
                 this.initFrameBuffer();
+                this.enableFrameBuffer(); // 初始化后开启frameBuffer，保证第一帧绘制在frameBuffer上
             }
             var d = __define,c=WebGLRenderBuffer,p=c.prototype;
             /**
@@ -5453,7 +5458,7 @@ var egret;
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
                 gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
                 gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
-                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                this.frameBufferBinding || gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             };
             /**
              * 启用frameBuffer
@@ -5461,6 +5466,7 @@ var egret;
             p.enableFrameBuffer = function () {
                 var gl = this.context;
                 gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+                this.frameBufferBinding = true;
             };
             /**
              * 禁用frameBuffer
@@ -5468,6 +5474,7 @@ var egret;
             p.disableFrameBuffer = function () {
                 var gl = this.context;
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                this.frameBufferBinding = false;
             };
             d(p, "width"
                 /**
@@ -5583,14 +5590,18 @@ var egret;
              * 获取指定坐标的像素
              */
             p.getPixel = function (x, y) {
-                //todo 标记脏避免每次绘制到canvas
-                var canvas = sharedCanvas;
-                var context = canvas.getContext("2d");
-                canvas.width = this.surface.width;
-                canvas.height = this.surface.height;
-                context.drawImage(this.surface, 0, 0);
-                //todo 宽度设置回去
-                return context.getImageData(x, y, 1, 1).data;
+                // var canvas = sharedCanvas;
+                // var context = canvas.getContext("2d");
+                // canvas.width = this.surface.width;
+                // canvas.height = this.surface.height;
+                // context.drawImage(this.surface, 0, 0);
+                // return <number[]><any>context.getImageData(x, y, 1, 1).data;
+                var gl = this.context;
+                var pixels = new Uint8Array(4);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+                gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                this.frameBufferBinding || gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                return pixels;
             };
             /**
              * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
