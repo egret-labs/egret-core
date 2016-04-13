@@ -81,12 +81,12 @@ module egret.web {
          * 初始化帧缓存配置
          * */
         public initFrameBuffer():void {
-            this._initFrameTexture();
-            this._initStencilBuffer();
-            this._initFrameBuffer();
+            this.initFrameTexture();
+            this.initStencilBufferObject();
+            this.initFrameBufferObject();
         }
-        private _initFrameTexture() {
-            var gl = this.context;
+        private initFrameTexture():void {
+            var gl:any = this.context;
             this.texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.surface.width, this.surface.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
@@ -96,22 +96,22 @@ module egret.web {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
-        private _initStencilBuffer() {
-            var gl = this.context;
+        private initStencilBufferObject():void {
+            var gl:any = this.context;
             this.stencilBuffer = gl.createRenderbuffer();
             gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
         }
-        private _initFrameBuffer() {
-            var gl = this.context;
+        private initFrameBufferObject():void {
+            var gl:any = this.context;
             this.frameBuffer = gl.createFramebuffer();
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
             gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
-        public resizeFrameBuffer() {
-            var gl = this.context;
+        public resizeFrameBuffer():void {
+            var gl:any = this.context;
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.surface.width, this.surface.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
             gl.bindTexture(gl.TEXTURE_2D, null);
@@ -124,14 +124,14 @@ module egret.web {
         /**
          * 启用frameBuffer
          * */
-        public enableFrameBuffer() {
+        public enableFrameBuffer():void {
             var gl = this.context;
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
         }
         /**
          * 禁用frameBuffer
          * */
-        public disableFrameBuffer() {
+        public disableFrameBuffer():void {
             var gl = this.context;
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
@@ -290,46 +290,8 @@ module egret.web {
          * @private
          */
         private clearRect(x:number, y:number, width:number, height:number):void {
-            this.$drawWebGL();
-            var gl:any = this.context;
-            var shader = this.shaderManager.primitiveShader;
-
-            if (!this.graphicsPoints) {
-                this.graphicsPoints = [];
-                this.graphicsIndices = [];
-                this.graphicsBuffer = gl.createBuffer();
-                this.graphicsIndexBuffer = gl.createBuffer();
-            }
-            else {
-                this.graphicsPoints.length = 0;
-                this.graphicsIndices.length = 0;
-            }
-
-            this.updateGraphics({x: x, y: y, width: width, height: height});
-
-            this.shaderManager.activateShader(shader);
             this.setGlobalCompositeOperation("destination-out");
-            this.$drawWebGL();
-            gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
-
-            gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
-            gl.uniform2f(shader.offsetVector, 0, 0);
-
-            gl.uniform3fv(shader.tintColor, [1, 1, 1]);
-
-            gl.uniform1f(shader.alpha, this._globalAlpha);
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
-
-            gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
-            gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false, 4 * 6, 2 * 4);
-
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
-
-            gl.drawElements(gl.TRIANGLE_STRIP, this.graphicsIndices.length, gl.UNSIGNED_SHORT, 0);
-
-            this.shaderManager.activateShader(this.shaderManager.defaultShader);
-
-            this.currentBlendMode = null;
+            this.renderGraphics({x: x, y: y, width: width, height: height});
             this.setGlobalCompositeOperation("source-over");
         }
 
@@ -915,7 +877,7 @@ module egret.web {
             this.updateGraphics(graphics);
 
             this.shaderManager.activateShader(shader);
-            gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+            //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
             gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
 
             gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
@@ -936,7 +898,7 @@ module egret.web {
             this.shaderManager.activateShader(this.shaderManager.defaultShader);
 
             this.currentBlendMode = null;
-            this.setGlobalCompositeOperation("source-over");
+            //this.setGlobalCompositeOperation("source-over");
         }
 
         private matrixArray:Float32Array;
