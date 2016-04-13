@@ -42,7 +42,7 @@ module egret.web {
         return canvas;
     }
 
-    var sharedCanvas:HTMLCanvasElement = createCanvas();
+    var sharedCanvas:HTMLCanvasElement;
 
     /**
      * @private
@@ -117,6 +117,9 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+            if(!sharedBuffer) {
+                sharedBuffer = new WebGLRenderBuffer()
+            }
             var newBuffer = sharedBuffer;
             var oldSurface = this.surface;
             var oldContext = this.context;
@@ -186,6 +189,9 @@ module egret.web {
          */
         public getPixel(x:number, y:number):number[] {
             //todo 标记脏避免每次绘制到canvas
+            if(!sharedCanvas) {
+                sharedCanvas = createCanvas();
+            }
             var canvas = sharedCanvas;
             var context = canvas.getContext("2d");
             canvas.width = this.surface.width;
@@ -786,5 +792,5 @@ module egret.web {
     }
 
     WebGLRenderBuffer.initBlendMode();
-    var sharedBuffer:WebGLRenderBuffer = new WebGLRenderBuffer();
+    var sharedBuffer:WebGLRenderBuffer;
 }

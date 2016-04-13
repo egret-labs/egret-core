@@ -2399,6 +2399,7 @@ var egret;
                 egret.sys.RenderBuffer = native.NativeRenderTextureRenderBuffer;
             }
             egret.sys.systemRenderer = new egret.CanvasRenderer();
+            egret.Capabilities.renderMode = "canvas";
         }
         function updateAllScreens() {
             var length = playerList.length;

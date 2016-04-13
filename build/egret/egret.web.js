@@ -2821,6 +2821,9 @@ var egret;
          * @param italic 是否斜体
          */
         function measureText(text, fontFamily, fontSize, bold, italic) {
+            if (!context) {
+                createContext();
+            }
             var font = "";
             if (italic)
                 font += "italic ";
@@ -2843,12 +2846,16 @@ var egret;
          * @private
          */
         function createContext() {
-            var canvas = document.createElement("canvas");
-            context = canvas.getContext("2d");
+            if (egret.Capabilities.renderMode == "canvas") {
+                context = egret.sys.hitTestBuffer.context;
+            }
+            else {
+                var canvas = document.createElement("canvas");
+                context = canvas.getContext("2d");
+            }
             context.textAlign = "left";
             context.textBaseline = "middle";
         }
-        createContext();
         egret.sys.measureText = measureText;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
@@ -2919,7 +2926,7 @@ var egret;
             }
             return canvas;
         }
-        var sharedCanvas = createCanvas();
+        var sharedCanvas;
         /**
          * @private
          * Canvas2D渲染缓冲
@@ -2991,6 +2998,9 @@ var egret;
              * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
              */
             p.resizeTo = function (width, height, offsetX, offsetY) {
+                if (!sharedCanvas) {
+                    sharedCanvas = createCanvas();
+                }
                 var oldContext = this.context;
                 var oldSurface = this.surface;
                 var newSurface = sharedCanvas;
@@ -3758,11 +3768,13 @@ var egret;
                 egret.sys.hitTestBuffer = new web.WebGLRenderBuffer(3, 3);
                 //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
                 egret.DisplayObject.prototype.$setHasDisplayList = function () { };
+                egret.Capabilities.renderMode = "webgl";
             }
             else {
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;
                 egret.sys.systemRenderer = new egret.CanvasRenderer();
                 egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
+                egret.Capabilities.renderMode = "canvas";
             }
         }
         /**
@@ -5382,7 +5394,7 @@ var egret;
             egret.$toBitmapData(canvas);
             return canvas;
         }
-        var sharedCanvas = createCanvas();
+        var sharedCanvas;
         /**
          * @private
          * WebGL渲染器
@@ -5470,6 +5482,9 @@ var egret;
              * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
              */
             p.resizeTo = function (width, height, offsetX, offsetY) {
+                if (!sharedBuffer) {
+                    sharedBuffer = new WebGLRenderBuffer();
+                }
                 var newBuffer = sharedBuffer;
                 var oldSurface = this.surface;
                 var oldContext = this.context;
@@ -5535,6 +5550,9 @@ var egret;
              */
             p.getPixel = function (x, y) {
                 //todo 标记脏避免每次绘制到canvas
+                if (!sharedCanvas) {
+                    sharedCanvas = createCanvas();
+                }
                 var canvas = sharedCanvas;
                 var context = canvas.getContext("2d");
                 canvas.width = this.surface.width;
@@ -6008,7 +6026,7 @@ var egret;
         web.WebGLRenderBuffer = WebGLRenderBuffer;
         egret.registerClass(WebGLRenderBuffer,'egret.web.WebGLRenderBuffer',["egret.sys.RenderBuffer"]);
         WebGLRenderBuffer.initBlendMode();
-        var sharedBuffer = new WebGLRenderBuffer();
+        var sharedBuffer;
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////

@@ -1531,6 +1531,7 @@ module egret {
 
             var underLines = this.drawText();
             this.fillBackground(underLines);
+            //tudo 宽高很小的情况下webgl模式绘制异常
             var bounds = this.$getRenderBounds();
             var node = this.textNode;
             node.x = bounds.x;

@@ -249,6 +249,22 @@ module egret {
                 Capabilities.supportVersion = version;
             }
         }
+
+        /***
+         * @language en_US
+         * current render mode
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 当前渲染模式
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        public static renderMode:string = "Unknown";
     }
 
     if (DEBUG) {

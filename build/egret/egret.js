@@ -16287,6 +16287,21 @@ var egret;
          * @platform Web,Native
          */
         Capabilities.supportVersion = "Unknown";
+        /***
+         * @language en_US
+         * current render mode
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 当前渲染模式
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        Capabilities.renderMode = "Unknown";
         return Capabilities;
     }());
     egret.Capabilities = Capabilities;
@@ -19136,6 +19151,7 @@ var egret;
             }
             var underLines = this.drawText();
             this.fillBackground(underLines);
+            //tudo 宽高很小的情况下webgl模式绘制异常
             var bounds = this.$getRenderBounds();
             var node = this.textNode;
             node.x = bounds.x;

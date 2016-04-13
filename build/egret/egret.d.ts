@@ -10727,6 +10727,21 @@ declare module egret {
          * 设置系统信息
          */
         static $setNativeCapabilities(value: string): void;
+        /***
+         * @language en_US
+         * current render mode
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        /***
+         * @language zh_CN
+         * 当前渲染模式
+         * @type {string}
+         * @version Egret 3.0.7
+         * @platform Web,Native
+         */
+        static renderMode: string;
     }
 }
 declare var testDeviceType: () => boolean;

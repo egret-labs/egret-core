@@ -65,7 +65,7 @@ module egret.web {
         return canvas;
     }
 
-    var sharedCanvas:HTMLCanvasElement = createCanvas();
+    var sharedCanvas:HTMLCanvasElement;
 
     /**
      * @private
@@ -147,6 +147,9 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+            if(!sharedCanvas) {
+                sharedCanvas = createCanvas();
+            }
             var oldContext = this.context;
             var oldSurface = this.surface;
             var newSurface = sharedCanvas;
