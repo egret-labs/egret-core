@@ -5548,16 +5548,16 @@ var egret;
                 offsetY = +offsetY || 0;
                 this.setTransform(1, 0, 0, 1, offsetX, offsetY);
                 var length = regions.length;
+                // 擦除脏矩形区域
+                for (var i = 0; i < length; i++) {
+                    var region = regions[i];
+                    this.clearRect(region.minX, region.minY, region.width, region.height);
+                }
                 //只有一个区域且刚好为舞台大小时,不设置模板
                 if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
                     regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
                     this.maskPushed = false;
                     return;
-                }
-                // 擦除脏矩形区域
-                for (var i = 0; i < length; i++) {
-                    var region = regions[i];
-                    this.clearRect(region.minX, region.minY, region.width, region.height);
                 }
                 // 设置模版
                 if (length > 0) {
@@ -5898,7 +5898,7 @@ var egret;
                 this.drawData[this.drawData.length - 1].count++;
             };
             p.$drawWebGL = function () {
-                if (this.currentBatchSize == 0 || this.contextLost) {
+                if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.contextLost) {
                     return;
                 }
                 this.start();
@@ -5990,7 +5990,9 @@ var egret;
                 this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
                 this.$drawWebGL();
                 this.enableFrameBuffer();
-                gl.enable(gl.STENCIL_TEST);
+                if (this.maskPushed) {
+                    gl.enable(gl.STENCIL_TEST);
+                }
             };
             p.setTransform = function (a, b, c, d, tx, ty) {
                 this.globalMatrix.setTo(a, b, c, d, tx, ty);
