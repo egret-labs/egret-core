@@ -226,10 +226,10 @@ module egret.sys {
             var minX:number, minY:number, maxX:number, maxY:number;
             //优化，通常情况下不缩放旋转的对象占多数，直接加上偏移量即可。
             if (a == 1.0 && b == 0.0 && c == 0.0 && d == 1.0) {
-                minX = Math.floor(x + tx) - 1;
-                minY = Math.floor(y + ty) - 1;
-                maxX = Math.ceil(xMax + tx) + 1;
-                maxY = Math.ceil(yMax + ty) + 1;
+                minX = x + tx - 1;
+                minY = y + ty - 1;
+                maxX = xMax + tx + 1;
+                maxY = yMax + ty + 1;
             }
             else {
                 var x0 = a * x + c * y + tx;
@@ -254,8 +254,8 @@ module egret.sys {
                     x3 = tmp;
                 }
 
-                minX = Math.floor(x0 < x2 ? x0 : x2) - 1;
-                maxX = Math.ceil(x1 > x3 ? x1 : x3) + 1;
+                minX = (x0 < x2 ? x0 : x2) - 1;
+                maxX = (x1 > x3 ? x1 : x3) + 1;
 
                 if (y0 > y1) {
                     tmp = y0;
@@ -268,8 +268,8 @@ module egret.sys {
                     y3 = tmp;
                 }
 
-                minY = Math.floor(y0 < y2 ? y0 : y2) - 1;
-                maxY = Math.ceil(y1 > y3 ? y1 : y3) + 1;
+                minY = (y0 < y2 ? y0 : y2) - 1;
+                maxY = (y1 > y3 ? y1 : y3) + 1;
             }
             this.minX = minX;
             this.minY = minY;

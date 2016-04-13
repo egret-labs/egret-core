@@ -103,11 +103,7 @@ module egret.sys {
          */
         public addRegion(target:Region):boolean {
             var minX = target.minX, minY = target.minY, maxX = target.maxX, maxY = target.maxY;
-            if (DEBUG) {
-                if (isF(minX) || isF(minY) || isF(maxX) || isF(maxY)) {
-                    log("addRegion error:", minX, minY, maxX, maxY);
-                }
-            }
+
             if (this.hasClipRect) {
                 if (minX < 0) {
                     minX = 0;
