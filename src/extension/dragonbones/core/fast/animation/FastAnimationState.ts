@@ -306,11 +306,20 @@ module dragonBones {
 			
 			this._isComplete = isThisComplete;
 
-			if(this.isUseCache()){
-				this.animationCache.update(this.progress);
+            //if (this.isUseCache()) {
+            if (this.animationCache) {
+                var frameIndex: number = Math.floor(this._progress * (this.animationCache.frameNum - 1));
+                this._armature._cacheFrameIndex = frameIndex;
+                this._armature._isFrameCached = this.animationCache._cahceList[frameIndex];
+                if (this._armature._isFrameCached) {
+                    //this.animationCache.update(this._progress);
+                }
+                else {
+                    this.updateTransformTimeline(this._progress);
+                }
 			}
 			else{
-				this.updateTransformTimeline(this._progress);
+                this.updateTransformTimeline(this._progress);
 			}
 			
 			//update main timeline
@@ -406,11 +415,11 @@ module dragonBones {
 		}
 		
 		private updateMainTimeline(isThisComplete:boolean):void{
-			var frameList:Array<Frame> = this.animationData.frameList;
+			var frameList:Array<Frame> = this.animationData._frameList;
 			if(frameList.length > 0){
 				var prevFrame:Frame;
 				var currentFrame:Frame;
-				for (var i:number = 0, l:number = this.animationData.frameList.length; i < l; ++i){
+                for (var i: number = 0, l: number = frameList.length; i < l; ++i){
 					if(this._currentFrameIndex < 0){
 						this._currentFrameIndex = 0;
 					}

@@ -368,7 +368,7 @@ module dragonBones {
 			
 			this._buildBones(outputArmature);
             outputArmature.buildIK();
-+			outputArmature.updateBoneCache();
+			outputArmature.updateBoneCache();
 			this._buildSlots(outputArmature, skinName, textureAtlasName);
 			
 			outputArmature.advanceTime(0);
@@ -393,9 +393,9 @@ module dragonBones {
 			
 			this._buildFastBones(outputArmature);
             outputArmature.buildIK();
-+			outputArmature.updateBoneCache();
-			this._buildFastSlots(outputArmature, skinName, textureAtlasName);
-			
+			outputArmature.updateBoneCache();
+            this._buildFastSlots(outputArmature, skinName, textureAtlasName);
+            outputArmature.updateSlotsZOrder();
 			outputArmature.advanceTime(0);
 			
 			return outputArmature;

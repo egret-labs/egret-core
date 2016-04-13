@@ -73,20 +73,20 @@ module dragonBones {
 		
 		public _frameCache:FrameCache;
 		
-		/** @private */
-		public updateByCache():void{
+        /** @private */
+        public updateByCache(frameIndex: number): void{
 			this._global = this._frameCache.globalTransform;
 			this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
 		}
 		
 		/** @private */
 		public switchTransformToBackup():void{
-			if(!this._globalBackup){
+			/*if(!this._globalBackup){
 				this._globalBackup = new DBTransform();
 				this._globalTransformMatrixBackup = new Matrix();
 			}
 			this._global = this._globalBackup;
-			this._globalTransformMatrix = this._globalTransformMatrixBackup;
+			this._globalTransformMatrix = this._globalTransformMatrixBackup;*/
 		}
 		
 		/**
@@ -109,9 +109,9 @@ module dragonBones {
 		}
 		
 		public constructor(){
-			this._globalTransformMatrix = new Matrix();
+            this._globalTransformMatrixBackup = this._globalTransformMatrix = new Matrix();
 			
-			this._global = new DBTransform();
+            this._globalBackup = this._global = new DBTransform();
 			this._origin = new DBTransform();
 			
 			this._visible = true;

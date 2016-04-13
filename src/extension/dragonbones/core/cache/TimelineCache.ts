@@ -88,7 +88,7 @@ module dragonBones {
 		public constructor(){
 		}
 		
-		public addFrame():void{
+        public addFrame(frameIndex: number, armature: FastArmature):void{
 		}
 		public update(frameIndex:number = 0):void{
 			this.currentFrameCache.copy(this.frameCacheList[frameIndex]);

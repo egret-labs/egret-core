@@ -150,9 +150,9 @@ module dragonBones {
 			}
 		}
 		
-		/** @private */
-		public updateByCache():void{
-			super.updateByCache();
+        /** @private */
+        public updateByCache(frameIndex: number): void{
+            super.updateByCache(frameIndex);
 			this._global = this._frameCache.globalTransform;
 			this._globalTransformMatrix = this._frameCache.globalTransformMatrix;
 		}

@@ -47,7 +47,7 @@ module dragonBones {
 		 */
 		public scale:number;
 		
-		private _frameList:Array<Frame>;
+        public _frameList:Array<Frame>;
 
 		/**
 		 * 初始化数据duration为0，scale为1

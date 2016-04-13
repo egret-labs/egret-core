@@ -59,7 +59,9 @@ module dragonBones {
 		 *帧声音
 		 * @member {string} dragonBones.Frame#sound
 		 */
-		public sound:string;
+        public sound: string;
+
+        public bone: string;
 
 		public curve:CurveData;
 

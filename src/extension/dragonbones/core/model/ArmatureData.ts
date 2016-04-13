@@ -50,6 +50,8 @@ module dragonBones {
 		private _skinDataList:Array<SkinData>;
 		private _slotDataList:Array<SlotData>;
 		private _animationDataList:Array<AnimationData>;
+        // Modify Fast mode by duanchunlei
+        public _cacheManager: AnimationCacheManager = null; // 标记缓存器是否已经生成过
         
         /**
          * 默认动画

@@ -150,7 +150,7 @@ module dragonBones {
             if(this._egretDisplay)
             {
 
-                this._egretDisplay.alpha = aMultiplier;
+                this._egretDisplay.$setAlpha(aMultiplier);
                 //todo apply colorTransform after engine support it.
             }
         }
@@ -169,20 +169,24 @@ module dragonBones {
                 const height = textureData.rotated ? rect.width : rect.height;
                 //const pivotX = width * displayData.pivot.x - (textureData.frame ? textureData.frame.x : 0);
                 //const pivotY = height * displayData.pivot.y - (textureData.frame ? textureData.frame.y : 0);
-                const pivotX = width * 0.5;
-                const pivotY = height * 0.5;
-                display.texture = textureAtlasTexture.getTexture(displayData.name);
+                const pivotX = displayData.pivot.x == displayData.pivot.x ? displayData.pivot.x : width * 0.5;
+                const pivotY = displayData.pivot.y == displayData.pivot.y ? displayData.pivot.y : height * 0.5;
+                if (!display.$visible) {
+                    display.$setVisible(true);
+                }
+                display.$setBitmapData(textureAtlasTexture.getTexture(displayData.name));
                 // display.readjustSize();
-                display.anchorOffsetX = pivotX;
-                display.anchorOffsetY = pivotY;
-                display.visible = true;
+                display.$setAnchorOffsetX(pivotX);
+                display.$setAnchorOffsetY(pivotY);
             }
             else {
-                display.texture = null;
+                if (display.$visible) {
+                    display.$setVisible(false);
+                }
+                display.$setBitmapData(null);
                 //display.readjustSize();
                 //display.anchorOffsetX = 0;
                 //display.anchorOffsetX = 0;
-                display.visible = false;
             }
         }
 

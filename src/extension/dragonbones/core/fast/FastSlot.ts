@@ -69,6 +69,8 @@ module dragonBones {
         public _displayList: Array<any> = [];
         public _displayDataList: Array<[DisplayData, TextureData]> = [];
 
+        public _cacheTimeline: SlotTimelineCache = null;
+
         public constructor(rawDisplay: any) {
             super();
             this.hasChildArmature = false;
@@ -115,17 +117,36 @@ module dragonBones {
 		
         //动画
         /** @private */
-        public updateByCache(frameIndex: number = 0): void {
-         
-            super.updateByCache();
-            this._updateTransform();
+        public updateByCache(frameIndex: number): void {
+            //var cacheTimeline = this.armature.animation.animationState.animationCache.slotTimelineCacheDic[this.name] as SlotTimelineCache;
+            var frameCache = this._cacheTimeline.frameCacheList[frameIndex];
+
+            var cacheDisplayIndex = (<SlotFrameCache><any>(frameCache)).displayIndex;
+            if (cacheDisplayIndex != this._displayIndex) {
+                //this.displayIndex = cacheDisplayIndex;
+                this._displayIndex = cacheDisplayIndex;
+                this.changeDisplay();
+            }
+
+            if (this._displayIndex < 0) {
+                return;
+            }
+
+            if (this._frameCache && frameCache.globalTransform == this._frameCache.globalTransform) {
+                this._frameCache = frameCache;
+            }
+            else {
+                this._frameCache = frameCache;
+                super.updateByCache(frameIndex);
+                this._updateTransform();
+            }
             
             //颜色
             var cacheColor: ColorTransform = (<SlotFrameCache><any>(this._frameCache)).colorTransform;
             var cacheColorChanged: boolean = cacheColor != null;
             if (
-                this.colorChanged != cacheColorChanged ||
-                (this.colorChanged && cacheColorChanged && !ColorTransformUtil.isEqual(this._colorTransform, cacheColor))
+                this._isColorChanged != cacheColorChanged ||
+                (this._isColorChanged && cacheColorChanged && !ColorTransformUtil.isEqual(this._colorTransform, cacheColor))
             ){
                 cacheColor = cacheColor || ColorTransformUtil.originalColor;
                 this._updateDisplayColor(
@@ -140,17 +161,21 @@ module dragonBones {
                     cacheColorChanged
                 );
             }
-            var cacheDisplayIndex = (<SlotFrameCache><any>(this._frameCache)).displayIndex;
-            if (cacheDisplayIndex != this._displayIndex) {
-                this.displayIndex = cacheDisplayIndex;
-            }
             
-            this.gotoAndPlay = (<SlotFrameCache><any>(this._frameCache)).gotoAndPlay;
+            var gotoAndPlay = (<SlotFrameCache><any>(this._frameCache)).gotoAndPlay;
+            if (this._gotoAndPlay != gotoAndPlay) {
+                this._gotoAndPlay = gotoAndPlay;
+                this.updateChildArmatureAnimation();
+            }
         }
 		
         /** @private */
         public _update(needUpdate: boolean = false): void {
             if (this._parent && (this._parent._needUpdate > 0 || needUpdate)) {
+                if (this._global != this._globalBackup) {
+                    this._global = this._globalBackup;
+                    this._globalTransformMatrix = this._globalTransformMatrixBackup;
+                }
                 var result: ParentTransformObject = this._updateGlobal();
                 if (result) {
                     result.release();
@@ -236,7 +261,13 @@ module dragonBones {
                         this._addDisplay();
                     }
                 }
+            }
 
+            if (this._display == this._rawDisplay) {
+                this._updateFrame();
+            }
+
+            if (this._display != prevDisplay) {
                 this._updateDisplayBlendMode(this._blendMode);
                 //this._updateVisible();
                 this._updateDisplayColor(
@@ -251,15 +282,11 @@ module dragonBones {
                 );
             }
 
-            if (this._display == this._rawDisplay) {
-                this._updateFrame();
-            }
-
             if (this._displayIndex >= 0) {
                 this._origin.copy(this._displayDataList[this._displayIndex][0].transform);
             }
-            if (this.armature && !this.armature._useCache)
-            {
+            
+            if (this.armature && !this.armature._isFrameCached) {
                 this._update(true);
             }
         }
@@ -559,9 +586,9 @@ module dragonBones {
         /** @private */
         public hideSlots(): void {
             this.displayIndex = -1;
-            if (this._frameCache) {
+            /*if (this._frameCache) {
                 this._frameCache.clear();
-            }
+            }*/
         }
 
         public _updateGlobal(): any {
