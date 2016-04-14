@@ -289,7 +289,7 @@ module egret.gui {
 
                 Bitmap.$drawImage(<sys.BitmapNode>this.$renderNode, bitmapData._bitmapData,
                     bitmapData._bitmapX, bitmapData._bitmapY, bitmapData._bitmapWidth, bitmapData._bitmapHeight, bitmapData._offsetX, bitmapData._offsetY, bitmapData.$getTextureWidth(), bitmapData.$getTextureHeight(),
-                    destW, destH, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
+                    destW, destH, bitmapData._sourceWidth, bitmapData._sourceHeight, this.scale9Grid || bitmapData["scale9Grid"], this.fillMode, this.$smoothing);
 			}
 			super.$render();
 		}
