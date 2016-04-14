@@ -76,6 +76,7 @@ module egret.web {
          * 帧缓存绑定的材质
          * */
         public texture:WebGLTexture;
+
         /**
          * 初始化帧缓存配置
          * */
@@ -84,6 +85,7 @@ module egret.web {
             this.initStencilBufferObject();
             this.initFrameBufferObject();
         }
+
         private initFrameTexture():void {
             var gl:any = this.context;
             this.texture = gl.createTexture();
@@ -95,12 +97,14 @@ module egret.web {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
+
         private initStencilBufferObject():void {
             var gl:any = this.context;
             this.stencilBuffer = gl.createRenderbuffer();
             gl.bindRenderbuffer(gl.RENDERBUFFER, this.stencilBuffer);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
         }
+
         private initFrameBufferObject():void {
             var gl:any = this.context;
             this.frameBuffer = gl.createFramebuffer();
@@ -109,6 +113,7 @@ module egret.web {
             gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_STENCIL_ATTACHMENT, gl.RENDERBUFFER, this.stencilBuffer);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
+
         public resizeFrameBuffer():void {
             var gl:any = this.context;
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
@@ -120,10 +125,12 @@ module egret.web {
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_STENCIL, this.surface.width, this.surface.height);
             this.frameBufferBinding || gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
+
         /**
          * frameBuffer绑定标示
          * */
         private frameBufferBinding:boolean = false;
+
         /**
          * 启用frameBuffer
          * */
@@ -132,6 +139,7 @@ module egret.web {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
             this.frameBufferBinding = true;
         }
+
         /**
          * 禁用frameBuffer
          * */
@@ -196,7 +204,7 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-            if(!sharedBuffer) {
+            if (!sharedBuffer) {
                 sharedBuffer = new WebGLRenderBuffer()
             }
             var newBuffer = sharedBuffer;
@@ -207,7 +215,9 @@ module egret.web {
             this.resize(Math.max(width, 257), Math.max(height, 257));
             this.setTransform(1, 0, 0, 1, 0, 0);
             this.setGlobalCompositeOperation("source-over");
-            this.drawImage(<any>oldSurface, 0, 0, oldSurface.width, oldSurface.height, offsetX, offsetY, oldSurface.width, oldSurface.height);
+            var oldSurfaceWidth = oldSurface.width;
+            var oldSurfaceHeight = oldSurface.height;
+            this.drawImage(<any>oldSurface, 0, 0, oldSurfaceWidth, oldSurfaceHeight, offsetX, offsetY, oldSurfaceWidth, oldSurfaceHeight, oldSurfaceWidth, oldSurfaceHeight);
             sharedBuffer.context = oldContext;
             sharedBuffer.surface = oldSurface;
             sharedBuffer.resize(1, 1);
@@ -406,12 +416,14 @@ module egret.web {
         }
 
         //Rendering Functions begin
-        public drawImage(image:BitmapData, offsetX:number, offsetY:number, width:number, height:number,
-                         surfaceOffsetX:number, surfaceOffsetY:number, surfaceImageWidth:number, surfaceImageHeight:number):void {
+        public drawImage(texture:BitmapData,
+                         sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
+                         destX:number, destY:number, destWidth:number, destHeight:number,
+                         textureSourceWidth:number, textureSourceHeight:number):void {
             if (this.contextLost) {
                 return;
             }
-            if (!image) {
+            if (!texture) {
                 return;
             }
             //if (this.filters) {
@@ -423,27 +435,19 @@ module egret.web {
             //        }
             //    }
             //}
-            this._drawImage(image,
-                offsetX, offsetY, width, height,
-                surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
+            this.createWebGLTexture(texture);
+            var webGLTexture = texture["webGLTexture"][this.glID];
+            if (!webGLTexture) {
+                return;
+            }
+            this.drawTexture(webGLTexture,
+                sourceX, sourceY, sourceWidth, sourceHeight,
+                destX, destY, destWidth, destHeight,
+                textureSourceWidth, textureSourceHeight);
         }
 
         private currentBaseTexture:Texture = null;
         private currentBatchSize:number = 0;
-
-        private _drawImage(texture:BitmapData,
-                           sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                           destX:number, destY:number, destWidth:number, destHeight:number):void {
-            var textureSourceWidth = texture.width;
-            var textureSourceHeight = texture.height;
-            this.createWebGLTexture(texture);
-            var webGLTexture = texture["webGLTexture"][this.glID];
-            if(!webGLTexture) {
-                return;
-            }
-            this.drawTexture(webGLTexture,
-                sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight)
-        }
 
         /**
          * @private
@@ -461,17 +465,17 @@ module egret.web {
             var textureSourceWidth = textureWidth;
             var textureSourceHeight = textureHeight;
             var webGLTexture = <Texture>texture;
-            if(!webGLTexture) {
+            if (!webGLTexture) {
                 return;
             }
-            if(this.currentBatchSize >= this.size - 1) {
+            if (this.currentBatchSize >= this.size - 1) {
                 this.$drawWebGL();
                 this.currentBaseTexture = webGLTexture;
-                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
+                this.drawData.push({texture: this.currentBaseTexture, count: 0});
             }
             else if (webGLTexture !== this.currentBaseTexture) {
                 this.currentBaseTexture = webGLTexture;
-                this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
+                this.drawData.push({texture: this.currentBaseTexture, count: 0});
             }
 
             //计算出绘制矩阵，之后把矩阵还原回之前的
@@ -640,7 +644,7 @@ module egret.web {
                 var gl:any = this.context;
                 var glTexture = gl.createTexture();
                 bitmapData.webGLTexture[this.glID] = glTexture;
-                if(!glTexture) {
+                if (!glTexture) {
                     //先创建texture失败,然后lost事件才发出来..
                     this.contextLost = true;
                     return;
@@ -671,7 +675,7 @@ module egret.web {
             this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, this.surface.width, this.surface.height);
             this.$drawWebGL();
             this.enableFrameBuffer();
-            if(this.maskPushed) {
+            if (this.maskPushed) {
                 gl.enable(gl.STENCIL_TEST);
             }
         }

@@ -12798,7 +12798,7 @@ var egret;
                 var displayList = new sys.DisplayList(stage);
                 displayList.renderBuffer = buffer;
                 stage.$displayList = displayList;
-                displayList.setClipRect(stage.$stageWidth, stage.$stageHeight);
+                //displayList.setClipRect(stage.$stageWidth, stage.$stageHeight);
                 return displayList;
             };
             /**

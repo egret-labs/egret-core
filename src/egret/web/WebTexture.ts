@@ -68,7 +68,7 @@ module egret.web {
         }
         else {//webgl
             (<WebGLRenderBuffer><any>buffer).drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
-                bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+                bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height, bitmapData._sourceWidth, bitmapData._sourceHeight);
             (<WebGLRenderBuffer><any>buffer).$drawWebGL();
         }
 
