@@ -293,7 +293,7 @@ module egret {
             values[sys.BitmapKeys.offsetY] = offsetY;
             values[sys.BitmapKeys.textureWidth] = textureWidth;
             values[sys.BitmapKeys.textureHeight] = textureHeight;
-            values[sys.BitmapKeys.sourceHeight] = sourceWidth;
+            values[sys.BitmapKeys.sourceWidth] = sourceWidth;
             values[sys.BitmapKeys.sourceHeight] = sourceHeight;
         }
 

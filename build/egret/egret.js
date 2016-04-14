@@ -2838,7 +2838,7 @@ var egret;
             values[7 /* offsetY */] = offsetY;
             values[8 /* textureWidth */] = textureWidth;
             values[9 /* textureHeight */] = textureHeight;
-            values[14 /* sourceHeight */] = sourceWidth;
+            values[13 /* sourceWidth */] = sourceWidth;
             values[14 /* sourceHeight */] = sourceHeight;
         };
         d(p, "scale9Grid"
