@@ -417,6 +417,7 @@ module egret.web {
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
             buffer.pushMask(scrollRect);
             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
+            buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
             buffer.popMask();
 
             sys.Region.release(region);
