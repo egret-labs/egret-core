@@ -12370,6 +12370,12 @@ var egret;
                     while (this.mergeDirtyList(dirtyList)) {
                     }
                 }
+                var numDirty = this.dirtyList.length;
+                if (numDirty > 0) {
+                    for (var i = 0; i < numDirty; i++) {
+                        this.dirtyList[i].intValues();
+                    }
+                }
                 return this.dirtyList;
             };
             /**
@@ -13355,6 +13361,17 @@ var egret;
                 this.maxY = maxY;
                 this.updateArea();
                 return this;
+            };
+            /**
+             * @private
+             * 把所有值都取整
+             */
+            p.intValues = function () {
+                this.minX = Math.floor(this.minX);
+                this.minY = Math.floor(this.minY);
+                this.maxX = Math.ceil(this.maxX);
+                this.maxY = Math.ceil(this.maxY);
+                this.updateArea();
             };
             /**
              * @private

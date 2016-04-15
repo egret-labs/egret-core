@@ -52,7 +52,7 @@ module egret.sys {
      */
     export class DirtyRegion {
 
-        public constructor(root:DisplayObject){
+        public constructor(root:DisplayObject) {
             this.root = root;
         }
 
@@ -155,10 +155,10 @@ module egret.sys {
                 this.clipRectChanged = true;//阻止所有的addRegion()
                 this.clear();
                 var region:Region = Region.create();
-                if(this.hasClipRect){
+                if (this.hasClipRect) {
                     dirtyList.push(region.setTo(0, 0, this.clipWidth, this.clipHeight));
                 }
-                else{
+                else {
                     var bounds = this.root.$getOriginalBounds();
                     dirtyList.push(region.setTo(bounds.x, bounds.y, bounds.width, bounds.height));
                 }
@@ -171,6 +171,12 @@ module egret.sys {
             }
             else {
                 while (this.mergeDirtyList(dirtyList)) {
+                }
+            }
+            var numDirty = this.dirtyList.length;
+            if (numDirty > 0) {
+                for (var i = 0; i < numDirty; i++) {
+                    this.dirtyList[i].intValues();
                 }
             }
             return this.dirtyList;
