@@ -135,6 +135,9 @@ module egret.web {
          * 启用frameBuffer
          * */
         public enableFrameBuffer():void {
+            if(this.frameBufferBinding) {
+                return;
+            }
             var gl = this.context;
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
             this.frameBufferBinding = true;
@@ -144,6 +147,9 @@ module egret.web {
          * 禁用frameBuffer
          * */
         public disableFrameBuffer():void {
+            if(!this.frameBufferBinding) {
+                return;
+            }
             var gl = this.context;
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             this.frameBufferBinding = false;
@@ -204,24 +210,30 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-            if (!sharedBuffer) {
-                sharedBuffer = new WebGLRenderBuffer()
-            }
-            var newBuffer = sharedBuffer;
             var oldSurface = this.surface;
-            var oldContext = this.context;
-            this.context = newBuffer.context;
-            this.surface = newBuffer.surface;
-            this.resize(Math.max(width, 257), Math.max(height, 257));
-            this.setTransform(1, 0, 0, 1, 0, 0);
-            this.setGlobalCompositeOperation("source-over");
-            var oldSurfaceWidth = oldSurface.width;
-            var oldSurfaceHeight = oldSurface.height;
-            this.drawImage(<any>oldSurface, 0, 0, oldSurfaceWidth, oldSurfaceHeight, offsetX, offsetY, oldSurfaceWidth, oldSurfaceHeight, oldSurfaceWidth, oldSurfaceHeight);
-            sharedBuffer.context = oldContext;
-            sharedBuffer.surface = oldSurface;
-            sharedBuffer.resize(1, 1);
-            this.initWebGL();
+            var oldWidth = oldSurface.width;
+            var oldHeight = oldSurface.height;
+            this.surface.width = width;
+            this.surface.height = height;
+            this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
+            // if (!sharedBuffer) {
+            //     sharedBuffer = new WebGLRenderBuffer()
+            // }
+            // var newBuffer = sharedBuffer;
+            // var oldSurface = this.surface;
+            // var oldContext = this.context;
+            // this.context = newBuffer.context;
+            // this.surface = newBuffer.surface;
+            // this.resize(Math.max(width, 257), Math.max(height, 257));
+            // this.setTransform(1, 0, 0, 1, 0, 0);
+            // this.setGlobalCompositeOperation("source-over");
+            // var oldSurfaceWidth = oldSurface.width;
+            // var oldSurfaceHeight = oldSurface.height;
+            // this.drawImage(<any>oldSurface, 0, 0, oldSurfaceWidth, oldSurfaceHeight, offsetX, offsetY, oldSurfaceWidth, oldSurfaceHeight, oldSurfaceWidth, oldSurfaceHeight);
+            // sharedBuffer.context = oldContext;
+            // sharedBuffer.surface = oldSurface;
+            // sharedBuffer.resize(1, 1);
+            // this.initWebGL();
         }
 
         /**
@@ -235,16 +247,18 @@ module egret.web {
             offsetY = +offsetY || 0;
             this.setTransform(1, 0, 0, 1, offsetX, offsetY);
             var length = regions.length;
+            //只有一个区域且刚好为舞台大小时,不设置模板,并且关闭frameBuffer，让元素直接绘制到舞台，提高性能
+            if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
+                regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
+                this.maskPushed = false;
+                this.disableFrameBuffer();
+                this.clear();
+                return;
+            }
             // 擦除脏矩形区域
             for (var i = 0; i < length; i++) {
                 var region = regions[i];
                 this.clearRect(region.minX, region.minY, region.width, region.height);
-            }
-            //只有一个区域且刚好为舞台大小时,不设置模板
-            if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
-                regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
-                this.maskPushed = false;
-                return;
             }
             // 设置模版
             if (length > 0) {
@@ -666,13 +680,25 @@ module egret.web {
 
         public onRenderFinish():void {
             this.$drawCalls = 0;
-            // 存储当前帧
+            if(this.frameBufferBinding) {
+              this.drawFrameBufferToSurface(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
+            }
+        }
+        /**
+         * 交换frameBuffer中的图像到surface中
+         * @param width 宽度
+         * @param height 高度
+         */
+        private drawFrameBufferToSurface(sourceX:number,
+          sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
             var gl = this.context;
             this.disableFrameBuffer();
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
             this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
             this._globalAlpha = 1;
-            this.drawTexture(this.texture, 0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, this.surface.width, this.surface.height);
+            this.setGlobalCompositeOperation("source-over");
+            clear && this.clear();
+            this.drawTexture(this.texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
             this.enableFrameBuffer();
             if (this.maskPushed) {
