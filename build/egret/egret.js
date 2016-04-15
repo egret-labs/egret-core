@@ -12619,15 +12619,28 @@ var egret;
                     var display = dirtyNodeList[i];
                     var node = display.$getRenderNode();
                     node.needRedraw = false; //先清空上次缓存的标记,防止上次没遍历到的节点needRedraw始终为true.
-                    if (node.renderAlpha > 0 && node.renderVisible) {
+                    if (this.isStage) {
+                        if (node.renderAlpha > 0 && node.renderVisible) {
+                            if (dirtyRegion.addRegion(node.renderRegion)) {
+                                node.needRedraw = true;
+                            }
+                        }
+                        var moved = display.$update();
+                        if (node.renderAlpha > 0 && node.renderVisible && (moved || !node.needRedraw)) {
+                            if (dirtyRegion.addRegion(node.renderRegion)) {
+                                node.needRedraw = true;
+                            }
+                        }
+                    }
+                    else {
                         if (dirtyRegion.addRegion(node.renderRegion)) {
                             node.needRedraw = true;
                         }
-                    }
-                    var moved = display.$update();
-                    if (node.renderAlpha > 0 && node.renderVisible && (moved || !node.needRedraw)) {
-                        if (dirtyRegion.addRegion(node.renderRegion)) {
-                            node.needRedraw = true;
+                        var moved = display.$update();
+                        if (moved || !node.needRedraw) {
+                            if (dirtyRegion.addRegion(node.renderRegion)) {
+                                node.needRedraw = true;
+                            }
                         }
                     }
                 }
