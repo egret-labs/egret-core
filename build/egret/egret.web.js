@@ -6506,8 +6506,8 @@ var egret;
                         buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                         displayBuffer.$drawWebGL();
                         web.WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
-                        var displayBufferWidth = maskBuffer.surface.width;
-                        var displayBufferHeight = maskBuffer.surface.height;
+                        var displayBufferWidth = displayBuffer.surface.width;
+                        var displayBufferHeight = displayBuffer.surface.height;
                         buffer.drawImage(displayBuffer.surface, 0, 0, displayBufferWidth, displayBufferHeight, 0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                         if (hasBlendMode) {
                             buffer.setGlobalCompositeOperation(defaultCompositeOp);
