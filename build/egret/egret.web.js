@@ -4266,7 +4266,7 @@ var egret;
                 buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
             }
             else {
-                buffer.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
+                buffer.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / egret.$TextureScaleFactor, bitmapData._bitmapY + rect.y / egret.$TextureScaleFactor, bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height, bitmapData._sourceWidth, bitmapData._sourceHeight);
                 buffer.$drawWebGL();
             }
             return surface;
@@ -5547,27 +5547,30 @@ var egret;
              * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
              */
             p.resizeTo = function (width, height, offsetX, offsetY) {
-                // if(!sharedBuffer) {
-                //     sharedBuffer = new WebGLRenderBuffer()
-                // }
-                // var newBuffer = sharedBuffer;
                 var oldSurface = this.surface;
-                // var oldContext = this.context;
-                // this.context = newBuffer.context;
-                // this.surface = newBuffer.surface;
-                // this.resize(Math.max(width, 257), Math.max(height, 257));
                 var oldWidth = oldSurface.width;
                 var oldHeight = oldSurface.height;
                 this.surface.width = width;
                 this.surface.height = height;
+                this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
+                // if (!sharedBuffer) {
+                //     sharedBuffer = new WebGLRenderBuffer()
+                // }
+                // var newBuffer = sharedBuffer;
+                // var oldSurface = this.surface;
+                // var oldContext = this.context;
+                // this.context = newBuffer.context;
+                // this.surface = newBuffer.surface;
+                // this.resize(Math.max(width, 257), Math.max(height, 257));
                 // this.setTransform(1, 0, 0, 1, 0, 0);
                 // this.setGlobalCompositeOperation("source-over");
-                this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
-                // this.drawImage(<any>oldSurface, 0, 0, oldSurface.width, oldSurface.height, offsetX, offsetY, oldSurface.width, oldSurface.height, true);
+                // var oldSurfaceWidth = oldSurface.width;
+                // var oldSurfaceHeight = oldSurface.height;
+                // this.drawImage(<any>oldSurface, 0, 0, oldSurfaceWidth, oldSurfaceHeight, offsetX, offsetY, oldSurfaceWidth, oldSurfaceHeight, oldSurfaceWidth, oldSurfaceHeight);
                 // sharedBuffer.context = oldContext;
                 // sharedBuffer.surface = oldSurface;
                 // sharedBuffer.resize(1, 1);
-                this.initWebGL();
+                // this.initWebGL();
             };
             /**
              * 清空并设置裁切
@@ -5728,11 +5731,11 @@ var egret;
                 gl.colorMask(true, true, true, true);
             };
             //Rendering Functions begin
-            p.drawImage = function (image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight) {
+            p.drawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight) {
                 if (this.contextLost) {
                     return;
                 }
-                if (!image) {
+                if (!texture) {
                     return;
                 }
                 //if (this.filters) {
@@ -5744,11 +5747,6 @@ var egret;
                 //        }
                 //    }
                 //}
-                this._drawImage(image, offsetX, offsetY, width, height, surfaceOffsetX, surfaceOffsetY, surfaceImageWidth, surfaceImageHeight);
-            };
-            p._drawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
-                var textureSourceWidth = texture.width;
-                var textureSourceHeight = texture.height;
                 this.createWebGLTexture(texture);
                 var webGLTexture = texture["webGLTexture"][this.glID];
                 if (!webGLTexture) {
@@ -6455,7 +6453,9 @@ var egret;
                             displayBuffer.setGlobalAlpha(1);
                             maskBuffer.$drawWebGL();
                             web.WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
-                            displayBuffer.drawImage(maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
+                            var maskBufferWidth = maskBuffer.surface.width;
+                            var maskBufferHeight = maskBuffer.surface.height;
+                            displayBuffer.drawImage(maskBuffer.surface, 0, 0, maskBufferWidth, maskBufferHeight, 0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
                         }
                         renderBufferPool.push(maskBuffer);
                     }
@@ -6469,7 +6469,9 @@ var egret;
                         buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                         displayBuffer.$drawWebGL();
                         web.WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
-                        buffer.drawImage(displayBuffer.surface, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
+                        var displayBufferWidth = maskBuffer.surface.width;
+                        var displayBufferHeight = maskBuffer.surface.height;
+                        buffer.drawImage(displayBuffer.surface, 0, 0, displayBufferWidth, displayBufferHeight, 0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                         if (hasBlendMode) {
                             buffer.setGlobalCompositeOperation(defaultCompositeOp);
                         }
@@ -6588,7 +6590,7 @@ var egret;
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 }
                 while (pos < length) {
-                    buffer.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
+                    buffer.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
                 }
                 if (m) {
                     buffer.restoreTransform();
@@ -6626,7 +6628,7 @@ var egret;
                     web.WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
                     node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
                 }
-                buffer.drawImage(node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
+                buffer.drawImage(node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height, width, height);
                 if (node.x || node.y) {
                     if (node.dirtyRender) {
                         node.$canvasRenderBuffer.context.translate(node.x, node.y);
@@ -6664,7 +6666,7 @@ var egret;
                     web.WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
                     node.$canvasRenderer["renderGraphics"](node, node.$canvasRenderBuffer.context, forHitTest);
                 }
-                buffer.drawImage(node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
+                buffer.drawImage(node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height, width, height);
                 if (node.x || node.y) {
                     if (node.dirtyRender) {
                         node.$canvasRenderBuffer.context.translate(node.x, node.y);
