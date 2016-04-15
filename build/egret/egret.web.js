@@ -3015,6 +3015,8 @@ var egret;
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             };
+            p.setDirtyRegionPolicy = function (state) {
+            };
             /**
              * 清空并设置裁切
              * @param regions 矩形列表
@@ -5398,6 +5400,8 @@ var egret;
                  * frameBuffer绑定标示
                  * */
                 this.frameBufferBinding = false;
+                this.dirtyRegionPolicy = true;
+                this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
                 this.glID = null;
                 this.size = 2000;
                 this.vertices = null;
@@ -5572,6 +5576,9 @@ var egret;
                 // sharedBuffer.resize(1, 1);
                 // this.initWebGL();
             };
+            p.setDirtyRegionPolicy = function (state) {
+                this.dirtyRegionPolicy = (state == "on");
+            };
             /**
              * 清空并设置裁切
              * @param regions 矩形列表
@@ -5579,6 +5586,13 @@ var egret;
              * @param offsetY 矩形要加上的偏移量y
              */
             p.beginClip = function (regions, offsetX, offsetY) {
+                if (this._dirtyRegionPolicy) {
+                    this.enableFrameBuffer();
+                }
+                else {
+                    this.disableFrameBuffer();
+                    this.clear();
+                }
                 offsetX = +offsetX || 0;
                 offsetY = +offsetY || 0;
                 this.setTransform(1, 0, 0, 1, offsetX, offsetY);
@@ -5587,8 +5601,6 @@ var egret;
                 if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
                     regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
                     this.maskPushed = false;
-                    this.disableFrameBuffer();
-                    this.clear();
                     return;
                 }
                 // 擦除脏矩形区域
@@ -5937,9 +5949,13 @@ var egret;
             };
             p.onRenderFinish = function () {
                 this.$drawCalls = 0;
-                if (this.frameBufferBinding) {
+                if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {console.log(this.surface.height);
+                    this.drawSurfaceToFrameBuffer(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, true);
+                }
+                if (this._dirtyRegionPolicy) {
                     this.drawFrameBufferToSurface(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
                 }
+                this._dirtyRegionPolicy = this.dirtyRegionPolicy;
             };
             /**
              * 交换frameBuffer中的图像到surface中
@@ -5958,6 +5974,27 @@ var egret;
                 this.drawTexture(this.texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
                 this.$drawWebGL();
                 this.enableFrameBuffer();
+                if (this.maskPushed) {
+                    gl.enable(gl.STENCIL_TEST);
+                }
+            };
+            /**
+             * 交换surface的图像到frameBuffer中
+             * @param width 宽度
+             * @param height 高度
+             */
+            p.drawSurfaceToFrameBuffer = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
+                if (clear === void 0) { clear = false; }
+                var gl = this.context;
+                this.enableFrameBuffer();
+                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
+                this.globalMatrix.setTo(1, 0, 0, 1, 0, 0);console.log(this.surface.height);
+                this._globalAlpha = 1;
+                this.setGlobalCompositeOperation("source-over");
+                clear && this.clear();
+                this.drawImage(this.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+                this.$drawWebGL();
+                this.disableFrameBuffer();
                 if (this.maskPushed) {
                     gl.enable(gl.STENCIL_TEST);
                 }

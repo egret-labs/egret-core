@@ -12687,6 +12687,7 @@ var egret;
             p.setDirtyRegionPolicy = function (policy) {
                 //todo 这里还可以做更多优化
                 this.dirtyRegion.setDirtyRegionPolicy(policy);
+                this.renderBuffer.setDirtyRegionPolicy(policy);
             };
             return DisplayList;
         }(egret.HashObject));

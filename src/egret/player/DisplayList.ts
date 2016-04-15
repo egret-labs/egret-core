@@ -216,7 +216,7 @@ module egret.sys {
             var dirtyRegion = this.dirtyRegion;
             var length = dirtyNodeList.length;
             for (var i = 0; i < length; i++) {
-                var display = dirtyNodeList[i]; 
+                var display = dirtyNodeList[i];
                 var node = display.$getRenderNode();
                 node.needRedraw = false;//先清空上次缓存的标记,防止上次没遍历到的节点needRedraw始终为true.
                 if (node.renderAlpha > 0 && node.renderVisible) {
@@ -297,6 +297,7 @@ module egret.sys {
         public setDirtyRegionPolicy(policy:string):void {
             //todo 这里还可以做更多优化
             this.dirtyRegion.setDirtyRegionPolicy(policy);
+            this.renderBuffer.setDirtyRegionPolicy(policy);
         }
     }
 }

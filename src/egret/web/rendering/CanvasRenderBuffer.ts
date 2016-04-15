@@ -165,6 +165,10 @@ module egret.web {
             oldSurface.width = 1;
         }
 
+        public setDirtyRegionPolicy(state:string):void {
+
+        }
+
         /**
          * 清空并设置裁切
          * @param regions 矩形列表

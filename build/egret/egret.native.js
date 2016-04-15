@@ -1045,6 +1045,8 @@ var egret;
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             };
+            p.setDirtyRegionPolicy = function (state) {
+            };
             /**
              * 清空并设置裁切
              * @param regions 矩形列表
@@ -2026,6 +2028,8 @@ var egret;
                 newContext.drawImage(oldSurface, offsetX, offsetY);
                 oldSurface.height = 1;
                 oldSurface.width = 1;
+            };
+            p.setDirtyRegionPolicy = function (state) {
             };
             /**
              * 清空并设置裁切
