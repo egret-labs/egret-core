@@ -24299,11 +24299,12 @@ var eui;
             if (!this.target) {
                 return;
             }
+            var nextOldValue = this.target[this.prop];
             if (this.oldValue) {
                 this.setPropertyValue(this.target, this.prop, this.oldValue, this.oldValue);
             }
-            if (this.target[this.prop]) {
-                this.oldValue = this.target[this.prop];
+            if (nextOldValue) {
+                this.oldValue = nextOldValue;
             }
             var chain = [];
             for (var i = 0, len = this.chain.length; i < len; i++) {
