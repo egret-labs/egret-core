@@ -729,7 +729,7 @@ module egret.web {
             var gl = this.context;
             this.enableFrameBuffer();
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
-            // this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
+            this.globalMatrix.setTo(1, 0, 0, 1, 0, 0);
             this._globalAlpha = 1;
             this.setGlobalCompositeOperation("source-over");
             clear && this.clear();
