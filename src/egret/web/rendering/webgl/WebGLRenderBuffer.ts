@@ -320,10 +320,12 @@ module egret.web {
          * 清空缓冲区数据
          */
         public clear():void {
-            var gl:any = this.context;
-            gl.colorMask(true, true, true, true);
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            if(this.surface.width != 0 && this.surface.height != 0) {
+                var gl:any = this.context;
+                gl.colorMask(true, true, true, true);
+                gl.clearColor(0, 0, 0, 0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+            }
         }
 
         /**

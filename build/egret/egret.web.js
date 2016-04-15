@@ -5650,10 +5650,12 @@ var egret;
              * 清空缓冲区数据
              */
             p.clear = function () {
-                var gl = this.context;
-                gl.colorMask(true, true, true, true);
-                gl.clearColor(0, 0, 0, 0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
+                if (this.surface.width != 0 && this.surface.height != 0) {
+                    var gl = this.context;
+                    gl.colorMask(true, true, true, true);
+                    gl.clearColor(0, 0, 0, 0);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                }
             };
             /**
              * @private
