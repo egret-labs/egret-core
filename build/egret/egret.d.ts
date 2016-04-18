@@ -9131,6 +9131,11 @@ declare module egret.sys {
         setTo(minX: number, minY: number, maxX: number, maxY: number): Region;
         /**
          * @private
+         * 把所有值都取整
+         */
+        intValues(): void;
+        /**
+         * @private
          */
         updateArea(): void;
         /**

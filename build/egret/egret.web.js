@@ -5597,10 +5597,11 @@ var egret;
                 offsetY = +offsetY || 0;
                 this.setTransform(1, 0, 0, 1, offsetX, offsetY);
                 var length = regions.length;
-                //只有一个区域且刚好为舞台大小时,不设置模板,并且关闭frameBuffer，让元素直接绘制到舞台，提高性能
+                //只有一个区域且刚好为舞台大小时,不设置模板
                 if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
                     regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
                     this.maskPushed = false;
+                    this.frameBufferBinding && this.clear();
                     return;
                 }
                 // 擦除脏矩形区域
@@ -5650,10 +5651,12 @@ var egret;
              * 清空缓冲区数据
              */
             p.clear = function () {
-                var gl = this.context;
-                gl.colorMask(true, true, true, true);
-                gl.clearColor(0, 0, 0, 0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
+                if (this.surface.width != 0 && this.surface.height != 0) {
+                    var gl = this.context;
+                    gl.colorMask(true, true, true, true);
+                    gl.clearColor(0, 0, 0, 0);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                }
             };
             /**
              * @private
@@ -5988,7 +5991,7 @@ var egret;
                 var gl = this.context;
                 this.enableFrameBuffer();
                 gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
-                // this.globalMatrix.setTo(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
+                this.globalMatrix.setTo(1, 0, 0, 1, 0, 0);
                 this._globalAlpha = 1;
                 this.setGlobalCompositeOperation("source-over");
                 clear && this.clear();
@@ -6506,8 +6509,8 @@ var egret;
                         buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                         displayBuffer.$drawWebGL();
                         web.WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
-                        var displayBufferWidth = maskBuffer.surface.width;
-                        var displayBufferHeight = maskBuffer.surface.height;
+                        var displayBufferWidth = displayBuffer.surface.width;
+                        var displayBufferHeight = displayBuffer.surface.height;
                         buffer.drawImage(displayBuffer.surface, 0, 0, displayBufferWidth, displayBufferHeight, 0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                         if (hasBlendMode) {
                             buffer.setGlobalCompositeOperation(defaultCompositeOp);
