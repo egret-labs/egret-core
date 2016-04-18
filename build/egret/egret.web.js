@@ -1326,6 +1326,15 @@ var egret;
                 window.setTimeout(function () { return video.pause(); }, 16);
                 this.video = video;
             };
+            d(p, "length"
+                ,function () {
+                    if (this.video) {
+                        return this.video.duration;
+                    }
+                    throw new Error("Video not loaded!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -1353,11 +1362,6 @@ var egret;
                 video.style.left = "0px";
                 video.height = video.videoHeight;
                 video.width = video.videoWidth;
-                if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
-                    setTimeout(function () {
-                        video.width = 0;
-                    }, 1000);
-                }
                 this.checkFullScreen(this._fullscreen);
             };
             p.checkFullScreen = function (playFullScreen) {
@@ -1411,7 +1415,7 @@ var egret;
                 }
             };
             p.screenError = function () {
-                egret.$error(3003);
+                egret.$error(3103);
             };
             p.exitFullscreen = function () {
                 //退出全屏
@@ -1525,9 +1529,6 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
-                    if (egret.Capabilities.isMobile) {
-                        return;
-                    }
                     this._fullscreen = !!value;
                     if (this.video && this.video.paused == false) {
                         this.checkFullScreen(this._fullscreen);
@@ -1613,6 +1614,9 @@ var egret;
                 var posterData = this.posterData;
                 var width = this.getPlayWidth();
                 var height = this.getPlayHeight();
+                if (width <= 0 || height <= 0) {
+                    return;
+                }
                 if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                     node.image = posterData;
                     node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
