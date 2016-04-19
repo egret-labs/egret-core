@@ -113,12 +113,22 @@ module egret.web {
             this.video = video;
         }
 
+        public get length():number {
+            if (this.video) {
+                return this.video.duration;
+            }
+
+            throw new Error("Video not loaded!");
+            return 0;
+        }
+
         private isPlayed:boolean = false;
 
         /**
          * @inheritDoc
          */
         public play(startTime?:number, loop:boolean = false) {
+
             if (this.loaded == false) {
                 this.load(this.src);
                 this.once(egret.Event.COMPLETE, e=> this.play(startTime, loop), this);
@@ -143,11 +153,6 @@ module egret.web {
             video.style.left = "0px";
             video.height = video.videoHeight;
             video.width = video.videoWidth;
-            if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
-                setTimeout(function () {//为了解决视频返回挤压页面内容
-                    video.width = 0;
-                }, 1000);
-            }
 
             this.checkFullScreen(this._fullscreen);
         }
@@ -218,7 +223,7 @@ module egret.web {
         }
 
         private screenError():void {
-            egret.$error(3003);
+            egret.$error(3103);
         }
 
         private screenChanged = (e):void => {
@@ -345,9 +350,6 @@ module egret.web {
          * @inheritDoc
          */
         public set fullscreen(value:boolean) {
-            if (egret.Capabilities.isMobile) {
-                return;
-            }
             this._fullscreen = !!value;
             if (this.video && this.video.paused == false) {
                 this.checkFullScreen(this._fullscreen);
@@ -464,6 +466,9 @@ module egret.web {
             var posterData = this.posterData;
             var width = this.getPlayWidth();
             var height = this.getPlayHeight();
+            if (width <= 0 || height <= 0) {
+                return;
+            }
             if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                 node.image = posterData;
                 node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);

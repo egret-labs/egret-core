@@ -1326,6 +1326,15 @@ var egret;
                 window.setTimeout(function () { return video.pause(); }, 16);
                 this.video = video;
             };
+            d(p, "length"
+                ,function () {
+                    if (this.video) {
+                        return this.video.duration;
+                    }
+                    throw new Error("Video not loaded!");
+                    return 0;
+                }
+            );
             /**
              * @inheritDoc
              */
@@ -1353,11 +1362,6 @@ var egret;
                 video.style.left = "0px";
                 video.height = video.videoHeight;
                 video.width = video.videoWidth;
-                if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
-                    setTimeout(function () {
-                        video.width = 0;
-                    }, 1000);
-                }
                 this.checkFullScreen(this._fullscreen);
             };
             p.checkFullScreen = function (playFullScreen) {
@@ -1411,7 +1415,7 @@ var egret;
                 }
             };
             p.screenError = function () {
-                egret.$error(3003);
+                egret.$error(3103);
             };
             p.exitFullscreen = function () {
                 //退出全屏
@@ -1525,9 +1529,6 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
-                    if (egret.Capabilities.isMobile) {
-                        return;
-                    }
                     this._fullscreen = !!value;
                     if (this.video && this.video.paused == false) {
                         this.checkFullScreen(this._fullscreen);
@@ -1613,6 +1614,9 @@ var egret;
                 var posterData = this.posterData;
                 var width = this.getPlayWidth();
                 var height = this.getPlayHeight();
+                if (width <= 0 || height <= 0) {
+                    return;
+                }
                 if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                     node.image = posterData;
                     node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
@@ -5597,10 +5601,11 @@ var egret;
                 offsetY = +offsetY || 0;
                 this.setTransform(1, 0, 0, 1, offsetX, offsetY);
                 var length = regions.length;
-                //只有一个区域且刚好为舞台大小时,不设置模板,并且关闭frameBuffer，让元素直接绘制到舞台，提高性能
+                //只有一个区域且刚好为舞台大小时,不设置模板
                 if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
                     regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
                     this.maskPushed = false;
+                    this.frameBufferBinding && this.clear();
                     return;
                 }
                 // 擦除脏矩形区域
@@ -5650,10 +5655,12 @@ var egret;
              * 清空缓冲区数据
              */
             p.clear = function () {
-                var gl = this.context;
-                gl.colorMask(true, true, true, true);
-                gl.clearColor(0, 0, 0, 0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
+                if (this.surface.width != 0 && this.surface.height != 0) {
+                    var gl = this.context;
+                    gl.colorMask(true, true, true, true);
+                    gl.clearColor(0, 0, 0, 0);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                }
             };
             /**
              * @private

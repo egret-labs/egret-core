@@ -259,10 +259,11 @@ module egret.web {
             offsetY = +offsetY || 0;
             this.setTransform(1, 0, 0, 1, offsetX, offsetY);
             var length = regions.length;
-            //只有一个区域且刚好为舞台大小时,不设置模板,并且关闭frameBuffer，让元素直接绘制到舞台，提高性能
+            //只有一个区域且刚好为舞台大小时,不设置模板
             if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
                 regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
                 this.maskPushed = false;
+                this.frameBufferBinding && this.clear();
                 return;
             }
             // 擦除脏矩形区域
@@ -320,10 +321,12 @@ module egret.web {
          * 清空缓冲区数据
          */
         public clear():void {
-            var gl:any = this.context;
-            gl.colorMask(true, true, true, true);
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            if(this.surface.width != 0 && this.surface.height != 0) {
+                var gl:any = this.context;
+                gl.colorMask(true, true, true, true);
+                gl.clearColor(0, 0, 0, 0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+            }
         }
 
         /**
