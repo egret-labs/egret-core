@@ -5594,13 +5594,6 @@ var egret;
              * @param offsetY 矩形要加上的偏移量y
              */
             p.beginClip = function (regions, offsetX, offsetY) {
-
-
-                this.$drawWebGL();
-
-                console.log(this.stencilHandleCount);
-                console.log(this.drawData.length);
-                
                 if (this._dirtyRegionPolicy) {
                     this.enableFrameBuffer();
                 }
@@ -5624,11 +5617,9 @@ var egret;
                     var region = regions[i];
                     this.clearRect(region.minX, region.minY, region.width, region.height);
                 }
-                this.$drawWebGL();
                 // 设置模版
                 if (length > 0) {
                     this.pushMask(regions);
-                    // this.$drawWebGL();
                     this.maskPushed = true;
                     this.offsetX = offsetX;
                     this.offsetY = offsetY;
@@ -5680,8 +5671,7 @@ var egret;
              */
             p.clearRect = function (x, y, width, height) {
                 this.setGlobalCompositeOperation("destination-out");
-                this.drawRect(0, 0, width, height);
-                // this.renderGraphics({x: x, y: y, width: width, height: height});
+                this.drawRect(x, y, width, height);
                 this.setGlobalCompositeOperation("source-over");
             };
             /**
@@ -6184,14 +6174,15 @@ var egret;
                     for (var i = 0; i < length; i++) {
                         var item = mask[i];
                         this.drawUvRect(0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
+                        this.currentBatchSize++;
+                        this.drawData[this.drawData.length - 1].count++;
                     }
                 }
                 else {
                     this.drawUvRect(0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                    this.currentBatchSize++;
+                    this.drawData[this.drawData.length - 1].count++;
                 }
-                var count = length ? length : 1;
-                this.currentBatchSize += count;
-                this.drawData[this.drawData.length - 1].count += count;
             };
             p.renderGraphics = function (graphics) {
                 this.$drawWebGL();

@@ -334,8 +334,7 @@ module egret.web {
          */
         private clearRect(x:number, y:number, width:number, height:number):void {
             this.setGlobalCompositeOperation("destination-out");
-            this.drawRect(0, 0, width, height);
-            // this.renderGraphics({x: x, y: y, width: width, height: height});
+            this.drawRect(x, y, width, height);
             this.setGlobalCompositeOperation("source-over");
         }
 
@@ -946,15 +945,15 @@ module egret.web {
                 for (var i = 0; i < length; i++) {
                     var item:sys.Region = mask[i];
                     this.drawUvRect(0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
+                    this.currentBatchSize++;
+                    this.drawData[this.drawData.length - 1].count++;
                 }
             }
             else {
                 this.drawUvRect(0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                this.currentBatchSize++;
+                this.drawData[this.drawData.length - 1].count++;
             }
-
-            var count = length ? length : 1;
-            this.currentBatchSize += count;
-            this.drawData[this.drawData.length - 1].count += count;
         }
 
         private graphicsPoints:Array<number> = null;
