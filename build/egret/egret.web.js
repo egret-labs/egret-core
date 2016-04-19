@@ -4911,8 +4911,13 @@ var egret;
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
                     "uniform sampler2D uSampler;\n" +
+                    "uniform float uPureColor;\n" +
                     "void main(void) {\n" +
+                    "if(uPureColor == 1.0) {\n" +
+                    "gl_FragColor = vColor ;\n" +
+                    "} else {\n" +
                     "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
+                    "}\n" +
                     "}";
                 this.uniforms = null;
                 this.gl = gl;
@@ -4930,6 +4935,7 @@ var egret;
                 this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
                 this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
                 this.colorAttribute = gl.getAttribLocation(program, "aColor");
+                this.uPureColor = gl.getUniformLocation(program, "uPureColor");
                 if (this.colorAttribute === -1) {
                     this.colorAttribute = 2;
                 }
@@ -5416,10 +5422,12 @@ var egret;
                 this.drawData = [];
                 this.$drawCalls = 0;
                 this.$computeDrawCall = false;
+                this.drawingTexture = true;
                 this.globalMatrix = new egret.Matrix();
                 this.savedGlobalMatrix = new egret.Matrix();
                 this._globalAlpha = 1;
                 this.$stencilList = [];
+                this.stencilHandleCount = 0;
                 this.graphicsPoints = null;
                 this.graphicsIndices = null;
                 this.graphicsBuffer = null;
@@ -5586,6 +5594,13 @@ var egret;
              * @param offsetY 矩形要加上的偏移量y
              */
             p.beginClip = function (regions, offsetX, offsetY) {
+
+
+                this.$drawWebGL();
+
+                console.log(this.stencilHandleCount);
+                console.log(this.drawData.length);
+                
                 if (this._dirtyRegionPolicy) {
                     this.enableFrameBuffer();
                 }
@@ -5609,9 +5624,11 @@ var egret;
                     var region = regions[i];
                     this.clearRect(region.minX, region.minY, region.width, region.height);
                 }
+                this.$drawWebGL();
                 // 设置模版
                 if (length > 0) {
                     this.pushMask(regions);
+                    // this.$drawWebGL();
                     this.maskPushed = true;
                     this.offsetX = offsetX;
                     this.offsetY = offsetY;
@@ -5663,7 +5680,8 @@ var egret;
              */
             p.clearRect = function (x, y, width, height) {
                 this.setGlobalCompositeOperation("destination-out");
-                this.renderGraphics({ x: x, y: y, width: width, height: height });
+                this.drawRect(0, 0, width, height);
+                // this.renderGraphics({x: x, y: y, width: width, height: height});
                 this.setGlobalCompositeOperation("source-over");
             };
             /**
@@ -5771,7 +5789,7 @@ var egret;
             };
             /**
              * @private
-             * 绘制webGL纹理
+             * draw a texture use default shader
              * */
             p.drawTexture = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight) {
                 if (this.contextLost) {
@@ -5780,12 +5798,7 @@ var egret;
                 if (!texture) {
                     return;
                 }
-                var textureSourceWidth = textureWidth;
-                var textureSourceHeight = textureHeight;
                 var webGLTexture = texture;
-                if (!webGLTexture) {
-                    return;
-                }
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
                     this.currentBaseTexture = webGLTexture;
@@ -5795,6 +5808,40 @@ var egret;
                     this.currentBaseTexture = webGLTexture;
                     this.drawData.push({ texture: this.currentBaseTexture, count: 0 });
                 }
+                this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                this.currentBatchSize++;
+                this.drawData[this.drawData.length - 1].count++;
+            };
+            /**
+             * @private
+             * draw a rect use default shader
+             * */
+            p.drawRect = function (x, y, width, height) {
+                if (this.contextLost) {
+                    return;
+                }
+                // TODO if needed, this rect can set a color
+                if (this.currentBatchSize >= this.size - 1) {
+                    this.$drawWebGL();
+                    this.drawData.push({ rect: 1, count: 0 });
+                }
+                else if (this.drawData.length > 1 && this.drawData[this.drawData.length - 2].rect) {
+                }
+                else {
+                    this.drawData.push({ rect: 1, count: 0 });
+                }
+                this.drawUvRect(0, 0, width, height, x, y, width, height, width, height);
+                this.currentBatchSize++;
+                this.drawData[this.drawData.length - 1].count++;
+                this.currentBaseTexture = null;
+            };
+            /**
+             * @private
+             * draw a rect with uv attribute, just push vertices datas to array
+             * */
+            p.drawUvRect = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight) {
+                var textureSourceWidth = textureWidth;
+                var textureSourceHeight = textureHeight;
                 //计算出绘制矩阵，之后把矩阵还原回之前的
                 var locWorldTransform = this.globalMatrix;
                 var originalA = locWorldTransform.a;
@@ -5864,8 +5911,6 @@ var egret;
                 vertices[index++] = sourceHeight + sourceY;
                 // alpha
                 vertices[index++] = alpha;
-                this.currentBatchSize++;
-                this.drawData[this.drawData.length - 1].count++;
             };
             p.$drawWebGL = function () {
                 if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.contextLost) {
@@ -5875,17 +5920,88 @@ var egret;
                 var gl = this.context;
                 var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
                 gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+                var shader = this.shaderManager.defaultShader;
                 var length = this.drawData.length;
                 var offset = 0;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawData[i];
+                    // its a texture
                     if (data.texture) {
+                        if (!this.drawingTexture) {
+                            gl.uniform1f(shader.uPureColor, 0.0);
+                            this.drawingTexture = true;
+                        }
                         gl.bindTexture(gl.TEXTURE_2D, data.texture);
                         var size = data.count * 6;
                         gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
                         offset += size;
                         if (this.$computeDrawCall) {
                             this.$drawCalls++;
+                        }
+                    }
+                    else if (data.rect) {
+                        if (this.drawingTexture) {
+                            gl.uniform1f(shader.uPureColor, 1.0);
+                            this.drawingTexture = false;
+                        }
+                        gl.bindTexture(gl.TEXTURE_2D, null);
+                        var size = data.count * 6;
+                        gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+                        offset += size;
+                        if (this.$computeDrawCall) {
+                            this.$drawCalls++;
+                        }
+                    }
+                    else if (data.pushMask || data.popMask) {
+                        if (this.drawingTexture) {
+                            gl.uniform1f(shader.uPureColor, 1.0);
+                            this.drawingTexture = false;
+                        }
+                        if (data.pushMask) {
+                            if (this.stencilHandleCount == 0) {
+                                gl.enable(gl.STENCIL_TEST);
+                                gl.clear(gl.STENCIL_BUFFER_BIT);
+                            }
+                            var level = this.stencilHandleCount;
+                            this.stencilHandleCount++;
+                            gl.colorMask(false, false, false, false);
+                            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+                            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+                            gl.bindTexture(gl.TEXTURE_2D, null);
+                            var size = data.count * 6;
+                            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+                            offset += size;
+                            if (this.$computeDrawCall) {
+                                this.$drawCalls++;
+                            }
+                            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                            gl.colorMask(true, true, true, true);
+                            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+                        }
+                        else if (data.popMask) {
+                            this.stencilHandleCount--;
+                            if (this.stencilHandleCount == 0) {
+                                gl.disable(gl.STENCIL_TEST);
+                                // skip this draw
+                                var size = data.count * 6;
+                                offset += size;
+                            }
+                            else {
+                                var level = this.stencilHandleCount;
+                                gl.colorMask(false, false, false, false);
+                                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                                gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+                                gl.bindTexture(gl.TEXTURE_2D, null);
+                                var size = data.count * 6;
+                                gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
+                                offset += size;
+                                if (this.$computeDrawCall) {
+                                    this.$drawCalls++;
+                                }
+                                gl.stencilFunc(gl.EQUAL, level, 0xFF);
+                                gl.colorMask(true, true, true, true);
+                                gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+                            }
                         }
                     }
                     else {
@@ -5920,6 +6036,8 @@ var egret;
                 this.shaderManager.activateShader(shader);
                 shader.syncUniforms();
                 gl.uniform2f(shader.projectionVector, this.projectionX, this.projectionY);
+                gl.uniform1f(shader.uPureColor, 0.0);
+                this.drawingTexture = true;
                 var stride = this.vertSize * 4;
                 gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
                 gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
@@ -6028,58 +6146,52 @@ var egret;
                 }
             };
             p.pushMask = function (mask) {
-                //todo 把绘制数据缓存提升性能
-                this.$drawWebGL();
-                var gl = this.context;
-                if (this.$stencilList.length === 0) {
-                    gl.enable(gl.STENCIL_TEST);
-                    gl.clear(gl.STENCIL_BUFFER_BIT);
-                }
-                var level = this.$stencilList.length;
+                // TODO mask count
                 this.$stencilList.push(mask);
-                gl.colorMask(false, false, false, false);
-                gl.stencilFunc(gl.EQUAL, level, 0xFF);
-                gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+                if (this.currentBatchSize >= this.size - 1) {
+                    this.$drawWebGL();
+                    this.drawData.push({ "pushMask": mask, "count": 0 });
+                }
+                else {
+                    this.drawData.push({ "pushMask": mask, "count": 0 });
+                }
+                this.drawMask(mask);
+                this.currentBaseTexture = null;
+            };
+            p.popMask = function () {
+                // TODO mask count
+                var mask = this.$stencilList.pop();
+                if (this.currentBatchSize >= this.size - 1) {
+                    this.$drawWebGL();
+                    this.drawData.push({ "popMask": mask, "count": 0 });
+                }
+                else {
+                    this.drawData.push({ "popMask": mask, "count": 0 });
+                }
+                this.drawMask(mask);
+                this.currentBaseTexture = null;
+            };
+            /**
+             * @private
+             * draw masks with default shader
+             **/
+            p.drawMask = function (mask) {
+                if (this.contextLost) {
+                    return;
+                }
                 var length = mask.length;
                 if (length) {
                     for (var i = 0; i < length; i++) {
                         var item = mask[i];
-                        this.renderGraphics({ x: item.minX, y: item.minY, width: item.width, height: item.height });
+                        this.drawUvRect(0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
                     }
                 }
                 else {
-                    this.renderGraphics(mask);
+                    this.drawUvRect(0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
                 }
-                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-                gl.colorMask(true, true, true, true);
-                gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-            };
-            p.popMask = function () {
-                this.$drawWebGL();
-                var gl = this.context;
-                var mask = this.$stencilList.pop();
-                if (this.$stencilList.length === 0) {
-                    gl.disable(gl.STENCIL_TEST);
-                }
-                else {
-                    var level = this.$stencilList.length;
-                    gl.colorMask(false, false, false, false);
-                    gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-                    gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-                    var length = mask.length;
-                    if (length) {
-                        for (var i = 0; i < length; i++) {
-                            var item = mask[i];
-                            this.renderGraphics({ x: item.minX, y: item.minY, width: item.width, height: item.height });
-                        }
-                    }
-                    else {
-                        this.renderGraphics(mask);
-                    }
-                    gl.stencilFunc(gl.EQUAL, level, 0xFF);
-                    gl.colorMask(true, true, true, true);
-                    gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-                }
+                var count = length ? length : 1;
+                this.currentBatchSize += count;
+                this.drawData[this.drawData.length - 1].count += count;
             };
             p.renderGraphics = function (graphics) {
                 this.$drawWebGL();
