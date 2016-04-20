@@ -58,9 +58,14 @@ module egret.web {
             "varying vec2 vTextureCoord;\n" +
             "varying vec4 vColor;\n" +
             "uniform sampler2D uSampler;\n" +
+            "uniform float uPureColor;\n" +
 
             "void main(void) {\n" +
-                "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
+                "if(uPureColor == 1.0) {\n" +
+                    "gl_FragColor = vColor ;\n" +
+                "} else {\n" +
+                    "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
+                "}\n" +
             "}";
         private uSampler:WebGLUniformLocation;
         public projectionVector:WebGLUniformLocation;
@@ -70,6 +75,7 @@ module egret.web {
         public aTextureCoord:number;
         public colorAttribute:number;
         public attributes:Array<number>;
+        public uPureColor:WebGLUniformLocation;
         public uniforms:any = null;
 
         constructor(gl:WebGLRenderingContext) {
@@ -91,6 +97,7 @@ module egret.web {
             this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
             this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
             this.colorAttribute = gl.getAttribLocation(program, "aColor");
+            this.uPureColor = gl.getUniformLocation(program, "uPureColor");
 
             if (this.colorAttribute === -1) {
                 this.colorAttribute = 2;
