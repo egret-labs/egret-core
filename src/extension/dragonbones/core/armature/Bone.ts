@@ -446,29 +446,31 @@ module dragonBones {
             this._global.y = this._origin.y + this._tween.y + this._offset.y;
         }
 		/** @private */
-		public _update(needUpdate:boolean = false):void{
-            this._needUpdate --;
-			if(needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)){
+		public _update(needUpdate:boolean = false):void {
+			this._needUpdate--;
+			if (needUpdate || this._needUpdate > 0 || (this._parent && this._parent._needUpdate > 0)) {
 				this._needUpdate = 1;
 			}
-			else{
+			else {
 				return;
 			}
-			
+			this.updataLocalTransform()
+			this.updateGlobalTransform()
+		}
+		private updataLocalTransform():void {
 			this.blendingTimeline();
-
-            //计算global
-            var result:ParentTransformObject = this._updateGlobal();
-            var parentGlobalTransform:DBTransform;
-            var parentGlobalTransformMatrix:Matrix;
-            if(result)
-            {
-                parentGlobalTransform = result.parentGlobalTransform;
-                parentGlobalTransformMatrix = result.parentGlobalTransformMatrix;
-                result.release();
-            }
-
-
+			this._calculateRelativeParentTransform();
+		}
+		private updateGlobalTransform():void {
+			//计算global
+			var result:ParentTransformObject = this._updateGlobal();
+			var parentGlobalTransform:DBTransform;
+			var parentGlobalTransformMatrix:Matrix;
+			if (result) {
+				parentGlobalTransform = result.parentGlobalTransform;
+				parentGlobalTransformMatrix = result.parentGlobalTransformMatrix;
+				result.release();
+			}
             //计算globalForChild
             var ifExistOffsetTranslation:boolean = this._offset.x != 0 || this._offset.y != 0;
             var ifExistOffsetScale:boolean = this._offset.scaleX != 1 || this._offset.scaleY != 1;
@@ -557,11 +559,13 @@ module dragonBones {
 			{
 				return;
 			}
-			
-			this.global.rotation = this.rotationIK;
-			TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
-			this._globalTransformForChild.rotation = this.rotationIK;
-			TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
+			this.updataLocalTransform();
+			this._global.rotation = this.rotationIK-this.parentBoneRotation;
+			this.updateGlobalTransform();
+			//this.global.rotation = this.rotationIK;
+			//TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
+			//this._globalTransformForChild.rotation = this.rotationIK;
+			//TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
 		}
         
 		/** @private */
@@ -623,7 +627,7 @@ module dragonBones {
 			{
 				return super._updateGlobal();
 			}
-			this._calculateRelativeParentTransform();
+			//this._calculateRelativeParentTransform();
 			var output:ParentTransformObject = this._calculateParentTransform();
 			if(output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform)
 			{
