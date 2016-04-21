@@ -11739,6 +11739,7 @@ declare module egret {
         private blurHandler(event);
         private tempStage;
         private onMouseDownHandler(event);
+        $onFocus(): void;
         private onStageDownHandler(event);
         /**
          * @private
@@ -12577,8 +12578,15 @@ declare module egret {
          */
         private fillBackground(lines);
         /**
-         * @private
-         * @version Egret 2.4
+         * @language en_US
+         * Enter the text automatically entered into the input state, the input type is text only and may only be invoked in the user interaction.
+         * @version Egret 3.0.8
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 输入文本自动进入到输入状态，仅在类型是输入文本并且是在用户交互下才可以调用。
+         * @version Egret 3.0.8
          * @platform Web,Native
          */
         setFocus(): void;
