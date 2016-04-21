@@ -229,6 +229,21 @@ module egret {
          * @readOnly
          */
         paused:boolean;
+        /**
+         * @language en_US
+         * Length of the current video (in seconds).
+         * @version Egret 3.0.8
+         * @platform Web,Native
+         * @readOnly
+         */
+        /**
+         * @language zh_CN
+         * 当前视频的长度（以秒为单位）。
+         * @version Egret 3.0.8
+         * @platform Web,Native
+         * @readOnly
+         */
+        length:number;
     }
     /**
      * @copy egret.Video

@@ -166,22 +166,28 @@ module dragonBones {
 			else{
 				return;
 			}
-			this.blendingTimeline();
-			//计算global
-            var result:ParentTransformObject = this._updateGlobal();
-            if(result)
-            {
-                result.release();
-            }
+			this.updataLocalTransform();
+			this.updateGlobalTransform();
 		}
-		
+		private updataLocalTransform():void{
+			this.blendingTimeline();
+			this._calculateRelativeParentTransform();
+		}
+		private updateGlobalTransform():void{
+			//计算global
+			var result:ParentTransformObject = this._updateGlobal();
+			if(result)
+			{
+				result.release();
+			}
+		}
         public _updateGlobal():ParentTransformObject 
 		{
 			if (!this.armature._skewEnable)
 			{
 				return super._updateGlobal();
 			}
-			this._calculateRelativeParentTransform();
+			//this._calculateRelativeParentTransform();
 			var output:ParentTransformObject = this._calculateParentTransform();
 			if(output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform )
 			{
@@ -233,9 +239,11 @@ module dragonBones {
 			{
 				return;
 			}
-			
-			this.global.rotation = this.rotationIK;
-			TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
+			this.updataLocalTransform();
+			this._global.rotation = this.rotationIK-this.parentBoneRotation;
+			this.updateGlobalTransform();
+			//this.global.rotation = this.rotationIK;
+			//TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
 		}
         
 		/** @private */

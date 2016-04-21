@@ -10249,7 +10249,7 @@ var eui;
          */
         /**
          * @language zh_CN
-         * 数据源刷新
+         * 数据源刷新时触发。此方法不从组件外部调用，仅用于编写自定义组件时，子类覆盖父类的此方法，以便在数据源发生改变时，自动执行一些额外的根据数据刷新视图的操作。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native

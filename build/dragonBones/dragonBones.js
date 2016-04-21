@@ -2837,13 +2837,18 @@ var dragonBones;
             var j;
             var jLen;
             for (this._i = 0; this._i < len; this._i++) {
-                for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
-                    bone = this._boneIKList[this._i][j];
-                    bone._update(this._isFading);
-                    bone.rotationIK = bone.global.rotation;
-                    if (this._i != 0 && bone.isIKConstraint) {
-                        this._ikList[this._i - 1].compute();
+                if (this._i != 0) {
+                    this._ikList[this._i - 1].compute();
+                    for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
+                        bone = this._boneIKList[this._i][j];
                         bone.adjustGlobalTransformMatrixByIK();
+                    }
+                }
+                else {
+                    for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
+                        bone = this._boneIKList[this._i][j];
+                        bone._update(this._isFading);
+                        bone.rotationIK = bone.global.rotation;
                     }
                 }
             }
@@ -4026,7 +4031,14 @@ var dragonBones;
             else {
                 return;
             }
+            this.updataLocalTransform();
+            this.updateGlobalTransform();
+        };
+        p.updataLocalTransform = function () {
             this.blendingTimeline();
+            this._calculateRelativeParentTransform();
+        };
+        p.updateGlobalTransform = function () {
             //计算global
             var result = this._updateGlobal();
             var parentGlobalTransform;
@@ -4093,10 +4105,13 @@ var dragonBones;
             if (!this.parent) {
                 return;
             }
-            this.global.rotation = this.rotationIK;
-            dragonBones.TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
-            this._globalTransformForChild.rotation = this.rotationIK;
-            dragonBones.TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
+            this.updataLocalTransform();
+            this._global.rotation = this.rotationIK - this.parentBoneRotation;
+            this.updateGlobalTransform();
+            //this.global.rotation = this.rotationIK;
+            //TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
+            //this._globalTransformForChild.rotation = this.rotationIK;
+            //TransformUtil.transformToMatrix(this._globalTransformForChild, this._globalTransformMatrixForChild);
         };
         /** @private */
         p._hideSlots = function () {
@@ -4147,7 +4162,7 @@ var dragonBones;
             if (!this._armature._skewEnable) {
                 return _super.prototype._updateGlobal.call(this);
             }
-            this._calculateRelativeParentTransform();
+            //this._calculateRelativeParentTransform();
             var output = this._calculateParentTransform();
             if (output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform) {
                 //计算父骨头绝对坐标
@@ -4441,8 +4456,8 @@ var dragonBones;
                     var bend = this.animationCacheBend != 0 ? this.animationCacheBend : this.bendDirection;
                     var weig = this.animationCacheWeight >= 0 ? this.animationCacheWeight : this.weight;
                     var tt = this.compute2(this.bones[0], this.bones[1], this.target.global.x, this.target.global.y, bend, weig);
-                    this.bones[0].rotationIK = tt.x;
-                    this.bones[1].rotationIK = tt.y + tt.x;
+                    this.bones[0].rotationIK = this.bones[0].origin.rotation + (tt.x - this.bones[0].origin.rotation) * weig + this.bones[0].parent.rotationIK;
+                    this.bones[1].rotationIK = this.bones[1].origin.rotation + (tt.y - this.bones[1].origin.rotation) * weig + this.bones[0].rotationIK;
                     break;
             }
         };
@@ -4453,59 +4468,73 @@ var dragonBones;
             bone.rotationIK = rotation + (rotationIK - rotation) * weightA;
         };
         p.compute2 = function (parent, child, targetX, targetY, bendDirection, weightA) {
-            //添加斜切后的算法，现在用的
             if (weightA == 0) {
                 return new dragonBones.Point(parent.global.rotation, child.global.rotation);
             }
             var tt = new dragonBones.Point();
-            /**父的绝对坐标**/
             var p1 = new dragonBones.Point(parent.global.x, parent.global.y);
-            /**子的绝对坐标**/
             var p2 = new dragonBones.Point(child.global.x, child.global.y);
-            var psx = parent.global.scaleX;
-            var psy = parent.global.scaleY;
-            var csx = child.global.scaleX;
-            var csy = child.global.scaleY;
-            var cx = child.origin.x * psx;
-            var cy = child.origin.y * psy;
-            var initalRotation = Math.atan2(cy, cx); //差值等于子在父落点到父的角度
+            var matrix = new dragonBones.Matrix();
+            dragonBones.TransformUtil.transformToMatrix(parent.parent.global, matrix);
+            matrix.invert();
+            var targetPoint = dragonBones.TransformUtil.applyMatrixToPoint(new dragonBones.Point(targetX, targetY), matrix, true);
+            targetX = targetPoint.x;
+            targetY = targetPoint.y;
+            p1 = dragonBones.TransformUtil.applyMatrixToPoint(p1, matrix, true);
+            p2 = dragonBones.TransformUtil.applyMatrixToPoint(p2, matrix, true);
+            var psx = parent.origin.scaleX;
+            var psy = parent.origin.scaleY;
+            var csx = child.origin.scaleX;
             var childX = p2.x - p1.x;
             var childY = p2.y - p1.y;
-            /**d1的长度**/
             var len1 = Math.sqrt(childX * childX + childY * childY);
             var parentAngle;
             var childAngle;
+            var sign = 1;
+            var offset1 = 0;
+            var offset2 = 0;
+            if (psx < 0) {
+                psx = -psx;
+                offset1 = Math.PI;
+                sign = -1;
+            }
+            else {
+                offset1 = 0;
+                sign = 1;
+            }
+            if (psy < 0) {
+                psy = -psy;
+                sign = -sign;
+            }
+            if (csx < 0) {
+                csx = -csx;
+                offset2 = Math.PI;
+            }
+            else {
+                offset2 = 0;
+            }
+            bendDirection = sign * bendDirection;
             outer: if (Math.abs(psx - psy) <= 0.001) {
                 var childlength = child.length;
                 var len2 = childlength * csx;
                 targetX = targetX - p1.x;
                 targetY = targetY - p1.y;
                 var cosDenom = 2 * len1 * len2;
-                if (cosDenom < 0.0001) {
-                    var temp = Math.atan2(targetY, targetX);
-                    tt.x = temp * weightA - initalRotation;
-                    tt.y = temp * weightA + initalRotation; //+ tt.x ;
-                    this.normalize(tt.x);
-                    this.normalize(tt.y);
-                    return tt;
-                }
                 var cos = (targetX * targetX + targetY * targetY - len1 * len1 - len2 * len2) / cosDenom;
                 if (cos < -1)
                     cos = -1;
                 else if (cos > 1)
                     cos = 1;
-                childAngle = Math.acos(cos) * bendDirection; //o2
-                var adjacent = len1 + len2 * cos; //ae
-                var opposite = len2 * Math.sin(childAngle); //be
-                parentAngle = Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite); //o1
-                tt.x = parentAngle * weightA - initalRotation;
-                tt.y = childAngle * weightA + initalRotation; //+tt.x;
+                childAngle = Math.acos(cos) * bendDirection;
+                var adjacent = len1 + len2 * cos;
+                var opposite = len2 * Math.sin(childAngle);
+                parentAngle = Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite);
             }
             else {
                 var l1 = len1;
                 var tx = targetX - p1.x;
                 var ty = targetY - p1.y;
-                var l2 = child.length * child.origin.scaleX; //child.currentLocalTransform.scaleX;
+                var l2 = child.length * child.origin.scaleX;
                 var a = psx * l2;
                 var b = psy * l2;
                 var ta = Math.atan2(ty, tx);
@@ -4530,8 +4559,6 @@ var dragonBones;
                         var y1 = Math.sqrt(dd - r * r) * bendDirection;
                         parentAngle = ta - Math.atan2(y1, r);
                         childAngle = Math.atan2(y1 / psy, (r - l1) / psx);
-                        tt.x = parentAngle * weightA - initalRotation;
-                        tt.y = childAngle * weightA + initalRotation; //+tt.x;
                         break outer;
                     }
                 }
@@ -4581,9 +4608,12 @@ var dragonBones;
                     parentAngle = ta - Math.atan2(maxY * bendDirection, maxX);
                     childAngle = maxAngle * bendDirection;
                 }
-                tt.x = parentAngle * weightA - initalRotation;
-                tt.y = childAngle * weightA + initalRotation; //;
             }
+            var cx = child.origin.x;
+            var cy = child.origin.y * psy;
+            var initalRotation = Math.atan2(cy, cx) * sign;
+            tt.x = parentAngle - initalRotation + offset1;
+            tt.y = (childAngle + initalRotation) * sign + offset2;
             this.normalize(tt.x);
             this.normalize(tt.y);
             return tt;
@@ -7574,13 +7604,18 @@ var dragonBones;
                     }
                 }
                 for (i = 0; i < len; i++) {
-                    for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
-                        bone = this._boneIKList[i][j];
-                        bone.update();
-                        bone.rotationIK = bone.global.rotation;
-                        if (i != 0 && bone.isIKConstraint) {
-                            this._ikList[i - 1].compute();
+                    if (i != 0) {
+                        this._ikList[i - 1].compute();
+                        for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
+                            bone = this._boneIKList[i][j];
                             bone.adjustGlobalTransformMatrixByIK();
+                        }
+                    }
+                    else {
+                        for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
+                            bone = this._boneIKList[i][j];
+                            bone.update();
+                            bone.rotationIK = bone.global.rotation;
                         }
                     }
                 }
@@ -8270,7 +8305,14 @@ var dragonBones;
             else {
                 return;
             }
+            this.updataLocalTransform();
+            this.updateGlobalTransform();
+        };
+        p.updataLocalTransform = function () {
             this.blendingTimeline();
+            this._calculateRelativeParentTransform();
+        };
+        p.updateGlobalTransform = function () {
             //计算global
             var result = this._updateGlobal();
             if (result) {
@@ -8281,7 +8323,7 @@ var dragonBones;
             if (!this.armature._skewEnable) {
                 return _super.prototype._updateGlobal.call(this);
             }
-            this._calculateRelativeParentTransform();
+            //this._calculateRelativeParentTransform();
             var output = this._calculateParentTransform();
             if (output != null && output.parentGlobalTransformMatrix && output.parentGlobalTransform) {
                 //计算父骨头绝对坐标
@@ -8319,8 +8361,11 @@ var dragonBones;
             if (!this.parent) {
                 return;
             }
-            this.global.rotation = this.rotationIK;
-            dragonBones.TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
+            this.updataLocalTransform();
+            this._global.rotation = this.rotationIK - this.parentBoneRotation;
+            this.updateGlobalTransform();
+            //this.global.rotation = this.rotationIK;
+            //TransformUtil.transformToMatrix(this.global, this._globalTransformMatrix);
         };
         /** @private */
         p._hideSlots = function () {
@@ -8492,8 +8537,8 @@ var dragonBones;
                     var bend = this.animationCacheBend != 0 ? this.animationCacheBend : this.bendDirection;
                     var weig = this.animationCacheWeight >= 0 ? this.animationCacheWeight : this.weight;
                     var tt = this.compute2(this.bones[0], this.bones[1], this.target.global.x, this.target.global.y, bend, weig);
-                    this.bones[0].rotationIK = tt.x;
-                    this.bones[1].rotationIK = tt.y + tt.x;
+                    this.bones[0].rotationIK = this.bones[0].origin.rotation + (tt.x - this.bones[0].origin.rotation) * weig + this.bones[0].parent.rotationIK;
+                    this.bones[1].rotationIK = this.bones[1].origin.rotation + (tt.y - this.bones[1].origin.rotation) * weig + this.bones[0].rotationIK;
                     break;
             }
         };
@@ -8504,59 +8549,73 @@ var dragonBones;
             bone.rotationIK = rotation + (rotationIK - rotation) * weightA;
         };
         p.compute2 = function (parent, child, targetX, targetY, bendDirection, weightA) {
-            //添加斜切后的算法，现在用的
             if (weightA == 0) {
                 return new dragonBones.Point(parent.global.rotation, child.global.rotation);
             }
             var tt = new dragonBones.Point();
-            /**父的绝对坐标**/
             var p1 = new dragonBones.Point(parent.global.x, parent.global.y);
-            /**子的绝对坐标**/
             var p2 = new dragonBones.Point(child.global.x, child.global.y);
-            var psx = parent.global.scaleX;
-            var psy = parent.global.scaleY;
-            var csx = child.global.scaleX;
-            var csy = child.global.scaleY;
-            var cx = child.origin.x * psx;
-            var cy = child.origin.y * psy;
-            var initalRotation = Math.atan2(cy, cx); //差值等于子在父落点到父的角度
+            var matrix = new dragonBones.Matrix();
+            dragonBones.TransformUtil.transformToMatrix(parent.parent.global, matrix);
+            matrix.invert();
+            var targetPoint = dragonBones.TransformUtil.applyMatrixToPoint(new dragonBones.Point(targetX, targetY), matrix, true);
+            targetX = targetPoint.x;
+            targetY = targetPoint.y;
+            p1 = dragonBones.TransformUtil.applyMatrixToPoint(p1, matrix, true);
+            p2 = dragonBones.TransformUtil.applyMatrixToPoint(p2, matrix, true);
+            var psx = parent.origin.scaleX;
+            var psy = parent.origin.scaleY;
+            var csx = child.origin.scaleX;
             var childX = p2.x - p1.x;
             var childY = p2.y - p1.y;
-            /**d1的长度**/
             var len1 = Math.sqrt(childX * childX + childY * childY);
             var parentAngle;
             var childAngle;
+            var sign = 1;
+            var offset1 = 0;
+            var offset2 = 0;
+            if (psx < 0) {
+                psx = -psx;
+                offset1 = Math.PI;
+                sign = -1;
+            }
+            else {
+                offset1 = 0;
+                sign = 1;
+            }
+            if (psy < 0) {
+                psy = -psy;
+                sign = -sign;
+            }
+            if (csx < 0) {
+                csx = -csx;
+                offset2 = Math.PI;
+            }
+            else {
+                offset2 = 0;
+            }
+            bendDirection = sign * bendDirection;
             outer: if (Math.abs(psx - psy) <= 0.001) {
                 var childlength = child.length;
                 var len2 = childlength * csx;
                 targetX = targetX - p1.x;
                 targetY = targetY - p1.y;
                 var cosDenom = 2 * len1 * len2;
-                if (cosDenom < 0.0001) {
-                    var temp = Math.atan2(targetY, targetX);
-                    tt.x = temp * weightA - initalRotation;
-                    tt.y = temp * weightA + initalRotation; //+ tt.x ;
-                    this.normalize(tt.x);
-                    this.normalize(tt.y);
-                    return tt;
-                }
                 var cos = (targetX * targetX + targetY * targetY - len1 * len1 - len2 * len2) / cosDenom;
                 if (cos < -1)
                     cos = -1;
                 else if (cos > 1)
                     cos = 1;
-                childAngle = Math.acos(cos) * bendDirection; //o2
-                var adjacent = len1 + len2 * cos; //ae
-                var opposite = len2 * Math.sin(childAngle); //be
-                parentAngle = Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite); //o1
-                tt.x = parentAngle * weightA - initalRotation;
-                tt.y = childAngle * weightA + initalRotation; //+tt.x;
+                childAngle = Math.acos(cos) * bendDirection;
+                var adjacent = len1 + len2 * cos;
+                var opposite = len2 * Math.sin(childAngle);
+                parentAngle = Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite);
             }
             else {
                 var l1 = len1;
                 var tx = targetX - p1.x;
                 var ty = targetY - p1.y;
-                var l2 = child.length * child.origin.scaleX; //child.currentLocalTransform.scaleX;
+                var l2 = child.length * child.origin.scaleX;
                 var a = psx * l2;
                 var b = psy * l2;
                 var ta = Math.atan2(ty, tx);
@@ -8581,8 +8640,6 @@ var dragonBones;
                         var y1 = Math.sqrt(dd - r * r) * bendDirection;
                         parentAngle = ta - Math.atan2(y1, r);
                         childAngle = Math.atan2(y1 / psy, (r - l1) / psx);
-                        tt.x = parentAngle * weightA - initalRotation;
-                        tt.y = childAngle * weightA + initalRotation; //+tt.x;
                         break outer;
                     }
                 }
@@ -8632,9 +8689,12 @@ var dragonBones;
                     parentAngle = ta - Math.atan2(maxY * bendDirection, maxX);
                     childAngle = maxAngle * bendDirection;
                 }
-                tt.x = parentAngle * weightA - initalRotation;
-                tt.y = childAngle * weightA + initalRotation; //;
             }
+            var cx = child.origin.x;
+            var cy = child.origin.y * psy;
+            var initalRotation = Math.atan2(cy, cx) * sign;
+            tt.x = parentAngle - initalRotation + offset1;
+            tt.y = (childAngle + initalRotation) * sign + offset2;
             this.normalize(tt.x);
             this.normalize(tt.y);
             return tt;
@@ -14386,6 +14446,20 @@ var dragonBones;
                 transform.skewY = TransformUtil.tmpSkewYArray[1];
             }
         };
+        TransformUtil.applyMatrixToPoint = function (targetPoint, matrix, returnNewPoint) {
+            if (returnNewPoint === void 0) { returnNewPoint = false; }
+            this._helpMatrix.tx = targetPoint.x;
+            this._helpMatrix.ty = targetPoint.y;
+            this._helpMatrix.concat(matrix);
+            if (returnNewPoint) {
+                return new dragonBones.Point(this._helpMatrix.tx, this._helpMatrix.ty);
+            }
+            else {
+                targetPoint.x = this._helpMatrix.tx;
+                targetPoint.y = this._helpMatrix.ty;
+                return targetPoint;
+            }
+        };
         /**
          * 标准化弧度值，把弧度制换算到[-PI，PI]之间
          * @param radian 输入一个弧度值
@@ -14447,6 +14521,7 @@ var dragonBones;
         TransformUtil.tmpSkewXArray = [];
         TransformUtil.tmpSkewYArray = [];
         TransformUtil.ACCURACY = 0.0001;
+        TransformUtil._helpMatrix = new dragonBones.Matrix();
         return TransformUtil;
     }());
     dragonBones.TransformUtil = TransformUtil;

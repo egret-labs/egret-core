@@ -11469,6 +11469,7 @@ var egret;
     locale_strings[3011] = "Index:\"{0}\" is out of the visual element index range";
     locale_strings[3012] = "This method is not available in Scroller component!";
     locale_strings[3013] = "UIStage is GUI root container, and only one such instant is in the display list！";
+    locale_strings[3014] = "Webkit fullscreen error";
     //socket 3100-3199
     locale_strings[3100] = "Current browser does not support WebSocket";
     locale_strings[3101] = "Please connect Socket firstly";
@@ -11608,6 +11609,7 @@ var egret;
     locale_strings[3011] = "索引:\"{0}\"超出可视元素索引范围";
     locale_strings[3012] = "此方法在Scroller组件内不可用!";
     locale_strings[3013] = "UIStage是GUI根容器，只能有一个此实例在显示列表中！";
+    locale_strings[3014] = "设置全屏模式失败";
     //socket 3100-3199
     locale_strings[3100] = "当前浏览器不支持WebSocket";
     locale_strings[3101] = "请先连接WebSocket";
@@ -16968,6 +16970,8 @@ var egret;
                     }
                     var bitmapWidth = texture._bitmapWidth;
                     var bitmapHeight = texture._bitmapHeight;
+                    node.imageWidth = texture._sourceWidth;
+                    node.imageHeight = texture._sourceHeight;
                     node.drawImage(texture._bitmapX, texture._bitmapY, bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY, texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
                     xPos += texture.$getTextureWidth() + values[4 /* letterSpacing */];
                 }

@@ -491,7 +491,8 @@ module egret {
                     }
                     var bitmapWidth:number = texture._bitmapWidth;
                     var bitmapHeight:number = texture._bitmapHeight;
-
+                    node.imageWidth = texture._sourceWidth;
+                    node.imageHeight = texture._sourceHeight;
                     node.drawImage(texture._bitmapX, texture._bitmapY,
                         bitmapWidth, bitmapHeight, xPos + texture._offsetX, yPos + texture._offsetY,
                         texture.$getScaleBitmapWidth(), texture.$getScaleBitmapHeight());
