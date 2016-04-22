@@ -135,4 +135,11 @@ module egret.web {
     Texture.prototype.toDataURL = toDataURL;
     Texture.prototype.saveToFile = saveToFile;
     Texture.prototype.getPixel32 = getPixel32;
+
+    //销毁掉webgl纹理
+    var originDispose = Texture.prototype.dispose;
+    Texture.prototype.dispose = function () {
+        WebGLUtils.deleteWebGLTexture(this._bitmapData);
+        originDispose.call(this);
+    }
 }

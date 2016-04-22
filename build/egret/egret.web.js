@@ -4331,6 +4331,12 @@ var egret;
         egret.Texture.prototype.toDataURL = toDataURL;
         egret.Texture.prototype.saveToFile = saveToFile;
         egret.Texture.prototype.getPixel32 = getPixel32;
+        //销毁掉webgl纹理
+        var originDispose = egret.Texture.prototype.dispose;
+        egret.Texture.prototype.dispose = function () {
+            web.WebGLUtils.deleteWebGLTexture(this._bitmapData);
+            originDispose.call(this);
+        };
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
