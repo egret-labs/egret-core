@@ -6689,6 +6689,8 @@ var egret;
                 //没有遮罩,同时显示对象没有子项
                 if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
                     if (scrollRect) {
+                        var m = displayMatrix;
+                        buffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
                         buffer.pushMask(scrollRect);
                     }
                     var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, 0, 0);
