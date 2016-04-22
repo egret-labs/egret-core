@@ -216,8 +216,10 @@ module egret.web {
             // dirtyRegionPolicy hack
             if(this._dirtyRegionPolicy) {
                 this.rootRenderTarget.useFrameBuffer = true;
+                this.rebindRenderTarget();
             } else {
                 this.rootRenderTarget.useFrameBuffer = false;
+                this.rebindRenderTarget();
                 this.clear();
             }
 
