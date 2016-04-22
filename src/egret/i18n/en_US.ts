@@ -19,12 +19,13 @@ module egret {
     locale_strings[1012] = "The type of parameter {0} must be Class.";
     locale_strings[1013] = "Variable assignment is NaN, please see the code!";
     locale_strings[1014] = "the constant \"{1}\" of the Class \"{0}\" is read-only";
-
     locale_strings[1015] = "xml not found!";
     locale_strings[1016] = "{0}has been obsoleted";
     locale_strings[1017] = "The format of JSON file is incorrect: {0}\ndata: {1}";
     locale_strings[1018] = "the scale9Grid is not correct";
-
+    locale_strings[1019] = "Network ab:{0}";
+    locale_strings[1020] = "Cannot initialize Shader";
+    locale_strings[1021] = "Current browser does not support webgl";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "This method is not available in the ScrollView!";
     locale_strings[1025] = "end of the file";
@@ -58,7 +59,7 @@ module egret {
     locale_strings[3011] = "Index:\"{0}\" is out of the visual element index range";
     locale_strings[3012] = "This method is not available in Scroller component!";
     locale_strings[3013] = "UIStage is GUI root container, and only one such instant is in the display list！";
-
+    locale_strings[3014] = "Webkit fullscreen error";
     //socket 3100-3199
     locale_strings[3100] = "Current browser does not support WebSocket";
     locale_strings[3101] = "Please connect Socket firstly";

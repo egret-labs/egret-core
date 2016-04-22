@@ -1473,6 +1473,8 @@ declare module dragonBones {
         _calculateRelativeParentTransform(): void;
         /** @private */
         _update(needUpdate?: boolean): void;
+        private updataLocalTransform();
+        private updateGlobalTransform();
         /** @private */
         _updateColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChanged: boolean): void;
         adjustGlobalTransformMatrixByIK(): void;
@@ -3221,6 +3223,8 @@ declare module dragonBones {
         updateByCache(): void;
         /** @private */
         update(needUpdate?: boolean): void;
+        private updataLocalTransform();
+        private updateGlobalTransform();
         _updateGlobal(): ParentTransformObject;
         adjustGlobalTransformMatrixByIK(): void;
         /** @private */
@@ -5398,6 +5402,8 @@ declare module dragonBones {
          * @param scaleYF y方向的缩放
          */
         static matrixToTransform(matrix: Matrix, transform: DBTransform, scaleXF: boolean, scaleYF: boolean): void;
+        private static _helpMatrix;
+        static applyMatrixToPoint(targetPoint: Point, matrix: Matrix, returnNewPoint?: Boolean): Point;
         /**
          * 标准化弧度值，把弧度制换算到[-PI，PI]之间
          * @param radian 输入一个弧度值

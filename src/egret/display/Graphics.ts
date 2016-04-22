@@ -710,8 +710,8 @@ module egret {
             var node = this.$renderNode;
             node.x = this.minX;
             node.y = this.minY;
-            node.width = this.maxX - this.minX;
-            node.height = this.maxY - this.minY;
+            node.width = Math.ceil(this.maxX - this.minX);
+            node.height = Math.ceil(this.maxY - this.minY);
         }
 
         /**

@@ -110,6 +110,11 @@ module egret.sys {
          * 销毁渲染缓冲
          */
         destroy():void;
+
+        /**
+         * 设置脏矩形策略
+         */
+        setDirtyRegionPolicy(state:string):void;
     }
 
     export var RenderBuffer:{

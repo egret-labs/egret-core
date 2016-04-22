@@ -1273,6 +1273,10 @@ module egret {
         public set cacheAsBitmap(value:boolean) {
             value = !!value;
             this.$DisplayObject[Keys.cacheAsBitmap] = value;
+            this.$setHasDisplayList(value);
+        }
+
+        public $setHasDisplayList(value:boolean):void {
             var hasDisplayList = !!this.$displayList;
             if (hasDisplayList == value) {
                 return;
@@ -1894,6 +1898,7 @@ module egret {
                 node.cleanBeforeRender();
                 this.$render();
                 this.$removeFlags(sys.DisplayObjectFlags.InvalidRenderNodes);
+                node = this.$renderNode;
             }
             return node;
         }

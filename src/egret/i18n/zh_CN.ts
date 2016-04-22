@@ -22,12 +22,13 @@ module egret {
     locale_strings[1012] = "参数 {0} 的类型必须为 Class。";
     locale_strings[1013] = "变量赋值为NaN，请查看代码！";
     locale_strings[1014] = "类 {0} 常量 {1} 是只读的";
-
     locale_strings[1015] = "xml not found!";
     locale_strings[1016] = "{0}已经废弃";
     locale_strings[1017] = "JSON文件格式不正确: {0}\ndata: {1}";
     locale_strings[1018] = "9宫格设置错误";
-
+    locale_strings[1019] = "网络异常:{0}";
+    locale_strings[1020] = "无法初始化着色器";
+    locale_strings[1021] = "当前浏览器不支持webgl";
     locale_strings[1022] = "{0} ArgumentError";
     locale_strings[1023] = "此方法在ScrollView内不可用!";
     locale_strings[1025] = "遇到文件尾";
@@ -62,6 +63,7 @@ module egret {
     locale_strings[3011] = "索引:\"{0}\"超出可视元素索引范围";
     locale_strings[3012] = "此方法在Scroller组件内不可用!";
     locale_strings[3013] = "UIStage是GUI根容器，只能有一个此实例在显示列表中！";
+    locale_strings[3014] = "设置全屏模式失败";
 
     //socket 3100-3199
     locale_strings[3100] = "当前浏览器不支持WebSocket";

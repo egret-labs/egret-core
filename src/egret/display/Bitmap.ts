@@ -44,7 +44,9 @@ module egret.sys {
         textureHeight,
         smoothing,
         explicitBitmapWidth,
-        explicitBitmapHeight
+        explicitBitmapHeight,
+        sourceWidth,
+        sourceHeight
     }
 }
 
@@ -218,7 +220,7 @@ module egret {
                 this.$refreshImageData();
             }
             else {
-                this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0);
+                this.setImageData(null, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
                 this.$invalidateContentBounds();
                 return true;
             }
@@ -261,12 +263,17 @@ module egret {
             if (bitmapData) {
                 if (bitmapData instanceof Texture) {
                     var texture = <Texture>bitmapData;
-                    this.setImageData(texture._bitmapData, texture._bitmapX, texture._bitmapY, texture._bitmapWidth,
-                        texture._bitmapHeight, texture._offsetX, texture._offsetY, texture.$getTextureWidth(), texture.$getTextureHeight());
+                    this.setImageData(texture._bitmapData,
+                        texture._bitmapX, texture._bitmapY,
+                        texture._bitmapWidth, texture._bitmapHeight,
+                        texture._offsetX, texture._offsetY,
+                        texture.$getTextureWidth(), texture.$getTextureHeight(),
+                        texture._sourceWidth, texture._sourceHeight);
                 }
                 else {
-                    this.setImageData(<BitmapData>bitmapData, 0, 0, (<BitmapData>bitmapData).width, (<BitmapData>bitmapData).height,
-                        0, 0, (<BitmapData>bitmapData).width, (<BitmapData>bitmapData).height);
+                    var width = (<BitmapData>bitmapData).width;
+                    var height = (<BitmapData>bitmapData).height;
+                    this.setImageData(<BitmapData>bitmapData, 0, 0, width, height, 0, 0, width, height, width, height);
                 }
             }
         }
@@ -275,7 +282,7 @@ module egret {
          * @private
          */
         private setImageData(image:BitmapData, bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number,
-                             offsetX:number, offsetY:number, textureWidth:number, textureHeight:number):void {
+                             offsetX:number, offsetY:number, textureWidth:number, textureHeight:number, sourceWidth:number, sourceHeight:number):void {
             var values = this.$Bitmap;
             values[sys.BitmapKeys.image] = image;
             values[sys.BitmapKeys.bitmapX] = bitmapX;
@@ -286,6 +293,8 @@ module egret {
             values[sys.BitmapKeys.offsetY] = offsetY;
             values[sys.BitmapKeys.textureWidth] = textureWidth;
             values[sys.BitmapKeys.textureHeight] = textureHeight;
+            values[sys.BitmapKeys.sourceWidth] = sourceWidth;
+            values[sys.BitmapKeys.sourceHeight] = sourceHeight;
         }
 
         /**
@@ -496,7 +505,7 @@ module egret {
                 Bitmap.$drawImage(<sys.BitmapNode>this.$renderNode, values[sys.BitmapKeys.image],
                     values[sys.BitmapKeys.bitmapX], values[sys.BitmapKeys.bitmapY], values[sys.BitmapKeys.bitmapWidth], values[sys.BitmapKeys.bitmapHeight],
                     values[sys.BitmapKeys.offsetX], values[sys.BitmapKeys.offsetY], values[sys.BitmapKeys.textureWidth], values[sys.BitmapKeys.textureHeight],
-                    destW, destH, this.scale9Grid || values[sys.BitmapKeys.bitmapData]["scale9Grid"], this.fillMode, values[sys.BitmapKeys.smoothing]);
+                    destW, destH, values[sys.BitmapKeys.sourceWidth], values[sys.BitmapKeys.sourceHeight], this.scale9Grid || values[sys.BitmapKeys.bitmapData]["scale9Grid"], this.fillMode, values[sys.BitmapKeys.smoothing]);
             }
         }
 
@@ -583,14 +592,16 @@ module egret {
          */
         static $drawImage(node:sys.BitmapNode, image:any,
                           bitmapX:number, bitmapY:number, bitmapWidth:number, bitmapHeight:number, offsetX:number, offsetY:number,
-                          textureWidth:number, textureHeight:number, destW:number, destH:number, scale9Grid:egret.Rectangle,
-                          fillMode:string, smoothing:boolean):void {
+                          textureWidth:number, textureHeight:number, destW:number, destH:number, sourceWidth:number, sourceHeight:number,
+                          scale9Grid:egret.Rectangle, fillMode:string, smoothing:boolean):void {
             if (!image) {
                 return;
             }
             var scale = $TextureScaleFactor;
             node.smoothing = smoothing;
             node.image = image;
+            node.imageWidth = sourceWidth;
+            node.imageHeight = sourceHeight;
             if (scale9Grid) {
                 Bitmap.drawScale9GridImage(node, scale9Grid,
                     bitmapX, bitmapY, bitmapWidth,

@@ -48,6 +48,9 @@ module egret.web {
      * @param italic 是否斜体
      */
     function measureText(text:string, fontFamily:string, fontSize:number, bold:boolean, italic:boolean):number {
+        if(!context) {
+            createContext();
+        }
         var font = "";
         if (italic)
             font += "italic ";
@@ -73,12 +76,16 @@ module egret.web {
      * @private
      */
     function createContext():void {
-        var canvas = document.createElement("canvas");
-        context = canvas.getContext("2d");
+        if(Capabilities.renderMode == "canvas") {
+            context = sys.hitTestBuffer.context;
+        }
+        else {
+            var canvas = document.createElement("canvas");
+            context = canvas.getContext("2d");
+        }
         context.textAlign = "left";
         context.textBaseline = "middle";
     }
 
-    createContext();
     sys.measureText = measureText;
 }

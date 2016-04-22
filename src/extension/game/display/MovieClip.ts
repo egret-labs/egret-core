@@ -229,9 +229,11 @@ module egret {
                 var textureHeight:number = texture.$getTextureHeight();
                 var destW:number = Math.round(texture.$getScaleBitmapWidth());
                 var destH:number = Math.round(texture.$getScaleBitmapHeight());
+                var sourceWidth:number = texture._sourceWidth;
+                var sourceHeight:number = texture._sourceHeight;
 
                 Bitmap.$drawImage(<sys.BitmapNode>this.$renderNode, texture._bitmapData, texture._bitmapX, texture._bitmapY,
-                    bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, null, egret.BitmapFillMode.SCALE, this.$smoothing);
+                    bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, null, egret.BitmapFillMode.SCALE, this.$smoothing);
             }
         }
 

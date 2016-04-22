@@ -534,8 +534,8 @@ module egret {
                         context.fillStyle = forHitTest ? BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
                         context.save();
                         var m = g.matrix;
-                        context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         this.renderPath(path, context);
+                        context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                         context.fill();
                         context.restore();
                         break;

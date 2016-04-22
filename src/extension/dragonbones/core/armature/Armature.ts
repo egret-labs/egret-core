@@ -264,15 +264,20 @@ module dragonBones {
 			
 			for (this._i = 0; this._i < len; this._i++) 
 			{
-				for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++)
+
+				if(this._i != 0)
 				{
-					bone = this._boneIKList[this._i][j];
-					bone._update(this._isFading);
-					bone.rotationIK = bone.global.rotation;
-					if(this._i != 0 && bone.isIKConstraint)
-					{
-						this._ikList[this._i-1].compute();
+					this._ikList[this._i-1].compute();
+					for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++) {
+						bone = this._boneIKList[this._i][j];
 						bone.adjustGlobalTransformMatrixByIK();
+					}
+				}else{
+					for (j = 0, jLen = this._boneIKList[this._i].length; j < jLen; j++)
+					{
+						bone = this._boneIKList[this._i][j];
+						bone._update(this._isFading);
+						bone.rotationIK = bone.global.rotation;
 					}
 				}
 			}

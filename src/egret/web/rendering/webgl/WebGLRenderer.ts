@@ -313,33 +313,35 @@ module egret.web {
                     //        mask.$displayList, region, root ? mask : null);
                     //}
                     //else {
-                        var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                        var maskContext = maskBuffer.context;
-                        if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
-                            drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
-                                displayObject.$displayList, clipRegion, root);
-                            displayBuffer.popMask();
-                            renderBufferPool.push(displayBuffer);
-                            sys.Region.release(region);
-                            Matrix.release(displayMatrix);
-                            return drawCalls;
-                        }
-                        maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
-                        offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                        var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
-                            mask.$displayList, region, root ? mask : null);
-                        Matrix.release(offsetM);
-                        if (calls > 0) {
-                            drawCalls += calls;
-                            displayBuffer.setGlobalCompositeOperation("destination-in");
-                            displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
-                            displayBuffer.setGlobalAlpha(1);
-                            maskBuffer.$drawWebGL();
-                            WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
-                            displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBuffer.surface.width, maskBuffer.surface.height,
-                                0, 0, maskBuffer.surface.width, maskBuffer.surface.height);
-                        }
-                        renderBufferPool.push(maskBuffer);
+                    var maskBuffer = this.createRenderBuffer(region.width, region.height);
+                    var maskContext = maskBuffer.context;
+                    if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
+                        drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
+                            displayObject.$displayList, clipRegion, root);
+                        displayBuffer.popMask();
+                        renderBufferPool.push(displayBuffer);
+                        sys.Region.release(region);
+                        Matrix.release(displayMatrix);
+                        return drawCalls;
+                    }
+                    maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
+                    offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
+                    var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
+                        mask.$displayList, region, root ? mask : null);
+                    Matrix.release(offsetM);
+                    if (calls > 0) {
+                        drawCalls += calls;
+                        displayBuffer.setGlobalCompositeOperation("destination-in");
+                        displayBuffer.setTransform(1, 0, 0, 1, 0, 0);
+                        displayBuffer.setGlobalAlpha(1);
+                        maskBuffer.$drawWebGL();
+                        WebGLUtils.deleteWebGLTexture(maskBuffer.surface);
+                        var maskBufferWidth = maskBuffer.surface.width;
+                        var maskBufferHeight = maskBuffer.surface.height;
+                        displayBuffer.drawImage(<any>maskBuffer.surface, 0, 0, maskBufferWidth, maskBufferHeight,
+                            0, 0, maskBufferWidth, maskBufferHeight, maskBufferWidth, maskBufferHeight);
+                    }
+                    renderBufferPool.push(maskBuffer);
                     //}
                 }
 
@@ -353,8 +355,10 @@ module egret.web {
                     buffer.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                     displayBuffer.$drawWebGL();
                     WebGLUtils.deleteWebGLTexture(displayBuffer.surface);
-                    buffer.drawImage(<any>displayBuffer.surface, 0, 0, displayBuffer.surface.width, displayBuffer.surface.height,
-                        0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
+                    var displayBufferWidth = displayBuffer.surface.width;
+                    var displayBufferHeight = displayBuffer.surface.height;
+                    buffer.drawImage(<any>displayBuffer.surface, 0, 0, displayBufferWidth, displayBufferHeight,
+                        0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
                     if (hasBlendMode) {
                         buffer.setGlobalCompositeOperation(defaultCompositeOp);
                     }
@@ -417,6 +421,7 @@ module egret.web {
             buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
             buffer.pushMask(scrollRect);
             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, region, root);
+            buffer.setTransform(m.a, m.b, m.c, m.d, m.tx + matrix.tx, m.ty + matrix.ty);
             buffer.popMask();
 
             sys.Region.release(region);
@@ -435,6 +440,7 @@ module egret.web {
             var webglBuffer:WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
             webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, buffer, forHitTest);
+            buffer.$drawWebGL();
         }
 
         /**
@@ -480,7 +486,7 @@ module egret.web {
             }
             while (pos < length) {
                 buffer.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                    data[pos++], data[pos++], data[pos++], data[pos++]);
+                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
             }
             if (m) {
                 buffer.restoreTransform();
@@ -516,11 +522,12 @@ module egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
+            var surface = node.$canvasRenderBuffer.surface;
             if (node.dirtyRender) {
-                WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
+                WebGLUtils.deleteWebGLTexture(surface);
                 node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
             }
-            buffer.drawImage(<BitmapData><any>node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
+            buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
             if (node.x || node.y) {
                 if (node.dirtyRender) {
                     node.$canvasRenderBuffer.context.translate(node.x, node.y);
@@ -543,7 +550,7 @@ module egret.web {
                 node.$canvasRenderer = new CanvasRenderer();
                 node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
-            else {
+            else if (node.dirtyRender) {
                 node.$canvasRenderBuffer.resize(width, height, true);
             }
             if (!node.$canvasRenderBuffer.context) {
@@ -555,11 +562,12 @@ module egret.web {
                 }
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
+            var surface = node.$canvasRenderBuffer.surface;
             if (node.dirtyRender) {
-                WebGLUtils.deleteWebGLTexture(node.$canvasRenderBuffer.surface);
+                WebGLUtils.deleteWebGLTexture(surface);
                 node.$canvasRenderer["renderGraphics"](node, node.$canvasRenderBuffer.context, forHitTest);
             }
-            buffer.drawImage(<BitmapData><any>node.$canvasRenderBuffer.surface, 0, 0, width, height, 0, 0, width, height);
+            buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
             if (node.x || node.y) {
                 if (node.dirtyRender) {
                     node.$canvasRenderBuffer.context.translate(node.x, node.y);

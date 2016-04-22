@@ -1069,7 +1069,7 @@ module egret {
         public set multiline(value:boolean) {
             this.$setMultiline(value);
         }
-
+           
         /**
          * @private
          *
@@ -1415,18 +1415,34 @@ module egret {
                     }
                 }
             }
+            if(graphics) {
+                var bounds = this.$getRenderBounds();
+                graphics.x = bounds.x;
+                graphics.y = bounds.y;
+                graphics.width = bounds.width;
+                graphics.height = bounds.height;
+                Rectangle.release(bounds);
+            }
         }
 
         /**
-         * @private
-         * @version Egret 2.4
+         * @language en_US
+         * Enter the text automatically entered into the input state, the input type is text only and may only be invoked in the user interaction.
+         * @version Egret 3.0.8
          * @platform Web,Native
          */
-        public setFocus() {
-            //todo:
-            egret.$warn(1013);
-        }
-
+        /**
+         * @language zh_CN
+         * 输入文本自动进入到输入状态，仅在类型是输入文本并且是在用户交互下才可以调用。
+         * @version Egret 3.0.8
+         * @platform Web,Native
+         */
+        public setFocus():void {
+            if (this.type == egret.TextFieldType.INPUT && this.$stage) {
+                this.inputUtils.$onFocus();
+            }
+        }    
+            
         /**
          * @private
          *
@@ -1523,12 +1539,13 @@ module egret {
 
             var underLines = this.drawText();
             this.fillBackground(underLines);
+            //tudo 宽高很小的情况下webgl模式绘制异常
             var bounds = this.$getRenderBounds();
             var node = this.textNode;
             node.x = bounds.x;
             node.y = bounds.y;
-            node.width = bounds.width;
-            node.height = bounds.height;
+            node.width = Math.ceil(bounds.width);
+            node.height = Math.ceil(bounds.height);
             Rectangle.release(bounds);
         }
 
@@ -1794,7 +1811,7 @@ module egret {
                                         var words2:Array<string> = words[k].match(/./g);
                                         for (var k2 = 0, wl2 = words2.length; k2 < wl2; k2++) {
                                             w = measureTextWidth(words2[k2], values, element.style);
-                                            if(lineW+w>textFieldWidth){
+                                            if(k2>0 && lineW+w>textFieldWidth){
                                                 break;
                                             }
                                             charNum += words2[k2].length;

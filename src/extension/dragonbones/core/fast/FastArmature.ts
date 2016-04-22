@@ -233,17 +233,21 @@ module dragonBones {
 				
                 for (i = 0; i < len; i++) 
                 {
-                    for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++)
-                    {
-                        bone = this._boneIKList[i][j];
-                        bone.update();
-                        bone.rotationIK = bone.global.rotation;
-                        if(i != 0 && bone.isIKConstraint)
-                        {
-                            this._ikList[i-1].compute();
-                            bone.adjustGlobalTransformMatrixByIK();
-                        }
-                    }
+					if(i != 0)
+					{
+						this._ikList[i-1].compute();
+						for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++) {
+							bone = this._boneIKList[i][j];
+							bone.adjustGlobalTransformMatrixByIK();
+						}
+					}else{
+						for (j = 0, jLen = this._boneIKList[i].length; j < jLen; j++)
+						{
+							bone = this._boneIKList[i][j];
+							bone.update();
+							bone.rotationIK = bone.global.rotation;
+						}
+					}
                 }
 				
 				i = this.slotList.length;

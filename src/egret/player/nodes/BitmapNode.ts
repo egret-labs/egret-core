@@ -47,8 +47,18 @@ module egret.sys {
          * 控制在缩放时是否对位图进行平滑处理。
          */
         public smoothing:boolean = true;
-
+        /**
+         * 相对偏移矩阵。
+         */
         public matrix:egret.Matrix;
+        /**
+         * 图片宽度。WebGL渲染使用
+         */
+        public imageWidth:number;
+        /**
+         * 图片高度。WebGL渲染使用
+         */
+        public imageHeight:number;
         /**
          * 绘制一次位图
          */

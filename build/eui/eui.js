@@ -304,7 +304,7 @@ var eui;
                 return true;
             }
             var isEventDispatcher = egret.is(host, "egret.IEventDispatcher");
-            if (!isEventDispatcher) {
+            if (!isEventDispatcher && !host[listeners]) {
                 host[listeners] = [];
             }
             var data = getPropertyDescriptor(host, property);
@@ -8814,7 +8814,7 @@ var eui;
                 return;
             }
             var values = this.$Bitmap;
-            egret.Bitmap.$drawImage(this.$renderNode, values[1 /* image */], values[2 /* bitmapX */], values[3 /* bitmapY */], values[4 /* bitmapWidth */], values[5 /* bitmapHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* textureWidth */], values[9 /* textureHeight */], width, height, this.scale9Grid, this.$fillMode, values[10 /* smoothing */]);
+            egret.Bitmap.$drawImage(this.$renderNode, values[1 /* image */], values[2 /* bitmapX */], values[3 /* bitmapY */], values[4 /* bitmapWidth */], values[5 /* bitmapHeight */], values[6 /* offsetX */], values[7 /* offsetY */], values[8 /* textureWidth */], values[9 /* textureHeight */], width, height, values[13 /* sourceWidth */], values[14 /* sourceHeight */], this.scale9Grid, this.$fillMode, values[10 /* smoothing */]);
         };
         /**
          * @copy eui.UIComponent#createChildren
@@ -10249,7 +10249,7 @@ var eui;
          */
         /**
          * @language zh_CN
-         * 数据源刷新
+         * 数据源刷新时触发。此方法不从组件外部调用，仅用于编写自定义组件时，子类覆盖父类的此方法，以便在数据源发生改变时，自动执行一些额外的根据数据刷新视图的操作。
          * @version Egret 2.4
          * @version eui 1.0
          * @platform Web,Native
@@ -24299,11 +24299,12 @@ var eui;
             if (!this.target) {
                 return;
             }
+            var nextOldValue = this.target[this.prop];
             if (this.oldValue) {
                 this.setPropertyValue(this.target, this.prop, this.oldValue, this.oldValue);
             }
-            if (this.target[this.prop]) {
-                this.oldValue = this.target[this.prop];
+            if (nextOldValue) {
+                this.oldValue = nextOldValue;
             }
             var chain = [];
             for (var i = 0, len = this.chain.length; i < len; i++) {

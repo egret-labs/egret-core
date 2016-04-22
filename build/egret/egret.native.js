@@ -1045,6 +1045,8 @@ var egret;
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             };
+            p.setDirtyRegionPolicy = function (state) {
+            };
             /**
              * 清空并设置裁切
              * @param regions 矩形列表
@@ -2027,6 +2029,8 @@ var egret;
                 oldSurface.height = 1;
                 oldSurface.width = 1;
             };
+            p.setDirtyRegionPolicy = function (state) {
+            };
             /**
              * 清空并设置裁切
              * @param regions 矩形列表
@@ -2399,6 +2403,7 @@ var egret;
                 egret.sys.RenderBuffer = native.NativeRenderTextureRenderBuffer;
             }
             egret.sys.systemRenderer = new egret.CanvasRenderer();
+            egret.Capabilities.renderMode = "canvas";
         }
         function updateAllScreens() {
             var length = playerList.length;
