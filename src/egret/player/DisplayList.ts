@@ -298,6 +298,12 @@ module egret.sys {
             //在chrome里，小等于256*256的canvas会不启用GPU加速。
             var width = Math.max(257, bounds.width);
             var height = Math.max(257, bounds.height);
+            if(this.offsetX == oldOffsetX &&
+                this.offsetY == oldOffsetY &&
+                buffer.surface.width == width &&
+                buffer.surface.height == height) {
+                return;
+            }
             if (!this.sizeChanged) {
                 this.sizeChanged = true;
                 buffer.resize(width, height);
