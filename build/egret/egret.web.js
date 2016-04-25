@@ -6068,24 +6068,28 @@ var egret;
                     bitmapData.webGLTexture = {};
                 }
                 if (!bitmapData.webGLTexture[this.glID]) {
-                    var gl = this.context;
-                    var glTexture = gl.createTexture();
+                    var glTexture = this.createTexture(bitmapData);
                     bitmapData.webGLTexture[this.glID] = glTexture;
-                    if (!glTexture) {
-                        //先创建texture失败,然后lost事件才发出来..
-                        this.contextLost = true;
-                        return;
-                    }
-                    glTexture.glContext = gl;
-                    gl.bindTexture(gl.TEXTURE_2D, glTexture);
-                    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                    gl.bindTexture(gl.TEXTURE_2D, null);
                 }
+            };
+            p.createTexture = function (bitmapData) {
+                var gl = this.context;
+                var glTexture = gl.createTexture();
+                if (!glTexture) {
+                    //先创建texture失败,然后lost事件才发出来..
+                    this.contextLost = true;
+                    return;
+                }
+                glTexture.glContext = gl;
+                gl.bindTexture(gl.TEXTURE_2D, glTexture);
+                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.bindTexture(gl.TEXTURE_2D, null);
+                return glTexture;
             };
             p.onRenderFinish = function () {
                 this.$drawCalls = 0;
@@ -6901,8 +6905,6 @@ var egret;
                     buffer.restoreTransform();
                 }
             };
-            //private canvasRenderer:CanvasRenderer;
-            //private canvasRenderBuffer:CanvasRenderBuffer;
             /**
              * @private
              */
@@ -6913,31 +6915,68 @@ var egret;
                 if (node.drawData.length == 0) {
                     return;
                 }
-                if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
-                    node.$canvasRenderer = new egret.CanvasRenderer();
-                    node.$canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
+                // if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
+                //     node.$canvasRenderer = new CanvasRenderer();
+                //     node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+                // }
+                // else {
+                //     node.$canvasRenderBuffer.resize(width, height, true);
+                // }
+                if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
+                    this.canvasRenderer = new egret.CanvasRenderer();
+                    this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
                 }
                 else {
-                    node.$canvasRenderBuffer.resize(width, height, true);
+                    this.canvasRenderBuffer.resize(width, height, true);
                 }
-                if (!node.$canvasRenderBuffer.context) {
+                // if (!node.$canvasRenderBuffer.context) {
+                //     return;
+                // }
+                if (!this.canvasRenderBuffer.context) {
                     return;
                 }
+                // if (node.x || node.y) {
+                //     if (node.dirtyRender) {
+                //         node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
+                //     }
+                //     buffer.transform(1, 0, 0, 1, node.x, node.y);
+                // }
                 if (node.x || node.y) {
                     if (node.dirtyRender) {
-                        node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
+                        this.canvasRenderBuffer.context.translate(-node.x, -node.y);
                     }
                     buffer.transform(1, 0, 0, 1, node.x, node.y);
                 }
-                var surface = node.$canvasRenderBuffer.surface;
+                // var surface = node.$canvasRenderBuffer.surface;
+                var surface = this.canvasRenderBuffer.surface;
+                // if (node.dirtyRender) {
+                //     WebGLUtils.deleteWebGLTexture(surface);
+                //     node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
+                // }
                 if (node.dirtyRender) {
-                    web.WebGLUtils.deleteWebGLTexture(surface);
-                    node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
+                    this.canvasRenderer["renderText"](node, this.canvasRenderBuffer.context);
+                    // 拷贝canvas到texture
+                    var texture = node.$texture;
+                    if (!texture) {
+                        texture = buffer.createTexture(surface);
+                        node.$texture = texture;
+                    }
+                    else {
+                        var gl = buffer.context;
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
+                        gl.bindTexture(gl.TEXTURE_2D, null);
+                    }
+                    // 保存材质尺寸
+                    node.$textureWidth = surface.width;
+                    node.$textureHeight = surface.height;
                 }
-                buffer.drawImage(surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
+                // buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
+                buffer.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
                 if (node.x || node.y) {
                     if (node.dirtyRender) {
-                        node.$canvasRenderBuffer.context.translate(node.x, node.y);
+                        // node.$canvasRenderBuffer.context.translate(node.x, node.y);
+                        this.canvasRenderBuffer.context.translate(node.x, node.y);
                     }
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
