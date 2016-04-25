@@ -669,28 +669,8 @@ module egret.web {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
-            var shader;
-            if (this.filterType == "colorTransform") {
-                shader = this.shaderManager.colorTransformShader;
-            }
-            else if (this.filterType == "blur") {
-                shader = this.shaderManager.blurShader;
-            }
-            else {
-                shader = this.shaderManager.defaultShader;
-            }
-            this.shaderManager.activateShader(shader);
-            shader.syncUniforms();
-
-            gl.uniform2f(shader.projectionVector, this.projectionX, this.projectionY);
-
             // set the default shader to draw texture model
             this.switchDrawingTextureState(true);
-
-            var stride = this.vertSize * 4;
-            gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
-            gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-            gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
         }
 
         public createWebGLTexture(texture:BitmapData):void {
@@ -891,8 +871,7 @@ module egret.web {
 
         /**
          * @private
-         * TODO 这个方法可以移到shader中？
-         * switch default shader render type
+         * 根据当前是否渲染材质，执行shader自动切换
          * if true, shader is ready to render texture
          * if false, shader is used to render rect
          **/
@@ -902,12 +881,31 @@ module egret.web {
                 return;
             }
             var gl = this.context;
-            var shader = this.shaderManager.defaultShader;
+            var shader;
             if(state) {
-                gl.uniform1f(shader.uPureColor, 0.0);
+                if (this.filterType == "colorTransform") {
+                    shader = this.shaderManager.colorTransformShader;
+                }
+                else if (this.filterType == "blur") {
+                    shader = this.shaderManager.blurShader;
+                }
+                else {
+                    shader = this.shaderManager.defaultShader;
+                }
             } else {
-                gl.uniform1f(shader.uPureColor, 1.0);
+                shader = this.shaderManager.primitiveShader;
             }
+
+            this.shaderManager.activateShader(shader);
+            shader.syncUniforms();
+
+            gl.uniform2f(shader.projectionVector, this.projectionX, this.projectionY);
+
+            var stride = this.vertSize * 4;
+            gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
+            gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
+            gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
+
             this.drawingTexture = state;
         }
         /**

@@ -4921,13 +4921,8 @@ var egret;
                     "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
                     "uniform sampler2D uSampler;\n" +
-                    "uniform float uPureColor;\n" +
                     "void main(void) {\n" +
-                    "if(uPureColor == 1.0) {\n" +
-                    "gl_FragColor = vColor ;\n" +
-                    "} else {\n" +
                     "gl_FragColor = texture2D(uSampler, vTextureCoord) * vColor ;\n" +
-                    "}\n" +
                     "}";
                 this.uniforms = null;
                 this.gl = gl;
@@ -4945,7 +4940,6 @@ var egret;
                 this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
                 this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
                 this.colorAttribute = gl.getAttribLocation(program, "aColor");
-                this.uPureColor = gl.getUniformLocation(program, "uPureColor");
                 if (this.colorAttribute === -1) {
                     this.colorAttribute = 2;
                 }
@@ -5065,52 +5059,117 @@ var egret;
          */
         var PrimitiveShader = (function () {
             function PrimitiveShader(gl) {
-                this.gl = null;
-                this.program = null;
-                this.projectionVector = null;
-                this.offsetVector = null;
-                this.tintColor = null;
-                this.aVertexPosition = null;
-                this.colorAttribute = null;
-                this.attributes = null;
-                this.translationMatrix = null;
-                this.alpha = null;
-                this.fragmentSrc = "precision mediump float;\n" +
-                    "varying vec4 vColor;\n" +
-                    "void main(void) {\n" +
-                    "   gl_FragColor = vColor;\n" +
-                    "}";
-                this.vertexSrc = "attribute vec2 aVertexPosition;\n" +
-                    "attribute vec4 aColor;\n" +
-                    "uniform mat3 translationMatrix;\n" +
+                this.defaultVertexSrc = "attribute vec2 aVertexPosition;\n" +
+                    "attribute vec2 aTextureCoord;\n" +
+                    "attribute vec2 aColor;\n" +
                     "uniform vec2 projectionVector;\n" +
                     "uniform vec2 offsetVector;\n" +
-                    "uniform float alpha;\n" +
-                    "uniform vec3 tint;\n" +
+                    "varying vec2 vTextureCoord;\n" +
+                    "varying vec4 vColor;\n" +
+                    "const vec2 center = vec2(-1.0, 1.0);\n" +
+                    "void main(void) {\n" +
+                    "   gl_Position = vec4( ((aVertexPosition + offsetVector) / projectionVector) + center , 0.0, 1.0);\n" +
+                    "   vTextureCoord = aTextureCoord;\n" +
+                    "   vColor = vec4(aColor.x, aColor.x, aColor.x, aColor.x);\n" +
+                    "}";
+                this.gl = null;
+                this.program = null;
+                this.fragmentSrc = "precision lowp float;\n" +
+                    "varying vec2 vTextureCoord;\n" +
                     "varying vec4 vColor;\n" +
                     "void main(void) {\n" +
-                    "   vec3 v = translationMatrix * vec3(aVertexPosition , 1.0);\n" +
-                    "   v -= offsetVector.xyx;\n" +
-                    "   gl_Position = vec4( v.x / projectionVector.x -1.0, v.y / -projectionVector.y + 1.0 , 0.0, 1.0);\n" +
-                    "   vColor = aColor * vec4(tint * alpha, alpha);\n" +
+                    "gl_FragColor = vColor ;\n" +
                     "}";
+                this.uniforms = null;
                 this.gl = gl;
                 this.init();
             }
             var d = __define,c=PrimitiveShader,p=c.prototype;
             p.init = function () {
                 var gl = this.gl;
-                var program = web.WebGLUtils.compileProgram(gl, this.vertexSrc, this.fragmentSrc);
+                var program = web.WebGLUtils.compileProgram(gl, this.defaultVertexSrc, this.fragmentSrc);
                 gl.useProgram(program);
                 this.projectionVector = gl.getUniformLocation(program, "projectionVector");
                 this.offsetVector = gl.getUniformLocation(program, "offsetVector");
-                this.tintColor = gl.getUniformLocation(program, "tint");
+                this.dimensions = gl.getUniformLocation(program, "dimensions");
                 this.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
+                this.aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
                 this.colorAttribute = gl.getAttribLocation(program, "aColor");
-                this.attributes = [this.aVertexPosition, this.colorAttribute];
-                this.translationMatrix = gl.getUniformLocation(program, "translationMatrix");
-                this.alpha = gl.getUniformLocation(program, "alpha");
+                if (this.colorAttribute === -1) {
+                    this.colorAttribute = 2;
+                }
+                this.attributes = [this.aVertexPosition, this.aTextureCoord, this.colorAttribute];
+                for (var key in this.uniforms) {
+                    this.uniforms[key].uniformLocation = gl.getUniformLocation(program, key);
+                }
+                this.initUniforms();
                 this.program = program;
+            };
+            p.initUniforms = function () {
+                if (!this.uniforms) {
+                    return;
+                }
+                var gl = this.gl;
+                var uniform;
+                for (var key in this.uniforms) {
+                    uniform = this.uniforms[key];
+                    var type = uniform.type;
+                    if (type === 'mat2' || type === 'mat3' || type === 'mat4') {
+                        uniform.glMatrix = true;
+                        uniform.glValueLength = 1;
+                        if (type === 'mat2') {
+                            uniform.glFunc = gl.uniformMatrix2fv;
+                        }
+                        else if (type === 'mat3') {
+                            uniform.glFunc = gl.uniformMatrix3fv;
+                        }
+                        else if (type === 'mat4') {
+                            uniform.glFunc = gl.uniformMatrix4fv;
+                        }
+                    }
+                    else {
+                        uniform.glFunc = gl['uniform' + type];
+                        if (type === '2f' || type === '2i') {
+                            uniform.glValueLength = 2;
+                        }
+                        else if (type === '3f' || type === '3i') {
+                            uniform.glValueLength = 3;
+                        }
+                        else if (type === '4f' || type === '4i') {
+                            uniform.glValueLength = 4;
+                        }
+                        else {
+                            uniform.glValueLength = 1;
+                        }
+                    }
+                }
+            };
+            p.syncUniforms = function () {
+                if (!this.uniforms) {
+                    return;
+                }
+                var uniform;
+                var gl = this.gl;
+                for (var key in this.uniforms) {
+                    uniform = this.uniforms[key];
+                    if (uniform.glValueLength === 1) {
+                        if (uniform.glMatrix === true) {
+                            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.transpose, uniform.value);
+                        }
+                        else {
+                            uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value);
+                        }
+                    }
+                    else if (uniform.glValueLength === 2) {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y);
+                    }
+                    else if (uniform.glValueLength === 3) {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z);
+                    }
+                    else if (uniform.glValueLength === 4) {
+                        uniform.glFunc.call(gl, uniform.uniformLocation, uniform.value.x, uniform.value.y, uniform.value.z, uniform.value.w);
+                    }
+                }
             };
             return PrimitiveShader;
         }());
@@ -6042,25 +6101,8 @@ var egret;
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                var shader;
-                if (this.filterType == "colorTransform") {
-                    shader = this.shaderManager.colorTransformShader;
-                }
-                else if (this.filterType == "blur") {
-                    shader = this.shaderManager.blurShader;
-                }
-                else {
-                    shader = this.shaderManager.defaultShader;
-                }
-                this.shaderManager.activateShader(shader);
-                shader.syncUniforms();
-                gl.uniform2f(shader.projectionVector, this.projectionX, this.projectionY);
                 // set the default shader to draw texture model
                 this.switchDrawingTextureState(true);
-                var stride = this.vertSize * 4;
-                gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
-                gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-                gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
             };
             p.createWebGLTexture = function (texture) {
                 var bitmapData = texture;
@@ -6226,13 +6268,28 @@ var egret;
                     return;
                 }
                 var gl = this.context;
-                var shader = this.shaderManager.defaultShader;
+                var shader;
                 if (state) {
-                    gl.uniform1f(shader.uPureColor, 0.0);
+                    if (this.filterType == "colorTransform") {
+                        shader = this.shaderManager.colorTransformShader;
+                    }
+                    else if (this.filterType == "blur") {
+                        shader = this.shaderManager.blurShader;
+                    }
+                    else {
+                        shader = this.shaderManager.defaultShader;
+                    }
                 }
                 else {
-                    gl.uniform1f(shader.uPureColor, 1.0);
+                    shader = this.shaderManager.primitiveShader;
                 }
+                this.shaderManager.activateShader(shader);
+                shader.syncUniforms();
+                gl.uniform2f(shader.projectionVector, this.projectionX, this.projectionY);
+                var stride = this.vertSize * 4;
+                gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
+                gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
+                gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
                 this.drawingTexture = state;
             };
             /**
