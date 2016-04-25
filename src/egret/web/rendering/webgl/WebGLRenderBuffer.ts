@@ -456,7 +456,7 @@ module egret.web {
          * @private
          * draw a texture use default shader
          * */
-        private drawTexture(texture:WebGLTexture,
+        public drawTexture(texture:WebGLTexture,
                             sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
                             destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number):void {
             if (this.contextLost) {
@@ -699,27 +699,34 @@ module egret.web {
                 bitmapData.webGLTexture = {};
             }
             if (!bitmapData.webGLTexture[this.glID]) {
-                var gl:any = this.context;
-                var glTexture = gl.createTexture();
+                var glTexture = this.createTexture(bitmapData);
                 bitmapData.webGLTexture[this.glID] = glTexture;
-                if (!glTexture) {
-                    //先创建texture失败,然后lost事件才发出来..
-                    this.contextLost = true;
-                    return;
-                }
-                glTexture.glContext = gl;
-                gl.bindTexture(gl.TEXTURE_2D, glTexture);
-                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-                gl.bindTexture(gl.TEXTURE_2D, null);
             }
+        }
+
+        // 创建一个材质，并返回，只供外部引用，内部无引用
+        public createTexture(bitmapData:BitmapData):WebGLTexture {
+            var gl:any = this.context;
+            var glTexture = gl.createTexture();
+            if (!glTexture) {
+                //先创建texture失败,然后lost事件才发出来..
+                this.contextLost = true;
+                return;
+            }
+            glTexture.glContext = gl;
+            gl.bindTexture(gl.TEXTURE_2D, glTexture);
+            gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bitmapData);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+            gl.bindTexture(gl.TEXTURE_2D, null);
+
+            return glTexture;
         }
 
         public onRenderFinish():void {
