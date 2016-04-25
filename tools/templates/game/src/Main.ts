@@ -126,37 +126,46 @@ class Main extends egret.DisplayObjectContainer {
 
         var topMask:egret.Shape = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.5);
-        topMask.graphics.drawRect(0, 0, stageW, stageH);
+        topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
-        topMask.width = stageW;
-        topMask.height = stageH;
+        topMask.y = 33;
         this.addChild(topMask);
 
         var icon:egret.Bitmap = this.createBitmapByName("egretIcon");
         this.addChild(icon);
-        icon.scaleX = 0.55;
-        icon.scaleY = 0.55;
-        icon.anchorOffsetX = icon.width / 2;
-        icon.anchorOffsetY = icon.height / 2;
-        icon.x = stageW / 2;
-        icon.y = stageH / 2 - 60;
+        icon.x = 26;
+        icon.y = 33;
+
+        var line:egret.Shape = new egret.Shape();
+        line.graphics.lineStyle(2,0xffffff);
+        line.graphics.moveTo(0,0);
+        line.graphics.lineTo(0,117);
+        line.graphics.endFill();
+        line.x = 172;
+        line.y = 61;
+        this.addChild(line);
+
 
         var colorLabel:egret.TextField = new egret.TextField();
         colorLabel.textColor = 0xffffff;
+        colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
-        colorLabel.size = 20;
-        colorLabel.x = stageW - colorLabel.width >> 1;
-        colorLabel.y = (stageH - colorLabel.height >> 1) + 50;
+        colorLabel.size = 24;
+        colorLabel.textColor = 0x00ff0c;
+        colorLabel.x = 172;
+        colorLabel.y = 80;
         this.addChild(colorLabel);
 
         var textfield:egret.TextField = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
-        textfield.width = stageW;
+        textfield.width = stageW - 172;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
-        textfield.x = 0;
-        textfield.y = stageH / 2 + 100;
+        textfield.size = 24;
+        textfield.textColor = 0x00ff0c;
+        textfield.x = 172;
+        textfield.y = 135;
         this.textfield = textfield;
 
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
