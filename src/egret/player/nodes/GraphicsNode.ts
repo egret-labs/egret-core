@@ -172,7 +172,10 @@ module egret.sys {
          * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
          */
         public dirtyRender:boolean = true;
-        public $canvasRenderer;
-        public $canvasRenderBuffer;
+        // public $canvasRenderer;
+        // public $canvasRenderBuffer;
+        public $texture;
+        public $textureWidth;
+        public $textureHeight;
     }
 }

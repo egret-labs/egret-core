@@ -9869,8 +9869,9 @@ declare module egret.sys {
          * 暂时调用lineStyle,beginFill,beginGradientFill标记,实际应该draw时候标记在Path2D
          */
         dirtyRender: boolean;
-        $canvasRenderer: any;
-        $canvasRenderBuffer: any;
+        $texture: any;
+        $textureWidth: any;
+        $textureHeight: any;
     }
 }
 declare module egret.sys {
