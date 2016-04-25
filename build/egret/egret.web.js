@@ -6072,6 +6072,7 @@ var egret;
                     bitmapData.webGLTexture[this.glID] = glTexture;
                 }
             };
+            // 创建一个材质，并返回，只供外部引用，内部无引用
             p.createTexture = function (bitmapData) {
                 var gl = this.context;
                 var glTexture = gl.createTexture();
@@ -6909,19 +6910,11 @@ var egret;
              * @private
              */
             p.renderText = function (node, buffer) {
-                //优化,使用同一个canvas
                 var width = node.width - node.x;
                 var height = node.height - node.y;
                 if (node.drawData.length == 0) {
                     return;
                 }
-                // if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
-                //     node.$canvasRenderer = new CanvasRenderer();
-                //     node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-                // }
-                // else {
-                //     node.$canvasRenderBuffer.resize(width, height, true);
-                // }
                 if (!this.canvasRenderBuffer || !this.canvasRenderBuffer.context) {
                     this.canvasRenderer = new egret.CanvasRenderer();
                     this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
@@ -6929,30 +6922,16 @@ var egret;
                 else {
                     this.canvasRenderBuffer.resize(width, height, true);
                 }
-                // if (!node.$canvasRenderBuffer.context) {
-                //     return;
-                // }
                 if (!this.canvasRenderBuffer.context) {
                     return;
                 }
-                // if (node.x || node.y) {
-                //     if (node.dirtyRender) {
-                //         node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
-                //     }
-                //     buffer.transform(1, 0, 0, 1, node.x, node.y);
-                // }
                 if (node.x || node.y) {
                     if (node.dirtyRender) {
                         this.canvasRenderBuffer.context.translate(-node.x, -node.y);
                     }
                     buffer.transform(1, 0, 0, 1, node.x, node.y);
                 }
-                // var surface = node.$canvasRenderBuffer.surface;
                 var surface = this.canvasRenderBuffer.surface;
-                // if (node.dirtyRender) {
-                //     WebGLUtils.deleteWebGLTexture(surface);
-                //     node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
-                // }
                 if (node.dirtyRender) {
                     this.canvasRenderer["renderText"](node, this.canvasRenderBuffer.context);
                     // 拷贝canvas到texture
@@ -6962,6 +6941,7 @@ var egret;
                         node.$texture = texture;
                     }
                     else {
+                        // 重新拷贝新的图像
                         var gl = buffer.context;
                         gl.bindTexture(gl.TEXTURE_2D, texture);
                         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
@@ -6971,11 +6951,9 @@ var egret;
                     node.$textureWidth = surface.width;
                     node.$textureHeight = surface.height;
                 }
-                // buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
                 buffer.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
                 if (node.x || node.y) {
                     if (node.dirtyRender) {
-                        // node.$canvasRenderBuffer.context.translate(node.x, node.y);
                         this.canvasRenderBuffer.context.translate(node.x, node.y);
                     }
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);

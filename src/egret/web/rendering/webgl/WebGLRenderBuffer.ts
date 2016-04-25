@@ -704,7 +704,8 @@ module egret.web {
             }
         }
 
-        public createTexture(bitmapData:BitmapData) {
+        // 创建一个材质，并返回，只供外部引用，内部无引用
+        public createTexture(bitmapData:BitmapData):WebGLTexture {
             var gl:any = this.context;
             var glTexture = gl.createTexture();
             if (!glTexture) {
