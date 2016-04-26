@@ -12697,6 +12697,12 @@ var egret;
                 //在chrome里，小等于256*256的canvas会不启用GPU加速。
                 var width = Math.max(257, bounds.width);
                 var height = Math.max(257, bounds.height);
+                if (this.offsetX == oldOffsetX &&
+                    this.offsetY == oldOffsetY &&
+                    buffer.surface.width == width &&
+                    buffer.surface.height == height) {
+                    return;
+                }
                 if (!this.sizeChanged) {
                     this.sizeChanged = true;
                     buffer.resize(width, height);
@@ -15676,10 +15682,11 @@ var egret;
             if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
                 if (scrollRect) {
                     var m = displayMatrix;
-                    displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                    displayContext.beginPath();
-                    displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
-                    displayContext.clip();
+                    context.save();
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    context.beginPath();
+                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.clip();
                 }
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
@@ -15687,6 +15694,9 @@ var egret;
                 drawCalls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
+                }
+                if (scrollRect) {
+                    context.restore();
                 }
                 return drawCalls;
             }

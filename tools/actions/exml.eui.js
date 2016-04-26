@@ -165,23 +165,25 @@ function generateExmlDTS() {
             //var className = p.substring(srcPath.length, p.length - 5);
             var className = ret.className;
             //className = className.split("/").join(".");
-            var index = className.lastIndexOf(".");
-            if (index == -1) {
-                if (ret.extendName == "") {
-                    dts += "declare class " + className + "{\n}\n";
+            if(className != "eui.Skin") {
+                var index = className.lastIndexOf(".");
+                if (index == -1) {
+                    if (ret.extendName == "") {
+                        dts += "declare class " + className + "{\n}\n";
+                    }
+                    else {
+                        dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
+                    }
                 }
                 else {
-                    dts += "declare class " + className + " extends " + ret.extendName + "{\n}\n";
-                }
-            }
-            else {
-                var moduleName = className.substring(0, index);
-                className = className.substring(index + 1);
-                if (ret.extendName == "") {
-                    dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
-                }
-                else {
-                    dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
+                    var moduleName = className.substring(0, index);
+                    className = className.substring(index + 1);
+                    if (ret.extendName == "") {
+                        dts += "declare module " + moduleName + "{\n\tclass " + className + "{\n\t}\n}\n";
+                    }
+                    else {
+                        dts += "declare module " + moduleName + "{\n\tclass " + className + " extends " + ret.extendName + "{\n\t}\n}\n";
+                    }
                 }
             }
         }
