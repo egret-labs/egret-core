@@ -15481,6 +15481,7 @@ var egret;
     var CanvasRenderer = (function () {
         function CanvasRenderer() {
             this.nestLevel = 0; //渲染的嵌套层次，0表示在调用堆栈的最外层。
+            this.renderingMask = false;
         }
         var d = __define,c=CanvasRenderer,p=c.prototype;
         /**
@@ -15699,6 +15700,21 @@ var egret;
                     context.restore();
                 }
                 return drawCalls;
+            }
+            var node = mask.$getRenderNode();
+            //遮罩是单纯的填充图形,且alpha为1,性能优化
+            if (mask && (!mask.$children || mask.$children.length == 0) &&
+                node && node.type == 3 /* GraphicsNode */ &&
+                node.drawData.length == 1 &&
+                node.drawData[0].type == 1 /* Fill */ &&
+                node.drawData[0].fillAlpha == 1) {
+                this.renderingMask = true;
+                context.save();
+                var calls = this.drawDisplayObject(mask, context, dirtyList, matrix, mask.$displayList, clipRegion, root);
+                this.renderingMask = false;
+                calls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
+                context.restore();
+                return calls;
             }
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayBuffer = this.createRenderBuffer(region.width, region.height);
@@ -15936,7 +15952,12 @@ var egret;
                         var fillPath = path;
                         context.fillStyle = forHitTest ? BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                         this.renderPath(path, context);
-                        context.fill();
+                        if (this.renderingMask) {
+                            context.clip();
+                        }
+                        else {
+                            context.fill();
+                        }
                         break;
                     case 2 /* GradientFill */:
                         var g = path;

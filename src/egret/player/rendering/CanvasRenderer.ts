@@ -164,6 +164,8 @@ module egret {
             return drawCalls;
         }
 
+        private renderingMask = false;
+
         /**
          * @private
          */
@@ -188,7 +190,7 @@ module egret {
             var maskRegion:sys.Region;
             var displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(displayObject.$parentDisplayList) {
+            if (displayObject.$parentDisplayList) {
                 var displayRoot = displayObject.$parentDisplayList.root;
                 var invertedMatrix:Matrix;
                 if (displayRoot !== displayObject.$stage) {
@@ -232,7 +234,7 @@ module egret {
                 region.updateRegion(bounds, displayMatrix);
             }
             var found = false;
-            if(!dirtyList) {//forRenderTexture
+            if (!dirtyList) {//forRenderTexture
                 found = true;
             }
             else {
@@ -273,6 +275,24 @@ module egret {
                     context.restore();
                 }
                 return drawCalls;
+            }
+
+            var node = mask.$getRenderNode();
+            //遮罩是单纯的填充图形,且alpha为1,性能优化
+            if (mask && (!mask.$children || mask.$children.length == 0) &&
+                node && node.type == sys.RenderNodeType.GraphicsNode &&
+                node.drawData.length == 1 &&
+                (<sys.Path2D>node.drawData[0]).type == sys.PathType.Fill &&
+                (<sys.FillPath>node.drawData[0]).fillAlpha == 1) {
+                this.renderingMask = true;
+                context.save();
+                var calls = this.drawDisplayObject(mask, context, dirtyList, matrix,
+                    mask.$displayList, clipRegion, root);
+                this.renderingMask = false;
+                calls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
+                    displayObject.$displayList, clipRegion, root);
+                context.restore();
+                return calls;
             }
 
             //绘制显示对象自身，若有scrollRect，应用clip
@@ -367,7 +387,7 @@ module egret {
             }
             var m = Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(displayObject.$parentDisplayList) {
+            if (displayObject.$parentDisplayList) {
                 var displayRoot = displayObject.$parentDisplayList.root;
                 if (displayRoot !== displayObject.$stage) {
                     displayObject.$getConcatenatedMatrixAt(displayRoot, m);
@@ -383,7 +403,7 @@ module egret {
                 return drawCalls;
             }
             var found = false;
-            if(!dirtyList) {//forRenderTexture
+            if (!dirtyList) {//forRenderTexture
                 found = true;
             }
             else {
@@ -482,7 +502,7 @@ module egret {
                 drawCalls++;
                 context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
-            if(m) {
+            if (m) {
                 context.restore();
             }
             return drawCalls;
@@ -531,7 +551,12 @@ module egret {
                         var fillPath = <sys.FillPath>path;
                         context.fillStyle = forHitTest ? BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                         this.renderPath(path, context);
-                        context.fill();
+                        if (this.renderingMask) {
+                            context.clip();
+                        }
+                        else {
+                            context.fill();
+                        }
                         break;
                     case sys.PathType.GradientFill:
                         var g = <sys.GradientFillPath>path;
