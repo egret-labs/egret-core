@@ -34,7 +34,7 @@ module egret.web {
      * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
      * TODO 提供drawable类型接口并且创建对象池？
      */
-     enum DRAWABLE_TYPE {
+     const enum DRAWABLE_TYPE {
          TEXTURE,
          RECT,
          PUSH_MASK,
