@@ -390,7 +390,7 @@
         "displayName": "Egret GUI 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个Egret GUI 项目",
+        "description": "创建一个Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
         "modules": [ "egret", "game", "res", "gui" ]
       }
     ],
