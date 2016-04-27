@@ -5503,19 +5503,6 @@ var egret;
     var web;
     (function (web) {
         /**
-         * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
-         * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
-         * TODO 提供drawable类型接口并且创建对象池？
-         */
-        var DRAWABLE_TYPE;
-        (function (DRAWABLE_TYPE) {
-            DRAWABLE_TYPE[DRAWABLE_TYPE["TEXTURE"] = 0] = "TEXTURE";
-            DRAWABLE_TYPE[DRAWABLE_TYPE["RECT"] = 1] = "RECT";
-            DRAWABLE_TYPE[DRAWABLE_TYPE["PUSH_MASK"] = 2] = "PUSH_MASK";
-            DRAWABLE_TYPE[DRAWABLE_TYPE["POP_MASK"] = 3] = "POP_MASK";
-            DRAWABLE_TYPE[DRAWABLE_TYPE["BLEND"] = 4] = "BLEND";
-        })(DRAWABLE_TYPE || (DRAWABLE_TYPE = {}));
-        /**
          * 创建一个canvas。
          */
         function createCanvas(width, height) {
@@ -5877,11 +5864,11 @@ var egret;
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
                     this.currentBaseTexture = webGLTexture;
-                    this.drawData.push({ type: DRAWABLE_TYPE.TEXTURE, texture: this.currentBaseTexture, count: 0 });
+                    this.drawData.push({ type: 0 /* TEXTURE */, texture: this.currentBaseTexture, count: 0 });
                 }
                 else if (webGLTexture !== this.currentBaseTexture) {
                     this.currentBaseTexture = webGLTexture;
-                    this.drawData.push({ type: DRAWABLE_TYPE.TEXTURE, texture: this.currentBaseTexture, count: 0 });
+                    this.drawData.push({ type: 0 /* TEXTURE */, texture: this.currentBaseTexture, count: 0 });
                 }
                 this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
                 this.currentBatchSize++;
@@ -5898,12 +5885,12 @@ var egret;
                 // TODO if needed, this rect can set a color
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
-                    this.drawData.push({ type: DRAWABLE_TYPE.RECT, rect: 1, count: 0 });
+                    this.drawData.push({ type: 1 /* RECT */, rect: 1, count: 0 });
                 }
                 else if (this.drawData.length > 1 && this.drawData[this.drawData.length - 2].rect) {
                 }
                 else {
-                    this.drawData.push({ type: DRAWABLE_TYPE.RECT, rect: 1, count: 0 });
+                    this.drawData.push({ type: 1 /* RECT */, rect: 1, count: 0 });
                 }
                 this.drawUvRect(0, 0, width, height, x, y, width, height, width, height);
                 this.currentBatchSize++;
@@ -6001,19 +5988,19 @@ var egret;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawData[i];
                     switch (data.type) {
-                        case DRAWABLE_TYPE.TEXTURE:
+                        case 0 /* TEXTURE */:
                             offset += this.drawTextureElements(data, offset);
                             break;
-                        case DRAWABLE_TYPE.RECT:
+                        case 1 /* RECT */:
                             offset += this.drawRectElements(data, offset);
                             break;
-                        case DRAWABLE_TYPE.PUSH_MASK:
+                        case 2 /* PUSH_MASK */:
                             offset += this.drawPushMaskElements(data, offset);
                             break;
-                        case DRAWABLE_TYPE.POP_MASK:
+                        case 3 /* POP_MASK */:
                             offset += this.drawPopMaskElements(data, offset);
                             break;
-                        case DRAWABLE_TYPE.BLEND:
+                        case 4 /* BLEND */:
                             var blendModeWebGL = WebGLRenderBuffer.blendModesForGL[data.value];
                             if (blendModeWebGL) {
                                 this.context.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
@@ -6023,7 +6010,7 @@ var egret;
                             break;
                     }
                     // add drawCall except blend type
-                    if (data.type != DRAWABLE_TYPE.BLEND) {
+                    if (data.type != 4 /* BLEND */) {
                         if (this.$computeDrawCall) {
                             this.$drawCalls++;
                         }
@@ -6172,7 +6159,7 @@ var egret;
             };
             p.setGlobalCompositeOperation = function (value) {
                 if (this.currentBlendMode != value) {
-                    this.drawData.push({ type: DRAWABLE_TYPE.BLEND, value: value });
+                    this.drawData.push({ type: 4 /* BLEND */, value: value });
                     this.currentBlendMode = value;
                     this.currentBaseTexture = null;
                 }
@@ -6182,10 +6169,10 @@ var egret;
                 this.$stencilList.push(mask);
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
-                    this.drawData.push({ type: DRAWABLE_TYPE.PUSH_MASK, pushMask: mask, count: 0 });
+                    this.drawData.push({ type: 2 /* PUSH_MASK */, pushMask: mask, count: 0 });
                 }
                 else {
-                    this.drawData.push({ type: DRAWABLE_TYPE.PUSH_MASK, pushMask: mask, count: 0 });
+                    this.drawData.push({ type: 2 /* PUSH_MASK */, pushMask: mask, count: 0 });
                 }
                 this.drawMask(mask);
                 this.currentBaseTexture = null;
@@ -6195,10 +6182,10 @@ var egret;
                 var mask = this.$stencilList.pop();
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
-                    this.drawData.push({ type: DRAWABLE_TYPE.POP_MASK, popMask: mask, count: 0 });
+                    this.drawData.push({ type: 3 /* POP_MASK */, popMask: mask, count: 0 });
                 }
                 else {
-                    this.drawData.push({ type: DRAWABLE_TYPE.POP_MASK, popMask: mask, count: 0 });
+                    this.drawData.push({ type: 3 /* POP_MASK */, popMask: mask, count: 0 });
                 }
                 this.drawMask(mask);
                 this.currentBaseTexture = null;

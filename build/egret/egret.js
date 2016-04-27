@@ -1992,15 +1992,24 @@ var egret;
                             value.$maskedObject.mask = null;
                         }
                         value.$maskedObject = this;
+                        value.$invalidateTransform();
                         this.$mask = value;
                         this.$maskRect = null;
                     }
                     else {
                         this.$setMaskRect(value);
+                        if (this.$mask) {
+                            this.$mask.$maskedObject = null;
+                            this.$mask.$invalidateTransform();
+                        }
                         this.$mask = null;
                     }
                 }
                 else {
+                    if (this.$mask) {
+                        this.$mask.$maskedObject = null;
+                        this.$mask.$invalidateTransform();
+                    }
                     this.$mask = null;
                     this.$maskRect = null;
                 }
