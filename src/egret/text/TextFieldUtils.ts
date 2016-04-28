@@ -202,10 +202,9 @@ module egret {
             for (i = 0; i < lineElement.elements.length; i++) {
                 var iwTE:IWTextElement = lineElement.elements[i];
                 lineW += iwTE.width;
-            }
-
-            if (x >= startX && x <= lineW) {
-                return {"lineIndex" : line - 1, "textElementIndex" : i};
+                if (x >= startX && x <= lineW) {
+                    return {"lineIndex" : line - 1, "textElementIndex" : i};
+                }
             }
 
             return null;
