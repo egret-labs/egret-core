@@ -250,7 +250,7 @@ var egret;
                         return this.originAudio.duration;
                     }
                     throw new Error("sound not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -614,7 +614,7 @@ var egret;
             d(p, "length"
                 ,function () {
                     throw new Error("qq sound not supported!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -939,7 +939,7 @@ var egret;
                         return this.audioBuffer.duration;
                     }
                     throw new Error("sound not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -1332,7 +1332,7 @@ var egret;
                         return this.video.duration;
                     }
                     throw new Error("Video not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -5183,7 +5183,6 @@ var egret;
                 this.uniforms = {
                     blur: { type: '2f', value: { x: 2, y: 2 } }
                 };
-                this.init();
             }
             var d = __define,c=BlurShader,p=c.prototype;
             return BlurShader;
@@ -5253,7 +5252,6 @@ var egret;
                             0, 0, 0, 1] },
                     colorAdd: { type: '4f', value: { x: 0, y: 0, z: 0, w: 0 } }
                 };
-                this.init();
             }
             var d = __define,c=ColorTransformShader,p=c.prototype;
             return ColorTransformShader;

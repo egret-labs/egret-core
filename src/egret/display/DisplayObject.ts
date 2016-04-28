@@ -979,19 +979,19 @@ module egret {
                 return false;
             }
 
-            if (false) {
-                var values = this.$DisplayObject;
-                var originalBounds = this.$getOriginalBounds();
-                var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-                var angle = values[Keys.rotation] / 180 * Math.PI;
-                var baseWidth = originalBounds.$getBaseWidth(angle);
-                if (!baseWidth) {
-                    return false;
-                }
-                var baseHeight = originalBounds.$getBaseHeight(angle);
-                values[Keys.scaleY] = bounds.height / baseHeight;
-                values[Keys.scaleX] = value / baseWidth;
-            }
+            // if (false) {
+            //     var values = this.$DisplayObject;
+            //     var originalBounds = this.$getOriginalBounds();
+            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     var angle = values[Keys.rotation] / 180 * Math.PI;
+            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     if (!baseWidth) {
+            //         return false;
+            //     }
+            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     values[Keys.scaleY] = bounds.height / baseHeight;
+            //     values[Keys.scaleX] = value / baseWidth;
+            // }
             this.invalidateMatrix();
 
             return true;
@@ -1049,19 +1049,19 @@ module egret {
                 return false;
             }
 
-            if (false) {
-                var values = this.$DisplayObject;
-                var originalBounds = this.$getOriginalBounds();
-                var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-                var angle = values[Keys.rotation] / 180 * Math.PI;
-                var baseHeight = originalBounds.$getBaseHeight(angle);
-                if (!baseHeight) {
-                    return false;
-                }
-                var baseWidth = originalBounds.$getBaseWidth(angle);
-                values[Keys.scaleY] = value / baseHeight;
-                values[Keys.scaleX] = bounds.width / baseWidth;
-            }
+            // if (false) {
+            //     var values = this.$DisplayObject;
+            //     var originalBounds = this.$getOriginalBounds();
+            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     var angle = values[Keys.rotation] / 180 * Math.PI;
+            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     if (!baseHeight) {
+            //         return false;
+            //     }
+            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     values[Keys.scaleY] = value / baseHeight;
+            //     values[Keys.scaleX] = bounds.width / baseWidth;
+            // }
             this.invalidateMatrix();
 
             return true;

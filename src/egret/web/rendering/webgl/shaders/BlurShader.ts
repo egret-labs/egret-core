@@ -65,7 +65,6 @@ module egret.web {
 
         constructor(gl:WebGLRenderingContext) {
             super(gl);
-            this.init();
         }
     }
 }
