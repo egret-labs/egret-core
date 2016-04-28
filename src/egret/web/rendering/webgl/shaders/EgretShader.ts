@@ -80,7 +80,6 @@ module egret.web {
 
         constructor(gl:WebGLRenderingContext) {
             this.gl = gl;
-            this.init();
         }
 
         public init():void {

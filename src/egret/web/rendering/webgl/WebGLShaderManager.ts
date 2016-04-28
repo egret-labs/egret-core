@@ -54,6 +54,7 @@ module egret.web {
             this.gl = gl;
             this.primitiveShader = new PrimitiveShader(gl);
             this.defaultShader = new EgretShader(gl);
+            this.defaultShader.init();
             this.colorTransformShader = new ColorTransformShader(gl);
             this.blurShader = new BlurShader(gl);
             this.activateShader(this.defaultShader);

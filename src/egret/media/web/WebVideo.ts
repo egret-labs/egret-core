@@ -119,7 +119,7 @@ module egret.web {
             }
 
             throw new Error("Video not loaded!");
-            return 0;
+            //return 0;
         }
 
         private isPlayed:boolean = false;

@@ -2620,7 +2620,7 @@ var egret;
                         return this.originAudio.duration;
                     }
                     throw new Error("sound not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -2957,7 +2957,7 @@ var egret;
             d(p, "length"
                 ,function () {
                     throw new Error("sound length not supported");
-                    return 0;
+                    //return 0;
                 }
             );
             /**

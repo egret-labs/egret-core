@@ -250,7 +250,7 @@ var egret;
                         return this.originAudio.duration;
                     }
                     throw new Error("sound not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -614,7 +614,7 @@ var egret;
             d(p, "length"
                 ,function () {
                     throw new Error("qq sound not supported!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -939,7 +939,7 @@ var egret;
                         return this.audioBuffer.duration;
                     }
                     throw new Error("sound not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -1332,7 +1332,7 @@ var egret;
                         return this.video.duration;
                     }
                     throw new Error("Video not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -4931,7 +4931,6 @@ var egret;
                     "}";
                 this.uniforms = null;
                 this.gl = gl;
-                this.init();
             }
             var d = __define,c=EgretShader,p=c.prototype;
             p.init = function () {
@@ -5319,6 +5318,7 @@ var egret;
                 this.gl = gl;
                 this.primitiveShader = new web.PrimitiveShader(gl);
                 this.defaultShader = new web.EgretShader(gl);
+                this.defaultShader.init();
                 this.colorTransformShader = new web.ColorTransformShader(gl);
                 this.blurShader = new web.BlurShader(gl);
                 this.activateShader(this.defaultShader);

@@ -133,7 +133,7 @@ module egret.web {
 
             throw new Error ("qq sound not supported!");
 
-            return 0;
+            //return 0;
         }
 
         /**
