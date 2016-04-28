@@ -4931,7 +4931,6 @@ var egret;
                     "}";
                 this.uniforms = null;
                 this.gl = gl;
-                this.init();
             }
             var d = __define,c=EgretShader,p=c.prototype;
             p.init = function () {
@@ -5183,6 +5182,7 @@ var egret;
                 this.uniforms = {
                     blur: { type: '2f', value: { x: 2, y: 2 } }
                 };
+                this.init();
             }
             var d = __define,c=BlurShader,p=c.prototype;
             return BlurShader;
@@ -5252,6 +5252,7 @@ var egret;
                             0, 0, 0, 1] },
                     colorAdd: { type: '4f', value: { x: 0, y: 0, z: 0, w: 0 } }
                 };
+                this.init();
             }
             var d = __define,c=ColorTransformShader,p=c.prototype;
             return ColorTransformShader;
@@ -5317,6 +5318,7 @@ var egret;
                 this.gl = gl;
                 this.primitiveShader = new web.PrimitiveShader(gl);
                 this.defaultShader = new web.EgretShader(gl);
+                this.defaultShader.init();
                 this.colorTransformShader = new web.ColorTransformShader(gl);
                 this.blurShader = new web.BlurShader(gl);
                 this.activateShader(this.defaultShader);
