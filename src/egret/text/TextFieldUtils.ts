@@ -197,16 +197,15 @@ module egret {
                 return null;
             }
             var lineElement:egret.ILineElement = lineArr[line - 1];
-            var lineW:number = 0;
+            var startX:number = TextFieldUtils.$getHalign(textfield) * (textfield.width - egret.sys.measureText(textfield.text, textfield.fontFamily, textfield.size, textfield.bold, textfield.italic));
+            var lineW:number = startX;
             for (i = 0; i < lineElement.elements.length; i++) {
                 var iwTE:IWTextElement = lineElement.elements[i];
+                lineW += iwTE.width;
+            }
 
-                if (lineW + iwTE.width < x) {
-                    lineW += iwTE.width;
-                }
-                else {
-                    return {"lineIndex" : line - 1, "textElementIndex" : i};
-                }
+            if (x >= startX && x <= lineW) {
+                return {"lineIndex" : line - 1, "textElementIndex" : i};
             }
 
             return null;
