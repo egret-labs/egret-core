@@ -153,54 +153,32 @@ module egret.web {
             video.style.left = "0px";
             video.height = video.videoHeight;
             video.width = video.videoWidth;
-
             this.checkFullScreen(this._fullscreen);
         }
 
         private checkFullScreen(playFullScreen:boolean):void {
             var video = this.video;
-
             if (playFullScreen) {
                 if (video.parentElement == null) {
                     video.removeAttribute("webkit-playsinline");
+                    video.style.width = "100%"
+                    video.style.height = "100%"
                     document.body.appendChild(video);
                 }
                 egret.stopTick(this.markDirty, this);
-                this.goFullscreen();
+                this.setFullScreenMonitor(true);
             }
             else {
                 if (video.parentElement != null) {
                     video.parentElement.removeChild(video);
                 }
                 video.setAttribute("webkit-playsinline", "true");
-
                 this.setFullScreenMonitor(false);
-
-                egret.startTick(this.markDirty, this);
-            }
-
-            video.play();
-        }
-
-        private goFullscreen():boolean {
-            var video = this.video;
-
-            var fullscreenType:string;
-            fullscreenType = egret.web.getPrefixStyleName('requestFullscreen', video);
-            if (!video[fullscreenType]) {
-                fullscreenType = egret.web.getPrefixStyleName('requestFullScreen', video);
-                if (!video[fullscreenType]) {
-                    return true;
+                if(!egret.Capabilities.isMobile){//移动平台不再渲染
+                    egret.startTick(this.markDirty, this);    
                 }
             }
-
-            video.removeAttribute("webkit-playsinline");
-
-            video[fullscreenType]();
-
-            this.setFullScreenMonitor(true);
-
-            return true;
+            video.play();
         }
 
         private setFullScreenMonitor(use:boolean):void {
@@ -254,10 +232,15 @@ module egret.web {
          *
          */
         private onVideoEnded() {
+            var video = this.video;
+            if (video.parentElement != null) {
+                video.parentElement.removeChild(video);
+            }
             this.pause();
             this.isPlayed = false;
-            this.$invalidateContentBounds();
-
+            if(!this._fullscreen){
+                this.$invalidateContentBounds();    
+            }
             this.dispatchEventWith(egret.Event.ENDED);
         }
 
@@ -461,6 +444,9 @@ module egret.web {
          * @private
          */
         $render():void {
+            if(this._fullscreen || egret.Capabilities.isMobile){
+                return ;   
+            }
             var node = <sys.BitmapNode>this.$renderNode;
             var bitmapData = this.bitmapData;
             var posterData = this.posterData;
@@ -502,7 +488,7 @@ module egret.web {
         $setWidth(value:number):boolean {
             this.widthSet = +value || 0;
             this.$invalidate();
-            this.$invalidateContentBounds();
+            this.$invalidateContentBounds();            
             return super.$setWidth(value);
         }
 
