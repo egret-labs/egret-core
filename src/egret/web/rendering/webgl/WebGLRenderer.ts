@@ -59,10 +59,16 @@ module egret.web {
             var webglBuffer:WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
             var root:DisplayObject = forRenderTexture ? displayObject : null;
             //绘制显示对象
+
+            // TODO pushRenderTarget
+
             this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
             webglBuffer.$drawWebGL();
             var drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
+
+            // TODO popRenderTarget
+
             this.nestLevel--;
             if (this.nestLevel === 0) {
                 //最大缓存6个渲染缓冲

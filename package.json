@@ -275,6 +275,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/WebGLRenderContext.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLRenderBuffer.ts",
             "platform": "web"
           },
