@@ -91,8 +91,7 @@ module dragonBones {
 		 */
         public rotated: boolean;
 		/**
-		 * 帧的区域
-		 * @member {dragonBones.ITextureAtlas} dragonBones.TextureData#textureAtlas
+		 * @private
 		 */
         public textureAtlas: ITextureAtlas;
 		/**
