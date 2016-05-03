@@ -82,12 +82,46 @@ module egret.web {
             return this.instance;
         }
 
+        // render target 管理
+        public $targets:WebGLRenderTarget[];
+        public createRenderTarget():WebGLRenderTarget {
+            var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
+            // create render target cause current render target unbind, so rebind render target
+            this.bindCurrentRenderTarget();
+
+            return renderTarget;
+        }
+        public pushTarget(target):void {
+            this.$targets.push(target);
+            this.bindRenderTarget(target);
+        }
+        public popTarget():void {
+            this.$targets.pop();
+            if(this.$targets.length > 0) {
+                this.bindCurrentRenderTarget();
+            }
+        }
+        public getCurrentTarget():WebGLRenderTarget {
+            var target = this.$targets[this.$targets.length - 1];
+            return target;
+        }
+        public bindCurrentRenderTarget():void {
+            var target = this.getCurrentTarget();
+            this.bindRenderTarget(target);
+        }
+        private bindRenderTarget(target:WebGLRenderTarget):void {
+            var gl = this.context;
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.getFrameBuffer());
+        }
+
 
         public constructor(width?:number, height?:number) {
             //todo 抽取出一个WebglRenderContext
             this.surface = createCanvas(width, height);
 
             this.initWebGL();
+
+            this.$targets = [];
         }
 
         /**

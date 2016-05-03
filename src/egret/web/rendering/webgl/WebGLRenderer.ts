@@ -59,16 +59,10 @@ module egret.web {
             var webglBuffer:WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
             var root:DisplayObject = forRenderTexture ? displayObject : null;
             //绘制显示对象
-
-            // TODO pushRenderTarget
-
             this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
             webglBuffer.$drawWebGL();
             var drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
-
-            // TODO popRenderTarget
-
             this.nestLevel--;
             if (this.nestLevel === 0) {
                 //最大缓存6个渲染缓冲
@@ -446,9 +440,24 @@ module egret.web {
          */
         public drawNodeToBuffer(node:sys.RenderNode, buffer:WebGLRenderBuffer, matrix:Matrix, forHitTest?:boolean):void {
             var webglBuffer:WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
+
+            // matrix save
+            webglBuffer.saveTransform();
+            //pushRenderTARGET
+            webglBuffer.renderContext.pushTarget(webglBuffer.rootRenderTarget);
+
+
             webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, buffer, forHitTest);
             buffer.$drawWebGL();
+
+            // matrix   restore
+            webglBuffer.restoreTransform();
+            //popRenderTARGET
+            webglBuffer.renderContext.popTarget();
+
+
+
         }
 
         /**
