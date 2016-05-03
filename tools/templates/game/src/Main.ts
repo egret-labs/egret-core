@@ -152,7 +152,6 @@ class Main extends egret.DisplayObjectContainer {
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
         colorLabel.size = 24;
-        colorLabel.textColor = 0x00ff0c;
         colorLabel.x = 172;
         colorLabel.y = 80;
         this.addChild(colorLabel);
@@ -163,7 +162,7 @@ class Main extends egret.DisplayObjectContainer {
         textfield.width = stageW - 172;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
         textfield.size = 24;
-        textfield.textColor = 0x00ff0c;
+        textfield.textColor = 0xffffff;
         textfield.x = 172;
         textfield.y = 135;
         this.textfield = textfield;
