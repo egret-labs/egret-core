@@ -241,4 +241,5 @@ Egret Engine 3.0 包含了白鹭时代研发的遵循HTML5标准的2D引擎及�
   * 1群：141578440 (2000 members capacity / Full)
   * 2群：397297607 (1000 members capacity / Full)
   * 3群：399919028 (1000 members capacity / Full)
-  * 4群：125237513 (1000 members capacity / avaliable)
+  * 4群：125237513 (1000 members capacity / Full)
+  * 5群：481169576 (1000 members capacity / avaliable)
