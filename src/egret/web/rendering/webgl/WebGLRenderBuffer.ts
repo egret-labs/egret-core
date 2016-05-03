@@ -123,13 +123,15 @@ module egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
-            this.renderContext.resize(width, height, useMaxSize);
+            this.rootRenderTarget.resize(width, height);
 
-            //this.renderContext.pushTarget(this.rootRenderTarget);
-            var target = this.renderContext.getCurrentTarget();
-            target.resize(this.surface.width, this.surface.height);
-            //this.renderContext.popTarget();
-            this.renderContext.bindCurrentRenderTarget();
+            this.renderContext.pushTarget(this.rootRenderTarget);
+
+            if(this.renderContext.$targets[0] == this.rootRenderTarget) {
+                this.renderContext.resize(width, height, useMaxSize);
+            }
+
+            this.renderContext.popTarget();
         }
 
 
@@ -142,12 +144,17 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
+            // TODO
+
             var oldSurface = this.surface;
             var oldWidth = oldSurface.width;
             var oldHeight = oldSurface.height;
             this.renderContext.resizeTo(width, height, offsetX, offsetY);
             // renderTexture resize, copy color data
             this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
+
+            // TODO
+
         }
 
         // dirtyRegionPolicy hack
@@ -224,21 +231,21 @@ module egret.web {
             var gl = this.context;
             var pixels = new Uint8Array(4);
 
-            // var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
-            // this.rootRenderTarget.useFrameBuffer = true;
-            // this.renderContext.pushTarget(this.rootRenderTarget);
-            var target = this.renderContext.getCurrentTarget();
-            var useFrameBuffer = target.useFrameBuffer;
-            target.useFrameBuffer = true;
-            this.renderContext.bindCurrentRenderTarget();
+            var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
+            this.rootRenderTarget.useFrameBuffer = true;
+            this.renderContext.pushTarget(this.rootRenderTarget);
+            // var target = this.renderContext.getCurrentTarget();
+            // var useFrameBuffer = target.useFrameBuffer;
+            // target.useFrameBuffer = true;
+            // this.renderContext.bindCurrentRenderTarget();
 
             gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
             // restore the state of current render target
-            target.useFrameBuffer = useFrameBuffer;
-            this.renderContext.bindCurrentRenderTarget();
-            // this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-            // this.renderContext.popTarget();
+            // target.useFrameBuffer = useFrameBuffer;
+            // this.renderContext.bindCurrentRenderTarget();
+            this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
+            this.renderContext.popTarget();
 
             return <number[]><any>pixels;
         }
@@ -366,12 +373,12 @@ module egret.web {
           sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
             var gl = this.context;
 
-            // this.rootRenderTarget.useFrameBuffer = false;
-            // this.renderContext.pushTarget(this.rootRenderTarget);
-            // var target = this.rootRenderTarget;
-            var target = this.renderContext.getCurrentTarget();
-            target.useFrameBuffer = false;
-            this.renderContext.bindCurrentRenderTarget();
+            this.rootRenderTarget.useFrameBuffer = false;
+            this.renderContext.pushTarget(this.rootRenderTarget);
+            var target = this.rootRenderTarget;
+            // var target = this.renderContext.getCurrentTarget();
+            // target.useFrameBuffer = false;
+            // this.renderContext.bindCurrentRenderTarget();
 
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
             this.setTransform(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
@@ -381,10 +388,10 @@ module egret.web {
             this.drawTexture(target.texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
 
-            target.useFrameBuffer = true;
-            this.renderContext.bindCurrentRenderTarget();
-            // this.rootRenderTarget.useFrameBuffer = true;
-            // this.renderContext.popTarget();
+            // target.useFrameBuffer = true;
+            // this.renderContext.bindCurrentRenderTarget();
+            this.rootRenderTarget.useFrameBuffer = true;
+            this.renderContext.popTarget();
 
             if (this.maskPushed) {
                 gl.enable(gl.STENCIL_TEST);
@@ -399,11 +406,11 @@ module egret.web {
           sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
             var gl = this.context;
 
-            var target = this.renderContext.getCurrentTarget();
-            target.useFrameBuffer = true;
-            this.renderContext.bindCurrentRenderTarget();
-            // this.rootRenderTarget.useFrameBuffer = true;
-            // this.renderContext.pushTarget(this.rootRenderTarget);
+            // var target = this.renderContext.getCurrentTarget();
+            // target.useFrameBuffer = true;
+            // this.renderContext.bindCurrentRenderTarget();
+            this.rootRenderTarget.useFrameBuffer = true;
+            this.renderContext.pushTarget(this.rootRenderTarget);
 
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
             this.setTransform(1, 0, 0, 1, 0, 0);
@@ -413,10 +420,10 @@ module egret.web {
             this.drawImage(<BitmapData><any>this.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
 
-            target.useFrameBuffer = false;
-            this.renderContext.bindCurrentRenderTarget();
-            // this.rootRenderTarget.useFrameBuffer = false;
-            // this.renderContext.popTarget();
+            // target.useFrameBuffer = false;
+            // this.renderContext.bindCurrentRenderTarget();
+            this.rootRenderTarget.useFrameBuffer = false;
+            this.renderContext.popTarget();
 
             if (this.maskPushed) {
                 gl.enable(gl.STENCIL_TEST);

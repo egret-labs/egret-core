@@ -75,7 +75,7 @@ module egret.web {
         private static instance:WebGLRenderContext;
         public static getInstance(width:number, height:number):WebGLRenderContext {
             if(this.instance) {
-                this.instance.resize(width, height);
+                this.instance.resize(width, height, true);
                 return this.instance;
             }
             this.instance = new WebGLRenderContext(width, height);
@@ -93,12 +93,16 @@ module egret.web {
         }
         public pushTarget(target):void {
             this.$targets.push(target);
+
             this.bindRenderTarget(target);
+            this.onResize(target.width, target.height);
         }
         public popTarget():void {
             this.$targets.pop();
             if(this.$targets.length > 0) {
-                this.bindCurrentRenderTarget();
+                var target = this.getCurrentTarget();
+                this.bindRenderTarget(target);
+                this.onResize(target.width, target.height);
             }
         }
         public getCurrentTarget():WebGLRenderTarget {
@@ -131,11 +135,13 @@ module egret.web {
             this.surface.width = this.surface.height = 0;
         }
 
-        private onResize():void {
-            this.projectionX = this.surface.width / 2;
-            this.projectionY = -this.surface.height / 2;
+        private onResize(width?:number, height?:number):void {
+            var width = width || this.surface.width;
+            var height = height || this.surface.height;
+            this.projectionX = width / 2;
+            this.projectionY = -height / 2;
             if (this.context) {
-                this.context.viewport(0, 0, this.surface.width, this.surface.height);
+                this.context.viewport(0, 0, width, height);
             }
         }
 
