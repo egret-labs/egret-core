@@ -133,6 +133,7 @@ module dragonBones {
         }
         
         /**
+         * @private
          * 根据子纹理的名字获取子纹理数据
          * @param subTextureName 子纹理的名字
          * @returns {dragonBone.TextureData} 子纹理数据
