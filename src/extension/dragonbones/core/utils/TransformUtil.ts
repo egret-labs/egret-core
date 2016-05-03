@@ -131,7 +131,9 @@ module dragonBones {
             }
 
         }
+
 		private static _helpMatrix:Matrix = new Matrix();
+        /** @private */
 		public static applyMatrixToPoint(targetPoint:Point, matrix:Matrix, returnNewPoint:Boolean = false):Point
 		{
 			this._helpMatrix.tx = targetPoint.x;
