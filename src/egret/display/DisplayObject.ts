@@ -1941,6 +1941,7 @@ module egret {
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
         $update(bounds?:Rectangle):boolean {
+            //todo 计算滤镜占用区域
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             var node = this.$renderNode;
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
