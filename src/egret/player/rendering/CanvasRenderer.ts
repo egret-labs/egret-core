@@ -277,9 +277,9 @@ module egret {
                 return drawCalls;
             }
 
-            var node = mask.$getRenderNode();
+            var node;
             //遮罩是单纯的填充图形,且alpha为1,性能优化
-            if (mask && (!mask.$children || mask.$children.length == 0) &&
+            if (mask && (node = mask.$getRenderNode()) && (!mask.$children || mask.$children.length == 0) &&
                 node && node.type == sys.RenderNodeType.GraphicsNode &&
                 node.drawData.length == 1 &&
                 (<sys.Path2D>node.drawData[0]).type == sys.PathType.Fill &&

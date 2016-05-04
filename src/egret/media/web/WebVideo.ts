@@ -444,9 +444,6 @@ module egret.web {
          * @private
          */
         $render():void {
-            if(this._fullscreen || egret.Capabilities.isMobile){
-                return ;   
-            }
             var node = <sys.BitmapNode>this.$renderNode;
             var bitmapData = this.bitmapData;
             var posterData = this.posterData;
@@ -459,7 +456,7 @@ module egret.web {
                 node.image = posterData;
                 node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
             }
-            else if (this.isPlayed && bitmapData) {
+            else if (this.isPlayed && bitmapData && !this._fullscreen && !egret.Capabilities.isMobile) {
                 node.image = bitmapData;
                 node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
             }

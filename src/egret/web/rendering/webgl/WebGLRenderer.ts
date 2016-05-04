@@ -266,8 +266,6 @@ module egret.web {
                     buffer.pushMask(scrollRect);
                 }
                 var offsetM = Matrix.create().setTo(1, 0, 0, 1, 0, 0);
-
-
                 //绘制显示对象
                 if (hasBlendMode) {
                     buffer.setGlobalCompositeOperation(compositeOp);
@@ -277,6 +275,9 @@ module egret.web {
                 Matrix.release(offsetM);
                 if (hasBlendMode) {
                     buffer.setGlobalCompositeOperation(defaultCompositeOp);
+                }
+                if (scrollRect) {
+                    buffer.pushMask(scrollRect);
                 }
                 sys.Region.release(region);
                 Matrix.release(displayMatrix);
@@ -326,7 +327,9 @@ module egret.web {
                     if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
                         drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
                             displayObject.$displayList, clipRegion, root);
-                        displayBuffer.popMask();
+                        if(scrollRect) {
+                            displayBuffer.popMask();
+                        }
                         renderBufferPool.push(displayBuffer);
                         sys.Region.release(region);
                         Matrix.release(displayMatrix);
@@ -343,6 +346,7 @@ module egret.web {
                     Matrix.release(offsetM);
 
                     maskBuffer.renderContext.$drawWebGL();
+                    maskBuffer.onRenderFinish();
                     maskBuffer.renderContext.popBuffer();
 
                     if (calls > 0) {
@@ -360,7 +364,12 @@ module egret.web {
                     //}
                 }
 
+                displayBuffer.setGlobalCompositeOperation(defaultCompositeOp);
+                if(scrollRect) {
+                    displayBuffer.popMask();
+                }
                 displayBuffer.renderContext.$drawWebGL();
+                displayBuffer.onRenderFinish();
                 displayBuffer.renderContext.popBuffer();
 
                 //绘制结果到屏幕
@@ -463,18 +472,15 @@ module egret.web {
             //pushRenderTARGET
             webglBuffer.renderContext.pushBuffer(webglBuffer);
 
-
             webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
             this.renderNode(node, buffer, forHitTest);
             buffer.$drawWebGL();
+            buffer.onRenderFinish();
 
             // matrix   restore
             webglBuffer.restoreTransform();
             //popRenderTARGET
             webglBuffer.renderContext.popBuffer();
-
-
-
         }
 
         /**
@@ -590,6 +596,41 @@ module egret.web {
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
             node.dirtyRender = false;
+
+            // var width = node.width - node.x;
+            // var height = node.height - node.y;
+            // if (node.drawData.length == 0) {
+            //     return;
+            // }
+            // if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
+            //     node.$canvasRenderer = new CanvasRenderer();
+            //     node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+            // }
+            // else {
+            //     node.$canvasRenderBuffer.resize(width, height, true);
+            // }
+            // if (!node.$canvasRenderBuffer.context) {
+            //     return;
+            // }
+            // if (node.x || node.y) {
+            //     if (node.dirtyRender) {
+            //         node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
+            //     }
+            //     buffer.transform(1, 0, 0, 1, node.x, node.y);
+            // }
+            // var surface = node.$canvasRenderBuffer.surface;
+            // if (node.dirtyRender) {
+            //     WebGLUtils.deleteWebGLTexture(surface);
+            //     node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
+            // }
+            // buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
+            // if (node.x || node.y) {
+            //     if (node.dirtyRender) {
+            //         node.$canvasRenderBuffer.context.translate(node.x, node.y);
+            //     }
+            //     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
+            // }
+            // node.dirtyRender = false;
         }
 
         /**
@@ -646,6 +687,41 @@ module egret.web {
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
             }
             node.dirtyRender = false;
+
+            // var width = node.width;
+            // var height = node.height;
+            // if (width <= 0 || height <= 0) {
+            //     return;
+            // }
+            // if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
+            //     node.$canvasRenderer = new CanvasRenderer();
+            //     node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
+            // }
+            // else if (node.dirtyRender) {
+            //     node.$canvasRenderBuffer.resize(width, height, true);
+            // }
+            // if (!node.$canvasRenderBuffer.context) {
+            //     return;
+            // }
+            // if (node.x || node.y) {
+            //     if (node.dirtyRender) {
+            //         node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
+            //     }
+            //     buffer.transform(1, 0, 0, 1, node.x, node.y);
+            // }
+            // var surface = node.$canvasRenderBuffer.surface;
+            // if (node.dirtyRender) {
+            //     WebGLUtils.deleteWebGLTexture(surface);
+            //     node.$canvasRenderer["renderGraphics"](node, node.$canvasRenderBuffer.context, forHitTest);
+            // }
+            // buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
+            // if (node.x || node.y) {
+            //     if (node.dirtyRender) {
+            //         node.$canvasRenderBuffer.context.translate(node.x, node.y);
+            //     }
+            //     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
+            // }
+            // node.dirtyRender = false;
         }
 
         private renderGroup(groupNode:sys.GroupNode, buffer:WebGLRenderBuffer):void {
