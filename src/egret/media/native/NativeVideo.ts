@@ -45,63 +45,43 @@ module egret.native {
          * @private
          * @inheritDoc
          */
-        constructor() {
+        constructor(url?:string) {
             super();
-            egret.log('native video init');
             if (!__global.Video) {
-                egret.log('not have global.video');
                 egret.$error(1043);
+            }
+            this.src = url;
+            if(url){
+                this.load();
             }
         }
         /**
          * @inheritDoc
          */
-        public load(url:string):void {
-            var self = this;
+        public load(url?:string):void {
+            url = url || this.src;
+            this.src = url;
             if (DEBUG && !url) {
                 egret.$error(3002);
             }
-            this.src = url;
-            
+            var self = this;
             var video = new __global.Video(url);
+            this.originVideo = video;
+            this.setVideoSize();
+            video['setKeepRatio'](true);
             video.addEventListener("canplaythrough", onCanPlay);
             video.addEventListener("error", onVideoError);
-            this.originVideo = video;
-            egret.log('ok1')
-            if (!egret_native.isFileExists(url)) {
-                download();
-            }
-            else {
-                onVideoLoaded();
-            }
-            function download() {
-                egret.log('download');
-                var promise = PromiseObject.create();
-                promise.onSuccessFunc = onVideoLoaded;
-                promise.onErrorFunc = onVideoError;
-                egret_native.download(url, url, promise);
-            }
-            function onVideoLoaded():void {
-                egret.log('onVideoLoaded');
-                video.load();
-                NativeSound.$recycle(url, video);
-            }
             function onCanPlay():void {
                 egret.log('onCanPlay');
                 removeListeners();
-                video['setVideoRect'](0, 300, 300, 400);
-                video['setKeepRatio'](true);
-                video.play();
                 self.loaded = true;
                 self.dispatchEventWith(egret.Event.COMPLETE);
             }
             function onVideoError():void {
                 egret.log('onVideoError');
                 removeListeners();
-
                 self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             }
-
             function removeListeners():void {
                 egret.log('removeListeners');
                 video.removeEventListener("canplaythrough", onCanPlay);
@@ -110,16 +90,33 @@ module egret.native {
             
         }
         /**
+         * @private
+         * */
+        private canPlay:boolean = false;
+        /**
          * @inheritDoc
          */
-        public play(){
-            
-        }  
+        public play(startTime?:number, loop:boolean = false){
+            if(!this.loaded){
+                this.load();
+                this.once(egret.Event.COMPLETE,e=>this.play(startTime,loop),this)
+                return;
+            }
+            this.canPlay = true;
+            if(!this.isAddToStage){
+                return;
+            }
+            var video = this.originVideo;
+            this.setVideoSize();
+            video.currentTime = startTime || 0;
+            video.play();
+        }
         /**
          * @inheritDoc
          */
         public close(){
-            
+            this.canPlay = false;
+            //this.originVideo.close();
         }  
         /**
          * @inheritDoc
@@ -153,12 +150,19 @@ module egret.native {
         /**
          * @inheritDoc
          */
-        public position: number = 0;
+        public get position(): number{
+            return this.originVideo.currentTime;
+        }
+        public set position(value){
+            if(this.originVideo){
+                this.originVideo.currentTime = value;
+            }
+        }
         /**
          * @inheritDoc
          */
         public pause(){
-            
+            this.originVideo.pause();
         }  
         public bitmapData: BitmapData;
         /**
@@ -169,6 +173,58 @@ module egret.native {
          * @inheritDoc
          */
         public length:number;
+        /**
+         * @private
+         */
+        private isAddToStage:boolean = false;
+        /**
+         * @inheritDoc
+         */
+        $onAddToStage(stage:Stage, nestLevel:number):void {
+            this.isAddToStage = true;
+            if(this.canPlay){
+                this.originVideo.play();
+            }
+            super.$onAddToStage(stage,nestLevel);
+        }
+        /**
+         * @inheritDoc
+         */
+        $onRemoveFromStage():void {
+            this.isAddToStage = false;
+            this.originVideo.pause();
+            super.$onRemoveFromStage();
+        }
+        /**
+         * @private
+         */
+        private heightSet:number = 0;
+        /**
+         * @private
+         */
+        private widthSet:number = 0;
+        $setHeight(value:number):boolean {
+            this.heightSet = +value || 0;
+            this.setVideoSize();
+            return super.$setHeight(value);
+        }
+
+        /**
+         * @private
+         * 设置显示宽度
+         */
+        $setWidth(value:number):boolean {
+            this.widthSet = +value || 0;
+            this.setVideoSize();
+            return super.$setWidth(value);
+        }
+        private setVideoSize():void{
+            if(this.fullscreen){
+                this.originVideo['setVideoRect'](this.x, this.y, this.stage.stageWidth, this.stage.stageHeight);
+            }else{
+                this.originVideo['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
+            }
+        }
     }
     if (__global.Video) {
         egret.Video = NativeVideo;

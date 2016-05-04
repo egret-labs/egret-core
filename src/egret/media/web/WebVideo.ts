@@ -380,7 +380,7 @@ module egret.web {
             this.video.removeEventListener("canplay", this.onVideoLoaded);
             var video = this.video;
             this.loaded = true;
-            video.pause();
+            //video.pause();
             if (this.posterData) {
                 this.posterData.width = this.getPlayWidth();
                 this.posterData.height = this.getPlayHeight();

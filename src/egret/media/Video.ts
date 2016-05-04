@@ -249,6 +249,6 @@ module egret {
      * @copy egret.Video
      */
     export var Video:{
-        new (): Video
+        new (url?:string): Video
     };
 }
