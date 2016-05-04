@@ -162,7 +162,8 @@ module egret {
         skewXdeg,//角度 degree
         skewYdeg,
         concatenatedAlpha,
-        concatenatedVisible
+        concatenatedVisible,
+        filters
     }
 
     /**
@@ -256,7 +257,8 @@ module egret {
                 15: NaN,             //explicitHeight,
                 16: 0,               //skewXdeg,
                 17: 0,               //skewYdeg,
-                18: 0                //concatenatedAlpha
+                18: 0,               //concatenatedAlpha,
+                19: null             //filters
             };
         }
 
@@ -1657,6 +1659,29 @@ module egret {
             this.invalidatePosition();
 
             return true;
+        }
+        
+        /**
+         * @language en_US
+         * An indexed array that contains each filter object currently associated with the display object.
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 包含当前与显示对象关联的每个滤镜对象的索引数组。
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        public get filters():Array<Filter> {
+            return this.$DisplayObject[Keys.filters];
+        }
+
+        /**
+         * @private
+         */
+        public set filters(value:Array<Filter>) {
+            this.$DisplayObject[Keys.filters] = value;
         }
 
         /**
