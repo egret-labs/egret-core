@@ -9050,9 +9050,11 @@ var dragonBones;
             }
         );
         d(p, "displayDataList"
+            /** @private */
             ,function () {
                 return this._displayDataList;
             }
+            /** @private */
             ,function (value) {
                 if (this._displayDataList != value) {
                     if (value && value.length) {
@@ -14594,6 +14596,7 @@ var dragonBones;
                 transform.skewY = TransformUtil.tmpSkewYArray[1];
             }
         };
+        /** @private */
         TransformUtil.applyMatrixToPoint = function (targetPoint, matrix, returnNewPoint) {
             if (returnNewPoint === void 0) { returnNewPoint = false; }
             this._helpMatrix.tx = targetPoint.x;
@@ -15270,6 +15273,7 @@ var dragonBones;
             return null;
         };
         /**
+         * @private
          * 根据子纹理的名字获取子纹理数据
          * @param subTextureName 子纹理的名字
          * @returns {dragonBone.TextureData} 子纹理数据

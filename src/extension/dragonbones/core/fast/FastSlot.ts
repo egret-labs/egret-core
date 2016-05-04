@@ -353,9 +353,11 @@ module dragonBones {
             this.display = value;
         }
 
+        /** @private */
         public get displayDataList(): Array<[DisplayData, TextureData]> {
             return this._displayDataList;
         }
+        /** @private */
         public set displayDataList(value: Array<[DisplayData, TextureData]>) {
             if (this._displayDataList != value) {
                 if (value && value.length) {

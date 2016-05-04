@@ -3342,6 +3342,8 @@ declare module dragonBones {
          * @member {FastArmature} dragonBones.Slot#childArmature
          */
         childArmature: any;
+        /** @private */
+        /** @private */
         displayDataList: Array<[DisplayData, TextureData]>;
         /**
          * 显示对象列表(包含 display 或者 子骨架)
@@ -4416,6 +4418,7 @@ declare module dragonBones {
          * @member {string} dragonBones.Frame#sound
          */
         sound: string;
+        /** @private */
         bone: string;
         curve: CurveData;
         /**
@@ -4970,8 +4973,7 @@ declare module dragonBones {
          */
         rotated: boolean;
         /**
-         * 帧的区域
-         * @member {dragonBones.ITextureAtlas} dragonBones.TextureData#textureAtlas
+         * @private
          */
         textureAtlas: ITextureAtlas;
         /**
@@ -5424,6 +5426,7 @@ declare module dragonBones {
          */
         static matrixToTransform(matrix: Matrix, transform: DBTransform, scaleXF: boolean, scaleYF: boolean): void;
         private static _helpMatrix;
+        /** @private */
         static applyMatrixToPoint(targetPoint: Point, matrix: Matrix, returnNewPoint?: Boolean): Point;
         /**
          * 标准化弧度值，把弧度制换算到[-PI，PI]之间
@@ -5647,6 +5650,7 @@ declare module dragonBones {
          */
         getFrame(subTextureName: string): Rectangle;
         /**
+         * @private
          * 根据子纹理的名字获取子纹理数据
          * @param subTextureName 子纹理的名字
          * @returns {dragonBone.TextureData} 子纹理数据
