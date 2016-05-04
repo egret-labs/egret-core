@@ -7185,7 +7185,7 @@ var egret;
                     this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
                 }
                 else {
-                    this.canvasRenderBuffer.resize(width, height, true);
+                    this.canvasRenderBuffer.resize(width, height);
                 }
                 if (!this.canvasRenderBuffer.context) {
                     return;
@@ -7273,7 +7273,7 @@ var egret;
                     this.canvasRenderBuffer = new web.CanvasRenderBuffer(width, height);
                 }
                 else {
-                    this.canvasRenderBuffer.resize(width, height, true);
+                    this.canvasRenderBuffer.resize(width, height);
                 }
                 if (!this.canvasRenderBuffer.context) {
                     return;

@@ -551,7 +551,7 @@ module egret.web {
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
             else {
-                this.canvasRenderBuffer.resize(width, height, true);
+                this.canvasRenderBuffer.resize(width, height);
             }
 
             if (!this.canvasRenderBuffer.context) {
@@ -647,7 +647,7 @@ module egret.web {
                 this.canvasRenderBuffer = new CanvasRenderBuffer(width, height);
             }
             else {
-                this.canvasRenderBuffer.resize(width, height, true);
+                this.canvasRenderBuffer.resize(width, height);
             }
             if (!this.canvasRenderBuffer.context) {
                 return;
