@@ -68,20 +68,19 @@ module egret.web {
 
         public constructor(width?:number, height?:number) {
             // 获取webglRenderContext
-            // TODO 要实现共用context，这里应该获取单例
-            // this.renderContext = new WebGLRenderContext(width, height);
             this.renderContext = WebGLRenderContext.getInstance(width, height);
             // 画布
             this.surface = this.renderContext.surface;
             // webGL上下文，未来可替换为WebGLRenderContext暴露给外层？
             this.context = this.renderContext.context;
-
-            // render target 管理相关
+            // buffer 对应的 render target
+            this.rootRenderTarget = new WebGLRenderTarget(this.context, width, height);
             // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
-            this.rootRenderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
-            if(this.renderContext.$targets.length == 0) {
-                this.renderContext.pushTarget(this.rootRenderTarget);
+            if(this.renderContext.$bufferStack.length == 0) {
+                this.renderContext.pushBuffer(this);
             }
+
+            this.stencilState = false;
         }
 
         /**
@@ -101,11 +100,45 @@ module egret.web {
         public rootRenderTarget:WebGLRenderTarget;
 
         /**
+         * stencil state
+         * 模版开关状态
+         */
+        private stencilState:boolean;
+
+        public $stencilList = [];
+        public stencilHandleCount:number = 0;
+
+        public enableStencil():void {
+            if(!this.stencilState) {
+                var gl = this.context;
+                gl.enable(gl.STENCIL_TEST);
+                this.stencilState = true;
+            }
+        }
+
+        public disableStencil():void {
+            if(this.stencilState) {
+                var gl = this.context;
+                gl.disable(gl.STENCIL_TEST);
+                this.stencilState = false;
+            }
+        }
+
+        public restoreStencil():void {
+            var gl = this.context;
+            if(this.stencilState) {
+                gl.enable(gl.STENCIL_TEST);
+            } else {
+                gl.disable(gl.STENCIL_TEST);
+            }
+        }
+
+        /**
          * 渲染缓冲的宽度，以像素为单位。
          * @readOnly
          */
         public get width():number {
-            return this.surface.width;
+            return this.rootRenderTarget.width;
         }
 
         /**
@@ -113,7 +146,7 @@ module egret.web {
          * @readOnly
          */
         public get height():number {
-            return this.surface.height;
+            return this.rootRenderTarget.height;
         }
 
         /**
@@ -123,15 +156,17 @@ module egret.web {
          * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
          */
         public resize(width:number, height:number, useMaxSize?:boolean):void {
+            // render target 尺寸重置
             this.rootRenderTarget.resize(width, height);
 
-            this.renderContext.pushTarget(this.rootRenderTarget);
+            this.renderContext.pushBuffer(this);
 
-            if(this.renderContext.$targets[0] == this.rootRenderTarget) {
+            // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
+            if(this.renderContext.$bufferStack[0] == this) {
                 this.renderContext.resize(width, height, useMaxSize);
             }
 
-            this.renderContext.popTarget();
+            this.renderContext.popBuffer();
         }
 
 
@@ -144,16 +179,14 @@ module egret.web {
          * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
          */
         public resizeTo(width:number, height:number, offsetX:number, offsetY:number):void {
-            // TODO
+            // TODO 这里用于cacheAsBitmap的实现
 
-            var oldSurface = this.surface;
-            var oldWidth = oldSurface.width;
-            var oldHeight = oldSurface.height;
-            this.renderContext.resizeTo(width, height, offsetX, offsetY);
+            // var oldSurface = this.surface;
+            // var oldWidth = oldSurface.width;
+            // var oldHeight = oldSurface.height;
+            // this.renderContext.resizeTo(width, height, offsetX, offsetY);
             // renderTexture resize, copy color data
-            this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
-
-            // TODO
+            // this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
 
         }
 
@@ -175,10 +208,10 @@ module egret.web {
             // dirtyRegionPolicy hack
             if(this._dirtyRegionPolicy) {
                 this.rootRenderTarget.useFrameBuffer = true;
-                this.renderContext.bindCurrentRenderTarget();
+                this.renderContext.bindBufferTarget(this);
             } else {
                 this.rootRenderTarget.useFrameBuffer = false;
-                this.renderContext.bindCurrentRenderTarget();
+                this.renderContext.bindBufferTarget(this);
                 this.clear();
             }
 
@@ -233,19 +266,12 @@ module egret.web {
 
             var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
             this.rootRenderTarget.useFrameBuffer = true;
-            this.renderContext.pushTarget(this.rootRenderTarget);
-            // var target = this.renderContext.getCurrentTarget();
-            // var useFrameBuffer = target.useFrameBuffer;
-            // target.useFrameBuffer = true;
-            // this.renderContext.bindCurrentRenderTarget();
+            this.renderContext.pushBuffer(this);
 
             gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
-            // restore the state of current render target
-            // target.useFrameBuffer = useFrameBuffer;
-            // this.renderContext.bindCurrentRenderTarget();
             this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-            this.renderContext.popTarget();
+            this.renderContext.popBuffer();
 
             return <number[]><any>pixels;
         }
@@ -311,8 +337,8 @@ module egret.web {
         public onRenderFinish():void {
             this.$drawCalls = 0;
 
-            // if used for render a render target, this is not need
-            if(this.renderContext.$targets.length == 1) {
+            // 如果是舞台渲染buffer，判断脏矩形策略
+            if(this.renderContext.$bufferStack.length == 1) {
                 // dirtyRegionPolicy hack
                 if(!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
                     this.drawSurfaceToFrameBuffer(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, true);
@@ -352,10 +378,6 @@ module egret.web {
             this.renderContext.setGlobalCompositeOperation(value);
         }
 
-        public get $stencilList() {
-            return this.renderContext.$stencilList;
-        };
-
         public pushMask(mask):void {
             this.renderContext.pushMask(mask);
         }
@@ -374,11 +396,8 @@ module egret.web {
             var gl = this.context;
 
             this.rootRenderTarget.useFrameBuffer = false;
-            this.renderContext.pushTarget(this.rootRenderTarget);
+            this.renderContext.pushBuffer(this);
             var target = this.rootRenderTarget;
-            // var target = this.renderContext.getCurrentTarget();
-            // target.useFrameBuffer = false;
-            // this.renderContext.bindCurrentRenderTarget();
 
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
             this.setTransform(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
@@ -388,14 +407,8 @@ module egret.web {
             this.drawTexture(target.texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
 
-            // target.useFrameBuffer = true;
-            // this.renderContext.bindCurrentRenderTarget();
             this.rootRenderTarget.useFrameBuffer = true;
-            this.renderContext.popTarget();
-
-            if (this.maskPushed) {
-                gl.enable(gl.STENCIL_TEST);
-            }
+            this.renderContext.popBuffer();
         }
         /**
          * 交换surface的图像到frameBuffer中
@@ -406,11 +419,8 @@ module egret.web {
           sourceY:number, sourceWidth:number, sourceHeight:number, destX:number, destY:number, destWidth:number, destHeight:number, clear:boolean = false):void {
             var gl = this.context;
 
-            // var target = this.renderContext.getCurrentTarget();
-            // target.useFrameBuffer = true;
-            // this.renderContext.bindCurrentRenderTarget();
             this.rootRenderTarget.useFrameBuffer = true;
-            this.renderContext.pushTarget(this.rootRenderTarget);
+            this.renderContext.pushBuffer(this);
 
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
             this.setTransform(1, 0, 0, 1, 0, 0);
@@ -420,20 +430,9 @@ module egret.web {
             this.drawImage(<BitmapData><any>this.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
 
-            // target.useFrameBuffer = false;
-            // this.renderContext.bindCurrentRenderTarget();
             this.rootRenderTarget.useFrameBuffer = false;
-            this.renderContext.popTarget();
-
-            if (this.maskPushed) {
-                gl.enable(gl.STENCIL_TEST);
-            }
+            this.renderContext.popBuffer();
         }
 
-        //Rendering Functions end
     }
-
-    // WebGLRenderBuffer.initBlendMode();
-
-    // var sharedBuffer:WebGLRenderBuffer;
 }

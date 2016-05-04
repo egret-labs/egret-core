@@ -75,57 +75,136 @@ module egret.web {
         private static instance:WebGLRenderContext;
         public static getInstance(width:number, height:number):WebGLRenderContext {
             if(this.instance) {
-                this.instance.resize(width, height, true);
                 return this.instance;
             }
             this.instance = new WebGLRenderContext(width, height);
             return this.instance;
         }
 
-        // render target 管理
-        public $targets:WebGLRenderTarget[];
-        public createRenderTarget():WebGLRenderTarget {
-            var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
-            // create render target cause current render target unbind, so rebind render target
-            this.bindCurrentRenderTarget();
+        /**
+         * render buffer 堆栈
+         */
+        public $bufferStack:WebGLRenderBuffer[];
 
-            return renderTarget;
-        }
-        public pushTarget(target):void {
-            this.$targets.push(target);
+        /**
+         * 当前绑定的render buffer
+         */
+        public currentBuffer:WebGLRenderBuffer;
 
-            this.bindRenderTarget(target);
-            this.onResize(target.width, target.height);
+        /**
+         * buffer 管理
+         */
+        public pushBuffer(buffer:WebGLRenderBuffer):void {
+            this.$drawWebGL();
+
+            this.$bufferStack.push(buffer);
+
+            this.bindBuffer(buffer);
+            this.currentBuffer = buffer;
         }
-        public popTarget():void {
-            this.$targets.pop();
-            if(this.$targets.length > 0) {
-                var target = this.getCurrentTarget();
-                this.bindRenderTarget(target);
-                this.onResize(target.width, target.height);
+
+        public popBuffer():void {
+            this.$drawWebGL();
+
+            this.$bufferStack.pop();
+
+            var buffer = this.$bufferStack[this.$bufferStack.length - 1];
+            if(buffer) {
+                this.bindBuffer(buffer);
+                this.currentBuffer = buffer;
+            } else {
+                this.currentBuffer = null;
             }
         }
-        public getCurrentTarget():WebGLRenderTarget {
-            var target = this.$targets[this.$targets.length - 1];
-            return target;
-        }
-        public bindCurrentRenderTarget():void {
-            var target = this.getCurrentTarget();
-            this.bindRenderTarget(target);
-        }
-        private bindRenderTarget(target:WebGLRenderTarget):void {
+
+        public bindBufferTarget(buffer:WebGLRenderBuffer) {
+            // 绑定buffer的frameBuffer
             var gl = this.context;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, target.getFrameBuffer());
+            gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.rootRenderTarget.getFrameBuffer());
         }
+
+        private bindBuffer(buffer:WebGLRenderBuffer):void {
+
+            this.bindBufferTarget(buffer);
+
+            buffer.restoreStencil();
+
+            this.onResize(buffer.width, buffer.height);
+        }
+
+        // public createRenderTarget():WebGLRenderTarget {
+        //     var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
+        //     // create render target cause current render target unbind, so rebind render target
+        //     var buffer = this.currentBuffer;
+        //     if(buffer) {
+        //         this.bindBufferTarget(buffer);
+        //     }
+        //
+        //     return renderTarget;
+        // }
+
+
+
+        // // render target 管理
+        // public $targets:WebGLRenderTarget[];
+        // public createRenderTarget():WebGLRenderTarget {
+        //     var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
+        //     // create render target cause current render target unbind, so rebind render target
+        //     this.bindCurrentRenderTarget();
+        //
+        //     return renderTarget;
+        // }
+        //
+        // public pushTarget(target:WebGLRenderTarget):void {
+        //
+        //     this.$targets.push(target);
+        //
+        //     this.bindRenderTarget(target);
+        //
+        //     var gl = this.context;
+        //     if(target.maskPushed) {
+        //         gl.enable(gl.STENCIL_TEST);
+        //     } else {
+        //         gl.disable(gl.STENCIL_TEST);
+        //     }
+        //
+        //     this.onResize(target.width, target.height);
+        // }
+        // public popTarget():void {
+        //     this.$targets.pop();
+        //     if(this.$targets.length > 0) {
+        //         var target = this.getCurrentTarget();
+        //         this.bindRenderTarget(target);
+        //         var gl = this.context;
+        //         if(target.maskPushed) {
+        //             // gl.enable(gl.STENCIL_TEST);
+        //         } else {
+        //             gl.disable(gl.STENCIL_TEST);
+        //         }
+        //         this.onResize(target.width, target.height);
+        //     }
+        // }
+        // public getCurrentTarget():WebGLRenderTarget {
+        //     var target = this.$targets[this.$targets.length - 1];
+        //     return target;
+        // }
+        // public bindCurrentRenderTarget():void {
+        //     var target = this.getCurrentTarget();
+        //     this.bindRenderTarget(target);
+        // }
+        // private bindRenderTarget(target:WebGLRenderTarget):void {
+        //     var gl = this.context;
+        //     gl.bindFramebuffer(gl.FRAMEBUFFER, target.getFrameBuffer());
+        // }
 
 
         public constructor(width?:number, height?:number) {
-            //todo 抽取出一个WebglRenderContext
+
             this.surface = createCanvas(width, height);
 
             this.initWebGL();
 
-            this.$targets = [];
+            this.$bufferStack = [];
         }
 
         /**
@@ -646,12 +725,11 @@ module egret.web {
             }
         }
 
-        public $stencilList = [];
-        public stencilHandleCount:number = 0;
-
         public pushMask(mask):void {
+            var buffer = this.currentBuffer;
+
             // TODO mask count
-            this.$stencilList.push(mask);
+            buffer.$stencilList.push(mask);
 
             if (this.currentBatchSize >= this.size - 1) {
                 this.$drawWebGL();
@@ -665,8 +743,10 @@ module egret.web {
         }
 
         public popMask():void {
+            var buffer = this.currentBuffer;
+
             // TODO mask count
-            var mask = this.$stencilList.pop();
+            var mask = buffer.$stencilList.pop();
 
             if (this.currentBatchSize >= this.size - 1) {
                 this.$drawWebGL();
@@ -758,15 +838,16 @@ module egret.web {
          * draw push mask elements
          **/
         private drawPushMaskElements(data:any, offset:number):number {
+            var buffer = this.currentBuffer;
             this.switchDrawingTextureState(false);
 
             var gl = this.context;
-            if(this.stencilHandleCount == 0) {
-                gl.enable(gl.STENCIL_TEST);
+            if(buffer.stencilHandleCount == 0) {
+                buffer.enableStencil();
                 gl.clear(gl.STENCIL_BUFFER_BIT);
             }
-            var level = this.stencilHandleCount;
-            this.stencilHandleCount++;
+            var level = buffer.stencilHandleCount;
+            buffer.stencilHandleCount++;
             gl.colorMask(false, false, false, false);
             gl.stencilFunc(gl.EQUAL, level, 0xFF);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
@@ -787,17 +868,18 @@ module egret.web {
          * draw pop mask elements
          **/
         private drawPopMaskElements(data:any, offset:number) {
+            var buffer = this.currentBuffer;
             this.switchDrawingTextureState(false);
 
             var gl = this.context;
-            this.stencilHandleCount--;
-            if(this.stencilHandleCount == 0) {
-                gl.disable(gl.STENCIL_TEST);
+            buffer.stencilHandleCount--;
+            if(buffer.stencilHandleCount == 0) {
+                buffer.disableStencil();
                 // skip this draw
                 var size = data.count * 6;
                 return size;
             } else {
-                var level = this.stencilHandleCount;
+                var level = buffer.stencilHandleCount;
                 gl.colorMask(false, false, false, false);
                 gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
                 gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
