@@ -318,8 +318,14 @@ module egret.web {
         public get $drawCalls():number {
             return this.renderContext.$drawCalls;
         }
+        public set $drawCalls(count:number) {
+            this.renderContext.$drawCalls = count;
+        }
         public get $computeDrawCall():boolean {
             return this.renderContext.$computeDrawCall;
+        }
+        public set $computeDrawCall(state:boolean) {
+            this.renderContext.$computeDrawCall = state;
         }
 
         public $drawWebGL():void {

@@ -6576,10 +6576,16 @@ var egret;
                 ,function () {
                     return this.renderContext.$drawCalls;
                 }
+                ,function (count) {
+                    this.renderContext.$drawCalls = count;
+                }
             );
             d(p, "$computeDrawCall"
                 ,function () {
                     return this.renderContext.$computeDrawCall;
+                }
+                ,function (state) {
+                    this.renderContext.$computeDrawCall = state;
                 }
             );
             p.$drawWebGL = function () {
