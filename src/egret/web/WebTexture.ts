@@ -30,11 +30,17 @@
 
 module egret.web {
 
+    var sharedCanvas;
+    var sharedContext;
+
     /**
      * @private
      */
-    function convertImageToCanvas(texture:egret.Texture, rect?:egret.Rectangle):HTMLCanvasElement {
-        var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
+    function convertImageToCanvas(texture: egret.Texture, rect?: egret.Rectangle): HTMLCanvasElement {
+        if(!sharedCanvas) {
+            sharedCanvas = document.createElement("canvas");
+            sharedContext = sharedCanvas.getContext("2d");
+        }
         var w = texture.$getTextureWidth();
         var h = texture.$getTextureHeight();
         if (rect == null) {
@@ -52,33 +58,26 @@ module egret.web {
 
         var iWidth = rect.width;
         var iHeight = rect.height;
-        var surface = buffer.surface;
+        var surface = sharedCanvas;
         surface["style"]["width"] = iWidth + "px";
         surface["style"]["height"] = iHeight + "px";
-        buffer.resize(iWidth,iHeight);
+        sharedCanvas.width = iWidth;
+        sharedCanvas.height = iHeight;
 
         var bitmapData = texture;
-        var offsetX:number = Math.round(bitmapData._offsetX);
-        var offsetY:number = Math.round(bitmapData._offsetY);
-        var bitmapWidth:number = bitmapData._bitmapWidth;
-        var bitmapHeight:number = bitmapData._bitmapHeight;
-        if(buffer.context.drawImage) {
-            buffer.context.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
-                bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
-        }
-        else {//webgl
-            (<WebGLRenderBuffer><any>buffer).drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
-                bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height, bitmapData._sourceWidth, bitmapData._sourceHeight);
-            (<WebGLRenderBuffer><any>buffer).$drawWebGL();
-        }
-
+        var offsetX: number = Math.round(bitmapData._offsetX);
+        var offsetY: number = Math.round(bitmapData._offsetY);
+        var bitmapWidth: number = bitmapData._bitmapWidth;
+        var bitmapHeight: number = bitmapData._bitmapHeight;
+        sharedContext.drawImage(bitmapData._bitmapData, bitmapData._bitmapX + rect.x / $TextureScaleFactor, bitmapData._bitmapY + rect.y / $TextureScaleFactor,
+            bitmapWidth * rect.width / w, bitmapHeight * rect.height / h, offsetX, offsetY, rect.width, rect.height);
         return surface;
     }
 
     /**
      * @private
      */
-    function toDataURL(type:string, rect?:egret.Rectangle):string {
+    function toDataURL(type: string, rect?: egret.Rectangle): string {
         try {
             var surface = convertImageToCanvas(this, rect);
             var result = surface.toDataURL(type);
@@ -90,7 +89,7 @@ module egret.web {
         return null;
     }
 
-    function saveToFile(type:string, filePath:string, rect?:egret.Rectangle):void {
+    function saveToFile(type: string, filePath: string, rect?: egret.Rectangle): void {
         var base64 = toDataURL.call(this, type, rect);
         if (base64 == null) {
             return;
@@ -106,11 +105,11 @@ module egret.web {
         aLink.dispatchEvent(evt);
     }
 
-    function getPixel32(x:number, y:number):number[] {
+    function getPixel32(x: number, y: number): number[] {
         var buffer = <CanvasRenderBuffer><any>sys.hitTestBuffer;
         buffer.resize(3, 3);
-        var context:any = buffer.context;
-        if(!context.translate) {//webgl
+        var context: any = buffer.context;
+        if (!context.translate) {//webgl
             context = buffer;
         }
         context.translate(1 - x, 1 - y);
@@ -119,7 +118,7 @@ module egret.web {
         var scale = $TextureScaleFactor;
         context.drawImage(this._bitmapData, this._bitmapX, this._bitmapY, width, this._bitmapHeight,
             this._offsetX, this._offsetY, width * scale, height * scale);
-        if(context.$drawWebGL) {//webgl
+        if (context.$drawWebGL) {//webgl
             context.$drawWebGL();
         }
         try {

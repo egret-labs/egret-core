@@ -185,6 +185,7 @@ declare module egret {
          * @platform Web,Native
          */
         constructor(host?: string, port?: number);
+        private connectCount;
         /**
          * @language en_US
          * Connect the socket to the specified host and port number
