@@ -5618,13 +5618,11 @@ var egret;
              * buffer 管理
              */
             p.pushBuffer = function (buffer) {
-                this.$drawWebGL();
                 this.$bufferStack.push(buffer);
                 this.bindBuffer(buffer);
                 this.currentBuffer = buffer;
             };
             p.popBuffer = function () {
-                this.$drawWebGL();
                 this.$bufferStack.pop();
                 var buffer = this.$bufferStack[this.$bufferStack.length - 1];
                 if (buffer) {
@@ -6958,6 +6956,7 @@ var egret;
                 else {
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(region.width, region.height);
+                    displayBuffer.renderContext.bindBufferTarget(displayBuffer.renderContext.currentBuffer); // 重新绑定
                     var displayContext = displayBuffer.context;
                     if (!displayContext) {
                         drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
@@ -6965,6 +6964,7 @@ var egret;
                         egret.Matrix.release(displayMatrix);
                         return drawCalls;
                     }
+                    displayBuffer.renderContext.$drawWebGL();
                     displayBuffer.renderContext.pushBuffer(displayBuffer);
                     if (scrollRect) {
                         var m = displayMatrix;
@@ -6987,6 +6987,7 @@ var egret;
                         //}
                         //else {
                         var maskBuffer = this.createRenderBuffer(region.width, region.height);
+                        maskBuffer.renderContext.bindBufferTarget(maskBuffer.renderContext.currentBuffer); // 重新绑定
                         var maskContext = maskBuffer.context;
                         if (!maskContext) {
                             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
@@ -6996,11 +6997,13 @@ var egret;
                             egret.Matrix.release(displayMatrix);
                             return drawCalls;
                         }
+                        maskBuffer.renderContext.$drawWebGL();
                         maskBuffer.renderContext.pushBuffer(maskBuffer);
                         maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                         offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                         var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM, mask.$displayList, region, root ? mask : null);
                         egret.Matrix.release(offsetM);
+                        maskBuffer.renderContext.$drawWebGL();
                         maskBuffer.renderContext.popBuffer();
                         if (calls > 0) {
                             drawCalls += calls;
@@ -7014,6 +7017,7 @@ var egret;
                         }
                         renderBufferPool.push(maskBuffer);
                     }
+                    displayBuffer.renderContext.$drawWebGL();
                     displayBuffer.renderContext.popBuffer();
                     //绘制结果到屏幕
                     if (drawCalls > 0) {
@@ -7099,6 +7103,7 @@ var egret;
              */
             p.drawNodeToBuffer = function (node, buffer, matrix, forHitTest) {
                 var webglBuffer = buffer;
+                buffer.$drawWebGL();
                 // matrix save
                 webglBuffer.saveTransform();
                 //pushRenderTARGET

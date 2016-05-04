@@ -95,8 +95,6 @@ module egret.web {
          * buffer 管理
          */
         public pushBuffer(buffer:WebGLRenderBuffer):void {
-            this.$drawWebGL();
-
             this.$bufferStack.push(buffer);
 
             this.bindBuffer(buffer);
@@ -104,8 +102,6 @@ module egret.web {
         }
 
         public popBuffer():void {
-            this.$drawWebGL();
-
             this.$bufferStack.pop();
 
             var buffer = this.$bufferStack[this.$bufferStack.length - 1];

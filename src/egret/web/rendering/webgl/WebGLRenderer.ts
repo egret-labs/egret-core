@@ -285,6 +285,7 @@ module egret.web {
             else {
                 //绘制显示对象自身，若有scrollRect，应用clip
                 var displayBuffer = this.createRenderBuffer(region.width, region.height);
+                displayBuffer.renderContext.bindBufferTarget(displayBuffer.renderContext.currentBuffer); // 重新绑定
                 var displayContext = displayBuffer.context;
                 if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
                     drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
@@ -294,6 +295,7 @@ module egret.web {
                     return drawCalls;
                 }
 
+                displayBuffer.renderContext.$drawWebGL();
                 displayBuffer.renderContext.pushBuffer(displayBuffer);
 
                 if (scrollRect) {
@@ -319,6 +321,7 @@ module egret.web {
                     //}
                     //else {
                     var maskBuffer = this.createRenderBuffer(region.width, region.height);
+                    maskBuffer.renderContext.bindBufferTarget(maskBuffer.renderContext.currentBuffer); // 重新绑定
                     var maskContext = maskBuffer.context;
                     if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
                         drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
@@ -330,6 +333,7 @@ module egret.web {
                         return drawCalls;
                     }
 
+                    maskBuffer.renderContext.$drawWebGL();
                     maskBuffer.renderContext.pushBuffer(maskBuffer);
 
                     maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
@@ -338,6 +342,7 @@ module egret.web {
                         mask.$displayList, region, root ? mask : null);
                     Matrix.release(offsetM);
 
+                    maskBuffer.renderContext.$drawWebGL();
                     maskBuffer.renderContext.popBuffer();
 
                     if (calls > 0) {
@@ -355,6 +360,7 @@ module egret.web {
                     //}
                 }
 
+                displayBuffer.renderContext.$drawWebGL();
                 displayBuffer.renderContext.popBuffer();
 
                 //绘制结果到屏幕
@@ -449,6 +455,8 @@ module egret.web {
          */
         public drawNodeToBuffer(node:sys.RenderNode, buffer:WebGLRenderBuffer, matrix:Matrix, forHitTest?:boolean):void {
             var webglBuffer:WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
+
+            buffer.$drawWebGL();
 
             // matrix save
             webglBuffer.saveTransform();
