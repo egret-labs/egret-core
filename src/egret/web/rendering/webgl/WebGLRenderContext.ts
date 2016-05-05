@@ -128,71 +128,18 @@ module egret.web {
             this.onResize(buffer.width, buffer.height);
         }
 
-        // public createRenderTarget():WebGLRenderTarget {
-        //     var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
-        //     // create render target cause current render target unbind, so rebind render target
-        //     var buffer = this.currentBuffer;
-        //     if(buffer) {
-        //         this.bindBufferTarget(buffer);
-        //     }
-        //
-        //     return renderTarget;
-        // }
-
-
-
-        // // render target 管理
-        // public $targets:WebGLRenderTarget[];
-        // public createRenderTarget():WebGLRenderTarget {
-        //     var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
-        //     // create render target cause current render target unbind, so rebind render target
-        //     this.bindCurrentRenderTarget();
-        //
-        //     return renderTarget;
-        // }
-        //
-        // public pushTarget(target:WebGLRenderTarget):void {
-        //
-        //     this.$targets.push(target);
-        //
-        //     this.bindRenderTarget(target);
-        //
-        //     var gl = this.context;
-        //     if(target.maskPushed) {
-        //         gl.enable(gl.STENCIL_TEST);
-        //     } else {
-        //         gl.disable(gl.STENCIL_TEST);
-        //     }
-        //
-        //     this.onResize(target.width, target.height);
-        // }
-        // public popTarget():void {
-        //     this.$targets.pop();
-        //     if(this.$targets.length > 0) {
-        //         var target = this.getCurrentTarget();
-        //         this.bindRenderTarget(target);
-        //         var gl = this.context;
-        //         if(target.maskPushed) {
-        //             // gl.enable(gl.STENCIL_TEST);
-        //         } else {
-        //             gl.disable(gl.STENCIL_TEST);
-        //         }
-        //         this.onResize(target.width, target.height);
-        //     }
-        // }
-        // public getCurrentTarget():WebGLRenderTarget {
-        //     var target = this.$targets[this.$targets.length - 1];
-        //     return target;
-        // }
-        // public bindCurrentRenderTarget():void {
-        //     var target = this.getCurrentTarget();
-        //     this.bindRenderTarget(target);
-        // }
-        // private bindRenderTarget(target:WebGLRenderTarget):void {
-        //     var gl = this.context;
-        //     gl.bindFramebuffer(gl.FRAMEBUFFER, target.getFrameBuffer());
-        // }
-
+        /**
+         * 创建render target 对象
+         * 由此类创建是为了消除创建造成的解绑效果
+         */
+        public createRenderTarget(width:number, height:number):WebGLRenderTarget {
+            var target = new WebGLRenderTarget(this.context, width, height);
+            // 恢复绑定
+            if(this.currentBuffer) {
+                this.bindBufferTarget(this.currentBuffer);
+            }
+            return target;
+        }
 
         public constructor(width?:number, height?:number) {
 

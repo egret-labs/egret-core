@@ -286,7 +286,7 @@ module egret.web {
             else {
                 //绘制显示对象自身，若有scrollRect，应用clip
                 var displayBuffer = this.createRenderBuffer(region.width, region.height);
-                displayBuffer.renderContext.bindBufferTarget(displayBuffer.renderContext.currentBuffer); // 重新绑定
+                // displayBuffer.renderContext.bindBufferTarget(displayBuffer.renderContext.currentBuffer); // 重新绑定
                 var displayContext = displayBuffer.context;
                 if (!displayContext) {//RenderContext创建失败，放弃绘制遮罩。
                     drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,
@@ -322,7 +322,7 @@ module egret.web {
                     //}
                     //else {
                     var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                    maskBuffer.renderContext.bindBufferTarget(maskBuffer.renderContext.currentBuffer); // 重新绑定
+                    // maskBuffer.renderContext.bindBufferTarget(maskBuffer.renderContext.currentBuffer); // 重新绑定
                     var maskContext = maskBuffer.context;
                     if (!maskContext) {//RenderContext创建失败，放弃绘制遮罩。
                         drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix,

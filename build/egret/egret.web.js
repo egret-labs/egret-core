@@ -5520,67 +5520,6 @@ var egret;
          * 抽象出此类，以实现共用一个context
          */
         var WebGLRenderContext = (function () {
-            // public createRenderTarget():WebGLRenderTarget {
-            //     var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
-            //     // create render target cause current render target unbind, so rebind render target
-            //     var buffer = this.currentBuffer;
-            //     if(buffer) {
-            //         this.bindBufferTarget(buffer);
-            //     }
-            //
-            //     return renderTarget;
-            // }
-            // // render target 管理
-            // public $targets:WebGLRenderTarget[];
-            // public createRenderTarget():WebGLRenderTarget {
-            //     var renderTarget = new WebGLRenderTarget(this.context, this.surface.width, this.surface.height);
-            //     // create render target cause current render target unbind, so rebind render target
-            //     this.bindCurrentRenderTarget();
-            //
-            //     return renderTarget;
-            // }
-            //
-            // public pushTarget(target:WebGLRenderTarget):void {
-            //
-            //     this.$targets.push(target);
-            //
-            //     this.bindRenderTarget(target);
-            //
-            //     var gl = this.context;
-            //     if(target.maskPushed) {
-            //         gl.enable(gl.STENCIL_TEST);
-            //     } else {
-            //         gl.disable(gl.STENCIL_TEST);
-            //     }
-            //
-            //     this.onResize(target.width, target.height);
-            // }
-            // public popTarget():void {
-            //     this.$targets.pop();
-            //     if(this.$targets.length > 0) {
-            //         var target = this.getCurrentTarget();
-            //         this.bindRenderTarget(target);
-            //         var gl = this.context;
-            //         if(target.maskPushed) {
-            //             // gl.enable(gl.STENCIL_TEST);
-            //         } else {
-            //             gl.disable(gl.STENCIL_TEST);
-            //         }
-            //         this.onResize(target.width, target.height);
-            //     }
-            // }
-            // public getCurrentTarget():WebGLRenderTarget {
-            //     var target = this.$targets[this.$targets.length - 1];
-            //     return target;
-            // }
-            // public bindCurrentRenderTarget():void {
-            //     var target = this.getCurrentTarget();
-            //     this.bindRenderTarget(target);
-            // }
-            // private bindRenderTarget(target:WebGLRenderTarget):void {
-            //     var gl = this.context;
-            //     gl.bindFramebuffer(gl.FRAMEBUFFER, target.getFrameBuffer());
-            // }
             function WebGLRenderContext(width, height) {
                 this.glID = null;
                 this.size = 2000;
@@ -5639,6 +5578,18 @@ var egret;
                 this.bindBufferTarget(buffer);
                 buffer.restoreStencil();
                 this.onResize(buffer.width, buffer.height);
+            };
+            /**
+             * 创建render target 对象
+             * 由此类创建是为了消除创建造成的解绑效果
+             */
+            p.createRenderTarget = function (width, height) {
+                var target = new web.WebGLRenderTarget(this.context, width, height);
+                // 恢复绑定
+                if (this.currentBuffer) {
+                    this.bindBufferTarget(this.currentBuffer);
+                }
+                return target;
             };
             /**
              * 销毁绘制对象
@@ -6387,7 +6338,7 @@ var egret;
                 // webGL上下文，未来可替换为WebGLRenderContext暴露给外层？
                 this.context = this.renderContext.context;
                 // buffer 对应的 render target
-                this.rootRenderTarget = new web.WebGLRenderTarget(this.context, width, height);
+                this.rootRenderTarget = this.renderContext.createRenderTarget(width, height);
                 // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
                 if (this.renderContext.$bufferStack.length == 0) {
                     this.renderContext.pushBuffer(this);
@@ -6956,7 +6907,7 @@ var egret;
                 else {
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(region.width, region.height);
-                    displayBuffer.renderContext.bindBufferTarget(displayBuffer.renderContext.currentBuffer); // 重新绑定
+                    // displayBuffer.renderContext.bindBufferTarget(displayBuffer.renderContext.currentBuffer); // 重新绑定
                     var displayContext = displayBuffer.context;
                     if (!displayContext) {
                         drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
@@ -6987,7 +6938,7 @@ var egret;
                         //}
                         //else {
                         var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                        maskBuffer.renderContext.bindBufferTarget(maskBuffer.renderContext.currentBuffer); // 重新绑定
+                        // maskBuffer.renderContext.bindBufferTarget(maskBuffer.renderContext.currentBuffer); // 重新绑定
                         var maskContext = maskBuffer.context;
                         if (!maskContext) {
                             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);

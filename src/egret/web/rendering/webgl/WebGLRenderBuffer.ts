@@ -74,7 +74,7 @@ module egret.web {
             // webGL上下文，未来可替换为WebGLRenderContext暴露给外层？
             this.context = this.renderContext.context;
             // buffer 对应的 render target
-            this.rootRenderTarget = new WebGLRenderTarget(this.context, width, height);
+            this.rootRenderTarget = this.renderContext.createRenderTarget(width, height);
             // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
             if(this.renderContext.$bufferStack.length == 0) {
                 this.renderContext.pushBuffer(this);
