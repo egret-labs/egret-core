@@ -1326,15 +1326,6 @@ var egret;
                 window.setTimeout(function () { return video.pause(); }, 16);
                 this.video = video;
             };
-            d(p, "length"
-                ,function () {
-                    if (this.video) {
-                        return this.video.duration;
-                    }
-                    throw new Error("Video not loaded!");
-                    //return 0;
-                }
-            );
             /**
              * @inheritDoc
              */
@@ -1362,6 +1353,11 @@ var egret;
                 video.style.left = "0px";
                 video.height = video.videoHeight;
                 video.width = video.videoWidth;
+                if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
+                    setTimeout(function () {
+                        video.width = 0;
+                    }, 1000);
+                }
                 this.checkFullScreen(this._fullscreen);
             };
             p.checkFullScreen = function (playFullScreen) {
@@ -1369,12 +1365,10 @@ var egret;
                 if (playFullScreen) {
                     if (video.parentElement == null) {
                         video.removeAttribute("webkit-playsinline");
-                        video.style.width = "100%";
-                        video.style.height = "100%";
                         document.body.appendChild(video);
                     }
                     egret.stopTick(this.markDirty, this);
-                    this.setFullScreenMonitor(true);
+                    this.goFullscreen();
                 }
                 else {
                     if (video.parentElement != null) {
@@ -1382,11 +1376,24 @@ var egret;
                     }
                     video.setAttribute("webkit-playsinline", "true");
                     this.setFullScreenMonitor(false);
-                    if (!egret.Capabilities.isMobile) {
-                        egret.startTick(this.markDirty, this);
-                    }
+                    egret.startTick(this.markDirty, this);
                 }
                 video.play();
+            };
+            p.goFullscreen = function () {
+                var video = this.video;
+                var fullscreenType;
+                fullscreenType = egret.web.getPrefixStyleName('requestFullscreen', video);
+                if (!video[fullscreenType]) {
+                    fullscreenType = egret.web.getPrefixStyleName('requestFullScreen', video);
+                    if (!video[fullscreenType]) {
+                        return true;
+                    }
+                }
+                video.removeAttribute("webkit-playsinline");
+                video[fullscreenType]();
+                this.setFullScreenMonitor(true);
+                return true;
             };
             p.setFullScreenMonitor = function (use) {
                 var video = this.video;
@@ -1404,7 +1411,7 @@ var egret;
                 }
             };
             p.screenError = function () {
-                egret.$error(3103);
+                egret.$error(3003);
             };
             p.exitFullscreen = function () {
                 //退出全屏
@@ -1431,15 +1438,9 @@ var egret;
              *
              */
             p.onVideoEnded = function () {
-                var video = this.video;
-                if (video.parentElement != null) {
-                    video.parentElement.removeChild(video);
-                }
                 this.pause();
                 this.isPlayed = false;
-                if (!this._fullscreen) {
-                    this.$invalidateContentBounds();
-                }
+                this.$invalidateContentBounds();
                 this.dispatchEventWith(egret.Event.ENDED);
             };
             /**
@@ -1524,6 +1525,9 @@ var egret;
                  * @inheritDoc
                  */
                 ,function (value) {
+                    if (egret.Capabilities.isMobile) {
+                        return;
+                    }
                     this._fullscreen = !!value;
                     if (this.video && this.video.paused == false) {
                         this.checkFullScreen(this._fullscreen);
@@ -1609,14 +1613,11 @@ var egret;
                 var posterData = this.posterData;
                 var width = this.getPlayWidth();
                 var height = this.getPlayHeight();
-                if (width <= 0 || height <= 0) {
-                    return;
-                }
                 if ((!this.isPlayed || egret.Capabilities.isMobile) && posterData) {
                     node.image = posterData;
                     node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
                 }
-                else if (this.isPlayed && bitmapData && !this._fullscreen && !egret.Capabilities.isMobile) {
+                else if (this.isPlayed && bitmapData) {
                     node.image = bitmapData;
                     node.drawImage(0, 0, bitmapData.width, bitmapData.height, 0, 0, width, height);
                 }
@@ -1651,6 +1652,17 @@ var egret;
                         return this.video.paused;
                     }
                     return true;
+                }
+            );
+            d(p, "length"
+                /**
+                 * @inheritDoc
+                 */
+                ,function () {
+                    if (this.video) {
+                        return this.video.duration;
+                    }
+                    throw new Error("Video not loaded!");
                 }
             );
             return WebVideo;
