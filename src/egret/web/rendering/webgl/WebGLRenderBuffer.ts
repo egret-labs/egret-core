@@ -69,13 +69,12 @@ module egret.web {
         public constructor(width?:number, height?:number) {
             // 获取webglRenderContext
             this.renderContext = WebGLRenderContext.getInstance(width, height);
-            // 画布
-            this.surface = this.renderContext.surface;
             // webGL上下文，未来可替换为WebGLRenderContext暴露给外层？
             this.context = this.renderContext.context;
             // buffer 对应的 render target
             this.rootRenderTarget = this.renderContext.createRenderTarget(width, height);
 
+            // TODO 抽像WebGLState类用于管理webgl状态，包括stencil，blend，colorMask等等
             this.stencilState = false;
 
             this.initVertexArrayObjects();
@@ -85,6 +84,10 @@ module egret.web {
             // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
             if(this.renderContext.$bufferStack.length == 0) {
                 this.renderContext.pushBuffer(this);
+                // 画布
+                this.surface = this.renderContext.surface;
+            } else {
+                this.surface = this.rootRenderTarget;
             }
         }
 
@@ -94,9 +97,10 @@ module egret.web {
         public context:WebGLRenderingContext;
 
         /**
-         * 呈现最终绘图结果的画布
+         * 如果是舞台缓存，为canvas
+         * 如果是普通缓存，为renderTarget
          */
-        public surface:HTMLCanvasElement;
+        public surface:any;
 
         /**
          * root render target
@@ -257,7 +261,7 @@ module egret.web {
             var length = regions.length;
             //只有一个区域且刚好为舞台大小时,不设置模板
             if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
-                regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
+                regions[0].width == this.rootRenderTarget.width && regions[0].height == this.rootRenderTarget.height) {
                 this.maskPushed = false;
                 this.rootRenderTarget.useFrameBuffer && this.clear();
                 return;
@@ -317,7 +321,7 @@ module egret.web {
          * @param type 转换的类型，如: "image/png","image/jpeg"
          */
         public toDataURL(type?:string, encoderOptions?:number):string {
-            return this.surface.toDataURL(type, encoderOptions);
+            return this.renderContext.surface.toDataURL(type, encoderOptions);
         }
 
         /**
@@ -334,10 +338,10 @@ module egret.web {
             if(this.renderContext.$bufferStack.length == 1) {
                 // dirtyRegionPolicy hack
                 if(!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
-                    this.drawSurfaceToFrameBuffer(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, true);
+                    this.drawSurfaceToFrameBuffer(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, true);
                 }
                 if(this._dirtyRegionPolicy) {
-                    this.drawFrameBufferToSurface(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
+                    this.drawFrameBufferToSurface(0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height, 0, 0, this.rootRenderTarget.width, this.rootRenderTarget.height);
                 }
                 this._dirtyRegionPolicy = this.dirtyRegionPolicy;
             }
@@ -357,11 +361,11 @@ module egret.web {
             var target = this.rootRenderTarget;
 
             gl.disable(gl.STENCIL_TEST);// 切换frameBuffer注意要禁用STENCIL_TEST
-            this.setTransform(1, 0, 0, -1, 0, this.surface.height);// 翻转,因为从frameBuffer中读出的图片是正的
+            this.setTransform(1, 0, 0, 1, 0, 0);
             this.setGlobalAlpha(1);
             this.setGlobalCompositeOperation("source-over");
             clear && this.clear();
-            this.drawTexture(target.texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+            this.drawImage(<BitmapData><any>target, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = true;
@@ -384,7 +388,7 @@ module egret.web {
             this.setGlobalAlpha(1);
             this.setGlobalCompositeOperation("source-over");
             clear && this.clear();
-            this.drawImage(<BitmapData><any>this.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+            this.drawImage(<BitmapData><any>this.renderContext.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
             this.$drawWebGL();
 
             this.rootRenderTarget.useFrameBuffer = false;
@@ -395,7 +399,7 @@ module egret.web {
          * 清空缓冲区数据
          */
         public clear():void {
-            if(this.surface.width != 0 && this.surface.height != 0) {
+            if(this.rootRenderTarget.width != 0 && this.rootRenderTarget.height != 0) {
                 var gl:any = this.context;
                 gl.colorMask(true, true, true, true);
                 gl.clearColor(0, 0, 0, 0);
@@ -432,8 +436,17 @@ module egret.web {
             //        }
             //    }
             //}
-            this.createWebGLTexture(texture);
-            var webGLTexture = texture["webGLTexture"][this.renderContext.glID];
+            var webGLTexture:WebGLTexture;
+            if(texture["texture"]) {
+                // 如果是render target
+                webGLTexture = texture["texture"];
+                this.saveTransform();
+                this.transform(1, 0, 0, -1, 0, destHeight);// 翻转
+            } else {
+                this.createWebGLTexture(texture);
+                webGLTexture = texture["webGLTexture"][this.renderContext.glID];
+            }
+
             if (!webGLTexture) {
                 return;
             }
@@ -441,6 +454,9 @@ module egret.web {
                 sourceX, sourceY, sourceWidth, sourceHeight,
                 destX, destY, destWidth, destHeight,
                 textureSourceWidth, textureSourceHeight);
+            if(texture["texture"]) {
+                this.restoreTransform();
+            }
         }
 
         private currentBaseTexture:Texture = null;

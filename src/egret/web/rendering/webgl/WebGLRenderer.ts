@@ -58,11 +58,22 @@ module egret.web {
             this.nestLevel++;
             var webglBuffer:WebGLRenderBuffer = <WebGLRenderBuffer>buffer;
             var root:DisplayObject = forRenderTexture ? displayObject : null;
+
+            var needPush = webglBuffer.renderContext.currentBuffer != webglBuffer;
+            if(needPush) {
+                webglBuffer.renderContext.pushBuffer(webglBuffer);
+            }
+
             //绘制显示对象
             this.drawDisplayObject(displayObject, webglBuffer, dirtyList, matrix, null, null, root);
             webglBuffer.$drawWebGL();
             var drawCall = webglBuffer.$drawCalls;
             webglBuffer.onRenderFinish();
+
+            if(needPush) {
+                webglBuffer.renderContext.popBuffer();
+            }
+
             this.nestLevel--;
             if (this.nestLevel === 0) {
                 //最大缓存6个渲染缓冲
