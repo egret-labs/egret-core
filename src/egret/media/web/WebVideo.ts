@@ -109,7 +109,7 @@ module egret.web {
             video.style.left = "0px";
             video.height = 1;
             video.width = 1;
-            window.setTimeout(() => video.pause(), 16);
+            window.setTimeout(() => video.pause(), 170);
             this.video = video;
         }
 
