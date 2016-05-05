@@ -5522,22 +5522,10 @@ var egret;
         var WebGLRenderContext = (function () {
             function WebGLRenderContext(width, height) {
                 this.glID = null;
-                this.size = 2000;
-                this.vertices = null;
-                this.vertSize = 5;
-                this.indices = null;
                 this.projectionX = NaN;
                 this.projectionY = NaN;
                 this.shaderManager = null;
                 this.contextLost = false;
-                this.currentBaseTexture = null;
-                this.currentBatchSize = 0;
-                this.drawData = [];
-                this.$drawCalls = 0;
-                this.$computeDrawCall = false;
-                this.globalMatrix = new egret.Matrix();
-                this.savedGlobalMatrix = new egret.Matrix();
-                this._globalAlpha = 1;
                 this.surface = createCanvas(width, height);
                 this.initWebGL();
                 this.$bufferStack = [];
@@ -5574,8 +5562,16 @@ var egret;
                 var gl = this.context;
                 gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.rootRenderTarget.getFrameBuffer());
             };
+            p.bindBufferData = function (buffer) {
+                var gl = this.context;
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, buffer.indices, gl.STATIC_DRAW);
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer.vertexBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, buffer.vertices, gl.DYNAMIC_DRAW);
+            };
             p.bindBuffer = function (buffer) {
                 this.bindBufferTarget(buffer);
+                this.bindBufferData(buffer);
                 buffer.restoreStencil();
                 this.onResize(buffer.width, buffer.height);
             };
@@ -5631,7 +5627,6 @@ var egret;
                     }
                 }
                 this.onResize();
-                this.clear();
             };
             /**
              * 改变渲染缓冲为指定大小，但保留原始图像数据
@@ -5648,18 +5643,6 @@ var egret;
                 this.onResize();
                 this.surface.addEventListener("webglcontextlost", this.handleContextLost.bind(this), false);
                 this.surface.addEventListener("webglcontextrestored", this.handleContextRestored.bind(this), false);
-                var numVerts = this.size * 4 * this.vertSize;
-                var numIndices = this.size * 6;
-                this.vertices = new Float32Array(numVerts);
-                this.indices = new Uint16Array(numIndices);
-                for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
-                    this.indices[i + 0] = j + 0;
-                    this.indices[i + 1] = j + 1;
-                    this.indices[i + 2] = j + 2;
-                    this.indices[i + 3] = j + 0;
-                    this.indices[i + 4] = j + 2;
-                    this.indices[i + 5] = j + 3;
-                }
                 this.getWebGLContext();
                 this.shaderManager = new web.WebGLShaderManager(this.context);
             };
@@ -5693,22 +5676,352 @@ var egret;
                     egret.$error(1021);
                 }
                 this.setContext(gl);
-                this.setGlobalCompositeOperation("source-over");
             };
             p.setContext = function (gl) {
                 this.context = gl;
                 gl.id = WebGLRenderContext.glContextId++;
                 this.glID = gl.id;
-                this.vertexBuffer = gl.createBuffer();
-                this.indexBuffer = gl.createBuffer();
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.DYNAMIC_DRAW);
                 gl.disable(gl.DEPTH_TEST);
                 gl.disable(gl.CULL_FACE);
                 gl.enable(gl.BLEND);
                 gl.colorMask(true, true, true, true);
+            };
+            p.switchDrawingTextureState = function (state) {
+                if (state == this.drawingTexture) {
+                    return;
+                }
+                var gl = this.context;
+                var shader = this.shaderManager.defaultShader;
+                if (state) {
+                    gl.uniform1f(shader.uPureColor, 0.0);
+                }
+                else {
+                    gl.uniform1f(shader.uPureColor, 1.0);
+                }
+                this.drawingTexture = state;
+            };
+            WebGLRenderContext.glContextId = 0;
+            return WebGLRenderContext;
+        }());
+        web.WebGLRenderContext = WebGLRenderContext;
+        egret.registerClass(WebGLRenderContext,'egret.web.WebGLRenderContext');
+    })(web = egret.web || (egret.web = {}));
+})(egret || (egret = {}));
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  Copyright (c) 2014-2015, Egret Technology Inc.
+//  All rights reserved.
+//  Redistribution and use in source and binary forms, with or without
+//  modification, are permitted provided that the following conditions are met:
+//
+//     * Redistributions of source code must retain the above copyright
+//       notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above copyright
+//       notice, this list of conditions and the following disclaimer in the
+//       documentation and/or other materials provided with the distribution.
+//     * Neither the name of the Egret nor the
+//       names of its contributors may be used to endorse or promote products
+//       derived from this software without specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
+//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
+//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//////////////////////////////////////////////////////////////////////////////////////
+var egret;
+(function (egret) {
+    var web;
+    (function (web) {
+        /**
+         * 创建一个canvas。
+         */
+        function createCanvas(width, height) {
+            var canvas = document.createElement("canvas");
+            if (!isNaN(width) && !isNaN(height)) {
+                canvas.width = width;
+                canvas.height = height;
+            }
+            egret.$toBitmapData(canvas);
+            return canvas;
+        }
+        /**
+         * @private
+         * WebGL渲染器
+         */
+        var WebGLRenderBuffer = (function () {
+            function WebGLRenderBuffer(width, height) {
+                /**
+                 * 初始化顶点数组和缓存
+                 */
+                this.size = 2000;
+                this.vertices = null;
+                this.vertSize = 5;
+                this.indices = null;
+                this.$stencilList = [];
+                this.stencilHandleCount = 0;
+                // dirtyRegionPolicy hack
+                this.dirtyRegionPolicy = true;
+                this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
+                this.currentBaseTexture = null;
+                this.currentBatchSize = 0;
+                this.drawData = [];
+                this.$drawCalls = 0;
+                this.$computeDrawCall = false;
+                this.globalMatrix = new egret.Matrix();
+                this.savedGlobalMatrix = new egret.Matrix();
+                this._globalAlpha = 1;
+                // 获取webglRenderContext
+                this.renderContext = web.WebGLRenderContext.getInstance(width, height);
+                // 画布
+                this.surface = this.renderContext.surface;
+                // webGL上下文，未来可替换为WebGLRenderContext暴露给外层？
+                this.context = this.renderContext.context;
+                // buffer 对应的 render target
+                this.rootRenderTarget = this.renderContext.createRenderTarget(width, height);
+                this.stencilState = false;
+                this.initVertexArrayObjects();
+                this.setGlobalCompositeOperation("source-over");
+                // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
+                if (this.renderContext.$bufferStack.length == 0) {
+                    this.renderContext.pushBuffer(this);
+                }
+            }
+            var d = __define,c=WebGLRenderBuffer,p=c.prototype;
+            p.initVertexArrayObjects = function () {
+                var numVerts = this.size * 4 * this.vertSize;
+                var numIndices = this.size * 6;
+                this.vertices = new Float32Array(numVerts);
+                this.indices = new Uint16Array(numIndices);
+                for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
+                    this.indices[i + 0] = j + 0;
+                    this.indices[i + 1] = j + 1;
+                    this.indices[i + 2] = j + 2;
+                    this.indices[i + 3] = j + 0;
+                    this.indices[i + 4] = j + 2;
+                    this.indices[i + 5] = j + 3;
+                }
+                var gl = this.context;
+                this.vertexBuffer = gl.createBuffer();
+                this.indexBuffer = gl.createBuffer();
+            };
+            p.enableStencil = function () {
+                if (!this.stencilState) {
+                    var gl = this.context;
+                    gl.enable(gl.STENCIL_TEST);
+                    this.stencilState = true;
+                }
+            };
+            p.disableStencil = function () {
+                if (this.stencilState) {
+                    var gl = this.context;
+                    gl.disable(gl.STENCIL_TEST);
+                    this.stencilState = false;
+                }
+            };
+            p.restoreStencil = function () {
+                var gl = this.context;
+                if (this.stencilState) {
+                    gl.enable(gl.STENCIL_TEST);
+                }
+                else {
+                    gl.disable(gl.STENCIL_TEST);
+                }
+            };
+            d(p, "width"
+                /**
+                 * 渲染缓冲的宽度，以像素为单位。
+                 * @readOnly
+                 */
+                ,function () {
+                    return this.rootRenderTarget.width;
+                }
+            );
+            d(p, "height"
+                /**
+                 * 渲染缓冲的高度，以像素为单位。
+                 * @readOnly
+                 */
+                ,function () {
+                    return this.rootRenderTarget.height;
+                }
+            );
+            /**
+             * 改变渲染缓冲的大小并清空缓冲区
+             * @param width 改变后的宽
+             * @param height 改变后的高
+             * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
+             */
+            p.resize = function (width, height, useMaxSize) {
+                // render target 尺寸重置
+                this.rootRenderTarget.resize(width, height);
+                this.renderContext.pushBuffer(this);
+                // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
+                if (this.renderContext.$bufferStack[0] == this) {
+                    this.renderContext.resize(width, height, useMaxSize);
+                    this.clear();
+                }
+                this.renderContext.popBuffer();
+            };
+            /**
+             * 改变渲染缓冲为指定大小，但保留原始图像数据
+             * @param width 改变后的宽
+             * @param height 改变后的高
+             * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
+             * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
+             */
+            p.resizeTo = function (width, height, offsetX, offsetY) {
+                // TODO 这里用于cacheAsBitmap的实现
+                // var oldSurface = this.surface;
+                // var oldWidth = oldSurface.width;
+                // var oldHeight = oldSurface.height;
+                // this.renderContext.resizeTo(width, height, offsetX, offsetY);
+                // renderTexture resize, copy color data
+                // this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
+            };
+            p.setDirtyRegionPolicy = function (state) {
+                this.dirtyRegionPolicy = (state == "on");
+            };
+            /**
+             * 清空并设置裁切
+             * @param regions 矩形列表
+             * @param offsetX 矩形要加上的偏移量x
+             * @param offsetY 矩形要加上的偏移量y
+             */
+            p.beginClip = function (regions, offsetX, offsetY) {
+                // dirtyRegionPolicy hack
+                if (this._dirtyRegionPolicy) {
+                    this.rootRenderTarget.useFrameBuffer = true;
+                    this.renderContext.bindBufferTarget(this);
+                }
+                else {
+                    this.rootRenderTarget.useFrameBuffer = false;
+                    this.renderContext.bindBufferTarget(this);
+                    this.clear();
+                }
+                offsetX = +offsetX || 0;
+                offsetY = +offsetY || 0;
+                this.setTransform(1, 0, 0, 1, offsetX, offsetY);
+                var length = regions.length;
+                //只有一个区域且刚好为舞台大小时,不设置模板
+                if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
+                    regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
+                    this.maskPushed = false;
+                    this.rootRenderTarget.useFrameBuffer && this.clear();
+                    return;
+                }
+                // 擦除脏矩形区域
+                for (var i = 0; i < length; i++) {
+                    var region = regions[i];
+                    this.clearRect(region.minX, region.minY, region.width, region.height);
+                }
+                // 设置模版
+                if (length > 0) {
+                    this.pushMask(regions);
+                    this.maskPushed = true;
+                    this.offsetX = offsetX;
+                    this.offsetY = offsetY;
+                }
+                else {
+                    this.maskPushed = false;
+                }
+            };
+            /**
+             * 取消上一次设置的clip。
+             */
+            p.endClip = function () {
+                if (this.maskPushed) {
+                    this.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
+                    this.popMask();
+                }
+            };
+            /**
+             * 获取指定坐标的像素
+             */
+            p.getPixel = function (x, y) {
+                var gl = this.context;
+                var pixels = new Uint8Array(4);
+                var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
+                this.rootRenderTarget.useFrameBuffer = true;
+                this.renderContext.pushBuffer(this);
+                gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
+                this.renderContext.popBuffer();
+                return pixels;
+            };
+            /**
+             * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
+             * @param type 转换的类型，如: "image/png","image/jpeg"
+             */
+            p.toDataURL = function (type, encoderOptions) {
+                return this.surface.toDataURL(type, encoderOptions);
+            };
+            /**
+             * 销毁绘制对象
+             */
+            p.destroy = function () {
+                this.renderContext.destroy();
+            };
+            p.onRenderFinish = function () {
+                this.$drawCalls = 0;
+                // 如果是舞台渲染buffer，判断脏矩形策略
+                if (this.renderContext.$bufferStack.length == 1) {
+                    // dirtyRegionPolicy hack
+                    if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
+                        this.drawSurfaceToFrameBuffer(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, true);
+                    }
+                    if (this._dirtyRegionPolicy) {
+                        this.drawFrameBufferToSurface(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
+                    }
+                    this._dirtyRegionPolicy = this.dirtyRegionPolicy;
+                }
+            };
+            /**
+             * 交换frameBuffer中的图像到surface中
+             * @param width 宽度
+             * @param height 高度
+             */
+            p.drawFrameBufferToSurface = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
+                if (clear === void 0) { clear = false; }
+                var gl = this.context;
+                this.rootRenderTarget.useFrameBuffer = false;
+                this.renderContext.pushBuffer(this);
+                var target = this.rootRenderTarget;
+                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
+                this.setTransform(1, 0, 0, -1, 0, this.surface.height); // 翻转,因为从frameBuffer中读出的图片是正的
+                this.setGlobalAlpha(1);
+                this.setGlobalCompositeOperation("source-over");
+                clear && this.clear();
+                this.drawTexture(target.texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+                this.$drawWebGL();
+                this.rootRenderTarget.useFrameBuffer = true;
+                this.renderContext.popBuffer();
+            };
+            /**
+             * 交换surface的图像到frameBuffer中
+             * @param width 宽度
+             * @param height 高度
+             */
+            p.drawSurfaceToFrameBuffer = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
+                if (clear === void 0) { clear = false; }
+                var gl = this.context;
+                this.rootRenderTarget.useFrameBuffer = true;
+                this.renderContext.pushBuffer(this);
+                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
+                this.setTransform(1, 0, 0, 1, 0, 0);
+                this.setGlobalAlpha(1);
+                this.setGlobalCompositeOperation("source-over");
+                clear && this.clear();
+                this.drawImage(this.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
+                this.$drawWebGL();
+                this.rootRenderTarget.useFrameBuffer = false;
+                this.renderContext.popBuffer();
             };
             /**
              * 清空缓冲区数据
@@ -5731,7 +6044,7 @@ var egret;
             };
             //Rendering Functions begin
             p.drawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight) {
-                if (this.contextLost) {
+                if (this.renderContext.contextLost) {
                     return;
                 }
                 if (!texture) {
@@ -5747,7 +6060,7 @@ var egret;
                 //    }
                 //}
                 this.createWebGLTexture(texture);
-                var webGLTexture = texture["webGLTexture"][this.glID];
+                var webGLTexture = texture["webGLTexture"][this.renderContext.glID];
                 if (!webGLTexture) {
                     return;
                 }
@@ -5758,7 +6071,7 @@ var egret;
              * draw a texture use default shader
              * */
             p.drawTexture = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight) {
-                if (this.contextLost) {
+                if (this.renderContext.contextLost) {
                     return;
                 }
                 if (!texture) {
@@ -5783,7 +6096,7 @@ var egret;
              * draw a rect use default shader
              * */
             p.drawRect = function (x, y, width, height) {
-                if (this.contextLost) {
+                if (this.renderContext.contextLost) {
                     return;
                 }
                 // TODO if needed, this rect can set a color
@@ -5879,7 +6192,7 @@ var egret;
                 vertices[index++] = alpha;
             };
             p.$drawWebGL = function () {
-                if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.contextLost) {
+                if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.renderContext.contextLost) {
                     return;
                 }
                 this.start();
@@ -5905,7 +6218,7 @@ var egret;
                             offset += this.drawPopMaskElements(data, offset);
                             break;
                         case 4 /* BLEND */:
-                            var blendModeWebGL = WebGLRenderContext.blendModesForGL[data.value];
+                            var blendModeWebGL = WebGLRenderBuffer.blendModesForGL[data.value];
                             if (blendModeWebGL) {
                                 this.context.blendFunc(blendModeWebGL[0], blendModeWebGL[1]);
                             }
@@ -5926,28 +6239,28 @@ var egret;
                 this.currentBaseTexture = null;
             };
             p.start = function () {
-                if (this.contextLost) {
+                if (this.renderContext.contextLost) {
                     return;
                 }
                 var gl = this.context;
                 gl.activeTexture(gl.TEXTURE0);
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+                // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
                 var shader;
                 if (this.filterType == "colorTransform") {
-                    shader = this.shaderManager.colorTransformShader;
+                    shader = this.renderContext.shaderManager.colorTransformShader;
                 }
                 else if (this.filterType == "blur") {
-                    shader = this.shaderManager.blurShader;
+                    shader = this.renderContext.shaderManager.blurShader;
                 }
                 else {
-                    shader = this.shaderManager.defaultShader;
+                    shader = this.renderContext.shaderManager.defaultShader;
                 }
-                this.shaderManager.activateShader(shader);
+                this.renderContext.shaderManager.activateShader(shader);
                 shader.syncUniforms();
-                gl.uniform2f(shader.projectionVector, this.projectionX, this.projectionY);
+                gl.uniform2f(shader.projectionVector, this.renderContext.projectionX, this.renderContext.projectionY);
                 // set the default shader to draw texture model
-                this.switchDrawingTextureState(true);
+                this.renderContext.switchDrawingTextureState(true);
                 var stride = this.vertSize * 4;
                 gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
                 gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
@@ -5958,9 +6271,9 @@ var egret;
                 if (!bitmapData.webGLTexture) {
                     bitmapData.webGLTexture = {};
                 }
-                if (!bitmapData.webGLTexture[this.glID]) {
+                if (!bitmapData.webGLTexture[this.renderContext.glID]) {
                     var glTexture = this.createTexture(bitmapData);
-                    bitmapData.webGLTexture[this.glID] = glTexture;
+                    bitmapData.webGLTexture[this.renderContext.glID] = glTexture;
                 }
             };
             // 创建一个材质，并返回，只供外部引用，内部无引用
@@ -5969,7 +6282,7 @@ var egret;
                 var glTexture = gl.createTexture();
                 if (!glTexture) {
                     //先创建texture失败,然后lost事件才发出来..
-                    this.contextLost = true;
+                    this.renderContext.contextLost = true;
                     return;
                 }
                 glTexture.glContext = gl;
@@ -6009,9 +6322,8 @@ var egret;
                 }
             };
             p.pushMask = function (mask) {
-                var buffer = this.currentBuffer;
                 // TODO mask count
-                buffer.$stencilList.push(mask);
+                this.$stencilList.push(mask);
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
                     this.drawData.push({ type: 2 /* PUSH_MASK */, pushMask: mask, count: 0 });
@@ -6023,9 +6335,8 @@ var egret;
                 this.currentBaseTexture = null;
             };
             p.popMask = function () {
-                var buffer = this.currentBuffer;
                 // TODO mask count
-                var mask = buffer.$stencilList.pop();
+                var mask = this.$stencilList.pop();
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
                     this.drawData.push({ type: 3 /* POP_MASK */, popMask: mask, count: 0 });
@@ -6041,7 +6352,7 @@ var egret;
              * draw masks with default shader
              **/
             p.drawMask = function (mask) {
-                if (this.contextLost) {
+                if (this.renderContext.contextLost) {
                     return;
                 }
                 var length = mask.length;
@@ -6059,26 +6370,12 @@ var egret;
                     this.drawData[this.drawData.length - 1].count++;
                 }
             };
-            p.switchDrawingTextureState = function (state) {
-                if (state == this.drawingTexture) {
-                    return;
-                }
-                var gl = this.context;
-                var shader = this.shaderManager.defaultShader;
-                if (state) {
-                    gl.uniform1f(shader.uPureColor, 0.0);
-                }
-                else {
-                    gl.uniform1f(shader.uPureColor, 1.0);
-                }
-                this.drawingTexture = state;
-            };
             /**
              * @private
              * draw texture elements
              **/
             p.drawTextureElements = function (data, offset) {
-                this.switchDrawingTextureState(true);
+                this.renderContext.switchDrawingTextureState(true);
                 var gl = this.context;
                 gl.bindTexture(gl.TEXTURE_2D, data.texture);
                 var size = data.count * 6;
@@ -6090,7 +6387,7 @@ var egret;
              * draw rect elements
              **/
             p.drawRectElements = function (data, offset) {
-                this.switchDrawingTextureState(false);
+                this.renderContext.switchDrawingTextureState(false);
                 var gl = this.context;
                 gl.bindTexture(gl.TEXTURE_2D, null);
                 var size = data.count * 6;
@@ -6102,15 +6399,14 @@ var egret;
              * draw push mask elements
              **/
             p.drawPushMaskElements = function (data, offset) {
-                var buffer = this.currentBuffer;
-                this.switchDrawingTextureState(false);
+                this.renderContext.switchDrawingTextureState(false);
                 var gl = this.context;
-                if (buffer.stencilHandleCount == 0) {
-                    buffer.enableStencil();
+                if (this.stencilHandleCount == 0) {
+                    this.enableStencil();
                     gl.clear(gl.STENCIL_BUFFER_BIT);
                 }
-                var level = buffer.stencilHandleCount;
-                buffer.stencilHandleCount++;
+                var level = this.stencilHandleCount;
+                this.stencilHandleCount++;
                 gl.colorMask(false, false, false, false);
                 gl.stencilFunc(gl.EQUAL, level, 0xFF);
                 gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
@@ -6127,18 +6423,17 @@ var egret;
              * draw pop mask elements
              **/
             p.drawPopMaskElements = function (data, offset) {
-                var buffer = this.currentBuffer;
-                this.switchDrawingTextureState(false);
+                this.renderContext.switchDrawingTextureState(false);
                 var gl = this.context;
-                buffer.stencilHandleCount--;
-                if (buffer.stencilHandleCount == 0) {
-                    buffer.disableStencil();
+                this.stencilHandleCount--;
+                if (this.stencilHandleCount == 0) {
+                    this.disableStencil();
                     // skip this draw
                     var size = data.count * 6;
                     return size;
                 }
                 else {
-                    var level = buffer.stencilHandleCount;
+                    var level = this.stencilHandleCount;
                     gl.colorMask(false, false, false, false);
                     gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
                     gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
@@ -6151,484 +6446,19 @@ var egret;
                     return size;
                 }
             };
-            WebGLRenderContext.initBlendMode = function () {
-                WebGLRenderContext.blendModesForGL = {};
-                WebGLRenderContext.blendModesForGL["source-over"] = [1, 771];
-                WebGLRenderContext.blendModesForGL["lighter"] = [770, 1];
-                WebGLRenderContext.blendModesForGL["destination-out"] = [0, 771];
-                WebGLRenderContext.blendModesForGL["destination-in"] = [0, 770];
+            WebGLRenderBuffer.initBlendMode = function () {
+                WebGLRenderBuffer.blendModesForGL = {};
+                WebGLRenderBuffer.blendModesForGL["source-over"] = [1, 771];
+                WebGLRenderBuffer.blendModesForGL["lighter"] = [770, 1];
+                WebGLRenderBuffer.blendModesForGL["destination-out"] = [0, 771];
+                WebGLRenderBuffer.blendModesForGL["destination-in"] = [0, 770];
             };
-            WebGLRenderContext.glContextId = 0;
-            // private graphicsPoints:Array<number> = null;
-            // private graphicsIndices:Array<number> = null;
-            // private graphicsBuffer:WebGLBuffer = null;
-            // private graphicsIndexBuffer:WebGLBuffer = null;
-            //
-            // public renderGraphics(graphics) {
-            //     this.$drawWebGL();
-            //     var gl:any = this.context;
-            //     var shader = this.shaderManager.primitiveShader;
-            //
-            //     if (!this.graphicsPoints) {
-            //         this.graphicsPoints = [];
-            //         this.graphicsIndices = [];
-            //         this.graphicsBuffer = gl.createBuffer();
-            //         this.graphicsIndexBuffer = gl.createBuffer();
-            //     }
-            //     else {
-            //         this.graphicsPoints.length = 0;
-            //         this.graphicsIndices.length = 0;
-            //     }
-            //
-            //     this.updateGraphics(graphics);
-            //
-            //     this.shaderManager.activateShader(shader);
-            //     //gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-            //     gl.uniformMatrix3fv(shader.translationMatrix, false, this.matrixToArray(this.globalMatrix));
-            //
-            //     gl.uniform2f(shader.projectionVector, this.projectionX, -this.projectionY);
-            //     gl.uniform2f(shader.offsetVector, 0, 0);
-            //
-            //     gl.uniform3fv(shader.tintColor, [1, 1, 1]);
-            //
-            //     gl.uniform1f(shader.alpha, this._globalAlpha);
-            //     gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
-            //
-            //     gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, 4 * 6, 0);
-            //     gl.vertexAttribPointer(shader.colorAttribute, 4, gl.FLOAT, false, 4 * 6, 2 * 4);
-            //
-            //     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
-            //
-            //     gl.drawElements(gl.TRIANGLE_STRIP, this.graphicsIndices.length, gl.UNSIGNED_SHORT, 0);
-            //
-            //     this.shaderManager.activateShader(this.shaderManager.defaultShader);
-            //
-            //     this.currentBlendMode = null;
-            //     //this.setGlobalCompositeOperation("source-over");
-            // }
-            //
-            // private matrixArray:Float32Array;
-            //
-            // private matrixToArray(matrix:Matrix) {
-            //     if (!this.matrixArray) {
-            //         this.matrixArray = new Float32Array(9);
-            //     }
-            //     this.matrixArray[0] = matrix.a;
-            //     this.matrixArray[1] = matrix.b;
-            //     this.matrixArray[2] = 0;
-            //     this.matrixArray[3] = matrix.c;
-            //     this.matrixArray[4] = matrix.d;
-            //     this.matrixArray[5] = 0;
-            //     this.matrixArray[6] = matrix.tx;
-            //     this.matrixArray[7] = matrix.ty;
-            //     this.matrixArray[8] = 1;
-            //     return this.matrixArray;
-            // }
-            //
-            // private updateGraphics(graphics) {
-            //     var gl:any = this.context;
-            //
-            //     this.buildRectangle(graphics);
-            //
-            //     gl.bindBuffer(gl.ARRAY_BUFFER, this.graphicsBuffer);
-            //     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.graphicsPoints), gl.STATIC_DRAW);
-            //
-            //     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.graphicsIndexBuffer);
-            //     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.graphicsIndices), gl.STATIC_DRAW);
-            // }
-            //
-            // private graphicsStyle:any = {a: 1, r: 255, g: 0, b: 0};
-            //
-            // private buildRectangle(graphicsData:Rectangle) {
-            //     var x:number = graphicsData.x;
-            //     var y:number = graphicsData.y;
-            //     var width:number = graphicsData.width;
-            //     var height:number = graphicsData.height;
-            //
-            //     var alpha:number = this.graphicsStyle.a;
-            //     var r:number = this.graphicsStyle.r * alpha;
-            //     var g:number = this.graphicsStyle.g * alpha;
-            //     var b:number = this.graphicsStyle.b * alpha;
-            //
-            //     var verts:Array<any> = this.graphicsPoints;
-            //     var indices:Array<any> = this.graphicsIndices;
-            //     var vertPos:number = verts.length / 6;
-            //
-            //     verts.push(x, y);
-            //     verts.push(r, g, b, alpha);
-            //
-            //     verts.push(x + width, y);
-            //     verts.push(r, g, b, alpha);
-            //
-            //     verts.push(x, y + height);
-            //     verts.push(r, g, b, alpha);
-            //
-            //     verts.push(x + width, y + height);
-            //     verts.push(r, g, b, alpha);
-            //
-            //     indices.push(vertPos, vertPos, vertPos + 1, vertPos + 2, vertPos + 3, vertPos + 3);
-            // }
-            WebGLRenderContext.blendModesForGL = null;
-            return WebGLRenderContext;
-        }());
-        web.WebGLRenderContext = WebGLRenderContext;
-        egret.registerClass(WebGLRenderContext,'egret.web.WebGLRenderContext');
-        WebGLRenderContext.initBlendMode();
-    })(web = egret.web || (egret.web = {}));
-})(egret || (egret = {}));
-//////////////////////////////////////////////////////////////////////////////////////
-//
-//  Copyright (c) 2014-2015, Egret Technology Inc.
-//  All rights reserved.
-//  Redistribution and use in source and binary forms, with or without
-//  modification, are permitted provided that the following conditions are met:
-//
-//     * Redistributions of source code must retain the above copyright
-//       notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above copyright
-//       notice, this list of conditions and the following disclaimer in the
-//       documentation and/or other materials provided with the distribution.
-//     * Neither the name of the Egret nor the
-//       names of its contributors may be used to endorse or promote products
-//       derived from this software without specific prior written permission.
-//
-//  THIS SOFTWARE IS PROVIDED BY EGRET AND CONTRIBUTORS "AS IS" AND ANY EXPRESS
-//  OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-//  IN NO EVENT SHALL EGRET AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-//  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;LOSS OF USE, DATA,
-//  OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-//  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-//  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//////////////////////////////////////////////////////////////////////////////////////
-var egret;
-(function (egret) {
-    var web;
-    (function (web) {
-        /**
-         * 创建一个canvas。
-         */
-        function createCanvas(width, height) {
-            var canvas = document.createElement("canvas");
-            if (!isNaN(width) && !isNaN(height)) {
-                canvas.width = width;
-                canvas.height = height;
-            }
-            egret.$toBitmapData(canvas);
-            return canvas;
-        }
-        /**
-         * @private
-         * WebGL渲染器
-         */
-        var WebGLRenderBuffer = (function () {
-            function WebGLRenderBuffer(width, height) {
-                this.$stencilList = [];
-                this.stencilHandleCount = 0;
-                // dirtyRegionPolicy hack
-                this.dirtyRegionPolicy = true;
-                this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
-                // 获取webglRenderContext
-                this.renderContext = web.WebGLRenderContext.getInstance(width, height);
-                // 画布
-                this.surface = this.renderContext.surface;
-                // webGL上下文，未来可替换为WebGLRenderContext暴露给外层？
-                this.context = this.renderContext.context;
-                // buffer 对应的 render target
-                this.rootRenderTarget = this.renderContext.createRenderTarget(width, height);
-                // 如果是用于舞台渲染的renderBuffer，则默认添加renderTarget到renderContext中，而且是第一个
-                if (this.renderContext.$bufferStack.length == 0) {
-                    this.renderContext.pushBuffer(this);
-                }
-                this.stencilState = false;
-            }
-            var d = __define,c=WebGLRenderBuffer,p=c.prototype;
-            p.enableStencil = function () {
-                if (!this.stencilState) {
-                    var gl = this.context;
-                    gl.enable(gl.STENCIL_TEST);
-                    this.stencilState = true;
-                }
-            };
-            p.disableStencil = function () {
-                if (this.stencilState) {
-                    var gl = this.context;
-                    gl.disable(gl.STENCIL_TEST);
-                    this.stencilState = false;
-                }
-            };
-            p.restoreStencil = function () {
-                var gl = this.context;
-                if (this.stencilState) {
-                    gl.enable(gl.STENCIL_TEST);
-                }
-                else {
-                    gl.disable(gl.STENCIL_TEST);
-                }
-            };
-            d(p, "width"
-                /**
-                 * 渲染缓冲的宽度，以像素为单位。
-                 * @readOnly
-                 */
-                ,function () {
-                    return this.rootRenderTarget.width;
-                }
-            );
-            d(p, "height"
-                /**
-                 * 渲染缓冲的高度，以像素为单位。
-                 * @readOnly
-                 */
-                ,function () {
-                    return this.rootRenderTarget.height;
-                }
-            );
-            /**
-             * 改变渲染缓冲的大小并清空缓冲区
-             * @param width 改变后的宽
-             * @param height 改变后的高
-             * @param useMaxSize 若传入true，则将改变后的尺寸与已有尺寸对比，保留较大的尺寸。
-             */
-            p.resize = function (width, height, useMaxSize) {
-                // render target 尺寸重置
-                this.rootRenderTarget.resize(width, height);
-                this.renderContext.pushBuffer(this);
-                // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
-                if (this.renderContext.$bufferStack[0] == this) {
-                    this.renderContext.resize(width, height, useMaxSize);
-                }
-                this.renderContext.popBuffer();
-            };
-            /**
-             * 改变渲染缓冲为指定大小，但保留原始图像数据
-             * @param width 改变后的宽
-             * @param height 改变后的高
-             * @param offsetX 原始图像数据在改变后缓冲区的绘制起始位置x
-             * @param offsetY 原始图像数据在改变后缓冲区的绘制起始位置y
-             */
-            p.resizeTo = function (width, height, offsetX, offsetY) {
-                // TODO 这里用于cacheAsBitmap的实现
-                // var oldSurface = this.surface;
-                // var oldWidth = oldSurface.width;
-                // var oldHeight = oldSurface.height;
-                // this.renderContext.resizeTo(width, height, offsetX, offsetY);
-                // renderTexture resize, copy color data
-                // this.drawFrameBufferToSurface(0, 0, oldWidth, oldHeight, offsetX, offsetY, oldWidth, oldHeight, true);
-            };
-            p.setDirtyRegionPolicy = function (state) {
-                this.dirtyRegionPolicy = (state == "on");
-            };
-            /**
-             * 清空并设置裁切
-             * @param regions 矩形列表
-             * @param offsetX 矩形要加上的偏移量x
-             * @param offsetY 矩形要加上的偏移量y
-             */
-            p.beginClip = function (regions, offsetX, offsetY) {
-                // dirtyRegionPolicy hack
-                if (this._dirtyRegionPolicy) {
-                    this.rootRenderTarget.useFrameBuffer = true;
-                    this.renderContext.bindBufferTarget(this);
-                }
-                else {
-                    this.rootRenderTarget.useFrameBuffer = false;
-                    this.renderContext.bindBufferTarget(this);
-                    this.clear();
-                }
-                offsetX = +offsetX || 0;
-                offsetY = +offsetY || 0;
-                this.renderContext.setTransform(1, 0, 0, 1, offsetX, offsetY);
-                var length = regions.length;
-                //只有一个区域且刚好为舞台大小时,不设置模板
-                if (length == 1 && regions[0].minX == 0 && regions[0].minY == 0 &&
-                    regions[0].width == this.surface.width && regions[0].height == this.surface.height) {
-                    this.maskPushed = false;
-                    this.rootRenderTarget.useFrameBuffer && this.clear();
-                    return;
-                }
-                // 擦除脏矩形区域
-                for (var i = 0; i < length; i++) {
-                    var region = regions[i];
-                    this.renderContext.clearRect(region.minX, region.minY, region.width, region.height);
-                }
-                // 设置模版
-                if (length > 0) {
-                    this.pushMask(regions);
-                    this.maskPushed = true;
-                    this.offsetX = offsetX;
-                    this.offsetY = offsetY;
-                }
-                else {
-                    this.maskPushed = false;
-                }
-            };
-            /**
-             * 取消上一次设置的clip。
-             */
-            p.endClip = function () {
-                if (this.maskPushed) {
-                    this.renderContext.setTransform(1, 0, 0, 1, this.offsetX, this.offsetY);
-                    this.popMask();
-                }
-            };
-            /**
-             * 获取指定坐标的像素
-             */
-            p.getPixel = function (x, y) {
-                var gl = this.context;
-                var pixels = new Uint8Array(4);
-                var useFrameBuffer = this.rootRenderTarget.useFrameBuffer;
-                this.rootRenderTarget.useFrameBuffer = true;
-                this.renderContext.pushBuffer(this);
-                gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-                this.rootRenderTarget.useFrameBuffer = useFrameBuffer;
-                this.renderContext.popBuffer();
-                return pixels;
-            };
-            /**
-             * 转换成base64字符串，如果图片（或者包含的图片）跨域，则返回null
-             * @param type 转换的类型，如: "image/png","image/jpeg"
-             */
-            p.toDataURL = function (type, encoderOptions) {
-                return this.surface.toDataURL(type, encoderOptions);
-            };
-            /**
-             * 清空缓冲区数据
-             */
-            p.clear = function () {
-                this.renderContext.clear();
-            };
-            /**
-             * 销毁绘制对象
-             */
-            p.destroy = function () {
-                this.renderContext.destroy();
-            };
-            p.drawImage = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight) {
-                this.renderContext.drawImage(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureSourceWidth, textureSourceHeight);
-            };
-            /**
-             * @private
-             * draw a texture use default shader
-             * */
-            p.drawTexture = function (texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight) {
-                this.renderContext.drawTexture(texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
-            };
-            d(p, "$drawCalls"
-                ,function () {
-                    return this.renderContext.$drawCalls;
-                }
-                ,function (count) {
-                    this.renderContext.$drawCalls = count;
-                }
-            );
-            d(p, "$computeDrawCall"
-                ,function () {
-                    return this.renderContext.$computeDrawCall;
-                }
-                ,function (state) {
-                    this.renderContext.$computeDrawCall = state;
-                }
-            );
-            p.$drawWebGL = function () {
-                this.renderContext.$drawWebGL();
-            };
-            p.createWebGLTexture = function (texture) {
-                return this.renderContext.createWebGLTexture(texture);
-            };
-            p.createTexture = function (bitmapData) {
-                return this.renderContext.createTexture(bitmapData);
-            };
-            p.onRenderFinish = function () {
-                this.$drawCalls = 0;
-                // 如果是舞台渲染buffer，判断脏矩形策略
-                if (this.renderContext.$bufferStack.length == 1) {
-                    // dirtyRegionPolicy hack
-                    if (!this._dirtyRegionPolicy && this.dirtyRegionPolicy) {
-                        this.drawSurfaceToFrameBuffer(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height, true);
-                    }
-                    if (this._dirtyRegionPolicy) {
-                        this.drawFrameBufferToSurface(0, 0, this.surface.width, this.surface.height, 0, 0, this.surface.width, this.surface.height);
-                    }
-                    this._dirtyRegionPolicy = this.dirtyRegionPolicy;
-                }
-            };
-            p.setTransform = function (a, b, c, d, tx, ty) {
-                this.renderContext.setTransform(a, b, c, d, tx, ty);
-            };
-            p.transform = function (a, b, c, d, tx, ty) {
-                this.renderContext.transform(a, b, c, d, tx, ty);
-            };
-            p.translate = function (dx, dy) {
-                this.renderContext.translate(dx, dy);
-            };
-            p.saveTransform = function () {
-                this.renderContext.saveTransform();
-            };
-            p.restoreTransform = function () {
-                this.renderContext.restoreTransform();
-            };
-            p.setGlobalAlpha = function (value) {
-                this.renderContext.setGlobalAlpha(value);
-            };
-            p.setGlobalCompositeOperation = function (value) {
-                this.renderContext.setGlobalCompositeOperation(value);
-            };
-            p.pushMask = function (mask) {
-                this.renderContext.pushMask(mask);
-            };
-            p.popMask = function () {
-                this.renderContext.popMask();
-            };
-            /**
-             * 交换frameBuffer中的图像到surface中
-             * @param width 宽度
-             * @param height 高度
-             */
-            p.drawFrameBufferToSurface = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
-                if (clear === void 0) { clear = false; }
-                var gl = this.context;
-                this.rootRenderTarget.useFrameBuffer = false;
-                this.renderContext.pushBuffer(this);
-                var target = this.rootRenderTarget;
-                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
-                this.setTransform(1, 0, 0, -1, 0, this.surface.height); // 翻转,因为从frameBuffer中读出的图片是正的
-                this.setGlobalAlpha(1);
-                this.setGlobalCompositeOperation("source-over");
-                clear && this.clear();
-                this.drawTexture(target.texture, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
-                this.$drawWebGL();
-                this.rootRenderTarget.useFrameBuffer = true;
-                this.renderContext.popBuffer();
-            };
-            /**
-             * 交换surface的图像到frameBuffer中
-             * @param width 宽度
-             * @param height 高度
-             */
-            p.drawSurfaceToFrameBuffer = function (sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, clear) {
-                if (clear === void 0) { clear = false; }
-                var gl = this.context;
-                this.rootRenderTarget.useFrameBuffer = true;
-                this.renderContext.pushBuffer(this);
-                gl.disable(gl.STENCIL_TEST); // 切换frameBuffer注意要禁用STENCIL_TEST
-                this.setTransform(1, 0, 0, 1, 0, 0);
-                this.setGlobalAlpha(1);
-                this.setGlobalCompositeOperation("source-over");
-                clear && this.clear();
-                this.drawImage(this.surface, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, sourceWidth, sourceHeight);
-                this.$drawWebGL();
-                this.rootRenderTarget.useFrameBuffer = false;
-                this.renderContext.popBuffer();
-            };
+            WebGLRenderBuffer.blendModesForGL = null;
             return WebGLRenderBuffer;
         }());
         web.WebGLRenderBuffer = WebGLRenderBuffer;
         egret.registerClass(WebGLRenderBuffer,'egret.web.WebGLRenderBuffer',["egret.sys.RenderBuffer"]);
+        WebGLRenderBuffer.initBlendMode();
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
 //////////////////////////////////////////////////////////////////////////////////////
@@ -6907,7 +6737,6 @@ var egret;
                 else {
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(region.width, region.height);
-                    // displayBuffer.renderContext.bindBufferTarget(displayBuffer.renderContext.currentBuffer); // 重新绑定
                     var displayContext = displayBuffer.context;
                     if (!displayContext) {
                         drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
@@ -6915,7 +6744,6 @@ var egret;
                         egret.Matrix.release(displayMatrix);
                         return drawCalls;
                     }
-                    displayBuffer.renderContext.$drawWebGL();
                     displayBuffer.renderContext.pushBuffer(displayBuffer);
                     if (scrollRect) {
                         var m = displayMatrix;
@@ -6938,7 +6766,6 @@ var egret;
                         //}
                         //else {
                         var maskBuffer = this.createRenderBuffer(region.width, region.height);
-                        // maskBuffer.renderContext.bindBufferTarget(maskBuffer.renderContext.currentBuffer); // 重新绑定
                         var maskContext = maskBuffer.context;
                         if (!maskContext) {
                             drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
@@ -6950,13 +6777,12 @@ var egret;
                             egret.Matrix.release(displayMatrix);
                             return drawCalls;
                         }
-                        maskBuffer.renderContext.$drawWebGL();
                         maskBuffer.renderContext.pushBuffer(maskBuffer);
                         maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                         offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                         var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM, mask.$displayList, region, root ? mask : null);
                         egret.Matrix.release(offsetM);
-                        maskBuffer.renderContext.$drawWebGL();
+                        maskBuffer.$drawWebGL();
                         maskBuffer.onRenderFinish();
                         maskBuffer.renderContext.popBuffer();
                         if (calls > 0) {
@@ -6975,7 +6801,7 @@ var egret;
                     if (scrollRect) {
                         displayBuffer.popMask();
                     }
-                    displayBuffer.renderContext.$drawWebGL();
+                    displayBuffer.$drawWebGL();
                     displayBuffer.onRenderFinish();
                     displayBuffer.renderContext.popBuffer();
                     //绘制结果到屏幕
@@ -6993,6 +6819,9 @@ var egret;
                             buffer.setGlobalCompositeOperation(defaultCompositeOp);
                         }
                     }
+                    // 最后执行绘制，因为有可能displayBuffer中的texture被更改
+                    // 未来可以省略此次绘制
+                    buffer.$drawWebGL();
                     renderBufferPool.push(displayBuffer);
                     egret.sys.Region.release(region);
                     egret.Matrix.release(displayMatrix);
@@ -7062,17 +6891,12 @@ var egret;
              */
             p.drawNodeToBuffer = function (node, buffer, matrix, forHitTest) {
                 var webglBuffer = buffer;
-                buffer.$drawWebGL();
-                // matrix save
-                webglBuffer.saveTransform();
                 //pushRenderTARGET
                 webglBuffer.renderContext.pushBuffer(webglBuffer);
                 webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
                 this.renderNode(node, buffer, forHitTest);
-                buffer.$drawWebGL();
-                buffer.onRenderFinish();
-                // matrix   restore
-                webglBuffer.restoreTransform();
+                webglBuffer.$drawWebGL();
+                webglBuffer.onRenderFinish();
                 //popRenderTARGET
                 webglBuffer.renderContext.popBuffer();
             };
