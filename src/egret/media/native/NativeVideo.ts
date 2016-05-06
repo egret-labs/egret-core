@@ -75,31 +75,36 @@ module egret.native {
             this.loading = true;
             this.loaded = false;
             egret.log('loading');
-
-            var self = this;
             var video = new __global.Video(url);
             this.originVideo = video;
             video['setVideoRect'](0, 0, 1, 1);
             video['setKeepRatio'](false);
-            video.addEventListener("canplaythrough", onCanPlay);
-            video.addEventListener("error", onVideoError);
+            video.addEventListener("canplaythrough", onCanPlay,this);
+            video.addEventListener("error", onVideoError,this);
+            video.addEventListener("onPlaying",onPlaying,this);
             video.load();
             function onCanPlay():void {
+                //video.current=0;
+                video.play();
                 egret.log('onCanPlay');
+            }
+            function onPlaying():void{
+                video.pause();
+                this.loaded = true;
+                this.loading = false;
+                this.dispatchEventWith(egret.Event.COMPLETE);
                 removeListeners();
-                self.loaded = true;
-                self.loading = false;
-                self.dispatchEventWith(egret.Event.COMPLETE);
             }
             function onVideoError():void {
                 egret.log('onVideoError');
                 removeListeners();
-                self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             }
             function removeListeners():void {
                 egret.log('removeListeners');
-                video.removeEventListener("canplaythrough", onCanPlay);
-                video.removeEventListener("error", onVideoError);
+                this.removeEventListener("canplaythrough", onCanPlay,this);
+                this.removeEventListener("error", onVideoError,this);
+                this.removeEventListener("onPlaying",onPlaying,this);
             }
         }
         /**
@@ -128,10 +133,12 @@ module egret.native {
          * @inheritDoc
          */
         public close(){
+            if(this.loaded){
+                this.originVideo['destroy']();
+            }
             this.canPlay = false;
             this.loaded = false;
             this.loading = false;
-            this.originVideo['destroy']();
             this.originVideo = null;
         }  
         /**
@@ -152,6 +159,9 @@ module egret.native {
         public get poster():string{
             return this.posterUrl;
         }
+        /**
+         * @inheritDoc
+         */
         public set poster(value:string){
             this.posterUrl = value;
             var loader = new NativeImageLoader();
@@ -172,8 +182,8 @@ module egret.native {
          * @inheritDoc
          */
         public get volume():number {
-            if (!this.originVideo)
-                return 1;
+            if (!this.loaded)
+                return 0;
             return this.originVideo.volume;
         }
 
@@ -181,7 +191,7 @@ module egret.native {
          * @inheritDoc
          */
         public set volume(value:number) {
-            if (!this.originVideo)
+            if (!this.loaded)
                 return;
             this.originVideo.volume = value;
         }
@@ -195,7 +205,7 @@ module egret.native {
          * @inheritDoc
          */
         public set position(value){
-            if(this.originVideo){
+            if(this.loaded){
                 this.originVideo.currentTime = value;
             }
         }
@@ -217,7 +227,13 @@ module egret.native {
         /**
          * @inheritDoc
          */
-        public length:number;
+        public get length():number {
+            if (this.loaded) {
+                return this.originVideo.duration;
+            }
+            throw new Error("Video not loaded!");
+            //return 0;
+        }
         /**
          * @private
          */
@@ -241,7 +257,9 @@ module egret.native {
          */
         $onRemoveFromStage():void {
             this.isAddToStage = false;
-            this.originVideo.pause();
+            if(this.loaded){
+                this.originVideo.pause();
+            }
             this.removeChildren();
             super.$onRemoveFromStage();
         }
