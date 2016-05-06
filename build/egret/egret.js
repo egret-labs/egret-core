@@ -793,7 +793,8 @@ var egret;
                 15: NaN,
                 16: 0,
                 17: 0,
-                18: 0 //concatenatedAlpha
+                18: 0,
+                19: null //filters
             };
         }
         var d = __define,c=DisplayObject,p=c.prototype;
@@ -2032,6 +2033,29 @@ var egret;
             this.invalidatePosition();
             return true;
         };
+        d(p, "filters"
+            /**
+             * @language en_US
+             * An indexed array that contains each filter object currently associated with the display object.
+             * @version Egret 3.1
+             * @platform Web,Native
+             */
+            /**
+             * @language zh_CN
+             * 包含当前与显示对象关联的每个滤镜对象的索引数组。
+             * @version Egret 3.1
+             * @platform Web,Native
+             */
+            ,function () {
+                return this.$DisplayObject[20 /* filters */];
+            }
+            /**
+             * @private
+             */
+            ,function (value) {
+                this.$DisplayObject[20 /* filters */] = value;
+            }
+        );
         /**
          * @language en_US
          * Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
@@ -2268,6 +2292,7 @@ var egret;
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
         p.$update = function (bounds) {
+            //todo 计算滤镜占用区域
             this.$removeFlagsUp(768 /* Dirty */);
             var node = this.$renderNode;
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。

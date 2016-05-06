@@ -5769,6 +5769,7 @@ var egret;
          */
         var WebGLRenderBuffer = (function () {
             function WebGLRenderBuffer(width, height) {
+                this.filters = [];
                 /**
                  * 初始化顶点数组和缓存
                  */
@@ -5810,6 +5811,15 @@ var egret;
                 }
             }
             var d = __define,c=WebGLRenderBuffer,p=c.prototype;
+            p.pushFilters = function (filters) {
+                this.filters.push(filters);
+            };
+            p.popFilters = function () {
+                this.filters.pop();
+            };
+            p.clearFilters = function () {
+                this.filters.length = 0;
+            };
             p.initVertexArrayObjects = function () {
                 var numVerts = this.size * 4 * this.vertSize;
                 var numIndices = this.size * 6;
@@ -6108,16 +6118,95 @@ var egret;
                 var webGLTexture = texture;
                 if (this.currentBatchSize >= this.size - 1) {
                     this.$drawWebGL();
-                    this.currentBaseTexture = webGLTexture;
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: this.currentBaseTexture, count: 0 });
                 }
-                else if (webGLTexture !== this.currentBaseTexture) {
-                    this.currentBaseTexture = webGLTexture;
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: this.currentBaseTexture, count: 0 });
+                if (this.filters.length > 0) {
+                    var resultTexture;
+                    // 构建filters列表
+                    var filters = [];
+                    for (var i = 0; i < this.filters.length; i++) {
+                        filters = filters.concat(this.filters[i]);
+                    }
+                    var len = filters.length;
+                    var offsetX = 0;
+                    var offsetY = 0;
+                    var offsetW = 0;
+                    var offsetH = 0;
+                    if (len > 1) {
+                        var lastTexture = webGLTexture;
+                        var tempBuffer = null;
+                        for (var i = 0; i < len - 1; i++) {
+                            var filter = filters[i];
+                            var lastTempBuffer = tempBuffer;
+                            tempBuffer = this.createRenderBuffer(sourceWidth + offsetW, sourceHeight + offsetH);
+                            if (filter.type == "blur") {
+                                offsetX -= filter.blurX;
+                                offsetY -= filter.blurY;
+                                offsetW += filter.blurX * 2;
+                                offsetH += filter.blurY * 2;
+                            }
+                            this.applyFilter(filter, lastTexture, tempBuffer, sourceWidth + offsetW, sourceHeight + offsetH);
+                            lastTexture = tempBuffer.rootRenderTarget.texture;
+                            if (lastTempBuffer) {
+                                lastTempBuffer.clearFilters();
+                                lastTempBuffer.filterType = "";
+                                renderBufferPool.push(lastTempBuffer);
+                            }
+                        }
+                        if (tempBuffer) {
+                            tempBuffer.clearFilters();
+                            tempBuffer.filterType = "";
+                            renderBufferPool.push(tempBuffer);
+                        }
+                        resultTexture = lastTexture;
+                    }
+                    else {
+                        resultTexture = webGLTexture;
+                    }
+                    // 直接在舞台上绘制
+                    this.$drawWebGL();
+                    this.currentBaseTexture = null;
+                    this.drawData.push({ type: 0 /* TEXTURE */, texture: resultTexture, count: 0 });
+                    // 应用最后的滤镜
+                    this.filterType = filters[len - 1].type;
+                    var filter = this.filter = filters[len - 1];
+                    if (filter.type == "blur") {
+                        offsetX -= filter.blurX;
+                        offsetY -= filter.blurY;
+                        offsetW += filter.blurX * 2;
+                        offsetH += filter.blurY * 2;
+                    }
+                    // 绘制
+                    this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX + offsetX, destY + offsetY, destWidth + offsetW, destHeight + offsetH, textureWidth, textureHeight);
+                    this.currentBatchSize++;
+                    this.drawData[this.drawData.length - 1].count++;
+                    // 绘制在屏幕
+                    this.$drawWebGL();
                 }
-                this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
-                this.currentBatchSize++;
-                this.drawData[this.drawData.length - 1].count++;
+                else {
+                    this.filterType = "";
+                    this.filter = null;
+                    if (webGLTexture !== this.currentBaseTexture) {
+                        this.currentBaseTexture = webGLTexture;
+                        this.drawData.push({ type: 0 /* TEXTURE */, texture: this.currentBaseTexture, count: 0 });
+                    }
+                    this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                    this.currentBatchSize++;
+                    this.drawData[this.drawData.length - 1].count++;
+                }
+            };
+            /**
+             * 应用滤镜绘制
+             * */
+            p.applyFilter = function (filter, texture, buffer, width, height) {
+                this.renderContext.pushBuffer(buffer);
+                buffer.setTransform(1, 0, 0, -1, 0, height);
+                buffer.setGlobalAlpha(1);
+                buffer.pushFilters([filter]);
+                // 轮换
+                buffer.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, width, height);
+                buffer.popFilters();
+                buffer.$drawWebGL();
+                this.renderContext.popBuffer();
             };
             /**
              * @private
@@ -6277,9 +6366,20 @@ var egret;
                 var shader;
                 if (this.filterType == "colorTransform") {
                     shader = this.renderContext.shaderManager.colorTransformShader;
+                    shader.uniforms.matrix.value = [
+                        this.filter.matrix[0], this.filter.matrix[1], this.filter.matrix[2], this.filter.matrix[3],
+                        this.filter.matrix[5], this.filter.matrix[6], this.filter.matrix[7], this.filter.matrix[8],
+                        this.filter.matrix[10], this.filter.matrix[11], this.filter.matrix[12], this.filter.matrix[13],
+                        this.filter.matrix[15], this.filter.matrix[16], this.filter.matrix[17], this.filter.matrix[18]
+                    ];
+                    shader.uniforms.colorAdd.value.x = this.filter.matrix[4];
+                    shader.uniforms.colorAdd.value.y = this.filter.matrix[9];
+                    shader.uniforms.colorAdd.value.z = this.filter.matrix[14];
+                    shader.uniforms.colorAdd.value.w = this.filter.matrix[19];
                 }
                 else if (this.filterType == "blur") {
                     shader = this.renderContext.shaderManager.blurShader;
+                    shader.uniforms.blur.value = { x: this.filter.blurX, y: this.filter.blurY };
                 }
                 else {
                     shader = this.renderContext.shaderManager.defaultShader;
@@ -6481,11 +6581,26 @@ var egret;
                 WebGLRenderBuffer.blendModesForGL["destination-out"] = [0, 771];
                 WebGLRenderBuffer.blendModesForGL["destination-in"] = [0, 770];
             };
+            /**
+             * @private
+             */
+            p.createRenderBuffer = function (width, height) {
+                var buffer = renderBufferPool.pop();
+                if (buffer) {
+                    buffer.resize(width, height);
+                }
+                else {
+                    buffer = new WebGLRenderBuffer(width, height);
+                    buffer.$computeDrawCall = false;
+                }
+                return buffer;
+            };
             WebGLRenderBuffer.blendModesForGL = null;
             return WebGLRenderBuffer;
         }());
         web.WebGLRenderBuffer = WebGLRenderBuffer;
         egret.registerClass(WebGLRenderBuffer,'egret.web.WebGLRenderBuffer',["egret.sys.RenderBuffer"]);
+        var renderBufferPool = []; //渲染缓冲区对象池
         WebGLRenderBuffer.initBlendMode();
     })(web = egret.web || (egret.web = {}));
 })(egret || (egret = {}));
@@ -6580,6 +6695,7 @@ var egret;
             p.drawDisplayObject = function (displayObject, buffer, dirtyList, matrix, displayList, clipRegion, root) {
                 var drawCalls = 0;
                 var node;
+                var filterPushed = false;
                 if (displayList && !root) {
                     if (displayList.isDirty) {
                         drawCalls += displayList.drawToSurface();
@@ -6588,6 +6704,11 @@ var egret;
                 }
                 else {
                     node = displayObject.$getRenderNode();
+                    var filters = displayObject.$DisplayObject[20];
+                    if (filters && filters.length > 0) {
+                        buffer.pushFilters(filters);
+                        filterPushed = true;
+                    }
                 }
                 if (node) {
                     if (dirtyList) {
@@ -6661,6 +6782,9 @@ var egret;
                             }
                         }
                     }
+                }
+                if (filterPushed) {
+                    buffer.popFilters();
                 }
                 return drawCalls;
             };

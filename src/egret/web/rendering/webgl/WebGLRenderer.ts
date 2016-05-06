@@ -96,6 +96,7 @@ module egret.web {
                                   matrix:Matrix, displayList:sys.DisplayList, clipRegion:sys.Region, root:DisplayObject):number {
             var drawCalls = 0;
             var node:sys.RenderNode;
+            var filterPushed:boolean = false;
             if (displayList && !root) {
                 if (displayList.isDirty) {
                     drawCalls += displayList.drawToSurface();
@@ -104,6 +105,11 @@ module egret.web {
             }
             else {
                 node = displayObject.$getRenderNode();
+                var filters = displayObject.$DisplayObject[20];
+                if(filters && filters.length > 0) {
+                    buffer.pushFilters(filters);
+                    filterPushed = true;
+                }
             }
 
             if (node) {
@@ -180,6 +186,11 @@ module egret.web {
                     }
                 }
             }
+
+            if(filterPushed) {
+                buffer.popFilters();
+            }
+
             return drawCalls;
         }
 
