@@ -5704,6 +5704,9 @@ var egret;
                 }
                 var gl = this.context;
                 var shader = this.shaderManager.defaultShader;
+                if (shader != this.shaderManager.currentShader) {
+                    return;
+                }
                 if (state) {
                     gl.uniform1f(shader.uPureColor, 0.0);
                 }
