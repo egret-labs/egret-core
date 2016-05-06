@@ -74,37 +74,53 @@ module egret.native {
             }
             this.loading = true;
             this.loaded = false;
-            egret.log('loading');
             var video = new __global.Video(url);
             this.originVideo = video;
             video['setVideoRect'](0, 0, 1, 1);
             video['setKeepRatio'](false);
-            video.addEventListener("canplaythrough", onCanPlay,this);
-            video.addEventListener("error", onVideoError,this);
-            video.addEventListener("onPlaying",onPlaying,this);
+            video.addEventListener("canplaythrough", onCanPlay);
+            video.addEventListener("error", onVideoError);
+            video.addEventListener("playing",onPlaying);
             video.load();
+            var self = this;
             function onCanPlay():void {
                 //video.current=0;
+                video['setVideoRect'](0, 0, 1, 1);
                 video.play();
                 egret.log('onCanPlay');
             }
             function onPlaying():void{
+                egret.log('onPlaying');
+                video['setVideoRect'](0, 0, 1, 1);
                 video.pause();
-                this.loaded = true;
-                this.loading = false;
-                this.dispatchEventWith(egret.Event.COMPLETE);
+                self.loaded = true;
+                self.loading = false;
                 removeListeners();
+                self.dispatchEventWith(egret.Event.COMPLETE);
+                video.addEventListener('pause',function(){
+                    self.paused = true;
+                });
+                video.addEventListener('playing',function(){
+                    self.paused = false;
+                });
+                video.addEventListener('ended',function(){
+                    egret.log('ended')
+                    self.dispatchEventWith(egret.Event.ENDED);
+                    if(self.loop){
+                        self.play(0,true);
+                    }
+                });
             }
             function onVideoError():void {
                 egret.log('onVideoError');
                 removeListeners();
-                this.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
+                self.dispatchEventWith(egret.IOErrorEvent.IO_ERROR);
             }
             function removeListeners():void {
                 egret.log('removeListeners');
-                this.removeEventListener("canplaythrough", onCanPlay,this);
-                this.removeEventListener("error", onVideoError,this);
-                this.removeEventListener("onPlaying",onPlaying,this);
+                video.removeEventListener("canplaythrough", onCanPlay);
+                video.removeEventListener("error", onVideoError);
+                video.removeEventListener("playing",onPlaying);
             }
         }
         /**
@@ -112,9 +128,14 @@ module egret.native {
          * */
         private canPlay:boolean = false;
         /**
+         * @private
+         * */
+        private loop:boolean = false;
+        /**
          * @inheritDoc
          */
         public play(startTime?:number, loop:boolean = false){
+            this.loop = loop;
             if(!this.loaded){
                 this.load();
                 this.once(egret.Event.COMPLETE,e=>this.play(startTime,loop),this)
@@ -140,7 +161,8 @@ module egret.native {
             this.loaded = false;
             this.loading = false;
             this.originVideo = null;
-        }  
+            this.loop = false;
+        }
         /**
          * @inheritDoc
          */
@@ -317,6 +339,9 @@ module egret.native {
                     poster.width = this.widthSet;
                     poster.height = this.heightSet;
                 }
+                //poster.width = 100;
+                //poster.height = 100;
+                egret.log('poster:',poster.width,poster.height);
             }
             if(video){
                 //egret.log('fullscreen:',this.fullscreen);
