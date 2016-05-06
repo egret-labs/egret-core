@@ -1354,7 +1354,7 @@ var egret;
                 video.height = video.videoHeight;
                 video.width = video.videoWidth;
                 if (egret.Capabilities.os != "Windows PC" && egret.Capabilities.os != "Mac OS") {
-                    setTimeout(function () {
+                    window.setTimeout(function () {
                         video.width = 0;
                     }, 1000);
                 }
@@ -2227,9 +2227,9 @@ var egret;
                 var point = this.$textfield.localToGlobal(0, 0);
                 var x = point.x;
                 var y = point.y;
-                var m = this.$textfield.$renderNode.renderMatrix;
-                var cX = m.a;
-                var cY = m.d;
+                // var m = this.$textfield.$renderNode.renderMatrix;
+                // var cX = m.a;
+                // var cY = m.d;
                 var scaleX = this.htmlInput.$scaleX;
                 var scaleY = this.htmlInput.$scaleY;
                 this.inputDiv.style.left = x * scaleX + "px";
@@ -2242,6 +2242,18 @@ var egret;
                     this.inputDiv.style.top = y * scaleY + "px";
                     this.inputElement.style.top = 0 + "px";
                 }
+                var node = this.$textfield;
+                var cX = 1;
+                var cY = 1;
+                var rotation = 0;
+                while (node.parent) {
+                    cX *= node.scaleX;
+                    cY *= node.scaleY;
+                    rotation += node.rotation;
+                    node = node.parent;
+                }
+                var transformKey = egret.web.getPrefixStyleName("transform");
+                this.inputDiv.style[transformKey] = "rotate(" + rotation + "deg)";
                 this._gscaleX = scaleX * cX;
                 this._gscaleY = scaleY * cY;
             };
@@ -6763,7 +6775,7 @@ var egret;
                         buffer.setGlobalCompositeOperation(defaultCompositeOp);
                     }
                     if (scrollRect) {
-                        buffer.pushMask(scrollRect);
+                        buffer.popMask();
                     }
                     egret.sys.Region.release(region);
                     egret.Matrix.release(displayMatrix);
@@ -6773,12 +6785,6 @@ var egret;
                     //绘制显示对象自身，若有scrollRect，应用clip
                     var displayBuffer = this.createRenderBuffer(region.width, region.height);
                     var displayContext = displayBuffer.context;
-                    if (!displayContext) {
-                        drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
-                        egret.sys.Region.release(region);
-                        egret.Matrix.release(displayMatrix);
-                        return drawCalls;
-                    }
                     displayBuffer.renderContext.pushBuffer(displayBuffer);
                     if (scrollRect) {
                         var m = displayMatrix;
@@ -6802,16 +6808,6 @@ var egret;
                         //else {
                         var maskBuffer = this.createRenderBuffer(region.width, region.height);
                         var maskContext = maskBuffer.context;
-                        if (!maskContext) {
-                            drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
-                            if (scrollRect) {
-                                displayBuffer.popMask();
-                            }
-                            renderBufferPool.push(displayBuffer);
-                            egret.sys.Region.release(region);
-                            egret.Matrix.release(displayMatrix);
-                            return drawCalls;
-                        }
                         maskBuffer.renderContext.pushBuffer(maskBuffer);
                         maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                         offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
@@ -7034,40 +7030,6 @@ var egret;
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
                 node.dirtyRender = false;
-                // var width = node.width - node.x;
-                // var height = node.height - node.y;
-                // if (node.drawData.length == 0) {
-                //     return;
-                // }
-                // if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
-                //     node.$canvasRenderer = new CanvasRenderer();
-                //     node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-                // }
-                // else {
-                //     node.$canvasRenderBuffer.resize(width, height, true);
-                // }
-                // if (!node.$canvasRenderBuffer.context) {
-                //     return;
-                // }
-                // if (node.x || node.y) {
-                //     if (node.dirtyRender) {
-                //         node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
-                //     }
-                //     buffer.transform(1, 0, 0, 1, node.x, node.y);
-                // }
-                // var surface = node.$canvasRenderBuffer.surface;
-                // if (node.dirtyRender) {
-                //     WebGLUtils.deleteWebGLTexture(surface);
-                //     node.$canvasRenderer["renderText"](node, node.$canvasRenderBuffer.context);
-                // }
-                // buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
-                // if (node.x || node.y) {
-                //     if (node.dirtyRender) {
-                //         node.$canvasRenderBuffer.context.translate(node.x, node.y);
-                //     }
-                //     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
-                // }
-                // node.dirtyRender = false;
             };
             /**
              * @private
@@ -7122,40 +7084,6 @@ var egret;
                     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
                 }
                 node.dirtyRender = false;
-                // var width = node.width;
-                // var height = node.height;
-                // if (width <= 0 || height <= 0) {
-                //     return;
-                // }
-                // if (!node.$canvasRenderBuffer || !node.$canvasRenderBuffer.context) {
-                //     node.$canvasRenderer = new CanvasRenderer();
-                //     node.$canvasRenderBuffer = new CanvasRenderBuffer(width, height);
-                // }
-                // else if (node.dirtyRender) {
-                //     node.$canvasRenderBuffer.resize(width, height, true);
-                // }
-                // if (!node.$canvasRenderBuffer.context) {
-                //     return;
-                // }
-                // if (node.x || node.y) {
-                //     if (node.dirtyRender) {
-                //         node.$canvasRenderBuffer.context.translate(-node.x, -node.y);
-                //     }
-                //     buffer.transform(1, 0, 0, 1, node.x, node.y);
-                // }
-                // var surface = node.$canvasRenderBuffer.surface;
-                // if (node.dirtyRender) {
-                //     WebGLUtils.deleteWebGLTexture(surface);
-                //     node.$canvasRenderer["renderGraphics"](node, node.$canvasRenderBuffer.context, forHitTest);
-                // }
-                // buffer.drawImage(<BitmapData><any>surface, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
-                // if (node.x || node.y) {
-                //     if (node.dirtyRender) {
-                //         node.$canvasRenderBuffer.context.translate(node.x, node.y);
-                //     }
-                //     buffer.transform(1, 0, 0, 1, -node.x, -node.y);
-                // }
-                // node.dirtyRender = false;
             };
             p.renderGroup = function (groupNode, buffer) {
                 var children = groupNode.drawData;
