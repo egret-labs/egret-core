@@ -5787,6 +5787,8 @@ var egret;
                 this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
                 this.currentBaseTexture = null;
                 this.currentBatchSize = 0;
+                this.colorMatrixFilter = null;
+                this.blurFilter = null;
                 this.drawData = [];
                 this.$drawCalls = 0;
                 this.$computeDrawCall = false;
@@ -6130,35 +6132,21 @@ var egret;
                         filters = filters.concat(this.filters[i]);
                     }
                     var len = filters.length;
-                    var offsetX = 0;
-                    var offsetY = 0;
-                    var offsetW = 0;
-                    var offsetH = 0;
+                    var tempBuffer = null;
                     if (len > 1) {
                         var lastTexture = webGLTexture;
-                        var tempBuffer = null;
                         for (var i = 0; i < len - 1; i++) {
                             var filter = filters[i];
                             var lastTempBuffer = tempBuffer;
-                            tempBuffer = this.createRenderBuffer(sourceWidth + offsetW, sourceHeight + offsetH);
-                            if (filter.type == "blur") {
-                                offsetX -= filter.blurX;
-                                offsetY -= filter.blurY;
-                                offsetW += filter.blurX * 2;
-                                offsetH += filter.blurY * 2;
-                            }
-                            this.applyFilter(filter, lastTexture, tempBuffer, sourceWidth + offsetW, sourceHeight + offsetH);
+                            tempBuffer = this.createRenderBuffer(sourceWidth, sourceHeight);
+                            //最后把结果绘制到tempBuffer上
+                            this.applyFilter(filter, lastTexture, tempBuffer, sourceWidth, sourceHeight, textureWidth, textureHeight);
                             lastTexture = tempBuffer.rootRenderTarget.texture;
                             if (lastTempBuffer) {
                                 lastTempBuffer.clearFilters();
                                 lastTempBuffer.filterType = "";
                                 renderBufferPool.push(lastTempBuffer);
                             }
-                        }
-                        if (tempBuffer) {
-                            tempBuffer.clearFilters();
-                            tempBuffer.filterType = "";
-                            renderBufferPool.push(tempBuffer);
                         }
                         resultTexture = lastTexture;
                     }
@@ -6168,22 +6156,69 @@ var egret;
                     // 直接在舞台上绘制
                     this.$drawWebGL();
                     this.currentBaseTexture = null;
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: resultTexture, count: 0 });
                     // 应用最后的滤镜
                     this.filterType = filters[len - 1].type;
                     var filter = this.filter = filters[len - 1];
-                    if (filter.type == "blur") {
-                        offsetX -= filter.blurX;
-                        offsetY -= filter.blurY;
-                        offsetW += filter.blurX * 2;
-                        offsetH += filter.blurY * 2;
+                    if (filter.type == "glow") {
+                        if (!this.colorMatrixFilter) {
+                            this.colorMatrixFilter = new egret.ColorMatrixFilter();
+                        }
+                        if (!this.blurFilter) {
+                            this.blurFilter = new egret.BlurFilter(2, 2);
+                        }
+                        //绘制纯色图
+                        var tempBuffer1 = this.createRenderBuffer(sourceWidth, sourceHeight);
+                        this.colorMatrixFilter.matrix = [
+                            0, 0, 0, 0, filter.$red,
+                            0, 0, 0, 0, filter.$green,
+                            0, 0, 0, 0, filter.$blue,
+                            0, 0, 0, 0, filter.alpha,
+                        ];
+                        this.applyFilter(this.colorMatrixFilter, resultTexture, tempBuffer1, sourceWidth, sourceHeight, textureWidth, textureHeight);
+                        // 应用blur
+                        var tempBuffer2 = this.createRenderBuffer(sourceWidth, sourceHeight);
+                        this.blurFilter.blurX = filter.blurX;
+                        this.blurFilter.blurY = filter.blurY;
+                        this.applyFilter(this.blurFilter, tempBuffer1.rootRenderTarget.texture, tempBuffer2, sourceWidth, sourceHeight, textureWidth, textureHeight);
+                        tempBuffer1.clearFilters();
+                        tempBuffer1.filterType = "";
+                        renderBufferPool.push(tempBuffer1);
+                        // 应用n次
+                        var tempBuffer3 = this.createRenderBuffer(sourceWidth, sourceHeight);
+                        this.blurFilter.blurX = filter.blurX;
+                        this.blurFilter.blurY = filter.blurY;
+                        for (var j = 0; j < filter.quality; j++) {
+                            this.applyFilter(this.blurFilter, tempBuffer2.rootRenderTarget.texture, tempBuffer3, sourceWidth, sourceHeight, textureWidth, textureHeight);
+                        }
+                        tempBuffer2.clearFilters();
+                        tempBuffer2.filterType = "";
+                        renderBufferPool.push(tempBuffer2);
+                        // 绘制原画
+                        this.setGlobalCompositeOperation("lighter");
+                        this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                        this.drawData.push({ type: 0 /* TEXTURE */, texture: resultTexture, count: 0 });
+                        this.currentBatchSize++;
+                        this.drawData[this.drawData.length - 1].count++;
+                        this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                        this.drawData.push({ type: 0 /* TEXTURE */, texture: tempBuffer3.rootRenderTarget.texture, count: 0 });
+                        this.currentBatchSize++;
+                        this.drawData[this.drawData.length - 1].count++;
+                        this.setGlobalCompositeOperation("source-over");
+                        this.$drawWebGL();
                     }
-                    // 绘制
-                    this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX + offsetX, destY + offsetY, destWidth + offsetW, destHeight + offsetH, textureWidth, textureHeight);
-                    this.currentBatchSize++;
-                    this.drawData[this.drawData.length - 1].count++;
-                    // 绘制在屏幕
-                    this.$drawWebGL();
+                    else {
+                        // 绘制
+                        this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                        this.drawData.push({ type: 0 /* TEXTURE */, texture: resultTexture, count: 0 });
+                        this.currentBatchSize++;
+                        this.drawData[this.drawData.length - 1].count++;
+                        this.$drawWebGL();
+                    }
+                    if (tempBuffer) {
+                        tempBuffer.clearFilters();
+                        tempBuffer.filterType = "";
+                        renderBufferPool.push(tempBuffer);
+                    }
                 }
                 else {
                     this.filterType = "";
@@ -6200,13 +6235,13 @@ var egret;
             /**
              * 应用滤镜绘制
              * */
-            p.applyFilter = function (filter, texture, buffer, width, height) {
+            p.applyFilter = function (filter, texture, buffer, width, height, textureWidth, textureHeight) {
                 this.renderContext.pushBuffer(buffer);
                 buffer.setTransform(1, 0, 0, -1, 0, height);
                 buffer.setGlobalAlpha(1);
                 buffer.pushFilters([filter]);
                 // 轮换
-                buffer.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, width, height);
+                buffer.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, textureWidth, textureHeight);
                 buffer.popFilters();
                 buffer.$drawWebGL();
                 this.renderContext.popBuffer();
