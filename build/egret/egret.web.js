@@ -6877,7 +6877,10 @@ var egret;
                 }
                 var m = egret.Matrix.create();
                 m.copyFrom(displayObject.$getConcatenatedMatrix());
-                if (displayObject.$parentDisplayList) {
+                if (root) {
+                    displayObject.$getConcatenatedMatrixAt(root, m);
+                }
+                else if (displayObject.$parentDisplayList) {
                     var displayRoot = displayObject.$parentDisplayList.root;
                     if (displayRoot !== displayObject.$stage) {
                         displayObject.$getConcatenatedMatrixAt(displayRoot, m);
