@@ -120,7 +120,7 @@ module RES {
      * @version Egret 2.4
      * @platform Web,Native
      */
-    export function loadConfig(url:string,resourceRoot:string="",type="json"):void{
+    export function loadConfig(url:string,resourceRoot:string="",type:string="json"):void{
         instance.loadConfig(url,resourceRoot,type);
     }
     /**
