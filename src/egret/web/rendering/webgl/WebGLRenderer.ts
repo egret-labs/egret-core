@@ -608,35 +608,44 @@ module egret.web {
                 return;
             }
             if (node.x || node.y) {
-                if (node.dirtyRender) {
+                if (node.dirtyRender || forHitTest) {
                     this.canvasRenderBuffer.context.translate(-node.x, -node.y);
                 }
                 buffer.transform(1, 0, 0, 1, node.x, node.y);
             }
             var surface = this.canvasRenderBuffer.surface;
-            if (node.dirtyRender) {
-                this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context);
+            if(forHitTest) {
+                this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context, true);
+                WebGLUtils.deleteWebGLTexture(surface);
+                buffer.createWebGLTexture(<BitmapData><any>surface);
+                var texture = surface["webGLTexture"][buffer.renderContext.glID]
+                buffer.drawTexture(texture, 0, 0, width, height, 0, 0, width, height, surface.width, surface.height);
+            } else {
+                if (node.dirtyRender) {
+                    this.canvasRenderer["renderGraphics"](node, this.canvasRenderBuffer.context);
 
-                // 拷贝canvas到texture
-                var texture = node.$texture;
-                if (!texture) {
-                    texture = buffer.createTexture(<BitmapData><any>surface);
-                    node.$texture = texture;
-                } else {
-                    // 重新拷贝新的图像
-                    var gl = buffer.context;
-                    gl.bindTexture(gl.TEXTURE_2D, texture);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
-                    gl.bindTexture(gl.TEXTURE_2D, null);
+                    // 拷贝canvas到texture
+                    var texture = node.$texture;
+                    if (!texture) {
+                        texture = buffer.createTexture(<BitmapData><any>surface);
+                        node.$texture = texture;
+                    } else {
+                        // 重新拷贝新的图像
+                        var gl = buffer.context;
+                        gl.bindTexture(gl.TEXTURE_2D, texture);
+                        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, surface);
+                        gl.bindTexture(gl.TEXTURE_2D, null);
+                    }
+                    // 保存材质尺寸
+                    node.$textureWidth = surface.width;
+                    node.$textureHeight = surface.height;
                 }
-                // 保存材质尺寸
-                node.$textureWidth = surface.width;
-                node.$textureHeight = surface.height;
+                buffer.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
             }
-            buffer.drawTexture(node.$texture, 0, 0, width, height, 0, 0, width, height, node.$textureWidth, node.$textureHeight);
+
 
             if (node.x || node.y) {
-                if (node.dirtyRender) {
+                if (node.dirtyRender || forHitTest) {
                     this.canvasRenderBuffer.context.translate(node.x, node.y);
                 }
                 buffer.transform(1, 0, 0, 1, -node.x, -node.y);
