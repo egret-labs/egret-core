@@ -281,9 +281,17 @@ module egret.web {
                 if (hasBlendMode) {
                     buffer.setGlobalCompositeOperation(compositeOp);
                 }
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    displayBuffer.pushMask(scrollRect);
+                }
                 drawCalls += this.drawDisplayObject(displayObject, buffer, dirtyList, offsetM,
                     displayObject.$displayList, region, null);
                 Matrix.release(offsetM);
+                if (scrollRect) {
+                    displayBuffer.popMask();
+                }
                 if (hasBlendMode) {
                     buffer.setGlobalCompositeOperation(defaultCompositeOp);
                 }
@@ -299,17 +307,11 @@ module egret.web {
                 var displayBuffer = this.createRenderBuffer(region.width, region.height);
                 var displayContext = displayBuffer.context;
                 displayBuffer.renderContext.pushBuffer(displayBuffer);
-                if (scrollRect) {
-                    var m = displayMatrix;
-                    displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                    displayBuffer.pushMask(scrollRect);
-                }
                 displayBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                 var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
 
                 drawCalls += this.drawDisplayObject(displayObject, displayBuffer, dirtyList, offsetM,
-                    displayObject.$displayList, region, root ? displayObject : null);
-                Matrix.release(offsetM);
+                    displayObject.$displayList, region, root);
                 //绘制遮罩
                 if (mask) {
                     //如果只有一次绘制或是已经被cache直接绘制到displayContext
@@ -318,7 +320,7 @@ module egret.web {
                     //if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     //    displayBuffer.setGlobalCompositeOperation("destination-in");
                     //    drawCalls += this.drawDisplayObject(mask, displayBuffer, dirtyList, offsetM,
-                    //        mask.$displayList, region, root ? mask : null);
+                    //        mask.$displayList, region, root);
                     //}
                     //else {
                     var maskBuffer = this.createRenderBuffer(region.width, region.height);
@@ -327,8 +329,7 @@ module egret.web {
                     maskBuffer.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                     offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                     var calls = this.drawDisplayObject(mask, maskBuffer, dirtyList, offsetM,
-                        mask.$displayList, region, root ? mask : null);
-                    Matrix.release(offsetM);
+                        mask.$displayList, region, root);
 
                     maskBuffer.$drawWebGL();
                     maskBuffer.onRenderFinish();
@@ -348,11 +349,9 @@ module egret.web {
                     renderBufferPool.push(maskBuffer);
                     //}
                 }
+                Matrix.release(offsetM);
 
                 displayBuffer.setGlobalCompositeOperation(defaultCompositeOp);
-                if (scrollRect) {
-                    displayBuffer.popMask();
-                }
                 displayBuffer.$drawWebGL();
                 displayBuffer.onRenderFinish();
                 displayBuffer.renderContext.popBuffer();
@@ -363,12 +362,20 @@ module egret.web {
                     if (hasBlendMode) {
                         buffer.setGlobalCompositeOperation(compositeOp);
                     }
+                    if (scrollRect) {
+                        var m = displayMatrix;
+                        displayBuffer.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                        displayBuffer.pushMask(scrollRect);
+                    }
                     buffer.setGlobalAlpha(1);
                     buffer.setTransform(1, 0, 0, -1, region.minX + matrix.tx, region.minY + matrix.ty + displayBuffer.height);
                     var displayBufferWidth = displayBuffer.width;
                     var displayBufferHeight = displayBuffer.height;
                     buffer.drawTexture(<WebGLTexture><any>displayBuffer.rootRenderTarget.texture, 0, 0, displayBufferWidth, displayBufferHeight,
                         0, 0, displayBufferWidth, displayBufferHeight, displayBufferWidth, displayBufferHeight);
+                    if (scrollRect) {
+                        displayBuffer.popMask();
+                    }
                     if (hasBlendMode) {
                         buffer.setGlobalCompositeOperation(defaultCompositeOp);
                     }

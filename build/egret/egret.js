@@ -15722,6 +15722,13 @@ var egret;
                 context.save();
                 var calls = this.drawDisplayObject(mask, context, dirtyList, matrix, mask.$displayList, clipRegion, root);
                 this.renderingMask = false;
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    context.beginPath();
+                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.clip();
+                }
                 calls += this.drawDisplayObject(displayObject, context, dirtyList, matrix, displayObject.$displayList, clipRegion, root);
                 context.restore();
                 return calls;
@@ -15735,24 +15742,16 @@ var egret;
                 egret.Matrix.release(displayMatrix);
                 return drawCalls;
             }
-            if (scrollRect) {
-                var m = displayMatrix;
-                displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                displayContext.beginPath();
-                displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
-                displayContext.clip();
-            }
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
             var offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-            drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM, displayObject.$displayList, region, root ? displayObject : null);
-            egret.Matrix.release(offsetM);
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM, displayObject.$displayList, region, root);
             //绘制遮罩
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
                 var maskRenderNode = mask.$getRenderNode();
                 if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
-                    drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM, mask.$displayList, region, root ? mask : null);
+                    drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM, mask.$displayList, region, root);
                 }
                 else {
                     var maskBuffer = this.createRenderBuffer(region.width, region.height);
@@ -15766,8 +15765,7 @@ var egret;
                     }
                     maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                     offsetM = egret.Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
-                    var calls = this.drawDisplayObject(mask, maskContext, dirtyList, offsetM, mask.$displayList, region, root ? mask : null);
-                    egret.Matrix.release(offsetM);
+                    var calls = this.drawDisplayObject(mask, maskContext, dirtyList, offsetM, mask.$displayList, region, root);
                     if (calls > 0) {
                         drawCalls += calls;
                         displayContext.globalCompositeOperation = "destination-in";
@@ -15778,15 +15776,27 @@ var egret;
                     renderBufferPool.push(maskBuffer);
                 }
             }
+            egret.Matrix.release(offsetM);
             //绘制结果到屏幕
             if (drawCalls > 0) {
                 drawCalls++;
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    context.save();
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    context.beginPath();
+                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.clip();
+                }
                 context.globalAlpha = 1;
                 context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                 context.drawImage(displayBuffer.surface, 0, 0);
+                if (scrollRect) {
+                    context.restore();
+                }
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
