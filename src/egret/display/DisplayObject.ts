@@ -1660,7 +1660,7 @@ module egret {
 
             return true;
         }
-        
+
         /**
          * @language en_US
          * An indexed array that contains each filter object currently associated with the display object.
@@ -1682,6 +1682,14 @@ module egret {
          */
         public set filters(value:Array<Filter>) {
             this.$DisplayObject[Keys.filters] = value;
+        }
+
+        /**
+         * @private
+         * 获取filters
+         */
+        $getFilters():Array<Filter> {
+            return this.$DisplayObject[Keys.filters];
         }
 
         /**

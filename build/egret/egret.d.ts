@@ -1211,6 +1211,11 @@ declare module egret {
          */
         filters: Array<Filter>;
         /**
+         * @private
+         * 获取filters
+         */
+        $getFilters(): Array<Filter>;
+        /**
          * @language en_US
          * Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
          * @param targetCoordinateSpace The display object that defines the coordinate system to use.

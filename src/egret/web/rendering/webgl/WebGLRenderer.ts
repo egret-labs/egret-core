@@ -105,7 +105,7 @@ module egret.web {
             }
             else {
                 node = displayObject.$getRenderNode();
-                var filters = displayObject.$DisplayObject[20];
+                var filters = displayObject.$getFilters();
                 if(filters && filters.length > 0) {
                     buffer.pushFilters(filters);
                     filterPushed = true;

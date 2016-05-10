@@ -2057,6 +2057,13 @@ var egret;
             }
         );
         /**
+         * @private
+         * 获取filters
+         */
+        p.$getFilters = function () {
+            return this.$DisplayObject[20 /* filters */];
+        };
+        /**
          * @language en_US
          * Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
          * @param targetCoordinateSpace The display object that defines the coordinate system to use.
