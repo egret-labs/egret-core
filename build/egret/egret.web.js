@@ -3780,7 +3780,6 @@ var egret;
                 egret.sys.hitTestBuffer = new web.WebGLRenderBuffer(3, 3);
             }
             else {
-                egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
             }
         }
         /**
@@ -3796,6 +3795,7 @@ var egret;
                 egret.Capabilities.renderMode = "webgl";
             }
             else {
+                egret.sys.hitTestBuffer = new web.CanvasRenderBuffer(3, 3);
                 egret.sys.RenderBuffer = web.CanvasRenderBuffer;
                 egret.sys.systemRenderer = new egret.CanvasRenderer();
                 egret.Capabilities.renderMode = "canvas";
