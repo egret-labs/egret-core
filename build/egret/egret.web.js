@@ -6142,14 +6142,24 @@ var egret;
                         // 要为模糊发光等改变尺寸的滤镜创建一个大一些的画布
                         var offsetX = 0;
                         var offsetY = 0;
+                        var distanceX = 0;
+                        var distanceY = 0;
                         if (filter.type == "blur") {
                             offsetX = filter.blurX * 0.028 * input.width;
                             offsetY = filter.blurY * 0.028 * input.height;
                         }
                         if (filter.type == "glow") {
-                            // TODO 计算glow滤镜需要的尺寸还需要加上偏移量，此处把glow放置在滤镜队列前面会造成影子被剪切
                             offsetX = filter.blurX * 0.028 * input.width;
                             offsetY = filter.blurY * 0.028 * input.height;
+                            // 计算glow滤镜需要的尺寸还需要加上偏移量，此处把glow放置在滤镜队列前面会造成影子被剪切
+                            var distance = filter.distance || 0;
+                            var angle = filter.angle || 0;
+                            if (distance != 0 && angle != 0) {
+                                distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
+                                distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
+                            }
+                            offsetX += Math.abs(distanceX);
+                            offsetY += Math.abs(distanceY);
                         }
                         output = this.createRenderBuffer(input.width + offsetX * 2, input.height + offsetY * 2);
                         this.drawToRenderTarget(filter, input, output, 0, 0, input.width, input.height, (output.width - input.width) / 2, (output.height - input.height) / 2, input.width, input.height, input.width, input.height);
@@ -6670,6 +6680,8 @@ var egret;
              */
             p.createRenderBuffer = function (width, height) {
                 var buffer = renderBufferPool.pop();
+                width = Math.min(width, 1024);
+                height = Math.min(height, 1024);
                 if (buffer) {
                     buffer.resize(width, height);
                 }
