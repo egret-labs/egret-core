@@ -6095,7 +6095,7 @@ var egret;
                     // 如果是render target
                     webGLTexture = texture["texture"];
                     this.saveTransform();
-                    this.transform(1, 0, 0, -1, 0, destHeight); // 翻转
+                    this.transform(1, 0, 0, -1, 0, destHeight + destY * 2); // 翻转
                 }
                 else {
                     this.createWebGLTexture(texture);
@@ -6132,18 +6132,28 @@ var egret;
                     }
                     var len = filters.length;
                     // 先绘制到input buffer上
+                    // TODO 可省略
                     var input = this.createRenderBuffer(destWidth, destHeight);
-                    this.drawToRenderTarget(filter, webGLTexture, input, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
-                    // 应用滤镜
+                    this.drawToRenderTarget(null, webGLTexture, input, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
+                    // 递归执行滤镜
                     var output = null;
-                    for (var i = 0; i < len; i++) {
+                    for (var i = 0; i < len - 1; i++) {
                         var filter = filters[i];
-                        // 如果不是最后一个滤镜，应用滤镜到另一个buffer并继续循环
-                        if (i != (len - 1)) {
-                            output = this.createRenderBuffer(input.width, input.height);
-                            this.drawToRenderTarget(filter, input, output, 0, 0, input.width, input.height, 0, 0, output.width, output.height, input.height, input.width);
-                            input = output;
+                        // 要为模糊发光等改变尺寸的滤镜创建一个大一些的画布
+                        var offsetX = 0;
+                        var offsetY = 0;
+                        if (filter.type == "blur") {
+                            offsetX = filter.blurX * 0.028 * input.width;
+                            offsetY = filter.blurY * 0.028 * input.height;
                         }
+                        if (filter.type == "glow") {
+                            // TODO 计算glow滤镜需要的尺寸还需要加上偏移量，此处把glow放置在滤镜队列前面会造成影子被剪切
+                            offsetX = filter.blurX * 0.028 * input.width;
+                            offsetY = filter.blurY * 0.028 * input.height;
+                        }
+                        output = this.createRenderBuffer(input.width + offsetX * 2, input.height + offsetY * 2);
+                        this.drawToRenderTarget(filter, input, output, 0, 0, input.width, input.height, (output.width - input.width) / 2, (output.height - input.height) / 2, input.width, input.height, input.width, input.height);
+                        input = output;
                     }
                     // 清空绘制列表，此处可通过添加切换shader命令优化
                     this.$drawWebGL();
@@ -6151,11 +6161,22 @@ var egret;
                     this.filterType = filters[len - 1].type;
                     this.filter = filters[len - 1];
                     var filter = this.filter;
+                    // blur 滤镜改变尺寸
+                    if (filter.type == "blur") {
+                        input = output || input;
+                        var offsetX = filter.blurX * 0.028 * input.width;
+                        var offsetY = filter.blurY * 0.028 * input.height;
+                        output = this.createRenderBuffer(input.width + offsetX * 2, input.height + offsetY * 2);
+                        this.drawToRenderTarget(null, input, output, 0, 0, input.width, input.height, (output.width - input.width) / 2, (output.height - input.height) / 2, input.width, input.height, input.width, input.height);
+                        input = output;
+                    }
                     // 绘制output结果到舞台
                     var result = output || input;
                     this.saveTransform();
-                    this.transform(1, 0, 0, -1, 0, result.height);
-                    this.drawUvRect(0, 0, result.width, result.height, destX, destY, result.width, result.height, result.width, result.height);
+                    var offsetX = (result.width - destWidth) / 2;
+                    var offsetY = (result.height - destHeight) / 2;
+                    this.transform(1, 0, 0, -1, 0, result.height + (destY - offsetY) * 2);
+                    this.drawUvRect(0, 0, result.width, result.height, destX - offsetX, destY - offsetY, result.width, result.height, result.width, result.height);
                     this.restoreTransform();
                     this.drawData.push({ type: 0 /* TEXTURE */, texture: result["rootRenderTarget"].texture, count: 0 });
                     this.currentBatchSize++;
@@ -6164,7 +6185,7 @@ var egret;
                     // 如果是发光滤镜，绘制光晕
                     if (filter.type == "glow") {
                         // 会调用$drawWebGL
-                        this.drawGlow(filter, result, destX, destY);
+                        this.drawGlow(filter, result, destX - offsetX, destY - offsetY);
                     }
                     else {
                         // 确保完全绘制完成后才能释放output
@@ -6190,7 +6211,6 @@ var egret;
              * 向一个renderTarget中绘制
              * */
             p.drawToRenderTarget = function (filter, input, output, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight) {
-                output.resize(destWidth, destHeight);
                 this.renderContext.pushBuffer(output);
                 output.setGlobalAlpha(1);
                 if (filter) {
@@ -6198,7 +6218,7 @@ var egret;
                 }
                 var texture = input["rootRenderTarget"] ? input.rootRenderTarget.texture : input;
                 if (input["rootRenderTarget"]) {
-                    output.setTransform(1, 0, 0, -1, 0, destHeight);
+                    output.setTransform(1, 0, 0, -1, 0, destHeight + 2 * destY);
                 }
                 else {
                     output.setTransform(1, 0, 0, 1, 0, 0);
@@ -6232,12 +6252,20 @@ var egret;
                 ];
                 output = this.createRenderBuffer(input.width, input.height);
                 this.drawToRenderTarget(this.colorMatrixFilter, input, output, 0, 0, input.width, input.height, 0, 0, output.width, output.height, input.width, input.height);
-                // 应用blur
+                // 应用blurX
                 this.blurFilter.blurX = filter.blurX;
+                this.blurFilter.blurY = 0;
+                input = output;
+                var offsetX = filter.blurX * 0.028 * input.width;
+                output = this.createRenderBuffer(input.width + offsetX * 2, input.height);
+                this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.width, input.height, offsetX, 0, input.width, input.height, input.width, input.height);
+                // 应用blurY
+                this.blurFilter.blurX = 0;
                 this.blurFilter.blurY = filter.blurY;
                 input = output;
-                output = this.createRenderBuffer(input.width, input.height);
-                this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.width, input.height, 0, 0, output.width, output.height, input.width, input.height);
+                var offsetY = filter.blurY * 0.028 * input.height;
+                output = this.createRenderBuffer(input.width, input.height + offsetY * 2);
+                this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.width, input.height, 0, offsetY, input.width, input.height, input.width, input.height);
                 // 根据光强绘制光
                 var result = output;
                 var distance = filter.distance || 0;
@@ -6248,13 +6276,11 @@ var egret;
                     distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
                     distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
                 }
-                var offsetX = Math.abs(distanceX);
-                var offsetY = Math.abs(distanceY);
                 this.setGlobalCompositeOperation("lighter");
                 for (var j = 0; j < filter.quality; j++) {
                     this.saveTransform();
-                    this.transform(1, 0, 0, -1, 0, result.height);
-                    this.drawUvRect(0, 0, result.width, result.height, destX + distanceX, destY + distanceY, result.width, result.height, result.width, result.height);
+                    this.transform(1, 0, 0, -1, 0, result.height + (destY + distanceY - offsetY) * 2);
+                    this.drawUvRect(0, 0, result.width, result.height, destX + distanceX - offsetX, destY + distanceY - offsetY, result.width, result.height, result.width, result.height);
                     this.restoreTransform();
                     this.drawData.push({ type: 0 /* TEXTURE */, texture: output.rootRenderTarget.texture, count: 0 });
                     this.currentBatchSize++;
