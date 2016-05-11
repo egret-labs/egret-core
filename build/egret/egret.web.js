@@ -5450,9 +5450,14 @@ var egret;
              * resize this render target, this will cause render target unbind
              */
             p.resize = function (width, height) {
+                width = width || 1;
+                height = height || 1;
+                if (this.width == width && this.height == height) {
+                    return;
+                }
                 var gl = this.gl;
-                this.width = width || 1;
-                this.height = height || 1;
+                this.width = width;
+                this.height = height;
                 // resize texture
                 gl.bindTexture(gl.TEXTURE_2D, this.texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
@@ -6355,6 +6360,7 @@ var egret;
                 this._globalAlpha = value;
             };
             p.setGlobalCompositeOperation = function (value) {
+                //todo 合并前面相同的设置
                 if (this.currentBlendMode != value) {
                     this.drawData.push({ type: 4 /* BLEND */, value: value });
                     this.currentBlendMode = value;
@@ -6987,12 +6993,19 @@ var egret;
                 var length = data.length;
                 var pos = 0;
                 var m = node.matrix;
+                var blendMode = node.blendMode;
                 if (m) {
                     buffer.saveTransform();
                     buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
                 }
+                if (blendMode) {
+                    buffer.setGlobalCompositeOperation(blendModes[blendMode]);
+                }
                 while (pos < length) {
                     buffer.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
+                }
+                if (blendMode) {
+                    buffer.setGlobalCompositeOperation(defaultCompositeOp);
                 }
                 if (m) {
                     buffer.restoreTransform();

@@ -523,14 +523,20 @@ module egret.web {
             var length = data.length;
             var pos = 0;
             var m = node.matrix;
+            var blendMode = node.blendMode;
             if (m) {
                 buffer.saveTransform();
                 buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-
+            }
+            if(blendMode) {
+                buffer.setGlobalCompositeOperation(blendModes[blendMode]);
             }
             while (pos < length) {
                 buffer.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++],
                     data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight);
+            }
+            if(blendMode) {
+                buffer.setGlobalCompositeOperation(defaultCompositeOp);
             }
             if (m) {
                 buffer.restoreTransform();

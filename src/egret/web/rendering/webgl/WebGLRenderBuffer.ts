@@ -769,6 +769,7 @@ module egret.web {
         private currentBlendMode:string;
 
         public setGlobalCompositeOperation(value:string) {
+            //todo 合并前面相同的设置
             if (this.currentBlendMode != value) {
                 this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
                 this.currentBlendMode = value;

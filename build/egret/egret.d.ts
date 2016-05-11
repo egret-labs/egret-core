@@ -9796,6 +9796,10 @@ declare module egret.sys {
          */
         imageHeight: number;
         /**
+         * 使用的混合模式
+         */
+        blendMode: number;
+        /**
          * 绘制一次位图
          */
         drawImage(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;
