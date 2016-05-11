@@ -32,7 +32,7 @@ module egret.native {
      * @private
      * @inheritDoc
      */
-    export class NativeVideo extends egret.DisplayObjectContainer implements egret.Video {
+    export class NativeVideo extends egret.DisplayObject implements egret.Video {
         /**
          * @private
          */
@@ -51,6 +51,7 @@ module egret.native {
          */
         constructor(url?:string) {
             super();
+            this.$renderNode = new sys.BitmapNode();
             if (!__global.Video) {
                 egret.$error(1043);
             }
@@ -126,10 +127,6 @@ module egret.native {
         /**
          * @private
          * */
-        private canPlay:boolean = false;
-        /**
-         * @private
-         * */
         private loop:boolean = false;
         /**
          * @inheritDoc
@@ -141,14 +138,31 @@ module egret.native {
                 this.once(egret.Event.COMPLETE,e=>this.play(startTime,loop),this)
                 return;
             }
-            this.canPlay = true;
-            if(!this.isAddToStage){
+            this.originVideo.currentTime = startTime || 0;
+            this.startPlay();
+        }
+        private isPlayed:boolean = false;
+        /**
+         * @private
+         * */
+        private startPlay(){
+            this.setVideoSize();
+            if(!this.isAddToStage || !this.loaded){
                 return;
             }
-            var video = this.originVideo;
-            this.setVideoSize();
-            video.currentTime = startTime || 0;
-            video.play();
+            this.isPlayed = true;
+            this.originVideo.play();
+            egret.startTick(this.markDirty, this);
+        }
+        /**
+         * @private
+         * */
+        private stopPlay(){
+            egret.stopTick(this.markDirty, this);
+            if(this.isPlayed){
+                this.isPlayed = false;
+                this.originVideo.pause();
+            }
         }
         /**
          * @inheritDoc
@@ -157,7 +171,6 @@ module egret.native {
             if(this.loaded){
                 this.originVideo['destroy']();
             }
-            this.canPlay = false;
             this.loaded = false;
             this.loading = false;
             this.originVideo = null;
@@ -170,7 +183,7 @@ module egret.native {
         /**
          * @private
          * */
-        private posterBitmap:egret.Bitmap;
+        private posterData:egret.Bitmap;
         /**
          * @private
          * */
@@ -189,11 +202,7 @@ module egret.native {
             var loader = new NativeImageLoader();
             loader.load(value);
             loader.addEventListener(egret.Event.COMPLETE,()=>{
-                this.posterBitmap = new egret.Bitmap(loader.data);
-                if(this.isAddToStage){
-                    this.setVideoSize();
-                    this.addChild(this.posterBitmap);
-                }
+                this.posterData = new egret.Bitmap(loader.data);
             },this);
         }
         /**
@@ -238,14 +247,23 @@ module egret.native {
             egret.log('pause');
             this.originVideo.pause();
         }
-        //todo
-        public bitmapData: BitmapData;
+        private _bitmapData:BitmapData;
         //todo
         /**
          * @inheritDoc
          */
+        public get bitmapData():BitmapData {
+            //if (!this.originVideo || !this.loaded)
+            //    return null;
+            //if (!this._bitmapData) {
+            //    this._bitmapData = $toBitmapData(this.originVideo);
+            //}
+            return this._bitmapData;
+        }
+        /**
+         * @inheritDoc
+         */
         public paused:boolean = false;
-        //todo
         /**
          * @inheritDoc
          */
@@ -265,13 +283,7 @@ module egret.native {
          */
         $onAddToStage(stage:Stage, nestLevel:number):void {
             this.isAddToStage = true;
-            if(this.canPlay){
-                this.originVideo.play();
-            }
-            if(this.posterBitmap){
-                this.addChild(this.posterBitmap);
-            }
-            this.setVideoSize();
+            this.startPlay();
             super.$onAddToStage(stage,nestLevel);
         }
         /**
@@ -279,11 +291,38 @@ module egret.native {
          */
         $onRemoveFromStage():void {
             this.isAddToStage = false;
-            if(this.loaded){
-                this.originVideo.pause();
-            }
-            this.removeChildren();
+            this.stopPlay();
             super.$onRemoveFromStage();
+        }
+        /**
+         * @private
+         */
+        private getPlayWidth():number {
+            if (!isNaN(this.widthSet)) {
+                return this.widthSet;
+            }
+            if (this.bitmapData) {
+                return this.bitmapData.width;
+            }
+            if (this.posterData) {
+                return this.posterData.width;
+            }
+            return NaN;
+        }
+        /**
+         * @private
+         */
+        private getPlayHeight():number {
+            if (!isNaN(this.heightSet)) {
+                return this.heightSet;
+            }
+            if (this.bitmapData) {
+                return this.bitmapData.height;
+            }
+            if (this.posterData) {
+                return this.posterData.height;
+            }
+            return NaN;
         }
         /**
          * @private
@@ -330,19 +369,6 @@ module egret.native {
          */
         private setVideoSize():void{
             var video = this.originVideo;
-            var poster = this.posterBitmap;
-            if(poster){
-                if(this.fullscreen && this.isAddToStage){
-                    poster.width = this.stage.stageWidth;
-                    poster.height = this.stage.stageHeight;
-                }else{
-                    poster.width = this.widthSet;
-                    poster.height = this.heightSet;
-                }
-                //poster.width = 100;
-                //poster.height = 100;
-                egret.log('poster:',poster.width,poster.height);
-            }
             if(video){
                 //egret.log('fullscreen:',this.fullscreen);
                 //egret.log(this.x, this.y, this.widthSet, this.heightSet);
@@ -354,6 +380,34 @@ module egret.native {
                     video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
                 }
             }
+        }
+        /**
+         * @private
+         */
+        $render():void {
+            var node = <sys.BitmapNode>this.$renderNode;
+            //var bitmapData = this.bitmapData;
+            var posterData = this.posterData;
+            var width = this.getPlayWidth();
+            var height = this.getPlayHeight();
+            if (width <= 0 || height <= 0) {
+                return;
+            }
+            if (!this.isPlayed && posterData) {
+                node.image = posterData;
+                node.drawImage(0, 0, posterData.width, posterData.height, 0, 0, width, height);
+            }else if(this.isPlayed){
+                this.setVideoSize();
+            }
+
+            //else if (this.isPlayed) {
+            //    node.image = posterData;
+            //    node.drawImage(0, 0, this.widthSet, this.heightSet, 0, 0, width, height);
+            //}
+        }
+        private markDirty():boolean {
+            this.$invalidate();
+            return true;
         }
     }
     if (__global.Video) {
