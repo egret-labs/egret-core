@@ -553,14 +553,12 @@ module egret.web {
                     }
 
                     // TODO 清空绘制列表，此处可通过添加切换shader命令优化
-                    this.$drawWebGL();
+                    // this.$drawWebGL();
                 }
 
                 // 应用最后的滤镜
                 var filter = filters[len - 1];
                 if(filter) {
-                    this.filterType = filter.type;
-                    this.filter = filter;
 
                     // blur 滤镜改变尺寸
                     if (filter.type == "blur") {
@@ -588,10 +586,10 @@ module egret.web {
                         this.transform(1, 0, 0, -1, 0, output.$getHeight() + (destY - offsetY) * 2);
                         this.drawUvRect(0, 0, output.$getWidth(), output.$getHeight(), destX - offsetX, destY - offsetY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
                         this.restoreTransform();
-                        this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: output["rootRenderTarget"].texture, count: 0});
+                        this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: output["rootRenderTarget"].texture, filter: filter, count: 0});
                     } else {
                         this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
-                        this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: 0});
+                        this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, filter: filter, count: 0});
                     }
                     this.currentBatchSize++;
                     this.drawData[this.drawData.length - 1].count++;
@@ -606,10 +604,10 @@ module egret.web {
                         // 会调用$drawWebGL
                         this.drawGlow(filter, output, destX - offsetX, destY - offsetY);
                     } else {
-                        // 确保完全绘制完成后才能释放output
-                        this.$drawWebGL();
-
                         if(output) {
+                            // 确保完全绘制完成后才能释放output
+                            this.$drawWebGL();
+
                             output.clearFilters();
                             output.filterType = "";
                             renderBufferPool.push(output);
@@ -864,8 +862,24 @@ module egret.web {
 
             var length = this.drawData.length;
             var offset = 0;
+            var shaderStarted = false;
             for (var i = 0; i < length; i++) {
                 var data = this.drawData[i];
+
+                // 根据filter开启shader
+                if(data.filter) {
+                    var filter = data.filter;
+                    this.filterType = filter.type;
+                    this.filter = filter;
+                    this.startShader();
+                    shaderStarted = false;
+                } else {
+                    if(!shaderStarted) {
+                        this.startShader();
+                        shaderStarted = true;
+                    }
+                }
+
                 switch(data.type) {
                     case DRAWABLE_TYPE.TEXTURE:
                         offset += this.drawTextureElements(data, offset);
@@ -920,6 +934,11 @@ module egret.web {
                 this.bindBuffer = true;
             }
 
+            // this.startShader();
+        }
+
+        private startShader() {
+            var gl:any = this.context;
             var shader;
             if (this.filterType == "colorTransform") {
                 shader = this.renderContext.shaderManager.colorTransformShader;
