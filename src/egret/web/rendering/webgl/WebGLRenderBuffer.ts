@@ -228,8 +228,8 @@ module egret.web {
             // 如果是舞台的渲染缓冲，执行resize，否则surface大小不随之改变
             if(this.renderContext.$bufferStack[0] == this) {
                 this.renderContext.resize(width, height, useMaxSize);
-                this.clear();
             }
+            this.clear();
 
             this.renderContext.popBuffer();
         }
@@ -515,13 +515,14 @@ module egret.web {
                 var len = filters.length;
 
                 if(len > 0) {
-                    // 先绘制到input buffer上
-                    // TODO 可省略
-                    var input = this.createRenderBuffer(destWidth, destHeight);
-                    this.drawToRenderTarget(null, webGLTexture, input, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
-
                     // 递归执行滤镜
+                    var input = null;
                     var output = null;
+                    if(len > 1) {
+                        // TODO 可省略
+                        input = this.createRenderBuffer(destWidth, destHeight);
+                        this.drawToRenderTarget(null, webGLTexture, input, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
+                    }
                     for(var i = 0; i < len - 1; i++) {
                         var filter = filters[i];
                         // 要为模糊发光等改变尺寸的滤镜创建一个大一些的画布
@@ -563,38 +564,56 @@ module egret.web {
 
                     // blur 滤镜改变尺寸
                     if (filter.type == "blur") {
-                        input = output || input;
-                        var offsetX = filter.blurX * 0.028 * input.$getWidth();
-                        var offsetY = filter.blurY * 0.028 * input.$getHeight();
-                        output = this.createRenderBuffer(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                        this.drawToRenderTarget(null, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
-                        input = output;
+                        if(output) {
+                            input = output;
+                            var offsetX = filter.blurX * 0.028 * input.$getWidth();
+                            var offsetY = filter.blurY * 0.028 * input.$getHeight();
+                            output = this.createRenderBuffer(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
+                            this.drawToRenderTarget(null, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
+                        } else {
+                            var offsetX = filter.blurX * 0.028 * destWidth;
+                            var offsetY = filter.blurY * 0.028 * destHeight;
+                            output = this.createRenderBuffer(destWidth + offsetX * 2, destHeight + offsetY * 2);
+                            this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, (output.$getWidth() - destWidth) / 2, (output.$getHeight() - destHeight) / 2, destWidth, destHeight, textureWidth, textureHeight);
+                        }
                     }
 
                     // 绘制output结果到舞台
-                    var result = output || input;
-                    this.saveTransform();
-                    var offsetX = (result.$getWidth() - destWidth) / 2;
-                    var offsetY = (result.$getHeight() - destHeight) / 2;
-                    this.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY - offsetY) * 2);
-                    this.drawUvRect(0, 0, result.$getWidth(), result.$getHeight(), destX - offsetX, destY - offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
-                    this.restoreTransform();
-                    this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: result["rootRenderTarget"].texture, count: 0});
+                    var offsetX = 0;
+                    var offsetY = 0;
+                    if(output) {
+                        offsetX = (output.$getWidth() - destWidth) / 2;
+                        offsetY = (output.$getHeight() - destHeight) / 2;
+                        this.saveTransform();
+                        this.transform(1, 0, 0, -1, 0, output.$getHeight() + (destY - offsetY) * 2);
+                        this.drawUvRect(0, 0, output.$getWidth(), output.$getHeight(), destX - offsetX, destY - offsetY, output.$getWidth(), output.$getHeight(), output.$getWidth(), output.$getHeight());
+                        this.restoreTransform();
+                        this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: output["rootRenderTarget"].texture, count: 0});
+                    } else {
+                        this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                        this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: 0});
+                    }
                     this.currentBatchSize++;
                     this.drawData[this.drawData.length - 1].count++;
 
                     // 如果是发光滤镜，绘制光晕
                     if(filter.type == "glow") {
                         this.$drawWebGL();
+                        if(!output) {
+                            output = this.createRenderBuffer(destWidth, destHeight);
+                            this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
+                        }
                         // 会调用$drawWebGL
-                        this.drawGlow(filter, result, destX - offsetX, destY - offsetY);
+                        this.drawGlow(filter, output, destX - offsetX, destY - offsetY);
                     } else {
                         // 确保完全绘制完成后才能释放output
                         this.$drawWebGL();
 
-                        result.clearFilters();
-                        result.filterType = "";
-                        renderBufferPool.push(result);
+                        if(output) {
+                            output.clearFilters();
+                            output.filterType = "";
+                            renderBufferPool.push(output);
+                        }
                     }
                     return;
                 }
