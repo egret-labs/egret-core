@@ -83,11 +83,14 @@ module egret.web {
          * resize this render target, this will cause render target unbind
          */
         public resize(width:number, height:number):void {
+            width = width || 1;
+            height = height || 1;
+            if(this.width == width && this.height == height) {
+                return;
+            }
             var gl = this.gl;
-
-            this.width = width || 1;
-            this.height = height || 1;
-
+            this.width = width;
+            this.height = height;
             // resize texture
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
