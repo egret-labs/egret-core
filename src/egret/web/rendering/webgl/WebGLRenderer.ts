@@ -199,6 +199,17 @@ module egret.web {
 
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
+            var mask = displayObject.$mask;
+            if(mask) {
+                var maskRenderNode = mask.$getRenderNode();
+                if(maskRenderNode) {
+                    var maskRenderMatrix = maskRenderNode.renderMatrix;
+                    //遮罩scaleX或scaleY为0，放弃绘制
+                    if((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                        return drawCalls;
+                    }
+                }
+            }
             //if (mask && !mask.$parentDisplayList) {
             //    mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
             //}

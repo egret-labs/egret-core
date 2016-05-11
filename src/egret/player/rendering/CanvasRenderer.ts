@@ -182,6 +182,16 @@ module egret {
 
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
+            if(mask) {
+                var maskRenderNode = mask.$getRenderNode();
+                if(maskRenderNode) {
+                    var maskRenderMatrix = maskRenderNode.renderMatrix;
+                    //遮罩scaleX或scaleY为0，放弃绘制
+                    if((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                        return drawCalls;
+                    }
+                }
+            }
             //if (mask && !mask.$parentDisplayList) {
             //    mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
             //}
@@ -277,14 +287,13 @@ module egret {
                 return drawCalls;
             }
 
-            var node;
             //遮罩是单纯的填充图形,且alpha为1,性能优化
             //todo 平台差异
-            if (mask && Capabilities.$runtimeType == RuntimeType.WEB && (node = mask.$getRenderNode()) && (!mask.$children || mask.$children.length == 0) &&
-                node && node.type == sys.RenderNodeType.GraphicsNode &&
-                node.drawData.length == 1 &&
-                (<sys.Path2D>node.drawData[0]).type == sys.PathType.Fill &&
-                (<sys.FillPath>node.drawData[0]).fillAlpha == 1) {
+            if (mask && Capabilities.$runtimeType == RuntimeType.WEB && (!mask.$children || mask.$children.length == 0) &&
+                maskRenderNode && maskRenderNode.type == sys.RenderNodeType.GraphicsNode &&
+                maskRenderNode.drawData.length == 1 &&
+                (<sys.Path2D>maskRenderNode.drawData[0]).type == sys.PathType.Fill &&
+                (<sys.FillPath>maskRenderNode.drawData[0]).fillAlpha == 1) {
                 this.renderingMask = true;
                 context.save();
                 var calls = this.drawDisplayObject(mask, context, dirtyList, matrix,
@@ -321,7 +330,6 @@ module egret {
             //绘制遮罩
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
-                var maskRenderNode = mask.$getRenderNode();
                 if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
