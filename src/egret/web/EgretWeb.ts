@@ -89,7 +89,6 @@ module egret.web {
             sys.hitTestBuffer = new WebGLRenderBuffer(3, 3);
         }
         else {
-            sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);
         }
     }
 
@@ -106,6 +105,7 @@ module egret.web {
             Capabilities.renderMode = "webgl";
         }
         else {
+            sys.hitTestBuffer = new CanvasRenderBuffer(3, 3);            
             sys.RenderBuffer = web.CanvasRenderBuffer;
             sys.systemRenderer = new CanvasRenderer();
             Capabilities.renderMode = "canvas";

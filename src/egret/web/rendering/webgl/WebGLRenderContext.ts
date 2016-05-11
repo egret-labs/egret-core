@@ -119,13 +119,18 @@ module egret.web {
             gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.rootRenderTarget.getFrameBuffer());
         }
 
+        // 是否绑定了indices，如果绑定了，则不再切换！
+        private bindIndices:boolean;
         private bindBufferData(buffer:WebGLRenderBuffer) {
             var gl = this.context;
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
-            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, buffer.indices, gl.STATIC_DRAW);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer.vertexBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, buffer.vertices, gl.DYNAMIC_DRAW);
+            if(!this.bindIndices) {
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, buffer.indices, gl.STATIC_DRAW);
+                this.bindIndices = true;
+            }
+
+            buffer.bindBuffer = false;
         }
 
         private bindBuffer(buffer:WebGLRenderBuffer):void {

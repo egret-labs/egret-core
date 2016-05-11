@@ -470,6 +470,7 @@ module eui {
          */
         public setLayoutBoundsSize(layoutWidth:number, layoutHeight:number):void {
             UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
+            this._widthConstraint = layoutWidth;
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
                 return;
             }
@@ -480,7 +481,6 @@ module eui {
             if (layoutWidth == values[sys.UIKeys.measuredWidth]) {
                 return;
             }
-            this._widthConstraint = layoutWidth;
             this.invalidateSize();
         }
 

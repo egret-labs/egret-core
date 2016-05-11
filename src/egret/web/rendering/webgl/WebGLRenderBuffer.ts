@@ -839,8 +839,9 @@ module egret.web {
 
             // update the vertices data
             var gl:any = this.context;
-            var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
-            gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+            // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
+            // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+            gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
 
             var length = this.drawData.length;
             var offset = 0;
@@ -885,6 +886,7 @@ module egret.web {
 
         private filterType;
         private filter;
+        public bindBuffer:boolean = false;
 
         private start():void {
             if (this.renderContext.contextLost) {
@@ -893,8 +895,11 @@ module egret.web {
             var gl:any = this.context;
             gl.activeTexture(gl.TEXTURE0);
 
-            // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
-            // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+            if(!this.bindBuffer) {
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+                //gl.bufferData(gl.ARRAY_BUFFER, buffer.vertices, gl.DYNAMIC_DRAW);
+                this.bindBuffer = true;
+            }
 
             var shader;
             if (this.filterType == "colorTransform") {
