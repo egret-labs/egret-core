@@ -751,11 +751,11 @@ module egret.web {
             // TODO if needed, this rect can set a color
             if (this.currentBatchSize >= this.size - 1) {
                 this.$drawWebGL();
-                this.drawData.push({type: DRAWABLE_TYPE.RECT, rect: 1, count: 0});
-            } else if(this.drawData.length > 1 && this.drawData[this.drawData.length - 2].rect) {
+                this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
+            } else if(this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.RECT) {
                 // merge to one draw
             } else {
-                this.drawData.push({type: DRAWABLE_TYPE.RECT, rect: 1, count: 0});
+                this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
             }
 
             this.drawUvRect(0, 0, width, height, x, y, width, height, width, height);
@@ -1058,12 +1058,57 @@ module egret.web {
         private currentBlendMode:string;
 
         public setGlobalCompositeOperation(value:string) {
-            //todo 合并前面相同的设置
-            if (this.currentBlendMode != value) {
-                this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
-                this.currentBlendMode = value;
-                this.currentBaseTexture = null;
+            var len = this.drawData.length;
+            // 有无遍历到有效绘图操作
+            var drawState = false;
+            for(var i = len - 1; i >= 0; i--) {
+                var data = this.drawData[i];
+
+                if(data){
+                    if(data.type != DRAWABLE_TYPE.BLEND && data.type != DRAWABLE_TYPE.PUSH_MASK && data.type != DRAWABLE_TYPE.POP_MASK) {
+                        drawState = true;
+                    }
+
+                    // 如果与上一次blend操作之间无有效绘图，上一次操作无效
+                    if(!drawState && data.type == DRAWABLE_TYPE.BLEND) {
+                        this.drawData.splice(i, 1);
+                        // 如果可能，合并前后两次绘制
+                        var next = this.drawData[i];
+                        var prev = this.drawData[i - 1];
+                        if(next && next.count > 0 && prev && prev.count > 0) {
+                            if(prev.type == next.type) {
+                                if(prev.type == DRAWABLE_TYPE.TEXTURE) {
+                                    if(prev.texture == next.texture && prev.filter == next.filter) {
+                                        prev.count += next.count;
+                                        this.drawData.splice(i, 1);
+                                    }
+                                } else {
+                                    prev.count += next.count;
+                                    this.drawData.splice(i, 1);
+                                }
+                            }
+                        }
+                        if(prev && prev.count > 0 && prev.type == 0 && i == len - 1) {
+                            if(prev.type == 0) {
+                                this.currentBaseTexture = prev.texture;
+                            }
+                        }
+                        continue;
+                    }
+
+                    // 如果与上一次blend操作重复，本次操作无效
+                    if(data.type == DRAWABLE_TYPE.BLEND) {
+                        if(data.value == value) {
+                            return;
+                        } else {
+                            break;
+                        }
+                    }
+                }
             }
+
+            this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
+            this.currentBaseTexture = null;
         }
 
         public pushMask(mask):void {
