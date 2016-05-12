@@ -1196,6 +1196,27 @@ declare module egret {
         $setMaskRect(value: Rectangle): boolean;
         /**
          * @language en_US
+         * An indexed array that contains each filter object currently associated with the display object.
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 包含当前与显示对象关联的每个滤镜对象的索引数组。
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        /**
+         * @private
+         */
+        filters: Array<Filter>;
+        /**
+         * @private
+         * 获取filters
+         */
+        $getFilters(): Array<Filter>;
+        /**
+         * @language en_US
          * Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
          * @param targetCoordinateSpace The display object that defines the coordinate system to use.
          * @param resultRect A reusable instance of Rectangle for saving the results. Passing this parameter can reduce the number of reallocate objects

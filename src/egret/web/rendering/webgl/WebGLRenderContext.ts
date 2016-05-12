@@ -30,19 +30,6 @@
 module egret.web {
 
     /**
-     * draw类型，所有的绘图操作都会缓存在drawData中，每个drawData都是一个drawable对象
-     * $renderWebGL方法依据drawable对象的类型，调用不同的绘制方法
-     * TODO 提供drawable类型接口并且创建对象池？
-     */
-     const enum DRAWABLE_TYPE {
-         TEXTURE,
-         RECT,
-         PUSH_MASK,
-         POP_MASK,
-         BLEND
-     }
-
-    /**
      * 创建一个canvas。
      */
     function createCanvas(width?:number, height?:number):HTMLCanvasElement {
@@ -119,13 +106,18 @@ module egret.web {
             gl.bindFramebuffer(gl.FRAMEBUFFER, buffer.rootRenderTarget.getFrameBuffer());
         }
 
+        // 是否绑定了indices，如果绑定了，则不再切换！
+        private bindIndices:boolean;
         private bindBufferData(buffer:WebGLRenderBuffer) {
             var gl = this.context;
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
-            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, buffer.indices, gl.STATIC_DRAW);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, buffer.vertexBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, buffer.vertices, gl.DYNAMIC_DRAW);
+            if(!this.bindIndices) {
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer.indexBuffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, buffer.indices, gl.STATIC_DRAW);
+                this.bindIndices = true;
+            }
+
+            buffer.bindBuffer = false;
         }
 
         private bindBuffer(buffer:WebGLRenderBuffer):void {
@@ -295,6 +287,9 @@ module egret.web {
             }
             var gl = this.context;
             var shader = this.shaderManager.defaultShader;
+            if(shader != this.shaderManager.currentShader) {
+                return;
+            }
             if(state) {
                 gl.uniform1f(shader.uPureColor, 0.0);
             } else {

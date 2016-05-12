@@ -162,7 +162,8 @@ module egret {
         skewXdeg,//角度 degree
         skewYdeg,
         concatenatedAlpha,
-        concatenatedVisible
+        concatenatedVisible,
+        filters
     }
 
     /**
@@ -256,7 +257,8 @@ module egret {
                 15: NaN,             //explicitHeight,
                 16: 0,               //skewXdeg,
                 17: 0,               //skewYdeg,
-                18: 0                //concatenatedAlpha
+                18: 0,               //concatenatedAlpha,
+                19: null             //filters
             };
         }
 
@@ -1661,6 +1663,37 @@ module egret {
 
         /**
          * @language en_US
+         * An indexed array that contains each filter object currently associated with the display object.
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 包含当前与显示对象关联的每个滤镜对象的索引数组。
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        public get filters():Array<Filter> {
+            return this.$DisplayObject[Keys.filters];
+        }
+
+        /**
+         * @private
+         */
+        public set filters(value:Array<Filter>) {
+            this.$DisplayObject[Keys.filters] = value;
+        }
+
+        /**
+         * @private
+         * 获取filters
+         */
+        $getFilters():Array<Filter> {
+            return this.$DisplayObject[Keys.filters];
+        }
+
+        /**
+         * @language en_US
          * Returns a rectangle that defines the area of the display object relative to the coordinate system of the targetCoordinateSpace object.
          * @param targetCoordinateSpace The display object that defines the coordinate system to use.
          * @param resultRect A reusable instance of Rectangle for saving the results. Passing this parameter can reduce the number of reallocate objects
@@ -1916,6 +1949,7 @@ module egret {
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
         $update(bounds?:Rectangle):boolean {
+            //todo 计算滤镜占用区域
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             var node = this.$renderNode;
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
