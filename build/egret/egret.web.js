@@ -6485,10 +6485,12 @@ var egret;
                     // 根据filter开启shader
                     if (data.filter) {
                         var filter = data.filter;
-                        this.filterType = filter.type;
-                        this.filter = filter;
-                        this.startShader();
-                        shaderStarted = false;
+                        if (filter != this.filter) {
+                            this.filterType = filter.type;
+                            this.filter = filter;
+                            this.startShader();
+                            shaderStarted = false;
+                        }
                     }
                     else {
                         if (!shaderStarted) {
@@ -6529,6 +6531,7 @@ var egret;
                 this.drawData.length = 0;
                 this.currentBatchSize = 0;
                 this.currentBaseTexture = null;
+                this.filter = null;
             };
             p.start = function () {
                 if (this.renderContext.contextLost) {

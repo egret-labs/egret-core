@@ -881,10 +881,12 @@ module egret.web {
                 // 根据filter开启shader
                 if(data.filter) {
                     var filter = data.filter;
-                    this.filterType = filter.type;
-                    this.filter = filter;
-                    this.startShader();
-                    shaderStarted = false;
+                    if(filter != this.filter) {
+                        this.filterType = filter.type;
+                        this.filter = filter;
+                        this.startShader();
+                        shaderStarted = false;
+                    }
                 } else {
                     if(!shaderStarted) {
                         this.startShader();
@@ -927,6 +929,8 @@ module egret.web {
             this.drawData.length = 0;
             this.currentBatchSize = 0;
             this.currentBaseTexture = null;
+
+            this.filter = null;
         }
 
         private filterType;
