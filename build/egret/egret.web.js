@@ -6204,6 +6204,8 @@ var egret;
                         filters = filters.concat(this.filters[i]);
                     }
                     var len = filters.length;
+                    var gOffsetX = 0;
+                    var gOffsetY = 0;
                     if (len > 0) {
                         // 递归执行滤镜
                         var input = null;
@@ -6240,26 +6242,38 @@ var egret;
                             output = this.createRenderBuffer(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
                             this.drawToRenderTarget(filter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
                             input = output;
+                            gOffsetX += offsetX;
+                            gOffsetY += offsetY;
                         }
                     }
                     // 应用最后的滤镜
                     var filter = filters[len - 1];
                     if (filter) {
-                        // blur 滤镜改变尺寸, 已改为通过uv坐标映射，性能高于此方法（但需要shader做切边处理）
-                        // if (filter.type == "blur") {
-                        //     if(output) {
-                        //         input = output;
-                        //         var offsetX = filter.blurX * 0.028 * input.$getWidth();
-                        //         var offsetY = filter.blurY * 0.028 * input.$getHeight();
-                        //         output = this.createRenderBuffer(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
-                        //         this.drawToRenderTarget(null, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
-                        //     } else {
-                        //         var offsetX = filter.blurX * 0.028 * destWidth;
-                        //         var offsetY = filter.blurY * 0.028 * destHeight;
-                        //         output = this.createRenderBuffer(destWidth + offsetX * 2, destHeight + offsetY * 2);
-                        //         this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, (output.$getWidth() - destWidth) / 2, (output.$getHeight() - destHeight) / 2, destWidth, destHeight, textureWidth, textureHeight);
-                        //     }
-                        // }
+                        // 实现为blurX与blurY的叠加
+                        if (filter.type == "blur" && filter.blurX != 0 && filter.blurY != 0) {
+                            if (!this.blurFilter) {
+                                this.blurFilter = new egret.BlurFilter(2, 2);
+                            }
+                            this.blurFilter.blurX = filter.blurX;
+                            this.blurFilter.blurY = 0;
+                            var offsetX = 0;
+                            var offsetY = 0;
+                            if (output) {
+                                input = output;
+                                offsetX = this.blurFilter.blurX * 0.028 * input.$getWidth();
+                                offsetY = this.blurFilter.blurY * 0.028 * input.$getHeight();
+                                output = this.createRenderBuffer(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
+                                this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
+                            }
+                            else {
+                                offsetX = this.blurFilter.blurX * 0.028 * destWidth;
+                                offsetY = this.blurFilter.blurY * 0.028 * destHeight;
+                                output = this.createRenderBuffer(destWidth + offsetX * 2, destHeight + offsetY * 2);
+                                this.drawToRenderTarget(this.blurFilter, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, (output.$getWidth() - destWidth) / 2, (output.$getHeight() - destHeight) / 2, destWidth, destHeight, textureWidth, textureHeight);
+                            }
+                            gOffsetX += offsetX;
+                            gOffsetY += offsetY;
+                        }
                         // 如果是发光滤镜，绘制光晕
                         if (filter.type == "glow") {
                             if (!output) {
@@ -6267,26 +6281,38 @@ var egret;
                                 this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
                             }
                             // 会调用$drawWebGL
-                            this.drawGlow(filter, output, destX, destY);
+                            this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
                         }
                         // 绘制output结果到舞台
                         var offsetX = 0;
                         var offsetY = 0;
                         if (output) {
                             if (filter.type == "blur") {
+                                if (!this.blurFilter) {
+                                    this.blurFilter = new egret.BlurFilter(2, 2);
+                                }
+                                if (filter.blurX == 0 || filter.blurY == 0) {
+                                    this.blurFilter.blurX = filter.blurX;
+                                    this.blurFilter.blurY = filter.blurY;
+                                }
+                                else {
+                                    this.blurFilter.blurX = 0;
+                                    this.blurFilter.blurY = filter.blurY;
+                                }
+                                filter = this.blurFilter;
                                 offsetX = filter.blurX * 0.028 * output.$getWidth();
                                 offsetY = filter.blurY * 0.028 * output.$getHeight();
                             }
                             this.saveTransform();
-                            this.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY) * 2);
-                            this.drawUvRect(-offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX, destY - offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
+                            this.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
+                            this.drawUvRect(-offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
                             this.restoreTransform();
                             this.drawData.push({ type: 0 /* TEXTURE */, texture: output["rootRenderTarget"].texture, filter: filter, count: 0 });
                         }
                         else {
                             if (filter.type == "blur") {
-                                var offsetX = filter.blurX * 0.028 * destWidth;
-                                var offsetY = filter.blurY * 0.028 * destHeight;
+                                offsetX = filter.blurX * 0.028 * destWidth;
+                                offsetY = filter.blurY * 0.028 * destHeight;
                             }
                             this.drawUvRect(sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX, destY - offsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight);
                             this.drawData.push({ type: 0 /* TEXTURE */, texture: webGLTexture, filter: filter, count: 0 });
