@@ -1677,9 +1677,6 @@ module egret {
             return this.$DisplayObject[Keys.filters];
         }
 
-        /**
-         * @private
-         */
         public set filters(value:Array<Filter>) {
             this.$DisplayObject[Keys.filters] = value;
         }
