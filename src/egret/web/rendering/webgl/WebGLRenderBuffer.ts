@@ -484,7 +484,6 @@ module egret.web {
             }
         }
 
-        private currentBaseTexture:Texture = null;
         private currentBatchSize:number = 0;
 
         /**
@@ -622,9 +621,10 @@ module egret.web {
             this.filterType = "";
             this.filter = null;
 
-            if (webGLTexture !== this.currentBaseTexture) {
-                this.currentBaseTexture = webGLTexture;
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: this.currentBaseTexture, count: 0});
+            if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture) {
+                // merge draw
+            } else {
+                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: 0});
             }
 
             this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
@@ -762,7 +762,6 @@ module egret.web {
 
             this.currentBatchSize++;
             this.drawData[this.drawData.length - 1].count++;
-            this.currentBaseTexture = null;
         }
 
         /**
@@ -928,7 +927,6 @@ module egret.web {
             // flush draw data
             this.drawData.length = 0;
             this.currentBatchSize = 0;
-            this.currentBaseTexture = null;
 
             this.filter = null;
         }
@@ -1072,27 +1070,6 @@ module egret.web {
                     // 如果与上一次blend操作之间无有效绘图，上一次操作无效
                     if(!drawState && data.type == DRAWABLE_TYPE.BLEND) {
                         this.drawData.splice(i, 1);
-                        // 如果可能，合并前后两次绘制
-                        var next = this.drawData[i];
-                        var prev = this.drawData[i - 1];
-                        if(next && next.count > 0 && prev && prev.count > 0) {
-                            if(prev.type == next.type) {
-                                if(prev.type == DRAWABLE_TYPE.TEXTURE) {
-                                    if(prev.texture == next.texture && prev.filter == next.filter) {
-                                        prev.count += next.count;
-                                        this.drawData.splice(i, 1);
-                                    }
-                                } else {
-                                    prev.count += next.count;
-                                    this.drawData.splice(i, 1);
-                                }
-                            }
-                        }
-                        if(prev && prev.count > 0 && prev.type == 0 && i == len - 1) {
-                            if(prev.type == 0) {
-                                this.currentBaseTexture = prev.texture;
-                            }
-                        }
                         continue;
                     }
 
@@ -1108,7 +1085,6 @@ module egret.web {
             }
 
             this.drawData.push({type:DRAWABLE_TYPE.BLEND, value: value});
-            this.currentBaseTexture = null;
         }
 
         public pushMask(mask):void {
@@ -1124,7 +1100,6 @@ module egret.web {
             }
 
             this.drawMask(mask);
-            this.currentBaseTexture = null;
         }
 
         public popMask():void {
@@ -1140,7 +1115,6 @@ module egret.web {
             }
 
             this.drawMask(mask);
-            this.currentBaseTexture = null;
         }
 
         /**

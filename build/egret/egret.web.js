@@ -5804,7 +5804,6 @@ var egret;
                 // dirtyRegionPolicy hack
                 this.dirtyRegionPolicy = true;
                 this._dirtyRegionPolicy = true; // 默认设置为true，保证第一帧绘制在frameBuffer上
-                this.currentBaseTexture = null;
                 this.currentBatchSize = 0;
                 this.colorMatrixFilter = null;
                 this.blurFilter = null;
@@ -6264,9 +6263,10 @@ var egret;
                 }
                 this.filterType = "";
                 this.filter = null;
-                if (webGLTexture !== this.currentBaseTexture) {
-                    this.currentBaseTexture = webGLTexture;
-                    this.drawData.push({ type: 0 /* TEXTURE */, texture: this.currentBaseTexture, count: 0 });
+                if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture) {
+                }
+                else {
+                    this.drawData.push({ type: 0 /* TEXTURE */, texture: webGLTexture, count: 0 });
                 }
                 this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
                 this.currentBatchSize++;
@@ -6388,7 +6388,6 @@ var egret;
                 this.drawUvRect(0, 0, width, height, x, y, width, height, width, height);
                 this.currentBatchSize++;
                 this.drawData[this.drawData.length - 1].count++;
-                this.currentBaseTexture = null;
             };
             /**
              * @private
@@ -6530,7 +6529,6 @@ var egret;
                 // flush draw data
                 this.drawData.length = 0;
                 this.currentBatchSize = 0;
-                this.currentBaseTexture = null;
                 this.filter = null;
             };
             p.start = function () {
@@ -6640,28 +6638,6 @@ var egret;
                         // 如果与上一次blend操作之间无有效绘图，上一次操作无效
                         if (!drawState && data.type == 4 /* BLEND */) {
                             this.drawData.splice(i, 1);
-                            // 如果可能，合并前后两次绘制
-                            var next = this.drawData[i];
-                            var prev = this.drawData[i - 1];
-                            if (next && next.count > 0 && prev && prev.count > 0) {
-                                if (prev.type == next.type) {
-                                    if (prev.type == 0 /* TEXTURE */) {
-                                        if (prev.texture == next.texture && prev.filter == next.filter) {
-                                            prev.count += next.count;
-                                            this.drawData.splice(i, 1);
-                                        }
-                                    }
-                                    else {
-                                        prev.count += next.count;
-                                        this.drawData.splice(i, 1);
-                                    }
-                                }
-                            }
-                            if (prev && prev.count > 0 && prev.type == 0 && i == len - 1) {
-                                if (prev.type == 0) {
-                                    this.currentBaseTexture = prev.texture;
-                                }
-                            }
                             continue;
                         }
                         // 如果与上一次blend操作重复，本次操作无效
@@ -6676,7 +6652,6 @@ var egret;
                     }
                 }
                 this.drawData.push({ type: 4 /* BLEND */, value: value });
-                this.currentBaseTexture = null;
             };
             p.pushMask = function (mask) {
                 // TODO mask count
@@ -6689,7 +6664,6 @@ var egret;
                     this.drawData.push({ type: 2 /* PUSH_MASK */, pushMask: mask, count: 0 });
                 }
                 this.drawMask(mask);
-                this.currentBaseTexture = null;
             };
             p.popMask = function () {
                 // TODO mask count
@@ -6702,7 +6676,6 @@ var egret;
                     this.drawData.push({ type: 3 /* POP_MASK */, popMask: mask, count: 0 });
                 }
                 this.drawMask(mask);
-                this.currentBaseTexture = null;
             };
             /**
              * @private
