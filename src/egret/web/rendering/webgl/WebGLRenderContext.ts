@@ -272,31 +272,6 @@ module egret.web {
             gl.enable(gl.BLEND);
             gl.colorMask(true, true, true, true);
         }
-
-        /**
-         * @private
-         * TODO 这个方法可以移到shader中？
-         * switch default shader render type
-         * if true, shader is ready to render texture
-         * if false, shader is used to render rect
-         **/
-        private drawingTexture:boolean;
-        public switchDrawingTextureState(state:boolean):void {
-            if(state == this.drawingTexture) {
-                return;
-            }
-            var gl = this.context;
-            var shader = this.shaderManager.defaultShader;
-            if(shader != this.shaderManager.currentShader) {
-                return;
-            }
-            if(state) {
-                gl.uniform1f(shader.uPureColor, 0.0);
-            } else {
-                gl.uniform1f(shader.uPureColor, 1.0);
-            }
-            this.drawingTexture = state;
-        }
     }
 
 }

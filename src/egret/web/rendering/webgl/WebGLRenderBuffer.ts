@@ -877,6 +877,7 @@ module egret.web {
             for (var i = 0; i < length; i++) {
                 var data = this.drawData[i];
 
+                var drawingTexture = (data.type == DRAWABLE_TYPE.TEXTURE);
                 // 根据filter开启shader
                 if(data.filter) {
                     var filter = data.filter;
@@ -887,7 +888,8 @@ module egret.web {
                         shaderStarted = false;
                     }
                 } else {
-                    if(!shaderStarted) {
+                    if(!shaderStarted || this.drawingTexture != drawingTexture) {
+                        this.drawingTexture = drawingTexture;
                         this.startShader();
                         shaderStarted = true;
                     }
@@ -934,6 +936,7 @@ module egret.web {
         private filterType;
         private filter;
         public bindBuffer:boolean = false;
+        private drawingTexture:boolean;
 
         private start():void {
             if (this.renderContext.contextLost) {
@@ -972,15 +975,16 @@ module egret.web {
                 shader.uniforms.blur.value = {x: this.filter.blurX, y: this.filter.blurY};
             }
             else {
-                shader = this.renderContext.shaderManager.defaultShader;
+                if(this.drawingTexture) {
+                    shader = this.renderContext.shaderManager.defaultShader;
+                } else {
+                    shader = this.renderContext.shaderManager.primitiveShader;
+                }
             }
             this.renderContext.shaderManager.activateShader(shader);
             shader.syncUniforms();
 
             gl.uniform2f(shader.projectionVector, this.renderContext.projectionX, this.renderContext.projectionY);
-
-            // set the default shader to draw texture model
-            this.renderContext.switchDrawingTextureState(true);
 
             var stride = this.vertSize * 4;
             gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
@@ -1147,8 +1151,6 @@ module egret.web {
          * draw texture elements
          **/
         private drawTextureElements(data:any, offset:number):number {
-            this.renderContext.switchDrawingTextureState(true);
-
             var gl = this.context;
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             var size = data.count * 6;
@@ -1161,8 +1163,6 @@ module egret.web {
          * draw rect elements
          **/
         private drawRectElements(data:any, offset:number):number {
-            this.renderContext.switchDrawingTextureState(false);
-
             var gl = this.context;
             gl.bindTexture(gl.TEXTURE_2D, null);
             var size = data.count * 6;
@@ -1175,8 +1175,6 @@ module egret.web {
          * draw push mask elements
          **/
         private drawPushMaskElements(data:any, offset:number):number {
-            this.renderContext.switchDrawingTextureState(false);
-
             var gl = this.context;
             if(this.stencilHandleCount == 0) {
                 this.enableStencil();
@@ -1204,8 +1202,6 @@ module egret.web {
          * draw pop mask elements
          **/
         private drawPopMaskElements(data:any, offset:number) {
-            this.renderContext.switchDrawingTextureState(false);
-
             var gl = this.context;
             this.stencilHandleCount--;
             if(this.stencilHandleCount == 0) {
