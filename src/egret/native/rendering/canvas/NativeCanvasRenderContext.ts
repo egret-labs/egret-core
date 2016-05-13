@@ -642,6 +642,24 @@ module egret.native {
             //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
             this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
+        
+        private savedMatrix:Matrix = new Matrix();
+        
+        /**
+         * @private
+         * 保存矩阵，这里只能保存一次，嵌套无效
+         */
+        public saveTransform():void {
+            this.savedMatrix.copyFrom(this.$matrix);
+        }
+
+        /**
+         * @private
+         * 保存矩阵，这里只能保存一次，嵌套无效
+         */
+        public restoreTransform():void {
+            this.$matrix.copyFrom(this.savedMatrix);
+        }
 
         /**
          * @private

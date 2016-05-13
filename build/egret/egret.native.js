@@ -1172,6 +1172,7 @@ var egret;
                 this.$clipRect = new egret.Rectangle();
                 this.$saveCount = 0;
                 this.$clipList = [];
+                this.savedGlobalMatrix = new egret.Matrix();
                 this.$hasStrokeText = false;
             }
             var d = __define,c=NativeCanvasRenderContext,p=c.prototype;
@@ -1639,6 +1640,13 @@ var egret;
                 var m = this.$matrix;
                 //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
                 this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            };
+            p.saveTransform = function () {
+                this.savedGlobalMatrix.copyFrom(this.$matrix);
+            };
+            p.restoreTransform = function () {
+                this.$matrix.copyFrom(this.savedGlobalMatrix);
+                // this.setTransformToNative();
             };
             /**
              * @private

@@ -16029,7 +16029,12 @@ var egret;
             var blendMode = node.blendMode;
             var saved = false;
             if (m) {
-                context.save();
+                if (context.saveTransform) {
+                    context.saveTransform();
+                }
+                else {
+                    context.save();
+                }
                 saved = true;
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
@@ -16042,7 +16047,15 @@ var egret;
                 context.drawImage(image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
             if (saved) {
-                context.restore();
+                if (context.restoreTransform) {
+                    context.restoreTransform();
+                    if (blendMode) {
+                        context.globalCompositeOperation = defaultCompositeOp;
+                    }
+                }
+                else {
+                    context.restore();
+                }
             }
             else if (blendMode) {
                 context.globalCompositeOperation = defaultCompositeOp;

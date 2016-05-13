@@ -515,7 +515,12 @@ module egret {
             var blendMode = node.blendMode;
             var saved = false;
             if (m) {
-                context.save();
+                if((<any>context).saveTransform) {//for native
+                    (<any>context).saveTransform();
+                }
+                else {
+                    context.save();
+                }
                 saved = true;
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             }
@@ -529,7 +534,15 @@ module egret {
                 context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
             if (saved) {
-                context.restore();
+                if((<any>context).restoreTransform) {//for native
+                    (<any>context).restoreTransform();
+                    if(blendMode) {
+                        context.globalCompositeOperation = defaultCompositeOp;
+                    }
+                }
+                else {
+                    context.restore();
+                }
             }
             else if(blendMode) {
                 context.globalCompositeOperation = defaultCompositeOp;
