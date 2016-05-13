@@ -3268,6 +3268,7 @@ var egret;
                  * @private
                  */
                 this.widthSet = 0;
+                this.$renderNode = new egret.sys.BitmapNode();
                 if (!__global.Video) {
                     egret.$error(1043);
                 }
@@ -3407,6 +3408,7 @@ var egret;
                     loader.load(value);
                     loader.addEventListener(egret.Event.COMPLETE, function () {
                         _this.posterData = new egret.Bitmap(loader.data);
+                        _this.markDirty();
                     }, this);
                 }
             );
@@ -3483,6 +3485,9 @@ var egret;
             p.$onAddToStage = function (stage, nestLevel) {
                 this.isAddToStage = true;
                 this.startPlay();
+                if (this.originVideo) {
+                    this.originVideo["setVideoVisible"](true);
+                }
                 _super.prototype.$onAddToStage.call(this, stage, nestLevel);
             };
             /**
@@ -3491,6 +3496,9 @@ var egret;
             p.$onRemoveFromStage = function () {
                 this.isAddToStage = false;
                 this.stopPlay();
+                if (this.originVideo) {
+                    this.originVideo["setVideoVisible"](false);
+                }
                 _super.prototype.$onRemoveFromStage.call(this);
             };
             /**
@@ -3591,10 +3599,6 @@ var egret;
                 else if (this.isPlayed) {
                     this.setVideoSize();
                 }
-                //else if (this.isPlayed) {
-                //    node.image = posterData;
-                //    node.drawImage(0, 0, this.widthSet, this.heightSet, 0, 0, width, height);
-                //}
             };
             p.markDirty = function () {
                 this.$invalidate();

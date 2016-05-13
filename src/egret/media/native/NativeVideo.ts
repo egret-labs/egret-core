@@ -203,6 +203,7 @@ module egret.native {
             loader.load(value);
             loader.addEventListener(egret.Event.COMPLETE,()=>{
                 this.posterData = new egret.Bitmap(loader.data);
+                this.markDirty();
             },this);
         }
         /**
@@ -284,6 +285,9 @@ module egret.native {
         $onAddToStage(stage:Stage, nestLevel:number):void {
             this.isAddToStage = true;
             this.startPlay();
+            if(this.originVideo){
+                this.originVideo["setVideoVisible"](true);
+            }
             super.$onAddToStage(stage,nestLevel);
         }
         /**
@@ -292,6 +296,9 @@ module egret.native {
         $onRemoveFromStage():void {
             this.isAddToStage = false;
             this.stopPlay();
+            if(this.originVideo){
+                this.originVideo["setVideoVisible"](false);
+            }
             super.$onRemoveFromStage();
         }
         /**
@@ -399,11 +406,6 @@ module egret.native {
             }else if(this.isPlayed){
                 this.setVideoSize();
             }
-
-            //else if (this.isPlayed) {
-            //    node.image = posterData;
-            //    node.drawImage(0, 0, this.widthSet, this.heightSet, 0, 0, width, height);
-            //}
         }
         private markDirty():boolean {
             this.$invalidate();
