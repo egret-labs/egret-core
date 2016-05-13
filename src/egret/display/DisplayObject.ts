@@ -1974,8 +1974,73 @@ module egret {
             if (root !== this.$stage) {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
+            renderBounds = this.measureFiltersBounds(renderBounds);
             region.updateRegion(renderBounds, matrix);
             return true;
+        }
+        
+        private static boundsForUpdate = new egret.Rectangle();
+        
+        private measureFiltersBounds(bounds:Rectangle):Rectangle {
+            var filters = this.$DisplayObject[Keys.filters];
+            if(filters && filters.length) {
+                var length = filters.length;
+                DisplayObject.boundsForUpdate.copyFrom(bounds);
+                bounds = DisplayObject.boundsForUpdate;
+                var x:number = bounds.x;
+                var y:number = bounds.y;
+                var w:number = bounds.width;
+                var h:number = bounds.height;
+                for(var i:number = 0 ; i < length ; i++) {
+                    var filter:Filter = filters[i];
+                    if(filter.type == "blur") {
+                        var offsetX = (<BlurFilter>filter).blurX * 0.028 * bounds.width;
+                        var offsetY = (<BlurFilter>filter).blurY * 0.028 * bounds.width;
+                        x -= offsetX;
+                        y -= offsetY;    
+                        w += offsetX * 2;
+                        h += offsetY * 2;
+                    }
+                    else if(filter.type == "glow") {
+                        var offsetX = (<BlurFilter>filter).blurX;
+                        var offsetY = (<BlurFilter>filter).blurY;
+                        x -= offsetX;
+                        y -= offsetY;
+                        w += offsetX * 2;
+                        h += offsetY * 2;
+                        var distance:number = (<DropShadowFilter>filter).distance || 0;
+                        var angle:number = (<DropShadowFilter>filter).angle || 0;
+                        var distanceX = 0;
+                        var distanceY = 0;
+                        if (distance != 0 && angle != 0) {
+                            //todo 缓存这个数据
+                            distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
+                            distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
+                            if(distanceX > 0) {
+                                x += distanceX;
+                                w += distanceX;
+                            }
+                            else if(distanceX < 0) {
+                                x -= distanceX;
+                                w -= distanceX;
+                            }
+                            if(distanceY > 0) {
+                                y += distanceY;
+                                h += distanceY;
+                            }
+                            else if(distanceY < 0) {
+                                y -= distanceY;
+                                h -= distanceY;
+                            }
+                        }
+                    }
+                }
+                bounds.x = x;
+                bounds.y = y;
+                bounds.width = w;
+                bounds.height = h;
+            }
+            return bounds;
         }
 
         /**
