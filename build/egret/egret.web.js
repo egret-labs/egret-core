@@ -6201,7 +6201,15 @@ var egret;
                     // 构建filters列表
                     var filters = [];
                     for (var i = 0; i < this.filters.length; i++) {
-                        filters = filters.concat(this.filters[i]);
+                        var _filters = this.filters[i];
+                        if (_filters) {
+                            for (var j = 0; j < _filters.length; j++) {
+                                var filter = _filters[j];
+                                if (filter && filter.type != "glow") {
+                                    filters.push(filter);
+                                }
+                            }
+                        }
                     }
                     var len = filters.length;
                     var gOffsetX = 0;
