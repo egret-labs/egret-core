@@ -1003,10 +1003,10 @@ module egret.web {
                     this.filter.matrix[10],this.filter.matrix[11],this.filter.matrix[12],this.filter.matrix[13],
                     this.filter.matrix[15],this.filter.matrix[16],this.filter.matrix[17],this.filter.matrix[18]
                 ];
-                shader.uniforms.colorAdd.value.x = this.filter.matrix[4];
-                shader.uniforms.colorAdd.value.y = this.filter.matrix[9];
-                shader.uniforms.colorAdd.value.z = this.filter.matrix[14];
-                shader.uniforms.colorAdd.value.w = this.filter.matrix[19];
+                shader.uniforms.colorAdd.value.x = this.filter.matrix[4] / 255.0;
+                shader.uniforms.colorAdd.value.y = this.filter.matrix[9] / 255.0;
+                shader.uniforms.colorAdd.value.z = this.filter.matrix[14] / 255.0;
+                shader.uniforms.colorAdd.value.w = this.filter.matrix[19] / 255.0;
             }
             else if (this.filterType == "blur") {
                 shader = this.renderContext.shaderManager.blurShader;
