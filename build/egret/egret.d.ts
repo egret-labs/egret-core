@@ -1889,7 +1889,10 @@ declare module egret {
          */
         $update(bounds?: Rectangle): boolean;
         private static boundsForUpdate;
-        private measureFiltersBounds(bounds);
+        /**
+         * @private
+         */
+        $measureFiltersBounds(bounds: Rectangle): Rectangle;
         /**
          * @private
          * 获取相对于指定根节点的连接矩阵。
@@ -6844,6 +6847,10 @@ declare module egret {
          * @platform Web,Native
          */
         type: string;
+        private $targets;
+        $addTarget(target: DisplayObject): void;
+        $removeTarget(target: DisplayObject): void;
+        protected invalidate(): void;
     }
 }
 declare module egret {
@@ -6888,6 +6895,7 @@ declare module egret {
          * @platform Web
          */
         blurX: number;
+        private $blurX;
         /**
          * @language en_US
          * The amount of vertical blur.
@@ -6901,6 +6909,7 @@ declare module egret {
          * @platform Web
          */
         blurY: number;
+        private $blurY;
     }
 }
 declare module egret {

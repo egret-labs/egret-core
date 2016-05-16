@@ -2727,7 +2727,21 @@ var egret;
                 return this.$DisplayObject[20 /* filters */];
             }
             ,function (value) {
+                this.$invalidateContentBounds();
+                var filters = this.$DisplayObject[20 /* filters */];
+                if (filters && filters.length) {
+                    var length = filters.length;
+                    for (var i = 0; i < length; i++) {
+                        filters[i].$removeTarget(this);
+                    }
+                }
                 this.$DisplayObject[20 /* filters */] = value;
+                if (value && value.length) {
+                    length = value.length;
+                    for (i = 0; i < length; i++) {
+                        value[i].$addTarget(this);
+                    }
+                }
             }
         );
         /**
@@ -2890,6 +2904,8 @@ var egret;
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
+                var withFiltersBounds = this.$measureFiltersBounds(bounds);
+                bounds.copyFrom(withFiltersBounds);
             }
             return bounds;
         };
@@ -2998,11 +3014,14 @@ var egret;
             if (root !== this.$stage) {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
-            renderBounds = this.measureFiltersBounds(renderBounds);
+            renderBounds = this.$measureFiltersBounds(renderBounds);
             region.updateRegion(renderBounds, matrix);
             return true;
         };
-        p.measureFiltersBounds = function (bounds) {
+        /**
+         * @private
+         */
+        p.$measureFiltersBounds = function (bounds) {
             var filters = this.$DisplayObject[20 /* filters */];
             if (filters && filters.length) {
                 var length = filters.length;
@@ -10362,8 +10381,33 @@ var egret;
              * @platform Web,Native
              */
             this.type = null;
+            this.$targets = [];
         }
         var d = __define,c=Filter,p=c.prototype;
+        p.$addTarget = function (target) {
+            var length = this.$targets.length;
+            for (var i = 0; i < length; i++) {
+                if (this.$targets[i].$hashCode == target.$hashCode) {
+                    return;
+                }
+            }
+            this.$targets.push(target);
+        };
+        p.$removeTarget = function (target) {
+            var length = this.$targets.length;
+            for (var i = 0; i < length; i++) {
+                if (this.$targets[i].$hashCode == target.$hashCode) {
+                    this.$targets.splice(i, 1);
+                    return;
+                }
+            }
+        };
+        p.invalidate = function () {
+            var length = this.$targets.length;
+            for (var i = 0; i < length; i++) {
+                this.$targets[i].$invalidateContentBounds();
+            }
+        };
         return Filter;
     }(egret.HashObject));
     egret.Filter = Filter;
@@ -10434,6 +10478,54 @@ var egret;
             this.blurY = blurY;
         }
         var d = __define,c=BlurFilter,p=c.prototype;
+        d(p, "blurX"
+            /**
+             * @language en_US
+             * The amount of horizontal blur.
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 水平模糊量。
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            ,function () {
+                return this.$blurX;
+            }
+            ,function (value) {
+                if (this.$blurX == value) {
+                    return;
+                }
+                this.$blurX = value;
+                this.invalidate();
+            }
+        );
+        d(p, "blurY"
+            /**
+             * @language en_US
+             * The amount of vertical blur.
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 垂直模糊量。
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            ,function () {
+                return this.$blurY;
+            }
+            ,function (value) {
+                if (this.$blurY == value) {
+                    return;
+                }
+                this.$blurY = value;
+                this.invalidate();
+            }
+        );
         return BlurFilter;
     }(egret.Filter));
     egret.BlurFilter = BlurFilter;
@@ -12819,7 +12911,11 @@ var egret;
                     var renderNode = this.$renderNode;
                     renderNode.drawData.length = 0;
                     renderNode.image = surface;
-                    renderNode.drawImage(0, 0, surface.width, surface.height, -this.offsetX, -this.offsetY, surface.width, surface.height);
+                    var width = surface.width;
+                    var height = surface.height;
+                    renderNode.imageWidth = width;
+                    renderNode.imageHeight = height;
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width, height);
                 }
                 this.dirtyList = null;
                 this.dirtyRegion.clear();
