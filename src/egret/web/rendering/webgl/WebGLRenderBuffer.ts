@@ -508,7 +508,15 @@ module egret.web {
                 // 构建filters列表
                 var filters = [];
                 for(var i = 0; i < this.filters.length; i++) {
-                    filters = filters.concat(this.filters[i]);
+                    var _filters = this.filters[i];
+                    if(_filters) {
+                        for(var j = 0; j < _filters.length; j++) {
+                            var filter = _filters[j];
+                            if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
+                                filters.push(filter);
+                            }
+                        }
+                    }
                 }
                 var len = filters.length;
 
@@ -894,9 +902,12 @@ module egret.web {
 
             // update the vertices data
             var gl:any = this.context;
-            // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
-            // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
-            gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
+
+            if(this.currentBatchSize > 0) {
+                var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
+                // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+                gl.bufferData(gl.ARRAY_BUFFER, view, gl.STREAM_DRAW);
+            }
 
             var length = this.drawData.length;
             var offset = 0;
@@ -1016,7 +1027,7 @@ module egret.web {
             var stride = this.vertSize * 4;
             gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
             gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-            gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
+            gl.vertexAttribPointer(shader.colorAttribute, 1, gl.FLOAT, false, stride, 4 * 4);
         }
 
         public createWebGLTexture(texture:BitmapData):void {

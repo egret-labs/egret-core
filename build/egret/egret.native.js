@@ -1172,7 +1172,7 @@ var egret;
                 this.$clipRect = new egret.Rectangle();
                 this.$saveCount = 0;
                 this.$clipList = [];
-                this.savedGlobalMatrix = new egret.Matrix();
+                this.savedMatrix = new egret.Matrix();
                 this.$hasStrokeText = false;
             }
             var d = __define,c=NativeCanvasRenderContext,p=c.prototype;
@@ -1641,12 +1641,19 @@ var egret;
                 //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
                 this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
             };
+            /**
+             * @private
+             * 保存矩阵，这里只能保存一次，嵌套无效
+             */
             p.saveTransform = function () {
-                this.savedGlobalMatrix.copyFrom(this.$matrix);
+                this.savedMatrix.copyFrom(this.$matrix);
             };
+            /**
+             * @private
+             * 保存矩阵，这里只能保存一次，嵌套无效
+             */
             p.restoreTransform = function () {
-                this.$matrix.copyFrom(this.savedGlobalMatrix);
-                // this.setTransformToNative();
+                this.$matrix.copyFrom(this.savedMatrix);
             };
             /**
              * @private

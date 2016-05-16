@@ -954,7 +954,6 @@ var egret;
                 var request = new XMLHttpRequest();
                 request.open("GET", url, true);
                 request.responseType = "arraybuffer";
-                console.log("loadWebAudio");
                 request.onload = function () {
                     self._arrayBuffer = request.response;
                     WebAudioDecode.decodeArr.push({
@@ -3791,7 +3790,7 @@ var egret;
                 egret.sys.RenderBuffer = web.WebGLRenderBuffer;
                 egret.sys.systemRenderer = new web.WebGLRenderer();
                 //屏蔽掉cacheAsBitmap,webgl模式不能有太多的RenderContext
-                egret.DisplayObject.prototype.$setHasDisplayList = function () { };
+                //DisplayObject.prototype.$setHasDisplayList = function(){};
                 egret.Capabilities.renderMode = "webgl";
             }
             else {
@@ -6201,7 +6200,15 @@ var egret;
                     // 构建filters列表
                     var filters = [];
                     for (var i = 0; i < this.filters.length; i++) {
-                        filters = filters.concat(this.filters[i]);
+                        var _filters = this.filters[i];
+                        if (_filters) {
+                            for (var j = 0; j < _filters.length; j++) {
+                                var filter = _filters[j];
+                                if (filter && filter.type != "glow") {
+                                    filters.push(filter);
+                                }
+                            }
+                        }
                     }
                     var len = filters.length;
                     var gOffsetX = 0;
@@ -6541,9 +6548,11 @@ var egret;
                 this.start();
                 // update the vertices data
                 var gl = this.context;
-                // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
-                // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
-                gl.bufferData(gl.ARRAY_BUFFER, this.vertices, gl.STATIC_DRAW);
+                if (this.currentBatchSize > 0) {
+                    var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
+                    // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+                    gl.bufferData(gl.ARRAY_BUFFER, view, gl.STREAM_DRAW);
+                }
                 var length = this.drawData.length;
                 var offset = 0;
                 var shaderStarted = false;
@@ -6648,7 +6657,7 @@ var egret;
                 var stride = this.vertSize * 4;
                 gl.vertexAttribPointer(shader.aVertexPosition, 2, gl.FLOAT, false, stride, 0);
                 gl.vertexAttribPointer(shader.aTextureCoord, 2, gl.FLOAT, false, stride, 2 * 4);
-                gl.vertexAttribPointer(shader.colorAttribute, 2, gl.FLOAT, false, stride, 4 * 4);
+                gl.vertexAttribPointer(shader.colorAttribute, 1, gl.FLOAT, false, stride, 4 * 4);
             };
             p.createWebGLTexture = function (texture) {
                 var bitmapData = texture;
