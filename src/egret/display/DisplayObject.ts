@@ -1678,7 +1678,21 @@ module egret {
         }
 
         public set filters(value:Array<Filter>) {
+            this.$invalidateContentBounds();
+            var filters:Array<Filter> = this.$DisplayObject[Keys.filters];
+            if(filters && filters.length) {
+                var length:number = filters.length;
+                for(var i:number = 0 ; i < length ; i++) {
+                    filters[i].$removeTarget(this);
+                }
+            }
             this.$DisplayObject[Keys.filters] = value;
+            if(value && value.length) {
+                length = value.length;
+                for(i = 0 ; i < length ; i++) {
+                    value[i].$addTarget(this);
+                }
+            }
         }
 
         /**
@@ -1843,6 +1857,8 @@ module egret {
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
+                var withFiltersBounds = this.$measureFiltersBounds(bounds);
+                bounds.copyFrom(withFiltersBounds);
             }
             return bounds;
         }
@@ -1971,14 +1987,17 @@ module egret {
             if (root !== this.$stage) {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
-            renderBounds = this.measureFiltersBounds(renderBounds);
+            renderBounds = this.$measureFiltersBounds(renderBounds);
             region.updateRegion(renderBounds, matrix);
             return true;
         }
         
         private static boundsForUpdate = new egret.Rectangle();
         
-        private measureFiltersBounds(bounds:Rectangle):Rectangle {
+        /**
+         * @private
+         */
+        public $measureFiltersBounds(bounds:Rectangle):Rectangle {
             var filters = this.$DisplayObject[Keys.filters];
             if(filters && filters.length) {
                 var length = filters.length;

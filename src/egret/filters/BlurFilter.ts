@@ -73,7 +73,19 @@ module egret {
          * @version Egret 3.1.0
          * @platform Web
          */
-        public blurX:number;
+        public get blurX():number {
+            return this.$blurX;
+        }
+
+        public set blurX(value:number) {
+            if(this.$blurX == value) {
+                return;
+            }
+            this.$blurX = value;
+            this.invalidate();
+        }
+        
+        private $blurX:number;
         
         /**
          * @language en_US
@@ -87,6 +99,18 @@ module egret {
          * @version Egret 3.1.0
          * @platform Web
          */
-        public blurY:number;
+        public get blurY():number {
+            return this.$blurY;
+        }
+
+        public set blurY(value:number) {
+            if(this.$blurY == value) {
+                return;
+            }
+            this.$blurY = value;
+            this.invalidate();
+        }
+        
+        private $blurY:number;
     }
 }

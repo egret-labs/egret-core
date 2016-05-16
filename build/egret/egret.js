@@ -2726,11 +2726,22 @@ var egret;
             ,function () {
                 return this.$DisplayObject[20 /* filters */];
             }
-            /**
-             * @private
-             */
             ,function (value) {
+                this.$invalidateContentBounds();
+                var filters = this.$DisplayObject[20 /* filters */];
+                if (filters && filters.length) {
+                    var length = filters.length;
+                    for (var i = 0; i < length; i++) {
+                        filters[i].$removeTarget(this);
+                    }
+                }
                 this.$DisplayObject[20 /* filters */] = value;
+                if (value && value.length) {
+                    length = value.length;
+                    for (i = 0; i < length; i++) {
+                        value[i].$addTarget(this);
+                    }
+                }
             }
         );
         /**
@@ -2893,6 +2904,8 @@ var egret;
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
+                var withFiltersBounds = this.$measureFiltersBounds(bounds);
+                bounds.copyFrom(withFiltersBounds);
             }
             return bounds;
         };
@@ -3001,11 +3014,14 @@ var egret;
             if (root !== this.$stage) {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
-            renderBounds = this.measureFiltersBounds(renderBounds);
+            renderBounds = this.$measureFiltersBounds(renderBounds);
             region.updateRegion(renderBounds, matrix);
             return true;
         };
-        p.measureFiltersBounds = function (bounds) {
+        /**
+         * @private
+         */
+        p.$measureFiltersBounds = function (bounds) {
             var filters = this.$DisplayObject[20 /* filters */];
             if (filters && filters.length) {
                 var length = filters.length;
@@ -10365,8 +10381,33 @@ var egret;
              * @platform Web,Native
              */
             this.type = null;
+            this.$targets = [];
         }
         var d = __define,c=Filter,p=c.prototype;
+        p.$addTarget = function (target) {
+            var length = this.$targets.length;
+            for (var i = 0; i < length; i++) {
+                if (this.$targets[i].$hashCode == target.$hashCode) {
+                    return;
+                }
+            }
+            this.$targets.push(target);
+        };
+        p.$removeTarget = function (target) {
+            var length = this.$targets.length;
+            for (var i = 0; i < length; i++) {
+                if (this.$targets[i].$hashCode == target.$hashCode) {
+                    this.$targets.splice(i, 1);
+                    return;
+                }
+            }
+        };
+        p.invalidate = function () {
+            var length = this.$targets.length;
+            for (var i = 0; i < length; i++) {
+                this.$targets[i].$invalidateContentBounds();
+            }
+        };
         return Filter;
     }(egret.HashObject));
     egret.Filter = Filter;
@@ -10403,23 +10444,88 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
+     * @language en_US
+     * The BlurFilter class lets you apply a blur visual effect to display objects. A blur effect softens the details of an image.
+     * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass.
+     * @version Egret 3.0.1
+     * @platform Web
+     */
+    /**
+     * @language zh_CN
+     * 可使用 BlurFilter 类将模糊视觉效果应用于显示对象。模糊效果可以柔化图像的细节。
+     * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
+     * @version Egret 3.1.0
+     * @platform Web
      */
     var BlurFilter = (function (_super) {
         __extends(BlurFilter, _super);
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @language en_US
+         * Initializes a BlurFilter object.
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 BlurFilter 对象。
+         * @version Egret 3.1.0
+         * @platform Web
          */
         function BlurFilter(blurX, blurY) {
             _super.call(this);
+            this.type = "blur";
             this.blurX = blurX;
             this.blurY = blurY;
-            this.type = "blur";
         }
         var d = __define,c=BlurFilter,p=c.prototype;
+        d(p, "blurX"
+            /**
+             * @language en_US
+             * The amount of horizontal blur.
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 水平模糊量。
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            ,function () {
+                return this.$blurX;
+            }
+            ,function (value) {
+                if (this.$blurX == value) {
+                    return;
+                }
+                this.$blurX = value;
+                this.invalidate();
+            }
+        );
+        d(p, "blurY"
+            /**
+             * @language en_US
+             * The amount of vertical blur.
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 垂直模糊量。
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            ,function () {
+                return this.$blurY;
+            }
+            ,function (value) {
+                if (this.$blurY == value) {
+                    return;
+                }
+                this.$blurY = value;
+                this.invalidate();
+            }
+        );
         return BlurFilter;
     }(egret.Filter));
     egret.BlurFilter = BlurFilter;
@@ -10456,15 +10562,32 @@ var egret;
 var egret;
 (function (egret) {
     /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
+     * @language en_US
+     * The ColorMatrixFilter class lets you apply a 4 x 5 matrix transformation on the RGBA color and alpha values of every pixel in the input image to produce a result with a new set of RGBA color and alpha values.
+     * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
+     * @version Egret 3.1.0
+     * @platform Web
+     */
+    /**
+     * @language zh_CN
+     * 使用 ColorMatrixFilter 类可以将 4 x 5 矩阵转换应用于输入图像上的每个像素的 RGBA 颜色和 Alpha 值，以生成具有一组新的 RGBA 颜色和 Alpha 值的结果。
+     * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
+     * @version Egret 3.1.0
+     * @platform Web
      */
     var ColorMatrixFilter = (function (_super) {
         __extends(ColorMatrixFilter, _super);
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @language en_US
+         * Initializes a ColorMatrixFilter object.
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 ColorMatrixFilter 对象。
+         * @version Egret 3.1.0
+         * @platform Web
          */
         function ColorMatrixFilter(matrix) {
             if (matrix === void 0) { matrix = null; }
@@ -10483,8 +10606,20 @@ var egret;
         var d = __define,c=ColorMatrixFilter,p=c.prototype;
         d(p, "matrix"
             /**
-             * @version Egret 2.4
-             * @platform Web,Native
+             * @language en_US
+             * A comma delimited list of 20 doubles that comprise a 4x5 matrix applied to the rendered element.
+             * The matrix is in row major order -- that is, the first five elements are multipled by the vector [srcR,srcG,srcB,srcA,1] to determine the output red value, the second five determine the output green value, etc.
+             * The value must either be an array or comma delimited string of 20 numbers.
+             * @version Egret 3.1.0
+             * @platform Web
+             */
+            /**
+             * @language zh_CN
+             * 构成应用于所呈示的元素的一个 4x5 矩阵的、以逗号分隔的 20 个双精度数的列表。
+             * 矩阵以行作为主要顺序，即用第一行五个元素乘以矢量 [srcR,srcG,srcB,srcA,1] 以确定输出的红色值，用第二行的五个元素确定输出的绿色值，等等。
+             * 该值必须为 20 个数字组成的数组或以逗号分隔的字符串。
+             * @version Egret 3.1.0
+             * @platform Web
              */
             ,function () {
                 for (var i = 0; i < 20; i++) {
@@ -10498,8 +10633,6 @@ var egret;
         );
         /**
          * @private
-         *
-         * @param value
          */
         p.setMatrix = function (value) {
             for (var i = 0; i < 20; i++) {
@@ -12778,7 +12911,11 @@ var egret;
                     var renderNode = this.$renderNode;
                     renderNode.drawData.length = 0;
                     renderNode.image = surface;
-                    renderNode.drawImage(0, 0, surface.width, surface.height, -this.offsetX, -this.offsetY, surface.width, surface.height);
+                    var width = surface.width;
+                    var height = surface.height;
+                    renderNode.imageWidth = width;
+                    renderNode.imageHeight = height;
+                    renderNode.drawImage(0, 0, width, height, -this.offsetX, -this.offsetY, width, height);
                 }
                 this.dirtyList = null;
                 this.dirtyRegion.clear();
