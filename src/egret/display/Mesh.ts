@@ -80,6 +80,7 @@ module egret {
          */
         $updateVertices(): void {
             this._verticesDirty = true;
+            this.$invalidateContentBounds();
         }
 
         /**
@@ -91,7 +92,7 @@ module egret {
                 var node = <sys.MeshNode>this.$renderNode;
                 var vertices = node.vertices;
                 if (vertices.length) {
-                    this._bounds.setTo(Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE, Number.MIN_VALUE);
+                    this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, Number.MIN_VALUE, Number.MIN_VALUE);
                     for (var i = 0, l = vertices.length; i < l; i += 2) {
                         var x = vertices[i];
                         var y = vertices[i + 1];
@@ -100,11 +101,13 @@ module egret {
                         if (this._bounds.y > y) this._bounds.y = y;
                         if (this._bounds.height < y) this._bounds.height = y;
                     }
+                    this._bounds.width -= this._bounds.x;
+                    this._bounds.height -= this._bounds.y;
                 } else {
                     this._bounds.setTo(0, 0, 0, 0);
                 }
             }
-            
+
             bounds.copyFrom(this._bounds);
         }
     }

@@ -82,7 +82,7 @@ module egret.sys {
             this.drawData.push(sourceX, sourceY, sourceW, sourceH, drawX, drawY, drawW, drawH);
             this.renderCount++;
         }
-        
+
         /**
          * 在显示对象的$render()方法被调用前，自动清空自身的drawData数据。
          */
