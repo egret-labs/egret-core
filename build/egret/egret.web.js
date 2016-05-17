@@ -6218,7 +6218,7 @@ var egret;
                 }
                 this.filterType = "";
                 this.filter = null;
-                if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture) {
+                if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.drawData[this.drawData.length - 1].filter) {
                 }
                 else {
                     this.drawData.push({ type: 0 /* TEXTURE */, texture: webGLTexture, count: 0 });
@@ -6581,6 +6581,8 @@ var egret;
                     }
                     else {
                         if (!shaderStarted || this.drawingTexture != drawingTexture) {
+                            this.filterType = "";
+                            this.filter = null;
                             this.drawingTexture = drawingTexture;
                             this.startShader();
                             shaderStarted = true;

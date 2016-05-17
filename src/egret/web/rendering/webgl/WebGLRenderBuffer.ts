@@ -532,7 +532,7 @@ module egret.web {
             this.filterType = "";
             this.filter = null;
 
-            if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture) {
+            if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.drawData[this.drawData.length - 1].filter) {
                 // merge draw
             } else {
                 this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: 0});
@@ -946,6 +946,8 @@ module egret.web {
                     }
                 } else {
                     if(!shaderStarted || this.drawingTexture != drawingTexture) {
+                        this.filterType = "";
+                        this.filter = null;
                         this.drawingTexture = drawingTexture;
                         this.startShader();
                         shaderStarted = true;
