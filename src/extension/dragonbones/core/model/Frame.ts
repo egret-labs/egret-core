@@ -61,6 +61,7 @@ module dragonBones {
 		 */
         public sound: string;
 
+        /** @private */
         public bone: string;
 
 		public curve:CurveData;

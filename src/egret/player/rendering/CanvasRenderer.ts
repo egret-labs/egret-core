@@ -164,6 +164,8 @@ module egret {
             return drawCalls;
         }
 
+        private renderingMask = false;
+
         /**
          * @private
          */
@@ -180,6 +182,16 @@ module egret {
 
             var scrollRect = displayObject.$scrollRect ? displayObject.$scrollRect : displayObject.$maskRect;
             var mask = displayObject.$mask;
+            if(mask) {
+                var maskRenderNode = mask.$getRenderNode();
+                if(maskRenderNode) {
+                    var maskRenderMatrix = maskRenderNode.renderMatrix;
+                    //遮罩scaleX或scaleY为0，放弃绘制
+                    if((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                        return drawCalls;
+                    }
+                }
+            }
             //if (mask && !mask.$parentDisplayList) {
             //    mask = null; //如果遮罩不在显示列表中，放弃绘制遮罩。
             //}
@@ -188,7 +200,7 @@ module egret {
             var maskRegion:sys.Region;
             var displayMatrix = Matrix.create();
             displayMatrix.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(displayObject.$parentDisplayList) {
+            if (displayObject.$parentDisplayList) {
                 var displayRoot = displayObject.$parentDisplayList.root;
                 var invertedMatrix:Matrix;
                 if (displayRoot !== displayObject.$stage) {
@@ -232,7 +244,7 @@ module egret {
                 region.updateRegion(bounds, displayMatrix);
             }
             var found = false;
-            if(!dirtyList) {//forRenderTexture
+            if (!dirtyList) {//forRenderTexture
                 found = true;
             }
             else {
@@ -275,6 +287,31 @@ module egret {
                 return drawCalls;
             }
 
+            //遮罩是单纯的填充图形,且alpha为1,性能优化
+            //todo 平台差异
+            if (mask && Capabilities.$runtimeType == RuntimeType.WEB && (!mask.$children || mask.$children.length == 0) &&
+                maskRenderNode && maskRenderNode.type == sys.RenderNodeType.GraphicsNode &&
+                maskRenderNode.drawData.length == 1 &&
+                (<sys.Path2D>maskRenderNode.drawData[0]).type == sys.PathType.Fill &&
+                (<sys.FillPath>maskRenderNode.drawData[0]).fillAlpha == 1) {
+                this.renderingMask = true;
+                context.save();
+                var calls = this.drawDisplayObject(mask, context, dirtyList, matrix,
+                    mask.$displayList, clipRegion, root);
+                this.renderingMask = false;
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    context.beginPath();
+                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.clip();
+                }
+                calls += this.drawDisplayObject(displayObject, context, dirtyList, matrix,
+                    displayObject.$displayList, clipRegion, root);
+                context.restore();
+                return calls;
+            }
+
             //绘制显示对象自身，若有scrollRect，应用clip
             var displayBuffer = this.createRenderBuffer(region.width, region.height);
             var displayContext = displayBuffer.context;
@@ -285,27 +322,18 @@ module egret {
                 Matrix.release(displayMatrix);
                 return drawCalls;
             }
-            if (scrollRect) {
-                var m = displayMatrix;
-                displayContext.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
-                displayContext.beginPath();
-                displayContext.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
-                displayContext.clip();
-            }
             displayContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
             var offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
 
             drawCalls += this.drawDisplayObject(displayObject, displayContext, dirtyList, offsetM,
-                displayObject.$displayList, region, root ? displayObject : null);
-            Matrix.release(offsetM);
+                displayObject.$displayList, region, root);
             //绘制遮罩
             if (mask) {
                 //如果只有一次绘制或是已经被cache直接绘制到displayContext
-                var maskRenderNode = mask.$getRenderNode();
                 if (maskRenderNode && maskRenderNode.$getRenderCount() == 1 || mask.$displayList) {
                     displayContext.globalCompositeOperation = "destination-in";
                     drawCalls += this.drawDisplayObject(mask, displayContext, dirtyList, offsetM,
-                        mask.$displayList, region, root ? mask : null);
+                        mask.$displayList, region, root);
                 }
                 else {
                     var maskBuffer = this.createRenderBuffer(region.width, region.height);
@@ -321,8 +349,7 @@ module egret {
                     maskContext.setTransform(1, 0, 0, 1, -region.minX, -region.minY);
                     offsetM = Matrix.create().setTo(1, 0, 0, 1, -region.minX, -region.minY);
                     var calls = this.drawDisplayObject(mask, maskContext, dirtyList, offsetM,
-                        mask.$displayList, region, root ? mask : null);
-                    Matrix.release(offsetM);
+                        mask.$displayList, region, root);
                     if (calls > 0) {
                         drawCalls += calls;
                         displayContext.globalCompositeOperation = "destination-in";
@@ -333,7 +360,7 @@ module egret {
                     renderBufferPool.push(maskBuffer);
                 }
             }
-
+            Matrix.release(offsetM);
 
             //绘制结果到屏幕
             if (drawCalls > 0) {
@@ -341,10 +368,20 @@ module egret {
                 if (hasBlendMode) {
                     context.globalCompositeOperation = compositeOp;
                 }
+                if (scrollRect) {
+                    var m = displayMatrix;
+                    context.save();
+                    context.setTransform(m.a, m.b, m.c, m.d, m.tx - region.minX, m.ty - region.minY);
+                    context.beginPath();
+                    context.rect(scrollRect.x, scrollRect.y, scrollRect.width, scrollRect.height);
+                    context.clip();
+                }
                 context.globalAlpha = 1;
                 context.setTransform(1, 0, 0, 1, region.minX + matrix.tx, region.minY + matrix.ty);
                 context.drawImage(<any>displayBuffer.surface, 0, 0);
-
+                if (scrollRect) {
+                    context.restore();
+                }
                 if (hasBlendMode) {
                     context.globalCompositeOperation = defaultCompositeOp;
                 }
@@ -367,7 +404,10 @@ module egret {
             }
             var m = Matrix.create();
             m.copyFrom(displayObject.$getConcatenatedMatrix());
-            if(displayObject.$parentDisplayList) {
+            if(root) {
+                displayObject.$getConcatenatedMatrixAt(root, m);
+            }
+            else if (displayObject.$parentDisplayList) {
                 var displayRoot = displayObject.$parentDisplayList.root;
                 if (displayRoot !== displayObject.$stage) {
                     displayObject.$getConcatenatedMatrixAt(displayRoot, m);
@@ -383,7 +423,7 @@ module egret {
                 return drawCalls;
             }
             var found = false;
-            if(!dirtyList) {//forRenderTexture
+            if (!dirtyList) {//forRenderTexture
                 found = true;
             }
             else {
@@ -472,18 +512,40 @@ module egret {
             var length = data.length;
             var pos = 0;
             var m = node.matrix;
+            var blendMode = node.blendMode;
+            var saved = false;
             if (m) {
-                context.save();
+                if((<any>context).saveTransform) {//for native
+                    (<any>context).saveTransform();
+                }
+                else {
+                    context.save();
+                }
+                saved = true;
                 context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
-
             }
+            if(blendMode) {
+                context.globalCompositeOperation = blendModes[blendMode];
+            }
+            
             var drawCalls:number = 0;
             while (pos < length) {
                 drawCalls++;
                 context.drawImage(<HTMLImageElement><any>image, data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++], data[pos++]);
             }
-            if(m) {
-                context.restore();
+            if (saved) {
+                if((<any>context).restoreTransform) {//for native
+                    (<any>context).restoreTransform();
+                    if(blendMode) {
+                        context.globalCompositeOperation = defaultCompositeOp;
+                    }
+                }
+                else {
+                    context.restore();
+                }
+            }
+            else if(blendMode) {
+                context.globalCompositeOperation = defaultCompositeOp;
             }
             return drawCalls;
         }
@@ -531,7 +593,12 @@ module egret {
                         var fillPath = <sys.FillPath>path;
                         context.fillStyle = forHitTest ? BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                         this.renderPath(path, context);
-                        context.fill();
+                        if (this.renderingMask) {
+                            context.clip();
+                        }
+                        else {
+                            context.fill();
+                        }
                         break;
                     case sys.PathType.GradientFill:
                         var g = <sys.GradientFillPath>path;

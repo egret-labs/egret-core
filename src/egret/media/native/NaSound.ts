@@ -92,7 +92,7 @@ module egret.native {
 
             throw new Error ("sound length not supported");
 
-            return 0;
+            //return 0;
         }
 
         /**

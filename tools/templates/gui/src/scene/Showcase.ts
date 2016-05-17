@@ -88,7 +88,7 @@ class Showcase extends egret.gui.SkinnableComponent {
     private dataSource:Array<any> = [];
 
     private initListData():void {
-        for (var i:number = 1; i < 50; i++) {
+        for (var i = 1; i < 50; i++) {
             this.dataSource.push({label: "List Item " + i});
         }
     }

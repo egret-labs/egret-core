@@ -28,18 +28,89 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
+     * @language en_US
+     * The BlurFilter class lets you apply a blur visual effect to display objects. A blur effect softens the details of an image.
+     * You can produce blurs that range from a softly unfocused look to a Gaussian blur, a hazy appearance like viewing an image through semi-opaque glass. 
+     * @version Egret 3.0.1
+     * @platform Web
+     */
+    /**
+     * @language zh_CN
+     * 可使用 BlurFilter 类将模糊视觉效果应用于显示对象。模糊效果可以柔化图像的细节。
+     * 您可以生成一些模糊效果，范围从创建一个柔化的、未聚焦的外观到高斯模糊（就像通过半透明玻璃查看图像一样的朦胧的外观）。
+     * @version Egret 3.1.0
+     * @platform Web
      */
     export class BlurFilter extends Filter {
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @language en_US
+         * Initializes a BlurFilter object.
+         * @version Egret 3.1.0
+         * @platform Web
          */
-        constructor(public blurX:number, public blurY:number) {
+        /**
+         * @language zh_CN
+         * 创建一个 BlurFilter 对象。
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        constructor(blurX:number, blurY:number) {
             super();
             this.type = "blur";
+            this.blurX = blurX;
+            this.blurY = blurY;
         }
+        
+        /**
+         * @language en_US
+         * The amount of horizontal blur.
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 水平模糊量。
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        public get blurX():number {
+            return this.$blurX;
+        }
+
+        public set blurX(value:number) {
+            if(this.$blurX == value) {
+                return;
+            }
+            this.$blurX = value;
+            this.invalidate();
+        }
+        
+        private $blurX:number;
+        
+        /**
+         * @language en_US
+         * The amount of vertical blur.
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 垂直模糊量。
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        public get blurY():number {
+            return this.$blurY;
+        }
+
+        public set blurY(value:number) {
+            if(this.$blurY == value) {
+                return;
+            }
+            this.$blurY = value;
+            this.invalidate();
+        }
+        
+        private $blurY:number;
     }
 }

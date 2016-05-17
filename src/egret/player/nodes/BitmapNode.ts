@@ -60,6 +60,10 @@ module egret.sys {
          */
         public imageHeight:number;
         /**
+         * 使用的混合模式
+         */
+        public blendMode:number = null;
+        /**
          * 绘制一次位图
          */
         public drawImage(sourceX:number, sourceY:number, sourceW:number, sourceH:number,

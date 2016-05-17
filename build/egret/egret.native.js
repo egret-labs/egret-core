@@ -1172,6 +1172,7 @@ var egret;
                 this.$clipRect = new egret.Rectangle();
                 this.$saveCount = 0;
                 this.$clipList = [];
+                this.savedMatrix = new egret.Matrix();
                 this.$hasStrokeText = false;
             }
             var d = __define,c=NativeCanvasRenderContext,p=c.prototype;
@@ -1639,6 +1640,20 @@ var egret;
                 var m = this.$matrix;
                 //console.log("setTransformToNative::a=" + m.a + " b=" + m.b + " c=" + m.c + " d=" + m.d + " tx=" + m.tx + " ty=" + m.ty);
                 this.$nativeContext.setTransform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            };
+            /**
+             * @private
+             * 保存矩阵，这里只能保存一次，嵌套无效
+             */
+            p.saveTransform = function () {
+                this.savedMatrix.copyFrom(this.$matrix);
+            };
+            /**
+             * @private
+             * 保存矩阵，这里只能保存一次，嵌套无效
+             */
+            p.restoreTransform = function () {
+                this.$matrix.copyFrom(this.savedMatrix);
             };
             /**
              * @private
@@ -2620,7 +2635,7 @@ var egret;
                         return this.originAudio.duration;
                     }
                     throw new Error("sound not loaded!");
-                    return 0;
+                    //return 0;
                 }
             );
             /**
@@ -2957,7 +2972,7 @@ var egret;
             d(p, "length"
                 ,function () {
                     throw new Error("sound length not supported");
-                    return 0;
+                    //return 0;
                 }
             );
             /**

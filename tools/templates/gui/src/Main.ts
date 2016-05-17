@@ -131,7 +131,7 @@ class Main extends egret.DisplayObjectContainer {
         //Game scene layer, the game content related to the scene can be placed inside this layer.
         this.gameLayer = new egret.DisplayObjectContainer();
         this.addChild(this.gameLayer);
-        var bitmap:egret.Bitmap = new egret.Bitmap();
+        var bitmap = new egret.Bitmap();
         bitmap.texture = RES.getRes("bgImage");
         this.gameLayer.addChild(bitmap);
 
@@ -140,7 +140,7 @@ class Main extends egret.DisplayObjectContainer {
         this.guiLayer = new egret.gui.UIStage();
         this.addChild(this.guiLayer);
 
-        var showcase:Showcase = new Showcase();
+        var showcase = new Showcase();
         //在GUI范围内一律使用addElement等方法替代addChild等方法。
         //Within GUI scope, addChild methods should be replaced by addElement methods.
         this.guiLayer.addElement(showcase);

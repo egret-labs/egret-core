@@ -1820,11 +1820,12 @@ declare module dragonBones {
         slotTimelineCacheList: Array<SlotTimelineCache>;
         slotTimelineCacheDic: any;
         frameNum: number;
+        _cahceList: Array<boolean>;
         constructor();
         static initWithAnimationData(animationData: AnimationData, armatureData: ArmatureData): AnimationCache;
         initSlotTimelineCacheDic(slotCacheGeneratorDic: any, slotFrameCacheDic: any): void;
         bindCacheUserSlotDic(slotDic: any): void;
-        addFrame(): void;
+        addFrame(frameIndex: number, armature: FastArmature): void;
         update(progress: number): void;
     }
 }
@@ -2187,7 +2188,7 @@ declare module dragonBones {
         frameCacheList: Array<FrameCache>;
         currentFrameCache: FrameCache;
         constructor();
-        addFrame(): void;
+        addFrame(frameIndex: number, armature: FastArmature): void;
         update(frameIndex?: number): void;
         bindCacheUser(cacheUser: ICacheUser): void;
     }
@@ -2247,7 +2248,7 @@ declare module dragonBones {
     class SlotTimelineCache extends TimelineCache {
         cacheGenerator: ISlotCacheGenerator;
         constructor();
-        addFrame(): void;
+        addFrame(frameIndex: number, armature: FastArmature): void;
     }
 }
 declare module dragonBones {
@@ -2853,6 +2854,7 @@ declare module dragonBones {
         _buildSlots(armature: Armature, skinName: string, textureAtlasName: string): void;
         _buildFastBones(armature: FastArmature): void;
         _buildFastSlots(armature: FastArmature, skinName: string, textureAtlasName: string): void;
+        private getTextureData(textureName, textureAtlasName);
         /**
          * @private
          * Generates an Armature instance.
@@ -2963,6 +2965,7 @@ declare module dragonBones {
          * 保证CacheManager是独占的前提下可以开启，开启后有助于性能提高
          */
         isCacheManagerExclusive: boolean;
+        _cacheFrameIndex: number;
         /** @private */
         _animation: FastAnimation;
         /** @private */
@@ -2986,7 +2989,10 @@ declare module dragonBones {
         _eventList: Array<any>;
         private _delayDispose;
         private _lockDispose;
-        private useCache;
+        /** @private*/
+        _useCache: boolean;
+        /** @private*/
+        _isFrameCached: boolean;
         constructor(display: any);
         /**
          * Cleans up any resources used by this instance.
@@ -3126,7 +3132,7 @@ declare module dragonBones {
         static _tempParentGlobalTransform: DBTransform;
         _frameCache: FrameCache;
         /** @private */
-        updateByCache(): void;
+        updateByCache(frameIndex: number): void;
         /** @private */
         switchTransformToBackup(): void;
         /**
@@ -3220,7 +3226,7 @@ declare module dragonBones {
         private operationInvalidUpdate(bone);
         _calculateRelativeParentTransform(): void;
         /** @private */
-        updateByCache(): void;
+        updateByCache(frameIndex: number): void;
         /** @private */
         update(needUpdate?: boolean): void;
         private updataLocalTransform();
@@ -3283,7 +3289,6 @@ declare module dragonBones {
      */
     class FastSlot extends FastDBObject implements ISlotCacheGenerator {
         /** @private Need to keep the reference of DisplayData. When slot switch displayObject, it need to restore the display obect's origional pivot. */
-        _displayDataList: Array<DisplayData>;
         /** @private */
         _originZOrder: number;
         /** @private */
@@ -3295,14 +3300,18 @@ declare module dragonBones {
         /** @private */
         _gotoAndPlay: string;
         _defaultGotoAndPlay: string;
-        _displayList: Array<any>;
-        _currentDisplayIndex: number;
-        _colorTransform: ColorTransform;
-        _isColorChanged: boolean;
-        _currentDisplay: any;
-        _blendMode: string;
         hasChildArmature: boolean;
-        constructor();
+        _isColorChanged: boolean;
+        _colorTransform: ColorTransform;
+        _blendMode: string;
+        _displayIndex: number;
+        _rawDisplay: any;
+        _display: any;
+        _childArmature: FastArmature;
+        _displayList: Array<any>;
+        _displayDataList: Array<[DisplayData, TextureData]>;
+        _cacheTimeline: SlotTimelineCache;
+        constructor(rawDisplay: any);
         /**
          * 通过传入 SlotData 初始化FastSlot
          * @param slotData
@@ -3313,24 +3322,16 @@ declare module dragonBones {
          */
         dispose(): void;
         /** @private */
-        updateByCache(): void;
+        updateByCache(frameIndex: number): void;
         /** @private */
-        _update(): void;
+        _update(needUpdate?: boolean): void;
         _calculateRelativeParentTransform(): void;
         updateChildArmatureAnimation(): void;
-        initDisplayList(newDisplayList: Array<any>): void;
-        private clearCurrentDisplay();
         /** @private */
-        _changeDisplayIndex(displayIndex?: number): void;
-        private changeSlotDisplay(value);
-        private initCurrentDisplay(slotIndex?);
+        changeDisplay(): void;
         /** @private */
         visible: boolean;
-        /**
-         * 显示对象列表(包含 display 或者 子骨架)
-         * @member {any[]} dragonBones.FastSlot#displayList
-         */
-        displayList: Array<any>;
+        displayIndex: number;
         /**
          * 当前的显示对象(可能是 display 或者 子骨架)
          * @member {any} dragonBones.FastSlot#display
@@ -3341,6 +3342,14 @@ declare module dragonBones {
          * @member {FastArmature} dragonBones.Slot#childArmature
          */
         childArmature: any;
+        /** @private */
+        /** @private */
+        displayDataList: Array<[DisplayData, TextureData]>;
+        /**
+         * 显示对象列表(包含 display 或者 子骨架)
+         * @member {any[]} dragonBones.FastSlot#displayList
+         */
+        displayList: Array<any>;
         /**
          * 显示顺序。(支持小数用于实现动态插入slot)
          * @member {number} dragonBones.FastSlot#zOrder
@@ -3357,15 +3366,16 @@ declare module dragonBones {
          */
         gotoAndPlay: string;
         colorTransform: ColorTransform;
-        displayIndex: number;
         colorChanged: boolean;
-        /**
-         * @private
-         */
+        /** @private */
         _updateDisplay(value: any): void;
-        /**
-         * @private
-         */
+        /** @private */
+        _addDisplay(): void;
+        /** @private */
+        _replaceDisplay(prevDisplay: any): void;
+        /** @private */
+        _removeDisplay(): void;
+        /** @private */
         _getDisplayIndex(): number;
         /**
          * @private
@@ -3384,6 +3394,11 @@ declare module dragonBones {
          * Updates the transform of the slot.
          */
         _updateTransform(): void;
+        /**
+         * @private
+         * Updates the frame of the slot.
+         */
+        _updateFrame(): void;
         /**
          * @private
          */
@@ -3637,7 +3652,7 @@ declare module dragonBones {
          * @member {boolean} dragonBones.AnimationState#autoTween
          */
         autoTween: boolean;
-        private _progress;
+        _progress: number;
         _armature: FastArmature;
         private _boneTimelineStateList;
         private _slotTimelineStateList;
@@ -3655,7 +3670,7 @@ declare module dragonBones {
         private _isPlaying;
         private _timeScale;
         private _playTimes;
-        private _fading;
+        _fading: boolean;
         _fadeTotalTime: number;
         constructor();
         dispose(): void;
@@ -3929,7 +3944,7 @@ declare module dragonBones {
          * @member {number} dragonBones.Timeline#scale
          */
         scale: number;
-        private _frameList;
+        _frameList: Array<Frame>;
         /**
          * 初始化数据duration为0，scale为1
          */
@@ -4045,6 +4060,7 @@ declare module dragonBones {
         private _skinDataList;
         private _slotDataList;
         private _animationDataList;
+        _cacheManager: AnimationCacheManager;
         /**
          * 默认动画
          * @member {string} dragonBones.ArmatureData#defaultAnimation
@@ -4402,6 +4418,8 @@ declare module dragonBones {
          * @member {string} dragonBones.Frame#sound
          */
         sound: string;
+        /** @private */
+        bone: string;
         curve: CurveData;
         /**
          *构造函数
@@ -4773,6 +4791,7 @@ declare module dragonBones {
         private static parseSkinSlotData(slotObject);
         private static parseSlotData(slotObject);
         private static parseDisplayData(displayObject);
+        private static _currentAnimationData;
         /** @private */
         private static parseAnimationData(animationObject, frameRate);
         private static parseSlotTimeline(timelineObject, duration, frameRate);
@@ -4953,6 +4972,10 @@ declare module dragonBones {
          *是否有旋转
          */
         rotated: boolean;
+        /**
+         * @private
+         */
+        textureAtlas: ITextureAtlas;
         /**
          *创建一个 TextureData 实例
          * @param region 区域
@@ -5403,6 +5426,7 @@ declare module dragonBones {
          */
         static matrixToTransform(matrix: Matrix, transform: DBTransform, scaleXF: boolean, scaleYF: boolean): void;
         private static _helpMatrix;
+        /** @private */
         static applyMatrixToPoint(targetPoint: Point, matrix: Matrix, returnNewPoint?: Boolean): Point;
         /**
          * 标准化弧度值，把弧度制换算到[-PI，PI]之间
@@ -5450,13 +5474,19 @@ declare module dragonBones {
         /**
          * 创建一个新的 EgretSlot 实例
          */
-        constructor();
+        constructor(rawDisplay: any);
         /**
          * 释放资源
          */
         dispose(): void;
         /** @private */
         _updateDisplay(value: any): void;
+        /** @private */
+        _addDisplay(): void;
+        /** @private */
+        _replaceDisplay(prevDisplay: any): void;
+        /** @private */
+        _removeDisplay(): void;
         /** @private */
         _getDisplayIndex(): number;
         /** @private */
@@ -5469,6 +5499,8 @@ declare module dragonBones {
         _updateDisplayVisible(value: boolean): void;
         /** @private */
         _updateDisplayColor(aOffset: number, rOffset: number, gOffset: number, bOffset: number, aMultiplier: number, rMultiplier: number, gMultiplier: number, bMultiplier: number, colorChanged?: boolean): void;
+        /** @private */
+        _updateFrame(): void;
         /** @private */
         _updateDisplayBlendMode(value: string): void;
     }
@@ -5617,6 +5649,13 @@ declare module dragonBones {
          * @returns {*} 子纹理所在的矩形区域
          */
         getFrame(subTextureName: string): Rectangle;
+        /**
+         * @private
+         * 根据子纹理的名字获取子纹理数据
+         * @param subTextureName 子纹理的名字
+         * @returns {dragonBone.TextureData} 子纹理数据
+         */
+        getTextureData(subTextureName: string): TextureData;
         private parseData(textureAtlasRawData);
     }
 }

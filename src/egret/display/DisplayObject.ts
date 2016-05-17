@@ -162,7 +162,8 @@ module egret {
         skewXdeg,//角度 degree
         skewYdeg,
         concatenatedAlpha,
-        concatenatedVisible
+        concatenatedVisible,
+        filters
     }
 
     /**
@@ -256,7 +257,8 @@ module egret {
                 15: NaN,             //explicitHeight,
                 16: 0,               //skewXdeg,
                 17: 0,               //skewYdeg,
-                18: 0                //concatenatedAlpha
+                18: 0,               //concatenatedAlpha,
+                19: null             //filters
             };
         }
 
@@ -979,19 +981,19 @@ module egret {
                 return false;
             }
 
-            if (false) {
-                var values = this.$DisplayObject;
-                var originalBounds = this.$getOriginalBounds();
-                var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-                var angle = values[Keys.rotation] / 180 * Math.PI;
-                var baseWidth = originalBounds.$getBaseWidth(angle);
-                if (!baseWidth) {
-                    return false;
-                }
-                var baseHeight = originalBounds.$getBaseHeight(angle);
-                values[Keys.scaleY] = bounds.height / baseHeight;
-                values[Keys.scaleX] = value / baseWidth;
-            }
+            // if (false) {
+            //     var values = this.$DisplayObject;
+            //     var originalBounds = this.$getOriginalBounds();
+            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     var angle = values[Keys.rotation] / 180 * Math.PI;
+            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     if (!baseWidth) {
+            //         return false;
+            //     }
+            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     values[Keys.scaleY] = bounds.height / baseHeight;
+            //     values[Keys.scaleX] = value / baseWidth;
+            // }
             this.invalidateMatrix();
 
             return true;
@@ -1049,19 +1051,19 @@ module egret {
                 return false;
             }
 
-            if (false) {
-                var values = this.$DisplayObject;
-                var originalBounds = this.$getOriginalBounds();
-                var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
-                var angle = values[Keys.rotation] / 180 * Math.PI;
-                var baseHeight = originalBounds.$getBaseHeight(angle);
-                if (!baseHeight) {
-                    return false;
-                }
-                var baseWidth = originalBounds.$getBaseWidth(angle);
-                values[Keys.scaleY] = value / baseHeight;
-                values[Keys.scaleX] = bounds.width / baseWidth;
-            }
+            // if (false) {
+            //     var values = this.$DisplayObject;
+            //     var originalBounds = this.$getOriginalBounds();
+            //     var bounds = this.$getTransformedBounds(this.$parent, $TempRectangle);
+            //     var angle = values[Keys.rotation] / 180 * Math.PI;
+            //     var baseHeight = originalBounds.$getBaseHeight(angle);
+            //     if (!baseHeight) {
+            //         return false;
+            //     }
+            //     var baseWidth = originalBounds.$getBaseWidth(angle);
+            //     values[Keys.scaleY] = value / baseHeight;
+            //     values[Keys.scaleX] = bounds.width / baseWidth;
+            // }
             this.invalidateMatrix();
 
             return true;
@@ -1615,16 +1617,25 @@ module egret {
                         value.$maskedObject.mask = null;
                     }
                     value.$maskedObject = this;
+                    value.$invalidateTransform();
 
                     this.$mask = value;
                     this.$maskRect = null;
                 }
                 else {
                     this.$setMaskRect(<Rectangle>value);
+                    if(this.$mask) {
+                        this.$mask.$maskedObject = null;
+                        this.$mask.$invalidateTransform();
+                    }
                     this.$mask = null;
                 }
             }
             else {
+                if(this.$mask) {
+                    this.$mask.$maskedObject = null;
+                    this.$mask.$invalidateTransform();
+                }
                 this.$mask = null;
                 this.$maskRect = null;
             }
@@ -1648,6 +1659,48 @@ module egret {
             this.invalidatePosition();
 
             return true;
+        }
+
+        /**
+         * @language en_US
+         * An indexed array that contains each filter object currently associated with the display object.
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        /**
+         * @language zh_CN
+         * 包含当前与显示对象关联的每个滤镜对象的索引数组。
+         * @version Egret 3.1
+         * @platform Web,Native
+         */
+        public get filters():Array<Filter> {
+            return this.$DisplayObject[Keys.filters];
+        }
+
+        public set filters(value:Array<Filter>) {
+            this.$invalidateContentBounds();
+            var filters:Array<Filter> = this.$DisplayObject[Keys.filters];
+            if(filters && filters.length) {
+                var length:number = filters.length;
+                for(var i:number = 0 ; i < length ; i++) {
+                    filters[i].$removeTarget(this);
+                }
+            }
+            this.$DisplayObject[Keys.filters] = value;
+            if(value && value.length) {
+                length = value.length;
+                for(i = 0 ; i < length ; i++) {
+                    value[i].$addTarget(this);
+                }
+            }
+        }
+
+        /**
+         * @private
+         * 获取filters
+         */
+        $getFilters():Array<Filter> {
+            return this.$DisplayObject[Keys.filters];
         }
 
         /**
@@ -1804,6 +1857,8 @@ module egret {
                 if (this.$displayList) {
                     this.$displayList.$renderNode.moved = true;
                 }
+                var withFiltersBounds = this.$measureFiltersBounds(bounds);
+                bounds.copyFrom(withFiltersBounds);
             }
             return bounds;
         }
@@ -1907,6 +1962,7 @@ module egret {
          * 更新对象在舞台上的显示区域,返回显示区域是否发生改变。
          */
         $update(bounds?:Rectangle):boolean {
+            //todo 计算滤镜占用区域
             this.$removeFlagsUp(sys.DisplayObjectFlags.Dirty);
             var node = this.$renderNode;
             //必须在访问moved属性前调用以下两个方法，因为moved属性在以下两个方法内重置。
@@ -1931,8 +1987,76 @@ module egret {
             if (root !== this.$stage) {
                 this.$getConcatenatedMatrixAt(root, matrix);
             }
+            renderBounds = this.$measureFiltersBounds(renderBounds);
             region.updateRegion(renderBounds, matrix);
             return true;
+        }
+        
+        private static boundsForUpdate = new egret.Rectangle();
+        
+        /**
+         * @private
+         */
+        public $measureFiltersBounds(bounds:Rectangle):Rectangle {
+            var filters = this.$DisplayObject[Keys.filters];
+            if(filters && filters.length) {
+                var length = filters.length;
+                DisplayObject.boundsForUpdate.copyFrom(bounds);
+                bounds = DisplayObject.boundsForUpdate;
+                var x:number = bounds.x;
+                var y:number = bounds.y;
+                var w:number = bounds.width;
+                var h:number = bounds.height;
+                for(var i:number = 0 ; i < length ; i++) {
+                    var filter:Filter = filters[i];
+                    if(filter.type == "blur") {
+                        var offsetX = (<BlurFilter>filter).blurX * 0.028 * bounds.width;
+                        var offsetY = (<BlurFilter>filter).blurY * 0.028 * bounds.width;
+                        x -= offsetX;
+                        y -= offsetY;    
+                        w += offsetX * 2;
+                        h += offsetY * 2;
+                    }
+                    else if(filter.type == "glow") {
+                        var offsetX = (<BlurFilter>filter).blurX;
+                        var offsetY = (<BlurFilter>filter).blurY;
+                        x -= offsetX;
+                        y -= offsetY;
+                        w += offsetX * 2;
+                        h += offsetY * 2;
+                        var distance:number = (<DropShadowFilter>filter).distance || 0;
+                        var angle:number = (<DropShadowFilter>filter).angle || 0;
+                        var distanceX = 0;
+                        var distanceY = 0;
+                        if (distance != 0 && angle != 0) {
+                            //todo 缓存这个数据
+                            distanceX = Math.ceil(distance * egret.NumberUtils.cos(angle));
+                            distanceY = Math.ceil(distance * egret.NumberUtils.sin(angle));
+                            if(distanceX > 0) {
+                                x += distanceX;
+                                w += distanceX;
+                            }
+                            else if(distanceX < 0) {
+                                x -= distanceX;
+                                w -= distanceX;
+                            }
+                            if(distanceY > 0) {
+                                y += distanceY;
+                                h += distanceY;
+                            }
+                            else if(distanceY < 0) {
+                                y -= distanceY;
+                                h -= distanceY;
+                            }
+                        }
+                    }
+                }
+                bounds.x = x;
+                bounds.y = y;
+                bounds.width = w;
+                bounds.height = h;
+            }
+            return bounds;
         }
 
         /**

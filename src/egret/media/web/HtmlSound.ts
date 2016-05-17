@@ -95,7 +95,7 @@ module egret.web {
 
             throw new Error ("sound not loaded!");
 
-            return 0;
+            //return 0;
         }
 
         /**

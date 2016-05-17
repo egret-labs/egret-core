@@ -9563,6 +9563,7 @@ var eui;
          */
         p.setLayoutBoundsSize = function (layoutWidth, layoutHeight) {
             UIImpl.prototype.setLayoutBoundsSize.call(this, layoutWidth, layoutHeight);
+            this._widthConstraint = layoutWidth;
             if (isNaN(layoutWidth) || layoutWidth === this._widthConstraint || layoutWidth == 0) {
                 return;
             }
@@ -9573,7 +9574,6 @@ var eui;
             if (layoutWidth == values[16 /* measuredWidth */]) {
                 return;
             }
-            this._widthConstraint = layoutWidth;
             this.invalidateSize();
         };
         /**

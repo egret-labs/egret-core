@@ -1,6 +1,6 @@
 {
   "name": "egret",
-  "version": "3.0.7",
+  "version": "3.1.0",
   "private": true,
   "author": "egret-labs",
   "scripts": {
@@ -275,6 +275,10 @@
             "platform": "web"
           },
           {
+            "path": "web/rendering/webgl/WebGLRenderContext.ts",
+            "platform": "web"
+          },
+          {
             "path": "web/rendering/webgl/WebGLRenderBuffer.ts",
             "platform": "web"
           },
@@ -367,6 +371,8 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "创建一个空项目,仅添加 Egret 相关模块引用",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret" ]
       },
       {
@@ -375,6 +381,8 @@
         "language": "TypeScript",
         "tag": "game,TypeScript",
         "description": "创建一个Egret 游戏项目",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret", "game", "tween", "res" ]
       },
       {
@@ -383,6 +391,8 @@
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
         "description": "使用 eui 扩展库创建友好的交互界面",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret", "eui", "res" ]
       },
       {
@@ -390,7 +400,9 @@
         "displayName": "Egret GUI 项目",
         "language": "TypeScript",
         "tag": "game,app,TypeScript",
-        "description": "创建一个Egret GUI 项目",
+        "description": "创建一个Egret GUI 项目(建议创建eui项目，它更易于使用，可以为您提高创建界面的效率及性能)",
+        "defaultWidth":640,
+        "defaultHeight":1136,
         "modules": [ "egret", "game", "res", "gui" ]
       }
     ],

@@ -125,6 +125,8 @@ module egret {
             this.socket = new egret.ISocket();
             this.socket.addCallBacks(this.onConnect, this.onClose, this.onSocketData, this.onError, this);
         }
+        
+        private connectCount:number = 0;
 
         /**
          * @language en_US
@@ -143,6 +145,7 @@ module egret {
          * @platform Web,Native
          */
         public connect(host:string, port:number):void {
+            this.connectCount++;
             this.socket.connect(host, port);
         }
 
@@ -151,6 +154,7 @@ module egret {
          * @param url 全地址。如ws://echo.websocket.org:80
          */
         public connectByUrl(url:string):void {
+            this.connectCount++;
             this.socket.connectByUrl(url);
         }
 
@@ -175,8 +179,11 @@ module egret {
          * 
          */
         private onConnect():void {
-            this._connected = true;
-            this.dispatchEventWith(egret.Event.CONNECT);
+            this.connectCount--;
+            if(this.connectCount == 0 ) {
+                this._connected = true;
+                this.dispatchEventWith(egret.Event.CONNECT);
+            }
         }
 
         /**

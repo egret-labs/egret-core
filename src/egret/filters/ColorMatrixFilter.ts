@@ -28,9 +28,18 @@
 //////////////////////////////////////////////////////////////////////////////////////
 module egret {
     /**
-     * @private
-     * @version Egret 2.4
-     * @platform Web,Native
+     * @language en_US
+     * The ColorMatrixFilter class lets you apply a 4 x 5 matrix transformation on the RGBA color and alpha values of every pixel in the input image to produce a result with a new set of RGBA color and alpha values.
+     * It allows saturation changes, hue rotation, luminance to alpha, and various other effects.
+     * @version Egret 3.1.0
+     * @platform Web
+     */
+    /**
+     * @language zh_CN
+     * 使用 ColorMatrixFilter 类可以将 4 x 5 矩阵转换应用于输入图像上的每个像素的 RGBA 颜色和 Alpha 值，以生成具有一组新的 RGBA 颜色和 Alpha 值的结果。
+     * 该类允许饱和度更改、色相旋转、亮度为 Alpha 以及各种其他效果。
+     * @version Egret 3.1.0
+     * @platform Web
      */
     export class ColorMatrixFilter extends Filter {
         /**
@@ -43,8 +52,16 @@ module egret {
         private matrix2:Array<number> = [];
 
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @language en_US
+         * Initializes a ColorMatrixFilter object.
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 创建一个 ColorMatrixFilter 对象。
+         * @version Egret 3.1.0
+         * @platform Web
          */
         constructor(matrix:Array<number> = null) {
             super();
@@ -53,8 +70,20 @@ module egret {
         }
 
         /**
-         * @version Egret 2.4
-         * @platform Web,Native
+         * @language en_US
+         * A comma delimited list of 20 doubles that comprise a 4x5 matrix applied to the rendered element.
+         * The matrix is in row major order -- that is, the first five elements are multipled by the vector [srcR,srcG,srcB,srcA,1] to determine the output red value, the second five determine the output green value, etc.
+         * The value must either be an array or comma delimited string of 20 numbers.
+         * @version Egret 3.1.0
+         * @platform Web
+         */
+        /**
+         * @language zh_CN
+         * 构成应用于所呈示的元素的一个 4x5 矩阵的、以逗号分隔的 20 个双精度数的列表。
+         * 矩阵以行作为主要顺序，即用第一行五个元素乘以矢量 [srcR,srcG,srcB,srcA,1] 以确定输出的红色值，用第二行的五个元素确定输出的绿色值，等等。
+         * 该值必须为 20 个数字组成的数组或以逗号分隔的字符串。
+         * @version Egret 3.1.0
+         * @platform Web
          */
         public get matrix():Array<number> {
             for (var i = 0; i < 20; i++) {
@@ -69,13 +98,12 @@ module egret {
 
         /**
          * @private
-         * 
-         * @param value 
          */
         private setMatrix(value:Array<number>):void {
             for (var i = 0; i < 20; i++) {
                 this.$matrix[i] = (value && value[i]) || 0;
             }
+            this.invalidate();
         }
     }
 }

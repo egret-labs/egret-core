@@ -170,7 +170,7 @@ module egret.web {
 
             throw new Error ("sound not loaded!");
 
-            return 0;
+            //return 0;
         }
 
 
@@ -189,7 +189,6 @@ module egret.web {
             var request = new XMLHttpRequest();
             request.open("GET", url, true);
             request.responseType = "arraybuffer";
-            console.log("loadWebAudio");
             request.onload = function () {
                 self._arrayBuffer = request.response;
 

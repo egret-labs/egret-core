@@ -124,7 +124,7 @@ class Main extends egret.DisplayObjectContainer {
         sky.width = stageW;
         sky.height = stageH;
 
-        var topMask:egret.Shape = new egret.Shape();
+        var topMask = new egret.Shape();
         topMask.graphics.beginFill(0x000000, 0.5);
         topMask.graphics.drawRect(0, 0, stageW, 172);
         topMask.graphics.endFill();
@@ -136,7 +136,7 @@ class Main extends egret.DisplayObjectContainer {
         icon.x = 26;
         icon.y = 33;
 
-        var line:egret.Shape = new egret.Shape();
+        var line = new egret.Shape();
         line.graphics.lineStyle(2,0xffffff);
         line.graphics.moveTo(0,0);
         line.graphics.lineTo(0,117);
@@ -146,24 +146,23 @@ class Main extends egret.DisplayObjectContainer {
         this.addChild(line);
 
 
-        var colorLabel:egret.TextField = new egret.TextField();
+        var colorLabel = new egret.TextField();
         colorLabel.textColor = 0xffffff;
         colorLabel.width = stageW - 172;
         colorLabel.textAlign = "center";
         colorLabel.text = "Hello Egret";
         colorLabel.size = 24;
-        colorLabel.textColor = 0x00ff0c;
         colorLabel.x = 172;
         colorLabel.y = 80;
         this.addChild(colorLabel);
 
-        var textfield:egret.TextField = new egret.TextField();
+        var textfield = new egret.TextField();
         this.addChild(textfield);
         textfield.alpha = 0;
         textfield.width = stageW - 172;
         textfield.textAlign = egret.HorizontalAlign.CENTER;
         textfield.size = 24;
-        textfield.textColor = 0x00ff0c;
+        textfield.textColor = 0xffffff;
         textfield.x = 172;
         textfield.y = 135;
         this.textfield = textfield;
@@ -178,7 +177,7 @@ class Main extends egret.DisplayObjectContainer {
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.
      */
     private createBitmapByName(name:string):egret.Bitmap {
-        var result:egret.Bitmap = new egret.Bitmap();
+        var result = new egret.Bitmap();
         var texture:egret.Texture = RES.getRes(name);
         result.texture = texture;
         return result;
@@ -191,14 +190,14 @@ class Main extends egret.DisplayObjectContainer {
     private startAnimation(result:Array<any>):void {
         var self:any = this;
 
-        var parser:egret.HtmlTextParser = new egret.HtmlTextParser();
+        var parser = new egret.HtmlTextParser();
         var textflowArr:Array<Array<egret.ITextElement>> = [];
         for (var i:number = 0; i < result.length; i++) {
             textflowArr.push(parser.parser(result[i]));
         }
 
-        var textfield:egret.TextField = self.textfield;
-        var count:number = -1;
+        var textfield = self.textfield;
+        var count = -1;
         var change:Function = function () {
             count++;
             if (count >= textflowArr.length) {
