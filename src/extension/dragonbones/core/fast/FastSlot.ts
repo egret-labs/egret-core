@@ -282,7 +282,7 @@ module dragonBones {
                 );
             }
 
-            if (this._displayIndex >= 0) {
+            if (this._displayIndex >= 0 && this._displayIndex < this._displayDataList.length) {
                 this._origin.copy(this._displayDataList[this._displayIndex][0].transform);
             }
             
