@@ -10638,6 +10638,7 @@ var egret;
             for (var i = 0; i < 20; i++) {
                 this.$matrix[i] = (value && value[i]) || 0;
             }
+            this.invalidate();
         };
         return ColorMatrixFilter;
     }(egret.Filter));
