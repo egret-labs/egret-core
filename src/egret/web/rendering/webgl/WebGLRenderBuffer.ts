@@ -123,17 +123,20 @@ module egret.web {
          * 初始化顶点数组和缓存
          */
         private size:number = 2000;
+        private vertexMaxSize:number = 2000 * 4;
         public vertices:Float32Array = null;
         private vertSize:number = 5;
         public indices:Uint16Array = null;
+        private indicesForMesh:Uint16Array = null;
         public vertexBuffer;
         public indexBuffer;
         public initVertexArrayObjects() {
-            var numVerts = this.size * 4 * this.vertSize;
-            var numIndices = this.size * 6;
+            var numVerts = this.vertexMaxSize * this.vertSize;
+            var numIndices = this.vertexMaxSize * 3 / 2;
 
             this.vertices = new Float32Array(numVerts);
             this.indices = new Uint16Array(numIndices);
+            this.indicesForMesh = new Uint16Array(numIndices);
 
             for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
                 this.indices[i + 0] = j + 0;
@@ -484,6 +487,125 @@ module egret.web {
             }
         }
 
+        private hasMesh: boolean = false;
+        private prevIsMesh: boolean = false;
+
+        public drawMesh(texture:BitmapData,
+                         sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
+                         destX:number, destY:number, destWidth:number, destHeight:number,
+                         textureSourceWidth:number, textureSourceHeight:number,
+                         meshUVs:number[], meshVertices:number[], meshIndices:number[]
+                         ):void {
+            if (this.contextLost) {
+                return;
+            }
+            if (!texture) {
+                return;
+            }
+            //if (this.filters) {
+            //    for (var i = 0; i < 1; i++) {
+            //        var filter:Filter = this.filters[0];
+            //        if (filter.type == "glow") {
+            //            this.useGlow(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
+            //            return;
+            //        }
+            //    }
+            //}
+            this.createWebGLTexture(texture);
+            var webGLTexture = texture["webGLTexture"][this.glID];
+            if (!webGLTexture) {
+                return;
+            }
+
+            var count = meshIndices.length / 3;
+
+            //if (this.currentBatchSize >= this.size - 1) {
+            if (this.vertexIndex >= this.vertexMaxSize - 1) {
+                this.$drawWebGL();
+                this.currentBaseTexture = webGLTexture;
+                //this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: this.currentBaseTexture, count: 0});
+                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: this.currentBaseTexture, count: count});
+            }
+            //else if (webGLTexture !== this.currentBaseTexture) {
+            else {
+                this.currentBaseTexture = webGLTexture;
+                //this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: this.currentBaseTexture, count: 0});
+                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: this.currentBaseTexture, count: count});
+            }
+
+            //计算出绘制矩阵，之后把矩阵还原回之前的
+            var locWorldTransform = this.globalMatrix;
+            var originalA:number = locWorldTransform.a;
+            var originalB:number = locWorldTransform.b;
+            var originalC:number = locWorldTransform.c;
+            var originalD:number = locWorldTransform.d;
+            var originalTx:number = locWorldTransform.tx;
+            var originalTy:number = locWorldTransform.ty;
+            if (destX != 0 || destY != 0) {
+                locWorldTransform.append(1, 0, 0, 1, destX, destY);
+            }
+            if (sourceWidth / destWidth != 1 || sourceHeight / destHeight != 1) {
+                locWorldTransform.append(destWidth / sourceWidth, 0, 0, destHeight / sourceHeight, 0, 0);
+            }
+            var a:number = locWorldTransform.a;
+            var b:number = locWorldTransform.b;
+            var c:number = locWorldTransform.c;
+            var d:number = locWorldTransform.d;
+            var tx:number = locWorldTransform.tx;
+            var ty:number = locWorldTransform.ty;
+
+            locWorldTransform.a = originalA;
+            locWorldTransform.b = originalB;
+            locWorldTransform.c = originalC;
+            locWorldTransform.d = originalD;
+            locWorldTransform.tx = originalTx;
+            locWorldTransform.ty = originalTy;
+
+            var vertices:Float32Array = this.vertices;
+            var indices:Uint16Array = this.indicesForMesh;
+            //var index:number = this.currentBatchSize * 4 * this.vertSize;
+            var index:number = this.vertexIndex * this.vertSize;
+            var alpha:number = this._globalAlpha;
+
+            var i = 0, iD = 0, l = 0;
+            var u = 0, v = 0, x = 0, y = 0;
+            for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                iD = i * 5 / 2;
+                x = meshVertices[i];
+                y = meshVertices[i + 1];
+                u = meshUVs[i];
+                v = meshUVs[i + 1];
+
+                // xy
+                vertices[index + iD + 0] = a * x + c * y + tx;
+                vertices[index + iD + 1] = b * x + d * y + ty;
+                // uv
+                vertices[index + iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                vertices[index + iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                // alpha
+                vertices[index + iD + 4] = alpha;
+            }
+
+            if (!this.hasMesh) {
+                this.hasMesh = true;
+                for (i = 0, l = this.indexIndex; i < l; ++i) {
+                    this.indicesForMesh[i] = this.indices[i];
+                }
+            }
+
+            for (i = 0, l = meshIndices.length; i < l; ++i) {
+                indices[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+            }
+
+            this.prevIsMesh = true;
+            this.vertexIndex += meshUVs.length / 2;
+            this.indexIndex += meshIndices.length;
+
+            //this.currentBatchSize++;
+
+            //this.drawData[this.drawData.length - 1].count++;
+        }
+
         private currentBatchSize:number = 0;
 
         /**
@@ -500,7 +622,8 @@ module egret.web {
                 return;
             }
             var webGLTexture = <Texture>texture;
-            if (this.currentBatchSize >= this.size - 1) {
+            // if (this.currentBatchSize >= this.size - 1) {
+            if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
             }
 
@@ -532,15 +655,16 @@ module egret.web {
             this.filterType = "";
             this.filter = null;
 
-            if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture) {
+            if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.prevIsMesh) {
                 // merge draw
             } else {
                 this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: 0});
             }
 
             this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
-            this.currentBatchSize++;
-            this.drawData[this.drawData.length - 1].count++;
+            // this.currentBatchSize++;
+            // this.drawData[this.drawData.length - 1].count++;
+            this.drawData[this.drawData.length - 1].count += 2;
 
         }
 
@@ -674,8 +798,9 @@ module egret.web {
                 this.drawUvRect(sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight);
                 this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, filter: filter, count: 0});
             }
-            this.currentBatchSize++;
-            this.drawData[this.drawData.length - 1].count++;
+            // this.currentBatchSize++;
+            // this.drawData[this.drawData.length - 1].count++;
+            this.drawData[this.drawData.length - 1].count += 2;
 
             if(output) {
                 // 确保完全绘制完成后才能释放output
