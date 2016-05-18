@@ -13163,11 +13163,6 @@ var egret;
                     this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
                 }
             };
-            p.$update = function () {
-                if (this.showFPS) {
-                    this.fpsDisplay.update(0, 0, 0, 0, 0);
-                }
-            };
             /**
              * @private
              *
@@ -14394,15 +14389,6 @@ var egret;
                     if (requestRenderingFlag) {
                         this.render(false, this.costEnterFrame + t2 - t1);
                     }
-                    var playerList = this.playerList;
-                    var length = playerList.length;
-                    if (length == 0) {
-                        return;
-                    }
-                    for (var i = 0; i < length; i++) {
-                        playerList[i].$update();
-                    }
-                    sys.$requestRenderingFlag = false;
                     return;
                 }
                 this.lastCount += this.frameInterval;

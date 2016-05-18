@@ -225,15 +225,6 @@ module egret.sys {
                 if (requestRenderingFlag) {
                     this.render(false, this.costEnterFrame+t2-t1);
                 }
-                var playerList = this.playerList;
-                var length = playerList.length;
-                if (length == 0) {
-                    return;
-                }
-                for (var i = 0; i < length; i++) {
-                    playerList[i].$update();
-                }
-                $requestRenderingFlag = false;
                 return;
             }
             this.lastCount += this.frameInterval;

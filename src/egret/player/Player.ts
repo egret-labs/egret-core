@@ -199,12 +199,6 @@ module egret.sys {
                 this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
             }
         }
-        
-        public $update():void {
-            if(this.showFPS) {
-                this.fpsDisplay.update(0, 0, 0, 0, 0);
-            }
-        }
 
         /**
          * @private

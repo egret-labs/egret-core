@@ -9065,7 +9065,6 @@ declare module egret.sys {
          * 渲染屏幕
          */
         $render(triggerByFrame: boolean, costTicker: number): void;
-        $update(): void;
         /**
          * @private
          *
