@@ -585,6 +585,7 @@ module egret.web {
                 this.cacheArrays(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
             }
 
+            this.prevIsMesh = false;
         }
 
         /**

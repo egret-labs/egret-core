@@ -6263,6 +6263,7 @@ var egret;
                     }
                     this.cacheArrays(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
                 }
+                this.prevIsMesh = false;
             };
             /**
              * 绘制材质并应用滤镜
