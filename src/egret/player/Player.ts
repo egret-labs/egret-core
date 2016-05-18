@@ -199,6 +199,12 @@ module egret.sys {
                 this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
             }
         }
+        
+        public $update():void {
+            if(this.showFPS) {
+                this.fpsDisplay.update(0, 0, 0, 0, 0);
+            }
+        }
 
         /**
          * @private
@@ -525,7 +531,7 @@ module egret.sys {
             this.costTicker += costTicker;
             if (this.totalTime >= 1000) {
 
-                var lastFPS = Math.ceil(this.totalTick * 1000 / this.totalTime);
+                var lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), sys.$ticker.$frameRate);
                 var lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
                 var lastDirtyRatio = Math.round(this.dirtyRatio / this.totalTick);
                 var lastCostDirty = Math.round(this.costDirty / this.totalTick);
