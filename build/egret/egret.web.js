@@ -1265,6 +1265,9 @@ var egret;
                     var isfullscreen = !!_this.video['webkitDisplayingFullscreen'];
                     if (!isfullscreen) {
                         _this.checkFullScreen(false);
+                        if (!egret.Capabilities.isMobile) {
+                            _this._fullscreen = isfullscreen;
+                        }
                     }
                 };
                 this._fullscreen = true;
@@ -1376,6 +1379,11 @@ var egret;
                     video.setAttribute("webkit-playsinline", "true");
                     this.setFullScreenMonitor(false);
                     egret.startTick(this.markDirty, this);
+                    if (egret.Capabilities.isMobile) {
+                        this.video.currentTime = 0;
+                        this.onVideoEnded();
+                        return;
+                    }
                 }
                 video.play();
             };

@@ -11692,6 +11692,7 @@ var egret;
     locale_strings[1040] = "hitTestPoint can not detect crossOrigin images! Please check if the display object has crossOrigin elements.";
     locale_strings[1041] = "egret.MainContext.runtimeType is deprecated, please use egret.Capabilities.runtimeType replace";
     locale_strings[1042] = "The parameters passed in the region needs is an integer in drawToTexture method. Otherwise, some browsers will draw abnormal.";
+    locale_strings[1042] = "Compile errors in {0}, the attribute name: {1}, the attribute value: {2}.";
     //gui  3000-3099
     locale_strings[3000] = "Theme configuration file failed to load: {0}";
     locale_strings[3001] = "Cannot find the skin name which is configured in Theme: {0}";
@@ -11832,6 +11833,7 @@ var egret;
     locale_strings[1040] = "hitTestPoint 不能对跨域图片进行检测! 请检查该显示对象内是否含有跨域元素";
     locale_strings[1041] = "egret.MainContext.runtimeType 已废弃,请使用egret.Capabilities.runtimeType 代替";
     locale_strings[1042] = "drawToTexture方法传入的区域各个参数需要为整数,否则某些浏览器绘制会出现异常";
+    locale_strings[1043] = "{0} 中存在编译错误，属性名 : {1}，属性值 : {2}";
     //gui  3000-3099
     locale_strings[3000] = "主题配置文件加载失败: {0}";
     locale_strings[3001] = "找不到主题中所配置的皮肤类名: {0}";
@@ -13161,6 +13163,11 @@ var egret;
                     this.fpsDisplay.update(drawCalls, dirtyRatio, t1 - t, t2 - t1, costTicker);
                 }
             };
+            p.$update = function () {
+                if (this.showFPS) {
+                    this.fpsDisplay.update(0, 0, 0, 0, 0);
+                }
+            };
             /**
              * @private
              *
@@ -13397,7 +13404,7 @@ var egret;
                 this.costRender += costRender;
                 this.costTicker += costTicker;
                 if (this.totalTime >= 1000) {
-                    var lastFPS = Math.ceil(this.totalTick * 1000 / this.totalTime);
+                    var lastFPS = Math.min(Math.ceil(this.totalTick * 1000 / this.totalTime), sys.$ticker.$frameRate);
                     var lastDrawCalls = Math.round(this.drawCalls / this.totalTick);
                     var lastDirtyRatio = Math.round(this.dirtyRatio / this.totalTick);
                     var lastCostDirty = Math.round(this.costDirty / this.totalTick);
@@ -14387,6 +14394,15 @@ var egret;
                     if (requestRenderingFlag) {
                         this.render(false, this.costEnterFrame + t2 - t1);
                     }
+                    var playerList = this.playerList;
+                    var length = playerList.length;
+                    if (length == 0) {
+                        return;
+                    }
+                    for (var i = 0; i < length; i++) {
+                        playerList[i].$update();
+                    }
+                    sys.$requestRenderingFlag = false;
                     return;
                 }
                 this.lastCount += this.frameInterval;
