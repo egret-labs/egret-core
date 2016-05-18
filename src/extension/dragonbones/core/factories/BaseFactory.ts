@@ -612,13 +612,13 @@ module dragonBones {
 			var slotData:SlotData;
 			var slot:FastSlot;
 			for(var i:number = 0; i < slotDataList.length; i++){
+				slotDisplayDataList.length = 0;
 				displayList.length = 0;
 				slotData = slotDataList[i];
 				slot = this._generateFastSlot();
 				slot.initWithSlotData(slotData);
 				
-				
-				var l:number = slotData.displayDataList.length;
+				var l: number = slotData.displayDataList.length;
 				while(l--){
 					var displayData:DisplayData = slotData.displayDataList[l];
 					

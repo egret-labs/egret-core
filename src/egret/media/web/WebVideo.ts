@@ -172,6 +172,12 @@ module egret.web {
                 this.setFullScreenMonitor(false);
 
                 egret.startTick(this.markDirty, this);
+                
+                if (egret.Capabilities.isMobile) {
+                    this.video.currentTime = 0;
+                    this.onVideoEnded();
+                    return;
+                }
             }
 
             video.play();
@@ -225,6 +231,10 @@ module egret.web {
             var isfullscreen = !!this.video['webkitDisplayingFullscreen'];
             if (!isfullscreen) {
                 this.checkFullScreen(false);
+                
+                if (!egret.Capabilities.isMobile) {
+                    this._fullscreen = isfullscreen;
+                }
             }
         };
 

@@ -1265,6 +1265,9 @@ var egret;
                     var isfullscreen = !!_this.video['webkitDisplayingFullscreen'];
                     if (!isfullscreen) {
                         _this.checkFullScreen(false);
+                        if (!egret.Capabilities.isMobile) {
+                            _this._fullscreen = isfullscreen;
+                        }
                     }
                 };
                 this._fullscreen = true;
@@ -1376,6 +1379,11 @@ var egret;
                     video.setAttribute("webkit-playsinline", "true");
                     this.setFullScreenMonitor(false);
                     egret.startTick(this.markDirty, this);
+                    if (egret.Capabilities.isMobile) {
+                        this.video.currentTime = 0;
+                        this.onVideoEnded();
+                        return;
+                    }
                 }
                 video.play();
             };
@@ -6247,7 +6255,7 @@ var egret;
                     this.filterType = "";
                     this.filter = null;
                     var count = 2;
-                    if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.prevIsMesh) {
+                    if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == 0 /* TEXTURE */ && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.prevIsMesh && !this.drawData[this.drawData.length - 1].filter) {
                         this.drawData[this.drawData.length - 1].count += count;
                     }
                     else {
@@ -6616,6 +6624,8 @@ var egret;
                     }
                     else {
                         if (!shaderStarted || this.drawingTexture != drawingTexture) {
+                            this.filterType = "";
+                            this.filter = null;
                             this.drawingTexture = drawingTexture;
                             this.startShader();
                             shaderStarted = true;
