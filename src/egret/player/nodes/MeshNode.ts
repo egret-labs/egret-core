@@ -75,6 +75,10 @@ module egret.sys {
          */
         public indices:number[];
         /**
+         * 顶点索引。
+         */
+        public bounds:Rectangle = new Rectangle();;
+        /**
          * 绘制一次位图
          */
         public drawMesh(sourceX:number, sourceY:number, sourceW:number, sourceH:number,

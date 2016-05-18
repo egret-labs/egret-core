@@ -109,6 +109,8 @@ module egret {
             }
 
             bounds.copyFrom(this._bounds);
+
+            node.bounds.copyFrom(this._bounds);
         }
     }
 }

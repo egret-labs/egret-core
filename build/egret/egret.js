@@ -6319,6 +6319,7 @@ var egret;
                 }
             }
             bounds.copyFrom(this._bounds);
+            node.bounds.copyFrom(this._bounds);
         };
         return Mesh;
     }(egret.Bitmap));
@@ -15163,12 +15164,17 @@ var egret;
                  * 控制在缩放时是否对位图进行平滑处理。
                  */
                 this.smoothing = true;
+                /**
+                 * 顶点索引。
+                 */
+                this.bounds = new egret.Rectangle();
                 this.type = 7 /* MeshNode */;
                 this.vertices = [];
                 this.uvs = [];
                 this.indices = [];
             }
             var d = __define,c=MeshNode,p=c.prototype;
+            ;
             /**
              * 绘制一次位图
              */

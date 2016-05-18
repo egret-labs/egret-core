@@ -10060,6 +10060,10 @@ declare module egret.sys {
          */
         indices: number[];
         /**
+         * 顶点索引。
+         */
+        bounds: Rectangle;
+        /**
          * 绘制一次位图
          */
         drawMesh(sourceX: number, sourceY: number, sourceW: number, sourceH: number, drawX: number, drawY: number, drawW: number, drawH: number): void;

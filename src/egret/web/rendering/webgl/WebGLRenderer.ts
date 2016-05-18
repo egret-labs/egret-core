@@ -573,7 +573,7 @@ module egret.web {
             }
             while (pos < length) {
                 buffer.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
-                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices);
+                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
             }
             if (m) {
                 buffer.restoreTransform();
