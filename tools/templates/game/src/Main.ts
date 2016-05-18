@@ -117,7 +117,7 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene():void {
-        var sky:egret.Bitmap = this.createBitmapByName("bgImage");
+        var sky:egret.Bitmap = this.createBitmapByName("bg_jpg");
         this.addChild(sky);
         var stageW:number = this.stage.stageWidth;
         var stageH:number = this.stage.stageHeight;
@@ -131,7 +131,7 @@ class Main extends egret.DisplayObjectContainer {
         topMask.y = 33;
         this.addChild(topMask);
 
-        var icon:egret.Bitmap = this.createBitmapByName("egretIcon");
+        var icon:egret.Bitmap = this.createBitmapByName("egret_icon_png");
         this.addChild(icon);
         icon.x = 26;
         icon.y = 33;
@@ -169,7 +169,7 @@ class Main extends egret.DisplayObjectContainer {
 
         //根据name关键字，异步获取一个json配置文件，name属性请参考resources/resource.json配置文件的内容。
         // Get asynchronously a json configuration file according to name keyword. As for the property of name please refer to the configuration file of resources/resource.json.
-        RES.getResAsync("description", this.startAnimation, this)
+        RES.getResAsync("description_json", this.startAnimation, this)
     }
 
     /**
