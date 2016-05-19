@@ -3244,6 +3244,7 @@ var egret;
                  * */
                 this.loop = false;
                 this.isPlayed = false;
+                this.firstPlay = true;
                 /**
                  * @inheritDoc
                  */
@@ -3312,9 +3313,11 @@ var egret;
                     egret.log('onPlaying');
                     video['setVideoRect'](0, 0, 1, 1);
                     video.pause();
+                    video.currentTime = 0;
                     self.loaded = true;
                     self.loading = false;
                     removeListeners();
+                    //video["setVideoVisible"](false);
                     self.dispatchEventWith(egret.Event.COMPLETE);
                     video.addEventListener('pause', function () {
                         self.paused = true;
@@ -3354,19 +3357,31 @@ var egret;
                     this.once(egret.Event.COMPLETE, function (e) { return _this.play(startTime, loop); }, this);
                     return;
                 }
-                this.originVideo.currentTime = startTime || 0;
-                this.startPlay();
+                var haveStartTime = false;
+                if (startTime != undefined) {
+                    this.originVideo.currentTime = startTime || 0;
+                    haveStartTime = true;
+                }
+                this.startPlay(haveStartTime);
             };
             /**
              * @private
              * */
-            p.startPlay = function () {
-                this.setVideoSize();
+            p.startPlay = function (haveStartTime) {
+                if (haveStartTime === void 0) { haveStartTime = false; }
                 if (!this.isAddToStage || !this.loaded) {
                     return;
                 }
+                this.firstPlay = false;
+                this.setVideoSize();
                 this.isPlayed = true;
-                this.originVideo.play();
+                //this.originVideo["setVideoVisible"](true);
+                if (!haveStartTime && this.paused && this.position != 0) {
+                    this.originVideo['resume']();
+                }
+                else {
+                    this.originVideo.play();
+                }
                 egret.startTick(this.markDirty, this);
             };
             /**
@@ -3407,8 +3422,9 @@ var egret;
                     var loader = new native.NativeImageLoader();
                     loader.load(value);
                     loader.addEventListener(egret.Event.COMPLETE, function () {
-                        _this.posterData = new egret.Bitmap(loader.data);
+                        _this.posterData = loader.data;
                         _this.markDirty();
+                        _this.$invalidateContentBounds();
                     }, this);
                 }
             );
@@ -3450,7 +3466,6 @@ var egret;
              * @inheritDoc
              */
             p.pause = function () {
-                egret.log('pause');
                 this.originVideo.pause();
             };
             d(p, "bitmapData"
@@ -3484,7 +3499,7 @@ var egret;
              */
             p.$onAddToStage = function (stage, nestLevel) {
                 this.isAddToStage = true;
-                this.startPlay();
+                //this.startPlay();
                 if (this.originVideo) {
                     this.originVideo["setVideoVisible"](true);
                 }
@@ -3537,6 +3552,8 @@ var egret;
             p.$setHeight = function (value) {
                 this.heightSet = +value || 0;
                 this.setVideoSize();
+                this.$invalidate();
+                this.$invalidateContentBounds();
                 return _super.prototype.$setHeight.call(this, value);
             };
             /**
@@ -3545,6 +3562,8 @@ var egret;
             p.$setWidth = function (value) {
                 this.widthSet = +value || 0;
                 this.setVideoSize();
+                this.$invalidate();
+                this.$invalidateContentBounds();
                 return _super.prototype.$setWidth.call(this, value);
             };
             /**
@@ -3576,8 +3595,28 @@ var egret;
                     }
                     else {
                         video['setFullScreen'](false);
-                        video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
+                        if (!this.firstPlay) {
+                            video['setVideoRect'](this.x, this.y, this.widthSet, this.heightSet);
+                        }
+                        else {
+                            video['setVideoRect'](this.x, this.y, 0, 0);
+                        }
                     }
+                }
+            };
+            /**
+             * @private
+             */
+            p.$measureContentBounds = function (bounds) {
+                var posterData = this.posterData;
+                // if (bitmapData) {
+                //     bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
+                // }
+                if (posterData) {
+                    bounds.setTo(0, 0, this.getPlayWidth(), this.getPlayHeight());
+                }
+                else {
+                    bounds.setEmpty();
                 }
             };
             /**
