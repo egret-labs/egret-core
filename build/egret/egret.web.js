@@ -2385,12 +2385,10 @@ var egret;
                     }
                     else {
                         window.setTimeout(function () {
-                            if (self.inputElement) {
-                                if (self.inputElement.selectionStart && self.inputElement.selectionEnd) {
-                                    if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
-                                        self.textValue = self.inputElement.value;
-                                        egret.Event.dispatchEvent(self, "updateText", false);
-                                    }
+                            if (self.inputElement && self.inputElement.selectionStart && self.inputElement.selectionEnd) {
+                                if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                                    self.textValue = self.inputElement.value;
+                                    egret.Event.dispatchEvent(self, "updateText", false);
                                 }
                             }
                         }, 0);
@@ -2398,7 +2396,7 @@ var egret;
                 }
                 else {
                     window.setTimeout(function () {
-                        if (self.inputElement.selectionStart == self.inputElement.selectionEnd) {
+                        if (self.inputElement && self.inputElement.selectionStart == self.inputElement.selectionEnd) {
                             self.textValue = self.inputElement.value;
                             egret.Event.dispatchEvent(self, "updateText", false);
                         }
