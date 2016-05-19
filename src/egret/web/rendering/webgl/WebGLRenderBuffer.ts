@@ -711,8 +711,8 @@ module egret.web {
                     }
                     filter = this.blurFilter;
 
-                    offsetX = filter.blurX * 0.028 * output.$getWidth();
-                    offsetY = filter.blurY * 0.028 * output.$getHeight();
+                    offsetX = this.blurFilter.blurX * 0.028 * output.$getWidth();
+                    offsetY = this.blurFilter.blurY * 0.028 * output.$getHeight();
                 }
                 this.saveTransform();
                 this.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
@@ -725,8 +725,8 @@ module egret.web {
                     offsetY = filter.blurY * 0.028 * realHeight;
                 }
                 this.cacheArrays(sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
-
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, filter: filter, count: meshIndices ? meshIndices.length / 3 : 2});
+                var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
+                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, filter: filter, count: meshIndices ? meshIndices.length / 3 : 2, uv: uv});
             }
 
             if(output) {
@@ -956,6 +956,21 @@ module egret.web {
             this.indexIndex += meshIndices.length;
         }
 
+        private getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
+            var uv = [
+                0, 0,
+                1, 1
+            ];
+            for (var i = 0, l = uv.length; i < l; i += 2) {
+                var u = uv[i];
+                var v = uv[i + 1];
+                // uv
+                uv[i] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                uv[i + 1] = (sourceY + v * sourceHeight) / textureSourceHeight;
+            }
+            return uv;
+        }
+
         private drawData = [];
         public $drawCalls:number = 0;
         public $computeDrawCall:boolean = false;
@@ -993,9 +1008,36 @@ module egret.web {
                 // 根据filter开启shader
                 if(data.filter) {
                     var filter = data.filter;
-                    if(filter != this.filter) {
+
+                    // 如果是blur，需要判断是否重新上传uv坐标
+                    if(filter.type == "blur") {
+                        var uvDirty = false;
+                        if(data.uv) {
+                            if(this.uv) {
+                                if(this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
+                                    this.uv = data.uv;
+                                    uvDirty = true;
+                                } else {
+                                    uvDirty = false;
+                                }
+                            } else {
+                                this.uv = data.uv;
+                                uvDirty = true;
+                            }
+                        } else {
+                            if(this.uv) {
+                                this.uv = null;
+                                uvDirty = true;
+                            } else {
+                                uvDirty = false;
+                            }
+                        }
+                    }
+
+                    if(filter != this.filter || uvDirty) {
                         this.filterType = filter.type;
                         this.filter = filter;
+                        this.uv = data.uv;
                         this.startShader();
                         shaderStarted = false;
                     }
@@ -1058,6 +1100,7 @@ module egret.web {
 
         private filterType;
         private filter;
+        private uv;
         public bindBuffer:boolean = false;
         private drawingTexture:boolean;
 
@@ -1096,6 +1139,12 @@ module egret.web {
             else if (this.filterType == "blur") {
                 shader = this.renderContext.shaderManager.blurShader;
                 shader.uniforms.blur.value = {x: this.filter.blurX, y: this.filter.blurY};
+                if(this.uv) {
+                    var uv = this.uv;
+                    shader.uniforms.uBounds.value = {x: uv[0], y: uv[1], z: uv[2], w: uv[3]};
+                } else {
+                    shader.uniforms.uBounds.value = {x: 0, y: 0, z: 1, w: 1};
+                }
             }
             else {
                 if(this.drawingTexture) {
