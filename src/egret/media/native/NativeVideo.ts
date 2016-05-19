@@ -301,6 +301,8 @@ module egret.native {
             if(this.originVideo){
                 this.originVideo["setVideoVisible"](true);
             }
+            this.$invalidate();
+            this.$invalidateContentBounds();
             super.$onAddToStage(stage,nestLevel);
         }
         /**
