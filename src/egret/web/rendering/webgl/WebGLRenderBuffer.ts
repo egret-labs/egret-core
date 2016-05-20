@@ -101,6 +101,21 @@ module egret.web {
         public clearFilters() {
             this.filters.length = 0;
         }
+        public getFilters() {
+            var filters = [];
+            for(var i = 0; i < this.filters.length; i++) {
+                var _filters = this.filters[i];
+                if(_filters) {
+                    for(var j = 0; j < _filters.length; j++) {
+                        var filter = _filters[j];
+                        if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
+                            filters.push(filter);
+                        }
+                    }
+                }
+            }
+            return filters;
+        }
 
         /**
          * webgl渲染上下文
@@ -123,17 +138,20 @@ module egret.web {
          * 初始化顶点数组和缓存
          */
         private size:number = 2000;
+        private vertexMaxSize:number = 2000 * 4;
         public vertices:Float32Array = null;
         private vertSize:number = 5;
         public indices:Uint16Array = null;
+        private indicesForMesh:Uint16Array = null;
         public vertexBuffer;
         public indexBuffer;
         public initVertexArrayObjects() {
-            var numVerts = this.size * 4 * this.vertSize;
-            var numIndices = this.size * 6;
+            var numVerts = this.vertexMaxSize * this.vertSize;
+            var numIndices = this.vertexMaxSize * 3 / 2;
 
             this.vertices = new Float32Array(numVerts);
             this.indices = new Uint16Array(numIndices);
+            this.indicesForMesh = new Uint16Array(numIndices);
 
             for (var i = 0, j = 0; i < numIndices; i += 6, j += 4) {
                 this.indices[i + 0] = j + 0;
@@ -452,15 +470,7 @@ module egret.web {
             if (!texture) {
                 return;
             }
-            //if (this.filters) {
-            //    for (var i = 0; i < 1; i++) {
-            //        var filter:Filter = this.filters[0];
-            //        if (filter.type == "glow") {
-            //            this.useGlow(image, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            //            return;
-            //        }
-            //    }
-            //}
+
             var webGLTexture:WebGLTexture;
             if(texture["texture"]) {
                 // 如果是render target
@@ -484,6 +494,37 @@ module egret.web {
             }
         }
 
+        private hasMesh: boolean = false;
+        private prevIsMesh: boolean = false;
+        private vertexIndex: number = 0;
+        private indexIndex: number = 0;
+
+        public drawMesh(texture:BitmapData,
+                         sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
+                         destX:number, destY:number, destWidth:number, destHeight:number,
+                         textureSourceWidth:number, textureSourceHeight:number,
+                         meshUVs:number[], meshVertices:number[], meshIndices:number[], bounds:Rectangle
+                         ):void {
+            if (this.renderContext.contextLost) {
+                return;
+            }
+            if (!texture) {
+                return;
+            }
+
+            this.createWebGLTexture(texture);
+            var webGLTexture = texture["webGLTexture"][this.renderContext.glID];
+            if (!webGLTexture) {
+                return;
+            }
+
+            this.drawTexture(webGLTexture,
+                sourceX, sourceY, sourceWidth, sourceHeight,
+                destX, destY, destWidth, destHeight,
+                textureSourceWidth, textureSourceHeight, meshUVs, meshVertices, meshIndices, bounds);
+
+        }
+
         private currentBatchSize:number = 0;
 
         /**
@@ -492,7 +533,8 @@ module egret.web {
          * */
         public drawTexture(texture:WebGLTexture,
                             sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                            destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number):void {
+                            destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number,
+                            meshUVs?:number[], meshVertices?:number[], meshIndices?:number[], bounds?:Rectangle):void {
             if (this.renderContext.contextLost) {
                 return;
             }
@@ -500,47 +542,48 @@ module egret.web {
                 return;
             }
             var webGLTexture = <Texture>texture;
-            if (this.currentBatchSize >= this.size - 1) {
+
+            if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
             }
 
-            if(this.filters.length > 0) {// 应用滤镜
-                // 构建filters列表
-                var filters = [];
-                for(var i = 0; i < this.filters.length; i++) {
-                    var _filters = this.filters[i];
-                    if(_filters) {
-                        for(var j = 0; j < _filters.length; j++) {
-                            var filter = _filters[j];
-                            if(filter && filter.type != "glow") {// 暂时屏蔽掉发光滤镜
-                                filters.push(filter);
-                            }
-                        }
-                    }
+            var filters = this.getFilters();
+            if(filters.length > 0) {
+                var width = destWidth;
+                var height = destHeight;
+                var offsetX = 0;
+                var offsetY = 0;
+                if(bounds) {
+                    width = bounds.width;
+                    height = bounds.height;
+                    offsetX = -bounds.x;
+                    offsetY = -bounds.y;
                 }
-                var len = filters.length;
-
-                if(len > 0) {
-                    this.drawTextureWidthFilter(filters, webGLTexture,
-                        sourceX, sourceY, sourceWidth, sourceHeight,
-                        destX, destY, destWidth, destHeight, textureWidth, textureHeight,
-                        destWidth, destHeight, 0, 0);// 后四个参数用于draw mesh
-                    return;
-                }
-            }
-
-            this.filterType = "";
-            this.filter = null;
-
-            if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture && !this.drawData[this.drawData.length - 1].filter) {
-                // merge draw
+                this.drawTextureWidthFilter(filters, webGLTexture,
+                    sourceX, sourceY, sourceWidth, sourceHeight,
+                    destX, destY, destWidth, destHeight, textureWidth, textureHeight,
+                    width, height, offsetX, offsetY, meshUVs, meshVertices, meshIndices);// 后参数用于draw mesh
             } else {
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: 0});
+                this.filterType = "";
+                this.filter = null;
+
+                var count = meshIndices ? meshIndices.length / 3 : 2;
+                if (this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.TEXTURE && webGLTexture == this.drawData[this.drawData.length - 1].texture && (this.prevIsMesh == !!meshUVs) && !this.drawData[this.drawData.length - 1].filter) {
+                    this.drawData[this.drawData.length - 1].count += count;
+                } else {
+                    this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, count: count});
+                }
+
+                this.cacheArrays(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight,
+                    meshUVs, meshVertices, meshIndices);
             }
 
-            this.drawUvRect(sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
-            this.currentBatchSize++;
-            this.drawData[this.drawData.length - 1].count++;
+            if(meshUVs) {
+                this.hasMesh = true;
+                this.prevIsMesh = true;
+            } else {
+                this.prevIsMesh = false;
+            }
 
         }
 
@@ -553,22 +596,28 @@ module egret.web {
         private drawTextureWidthFilter(filters:any, webGLTexture:WebGLTexture,
                             sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
                             destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number,
-                            realWidth:number, realHeight:number, _offsetX:number, _offsetY:number) {
+                            realWidth:number, realHeight:number, _offsetX:number, _offsetY:number,
+                            meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]) {
 
             var len = filters.length;
 
-            destWidth = realWidth;
-            destHeight = realHeight;
-            var gOffsetX = _offsetX;
-            var gOffsetY = _offsetY;
+            // destWidth = realWidth;
+            // destHeight = realHeight;
+            // var gOffsetX = _offsetX;
+            // var gOffsetY = _offsetY;
+            var gOffsetX = 0;
+            var gOffsetY = 0;
 
             // 递归执行滤镜
             var input = null;
             var output = null;
             if(len > 1) {
                 // TODO 可省略
-                input = this.createRenderBuffer(destWidth, destHeight);
-                this.drawToRenderTarget(null, webGLTexture, input, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
+                input = this.createRenderBuffer(realWidth, realHeight);
+                gOffsetX += _offsetX;
+                gOffsetY += _offsetY;
+                this.drawToRenderTarget(null, webGLTexture, input, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true,
+                    meshUVs, meshVertices, meshIndices);
 
                 for(var i = 0; i < len - 1; i++) {
                     var filter = filters[i];
@@ -622,10 +671,12 @@ module egret.web {
                     output = this.createRenderBuffer(input.$getWidth() + offsetX * 2, input.$getHeight() + offsetY * 2);
                     this.drawToRenderTarget(this.blurFilter, input, output, 0, 0, input.$getWidth(), input.$getHeight(), (output.$getWidth() - input.$getWidth()) / 2, (output.$getHeight() - input.$getHeight()) / 2, input.$getWidth(), input.$getHeight(), input.$getWidth(), input.$getHeight());
                 } else {
-                    offsetX = this.blurFilter.blurX * 0.028 * destWidth;
-                    offsetY = this.blurFilter.blurY * 0.028 * destHeight;
-                    output = this.createRenderBuffer(destWidth + offsetX * 2, destHeight + offsetY * 2);
-                    this.drawToRenderTarget(this.blurFilter, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, (output.$getWidth() - destWidth) / 2, (output.$getHeight() - destHeight) / 2, destWidth, destHeight, textureWidth, textureHeight);
+                    offsetX = this.blurFilter.blurX * 0.028 * realWidth;
+                    offsetY = this.blurFilter.blurY * 0.028 * realHeight;
+                    gOffsetX += _offsetX;
+                    gOffsetY += _offsetY;
+                    output = this.createRenderBuffer(realWidth + offsetX * 2, realHeight + offsetY * 2);
+                    this.drawToRenderTarget(this.blurFilter, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, offsetX + _offsetX, offsetY + _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
                 }
                 gOffsetX += offsetX;
                 gOffsetY += offsetY;
@@ -634,8 +685,10 @@ module egret.web {
             // 如果是发光滤镜，绘制光晕
             if(filter.type == "glow") {
                 if(!output) {
-                    output = this.createRenderBuffer(destWidth, destHeight);
-                    this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight, textureWidth, textureHeight);
+                    gOffsetX += _offsetX;
+                    gOffsetY += _offsetY;
+                    output = this.createRenderBuffer(realWidth, realHeight);
+                    this.drawToRenderTarget(null, webGLTexture, output, sourceX, sourceY, sourceWidth, sourceHeight, _offsetX, _offsetY, destWidth, destHeight, textureWidth, textureHeight, true, meshUVs, meshVertices, meshIndices);
                 }
                 // 会调用$drawWebGL
                 this.drawGlow(filter, output, destX - gOffsetX, destY - gOffsetY);
@@ -658,24 +711,23 @@ module egret.web {
                     }
                     filter = this.blurFilter;
 
-                    offsetX = filter.blurX * 0.028 * output.$getWidth();
-                    offsetY = filter.blurY * 0.028 * output.$getHeight();
+                    offsetX = this.blurFilter.blurX * 0.028 * output.$getWidth();
+                    offsetY = this.blurFilter.blurY * 0.028 * output.$getHeight();
                 }
                 this.saveTransform();
                 this.transform(1, 0, 0, -1, 0, output.$getHeight() + 2 * offsetY + (destY - offsetY - gOffsetY) * 2);
-                this.drawUvRect(-offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
+                this.cacheArrays(-offsetX, -offsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, output.$getWidth() + 2 * offsetX, output.$getHeight() + 2 * offsetY, output.$getWidth(), output.$getHeight());
                 this.restoreTransform();
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: output["rootRenderTarget"].texture, filter: filter, count: 0});
+                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: output["rootRenderTarget"].texture, filter: filter, count: 2});
             } else {
                 if (filter.type == "blur") {
-                    offsetX = filter.blurX * 0.028 * destWidth;
-                    offsetY = filter.blurY * 0.028 * destHeight;
+                    offsetX = filter.blurX * 0.028 * realWidth;
+                    offsetY = filter.blurY * 0.028 * realHeight;
                 }
-                this.drawUvRect(sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight);
-                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, filter: filter, count: 0});
+                this.cacheArrays(sourceX - offsetX, sourceY - offsetY, sourceWidth + 2 * offsetX, sourceHeight + 2 * offsetY, destX - offsetX - gOffsetX, destY - offsetY - gOffsetY, destWidth + 2 * offsetX, destHeight + 2 * offsetY, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
+                var uv = this.getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureWidth, textureHeight);
+                this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: webGLTexture, filter: filter, count: meshIndices ? meshIndices.length / 3 : 2, uv: uv});
             }
-            this.currentBatchSize++;
-            this.drawData[this.drawData.length - 1].count++;
 
             if(output) {
                 // 确保完全绘制完成后才能释放output
@@ -692,7 +744,8 @@ module egret.web {
          * */
         private drawToRenderTarget(filter:Filter, input:any, output:WebGLRenderBuffer,
                             sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                            destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number, release:boolean = true) {
+                            destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number, release:boolean = true,
+                            meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]) {
             this.renderContext.pushBuffer(output);
             output.setGlobalAlpha(1);
             output.setTransform(1, 0, 0, 1, 0, 0);
@@ -702,7 +755,7 @@ module egret.web {
             if(input["rootRenderTarget"]) {
                 output.drawImage(<BitmapData><any>input.rootRenderTarget, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
             } else {
-                output.drawTexture(<WebGLTexture><any>input, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight);
+                output.drawTexture(<WebGLTexture><any>input, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight, textureWidth, textureHeight, meshUVs, meshVertices, meshIndices);
             }
             if(filter) {
                 output.popFilters();
@@ -781,11 +834,12 @@ module egret.web {
             function draw(result, offsetX, offsetY) {
                 this.saveTransform();
                 this.transform(1, 0, 0, -1, 0, result.$getHeight() + (destY + offsetY) * 2);
-                this.drawUvRect(0, 0, result.$getWidth(), result.$getHeight(), destX + offsetX, destY + offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
+                this.cacheArrays(0, 0, result.$getWidth(), result.$getHeight(), destX + offsetX, destY + offsetY, result.$getWidth(), result.$getHeight(), result.$getWidth(), result.$getHeight());
                 this.restoreTransform();
                 this.drawData.push({type: DRAWABLE_TYPE.TEXTURE, texture: result.rootRenderTarget.texture, count: 0});
-                this.currentBatchSize++;
-                this.drawData[this.drawData.length - 1].count++;
+                // this.currentBatchSize++;
+                // this.drawData[this.drawData.length - 1].count++;
+                this.drawData[this.drawData.length - 1].count += 2;
             }
 
             output.clearFilters();
@@ -803,7 +857,8 @@ module egret.web {
             }
 
             // TODO if needed, this rect can set a color
-            if (this.currentBatchSize >= this.size - 1) {
+            // if (this.currentBatchSize >= this.size - 1) {
+            if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
                 this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
             } else if(this.drawData.length > 0 && this.drawData[this.drawData.length - 1].type == DRAWABLE_TYPE.RECT) {
@@ -812,22 +867,34 @@ module egret.web {
                 this.drawData.push({type: DRAWABLE_TYPE.RECT, count: 0});
             }
 
-            this.drawUvRect(0, 0, width, height, x, y, width, height, width, height);
+            this.cacheArrays(0, 0, width, height, x, y, width, height, width, height);
 
-            this.currentBatchSize++;
-            this.drawData[this.drawData.length - 1].count++;
+            // this.currentBatchSize++;
+            // this.drawData[this.drawData.length - 1].count++;
+            this.drawData[this.drawData.length - 1].count += 2;
         }
 
         /**
-         * @private
-         * draw a rect with uv attribute, just push vertices datas to array
+         * 缓存顶点与索引信息
+         * 如果后三个参数缺省，默认为构成矩形的顶点
          * */
-        private drawUvRect(sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
-                                destX:number, destY:number, destWidth:number, destHeight:number, textureWidth:number, textureHeight:number) {
-
-            var textureSourceWidth = textureWidth;
-            var textureSourceHeight = textureHeight;
-
+        private cacheArrays(sourceX:number, sourceY:number, sourceWidth:number, sourceHeight:number,
+                                destX:number, destY:number, destWidth:number, destHeight:number, textureSourceWidth:number, textureSourceHeight:number,
+                                meshUVs?:number[], meshVertices?:number[], meshIndices?:number[]):void {
+            // 如果后三个值缺省，默认为构成矩形的顶点
+            meshVertices = meshVertices || [
+                0, 0,
+                sourceWidth, 0,
+                sourceWidth, sourceHeight,
+                0, sourceHeight
+            ];
+            meshUVs = meshUVs || [
+                0, 0,
+                1, 0,
+                1, 1,
+                0, 1
+            ];
+            meshIndices = meshIndices || [0, 1, 2, 0, 2, 3];
             //计算出绘制矩阵，之后把矩阵还原回之前的
             var locWorldTransform = this.globalMatrix;
             var originalA:number = locWorldTransform.a;
@@ -856,56 +923,52 @@ module egret.web {
             locWorldTransform.tx = originalTx;
             locWorldTransform.ty = originalTy;
 
-            var width:number = textureSourceWidth;
-            var height:number = textureSourceHeight;
-
-            var w:number = sourceWidth;
-            var h:number = sourceHeight;
-
-            sourceX = sourceX / width;
-            sourceY = sourceY / height;
-            sourceWidth = sourceWidth / width;
-            sourceHeight = sourceHeight / height;
-
             var vertices:Float32Array = this.vertices;
-            var index:number = this.currentBatchSize * 4 * this.vertSize;
+            var index:number = this.vertexIndex * this.vertSize;
             var alpha:number = this._globalAlpha;
 
-            // xy
-            vertices[index++] = tx;
-            vertices[index++] = ty;
-            // uv
-            vertices[index++] = sourceX;
-            vertices[index++] = sourceY;
-            // alpha
-            vertices[index++] = alpha;
+            // 缓存顶点数组
+            var i = 0, iD = 0, l = 0;
+            var u = 0, v = 0, x = 0, y = 0;
+            for (i = 0, l = meshUVs.length; i < l; i += 2) {
+                iD = i * 5 / 2;
+                x = meshVertices[i];
+                y = meshVertices[i + 1];
+                u = meshUVs[i];
+                v = meshUVs[i + 1];
 
-            // xy
-            vertices[index++] = a * w + tx;
-            vertices[index++] = b * w + ty;
-            // uv
-            vertices[index++] = sourceWidth + sourceX;
-            vertices[index++] = sourceY;
-            // alpha
-            vertices[index++] = alpha;
+                // xy
+                vertices[index + iD + 0] = a * x + c * y + tx;
+                vertices[index + iD + 1] = b * x + d * y + ty;
+                // uv
+                vertices[index + iD + 2] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                vertices[index + iD + 3] = (sourceY + v * sourceHeight) / textureSourceHeight;
+                // alpha
+                vertices[index + iD + 4] = alpha;
+            }
 
-            // xy
-            vertices[index++] = a * w + c * h + tx;
-            vertices[index++] = d * h + b * w + ty;
-            // uv
-            vertices[index++] = sourceWidth + sourceX;
-            vertices[index++] = sourceHeight + sourceY;
-            // alpha
-            vertices[index++] = alpha;
+            // 缓存索引数组
+            for (i = 0, l = meshIndices.length; i < l; ++i) {
+                this.indicesForMesh[this.indexIndex + i] = meshIndices[i] + this.vertexIndex;
+            }
 
-            // xy
-            vertices[index++] = c * h + tx;
-            vertices[index++] = d * h + ty;
-            // uv
-            vertices[index++] = sourceX;
-            vertices[index++] = sourceHeight + sourceY;
-            // alpha
-            vertices[index++] = alpha;
+            this.vertexIndex += meshUVs.length / 2;
+            this.indexIndex += meshIndices.length;
+        }
+
+        private getUv(sourceX, sourceY, sourceWidth, sourceHeight, textureSourceWidth, textureSourceHeight) {
+            var uv = [
+                0, 0,
+                1, 1
+            ];
+            for (var i = 0, l = uv.length; i < l; i += 2) {
+                var u = uv[i];
+                var v = uv[i + 1];
+                // uv
+                uv[i] = (sourceX + u * sourceWidth) / textureSourceWidth;
+                uv[i + 1] = (sourceY + v * sourceHeight) / textureSourceHeight;
+            }
+            return uv;
         }
 
         private drawData = [];
@@ -913,7 +976,8 @@ module egret.web {
         public $computeDrawCall:boolean = false;
 
         public $drawWebGL():void {
-            if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.renderContext.contextLost) {
+            // if ((this.currentBatchSize == 0 && this.drawData.length == 0) || this.renderContext.contextLost) {
+            if ((this.vertexIndex == 0 && this.drawData.length == 0) || this.renderContext.contextLost) {
                 return;
             }
 
@@ -922,10 +986,16 @@ module egret.web {
             // update the vertices data
             var gl:any = this.context;
 
-            if(this.currentBatchSize > 0) {
-                var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
+            if(this.vertexIndex > 0) {
+                // var view = this.vertices.subarray(0, this.currentBatchSize * 4 * this.vertSize);
                 // gl.bufferSubData(gl.ARRAY_BUFFER, 0, view);
+                var view = this.vertices.subarray(0, this.vertexIndex * this.vertSize);
                 gl.bufferData(gl.ARRAY_BUFFER, view, gl.STREAM_DRAW);
+            }
+
+            if (this.hasMesh){
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indicesForMesh, gl.STATIC_DRAW);
             }
 
             var length = this.drawData.length;
@@ -938,9 +1008,36 @@ module egret.web {
                 // 根据filter开启shader
                 if(data.filter) {
                     var filter = data.filter;
-                    if(filter != this.filter) {
+
+                    // 如果是blur，需要判断是否重新上传uv坐标
+                    if(filter.type == "blur") {
+                        var uvDirty = false;
+                        if(data.uv) {
+                            if(this.uv) {
+                                if(this.uv[0] != data.uv[0] || this.uv[1] != data.uv[1] || this.uv[2] != data.uv[2] || this.uv[3] != data.uv[3]) {
+                                    this.uv = data.uv;
+                                    uvDirty = true;
+                                } else {
+                                    uvDirty = false;
+                                }
+                            } else {
+                                this.uv = data.uv;
+                                uvDirty = true;
+                            }
+                        } else {
+                            if(this.uv) {
+                                this.uv = null;
+                                uvDirty = true;
+                            } else {
+                                uvDirty = false;
+                            }
+                        }
+                    }
+
+                    if(filter != this.filter || uvDirty) {
                         this.filterType = filter.type;
                         this.filter = filter;
+                        this.uv = data.uv;
                         this.startShader();
                         shaderStarted = false;
                     }
@@ -985,15 +1082,25 @@ module egret.web {
                 }
             }
 
+            if(this.hasMesh) {
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+            }
+
             // flush draw data
+            this.hasMesh = false;
             this.drawData.length = 0;
-            this.currentBatchSize = 0;
+
+            // this.currentBatchSize = 0;
+            this.vertexIndex = 0;
+            this.indexIndex = 0;
 
             this.filter = null;
         }
 
         private filterType;
         private filter;
+        private uv;
         public bindBuffer:boolean = false;
         private drawingTexture:boolean;
 
@@ -1032,6 +1139,12 @@ module egret.web {
             else if (this.filterType == "blur") {
                 shader = this.renderContext.shaderManager.blurShader;
                 shader.uniforms.blur.value = {x: this.filter.blurX, y: this.filter.blurY};
+                if(this.uv) {
+                    var uv = this.uv;
+                    shader.uniforms.uBounds.value = {x: uv[0], y: uv[1], z: uv[2], w: uv[3]};
+                } else {
+                    shader.uniforms.uBounds.value = {x: 0, y: 0, z: 1, w: 1};
+                }
             }
             else {
                 if(this.drawingTexture) {
@@ -1155,7 +1268,8 @@ module egret.web {
             // TODO mask count
             this.$stencilList.push(mask);
 
-            if (this.currentBatchSize >= this.size - 1) {
+            // if (this.currentBatchSize >= this.size - 1) {
+            if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
                 this.drawData.push({type: DRAWABLE_TYPE.PUSH_MASK, pushMask: mask, count: 0});
             } else {
@@ -1170,7 +1284,8 @@ module egret.web {
             // TODO mask count
             var mask = this.$stencilList.pop();
 
-            if (this.currentBatchSize >= this.size - 1) {
+            // if (this.currentBatchSize >= this.size - 1) {
+            if (this.vertexIndex >= this.vertexMaxSize - 1) {
                 this.$drawWebGL();
                 this.drawData.push({type: DRAWABLE_TYPE.POP_MASK, popMask: mask, count: 0});
             } else {
@@ -1193,15 +1308,17 @@ module egret.web {
             if (length) {
                 for (var i = 0; i < length; i++) {
                     var item:sys.Region = mask[i];
-                    this.drawUvRect(0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
-                    this.currentBatchSize++;
-                    this.drawData[this.drawData.length - 1].count++;
+                    this.cacheArrays(0, 0, item.width, item.height, item.minX, item.minY, item.width, item.height, item.width, item.height);
+                    // this.currentBatchSize++;
+                    // this.drawData[this.drawData.length - 1].count++;
+                    this.drawData[this.drawData.length - 1].count += 2;
                 }
             }
             else {
-                this.drawUvRect(0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
-                this.currentBatchSize++;
-                this.drawData[this.drawData.length - 1].count++;
+                this.cacheArrays(0, 0, mask.width, mask.height, mask.x, mask.y, mask.width, mask.height, mask.width, mask.height);
+                // this.currentBatchSize++;
+                // this.drawData[this.drawData.length - 1].count++;
+                this.drawData[this.drawData.length - 1].count += 2;
             }
         }
 
@@ -1212,7 +1329,8 @@ module egret.web {
         private drawTextureElements(data:any, offset:number):number {
             var gl = this.context;
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
-            var size = data.count * 6;
+            // var size = data.count * 6;
+            var size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
             return size;
         }
@@ -1224,7 +1342,8 @@ module egret.web {
         private drawRectElements(data:any, offset:number):number {
             var gl = this.context;
             gl.bindTexture(gl.TEXTURE_2D, null);
-            var size = data.count * 6;
+            // var size = data.count * 6;
+            var size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
             return size;
         }
@@ -1246,7 +1365,8 @@ module egret.web {
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
 
             gl.bindTexture(gl.TEXTURE_2D, null);
-            var size = data.count * 6;
+            // var size = data.count * 6;
+            var size = data.count * 3;
             gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
 
             gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
@@ -1266,7 +1386,8 @@ module egret.web {
             if(this.stencilHandleCount == 0) {
                 this.disableStencil();
                 // skip this draw
-                var size = data.count * 6;
+                // var size = data.count * 6;
+                var size = data.count * 3;
                 return size;
             } else {
                 var level = this.stencilHandleCount;
@@ -1275,7 +1396,8 @@ module egret.web {
                 gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
 
                 gl.bindTexture(gl.TEXTURE_2D, null);
-                var size = data.count * 6;
+                // var size = data.count * 6;
+                var size = data.count * 3;
                 gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
 
                 gl.stencilFunc(gl.EQUAL, level, 0xFF);

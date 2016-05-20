@@ -521,6 +521,9 @@ module egret.web {
                 case sys.RenderNodeType.SetAlphaNode:
                     buffer.setGlobalAlpha(node.drawData[0]);
                     break;
+                case sys.RenderNodeType.MeshNode:
+                    this.renderMesh(<sys.MeshNode>node, buffer);
+                    break;
             }
         }
 
@@ -548,6 +551,29 @@ module egret.web {
             }
             if(blendMode) {
                 buffer.setGlobalCompositeOperation(defaultCompositeOp);
+            }
+            if (m) {
+                buffer.restoreTransform();
+            }
+        }
+
+        /**
+         * @private
+         */
+        private renderMesh(node:sys.MeshNode, buffer:WebGLRenderBuffer):void {
+            var image = node.image;
+            //buffer.imageSmoothingEnabled = node.smoothing;
+            var data = node.drawData;
+            var length = data.length;
+            var pos = 0;
+            var m = node.matrix;
+            if (m) {
+                buffer.saveTransform();
+                buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
+            }
+            while (pos < length) {
+                buffer.drawMesh(image, data[pos++], data[pos++], data[pos++], data[pos++],
+                    data[pos++], data[pos++], data[pos++], data[pos++], node.imageWidth, node.imageHeight, node.uvs, node.vertices, node.indices, node.bounds);
             }
             if (m) {
                 buffer.restoreTransform();

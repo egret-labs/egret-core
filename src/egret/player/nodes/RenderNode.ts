@@ -56,7 +56,11 @@ module egret.sys {
         /**
          * 设置透明度节点
          */
-        SetAlphaNode
+        SetAlphaNode,
+        /**
+         * Mesh 节点
+         */
+        MeshNode
     }
 
     /**
